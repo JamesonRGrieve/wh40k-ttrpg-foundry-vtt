@@ -1,55 +1,55 @@
 {{! Rogue Trader Force Field Roll Card - Modern Design }}
-<div class="rt-chat">
-    <div class="rt-roll-card">
+<div class="wh40k-chat">
+    <div class="wh40k-roll-card">
         {{! Header }}
-        <div class="rt-roll-card__header">
-            <div class="rt-roll-card__actor">{{actor.name}}</div>
-            <h2 class="rt-roll-card__title">{{forceField.name}}</h2>
-            <div class="rt-roll-card__subtitle">Force Field Activation</div>
+        <div class="wh40k-roll-card__header">
+            <div class="wh40k-roll-card__actor">{{actor.name}}</div>
+            <h2 class="wh40k-roll-card__title">{{forceField.name}}</h2>
+            <div class="wh40k-roll-card__subtitle">Force Field Activation</div>
             {{#if isManualRoll}}
-                <div class="rt-roll-card__manual-badge"><i class="fas fa-hand-paper"></i> Player Rolled</div>
+                <div class="wh40k-roll-card__manual-badge"><i class="fas fa-hand-paper"></i> Player Rolled</div>
             {{/if}}
         </div>
 
         {{! Body }}
-        <div class="rt-roll-card__body">
+        <div class="wh40k-roll-card__body">
             {{#if isTargetOnly}}
-                <div class="rt-roll-card__row">
-                    <span class="rt-roll-card__label">Protection Rating</span>
-                    <span class="rt-roll-card__value">{{protectionRating}}</span>
+                <div class="wh40k-roll-card__row">
+                    <span class="wh40k-roll-card__label">Protection Rating</span>
+                    <span class="wh40k-roll-card__value">{{protectionRating}}</span>
                 </div>
-                <div class="rt-roll-card__target-only">
+                <div class="wh40k-roll-card__target-only">
                     Target posted - awaiting physical dice roll
                 </div>
             {{else}}
                 {{#if overload}}
-                    <div class="rt-roll-card__fury">
-                        <div class="rt-roll-card__fury-title">⚠ Field Overload! ⚠</div>
-                        <div class="rt-roll-card__fury-effect">The field ceases to function until recharged or repaired (Very Hard Tech-Use test required).</div>
+                    <div class="wh40k-roll-card__fury">
+                        <div class="wh40k-roll-card__fury-title">⚠ Field Overload! ⚠</div>
+                        <div class="wh40k-roll-card__fury-effect">The field ceases to function until recharged or repaired (Very Hard Tech-Use test required).</div>
                     </div>
                 {{/if}}
 
                 {{#if success}}
-                    <div class="rt-roll-card__result rt-roll-card__result--success">
-                        <div class="rt-roll-card__result-label">Field Activated</div>
-                        <div class="rt-roll-card__result-roll">{{roll.total}}</div>
+                    <div class="wh40k-roll-card__result wh40k-roll-card__result--success">
+                        <div class="wh40k-roll-card__result-label">Field Activated</div>
+                        <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
                     </div>
-                    <div class="rt-roll-card__text">
+                    <div class="wh40k-roll-card__text">
                         <p>The field activates successfully! Attack is nullified.</p>
                     </div>
                 {{else}}
-                    <div class="rt-roll-card__result rt-roll-card__result--failure">
-                        <div class="rt-roll-card__result-label">Field Failed</div>
-                        <div class="rt-roll-card__result-roll">{{roll.total}}</div>
+                    <div class="wh40k-roll-card__result wh40k-roll-card__result--failure">
+                        <div class="wh40k-roll-card__result-label">Field Failed</div>
+                        <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
                     </div>
-                    <div class="rt-roll-card__text">
+                    <div class="wh40k-roll-card__text">
                         <p>The field fails to protect and the attack proceeds as normal.</p>
                     </div>
                 {{/if}}
 
                 {{#if forceField.system.description}}
-                    <div class="rt-roll-card__divider"></div>
-                    <div class="rt-roll-card__text">{{forceField.system.description}}</div>
+                    <div class="wh40k-roll-card__divider"></div>
+                    <div class="wh40k-roll-card__text">{{forceField.system.description}}</div>
                 {{/if}}
             {{/if}}{{! end isTargetOnly else }}
         </div>

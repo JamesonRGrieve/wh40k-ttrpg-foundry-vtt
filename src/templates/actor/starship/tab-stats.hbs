@@ -1,116 +1,116 @@
 {{!-- Starship Stats Tab --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-    <div class="rt-panel spacer rt-grid-col-3 rt-grid-row-1">
-        <h1 class="rt-panel-header">{{localize "WH40K.Starship.Combat.Header"}}</h1>
-        <div class="rt-ship-initiative-box">
-            <button type="button" class="rt-initiative-btn" data-action="rollInitiative" title="{{localize 'WH40K.Starship.Combat.RollInitiative'}}">
+    <div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-1">
+        <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Combat.Header"}}</h1>
+        <div class="wh40k-ship-initiative-box">
+            <button type="button" class="wh40k-initiative-btn" data-action="rollInitiative" title="{{localize 'WH40K.Starship.Combat.RollInitiative'}}">
                 <span class="material-icons">radar</span>
-                <span class="rt-init-label">{{localize "WH40K.Starship.Combat.Initiative"}}</span>
+                <span class="wh40k-init-label">{{localize "WH40K.Starship.Combat.Initiative"}}</span>
             </button>
-            <span class="rt-detection-bonus" title="{{localize 'WH40K.Starship.Combat.DetectionBonus'}}">+{{system.detectionBonus}}</span>
+            <span class="wh40k-detection-bonus" title="{{localize 'WH40K.Starship.Combat.DetectionBonus'}}">+{{system.detectionBonus}}</span>
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.Combat.Speed"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.speed" value="{{system.speed}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.Combat.Speed"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.speed" value="{{system.speed}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.Combat.Manoeuvrability"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.manoeuvrability" value="{{system.manoeuvrability}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.Combat.Manoeuvrability"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.manoeuvrability" value="{{system.manoeuvrability}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.Combat.Detection"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.detection" value="{{system.detection}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.Combat.Detection"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.detection" value="{{system.detection}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.Combat.Armour"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.armour" value="{{system.armour}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.Combat.Armour"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.armour" value="{{system.armour}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.Combat.VoidShields"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.voidShields" value="{{system.voidShields}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.Combat.VoidShields"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.voidShields" value="{{system.voidShields}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.Combat.TurretRating"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.turretRating" value="{{system.turretRating}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.Combat.TurretRating"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.turretRating" value="{{system.turretRating}}" />
         </div>
     </div>
 
-    <div class="rt-panel spacer rt-grid-col-3 rt-grid-row-1">
-        <h1 class="rt-panel-header">{{localize "WH40K.Starship.Resources.Header"}}</h1>
+    <div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-1">
+        <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Resources.Header"}}</h1>
         
         {{!-- Power Status Indicator --}}
-        <div class="rt-resource-status {{#if system.hasPowerShortage}}rt-shortage{{/if}}">
-            <span class="rt-resource-icon material-icons">bolt</span>
-            <span class="rt-resource-label">{{localize "WH40K.Starship.Resources.Power"}}</span>
-            <span class="rt-resource-value {{#if system.hasPowerShortage}}rt-negative{{else}}rt-positive{{/if}}">
+        <div class="wh40k-resource-status {{#if system.hasPowerShortage}}wh40k-shortage{{/if}}">
+            <span class="wh40k-resource-icon material-icons">bolt</span>
+            <span class="wh40k-resource-label">{{localize "WH40K.Starship.Resources.Power"}}</span>
+            <span class="wh40k-resource-value {{#if system.hasPowerShortage}}wh40k-negative{{else}}wh40k-positive{{/if}}">
                 {{system.power.available}}
             </span>
-            <span class="rt-resource-detail">( {{system.power.used}} / {{system.power.total}} )</span>
+            <span class="wh40k-resource-detail">( {{system.power.used}} / {{system.power.total}} )</span>
         </div>
         
         {{!-- Space Status Indicator --}}
-        <div class="rt-resource-status {{#if system.hasSpaceShortage}}rt-shortage{{/if}}">
-            <span class="rt-resource-icon material-icons">warehouse</span>
-            <span class="rt-resource-label">{{localize "WH40K.Starship.Resources.Space"}}</span>
-            <span class="rt-resource-value {{#if system.hasSpaceShortage}}rt-negative{{else}}rt-positive{{/if}}">
+        <div class="wh40k-resource-status {{#if system.hasSpaceShortage}}wh40k-shortage{{/if}}">
+            <span class="wh40k-resource-icon material-icons">warehouse</span>
+            <span class="wh40k-resource-label">{{localize "WH40K.Starship.Resources.Space"}}</span>
+            <span class="wh40k-resource-value {{#if system.hasSpaceShortage}}wh40k-negative{{else}}wh40k-positive{{/if}}">
                 {{system.space.available}}
             </span>
-            <span class="rt-resource-detail">( {{system.space.used}} / {{system.space.total}} )</span>
+            <span class="wh40k-resource-detail">( {{system.space.used}} / {{system.space.total}} )</span>
         </div>
         
-        <div class="rt-resources-divider"></div>
+        <div class="wh40k-resources-divider"></div>
         
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.Resources.SpaceTotal"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.space.total" value="{{system.space.total}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.Resources.SpaceTotal"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.space.total" value="{{system.space.total}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.Resources.SpaceUsed"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.space.used" value="{{system.space.used}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.Resources.SpaceUsed"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.space.used" value="{{system.space.used}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.Resources.PowerTotal"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.power.total" value="{{system.power.total}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.Resources.PowerTotal"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.power.total" value="{{system.power.total}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.Resources.PowerUsed"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.power.used" value="{{system.power.used}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.Resources.PowerUsed"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.power.used" value="{{system.power.used}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.Resources.ShipPoints"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.shipPoints" value="{{system.shipPoints}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.Resources.ShipPoints"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.shipPoints" value="{{system.shipPoints}}" />
         </div>
     </div>
 
-    <div class="rt-panel spacer rt-grid-col-3 rt-grid-row-1">
-        <h1 class="rt-panel-header">{{localize "WH40K.Starship.WeaponCapacity.Header"}}</h1>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.WeaponCapacity.Prow"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.weaponCapacity.prow" value="{{system.weaponCapacity.prow}}" />
+    <div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-1">
+        <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.WeaponCapacity.Header"}}</h1>
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.WeaponCapacity.Prow"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.weaponCapacity.prow" value="{{system.weaponCapacity.prow}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.WeaponCapacity.Dorsal"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.weaponCapacity.dorsal" value="{{system.weaponCapacity.dorsal}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.WeaponCapacity.Dorsal"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.weaponCapacity.dorsal" value="{{system.weaponCapacity.dorsal}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.WeaponCapacity.Port"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.weaponCapacity.port" value="{{system.weaponCapacity.port}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.WeaponCapacity.Port"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.weaponCapacity.port" value="{{system.weaponCapacity.port}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.WeaponCapacity.Starboard"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.weaponCapacity.starboard" value="{{system.weaponCapacity.starboard}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.WeaponCapacity.Starboard"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.weaponCapacity.starboard" value="{{system.weaponCapacity.starboard}}" />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Starship.WeaponCapacity.Keel"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.weaponCapacity.keel" value="{{system.weaponCapacity.keel}}" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.WeaponCapacity.Keel"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.weaponCapacity.keel" value="{{system.weaponCapacity.keel}}" />
         </div>
     </div>
 
-    <div class="rt-panel spacer rt-grid-col-3 rt-grid-row-1">
-        <h1 class="rt-panel-header">{{localize "WH40K.Starship.Physical.Header"}}</h1>
-        <div class="rt-field__wrapper rt-grid-col-3">
-            <span class="rt-field__header">{{localize "WH40K.Starship.Physical.Dimensions"}}</span>
-            <input type="text" class="rt-field__input" name="system.dimensions" value="{{system.dimensions}}" />
+    <div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-1">
+        <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Physical.Header"}}</h1>
+        <div class="wh40k-field__wrapper wh40k-grid-col-3">
+            <span class="wh40k-field__header">{{localize "WH40K.Starship.Physical.Dimensions"}}</span>
+            <input type="text" class="wh40k-field__input" name="system.dimensions" value="{{system.dimensions}}" />
         </div>
     </div>
 </section>

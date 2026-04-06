@@ -212,7 +212,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get tierLabel() {
-        return game.i18n.localize(`RT.Talent.Tier${this.tier}`);
+        return game.i18n.localize(`WH40K.Talent.Tier${this.tier}`);
     }
 
     /**
@@ -221,7 +221,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get categoryLabel() {
         if (!this.category) return game.i18n.localize('WH40K.TalentCategory.General');
-        const key = `RT.TalentCategory.${this.category.capitalize()}`;
+        const key = `WH40K.TalentCategory.${this.category.capitalize()}`;
         const localized = game.i18n.localize(key);
         return localized === key ? this.category : localized;
     }

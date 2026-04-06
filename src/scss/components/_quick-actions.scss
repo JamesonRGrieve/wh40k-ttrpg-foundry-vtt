@@ -6,15 +6,15 @@
 .wh40k-quick-actions-bar {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--rt-item-spacing-xs);
-    padding: var(--rt-item-spacing-sm);
-    background: var(--rt-item-panel-bg);
-    border-top: 1px solid var(--rt-item-panel-border);
+    gap: var(--wh40k-item-spacing-xs);
+    padding: var(--wh40k-item-spacing-sm);
+    background: var(--wh40k-item-panel-bg);
+    border-top: 1px solid var(--wh40k-item-panel-border);
 
     // Compact mode (icons only, smaller spacing)
     &--compact {
-        gap: var(--rt-item-spacing-xs);
-        padding: var(--rt-item-spacing-xs);
+        gap: var(--wh40k-item-spacing-xs);
+        padding: var(--wh40k-item-spacing-xs);
 
         .wh40k-quick-action {
             min-width: 32px;
@@ -31,11 +31,11 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--rt-item-spacing-xs);
+    gap: var(--wh40k-item-spacing-xs);
     padding: 6px 12px;
-    font-size: var(--rt-item-font-size-sm);
+    font-size: var(--wh40k-item-font-size-sm);
     font-weight: 500;
-    border-radius: var(--rt-item-radius-sm);
+    border-radius: var(--wh40k-item-radius-sm);
     border: 1px solid transparent;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -62,7 +62,7 @@
     }
 
     &:focus-visible {
-        outline: 2px solid var(--rt-gold);
+        outline: 2px solid var(--wh40k-gold);
         outline-offset: 1px;
     }
 
@@ -70,14 +70,14 @@
     // Variant: Primary (main actions)
     // ----------------------------------------
     &--primary {
-        background: linear-gradient(135deg, var(--rt-gold) 0%, var(--rt-gold-dark) 100%);
-        border-color: var(--rt-gold-dark);
+        background: linear-gradient(135deg, var(--wh40k-gold) 0%, var(--wh40k-gold-dark) 100%);
+        border-color: var(--wh40k-gold-dark);
         color: #fff;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 
         &:hover:not(:disabled) {
-            background: linear-gradient(135deg, lighten(#c0a062, 5%) 0%, var(--rt-gold) 100%);
-            border-color: var(--rt-gold);
+            background: linear-gradient(135deg, lighten(#c0a062, 5%) 0%, var(--wh40k-gold) 100%);
+            border-color: var(--wh40k-gold);
             box-shadow: 0 3px 8px rgba(192, 160, 98, 0.3);
         }
     }
@@ -118,7 +118,7 @@
     // ----------------------------------------
     &--compact {
         padding: 4px 8px;
-        font-size: var(--rt-item-font-size-xs);
+        font-size: var(--wh40k-item-font-size-xs);
         min-width: 28px;
     }
 }
@@ -130,7 +130,7 @@
 
 .wh40k-item-list {
     .wh40k-quick-actions-bar {
-        padding: var(--rt-item-spacing-xs);
+        padding: var(--wh40k-item-spacing-xs);
         background: transparent;
         border-top: none;
         justify-content: flex-end;
@@ -138,7 +138,7 @@
 
     .wh40k-quick-action {
         padding: 4px 8px;
-        font-size: var(--rt-item-font-size-xs);
+        font-size: var(--wh40k-item-font-size-xs);
         min-width: 28px;
     }
 }

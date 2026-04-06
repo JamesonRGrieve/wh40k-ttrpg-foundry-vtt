@@ -23,7 +23,7 @@ export default class ForceFieldSheet extends BaseItemSheet {
     static PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-force-field-sheet-v2.hbs',
-            scrollable: ['.rt-tab-content'],
+            scrollable: ['.wh40k-tab-content'],
         },
     };
 

@@ -112,7 +112,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * @type {string}
      */
     get damageTypeLabel() {
-        const key = `RT.DamageType.${this.damageType.capitalize()}`;
+        const key = `WH40K.DamageType.${this.damageType.capitalize()}`;
         return game.i18n.has(key) ? game.i18n.localize(key) : this.damageType.capitalize();
     }
 
@@ -121,7 +121,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * @type {string}
      */
     get bodyPartLabel() {
-        const key = `RT.BodyPart.${this.bodyPart.capitalize()}`;
+        const key = `WH40K.BodyPart.${this.bodyPart.capitalize()}`;
         return game.i18n.has(key) ? game.i18n.localize(key) : this.bodyPart.capitalize();
     }
 

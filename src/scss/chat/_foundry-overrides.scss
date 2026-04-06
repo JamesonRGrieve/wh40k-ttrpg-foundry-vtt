@@ -14,26 +14,26 @@ body.theme-dark {
     #chat-log {
         // Override message background
         .message {
-            background-color: var(--rt-panel-bg-solid) !important;
-            border-color: var(--rt-border-color) !important;
-            box-shadow: 0 2px 4px var(--rt-shadow-medium) !important;
+            background-color: var(--wh40k-panel-bg-solid) !important;
+            border-color: var(--wh40k-border-color) !important;
+            box-shadow: 0 2px 4px var(--wh40k-shadow-medium) !important;
 
             // Message header (sender name, timestamp)
             .message-header {
-                background: var(--rt-panel-bg) !important;
-                border-bottom: 1px solid var(--rt-border-color) !important;
-                color: var(--rt-text-dark) !important;
+                background: var(--wh40k-panel-bg) !important;
+                border-bottom: 1px solid var(--wh40k-border-color) !important;
+                color: var(--wh40k-text-dark) !important;
 
                 .message-sender {
-                    color: var(--rt-gold) !important;
+                    color: var(--wh40k-gold) !important;
                     font-weight: 600 !important;
                 }
 
                 .message-metadata {
-                    color: var(--rt-text-muted) !important;
+                    color: var(--wh40k-text-muted) !important;
 
                     .message-timestamp {
-                        color: var(--rt-text-subtle) !important;
+                        color: var(--wh40k-text-subtle) !important;
                     }
                 }
             }
@@ -41,7 +41,7 @@ body.theme-dark {
             // Message content area
             .message-content {
                 background: transparent !important;
-                color: var(--rt-text-dark) !important;
+                color: var(--wh40k-text-dark) !important;
 
                 // All text elements
                 p,
@@ -51,28 +51,28 @@ body.theme-dark {
                 th,
                 li,
                 label {
-                    color: var(--rt-text-dark) !important;
+                    color: var(--wh40k-text-dark) !important;
                 }
 
                 // Links
                 a {
-                    color: var(--rt-gold) !important;
+                    color: var(--wh40k-gold) !important;
 
                     &:hover {
-                        color: var(--rt-gold-bright) !important;
+                        color: var(--wh40k-gold-bright) !important;
                     }
                 }
 
                 // Emphasis
                 strong,
                 b {
-                    color: var(--rt-text-dark) !important;
+                    color: var(--wh40k-text-dark) !important;
                     font-weight: 700 !important;
                 }
 
                 em,
                 i {
-                    color: var(--rt-text-medium) !important;
+                    color: var(--wh40k-text-medium) !important;
                 }
 
                 // Headings
@@ -82,47 +82,47 @@ body.theme-dark {
                 h4,
                 h5,
                 h6 {
-                    color: var(--rt-text-dark) !important;
+                    color: var(--wh40k-text-dark) !important;
                 }
 
                 // Tables
                 table {
                     background: transparent !important;
-                    border-color: var(--rt-border-color) !important;
+                    border-color: var(--wh40k-border-color) !important;
 
                     th {
-                        background: var(--rt-panel-bg) !important;
-                        border-color: var(--rt-border-color) !important;
-                        color: var(--rt-text-dark) !important;
+                        background: var(--wh40k-panel-bg) !important;
+                        border-color: var(--wh40k-border-color) !important;
+                        color: var(--wh40k-text-dark) !important;
                     }
 
                     td {
-                        border-color: var(--rt-border-color) !important;
+                        border-color: var(--wh40k-border-color) !important;
                         background: transparent !important;
-                        color: var(--rt-text-dark) !important;
+                        color: var(--wh40k-text-dark) !important;
                     }
                 }
 
                 // Code blocks
                 code,
                 pre {
-                    background: var(--rt-panel-bg) !important;
-                    color: var(--rt-text-dark) !important;
-                    border-color: var(--rt-border-color) !important;
+                    background: var(--wh40k-panel-bg) !important;
+                    color: var(--wh40k-text-dark) !important;
+                    border-color: var(--wh40k-border-color) !important;
                 }
             }
 
             // Flavor text (whispers, etc.)
             .flavor-text {
-                color: var(--rt-text-muted) !important;
-                background: var(--rt-panel-bg) !important;
+                color: var(--wh40k-text-muted) !important;
+                background: var(--wh40k-panel-bg) !important;
             }
         }
 
         // Whisper messages (GM only)
         .message.whisper {
             background: rgba(106, 90, 74, 0.3) !important;
-            border-color: var(--rt-bio-border) !important;
+            border-color: var(--wh40k-bio-border) !important;
 
             .message-header {
                 background: rgba(106, 90, 74, 0.4) !important;
@@ -132,34 +132,34 @@ body.theme-dark {
         // Blind messages (hidden from players)
         .message.blind {
             background: rgba(74, 55, 40, 0.3) !important;
-            border-color: var(--rt-border-color-strong) !important;
+            border-color: var(--wh40k-border-color-strong) !important;
         }
     }
 
     // Chat form (message input area)
     #chat-form {
-        background: var(--rt-panel-bg-solid) !important;
-        border-color: var(--rt-border-color) !important;
+        background: var(--wh40k-panel-bg-solid) !important;
+        border-color: var(--wh40k-border-color) !important;
 
         textarea {
-            background: var(--rt-input-bg) !important;
-            color: var(--rt-text-dark) !important;
-            border-color: var(--rt-border-color) !important;
+            background: var(--wh40k-input-bg) !important;
+            color: var(--wh40k-text-dark) !important;
+            border-color: var(--wh40k-border-color) !important;
 
             &:focus {
-                background: var(--rt-input-bg-focus) !important;
-                border-color: var(--rt-gold) !important;
+                background: var(--wh40k-input-bg-focus) !important;
+                border-color: var(--wh40k-gold) !important;
             }
         }
 
         button {
-            background: var(--rt-btn-bg) !important;
-            color: var(--rt-text-dark) !important;
-            border-color: var(--rt-border-color) !important;
+            background: var(--wh40k-btn-bg) !important;
+            color: var(--wh40k-text-dark) !important;
+            border-color: var(--wh40k-border-color) !important;
 
             &:hover {
-                background: var(--rt-btn-bg-hover) !important;
-                border-color: var(--rt-gold) !important;
+                background: var(--wh40k-btn-bg-hover) !important;
+                border-color: var(--wh40k-gold) !important;
             }
         }
     }
@@ -174,42 +174,42 @@ body.theme-dark {
     #chat-log {
         // Hit location / Initiative cards
         .wh40k-hit-location-result {
-            background: var(--rt-panel-bg-solid) !important;
-            border-color: var(--rt-border-color) !important;
+            background: var(--wh40k-panel-bg-solid) !important;
+            border-color: var(--wh40k-border-color) !important;
 
             h3 {
-                color: var(--rt-text-dark) !important;
+                color: var(--wh40k-text-dark) !important;
 
                 i {
-                    color: var(--rt-gold) !important;
+                    color: var(--wh40k-gold) !important;
                 }
             }
 
             .wh40k-roll-result {
-                background: var(--rt-panel-bg) !important;
-                color: var(--rt-text-dark) !important;
-                border-color: var(--rt-border-color-strong) !important;
+                background: var(--wh40k-panel-bg) !important;
+                color: var(--wh40k-text-dark) !important;
+                border-color: var(--wh40k-border-color-strong) !important;
             }
 
             .wh40k-location-name {
-                color: var(--rt-text-dark) !important;
+                color: var(--wh40k-text-dark) !important;
             }
 
             .wh40k-location-armour {
-                color: var(--rt-text-muted) !important;
+                color: var(--wh40k-text-muted) !important;
             }
         }
 
         // Roll cards
         .wh40k-roll-card {
-            background: var(--rt-panel-bg-solid) !important;
-            border-color: var(--rt-gold) !important;
+            background: var(--wh40k-panel-bg-solid) !important;
+            border-color: var(--wh40k-gold) !important;
         }
 
         // Item cards
         .wh40k-item-card {
-            background: var(--rt-panel-bg-solid) !important;
-            border-color: var(--rt-bronze) !important;
+            background: var(--wh40k-panel-bg-solid) !important;
+            border-color: var(--wh40k-bronze) !important;
         }
     }
 }

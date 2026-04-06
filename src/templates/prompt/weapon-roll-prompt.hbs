@@ -1,23 +1,23 @@
 {{!-- Rogue Trader Weapon Roll Prompt - Modern Design --}}
 <div class="dialog-content">
-    <form class="rt-prompt rt-prompt--attack" autocomplete="off">
+    <form class="wh40k-prompt wh40k-prompt--attack" autocomplete="off">
         {{!-- Weapon Select or Info --}}
         {{#if weaponSelect}}
-            <div class="rt-prompt__panel">
-                <h3 class="rt-prompt__section-title">Select Weapons</h3>
-                <div class="rt-prompt__weapon-list">
+            <div class="wh40k-prompt__panel">
+                <h3 class="wh40k-prompt__section-title">Select Weapons</h3>
+                <div class="wh40k-prompt__weapon-list">
                     {{#each weapons as |weapon|}}
-                        <label class="rt-prompt__weapon-item {{#if weapon.isSelected}}rt-prompt__weapon-item--selected{{/if}}">
-                            <input class="rt-prompt__weapon-check weapon-select"
+                        <label class="wh40k-prompt__weapon-item {{#if weapon.isSelected}}wh40k-prompt__weapon-item--selected{{/if}}">
+                            <input class="wh40k-prompt__weapon-check weapon-select"
                                 type="checkbox"
                                 data-dtype="Boolean"
                                 {{checked weapon.isSelected}}
                                 name="{{weapon.id}}" />
-                            <img class="rt-prompt__weapon-img" alt="{{weapon.name}}" src="{{weapon.img}}" />
-                            <div class="rt-prompt__weapon-info">
-                                <div class="rt-prompt__weapon-name">{{weapon.name}}</div>
+                            <img class="wh40k-prompt__weapon-img" alt="{{weapon.name}}" src="{{weapon.img}}" />
+                            <div class="wh40k-prompt__weapon-info">
+                                <div class="wh40k-prompt__weapon-name">{{weapon.name}}</div>
                                 {{#if weapon.items}}
-                                    <div class="rt-prompt__weapon-details">
+                                    <div class="wh40k-prompt__weapon-details">
                                         {{#each weapon.items as |item|}}{{item.name}}{{#unless @last}}, {{/unless}}{{/each}}
                                     </div>
                                 {{/if}}
@@ -28,121 +28,121 @@
             </div>
         {{else}}
             {{!-- Weapon Header Panel --}}
-            <div class="rt-prompt__panel">
-                <div class="rt-prompt__header">
-                    <img class="rt-prompt__icon" alt="{{weapon.name}}" src="{{weapon.img}}" />
-                    <div class="rt-prompt__title-group">
-                        <h2 class="rt-prompt__title">{{weapon.name}}</h2>
-                        <div class="rt-prompt__subtitle">{{this.sourceActor.name}}</div>
+            <div class="wh40k-prompt__panel">
+                <div class="wh40k-prompt__header">
+                    <img class="wh40k-prompt__icon" alt="{{weapon.name}}" src="{{weapon.img}}" />
+                    <div class="wh40k-prompt__title-group">
+                        <h2 class="wh40k-prompt__title">{{weapon.name}}</h2>
+                        <div class="wh40k-prompt__subtitle">{{this.sourceActor.name}}</div>
                     </div>
                 </div>
                 
                 {{!-- Target Display --}}
-                <div class="rt-prompt__target">
-                    <span class="rt-prompt__target-label">Target ({{baseChar}})</span>
-                    <span class="rt-prompt__target-value">{{baseTarget}}</span>
-                    <span class="rt-prompt__target-percent">%</span>
+                <div class="wh40k-prompt__target">
+                    <span class="wh40k-prompt__target-label">Target ({{baseChar}})</span>
+                    <span class="wh40k-prompt__target-value">{{baseTarget}}</span>
+                    <span class="wh40k-prompt__target-percent">%</span>
                 </div>
                 
                 {{#if weapon.usesAmmo}}
-                    <div class="rt-prompt__field">
-                        <span class="rt-prompt__label">Ammunition</span>
-                        <span class="rt-prompt__value">{{ammoText}}</span>
+                    <div class="wh40k-prompt__field">
+                        <span class="wh40k-prompt__label">Ammunition</span>
+                        <span class="wh40k-prompt__value">{{ammoText}}</span>
                     </div>
                 {{/if}}
                 {{#each weapon.items as |item|}}
                     {{#if item.isAttackSpecial}}
-                        <div class="rt-prompt__field">
-                            <span class="rt-prompt__label">Special</span>
-                            <span class="rt-prompt__value">{{item.name}}</span>
+                        <div class="wh40k-prompt__field">
+                            <span class="wh40k-prompt__label">Special</span>
+                            <span class="wh40k-prompt__value">{{item.name}}</span>
                         </div>
                     {{/if}}
                 {{/each}}
             </div>
 
             {{!-- Attack Options Panel --}}
-            <div class="rt-prompt__panel">
-                <h3 class="rt-prompt__section-title">Attack Options</h3>
-                <div class="rt-prompt__field">
-                    <span class="rt-prompt__label">Attack Type{{#if weapon.usesAmmo}} <small>(max {{fireRate}} hits)</small>{{/if}}</span>
-                    <select class="rt-prompt__select" name="action" id="action">
+            <div class="wh40k-prompt__panel">
+                <h3 class="wh40k-prompt__section-title">Attack Options</h3>
+                <div class="wh40k-prompt__field">
+                    <span class="wh40k-prompt__label">Attack Type{{#if weapon.usesAmmo}} <small>(max {{fireRate}} hits)</small>{{/if}}</span>
+                    <select class="wh40k-prompt__select" name="action" id="action">
                         {{selectOptions actions selected=this.action}}
                     </select>
                 </div>
                 {{#if this.isCalledShot}}
-                    <div class="rt-prompt__field">
-                        <span class="rt-prompt__label">Called Shot Location</span>
-                        <select class="rt-prompt__select" name="calledShotLocation" id="calledShotLocation">
+                    <div class="wh40k-prompt__field">
+                        <span class="wh40k-prompt__label">Called Shot Location</span>
+                        <select class="wh40k-prompt__select" name="calledShotLocation" id="calledShotLocation">
                             {{selectOptions locations selected=this.calledShotLocation}}
                         </select>
                     </div>
                 {{/if}}
                 {{#if this.isLasWeapon}}
-                    <div class="rt-prompt__field">
-                        <span class="rt-prompt__label">Las Firing Mode</span>
-                        <select class="rt-prompt__select" name="lasMode" id="lasMode">
+                    <div class="wh40k-prompt__field">
+                        <span class="wh40k-prompt__label">Las Firing Mode</span>
+                        <select class="wh40k-prompt__select" name="lasMode" id="lasMode">
                             {{selectOptions (arrayToObject lasModes) selected=this.lasMode}}
                         </select>
                     </div>
                 {{/if}}
                 {{#if this.hasEyeOfVengeanceAvailable}}
-                    <div class="rt-prompt__checkbox-field">
-                        <span class="rt-prompt__label">Use Eye of Vengeance</span>
-                        <input class="rt-prompt__input" data-dtype="Boolean" type="checkbox" name="eyeOfVengeance" {{checked this.eyeOfVengeance}} />
+                    <div class="wh40k-prompt__checkbox-field">
+                        <span class="wh40k-prompt__label">Use Eye of Vengeance</span>
+                        <input class="wh40k-prompt__input" data-dtype="Boolean" type="checkbox" name="eyeOfVengeance" {{checked this.eyeOfVengeance}} />
                     </div>
                 {{/if}}
             </div>
 
             {{!-- Modifiers Panel --}}
-            <div class="rt-prompt__panel">
-                <h3 class="rt-prompt__section-title">Modifiers</h3>
+            <div class="wh40k-prompt__panel">
+                <h3 class="wh40k-prompt__section-title">Modifiers</h3>
                 {{#with this.modifiers}}
-                    <div class="rt-prompt__field">
-                        <span class="rt-prompt__label">Difficulty</span>
-                        <select class="rt-prompt__select" data-dtype="Number" name="modifiers.difficulty">
+                    <div class="wh40k-prompt__field">
+                        <span class="wh40k-prompt__label">Difficulty</span>
+                        <select class="wh40k-prompt__select" data-dtype="Number" name="modifiers.difficulty">
                             {{selectOptions @root.difficulties selected=difficulty}}
                         </select>
                     </div>
                     {{#if @root.canAim}}
-                        <div class="rt-prompt__field">
-                            <span class="rt-prompt__label">Aim</span>
-                            <select class="rt-prompt__select" data-dtype="Number" name="modifiers.aim">
+                        <div class="wh40k-prompt__field">
+                            <span class="wh40k-prompt__label">Aim</span>
+                            <select class="wh40k-prompt__select" data-dtype="Number" name="modifiers.aim">
                                 {{selectOptions @root.aims selected=aim}}
                             </select>
                         </div>
                     {{/if}}
-                    <div class="rt-prompt__field">
-                        <span class="rt-prompt__label">Additional Modifier</span>
-                        <input class="rt-prompt__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
+                    <div class="wh40k-prompt__field">
+                        <span class="wh40k-prompt__label">Additional Modifier</span>
+                        <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
                     </div>
                 {{/with}}
                 {{#if this.weapon.isRanged}}
-                    <div class="rt-prompt__divider"></div>
-                    <div class="rt-prompt__field">
-                        <span class="rt-prompt__label">Distance (m)</span>
-                        <input class="rt-prompt__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
+                    <div class="wh40k-prompt__divider"></div>
+                    <div class="wh40k-prompt__field">
+                        <span class="wh40k-prompt__label">Distance (m)</span>
+                        <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
                     </div>
-                    <div class="rt-prompt__range-info">
-                        <span class="rt-prompt__range-label">{{rangeName}}</span>
-                        <span class="rt-prompt__range-value {{#if (gt rangeBonus 0)}}rt-prompt__range-value--positive{{else if (lt rangeBonus 0)}}rt-prompt__range-value--negative{{else}}rt-prompt__range-value--neutral{{/if}}">{{#if (gt rangeBonus 0)}}+{{/if}}{{rangeBonus}}</span>
+                    <div class="wh40k-prompt__range-info">
+                        <span class="wh40k-prompt__range-label">{{rangeName}}</span>
+                        <span class="wh40k-prompt__range-value {{#if (gt rangeBonus 0)}}wh40k-prompt__range-value--positive{{else if (lt rangeBonus 0)}}wh40k-prompt__range-value--negative{{else}}wh40k-prompt__range-value--neutral{{/if}}">{{#if (gt rangeBonus 0)}}+{{/if}}{{rangeBonus}}</span>
                     </div>
                     {{#if this.rangeModifiedBy}}
-                        <div class="rt-prompt__hint">
+                        <div class="wh40k-prompt__hint">
                             <i class="fas fa-info-circle"></i>
                             Range modifier affected by {{this.rangeModifiedBy}}
                         </div>
                     {{/if}}
                     {{#if this.isMeltaRange}}
-                        <div class="rt-prompt__hint rt-prompt__hint--melta">
+                        <div class="wh40k-prompt__hint wh40k-prompt__hint--melta">
                             <i class="fas fa-fire"></i>
                             Melta: Double penetration at this range
                         </div>
                     {{/if}}
                 {{/if}}
                 {{#if this.modifiers.attack}}
-                    <div class="rt-prompt__field">
-                        <span class="rt-prompt__label">Weapon Attack Mod</span>
-                        <span class="rt-prompt__value">{{modifiers.attack}}</span>
+                    <div class="wh40k-prompt__field">
+                        <span class="wh40k-prompt__label">Weapon Attack Mod</span>
+                        <span class="wh40k-prompt__value">{{modifiers.attack}}</span>
                     </div>
                 {{/if}}
             </div>

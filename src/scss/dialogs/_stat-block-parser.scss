@@ -51,7 +51,7 @@
 
             &:focus {
                 outline: none;
-                border-color: var(--rt-color-accent, #c9a227);
+                border-color: var(--wh40k-color-accent, #c9a227);
             }
         }
 
@@ -148,7 +148,7 @@
             h4 {
                 margin: 0 0 0.5rem 0;
                 font-size: $wh40k-font-size-sm;
-                color: var(--rt-color-accent, $wh40k-color-gold);
+                color: var(--wh40k-color-accent, $wh40k-color-gold);
                 display: flex;
                 align-items: center;
                 gap: 0.4rem;
@@ -157,7 +157,7 @@
 
                 i {
                     font-size: 0.7rem;
-                    color: var(--rt-color-accent, $wh40k-color-gold);
+                    color: var(--wh40k-color-accent, $wh40k-color-gold);
                 }
             }
 
@@ -221,7 +221,7 @@
                     color: var(--color-text-secondary);
 
                     i {
-                        color: var(--rt-color-accent, $wh40k-color-gold);
+                        color: var(--wh40k-color-accent, $wh40k-color-gold);
                         font-size: 0.65rem;
                     }
                 }
@@ -235,19 +235,19 @@
             }
 
             &.preview-panel--skills {
-                --rt-color-accent: #{$wh40k-accent-skills};
+                --wh40k-color-accent: #{$wh40k-accent-skills};
             }
 
             &.preview-panel--talents {
-                --rt-color-accent: #{$wh40k-accent-talents};
+                --wh40k-color-accent: #{$wh40k-accent-talents};
             }
 
             &.preview-panel--traits {
-                --rt-color-accent: #{$wh40k-accent-equipment};
+                --wh40k-color-accent: #{$wh40k-accent-equipment};
             }
 
             &.preview-panel--weapons {
-                --rt-color-accent: #{$wh40k-accent-combat};
+                --wh40k-color-accent: #{$wh40k-accent-combat};
             }
         }
     }
@@ -263,7 +263,7 @@
         }
 
         .primary {
-            background: var(--rt-color-accent, #c9a227);
+            background: var(--wh40k-color-accent, #c9a227);
             color: #fff;
 
             &:hover {

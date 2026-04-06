@@ -24,7 +24,7 @@ export class TargetedActionManager {
                     };
                 }
             } catch (error) {
-                game.rt.log('Unable to add game bar icon.', error);
+                game.wh40k.log('Unable to add game bar icon.', error);
             }
         });
     }
@@ -35,7 +35,7 @@ export class TargetedActionManager {
     }
 
     getSourceToken(source) {
-        game.rt.log('getSourceToken', source);
+        game.wh40k.log('getSourceToken', source);
         let sourceToken;
         if (source) {
             sourceToken = source.token ?? source.getActiveTokens()[0];
@@ -61,7 +61,7 @@ export class TargetedActionManager {
     }
 
     getTargetToken(target) {
-        game.rt.log('getTargetToken', target);
+        game.wh40k.log('getTargetToken', target);
         let targetToken;
         if (target) {
             targetToken = target.token ?? target.getActiveTokens()[0];
@@ -84,7 +84,7 @@ export class TargetedActionManager {
     }
 
     createSourceAndTargetData(source, target) {
-        game.rt.log('createSourceAndTargetData', { source, target });
+        game.wh40k.log('createSourceAndTargetData', { source, target });
 
         // Source
         const sourceToken = this.getSourceToken(source);
@@ -106,7 +106,7 @@ export class TargetedActionManager {
     }
 
     async performWeaponAttack(source = null, target = null, weapon = null) {
-        game.rt.log('performWeaponAttack', { source, target, weapon });
+        game.wh40k.log('performWeaponAttack', { source, target, weapon });
         const rollData = this.createSourceAndTargetData(source, target);
         if (!rollData) return;
 
@@ -127,7 +127,7 @@ export class TargetedActionManager {
     }
 
     async performPsychicAttack(source = null, target = null, psychicPower = null) {
-        game.rt.log('performPsychicAttack');
+        game.wh40k.log('performPsychicAttack');
         const rollData = this.createSourceAndTargetData(source, target);
         if (!rollData) return;
 

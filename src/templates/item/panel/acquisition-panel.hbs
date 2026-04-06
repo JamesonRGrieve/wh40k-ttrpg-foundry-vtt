@@ -2,40 +2,40 @@
      Weight, Availability, and Craftsmanship configuration for physical items
      Uses PhysicalItemTemplate fields
 --}}
-<div class="rt-acquisition-panel">
-  <header class="rt-panel-header">
+<div class="wh40k-acquisition-panel">
+  <header class="wh40k-panel-header">
     <i class="fas fa-coins"></i>
     <span>{{localize "WH40K.Acquisition"}}</span>
   </header>
   
-  <div class="rt-panel-body">
-    <div class="rt-acquisition-grid">
+  <div class="wh40k-panel-body">
+    <div class="wh40k-acquisition-grid">
       
       {{!-- Weight --}}
-      <div class="rt-field">
-        <label class="rt-field__label">
+      <div class="wh40k-field">
+        <label class="wh40k-field__label">
           <i class="fas fa-weight-hanging"></i>
           {{localize "WH40K.Weight"}}
         </label>
-        <div class="rt-field__input-group">
-          <input class="rt-field__input rt-field__input--numeric" 
+        <div class="wh40k-field__input-group">
+          <input class="wh40k-field__input wh40k-field__input--numeric" 
                  name="system.weight" 
                  type="number" 
                  value="{{system.weight}}" 
                  step="0.1" 
                  min="0" 
                  placeholder="0" />
-          <span class="rt-field__unit">kg</span>
+          <span class="wh40k-field__unit">kg</span>
         </div>
       </div>
       
       {{!-- Availability --}}
-      <div class="rt-field">
-        <label class="rt-field__label">
+      <div class="wh40k-field">
+        <label class="wh40k-field__label">
           <i class="fas fa-store"></i>
           {{localize "WH40K.Availability"}}
         </label>
-        <select class="rt-field__input rt-field__select" name="system.availability">
+        <select class="wh40k-field__input wh40k-field__select" name="system.availability">
           <option value="">{{localize "WH40K.Availability.None"}}</option>
           {{#each config.availabilities}}
           <option value="{{@key}}" {{selected (eq @key ../system.availability)}}>
@@ -46,12 +46,12 @@
       </div>
       
       {{!-- Craftsmanship --}}
-      <div class="rt-field">
-        <label class="rt-field__label">
+      <div class="wh40k-field">
+        <label class="wh40k-field__label">
           <i class="fas fa-hammer"></i>
           {{localize "WH40K.Craftsmanship"}}
         </label>
-        <select class="rt-field__input rt-field__select" name="system.craftsmanship">
+        <select class="wh40k-field__input wh40k-field__select" name="system.craftsmanship">
           {{#each config.craftsmanships}}
           <option value="{{@key}}" {{selected (eq @key ../system.craftsmanship)}}>
             {{label}} ({{signedNumber modifier}})
@@ -64,7 +64,7 @@
     
     {{!-- Acquisition Info Display --}}
     {{#if system.acquisitionInfo}}
-    <div class="rt-acquisition-summary">
+    <div class="wh40k-acquisition-summary">
       <i class="fas fa-info-circle"></i>
       <span>{{system.acquisitionInfo}}</span>
     </div>

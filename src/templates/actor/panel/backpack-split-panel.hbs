@@ -1,71 +1,71 @@
 {{!-- Backpack Split Panel - Personal & Ship Storage --}}
 {{!-- Modern split-panel design with compact table rows --}}
 
-<div class="rt-panel rt-panel-backpack-split">
+<div class="wh40k-panel wh40k-panel-backpack-split">
     {{!-- Panel Header with Encumbrance Bar --}}
-    <div class="rt-panel-header">
-        <span class="rt-panel-title"><i class="fas fa-boxes"></i> Inventory</span>
-        <div class="rt-encumbrance-display">
-            <span class="rt-enc-label">Carry:</span>
-            <div class="rt-encumbrance-bar-container">
-                <div class="rt-encumbrance-bar-fill {{#if (gte encumbrancePercent 100)}}rt-enc-danger{{else if (gte encumbrancePercent 75)}}rt-enc-warning{{else if (gte encumbrancePercent 50)}}rt-enc-caution{{/if}}"
+    <div class="wh40k-panel-header">
+        <span class="wh40k-panel-title"><i class="fas fa-boxes"></i> Inventory</span>
+        <div class="wh40k-encumbrance-display">
+            <span class="wh40k-enc-label">Carry:</span>
+            <div class="wh40k-encumbrance-bar-container">
+                <div class="wh40k-encumbrance-bar-fill {{#if (gte encumbrancePercent 100)}}wh40k-enc-danger{{else if (gte encumbrancePercent 75)}}wh40k-enc-warning{{else if (gte encumbrancePercent 50)}}wh40k-enc-caution{{/if}}"
                      style="width: {{encumbrancePercent}}%"></div>
             </div>
-            <span class="rt-enc-value">{{actor.encumbrance.current}} / {{actor.encumbrance.max}} kg</span>
+            <span class="wh40k-enc-value">{{actor.encumbrance.current}} / {{actor.encumbrance.max}} kg</span>
             {{#if actor.encumbrance.encumbered}}
-            <i class="fas fa-exclamation-triangle rt-enc-alert" title="Encumbered!"></i>
+            <i class="fas fa-exclamation-triangle wh40k-enc-alert" title="Encumbered!"></i>
             {{/if}}
         </div>
     </div>
 
     {{!-- Split Panel Body --}}
-    <div class="rt-panel-body rt-split-container">
+    <div class="wh40k-panel-body wh40k-split-container">
         {{!-- LEFT: Backpack --}}
-        <div class="rt-split-column rt-backpack-inventory">
-            <div class="rt-column-header">
+        <div class="wh40k-split-column wh40k-backpack-inventory">
+            <div class="wh40k-column-header">
                 <i class="fas fa-suitcase"></i>
                 <span>Backpack</span>
-                <span class="rt-item-badge">{{allCarriedItems.length}}</span>
+                <span class="wh40k-item-badge">{{allCarriedItems.length}}</span>
             </div>
-            <div class="rt-column-body rt-dropzone-area" data-drop-zone="personal">
+            <div class="wh40k-column-body wh40k-dropzone-area" data-drop-zone="personal">
                 {{#if allCarriedItems.length}}
-                <div class="rt-inventory-table">
-                    <table class="rt-item-table">
+                <div class="wh40k-inventory-table">
+                    <table class="wh40k-item-table">
                         <thead>
                             <tr>
-                                <th class="rt-col-icon"></th>
-                                <th class="rt-col-name">Item</th>
-                                <th class="rt-col-type">Type</th>
-                                <th class="rt-col-weight">Weight</th>
-                                <th class="rt-col-actions"></th>
+                                <th class="wh40k-col-icon"></th>
+                                <th class="wh40k-col-name">Item</th>
+                                <th class="wh40k-col-type">Type</th>
+                                <th class="wh40k-col-weight">Weight</th>
+                                <th class="wh40k-col-actions"></th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#each allCarriedItems as |item|}}
-                            <tr class="rt-backpack-item-row"
+                            <tr class="wh40k-backpack-item-row"
                                 data-item-id="{{item.id}}" 
                                 data-item-type="{{item.type}}"
                                 draggable="true">
-                                <td class="rt-col-icon">
-                                    <img src="{{item.img}}" alt="{{item.name}}" class="rt-item-icon" />
+                                <td class="wh40k-col-icon">
+                                    <img src="{{item.img}}" alt="{{item.name}}" class="wh40k-item-icon" />
                                 </td>
-                                <td class="rt-col-name">
-                                    <button type="button" class="rt-item-name" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">
+                                <td class="wh40k-col-name">
+                                    <button type="button" class="wh40k-item-name" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">
                                         {{item.name}}
                                     </button>
                                 </td>
-                                <td class="rt-col-type">
-                                    <span class="rt-item-type">{{item.type}}</span>
+                                <td class="wh40k-col-type">
+                                    <span class="wh40k-item-type">{{item.type}}</span>
                                 </td>
-                                <td class="rt-col-weight">
+                                <td class="wh40k-col-weight">
                                     {{#if item.system.weight}}
-                                    <span class="rt-item-weight">{{item.system.weight}}kg</span>
+                                    <span class="wh40k-item-weight">{{item.system.weight}}kg</span>
                                     {{else}}
-                                    <span class="rt-item-weight rt-weight-none">—</span>
+                                    <span class="wh40k-item-weight wh40k-weight-none">—</span>
                                     {{/if}}
                                 </td>
-                                <td class="rt-col-actions">
-                                    <button type="button" class="rt-inv-btn rt-inv-danger" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
+                                <td class="wh40k-col-actions">
+                                    <button type="button" class="wh40k-inv-btn wh40k-inv-danger" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -75,70 +75,70 @@
                     </table>
                 </div>
                 {{else}}
-                <div class="rt-empty-state item-drop">
-                    <i class="fas fa-box-open rt-empty-icon"></i>
-                    <p class="rt-empty-text">No items in backpack</p>
-                    <p class="rt-empty-hint">Drag items here from ship storage</p>
+                <div class="wh40k-empty-state item-drop">
+                    <i class="fas fa-box-open wh40k-empty-icon"></i>
+                    <p class="wh40k-empty-text">No items in backpack</p>
+                    <p class="wh40k-empty-hint">Drag items here from ship storage</p>
                 </div>
                 {{/if}}
             </div>
         </div>
 
         {{!-- DIVIDER --}}
-        <div class="rt-split-divider">
-            <div class="rt-divider-line"></div>
-            <div class="rt-divider-icon">
+        <div class="wh40k-split-divider">
+            <div class="wh40k-divider-line"></div>
+            <div class="wh40k-divider-icon">
                 <i class="fas fa-exchange-alt"></i>
             </div>
-            <div class="rt-divider-line"></div>
+            <div class="wh40k-divider-line"></div>
         </div>
 
         {{!-- RIGHT: Ship Storage --}}
-        <div class="rt-split-column rt-ship-storage">
-            <div class="rt-column-header">
+        <div class="wh40k-split-column wh40k-ship-storage">
+            <div class="wh40k-column-header">
                 <i class="fas fa-rocket"></i>
                 <span>Ship Storage</span>
-                <span class="rt-item-badge">{{allShipItems.length}}</span>
+                <span class="wh40k-item-badge">{{allShipItems.length}}</span>
             </div>
-            <div class="rt-column-body rt-dropzone-area" data-drop-zone="ship">
+            <div class="wh40k-column-body wh40k-dropzone-area" data-drop-zone="ship">
                 {{#if allShipItems.length}}
-                <div class="rt-inventory-table">
-                    <table class="rt-item-table">
+                <div class="wh40k-inventory-table">
+                    <table class="wh40k-item-table">
                         <thead>
                             <tr>
-                                <th class="rt-col-icon"></th>
-                                <th class="rt-col-name">Item</th>
-                                <th class="rt-col-type">Type</th>
-                                <th class="rt-col-weight">Weight</th>
-                                <th class="rt-col-actions"></th>
+                                <th class="wh40k-col-icon"></th>
+                                <th class="wh40k-col-name">Item</th>
+                                <th class="wh40k-col-type">Type</th>
+                                <th class="wh40k-col-weight">Weight</th>
+                                <th class="wh40k-col-actions"></th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#each allShipItems as |item|}}
-                            <tr class="rt-backpack-item-row rt-row-ship"
+                            <tr class="wh40k-backpack-item-row wh40k-row-ship"
                                 data-item-id="{{item.id}}" 
                                 data-item-type="{{item.type}}"
                                 draggable="true">
-                                <td class="rt-col-icon">
-                                    <img src="{{item.img}}" alt="{{item.name}}" class="rt-item-icon" />
+                                <td class="wh40k-col-icon">
+                                    <img src="{{item.img}}" alt="{{item.name}}" class="wh40k-item-icon" />
                                 </td>
-                                <td class="rt-col-name">
-                                    <button type="button" class="rt-item-name" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">
+                                <td class="wh40k-col-name">
+                                    <button type="button" class="wh40k-item-name" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">
                                         {{item.name}}
                                     </button>
                                 </td>
-                                <td class="rt-col-type">
-                                    <span class="rt-item-type">{{item.type}}</span>
+                                <td class="wh40k-col-type">
+                                    <span class="wh40k-item-type">{{item.type}}</span>
                                 </td>
-                                <td class="rt-col-weight">
+                                <td class="wh40k-col-weight">
                                     {{#if item.system.weight}}
-                                    <span class="rt-item-weight">{{item.system.weight}}kg</span>
+                                    <span class="wh40k-item-weight">{{item.system.weight}}kg</span>
                                     {{else}}
-                                    <span class="rt-item-weight rt-weight-none">—</span>
+                                    <span class="wh40k-item-weight wh40k-weight-none">—</span>
                                     {{/if}}
                                 </td>
-                                <td class="rt-col-actions">
-                                    <button type="button" class="rt-inv-btn rt-inv-danger" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
+                                <td class="wh40k-col-actions">
+                                    <button type="button" class="wh40k-inv-btn wh40k-inv-danger" data-action="itemDelete" data-item-id="{{item.id}}" title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -148,10 +148,10 @@
                     </table>
                 </div>
                 {{else}}
-                <div class="rt-empty-state">
-                    <i class="fas fa-rocket rt-empty-icon"></i>
-                    <p class="rt-empty-text">No items in ship storage</p>
-                    <p class="rt-empty-hint">Drag items here to free carry weight</p>
+                <div class="wh40k-empty-state">
+                    <i class="fas fa-rocket wh40k-empty-icon"></i>
+                    <p class="wh40k-empty-text">No items in ship storage</p>
+                    <p class="wh40k-empty-hint">Drag items here to free carry weight</p>
                 </div>
                 {{/if}}
             </div>

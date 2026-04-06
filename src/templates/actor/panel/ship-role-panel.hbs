@@ -1,76 +1,76 @@
-<div class="rt-panel spacer rt-grid-col-3 rt-grid-row-1 rt-panel-ship-roles">
-    <div class="rt-panel-header collapsible-header" data-panel="ship-roles">
+<div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-1 wh40k-panel-ship-roles">
+    <div class="wh40k-panel-header collapsible-header" data-panel="ship-roles">
         <i class="fas fa-user-tie"></i>
-        <span class="rt-panel-title">{{localize "WH40K.ShipRole.Header"}}</span>
-        <span class="rt-panel-count">{{shipRoles.length}}</span>
-        <button type="button" class="rt-panel-add-btn" data-action="itemCreate" data-item-type="shipRole" data-tooltip="Add Ship Role">
+        <span class="wh40k-panel-title">{{localize "WH40K.ShipRole.Header"}}</span>
+        <span class="wh40k-panel-count">{{shipRoles.length}}</span>
+        <button type="button" class="wh40k-panel-add-btn" data-action="itemCreate" data-item-type="shipRole" data-tooltip="Add Ship Role">
             <i class="fas fa-plus"></i>
         </button>
         <i class="fas fa-chevron-down collapse-icon"></i>
     </div>
     
-    <div class="rt-panel-body collapsible-body" data-panel-body="ship-roles">
+    <div class="wh40k-panel-body collapsible-body" data-panel-body="ship-roles">
         {{#if shipRoles.length}}
-            <div class="rt-ship-roles-list">
+            <div class="wh40k-ship-roles-list">
                 {{#each shipRoles as |role|}}
-                    <div class="rt-ship-role-card">
-                        <div class="rt-ship-role-header">
-                            <button class="rt-ship-role-name" data-action="itemEdit" data-item-id="{{role._id}}" type="button">
-                                <img class="rt-item-img" src="{{role.img}}" alt="{{role.name}}" />
-                                <span class="rt-role-name-text">{{role.name}}</span>
+                    <div class="wh40k-ship-role-card">
+                        <div class="wh40k-ship-role-header">
+                            <button class="wh40k-ship-role-name" data-action="itemEdit" data-item-id="{{role._id}}" type="button">
+                                <img class="wh40k-item-img" src="{{role.img}}" alt="{{role.name}}" />
+                                <span class="wh40k-role-name-text">{{role.name}}</span>
                             </button>
-                            <span class="rt-role-rank-badge" data-tooltip="Rank {{role.system.rank}}">
+                            <span class="wh40k-role-rank-badge" data-tooltip="Rank {{role.system.rank}}">
                                 R{{role.system.rank}}
                             </span>
-                            <button class="rt-control-icon" data-action="itemDelete" data-item-id="{{role._id}}" data-tooltip="Remove Role">
+                            <button class="wh40k-control-icon" data-action="itemDelete" data-item-id="{{role._id}}" data-tooltip="Remove Role">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
                         
-                        <div class="rt-ship-role-body">
+                        <div class="wh40k-ship-role-body">
                             {{#if role.system.purpose}}
-                            <div class="rt-role-section">
-                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.Purpose"}}:</strong>
-                                <span class="rt-role-value">{{{role.system.purpose}}}</span>
+                            <div class="wh40k-role-section">
+                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.Purpose"}}:</strong>
+                                <span class="wh40k-role-value">{{{role.system.purpose}}}</span>
                             </div>
                             {{/if}}
                             
                             {{#if role.system.careerPreferencesLabel}}
-                            <div class="rt-role-section">
-                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.CareerPreferences"}}:</strong>
-                                <span class="rt-role-value">{{role.system.careerPreferencesLabel}}</span>
+                            <div class="wh40k-role-section">
+                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.CareerPreferences"}}:</strong>
+                                <span class="wh40k-role-value">{{role.system.careerPreferencesLabel}}</span>
                             </div>
                             {{/if}}
                             
                             {{#if role.system.subordinatesLabel}}
-                            <div class="rt-role-section">
-                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.Subordinates"}}:</strong>
-                                <span class="rt-role-value">{{role.system.subordinatesLabel}}</span>
+                            <div class="wh40k-role-section">
+                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.Subordinates"}}:</strong>
+                                <span class="wh40k-role-value">{{role.system.subordinatesLabel}}</span>
                             </div>
                             {{/if}}
                             
                             {{#if role.system.importantSkillsLabel}}
-                            <div class="rt-role-section">
-                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.ImportantSkills"}}:</strong>
-                                <span class="rt-role-skills">{{role.system.importantSkillsLabel}}</span>
+                            <div class="wh40k-role-section">
+                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.ImportantSkills"}}:</strong>
+                                <span class="wh40k-role-skills">{{role.system.importantSkillsLabel}}</span>
                             </div>
                             {{/if}}
                             
                             {{!-- Abilities (modern structured display) --}}
                             {{#if role.system.abilities.length}}
-                            <div class="rt-role-section rt-role-abilities">
-                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.Abilities"}}:</strong>
-                                <div class="rt-role-abilities-list">
+                            <div class="wh40k-role-section wh40k-role-abilities">
+                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.Abilities"}}:</strong>
+                                <div class="wh40k-role-abilities-list">
                                     {{#each role.system.abilities as |ability|}}
-                                    <div class="rt-role-ability">
-                                        <span class="rt-ability-name">{{ability.name}}</span>
+                                    <div class="wh40k-role-ability">
+                                        <span class="wh40k-ability-name">{{ability.name}}</span>
                                         {{#if ability.bonus}}
-                                        <span class="rt-ability-bonus {{#if (gt ability.bonus 0)}}rt-bonus-positive{{else}}rt-bonus-negative{{/if}}">
+                                        <span class="wh40k-ability-bonus {{#if (gt ability.bonus 0)}}wh40k-bonus-positive{{else}}wh40k-bonus-negative{{/if}}">
                                             {{#if (gt ability.bonus 0)}}+{{/if}}{{ability.bonus}}
                                         </span>
                                         {{/if}}
                                         {{#if ability.description}}
-                                        <div class="rt-ability-desc">{{{ability.description}}}</div>
+                                        <div class="wh40k-ability-desc">{{{ability.description}}}</div>
                                         {{/if}}
                                     </div>
                                     {{/each}}
@@ -78,19 +78,19 @@
                             </div>
                             {{else if role.system.effect}}
                             {{!-- Legacy effect fallback --}}
-                            <div class="rt-role-section rt-role-effect">
-                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.Effect"}}:</strong>
-                                <span class="rt-role-value">{{{role.system.effect}}}</span>
+                            <div class="wh40k-role-section wh40k-role-effect">
+                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.Effect"}}:</strong>
+                                <span class="wh40k-role-value">{{{role.system.effect}}}</span>
                             </div>
                             {{/if}}
                             
                             {{!-- Ship Bonuses --}}
                             {{#if role.system.shipBonusesArray.length}}
-                            <div class="rt-role-section rt-role-bonuses">
-                                <strong class="rt-role-label">{{localize "WH40K.ShipRole.ShipBonuses"}}:</strong>
-                                <div class="rt-bonus-badges">
+                            <div class="wh40k-role-section wh40k-role-bonuses">
+                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.ShipBonuses"}}:</strong>
+                                <div class="wh40k-bonus-badges">
                                     {{#each role.system.shipBonusesArray as |bonus|}}
-                                    <span class="rt-bonus-badge {{#if (gt bonus.value 0)}}rt-bonus-positive{{else}}rt-bonus-negative{{/if}}">
+                                    <span class="wh40k-bonus-badge {{#if (gt bonus.value 0)}}wh40k-bonus-positive{{else}}wh40k-bonus-negative{{/if}}">
                                         {{bonus.label}}: {{bonus.display}}
                                     </span>
                                     {{/each}}
@@ -102,10 +102,10 @@
                 {{/each}}
             </div>
         {{else}}
-            <div class="rt-empty-state">
+            <div class="wh40k-empty-state">
                 <i class="fas fa-user-tie fa-3x"></i>
                 <p>{{localize "WH40K.ShipRole.NoRoles"}}</p>
-                <button type="button" data-action="itemCreate" data-item-type="shipRole" class="rt-btn-create">
+                <button type="button" data-action="itemCreate" data-item-type="shipRole" class="wh40k-btn-create">
                     <i class="fas fa-plus"></i> {{localize "WH40K.ShipRole.AddRole"}}
                 </button>
             </div>

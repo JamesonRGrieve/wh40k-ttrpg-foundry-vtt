@@ -2,36 +2,36 @@
   Rogue Trader Gear Item Sheet - V2 Redesign
   Compact 2-column layout with consumable emphasis
 --}}
-<div class="rt-gear-sheet">
+<div class="wh40k-gear-sheet">
   <form autocomplete="off">
     
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact gear identity with category icon overlay
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="rt-gear-header">
-      <div class="rt-gear-header__image" data-action="editImage" data-edit="img">
+    <header class="wh40k-gear-header">
+      <div class="wh40k-gear-header__image" data-action="editImage" data-edit="img">
         <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="rt-gear-header__image-overlay">
+        <div class="wh40k-gear-header__image-overlay">
           <i class="fas {{categoryIcon}}"></i>
         </div>
       </div>
       
-      <div class="rt-gear-header__info">
-        <input type="text" class="rt-gear-header__name" name="name" value="{{item.name}}" placeholder="Gear Name" />
+      <div class="wh40k-gear-header__info">
+        <input type="text" class="wh40k-gear-header__name" name="name" value="{{item.name}}" placeholder="Gear Name" />
         
-        <div class="rt-gear-header__meta">
-          <span class="rt-gear-badge rt-gear-badge--category" title="Category">
+        <div class="wh40k-gear-header__meta">
+          <span class="wh40k-gear-badge wh40k-gear-badge--category" title="Category">
             <i class="fas {{categoryIcon}}"></i>
             {{categoryLabel}}
           </span>
           {{#if (ne system.craftsmanship "common")}}
-          <span class="rt-gear-badge rt-gear-badge--craft rt-gear-badge--{{system.craftsmanship}}" title="Craftsmanship">
+          <span class="wh40k-gear-badge wh40k-gear-badge--craft wh40k-gear-badge--{{system.craftsmanship}}" title="Craftsmanship">
             <i class="fas fa-hammer"></i>
             {{system.craftsmanshipLabel}}
           </span>
           {{/if}}
           {{#if (gt system.quantity 1)}}
-          <span class="rt-gear-badge rt-gear-badge--quantity" title="Quantity">
+          <span class="wh40k-gear-badge wh40k-gear-badge--quantity" title="Quantity">
             <i class="fas fa-layer-group"></i>
             ×{{system.quantity}}
           </span>
@@ -43,54 +43,54 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          STAT BAR: Key gear statistics with quick adjusters
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="rt-gear-stats">
-      <div class="rt-gear-stat rt-gear-stat--category">
-        <div class="rt-gear-stat__icon">
+    <div class="wh40k-gear-stats">
+      <div class="wh40k-gear-stat wh40k-gear-stat--category">
+        <div class="wh40k-gear-stat__icon">
           <i class="fas {{categoryIcon}}"></i>
         </div>
-        <div class="rt-gear-stat__content">
-          <span class="rt-gear-stat__label">Category</span>
-          <span class="rt-gear-stat__value">{{categoryLabel}}</span>
+        <div class="wh40k-gear-stat__content">
+          <span class="wh40k-gear-stat__label">Category</span>
+          <span class="wh40k-gear-stat__value">{{categoryLabel}}</span>
         </div>
       </div>
       
-      <div class="rt-gear-stat rt-gear-stat--quantity">
-        <div class="rt-gear-stat__icon">
+      <div class="wh40k-gear-stat wh40k-gear-stat--quantity">
+        <div class="wh40k-gear-stat__icon">
           <i class="fas fa-cubes"></i>
         </div>
-        <div class="rt-gear-stat__content">
-          <span class="rt-gear-stat__label">Quantity</span>
-          <span class="rt-gear-stat__value">×{{system.quantity}}</span>
+        <div class="wh40k-gear-stat__content">
+          <span class="wh40k-gear-stat__label">Quantity</span>
+          <span class="wh40k-gear-stat__value">×{{system.quantity}}</span>
         </div>
       </div>
       
-      <div class="rt-gear-stat rt-gear-stat--weight">
-        <div class="rt-gear-stat__icon">
+      <div class="wh40k-gear-stat wh40k-gear-stat--weight">
+        <div class="wh40k-gear-stat__icon">
           <i class="fas fa-weight-hanging"></i>
         </div>
-        <div class="rt-gear-stat__content">
-          <span class="rt-gear-stat__label">Weight</span>
-          <span class="rt-gear-stat__value">{{system.effectiveTotalWeight}}kg</span>
+        <div class="wh40k-gear-stat__content">
+          <span class="wh40k-gear-stat__label">Weight</span>
+          <span class="wh40k-gear-stat__value">{{system.effectiveTotalWeight}}kg</span>
         </div>
       </div>
       
-      <div class="rt-gear-stat rt-gear-stat--availability">
-        <div class="rt-gear-stat__icon">
+      <div class="wh40k-gear-stat wh40k-gear-stat--availability">
+        <div class="wh40k-gear-stat__icon">
           <i class="fas fa-shop"></i>
         </div>
-        <div class="rt-gear-stat__content">
-          <span class="rt-gear-stat__label">Availability</span>
-          <span class="rt-gear-stat__value">{{system.availabilityLabel}}</span>
+        <div class="wh40k-gear-stat__content">
+          <span class="wh40k-gear-stat__label">Availability</span>
+          <span class="wh40k-gear-stat__value">{{system.availabilityLabel}}</span>
         </div>
       </div>
       
-      <div class="rt-gear-stat rt-gear-stat--cost">
-        <div class="rt-gear-stat__icon">
+      <div class="wh40k-gear-stat wh40k-gear-stat--cost">
+        <div class="wh40k-gear-stat__icon">
           <i class="fas fa-coins"></i>
         </div>
-        <div class="rt-gear-stat__content">
-          <span class="rt-gear-stat__label">Cost</span>
-          <span class="rt-gear-stat__value">{{system.cost.value}}₮</span>
+        <div class="wh40k-gear-stat__content">
+          <span class="wh40k-gear-stat__label">Cost</span>
+          <span class="wh40k-gear-stat__value">{{system.cost.value}}₮</span>
         </div>
       </div>
     </div>
@@ -98,22 +98,22 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="rt-tabs rt-tabs--gear rt-gear-tabs" data-group="primary">
-      <button type="button" class="rt-tab rt-gear-tab active" data-tab="overview" data-group="primary">
+    <nav class="wh40k-tabs wh40k-tabs--gear wh40k-gear-tabs" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-gear-tab active" data-tab="overview" data-group="primary">
         <i class="fas fa-info-circle"></i>
         <span>Overview</span>
       </button>
       {{#if hasLimitedUses}}
-      <button type="button" class="rt-tab rt-gear-tab" data-tab="usage" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-gear-tab" data-tab="usage" data-group="primary">
         <i class="fas fa-hourglass-half"></i>
         <span>Usage</span>
       </button>
       {{/if}}
-      <button type="button" class="rt-tab rt-gear-tab" data-tab="description" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-gear-tab" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
         <span>Description</span>
       </button>
-      <button type="button" class="rt-tab rt-gear-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-gear-tab" data-tab="effects" data-group="primary">
         <i class="fas fa-sparkles"></i>
         <span>Effects</span>
       </button>
@@ -122,25 +122,25 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="rt-gear-content rt-tab-content rt-tab-content--gear">
+    <section class="wh40k-gear-content wh40k-tab-content wh40k-tab-content--gear">
       
       {{!-- OVERVIEW TAB --}}
-      <div class="rt-gear-panel tab active" data-tab="overview" data-group="primary">
+      <div class="wh40k-gear-panel tab active" data-tab="overview" data-group="primary">
         
         {{!-- 2-Column Layout --}}
-        <div class="rt-gear-grid">
+        <div class="wh40k-gear-grid">
           
           {{!-- LEFT COLUMN --}}
-          <div class="rt-gear-column">
+          <div class="wh40k-gear-column">
             
             {{!-- Category & Classification --}}
-            <div class="rt-gear-section">
-              <div class="rt-gear-section__header">
+            <div class="wh40k-gear-section">
+              <div class="wh40k-gear-section__header">
                 <i class="fas fa-tags"></i>
                 <h3>Classification</h3>
               </div>
-              <div class="rt-gear-section__body">
-                <div class="rt-field">
+              <div class="wh40k-gear-section__body">
+                <div class="wh40k-field">
                   <label>Category</label>
                   <select name="system.category">
                     <option value="general" {{#if (eq system.category "general")}}selected{{/if}}>General Equipment</option>
@@ -159,7 +159,7 @@
                   </select>
                 </div>
                 
-                <div class="rt-field">
+                <div class="wh40k-field">
                   <label>Craftsmanship</label>
                   <select name="system.craftsmanship">
                     <option value="poor" {{#if (eq system.craftsmanship "poor")}}selected{{/if}}>Poor</option>
@@ -169,7 +169,7 @@
                   </select>
                 </div>
                 
-                <div class="rt-field">
+                <div class="wh40k-field">
                   <label>Availability</label>
                   <select name="system.availability">
                     <option value="ubiquitous" {{#if (eq system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
@@ -189,19 +189,19 @@
             </div>
             
             {{!-- Storage --}}
-            <div class="rt-gear-section">
-              <div class="rt-gear-section__header">
+            <div class="wh40k-gear-section">
+              <div class="wh40k-gear-section__header">
                 <i class="fas fa-box"></i>
                 <h3>Storage</h3>
               </div>
-              <div class="rt-gear-section__body">
-                <div class="rt-checkbox-group">
-                  <label class="rt-checkbox">
+              <div class="wh40k-gear-section__body">
+                <div class="wh40k-checkbox-group">
+                  <label class="wh40k-checkbox">
                     <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
                     <i class="fas {{#if system.equipped}}fa-check-square{{else}}fa-square{{/if}}"></i>
                     <span>Equipped</span>
                   </label>
-                  <label class="rt-checkbox">
+                  <label class="wh40k-checkbox">
                     <input type="checkbox" name="system.inBackpack" {{checked system.inBackpack}} />
                     <i class="fas {{#if system.inBackpack}}fa-check-square{{else}}fa-square{{/if}}"></i>
                     <span>In Backpack</span>
@@ -213,28 +213,28 @@
           </div>
           
           {{!-- RIGHT COLUMN --}}
-          <div class="rt-gear-column">
+          <div class="wh40k-gear-column">
             
             {{!-- Physical Properties --}}
-            <div class="rt-gear-section">
-              <div class="rt-gear-section__header">
+            <div class="wh40k-gear-section">
+              <div class="wh40k-gear-section__header">
                 <i class="fas fa-cubes"></i>
                 <h3>Physical Properties</h3>
               </div>
-              <div class="rt-gear-section__body">
-                <div class="rt-field">
+              <div class="wh40k-gear-section__body">
+                <div class="wh40k-field">
                   <label>Quantity</label>
                   <input type="number" name="system.quantity" value="{{system.quantity}}" 
                          data-dtype="Number" min="1" />
                 </div>
                 
-                <div class="rt-field">
+                <div class="wh40k-field">
                   <label>Weight per Unit (kg)</label>
                   <input type="number" name="system.weight" value="{{system.weight}}" 
                          data-dtype="Number" min="0" step="0.1" />
                 </div>
                 
-                <div class="rt-field">
+                <div class="wh40k-field">
                   <label>Total Weight</label>
                   <input type="text" value="{{system.effectiveTotalWeight}} kg" disabled />
                 </div>
@@ -242,13 +242,13 @@
             </div>
             
             {{!-- Economic --}}
-            <div class="rt-gear-section">
-              <div class="rt-gear-section__header">
+            <div class="wh40k-gear-section">
+              <div class="wh40k-gear-section__header">
                 <i class="fas fa-coins"></i>
                 <h3>Economic</h3>
               </div>
-              <div class="rt-gear-section__body">
-                <div class="rt-field">
+              <div class="wh40k-gear-section__body">
+                <div class="wh40k-field">
                   <label>Cost (Thrones)</label>
                   <input type="number" name="system.cost.value" value="{{system.cost.value}}" 
                          data-dtype="Number" min="0" />
@@ -257,20 +257,20 @@
             </div>
             
             {{!-- Consumable Toggle --}}
-            <div class="rt-gear-section">
-              <div class="rt-gear-section__header">
+            <div class="wh40k-gear-section">
+              <div class="wh40k-gear-section__header">
                 <i class="fas fa-flask"></i>
                 <h3>Consumable</h3>
               </div>
-              <div class="rt-gear-section__body">
-                <label class="rt-checkbox">
+              <div class="wh40k-gear-section__body">
+                <label class="wh40k-checkbox">
                   <input type="checkbox" name="system.consumable" {{checked system.consumable}} />
                   <i class="fas {{#if system.consumable}}fa-check-square{{else}}fa-square{{/if}}"></i>
                   <span>Has Limited Uses</span>
                 </label>
                 
                 {{#if system.consumable}}
-                <div class="rt-field" style="margin-top: 8px;">
+                <div class="wh40k-field" style="margin-top: 8px;">
                   <label>Maximum Uses</label>
                   <input type="number" name="system.uses.max" value="{{system.uses.max}}" 
                          data-dtype="Number" min="0" />
@@ -287,55 +287,55 @@
 
       {{!-- USAGE TAB (if consumable) --}}
       {{#if hasLimitedUses}}
-      <div class="rt-gear-panel tab" data-tab="usage" data-group="primary">
+      <div class="wh40k-gear-panel tab" data-tab="usage" data-group="primary">
         
-        <div class="rt-gear-section rt-gear-section--consumable">
-          <div class="rt-gear-section__header">
+        <div class="wh40k-gear-section wh40k-gear-section--consumable">
+          <div class="wh40k-gear-section__header">
             <i class="fas fa-hourglass-half"></i>
             <h3>Consumable Properties</h3>
-            <span class="rt-gear-section__badge {{#if usesExhausted}}rt-gear-section__badge--danger{{/if}}">
+            <span class="wh40k-gear-section__badge {{#if usesExhausted}}wh40k-gear-section__badge--danger{{/if}}">
               {{usesDisplay}}
             </span>
           </div>
-          <div class="rt-gear-section__body">
+          <div class="wh40k-gear-section__body">
             
             {{!-- Uses Bar --}}
-            <div class="rt-uses-bar">
-              <div class="rt-uses-bar__track">
-                <div class="rt-uses-bar__fill {{#if usesExhausted}}rt-uses-bar__fill--empty{{/if}}" 
+            <div class="wh40k-uses-bar">
+              <div class="wh40k-uses-bar__track">
+                <div class="wh40k-uses-bar__fill {{#if usesExhausted}}wh40k-uses-bar__fill--empty{{/if}}" 
                      style="width: {{multiply (divide system.uses.value system.uses.max) 100}}%"></div>
               </div>
-              <div class="rt-uses-bar__label">
+              <div class="wh40k-uses-bar__label">
                 {{system.uses.value}} / {{system.uses.max}} Uses Remaining
               </div>
             </div>
             
-            <div class="rt-field-row">
-              <div class="rt-field">
+            <div class="wh40k-field-row">
+              <div class="wh40k-field">
                 <label>Current Uses</label>
                 <input type="number" name="system.uses.value" value="{{system.uses.value}}" 
                        data-dtype="Number" min="0" max="{{system.uses.max}}" />
               </div>
-              <div class="rt-field">
+              <div class="wh40k-field">
                 <label>Maximum Uses</label>
                 <input type="number" name="system.uses.max" value="{{system.uses.max}}" 
                        data-dtype="Number" min="0" />
               </div>
             </div>
             
-            <div class="rt-field">
+            <div class="wh40k-field">
               <label>Duration / Recovery</label>
               <input type="text" name="system.duration" value="{{system.duration}}" 
                      placeholder="e.g., 1 hour, 1d6 rounds, permanent" />
             </div>
             
             {{!-- Quick Actions --}}
-            <div class="rt-consumable-actions">
-              <button type="button" class="rt-btn rt-btn--secondary" data-action="consumeUse" {{#if usesExhausted}}disabled{{/if}}>
+            <div class="wh40k-consumable-actions">
+              <button type="button" class="wh40k-btn wh40k-btn--secondary" data-action="consumeUse" {{#if usesExhausted}}disabled{{/if}}>
                 <i class="fas fa-minus"></i>
                 Use One
               </button>
-              <button type="button" class="rt-btn rt-btn--primary" data-action="resetUses">
+              <button type="button" class="wh40k-btn wh40k-btn--primary" data-action="resetUses">
                 <i class="fas fa-redo"></i>
                 Reset to Max
               </button>
@@ -348,48 +348,48 @@
       {{/if}}
 
       {{!-- DESCRIPTION TAB --}}
-      <div class="rt-gear-panel tab" data-tab="description" data-group="primary">
+      <div class="wh40k-gear-panel tab" data-tab="description" data-group="primary">
         
         {{!-- Mechanical Effect --}}
-        <div class="rt-gear-section">
-          <div class="rt-gear-section__header">
+        <div class="wh40k-gear-section">
+          <div class="wh40k-gear-section__header">
             <i class="fas fa-bolt"></i>
             <h3>Mechanical Effect</h3>
           </div>
-          <div class="rt-gear-section__body rt-gear-section__body--editor">
+          <div class="wh40k-gear-section__body wh40k-gear-section__body--editor">
             {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
           </div>
         </div>
 
         {{!-- Full Description --}}
-        <div class="rt-gear-section">
-          <div class="rt-gear-section__header">
+        <div class="wh40k-gear-section">
+          <div class="wh40k-gear-section__header">
             <i class="fas fa-book"></i>
             <h3>Description</h3>
           </div>
-          <div class="rt-gear-section__body rt-gear-section__body--editor">
+          <div class="wh40k-gear-section__body wh40k-gear-section__body--editor">
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
           </div>
         </div>
 
         {{!-- GM Notes --}}
-        <div class="rt-gear-section">
-          <div class="rt-gear-section__header">
+        <div class="wh40k-gear-section">
+          <div class="wh40k-gear-section__header">
             <i class="fas fa-sticky-note"></i>
             <h3>GM Notes</h3>
           </div>
-          <div class="rt-gear-section__body">
+          <div class="wh40k-gear-section__body">
             <textarea name="system.notes" rows="4" placeholder="Special rules, GM notes, etc.">{{system.notes}}</textarea>
           </div>
         </div>
 
         {{!-- Source --}}
-        <div class="rt-gear-section">
-          <div class="rt-gear-section__header">
+        <div class="wh40k-gear-section">
+          <div class="wh40k-gear-section__header">
             <i class="fas fa-book-open"></i>
             <h3>Source</h3>
           </div>
-          <div class="rt-gear-section__body">
+          <div class="wh40k-gear-section__body">
             <input type="text" name="system.source" value="{{system.source}}" 
                    placeholder="e.g., Rogue Trader Core Rulebook pg. 123" />
           </div>
@@ -398,7 +398,7 @@
       </div>
 
       {{!-- EFFECTS TAB --}}
-      <div class="rt-gear-panel tab" data-tab="effects" data-group="primary">
+      <div class="wh40k-gear-panel tab" data-tab="effects" data-group="primary">
         {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
       </div>
 

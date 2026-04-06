@@ -77,7 +77,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
      */
     get typeLabel() {
         return game.i18n.localize(
-            `RT.CyberneticType.${this.type
+            `WH40K.CyberneticType.${this.type
                 .split('-')
                 .map((s) => s.capitalize())
                 .join('')}`,
@@ -91,7 +91,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
     get locationsLabel() {
         if (!this.locations.size) return '-';
         return Array.from(this.locations)
-            .map((l) => game.i18n.localize(`RT.BodyLocation.${l.capitalize()}`))
+            .map((l) => game.i18n.localize(`WH40K.BodyLocation.${l.capitalize()}`))
             .join(', ');
     }
 

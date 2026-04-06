@@ -1,11 +1,11 @@
 import { WeaponRollData } from '../rolls/roll-data.mjs';
 
 export function ammoText(item) {
-    game.rt.log('ammoText', item);
+    game.wh40k.log('ammoText', item);
     if (item.usesAmmo) {
         const ammo = item.items.find((i) => i.isAmmunition);
         const name = ammo ? ammo.name : 'Standard';
-        game.rt.log('ammoName', name);
+        game.wh40k.log('ammoName', name);
         return `${name} (${item.system.clip.value}/${item.system.clip.max})`;
     }
 }
@@ -59,7 +59,7 @@ export async function calculateAmmoAttackSpecials(rollData) {
     const ammo = weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
 
-    game.rt.log('calculateAmmoAttackSpecials', ammo.name);
+    game.wh40k.log('calculateAmmoAttackSpecials', ammo.name);
     switch (ammo.name) {
         case 'Explosive Arrows/Quarrels':
             rollData.attackSpecials.findSplice((i) => i.name === 'Primitive');

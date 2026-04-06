@@ -56,7 +56,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
         const list = [];
         for (const [key, value] of Object.entries(this.modifiers)) {
             if (value !== 0) {
-                const label = game.i18n.localize(`RT.VehicleStat.${key.charAt(0).toUpperCase()}${key.slice(1)}`);
+                const label = game.i18n.localize(`WH40K.VehicleStat.${key.charAt(0).toUpperCase()}${key.slice(1)}`);
                 list.push({
                     key,
                     label,

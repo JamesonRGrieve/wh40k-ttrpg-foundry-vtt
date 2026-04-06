@@ -16,10 +16,10 @@
     display: flex;
     flex-direction: column;
     gap: 0;
-    background: var(--rt-panel-bg-solid);
+    background: var(--wh40k-panel-bg-solid);
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 14px var(--rt-shadow-soft);
+    box-shadow: 0 4px 14px var(--wh40k-shadow-soft);
     position: relative;
 }
 
@@ -53,17 +53,17 @@
 }
 
 .wh40k-skill-training select {
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
 }
 
 .wh40k-skills-header {
-    border-bottom: 1px solid var(--rt-border-color-light);
-    background: var(--rt-panel-bg-solid) !important;
+    border-bottom: 1px solid var(--wh40k-border-color-light);
+    background: var(--wh40k-panel-bg-solid) !important;
 }
 
 .wh40k-skills-column {
     .wh40k-skill-row {
-        border-bottom: 1px solid var(--rt-border-color-light);
+        border-bottom: 1px solid var(--wh40k-border-color-light);
     }
 
     .wh40k-skill-row:last-child {
@@ -108,7 +108,7 @@
 
 .wh40k-skill-char-tag {
     font-size: 0.75em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     margin-left: 4px;
 }
 
@@ -126,11 +126,11 @@
     min-width: 180px;
     max-width: 240px;
     padding: 8px 10px;
-    background: var(--rt-panel-bg-solid);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-solid);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 6px;
-    box-shadow: 0 6px 18px var(--rt-shadow-medium);
-    color: var(--rt-text-dark);
+    box-shadow: 0 6px 18px var(--wh40k-shadow-medium);
+    color: var(--wh40k-text-dark);
     font-size: 0.75em;
     line-height: 1.3;
     text-transform: none;
@@ -150,7 +150,7 @@
     transform: translateX(-50%);
     border-width: 6px 6px 0 6px;
     border-style: solid;
-    border-color: var(--rt-panel-bg-solid) transparent transparent transparent;
+    border-color: var(--wh40k-panel-bg-solid) transparent transparent transparent;
     opacity: 0;
     transition: opacity 0.15s ease;
     z-index: 3;
@@ -195,7 +195,7 @@
     cursor: pointer;
 
     &:hover .wh40k-portrait {
-        border-color: var(--rt-gold, #d4af37);
+        border-color: var(--wh40k-gold, #d4af37);
         box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
     }
 }
@@ -219,7 +219,7 @@
     width: 96px;
     height: 96px;
     object-fit: cover;
-    border: 2px solid var(--rt-border-color, #4a3728);
+    border: 2px solid var(--wh40k-border-color, #4a3728);
     border-radius: 6px;
     transition: all 0.3s ease;
 }
@@ -235,13 +235,13 @@
     font-size: 0.85em;
     font-weight: bold;
     text-transform: uppercase;
-    color: var(--rt-text-medium);
+    color: var(--wh40k-text-medium);
     min-width: 70px;
 }
 
 .wh40k-header-value {
     font-size: 1em;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     min-width: 0;
 }
 
@@ -258,16 +258,16 @@
 .wh40k-header-input {
     border: none;
     background: transparent;
-    border-bottom: 1px solid var(--rt-border-color);
-    color: var(--rt-text-dark);
+    border-bottom: 1px solid var(--wh40k-border-color);
+    color: var(--wh40k-text-dark);
     padding: 2px 5px;
     flex: 1;
     min-width: 120px;
 
     &:focus {
         outline: none;
-        border-bottom-color: var(--rt-gold, #d4af37);
-        box-shadow: 0 1px 0 var(--rt-gold, #d4af37);
+        border-bottom-color: var(--wh40k-gold, #d4af37);
+        box-shadow: 0 1px 0 var(--wh40k-gold, #d4af37);
     }
 }
 
@@ -287,5 +287,5 @@
 .wh40k-header-hud {
     margin-top: 8px;
     padding-top: 12px;
-    border-top: 1px solid var(--rt-border-color-light);
+    border-top: 1px solid var(--wh40k-border-color-light);
 }

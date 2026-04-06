@@ -185,7 +185,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
             if (value !== 0) {
                 list.push({
                     key,
-                    label: game.i18n.localize(`RT.ShipStat.${key.capitalize()}`),
+                    label: game.i18n.localize(`WH40K.ShipStat.${key.capitalize()}`),
                     value,
                 });
             }

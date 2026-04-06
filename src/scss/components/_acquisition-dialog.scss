@@ -12,17 +12,17 @@
         justify-content: space-between;
         align-items: center;
         padding-bottom: 0.75rem;
-        border-bottom: 2px solid var(--rt-bronze);
+        border-bottom: 2px solid var(--wh40k-bronze);
 
         h2 {
             margin: 0;
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
 
         .pf-value {
             font-size: 1.5rem;
             font-weight: bold;
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
     }
 
@@ -31,25 +31,25 @@
         gap: 0.75rem;
         padding: 0.75rem;
         background: rgba(0, 0, 0, 0.3);
-        border: 1px solid var(--rt-bronze);
+        border: 1px solid var(--wh40k-bronze);
         border-radius: 4px;
 
         .item-icon {
             width: 48px;
             height: 48px;
-            border: 1px solid var(--rt-gold);
+            border: 1px solid var(--wh40k-gold);
         }
 
         .item-name {
             font-weight: bold;
-            color: var(--rt-bone);
+            color: var(--wh40k-bone);
         }
     }
 
     .modifiers-section {
         h3 {
             margin: 0 0 0.5rem 0;
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
             font-size: 0.9rem;
         }
     }
@@ -71,18 +71,18 @@
     .acquisition-summary {
         padding: 0.75rem;
         background: rgba(212, 175, 55, 0.1);
-        border: 2px solid var(--rt-gold);
+        border: 2px solid var(--wh40k-gold);
         border-radius: 4px;
 
         .final {
             font-size: 1.2rem;
             font-weight: bold;
             padding-top: 0.5rem;
-            border-top: 1px solid var(--rt-bronze);
+            border-top: 1px solid var(--wh40k-bronze);
         }
 
         .final-target {
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
             font-size: 1.5rem;
         }
     }
@@ -99,15 +99,15 @@
         }
 
         .acquisition-roll-btn {
-            background: var(--rt-gold);
-            color: var(--rt-black);
-            border: 2px solid var(--rt-bronze);
+            background: var(--wh40k-gold);
+            color: var(--wh40k-black);
+            border: 2px solid var(--wh40k-bronze);
         }
 
         .acquisition-cancel-btn {
-            background: var(--rt-iron);
-            color: var(--rt-bone);
-            border: 2px solid var(--rt-bronze);
+            background: var(--wh40k-iron);
+            color: var(--wh40k-bone);
+            border: 2px solid var(--wh40k-bronze);
         }
     }
 }

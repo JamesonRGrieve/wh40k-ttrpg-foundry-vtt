@@ -1,24 +1,24 @@
 {{!-- Psychic Powers Panel V2 - Modern Card-based Design --}}
-<div class="rt-panel rt-panel-powers rt-panel-psychic-powers">
-    <header class="rt-panel-header" data-action="togglePanel" data-panel-id="psychic-powers">
-        <span class="rt-panel-title">
+<div class="wh40k-panel wh40k-panel-powers wh40k-panel-psychic-powers">
+    <header class="wh40k-panel-header" data-action="togglePanel" data-panel-id="psychic-powers">
+        <span class="wh40k-panel-title">
             <i class="fas fa-hat-wizard"></i>
             Psychic Powers
             {{#if psychicPowersCount}}
-            <span class="rt-count-badge">{{psychicPowersCount}}</span>
+            <span class="wh40k-count-badge">{{psychicPowersCount}}</span>
             {{/if}}
         </span>
-        <i class="fas fa-chevron-down rt-panel-toggle"></i>
+        <i class="fas fa-chevron-down wh40k-panel-toggle"></i>
     </header>
-    <div class="rt-panel-body">
+    <div class="wh40k-panel-body">
         {{!-- Discipline Filter Tabs --}}
         {{#if psychicDisciplines.length}}
-        <div class="rt-power-filters">
-            <button type="button" class="rt-filter-btn {{#unless activeDiscipline}}active{{/unless}}" data-action="filterPowers" data-discipline="">
+        <div class="wh40k-power-filters">
+            <button type="button" class="wh40k-filter-btn {{#unless activeDiscipline}}active{{/unless}}" data-action="filterPowers" data-discipline="">
                 All
             </button>
             {{#each psychicDisciplines as |disc|}}
-            <button type="button" class="rt-filter-btn rt-filter-{{disc.id}}" data-action="filterPowers" data-discipline="{{disc.id}}">
+            <button type="button" class="wh40k-filter-btn wh40k-filter-{{disc.id}}" data-action="filterPowers" data-discipline="{{disc.id}}">
                 {{disc.label}}
             </button>
             {{/each}}
@@ -26,103 +26,103 @@
         {{/if}}
         
         {{!-- Powers List --}}
-        <div class="rt-powers-list" data-drop-zone="powers" data-accepts="psychicPower">
+        <div class="wh40k-powers-list" data-drop-zone="powers" data-accepts="psychicPower">
             {{#each psychicPowers as |power|}}
-            <div class="rt-power-card item-drag" data-item-id="{{power.id}}" data-discipline="{{power.system.discipline}}" draggable="true">
+            <div class="wh40k-power-card item-drag" data-item-id="{{power.id}}" data-discipline="{{power.system.discipline}}" draggable="true">
                 {{!-- Power Header --}}
-                <div class="rt-power-card-header">
-                    <img class="rt-power-icon" src="{{power.img}}" alt="{{power.name}}" />
-                    <div class="rt-power-info">
-                        <button type="button" class="rt-power-name" data-action="itemEdit" data-item-id="{{power.id}}" title="Edit Power">
+                <div class="wh40k-power-card-header">
+                    <img class="wh40k-power-icon" src="{{power.img}}" alt="{{power.name}}" />
+                    <div class="wh40k-power-info">
+                        <button type="button" class="wh40k-power-name" data-action="itemEdit" data-item-id="{{power.id}}" title="Edit Power">
                             {{power.name}}
                         </button>
-                        <div class="rt-power-meta">
-                            <span class="rt-power-discipline rt-disc-{{power.system.discipline}}">
+                        <div class="wh40k-power-meta">
+                            <span class="wh40k-power-discipline wh40k-disc-{{power.system.discipline}}">
                                 {{power.system.disciplineLabel}}
                             </span>
-                            <span class="rt-power-pr">
+                            <span class="wh40k-power-pr">
                                 PR {{power.system.prCost}}
                             </span>
                             {{#if power.system.sustained}}
-                            <span class="rt-power-sustained">
+                            <span class="wh40k-power-sustained">
                                 <i class="fas fa-sync-alt"></i> Sustained
                             </span>
                             {{/if}}
                         </div>
                     </div>
-                    <div class="rt-power-card-actions">
-                        <button type="button" class="rt-power-btn rt-btn-roll" data-action="rollPower" data-item-id="{{power.id}}" title="Focus Power">
+                    <div class="wh40k-power-card-actions">
+                        <button type="button" class="wh40k-power-btn wh40k-btn-roll" data-action="rollPower" data-item-id="{{power.id}}" title="Focus Power">
                             <i class="fas fa-dice-d20"></i>
                         </button>
                         {{#if power.system.isAttack}}
-                        <button type="button" class="rt-power-btn rt-btn-damage" data-action="rollPowerDamage" data-item-id="{{power.id}}" title="Roll Damage">
+                        <button type="button" class="wh40k-power-btn wh40k-btn-damage" data-action="rollPowerDamage" data-item-id="{{power.id}}" title="Roll Damage">
                             <i class="fas fa-bolt"></i>
                         </button>
                         {{else}}
-                        <button type="button" class="rt-power-btn rt-btn-chat" data-action="vocalizePower" data-item-id="{{power.id}}" title="Post to Chat">
+                        <button type="button" class="wh40k-power-btn wh40k-btn-chat" data-action="vocalizePower" data-item-id="{{power.id}}" title="Post to Chat">
                             <i class="fas fa-comment"></i>
                         </button>
                         {{/if}}
-                        <button type="button" class="rt-power-btn rt-btn-expand" data-action="togglePowerDetails" data-item-id="{{power.id}}" title="Toggle Details">
+                        <button type="button" class="wh40k-power-btn wh40k-btn-expand" data-action="togglePowerDetails" data-item-id="{{power.id}}" title="Toggle Details">
                             <i class="fas fa-chevron-down"></i>
                         </button>
                     </div>
                 </div>
                 
                 {{!-- Power Stats Row --}}
-                <div class="rt-power-stats">
-                    <div class="rt-power-stat">
-                        <span class="rt-stat-label">Focus</span>
-                        <span class="rt-stat-value">{{power.system.focusTestLabel}}</span>
+                <div class="wh40k-power-stats">
+                    <div class="wh40k-power-stat">
+                        <span class="wh40k-stat-label">Focus</span>
+                        <span class="wh40k-stat-value">{{power.system.focusTestLabel}}</span>
                     </div>
-                    <div class="rt-power-stat">
-                        <span class="rt-stat-label">Action</span>
-                        <span class="rt-stat-value">{{power.system.activationLabel}}</span>
+                    <div class="wh40k-power-stat">
+                        <span class="wh40k-stat-label">Action</span>
+                        <span class="wh40k-stat-value">{{power.system.activationLabel}}</span>
                     </div>
                     {{#if power.system.isAttack}}
-                    <div class="rt-power-stat">
-                        <span class="rt-stat-label">Damage</span>
-                        <span class="rt-stat-value">{{power.system.damageLabel}}</span>
+                    <div class="wh40k-power-stat">
+                        <span class="wh40k-stat-label">Damage</span>
+                        <span class="wh40k-stat-value">{{power.system.damageLabel}}</span>
                     </div>
                     {{/if}}
-                    <div class="rt-power-stat">
-                        <span class="rt-stat-label">Range</span>
-                        <span class="rt-stat-value">{{power.system.targetLabel}}</span>
+                    <div class="wh40k-power-stat">
+                        <span class="wh40k-stat-label">Range</span>
+                        <span class="wh40k-stat-value">{{power.system.targetLabel}}</span>
                     </div>
                 </div>
                 
                 {{!-- Expandable Details --}}
-                <div class="rt-power-details" data-power-id="{{power.id}}" hidden>
+                <div class="wh40k-power-details" data-power-id="{{power.id}}" hidden>
                     {{#if power.system.effect}}
-                    <div class="rt-power-detail-section">
-                        <span class="rt-detail-heading">Effect</span>
-                        <div class="rt-detail-content">{{{power.system.effect}}}</div>
+                    <div class="wh40k-power-detail-section">
+                        <span class="wh40k-detail-heading">Effect</span>
+                        <div class="wh40k-detail-content">{{{power.system.effect}}}</div>
                     </div>
                     {{/if}}
                     {{#if power.system.overbleed}}
-                    <div class="rt-power-detail-section rt-section-overbleed">
-                        <span class="rt-detail-heading"><i class="fas fa-fire"></i> Overbleed</span>
-                        <div class="rt-detail-content">{{{power.system.overbleed}}}</div>
+                    <div class="wh40k-power-detail-section wh40k-section-overbleed">
+                        <span class="wh40k-detail-heading"><i class="fas fa-fire"></i> Overbleed</span>
+                        <div class="wh40k-detail-content">{{{power.system.overbleed}}}</div>
                     </div>
                     {{/if}}
                     {{#if power.system.description}}
-                    <div class="rt-power-detail-section">
-                        <span class="rt-detail-heading">Description</span>
-                        <div class="rt-detail-content">{{{power.system.description}}}</div>
+                    <div class="wh40k-power-detail-section">
+                        <span class="wh40k-detail-heading">Description</span>
+                        <div class="wh40k-detail-content">{{{power.system.description}}}</div>
                     </div>
                     {{/if}}
-                    <div class="rt-power-detail-actions">
-                        <button type="button" class="rt-detail-btn" data-action="itemEdit" data-item-id="{{power.id}}">
+                    <div class="wh40k-power-detail-actions">
+                        <button type="button" class="wh40k-detail-btn" data-action="itemEdit" data-item-id="{{power.id}}">
                             <i class="fas fa-cog"></i> Edit
                         </button>
-                        <button type="button" class="rt-detail-btn rt-btn-danger" data-action="itemDelete" data-item-id="{{power.id}}">
+                        <button type="button" class="wh40k-detail-btn wh40k-btn-danger" data-action="itemDelete" data-item-id="{{power.id}}">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </div>
                 </div>
             </div>
             {{else}}
-            <div class="rt-empty-state">
+            <div class="wh40k-empty-state">
                 <i class="fas fa-hat-wizard"></i>
                 <p>No psychic powers</p>
             </div>
@@ -130,9 +130,9 @@
         </div>
         
         {{!-- Add Power Dropzone --}}
-        <div class="rt-dropzone {{#if psychicPowersCount}}rt-dropzone--compact{{/if}}" data-action="itemCreate" data-type="psychicPower">
-            <i class="fas fa-plus rt-dropzone-icon"></i>
-            <span class="rt-dropzone-text">{{#if psychicPowersCount}}Drop or click to add{{else}}Drop Psychic Power or Click to Create{{/if}}</span>
+        <div class="wh40k-dropzone {{#if psychicPowersCount}}wh40k-dropzone--compact{{/if}}" data-action="itemCreate" data-type="psychicPower">
+            <i class="fas fa-plus wh40k-dropzone-icon"></i>
+            <span class="wh40k-dropzone-text">{{#if psychicPowersCount}}Drop or click to add{{else}}Drop Psychic Power or Click to Create{{/if}}</span>
         </div>
     </div>
 </div>

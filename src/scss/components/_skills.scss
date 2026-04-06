@@ -362,94 +362,94 @@ $wh40k-skill-group-grid: 1.5rem 1fr auto;
 // skills with distinct but subtle colors
 
 .wh40k-specialist-panel .wh40k-specialist-group {
-    --rt-spec-a: rgba(36, 107, 131, 0.22);
-    --rt-spec-b: rgba(24, 80, 96, 0.14);
-    --rt-spec-top: rgba(36, 107, 131, 0.5);
-    --rt-spec-bottom: rgba(24, 80, 96, 0.5);
-    background: linear-gradient(135deg, var(--rt-spec-a), var(--rt-spec-b));
-    border-top-color: var(--rt-spec-top);
-    border-bottom-color: var(--rt-spec-bottom);
+    --wh40k-spec-a: rgba(36, 107, 131, 0.22);
+    --wh40k-spec-b: rgba(24, 80, 96, 0.14);
+    --wh40k-spec-top: rgba(36, 107, 131, 0.5);
+    --wh40k-spec-bottom: rgba(24, 80, 96, 0.5);
+    background: linear-gradient(135deg, var(--wh40k-spec-a), var(--wh40k-spec-b));
+    border-top-color: var(--wh40k-spec-top);
+    border-bottom-color: var(--wh40k-spec-bottom);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group .wh40k-specialist-header {
-    background: linear-gradient(180deg, var(--rt-spec-a) 0%, transparent 100%);
+    background: linear-gradient(180deg, var(--wh40k-spec-a) 0%, transparent 100%);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(2) {
-    --rt-spec-a: rgba(92, 0, 0, 0.18);
-    --rt-spec-b: rgba(60, 0, 40, 0.12);
-    --rt-spec-top: rgba(92, 0, 0, 0.5);
-    --rt-spec-bottom: rgba(60, 0, 40, 0.5);
+    --wh40k-spec-a: rgba(92, 0, 0, 0.18);
+    --wh40k-spec-b: rgba(60, 0, 40, 0.12);
+    --wh40k-spec-top: rgba(92, 0, 0, 0.5);
+    --wh40k-spec-bottom: rgba(60, 0, 40, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(3) {
-    --rt-spec-a: rgba(25, 25, 112, 0.15);
-    --rt-spec-b: rgba(0, 0, 128, 0.1);
-    --rt-spec-top: rgba(0, 0, 139, 0.5);
-    --rt-spec-bottom: rgba(0, 0, 139, 0.5);
+    --wh40k-spec-a: rgba(25, 25, 112, 0.15);
+    --wh40k-spec-b: rgba(0, 0, 128, 0.1);
+    --wh40k-spec-top: rgba(0, 0, 139, 0.5);
+    --wh40k-spec-bottom: rgba(0, 0, 139, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(4) {
-    --rt-spec-a: rgba(42, 120, 60, 0.18);
-    --rt-spec-b: rgba(28, 80, 44, 0.12);
-    --rt-spec-top: rgba(42, 120, 60, 0.5);
-    --rt-spec-bottom: rgba(28, 80, 44, 0.5);
+    --wh40k-spec-a: rgba(42, 120, 60, 0.18);
+    --wh40k-spec-b: rgba(28, 80, 44, 0.12);
+    --wh40k-spec-top: rgba(42, 120, 60, 0.5);
+    --wh40k-spec-bottom: rgba(28, 80, 44, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(5) {
-    --rt-spec-a: rgba(158, 112, 40, 0.18);
-    --rt-spec-b: rgba(120, 80, 24, 0.12);
-    --rt-spec-top: rgba(158, 112, 40, 0.5);
-    --rt-spec-bottom: rgba(120, 80, 24, 0.5);
+    --wh40k-spec-a: rgba(158, 112, 40, 0.18);
+    --wh40k-spec-b: rgba(120, 80, 24, 0.12);
+    --wh40k-spec-top: rgba(158, 112, 40, 0.5);
+    --wh40k-spec-bottom: rgba(120, 80, 24, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(6) {
-    --rt-spec-a: rgba(84, 72, 140, 0.18);
-    --rt-spec-b: rgba(60, 50, 100, 0.12);
-    --rt-spec-top: rgba(84, 72, 140, 0.5);
-    --rt-spec-bottom: rgba(60, 50, 100, 0.5);
+    --wh40k-spec-a: rgba(84, 72, 140, 0.18);
+    --wh40k-spec-b: rgba(60, 50, 100, 0.12);
+    --wh40k-spec-top: rgba(84, 72, 140, 0.5);
+    --wh40k-spec-bottom: rgba(60, 50, 100, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(7) {
-    --rt-spec-a: rgba(96, 56, 22, 0.18);
-    --rt-spec-b: rgba(74, 38, 18, 0.12);
-    --rt-spec-top: rgba(96, 56, 22, 0.5);
-    --rt-spec-bottom: rgba(74, 38, 18, 0.5);
+    --wh40k-spec-a: rgba(96, 56, 22, 0.18);
+    --wh40k-spec-b: rgba(74, 38, 18, 0.12);
+    --wh40k-spec-top: rgba(96, 56, 22, 0.5);
+    --wh40k-spec-bottom: rgba(74, 38, 18, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(8) {
-    --rt-spec-a: rgba(18, 86, 96, 0.18);
-    --rt-spec-b: rgba(12, 64, 72, 0.12);
-    --rt-spec-top: rgba(18, 86, 96, 0.5);
-    --rt-spec-bottom: rgba(12, 64, 72, 0.5);
+    --wh40k-spec-a: rgba(18, 86, 96, 0.18);
+    --wh40k-spec-b: rgba(12, 64, 72, 0.12);
+    --wh40k-spec-top: rgba(18, 86, 96, 0.5);
+    --wh40k-spec-bottom: rgba(12, 64, 72, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(9) {
-    --rt-spec-a: rgba(120, 90, 18, 0.18);
-    --rt-spec-b: rgba(86, 62, 12, 0.12);
-    --rt-spec-top: rgba(120, 90, 18, 0.5);
-    --rt-spec-bottom: rgba(86, 62, 12, 0.5);
+    --wh40k-spec-a: rgba(120, 90, 18, 0.18);
+    --wh40k-spec-b: rgba(86, 62, 12, 0.12);
+    --wh40k-spec-top: rgba(120, 90, 18, 0.5);
+    --wh40k-spec-bottom: rgba(86, 62, 12, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(10) {
-    --rt-spec-a: rgba(24, 96, 132, 0.18);
-    --rt-spec-b: rgba(16, 70, 98, 0.12);
-    --rt-spec-top: rgba(24, 96, 132, 0.5);
-    --rt-spec-bottom: rgba(16, 70, 98, 0.5);
+    --wh40k-spec-a: rgba(24, 96, 132, 0.18);
+    --wh40k-spec-b: rgba(16, 70, 98, 0.12);
+    --wh40k-spec-top: rgba(24, 96, 132, 0.5);
+    --wh40k-spec-bottom: rgba(16, 70, 98, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(11) {
-    --rt-spec-a: rgba(132, 54, 54, 0.18);
-    --rt-spec-b: rgba(92, 38, 38, 0.12);
-    --rt-spec-top: rgba(132, 54, 54, 0.5);
-    --rt-spec-bottom: rgba(92, 38, 38, 0.5);
+    --wh40k-spec-a: rgba(132, 54, 54, 0.18);
+    --wh40k-spec-b: rgba(92, 38, 38, 0.12);
+    --wh40k-spec-top: rgba(132, 54, 54, 0.5);
+    --wh40k-spec-bottom: rgba(92, 38, 38, 0.5);
 }
 
 .wh40k-specialist-panel .wh40k-specialist-group:nth-of-type(12) {
-    --rt-spec-a: rgba(66, 96, 36, 0.18);
-    --rt-spec-b: rgba(50, 72, 26, 0.12);
-    --rt-spec-top: rgba(66, 96, 36, 0.5);
-    --rt-spec-bottom: rgba(50, 72, 26, 0.5);
+    --wh40k-spec-a: rgba(66, 96, 36, 0.18);
+    --wh40k-spec-b: rgba(50, 72, 26, 0.12);
+    --wh40k-spec-top: rgba(66, 96, 36, 0.5);
+    --wh40k-spec-bottom: rgba(50, 72, 26, 0.5);
 }
 
 .wh40k-specialist-group {

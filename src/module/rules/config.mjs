@@ -15,7 +15,7 @@ WH40K.originPath = {
         { key: 'motivation', label: 'Motivation', choiceGroup: 'origin.motivation' },
         { key: 'career', label: 'Career', choiceGroup: 'origin.career' },
     ],
-    compendium: 'wh40k-rpg.rt-items-origin-path',
+    compendium: 'wh40k-rpg.wh40k-items-origin-path',
 };
 
 WH40K.bio = {

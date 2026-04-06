@@ -45,7 +45,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     static PARTS = {
         dialog: {
             template: 'systems/wh40k-rpg/templates/dialogs/advancement-dialog.hbs',
-            scrollable: ['.rt-adv__content'],
+            scrollable: ['.wh40k-adv__content'],
         },
     };
 

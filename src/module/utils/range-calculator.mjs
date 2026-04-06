@@ -261,9 +261,9 @@ export function formatRangeDisplay(rangeInfo) {
 
     // CSS class for styling
     let modifierClass = 'wh40k-range-modifier';
-    if (modifier > 0) modifierClass += ' rt-range-modifier--positive';
-    else if (modifier < 0) modifierClass += ' rt-range-modifier--negative';
-    else modifierClass += ' rt-range-modifier--neutral';
+    if (modifier > 0) modifierClass += ' wh40k-range-modifier--positive';
+    else if (modifier < 0) modifierClass += ' wh40k-range-modifier--negative';
+    else modifierClass += ' wh40k-range-modifier--neutral';
 
     // Build tooltip
     let tooltip = description;

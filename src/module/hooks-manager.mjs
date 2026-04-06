@@ -63,12 +63,12 @@ import { DHCombatActionManager } from './actions/combat-action-manager.mjs';
 import { checkAndMigrateWorld } from './wh40k-rpg-migrations.mjs';
 import { DHTourMain } from './tours/main-tour.mjs';
 import { RollTableUtils } from './utils/roll-table-utils.mjs';
-import { TooltipsRT } from './applications/components/_module.mjs';
+import { TooltipsWH40K } from './applications/components/_module.mjs';
 import * as characterCreation from './applications/character-creation/_module.mjs';
 import * as npcApplications from './applications/npc/_module.mjs';
 
 import * as documents from './documents/_module.mjs';
-import TokenRulerRT from './canvas/ruler.mjs';
+import TokenRulerWH40K from './canvas/ruler.mjs';
 import { SYSTEM_ID } from './constants.mjs';
 
 export { SYSTEM_ID };
@@ -90,9 +90,9 @@ export class HooksManager {
         console.log('Loading WH40K RPG System v1.0.0');
 
         const consolePrefix = 'WH40K RPG | ';
-        game.rt = {
+        game.wh40k = {
             debug: false,
-            log: (s, o) => (game.rt.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
+            log: (s, o) => (game.wh40k.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
             warn: (s, o) => console.warn(`${consolePrefix}${s}`, o),
             error: (s, o) => console.error(`${consolePrefix}${s}`, o),
             rollItemMacro,
@@ -131,7 +131,7 @@ export class HooksManager {
             openPresetLibrary: () => npcApplications.CombatPresetDialog.showLibrary(),
             // Dice/Roll classes
             dice: dice,
-            BasicRollRT: dice.BasicRollRT,
+            BasicRollWH40K: dice.BasicRollWH40K,
             D100Roll: dice.D100Roll,
         };
 
@@ -152,14 +152,14 @@ export class HooksManager {
         };
         CONFIG.Item.documentClass = WH40KItem;
         CONFIG.ActiveEffect.documentClass = documents.WH40KActiveEffect;
-        CONFIG.ChatMessage.documentClass = documents.ChatMessageRT;
+        CONFIG.ChatMessage.documentClass = documents.ChatMessageWH40K;
 
         // Token document and movement
-        CONFIG.Token.documentClass = documents.TokenDocumentRT;
-        CONFIG.Token.rulerClass = TokenRulerRT;
+        CONFIG.Token.documentClass = documents.TokenDocumentWH40K;
+        CONFIG.Token.rulerClass = TokenRulerWH40K;
 
         // Register custom Roll classes for serialization/deserialization
-        CONFIG.Dice.rolls.push(dice.BasicRollRT, dice.D100Roll);
+        CONFIG.Dice.rolls.push(dice.BasicRollWH40K, dice.D100Roll);
 
         // Register data models for actors
         // DataModels handle schema validation and data preparation
@@ -442,8 +442,8 @@ export class HooksManager {
         HandlebarManager.loadTemplates();
 
         // Register movement actions and Token HUD hooks (after settings are available)
-        documents.TokenDocumentRT.registerMovementActions();
-        documents.TokenDocumentRT.registerHUDListeners();
+        documents.TokenDocumentWH40K.registerMovementActions();
+        documents.TokenDocumentWH40K.registerHUDListeners();
         CONFIG.Token.movement.costAggregator = (results, distance, segment) => {
             return Math.max(...results.map((i) => i.cost));
         };
@@ -453,8 +453,8 @@ export class HooksManager {
         await checkAndMigrateWorld();
 
         // Initialize rich tooltip system
-        game.rt.tooltips = new TooltipsRT();
-        await game.rt.tooltips.initialize();
+        game.wh40k.tooltips = new TooltipsWH40K();
+        await game.wh40k.tooltips.initialize();
 
         game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
 
@@ -464,7 +464,7 @@ export class HooksManager {
     }
 
     static hotbarDrop(bar, data, slot) {
-        game.rt.log('Hotbar Drop:', data);
+        game.wh40k.log('Hotbar Drop:', data);
         switch (data.type) {
             case 'characteristic':
                 createCharacteristicMacro(data, slot);
@@ -485,11 +485,11 @@ export class HooksManager {
         const header = $html.find('.directory-header');
         if (!header.length) return;
 
-        if (header.find('.rt-compendium-browser-btn').length) return;
+        if (header.find('.wh40k-compendium-browser-btn').length) return;
 
         const browserBtn = $(`
-            <button type="button" class="wh40k-compendium-browser-btn" title="Open RT Compendium Browser">
-                <i class="fas fa-search"></i> RT Browser
+            <button type="button" class="wh40k-compendium-browser-btn" title="Open Compendium Browser">
+                <i class="fas fa-search"></i> Compendium Browser
             </button>
         `);
         browserBtn.on('click', (event) => {

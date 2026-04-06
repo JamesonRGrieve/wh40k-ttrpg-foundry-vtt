@@ -162,7 +162,7 @@ export default function StatBreakdownMixin(Base) {
                     </button>
                 </div>
                 <div class="wh40k-stat-breakdown-body">
-                    <div class="wh40k-stat-breakdown-row rt-stat-breakdown-row--base">
+                    <div class="wh40k-stat-breakdown-row wh40k-stat-breakdown-row--base">
                         <span class="wh40k-stat-breakdown-source">Base</span>
                         <span class="wh40k-stat-breakdown-value">${base}</span>
                     </div>
@@ -193,7 +193,7 @@ export default function StatBreakdownMixin(Base) {
 
             // Add total
             html += `
-                    <div class="wh40k-stat-breakdown-row rt-stat-breakdown-row--total">
+                    <div class="wh40k-stat-breakdown-row wh40k-stat-breakdown-row--total">
                         <span class="wh40k-stat-breakdown-source">Total</span>
                         <span class="wh40k-stat-breakdown-value">${total}</span>
                     </div>

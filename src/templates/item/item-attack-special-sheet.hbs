@@ -1,52 +1,52 @@
 {{! Rogue Trader Attack Special Sheet - Modern Design }}
-<form class="rt-item-sheet" autocomplete="off">
+<form class="wh40k-item-sheet" autocomplete="off">
     {{! Header }}
-    <div class="rt-item-sheet__header">
-        <div class="rt-item-sheet__image-wrapper">
-            <img class="rt-item-sheet__image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
+    <div class="wh40k-item-sheet__header">
+        <div class="wh40k-item-sheet__image-wrapper">
+            <img class="wh40k-item-sheet__image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
         </div>
-        <div class="rt-item-sheet__title-area">
-            <div class="rt-item-sheet__name-field">
-                <label class="rt-item-sheet__name-label">Name</label>
-                <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" />
+        <div class="wh40k-item-sheet__title-area">
+            <div class="wh40k-item-sheet__name-field">
+                <label class="wh40k-item-sheet__name-label">Name</label>
+                <input class="wh40k-item-sheet__name-input" name="name" type="text" value="{{item.name}}" />
             </div>
         </div>
     </div>
 
     {{! Main Fields }}
-    <div class="rt-item-sheet__panel">
-        <div class="rt-item-sheet__field-row">
-            <div class="rt-item-sheet__checkbox-field">
-                <input class="rt-item-sheet__input" name="system.hasLevel" type="checkbox" data-dtype="Boolean" {{checked item.system.hasLevel}} />
-                <label class="rt-item-sheet__label">Has Level</label>
+    <div class="wh40k-item-sheet__panel">
+        <div class="wh40k-item-sheet__field-row">
+            <div class="wh40k-item-sheet__checkbox-field">
+                <input class="wh40k-item-sheet__input" name="system.hasLevel" type="checkbox" data-dtype="Boolean" {{checked item.system.hasLevel}} />
+                <label class="wh40k-item-sheet__label">Has Level</label>
             </div>
-            <div class="rt-item-sheet__checkbox-field">
-                <input class="rt-item-sheet__input" name="system.enabled" type="checkbox" data-dtype="Boolean" {{checked item.system.enabled}} />
-                <label class="rt-item-sheet__label">Enabled</label>
+            <div class="wh40k-item-sheet__checkbox-field">
+                <input class="wh40k-item-sheet__input" name="system.enabled" type="checkbox" data-dtype="Boolean" {{checked item.system.enabled}} />
+                <label class="wh40k-item-sheet__label">Enabled</label>
             </div>
         </div>
 
-        <div class="rt-item-sheet__field-row">
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Level</label>
+        <div class="wh40k-item-sheet__field-row">
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Level</label>
                 {{#if item.system.hasLevel}}
-                    <input class="rt-item-sheet__input" name="system.level" type="number" data-dtype="Number" value="{{item.system.level}}" />
+                    <input class="wh40k-item-sheet__input" name="system.level" type="number" data-dtype="Number" value="{{item.system.level}}" />
                 {{else}}
-                    <input class="rt-item-sheet__input" type="text" value="N/A" disabled />
+                    <input class="wh40k-item-sheet__input" type="text" value="N/A" disabled />
                 {{/if}}
             </div>
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Source</label>
-                <input class="rt-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" />
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Source</label>
+                <input class="wh40k-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" />
             </div>
         </div>
     </div>
 
     {{! Description }}
-    <div class="rt-item-sheet__description">
-        <div class="rt-item-sheet__field">
-            <label class="rt-item-sheet__label">Description</label>
-            <textarea class="rt-item-sheet__textarea" name="system.description">{{item.system.description}}</textarea>
+    <div class="wh40k-item-sheet__description">
+        <div class="wh40k-item-sheet__field">
+            <label class="wh40k-item-sheet__label">Description</label>
+            <textarea class="wh40k-item-sheet__textarea" name="system.description">{{item.system.description}}</textarea>
         </div>
     </div>
 </form>

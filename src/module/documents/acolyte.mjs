@@ -376,7 +376,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} itemId - The item ID
      */
     async rollItem(itemId) {
-        game.rt.log('RollItem', itemId);
+        game.wh40k.log('RollItem', itemId);
         const item = this.items.get(itemId);
         switch (item.type) {
             case 'weapon':
@@ -454,7 +454,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     async rollCharacteristicCheck(characteristic) {
         const char = this.getCharacteristicFuzzy(characteristic);
         if (!char) {
-            game.rt.error('Unable to perform characteristic test. Could not find provided characteristic.', characteristic);
+            game.wh40k.error('Unable to perform characteristic test. Could not find provided characteristic.', characteristic);
             return null;
         }
 

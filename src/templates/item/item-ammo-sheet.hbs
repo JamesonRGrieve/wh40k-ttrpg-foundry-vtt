@@ -1,46 +1,46 @@
 {{!-- Rogue Trader Ammo Sheet - Modern V13 Design --}}
-<form class="rt-item-sheet" autocomplete="off">
+<form class="wh40k-item-sheet" autocomplete="off">
     {{!-- Header --}}
-    <div class="rt-item-sheet__header">
-        <div class="rt-item-sheet__image-wrapper">
-            <img class="rt-item-sheet__image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
+    <div class="wh40k-item-sheet__header">
+        <div class="wh40k-item-sheet__image-wrapper">
+            <img class="wh40k-item-sheet__image" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
         </div>
-        <div class="rt-item-sheet__title-area">
-            <div class="rt-item-sheet__name-field">
-                <label class="rt-item-sheet__name-label">Name</label>
-                <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Ammunition Name" />
+        <div class="wh40k-item-sheet__title-area">
+            <div class="wh40k-item-sheet__name-field">
+                <label class="wh40k-item-sheet__name-label">Name</label>
+                <input class="wh40k-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Ammunition Name" />
             </div>
-            <div class="rt-item-sheet__subtitle">
+            <div class="wh40k-item-sheet__subtitle">
                 <i class="fas fa-bullseye"></i> Ammunition
             </div>
         </div>
     </div>
     
     {{!-- Modifiers Panel --}}
-    <div class="rt-item-sheet__panel">
-        <h3 class="rt-item-sheet__panel-title">Modifiers</h3>
-        <div class="rt-item-sheet__field-row">
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Damage Modifier</label>
-                <input class="rt-item-sheet__input" name="system.modifiers.damage" type="number" value="{{item.system.modifiers.damage}}" />
+    <div class="wh40k-item-sheet__panel">
+        <h3 class="wh40k-item-sheet__panel-title">Modifiers</h3>
+        <div class="wh40k-item-sheet__field-row">
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Damage Modifier</label>
+                <input class="wh40k-item-sheet__input" name="system.modifiers.damage" type="number" value="{{item.system.modifiers.damage}}" />
             </div>
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Penetration Modifier</label>
-                <input class="rt-item-sheet__input" name="system.modifiers.penetration" type="number" value="{{item.system.modifiers.penetration}}" />
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Penetration Modifier</label>
+                <input class="wh40k-item-sheet__input" name="system.modifiers.penetration" type="number" value="{{item.system.modifiers.penetration}}" />
             </div>
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Range Modifier (%)</label>
-                <input class="rt-item-sheet__input" name="system.modifiers.range" type="number" value="{{item.system.modifiers.range}}" />
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Range Modifier (%)</label>
+                <input class="wh40k-item-sheet__input" name="system.modifiers.range" type="number" value="{{item.system.modifiers.range}}" />
             </div>
         </div>
     </div>
     
     {{!-- Compatibility Panel --}}
-    <div class="rt-item-sheet__panel">
-        <h3 class="rt-item-sheet__panel-title">Weapon Compatibility</h3>
-        <div class="rt-item-sheet__field">
-            <label class="rt-item-sheet__label">Weapon Types (leave empty for universal)</label>
-            <select class="rt-item-sheet__select" name="system.weaponTypes" multiple size="5">
+    <div class="wh40k-item-sheet__panel">
+        <h3 class="wh40k-item-sheet__panel-title">Weapon Compatibility</h3>
+        <div class="wh40k-item-sheet__field">
+            <label class="wh40k-item-sheet__label">Weapon Types (leave empty for universal)</label>
+            <select class="wh40k-item-sheet__select" name="system.weaponTypes" multiple size="5">
                 <option value="las" {{#if (arrayIncludes "las" item.system.weaponTypes)}}selected{{/if}}>Las</option>
                 <option value="solid-projectile" {{#if (arrayIncludes "solid-projectile" item.system.weaponTypes)}}selected{{/if}}>Solid Projectile</option>
                 <option value="bolt" {{#if (arrayIncludes "bolt" item.system.weaponTypes)}}selected{{/if}}>Bolt</option>
@@ -54,28 +54,28 @@
     </div>
     
     {{!-- Qualities Panel --}}
-    <div class="rt-item-sheet__panel">
-        <h3 class="rt-item-sheet__panel-title">Quality Changes</h3>
-        <div class="rt-item-sheet__field-row">
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Added Qualities</label>
-                <div class="rt-tags">
+    <div class="wh40k-item-sheet__panel">
+        <h3 class="wh40k-item-sheet__panel-title">Quality Changes</h3>
+        <div class="wh40k-item-sheet__field-row">
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Added Qualities</label>
+                <div class="wh40k-tags">
                     {{#each item.system.addedQualities as |quality|}}
-                    <span class="rt-tag rt-tag--success">{{quality}}</span>
+                    <span class="wh40k-tag wh40k-tag--success">{{quality}}</span>
                     {{/each}}
                     {{#unless item.system.addedQualities.length}}
-                    <span class="rt-help-text">No qualities added</span>
+                    <span class="wh40k-help-text">No qualities added</span>
                     {{/unless}}
                 </div>
             </div>
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Removed Qualities</label>
-                <div class="rt-tags">
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Removed Qualities</label>
+                <div class="wh40k-tags">
                     {{#each item.system.removedQualities as |quality|}}
-                    <span class="rt-tag rt-tag--danger">{{quality}}</span>
+                    <span class="wh40k-tag wh40k-tag--danger">{{quality}}</span>
                     {{/each}}
                     {{#unless item.system.removedQualities.length}}
-                    <span class="rt-help-text">No qualities removed</span>
+                    <span class="wh40k-help-text">No qualities removed</span>
                     {{/unless}}
                 </div>
             </div>
@@ -83,33 +83,33 @@
     </div>
     
     {{!-- Physical Properties --}}
-    <div class="rt-item-sheet__panel">
-        <div class="rt-item-sheet__field-row">
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Weight (kg)</label>
-                <input class="rt-item-sheet__input" name="system.weight" type="number" step="0.1" value="{{item.system.weight}}" />
+    <div class="wh40k-item-sheet__panel">
+        <div class="wh40k-item-sheet__field-row">
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Weight (kg)</label>
+                <input class="wh40k-item-sheet__input" name="system.weight" type="number" step="0.1" value="{{item.system.weight}}" />
             </div>
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Availability</label>
-                <select class="rt-item-sheet__select" name="system.availability">
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Availability</label>
+                <select class="wh40k-item-sheet__select" name="system.availability">
                     {{selectOptions (arrayToObject CONFIG.WH40K.availabilities) selected=item.system.availability}}
                 </select>
             </div>
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Source</label>
-                <input class="rt-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" placeholder="RT: Core" />
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Source</label>
+                <input class="wh40k-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" placeholder="RT: Core" />
             </div>
         </div>
     </div>
     
     {{!-- Effect Description --}}
-    <div class="rt-item-sheet__description">
-        <div class="rt-item-sheet__field">
-            <label class="rt-item-sheet__label">Effect</label>
+    <div class="wh40k-item-sheet__description">
+        <div class="wh40k-item-sheet__field">
+            <label class="wh40k-item-sheet__label">Effect</label>
             {{#if inEditMode}}
             {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
             {{else}}
-            <div class="rt-description-content">{{{system.effect}}}</div>
+            <div class="wh40k-description-content">{{{system.effect}}}</div>
             {{/if}}
         </div>
     </div>

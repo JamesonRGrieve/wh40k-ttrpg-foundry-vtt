@@ -44,7 +44,7 @@
         border-bottom: 2px solid rgba($wh40k-accent-powers, 0.3);
 
         .wh40k-panel-title {
-            color: var(--rt-text-dark);
+            color: var(--wh40k-text-dark);
 
             i {
                 color: $wh40k-accent-powers;
@@ -81,7 +81,7 @@
     display: flex;
     gap: $wh40k-space-md;
     padding: $wh40k-space-sm;
-    background: var(--rt-panel-bg-translucent);
+    background: var(--wh40k-panel-bg-translucent);
     border-radius: $wh40k-radius-md;
     margin-bottom: $wh40k-space-md;
 }
@@ -117,7 +117,7 @@
     font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     margin-top: 2px;
 }
 
@@ -140,17 +140,17 @@
 .wh40k-stat-label {
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--rt-text-secondary);
+    color: var(--wh40k-text-secondary);
     min-width: 70px;
 }
 
 .wh40k-psy-input {
     width: 60px;
     padding: 4px 8px;
-    border: 1px solid var(--rt-border-color);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: 4px;
-    background: var(--rt-input-bg);
-    color: var(--rt-text-dark);
+    background: var(--wh40k-input-bg);
+    color: var(--wh40k-text-dark);
     font-size: 0.9rem;
     font-weight: 600;
     text-align: center;
@@ -165,10 +165,10 @@
 .wh40k-psy-select {
     flex: 1;
     padding: 6px 10px;
-    border: 1px solid var(--rt-border-color);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: 4px;
-    background: var(--rt-input-bg);
-    color: var(--rt-text-dark);
+    background: var(--wh40k-input-bg);
+    color: var(--wh40k-text-dark);
     font-size: 0.85rem;
     cursor: pointer;
 
@@ -204,16 +204,16 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.03em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-psy-text {
     width: 100%;
     padding: 6px 10px;
-    border: 1px solid var(--rt-border-color);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: 4px;
-    background: var(--rt-input-bg);
-    color: var(--rt-text-dark);
+    background: var(--wh40k-input-bg);
+    color: var(--wh40k-text-dark);
     font-size: 0.85rem;
 
     &:focus {
@@ -229,14 +229,14 @@
     gap: $wh40k-space-xs;
     cursor: pointer;
     padding: 4px 8px;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     transition: all 0.2s ease;
 
     &:hover {
-        background: var(--rt-panel-bg);
-        border-color: var(--rt-border-color);
+        background: var(--wh40k-panel-bg);
+        border-color: var(--wh40k-border-color);
     }
 
     .wh40k-checkbox {
@@ -246,7 +246,7 @@
 
     .wh40k-checkbox-label {
         font-size: 0.8rem;
-        color: var(--rt-text-secondary);
+        color: var(--wh40k-text-secondary);
         display: flex;
         align-items: center;
         gap: 4px;
@@ -269,10 +269,10 @@
     justify-content: center;
     gap: $wh40k-space-xs;
     padding: 8px 12px;
-    border: 1px solid var(--rt-border-color);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: 4px;
-    background: var(--rt-btn-bg);
-    color: var(--rt-text-secondary);
+    background: var(--wh40k-btn-bg);
+    color: var(--wh40k-text-secondary);
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
@@ -306,26 +306,26 @@
     flex-wrap: wrap;
     gap: 4px;
     padding: $wh40k-space-sm;
-    background: var(--rt-panel-bg-translucent);
+    background: var(--wh40k-panel-bg-translucent);
     border-radius: $wh40k-radius-sm;
     margin-bottom: $wh40k-space-md;
 }
 
 .wh40k-filter-btn {
     padding: 4px 10px;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 12px;
     background: transparent;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     font-size: 0.75rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-        background: var(--rt-panel-bg);
-        color: var(--rt-text-dark);
-        border-color: var(--rt-border-color);
+        background: var(--wh40k-panel-bg);
+        color: var(--wh40k-text-dark);
+        border-color: var(--wh40k-border-color);
     }
 
     &.active {
@@ -396,8 +396,8 @@
 // ============================================
 
 .wh40k-power-card {
-    background: var(--rt-panel-bg-solid);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-solid);
+    border: 1px solid var(--wh40k-border-color-light);
     border-left: 3px solid $wh40k-accent-powers;
     border-radius: 6px;
     overflow: hidden;
@@ -405,9 +405,9 @@
     cursor: grab;
 
     &:hover {
-        background: var(--rt-panel-bg);
-        border-color: var(--rt-border-color);
-        box-shadow: 0 2px 8px var(--rt-shadow-soft);
+        background: var(--wh40k-panel-bg);
+        border-color: var(--wh40k-border-color);
+        box-shadow: 0 2px 8px var(--wh40k-shadow-soft);
     }
 
     &:active {
@@ -448,7 +448,7 @@
     width: 36px;
     height: 36px;
     border-radius: 4px;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
     object-fit: cover;
     flex-shrink: 0;
 }
@@ -466,7 +466,7 @@
     text-align: left;
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
@@ -593,7 +593,7 @@
 .wh40k-order-action {
     font-size: 0.7rem;
     font-weight: 600;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-power-sustained {
@@ -637,14 +637,14 @@
     border: 1px solid transparent;
     border-radius: 4px;
     background: transparent;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     transition: all 0.15s ease;
 
     &:hover {
-        background: var(--rt-panel-bg-translucent);
-        border-color: var(--rt-border-color-light);
-        color: var(--rt-text-dark);
+        background: var(--wh40k-panel-bg-translucent);
+        border-color: var(--wh40k-border-color-light);
+        color: var(--wh40k-text-dark);
     }
 
     &.wh40k-btn-roll:hover {
@@ -685,8 +685,8 @@
     flex-wrap: wrap;
     gap: $wh40k-space-sm;
     padding: $wh40k-space-xs $wh40k-space-md;
-    background: var(--rt-panel-bg-translucent);
-    border-top: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border-top: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-power-stat {
@@ -700,13 +700,13 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
 
     .wh40k-stat-value {
         font-size: 0.8rem;
         font-weight: 500;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
     }
 }
 
@@ -718,8 +718,8 @@
     display: flex;
     gap: 4px;
     padding: $wh40k-space-xs $wh40k-space-md;
-    background: var(--rt-panel-bg-translucent);
-    border-top: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border-top: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-level-badge {
@@ -760,8 +760,8 @@
 
 .wh40k-power-details {
     padding: $wh40k-space-md;
-    background: var(--rt-panel-bg-translucent);
-    border-top: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border-top: 1px solid var(--wh40k-border-color-light);
     animation: expandDown 0.2s ease;
 
     &[hidden] {
@@ -796,7 +796,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--rt-text-secondary);
+    color: var(--wh40k-text-secondary);
     margin-bottom: 4px;
 
     i {
@@ -806,11 +806,11 @@
 
 .wh40k-detail-content {
     padding: $wh40k-space-sm;
-    background: var(--rt-panel-bg);
+    background: var(--wh40k-panel-bg);
     border-radius: 4px;
     font-size: 0.8rem;
     line-height: 1.5;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
 
     p {
         margin: 0 0 0.5em 0;
@@ -855,7 +855,7 @@
     gap: $wh40k-space-sm;
     margin-top: $wh40k-space-md;
     padding-top: $wh40k-space-sm;
-    border-top: 1px solid var(--rt-border-color-light);
+    border-top: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-detail-btn {
@@ -863,18 +863,18 @@
     align-items: center;
     gap: 4px;
     padding: 6px 12px;
-    border: 1px solid var(--rt-border-color);
+    border: 1px solid var(--wh40k-border-color);
     border-radius: 4px;
-    background: var(--rt-btn-bg);
-    color: var(--rt-text-secondary);
+    background: var(--wh40k-btn-bg);
+    color: var(--wh40k-text-secondary);
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-        background: var(--rt-btn-bg-hover);
-        border-color: var(--rt-border-color-strong);
+        background: var(--wh40k-btn-bg-hover);
+        border-color: var(--wh40k-border-color-strong);
     }
 
     &.wh40k-btn-danger:hover {
@@ -894,7 +894,7 @@
     align-items: center;
     justify-content: center;
     padding: $wh40k-space-xl;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     text-align: center;
 
     i {

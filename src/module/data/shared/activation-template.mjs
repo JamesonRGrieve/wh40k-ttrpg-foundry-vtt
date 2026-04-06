@@ -103,7 +103,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * @type {string}
      */
     get activationLabel() {
-        return game.i18n.localize(`RT.Activation.${this.activation.type.capitalize()}`);
+        return game.i18n.localize(`WH40K.Activation.${this.activation.type.capitalize()}`);
     }
 
     /* -------------------------------------------- */
@@ -116,9 +116,9 @@ export default class ActivationTemplate extends SystemDataModel {
         const target = this.target;
         if (target.type === 'self') return game.i18n.localize('WH40K.Target.Self');
         if (target.value) {
-            return `${target.value}${target.units} ${game.i18n.localize(`RT.Target.${target.type.capitalize()}`)}`;
+            return `${target.value}${target.units} ${game.i18n.localize(`WH40K.Target.${target.type.capitalize()}`)}`;
         }
-        return game.i18n.localize(`RT.Target.${target.type.capitalize()}`);
+        return game.i18n.localize(`WH40K.Target.${target.type.capitalize()}`);
     }
 
     /* -------------------------------------------- */
@@ -132,9 +132,9 @@ export default class ActivationTemplate extends SystemDataModel {
         if (duration.units === 'instant') return game.i18n.localize('WH40K.Duration.Instant');
         if (duration.sustained) return game.i18n.localize('WH40K.Duration.Sustained');
         if (duration.value) {
-            return `${duration.value} ${game.i18n.localize(`RT.Duration.${duration.units.capitalize()}`)}`;
+            return `${duration.value} ${game.i18n.localize(`WH40K.Duration.${duration.units.capitalize()}`)}`;
         }
-        return game.i18n.localize(`RT.Duration.${duration.units.capitalize()}`);
+        return game.i18n.localize(`WH40K.Duration.${duration.units.capitalize()}`);
     }
 
     /* -------------------------------------------- */

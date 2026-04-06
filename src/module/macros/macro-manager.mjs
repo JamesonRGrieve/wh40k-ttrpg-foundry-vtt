@@ -45,7 +45,7 @@ export async function createItemMacro(data, slot) {
 
     const macroName = `${data.actorName}: ${data.data.name}`;
     // Create the macro command
-    const command = `game.rt.rollItemMacro("${data.actorId}", "${data.data._id}");`;
+    const command = `game.wh40k.rollItemMacro("${data.actorId}", "${data.data._id}");`;
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
@@ -59,7 +59,7 @@ export async function createItemMacro(data, slot) {
 }
 
 export function rollItemMacro(actorId, itemId) {
-    game.rt.log('RollItemMacro');
+    game.wh40k.log('RollItemMacro');
     if (!checkCanRollMacro(itemId)) return;
     const actor = getTokenActor(actorId);
     if (!actor) return;
@@ -74,12 +74,12 @@ export async function createSkillMacro(data, slot) {
 
     const { skill, speciality, name } = data.data;
     const macroName = `${data.actorName}: ${name}`;
-    game.rt.log(`Creating macro with name: ${macroName}`);
+    game.wh40k.log(`Creating macro with name: ${macroName}`);
 
     // Setup macro data.
-    let command = `game.rt.rollSkillMacro("${data.actorId}", "${skill}");`;
+    let command = `game.wh40k.rollSkillMacro("${data.actorId}", "${skill}");`;
     if (speciality) {
-        command = `game.rt.rollSkillMacro("${data.actorId}", "${skill}", "${speciality}");`;
+        command = `game.wh40k.rollSkillMacro("${data.actorId}", "${skill}", "${speciality}");`;
     }
     if (checkExistingMacro(macroName, command)) return;
 
@@ -110,7 +110,7 @@ export async function createCharacteristicMacro(data, slot) {
     const macroName = `${data.actorName}: ${name}`;
 
     // Create the macro command
-    const command = `game.rt.rollCharacteristicMacro("${data.actorId}","${characteristic}");`;
+    const command = `game.wh40k.rollCharacteristicMacro("${data.actorId}","${characteristic}");`;
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({

@@ -176,7 +176,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             char.progressOffset = circumference * (1 - advanceProgress);
             char.advanceProgress = Math.round(advanceProgress * 100); // Percentage
 
-            // Calculate XP cost for next advance (follows RT progression)
+            // Calculate XP cost for next advance (follows WH40K progression)
             // Simple: 100, Intermediate: 250, Trained: 500, Proficient: 750, Expert: 1000
             const advanceCosts = [100, 250, 500, 750, 1000];
             const nextAdvance = char.advance || 0;
@@ -298,9 +298,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     _applyRestoredState() {
         // Apply equipment filters
         if (this._equipmentFilter) {
-            const searchInput = this.element?.querySelector('.rt-equipment-search');
-            const typeFilter = this.element?.querySelector('.rt-equipment-type-filter');
-            const statusFilter = this.element?.querySelector('.rt-equipment-status-filter');
+            const searchInput = this.element?.querySelector('.wh40k-equipment-search');
+            const typeFilter = this.element?.querySelector('.wh40k-equipment-type-filter');
+            const statusFilter = this.element?.querySelector('.wh40k-equipment-status-filter');
 
             if (searchInput && this._equipmentFilter.search) {
                 searchInput.value = this._equipmentFilter.search;
@@ -320,9 +320,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         // Apply skills filters
         if (this._skillsFilter) {
-            const searchInput = this.element?.querySelector('.rt-skills-search');
-            const charFilter = this.element?.querySelector('.rt-skills-char-filter');
-            const trainingFilter = this.element?.querySelector('.rt-skills-training-filter');
+            const searchInput = this.element?.querySelector('.wh40k-skills-search');
+            const charFilter = this.element?.querySelector('.wh40k-skills-char-filter');
+            const trainingFilter = this.element?.querySelector('.wh40k-skills-training-filter');
 
             if (searchInput && this._skillsFilter.search) {
                 searchInput.value = this._skillsFilter.search;
@@ -352,7 +352,14 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         if (!this.element) return;
 
         // Common scrollable containers
-        const scrollableSelectors = ['.rt-body', '.rt-skills-columns', '.rt-all-items-grid', '.rt-talents-grid', '.scrollable', '[data-scrollable]'];
+        const scrollableSelectors = [
+            '.wh40k-body',
+            '.wh40k-skills-columns',
+            '.wh40k-all-items-grid',
+            '.wh40k-talents-grid',
+            '.scrollable',
+            '[data-scrollable]',
+        ];
 
         scrollableSelectors.forEach((selector) => {
             const elements = this.element.querySelectorAll(selector);
@@ -372,7 +379,14 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     _applyScrollPositions() {
         if (!this.element || this._scrollPositions.size === 0) return;
 
-        const scrollableSelectors = ['.rt-body', '.rt-skills-columns', '.rt-all-items-grid', '.rt-talents-grid', '.scrollable', '[data-scrollable]'];
+        const scrollableSelectors = [
+            '.wh40k-body',
+            '.wh40k-skills-columns',
+            '.wh40k-all-items-grid',
+            '.wh40k-talents-grid',
+            '.scrollable',
+            '[data-scrollable]',
+        ];
 
         scrollableSelectors.forEach((selector) => {
             const elements = this.element.querySelectorAll(selector);
@@ -646,7 +660,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     //  */
     // _getSkillSuggestions(skillKey) {
     //     // Access the tooltip system's cached skill descriptions
-    //     const tooltips = game.rt?.tooltips;
+    //     const tooltips = game.wh40k?.tooltips;
     //     if (!tooltips) return [];
     //
     //     // Get skill description from compendium cache
@@ -1062,7 +1076,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             await this._restoreSheetState();
         }
 
-        // Add rt-sheet class to the form element for CSS styling
+        // Add wh40k-sheet class to the form element for CSS styling
         const form = this.element.querySelector('form');
         if (form) {
             form.classList.add('wh40k-sheet');
@@ -1097,11 +1111,11 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         });
 
         // Set up drag handlers for items
-        // Note: Talent panel rows (rt-tp_row) are excluded by EnhancedDragDropMixin
+        // Note: Talent panel rows (wh40k-tp_row) are excluded by EnhancedDragDropMixin
         this.element.querySelectorAll('[data-item-id]').forEach((el) => {
             if (el.dataset.itemId) {
                 // Skip if this element or any ancestor is a talent row
-                if (el.closest('.rt-tp_row') || el.closest('.rt-talent-row')) return;
+                if (el.closest('.wh40k-tp_row') || el.closest('.wh40k-talent-row')) return;
 
                 el.setAttribute('draggable', true);
                 el.addEventListener('dragstart', this._onDragItem.bind(this), false);
@@ -1155,7 +1169,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
     /**
      * Setup responsive column management using ResizeObserver.
-     * Adjusts --rt-columns CSS variable based on sheet width.
+     * Adjusts --wh40k-columns CSS variable based on sheet width.
      * @protected
      */
     _setupResponsiveColumns() {
@@ -1167,7 +1181,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                 const width = entry.contentRect.width;
                 const columns = width < 700 ? 1 : width < 900 ? 2 : 3;
                 if (this.element) {
-                    this.element.style.setProperty('--rt-columns', columns);
+                    this.element.style.setProperty('--wh40k-columns', columns);
                 }
             }
         });
@@ -1191,14 +1205,14 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         this._clickOutsideHandler = (event) => {
             // Check if click was outside any dropdown or toggle button
-            const clickedDropdown = event.target.closest('.rt-char-hud-details');
-            const clickedToggle = event.target.closest('.rt-char-hud-toggle');
+            const clickedDropdown = event.target.closest('.wh40k-char-hud-details');
+            const clickedToggle = event.target.closest('.wh40k-char-hud-toggle');
 
             // If clicked outside dropdowns and toggle buttons, close all dropdowns
             if (!clickedDropdown && !clickedToggle) {
-                this.element?.querySelectorAll('.rt-char-hud-details.expanded').forEach((el) => {
+                this.element?.querySelectorAll('.wh40k-char-hud-details.expanded').forEach((el) => {
                     el.classList.remove('expanded');
-                    const toggleIcon = el.closest('.rt-char-hud-item')?.querySelector('.rt-char-hud-toggle-icon');
+                    const toggleIcon = el.closest('.wh40k-char-hud-item')?.querySelector('.wh40k-char-hud-toggle-icon');
                     if (toggleIcon) toggleIcon.classList.remove('active');
                 });
             }
@@ -1385,17 +1399,17 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #itemEdit(event, target) {
-        console.log('RT | itemEdit action triggered', { target, dataset: target.dataset });
+        console.log('WH40K | itemEdit action triggered', { target, dataset: target.dataset });
         const itemId = target.dataset.itemId || target.closest('[data-item-id]')?.dataset.itemId;
-        console.log('RT | itemEdit itemId:', itemId);
+        console.log('WH40K | itemEdit itemId:', itemId);
         if (!itemId) {
-            console.warn('RT | itemEdit: No itemId found', target);
+            console.warn('WH40K | itemEdit: No itemId found', target);
             return;
         }
         const item = this.actor.items.get(itemId);
-        console.log('RT | itemEdit item:', item);
+        console.log('WH40K | itemEdit item:', item);
         if (!item) {
-            console.warn('RT | itemEdit: Item not found with ID', itemId);
+            console.warn('WH40K | itemEdit: Item not found with ID', itemId);
             return;
         }
         item.sheet.render(true);
@@ -1410,18 +1424,18 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemDelete(event, target) {
-        console.log('RT | itemDelete action triggered', { target, dataset: target.dataset });
+        console.log('WH40K | itemDelete action triggered', { target, dataset: target.dataset });
         const itemId = target.dataset.itemId || target.closest('[data-item-id]')?.dataset.itemId;
-        console.log('RT | itemDelete itemId:', itemId);
+        console.log('WH40K | itemDelete itemId:', itemId);
         if (!itemId) {
-            console.warn('RT | itemDelete: No itemId found', target);
+            console.warn('WH40K | itemDelete: No itemId found', target);
             return;
         }
 
         const item = this.actor.items.get(itemId);
-        console.log('RT | itemDelete item:', item);
+        console.log('WH40K | itemDelete item:', item);
         if (!item) {
-            console.warn('RT | itemDelete: Item not found with ID', itemId);
+            console.warn('WH40K | itemDelete: Item not found with ID', itemId);
             return;
         }
 
@@ -1432,13 +1446,13 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             cancelLabel: 'Cancel',
         });
 
-        console.log('RT | itemDelete confirmed:', confirmed);
+        console.log('WH40K | itemDelete confirmed:', confirmed);
         if (confirmed) {
             try {
                 await this.actor.deleteEmbeddedDocuments('Item', [itemId]);
-                console.log('RT | itemDelete: Successfully deleted item', itemId);
+                console.log('WH40K | itemDelete: Successfully deleted item', itemId);
             } catch (err) {
-                console.error('RT | itemDelete: Error deleting item', err);
+                console.error('WH40K | itemDelete: Error deleting item', err);
                 ui.notifications.error(`Failed to delete ${item.name}`);
             }
         }
@@ -1453,27 +1467,27 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemVocalize(event, target) {
-        console.log('RT | itemVocalize action triggered', { target, dataset: target.dataset });
+        console.log('WH40K | itemVocalize action triggered', { target, dataset: target.dataset });
         const itemId = target.dataset.itemId || target.closest('[data-item-id]')?.dataset.itemId;
-        console.log('RT | itemVocalize itemId:', itemId);
+        console.log('WH40K | itemVocalize itemId:', itemId);
         if (!itemId) {
-            console.warn('RT | itemVocalize: No item ID found', target);
+            console.warn('WH40K | itemVocalize: No item ID found', target);
             return;
         }
 
         const item = this.actor.items.get(itemId);
-        console.log('RT | itemVocalize item:', item);
+        console.log('WH40K | itemVocalize item:', item);
         if (!item) {
-            console.warn(`RT | itemVocalize: Item ${itemId} not found on actor`);
+            console.warn(`WH40K | itemVocalize: Item ${itemId} not found on actor`);
             return;
         }
 
         try {
-            console.log('RT | itemVocalize: Calling item.sendToChat()');
+            console.log('WH40K | itemVocalize: Calling item.sendToChat()');
             await item.sendToChat();
-            console.log('RT | itemVocalize: Successfully sent to chat');
+            console.log('WH40K | itemVocalize: Successfully sent to chat');
         } catch (err) {
-            console.error('RT | itemVocalize: Error sending item to chat', err);
+            console.error('WH40K | itemVocalize: Error sending item to chat', err);
             ui.notifications.error(`Failed to send ${item.name} to chat`);
         }
     }
@@ -1581,15 +1595,15 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         if (!sectionName) return;
 
         // Find the dropdown panel element
-        const dropdown = this.element.querySelector(`.rt-char-hud-details.${sectionName}`);
+        const dropdown = this.element.querySelector(`.wh40k-char-hud-details.${sectionName}`);
         if (!dropdown) return;
 
         // Close all other dropdowns first
-        this.element.querySelectorAll('.rt-char-hud-details.expanded').forEach((el) => {
+        this.element.querySelectorAll('.wh40k-char-hud-details.expanded').forEach((el) => {
             if (el !== dropdown) {
                 el.classList.remove('expanded');
                 // Also remove active class from the toggle icon
-                const toggleSelectionIcon = el.closest('.rt-char-hud-item')?.querySelector('.rt-char-hud-toggle-icon');
+                const toggleSelectionIcon = el.closest('.wh40k-char-hud-item')?.querySelector('.wh40k-char-hud-toggle-icon');
                 if (toggleSelectionIcon) toggleSelectionIcon.classList.remove('active');
             }
         });
@@ -1598,7 +1612,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         const isExpanded = dropdown.classList.toggle('expanded');
 
         // Toggle the chevron icon
-        const toggleIcon = target.querySelector('.rt-char-hud-toggle-icon');
+        const toggleIcon = target.querySelector('.wh40k-char-hud-toggle-icon');
         if (toggleIcon) {
             toggleIcon.classList.toggle('active', isExpanded);
         }
@@ -1764,18 +1778,18 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // const specialty = target.dataset.specialty;
 
         if (!skillKey) {
-            console.warn('RT | viewSkillInfo: No skill key found');
+            console.warn('WH40K | viewSkillInfo: No skill key found');
             return;
         }
 
         const skill = this.actor.system.skills?.[skillKey];
         if (!skill) {
-            console.warn(`RT | viewSkillInfo: Skill ${skillKey} not found`);
+            console.warn(`WH40K | viewSkillInfo: Skill ${skillKey} not found`);
             return;
         }
 
         // Try to find the skill item in the compendium
-        const pack = game.packs.get('wh40k-rpg.rt-items-skills');
+        const pack = game.packs.get('wh40k-rpg.wh40k-items-skills');
         if (!pack) {
             ui.notifications.warn('Skills compendium not found.');
             return;
@@ -1943,14 +1957,14 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Animate circle for V1 HUD (bonus display)
-        const circleElement = this.element.querySelector(`[data-characteristic="${charKey}"] .rt-char-hud-circle`);
+        const circleElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-circle`);
         if (circleElement) {
             circleElement.classList.add('value-changed');
             setTimeout(() => circleElement.classList.remove('value-changed'), 500);
         }
 
         // Add value-changed animation to mod display for V1 HUD
-        const modElement = this.element.querySelector(`[data-characteristic="${charKey}"] .rt-char-hud-mod`);
+        const modElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`);
         if (modElement) {
             modElement.classList.add('value-changed');
             setTimeout(() => modElement.classList.remove('value-changed'), 500);

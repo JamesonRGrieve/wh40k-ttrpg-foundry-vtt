@@ -1,9 +1,9 @@
 {{!-- Acolyte Sheet Powers Tab --}}
 {{!-- Modern powers management with psychic powers, navigator powers, rituals, and orders --}}
-<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} rt-tab-powers" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-    <div class="rt-powers-layout">
+<section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }} wh40k-tab-powers" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    <div class="wh40k-powers-layout">
         {{!-- Left Column: Psyker Control & Psychic Powers --}}
-        <div class="rt-powers-col rt-powers-col-left">
+        <div class="wh40k-powers-col wh40k-powers-col-left">
             {{!-- Psy Rating Control Center --}}
             {{> systems/wh40k-rpg/templates/actor/panel/psy-rating-panel-v2.hbs}}
             
@@ -12,7 +12,7 @@
         </div>
         
         {{!-- Right Column: Navigator, Rituals, Orders --}}
-        <div class="rt-powers-col rt-powers-col-right">
+        <div class="wh40k-powers-col wh40k-powers-col-right">
             {{!-- Navigator Powers --}}
             {{> systems/wh40k-rpg/templates/actor/panel/navigator-powers-panel-v2.hbs}}
             

@@ -309,7 +309,7 @@ export class OriginChartLayout {
      * @private
      */
     static _getStepLabel(stepKey) {
-        const key = `RT.OriginPath.${stepKey.charAt(0).toUpperCase() + stepKey.slice(1)}`;
+        const key = `WH40K.OriginPath.${stepKey.charAt(0).toUpperCase() + stepKey.slice(1)}`;
         return game.i18n.localize(key);
     }
 }

@@ -31,7 +31,7 @@
 
             &:focus {
                 outline: none;
-                border-color: var(--rt-color-accent, #c9a227);
+                border-color: var(--wh40k-color-accent, #c9a227);
             }
         }
 
@@ -76,7 +76,7 @@
 
             input[type='range'] {
                 flex: 1;
-                accent-color: var(--rt-color-accent, #c9a227);
+                accent-color: var(--wh40k-color-accent, #c9a227);
             }
 
             .threat-value {
@@ -89,7 +89,7 @@
 
         .tier-label {
             font-size: 0.8rem;
-            color: var(--rt-color-accent, #c9a227);
+            color: var(--wh40k-color-accent, #c9a227);
             font-style: italic;
             margin-top: 0.25rem;
         }
@@ -127,7 +127,7 @@
         h4 {
             margin: 0 0 0.5rem 0;
             font-size: 0.9rem;
-            color: var(--rt-color-accent, #c9a227);
+            color: var(--wh40k-color-accent, #c9a227);
         }
 
         .name-preview-list {
@@ -158,7 +158,7 @@
         }
 
         .primary {
-            background: var(--rt-color-accent, #c9a227);
+            background: var(--wh40k-color-accent, #c9a227);
             color: #fff;
 
             &:hover {

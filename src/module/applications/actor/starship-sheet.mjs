@@ -22,7 +22,7 @@ export default class StarshipSheet extends BaseActorSheet {
             width: 900,
             height: 700,
         },
-        tabs: [{ navSelector: 'nav.rt-navigation', contentSelector: '#tab-body', initial: 'stats', group: 'primary' }],
+        tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'stats', group: 'primary' }],
     };
 
     /* -------------------------------------------- */

@@ -80,7 +80,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
      * @type {string}
      */
     get disciplineLabel() {
-        return game.i18n.localize(`RT.PsychicDiscipline.${this.discipline.capitalize()}`);
+        return game.i18n.localize(`WH40K.PsychicDiscipline.${this.discipline.capitalize()}`);
     }
 
     /**
@@ -88,7 +88,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
      * @type {string}
      */
     get focusCharacteristicLabel() {
-        return game.i18n.localize(`RT.Characteristic.${this.focusPower.characteristic.capitalize()}`);
+        return game.i18n.localize(`WH40K.Characteristic.${this.focusPower.characteristic.capitalize()}`);
     }
 
     /**
@@ -102,7 +102,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
         }
         if (this.focusPower.opposed) {
             const oppChar = this.focusPower.opposedCharacteristic || 'willpower';
-            label += ` (Opposed by ${game.i18n.localize(`RT.Characteristic.${oppChar.capitalize()}`)})`;
+            label += ` (Opposed by ${game.i18n.localize(`WH40K.Characteristic.${oppChar.capitalize()}`)})`;
         }
         return label;
     }

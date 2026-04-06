@@ -104,7 +104,7 @@ export class AssignDamageData {
             'system.wounds.critical': this.actor.system.wounds.critical + this.criticalDamageTaken,
             'system.fatigue.value': this.actor.system.fatigue.value + this.fatigueTaken,
         });
-        game.rt.log('performActionAndSendToChat', this);
+        game.wh40k.log('performActionAndSendToChat', this);
 
         // Create critical injury item if critical damage was taken
         if (this.hasCriticalDamage && this.criticalEffect) {

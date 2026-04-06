@@ -21,8 +21,8 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: var(--rt-sheet-bg);
-    color: var(--rt-text-dark);
+    background: var(--wh40k-sheet-bg);
+    color: var(--wh40k-text-dark);
     font-family: $wh40k-font-body;
     font-size: $wh40k-font-size-base;
     overflow: hidden;
@@ -44,16 +44,16 @@
 
     &::-webkit-scrollbar-track,
     .wh40k-tab-content::-webkit-scrollbar-track {
-        background: var(--rt-panel-bg);
+        background: var(--wh40k-panel-bg);
     }
 
     &::-webkit-scrollbar-thumb,
     .wh40k-tab-content::-webkit-scrollbar-thumb {
-        background: var(--rt-border-color);
+        background: var(--wh40k-border-color);
         border-radius: $wh40k-radius-md;
 
         &:hover {
-            background: var(--rt-gold-dark);
+            background: var(--wh40k-gold-dark);
         }
     }
 

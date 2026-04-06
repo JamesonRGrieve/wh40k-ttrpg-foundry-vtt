@@ -1,12 +1,12 @@
-<form class="rt-item-sheet rt-item-sheet--journal" autocomplete="off">
+<form class="wh40k-item-sheet wh40k-item-sheet--journal" autocomplete="off">
     {{! Header }}
-    <header class="rt-item-sheet__header">
-        <div class="rt-item-sheet__portrait rt-item-sheet__portrait--small">
-            <span class="material-icons rt-item-sheet__portrait-icon">auto_stories</span>
+    <header class="wh40k-item-sheet__header">
+        <div class="wh40k-item-sheet__portrait wh40k-item-sheet__portrait--small">
+            <span class="material-icons wh40k-item-sheet__portrait-icon">auto_stories</span>
         </div>
-        <div class="rt-item-sheet__header-info">
-            <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Journal Entry Title" />
-            <div class="rt-item-sheet__type-badge">
+        <div class="wh40k-item-sheet__header-info">
+            <input class="wh40k-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Journal Entry Title" />
+            <div class="wh40k-item-sheet__type-badge">
                 <span class="material-icons">menu_book</span>
                 <span>Journal Entry</span>
             </div>
@@ -14,32 +14,32 @@
     </header>
 
     {{! Entry Details Panel }}
-    <section class="rt-item-sheet__panel">
-        <h2 class="rt-item-sheet__panel-title">
+    <section class="wh40k-item-sheet__panel">
+        <h2 class="wh40k-item-sheet__panel-title">
             <span class="material-icons">event</span>
             Entry Details
         </h2>
-        <div class="rt-item-sheet__grid rt-item-sheet__grid--2col">
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Date</label>
-                <input class="rt-item-sheet__input" name="system.time" type="date" value="{{item.system.time}}" />
+        <div class="wh40k-item-sheet__grid wh40k-item-sheet__grid--2col">
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Date</label>
+                <input class="wh40k-item-sheet__input" name="system.time" type="date" value="{{item.system.time}}" />
             </div>
-            <div class="rt-item-sheet__field">
-                <label class="rt-item-sheet__label">Location</label>
-                <input class="rt-item-sheet__input" name="system.place" type="text" value="{{item.system.place}}" placeholder="Where this occurred..." />
+            <div class="wh40k-item-sheet__field">
+                <label class="wh40k-item-sheet__label">Location</label>
+                <input class="wh40k-item-sheet__input" name="system.place" type="text" value="{{item.system.place}}" placeholder="Where this occurred..." />
             </div>
         </div>
     </section>
 
     {{! Entry Content Panel }}
-    <section class="rt-item-sheet__panel rt-item-sheet__panel--description">
-        <h2 class="rt-item-sheet__panel-title">
+    <section class="wh40k-item-sheet__panel wh40k-item-sheet__panel--description">
+        <h2 class="wh40k-item-sheet__panel-title">
             <span class="material-icons">edit_note</span>
             Entry
         </h2>
-        <div class="rt-item-sheet__field rt-item-sheet__field--full">
+        <div class="wh40k-item-sheet__field wh40k-item-sheet__field--full">
             <textarea
-                class="rt-item-sheet__textarea rt-item-sheet__textarea--large"
+                class="wh40k-item-sheet__textarea wh40k-item-sheet__textarea--large"
                 name="system.description"
                 placeholder="Record your thoughts, discoveries, and observations..."
             >{{item.system.description}}</textarea>

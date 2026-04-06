@@ -2,36 +2,36 @@
   Rogue Trader Ammunition Item Sheet - V2 Redesign
   Matches weapon/armour sheet patterns with modern ApplicationV2 structure
 --}}
-<div class="rt-ammo-sheet">
+<div class="wh40k-ammo-sheet">
   <form autocomplete="off">
     
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact ammo identity with inline stats
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="rt-ammo-header">
-      <div class="rt-ammo-header__image" data-action="editImage" data-edit="img">
+    <header class="wh40k-ammo-header">
+      <div class="wh40k-ammo-header__image" data-action="editImage" data-edit="img">
         <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="rt-ammo-header__image-overlay">
+        <div class="wh40k-ammo-header__image-overlay">
           <i class="fas fa-bullseye"></i>
         </div>
       </div>
       
-      <div class="rt-ammo-header__info">
-        <input type="text" class="rt-ammo-header__name" name="name" value="{{item.name}}" placeholder="Ammunition Name" />
+      <div class="wh40k-ammo-header__info">
+        <input type="text" class="wh40k-ammo-header__name" name="name" value="{{item.name}}" placeholder="Ammunition Name" />
         
-        <div class="rt-ammo-header__meta">
-          <span class="rt-ammo-badge rt-ammo-badge--type" title="Ammunition">
+        <div class="wh40k-ammo-header__meta">
+          <span class="wh40k-ammo-badge wh40k-ammo-badge--type" title="Ammunition">
             <i class="fas fa-bullseye"></i>
             Ammunition
           </span>
           {{#if item.system.hasModifiers}}
-          <span class="rt-ammo-badge rt-ammo-badge--modifiers" title="Has Stat Modifiers">
+          <span class="wh40k-ammo-badge wh40k-ammo-badge--modifiers" title="Has Stat Modifiers">
             <i class="fas fa-plus-circle"></i>
             Modifiers
           </span>
           {{/if}}
           {{#if item.system.weaponTypes.size}}
-          <span class="rt-ammo-badge rt-ammo-badge--compatibility" title="Weapon Compatibility">
+          <span class="wh40k-ammo-badge wh40k-ammo-badge--compatibility" title="Weapon Compatibility">
             <i class="fas fa-link"></i>
             {{item.system.weaponTypes.size}} Types
           </span>
@@ -43,59 +43,59 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          STAT BAR: Modifier summary at a glance
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="rt-ammo-stats">
+    <div class="wh40k-ammo-stats">
       {{!-- Damage Modifier --}}
-      <div class="rt-ammo-stat rt-ammo-stat--{{#if (gt item.system.modifiers.damage 0)}}positive{{else}}{{#if (lt item.system.modifiers.damage 0)}}negative{{else}}neutral{{/if}}{{/if}}">
-        <div class="rt-ammo-stat__icon">
+      <div class="wh40k-ammo-stat wh40k-ammo-stat--{{#if (gt item.system.modifiers.damage 0)}}positive{{else}}{{#if (lt item.system.modifiers.damage 0)}}negative{{else}}neutral{{/if}}{{/if}}">
+        <div class="wh40k-ammo-stat__icon">
           <i class="fas fa-burst"></i>
         </div>
-        <div class="rt-ammo-stat__content">
-          <span class="rt-ammo-stat__label">Damage</span>
-          <span class="rt-ammo-stat__value">{{#if (eq item.system.modifiers.damage 0)}}--{{else}}{{signedNumber item.system.modifiers.damage}}{{/if}}</span>
+        <div class="wh40k-ammo-stat__content">
+          <span class="wh40k-ammo-stat__label">Damage</span>
+          <span class="wh40k-ammo-stat__value">{{#if (eq item.system.modifiers.damage 0)}}--{{else}}{{signedNumber item.system.modifiers.damage}}{{/if}}</span>
         </div>
       </div>
       
       {{!-- Penetration Modifier --}}
-      <div class="rt-ammo-stat rt-ammo-stat--{{#if (gt item.system.modifiers.penetration 0)}}positive{{else}}{{#if (lt item.system.modifiers.penetration 0)}}negative{{else}}neutral{{/if}}{{/if}}">
-        <div class="rt-ammo-stat__icon">
+      <div class="wh40k-ammo-stat wh40k-ammo-stat--{{#if (gt item.system.modifiers.penetration 0)}}positive{{else}}{{#if (lt item.system.modifiers.penetration 0)}}negative{{else}}neutral{{/if}}{{/if}}">
+        <div class="wh40k-ammo-stat__icon">
           <i class="fas fa-shield-slash"></i>
         </div>
-        <div class="rt-ammo-stat__content">
-          <span class="rt-ammo-stat__label">Pen</span>
-          <span class="rt-ammo-stat__value">{{#if (eq item.system.modifiers.penetration 0)}}--{{else}}{{signedNumber item.system.modifiers.penetration}}{{/if}}</span>
+        <div class="wh40k-ammo-stat__content">
+          <span class="wh40k-ammo-stat__label">Pen</span>
+          <span class="wh40k-ammo-stat__value">{{#if (eq item.system.modifiers.penetration 0)}}--{{else}}{{signedNumber item.system.modifiers.penetration}}{{/if}}</span>
         </div>
       </div>
       
       {{!-- Range Modifier --}}
-      <div class="rt-ammo-stat rt-ammo-stat--{{#if (gt item.system.modifiers.range 0)}}positive{{else}}{{#if (lt item.system.modifiers.range 0)}}negative{{else}}neutral{{/if}}{{/if}}">
-        <div class="rt-ammo-stat__icon">
+      <div class="wh40k-ammo-stat wh40k-ammo-stat--{{#if (gt item.system.modifiers.range 0)}}positive{{else}}{{#if (lt item.system.modifiers.range 0)}}negative{{else}}neutral{{/if}}{{/if}}">
+        <div class="wh40k-ammo-stat__icon">
           <i class="fas fa-ruler"></i>
         </div>
-        <div class="rt-ammo-stat__content">
-          <span class="rt-ammo-stat__label">Range</span>
-          <span class="rt-ammo-stat__value">{{#if (eq item.system.modifiers.range 0)}}--{{else}}{{signedNumber item.system.modifiers.range}}%{{/if}}</span>
+        <div class="wh40k-ammo-stat__content">
+          <span class="wh40k-ammo-stat__label">Range</span>
+          <span class="wh40k-ammo-stat__value">{{#if (eq item.system.modifiers.range 0)}}--{{else}}{{signedNumber item.system.modifiers.range}}%{{/if}}</span>
         </div>
       </div>
       
       {{!-- Clip Modifier --}}
-      <div class="rt-ammo-stat rt-ammo-stat--{{#if (gt item.system.clipModifier 0)}}positive{{else}}{{#if (lt item.system.clipModifier 0)}}negative{{else}}neutral{{/if}}{{/if}}">
-        <div class="rt-ammo-stat__icon">
+      <div class="wh40k-ammo-stat wh40k-ammo-stat--{{#if (gt item.system.clipModifier 0)}}positive{{else}}{{#if (lt item.system.clipModifier 0)}}negative{{else}}neutral{{/if}}{{/if}}">
+        <div class="wh40k-ammo-stat__icon">
           <i class="fas fa-layer-group"></i>
         </div>
-        <div class="rt-ammo-stat__content">
-          <span class="rt-ammo-stat__label">Clip</span>
-          <span class="rt-ammo-stat__value">{{#if (eq item.system.clipModifier 0)}}--{{else}}{{signedNumber item.system.clipModifier}}{{/if}}</span>
+        <div class="wh40k-ammo-stat__content">
+          <span class="wh40k-ammo-stat__label">Clip</span>
+          <span class="wh40k-ammo-stat__value">{{#if (eq item.system.clipModifier 0)}}--{{else}}{{signedNumber item.system.clipModifier}}{{/if}}</span>
         </div>
       </div>
       
       {{!-- Weight --}}
-      <div class="rt-ammo-stat rt-ammo-stat--neutral">
-        <div class="rt-ammo-stat__icon">
+      <div class="wh40k-ammo-stat wh40k-ammo-stat--neutral">
+        <div class="wh40k-ammo-stat__icon">
           <i class="fas fa-weight-hanging"></i>
         </div>
-        <div class="rt-ammo-stat__content">
-          <span class="rt-ammo-stat__label">Weight</span>
-          <span class="rt-ammo-stat__value">{{item.system.weight}}kg</span>
+        <div class="wh40k-ammo-stat__content">
+          <span class="wh40k-ammo-stat__label">Weight</span>
+          <span class="wh40k-ammo-stat__value">{{item.system.weight}}kg</span>
         </div>
       </div>
     </div>
@@ -103,20 +103,20 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="rt-tabs rt-tabs--ammo rt-ammo-tabs" data-group="primary">
-      <button type="button" class="rt-tab rt-ammo-tab active" data-tab="modifiers" data-group="primary">
+    <nav class="wh40k-tabs wh40k-tabs--ammo wh40k-ammo-tabs" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-ammo-tab active" data-tab="modifiers" data-group="primary">
         <i class="fas fa-sliders-h"></i>
         <span>Modifiers</span>
       </button>
-      <button type="button" class="rt-tab rt-ammo-tab" data-tab="compatibility" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-ammo-tab" data-tab="compatibility" data-group="primary">
         <i class="fas fa-link"></i>
         <span>Compatibility</span>
       </button>
-      <button type="button" class="rt-tab rt-ammo-tab" data-tab="qualities" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-ammo-tab" data-tab="qualities" data-group="primary">
         <i class="fas fa-star"></i>
         <span>Qualities</span>
       </button>
-      <button type="button" class="rt-tab rt-ammo-tab" data-tab="details" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-ammo-tab" data-tab="details" data-group="primary">
         <i class="fas fa-info-circle"></i>
         <span>Details</span>
       </button>
@@ -125,37 +125,37 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="rt-ammo-content rt-tab-content rt-tab-content--ammo scrollable">
+    <div class="wh40k-ammo-content wh40k-tab-content wh40k-tab-content--ammo scrollable">
       
       {{!-- MODIFIERS TAB --}}
-      <div class="rt-ammo-panel tab active" data-tab="modifiers" data-group="primary">
+      <div class="wh40k-ammo-panel tab active" data-tab="modifiers" data-group="primary">
         
-        <div class="rt-ammo-section">
-          <div class="rt-ammo-section__header">
+        <div class="wh40k-ammo-section">
+          <div class="wh40k-ammo-section__header">
             <i class="fas fa-sliders-h"></i>
             <h3>Weapon Stat Modifiers</h3>
           </div>
-          <div class="rt-ammo-section__body">
-            <div class="rt-field-grid rt-field-grid--2col">
-              <div class="rt-field">
+          <div class="wh40k-ammo-section__body">
+            <div class="wh40k-field-grid wh40k-field-grid--2col">
+              <div class="wh40k-field">
                 <label>Damage Modifier</label>
                 <input type="number" name="system.modifiers.damage" value="{{item.system.modifiers.damage}}" 
                        data-dtype="Number" step="1" />
                 <small>Applied to weapon base damage</small>
               </div>
-              <div class="rt-field">
+              <div class="wh40k-field">
                 <label>Penetration Modifier</label>
                 <input type="number" name="system.modifiers.penetration" value="{{item.system.modifiers.penetration}}" 
                        data-dtype="Number" step="1" />
                 <small>Applied to weapon penetration</small>
               </div>
-              <div class="rt-field">
+              <div class="wh40k-field">
                 <label>Range Modifier (%)</label>
                 <input type="number" name="system.modifiers.range" value="{{item.system.modifiers.range}}" 
                        data-dtype="Number" step="1" />
                 <small>Percentage change to range</small>
               </div>
-              <div class="rt-field">
+              <div class="wh40k-field">
                 <label>Clip Size Modifier</label>
                 <input type="number" name="system.clipModifier" value="{{item.system.clipModifier}}" 
                        data-dtype="Number" step="1" />
@@ -166,24 +166,24 @@
         </div>
 
         {{!-- Rate of Fire Modifiers --}}
-        <div class="rt-ammo-section">
-          <div class="rt-ammo-section__header">
+        <div class="wh40k-ammo-section">
+          <div class="wh40k-ammo-section__header">
             <i class="fas fa-gauge-high"></i>
             <h3>Rate of Fire Modifiers</h3>
           </div>
-          <div class="rt-ammo-section__body">
-            <div class="rt-field-grid rt-field-grid--3col">
-              <div class="rt-field">
+          <div class="wh40k-ammo-section__body">
+            <div class="wh40k-field-grid wh40k-field-grid--3col">
+              <div class="wh40k-field">
                 <label>Single Shot</label>
                 <input type="number" name="system.modifiers.rateOfFire.single" value="{{item.system.modifiers.rateOfFire.single}}" 
                        data-dtype="Number" step="1" />
               </div>
-              <div class="rt-field">
+              <div class="wh40k-field">
                 <label>Semi-Auto</label>
                 <input type="number" name="system.modifiers.rateOfFire.semi" value="{{item.system.modifiers.rateOfFire.semi}}" 
                        data-dtype="Number" step="1" />
               </div>
-              <div class="rt-field">
+              <div class="wh40k-field">
                 <label>Full-Auto</label>
                 <input type="number" name="system.modifiers.rateOfFire.full" value="{{item.system.modifiers.rateOfFire.full}}" 
                        data-dtype="Number" step="1" />
@@ -195,23 +195,23 @@
       </div>
 
       {{!-- COMPATIBILITY TAB --}}
-      <div class="rt-ammo-panel tab" data-tab="compatibility" data-group="primary">
+      <div class="wh40k-ammo-panel tab" data-tab="compatibility" data-group="primary">
         
-        <div class="rt-ammo-section">
-          <div class="rt-ammo-section__header">
+        <div class="wh40k-ammo-section">
+          <div class="wh40k-ammo-section__header">
             <i class="fas fa-link"></i>
             <h3>Compatible Weapon Types</h3>
-            <span class="rt-ammo-section__count">{{item.system.weaponTypes.size}} selected</span>
+            <span class="wh40k-ammo-section__count">{{item.system.weaponTypes.size}} selected</span>
           </div>
-          <div class="rt-ammo-section__body">
-            <p class="rt-help-text">Select which weapon types can use this ammunition. If none selected, ammo is universal.</p>
+          <div class="wh40k-ammo-section__body">
+            <p class="wh40k-help-text">Select which weapon types can use this ammunition. If none selected, ammo is universal.</p>
             
-            <div class="rt-weapon-type-chips">
+            <div class="wh40k-weapon-type-chips">
               {{#each CONFIG.WH40K.weaponTypes as |type key|}}
-              <label class="rt-weapon-type-chip {{#if (setIncludes key system.weaponTypes)}}active{{/if}}">
+              <label class="wh40k-weapon-type-chip {{#if (setIncludes key system.weaponTypes)}}active{{/if}}">
                 <input type="checkbox" name="system.weaponTypes" value="{{key}}" 
                        {{#if (setIncludes key system.weaponTypes)}}checked{{/if}} />
-                <span class="rt-weapon-type-chip__label">
+                <span class="wh40k-weapon-type-chip__label">
                   <i class="{{type.icon}}"></i>
                   {{type.label}}
                 </span>
@@ -224,24 +224,24 @@
       </div>
 
       {{!-- QUALITIES TAB --}}
-      <div class="rt-ammo-panel tab" data-tab="qualities" data-group="primary">
+      <div class="wh40k-ammo-panel tab" data-tab="qualities" data-group="primary">
         
         {{!-- Added Qualities --}}
-        <div class="rt-ammo-section">
-          <div class="rt-ammo-section__header">
+        <div class="wh40k-ammo-section">
+          <div class="wh40k-ammo-section__header">
             <i class="fas fa-plus-circle"></i>
             <h3>Added Qualities</h3>
             {{#if item.system.addedQualities.size}}
-            <span class="rt-ammo-section__count">{{item.system.addedQualities.size}}</span>
+            <span class="wh40k-ammo-section__count">{{item.system.addedQualities.size}}</span>
             {{/if}}
           </div>
-          <div class="rt-ammo-section__body">
+          <div class="wh40k-ammo-section__body">
             {{#if item.system.addedQualities.size}}
-            <div class="rt-quality-tags">
+            <div class="wh40k-quality-tags">
               {{#each (setToArray item.system.addedQualities) as |quality|}}
-              <div class="rt-quality-tag rt-quality-tag--added">
-                <span class="rt-quality-tag__label">{{quality}}</span>
-                <button type="button" class="rt-quality-tag__remove" 
+              <div class="wh40k-quality-tag wh40k-quality-tag--added">
+                <span class="wh40k-quality-tag__label">{{quality}}</span>
+                <button type="button" class="wh40k-quality-tag__remove" 
                         data-action="removeAddedQuality" data-quality="{{quality}}"
                         title="Remove quality">
                   <i class="fas fa-times"></i>
@@ -250,12 +250,12 @@
               {{/each}}
             </div>
             {{else}}
-            <p class="rt-empty-text">No qualities added</p>
+            <p class="wh40k-empty-text">No qualities added</p>
             {{/if}}
             
-            <div class="rt-quality-add">
-              <input type="text" class="rt-quality-add__input" name="new-added-quality" placeholder="Enter quality name..." />
-              <button type="button" class="rt-btn rt-btn--primary" data-action="addQuality" data-type="added">
+            <div class="wh40k-quality-add">
+              <input type="text" class="wh40k-quality-add__input" name="new-added-quality" placeholder="Enter quality name..." />
+              <button type="button" class="wh40k-btn wh40k-btn--primary" data-action="addQuality" data-type="added">
                 <i class="fas fa-plus"></i>
                 Add Quality
               </button>
@@ -264,21 +264,21 @@
         </div>
 
         {{!-- Removed Qualities --}}
-        <div class="rt-ammo-section">
-          <div class="rt-ammo-section__header">
+        <div class="wh40k-ammo-section">
+          <div class="wh40k-ammo-section__header">
             <i class="fas fa-minus-circle"></i>
             <h3>Removed Qualities</h3>
             {{#if item.system.removedQualities.size}}
-            <span class="rt-ammo-section__count">{{item.system.removedQualities.size}}</span>
+            <span class="wh40k-ammo-section__count">{{item.system.removedQualities.size}}</span>
             {{/if}}
           </div>
-          <div class="rt-ammo-section__body">
+          <div class="wh40k-ammo-section__body">
             {{#if item.system.removedQualities.size}}
-            <div class="rt-quality-tags">
+            <div class="wh40k-quality-tags">
               {{#each (setToArray item.system.removedQualities) as |quality|}}
-              <div class="rt-quality-tag rt-quality-tag--removed">
-                <span class="rt-quality-tag__label">{{quality}}</span>
-                <button type="button" class="rt-quality-tag__remove" 
+              <div class="wh40k-quality-tag wh40k-quality-tag--removed">
+                <span class="wh40k-quality-tag__label">{{quality}}</span>
+                <button type="button" class="wh40k-quality-tag__remove" 
                         data-action="removeRemovedQuality" data-quality="{{quality}}"
                         title="Remove quality">
                   <i class="fas fa-times"></i>
@@ -287,12 +287,12 @@
               {{/each}}
             </div>
             {{else}}
-            <p class="rt-empty-text">No qualities removed</p>
+            <p class="wh40k-empty-text">No qualities removed</p>
             {{/if}}
             
-            <div class="rt-quality-add">
-              <input type="text" class="rt-quality-add__input" name="new-removed-quality" placeholder="Enter quality name..." />
-              <button type="button" class="rt-btn rt-btn--primary" data-action="addQuality" data-type="removed">
+            <div class="wh40k-quality-add">
+              <input type="text" class="wh40k-quality-add__input" name="new-removed-quality" placeholder="Enter quality name..." />
+              <button type="button" class="wh40k-btn wh40k-btn--primary" data-action="addQuality" data-type="removed">
                 <i class="fas fa-plus"></i>
                 Add Quality
               </button>
@@ -303,22 +303,22 @@
       </div>
 
       {{!-- DETAILS TAB --}}
-      <div class="rt-ammo-panel tab" data-tab="details" data-group="primary">
+      <div class="wh40k-ammo-panel tab" data-tab="details" data-group="primary">
         
         {{!-- Physical Properties --}}
-        <div class="rt-ammo-section">
-          <div class="rt-ammo-section__header">
+        <div class="wh40k-ammo-section">
+          <div class="wh40k-ammo-section__header">
             <i class="fas fa-box"></i>
             <h3>Physical Properties</h3>
           </div>
-          <div class="rt-ammo-section__body">
-            <div class="rt-field-grid rt-field-grid--2col">
-              <div class="rt-field">
+          <div class="wh40k-ammo-section__body">
+            <div class="wh40k-field-grid wh40k-field-grid--2col">
+              <div class="wh40k-field">
                 <label>Weight (kg)</label>
                 <input type="number" name="system.weight" value="{{item.system.weight}}" 
                        data-dtype="Number" min="0" step="0.1" />
               </div>
-              <div class="rt-field">
+              <div class="wh40k-field">
                 <label>Availability</label>
                 <select name="system.availability">
                   <option value="ubiquitous" {{#if (eq item.system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
@@ -332,7 +332,7 @@
                   <option value="extremely-rare" {{#if (eq item.system.availability "extremely-rare")}}selected{{/if}}>Extremely Rare</option>
                 </select>
               </div>
-              <div class="rt-field">
+              <div class="wh40k-field">
                 <label>Cost (Thrones)</label>
                 <input type="number" name="system.cost" value="{{item.system.cost}}" 
                        data-dtype="Number" min="0" />
@@ -342,53 +342,53 @@
         </div>
 
         {{!-- Effect Description --}}
-        <div class="rt-ammo-section">
-          <div class="rt-ammo-section__header">
+        <div class="wh40k-ammo-section">
+          <div class="wh40k-ammo-section__header">
             <i class="fas fa-bolt"></i>
             <h3>Effect</h3>
           </div>
-          <div class="rt-ammo-section__body rt-ammo-section__body--editor">
+          <div class="wh40k-ammo-section__body wh40k-ammo-section__body--editor">
             {{#if inEditMode}}
             {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
             {{else}}
-            <div class="rt-description-content">{{{system.effect}}}</div>
+            <div class="wh40k-description-content">{{{system.effect}}}</div>
             {{/if}}
           </div>
         </div>
 
         {{!-- Description --}}
-        <div class="rt-ammo-section">
-          <div class="rt-ammo-section__header">
+        <div class="wh40k-ammo-section">
+          <div class="wh40k-ammo-section__header">
             <i class="fas fa-book"></i>
             <h3>Description</h3>
           </div>
-          <div class="rt-ammo-section__body rt-ammo-section__body--editor">
+          <div class="wh40k-ammo-section__body wh40k-ammo-section__body--editor">
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}
-            <div class="rt-description-content">{{{system.description.value}}}</div>
+            <div class="wh40k-description-content">{{{system.description.value}}}</div>
             {{/if}}
           </div>
         </div>
 
         {{!-- Notes --}}
-        <div class="rt-ammo-section">
-          <div class="rt-ammo-section__header">
+        <div class="wh40k-ammo-section">
+          <div class="wh40k-ammo-section__header">
             <i class="fas fa-sticky-note"></i>
             <h3>Notes</h3>
           </div>
-          <div class="rt-ammo-section__body">
+          <div class="wh40k-ammo-section__body">
             <textarea name="system.notes" rows="3" placeholder="Additional notes...">{{item.system.notes}}</textarea>
           </div>
         </div>
 
         {{!-- Source --}}
-        <div class="rt-ammo-section">
-          <div class="rt-ammo-section__header">
+        <div class="wh40k-ammo-section">
+          <div class="wh40k-ammo-section__header">
             <i class="fas fa-book-open"></i>
             <h3>Source</h3>
           </div>
-          <div class="rt-ammo-section__body">
+          <div class="wh40k-ammo-section__body">
             <input type="text" name="system.source" value="{{item.system.source}}" 
                    placeholder="Rogue Trader Core Rulebook, pg. 123" />
           </div>

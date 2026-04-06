@@ -11,30 +11,30 @@
         font-size: $wh40k-font-size-xs;
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
 
     &__input,
     &__select,
     &__textarea {
-        background: var(--rt-input-bg);
-        border: 1px solid var(--rt-border-color-light);
+        background: var(--wh40k-input-bg);
+        border: 1px solid var(--wh40k-border-color-light);
         border-radius: $wh40k-radius-sm;
         padding: $wh40k-space-xs $wh40k-space-sm;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         font-family: $wh40k-font-body;
         font-size: $wh40k-font-size-base;
         transition: all $wh40k-transition-fast;
 
         &:focus {
             outline: none;
-            border-color: var(--rt-gold);
-            background: var(--rt-input-bg-focus);
+            border-color: var(--wh40k-gold);
+            background: var(--wh40k-input-bg-focus);
             box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
         }
 
         &::placeholder {
-            color: var(--rt-text-subtle);
+            color: var(--wh40k-text-subtle);
         }
 
         &--centered {
@@ -46,8 +46,8 @@
         cursor: pointer;
 
         option {
-            background: var(--rt-sheet-bg);
-            color: var(--rt-text-dark);
+            background: var(--wh40k-sheet-bg);
+            color: var(--wh40k-text-dark);
         }
     }
 
@@ -61,24 +61,24 @@
         align-items: center;
         gap: $wh40k-space-sm;
         cursor: pointer;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         font-size: $wh40k-font-size-sm;
 
         input[type='checkbox'] {
             appearance: none;
             width: 18px;
             height: 18px;
-            border: 2px solid var(--rt-border-color);
+            border: 2px solid var(--wh40k-border-color);
             border-radius: $wh40k-radius-sm;
-            background: var(--rt-input-bg);
+            background: var(--wh40k-input-bg);
             cursor: pointer;
             position: relative;
             transition: all $wh40k-transition-fast;
             flex-shrink: 0;
 
             &:checked {
-                background: var(--rt-gold);
-                border-color: var(--rt-gold);
+                background: var(--wh40k-gold);
+                border-color: var(--wh40k-gold);
 
                 &::after {
                     content: '✓';
@@ -93,7 +93,7 @@
             }
 
             &:hover {
-                border-color: var(--rt-gold);
+                border-color: var(--wh40k-gold);
             }
         }
     }
@@ -120,15 +120,15 @@
 // ============================================
 
 .wh40k-description {
-    background: var(--rt-panel-body-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-body-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-md;
     padding: $wh40k-space-md;
     min-height: 80px;
 
     .editor-content,
     .editor {
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         line-height: 1.6;
 
         h1,
@@ -136,7 +136,7 @@
         h3,
         h4 {
             font-family: $wh40k-font-heading;
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
             margin-top: $wh40k-space-md;
             margin-bottom: $wh40k-space-sm;
         }
@@ -147,7 +147,7 @@
 
         strong,
         b {
-            color: var(--rt-text-dark);
+            color: var(--wh40k-text-dark);
         }
 
         ul,
@@ -167,7 +167,7 @@
 // ============================================
 
 .wh40k-empty-state {
-    color: var(--rt-text-subtle);
+    color: var(--wh40k-text-subtle);
     font-style: italic;
     text-align: center;
     padding: $wh40k-space-md;

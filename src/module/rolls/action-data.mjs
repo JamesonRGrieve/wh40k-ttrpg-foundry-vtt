@@ -358,7 +358,7 @@ export class ActionData {
             // Create Specials
             await this.createEffectData();
 
-            game.rt.log('Perform Action', this);
+            game.wh40k.log('Perform Action', this);
 
             // Description Text
             await this.descriptionText();

@@ -22,7 +22,7 @@ export default class VehicleSheet extends BaseActorSheet {
             adjustIntegrity: VehicleSheet.#adjustIntegrity,
             rollWeapon: VehicleSheet.#rollWeapon,
         },
-        tabs: [{ navSelector: 'nav.rt-navigation', contentSelector: '#tab-body', initial: 'stats', group: 'primary' }],
+        tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'stats', group: 'primary' }],
     };
 
     /* -------------------------------------------- */

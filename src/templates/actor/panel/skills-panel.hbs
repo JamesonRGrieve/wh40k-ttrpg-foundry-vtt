@@ -1,76 +1,76 @@
-<div class="rt-skills-panel">
-    <div class="rt-skills-columns">
+<div class="wh40k-skills-panel">
+    <div class="wh40k-skills-columns">
         <!-- Left Column -->
-        <div class="rt-skills-column">
+        <div class="wh40k-skills-column">
             {{#each skillLists.standardColumns.[0] as |entry|}}
-            <div class="rt-skill-row{{#if (eq entry.[1].advanced true)}} rt-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} rt-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
-                <div class="rt-skill-info">
-                    <span class="rt-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
-                    <div class="rt-skill-name-wrapper">
-                        <button type="button" class="rt-skill-name"
+            <div class="wh40k-skill-row{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
+                <div class="wh40k-skill-info">
+                    <span class="wh40k-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
+                    <div class="wh40k-skill-name-wrapper">
+                        <button type="button" class="wh40k-skill-name"
                                 data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
                                 data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
                                 data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
                                 title="Click to view {{entry.[1].label}} skill details">
-                            <span class="rt-skill-label">{{entry.[1].label}} <span class="rt-skill-char">({{entry.[1].charShort}})</span></span>
+                            <span class="wh40k-skill-label">{{entry.[1].label}} <span class="wh40k-skill-char">({{entry.[1].charShort}})</span></span>
                         </button>
-                        <button type="button" class="rt-skill-roll" 
+                        <button type="button" class="wh40k-skill-roll" 
                                 data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
                                 title="Roll {{entry.[1].label}} Test">
                             <i class="fas fa-dice-d20"></i>
                         </button>
                         {{!-- Favorite toggle button --}}
-                        <button type="button" class="rt-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}" 
+                        <button type="button" class="wh40k-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}" 
                                 data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
                                 title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
                             <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
                         </button>
                     </div>
                 </div>
-                <div class="rt-spec-training rt-training-display">
-                    <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" title="Trained (+0 bonus)">T</span>
-                    <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" title="+10 Bonus">+10</span>
-                    <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
+                <div class="wh40k-spec-training wh40k-training-display">
+                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" title="Trained (+0 bonus)">T</span>
+                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" title="+10 Bonus">+10</span>
+                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
                 </div>
-                <div class="rt-skill-total" title="{{entry.[1].breakdown}}">
+                <div class="wh40k-skill-total" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>
                 </div>
             </div>
             {{/each}}
         </div>
         <!-- Right Column -->
-        <div class="rt-skills-column">
+        <div class="wh40k-skills-column">
             {{#each skillLists.standardColumns.[1] as |entry|}}
-            <div class="rt-skill-row{{#if (eq entry.[1].advanced true)}} rt-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} rt-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
-                <div class="rt-skill-info">
-                    <span class="rt-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
-                    <div class="rt-skill-name-wrapper">
-                        <button type="button" class="rt-skill-name" 
+            <div class="wh40k-skill-row{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
+                <div class="wh40k-skill-info">
+                    <span class="wh40k-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
+                    <div class="wh40k-skill-name-wrapper">
+                        <button type="button" class="wh40k-skill-name" 
                                 data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
                                 data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
                                 data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
                                 title="Click to view {{entry.[1].label}} skill details">
-                            <span class="rt-skill-label">{{entry.[1].label}} <span class="rt-skill-char">({{entry.[1].charShort}})</span></span>
+                            <span class="wh40k-skill-label">{{entry.[1].label}} <span class="wh40k-skill-char">({{entry.[1].charShort}})</span></span>
                         </button>
-                        <button type="button" class="rt-skill-roll" 
+                        <button type="button" class="wh40k-skill-roll" 
                                 data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
                                 title="Roll {{entry.[1].label}} Test">
                             <i class="fas fa-dice-d20"></i>
                         </button>
                         {{!-- Favorite toggle button --}}
-                        <button type="button" class="rt-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}" 
+                        <button type="button" class="wh40k-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}" 
                                 data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
                                 title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
                             <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
                         </button>
                     </div>
                 </div>
-                <div class="rt-spec-training rt-training-display">
-                    <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" title="Trained (+0 bonus)">T</span>
-                    <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" title="+10 Bonus">+10</span>
-                    <span class="rt-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
+                <div class="wh40k-spec-training wh40k-training-display">
+                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" title="Trained (+0 bonus)">T</span>
+                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" title="+10 Bonus">+10</span>
+                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="+20 Bonus">+20</span>
                 </div>
-                <div class="rt-skill-total" title="{{entry.[1].breakdown}}">
+                <div class="wh40k-skill-total" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>
                 </div>
             </div>

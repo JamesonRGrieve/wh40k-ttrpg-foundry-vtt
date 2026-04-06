@@ -1,14 +1,14 @@
-<div class="rt-panel spacer rt-grid-col-6 rt-grid-row-1">
-    <h1 class="rt-panel-header">{{localize "WH40K.Starship.Upgrades.Header"}}</h1>
-    <div class="rt-table--border">
+<div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-1">
+    <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Upgrades.Header"}}</h1>
+    <div class="wh40k-table--border">
         <div class="table-row--head">
             <div class="table-cell--span2">{{localize "WH40K.Starship.Upgrades.Name"}}</div>
             <div class="table-cell">{{localize "WH40K.Starship.Upgrades.Power"}}</div>
             <div class="table-cell">{{localize "WH40K.Starship.Upgrades.Space"}}</div>
             <div class="table-cell--span2">{{localize "WH40K.Starship.Upgrades.Effect"}}</div>
             <div class="table-cell--last">
-                <label class="rt-control-button" data-action="itemCreate" data-type="shipUpgrade">
-                    <span class="rt-control-button__span material-icons">add_circle</span>
+                <label class="wh40k-control-button" data-action="itemCreate" data-type="shipUpgrade">
+                    <span class="wh40k-control-button__span material-icons">add_circle</span>
                 </label>
             </div>
         </div>
@@ -16,17 +16,17 @@
             {{#if item.isShipUpgrade}}
                 <div class="table-row">
                     <div class="table-cell--span2">
-                        <button class="item-name rt-item-button" data-item-id="{{item.id}}" type="button">
-                            <img class="rt-item-img" src="{{item.img}}" alt="{{item.name}}" />
+                        <button class="item-name wh40k-item-button" data-item-id="{{item.id}}" type="button">
+                            <img class="wh40k-item-img" src="{{item.img}}" alt="{{item.name}}" />
                             {{item.name}}
                         </button>
                     </div>
                     <div class="table-cell">{{item.system.power}}</div>
                     <div class="table-cell">{{item.system.space}}</div>
-                    <div class="table-cell--span2 rt-effect-text">{{{item.system.effect}}}</div>
+                    <div class="table-cell--span2 wh40k-effect-text">{{{item.system.effect}}}</div>
                     <div class="table-cell--last">
-                        <label class="rt-control-button item-delete" data-item-id="{{item.id}}">
-                            <span class="rt-control-button__span material-icons">delete</span>
+                        <label class="wh40k-control-button item-delete" data-item-id="{{item.id}}">
+                            <span class="wh40k-control-button__span material-icons">delete</span>
                         </label>
                     </div>
                 </div>

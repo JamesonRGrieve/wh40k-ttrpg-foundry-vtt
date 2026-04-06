@@ -1,14 +1,14 @@
 {{! NPC Template - Equipment Tab }}
 <section class="tab-content tab-equipment" data-tab="equipment" data-group="primary">
     {{! Weapons Section }}
-    <div class="rt-panel">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel">
+        <header class="wh40k-panel-header">
             <h3><i class="fas fa-sword"></i> {{localize "WH40K.NPC.Template.Weapons"}}</h3>
-            <button type="button" class="rt-btn rt-btn-icon" data-action="addWeapon">
+            <button type="button" class="wh40k-btn wh40k-btn-icon" data-action="addWeapon">
                 <i class="fas fa-plus"></i>
             </button>
         </header>
-        <div class="rt-panel-content">
+        <div class="wh40k-panel-content">
             {{#if (gt system.weapons.length 0)}}
                 <div class="weapons-list">
                     <div class="weapon-header">
@@ -41,7 +41,7 @@
                                 placeholder="{{localize 'WH40K.Weapon.SpecialPlaceholder'}}"
                             />
                             <div class="col-actions">
-                                <button type="button" class="rt-btn rt-btn-icon rt-btn-danger" data-action="removeWeapon" data-index="{{idx}}">
+                                <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger" data-action="removeWeapon" data-index="{{idx}}">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -55,11 +55,11 @@
     </div>
 
     {{! Armour Section }}
-    <div class="rt-panel">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel">
+        <header class="wh40k-panel-header">
             <h3><i class="fas fa-shield-alt"></i> {{localize "WH40K.NPC.Template.Armour"}}</h3>
         </header>
-        <div class="rt-panel-content">
+        <div class="wh40k-panel-content">
             <div class="armour-simple">
                 <label>{{localize "WH40K.NPC.Template.BaseArmour"}}</label>
                 <input type="number" name="system.baseArmour" value="{{system.baseArmour}}" min="0" />
@@ -78,21 +78,21 @@
     </div>
 
     {{! Equipment Section }}
-    <div class="rt-panel">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel">
+        <header class="wh40k-panel-header">
             <h3><i class="fas fa-backpack"></i> {{localize "WH40K.NPC.Template.Equipment"}}</h3>
-            <button type="button" class="rt-btn rt-btn-icon" data-action="addEquipment">
+            <button type="button" class="wh40k-btn wh40k-btn-icon" data-action="addEquipment">
                 <i class="fas fa-plus"></i>
             </button>
         </header>
-        <div class="rt-panel-content">
+        <div class="wh40k-panel-content">
             {{#if (gt system.equipment.length 0)}}
                 <div class="equipment-list">
                     {{#each system.equipment as |item idx|}}
                         <div class="equipment-row" data-index="{{idx}}">
                             <input type="text" name="system.equipment.{{idx}}.name" value="{{item.name}}" placeholder="{{localize 'WH40K.Item.Name'}}" />
                             <input type="number" name="system.equipment.{{idx}}.quantity" value="{{item.quantity}}" min="1" class="quantity" />
-                            <button type="button" class="rt-btn rt-btn-icon rt-btn-danger" data-action="removeEquipment" data-index="{{idx}}">
+                            <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger" data-action="removeEquipment" data-index="{{idx}}">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>

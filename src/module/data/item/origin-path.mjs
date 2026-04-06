@@ -221,7 +221,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @type {string}
      */
     get stepLabel() {
-        return game.i18n.localize(`RT.OriginPath.${this.step.capitalize()}`);
+        return game.i18n.localize(`WH40K.OriginPath.${this.step.capitalize()}`);
     }
 
     /**

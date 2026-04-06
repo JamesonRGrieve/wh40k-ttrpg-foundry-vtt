@@ -1,17 +1,17 @@
 {{!-- Vehicle V2 Components Tab --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
-    <div class="rt-vehicle-v2-components">
+    <div class="wh40k-vehicle-v2-components">
         
         {{!-- Components/Upgrades List --}}
-        <div class="rt-vehicle-v2-panel rt-vehicle-v2-components-list">
-            <h3 class="rt-vehicle-v2-panel-title">
+        <div class="wh40k-vehicle-v2-panel wh40k-vehicle-v2-components-list">
+            <h3 class="wh40k-vehicle-v2-panel-title">
                 <i class="fas fa-cog"></i>
                 Components & Upgrades
             </h3>
-            <div class="rt-vehicle-v2-items-list">
+            <div class="wh40k-vehicle-v2-items-list">
                 {{#each components}}
-                <div class="rt-vehicle-v2-component-item" data-item-id="{{this._id}}">
-                    <div class="rt-vehicle-v2-component-name">
+                <div class="wh40k-vehicle-v2-component-item" data-item-id="{{this._id}}">
+                    <div class="wh40k-vehicle-v2-component-name">
                         <input type="checkbox" 
                                data-action="toggleComponentActive" 
                                data-item-id="{{this._id}}"
@@ -19,7 +19,7 @@
                         {{this.name}}
                     </div>
                     {{#if this.system.description}}
-                    <div class="rt-vehicle-v2-component-desc">
+                    <div class="wh40k-vehicle-v2-component-desc">
                         {{{this.system.description}}}
                     </div>
                     {{/if}}
@@ -27,12 +27,12 @@
                 {{/each}}
                 
                 {{#each vehicleUpgrades}}
-                <div class="rt-vehicle-v2-component-item" data-item-id="{{this._id}}">
-                    <div class="rt-vehicle-v2-component-name">
+                <div class="wh40k-vehicle-v2-component-item" data-item-id="{{this._id}}">
+                    <div class="wh40k-vehicle-v2-component-name">
                         {{this.name}}
                     </div>
                     {{#if this.system.description}}
-                    <div class="rt-vehicle-v2-component-desc">
+                    <div class="wh40k-vehicle-v2-component-desc">
                         {{{this.system.description}}}
                     </div>
                     {{/if}}
@@ -40,7 +40,7 @@
                 {{/each}}
                 
                 {{#unless (or components.length vehicleUpgrades.length)}}
-                <div class="rt-vehicle-v2-empty">No components or upgrades</div>
+                <div class="wh40k-vehicle-v2-empty">No components or upgrades</div>
                 {{/unless}}
             </div>
         </div>

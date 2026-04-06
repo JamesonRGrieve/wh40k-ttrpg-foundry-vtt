@@ -99,7 +99,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel {
         const schema = {};
         for (const template of this._schemaTemplates) {
             if (!template.defineSchema) {
-                throw new Error(`Invalid RT template mixin ${template} defined on class ${this.constructor}`);
+                throw new Error(`Invalid WH40K template mixin ${template} defined on class ${this.constructor}`);
             }
             this.mergeSchema(schema, template.defineSchema());
         }

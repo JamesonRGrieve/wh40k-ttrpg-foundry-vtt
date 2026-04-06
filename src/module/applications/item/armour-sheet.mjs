@@ -32,7 +32,7 @@ export default class ArmourSheet extends ContainerItemSheet {
     static PARTS = {
         sheet: {
             template: 'systems/wh40k-rpg/templates/item/item-armour-sheet-v2.hbs',
-            scrollable: ['.rt-tab-content'],
+            scrollable: ['.wh40k-tab-content'],
         },
     };
 
@@ -100,7 +100,7 @@ export default class ArmourSheet extends ContainerItemSheet {
                 .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
                 .join('');
             props[id] = {
-                label: game.i18n.localize(`RT.ArmourProperty.${pascalCase}`),
+                label: game.i18n.localize(`WH40K.ArmourProperty.${pascalCase}`),
             };
         }
 

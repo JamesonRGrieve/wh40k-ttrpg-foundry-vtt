@@ -4,16 +4,16 @@
 {{#if weaponSelect}}
     <div class="urd-panel__section">
         <h4 class="urd-panel__section-title">Select Weapon</h4>
-        <div class="rt-prompt__weapon-list">
+        <div class="wh40k-prompt__weapon-list">
             {{#each weapons as |weapon|}}
-                <label class="rt-prompt__weapon-item {{#if weapon.isSelected}}rt-prompt__weapon-item--selected{{/if}}"
+                <label class="wh40k-prompt__weapon-item {{#if weapon.isSelected}}wh40k-prompt__weapon-item--selected{{/if}}"
                        data-action="selectWeapon" data-weapon-id="{{weapon.id}}">
-                    <input class="rt-prompt__weapon-check" type="checkbox" {{checked weapon.isSelected}} name="{{weapon.id}}" tabindex="-1" />
-                    <img class="rt-prompt__weapon-img" alt="{{weapon.name}}" src="{{weapon.img}}" />
-                    <div class="rt-prompt__weapon-info">
-                        <div class="rt-prompt__weapon-name">{{weapon.name}}</div>
+                    <input class="wh40k-prompt__weapon-check" type="checkbox" {{checked weapon.isSelected}} name="{{weapon.id}}" tabindex="-1" />
+                    <img class="wh40k-prompt__weapon-img" alt="{{weapon.name}}" src="{{weapon.img}}" />
+                    <div class="wh40k-prompt__weapon-info">
+                        <div class="wh40k-prompt__weapon-name">{{weapon.name}}</div>
                         {{#if weapon.items}}
-                            <div class="rt-prompt__weapon-details">
+                            <div class="wh40k-prompt__weapon-details">
                                 {{#each weapon.items as |item|}}{{item.name}}{{#unless @last}}, {{/unless}}{{/each}}
                             </div>
                         {{/if}}
@@ -81,7 +81,7 @@
     {{#if isCalledShot}}
         <div class="urd-panel__field">
             <span class="urd-panel__label">Called Shot Location</span>
-            <select class="rt-prompt__select" name="calledShotLocation">
+            <select class="wh40k-prompt__select" name="calledShotLocation">
                 {{selectOptions locations selected=calledShotLocation}}
             </select>
         </div>

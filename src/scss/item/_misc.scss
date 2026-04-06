@@ -3,10 +3,10 @@
 // ============================================
 
 .wh40k-compendium-browser-btn {
-    background: linear-gradient(135deg, var(--rt-gold-dark) 0%, var(--rt-gold) 100%);
-    border: 1px solid var(--rt-gold);
+    background: linear-gradient(135deg, var(--wh40k-gold-dark) 0%, var(--wh40k-gold) 100%);
+    border: 1px solid var(--wh40k-gold);
     border-radius: $wh40k-radius-sm;
-    color: var(--rt-sheet-bg);
+    color: var(--wh40k-sheet-bg);
     font-size: $wh40k-font-size-xs;
     font-weight: 600;
     padding: 4px 8px;
@@ -14,8 +14,8 @@
     margin-right: 4px;
 
     &:hover {
-        background: var(--rt-gold);
-        box-shadow: var(--rt-gold-glow);
+        background: var(--wh40k-gold);
+        box-shadow: var(--wh40k-gold-glow);
     }
 
     i {
@@ -27,19 +27,19 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: var(--rt-sheet-bg);
-    color: var(--rt-text-dark);
+    background: var(--wh40k-sheet-bg);
+    color: var(--wh40k-text-dark);
     font-family: $wh40k-font-ui;
 
     .browser-header {
         padding: $wh40k-space-md $wh40k-space-lg;
         background: linear-gradient(180deg, rgba(139, 109, 43, 0.2) 0%, transparent 100%);
-        border-bottom: 2px solid var(--rt-gold-dark);
+        border-bottom: 2px solid var(--wh40k-gold-dark);
 
         h1 {
             font-family: $wh40k-font-display;
             font-size: $wh40k-font-size-lg;
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
             margin: 0 0 $wh40k-space-xs;
 
             i {
@@ -49,7 +49,7 @@
 
         p {
             font-size: $wh40k-font-size-sm;
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
             margin: 0;
         }
     }
@@ -62,15 +62,15 @@
 
     .browser-sidebar {
         width: 220px;
-        background: var(--rt-panel-bg);
-        border-right: 1px solid var(--rt-border-color-light);
+        background: var(--wh40k-panel-bg);
+        border-right: 1px solid var(--wh40k-border-color-light);
         padding: $wh40k-space-md;
         overflow-y: auto;
 
         h3 {
             font-family: $wh40k-font-display;
             font-size: $wh40k-font-size-sm;
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
             margin: 0 0 $wh40k-space-sm;
             text-transform: uppercase;
             letter-spacing: 0.1em;
@@ -86,7 +86,7 @@
             label {
                 display: block;
                 font-size: $wh40k-font-size-xs;
-                color: var(--rt-text-muted);
+                color: var(--wh40k-text-muted);
                 text-transform: uppercase;
                 margin-bottom: 4px;
             }
@@ -94,16 +94,16 @@
             input,
             select {
                 width: 100%;
-                background: var(--rt-input-bg);
-                border: 1px solid var(--rt-border-color-light);
+                background: var(--wh40k-input-bg);
+                border: 1px solid var(--wh40k-border-color-light);
                 border-radius: $wh40k-radius-sm;
-                color: var(--rt-text-dark);
+                color: var(--wh40k-text-dark);
                 font-size: $wh40k-font-size-sm;
                 padding: $wh40k-space-xs $wh40k-space-sm;
 
                 &:focus {
                     outline: none;
-                    border-color: var(--rt-gold);
+                    border-color: var(--wh40k-gold);
                 }
             }
         }
@@ -113,7 +113,7 @@
             background: rgba($wh40k-color-crimson-dark, 0.2);
             border: 1px solid $wh40k-color-crimson-dark;
             border-radius: $wh40k-radius-sm;
-            color: var(--rt-text-dark);
+            color: var(--wh40k-text-dark);
             font-size: $wh40k-font-size-xs;
             padding: $wh40k-space-xs $wh40k-space-sm;
             cursor: pointer;
@@ -132,13 +132,13 @@
 
         .results-header {
             padding: $wh40k-space-sm $wh40k-space-md;
-            background: var(--rt-panel-bg);
-            border-bottom: 1px solid var(--rt-border-color-light);
+            background: var(--wh40k-panel-bg);
+            border-bottom: 1px solid var(--wh40k-border-color-light);
 
             h3 {
                 margin: 0;
                 font-size: $wh40k-font-size-sm;
-                color: var(--rt-text-dark);
+                color: var(--wh40k-text-dark);
             }
         }
 
@@ -157,20 +157,20 @@
                 align-items: center;
                 padding: $wh40k-space-xs $wh40k-space-sm;
                 background: rgba(139, 109, 43, 0.15);
-                border: 1px solid var(--rt-gold-dark);
+                border: 1px solid var(--wh40k-gold-dark);
                 border-radius: $wh40k-radius-sm;
                 margin-bottom: $wh40k-space-xs;
 
                 .results-group-title {
                     font-family: $wh40k-font-display;
                     font-size: $wh40k-font-size-sm;
-                    color: var(--rt-gold);
+                    color: var(--wh40k-gold);
                 }
 
                 .results-group-count {
                     font-size: $wh40k-font-size-xs;
-                    color: var(--rt-text-muted);
-                    background: var(--rt-sheet-bg);
+                    color: var(--wh40k-text-muted);
+                    background: var(--wh40k-sheet-bg);
                     padding: 2px 6px;
                     border-radius: $wh40k-radius-sm;
                 }
@@ -182,15 +182,15 @@
             align-items: center;
             gap: $wh40k-space-sm;
             padding: $wh40k-space-xs $wh40k-space-sm;
-            background: var(--rt-panel-bg);
+            background: var(--wh40k-panel-bg);
             border: 1px solid transparent;
             border-radius: $wh40k-radius-sm;
             margin-bottom: 2px;
             cursor: pointer;
 
             &:hover {
-                background: var(--rt-input-bg);
-                border-color: var(--rt-gold);
+                background: var(--wh40k-input-bg);
+                border-color: var(--wh40k-gold);
             }
 
             .item-image {
@@ -206,7 +206,7 @@
 
                 .item-name {
                     font-size: $wh40k-font-size-sm;
-                    color: var(--rt-text-dark);
+                    color: var(--wh40k-text-dark);
                     margin: 0;
                     white-space: nowrap;
                     overflow: hidden;
@@ -217,14 +217,14 @@
                     display: flex;
                     gap: $wh40k-space-sm;
                     font-size: $wh40k-font-size-xs;
-                    color: var(--rt-text-muted);
+                    color: var(--wh40k-text-muted);
 
                     span {
                         white-space: nowrap;
                     }
 
                     .item-type {
-                        color: var(--rt-gold);
+                        color: var(--wh40k-gold);
                         text-transform: capitalize;
                     }
                 }
@@ -234,7 +234,7 @@
         .no-results {
             text-align: center;
             padding: $wh40k-space-xl;
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
 
             i {
                 font-size: 48px;

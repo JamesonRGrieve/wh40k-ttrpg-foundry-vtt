@@ -14,16 +14,16 @@
   @param {String} icon - Font Awesome icon class (optional)
 --}}
 
-<div class="rt-modifier-row {{#if uuid}}rt-modifier-row--clickable{{/if}}"
+<div class="wh40k-modifier-row {{#if uuid}}wh40k-modifier-row--clickable{{/if}}"
      {{#if uuid}}data-action="viewItem" data-uuid="{{uuid}}"{{/if}}>
-  <div class="rt-modifier-row__source">
+  <div class="wh40k-modifier-row__source">
     {{#if icon}}
     <i class="{{icon}}"></i>
     {{/if}}
-    <span class="rt-modifier-row__name">{{source}}</span>
+    <span class="wh40k-modifier-row__name">{{source}}</span>
   </div>
   
-  <div class="rt-modifier-row__value {{#if (gt value 0)}}rt-modifier-row__value--positive{{else if (lt value 0)}}rt-modifier-row__value--negative{{/if}}">
+  <div class="wh40k-modifier-row__value {{#if (gt value 0)}}wh40k-modifier-row__value--positive{{else if (lt value 0)}}wh40k-modifier-row__value--negative{{/if}}">
     {{signedNumber value}}
   </div>
 </div>

@@ -95,7 +95,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
         const list = [];
         for (const [key, value] of Object.entries(this.modifiers)) {
             if (value !== 0) {
-                const label = game.i18n.localize(`RT.VehicleStat.${key.charAt(0).toUpperCase()}${key.slice(1)}`);
+                const label = game.i18n.localize(`WH40K.VehicleStat.${key.charAt(0).toUpperCase()}${key.slice(1)}`);
                 list.push({
                     key,
                     label,
@@ -136,7 +136,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
     /** @override */
     get chatProperties() {
         const props = [
-            game.i18n.localize(`RT.Availability.${this.availability.charAt(0).toUpperCase()}${this.availability.slice(1)}`),
+            game.i18n.localize(`WH40K.Availability.${this.availability.charAt(0).toUpperCase()}${this.availability.slice(1)}`),
             `Type: ${this.upgradeTypeLabel}`,
             `Difficulty: ${this.difficultyFormatted}`,
         ];

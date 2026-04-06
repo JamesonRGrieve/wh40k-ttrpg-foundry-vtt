@@ -233,7 +233,7 @@
             transition: all 0.2s ease;
 
             &:hover {
-                color: var(--rt-accent-gold, #d4af37);
+                color: var(--wh40k-accent-gold, #d4af37);
                 transform: scale(1.1);
             }
         }
@@ -368,7 +368,7 @@
     padding: 8px 10px;
     background: rgba(74, 55, 40, 0.05);
     border-radius: 6px;
-    border-left: 3px solid var(--rt-accent-gold, #d4af37);
+    border-left: 3px solid var(--wh40k-accent-gold, #d4af37);
 }
 
 .wh40k-ability-name {
@@ -465,7 +465,7 @@
         align-items: center;
         gap: 6px;
         padding: 8px 16px;
-        background: linear-gradient(180deg, var(--rt-accent-gold, #d4af37) 0%, #c9a42b 100%);
+        background: linear-gradient(180deg, var(--wh40k-accent-gold, #d4af37) 0%, #c9a42b 100%);
         border: 1px solid #b89420;
         border-radius: 6px;
         color: #2a1a0a;
@@ -474,7 +474,7 @@
         transition: all 0.2s ease;
 
         &:hover {
-            background: linear-gradient(180deg, #e0c050 0%, var(--rt-accent-gold, #d4af37) 100%);
+            background: linear-gradient(180deg, #e0c050 0%, var(--wh40k-accent-gold, #d4af37) 100%);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
     }

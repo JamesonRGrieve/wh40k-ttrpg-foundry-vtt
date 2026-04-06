@@ -21,7 +21,7 @@
         font-family: 'Cinzel', serif;
         font-size: 1.5rem;
         font-weight: 700;
-        color: var(--rt-gold-bright);
+        color: var(--wh40k-gold-bright);
         text-transform: uppercase;
         letter-spacing: 0.15em;
         text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
@@ -34,27 +34,27 @@
 
     &__description {
         font-size: 1rem;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         margin: 16px 0;
         line-height: 1.5;
 
         strong {
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
             font-weight: 700;
         }
     }
 
     &__instructions {
         font-size: 0.9rem;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
         margin: 16px 0;
         padding: 12px;
-        background: var(--rt-panel-bg);
+        background: var(--wh40k-panel-bg);
         border-radius: 4px;
-        border: 1px solid var(--rt-border-color);
+        border: 1px solid var(--wh40k-border-color);
 
         strong {
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
             font-weight: 700;
         }
     }
@@ -66,14 +66,14 @@
         border: 3px solid;
 
         &--success {
-            background: var(--rt-success-bg);
-            border-color: var(--rt-success-primary);
-            box-shadow: 0 0 20px var(--rt-card-success-glow);
+            background: var(--wh40k-success-bg);
+            border-color: var(--wh40k-success-primary);
+            box-shadow: 0 0 20px var(--wh40k-card-success-glow);
         }
 
         &--failure {
-            background: var(--rt-panel-bg);
-            border-color: var(--rt-text-muted);
+            background: var(--wh40k-panel-bg);
+            border-color: var(--wh40k-text-muted);
         }
     }
 
@@ -81,13 +81,13 @@
         font-family: 'Cinzel', serif;
         font-size: 3rem;
         font-weight: 700;
-        color: var(--rt-gold-bright);
+        color: var(--wh40k-gold-bright);
         line-height: 1;
     }
 
     &__roll-label {
         font-size: 1rem;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
         margin-top: 8px;
     }
 
@@ -98,7 +98,7 @@
             font-family: 'Cinzel', serif;
             font-size: 1.3rem;
             font-weight: 700;
-            color: var(--rt-gold-bright);
+            color: var(--wh40k-gold-bright);
             text-transform: uppercase;
             letter-spacing: 0.1em;
             margin: 0 0 12px 0;
@@ -107,7 +107,7 @@
 
         p {
             font-size: 0.95rem;
-            color: var(--rt-text-dark);
+            color: var(--wh40k-text-dark);
             margin: 8px 0;
         }
     }
@@ -119,13 +119,13 @@
             font-family: 'Cinzel', serif;
             font-size: 1.2rem;
             font-weight: 600;
-            color: var(--rt-text-dark);
+            color: var(--wh40k-text-dark);
             margin: 0 0 12px 0;
         }
 
         p {
             font-size: 0.9rem;
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
             font-style: italic;
             margin: 8px 0;
         }
@@ -133,7 +133,7 @@
 
     &__dos {
         font-size: 0.85rem;
-        color: var(--rt-success-primary);
+        color: var(--wh40k-success-primary);
         font-weight: 600;
         margin-top: 8px;
     }

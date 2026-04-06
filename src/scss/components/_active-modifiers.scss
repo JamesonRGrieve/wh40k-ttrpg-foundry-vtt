@@ -44,7 +44,7 @@
     border-radius: 4px;
     font-size: 0.9em;
     font-weight: 600;
-    color: var(--rt-text-secondary, rgba(255, 255, 255, 0.8));
+    color: var(--wh40k-text-secondary, rgba(255, 255, 255, 0.8));
     text-transform: uppercase;
     letter-spacing: 0.5px;
 
@@ -114,7 +114,7 @@
     width: 40px;
     height: 40px;
     border-radius: 4px;
-    border: 1px solid var(--rt-panel-border, rgba(255, 255, 255, 0.1));
+    border: 1px solid var(--wh40k-panel-border, rgba(255, 255, 255, 0.1));
     overflow: hidden;
 
     img {
@@ -141,13 +141,13 @@
     padding: 0;
     font-size: 1em;
     font-weight: 600;
-    color: var(--rt-text-primary, #fff);
+    color: var(--wh40k-text-primary, #fff);
     text-align: left;
     cursor: pointer;
     transition: color 0.15s ease;
 
     &:hover {
-        color: var(--rt-accent, #fbbf24);
+        color: var(--wh40k-accent, #fbbf24);
     }
 }
 
@@ -165,13 +165,13 @@
 
 .wh40k-modifier-item-description {
     font-size: 0.9em;
-    color: var(--rt-text-secondary, rgba(255, 255, 255, 0.7));
+    color: var(--wh40k-text-secondary, rgba(255, 255, 255, 0.7));
     line-height: 1.4;
 }
 
 .wh40k-modifier-item-duration {
     font-size: 0.85em;
-    color: var(--rt-text-disabled, rgba(255, 255, 255, 0.5));
+    color: var(--wh40k-text-disabled, rgba(255, 255, 255, 0.5));
     font-style: italic;
 }
 
@@ -183,9 +183,9 @@
     align-items: center;
     justify-content: center;
     background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--rt-panel-border, rgba(255, 255, 255, 0.1));
+    border: 1px solid var(--wh40k-panel-border, rgba(255, 255, 255, 0.1));
     border-radius: 4px;
-    color: var(--rt-text-secondary, rgba(255, 255, 255, 0.7));
+    color: var(--wh40k-text-secondary, rgba(255, 255, 255, 0.7));
     cursor: pointer;
     transition: all 0.15s ease;
 
@@ -195,8 +195,8 @@
 
     &:hover {
         background: rgba(0, 0, 0, 0.3);
-        border-color: var(--rt-accent, #fbbf24);
-        color: var(--rt-accent, #fbbf24);
+        border-color: var(--wh40k-accent, #fbbf24);
+        color: var(--wh40k-accent, #fbbf24);
     }
 
     // Active toggle
@@ -213,7 +213,7 @@
     justify-content: center;
     gap: 12px;
     padding: 32px 16px;
-    color: var(--rt-text-disabled, rgba(255, 255, 255, 0.4));
+    color: var(--wh40k-text-disabled, rgba(255, 255, 255, 0.4));
     text-align: center;
 
     i {

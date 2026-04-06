@@ -15,7 +15,7 @@ export default class AcolyteSheetSidebar extends AcolyteSheet {
         ...AcolyteSheet.DEFAULT_OPTIONS,
         classes: ['acolyte', 'sidebar-nav'],
         // Tab configuration for sidebar layout
-        tabs: [{ navSelector: 'nav.rt-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
+        tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
     };
 
     /* -------------------------------------------- */

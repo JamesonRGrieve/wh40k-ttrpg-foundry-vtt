@@ -1,11 +1,11 @@
-<div class="rt-header__item-wrapper--{{cleanFieldName key}}">
-    <span class="rt-header__title">{{capitalize key}}</span>
+<div class="wh40k-header__item-wrapper--{{cleanFieldName key}}">
+    <span class="wh40k-header__title">{{capitalize key}}</span>
     {{#if options}}
-        <select class="rt-header__select acolyte-{{key}}" name="system.bio.{{key}}">
+        <select class="wh40k-header__select acolyte-{{key}}" name="system.bio.{{key}}">
             <option value=""></option>
             {{selectOptions (arrayToObject options) selected=this.value}}
         </select>
     {{else}}
-        <input class="rt-header__input" name="system.bio.{{key}}" type="text" value="{{this.value}}" />
+        <input class="wh40k-header__input" name="system.bio.{{key}}" type="text" value="{{this.value}}" />
     {{/if}}
 </div>

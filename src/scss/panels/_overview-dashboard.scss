@@ -15,18 +15,18 @@
 }
 
 // Dashboard Rows
-// Uses --rt-columns CSS variable set by ResizeObserver
+// Uses --wh40k-columns CSS variable set by ResizeObserver
 .wh40k-dashboard-row {
     display: grid;
     gap: $wh40k-space-sm;
 
     &.wh40k-dashboard-row--top {
-        grid-template-columns: repeat(var(--rt-columns, 3), 1fr);
+        grid-template-columns: repeat(var(--wh40k-columns, 3), 1fr);
         min-height: 200px;
     }
 
     &.wh40k-dashboard-row--middle {
-        grid-template-columns: repeat(var(--rt-columns, 3), 1fr);
+        grid-template-columns: repeat(var(--wh40k-columns, 3), 1fr);
         min-height: 140px;
     }
 
@@ -1497,7 +1497,7 @@
 // ============================================
 // Responsive Adjustments
 // ============================================
-// These work with the --rt-columns CSS variable set by ResizeObserver
+// These work with the --wh40k-columns CSS variable set by ResizeObserver
 // Fallback media queries for non-JS environments
 
 @media (max-width: 700px) {

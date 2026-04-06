@@ -96,7 +96,7 @@ export class Hit {
             if (vengefulLevel && vengefulLevel < righteousFuryThreshold) {
                 righteousFuryThreshold = vengefulLevel;
             }
-            game.rt.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
+            game.wh40k.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
         }
 
         let rollFormula = actionItem.system.effectiveDamageFormula ?? actionItem.system.damage?.formula ?? actionItem.system.damage;
@@ -106,7 +106,7 @@ export class Hit {
         this.damageRoll = new Roll(rollFormula, attackData.rollData);
 
         if (attackData.rollData.hasAttackSpecial('Tearing')) {
-            game.rt.log('Modifying dice due to tearing');
+            game.wh40k.log('Modifying dice due to tearing');
             this.damageRoll.terms
                 .filter((term) => term instanceof foundry.dice.terms.Die)
                 .forEach((die) => {
@@ -117,14 +117,14 @@ export class Hit {
         }
 
         await this.damageRoll.evaluate();
-        game.rt.log('Damage Roll', this.damageRoll);
+        game.wh40k.log('Damage Roll', this.damageRoll);
 
         this.damage = this.damageRoll.total;
 
         for (const term of this.damageRoll.terms) {
             if (!term.results) continue;
             for (const result of term.results) {
-                game.rt.log('_calculateDamage result:', result);
+                game.wh40k.log('_calculateDamage result:', result);
                 if (result.discarded || !result.active) continue;
                 if (result.result >= righteousFuryThreshold) {
                     // Righteous fury hit

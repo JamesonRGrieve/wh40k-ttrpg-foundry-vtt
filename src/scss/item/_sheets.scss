@@ -13,14 +13,14 @@
     justify-content: space-between;
     align-items: center;
     padding: $wh40k-space-sm;
-    background: var(--rt-panel-body-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-body-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-sm;
     margin-bottom: $wh40k-space-xs;
 
     &:hover {
-        border-color: var(--rt-gold);
-        background: var(--rt-input-bg-focus);
+        border-color: var(--wh40k-gold);
+        background: var(--wh40k-input-bg-focus);
     }
 
     &__info {
@@ -30,12 +30,12 @@
         flex: 1;
 
         strong {
-            color: var(--rt-text-dark);
+            color: var(--wh40k-text-dark);
         }
     }
 
     &__detail {
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         font-size: $wh40k-font-size-sm;
         margin-left: $wh40k-space-sm;
     }
@@ -64,10 +64,10 @@
         gap: $wh40k-space-sm;
         font-family: $wh40k-font-display;
         font-size: $wh40k-font-size-md;
-        color: var(--rt-gold);
+        color: var(--wh40k-gold);
         margin: 0 0 $wh40k-space-md 0;
         padding-bottom: $wh40k-space-sm;
-        border-bottom: 1px solid var(--rt-border-color-light);
+        border-bottom: 1px solid var(--wh40k-border-color-light);
 
         .material-icons {
             font-size: 18px;
@@ -83,7 +83,7 @@
     height: 22px;
     padding: 0 6px;
     margin-left: $wh40k-space-sm;
-    background: var(--rt-gold);
+    background: var(--wh40k-gold);
     border-radius: 11px;
     font-family: $wh40k-font-ui;
     font-size: $wh40k-font-size-xs;
@@ -98,7 +98,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--rt-gold);
+    background: var(--wh40k-gold);
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -110,7 +110,7 @@
     }
 
     &:hover {
-        background: var(--rt-gold-bright);
+        background: var(--wh40k-gold-bright);
         transform: scale(1.1);
     }
 }
@@ -130,14 +130,14 @@
     align-items: center;
     gap: $wh40k-space-sm;
     padding: $wh40k-space-sm;
-    background: var(--rt-panel-body-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-body-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-sm;
     transition: all $wh40k-transition-fast;
 
     &:hover {
-        background: var(--rt-input-bg-focus);
-        border-color: var(--rt-gold);
+        background: var(--wh40k-input-bg-focus);
+        border-color: var(--wh40k-gold);
     }
 
     &--disabled {
@@ -155,32 +155,32 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--rt-btn-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-sm;
     cursor: pointer;
     transition: all $wh40k-transition-fast;
 
     .material-icons {
         font-size: 16px;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
 
     &:hover {
-        background: var(--rt-btn-bg-hover);
-        border-color: var(--rt-gold);
+        background: var(--wh40k-btn-bg-hover);
+        border-color: var(--wh40k-gold);
 
         .material-icons {
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
     }
 
     &--danger:hover {
         background: rgba(139, 0, 0, 0.2);
-        border-color: var(--rt-red);
+        border-color: var(--wh40k-red);
 
         .material-icons {
-            color: var(--rt-red);
+            color: var(--wh40k-red);
         }
     }
 }
@@ -188,7 +188,7 @@
 .wh40k-item-sheet__effect-name {
     flex: 1;
     font-weight: 500;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
 }
 
 .wh40k-item-sheet__effect-controls {
@@ -207,7 +207,7 @@
     justify-content: center;
     padding: $wh40k-space-xl $wh40k-space-md;
     text-align: center;
-    color: var(--rt-text-subtle);
+    color: var(--wh40k-text-subtle);
 
     .material-icons {
         font-size: 48px;

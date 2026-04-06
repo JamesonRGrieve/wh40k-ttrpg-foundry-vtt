@@ -1,16 +1,16 @@
 {{! Critical Injury Chat Card }}
-<div class="rt-chat-card rt-injury-card rt-injury-card--{{damageType}}">
-    <header class="rt-card-header">
-        <img src="{{img}}" alt="{{name}}" class="rt-card-icon" />
-        <div class="rt-card-title-area">
-            <h3 class="rt-card-title">{{name}}</h3>
-            <div class="rt-card-badges">
-                <span class="rt-badge rt-badge--{{severityClass}}">
+<div class="wh40k-chat-card wh40k-injury-card wh40k-injury-card--{{damageType}}">
+    <header class="wh40k-card-header">
+        <img src="{{img}}" alt="{{name}}" class="wh40k-card-icon" />
+        <div class="wh40k-card-title-area">
+            <h3 class="wh40k-card-title">{{name}}</h3>
+            <div class="wh40k-card-badges">
+                <span class="wh40k-badge wh40k-badge--{{severityClass}}">
                     <i class="fas fa-chart-line"></i>
                     {{severityLabel}}
                 </span>
                 {{#if permanent}}
-                    <span class="rt-badge rt-badge--permanent">
+                    <span class="wh40k-badge wh40k-badge--permanent">
                         <i class="fas fa-infinity"></i>
                         Permanent
                     </span>
@@ -19,39 +19,39 @@
         </div>
     </header>
 
-    <div class="rt-card-body">
-        <div class="rt-injury-meta">
-            <span class="rt-meta-item">
+    <div class="wh40k-card-body">
+        <div class="wh40k-injury-meta">
+            <span class="wh40k-meta-item">
                 <i class="fas {{damageTypeIcon}}"></i>
                 {{damageTypeLabel}}
             </span>
-            <span class="rt-meta-item">
+            <span class="wh40k-meta-item">
                 <i class="fas {{bodyPartIcon}}"></i>
                 {{bodyPartLabel}}
             </span>
         </div>
 
-        <div class="rt-injury-effect">
+        <div class="wh40k-injury-effect">
             {{{effect}}}
         </div>
 
         {{#if notes}}
-            <div class="rt-injury-notes">
+            <div class="wh40k-injury-notes">
                 <strong>Notes:</strong>
                 {{notes}}
             </div>
         {{/if}}
 
         {{#if description}}
-            <div class="rt-injury-description">
+            <div class="wh40k-injury-description">
                 {{{description}}}
             </div>
         {{/if}}
     </div>
 
     {{#if sourceReference}}
-        <footer class="rt-card-footer">
-            <span class="rt-source-ref">
+        <footer class="wh40k-card-footer">
+            <span class="wh40k-source-ref">
                 <i class="fas fa-book"></i>
                 {{sourceReference}}
             </span>

@@ -1,26 +1,26 @@
 {{!-- Armour Modification Properties Tab --}}
-<div class="rt-tab-content rt-armour-mod-properties" data-tab="properties">
-    <div class="rt-properties-grid">
+<div class="wh40k-tab-content wh40k-armour-mod-properties" data-tab="properties">
+    <div class="wh40k-properties-grid">
         {{!-- Added Properties Column --}}
-        <div class="rt-properties-column rt-properties-column--added">
-            <header class="rt-properties-header">
+        <div class="wh40k-properties-column wh40k-properties-column--added">
+            <header class="wh40k-properties-header">
                 <h3>
                     <i class="fas fa-plus-circle"></i>
                     {{localize "WH40K.Modification.AddedProperties"}}
                 </h3>
             </header>
             
-            <div class="rt-properties-list">
+            <div class="wh40k-properties-list">
                 {{#each addedPropertiesArray}}
-                    <div class="rt-property-tag rt-property-tag--added">
-                        <div class="rt-property-info">
-                            <span class="rt-property-label">{{label}}</span>
+                    <div class="wh40k-property-tag wh40k-property-tag--added">
+                        <div class="wh40k-property-info">
+                            <span class="wh40k-property-label">{{label}}</span>
                             {{#if description}}
-                                <span class="rt-property-desc">{{description}}</span>
+                                <span class="wh40k-property-desc">{{description}}</span>
                             {{/if}}
                         </div>
                         <button type="button" 
-                                class="rt-property-remove" 
+                                class="wh40k-property-remove" 
                                 data-action="removeProperty" 
                                 data-property="{{key}}" 
                                 data-list="added"
@@ -30,7 +30,7 @@
                         </button>
                     </div>
                 {{else}}
-                    <p class="rt-empty-state">
+                    <p class="wh40k-empty-state">
                         <i class="fas fa-info-circle"></i>
                         No properties added
                     </p>
@@ -38,16 +38,16 @@
             </div>
             
             {{#if isEditable}}
-                <div class="rt-property-add">
-                    <label class="rt-field-label">Add Property</label>
-                    <select class="rt-property-select" data-add-list="added">
+                <div class="wh40k-property-add">
+                    <label class="wh40k-field-label">Add Property</label>
+                    <select class="wh40k-property-select" data-add-list="added">
                         <option value="">-- Select Property --</option>
                         {{#each availablePropertiesArray}}
                             <option value="{{key}}">{{label}}</option>
                         {{/each}}
                     </select>
                     <button type="button" 
-                            class="rt-property-add-button" 
+                            class="wh40k-property-add-button" 
                             data-action="addProperty" 
                             data-property=""
                             data-list="added">
@@ -59,25 +59,25 @@
         </div>
         
         {{!-- Removed Properties Column --}}
-        <div class="rt-properties-column rt-properties-column--removed">
-            <header class="rt-properties-header">
+        <div class="wh40k-properties-column wh40k-properties-column--removed">
+            <header class="wh40k-properties-header">
                 <h3>
                     <i class="fas fa-minus-circle"></i>
                     {{localize "WH40K.Modification.RemovedProperties"}}
                 </h3>
             </header>
             
-            <div class="rt-properties-list">
+            <div class="wh40k-properties-list">
                 {{#each removedPropertiesArray}}
-                    <div class="rt-property-tag rt-property-tag--removed">
-                        <div class="rt-property-info">
-                            <span class="rt-property-label">{{label}}</span>
+                    <div class="wh40k-property-tag wh40k-property-tag--removed">
+                        <div class="wh40k-property-info">
+                            <span class="wh40k-property-label">{{label}}</span>
                             {{#if description}}
-                                <span class="rt-property-desc">{{description}}</span>
+                                <span class="wh40k-property-desc">{{description}}</span>
                             {{/if}}
                         </div>
                         <button type="button" 
-                                class="rt-property-remove" 
+                                class="wh40k-property-remove" 
                                 data-action="removeProperty" 
                                 data-property="{{key}}" 
                                 data-list="removed"
@@ -87,7 +87,7 @@
                         </button>
                     </div>
                 {{else}}
-                    <p class="rt-empty-state">
+                    <p class="wh40k-empty-state">
                         <i class="fas fa-info-circle"></i>
                         No properties removed
                     </p>
@@ -95,16 +95,16 @@
             </div>
             
             {{#if isEditable}}
-                <div class="rt-property-add">
-                    <label class="rt-field-label">Remove Property</label>
-                    <select class="rt-property-select" data-add-list="removed">
+                <div class="wh40k-property-add">
+                    <label class="wh40k-field-label">Remove Property</label>
+                    <select class="wh40k-property-select" data-add-list="removed">
                         <option value="">-- Select Property --</option>
                         {{#each availablePropertiesArray}}
                             <option value="{{key}}">{{label}}</option>
                         {{/each}}
                     </select>
                     <button type="button" 
-                            class="rt-property-add-button" 
+                            class="wh40k-property-add-button" 
                             data-action="addProperty" 
                             data-property=""
                             data-list="removed">
@@ -119,7 +119,7 @@
 
 <script>
 // Wire up the select dropdowns to the add buttons
-document.querySelectorAll('.rt-property-select').forEach(select => {
+document.querySelectorAll('.wh40k-property-select').forEach(select => {
     select.addEventListener('change', (e) => {
         const list = e.target.dataset.addList;
         const button = e.target.parentElement.querySelector(`[data-list="${list}"]`);

@@ -232,6 +232,6 @@ export class RollTableUtils {
 
 // Register global access
 Hooks.once('ready', () => {
-    game.rt = game.rt || {};
-    game.rt.rollTable = RollTableUtils;
+    game.wh40k = game.wh40k || {};
+    game.wh40k.rollTable = RollTableUtils;
 });

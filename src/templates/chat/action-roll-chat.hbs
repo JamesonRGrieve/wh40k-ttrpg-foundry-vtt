@@ -1,33 +1,33 @@
 {{!-- Rogue Trader Action Roll Card - Modern Design --}}
-<div class="rt-chat">
-    <div class="rt-roll-card">
+<div class="wh40k-chat">
+    <div class="wh40k-roll-card">
         {{!-- Header --}}
-        <div class="rt-roll-card__header">
-            {{#if label}}<div class="rt-roll-card__actor">{{label}}</div>{{/if}}
+        <div class="wh40k-roll-card__header">
+            {{#if label}}<div class="wh40k-roll-card__actor">{{label}}</div>{{/if}}
             {{#with rollData}}
-                <h2 class="rt-roll-card__title">{{name}}</h2>
-                {{#if action}}<div class="rt-roll-card__subtitle">{{action}}</div>{{/if}}
-                {{#if effectString}}<div class="rt-roll-card__subtitle">{{effectString}}</div>{{/if}}
+                <h2 class="wh40k-roll-card__title">{{name}}</h2>
+                {{#if action}}<div class="wh40k-roll-card__subtitle">{{action}}</div>{{/if}}
+                {{#if effectString}}<div class="wh40k-roll-card__subtitle">{{effectString}}</div>{{/if}}
                 {{#if isManualRoll}}
-                    <div class="rt-roll-card__manual-badge"><i class="fas fa-hand-paper"></i> Player Rolled</div>
+                    <div class="wh40k-roll-card__manual-badge"><i class="fas fa-hand-paper"></i> Player Rolled</div>
                 {{/if}}
             {{/with}}
         </div>
         
         {{!-- Body --}}
-        <div class="rt-roll-card__body">
+        <div class="wh40k-roll-card__body">
             {{#with rollData}}
                 {{!-- Weapon Qualities --}}
                 {{#if weapon}}
                     {{#if weapon.system.effectiveSpecial.size}}
-                        <div class="rt-roll-card__qualities">
-                            <div class="rt-roll-card__qualities-header">
+                        <div class="wh40k-roll-card__qualities">
+                            <div class="wh40k-roll-card__qualities-header">
                                 <i class="fas fa-star" style="color: #4bc073; font-size: 0.85rem;"></i>
-                                <span class="rt-roll-card__qualities-title">Active Qualities</span>
+                                <span class="wh40k-roll-card__qualities-title">Active Qualities</span>
                             </div>
-                            <div class="rt-roll-card__qualities-list">
+                            <div class="wh40k-roll-card__qualities-list">
                                 {{#each (specialQualities weapon.system.effectiveSpecial) as |quality|}}
-                                    <span class="rt-quality-tag" data-tooltip="{{quality.description}}" title="{{quality.description}}">
+                                    <span class="wh40k-quality-tag" data-tooltip="{{quality.description}}" title="{{quality.description}}">
                                         {{quality.label}}{{#if quality.level}} ({{quality.level}}){{/if}}
                                     </span>
                                 {{/each}}
@@ -38,47 +38,47 @@
                 
                 {{#unless ignoreModifiers}}
                     {{!-- Modifiers Breakdown --}}
-                    <div class="rt-roll-card__row">
-                        <span class="rt-roll-card__label">Base</span>
-                        <span class="rt-roll-card__value">{{baseTarget}}</span>
+                    <div class="wh40k-roll-card__row">
+                        <span class="wh40k-roll-card__label">Base</span>
+                        <span class="wh40k-roll-card__value">{{baseTarget}}</span>
                     </div>
                     
                     {{#each activeModifiers}}
-                        <div class="rt-roll-card__row rt-roll-card__row--modifier">
-                            <span class="rt-roll-card__label">{{@key}}</span>
-                            <span class="rt-roll-card__value {{#if (gt this 0)}}rt-roll-card__value--positive{{else if (lt this 0)}}rt-roll-card__value--negative{{/if}}">
+                        <div class="wh40k-roll-card__row wh40k-roll-card__row--modifier">
+                            <span class="wh40k-roll-card__label">{{@key}}</span>
+                            <span class="wh40k-roll-card__value {{#if (gt this 0)}}wh40k-roll-card__value--positive{{else if (lt this 0)}}wh40k-roll-card__value--negative{{/if}}">
                                 {{#if (gt this 0)}}+{{/if}}{{this}}
                             </span>
                         </div>
                     {{/each}}
                     
                     {{!-- Target Number --}}
-                    <div class="rt-roll-card__target">
-                        <span class="rt-roll-card__label">Target</span>
-                        <span class="rt-roll-card__value">{{modifiedTarget}}</span>
+                    <div class="wh40k-roll-card__target">
+                        <span class="wh40k-roll-card__label">Target</span>
+                        <span class="wh40k-roll-card__value">{{modifiedTarget}}</span>
                     </div>
                 {{/unless}}
                 
                 {{#if usesAmmo}}
-                    <div class="rt-roll-card__row">
-                        <span class="rt-roll-card__label">Ammo Used</span>
-                        <span class="rt-roll-card__value">{{ammoUsed}}</span>
+                    <div class="wh40k-roll-card__row">
+                        <span class="wh40k-roll-card__label">Ammo Used</span>
+                        <span class="wh40k-roll-card__value">{{ammoUsed}}</span>
                     </div>
                 {{/if}}
                 
                 {{!-- Effects --}}
                 {{#each @root.effectOutput as |effect|}}
-                    <div class="rt-roll-card__effect">
-                        <span class="rt-roll-card__effect-name">{{effect.name}}</span>
-                        <span class="rt-roll-card__effect-desc">{{effect.effect}}</span>
+                    <div class="wh40k-roll-card__effect">
+                        <span class="wh40k-roll-card__effect-name">{{effect.name}}</span>
+                        <span class="wh40k-roll-card__effect-desc">{{effect.effect}}</span>
                     </div>
                 {{/each}}
                 
                 {{!-- Opposed Roll --}}
                 {{#if isOpposed}}
-                    <div class="rt-roll-card__row">
-                        <span class="rt-roll-card__label">Opposed {{opposedChar}}</span>
-                        <span class="rt-roll-card__value">{{opposedRoll.total}} vs {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}} DoS){{/if}}</span>
+                    <div class="wh40k-roll-card__row">
+                        <span class="wh40k-roll-card__label">Opposed {{opposedChar}}</span>
+                        <span class="wh40k-roll-card__value">{{opposedRoll.total}} vs {{opposedTarget}} {{#if opposedSuccess}}({{opposedDos}} DoS){{/if}}</span>
                     </div>
                 {{/if}}
                 
@@ -86,14 +86,14 @@
                 {{#unless ignoreDegrees}}
                   {{#unless isTargetOnly}}
                     {{#if success}}
-                        <div class="rt-roll-card__degrees rt-roll-card__degrees--success">
-                            <span class="rt-roll-card__degrees-count">{{dos}}</span>
-                            <span class="rt-roll-card__degrees-label">Degrees of Success</span>
+                        <div class="wh40k-roll-card__degrees wh40k-roll-card__degrees--success">
+                            <span class="wh40k-roll-card__degrees-count">{{dos}}</span>
+                            <span class="wh40k-roll-card__degrees-label">Degrees of Success</span>
                         </div>
                     {{else}}
-                        <div class="rt-roll-card__degrees rt-roll-card__degrees--failure">
-                            <span class="rt-roll-card__degrees-count">{{dof}}</span>
-                            <span class="rt-roll-card__degrees-label">Degrees of Failure</span>
+                        <div class="wh40k-roll-card__degrees wh40k-roll-card__degrees--failure">
+                            <span class="wh40k-roll-card__degrees-count">{{dof}}</span>
+                            <span class="wh40k-roll-card__degrees-label">Degrees of Failure</span>
                         </div>
                     {{/if}}
                   {{/unless}}
@@ -101,7 +101,7 @@
                 
                 {{!-- Target-only display (no roll entered) --}}
                 {{#if isTargetOnly}}
-                    <div class="rt-roll-card__target-only">
+                    <div class="wh40k-roll-card__target-only">
                         Target posted - awaiting physical dice roll
                     </div>
                 {{/if}}
@@ -110,20 +110,20 @@
                 {{#unless ignoreSuccess}}
                   {{#unless isTargetOnly}}
                     {{#if success}}
-                        <div class="rt-roll-card__result rt-roll-card__result--success">
-                            <div class="rt-roll-card__result-label">Success</div>
-                            <div class="rt-roll-card__result-roll">{{roll.total}}</div>
+                        <div class="wh40k-roll-card__result wh40k-roll-card__result--success">
+                            <div class="wh40k-roll-card__result-label">Success</div>
+                            <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
                         </div>
                         {{#if hitLocation}}
-                            <div class="rt-roll-card__hit-loc">
+                            <div class="wh40k-roll-card__hit-loc">
                                 <i class="fas fa-crosshairs"></i>
                                 <span>{{hitLocation}}</span>
                             </div>
                         {{/if}}
                     {{else}}
-                        <div class="rt-roll-card__result rt-roll-card__result--failure">
-                            <div class="rt-roll-card__result-label">Failure</div>
-                            <div class="rt-roll-card__result-roll">{{roll.total}}</div>
+                        <div class="wh40k-roll-card__result wh40k-roll-card__result--failure">
+                            <div class="wh40k-roll-card__result-label">Failure</div>
+                            <div class="wh40k-roll-card__result-roll">{{roll.total}}</div>
                         </div>
                     {{/if}}
                   {{/unless}}
@@ -131,24 +131,24 @@
                 
                 {{!-- Action Controls --}}
                 {{#unless ignoreControls}}
-                    <div class="rt-roll-card__controls rt-roll-card__controls--stacked">
+                    <div class="wh40k-roll-card__controls wh40k-roll-card__controls--stacked">
                         {{#if showDamage}}
-                            <button class="rt-roll-card__btn rt-roll-card__btn--damage rt-roll-card__btn--full roll-control__roll-damage" data-roll-id="{{@root.id}}">
+                            <button class="wh40k-roll-card__btn wh40k-roll-card__btn--damage wh40k-roll-card__btn--full roll-control__roll-damage" data-roll-id="{{@root.id}}">
                                 <span class="material-icons">bolt</span>
                                 <span>Roll Damage</span>
                             </button>
                         {{else}}
-                            <button class="rt-roll-card__btn rt-roll-card__btn--disabled rt-roll-card__btn--full">
+                            <button class="wh40k-roll-card__btn wh40k-roll-card__btn--disabled wh40k-roll-card__btn--full">
                                 <span class="material-icons">bolt</span>
                                 <span>Damage</span>
                             </button>
                         {{/if}}
-                        <div class="rt-roll-card__controls-row">
-                            <button class="rt-roll-card__btn rt-roll-card__btn--sm roll-control__refund" data-roll-id="{{@root.id}}">
+                        <div class="wh40k-roll-card__controls-row">
+                            <button class="wh40k-roll-card__btn wh40k-roll-card__btn--sm roll-control__refund" data-roll-id="{{@root.id}}">
                                 <span class="material-icons">deblur</span>
                                 <span>Refund</span>
                             </button>
-                            <button class="rt-roll-card__btn rt-roll-card__btn--sm rt-roll-card__btn--fate roll-control__fate-reroll" data-roll-id="{{@root.id}}">
+                            <button class="wh40k-roll-card__btn wh40k-roll-card__btn--sm wh40k-roll-card__btn--fate roll-control__fate-reroll" data-roll-id="{{@root.id}}">
                                 <span class="material-icons">casino</span>
                                 <span>Re-roll</span>
                             </button>

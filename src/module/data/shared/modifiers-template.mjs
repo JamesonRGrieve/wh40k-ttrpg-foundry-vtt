@@ -337,7 +337,7 @@ export default class ModifiersTemplate extends SystemDataModel {
             if (value !== 0) {
                 list.push({
                     key,
-                    label: game.i18n.localize(`RT.Characteristic.${key.capitalize()}`),
+                    label: game.i18n.localize(`WH40K.Characteristic.${key.capitalize()}`),
                     value,
                     type: 'characteristic',
                 });
@@ -349,7 +349,7 @@ export default class ModifiersTemplate extends SystemDataModel {
             if (value !== 0) {
                 list.push({
                     key,
-                    label: game.i18n.localize(`RT.Skill.${key}`),
+                    label: game.i18n.localize(`WH40K.Skill.${key}`),
                     value,
                     type: 'skill',
                 });
@@ -361,7 +361,7 @@ export default class ModifiersTemplate extends SystemDataModel {
             if (value !== 0) {
                 list.push({
                     key,
-                    label: game.i18n.localize(`RT.Combat.${key.capitalize()}`),
+                    label: game.i18n.localize(`WH40K.Combat.${key.capitalize()}`),
                     value,
                     type: 'combat',
                 });
@@ -373,7 +373,7 @@ export default class ModifiersTemplate extends SystemDataModel {
             if (value !== 0) {
                 list.push({
                     key,
-                    label: game.i18n.localize(`RT.Resource.${key.capitalize()}`),
+                    label: game.i18n.localize(`WH40K.Resource.${key.capitalize()}`),
                     value,
                     type: 'resource',
                 });

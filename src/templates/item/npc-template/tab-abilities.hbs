@@ -1,21 +1,21 @@
 {{! NPC Template - Abilities Tab }}
 <section class="tab-content tab-abilities" data-tab="abilities" data-group="primary">
     {{! Talents Section }}
-    <div class="rt-panel">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel">
+        <header class="wh40k-panel-header">
             <h3><i class="fas fa-star"></i> {{localize "WH40K.NPC.Template.Talents"}}</h3>
-            <button type="button" class="rt-btn rt-btn-icon" data-action="addTalent">
+            <button type="button" class="wh40k-btn wh40k-btn-icon" data-action="addTalent">
                 <i class="fas fa-plus"></i>
             </button>
         </header>
-        <div class="rt-panel-content">
+        <div class="wh40k-panel-content">
             {{#if (gt system.talentRefs.length 0)}}
                 <div class="abilities-list">
                     {{#each talents as |talent idx|}}
                         <div class="ability-row" data-index="{{idx}}">
                             <img src="{{talent.img}}" alt="{{talent.name}}" class="ability-icon" />
                             <span class="ability-name">{{talent.name}}</span>
-                            <button type="button" class="rt-btn rt-btn-icon rt-btn-danger" data-action="removeTalent" data-index="{{idx}}">
+                            <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger" data-action="removeTalent" data-index="{{idx}}">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -28,14 +28,14 @@
     </div>
 
     {{! Traits Section }}
-    <div class="rt-panel">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel">
+        <header class="wh40k-panel-header">
             <h3><i class="fas fa-dna"></i> {{localize "WH40K.NPC.Template.Traits"}}</h3>
-            <button type="button" class="rt-btn rt-btn-icon" data-action="addTrait">
+            <button type="button" class="wh40k-btn wh40k-btn-icon" data-action="addTrait">
                 <i class="fas fa-plus"></i>
             </button>
         </header>
-        <div class="rt-panel-content">
+        <div class="wh40k-panel-content">
             {{#if (gt system.traitRefs.length 0)}}
                 <div class="abilities-list">
                     {{#each traits as |trait idx|}}
@@ -45,7 +45,7 @@
                             {{#if trait.level}}
                                 <span class="ability-level">({{trait.level}})</span>
                             {{/if}}
-                            <button type="button" class="rt-btn rt-btn-icon rt-btn-danger" data-action="removeTrait" data-index="{{idx}}">
+                            <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger" data-action="removeTrait" data-index="{{idx}}">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -58,11 +58,11 @@
     </div>
 
     {{! Special Abilities Section }}
-    <div class="rt-panel">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel">
+        <header class="wh40k-panel-header">
             <h3><i class="fas fa-magic"></i> {{localize "WH40K.NPC.Template.SpecialAbilities"}}</h3>
         </header>
-        <div class="rt-panel-content">
+        <div class="wh40k-panel-content">
             <div class="prosemirror-editor">
                 {{formInput fields.specialAbilities value=system.specialAbilities enriched=enrichedSpecialAbilities}}
             </div>
@@ -71,14 +71,14 @@
 
     {{! Psychic Powers Section (if applicable) }}
     {{#if hasPsychicPowers}}
-        <div class="rt-panel">
-            <header class="rt-panel-header">
+        <div class="wh40k-panel">
+            <header class="wh40k-panel-header">
                 <h3><i class="fas fa-brain"></i> {{localize "WH40K.NPC.Template.PsychicPowers"}}</h3>
-                <button type="button" class="rt-btn rt-btn-icon" data-action="addPsychicPower">
+                <button type="button" class="wh40k-btn wh40k-btn-icon" data-action="addPsychicPower">
                     <i class="fas fa-plus"></i>
                 </button>
             </header>
-            <div class="rt-panel-content">
+            <div class="wh40k-panel-content">
                 {{#if (gt psychicPowers.length 0)}}
                     <div class="abilities-list">
                         {{#each psychicPowers as |power idx|}}
@@ -86,7 +86,7 @@
                                 <img src="{{power.img}}" alt="{{power.name}}" class="ability-icon" />
                                 <span class="ability-name">{{power.name}}</span>
                                 <span class="power-rating">PR {{power.rating}}</span>
-                                <button type="button" class="rt-btn rt-btn-icon rt-btn-danger" data-action="removePsychicPower" data-index="{{idx}}">
+                                <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger" data-action="removePsychicPower" data-index="{{idx}}">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>

@@ -187,7 +187,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @type {string}
      */
     get typeLabel() {
-        const key = `RT.NPCType.${this.type.charAt(0).toUpperCase()}${this.type.slice(1)}`;
+        const key = `WH40K.NPCType.${this.type.charAt(0).toUpperCase()}${this.type.slice(1)}`;
         return game.i18n.localize(key);
     }
 
@@ -232,7 +232,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @type {string}
      */
     get roleLabel() {
-        const key = `RT.NPCRole.${this.role.charAt(0).toUpperCase()}${this.role.slice(1)}`;
+        const key = `WH40K.NPCRole.${this.role.charAt(0).toUpperCase()}${this.role.slice(1)}`;
         return game.i18n.localize(key);
     }
 

@@ -50,7 +50,7 @@
 }
 
 // ============================================
-// Talent Panel (rt-tp_) - Compact with Overlay Actions
+// Talent Panel (wh40k-tp_) - Compact with Overlay Actions
 // ============================================
 // Modern design: Actions overlay the row on hover, giving
 // maximum space to talent names when not interacting
@@ -61,8 +61,8 @@
     align-items: center;
     gap: 6px;
     padding: 3px 6px;
-    background: var(--rt-panel-bg-solid);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-solid);
+    border: 1px solid var(--wh40k-border-color-light);
     border-left: 3px solid $wh40k-accent-talents;
     border-radius: 4px;
     min-height: 28px;
@@ -72,7 +72,7 @@
     user-select: none;
 
     &:hover {
-        border-color: var(--rt-border-color);
+        border-color: var(--wh40k-border-color);
 
         .wh40k-tp_actions {
             opacity: 1;
@@ -88,7 +88,7 @@
 .wh40k-tp_icon {
     width: 22px;
     height: 22px;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 3px;
     object-fit: cover;
     flex-shrink: 0;
@@ -104,7 +104,7 @@
     text-align: left;
     font-size: 0.78rem;
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
@@ -128,7 +128,7 @@
     align-items: center;
     flex-shrink: 0;
     font-size: 0.6rem;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     transition: opacity 0.1s ease;
 }
 
@@ -163,7 +163,7 @@
     gap: 1px;
     align-items: center;
     padding: 2px 4px;
-    background: linear-gradient(90deg, transparent 0%, var(--rt-panel-bg-solid) 20%);
+    background: linear-gradient(90deg, transparent 0%, var(--wh40k-panel-bg-solid) 20%);
     border-radius: 3px;
     opacity: 0;
     pointer-events: none;
@@ -173,7 +173,7 @@
 .wh40k-tp_btn {
     background: none;
     border: none;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     padding: 2px 5px;
     border-radius: 3px;
@@ -201,8 +201,8 @@
     align-items: center;
     gap: $wh40k-space-sm;
     padding: 6px $wh40k-space-sm;
-    background: var(--rt-panel-bg-solid);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-solid);
+    border: 1px solid var(--wh40k-border-color-light);
     border-left: 3px solid $wh40k-accent-equipment;
     border-radius: 4px;
     overflow: hidden;
@@ -211,9 +211,9 @@
     cursor: grab;
 
     &:hover {
-        background: var(--rt-panel-bg);
-        border-color: var(--rt-border-color);
-        box-shadow: 0 1px 3px var(--rt-shadow-soft);
+        background: var(--wh40k-panel-bg);
+        border-color: var(--wh40k-border-color);
+        box-shadow: 0 1px 3px var(--wh40k-shadow-soft);
     }
 
     &:active {
@@ -234,7 +234,7 @@
 .wh40k-row-icon {
     width: 28px;
     height: 28px;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 3px;
     object-fit: cover;
     flex-shrink: 0;
@@ -242,7 +242,7 @@
 
 .wh40k-row-icon-inline {
     font-size: 1rem;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     flex-shrink: 0;
     width: 20px;
     text-align: center;
@@ -265,7 +265,7 @@
     text-align: left;
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
@@ -282,7 +282,7 @@
     gap: $wh40k-space-sm;
     flex-wrap: wrap;
     font-size: 0.7rem;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     align-items: center;
     line-height: 1.2;
 }
@@ -311,7 +311,7 @@
 .wh40k-action-btn {
     background: none;
     border: none;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     padding: 4px 6px;
     border-radius: 3px;
@@ -339,8 +339,8 @@
     align-items: center;
     gap: 4px;
     padding: 2px 6px;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     flex-shrink: 0;
 }
@@ -348,7 +348,7 @@
 .wh40k-stepper-btn {
     background: transparent;
     border: none;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     padding: 2px 4px;
     border-radius: 2px;
@@ -356,15 +356,15 @@
     font-size: 0.7rem;
 
     &:hover {
-        color: var(--rt-text-dark);
-        background: var(--rt-panel-bg);
+        color: var(--wh40k-text-dark);
+        background: var(--wh40k-panel-bg);
     }
 }
 
 .wh40k-level-display {
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     min-width: 20px;
     text-align: center;
 }
@@ -373,8 +373,8 @@
 .wh40k-row-expanded {
     padding: $wh40k-space-sm;
     padding-top: 0;
-    background: var(--rt-panel-bg-translucent);
-    border-top: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border-top: 1px solid var(--wh40k-border-color-light);
     animation: expandDown 0.2s ease;
 }
 
@@ -396,19 +396,19 @@
     font-size: 0.8rem;
 
     &:not(:last-child) {
-        border-bottom: 1px solid var(--rt-border-color-light);
+        border-bottom: 1px solid var(--wh40k-border-color-light);
     }
 }
 
 .wh40k-detail-label {
     font-weight: 600;
-    color: var(--rt-text-secondary);
+    color: var(--wh40k-text-secondary);
     min-width: 100px;
     flex-shrink: 0;
 }
 
 .wh40k-detail-value {
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     flex: 1;
 }
 
@@ -426,11 +426,11 @@
 .wh40k-detail-content {
     width: 100%;
     padding: $wh40k-space-xs;
-    background: var(--rt-panel-bg);
+    background: var(--wh40k-panel-bg);
     border-radius: 3px;
     font-size: 0.75rem;
     line-height: 1.4;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
 
     p {
         margin: 0 0 0.5em 0;
@@ -463,14 +463,14 @@
     align-items: center;
     gap: $wh40k-space-xs;
     padding: 4px $wh40k-space-sm;
-    background: var(--rt-panel-bg-translucent);
+    background: var(--wh40k-panel-bg-translucent);
     border-left: 3px solid $wh40k-accent-equipment;
     border-radius: 3px;
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--rt-text-secondary);
+    color: var(--wh40k-text-secondary);
     position: sticky; // Make headers sticky during scroll
     top: 0;
     z-index: 2;
@@ -490,8 +490,8 @@
 }
 
 .wh40k-count-badge {
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     padding: 2px 6px;
     border-radius: 10px;
     font-size: 0.65rem;
@@ -526,7 +526,7 @@
     border-radius: 3px;
     font-size: 0.7rem;
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     text-transform: capitalize;
 }
 
@@ -534,7 +534,7 @@
 .wh40k-empty-state {
     text-align: center;
     padding: $wh40k-space-lg;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 
     i {
         font-size: 2rem;
@@ -592,8 +592,8 @@
 // ============================================
 //
 // 1. Added min-height to rows for consistency
-// 2. Added overflow: hidden to rt-row-main
-// 3. Added width: 100% to rt-row-name for ellipsis
+// 2. Added overflow: hidden to wh40k-row-main
+// 3. Added width: 100% to wh40k-row-name for ellipsis
 // 4. Added empty state styling for tables
 // 5. Improved meta item wrapping with white-space: nowrap
 // 6. Made group headers sticky for better navigation

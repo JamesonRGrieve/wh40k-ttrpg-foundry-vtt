@@ -68,7 +68,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get typeLabel() {
         return game.i18n.localize(
-            `RT.RitualType.${this.type
+            `WH40K.RitualType.${this.type
                 .split('-')
                 .map((s) => s.capitalize())
                 .join('')}`,
@@ -80,7 +80,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get testLabel() {
-        let label = game.i18n.localize(`RT.Characteristic.${this.test.characteristic.capitalize()}`);
+        let label = game.i18n.localize(`WH40K.Characteristic.${this.test.characteristic.capitalize()}`);
         if (this.test.skill) label = this.test.skill;
         if (this.test.modifier !== 0) {
             label += ` ${this.test.modifier >= 0 ? '+' : ''}${this.test.modifier}`;

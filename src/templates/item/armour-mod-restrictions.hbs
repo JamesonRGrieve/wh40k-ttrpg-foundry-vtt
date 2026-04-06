@@ -1,34 +1,34 @@
 {{!-- Armour Modification Restrictions Tab --}}
-<div class="rt-tab-content rt-armour-mod-restrictions" data-tab="restrictions">
-    <div class="rt-panel">
-        <header class="rt-panel-header">
+<div class="wh40k-tab-content wh40k-armour-mod-restrictions" data-tab="restrictions">
+    <div class="wh40k-panel">
+        <header class="wh40k-panel-header">
             <h3>
                 <i class="fas fa-filter"></i>
                 {{localize "WH40K.Modification.Restrictions"}}
             </h3>
         </header>
         
-        <div class="rt-panel-body">
-            <p class="rt-help-text">
+        <div class="wh40k-panel-body">
+            <p class="wh40k-help-text">
                 {{localize "WH40K.Modification.RestrictionsHelp"}}
             </p>
             
-            <div class="rt-restriction-grid">
+            <div class="wh40k-restriction-grid">
                 {{#each armourTypesArray}}
-                    <label class="rt-restriction-item {{#if selected}}selected{{/if}}">
+                    <label class="wh40k-restriction-item {{#if selected}}selected{{/if}}">
                         <input type="checkbox" 
                                data-action="toggleArmourType" 
                                data-type="{{key}}"
                                {{checked selected}}
                                {{disabled (eq key "any")}}>
-                        <span class="rt-restriction-label">{{label}}</span>
-                        <i class="fas fa-check rt-restriction-check"></i>
+                        <span class="wh40k-restriction-label">{{label}}</span>
+                        <i class="fas fa-check wh40k-restriction-check"></i>
                     </label>
                 {{/each}}
             </div>
             
             {{#if (eq armourTypesArray.length 0)}}
-                <p class="rt-empty-state">
+                <p class="wh40k-empty-state">
                     <i class="fas fa-exclamation-triangle"></i>
                     No armour types configured
                 </p>
@@ -36,29 +36,29 @@
         </div>
     </div>
     
-    <div class="rt-panel rt-panel--source">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel wh40k-panel--source">
+        <header class="wh40k-panel-header">
             <h3>
                 <i class="fas fa-book"></i>
                 {{localize "WH40K.Source.Book"}}
             </h3>
         </header>
         
-        <div class="rt-panel-body">
-            <div class="rt-field-row">
-                <div class="rt-field">
-                    <label class="rt-field-label">{{localize "WH40K.Availability.Label"}}</label>
-                    <select name="system.availability" class="rt-field-select">
+        <div class="wh40k-panel-body">
+            <div class="wh40k-field-row">
+                <div class="wh40k-field">
+                    <label class="wh40k-field-label">{{localize "WH40K.Availability.Label"}}</label>
+                    <select name="system.availability" class="wh40k-field-select">
                         {{selectOptions dh.availabilities selected=system.availability labelAttr="label" blank=""}}
                     </select>
                 </div>
                 
-                <div class="rt-field">
-                    <label class="rt-field-label">{{localize "WH40K.Source.Book"}}</label>
+                <div class="wh40k-field">
+                    <label class="wh40k-field-label">{{localize "WH40K.Source.Book"}}</label>
                     <input type="text" 
                            name="system.source" 
                            value="{{system.source}}" 
-                           class="rt-field-input"
+                           class="wh40k-field-input"
                            placeholder="Core Rulebook, p. 123">
                 </div>
             </div>

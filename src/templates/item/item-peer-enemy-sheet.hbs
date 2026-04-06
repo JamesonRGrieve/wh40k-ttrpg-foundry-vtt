@@ -1,28 +1,28 @@
 {{! Rogue Trader Peer/Enemy Sheet - Modern Design }}
-<form class="rt-item-sheet" autocomplete="off">
+<form class="wh40k-item-sheet" autocomplete="off">
     {{! Header }}
-    <div class="rt-item-sheet__header">
-        <div class="rt-item-sheet__title-area" style="padding-left: 16px;">
-            <div class="rt-item-sheet__name-field">
-                <label class="rt-item-sheet__name-label">Name</label>
-                <input class="rt-item-sheet__name-input" name="name" type="text" value="{{item.name}}" />
+    <div class="wh40k-item-sheet__header">
+        <div class="wh40k-item-sheet__title-area" style="padding-left: 16px;">
+            <div class="wh40k-item-sheet__name-field">
+                <label class="wh40k-item-sheet__name-label">Name</label>
+                <input class="wh40k-item-sheet__name-input" name="name" type="text" value="{{item.name}}" />
             </div>
         </div>
     </div>
 
     {{! Main Fields }}
-    <div class="rt-item-sheet__panel">
-        <div class="rt-item-sheet__field">
-            <label class="rt-item-sheet__label">Modifier</label>
-            <input class="rt-item-sheet__input" name="system.modifier" type="number" data-dtype="Number" value="{{item.system.modifier}}" />
+    <div class="wh40k-item-sheet__panel">
+        <div class="wh40k-item-sheet__field">
+            <label class="wh40k-item-sheet__label">Modifier</label>
+            <input class="wh40k-item-sheet__input" name="system.modifier" type="number" data-dtype="Number" value="{{item.system.modifier}}" />
         </div>
     </div>
 
     {{! Description }}
-    <div class="rt-item-sheet__description">
-        <div class="rt-item-sheet__field">
-            <label class="rt-item-sheet__label">Description</label>
-            <textarea class="rt-item-sheet__textarea" name="system.description">{{item.system.description}}</textarea>
+    <div class="wh40k-item-sheet__description">
+        <div class="wh40k-item-sheet__field">
+            <label class="wh40k-item-sheet__label">Description</label>
+            <textarea class="wh40k-item-sheet__textarea" name="system.description">{{item.system.description}}</textarea>
         </div>
     </div>
 </form>

@@ -16,17 +16,17 @@
   @param {Boolean} expandable - Whether tags are click-to-expand for details
 --}}
 
-<div class="rt-quality-tags">
+<div class="wh40k-quality-tags">
   {{#each qualities}}
-  <div class="rt-quality-tag {{#if ../expandable}}rt-quality-tag--expandable{{/if}}"
+  <div class="wh40k-quality-tag {{#if ../expandable}}wh40k-quality-tag--expandable{{/if}}"
        {{#if ../expandable}}data-action="expandQuality" data-quality-name="{{this.name}}"{{/if}}>
-    <span class="rt-quality-tag__label">
+    <span class="wh40k-quality-tag__label">
       {{this.name}}{{#if this.rating}} ({{this.rating}}){{/if}}
     </span>
     
     {{#if ../editable}}
     <button type="button" 
-            class="rt-quality-tag__remove" 
+            class="wh40k-quality-tag__remove" 
             data-action="removeQuality" 
             data-quality-name="{{this.name}}"
             title="Remove {{this.name}}">
@@ -38,23 +38,23 @@
   
   {{#if editable}}
   <button type="button" 
-          class="rt-quality-tag rt-quality-tag--add" 
+          class="wh40k-quality-tag wh40k-quality-tag--add" 
           data-action="addQuality"
           title="Add Quality">
     <i class="fa-solid fa-plus"></i>
-    <span class="rt-quality-tag__label">Add</span>
+    <span class="wh40k-quality-tag__label">Add</span>
   </button>
   {{/if}}
 </div>
 
 {{#if expandable}}
 {{!-- Quality expansion panels (hidden by default) --}}
-<div class="rt-quality-expansions">
+<div class="wh40k-quality-expansions">
   {{#each qualities}}
   {{#if this.description}}
-  <div class="rt-expansion-panel" data-quality-panel="{{this.name}}" style="display: none;">
+  <div class="wh40k-expansion-panel" data-quality-panel="{{this.name}}" style="display: none;">
     <h4>{{this.name}}{{#if this.rating}} ({{this.rating}}){{/if}}</h4>
-    <div class="rt-quality-description">
+    <div class="wh40k-quality-description">
       {{{this.description}}}
     </div>
   </div>

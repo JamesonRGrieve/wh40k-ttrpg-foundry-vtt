@@ -1,22 +1,22 @@
 {{!-- Compact Characteristics Panel - Expandable Rows --}}
-<div class="rt-panel rt-char-panel">
-    <h1 class="rt-panel-header">
+<div class="wh40k-panel wh40k-char-panel">
+    <h1 class="wh40k-panel-header">
         Characteristics
         <button type="button" 
-                class="rt-char-setup-btn" 
+                class="wh40k-char-setup-btn" 
                 data-action="openCharacteristicSetup"
                 title="{{localize 'WH40K.CharacteristicSetup.OpenSetup'}}">
             <i class="fa-solid fa-sliders"></i>
         </button>
     </h1>
-    <div class="rt-char-list">
+    <div class="wh40k-char-list">
         {{#each actor.characteristics as |characteristic name|}}
             {{!-- Filter out Influence (Inf) - not a real RT characteristic --}}
             {{#unless (eq name "influence")}}
-            <details class="rt-char-item">
-                <summary class="rt-char-summary {{#if (gt this.originPathModifier 0)}}rt-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}rt-char-penalty{{/if}}">
+            <details class="wh40k-char-item">
+                <summary class="wh40k-char-summary {{#if (gt this.originPathModifier 0)}}wh40k-char-bonus{{/if}}{{#if (lt this.originPathModifier 0)}}wh40k-char-penalty{{/if}}">
                     <span
-                        class="rt-char-name roll-characteristic actor-drag"
+                        class="wh40k-char-name roll-characteristic actor-drag"
                         data-item-type="characteristic"
                         data-item-id="{{name}}"
                         data-characteristic="{{name}}"
@@ -27,17 +27,17 @@
                     >{{this.short}}</span>
                     <button 
                         type="button" 
-                        class="rt-stat-breakdown-btn"
+                        class="wh40k-stat-breakdown-btn"
                         data-action="showStatBreakdown"
                         data-stat-key="{{name}}"
                         title="Show stat breakdown">
                         <i class="fa-solid fa-calculator"></i>
                     </button>
-                    <span class="rt-char-total" title="Current total">{{this.total}}</span>
+                    <span class="wh40k-char-total" title="Current total">{{this.total}}</span>
                 </summary>
-                <div class="rt-char-controls">
-                    <label class="rt-char-field">
-                        <span class="rt-char-field-label">Advances</span>
+                <div class="wh40k-char-controls">
+                    <label class="wh40k-char-field">
+                        <span class="wh40k-char-field-label">Advances</span>
                         <select name="system.characteristics.{{name}}.advance" title="Characteristic advancement level">
                             {{option "0" this.advance "None (+0)"}}
                             {{option "1" this.advance "Simple (+5)"}}
@@ -47,17 +47,17 @@
                             {{option "5" this.advance "Expert (+25)"}}
                         </select>
                     </label>
-                    <label class="rt-char-field">
-                        <span class="rt-char-field-label">Unnatural</span>
-                        <select name="system.characteristics.{{name}}.unnatural" class="rt-unnatural-select" data-dtype="Number" title="Unnatural characteristic multiplier">
+                    <label class="wh40k-char-field">
+                        <span class="wh40k-char-field-label">Unnatural</span>
+                        <select name="system.characteristics.{{name}}.unnatural" class="wh40k-unnatural-select" data-dtype="Number" title="Unnatural characteristic multiplier">
                             <option value="0" {{#if (eq this.unnatural 0)}}selected{{/if}}>None</option>
                             <option value="2" {{#if (eq this.unnatural 2)}}selected{{/if}}>×2</option>
                             <option value="3" {{#if (eq this.unnatural 3)}}selected{{/if}}>×3</option>
                             <option value="4" {{#if (eq this.unnatural 4)}}selected{{/if}}>×4</option>
                         </select>
                     </label>
-                    <label class="rt-char-field">
-                        <span class="rt-char-field-label">Modifier</span>
+                    <label class="wh40k-char-field">
+                        <span class="wh40k-char-field-label">Modifier</span>
                         <input
                             type="number"
                             name="system.characteristics.{{name}}.modifier"

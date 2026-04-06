@@ -1,5 +1,5 @@
 export function getHitLocationForRoll(roll) {
-    game.rt.log('getHitLocationForRoll', roll);
+    game.wh40k.log('getHitLocationForRoll', roll);
     const rollString = roll.toString().split('');
     const reverseArray = rollString.reverse();
     const joinArray = reverseArray.join('');

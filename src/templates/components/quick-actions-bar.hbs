@@ -14,11 +14,11 @@
 --}}
 
 {{#if item}}
-<div class="rt-quick-actions-bar {{#if compact}}rt-quick-actions-bar--compact{{/if}}">
+<div class="wh40k-quick-actions-bar {{#if compact}}wh40k-quick-actions-bar--compact{{/if}}">
   {{!-- Weapon Actions --}}
   {{#if (eq item.type "weapon")}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--primary" 
+            class="wh40k-quick-action wh40k-quick-action--primary" 
             data-action="itemRoll"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Attack'}}">
@@ -26,7 +26,7 @@
       {{#unless compact}}<span>{{localize "WH40K.Action.Attack"}}</span>{{/unless}}
     </button>
     <button type="button" 
-            class="rt-quick-action rt-quick-action--primary" 
+            class="wh40k-quick-action wh40k-quick-action--primary" 
             data-action="rollDamage"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Damage'}}">
@@ -34,7 +34,7 @@
       {{#unless compact}}<span>{{localize "WH40K.Action.Damage"}}</span>{{/unless}}
     </button>
     <button type="button" 
-            class="rt-quick-action rt-quick-action--secondary" 
+            class="wh40k-quick-action wh40k-quick-action--secondary" 
             data-action="reloadWeapon"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Reload'}}">
@@ -46,7 +46,7 @@
   {{!-- Armour Actions --}}
   {{#if (eq item.type "armour")}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--primary" 
+            class="wh40k-quick-action wh40k-quick-action--primary" 
             data-action="toggleEquip"
             data-item-id="{{item.id}}"
             title="{{#if system.equipped}}{{localize 'WH40K.Action.Unequip'}}{{else}}{{localize 'WH40K.Action.Equip'}}{{/if}}">
@@ -61,7 +61,7 @@
   {{#if (eq item.type "talent")}}
     {{#if system.isRollable}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--primary" 
+            class="wh40k-quick-action wh40k-quick-action--primary" 
             data-action="itemRoll"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Roll'}}">
@@ -70,7 +70,7 @@
     </button>
     {{/if}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--secondary" 
+            class="wh40k-quick-action wh40k-quick-action--secondary" 
             data-action="toggleFavorite"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Favorite'}}">
@@ -83,7 +83,7 @@
   {{#if (eq item.type "trait")}}
     {{#if system.rollable}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--primary" 
+            class="wh40k-quick-action wh40k-quick-action--primary" 
             data-action="itemRoll"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Roll'}}">
@@ -96,7 +96,7 @@
   {{!-- Consumable Actions --}}
   {{#if (or (eq item.type "consumable") (eq item.type "drug") (and (eq item.type "gear") system.consumable))}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--primary" 
+            class="wh40k-quick-action wh40k-quick-action--primary" 
             data-action="useItem"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Use'}}">
@@ -104,7 +104,7 @@
       {{#unless compact}}<span>{{localize "WH40K.Action.Use"}}</span>{{/unless}}
     </button>
     <button type="button" 
-            class="rt-quick-action rt-quick-action--secondary" 
+            class="wh40k-quick-action wh40k-quick-action--secondary" 
             data-action="adjustQuantity"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Adjust'}}">
@@ -116,7 +116,7 @@
   {{!-- Condition Actions --}}
   {{#if (eq item.type "condition")}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--secondary" 
+            class="wh40k-quick-action wh40k-quick-action--secondary" 
             data-action="stackCondition"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Stack'}}">
@@ -124,7 +124,7 @@
       {{#unless compact}}<span>{{localize "WH40K.Action.Stack"}}</span>{{/unless}}
     </button>
     <button type="button" 
-            class="rt-quick-action rt-quick-action--secondary" 
+            class="wh40k-quick-action wh40k-quick-action--secondary" 
             data-action="reduceCondition"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Reduce'}}">
@@ -132,7 +132,7 @@
       {{#unless compact}}<span>{{localize "WH40K.Action.Reduce"}}</span>{{/unless}}
     </button>
     <button type="button" 
-            class="rt-quick-action rt-quick-action--danger" 
+            class="wh40k-quick-action wh40k-quick-action--danger" 
             data-action="removeCondition"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Remove'}}">
@@ -144,7 +144,7 @@
   {{!-- Critical Injury Actions --}}
   {{#if (eq item.type "criticalInjury")}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--primary" 
+            class="wh40k-quick-action wh40k-quick-action--primary" 
             data-action="rollSeverity"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.RollSeverity'}}">
@@ -152,7 +152,7 @@
       {{#unless compact}}<span>{{localize "WH40K.Action.RollSeverity"}}</span>{{/unless}}
     </button>
     <button type="button" 
-            class="rt-quick-action rt-quick-action--secondary" 
+            class="wh40k-quick-action wh40k-quick-action--secondary" 
             data-action="treatInjury"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Treat'}}">
@@ -164,7 +164,7 @@
   {{!-- Psychic Power Actions --}}
   {{#if (or (eq item.type "psychicPower") (eq item.type "navigatorPower"))}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--primary" 
+            class="wh40k-quick-action wh40k-quick-action--primary" 
             data-action="manifestPower"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Manifest'}}">
@@ -176,7 +176,7 @@
   {{!-- Ammunition Actions --}}
   {{#if (eq item.type "ammunition")}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--primary" 
+            class="wh40k-quick-action wh40k-quick-action--primary" 
             data-action="loadAmmo"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Load'}}">
@@ -188,7 +188,7 @@
   {{!-- Universal Actions --}}
   {{#unless inSheet}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--secondary" 
+            class="wh40k-quick-action wh40k-quick-action--secondary" 
             data-action="postToChat"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.PostToChat'}}">
@@ -200,7 +200,7 @@
   {{#if inSheet}}
     {{#if item.isOwner}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--secondary" 
+            class="wh40k-quick-action wh40k-quick-action--secondary" 
             data-action="editItem"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Edit'}}">
@@ -213,7 +213,7 @@
   {{#unless inSheet}}
     {{#if item.isOwner}}
     <button type="button" 
-            class="rt-quick-action rt-quick-action--danger" 
+            class="wh40k-quick-action wh40k-quick-action--danger" 
             data-action="deleteItem"
             data-item-id="{{item.id}}"
             title="{{localize 'WH40K.Action.Delete'}}">

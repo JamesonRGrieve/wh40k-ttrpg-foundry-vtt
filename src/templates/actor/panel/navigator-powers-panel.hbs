@@ -1,16 +1,16 @@
-<div class="rt-panel spacer rt-grid-col-3 rt-grid-row-2">
-    <div class="rt-panel-header">
-        <span class="rt-panel-title">{{localize "WH40K.NavigatorPowers.Header"}}</span>
+<div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-2">
+    <div class="wh40k-panel-header">
+        <span class="wh40k-panel-title">{{localize "WH40K.NavigatorPowers.Header"}}</span>
     </div>
-    <div class="rt-panel-body">
-        <div class="rt-table--border">
+    <div class="wh40k-panel-body">
+        <div class="wh40k-table--border">
             <div class="table-row--head">
                 <div class="table-cell--span2">{{localize "WH40K.NavigatorPowers.Name"}}</div>
                 <div class="table-cell">{{localize "WH40K.NavigatorPowers.Range"}}</div>
                 <div class="table-cell">{{localize "WH40K.NavigatorPowers.Test"}}</div>
                 <div class="table-cell--last">
-                    <label class="rt-control-button">
-                        <span class="rt-control-button__span material-icons">{{defaultVal icon "add_circle"}}</span>
+                    <label class="wh40k-control-button">
+                        <span class="wh40k-control-button__span material-icons">{{defaultVal icon "add_circle"}}</span>
                     </label>
                 </div>
             </div>
@@ -18,15 +18,15 @@
                 <div class="table-row">
                     <div class="table-cell--span2">
                         <button class="item-name" data-item-id="{{power._id}}" type="button">
-                            <img class="rt-item-img" src="{{power.img}}" alt="{{power.name}}" />
+                            <img class="wh40k-item-img" src="{{power.img}}" alt="{{power.name}}" />
                             {{power.name}}
                         </button>
                     </div>
                     <div class="table-cell">{{power.system.range}}</div>
                     <div class="table-cell">{{power.system.test}}</div>
                     <div class="table-cell--last">
-                        <label class="rt-control-button item-delete" data-item-id="{{power._id}}">
-                            <span class="rt-control-button__span material-icons">delete</span>
+                        <label class="wh40k-control-button item-delete" data-item-id="{{power._id}}">
+                            <span class="wh40k-control-button__span material-icons">delete</span>
                         </label>
                     </div>
                 </div>

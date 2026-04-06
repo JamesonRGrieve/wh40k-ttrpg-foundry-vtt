@@ -66,7 +66,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * @type {string}
      */
     get natureLabel() {
-        const key = `RT.Condition.Nature.${this.nature.capitalize()}`;
+        const key = `WH40K.Condition.Nature.${this.nature.capitalize()}`;
         return game.i18n.has(key) ? game.i18n.localize(key) : this.nature.capitalize();
     }
 
@@ -96,7 +96,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * @type {string}
      */
     get appliesToLabel() {
-        const key = `RT.Condition.AppliesTo.${this.appliesTo.capitalize()}`;
+        const key = `WH40K.Condition.AppliesTo.${this.appliesTo.capitalize()}`;
         return game.i18n.has(key) ? game.i18n.localize(key) : this.appliesTo.capitalize();
     }
 
@@ -135,7 +135,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
             const key = 'WH40K.Condition.Duration.Permanent';
             return game.i18n.has(key) ? game.i18n.localize(key) : 'Permanent';
         }
-        const unitKey = `RT.Condition.Duration.${this.duration.units.capitalize()}`;
+        const unitKey = `WH40K.Condition.Duration.${this.duration.units.capitalize()}`;
         const unit = game.i18n.has(unitKey) ? game.i18n.localize(unitKey) : this.duration.units;
         return `${this.duration.value} ${unit}`;
     }
