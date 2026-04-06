@@ -1,9 +1,9 @@
-import { WH40K } from '../config.mjs';
+import { WH40K as WH40K_BASE } from '../config.mjs';
 
 export const WH40K = {};
 
 // Merge the comprehensive config from config.mjs
-Object.assign(WH40K, WH40K);
+Object.assign(WH40K, WH40K_BASE);
 
 // Origin Path steps for WH40K RPG character creation
 WH40K.originPath = {
@@ -114,7 +114,7 @@ WH40K.ui = {
 };
 
 export function toggleUIExpanded(name) {
-    CONFIG.rt.ui.toggleExpanded(name);
+    CONFIG.wh40k.ui.toggleExpanded(name);
 }
 
 export function fieldMatch(val1, val2) {

@@ -181,7 +181,7 @@ export default class VehicleData extends ActorDataModel {
    * @type {string}
    */
   get sizeLabel() {
-    const sizeConfig = CONFIG.rt?.vehicleSizes || CONFIG.rt?.sizes || {};
+    const sizeConfig = CONFIG.wh40k?.vehicleSizes || CONFIG.wh40k?.sizes || {};
     const sizeData = sizeConfig[this.size];
     if (sizeData) {
       return game.i18n.localize(sizeData.label);
@@ -194,7 +194,7 @@ export default class VehicleData extends ActorDataModel {
    * @type {string}
    */
   get vehicleClassLabel() {
-    const classes = CONFIG.rt?.vehicleClasses || {};
+    const classes = CONFIG.wh40k?.vehicleClasses || {};
     const classData = classes[this.vehicleClass];
     if (classData) {
       return game.i18n.localize(classData.label);
@@ -207,7 +207,7 @@ export default class VehicleData extends ActorDataModel {
    * @type {string}
    */
   get vehicleTypeLabel() {
-    const types = CONFIG.rt?.vehicleTypes || {};
+    const types = CONFIG.wh40k?.vehicleTypes || {};
     const typeData = types[this.type];
     if (typeData) {
       return game.i18n.localize(typeData.label);

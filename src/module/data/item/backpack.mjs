@@ -30,7 +30,7 @@ export default class BackpackData extends ItemDataModel.mixin(
             props.push("Combat Vest");
         }
         if (this.availability) {
-            props.push(CONFIG.rt?.availabilities?.[this.availability] ?? this.availability);
+            props.push(CONFIG.wh40k?.availabilities?.[this.availability] ?? this.availability);
         }
         return props;
     }

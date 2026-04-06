@@ -552,7 +552,7 @@ export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2)
         })) : [];
 
         // Size modifiers from config (values are plain strings like "Average (4)")
-        const sizes = CONFIG.rt?.sizes || {};
+        const sizes = CONFIG.wh40k?.sizes || {};
         const currentSizeMod = this._sizeModifierKey ?? this._getDefaultSizeKey(rd);
         const sizeOptions = Object.entries(sizes).map(([key, label]) => {
             const modifier = (parseInt(key) - 4) * 10;

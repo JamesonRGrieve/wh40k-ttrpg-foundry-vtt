@@ -147,17 +147,15 @@ Enable Debug with: game.rt.debug = true
         //CONFIG.debug.hooks = true;
 
         // Add custom constants for configuration.
-        CONFIG.rt = WH40K;
+        CONFIG.wh40k = WH40K;
         CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
         CONFIG.MeasuredTemplate.defaults.angle = 30.0;
 
         // Define custom Document classes
         CONFIG.Actor.documentClass = WH40KActorProxy;
         CONFIG.Actor.documentClasses = {
-            acolyte: documents.WH40KAcolyte,
             character: documents.WH40KAcolyte,
-            npc: documents.WH40KNPC,
-            npcV2: documents.WH40KNPCV2,
+            npc: documents.WH40KNPCV2,
             vehicle: documents.WH40KVehicle,
             starship: documents.WH40KStarship,
         };
@@ -175,10 +173,8 @@ Enable Debug with: game.rt.debug = true
         // Register data models for actors
         // DataModels handle schema validation and data preparation
         CONFIG.Actor.dataModels = {
-            acolyte: dataModels.CharacterData,
             character: dataModels.CharacterData,
-            npc: dataModels.NPCData,
-            npcV2: dataModels.NPCDataV2,
+            npc: dataModels.NPCDataV2,
             vehicle: dataModels.VehicleData,
             starship: dataModels.StarshipData,
         };
@@ -242,36 +238,21 @@ Enable Debug with: game.rt.debug = true
         // Unregister core V1 actor sheet and register V2 actor sheets
         DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.appv1.sheets.ActorSheet);
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, AcolyteSheet, {
-            types: ['acolyte', 'character'],
+            types: ['character'],
             makeDefault: true,
-            label: 'WH40K.Sheet.Acolyte',
+            label: 'WH40K.Sheet.PlayerCharacter',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, AcolyteSheetSidebar, {
-            types: ['acolyte', 'character'],
+            types: ['character'],
             makeDefault: false,
-            label: 'WH40K.Sheet.AcolyteSidebar',
+            label: 'WH40K.Sheet.PlayerCharacterSidebar',
         });
-        // Legacy NPC type uses Acolyte sheet as fallback (for existing npc actors)
-        // TODO: Add migration to convert "npc" to "npcV2" type
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, AcolyteSheet, {
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NPCSheetV2, {
             types: ['npc'],
             makeDefault: true,
-            label: 'WH40K.Sheet.NPCLegacy',
+            label: 'WH40K.Sheet.NPC',
         });
-        // NPC V2 sheet - modern redesign for npcV2 actors
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NPCSheetV2, {
-            types: ['npcV2'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.NPCV2',
-        });
-        // Vehicle V2 sheet - for npcV2 actors with primaryUse="vehicle"
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheetV2, {
-            types: ['npcV2'],
-            makeDefault: false,
-            label: 'WH40K.Sheet.VehicleV2',
-        });
-        // Legacy vehicle sheet
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheet, {
             types: ['vehicle'],
             makeDefault: true,
             label: 'WH40K.Sheet.Vehicle',

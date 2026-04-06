@@ -115,7 +115,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(
    * @type {string}
    */
   get upgradeTypeLabel() {
-    const types = CONFIG.rt?.vehicleUpgradeTypes || {};
+    const types = CONFIG.wh40k?.vehicleUpgradeTypes || {};
     const typeData = types[this.upgradeType];
     if (typeData) {
       return game.i18n.localize(typeData.label);

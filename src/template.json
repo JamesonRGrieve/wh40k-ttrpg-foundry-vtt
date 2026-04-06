@@ -1,10 +1,8 @@
 {
   "Actor": {
     "types": [
-      "acolyte",
       "character",
       "npc",
-      "npcV2",
       "vehicle",
       "starship"
     ],
@@ -778,12 +776,6 @@
       "npc": {
         "faction": "",
         "subfaction": "",
-        "type": "troop",
-        "threatLevel": 0
-      },
-      "npcV2": {
-        "faction": "",
-        "subfaction": "",
         "allegiance": "",
         "role": "specialist",
         "type": "troop",
@@ -862,42 +854,6 @@
           "acquisitions": [],
           "mutations": ""
         }
-      }
-    },
-    "acolyte": {
-      "templates": [
-        "base",
-        "creature",
-        "rogueTraderExtras"
-      ],
-      "bio": {
-        "gender": "",
-        "age": "",
-        "build": "",
-        "complexion": "",
-        "hair": "",
-        "quirks": "",
-        "superstition": "",
-        "mementos": "",
-        "notes": ""
-      },
-      "originPath": {
-        "homeWorld": "",
-        "birthright": "",
-        "lureOfTheVoid": "",
-        "trialsAndTravails": "",
-        "motivation": "",
-        "career": ""
-      },
-      "experience": {
-        "used": 0,
-        "total": 0
-      },
-      "insanity": 0,
-      "corruption": 0,
-      "aptitudes": {},
-      "backgroundEffects": {
-        "abilities": []
       }
     },
     "character": {

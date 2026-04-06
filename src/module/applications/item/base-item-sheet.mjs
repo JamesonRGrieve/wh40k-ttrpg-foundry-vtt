@@ -165,7 +165,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
             fields: this.item.system.schema?.fields ?? {},
             effects: this.item.getEmbeddedCollection('ActiveEffect').contents,
             flags: this.item.flags,
-            dh: CONFIG.rt || WH40K,
+            dh: CONFIG.wh40k || WH40K,
             isEditable: this.isEditable,
             editable: this.isEditable, // Alias for template compatibility with {{editor}} helper
             owner: this.item.isOwner, // Required for {{editor}} helper

@@ -277,7 +277,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(
     if (types.includes('any')) return game.i18n.localize("WH40K.Modification.AnyArmour");
     
     const labels = types.map(type => {
-      const config = CONFIG.rt?.armourTypes?.[type];
+      const config = CONFIG.wh40k?.armourTypes?.[type];
       return config ? game.i18n.localize(config.label) : type;
     });
     

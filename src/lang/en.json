@@ -1,10 +1,8 @@
 {
     "TYPES": {
         "Actor": {
-            "acolyte": "Character",
-            "character": "Character",
-            "npc": "NPC (Legacy)",
-            "npcV2": "NPC",
+            "character": "Player Character",
+            "npc": "NPC",
             "vehicle": "Vehicle",
             "starship": "Starship"
         },
@@ -313,9 +311,11 @@
         "Sheet": {
             "Acolyte": "Character Sheet",
             "AcolyteSidebar": "Character Sheet (Sidebar)",
+            "PlayerCharacter": "Player Character Sheet",
+            "PlayerCharacterSidebar": "Player Character Sheet (Sidebar)",
             "NPC": "NPC Sheet",
-            "NPCV2": "NPC Sheet (Modern)",
-            "NPCLegacy": "NPC Sheet (Legacy)",
+            
+            
             "Vehicle": "Vehicle Sheet",
             "Starship": "Starship Sheet",
             "Item": "Item Sheet",

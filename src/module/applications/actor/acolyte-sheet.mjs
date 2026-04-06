@@ -281,7 +281,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         const context = await super._prepareContext(options);
 
         // RT-specific configuration
-        context.dh = CONFIG.rt || WH40K;
+        context.dh = CONFIG.wh40k || WH40K;
 
         // Prepare characteristic HUD data
         this._prepareCharacteristicHUD(context);
@@ -554,7 +554,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @protected
      */
     _prepareOriginPathSteps() {
-        const steps = CONFIG.rt.originPath?.steps || [
+        const steps = CONFIG.wh40k.originPath?.steps || [
             { key: 'homeWorld', label: 'Home World', shortLabel: 'Home', choiceGroup: 'origin.home-world', icon: 'fa-globe' },
             { key: 'birthright', label: 'Birthright', shortLabel: 'Birth', choiceGroup: 'origin.birthright', icon: 'fa-baby' },
             { key: 'lureOfTheVoid', label: 'Lure of the Void', shortLabel: 'Lure', choiceGroup: 'origin.lure-of-the-void', icon: 'fa-meteor' },
@@ -1519,9 +1519,9 @@ export default class AcolyteSheet extends BaseActorSheet {
 
         // Find the action definition in config
         const allActions = [
-            ...(CONFIG.rt.combatActions?.attacks || []),
-            ...(CONFIG.rt.combatActions?.movement || []),
-            ...(CONFIG.rt.combatActions?.utility || []),
+            ...(CONFIG.wh40k.combatActions?.attacks || []),
+            ...(CONFIG.wh40k.combatActions?.movement || []),
+            ...(CONFIG.wh40k.combatActions?.utility || []),
         ];
 
         const actionConfig = allActions.find((a) => a.key === actionKey);
@@ -1609,7 +1609,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         // Store movement action on token flags
         await token.update({ 'flags.wh40k-rpg.movementAction': movementType });
 
-        const config = CONFIG.rt.movementTypes[movementType];
+        const config = CONFIG.wh40k.movementTypes[movementType];
         const label = config ? game.i18n.localize(config.label) : movementType;
         const speed = this.actor.system.movement[movementType];
         ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);

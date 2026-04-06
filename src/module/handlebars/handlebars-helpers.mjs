@@ -170,7 +170,7 @@ export function registerHandlebarsHelpers() {
             return actor.flags['wh40k-rpg'].ui.expanded.includes(field);
         }
         // Fallback to global CONFIG for compatibility (old system)
-        return CONFIG.rt.ui.expanded ? CONFIG.rt.ui.expanded.includes(field) : false;
+        return CONFIG.wh40k.ui.expanded ? CONFIG.wh40k.ui.expanded.includes(field) : false;
     });
 
     Handlebars.registerHelper('toLowerCase', function (str) {
@@ -193,7 +193,7 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('getBioOptions', function (field) {
-        return CONFIG.rt.bio[field];
+        return CONFIG.wh40k.bio[field];
     });
 
     Handlebars.registerHelper('and', function (obj1, obj2) {
@@ -527,7 +527,7 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('skillIcon', function (skillKey) {
-        const config = CONFIG?.rt?.getSkillIcon ? CONFIG.rt : WH40K;
+        const config = CONFIG?.rt?.getSkillIcon ? CONFIG.wh40k : WH40K;
         const icon = config?.getSkillIcon?.(skillKey) || 'modules/game-icons-net/blacktransparent/skills.svg';
         if (foundry?.utils?.getRoute) return foundry.utils.getRoute(icon);
         return icon;
@@ -786,7 +786,7 @@ export function registerHandlebarsHelpers() {
 
         const rtConfig = CONFIG?.rt;
         if (!rtConfig?.weaponQualities) {
-            console.warn('RT | CONFIG.rt.weaponQualities not available');
+            console.warn('RT | CONFIG.wh40k.weaponQualities not available');
             return [];
         }
 
@@ -842,7 +842,7 @@ export function registerHandlebarsHelpers() {
     Handlebars.registerHelper('craftsmanshipQualities', function (weaponSystem) {
         const rtConfig = CONFIG?.rt;
         if (!rtConfig?.weaponQualities) {
-            console.warn('RT | CONFIG.rt.weaponQualities not available');
+            console.warn('RT | CONFIG.wh40k.weaponQualities not available');
             return [];
         }
 
@@ -953,7 +953,7 @@ export function registerHandlebarsHelpers() {
     Handlebars.registerHelper('qualityLookup', function (identifier) {
         const rtConfig = CONFIG?.rt;
         if (!rtConfig?.weaponQualities) {
-            console.warn('RT | CONFIG.rt.weaponQualities not available');
+            console.warn('RT | CONFIG.wh40k.weaponQualities not available');
             return {
                 identifier,
                 label: identifier,
