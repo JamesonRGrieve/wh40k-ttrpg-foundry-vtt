@@ -1,5 +1,5 @@
 /**
- * @file AcolyteSheet - Character sheet for acolyte/character actors using ApplicationV2
+ * @file CharacterSheet - Character sheet for acolyte/character actors using ApplicationV2
  * This is the main player character sheet for WH40K RPG
  */
 
@@ -22,97 +22,97 @@ const TextEditor = foundry.applications.ux.TextEditor.implementation;
 /**
  * Actor sheet for Acolyte/Character type actors.
  */
-export default class AcolyteSheet extends BaseActorSheet {
+export default class CharacterSheet extends BaseActorSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
         actions: {
             // Combat actions
-            'attack': AcolyteSheet.#attack,
-            'dodge': AcolyteSheet.#dodge,
-            'parry': AcolyteSheet.#parry,
-            'initiative': AcolyteSheet.#rollInitiative,
-            'assign-damage': AcolyteSheet.#assignDamage,
-            'toggleFavoriteAction': AcolyteSheet.#toggleFavoriteAction,
-            'combatAction': AcolyteSheet.#combatAction,
-            'vocalizeCombatAction': AcolyteSheet.#vocalizeCombatAction,
-            'vocalizeMovement': AcolyteSheet.#vocalizeMovement,
-            'setMovementMode': AcolyteSheet.#setMovementMode,
+            'attack': CharacterSheet.#attack,
+            'dodge': CharacterSheet.#dodge,
+            'parry': CharacterSheet.#parry,
+            'initiative': CharacterSheet.#rollInitiative,
+            'assign-damage': CharacterSheet.#assignDamage,
+            'toggleFavoriteAction': CharacterSheet.#toggleFavoriteAction,
+            'combatAction': CharacterSheet.#combatAction,
+            'vocalizeCombatAction': CharacterSheet.#vocalizeCombatAction,
+            'vocalizeMovement': CharacterSheet.#vocalizeMovement,
+            'setMovementMode': CharacterSheet.#setMovementMode,
 
             // Stat adjustment actions
-            'adjustStat': AcolyteSheet.#adjustStat,
-            'increment': AcolyteSheet.#increment,
-            'decrement': AcolyteSheet.#decrement,
-            'setCriticalPip': AcolyteSheet.#setCriticalPip,
-            'setFateStar': AcolyteSheet.#setFateStar,
-            'setFatigueBolt': AcolyteSheet.#setFatigueBolt,
-            'setCorruption': AcolyteSheet.#setCorruption,
-            'setInsanity': AcolyteSheet.#setInsanity,
-            'restoreFate': AcolyteSheet.#restoreFate,
-            'spendFate': AcolyteSheet.#spendFate,
+            'adjustStat': CharacterSheet.#adjustStat,
+            'increment': CharacterSheet.#increment,
+            'decrement': CharacterSheet.#decrement,
+            'setCriticalPip': CharacterSheet.#setCriticalPip,
+            'setFateStar': CharacterSheet.#setFateStar,
+            'setFatigueBolt': CharacterSheet.#setFatigueBolt,
+            'setCorruption': CharacterSheet.#setCorruption,
+            'setInsanity': CharacterSheet.#setInsanity,
+            'restoreFate': CharacterSheet.#restoreFate,
+            'spendFate': CharacterSheet.#spendFate,
 
             // Equipment actions
-            'toggleEquip': AcolyteSheet.#toggleEquip,
-            'stowItem': AcolyteSheet.#stowItem,
-            'unstowItem': AcolyteSheet.#unstowItem,
-            'stowToShip': AcolyteSheet.#stowToShip,
-            'unstowFromShip': AcolyteSheet.#unstowFromShip,
-            'toggleActivate': AcolyteSheet.#toggleActivate,
-            'filterEquipment': AcolyteSheet.#filterEquipment,
-            'clearEquipmentSearch': AcolyteSheet.#clearEquipmentSearch,
-            'bulkEquip': AcolyteSheet.#bulkEquip,
+            'toggleEquip': CharacterSheet.#toggleEquip,
+            'stowItem': CharacterSheet.#stowItem,
+            'unstowItem': CharacterSheet.#unstowItem,
+            'stowToShip': CharacterSheet.#stowToShip,
+            'unstowFromShip': CharacterSheet.#unstowFromShip,
+            'toggleActivate': CharacterSheet.#toggleActivate,
+            'filterEquipment': CharacterSheet.#filterEquipment,
+            'clearEquipmentSearch': CharacterSheet.#clearEquipmentSearch,
+            'bulkEquip': CharacterSheet.#bulkEquip,
 
             // Skills actions
-            'filterSkills': AcolyteSheet.#filterSkills,
-            'clearSkillsSearch': AcolyteSheet.#clearSkillsSearch,
-            'toggleFavoriteSkill': AcolyteSheet.#toggleFavoriteSkill,
-            'toggleFavoriteSpecialistSkill': AcolyteSheet.#toggleFavoriteSpecialistSkill,
+            'filterSkills': CharacterSheet.#filterSkills,
+            'clearSkillsSearch': CharacterSheet.#clearSkillsSearch,
+            'toggleFavoriteSkill': CharacterSheet.#toggleFavoriteSkill,
+            'toggleFavoriteSpecialistSkill': CharacterSheet.#toggleFavoriteSpecialistSkill,
 
             // Talents actions
-            'toggleFavoriteTalent': AcolyteSheet.#toggleFavoriteTalent,
-            'filterTraits': AcolyteSheet.#filterTraits,
-            'clearTraitsFilter': AcolyteSheet.#clearTraitsFilter,
-            'adjustTraitLevel': AcolyteSheet.#adjustTraitLevel,
-            'openAddSpecialistDialog': AcolyteSheet.#openAddSpecialistDialog,
+            'toggleFavoriteTalent': CharacterSheet.#toggleFavoriteTalent,
+            'filterTraits': CharacterSheet.#filterTraits,
+            'clearTraitsFilter': CharacterSheet.#clearTraitsFilter,
+            'adjustTraitLevel': CharacterSheet.#adjustTraitLevel,
+            'openAddSpecialistDialog': CharacterSheet.#openAddSpecialistDialog,
 
             // Powers actions
-            'rollPower': AcolyteSheet.#rollPower,
-            'rollPowerDamage': AcolyteSheet.#rollPowerDamage,
-            'vocalizePower': AcolyteSheet.#vocalizePower,
-            'togglePowerDetails': AcolyteSheet.#togglePowerDetails,
-            'rollRitual': AcolyteSheet.#rollRitual,
-            'vocalizeRitual': AcolyteSheet.#vocalizeRitual,
-            'rollOrder': AcolyteSheet.#rollOrder,
-            'vocalizeOrder': AcolyteSheet.#vocalizeOrder,
-            'rollPhenomena': AcolyteSheet.#rollPhenomena,
-            'rollPerils': AcolyteSheet.#rollPerils,
-            'filterPowers': AcolyteSheet.#filterPowers,
-            'filterOrders': AcolyteSheet.#filterOrders,
+            'rollPower': CharacterSheet.#rollPower,
+            'rollPowerDamage': CharacterSheet.#rollPowerDamage,
+            'vocalizePower': CharacterSheet.#vocalizePower,
+            'togglePowerDetails': CharacterSheet.#togglePowerDetails,
+            'rollRitual': CharacterSheet.#rollRitual,
+            'vocalizeRitual': CharacterSheet.#vocalizeRitual,
+            'rollOrder': CharacterSheet.#rollOrder,
+            'vocalizeOrder': CharacterSheet.#vocalizeOrder,
+            'rollPhenomena': CharacterSheet.#rollPhenomena,
+            'rollPerils': CharacterSheet.#rollPerils,
+            'filterPowers': CharacterSheet.#filterPowers,
+            'filterOrders': CharacterSheet.#filterOrders,
 
             // Acquisition actions
-            'addAcquisition': AcolyteSheet.#addAcquisition,
-            'removeAcquisition': AcolyteSheet.#removeAcquisition,
-            'openAcquisitionDialog': AcolyteSheet.#openAcquisitionDialog,
+            'addAcquisition': CharacterSheet.#addAcquisition,
+            'removeAcquisition': CharacterSheet.#removeAcquisition,
+            'openAcquisitionDialog': CharacterSheet.#openAcquisitionDialog,
 
             // Experience actions
-            'customXP': AcolyteSheet.#customXP,
-            'openAdvancement': AcolyteSheet.#openAdvancement,
+            'customXP': CharacterSheet.#customXP,
+            'openAdvancement': CharacterSheet.#openAdvancement,
 
             // Active Effect actions
-            'createEffect': AcolyteSheet.#createEffect,
-            'toggleEffect': AcolyteSheet.#toggleEffect,
-            'deleteEffect': AcolyteSheet.#deleteEffect,
+            'createEffect': CharacterSheet.#createEffect,
+            'toggleEffect': CharacterSheet.#toggleEffect,
+            'deleteEffect': CharacterSheet.#deleteEffect,
 
             // Biography actions
-            'openOriginPathBuilder': AcolyteSheet.#openOriginPathBuilder,
+            'openOriginPathBuilder': CharacterSheet.#openOriginPathBuilder,
 
             // Characteristic setup
-            'openCharacteristicSetup': AcolyteSheet.#openCharacteristicSetup,
+            'openCharacteristicSetup': CharacterSheet.#openCharacteristicSetup,
 
             // Utility menu
-            'showUtilityMenu': AcolyteSheet.#showUtilityMenu,
+            'showUtilityMenu': CharacterSheet.#showUtilityMenu,
 
             // Misc actions
-            'bonusVocalize': AcolyteSheet.#bonusVocalize,
+            'bonusVocalize': CharacterSheet.#bonusVocalize,
         },
         classes: ['wh40k-rpg', 'sheet', 'actor', 'acolyte'],
         position: {
@@ -1346,7 +1346,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle weapon attack action.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1363,7 +1363,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle dodge action.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1380,7 +1380,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle parry action.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1397,7 +1397,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle assign damage action.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1418,7 +1418,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle initiative roll.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1459,7 +1459,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle toggling a combat action as favorite.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1476,7 +1476,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle generic combat action from favorites.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1509,7 +1509,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle vocalizing combat actions to chat.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1550,7 +1550,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle vocalizing movement to chat.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1591,7 +1591,7 @@ export default class AcolyteSheet extends BaseActorSheet {
     /**
      * Set the active movement mode on the actor's token.
      * Updates the token's movement action flag for ruler integration.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1622,7 +1622,7 @@ export default class AcolyteSheet extends BaseActorSheet {
     /**
      * Handle stat adjustment button clicks.
      * Throttled to prevent spam clicks.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1702,26 +1702,26 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle increment action (convenience wrapper for adjustStat).
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #increment(event, target) {
         event.stopPropagation(); // Prevent header toggle
         target.dataset.statAction = 'increment';
-        return AcolyteSheet.#adjustStat.call(this, event, target);
+        return CharacterSheet.#adjustStat.call(this, event, target);
     }
 
     /**
      * Handle decrement action (convenience wrapper for adjustStat).
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #decrement(event, target) {
         event.stopPropagation(); // Prevent header toggle
         target.dataset.statAction = 'decrement';
-        return AcolyteSheet.#adjustStat.call(this, event, target);
+        return CharacterSheet.#adjustStat.call(this, event, target);
     }
 
     /* -------------------------------------------- */
@@ -1729,7 +1729,7 @@ export default class AcolyteSheet extends BaseActorSheet {
     /**
      * Handle clicking on a critical damage pip.
      * Throttled to prevent spam clicks.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1756,7 +1756,7 @@ export default class AcolyteSheet extends BaseActorSheet {
     /**
      * Handle clicking on a fate star pip.
      * Throttled to prevent spam clicks.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1783,7 +1783,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle quick-set fatigue bolt.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1810,7 +1810,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle quick-set corruption.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1839,7 +1839,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle quick-set insanity.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1868,7 +1868,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle restoring all fate points.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1895,7 +1895,7 @@ export default class AcolyteSheet extends BaseActorSheet {
     /**
      * Handle fate spending actions.
      * Throttled to prevent accidental double-spending.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1977,7 +1977,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle toggling item equipped state.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -1992,7 +1992,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle stowing an item.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2011,7 +2011,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle unstowing an item.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2026,7 +2026,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle stowing an item in ship storage.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2045,7 +2045,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle unstowing an item from ship storage.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2060,7 +2060,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle toggling force field activation.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2075,7 +2075,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle bulk equipment operations.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2146,7 +2146,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle adding an acquisition.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2162,7 +2162,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle removing an acquisition.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2185,7 +2185,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Open the Acquisition Dialog for rolling acquisition tests.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2200,7 +2200,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle custom XP addition/subtraction.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2214,7 +2214,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Open the advancement dialog for spending XP.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2230,7 +2230,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle bonus vocalize.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2264,7 +2264,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Open the Origin Path Builder dialog for this character.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2290,7 +2290,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Open the characteristic setup dialog.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
@@ -2402,7 +2402,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle equipment filtering (search and type/status filters).
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
@@ -2470,7 +2470,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle clearing equipment search.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2491,7 +2491,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle filtering skills by search term, characteristic, and training level.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
@@ -2511,7 +2511,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Clear all skill filters.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
@@ -2525,7 +2525,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Toggle favorite status for a skill.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
@@ -2557,7 +2557,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * Toggle favorite status for a specialist skill entry.
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      */
     static async #toggleFavoriteSpecialistSkill(event, target) {
         const skillKey = target.dataset.skill;
@@ -2592,7 +2592,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * First shows skill selector, then opens the existing specialist skill dialog.
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      */
     static async #openAddSpecialistDialog(event, target) {
         // Get list of specialist skills for the dropdown
@@ -2655,7 +2655,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Toggle favorite status for a talent.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
@@ -2689,7 +2689,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * Filter traits list.
      * @param {Event} event  Triggering event
      * @param {HTMLElement} target  The input/select element
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @private
      */
     static async #filterTraits(event, target) {
@@ -2708,7 +2708,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * Clear traits filter.
      * @param {Event} event  Triggering event
      * @param {HTMLElement} target  The button clicked
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @private
      */
     static async #clearTraitsFilter(event, target) {
@@ -2720,7 +2720,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * Adjust trait level.
      * @param {Event} event  Triggering event
      * @param {HTMLElement} target  The button clicked
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @private
      */
     static async #adjustTraitLevel(event, target) {
@@ -2743,7 +2743,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle creating a new Active Effect.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2774,7 +2774,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle toggling an Active Effect's enabled/disabled state.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2807,7 +2807,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle deleting an Active Effect.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2850,7 +2850,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle rolling a psychic or navigator power.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2875,7 +2875,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle rolling damage for an attack power.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2900,7 +2900,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle vocalizing a power to chat.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2933,7 +2933,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle toggling power details expansion.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2957,7 +2957,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle rolling a ritual.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -2975,7 +2975,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle vocalizing a ritual to chat.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -3003,7 +3003,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle rolling an order.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -3021,7 +3021,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle vocalizing an order to chat.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -3049,7 +3049,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle rolling psychic phenomena.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -3089,7 +3089,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle rolling perils of the warp.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -3129,7 +3129,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle filtering psychic powers by discipline.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
@@ -3154,7 +3154,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
     /**
      * Handle filtering orders by category.
-     * @this {AcolyteSheet}
+     * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
