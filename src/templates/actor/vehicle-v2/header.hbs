@@ -37,7 +37,7 @@
                     <label>{{localize "WH40K.NPC.Faction"}}</label>
                     <input type="text" 
                            name="system.faction" 
-                           value="{{system.faction}}" 
+                           value="{{source.faction}}" 
                            placeholder="e.g., Imperial Guard, Ork" />
                 </div>
             </div>
@@ -52,14 +52,14 @@
                     <input type="number" 
                            class="wh40k-vehicle-v2-stat-input" 
                            name="system.wounds.value" 
-                           value="{{system.wounds.value}}" 
+                           value="{{source.wounds.value}}" 
                            min="0" 
                            title="Current" />
                     <span class="wh40k-vehicle-v2-stat-separator">/</span>
                     <input type="number" 
                            class="wh40k-vehicle-v2-stat-input" 
                            name="system.wounds.max" 
-                           value="{{system.wounds.max}}" 
+                           value="{{source.wounds.max}}" 
                            min="1" 
                            title="Max" />
                 </div>
@@ -71,7 +71,7 @@
                 <input type="number" 
                        class="wh40k-vehicle-v2-stat-input" 
                        name="system.armour.total" 
-                       value="{{system.armour.total}}" 
+                       value="{{source.armour.total}}" 
                        min="0" />
             </div>
             
@@ -81,7 +81,7 @@
                 <input type="number" 
                        class="wh40k-vehicle-v2-stat-input" 
                        name="system.size" 
-                       value="{{system.size}}" 
+                       value="{{source.size}}" 
                        min="1" 
                        max="10" />
             </div>

@@ -38,14 +38,14 @@
                         <div class="form-group">
                             <label>{{localize "WH40K.ShipComponent.Type"}}</label>
                             <select name="system.componentType">
-                                {{selectOptions componentTypes selected=system.componentType}}
+                                {{selectOptions componentTypes selected=source.componentType}}
                             </select>
                         </div>
                         
                         <div class="form-group">
                             <label>{{localize "WH40K.HullType"}}</label>
                             <select name="system.hullType" multiple>
-                                {{selectOptions hullTypes selected=system.hullType}}
+                                {{selectOptions hullTypes selected=source.hullType}}
                             </select>
                             <p class="hint">Hold Ctrl/Cmd to select multiple hull types</p>
                         </div>
@@ -53,14 +53,14 @@
                         <div class="form-group">
                             <label>{{localize "WH40K.Availability"}}</label>
                             <select name="system.availability">
-                                {{selectOptions availabilities selected=system.availability}}
+                                {{selectOptions availabilities selected=source.availability}}
                             </select>
                         </div>
                         
                         <div class="form-group">
                             <label>{{localize "WH40K.ShipComponent.Condition"}}</label>
                             <select name="system.condition">
-                                {{selectOptions conditions selected=system.condition}}
+                                {{selectOptions conditions selected=source.condition}}
                             </select>
                         </div>
                         
@@ -82,22 +82,22 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label>{{localize "WH40K.ShipComponent.Power"}} (Used)</label>
-                                <input type="number" name="system.power.used" value="{{system.power.used}}" />
+                                <input type="number" name="system.power.used" value="{{source.power.used}}" />
                             </div>
                             <div class="form-group">
                                 <label>{{localize "WH40K.ShipComponent.Power"}} (Generated)</label>
-                                <input type="number" name="system.power.generated" value="{{system.power.generated}}" />
+                                <input type="number" name="system.power.generated" value="{{source.power.generated}}" />
                             </div>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group">
                                 <label>{{localize "WH40K.ShipComponent.Space"}}</label>
-                                <input type="number" name="system.space" value="{{system.space}}" />
+                                <input type="number" name="system.space" value="{{source.space}}" />
                             </div>
                             <div class="form-group">
                                 <label>{{localize "WH40K.ShipComponent.ShipPoints"}}</label>
-                                <input type="number" name="system.shipPoints" value="{{system.shipPoints}}" />
+                                <input type="number" name="system.shipPoints" value="{{source.shipPoints}}" />
                             </div>
                         </div>
                     </div>
@@ -112,45 +112,45 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Speed</label>
-                                <input type="number" name="system.modifiers.speed" value="{{system.modifiers.speed}}" />
+                                <input type="number" name="system.modifiers.speed" value="{{source.modifiers.speed}}" />
                             </div>
                             <div class="form-group">
                                 <label>Manoeuvrability</label>
-                                <input type="number" name="system.modifiers.manoeuvrability" value="{{system.modifiers.manoeuvrability}}" />
+                                <input type="number" name="system.modifiers.manoeuvrability" value="{{source.modifiers.manoeuvrability}}" />
                             </div>
                             <div class="form-group">
                                 <label>Detection</label>
-                                <input type="number" name="system.modifiers.detection" value="{{system.modifiers.detection}}" />
+                                <input type="number" name="system.modifiers.detection" value="{{source.modifiers.detection}}" />
                             </div>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Armour</label>
-                                <input type="number" name="system.modifiers.armour" value="{{system.modifiers.armour}}" />
+                                <input type="number" name="system.modifiers.armour" value="{{source.modifiers.armour}}" />
                             </div>
                             <div class="form-group">
                                 <label>Hull Integrity</label>
-                                <input type="number" name="system.modifiers.hullIntegrity" value="{{system.modifiers.hullIntegrity}}" />
+                                <input type="number" name="system.modifiers.hullIntegrity" value="{{source.modifiers.hullIntegrity}}" />
                             </div>
                             <div class="form-group">
                                 <label>Turret Rating</label>
-                                <input type="number" name="system.modifiers.turretRating" value="{{system.modifiers.turretRating}}" />
+                                <input type="number" name="system.modifiers.turretRating" value="{{source.modifiers.turretRating}}" />
                             </div>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Void Shields</label>
-                                <input type="number" name="system.modifiers.voidShields" value="{{system.modifiers.voidShields}}" />
+                                <input type="number" name="system.modifiers.voidShields" value="{{source.modifiers.voidShields}}" />
                             </div>
                             <div class="form-group">
                                 <label>Morale</label>
-                                <input type="number" name="system.modifiers.morale" value="{{system.modifiers.morale}}" />
+                                <input type="number" name="system.modifiers.morale" value="{{source.modifiers.morale}}" />
                             </div>
                             <div class="form-group">
                                 <label>Crew Rating</label>
-                                <input type="number" name="system.modifiers.crewRating" value="{{system.modifiers.crewRating}}" />
+                                <input type="number" name="system.modifiers.crewRating" value="{{source.modifiers.crewRating}}" />
                             </div>
                         </div>
                     </div>

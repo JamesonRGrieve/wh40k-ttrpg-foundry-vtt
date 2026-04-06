@@ -12,13 +12,13 @@
             <div class="wh40k-header-row">
                 <span class="wh40k-header-label">{{localize "WH40K.Vehicle.Type"}}</span>
                 <select class="wh40k-header-input" name="system.type">
-                    {{selectOptions dh.vehicleTypes selected=actor.system.type labelAttr="label" valueAttr="@key"}}
+                    {{selectOptions dh.vehicleTypes selected=source.type labelAttr="label" valueAttr="@key"}}
                 </select>
             </div>
             <div class="wh40k-header-row">
                 <span class="wh40k-header-label">{{localize "WH40K.Vehicle.Class"}}</span>
                 <select class="wh40k-header-input" name="system.vehicleClass">
-                    {{selectOptions dh.vehicleClasses selected=actor.system.vehicleClass labelAttr="label" valueAttr="@key"}}
+                    {{selectOptions dh.vehicleClasses selected=source.vehicleClass labelAttr="label" valueAttr="@key"}}
                 </select>
             </div>
         </div>
@@ -26,14 +26,14 @@
             <div class="wh40k-stat-box wh40k-integrity-box">
                 <span class="wh40k-stat-label">Integrity</span>
                 <div class="wh40k-stat-values">
-                    <input type="number" class="wh40k-stat-input" name="system.integrity.value" value="{{system.integrity.value}}" title="Current" />
+                    <input type="number" class="wh40k-stat-input" name="system.integrity.value" value="{{source.integrity.value}}" title="Current" />
                     <span class="wh40k-stat-separator">/</span>
-                    <input type="number" class="wh40k-stat-input" name="system.integrity.max" value="{{system.integrity.max}}" title="Max" />
+                    <input type="number" class="wh40k-stat-input" name="system.integrity.max" value="{{source.integrity.max}}" title="Max" />
                 </div>
             </div>
             <div class="wh40k-stat-box wh40k-capacity-box">
                 <span class="wh40k-stat-label">Capacity</span>
-                <input type="number" class="wh40k-stat-input wh40k-stat-single" name="system.carryingCapacity" value="{{system.carryingCapacity}}" />
+                <input type="number" class="wh40k-stat-input wh40k-stat-single" name="system.carryingCapacity" value="{{source.carryingCapacity}}" />
             </div>
         </div>
     </div>

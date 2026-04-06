@@ -369,7 +369,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _createAcquisitionMessage(data) {
-        const content = await renderTemplate('systems/wh40k-rpg/templates/chat/acquisition-test.hbs', {
+        const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/acquisition-test.hbs', {
             actor: this.actor,
             item: data.item,
             roll: data.roll.total,

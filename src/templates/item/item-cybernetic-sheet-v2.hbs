@@ -271,7 +271,7 @@
                 <label class="wh40k-property-label">
                   <i class="fas fa-weight-hanging"></i> Weight (kg)
                 </label>
-                <input type="number" name="system.weight" value="{{system.weight}}" 
+                <input type="number" name="system.weight" value="{{source.weight}}" 
                        step="0.1" min="0" class="wh40k-property-input" />
               </div>
               
@@ -494,32 +494,32 @@
             <div class="wh40k-armour-ap-grid">
               <div class="wh40k-armour-ap-field">
                 <label><i class="fas fa-head-side-brain"></i> Head</label>
-                <input type="number" name="system.armourPoints.head" value="{{system.armourPoints.head}}" 
+                <input type="number" name="system.armourPoints.head" value="{{source.armourPoints.head}}" 
                        data-dtype="Number" min="0" />
               </div>
               <div class="wh40k-armour-ap-field">
                 <label><i class="fas fa-hand-fist"></i> Left Arm</label>
-                <input type="number" name="system.armourPoints.leftArm" value="{{system.armourPoints.leftArm}}" 
+                <input type="number" name="system.armourPoints.leftArm" value="{{source.armourPoints.leftArm}}" 
                        data-dtype="Number" min="0" />
               </div>
               <div class="wh40k-armour-ap-field">
                 <label><i class="fas fa-hand-fist"></i> Right Arm</label>
-                <input type="number" name="system.armourPoints.rightArm" value="{{system.armourPoints.rightArm}}" 
+                <input type="number" name="system.armourPoints.rightArm" value="{{source.armourPoints.rightArm}}" 
                        data-dtype="Number" min="0" />
               </div>
               <div class="wh40k-armour-ap-field">
                 <label><i class="fas fa-shield"></i> Body</label>
-                <input type="number" name="system.armourPoints.body" value="{{system.armourPoints.body}}" 
+                <input type="number" name="system.armourPoints.body" value="{{source.armourPoints.body}}" 
                        data-dtype="Number" min="0" />
               </div>
               <div class="wh40k-armour-ap-field">
                 <label><i class="fas fa-boot"></i> Left Leg</label>
-                <input type="number" name="system.armourPoints.leftLeg" value="{{system.armourPoints.leftLeg}}" 
+                <input type="number" name="system.armourPoints.leftLeg" value="{{source.armourPoints.leftLeg}}" 
                        data-dtype="Number" min="0" />
               </div>
               <div class="wh40k-armour-ap-field">
                 <label><i class="fas fa-boot"></i> Right Leg</label>
-                <input type="number" name="system.armourPoints.rightLeg" value="{{system.armourPoints.rightLeg}}" 
+                <input type="number" name="system.armourPoints.rightLeg" value="{{source.armourPoints.rightLeg}}" 
                        data-dtype="Number" min="0" />
               </div>
             </div>
@@ -557,7 +557,7 @@
                 <label class="wh40k-property-label">
                   <i class="fas fa-user-doctor"></i> Surgery Type
                 </label>
-                <input type="text" name="system.installation.surgery" value="{{system.installation.surgery}}" 
+                <input type="text" name="system.installation.surgery" value="{{source.installation.surgery}}" 
                        class="wh40k-property-input" placeholder="e.g., Major, Simple, Complex" />
               </div>
               
@@ -566,7 +566,7 @@
                 <label class="wh40k-property-label">
                   <i class="fas fa-gauge-high"></i> Difficulty
                 </label>
-                <input type="text" name="system.installation.difficulty" value="{{system.installation.difficulty}}" 
+                <input type="text" name="system.installation.difficulty" value="{{source.installation.difficulty}}" 
                        class="wh40k-property-input" placeholder="e.g., Challenging (-10), Difficult (-20)" />
               </div>
               
@@ -575,7 +575,7 @@
                 <label class="wh40k-property-label">
                   <i class="fas fa-clock"></i> Recovery Time
                 </label>
-                <input type="text" name="system.installation.recoveryTime" value="{{system.installation.recoveryTime}}" 
+                <input type="text" name="system.installation.recoveryTime" value="{{source.installation.recoveryTime}}" 
                        class="wh40k-property-input" placeholder="e.g., 1d5 days, 2 weeks" />
               </div>
             </div>
@@ -635,17 +635,17 @@
             <div class="wh40k-properties-grid">
               <div class="wh40k-property">
                 <label class="wh40k-property-label">Book</label>
-                <input type="text" name="system.source.book" value="{{system.source.book}}" 
+                <input type="text" name="system.source.book" value="{{source.source.book}}" 
                        class="wh40k-property-input" placeholder="RT: Core Rulebook" />
               </div>
               <div class="wh40k-property">
                 <label class="wh40k-property-label">Page</label>
-                <input type="text" name="system.source.page" value="{{system.source.page}}" 
+                <input type="text" name="system.source.page" value="{{source.source.page}}" 
                        class="wh40k-property-input" placeholder="142" />
               </div>
               <div class="wh40k-property wh40k-property--full">
                 <label class="wh40k-property-label">Custom Reference</label>
-                <input type="text" name="system.source.custom" value="{{system.source.custom}}" 
+                <input type="text" name="system.source.custom" value="{{source.source.custom}}" 
                        class="wh40k-property-input" placeholder="Optional: Custom source text overrides book/page" />
               </div>
             </div>

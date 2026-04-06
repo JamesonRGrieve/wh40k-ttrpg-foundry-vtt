@@ -138,7 +138,7 @@
 
                         <div class="wh40k-field">
                             <label>Identifier</label>
-                            <input type="text" name="system.identifier" value="{{system.identifier}}" placeholder="e.g., tearing, blast, unwieldy" />
+                            <input type="text" name="system.identifier" value="{{source.identifier}}" placeholder="e.g., tearing, blast, unwieldy" />
                             <p class="wh40k-field-hint">Unique identifier (lowercase, hyphenated)</p>
                         </div>
 
@@ -153,7 +153,7 @@
                         {{#if system.hasLevel}}
                             <div class="wh40k-field">
                                 <label>Default Level</label>
-                                <input type="number" name="system.level" value="{{system.level}}" data-dtype="Number" min="0" />
+                                <input type="number" name="system.level" value="{{source.level}}" data-dtype="Number" min="0" />
                                 <p class="wh40k-field-hint">Default level value for this quality</p>
                             </div>
                         {{/if}}
@@ -195,16 +195,16 @@
                         <div class="wh40k-field-row">
                             <div class="wh40k-field">
                                 <label>Source Book</label>
-                                <input type="text" name="system.source.book" value="{{system.source.book}}" placeholder="Rogue Trader Core" />
+                                <input type="text" name="system.source.book" value="{{source.source.book}}" placeholder="Rogue Trader Core" />
                             </div>
                             <div class="wh40k-field">
                                 <label>Page</label>
-                                <input type="text" name="system.source.page" value="{{system.source.page}}" placeholder="127" />
+                                <input type="text" name="system.source.page" value="{{source.source.page}}" placeholder="127" />
                             </div>
                         </div>
                         <div class="wh40k-field">
                             <label>Custom Reference</label>
-                            <input type="text" name="system.source.custom" value="{{system.source.custom}}" placeholder="Homebrew, Errata, etc." />
+                            <input type="text" name="system.source.custom" value="{{source.source.custom}}" placeholder="Homebrew, Errata, etc." />
                         </div>
                     </div>
                 </div>

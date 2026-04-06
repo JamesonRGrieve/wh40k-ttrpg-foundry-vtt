@@ -6,7 +6,7 @@
     <div class="wh40k-integrity-display">
         <div class="wh40k-field__wrapper">
             <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Integrity.Max"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.integrity.max" value="{{system.integrity.max}}" />
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.integrity.max" value="{{source.integrity.max}}" />
         </div>
         <div class="wh40k-field__wrapper">
             <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Integrity.Current"}}</span>
@@ -14,7 +14,7 @@
                 <button class="wh40k-control-button" data-action="adjustIntegrity" data-delta="-1" title="Damage">
                     <i class="fas fa-minus"></i>
                 </button>
-                <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.integrity.value" value="{{system.integrity.value}}" />
+                <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.integrity.value" value="{{source.integrity.value}}" />
                 <button class="wh40k-control-button" data-action="adjustIntegrity" data-delta="1" title="Repair">
                     <i class="fas fa-plus"></i>
                 </button>
@@ -22,7 +22,7 @@
         </div>
         <div class="wh40k-field__wrapper">
             <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Integrity.Critical"}}</span>
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.integrity.critical" value="{{system.integrity.critical}}" />
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.integrity.critical" value="{{source.integrity.critical}}" />
         </div>
         {{#if actor.system.isDamaged}}
             <div class="wh40k-integrity-status wh40k-status-damaged">

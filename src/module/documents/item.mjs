@@ -435,7 +435,7 @@ export class WH40KItem extends WH40KItemContainer {
             template = 'systems/wh40k-rpg/templates/chat/armour-card-chat.hbs';
         }
 
-        const html = await renderTemplate(template, cardData);
+        const html = await foundry.applications.handlebars.renderTemplate(template, cardData);
 
         const chatData = {
             user: game.user.id,
@@ -542,7 +542,7 @@ export class WH40KItem extends WH40KItemContainer {
             rollDescription: rollConfig.description || '',
         };
 
-        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/talent-roll-chat.hbs', cardData);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-roll-chat.hbs', cardData);
 
         return ChatMessage.create({
             user: game.user.id,
@@ -585,7 +585,7 @@ export class WH40KItem extends WH40KItemContainer {
             actor: this.actor.name,
         };
 
-        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs', cardData);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs', cardData);
 
         return ChatMessage.create({
             user: game.user.id,
@@ -623,7 +623,7 @@ export class WH40KItem extends WH40KItemContainer {
             actor: this.actor.name,
         };
 
-        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/order-roll-chat.hbs', cardData);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/order-roll-chat.hbs', cardData);
 
         return ChatMessage.create({
             user: game.user.id,
@@ -661,7 +661,7 @@ export class WH40KItem extends WH40KItemContainer {
             actor: this.actor.name,
         };
 
-        const html = await renderTemplate('systems/wh40k-rpg/templates/chat/ritual-roll-chat.hbs', cardData);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ritual-roll-chat.hbs', cardData);
 
         return ChatMessage.create({
             user: game.user.id,

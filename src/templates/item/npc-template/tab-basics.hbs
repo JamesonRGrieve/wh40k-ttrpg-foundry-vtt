@@ -50,7 +50,7 @@
                         <input
                             type="number"
                             name="system.scalingRules.characteristicScale"
-                            value="{{system.scalingRules.characteristicScale}}"
+                            value="{{source.scalingRules.characteristicScale}}"
                             min="0"
                             max="50"
                             step="1"
@@ -62,7 +62,7 @@
                 <div class="scaling-field">
                     <label>{{localize "WH40K.NPC.Template.WoundsScale"}}</label>
                     <div class="input-with-suffix">
-                        <input type="number" name="system.scalingRules.woundsScale" value="{{system.scalingRules.woundsScale}}" min="0" max="50" step="1" />
+                        <input type="number" name="system.scalingRules.woundsScale" value="{{source.scalingRules.woundsScale}}" min="0" max="50" step="1" />
                         <span class="suffix">%</span>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                 <div class="scaling-field">
                     <label>{{localize "WH40K.NPC.Template.ArmourScale"}}</label>
                     <div class="input-with-suffix">
-                        <input type="number" name="system.scalingRules.armourScale" value="{{system.scalingRules.armourScale}}" min="0" max="30" step="1" />
+                        <input type="number" name="system.scalingRules.armourScale" value="{{source.scalingRules.armourScale}}" min="0" max="30" step="1" />
                         <span class="suffix">%</span>
                     </div>
                 </div>
@@ -78,19 +78,19 @@
                 <div class="scaling-field">
                     <label>{{localize "WH40K.NPC.Template.WeaponScale"}}</label>
                     <div class="input-with-suffix">
-                        <input type="number" name="system.scalingRules.weaponScale" value="{{system.scalingRules.weaponScale}}" min="0" max="30" step="1" />
+                        <input type="number" name="system.scalingRules.weaponScale" value="{{source.scalingRules.weaponScale}}" min="0" max="30" step="1" />
                         <span class="suffix">%</span>
                     </div>
                 </div>
 
                 <div class="scaling-field full-width">
                     <label>{{localize "WH40K.NPC.Template.MinMultiplier"}}</label>
-                    <input type="number" name="system.scalingRules.minMultiplier" value="{{system.scalingRules.minMultiplier}}" min="0.1" max="1" step="0.1" />
+                    <input type="number" name="system.scalingRules.minMultiplier" value="{{source.scalingRules.minMultiplier}}" min="0.1" max="1" step="0.1" />
                 </div>
 
                 <div class="scaling-field full-width">
                     <label>{{localize "WH40K.NPC.Template.MaxMultiplier"}}</label>
-                    <input type="number" name="system.scalingRules.maxMultiplier" value="{{system.scalingRules.maxMultiplier}}" min="1" max="5" step="0.1" />
+                    <input type="number" name="system.scalingRules.maxMultiplier" value="{{source.scalingRules.maxMultiplier}}" min="1" max="5" step="0.1" />
                 </div>
             </div>
         </div>
@@ -105,7 +105,7 @@
             <div class="source-fields">
                 <div class="field-group">
                     <label>{{localize "WH40K.NPC.SourceBook"}}</label>
-                    <input type="text" name="system.source" value="{{system.source}}" placeholder="{{localize 'WH40K.NPC.SourcePlaceholder'}}" />
+                    <input type="text" name="system.source" value="{{source.source}}" placeholder="{{localize 'WH40K.NPC.SourcePlaceholder'}}" />
                 </div>
             </div>
         </div>

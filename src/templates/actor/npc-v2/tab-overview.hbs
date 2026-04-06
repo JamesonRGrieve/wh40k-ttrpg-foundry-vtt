@@ -116,19 +116,19 @@
           <div class="wh40k-personality-grid">
             <div class="wh40k-personality-field">
               <label><i class="fa-solid fa-face-smile"></i> Demeanor</label>
-              <input type="text" name="system.personality.demeanor" value="{{system.personality.demeanor}}" placeholder="e.g., Gruff, Cheerful" {{#unless editable}}disabled{{/unless}} />
+              <input type="text" name="system.personality.demeanor" value="{{source.personality.demeanor}}" placeholder="e.g., Gruff, Cheerful" {{#unless editable}}disabled{{/unless}} />
             </div>
             <div class="wh40k-personality-field">
               <label><i class="fa-solid fa-bullseye"></i> Goals</label>
-              <input type="text" name="system.personality.goals" value="{{system.personality.goals}}" placeholder="What do they want?" {{#unless editable}}disabled{{/unless}} />
+              <input type="text" name="system.personality.goals" value="{{source.personality.goals}}" placeholder="What do they want?" {{#unless editable}}disabled{{/unless}} />
             </div>
             <div class="wh40k-personality-field">
               <label><i class="fa-solid fa-ghost"></i> Fears</label>
-              <input type="text" name="system.personality.fears" value="{{system.personality.fears}}" placeholder="What do they fear?" {{#unless editable}}disabled{{/unless}} />
+              <input type="text" name="system.personality.fears" value="{{source.personality.fears}}" placeholder="What do they fear?" {{#unless editable}}disabled{{/unless}} />
             </div>
             <div class="wh40k-personality-field">
               <label><i class="fa-solid fa-bolt"></i> Quirks</label>
-              <input type="text" name="system.personality.quirks" value="{{system.personality.quirks}}" placeholder="Memorable traits" {{#unless editable}}disabled{{/unless}} />
+              <input type="text" name="system.personality.quirks" value="{{source.personality.quirks}}" placeholder="Memorable traits" {{#unless editable}}disabled{{/unless}} />
             </div>
           </div>
         </div>
@@ -213,11 +213,11 @@
         <div class="wh40k-meta-fields">
           <div class="wh40k-meta-field">
             <i class="fa-solid fa-flag"></i>
-            <input type="text" name="system.faction" value="{{system.faction}}" placeholder="Faction" {{#unless editable}}disabled{{/unless}} />
+            <input type="text" name="system.faction" value="{{source.faction}}" placeholder="Faction" {{#unless editable}}disabled{{/unless}} />
           </div>
           <div class="wh40k-meta-field">
             <i class="fa-solid fa-book-open"></i>
-            <input type="text" name="system.source" value="{{system.source}}" placeholder="Source (e.g. Core p.123)" {{#unless editable}}disabled{{/unless}} />
+            <input type="text" name="system.source" value="{{source.source}}" placeholder="Source (e.g. Core p.123)" {{#unless editable}}disabled{{/unless}} />
           </div>
         </div>
         {{!-- Tags --}}

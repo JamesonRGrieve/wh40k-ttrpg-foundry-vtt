@@ -418,7 +418,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         };
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
-        const html = await renderTemplate(template, templateData);
+        const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
         const chatData = {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor }),

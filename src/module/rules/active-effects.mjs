@@ -29,7 +29,7 @@ export async function handleOnFire(actor) {
 }
 
 export async function sendActiveEffectMessage(activeContext) {
-    const html = await renderTemplate(activeContext.template, activeContext);
+    const html = await foundry.applications.handlebars.renderTemplate(activeContext.template, activeContext);
     const chatData = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),

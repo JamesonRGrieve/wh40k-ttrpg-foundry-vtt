@@ -200,33 +200,27 @@ export class RollTableUtils {
             </form>
         `;
 
-        new Dialog({
-            title: 'Roll Table',
-            content: content,
-            buttons: {
-                roll: {
-                    icon: '<i class="fas fa-dice"></i>',
-                    label: 'Roll',
-                    callback: async (html) => {
-                        const tableName = html.find('[name="tableName"]').val();
-                        const modifier = parseInt(html.find('[name="modifier"]').val()) || 0;
+        foundry.applications.api.DialogV2.prompt({
+            window: { title: 'Roll Table' },
+            content,
+            ok: {
+                icon: 'fas fa-dice',
+                label: 'Roll',
+                callback: async (event, button, dialog) => {
+                    const tableName = dialog.querySelector('[name="tableName"]').value;
+                    const modifier = parseInt(dialog.querySelector('[name="modifier"]').value) || 0;
 
-                        if (modifier !== 0) {
-                            const roll = new Roll(`1d100 + ${modifier}`);
-                            await roll.evaluate();
-                            await this.rollTable(tableName, { roll });
-                        } else {
-                            await this.rollTable(tableName);
-                        }
-                    },
-                },
-                cancel: {
-                    icon: '<i class="fas fa-times"></i>',
-                    label: 'Cancel',
+                    if (modifier !== 0) {
+                        const roll = new Roll(`1d100 + ${modifier}`);
+                        await roll.evaluate();
+                        await this.rollTable(tableName, { roll });
+                    } else {
+                        await this.rollTable(tableName);
+                    }
                 },
             },
-            default: 'roll',
-        }).render(true);
+            rejectClose: false,
+        });
     }
 }
 

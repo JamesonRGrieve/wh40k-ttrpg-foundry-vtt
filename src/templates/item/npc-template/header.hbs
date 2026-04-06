@@ -30,19 +30,19 @@
             
             <div class="field-group">
                 <label>{{localize "WH40K.NPC.ThreatLevel"}}</label>
-                <input type="number" name="system.baseThreatLevel" value="{{system.baseThreatLevel}}" min="1" max="30" />
+                <input type="number" name="system.baseThreatLevel" value="{{source.baseThreatLevel}}" min="1" max="30" />
             </div>
         </div>
         
         <div class="faction-row">
             <div class="field-group">
                 <label>{{localize "WH40K.NPC.Faction"}}</label>
-                <input type="text" name="system.faction" value="{{system.faction}}" placeholder="{{localize 'WH40K.NPC.FactionPlaceholder'}}" />
+                <input type="text" name="system.faction" value="{{source.faction}}" placeholder="{{localize 'WH40K.NPC.FactionPlaceholder'}}" />
             </div>
             
             <div class="field-group">
                 <label>{{localize "WH40K.NPC.Subfaction"}}</label>
-                <input type="text" name="system.subfaction" value="{{system.subfaction}}" placeholder="{{localize 'WH40K.NPC.SubfactionPlaceholder'}}" />
+                <input type="text" name="system.subfaction" value="{{source.subfaction}}" placeholder="{{localize 'WH40K.NPC.SubfactionPlaceholder'}}" />
             </div>
         </div>
     </div>
