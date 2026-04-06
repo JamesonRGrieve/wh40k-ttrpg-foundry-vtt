@@ -1,23 +1,23 @@
 {{!-- Skill Item Sheet - Imperial Gothic Redesign --}}
-<div class="rt-item-sheet rt-skill-sheet">
+<div class="wh40k-item-sheet wh40k-skill-sheet">
     <form autocomplete="off">
         {{!-- Header --}}
-        <header class="rt-item-header">
-            <div class="rt-item-image" data-edit="img">
+        <header class="wh40k-item-header">
+            <div class="wh40k-item-image" data-edit="img">
                 <img src="{{item.img}}" alt="{{item.name}}" />
             </div>
-            <div class="rt-item-title">
-                <input type="text" class="rt-item-title__name" name="name" value="{{item.name}}" placeholder="Skill Name" />
-                <div class="rt-item-meta">
-                    <span class="rt-meta-badge rt-meta-badge--skill">
+            <div class="wh40k-item-title">
+                <input type="text" class="wh40k-item-title__name" name="name" value="{{item.name}}" placeholder="Skill Name" />
+                <div class="wh40k-item-meta">
+                    <span class="wh40k-meta-badge wh40k-meta-badge--skill">
                         <i class="fas fa-graduation-cap"></i> Skill
                     </span>
-                    <select name="system.skillType" class="rt-meta-select">
+                    <select name="system.skillType" class="wh40k-meta-select">
                         <option value="basic" {{#if (eq item.system.skillType "basic")}}selected{{/if}}>Basic</option>
                         <option value="advanced" {{#if (eq item.system.skillType "advanced")}}selected{{/if}}>Advanced</option>
                         <option value="specialist" {{#if (eq item.system.skillType "specialist")}}selected{{/if}}>Specialist</option>
                     </select>
-                    <select name="system.characteristic" class="rt-meta-select">
+                    <select name="system.characteristic" class="wh40k-meta-select">
                         <option value="agility" {{#if (eq item.system.characteristic "agility")}}selected{{/if}}>Agility</option>
                         <option value="ballisticSkill" {{#if (eq item.system.characteristic "ballisticSkill")}}selected{{/if}}>Ballistic Skill</option>
                         <option value="fellowship" {{#if (eq item.system.characteristic "fellowship")}}selected{{/if}}>Fellowship</option>
@@ -31,30 +31,30 @@
                 </div>
                 
                 {{!-- Badges Row --}}
-                <div class="rt-skill-badges">
+                <div class="wh40k-skill-badges">
                     {{!-- Skill Type Badge --}}
                     {{#if (eq item.system.skillType "basic")}}
-                    <span class="rt-skill-type-badge rt-skill-type-badge--basic">
+                    <span class="wh40k-skill-type-badge wh40k-skill-type-badge--basic">
                         <i class="fas fa-circle-check"></i> Basic
                     </span>
                     {{else if (eq item.system.skillType "advanced")}}
-                    <span class="rt-skill-type-badge rt-skill-type-badge--advanced">
+                    <span class="wh40k-skill-type-badge wh40k-skill-type-badge--advanced">
                         <i class="fas fa-star"></i> Advanced
                     </span>
                     {{else if (eq item.system.skillType "specialist")}}
-                    <span class="rt-skill-type-badge rt-skill-type-badge--specialist">
+                    <span class="wh40k-skill-type-badge wh40k-skill-type-badge--specialist">
                         <i class="fas fa-flask"></i> Specialist
                     </span>
                     {{/if}}
                     
                     {{!-- Characteristic Badge --}}
-                    <span class="rt-char-badge">
+                    <span class="wh40k-char-badge">
                         <i class="fas fa-dice-d20"></i> {{capitalize item.system.characteristicAbbr}}
                     </span>
                     
                     {{!-- Descriptor Badge (if exists) --}}
                     {{#if item.system.descriptor}}
-                    <span class="rt-descriptor-badge" title="{{item.system.descriptor}}">
+                    <span class="wh40k-descriptor-badge" title="{{item.system.descriptor}}">
                         <i class="fas fa-tag"></i> {{item.system.descriptor}}
                     </span>
                     {{/if}}
@@ -63,33 +63,33 @@
         </header>
 
         {{!-- Body --}}
-        <div class="rt-item-body">
+        <div class="wh40k-item-body">
             
             {{!-- Properties Panel --}}
-            <section class="rt-skill-properties">
-                <h3 class="rt-section-title">
+            <section class="wh40k-skill-properties">
+                <h3 class="wh40k-section-title">
                     <i class="fas fa-info-circle"></i> Properties
                 </h3>
                 
-                <div class="rt-properties-grid">
-                    <div class="rt-property">
+                <div class="wh40k-properties-grid">
+                    <div class="wh40k-property">
                         <label>Characteristic</label>
-                        <div class="rt-property-value">{{item.system.characteristicLabel}}</div>
+                        <div class="wh40k-property-value">{{item.system.characteristicLabel}}</div>
                     </div>
                     
-                    <div class="rt-property">
+                    <div class="wh40k-property">
                         <label>Skill Type</label>
-                        <div class="rt-property-value">{{capitalize item.system.skillType}}</div>
+                        <div class="wh40k-property-value">{{capitalize item.system.skillType}}</div>
                     </div>
                     
-                    <div class="rt-property">
+                    <div class="wh40k-property">
                         <label>Use Time</label>
                         <input type="text" name="system.useTime" value="{{item.system.useTime}}" placeholder="Half Action" />
                     </div>
                     
-                    <div class="rt-property">
+                    <div class="wh40k-property">
                         <label>Untrained Use</label>
-                        <div class="rt-property-value">
+                        <div class="wh40k-property-value">
                             {{#if item.system.isBasic}}
                                 <i class="fas fa-check" style="color: #27ae60;"></i> Can use untrained
                             {{else}}
@@ -101,16 +101,16 @@
                 
                 {{!-- Aptitudes --}}
                 {{#if item.system.aptitudes.length}}
-                <div class="rt-property" style="margin-top: 1rem;">
+                <div class="wh40k-property" style="margin-top: 1rem;">
                     <label>Aptitudes</label>
-                    <div class="rt-aptitudes-list">
+                    <div class="wh40k-aptitudes-list">
                         {{#each item.system.aptitudes}}
-                        <span class="rt-aptitude-tag">{{this}}</span>
+                        <span class="wh40k-aptitude-tag">{{this}}</span>
                         {{/each}}
                     </div>
                 </div>
                 {{else}}
-                <div class="rt-property" style="margin-top: 1rem;">
+                <div class="wh40k-property" style="margin-top: 1rem;">
                     <label>Aptitudes</label>
                     <input type="text" name="system.aptitudes" value="" placeholder="Agility, General (comma-separated)" />
                 </div>
@@ -119,11 +119,11 @@
             
             {{!-- Descriptor Panel --}}
             {{#if item.system.descriptor}}
-            <section class="rt-skill-descriptor">
-                <h3 class="rt-section-title">
+            <section class="wh40k-skill-descriptor">
+                <h3 class="wh40k-section-title">
                     <i class="fas fa-align-left"></i> Description
                 </h3>
-                <div class="rt-descriptor-text">
+                <div class="wh40k-descriptor-text">
                     {{item.system.descriptor}}
                 </div>
             </section>
@@ -131,15 +131,15 @@
             
             {{!-- Specializations (for specialist skills) --}}
             {{#if (eq item.system.skillType "specialist")}}
-            <section class="rt-skill-specializations">
-                <h3 class="rt-section-title">
+            <section class="wh40k-skill-specializations">
+                <h3 class="wh40k-section-title">
                     <i class="fas fa-list-ul"></i> Specializations
                 </h3>
                 
                 {{#if item.system.specializations.length}}
-                <div class="rt-specializations-list">
+                <div class="wh40k-specializations-list">
                     {{#each item.system.specializations}}
-                    <span class="rt-specialization-tag">
+                    <span class="wh40k-specialization-tag">
                         <i class="fas fa-chevron-right"></i> {{this}}
                     </span>
                     {{/each}}
@@ -147,7 +147,7 @@
                 {{/if}}
                 
                 <input type="text" 
-                       class="rt-specializations-input" 
+                       class="wh40k-specializations-input" 
                        name="system.specializations" 
                        value="{{join item.system.specializations ", "}}" 
                        placeholder="Imperium, Koronus Expanse, War (comma-separated)" 
@@ -156,23 +156,23 @@
             {{/if}}
             
             {{!-- Uses & Rules Panel --}}
-            <section class="rt-skill-uses">
-                <h3 class="rt-section-title">
+            <section class="wh40k-skill-uses">
+                <h3 class="wh40k-section-title">
                     <i class="fas fa-book-open"></i> Uses &amp; Rules
                 </h3>
-                <div class="rt-uses-content editor" data-edit="system.uses">
+                <div class="wh40k-uses-content editor" data-edit="system.uses">
                     {{{item.system.uses}}}
                 </div>
             </section>
             
             {{!-- Difficulty Examples Table --}}
-            <section class="rt-skill-difficulties">
-                <h3 class="rt-section-title">
+            <section class="wh40k-skill-difficulties">
+                <h3 class="wh40k-section-title">
                     <i class="fas fa-chart-line"></i> Example Difficulties
                 </h3>
                 
                 {{#if item.system.exampleDifficulties.length}}
-                <table class="rt-difficulties-table">
+                <table class="wh40k-difficulties-table">
                     <thead>
                         <tr>
                             <th>Difficulty</th>
@@ -183,8 +183,8 @@
                     <tbody>
                         {{#each item.system.exampleDifficulties}}
                         <tr>
-                            <td class="rt-difficulty-name">{{this.difficulty}}</td>
-                            <td class="rt-difficulty-modifier {{#if (gt this.modifier 0)}}positive{{else if (lt this.modifier 0)}}negative{{else}}neutral{{/if}}">
+                            <td class="wh40k-difficulty-name">{{this.difficulty}}</td>
+                            <td class="wh40k-difficulty-modifier {{#if (gt this.modifier 0)}}positive{{else if (lt this.modifier 0)}}negative{{else}}neutral{{/if}}">
                                 {{#if (gt this.modifier 0)}}+{{/if}}{{this.modifier}}
                             </td>
                             <td>{{this.example}}</td>
@@ -193,7 +193,7 @@
                     </tbody>
                 </table>
                 {{else}}
-                <div class="rt-difficulties-empty">
+                <div class="wh40k-difficulties-empty">
                     <i class="fas fa-info-circle"></i> No example difficulties defined
                 </div>
                 {{/if}}
@@ -201,34 +201,34 @@
             
             {{!-- Special Rules (optional) --}}
             {{#if item.system.specialRules}}
-            <section class="rt-skill-special-rules">
-                <h3 class="rt-section-title">
+            <section class="wh40k-skill-special-rules">
+                <h3 class="wh40k-section-title">
                     <i class="fas fa-exclamation-triangle"></i> Special Rules
                 </h3>
-                <div class="rt-special-rules-content editor" data-edit="system.specialRules">
+                <div class="wh40k-special-rules-content editor" data-edit="system.specialRules">
                     {{{item.system.specialRules}}}
                 </div>
             </section>
             {{/if}}
             
             {{!-- Roll Config (advanced settings) --}}
-            <section class="rt-skill-roll-config">
-                <h3 class="rt-section-title">
+            <section class="wh40k-skill-roll-config">
+                <h3 class="wh40k-section-title">
                     <i class="fas fa-cog"></i> Roll Configuration
                 </h3>
                 
-                <div class="rt-config-grid">
-                    <div class="rt-config-field">
+                <div class="wh40k-config-grid">
+                    <div class="wh40k-config-field">
                         <label>Default Modifier</label>
                         <input type="number" name="system.rollConfig.defaultModifier" value="{{item.system.rollConfig.defaultModifier}}" />
                     </div>
                     
-                    <div class="rt-config-field">
+                    <div class="wh40k-config-field">
                         <label>Untrained Penalty</label>
                         <input type="number" name="system.rollConfig.untrainedPenalty" value="{{item.system.rollConfig.untrainedPenalty}}" />
                     </div>
                     
-                    <div class="rt-config-field">
+                    <div class="wh40k-config-field">
                         <label style="display: flex; align-items: center; gap: 0.5rem;">
                             <input type="checkbox" name="system.rollConfig.canBeUsedUntrained" {{checked item.system.rollConfig.canBeUsedUntrained}} />
                             Can Use Untrained
@@ -238,14 +238,14 @@
             </section>
             
             {{!-- Footer: Source --}}
-            <div class="rt-item-footer" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.08);">
-                <label style="font-size: 0.7rem; text-transform: uppercase; color: var(--rt-text-muted); margin-bottom: 0.25rem; display: block;">Source</label>
+            <div class="wh40k-item-footer" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+                <label style="font-size: 0.7rem; text-transform: uppercase; color: var(--wh40k-text-muted); margin-bottom: 0.25rem; display: block;">Source</label>
                 <input type="text" 
-                       class="rt-source-input" 
+                       class="wh40k-source-input" 
                        name="system.source" 
                        value="{{#if item.system.source}}{{item.system.source}}{{else}}Core Rulebook{{/if}}" 
                        placeholder="Core Rulebook" 
-                       style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: var(--rt-text-light);" />
+                       style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: var(--wh40k-text-light);" />
             </div>
         </div>
     </form>

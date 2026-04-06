@@ -112,7 +112,7 @@ export default class CharacteristicGrantData extends BaseGrantData {
                 newValue: newAdvance,
             };
 
-            const charLabel = game.i18n.localize(`RT.Characteristic.${key}`);
+            const charLabel = game.i18n.localize(`WH40K.Characteristic.${key}`);
             const sign = value > 0 ? '+' : '';
             result.notifications.push(`${charLabel} ${sign}${value}`);
         }
@@ -188,7 +188,7 @@ export default class CharacteristicGrantData extends BaseGrantData {
         summary.icon = this.constructor.ICON;
 
         for (const charConfig of this.characteristics) {
-            const label = game.i18n.localize(`RT.Characteristic.${charConfig.key}`);
+            const label = game.i18n.localize(`WH40K.Characteristic.${charConfig.key}`);
             const sign = charConfig.value > 0 ? '+' : '';
 
             summary.details.push({

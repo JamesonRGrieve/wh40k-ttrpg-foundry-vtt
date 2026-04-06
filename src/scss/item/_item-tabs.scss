@@ -14,8 +14,8 @@
     display: flex;
     gap: 2px;
     padding: 0 12px;
-    background: var(--rt-panel-bg-solid);
-    border-bottom: 1px solid var(--rt-border-color);
+    background: var(--wh40k-panel-bg-solid);
+    border-bottom: 1px solid var(--wh40k-border-color);
     flex-shrink: 0;
 }
 
@@ -31,7 +31,7 @@
     border-bottom: 3px solid transparent;
     font-size: 0.85rem;
     font-weight: 500;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     transition: all 0.2s ease;
 
@@ -40,8 +40,8 @@
     }
 
     &:hover {
-        color: var(--rt-text-dark);
-        background: var(--rt-panel-bg-translucent);
+        color: var(--wh40k-text-dark);
+        background: var(--wh40k-panel-bg-translucent);
     }
 
     &.active {
@@ -52,18 +52,18 @@
 
 // Item type specific active states
 .wh40k-talent-tab.active {
-    color: var(--rt-talents-primary);
-    background: var(--rt-talents-bg);
+    color: var(--wh40k-talents-primary);
+    background: var(--wh40k-talents-bg);
 }
 
 .wh40k-trait-tab.active {
-    color: var(--rt-traits-primary);
-    background: var(--rt-traits-bg);
+    color: var(--wh40k-traits-primary);
+    background: var(--wh40k-traits-bg);
 }
 
 .wh40k-origin-tab.active {
-    color: var(--rt-dynasty-primary);
-    background: var(--rt-dynasty-bg);
+    color: var(--wh40k-dynasty-primary);
+    background: var(--wh40k-dynasty-bg);
 }
 
 // ============================================
@@ -84,15 +84,15 @@
     }
 
     &::-webkit-scrollbar-track {
-        background: var(--rt-panel-bg);
+        background: var(--wh40k-panel-bg);
     }
 
     &::-webkit-scrollbar-thumb {
-        background: var(--rt-border-color);
+        background: var(--wh40k-border-color);
         border-radius: 4px;
 
         &:hover {
-            background: var(--rt-gold-dark);
+            background: var(--wh40k-gold-dark);
         }
     }
 }

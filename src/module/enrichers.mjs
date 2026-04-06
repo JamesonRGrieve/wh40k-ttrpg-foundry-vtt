@@ -92,7 +92,7 @@ async function enrichCharacteristic(match, options) {
 
     // Create enriched element
     const span = document.createElement('span');
-    span.className = 'wh40k-enricher rt-enricher-characteristic';
+    span.className = 'wh40k-enricher wh40k-enricher-characteristic';
     span.dataset.enricherType = 'characteristic';
     span.dataset.enricherConfig = charKey;
     span.dataset.actorUuid = actor.uuid;
@@ -156,7 +156,7 @@ async function enrichSkill(match, options) {
 
     // Create enriched element
     const span = document.createElement('span');
-    span.className = 'wh40k-enricher rt-enricher-skill';
+    span.className = 'wh40k-enricher wh40k-enricher-skill';
     span.dataset.enricherType = 'skill';
     span.dataset.enricherConfig = specialization ? `${skillKey}:${specialization}` : skillKey;
     span.dataset.actorUuid = actor.uuid;
@@ -207,7 +207,7 @@ async function enrichModifier(match, options) {
 
     // Create enriched element
     const span = document.createElement('span');
-    span.className = `rt-enricher rt-enricher-modifier ${numValue >= 0 ? 'positive' : 'negative'}`;
+    span.className = `wh40k-enricher wh40k-enricher-modifier ${numValue >= 0 ? 'positive' : 'negative'}`;
     span.dataset.enricherType = 'modifier';
     span.dataset.enricherConfig = config;
 
@@ -243,7 +243,7 @@ async function enrichArmor(match, options) {
 
     // Create enriched element
     const span = document.createElement('span');
-    span.className = 'wh40k-enricher rt-enricher-armor';
+    span.className = 'wh40k-enricher wh40k-enricher-armor';
     span.dataset.enricherType = 'armor';
     span.dataset.enricherConfig = config;
     span.dataset.actorUuid = actor.uuid;
@@ -300,7 +300,7 @@ async function enrichArmor(match, options) {
  */
 function createErrorElement(original, error) {
     const span = document.createElement('span');
-    span.className = 'wh40k-enricher rt-enricher-error';
+    span.className = 'wh40k-enricher wh40k-enricher-error';
     span.title = error;
     span.textContent = original;
     return span;
@@ -313,7 +313,7 @@ function createErrorElement(original, error) {
  * @param {MouseEvent} event  The click event.
  */
 async function handleEnricherClick(event) {
-    const enricher = event.target.closest('.rt-enricher');
+    const enricher = event.target.closest('.wh40k-enricher');
     if (!enricher) return;
 
     const type = enricher.dataset.enricherType;
@@ -389,7 +389,7 @@ async function enrichQuality(match, options) {
     config = config.trim().toLowerCase();
 
     // Try to find the quality in compendiums
-    const qualityPack = game.packs.get('wh40k-rpg.rt-items-weapon-qualities');
+    const qualityPack = game.packs.get('wh40k-rpg.wh40k-items-weapon-qualities');
     let quality = null;
 
     if (qualityPack) {
@@ -402,7 +402,7 @@ async function enrichQuality(match, options) {
 
     // Create enriched element
     const span = document.createElement('span');
-    span.className = 'wh40k-enricher rt-enricher-quality';
+    span.className = 'wh40k-enricher wh40k-enricher-quality';
     span.dataset.enricherType = 'quality';
     span.dataset.enricherConfig = config;
 
@@ -430,7 +430,7 @@ async function enrichProperty(match, options) {
     config = config.trim().toLowerCase();
 
     // Try to find the property in compendiums
-    const propertyPack = game.packs.get('wh40k-rpg.rt-items-armour-properties');
+    const propertyPack = game.packs.get('wh40k-rpg.wh40k-items-armour-properties');
     let property = null;
 
     if (propertyPack) {
@@ -443,7 +443,7 @@ async function enrichProperty(match, options) {
 
     // Create enriched element
     const span = document.createElement('span');
-    span.className = 'wh40k-enricher rt-enricher-property';
+    span.className = 'wh40k-enricher wh40k-enricher-property';
     span.dataset.enricherType = 'property';
     span.dataset.enricherConfig = config;
 
@@ -471,7 +471,7 @@ async function enrichCondition(match, options) {
     config = config.trim().toLowerCase();
 
     // Try to find the condition in compendiums
-    const conditionPack = game.packs.get('wh40k-rpg.rt-items-conditions');
+    const conditionPack = game.packs.get('wh40k-rpg.wh40k-items-conditions');
     let condition = null;
 
     if (conditionPack) {
@@ -484,7 +484,7 @@ async function enrichCondition(match, options) {
 
     // Create enriched element
     const span = document.createElement('span');
-    span.className = 'wh40k-enricher rt-enricher-condition';
+    span.className = 'wh40k-enricher wh40k-enricher-condition';
     span.dataset.enricherType = 'condition';
     span.dataset.enricherConfig = config;
 

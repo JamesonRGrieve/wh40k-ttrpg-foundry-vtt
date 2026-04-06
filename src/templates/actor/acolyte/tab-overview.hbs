@@ -2,29 +2,29 @@
 {{!-- At-a-glance view of all critical information --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
-    <div class="rt-dashboard">
+    <div class="wh40k-dashboard">
         {{!-- Row 1: Vitals | Key Skills --}}
-        <div class="rt-dashboard-row rt-dashboard-row--top">
+        <div class="wh40k-dashboard-row wh40k-dashboard-row--top">
             
             {{!-- Zone 1: Vitals (Top-Left) --}}
-            <div class="rt-dashboard-zone rt-zone-vitals">
-                <div class="rt-zone-header">
+            <div class="wh40k-dashboard-zone wh40k-zone-vitals">
+                <div class="wh40k-zone-header">
                     <i class="fas fa-heartbeat"></i>
                     <span>Vitals</span>
                 </div>
-                <div class="rt-zone-content">
+                <div class="wh40k-zone-content">
                     {{!-- Wounds --}}
-                    <div class="rt-vital-row">
-                        <span class="rt-vital-icon"><i class="fas fa-heart"></i></span>
-                        <span class="rt-vital-label">Wounds</span>
-                        <div class="rt-vital-controls">
-                            <button type="button" class="rt-vital-btn" data-action="decrement" data-field="system.wounds.value" data-min="0" title="−1">
+                    <div class="wh40k-vital-row">
+                        <span class="wh40k-vital-icon"><i class="fas fa-heart"></i></span>
+                        <span class="wh40k-vital-label">Wounds</span>
+                        <div class="wh40k-vital-controls">
+                            <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.wounds.value" data-min="0" title="−1">
                                 <i class="fas fa-minus"></i>
                             </button>
-                            <span class="rt-vital-value {{#if (eq system.wounds.value 0)}}rt-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}rt-warning{{/if}}">
+                            <span class="wh40k-vital-value {{#if (eq system.wounds.value 0)}}wh40k-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}wh40k-warning{{/if}}">
                                 {{system.wounds.value}}/{{system.wounds.max}}
                             </span>
-                            <button type="button" class="rt-vital-btn" data-action="increment" data-field="system.wounds.value" data-max="{{system.wounds.max}}" title="+1">
+                            <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.wounds.value" data-max="{{system.wounds.max}}" title="+1">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -32,13 +32,13 @@
                     
                     {{!-- Critical Wounds - Below wounds, always visible if critical > 0 --}}
                     {{#if (or (gt system.wounds.critical 0) (eq system.wounds.value 0))}}
-                    <div class="rt-vital-row rt-vital-critical-row">
-                        <span class="rt-vital-icon"><i class="fas fa-skull"></i></span>
-                        <span class="rt-vital-label">Critical</span>
-                        <div class="rt-critical-pips-inline">
+                    <div class="wh40k-vital-row wh40k-vital-critical-row">
+                        <span class="wh40k-vital-icon"><i class="fas fa-skull"></i></span>
+                        <span class="wh40k-vital-label">Critical</span>
+                        <div class="wh40k-critical-pips-inline">
                             {{#times 10}}
                                 <button type="button"
-                                        class="rt-crit-pip-mini {{#if (lte this ../system.wounds.critical)}}rt-crit-pip-mini--filled{{/if}}"
+                                        class="wh40k-crit-pip-mini {{#if (lte this ../system.wounds.critical)}}wh40k-crit-pip-mini--filled{{/if}}"
                                         data-action="setCriticalPip"
                                         data-crit-level="{{this}}"
                                         title="Critical Level {{this}}">
@@ -49,13 +49,13 @@
                     {{/if}}
                     
                     {{!-- Fatigue --}}
-                    <div class="rt-vital-row">
-                        <span class="rt-vital-icon"><i class="fas fa-bolt"></i></span>
-                        <span class="rt-vital-label">Fatigue</span>
-                        <div class="rt-fatigue-bolts-inline">
+                    <div class="wh40k-vital-row">
+                        <span class="wh40k-vital-icon"><i class="fas fa-bolt"></i></span>
+                        <span class="wh40k-vital-label">Fatigue</span>
+                        <div class="wh40k-fatigue-bolts-inline">
                             {{#each (range 1 system.fatigue.max) as |index|}}
                                 <button type="button"
-                                        class="rt-fatigue-pip {{#if (lte index ../system.fatigue.value)}}rt-fatigue-pip--filled{{/if}}"
+                                        class="wh40k-fatigue-pip {{#if (lte index ../system.fatigue.value)}}wh40k-fatigue-pip--filled{{/if}}"
                                         data-action="setFatigueBolt"
                                         data-fatigue-index="{{index}}"
                                         title="Fatigue Level {{index}}">
@@ -64,18 +64,18 @@
                             {{/each}}
                         </div>
                         {{#if (gt system.fatigue.value 0)}}
-                        <span class="rt-vital-penalty">−10</span>
+                        <span class="wh40k-vital-penalty">−10</span>
                         {{/if}}
                     </div>
                     
                     {{!-- Fate Points --}}
-                    <div class="rt-vital-row">
-                        <span class="rt-vital-icon"><i class="fas fa-star"></i></span>
-                        <span class="rt-vital-label">Fate</span>
-                        <div class="rt-fate-stars-inline">
+                    <div class="wh40k-vital-row">
+                        <span class="wh40k-vital-icon"><i class="fas fa-star"></i></span>
+                        <span class="wh40k-vital-label">Fate</span>
+                        <div class="wh40k-fate-stars-inline">
                             {{#each (range 1 system.fate.max) as |index|}}
                                 <button type="button"
-                                        class="rt-fate-pip {{#if (lte index ../system.fate.value)}}rt-fate-pip--filled{{/if}}"
+                                        class="wh40k-fate-pip {{#if (lte index ../system.fate.value)}}wh40k-fate-pip--filled{{/if}}"
                                         data-action="setFateStar"
                                         data-fate-index="{{index}}"
                                         title="Fate Point {{index}}">
@@ -83,63 +83,63 @@
                                 </button>
                             {{/each}}
                         </div>
-                        <button type="button" class="rt-vital-btn-small" data-action="restoreFate" title="Restore All">
+                        <button type="button" class="wh40k-vital-btn-small" data-action="restoreFate" title="Restore All">
                             <i class="fas fa-redo"></i>
                         </button>
                     </div>
                 </div>
                 
                 {{!-- Mental State (compact) --}}
-                <div class="rt-zone-subsection">
-                    <div class="rt-mental-row">
-                        <span class="rt-mental-icon"><i class="fas fa-skull"></i></span>
-                        <span class="rt-mental-label">Corruption</span>
-                        <div class="rt-vital-controls">
-                            <button type="button" class="rt-vital-btn" data-action="decrement" data-field="system.corruption" data-min="0" title="−1">
+                <div class="wh40k-zone-subsection">
+                    <div class="wh40k-mental-row">
+                        <span class="wh40k-mental-icon"><i class="fas fa-skull"></i></span>
+                        <span class="wh40k-mental-label">Corruption</span>
+                        <div class="wh40k-vital-controls">
+                            <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.corruption" data-min="0" title="−1">
                                 <i class="fas fa-minus"></i>
                             </button>
-                            <span class="rt-mental-value">{{system.corruption}}</span>
-                            <button type="button" class="rt-vital-btn" data-action="increment" data-field="system.corruption" data-max="100" title="+1">
+                            <span class="wh40k-mental-value">{{system.corruption}}</span>
+                            <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.corruption" data-max="100" title="+1">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
-                        <span class="rt-mental-degree {{corruptionDegreeClass system.corruption}}">{{corruptionDegree system.corruption}}</span>
+                        <span class="wh40k-mental-degree {{corruptionDegreeClass system.corruption}}">{{corruptionDegree system.corruption}}</span>
                     </div>
-                    <div class="rt-mental-row">
-                        <span class="rt-mental-icon"><i class="fas fa-brain"></i></span>
-                        <span class="rt-mental-label">Insanity</span>
-                        <div class="rt-vital-controls">
-                            <button type="button" class="rt-vital-btn" data-action="decrement" data-field="system.insanity" data-min="0" title="−1">
+                    <div class="wh40k-mental-row">
+                        <span class="wh40k-mental-icon"><i class="fas fa-brain"></i></span>
+                        <span class="wh40k-mental-label">Insanity</span>
+                        <div class="wh40k-vital-controls">
+                            <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.insanity" data-min="0" title="−1">
                                 <i class="fas fa-minus"></i>
                             </button>
-                            <span class="rt-mental-value">{{system.insanity}}</span>
-                            <button type="button" class="rt-vital-btn" data-action="increment" data-field="system.insanity" data-max="100" title="+1">
+                            <span class="wh40k-mental-value">{{system.insanity}}</span>
+                            <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.insanity" data-max="100" title="+1">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
-                        <span class="rt-mental-degree {{insanityDegreeClass system.insanity}}">{{insanityDegree system.insanity}}</span>
+                        <span class="wh40k-mental-degree {{insanityDegreeClass system.insanity}}">{{insanityDegree system.insanity}}</span>
                     </div>
                 </div>
             </div>
             
             {{!-- Zone 2: Favorite Skills (Top-Right) --}}
-            <div class="rt-dashboard-zone rt-zone-skills">
-                <div class="rt-zone-header">
+            <div class="wh40k-dashboard-zone wh40k-zone-skills">
+                <div class="wh40k-zone-header">
                     <i class="fas fa-star"></i>
                     <span>Favorite Skills</span>
                 </div>
-                <div class="rt-zone-content">
-                    <div class="rt-skill-list-compact">
+                <div class="wh40k-zone-content">
+                    <div class="wh40k-skill-list-compact">
                         {{#if favoriteSkills}}
                             {{#each favoriteSkills as |skill|}}
-                            <div class="rt-skill-row-compact" data-tooltip 
+                            <div class="wh40k-skill-row-compact" data-tooltip 
                                  aria-label="{{skill.label}}: {{skill.current}}"
                                  data-wh40k-tooltip="skill" 
                                  data-wh40k-tooltip-data="{{skill.tooltipData}}">
-                                <span class="rt-skill-name-compact">{{skill.label}}</span>
-                                <span class="rt-skill-value-compact">{{skill.current}}</span>
+                                <span class="wh40k-skill-name-compact">{{skill.label}}</span>
+                                <span class="wh40k-skill-value-compact">{{skill.current}}</span>
                                 <button type="button" 
-                                        class="rt-skill-roll-btn"
+                                        class="wh40k-skill-roll-btn"
                                         data-action="roll"
                                         data-roll-type="skill"
                                         data-roll-target="{{skill.key}}"
@@ -149,10 +149,10 @@
                             </div>
                             {{/each}}
                         {{else}}
-                            <div class="rt-no-favorites">
+                            <div class="wh40k-no-favorites">
                                 <i class="far fa-star"></i>
                                 <p>No favorite skills selected</p>
-                                <p class="rt-hint">Star skills in the Skills tab to add them here</p>
+                                <p class="wh40k-hint">Star skills in the Skills tab to add them here</p>
                             </div>
                         {{/if}}
                     </div>
@@ -160,25 +160,25 @@
             </div>
             
             {{!-- Zone 3: Favorite Talents --}}
-            <div class="rt-dashboard-zone rt-zone-talents">
-                <div class="rt-zone-header">
+            <div class="wh40k-dashboard-zone wh40k-zone-talents">
+                <div class="wh40k-zone-header">
                     <i class="fas fa-star-half-alt"></i>
                     <span>Favorite Talents</span>
                 </div>
-                <div class="rt-zone-content">
-                    <div class="rt-talent-list-compact">
+                <div class="wh40k-zone-content">
+                    <div class="wh40k-talent-list-compact">
                         {{#if favoriteTalents}}
                             {{#each favoriteTalents as |talent|}}
-                            <div class="rt-talent-row-compact" data-tooltip title="{{talent.name}}{{#if talent.specialization}} ({{talent.specialization}}){{/if}}">
-                                <img class="rt-talent-icon-compact" src="{{talent.img}}" alt="{{talent.name}}" />
-                                <span class="rt-talent-name-compact">
+                            <div class="wh40k-talent-row-compact" data-tooltip title="{{talent.name}}{{#if talent.specialization}} ({{talent.specialization}}){{/if}}">
+                                <img class="wh40k-talent-icon-compact" src="{{talent.img}}" alt="{{talent.name}}" />
+                                <span class="wh40k-talent-name-compact">
                                     {{talent.fullName}}
                                     {{#if talent.system.tier}}
-                                    <span class="rt-talent-tier-badge">T{{talent.system.tier}}</span>
+                                    <span class="wh40k-talent-tier-badge">T{{talent.system.tier}}</span>
                                     {{/if}}
                                 </span>
                                 <button type="button" 
-                                        class="rt-talent-info-btn"
+                                        class="wh40k-talent-info-btn"
                                         data-action="itemEdit"
                                         data-item-id="{{talent.id}}"
                                         title="View {{talent.name}}">
@@ -187,10 +187,10 @@
                             </div>
                             {{/each}}
                         {{else}}
-                            <div class="rt-no-favorites">
+                            <div class="wh40k-no-favorites">
                                 <i class="far fa-star"></i>
                                 <p>No favorite talents selected</p>
-                                <p class="rt-hint">Star talents in the Talents tab to add them here</p>
+                                <p class="wh40k-hint">Star talents in the Talents tab to add them here</p>
                             </div>
                         {{/if}}
                     </div>
@@ -199,33 +199,33 @@
         </div>
         
         {{!-- Row 2: Equipped Weapons | Movement & Load | Armour --}}
-        <div class="rt-dashboard-row rt-dashboard-row--middle">
+        <div class="wh40k-dashboard-row wh40k-dashboard-row--middle">
             
             {{!-- Zone 4: Equipped Weapons --}}
-            <div class="rt-dashboard-zone rt-zone-weapons">
-                <div class="rt-zone-header">
+            <div class="wh40k-dashboard-zone wh40k-zone-weapons">
+                <div class="wh40k-zone-header">
                     <i class="fas fa-crosshairs"></i>
                     <span>Equipped Weapons</span>
                 </div>
-                <div class="rt-zone-content">
+                <div class="wh40k-zone-content">
                     {{#if equippedWeapons.length}}
-                    <div class="rt-ew-list">
+                    <div class="wh40k-ew-list">
                         {{#each equippedWeapons as |weapon|}}
-                        <div class="rt-ew-row" data-action="itemEdit" data-item-id="{{weapon.id}}" title="Open {{weapon.name}}">
-                            <img class="rt-ew-icon" src="{{weapon.img}}" alt="{{weapon.name}}" />
-                            <div class="rt-ew-info">
-                                <span class="rt-ew-name">{{weapon.name}}</span>
-                                <span class="rt-ew-meta">
-                                    <span class="rt-ew-class">{{weapon.system.class}}</span>
-                                    {{#if weapon.system.rangeLabel}}<span class="rt-ew-range">{{weapon.system.rangeLabel}}</span>{{/if}}
+                        <div class="wh40k-ew-row" data-action="itemEdit" data-item-id="{{weapon.id}}" title="Open {{weapon.name}}">
+                            <img class="wh40k-ew-icon" src="{{weapon.img}}" alt="{{weapon.name}}" />
+                            <div class="wh40k-ew-info">
+                                <span class="wh40k-ew-name">{{weapon.name}}</span>
+                                <span class="wh40k-ew-meta">
+                                    <span class="wh40k-ew-class">{{weapon.system.class}}</span>
+                                    {{#if weapon.system.rangeLabel}}<span class="wh40k-ew-range">{{weapon.system.rangeLabel}}</span>{{/if}}
                                 </span>
                             </div>
-                            <span class="rt-ew-damage">{{weapon.system.damageLabel}}</span>
+                            <span class="wh40k-ew-damage">{{weapon.system.damageLabel}}</span>
                         </div>
                         {{/each}}
                     </div>
                     {{else}}
-                    <div class="rt-ew-empty">
+                    <div class="wh40k-ew-empty">
                         <i class="fas fa-crosshairs"></i>
                         <span>No weapons equipped</span>
                     </div>
@@ -234,74 +234,74 @@
             </div>
             
             {{!-- Zone 5: Movement & Load --}}
-            <div class="rt-dashboard-zone rt-zone-movement">
-                <div class="rt-zone-header">
+            <div class="wh40k-dashboard-zone wh40k-zone-movement">
+                <div class="wh40k-zone-header">
                     <i class="fas fa-running"></i>
                     <span>Movement & Load</span>
                 </div>
-                <div class="rt-zone-content rt-movement-compact">
-                    <div class="rt-movement-speeds">
-                        <div class="rt-speed-item">
-                            <span class="rt-speed-value">{{actor.movement.half}}</span>
-                            <span class="rt-speed-label">Half</span>
+                <div class="wh40k-zone-content wh40k-movement-compact">
+                    <div class="wh40k-movement-speeds">
+                        <div class="wh40k-speed-item">
+                            <span class="wh40k-speed-value">{{actor.movement.half}}</span>
+                            <span class="wh40k-speed-label">Half</span>
                         </div>
-                        <div class="rt-speed-item">
-                            <span class="rt-speed-value">{{actor.movement.full}}</span>
-                            <span class="rt-speed-label">Full</span>
+                        <div class="wh40k-speed-item">
+                            <span class="wh40k-speed-value">{{actor.movement.full}}</span>
+                            <span class="wh40k-speed-label">Full</span>
                         </div>
-                        <div class="rt-speed-item">
-                            <span class="rt-speed-value">{{actor.movement.charge}}</span>
-                            <span class="rt-speed-label">Charge</span>
+                        <div class="wh40k-speed-item">
+                            <span class="wh40k-speed-value">{{actor.movement.charge}}</span>
+                            <span class="wh40k-speed-label">Charge</span>
                         </div>
-                        <div class="rt-speed-item rt-speed-item--highlight">
-                            <span class="rt-speed-value">{{actor.movement.run}}</span>
-                            <span class="rt-speed-label">Run</span>
+                        <div class="wh40k-speed-item wh40k-speed-item--highlight">
+                            <span class="wh40k-speed-value">{{actor.movement.run}}</span>
+                            <span class="wh40k-speed-label">Run</span>
                         </div>
                     </div>
-                    <div class="rt-encumbrance-compact">
-                        <div class="rt-enc-info">
-                            <span class="rt-enc-current-compact">{{actor.encumbrance.current}}</span>
-                            <span class="rt-enc-separator">/</span>
-                            <span class="rt-enc-max-compact">{{actor.encumbrance.max}} kg</span>
+                    <div class="wh40k-encumbrance-compact">
+                        <div class="wh40k-enc-info">
+                            <span class="wh40k-enc-current-compact">{{actor.encumbrance.current}}</span>
+                            <span class="wh40k-enc-separator">/</span>
+                            <span class="wh40k-enc-max-compact">{{actor.encumbrance.max}} kg</span>
                         </div>
-                        <div class="rt-enc-bar-compact {{#if actor.encumbrance.encumbered}}rt-enc-over{{/if}}">
-                            <div class="rt-enc-fill-compact" style="width: {{encumbrancePercent}}%"></div>
+                        <div class="wh40k-enc-bar-compact {{#if actor.encumbrance.encumbered}}wh40k-enc-over{{/if}}">
+                            <div class="wh40k-enc-fill-compact" style="width: {{encumbrancePercent}}%"></div>
                         </div>
                     </div>
                 </div>
             </div>
             
             {{!-- Zone 6: Armour --}}
-            <div class="rt-dashboard-zone rt-zone-armour">
-                <div class="rt-zone-header">
+            <div class="wh40k-dashboard-zone wh40k-zone-armour">
+                <div class="wh40k-zone-header">
                     <i class="fas fa-shield-alt"></i>
                     <span>Armour</span>
                 </div>
-                <div class="rt-zone-content">
-                    <div class="rt-ov-armour-silhouette">
-                        <div class="rt-ov-armour-box rt-ov-box-head" title="Head: 01-10">
-                            <span class="rt-ov-box-label">Head</span>
-                            <span class="rt-ov-box-ap">{{system.armour.head.total}}</span>
+                <div class="wh40k-zone-content">
+                    <div class="wh40k-ov-armour-silhouette">
+                        <div class="wh40k-ov-armour-box wh40k-ov-box-head" title="Head: 01-10">
+                            <span class="wh40k-ov-box-label">Head</span>
+                            <span class="wh40k-ov-box-ap">{{system.armour.head.total}}</span>
                         </div>
-                        <div class="rt-ov-armour-box rt-ov-box-right-arm" title="R.Arm: 11-20">
-                            <span class="rt-ov-box-label">R.Arm</span>
-                            <span class="rt-ov-box-ap">{{system.armour.rightArm.total}}</span>
+                        <div class="wh40k-ov-armour-box wh40k-ov-box-right-arm" title="R.Arm: 11-20">
+                            <span class="wh40k-ov-box-label">R.Arm</span>
+                            <span class="wh40k-ov-box-ap">{{system.armour.rightArm.total}}</span>
                         </div>
-                        <div class="rt-ov-armour-box rt-ov-box-body" title="Body: 31-70">
-                            <span class="rt-ov-box-label">Body</span>
-                            <span class="rt-ov-box-ap">{{system.armour.body.total}}</span>
+                        <div class="wh40k-ov-armour-box wh40k-ov-box-body" title="Body: 31-70">
+                            <span class="wh40k-ov-box-label">Body</span>
+                            <span class="wh40k-ov-box-ap">{{system.armour.body.total}}</span>
                         </div>
-                        <div class="rt-ov-armour-box rt-ov-box-left-arm" title="L.Arm: 21-30">
-                            <span class="rt-ov-box-label">L.Arm</span>
-                            <span class="rt-ov-box-ap">{{system.armour.leftArm.total}}</span>
+                        <div class="wh40k-ov-armour-box wh40k-ov-box-left-arm" title="L.Arm: 21-30">
+                            <span class="wh40k-ov-box-label">L.Arm</span>
+                            <span class="wh40k-ov-box-ap">{{system.armour.leftArm.total}}</span>
                         </div>
-                        <div class="rt-ov-armour-box rt-ov-box-right-leg" title="R.Leg: 71-85">
-                            <span class="rt-ov-box-label">R.Leg</span>
-                            <span class="rt-ov-box-ap">{{system.armour.rightLeg.total}}</span>
+                        <div class="wh40k-ov-armour-box wh40k-ov-box-right-leg" title="R.Leg: 71-85">
+                            <span class="wh40k-ov-box-label">R.Leg</span>
+                            <span class="wh40k-ov-box-ap">{{system.armour.rightLeg.total}}</span>
                         </div>
-                        <div class="rt-ov-armour-box rt-ov-box-left-leg" title="L.Leg: 86-00">
-                            <span class="rt-ov-box-label">L.Leg</span>
-                            <span class="rt-ov-box-ap">{{system.armour.leftLeg.total}}</span>
+                        <div class="wh40k-ov-armour-box wh40k-ov-box-left-leg" title="L.Leg: 86-00">
+                            <span class="wh40k-ov-box-label">L.Leg</span>
+                            <span class="wh40k-ov-box-ap">{{system.armour.leftLeg.total}}</span>
                         </div>
                     </div>
                 </div>
@@ -309,36 +309,36 @@
         </div>
         
         {{!-- Row 3: Progression | Active Effects (2-wide) --}}
-        <div class="rt-dashboard-row rt-dashboard-row--bottom">
+        <div class="wh40k-dashboard-row wh40k-dashboard-row--bottom">
             
             {{!-- Zone 7: Progression --}}
-            <div class="rt-dashboard-zone rt-zone-progression">
-                <div class="rt-zone-header">
+            <div class="wh40k-dashboard-zone wh40k-zone-progression">
+                <div class="wh40k-zone-header">
                     <i class="fas fa-graduation-cap"></i>
                     <span>Progression</span>
                 </div>
-                <div class="rt-zone-content">
-                    <div class="rt-xp-row">
-                        <span class="rt-xp-label">Available XP</span>
-                        <span class="rt-xp-value rt-xp-available">{{system.experience.available}}</span>
+                <div class="wh40k-zone-content">
+                    <div class="wh40k-xp-row">
+                        <span class="wh40k-xp-label">Available XP</span>
+                        <span class="wh40k-xp-value wh40k-xp-available">{{system.experience.available}}</span>
                     </div>
-                    <div class="rt-xp-row">
-                        <span class="rt-xp-label">Spent XP</span>
-                        <span class="rt-xp-value">{{system.experience.used}}</span>
+                    <div class="wh40k-xp-row">
+                        <span class="wh40k-xp-label">Spent XP</span>
+                        <span class="wh40k-xp-value">{{system.experience.used}}</span>
                     </div>
-                    <div class="rt-xp-row">
-                        <span class="rt-xp-label">Total XP</span>
-                        <span class="rt-xp-value">{{system.experience.total}}</span>
+                    <div class="wh40k-xp-row">
+                        <span class="wh40k-xp-label">Total XP</span>
+                        <span class="wh40k-xp-value">{{system.experience.total}}</span>
                     </div>
-                    <div class="rt-xp-row rt-rank-row">
-                        <span class="rt-xp-label">Rank</span>
-                        <span class="rt-xp-value rt-rank-value">{{system.rogueTrader.rank}}</span>
+                    <div class="wh40k-xp-row wh40k-rank-row">
+                        <span class="wh40k-xp-label">Rank</span>
+                        <span class="wh40k-xp-value wh40k-rank-value">{{system.rogueTrader.rank}}</span>
                     </div>
-                    <div class="rt-xp-actions">
-                        <button type="button" class="rt-xp-action-btn" data-action="customXP" title="Add XP">
+                    <div class="wh40k-xp-actions">
+                        <button type="button" class="wh40k-xp-action-btn" data-action="customXP" title="Add XP">
                             <i class="fas fa-plus"></i> Add XP
                         </button>
-                        <button type="button" class="rt-xp-action-btn" data-action="openAdvancement" title="Buy Advancements">
+                        <button type="button" class="wh40k-xp-action-btn" data-action="openAdvancement" title="Buy Advancements">
                             <i class="fa-solid fa-arrow-up-big-small"></i> Advance
                         </button>
                     </div>
@@ -346,26 +346,26 @@
             </div>
             
             {{!-- Zone 8: Active Effects (takes 2fr column) --}}
-            <div class="rt-dashboard-zone rt-zone-effects">
-                <div class="rt-zone-header">
+            <div class="wh40k-dashboard-zone wh40k-zone-effects">
+                <div class="wh40k-zone-header">
                     <i class="fas fa-magic"></i>
                     <span>Active Effects</span>
                 </div>
-                <div class="rt-zone-content">
+                <div class="wh40k-zone-content">
                     {{#if effects.length}}
-                    <div class="rt-effects-preview">
+                    <div class="wh40k-effects-preview">
                         {{#each effects as |effect|}}
-                        <div class="rt-effect-chip {{#if effect.disabled}}rt-effect-chip--disabled{{/if}}" title="{{effect.name}}">
-                            <img src="{{effect.icon}}" alt="" class="rt-effect-icon-mini" />
-                            <span class="rt-effect-name-mini">{{effect.name}}</span>
-                            <div class="rt-effect-chip-controls">
-                                <button type="button" class="rt-effect-chip-btn"
+                        <div class="wh40k-effect-chip {{#if effect.disabled}}wh40k-effect-chip--disabled{{/if}}" title="{{effect.name}}">
+                            <img src="{{effect.icon}}" alt="" class="wh40k-effect-icon-mini" />
+                            <span class="wh40k-effect-name-mini">{{effect.name}}</span>
+                            <div class="wh40k-effect-chip-controls">
+                                <button type="button" class="wh40k-effect-chip-btn"
                                         data-action="toggleEffect"
                                         data-effect-id="{{effect.id}}"
                                         title="{{#if effect.disabled}}Enable{{else}}Disable{{/if}}">
                                     <i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i>
                                 </button>
-                                <button type="button" class="rt-effect-chip-btn rt-effect-chip-btn--danger"
+                                <button type="button" class="wh40k-effect-chip-btn wh40k-effect-chip-btn--danger"
                                         data-action="deleteEffect"
                                         data-effect-id="{{effect.id}}"
                                         title="Delete">
@@ -376,11 +376,11 @@
                         {{/each}}
                     </div>
                     {{else}}
-                    <div class="rt-effects-empty">
+                    <div class="wh40k-effects-empty">
                         <span>No active effects</span>
                     </div>
                     {{/if}}
-                    <button type="button" class="rt-effect-create-btn" data-action="createEffect" title="Create Effect">
+                    <button type="button" class="wh40k-effect-create-btn" data-action="createEffect" title="Create Effect">
                         <i class="fas fa-plus"></i> New Effect
                     </button>
                 </div>

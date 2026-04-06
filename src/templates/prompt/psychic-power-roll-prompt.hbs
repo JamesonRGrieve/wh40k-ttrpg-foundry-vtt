@@ -1,23 +1,23 @@
 {{!-- Rogue Trader Psychic Power Roll Prompt - Modern Design --}}
 <div class="dialog-content">
-    <form class="rt-prompt rt-prompt--psychic" autocomplete="off">
+    <form class="wh40k-prompt wh40k-prompt--psychic" autocomplete="off">
         {{!-- Power Select or Info --}}
         {{#if powerSelect}}
-            <div class="rt-prompt__panel">
-                <h3 class="rt-prompt__section-title">Select Power</h3>
-                <div class="rt-prompt__weapon-list">
+            <div class="wh40k-prompt__panel">
+                <h3 class="wh40k-prompt__section-title">Select Power</h3>
+                <div class="wh40k-prompt__weapon-list">
                     {{#each psychicPowers as |power|}}
-                        <label class="rt-prompt__weapon-item {{#if power.isSelected}}rt-prompt__weapon-item--selected{{/if}}">
-                            <input class="rt-prompt__weapon-check weapon-select"
+                        <label class="wh40k-prompt__weapon-item {{#if power.isSelected}}wh40k-prompt__weapon-item--selected{{/if}}">
+                            <input class="wh40k-prompt__weapon-check weapon-select"
                                 type="checkbox"
                                 data-dtype="Boolean"
                                 {{checked power.isSelected}}
                                 name="{{power.id}}" />
-                            <img class="rt-prompt__weapon-img" alt="{{power.name}}" src="{{power.img}}" />
-                            <div class="rt-prompt__weapon-info">
-                                <div class="rt-prompt__weapon-name">{{power.name}}</div>
+                            <img class="wh40k-prompt__weapon-img" alt="{{power.name}}" src="{{power.img}}" />
+                            <div class="wh40k-prompt__weapon-info">
+                                <div class="wh40k-prompt__weapon-name">{{power.name}}</div>
                                 {{#if power.items}}
-                                    <div class="rt-prompt__weapon-details">
+                                    <div class="wh40k-prompt__weapon-details">
                                         {{#each power.items as |item|}}{{item.name}}{{#unless @last}}, {{/unless}}{{/each}}
                                     </div>
                                 {{/if}}
@@ -28,76 +28,76 @@
             </div>
         {{else}}
             {{!-- Power Header --}}
-            <div class="rt-prompt__panel">
-                <div class="rt-prompt__header">
-                    <img class="rt-prompt__icon" alt="{{power.name}}" src="{{power.img}}" />
-                    <div class="rt-prompt__title-group">
-                        <h2 class="rt-prompt__title">{{power.name}}</h2>
-                        <div class="rt-prompt__subtitle">{{this.sourceActor.name}}</div>
+            <div class="wh40k-prompt__panel">
+                <div class="wh40k-prompt__header">
+                    <img class="wh40k-prompt__icon" alt="{{power.name}}" src="{{power.img}}" />
+                    <div class="wh40k-prompt__title-group">
+                        <h2 class="wh40k-prompt__title">{{power.name}}</h2>
+                        <div class="wh40k-prompt__subtitle">{{this.sourceActor.name}}</div>
                     </div>
                 </div>
                 
                 {{!-- Target Display --}}
-                <div class="rt-prompt__target">
-                    <span class="rt-prompt__target-label">Target ({{baseChar}})</span>
-                    <span class="rt-prompt__target-value">{{baseTarget}}</span>
-                    <span class="rt-prompt__target-percent">%</span>
+                <div class="wh40k-prompt__target">
+                    <span class="wh40k-prompt__target-label">Target ({{baseChar}})</span>
+                    <span class="wh40k-prompt__target-value">{{baseTarget}}</span>
+                    <span class="wh40k-prompt__target-percent">%</span>
                 </div>
                 
                 {{#each power.items as |item|}}
                     {{#if item.isAttackSpecial}}
-                        <div class="rt-prompt__field">
-                            <span class="rt-prompt__label">Special</span>
-                            <span class="rt-prompt__value">{{item.name}}</span>
+                        <div class="wh40k-prompt__field">
+                            <span class="wh40k-prompt__label">Special</span>
+                            <span class="wh40k-prompt__value">{{item.name}}</span>
                         </div>
                     {{/if}}
                 {{/each}}
             </div>
 
             {{!-- Focus Power Section --}}
-            <div class="rt-prompt__panel">
-                <h3 class="rt-prompt__section-title">Focus Power</h3>
-                <div class="rt-prompt__field">
-                    <span class="rt-prompt__label">Psychic Rating</span>
-                    <input class="rt-prompt__input" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
+            <div class="wh40k-prompt__panel">
+                <h3 class="wh40k-prompt__section-title">Focus Power</h3>
+                <div class="wh40k-prompt__field">
+                    <span class="wh40k-prompt__label">Psychic Rating</span>
+                    <input class="wh40k-prompt__input" type="number" data-dtype="Number" id="pr" name="pr" value="{{pr}}" />
                 </div>
                 {{#if this.modifiers.bonus}}
-                    <div class="rt-prompt__field">
-                        <span class="rt-prompt__label">Rating Bonus</span>
-                        <span class="rt-prompt__value">+{{modifiers.bonus}}</span>
+                    <div class="wh40k-prompt__field">
+                        <span class="wh40k-prompt__label">Rating Bonus</span>
+                        <span class="wh40k-prompt__value">+{{modifiers.bonus}}</span>
                     </div>
                 {{/if}}
-                <div class="rt-prompt__checkbox-field">
-                    <span class="rt-prompt__label">Has Psy Focus</span>
-                    <input class="rt-prompt__input" type="checkbox" data-dtype="Boolean" {{checked hasFocus}} name="hasFocus" />
+                <div class="wh40k-prompt__checkbox-field">
+                    <span class="wh40k-prompt__label">Has Psy Focus</span>
+                    <input class="wh40k-prompt__input" type="checkbox" data-dtype="Boolean" {{checked hasFocus}} name="hasFocus" />
                 </div>
             </div>
 
             {{!-- Modifiers Section --}}
-            <div class="rt-prompt__panel">
-                <h3 class="rt-prompt__section-title">Modifiers</h3>
+            <div class="wh40k-prompt__panel">
+                <h3 class="wh40k-prompt__section-title">Modifiers</h3>
                 {{#with this.modifiers}}
-                    <div class="rt-prompt__field">
-                        <span class="rt-prompt__label">Difficulty</span>
-                        <select class="rt-prompt__select" name="modifiers.difficulty">
+                    <div class="wh40k-prompt__field">
+                        <span class="wh40k-prompt__label">Difficulty</span>
+                        <select class="wh40k-prompt__select" name="modifiers.difficulty">
                             {{selectOptions @root.difficulties selected=difficulty}}
                         </select>
                     </div>
-                    <div class="rt-prompt__field">
-                        <span class="rt-prompt__label">Additional Modifier</span>
-                        <input class="rt-prompt__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
+                    <div class="wh40k-prompt__field">
+                        <span class="wh40k-prompt__label">Additional Modifier</span>
+                        <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="modifiers.modifier" value="{{modifier}}" />
                     </div>
                 {{/with}}
                 
-                <div class="rt-prompt__divider"></div>
+                <div class="wh40k-prompt__divider"></div>
                 
-                <div class="rt-prompt__field">
-                    <span class="rt-prompt__label">Distance (m)</span>
-                    <input class="rt-prompt__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
+                <div class="wh40k-prompt__field">
+                    <span class="wh40k-prompt__label">Distance (m)</span>
+                    <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="distance" id="distance" value="{{this.distance}}" />
                 </div>
-                <div class="rt-prompt__range-info">
-                    <span class="rt-prompt__range-label">{{rangeName}}</span>
-                    <span class="rt-prompt__range-value">Max: {{maxRange}}m</span>
+                <div class="wh40k-prompt__range-info">
+                    <span class="wh40k-prompt__range-label">{{rangeName}}</span>
+                    <span class="wh40k-prompt__range-value">Max: {{maxRange}}m</span>
                 </div>
             </div>
         {{/if}}

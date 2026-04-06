@@ -2,30 +2,30 @@
   Rogue Trader Weapon Quality Item Sheet - V2 Redesign
   Clean reference-card style for weapon quality definitions
 }}
-<div class="rt-weapon-quality-sheet">
+<div class="wh40k-weapon-quality-sheet">
     <form autocomplete="off">
 
         {{! ═══════════════════════════════════════════════════════════════════
          HEADER: Simple quality identity
     ═══════════════════════════════════════════════════════════════════ }}
-        <header class="rt-quality-header">
-            <div class="rt-quality-header__image" data-action="editImage" data-edit="img">
+        <header class="wh40k-quality-header">
+            <div class="wh40k-quality-header__image" data-action="editImage" data-edit="img">
                 <img src="{{item.img}}" alt="{{item.name}}" />
-                <div class="rt-quality-header__image-overlay">
+                <div class="wh40k-quality-header__image-overlay">
                     <i class="fas fa-star"></i>
                 </div>
             </div>
 
-            <div class="rt-quality-header__info">
-                <input type="text" class="rt-quality-header__name" name="name" value="{{item.name}}" placeholder="Quality Name" />
+            <div class="wh40k-quality-header__info">
+                <input type="text" class="wh40k-quality-header__name" name="name" value="{{item.name}}" placeholder="Quality Name" />
 
-                <div class="rt-quality-header__meta">
-                    <span class="rt-quality-badge rt-quality-badge--type" title="Item Type">
+                <div class="wh40k-quality-header__meta">
+                    <span class="wh40k-quality-badge wh40k-quality-badge--type" title="Item Type">
                         <i class="fas fa-star"></i>
                         Weapon Quality
                     </span>
                     {{#if system.hasLevel}}
-                        <span class="rt-quality-badge rt-quality-badge--level" title="Has Level">
+                        <span class="wh40k-quality-badge wh40k-quality-badge--level" title="Has Level">
                             <i class="fas fa-sort-numeric-up"></i>
                             Level
                             {{system.level}}
@@ -38,35 +38,35 @@
         {{! ═══════════════════════════════════════════════════════════════════
          STAT BAR: Quick reference stats
     ═══════════════════════════════════════════════════════════════════ }}
-        <div class="rt-quality-stats">
-            <div class="rt-quality-stat">
-                <div class="rt-quality-stat__icon">
+        <div class="wh40k-quality-stats">
+            <div class="wh40k-quality-stat">
+                <div class="wh40k-quality-stat__icon">
                     <i class="fas fa-fingerprint"></i>
                 </div>
-                <div class="rt-quality-stat__content">
-                    <span class="rt-quality-stat__label">Identifier</span>
-                    <span class="rt-quality-stat__value">{{system.identifier}}</span>
+                <div class="wh40k-quality-stat__content">
+                    <span class="wh40k-quality-stat__label">Identifier</span>
+                    <span class="wh40k-quality-stat__value">{{system.identifier}}</span>
                 </div>
             </div>
 
-            <div class="rt-quality-stat">
-                <div class="rt-quality-stat__icon">
+            <div class="wh40k-quality-stat">
+                <div class="wh40k-quality-stat__icon">
                     <i class="fas fa-sort-numeric-up"></i>
                 </div>
-                <div class="rt-quality-stat__content">
-                    <span class="rt-quality-stat__label">Has Level</span>
-                    <span class="rt-quality-stat__value">{{#if system.hasLevel}}Yes{{else}}No{{/if}}</span>
+                <div class="wh40k-quality-stat__content">
+                    <span class="wh40k-quality-stat__label">Has Level</span>
+                    <span class="wh40k-quality-stat__value">{{#if system.hasLevel}}Yes{{else}}No{{/if}}</span>
                 </div>
             </div>
 
             {{#if system.hasLevel}}
-                <div class="rt-quality-stat">
-                    <div class="rt-quality-stat__icon">
+                <div class="wh40k-quality-stat">
+                    <div class="wh40k-quality-stat__icon">
                         <i class="fas fa-hashtag"></i>
                     </div>
-                    <div class="rt-quality-stat__content">
-                        <span class="rt-quality-stat__label">Level</span>
-                        <span class="rt-quality-stat__value">{{system.level}}</span>
+                    <div class="wh40k-quality-stat__content">
+                        <span class="wh40k-quality-stat__label">Level</span>
+                        <span class="wh40k-quality-stat__value">{{system.level}}</span>
                     </div>
                 </div>
             {{/if}}
@@ -75,16 +75,16 @@
         {{! ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ }}
-        <nav class="rt-tabs rt-tabs--quality rt-quality-tabs" data-group="primary">
-            <button type="button" class="rt-tab rt-quality-tab active" data-tab="effect" data-group="primary">
+        <nav class="wh40k-tabs wh40k-tabs--quality wh40k-quality-tabs" data-group="primary">
+            <button type="button" class="wh40k-tab wh40k-quality-tab active" data-tab="effect" data-group="primary">
                 <i class="fas fa-bolt"></i>
                 <span>Effect</span>
             </button>
-            <button type="button" class="rt-tab rt-quality-tab" data-tab="details" data-group="primary">
+            <button type="button" class="wh40k-tab wh40k-quality-tab" data-tab="details" data-group="primary">
                 <i class="fas fa-cog"></i>
                 <span>Details</span>
             </button>
-            <button type="button" class="rt-tab rt-quality-tab" data-tab="description" data-group="primary">
+            <button type="button" class="wh40k-tab wh40k-quality-tab" data-tab="description" data-group="primary">
                 <i class="fas fa-book"></i>
                 <span>Description</span>
             </button>
@@ -93,29 +93,29 @@
         {{! ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ }}
-        <section class="rt-quality-content rt-tab-content rt-tab-content--quality">
+        <section class="wh40k-quality-content wh40k-tab-content wh40k-tab-content--quality">
 
             {{! EFFECT TAB (Primary) }}
-            <div class="rt-quality-panel tab active" data-tab="effect" data-group="primary">
+            <div class="wh40k-quality-panel tab active" data-tab="effect" data-group="primary">
 
-                <div class="rt-quality-section rt-quality-section--effect">
-                    <div class="rt-quality-section__header">
+                <div class="wh40k-quality-section wh40k-quality-section--effect">
+                    <div class="wh40k-quality-section__header">
                         <i class="fas fa-bolt"></i>
                         <h3>Mechanical Effect</h3>
                     </div>
-                    <div class="rt-quality-section__body rt-quality-section__body--editor">
+                    <div class="wh40k-quality-section__body wh40k-quality-section__body--editor">
                         {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
                     </div>
                 </div>
 
                 {{#if system.hasLevel}}
-                    <div class="rt-quality-section">
-                        <div class="rt-quality-section__header">
+                    <div class="wh40k-quality-section">
+                        <div class="wh40k-quality-section__header">
                             <i class="fas fa-info-circle"></i>
                             <h3>Level Explanation</h3>
                         </div>
-                        <div class="rt-quality-section__body">
-                            <p class="rt-hint-text">
+                        <div class="wh40k-quality-section__body">
+                            <p class="wh40k-hint-text">
                                 This quality has a numeric level (X). The level is displayed as
                                 <strong>{{item.name}} ({{system.level}})</strong>
                                 when applied to a weapon. The effect above should reference the level value where applicable.
@@ -127,46 +127,46 @@
             </div>
 
             {{! DETAILS TAB }}
-            <div class="rt-quality-panel tab" data-tab="details" data-group="primary">
+            <div class="wh40k-quality-panel tab" data-tab="details" data-group="primary">
 
-                <div class="rt-quality-section">
-                    <div class="rt-quality-section__header">
+                <div class="wh40k-quality-section">
+                    <div class="wh40k-quality-section__header">
                         <i class="fas fa-cog"></i>
                         <h3>Quality Properties</h3>
                     </div>
-                    <div class="rt-quality-section__body">
+                    <div class="wh40k-quality-section__body">
 
-                        <div class="rt-field">
+                        <div class="wh40k-field">
                             <label>Identifier</label>
                             <input type="text" name="system.identifier" value="{{system.identifier}}" placeholder="e.g., tearing, blast, unwieldy" />
-                            <p class="rt-field-hint">Unique identifier (lowercase, hyphenated)</p>
+                            <p class="wh40k-field-hint">Unique identifier (lowercase, hyphenated)</p>
                         </div>
 
-                        <div class="rt-field rt-field--checkbox">
+                        <div class="wh40k-field wh40k-field--checkbox">
                             <label>
                                 <input type="checkbox" name="system.hasLevel" {{checked system.hasLevel}} />
                                 <span>Quality Has Numeric Level</span>
                             </label>
-                            <p class="rt-field-hint">Check if this quality takes a level parameter (e.g., Blast (X), Tearing (X))</p>
+                            <p class="wh40k-field-hint">Check if this quality takes a level parameter (e.g., Blast (X), Tearing (X))</p>
                         </div>
 
                         {{#if system.hasLevel}}
-                            <div class="rt-field">
+                            <div class="wh40k-field">
                                 <label>Default Level</label>
                                 <input type="number" name="system.level" value="{{system.level}}" data-dtype="Number" min="0" />
-                                <p class="rt-field-hint">Default level value for this quality</p>
+                                <p class="wh40k-field-hint">Default level value for this quality</p>
                             </div>
                         {{/if}}
 
                     </div>
                 </div>
 
-                <div class="rt-quality-section">
-                    <div class="rt-quality-section__header">
+                <div class="wh40k-quality-section">
+                    <div class="wh40k-quality-section__header">
                         <i class="fas fa-sticky-note"></i>
                         <h3>Notes</h3>
                     </div>
-                    <div class="rt-quality-section__body">
+                    <div class="wh40k-quality-section__body">
                         <textarea name="system.notes" rows="4" placeholder="Additional notes, legacy data, GM notes...">{{system.notes}}</textarea>
                     </div>
                 </div>
@@ -174,35 +174,35 @@
             </div>
 
             {{! DESCRIPTION TAB }}
-            <div class="rt-quality-panel tab" data-tab="description" data-group="primary">
+            <div class="wh40k-quality-panel tab" data-tab="description" data-group="primary">
 
-                <div class="rt-quality-section">
-                    <div class="rt-quality-section__header">
+                <div class="wh40k-quality-section">
+                    <div class="wh40k-quality-section__header">
                         <i class="fas fa-book"></i>
                         <h3>Full Description</h3>
                     </div>
-                    <div class="rt-quality-section__body rt-quality-section__body--editor">
+                    <div class="wh40k-quality-section__body wh40k-quality-section__body--editor">
                         {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
                     </div>
                 </div>
 
-                <div class="rt-quality-section">
-                    <div class="rt-quality-section__header">
+                <div class="wh40k-quality-section">
+                    <div class="wh40k-quality-section__header">
                         <i class="fas fa-book-open"></i>
                         <h3>Source</h3>
                     </div>
-                    <div class="rt-quality-section__body">
-                        <div class="rt-field-row">
-                            <div class="rt-field">
+                    <div class="wh40k-quality-section__body">
+                        <div class="wh40k-field-row">
+                            <div class="wh40k-field">
                                 <label>Source Book</label>
                                 <input type="text" name="system.source.book" value="{{system.source.book}}" placeholder="Rogue Trader Core" />
                             </div>
-                            <div class="rt-field">
+                            <div class="wh40k-field">
                                 <label>Page</label>
                                 <input type="text" name="system.source.page" value="{{system.source.page}}" placeholder="127" />
                             </div>
                         </div>
-                        <div class="rt-field">
+                        <div class="wh40k-field">
                             <label>Custom Reference</label>
                             <input type="text" name="system.source.custom" value="{{system.source.custom}}" placeholder="Homebrew, Errata, etc." />
                         </div>

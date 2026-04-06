@@ -1,114 +1,114 @@
 {{!-- Mobility Panel - Clean, Modern Design --}}
 
-<div class="rt-panel rt-panel-mobility">
-    <div class="rt-panel-header rt-panel-header--clickable sheet-control__hide-control"
+<div class="wh40k-panel wh40k-panel-mobility">
+    <div class="wh40k-panel-header wh40k-panel-header--clickable sheet-control__hide-control"
          data-toggle="mobility_details"
          title="Click to {{#if (isExpanded 'mobility_details' actor)}}collapse{{else}}expand{{/if}}">
-        <span class="rt-panel-title">
+        <span class="wh40k-panel-title">
             <i class="fas fa-person-running"></i> Mobility
         </span>
-        <i class="fas fa-chevron-down rt-panel-chevron {{#if (isExpanded 'mobility_details' actor)}}rt-panel-chevron--open{{/if}}"></i>
+        <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'mobility_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
     </div>
 
-    <div class="rt-panel-body">
+    <div class="wh40k-panel-body">
         
         {{!-- Movement Speeds - Always Visible --}}
-        <div class="rt-mobility-speeds">
-            <div class="rt-speed-box rt-speed-half" data-action="setMovementMode" data-movement-type="half"
+        <div class="wh40k-mobility-speeds">
+            <div class="wh40k-speed-box wh40k-speed-half" data-action="setMovementMode" data-movement-type="half"
                  title="Click to set Half Move as active movement mode">
                 <i class="fas fa-walking"></i>
-                <div class="rt-speed-data">
-                    <span class="rt-speed-value">{{system.movement.half}}</span>
-                    <span class="rt-speed-unit">m</span>
+                <div class="wh40k-speed-data">
+                    <span class="wh40k-speed-value">{{system.movement.half}}</span>
+                    <span class="wh40k-speed-unit">m</span>
                 </div>
-                <span class="rt-speed-label">Half</span>
+                <span class="wh40k-speed-label">Half</span>
             </div>
             
-            <div class="rt-speed-box rt-speed-full" data-action="setMovementMode" data-movement-type="full"
+            <div class="wh40k-speed-box wh40k-speed-full" data-action="setMovementMode" data-movement-type="full"
                  title="Click to set Full Move as active movement mode">
                 <i class="fas fa-shoe-prints"></i>
-                <div class="rt-speed-data">
-                    <span class="rt-speed-value">{{system.movement.full}}</span>
-                    <span class="rt-speed-unit">m</span>
+                <div class="wh40k-speed-data">
+                    <span class="wh40k-speed-value">{{system.movement.full}}</span>
+                    <span class="wh40k-speed-unit">m</span>
                 </div>
-                <span class="rt-speed-label">Full</span>
+                <span class="wh40k-speed-label">Full</span>
             </div>
             
-            <div class="rt-speed-box rt-speed-charge" data-action="setMovementMode" data-movement-type="charge"
+            <div class="wh40k-speed-box wh40k-speed-charge" data-action="setMovementMode" data-movement-type="charge"
                  title="Click to set Charge as active movement mode">
                 <i class="fas fa-running"></i>
-                <div class="rt-speed-data">
-                    <span class="rt-speed-value">{{system.movement.charge}}</span>
-                    <span class="rt-speed-unit">m</span>
+                <div class="wh40k-speed-data">
+                    <span class="wh40k-speed-value">{{system.movement.charge}}</span>
+                    <span class="wh40k-speed-unit">m</span>
                 </div>
-                <span class="rt-speed-label">Charge</span>
+                <span class="wh40k-speed-label">Charge</span>
             </div>
             
-            <div class="rt-speed-box rt-speed-run" data-action="setMovementMode" data-movement-type="run"
+            <div class="wh40k-speed-box wh40k-speed-run" data-action="setMovementMode" data-movement-type="run"
                  title="Click to set Run as active movement mode">
                 <i class="fas fa-wind"></i>
-                <div class="rt-speed-data">
-                    <span class="rt-speed-value">{{system.movement.run}}</span>
-                    <span class="rt-speed-unit">m</span>
+                <div class="wh40k-speed-data">
+                    <span class="wh40k-speed-value">{{system.movement.run}}</span>
+                    <span class="wh40k-speed-unit">m</span>
                 </div>
-                <span class="rt-speed-label">Run</span>
+                <span class="wh40k-speed-label">Run</span>
             </div>
         </div>
 
         {{!-- Expanded Details --}}
-        <div class="rt-panel-details mobility_details" {{hideIfNot (isExpanded 'mobility_details' actor)}}>
+        <div class="wh40k-panel-details mobility_details" {{hideIfNot (isExpanded 'mobility_details' actor)}}>
             
             {{!-- Athletics Section --}}
-            <div class="rt-mobility-section">
-                <div class="rt-section-header">
+            <div class="wh40k-mobility-section">
+                <div class="wh40k-section-header">
                     <i class="fas fa-person-hiking"></i>
                     <span>Athletics</span>
                 </div>
-                <div class="rt-athletics-grid">
-                    <div class="rt-athletic-stat">
-                        <span class="rt-athletic-label">Leap Vertical</span>
-                        <span class="rt-athletic-value">{{system.movement.leapVertical}}m</span>
+                <div class="wh40k-athletics-grid">
+                    <div class="wh40k-athletic-stat">
+                        <span class="wh40k-athletic-label">Leap Vertical</span>
+                        <span class="wh40k-athletic-value">{{system.movement.leapVertical}}m</span>
                     </div>
-                    <div class="rt-athletic-stat">
-                        <span class="rt-athletic-label">Leap Horizontal</span>
-                        <span class="rt-athletic-value">{{system.movement.leapHorizontal}}m</span>
+                    <div class="wh40k-athletic-stat">
+                        <span class="wh40k-athletic-label">Leap Horizontal</span>
+                        <span class="wh40k-athletic-value">{{system.movement.leapHorizontal}}m</span>
                     </div>
-                    <div class="rt-athletic-stat">
-                        <span class="rt-athletic-label">Jump Height</span>
-                        <span class="rt-athletic-value">{{system.movement.jump}}cm</span>
+                    <div class="wh40k-athletic-stat">
+                        <span class="wh40k-athletic-label">Jump Height</span>
+                        <span class="wh40k-athletic-value">{{system.movement.jump}}cm</span>
                     </div>
                 </div>
             </div>
 
             {{!-- Carrying Capacity Section --}}
-            <div class="rt-mobility-section">
-                <div class="rt-section-header">
+            <div class="wh40k-mobility-section">
+                <div class="wh40k-section-header">
                     <i class="fas fa-weight-hanging"></i>
                     <span>Carrying Capacity</span>
                 </div>
-                <div class="rt-carrying-grid">
-                    <div class="rt-carry-stat">
-                        <span class="rt-carry-label">Lift</span>
-                        <span class="rt-carry-value">{{system.lifting.lift}}<span class="rt-carry-unit">kg</span></span>
+                <div class="wh40k-carrying-grid">
+                    <div class="wh40k-carry-stat">
+                        <span class="wh40k-carry-label">Lift</span>
+                        <span class="wh40k-carry-value">{{system.lifting.lift}}<span class="wh40k-carry-unit">kg</span></span>
                     </div>
-                    <div class="rt-carry-stat">
-                        <span class="rt-carry-label">Carry</span>
-                        <span class="rt-carry-value">{{system.lifting.carry}}<span class="rt-carry-unit">kg</span></span>
+                    <div class="wh40k-carry-stat">
+                        <span class="wh40k-carry-label">Carry</span>
+                        <span class="wh40k-carry-value">{{system.lifting.carry}}<span class="wh40k-carry-unit">kg</span></span>
                     </div>
-                    <div class="rt-carry-stat">
-                        <span class="rt-carry-label">Push/Drag</span>
-                        <span class="rt-carry-value">{{system.lifting.push}}<span class="rt-carry-unit">kg</span></span>
+                    <div class="wh40k-carry-stat">
+                        <span class="wh40k-carry-label">Push/Drag</span>
+                        <span class="wh40k-carry-value">{{system.lifting.push}}<span class="wh40k-carry-unit">kg</span></span>
                     </div>
                 </div>
             </div>
 
             {{!-- Size --}}
-            <div class="rt-mobility-section rt-size-section">
-                <div class="rt-section-header">
+            <div class="wh40k-mobility-section wh40k-size-section">
+                <div class="wh40k-section-header">
                     <i class="fas fa-arrows-alt"></i>
                     <span>Size</span>
                 </div>
-                <select name="system.size" data-dtype="Number" class="rt-size-select">
+                <select name="system.size" data-dtype="Number" class="wh40k-size-select">
                     <option value="1" {{#if (eq system.size 1)}}selected{{/if}}>Miniscule</option>
                     <option value="2" {{#if (eq system.size 2)}}selected{{/if}}>Puny</option>
                     <option value="3" {{#if (eq system.size 3)}}selected{{/if}}>Scrawny</option>

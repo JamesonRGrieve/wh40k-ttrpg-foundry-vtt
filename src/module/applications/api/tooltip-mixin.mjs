@@ -1,6 +1,6 @@
 /**
  * @file TooltipMixin - Adds rich tooltip data preparation helpers to ApplicationV2 sheets
- * Works with TooltipsRT system for rich tooltip display
+ * Works with TooltipsWH40K system for rich tooltip display
  */
 
 import {
@@ -10,11 +10,11 @@ import {
     prepareWeaponTooltipData,
     prepareModifierTooltipData,
     prepareQualityTooltipData,
-} from '../components/rt-tooltip.mjs';
+} from '../components/wh40k-tooltip.mjs';
 
 /**
  * Mixin to add rich tooltip data preparation helpers to sheets.
- * The actual tooltip display is handled by the global TooltipsRT instance.
+ * The actual tooltip display is handled by the global TooltipsWH40K instance.
  * @param {typeof ApplicationV2} Base  The base class being mixed.
  * @returns {typeof TooltipSheet}
  * @mixin
@@ -30,7 +30,7 @@ export default function TooltipMixin(Base) {
          * @param {string} key              Characteristic key.
          * @param {object} characteristic   Characteristic data.
          * @param {object} [modifierSources]  Modifier sources.
-         * @returns {string}  JSON string for data-rt-tooltip-data attribute.
+         * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareCharacteristicTooltip(key, characteristic, modifierSources = {}) {
             return prepareCharacteristicTooltipData(key, characteristic, modifierSources);
@@ -43,7 +43,7 @@ export default function TooltipMixin(Base) {
          * @param {string} key            Skill key.
          * @param {object} skill          Skill data.
          * @param {object} characteristics  Character characteristics.
-         * @returns {string}  JSON string for data-rt-tooltip-data attribute.
+         * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareSkillTooltip(key, skill, characteristics) {
             const actorUuid = this.document?.uuid || null;
@@ -57,7 +57,7 @@ export default function TooltipMixin(Base) {
          * @param {string} location     Armor location.
          * @param {object} armorData    Armor data for this location.
          * @param {Array} [equipped]    Equipped armor pieces.
-         * @returns {string}  JSON string for data-rt-tooltip-data attribute.
+         * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareArmorTooltip(location, armorData, equipped = []) {
             return prepareArmorTooltipData(location, armorData, equipped);
@@ -68,7 +68,7 @@ export default function TooltipMixin(Base) {
         /**
          * Prepare weapon tooltip data.
          * @param {object} weapon  Weapon item.
-         * @returns {string}  JSON string for data-rt-tooltip-data attribute.
+         * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareWeaponTooltip(weapon) {
             return prepareWeaponTooltipData(weapon);
@@ -80,7 +80,7 @@ export default function TooltipMixin(Base) {
          * Prepare modifier sources tooltip data.
          * @param {string} title    Tooltip title.
          * @param {Array} sources   Modifier sources.
-         * @returns {string}  JSON string for data-rt-tooltip-data attribute.
+         * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareModifierTooltip(title, sources) {
             return prepareModifierTooltipData(title, sources);
@@ -92,7 +92,7 @@ export default function TooltipMixin(Base) {
          * Prepare weapon quality tooltip data.
          * @param {string} identifier  Quality identifier (e.g., "tearing", "blast-5").
          * @param {number} [level]     Optional quality level.
-         * @returns {string}  JSON string for data-rt-tooltip-data attribute.
+         * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareQualityTooltip(identifier, level = null) {
             return prepareQualityTooltipData(identifier, level);

@@ -262,7 +262,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     get categoryLabel() {
         const config = CONFIG.WH40K?.gearCategories?.[this.category];
         if (config?.label) return game.i18n.localize(config.label);
-        return game.i18n.localize(`RT.GearCategory.${this.category.capitalize()}`);
+        return game.i18n.localize(`WH40K.GearCategory.${this.category.capitalize()}`);
     }
 
     /**

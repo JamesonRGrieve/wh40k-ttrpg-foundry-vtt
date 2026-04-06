@@ -65,7 +65,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
      * @type {string}
      */
     get categoryLabel() {
-        return game.i18n.localize(`RT.OrderCategory.${this.category.capitalize()}`);
+        return game.i18n.localize(`WH40K.OrderCategory.${this.category.capitalize()}`);
     }
 
     /**
@@ -74,7 +74,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
      */
     get actionTypeLabel() {
         return game.i18n.localize(
-            `RT.ActionType.${this.actionType
+            `WH40K.ActionType.${this.actionType
                 .split('-')
                 .map((s) => s.capitalize())
                 .join('')}`,

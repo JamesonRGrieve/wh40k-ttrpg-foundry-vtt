@@ -240,8 +240,8 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         }
 
         // Preview tabs
-        const tabs = form.querySelectorAll('.rt-preview-tab');
-        const sections = form.querySelectorAll('.rt-preview-section');
+        const tabs = form.querySelectorAll('.wh40k-preview-tab');
+        const sections = form.querySelectorAll('.wh40k-preview-section');
 
         tabs.forEach((tab) => {
             tab.addEventListener('click', () => {

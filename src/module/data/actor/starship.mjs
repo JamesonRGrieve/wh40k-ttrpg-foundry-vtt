@@ -203,7 +203,7 @@ export default class StarshipData extends ActorDataModel {
     get hullTypeLabel() {
         if (!this.hullType) return '';
         return game.i18n.localize(
-            `RT.HullType.${this.hullType
+            `WH40K.HullType.${this.hullType
                 .split('-')
                 .map((s) => s.capitalize())
                 .join('')}`,

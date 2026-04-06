@@ -4,7 +4,7 @@
 // Complete overhaul with auto-calc transparency, manual override, and rest button
 
 .wh40k-fatigue-panel-v2 {
-    // Base panel styling inherits from rt-panel
+    // Base panel styling inherits from wh40k-panel
 
     // ============================================
     // Main Display Area
@@ -32,25 +32,25 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--rt-btn-bg);
-        border: 2px solid var(--rt-fatigue-border);
+        background: var(--wh40k-btn-bg);
+        border: 2px solid var(--wh40k-fatigue-border);
         border-radius: 8px;
         font-size: 1.1rem;
         font-weight: 700;
         cursor: pointer;
         transition: all 0.15s ease;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
 
         &:hover {
-            background: var(--rt-btn-bg-hover);
-            border-color: var(--rt-fatigue-primary);
+            background: var(--wh40k-btn-bg-hover);
+            border-color: var(--wh40k-fatigue-primary);
             transform: scale(1.08);
-            box-shadow: 0 2px 6px var(--rt-shadow-soft);
+            box-shadow: 0 2px 6px var(--wh40k-shadow-soft);
         }
 
         &:active {
             transform: scale(0.95);
-            box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+            box-shadow: inset 0 2px 4px var(--wh40k-shadow-medium);
         }
 
         i {
@@ -59,18 +59,18 @@
     }
 
     .wh40k-fatigue-minus {
-        color: var(--rt-success-primary);
+        color: var(--wh40k-success-primary);
         &:hover {
-            border-color: var(--rt-success-primary);
-            background: var(--rt-success-bg);
+            border-color: var(--wh40k-success-primary);
+            background: var(--wh40k-success-bg);
         }
     }
 
     .wh40k-fatigue-plus {
-        color: var(--rt-fatigue-secondary);
+        color: var(--wh40k-fatigue-secondary);
         &:hover {
-            border-color: var(--rt-fatigue-secondary);
-            background: var(--rt-fatigue-bg);
+            border-color: var(--wh40k-fatigue-secondary);
+            background: var(--wh40k-fatigue-bg);
         }
     }
 
@@ -85,20 +85,20 @@
     .wh40k-fatigue-current {
         font-size: 2.5rem;
         font-weight: 700;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         line-height: 1;
         transition: all 0.3s ease;
     }
 
     .wh40k-fatigue-sep {
         font-size: 1.5rem;
-        color: var(--rt-text-subtle);
+        color: var(--wh40k-text-subtle);
         font-weight: 400;
     }
 
     .wh40k-fatigue-max {
         font-size: 1.3rem;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         font-weight: 600;
     }
 
@@ -112,16 +112,16 @@
         justify-content: center;
         gap: $wh40k-space-xs;
         padding: $wh40k-space-xs $wh40k-space-sm;
-        background: var(--rt-success-bg);
+        background: var(--wh40k-success-bg);
         border: 1px solid rgba(74, 143, 92, 0.3);
         border-radius: 6px;
         font-size: 0.75rem;
         font-weight: 600;
-        color: var(--rt-success-primary);
+        color: var(--wh40k-success-primary);
 
         i {
             font-size: 0.9em;
-            color: var(--rt-success-secondary);
+            color: var(--wh40k-success-secondary);
         }
     }
 
@@ -138,11 +138,11 @@
     .wh40k-fatigue-bar {
         flex: 1;
         height: 12px;
-        background: var(--rt-border-accent);
+        background: var(--wh40k-border-accent);
         border-radius: 6px;
         overflow: visible; // Changed to visible for threshold markers
         position: relative;
-        box-shadow: inset 0 1px 3px var(--rt-shadow-soft);
+        box-shadow: inset 0 1px 3px var(--wh40k-shadow-soft);
     }
 
     // Threshold Markers
@@ -159,7 +159,7 @@
         .wh40k-threshold-line {
             width: 2px;
             height: 100%;
-            background: var(--rt-skills-border);
+            background: var(--wh40k-skills-border);
             border-radius: 1px;
         }
 
@@ -168,11 +168,11 @@
             top: -18px;
             font-size: 9px;
             font-weight: 600;
-            color: var(--rt-skills-primary);
-            background: var(--rt-panel-bg-solid);
+            color: var(--wh40k-skills-primary);
+            background: var(--wh40k-panel-bg-solid);
             padding: 1px 3px;
             border-radius: 2px;
-            border: 1px solid var(--rt-skills-border);
+            border: 1px solid var(--wh40k-skills-border);
         }
     }
 
@@ -202,7 +202,7 @@
     .wh40k-fatigue-percent {
         font-size: 0.8rem;
         font-weight: 700;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         min-width: 36px;
         text-align: right;
         font-family: 'Modesto Condensed', serif;
@@ -230,9 +230,9 @@
     }
 
     .wh40k-alert-exhausted {
-        background: var(--rt-fatigue-bg);
-        color: var(--rt-fatigue-primary);
-        border: 2px solid var(--rt-fatigue-border);
+        background: var(--wh40k-fatigue-bg);
+        color: var(--wh40k-fatigue-primary);
+        border: 2px solid var(--wh40k-fatigue-border);
         animation: pulse-orange 2s ease-in-out infinite;
     }
 
@@ -249,12 +249,12 @@
     // Panel state modifier for exhausted
     &.wh40k-exhausted {
         .wh40k-panel-header {
-            background: var(--rt-fatigue-bg);
-            border-bottom: 2px solid var(--rt-fatigue-secondary);
+            background: var(--wh40k-fatigue-bg);
+            border-bottom: 2px solid var(--wh40k-fatigue-secondary);
         }
 
         .wh40k-fatigue-current {
-            color: var(--rt-fatigue-secondary);
+            color: var(--wh40k-fatigue-secondary);
             animation: pulse-scale 1.5s ease-in-out infinite;
         }
     }
@@ -286,57 +286,57 @@
         justify-content: center;
         gap: 6px;
         padding: $wh40k-space-sm $wh40k-space-md;
-        background: var(--rt-panel-bg-solid);
-        border: 2px solid var(--rt-border-color-light);
+        background: var(--wh40k-panel-bg-solid);
+        border: 2px solid var(--wh40k-border-color-light);
         border-radius: 8px;
         font-size: 0.8rem;
         font-weight: 700;
         cursor: pointer;
         transition: all 0.15s ease;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
 
         i {
             font-size: 1em;
         }
 
         &:hover {
-            background: var(--rt-btn-bg-hover);
-            border-color: var(--rt-border-color);
+            background: var(--wh40k-btn-bg-hover);
+            border-color: var(--wh40k-border-color);
             transform: translateY(-2px);
-            box-shadow: 0 3px 8px var(--rt-shadow-medium);
+            box-shadow: 0 3px 8px var(--wh40k-shadow-medium);
         }
 
         &:active {
             transform: translateY(0);
-            box-shadow: inset 0 2px 4px var(--rt-shadow-medium);
+            box-shadow: inset 0 2px 4px var(--wh40k-shadow-medium);
         }
     }
 
     .wh40k-rest-btn {
         border-color: rgba(74, 143, 92, 0.4);
-        color: var(--rt-success-primary);
+        color: var(--wh40k-success-primary);
 
         i {
-            color: var(--rt-success-secondary);
+            color: var(--wh40k-success-secondary);
         }
 
         &:hover {
-            border-color: var(--rt-success-primary);
-            background: var(--rt-success-bg);
+            border-color: var(--wh40k-success-primary);
+            background: var(--wh40k-success-bg);
         }
     }
 
     .wh40k-clear-btn {
-        border-color: var(--rt-fatigue-border);
-        color: var(--rt-fatigue-primary);
+        border-color: var(--wh40k-fatigue-border);
+        color: var(--wh40k-fatigue-primary);
 
         i {
-            color: var(--rt-fatigue-secondary);
+            color: var(--wh40k-fatigue-secondary);
         }
 
         &:hover {
-            border-color: var(--rt-fatigue-secondary);
-            background: var(--rt-fatigue-bg);
+            border-color: var(--wh40k-fatigue-secondary);
+            background: var(--wh40k-fatigue-bg);
         }
     }
 
@@ -346,8 +346,8 @@
 
     .wh40k-fatigue-edit-section {
         padding: $wh40k-space-md;
-        background: var(--rt-panel-bg-translucent);
-        border: 1px solid var(--rt-border-color-light);
+        background: var(--wh40k-panel-bg-translucent);
+        border: 1px solid var(--wh40k-border-color-light);
         border-radius: 8px;
         margin-bottom: $wh40k-space-sm;
 
@@ -361,7 +361,7 @@
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
         margin-bottom: $wh40k-space-sm;
         display: flex;
         align-items: center;
@@ -388,20 +388,20 @@
         display: flex;
         align-items: center;
         padding: $wh40k-space-sm;
-        background: var(--rt-panel-bg);
-        border: 2px solid var(--rt-border-color-light);
+        background: var(--wh40k-panel-bg);
+        border: 2px solid var(--wh40k-border-color-light);
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.2s ease;
 
         &:hover {
-            background: var(--rt-panel-bg-solid);
-            border-color: var(--rt-border-color);
+            background: var(--wh40k-panel-bg-solid);
+            border-color: var(--wh40k-border-color);
         }
 
         &.wh40k-mode-active {
-            background: var(--rt-success-bg);
-            border-color: var(--rt-success-primary);
+            background: var(--wh40k-success-bg);
+            border-color: var(--wh40k-success-primary);
             box-shadow: 0 0 0 2px rgba(74, 143, 92, 0.2);
         }
     }
@@ -420,19 +420,19 @@
 
         i {
             font-size: 1.2rem;
-            color: var(--rt-success-secondary);
+            color: var(--wh40k-success-secondary);
             margin-bottom: 4px;
         }
 
         strong {
             font-size: 0.85rem;
-            color: var(--rt-text-dark);
+            color: var(--wh40k-text-dark);
             font-weight: 700;
         }
 
         small {
             font-size: 0.7rem;
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
             font-weight: 600;
         }
     }
@@ -442,21 +442,21 @@
         align-items: flex-start;
         gap: $wh40k-space-xs;
         padding: $wh40k-space-sm;
-        background: var(--rt-success-bg);
+        background: var(--wh40k-success-bg);
         border-left: 3px solid rgba(74, 143, 92, 0.4);
         border-radius: 4px;
         font-size: 0.75rem;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
 
         i {
-            color: var(--rt-success-secondary);
+            color: var(--wh40k-success-secondary);
             font-size: 0.9em;
             margin-top: 2px;
             flex-shrink: 0;
         }
 
         strong {
-            color: var(--rt-success-primary);
+            color: var(--wh40k-success-primary);
             font-weight: 700;
         }
     }
@@ -482,7 +482,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         display: flex;
         align-items: center;
         gap: 6px;
@@ -492,8 +492,8 @@
         font-size: 0.65rem;
         font-weight: 700;
         padding: 2px 6px;
-        background: var(--rt-success-bg);
-        color: var(--rt-success-primary);
+        background: var(--wh40k-success-bg);
+        color: var(--wh40k-success-primary);
         border-radius: 3px;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -503,30 +503,30 @@
         width: 100%;
         height: 40px;
         padding: 0 $wh40k-space-sm;
-        border: 2px solid var(--rt-border-color-light);
+        border: 2px solid var(--wh40k-border-color-light);
         border-radius: 6px;
-        background: var(--rt-input-bg);
+        background: var(--wh40k-input-bg);
         font-size: 1.1rem;
         font-weight: 700;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         text-align: center;
         font-family: 'Modesto Condensed', serif;
         transition: all 0.15s ease;
 
         &:focus {
             outline: none;
-            border-color: var(--rt-border-color-strong);
-            background: var(--rt-input-bg-focus);
-            box-shadow: 0 0 0 3px var(--rt-shadow-soft);
+            border-color: var(--wh40k-border-color-strong);
+            background: var(--wh40k-input-bg-focus);
+            box-shadow: 0 0 0 3px var(--wh40k-shadow-soft);
         }
 
         &:hover:not(:readonly) {
-            border-color: var(--rt-border-color);
+            border-color: var(--wh40k-border-color);
         }
 
         &:readonly {
-            background: var(--rt-panel-bg);
-            color: var(--rt-text-muted);
+            background: var(--wh40k-panel-bg);
+            color: var(--wh40k-text-muted);
             cursor: not-allowed;
         }
     }
@@ -539,12 +539,12 @@
         display: flex;
         gap: $wh40k-space-sm;
         padding: $wh40k-space-sm;
-        background: var(--rt-fatigue-bg);
-        border-left: 3px solid var(--rt-fatigue-border);
+        background: var(--wh40k-fatigue-bg);
+        border-left: 3px solid var(--wh40k-fatigue-border);
         border-radius: 4px;
 
         i {
-            color: var(--rt-fatigue-secondary);
+            color: var(--wh40k-fatigue-secondary);
             font-size: 1.2rem;
             margin-top: 2px;
             flex-shrink: 0;
@@ -559,14 +559,14 @@
         strong {
             font-size: 0.8rem;
             font-weight: 700;
-            color: var(--rt-text-medium);
+            color: var(--wh40k-text-medium);
             text-transform: uppercase;
             letter-spacing: 0.03em;
         }
 
         p {
             font-size: 0.75rem;
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
             line-height: 1.4;
             margin: 0;
         }

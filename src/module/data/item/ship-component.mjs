@@ -220,7 +220,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * @type {string}
      */
     get componentTypeLabel() {
-        return game.i18n.localize(`RT.ShipComponent.${this.componentType.capitalize()}`);
+        return game.i18n.localize(`WH40K.ShipComponent.${this.componentType.capitalize()}`);
     }
 
     /**
@@ -232,7 +232,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
         return Array.from(this.hullType)
             .map((h) =>
                 game.i18n.localize(
-                    `RT.HullType.${h
+                    `WH40K.HullType.${h
                         .split('-')
                         .map((s) => s.capitalize())
                         .join('')}`,
@@ -293,7 +293,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
             if (value !== 0) {
                 list.push({
                     key,
-                    label: game.i18n.localize(`RT.ShipStat.${key.capitalize()}`),
+                    label: game.i18n.localize(`WH40K.ShipStat.${key.capitalize()}`),
                     value,
                 });
             }

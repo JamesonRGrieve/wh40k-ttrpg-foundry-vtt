@@ -8,7 +8,7 @@ import ApplicationV2Mixin from './api/application-v2-mixin.mjs';
 const { ApplicationV2 } = foundry.applications.api;
 
 /**
- * Compendium browser for browsing and filtering RT system compendiums.
+ * Compendium browser for browsing and filtering WH40K system compendiums.
  */
 export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     constructor(options = {}) {
@@ -38,7 +38,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
             height: 700,
         },
         window: {
-            title: 'RT Compendium Browser',
+            title: 'WH40K Compendium Browser',
             resizable: true,
             minimizable: true,
         },
@@ -294,7 +294,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
             .split('-')
             .map((s) => s.capitalize())
             .join('');
-        const typeLabel = game.i18n.localize(`RT.ArmourType.${typeKey}`);
+        const typeLabel = game.i18n.localize(`WH40K.ArmourType.${typeKey}`);
 
         return {
             type: system.type,
@@ -382,7 +382,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         const rtConfig = CONFIG?.rt;
 
         if (!rtConfig) {
-            console.warn('RT | CONFIG.wh40k not available in compendium browser');
+            console.warn('WH40K | CONFIG.wh40k not available in compendium browser');
             return {
                 identifier: system.identifier || '',
                 label: system.name || 'Unknown Quality',

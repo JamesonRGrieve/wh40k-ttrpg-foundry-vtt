@@ -120,7 +120,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             height: 800,
         },
         // Tab configuration - uses ApplicationV2 tab handling
-        tabs: [{ navSelector: 'nav.rt-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
+        tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
     };
 
     /* -------------------------------------------- */
@@ -268,7 +268,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     async _updateSystemField(field, value) {
         // Direct field update to avoid overwriting calculated properties
-        console.log(`[RT DEBUG] _updateSystemField:`, { field, value, updateData: { [field]: value } });
+        console.log(`[WH40K DEBUG] _updateSystemField:`, { field, value, updateData: { [field]: value } });
         await this.actor.update({ [field]: value });
     }
 
@@ -280,7 +280,7 @@ export default class AcolyteSheet extends BaseActorSheet {
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
 
-        // RT-specific configuration
+        // WH40K-specific configuration
         context.dh = CONFIG.wh40k || WH40K;
 
         // Prepare characteristic HUD data
@@ -489,7 +489,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         }
 
         // Add active class to the initial nav item
-        const navItem = this.element.querySelector(`nav.rt-navigation a[data-tab="${activeTab}"]`);
+        const navItem = this.element.querySelector(`nav.wh40k-navigation a[data-tab="${activeTab}"]`);
         if (navItem) {
             navItem.classList.add('active');
         }
@@ -537,7 +537,7 @@ export default class AcolyteSheet extends BaseActorSheet {
             char.progressCircumference = circumference;
             char.progressOffset = circumference * (1 - advance / 5);
 
-            // XP cost for next advancement (using RT/DH2e progression)
+            // XP cost for next advancement (using WH40K progression)
             const xpCosts = [100, 250, 500, 750, 1000]; // Simple to Expert
             char.nextAdvanceCost = advance < 5 ? xpCosts[advance] : 0;
 
@@ -1641,7 +1641,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         const action = target.dataset.statAction;
 
         // DEBUG: Log before update
-        console.log(`[RT DEBUG] adjustStat BEFORE:`, {
+        console.log(`[WH40K DEBUG] adjustStat BEFORE:`, {
             field,
             action,
             woundsMax: this.actor.system.wounds?.max,
@@ -1683,13 +1683,13 @@ export default class AcolyteSheet extends BaseActorSheet {
             if (min !== null && newValue < min) newValue = min;
         }
 
-        console.log(`[RT DEBUG] adjustStat update:`, { field, currentValue, newValue, min, max });
+        console.log(`[WH40K DEBUG] adjustStat update:`, { field, currentValue, newValue, min, max });
 
         if (newValue !== currentValue) {
             await this._updateSystemField(field, newValue);
 
             // DEBUG: Log after update
-            console.log(`[RT DEBUG] adjustStat AFTER:`, {
+            console.log(`[WH40K DEBUG] adjustStat AFTER:`, {
                 woundsMax: this.actor.system.wounds?.max,
                 woundsValue: this.actor.system.wounds?.value,
                 fateMax: this.actor.system.fate?.max,
@@ -2270,13 +2270,13 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     static async #openOriginPathBuilder(event, target) {
         try {
-            if (game.rt?.openOriginPathBuilder) {
-                await game.rt.openOriginPathBuilder(this.actor);
+            if (game.wh40k?.openOriginPathBuilder) {
+                await game.wh40k.openOriginPathBuilder(this.actor);
             } else {
                 this._notify('warning', 'Origin Path Builder not available', {
                     duration: 3000,
                 });
-                console.warn('game.rt.openOriginPathBuilder not found');
+                console.warn('game.wh40k.openOriginPathBuilder not found');
             }
         } catch (error) {
             this._notify('error', `Failed to open Origin Path Builder: ${error.message}`, {
@@ -2312,7 +2312,7 @@ export default class AcolyteSheet extends BaseActorSheet {
 
         // Create a simple context menu programmatically
         const menu = document.createElement('div');
-        menu.className = 'wh40k-context-menu rt-utility-menu';
+        menu.className = 'wh40k-context-menu wh40k-utility-menu';
         menu.style.position = 'fixed';
         menu.style.zIndex = '1000';
 
@@ -2374,7 +2374,7 @@ export default class AcolyteSheet extends BaseActorSheet {
                 name: game.i18n.localize('WH40K.Utility.SetupOriginPath'),
                 icon: '<i class="fa-solid fa-route"></i>',
                 callback: () => this._openOriginPathBuilder(),
-                condition: () => !!game.rt?.openOriginPathBuilder,
+                condition: () => !!game.wh40k?.openOriginPathBuilder,
             },
         ];
     }
@@ -2385,8 +2385,8 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     async _openOriginPathBuilder() {
         try {
-            if (game.rt?.openOriginPathBuilder) {
-                await game.rt.openOriginPathBuilder(this.actor);
+            if (game.wh40k?.openOriginPathBuilder) {
+                await game.wh40k.openOriginPathBuilder(this.actor);
             } else {
                 ui.notifications.warn(game.i18n.localize('WH40K.Utility.OriginPathNotAvailable'));
             }
@@ -2407,13 +2407,13 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Element that triggered the event.
      */
     static #filterEquipment(event, target) {
-        const equipmentPanel = this.element.querySelector('.rt-all-items-grid');
+        const equipmentPanel = this.element.querySelector('.wh40k-all-items-grid');
         if (!equipmentPanel) return;
 
         // Get filter values
-        const searchInput = this.element.querySelector('.rt-equipment-search');
-        const typeFilter = this.element.querySelector('.rt-equipment-type-filter');
-        const statusFilter = this.element.querySelector('.rt-equipment-status-filter');
+        const searchInput = this.element.querySelector('.wh40k-equipment-search');
+        const typeFilter = this.element.querySelector('.wh40k-equipment-type-filter');
+        const statusFilter = this.element.querySelector('.wh40k-equipment-status-filter');
 
         const searchTerm = searchInput?.value.toLowerCase() || '';
         const typeValue = typeFilter?.value || '';
@@ -2427,14 +2427,14 @@ export default class AcolyteSheet extends BaseActorSheet {
         };
 
         // Get all item cards
-        const itemCards = equipmentPanel.querySelectorAll('.rt-inventory-card');
+        const itemCards = equipmentPanel.querySelectorAll('.wh40k-inventory-card');
 
         let visibleCount = 0;
 
         itemCards.forEach((card) => {
             const itemName = card.getAttribute('title')?.toLowerCase() || '';
             const itemType = card.getAttribute('data-item-type') || '';
-            const isEquipped = card.querySelector('.rt-inv-equipped') !== null;
+            const isEquipped = card.querySelector('.wh40k-inv-equipped') !== null;
 
             // Check filters
             const matchesSearch = !searchTerm || itemName.includes(searchTerm);
@@ -2451,13 +2451,13 @@ export default class AcolyteSheet extends BaseActorSheet {
         });
 
         // Toggle clear button visibility
-        const clearBtn = this.element.querySelector('.rt-search-clear');
+        const clearBtn = this.element.querySelector('.wh40k-search-clear');
         if (clearBtn) {
             clearBtn.style.display = searchTerm ? 'flex' : 'none';
         }
 
         // Show message if no results
-        const existingMsg = equipmentPanel.querySelector('.rt-no-results');
+        const existingMsg = equipmentPanel.querySelector('.wh40k-no-results');
         if (existingMsg) existingMsg.remove();
 
         if (visibleCount === 0 && itemCards.length > 0) {
@@ -2475,7 +2475,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #clearEquipmentSearch(event, target) {
-        const searchInput = this.element.querySelector('.rt-equipment-search');
+        const searchInput = this.element.querySelector('.wh40k-equipment-search');
         if (searchInput) {
             searchInput.value = '';
             // Clear stored filter state
@@ -2693,7 +2693,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      * @private
      */
     static async #filterTraits(event, target) {
-        const form = target.closest('.rt-traits-filters');
+        const form = target.closest('.wh40k-traits-filters');
         if (!form) return;
 
         const search = form.querySelector('[name=traits-search]')?.value || '';
@@ -2939,7 +2939,7 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     static #togglePowerDetails(event, target) {
         const itemId = target.dataset.itemId;
-        const detailsEl = this.element.querySelector(`.rt-power-details[data-power-id="${itemId}"]`);
+        const detailsEl = this.element.querySelector(`.wh40k-power-details[data-power-id="${itemId}"]`);
 
         if (detailsEl) {
             const isHidden = detailsEl.hasAttribute('hidden');
@@ -3055,15 +3055,15 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     static async #rollPhenomena(event, target) {
         try {
-            // Use the game.rt roll helper if available
-            if (game.rt?.rollPsychicPhenomena) {
-                await game.rt.rollPsychicPhenomena(this.actor);
+            // Use the game.wh40k roll helper if available
+            if (game.wh40k?.rollPsychicPhenomena) {
+                await game.wh40k.rollPsychicPhenomena(this.actor);
             } else {
                 // Fallback: roll on phenomena table
                 const table =
                     game.tables.getName('Psychic Phenomena') ||
                     (await game.packs
-                        .get('wh40k-rpg.rt-rolltables-psychic')
+                        .get('wh40k-rpg.wh40k-rolltables-psychic')
                         ?.getDocuments()
                         .then((docs) => docs.find((d) => d.name.includes('Phenomena'))));
 
@@ -3095,15 +3095,15 @@ export default class AcolyteSheet extends BaseActorSheet {
      */
     static async #rollPerils(event, target) {
         try {
-            // Use the game.rt roll helper if available
-            if (game.rt?.rollPerilsOfTheWarp) {
-                await game.rt.rollPerilsOfTheWarp(this.actor);
+            // Use the game.wh40k roll helper if available
+            if (game.wh40k?.rollPerilsOfTheWarp) {
+                await game.wh40k.rollPerilsOfTheWarp(this.actor);
             } else {
                 // Fallback: roll on perils table
                 const table =
                     game.tables.getName('Perils of the Warp') ||
                     (await game.packs
-                        .get('wh40k-rpg.rt-rolltables-psychic')
+                        .get('wh40k-rpg.wh40k-rolltables-psychic')
                         ?.getDocuments()
                         .then((docs) => docs.find((d) => d.name.includes('Perils'))));
 
@@ -3141,7 +3141,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         this._powersFilter.discipline = discipline;
 
         // Update active class on filter buttons
-        const filterBtns = this.element.querySelectorAll('.rt-panel-psychic-powers .rt-filter-btn');
+        const filterBtns = this.element.querySelectorAll('.wh40k-panel-psychic-powers .wh40k-filter-btn');
         filterBtns.forEach((btn) => {
             btn.classList.toggle('active', btn.dataset.discipline === discipline);
         });
@@ -3166,7 +3166,7 @@ export default class AcolyteSheet extends BaseActorSheet {
         this._powersFilter.orderCategory = category;
 
         // Update active class on filter buttons
-        const filterBtns = this.element.querySelectorAll('.rt-panel-orders .rt-filter-btn');
+        const filterBtns = this.element.querySelectorAll('.wh40k-panel-orders .wh40k-filter-btn');
         filterBtns.forEach((btn) => {
             btn.classList.toggle('active', btn.dataset.category === category);
         });

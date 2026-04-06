@@ -1,29 +1,29 @@
-<div class="rt-panel spacer rt-grid-col-6 rt-grid-row-1">
-    <h1 class="rt-panel-header">{{localize "WH40K.Starship.Crew.Header"}}</h1>
-    <div class="rt-crew-grid">
-        <div class="rt-crew-stat">
-            <span class="rt-crew-stat-label">{{localize "WH40K.Starship.Crew.Population"}}</span>
-            <input type="number" class="rt-crew-stat-input" name="system.crew.population" value="{{system.crew.population}}" />
+<div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-1">
+    <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Crew.Header"}}</h1>
+    <div class="wh40k-crew-grid">
+        <div class="wh40k-crew-stat">
+            <span class="wh40k-crew-stat-label">{{localize "WH40K.Starship.Crew.Population"}}</span>
+            <input type="number" class="wh40k-crew-stat-input" name="system.crew.population" value="{{system.crew.population}}" />
         </div>
-        <div class="rt-crew-stat">
-            <span class="rt-crew-stat-label">{{localize "WH40K.Starship.Crew.Rating"}}</span>
-            <input type="number" class="rt-crew-stat-input" name="system.crew.crewRating" value="{{system.crew.crewRating}}" />
+        <div class="wh40k-crew-stat">
+            <span class="wh40k-crew-stat-label">{{localize "WH40K.Starship.Crew.Rating"}}</span>
+            <input type="number" class="wh40k-crew-stat-input" name="system.crew.crewRating" value="{{system.crew.crewRating}}" />
         </div>
-        <div class="rt-crew-stat">
-            <span class="rt-crew-stat-label">{{localize "WH40K.Starship.Crew.MoraleCurrent"}}</span>
-            <input type="number" class="rt-crew-stat-input" name="system.crew.morale.value" value="{{system.crew.morale.value}}" />
+        <div class="wh40k-crew-stat">
+            <span class="wh40k-crew-stat-label">{{localize "WH40K.Starship.Crew.MoraleCurrent"}}</span>
+            <input type="number" class="wh40k-crew-stat-input" name="system.crew.morale.value" value="{{system.crew.morale.value}}" />
         </div>
-        <div class="rt-crew-stat">
-            <span class="rt-crew-stat-label">{{localize "WH40K.Starship.Crew.MoraleMax"}}</span>
-            <input type="number" class="rt-crew-stat-input" name="system.crew.morale.max" value="{{system.crew.morale.max}}" />
+        <div class="wh40k-crew-stat">
+            <span class="wh40k-crew-stat-label">{{localize "WH40K.Starship.Crew.MoraleMax"}}</span>
+            <input type="number" class="wh40k-crew-stat-input" name="system.crew.morale.max" value="{{system.crew.morale.max}}" />
         </div>
     </div>
 </div>
 
-<div class="rt-panel spacer rt-grid-col-6 rt-grid-row-1">
-    <h1 class="rt-panel-header">{{localize "WH40K.Starship.Crew.Officers"}}</h1>
-    <p class="rt-crew-instructions">{{localize "WH40K.Starship.Crew.OfficersDesc"}}</p>
-    <div class="rt-table--border">
+<div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-1">
+    <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Crew.Officers"}}</h1>
+    <p class="wh40k-crew-instructions">{{localize "WH40K.Starship.Crew.OfficersDesc"}}</p>
+    <div class="wh40k-table--border">
         <div class="table-row--head">
             <div class="table-cell--span2">{{localize "WH40K.Starship.Crew.Role"}}</div>
             <div class="table-cell--span2">{{localize "WH40K.Starship.Crew.Officer"}}</div>
@@ -32,8 +32,8 @@
         {{#each shipRoles as |role|}}
             <div class="table-row">
                 <div class="table-cell--span2">
-                    <button class="item-name rt-item-button" data-item-id="{{role.id}}" type="button">
-                        <img class="rt-item-img" src="{{role.img}}" alt="{{role.name}}" />
+                    <button class="item-name wh40k-item-button" data-item-id="{{role.id}}" type="button">
+                        <img class="wh40k-item-img" src="{{role.img}}" alt="{{role.name}}" />
                         {{role.name}}
                     </button>
                 </div>

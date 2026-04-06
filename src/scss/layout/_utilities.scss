@@ -4,14 +4,14 @@
 // Reusable grid and column patterns
 
 // ============================================
-// Tab Grid Layouts (replaces rt-overview-grid, rt-combat-grid, etc.)
+// Tab Grid Layouts (replaces wh40k-overview-grid, wh40k-combat-grid, etc.)
 // ============================================
 
 .wh40k-tab-grid {
-    @include rt-tab-grid(2, $wh40k-space-md);
+    @include wh40k-tab-grid(2, $wh40k-space-md);
 
     &--3col {
-        @include rt-tab-grid(3, $wh40k-space-md);
+        @include wh40k-tab-grid(3, $wh40k-space-md);
     }
 
     &--gap-sm {
@@ -24,11 +24,11 @@
 }
 
 // ============================================
-// Tab Column (replaces rt-overview-col, rt-combat-col, etc.)
+// Tab Column (replaces wh40k-overview-col, wh40k-combat-col, etc.)
 // ============================================
 
 .wh40k-tab-col {
-    @include rt-tab-column;
+    @include wh40k-tab-column;
 }
 
 // ============================================

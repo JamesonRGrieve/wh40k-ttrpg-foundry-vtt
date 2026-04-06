@@ -12,8 +12,8 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: var(--rt-sheet-bg);
-    color: var(--rt-text-dark);
+    background: var(--wh40k-sheet-bg);
+    color: var(--wh40k-text-dark);
     font-family: 'Roboto', sans-serif;
     font-size: 0.9rem;
     overflow: hidden;
@@ -36,15 +36,15 @@
     align-items: center;
     gap: 12px;
     padding: 12px;
-    background: linear-gradient(135deg, var(--rt-equipment-bg) 0%, transparent 100%);
-    border-bottom: 2px solid var(--rt-equipment-border);
+    background: linear-gradient(135deg, var(--wh40k-equipment-bg) 0%, transparent 100%);
+    border-bottom: 2px solid var(--wh40k-equipment-border);
 
     &__image {
         position: relative;
         width: 64px;
         height: 64px;
         flex-shrink: 0;
-        border: 2px solid var(--rt-bronze);
+        border: 2px solid var(--wh40k-bronze);
         border-radius: 6px;
         overflow: hidden;
         cursor: pointer;
@@ -58,7 +58,7 @@
 
         &:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px var(--rt-shadow-medium);
+            box-shadow: 0 4px 12px var(--wh40k-shadow-medium);
 
             .wh40k-gear-header__image-overlay {
                 opacity: 1;
@@ -97,12 +97,12 @@
         font-family: 'Cinzel', serif;
         font-size: 1.3rem;
         font-weight: 600;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         transition: border-color 0.2s ease;
 
         &:hover,
         &:focus {
-            border-bottom-color: var(--rt-gold);
+            border-bottom-color: var(--wh40k-gold);
             outline: none;
         }
     }
@@ -136,15 +136,15 @@
     letter-spacing: 0.03em;
 
     &--category {
-        background: var(--rt-equipment-bg);
-        border: 1px solid var(--rt-equipment-border);
-        color: var(--rt-equipment-primary);
+        background: var(--wh40k-equipment-bg);
+        border: 1px solid var(--wh40k-equipment-border);
+        color: var(--wh40k-equipment-primary);
     }
 
     &--quantity {
-        background: var(--rt-panel-bg-translucent);
-        border: 1px solid var(--rt-border-color-light);
-        color: var(--rt-text-medium);
+        background: var(--wh40k-panel-bg-translucent);
+        border: 1px solid var(--wh40k-border-color-light);
+        color: var(--wh40k-text-medium);
     }
 
     &--craft {
@@ -153,25 +153,25 @@
         &.wh40k-gear-badge--poor {
             background: rgba(139, 0, 0, 0.1);
             border-color: rgba(139, 0, 0, 0.4);
-            color: var(--rt-red);
+            color: var(--wh40k-red);
         }
 
         &.wh40k-gear-badge--common {
-            background: var(--rt-panel-bg-translucent);
-            border-color: var(--rt-border-color-light);
-            color: var(--rt-text-muted);
+            background: var(--wh40k-panel-bg-translucent);
+            border-color: var(--wh40k-border-color-light);
+            color: var(--wh40k-text-muted);
         }
 
         &.wh40k-gear-badge--good {
             background: rgba(45, 90, 45, 0.1);
             border-color: rgba(45, 90, 45, 0.4);
-            color: var(--rt-green);
+            color: var(--wh40k-green);
         }
 
         &.wh40k-gear-badge--best {
             background: rgba(212, 175, 55, 0.15);
             border-color: rgba(212, 175, 55, 0.5);
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
     }
 }
@@ -185,8 +185,8 @@
     flex-wrap: wrap;
     gap: 2px;
     padding: 8px;
-    background: var(--rt-panel-bg-solid);
-    border-bottom: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-solid);
+    border-bottom: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-gear-stat {
@@ -196,13 +196,13 @@
     flex: 1;
     min-width: 60px;
     padding: 8px 6px;
-    background: var(--rt-panel-bg);
+    background: var(--wh40k-panel-bg);
     border-radius: 4px;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
 
     &__icon {
         font-size: 1rem;
-        color: var(--rt-bronze);
+        color: var(--wh40k-bronze);
         margin-bottom: 4px;
     }
 
@@ -218,29 +218,29 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
 
     &__value {
         font-family: 'Cinzel', serif;
         font-size: 1rem;
         font-weight: 700;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
     }
 
     // Stat variants
     &--category {
         .wh40k-gear-stat__icon {
-            color: var(--rt-equipment-primary);
+            color: var(--wh40k-equipment-primary);
         }
         .wh40k-gear-stat__value {
-            color: var(--rt-equipment-primary);
+            color: var(--wh40k-equipment-primary);
         }
     }
 
     &--quantity {
         .wh40k-gear-stat__icon {
-            color: var(--rt-bronze);
+            color: var(--wh40k-bronze);
         }
     }
 }
@@ -253,8 +253,8 @@
     display: flex;
     gap: 2px;
     padding: 0 12px;
-    background: var(--rt-panel-bg-solid);
-    border-bottom: 1px solid var(--rt-border-color);
+    background: var(--wh40k-panel-bg-solid);
+    border-bottom: 1px solid var(--wh40k-border-color);
 }
 
 .wh40k-gear-tab {
@@ -267,7 +267,7 @@
     border-bottom: 3px solid transparent;
     font-size: 0.85rem;
     font-weight: 500;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     transition: all 0.2s ease;
 
@@ -276,14 +276,14 @@
     }
 
     &:hover {
-        color: var(--rt-text-dark);
-        background: var(--rt-panel-bg-translucent);
+        color: var(--wh40k-text-dark);
+        background: var(--wh40k-panel-bg-translucent);
     }
 
     &.active {
-        color: var(--rt-equipment-primary);
-        border-bottom-color: var(--rt-equipment-primary);
-        background: var(--rt-equipment-bg);
+        color: var(--wh40k-equipment-primary);
+        border-bottom-color: var(--wh40k-equipment-primary);
+        background: var(--wh40k-equipment-bg);
     }
 }
 
@@ -302,15 +302,15 @@
     }
 
     &::-webkit-scrollbar-track {
-        background: var(--rt-panel-bg);
+        background: var(--wh40k-panel-bg);
     }
 
     &::-webkit-scrollbar-thumb {
-        background: var(--rt-border-color);
+        background: var(--wh40k-border-color);
         border-radius: 4px;
 
         &:hover {
-            background: var(--rt-gold-dark);
+            background: var(--wh40k-gold-dark);
         }
     }
 }
@@ -328,8 +328,8 @@
 // ============================================
 
 .wh40k-gear-section {
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 6px;
     margin-bottom: 12px;
     overflow: hidden;
@@ -339,12 +339,12 @@
         align-items: center;
         gap: 8px;
         padding: 10px 12px;
-        background: linear-gradient(135deg, var(--rt-accent-overlay) 0%, transparent 100%);
-        border-bottom: 1px solid var(--rt-border-color-light);
+        background: linear-gradient(135deg, var(--wh40k-accent-overlay) 0%, transparent 100%);
+        border-bottom: 1px solid var(--wh40k-border-color-light);
 
         i {
             font-size: 0.9rem;
-            color: var(--rt-bronze);
+            color: var(--wh40k-bronze);
         }
 
         h3 {
@@ -353,7 +353,7 @@
             font-family: 'Cinzel', serif;
             font-size: 0.95rem;
             font-weight: 600;
-            color: var(--rt-text-dark);
+            color: var(--wh40k-text-dark);
         }
     }
 
@@ -367,9 +367,9 @@
         font-weight: 600;
 
         &--danger {
-            background: var(--rt-danger-bg);
-            border: 1px solid var(--rt-red);
-            color: var(--rt-red-bright);
+            background: var(--wh40k-danger-bg);
+            border: 1px solid var(--wh40k-red);
+            color: var(--wh40k-red-bright);
         }
     }
 
@@ -390,11 +390,11 @@
     }
 
     &--consumable {
-        border-color: var(--rt-warning-primary);
+        border-color: var(--wh40k-warning-primary);
 
         .wh40k-gear-section__header {
-            background: linear-gradient(135deg, var(--rt-warning-bg) 0%, transparent 100%);
-            border-bottom-color: var(--rt-warning-primary);
+            background: linear-gradient(135deg, var(--wh40k-warning-bg) 0%, transparent 100%);
+            border-bottom-color: var(--wh40k-warning-primary);
         }
     }
 }
@@ -440,8 +440,8 @@
         position: relative;
         width: 100%;
         height: 24px;
-        background: var(--rt-panel-bg-translucent);
-        border: 1px solid var(--rt-border-color-light);
+        background: var(--wh40k-panel-bg-translucent);
+        border: 1px solid var(--wh40k-border-color-light);
         border-radius: 12px;
         overflow: hidden;
     }
@@ -451,11 +451,11 @@
         top: 0;
         left: 0;
         height: 100%;
-        background: linear-gradient(90deg, var(--rt-green) 0%, var(--rt-green-light) 100%);
+        background: linear-gradient(90deg, var(--wh40k-green) 0%, var(--wh40k-green-light) 100%);
         transition: width 0.3s ease, background 0.3s ease;
 
         &--empty {
-            background: linear-gradient(90deg, var(--rt-red) 0%, var(--rt-red-bright) 100%);
+            background: linear-gradient(90deg, var(--wh40k-red) 0%, var(--wh40k-red-bright) 100%);
         }
     }
 
@@ -464,7 +464,7 @@
         font-size: 0.8rem;
         font-weight: 600;
         text-align: center;
-        color: var(--rt-text-medium);
+        color: var(--wh40k-text-medium);
     }
 }
 
@@ -488,7 +488,7 @@
     border-radius: 4px;
 
     &:hover {
-        background: var(--rt-panel-bg-translucent);
+        background: var(--wh40k-panel-bg-translucent);
     }
 
     input[type='checkbox'] {
@@ -499,18 +499,18 @@
 
     i {
         font-size: 1.1rem;
-        color: var(--rt-bronze);
+        color: var(--wh40k-bronze);
         transition: color 0.2s ease;
     }
 
     input[type='checkbox']:checked + i {
-        color: var(--rt-green);
+        color: var(--wh40k-green);
     }
 
     span {
         font-size: 0.85rem;
         font-weight: 500;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
     }
 }
 
@@ -533,30 +533,30 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
 
     input,
     select,
     textarea {
         padding: 6px 10px;
-        background: var(--rt-input-bg);
-        border: 1px solid var(--rt-border-color-light);
+        background: var(--wh40k-input-bg);
+        border: 1px solid var(--wh40k-border-color-light);
         border-radius: 4px;
         font-family: inherit;
         font-size: 0.85rem;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
         &:focus {
             outline: none;
-            border-color: var(--rt-gold);
-            box-shadow: 0 0 0 2px var(--rt-gold-translucent);
+            border-color: var(--wh40k-gold);
+            box-shadow: 0 0 0 2px var(--wh40k-gold-translucent);
         }
 
         &:disabled {
-            background: var(--rt-panel-bg-translucent);
-            color: var(--rt-text-muted);
+            background: var(--wh40k-panel-bg-translucent);
+            color: var(--wh40k-text-muted);
             cursor: not-allowed;
         }
     }

@@ -44,7 +44,7 @@ export class ForceFieldData {
     }
 
     async performActionAndSendToChat() {
-        game.rt.log('performActionAndSendToChat', this);
+        game.wh40k.log('performActionAndSendToChat', this);
 
         // Update to overloaded if necessary
         if (this.overload) {

@@ -3,7 +3,7 @@
 // Mixins
 // ============================================
 
-@mixin rt-progress-gradient($gradient) {
+@mixin wh40k-progress-gradient($gradient) {
     &::-webkit-progress-value {
         border-radius: 999px;
         background: $gradient;
@@ -14,9 +14,9 @@
     }
 }
 
-@mixin rt-panel-vitals-theme($progress-gradient, $title-color, $icon-color) {
+@mixin wh40k-panel-vitals-theme($progress-gradient, $title-color, $icon-color) {
     .wh40k-vitals-progress {
-        @include rt-progress-gradient($progress-gradient);
+        @include wh40k-progress-gradient($progress-gradient);
     }
     .wh40k-vitals-title {
         color: $title-color;
@@ -26,7 +26,7 @@
     }
 }
 
-@mixin rt-panel-tint($color, $border-opacity: 0.75, $header-opacity: 0.12) {
+@mixin wh40k-panel-tint($color, $border-opacity: 0.75, $header-opacity: 0.12) {
     border-left: 3px solid rgba($color, $border-opacity);
 
     .wh40k-panel-header {

@@ -1,28 +1,28 @@
 {{!-- Active Effects Panel --}}
 {{!-- Displays all active effects on the actor --}}
-<div class="rt-panel rt-panel-effects-list {{#if collapsible}}rt-collapsible{{/if}}" data-panel-id="effects">
-    <div class="rt-panel-header" {{#if collapsible}}data-action="togglePanel"{{/if}}>
-        <span class="rt-panel-title">
+<div class="wh40k-panel wh40k-panel-effects-list {{#if collapsible}}wh40k-collapsible{{/if}}" data-panel-id="effects">
+    <div class="wh40k-panel-header" {{#if collapsible}}data-action="togglePanel"{{/if}}>
+        <span class="wh40k-panel-title">
             <i class="fas fa-magic"></i> Active Effects
         </span>
         {{#if collapsible}}
-            <i class="fas fa-chevron-down rt-collapse-icon"></i>
+            <i class="fas fa-chevron-down wh40k-collapse-icon"></i>
         {{/if}}
     </div>
-    <div class="rt-panel-body">
+    <div class="wh40k-panel-body">
         {{#if effects.length}}
-            <div class="rt-effects-list">
+            <div class="wh40k-effects-list">
                 {{#each effects as |effect|}}
-                    <div class="rt-effect-card {{effect.document.natureClass}} {{#if effect.document.disabled}}disabled{{/if}}" data-effect-id="{{effect.id}}">
-                        <div class="rt-card-header">
-                            <img src="{{effect.icon}}" alt="{{effect.name}}" class="rt-card-icon">
-                            <div class="rt-card-info">
-                                <div class="rt-card-name">{{effect.name}}</div>
-                                <div class="rt-card-meta">{{effect.document.sourceName}}</div>
+                    <div class="wh40k-effect-card {{effect.document.natureClass}} {{#if effect.document.disabled}}disabled{{/if}}" data-effect-id="{{effect.id}}">
+                        <div class="wh40k-card-header">
+                            <img src="{{effect.icon}}" alt="{{effect.name}}" class="wh40k-card-icon">
+                            <div class="wh40k-card-info">
+                                <div class="wh40k-card-name">{{effect.name}}</div>
+                                <div class="wh40k-card-meta">{{effect.document.sourceName}}</div>
                             </div>
-                            <div class="rt-effect-controls">
+                            <div class="wh40k-effect-controls">
                                 {{#if effect.document.isTemporary}}
-                                    <span class="rt-effect-duration {{#if effect.document.isExpiring}}expiring{{/if}}" 
+                                    <span class="wh40k-effect-duration {{#if effect.document.isExpiring}}expiring{{/if}}" 
                                           title="{{effect.document.durationLabel}}">
                                         <i class="far fa-clock"></i> 
                                         {{#if effect.document.remainingDuration}}
@@ -32,14 +32,14 @@
                                         {{/if}}
                                     </span>
                                 {{/if}}
-                                <button class="rt-card-btn" 
+                                <button class="wh40k-card-btn" 
                                         data-action="toggleEffect" 
                                         data-effect-id="{{effect.id}}"
                                         title="{{#if effect.document.disabled}}Enable{{else}}Disable{{/if}} Effect">
                                     <i class="fas {{#if effect.document.disabled}}fa-eye-slash{{else}}fa-eye{{/if}}"></i>
                                 </button>
                                 {{#if ../editable}}
-                                    <button class="rt-card-btn rt-btn-danger" 
+                                    <button class="wh40k-card-btn wh40k-btn-danger" 
                                             data-action="deleteEffect" 
                                             data-effect-id="{{effect.id}}"
                                             title="Delete Effect">
@@ -50,11 +50,11 @@
                         </div>
                         
                         {{#if effect.document.changesSummary.length}}
-                            <div class="rt-effect-changes">
+                            <div class="wh40k-effect-changes">
                                 {{#each effect.document.changesSummary as |change|}}
-                                    <div class="rt-effect-change">
-                                        <span class="rt-change-label">{{change.label}}</span>
-                                        <span class="rt-change-value">{{change.value}}</span>
+                                    <div class="wh40k-effect-change">
+                                        <span class="wh40k-change-label">{{change.label}}</span>
+                                        <span class="wh40k-change-value">{{change.value}}</span>
                                     </div>
                                 {{/each}}
                             </div>
@@ -65,9 +65,9 @@
         {{/if}}
         
         {{#if editable}}
-            <div class="rt-dropzone" data-action="effectCreate">
-                <i class="fas fa-magic rt-dropzone-icon"></i>
-                <span class="rt-dropzone-text">Drop Effect or Click to Create</span>
+            <div class="wh40k-dropzone" data-action="effectCreate">
+                <i class="fas fa-magic wh40k-dropzone-icon"></i>
+                <span class="wh40k-dropzone-text">Drop Effect or Click to Create</span>
             </div>
         {{/if}}
     </div>

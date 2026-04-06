@@ -1,6 +1,6 @@
-<div class="rt-panel rt-grid-col-2 {{isError actor.encumbrance.encumbered}}">
-    <div class="rt-panel-header">
-        <span class="rt-panel-title">
+<div class="wh40k-panel wh40k-grid-col-2 {{isError actor.encumbrance.encumbered}}">
+    <div class="wh40k-panel-header">
+        <span class="wh40k-panel-title">
             {{#if actor.encumbrance.encumbered}}
                 Encumbrance (overweight)
             {{else}}
@@ -8,24 +8,24 @@
             {{/if}}
         </span>
     </div>
-    <div class="rt-panel-body">
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">Current Enc.</span>
-            <span class="rt-field__span">{{actor.encumbrance.value}}</span>
+    <div class="wh40k-panel-body">
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">Current Enc.</span>
+            <span class="wh40k-field__span">{{actor.encumbrance.value}}</span>
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">Max Enc.</span>
-            <span class="rt-field__span">{{actor.encumbrance.max}}</span>
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">Max Enc.</span>
+            <span class="wh40k-field__span">{{actor.encumbrance.max}}</span>
         </div>
         {{#if actor.backpack.hasBackpack}}
             {{#unless actor.backpack.isCombatVest}}
-                <div class="rt-field__wrapper">
-                    <span class="rt-field__header">Backpack Current Enc.</span>
-                    <span class="rt-field__span">{{actor.encumbrance.backpack_value}}</span>
+                <div class="wh40k-field__wrapper">
+                    <span class="wh40k-field__header">Backpack Current Enc.</span>
+                    <span class="wh40k-field__span">{{actor.encumbrance.backpack_value}}</span>
                 </div>
-                <div class="rt-field__wrapper">
-                    <span class="rt-field__header">Backpack Max Enc.</span>
-                    <span class="rt-field__span">{{actor.encumbrance.backpack_max}}</span>
+                <div class="wh40k-field__wrapper">
+                    <span class="wh40k-field__header">Backpack Max Enc.</span>
+                    <span class="wh40k-field__span">{{actor.encumbrance.backpack_max}}</span>
                 </div>
             {{/unless}}
         {{/if}}

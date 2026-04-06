@@ -3,8 +3,8 @@
  */
 
 .combat-hud.floating-panel {
-    background: linear-gradient(135deg, var(--rt-iron, #3e3e3e) 0%, var(--rt-black, #0a0a0a) 100%);
-    border: 3px solid var(--rt-bronze, #cd7f32);
+    background: linear-gradient(135deg, var(--wh40k-iron, #3e3e3e) 0%, var(--wh40k-black, #0a0a0a) 100%);
+    border: 3px solid var(--wh40k-bronze, #cd7f32);
     border-radius: 6px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
 
@@ -29,13 +29,13 @@
     // Sections
     .combat-panel-section {
         background: rgba(0, 0, 0, 0.3);
-        border: 1px solid var(--rt-bronze, #cd7f32);
+        border: 1px solid var(--wh40k-bronze, #cd7f32);
         border-radius: 4px;
         padding: 0.5rem;
 
         h3 {
             margin: 0 0 0.5rem 0;
-            color: var(--rt-gold, #d4af37);
+            color: var(--wh40k-gold, #d4af37);
             font-size: 0.9rem;
             font-weight: bold;
             text-transform: uppercase;
@@ -51,14 +51,14 @@
 
         .vital-label {
             width: 60px;
-            color: var(--rt-bone, #e8dcc8);
+            color: var(--wh40k-bone, #e8dcc8);
         }
 
         .vital-bar {
             flex: 1;
             height: 16px;
             background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--rt-bronze, #cd7f32);
+            border: 1px solid var(--wh40k-bronze, #cd7f32);
             border-radius: 2px;
             overflow: hidden;
 
@@ -72,7 +72,7 @@
         .vital-value {
             width: 50px;
             text-align: right;
-            color: var(--rt-bone, #e8dcc8);
+            color: var(--wh40k-bone, #e8dcc8);
             font-weight: bold;
         }
 
@@ -96,7 +96,7 @@
         .weapon-icon {
             width: 40px;
             height: 40px;
-            border: 1px solid var(--rt-gold, #d4af37);
+            border: 1px solid var(--wh40k-gold, #d4af37);
             border-radius: 2px;
         }
 
@@ -104,13 +104,13 @@
             flex: 1;
 
             .weapon-name {
-                color: var(--rt-bone, #e8dcc8);
+                color: var(--wh40k-bone, #e8dcc8);
                 font-weight: bold;
             }
 
             .weapon-stats {
                 font-size: 0.85rem;
-                color: var(--rt-gold, #d4af37);
+                color: var(--wh40k-gold, #d4af37);
             }
         }
     }
@@ -124,14 +124,14 @@
         .attack-btn {
             flex: 1;
             padding: 0.5rem;
-            background: var(--rt-bronze, #cd7f32);
-            border: 1px solid var(--rt-gold, #d4af37);
-            color: var(--rt-bone, #e8dcc8);
+            background: var(--wh40k-bronze, #cd7f32);
+            border: 1px solid var(--wh40k-gold, #d4af37);
+            color: var(--wh40k-bone, #e8dcc8);
             font-weight: bold;
             cursor: pointer;
 
             &:hover {
-                background: var(--rt-gold, #d4af37);
+                background: var(--wh40k-gold, #d4af37);
             }
         }
     }
@@ -146,14 +146,14 @@
         button {
             flex: 1;
             padding: 0.5rem;
-            background: var(--rt-iron, #3e3e3e);
-            border: 1px solid var(--rt-bronze, #cd7f32);
-            color: var(--rt-bone, #e8dcc8);
+            background: var(--wh40k-iron, #3e3e3e);
+            border: 1px solid var(--wh40k-bronze, #cd7f32);
+            color: var(--wh40k-bone, #e8dcc8);
             cursor: pointer;
 
             &:hover:not(:disabled) {
-                background: var(--rt-bronze, #cd7f32);
-                border-color: var(--rt-gold, #d4af37);
+                background: var(--wh40k-bronze, #cd7f32);
+                border-color: var(--wh40k-gold, #d4af37);
             }
 
             &:disabled {

@@ -7,7 +7,7 @@
 // Icon Buttons
 // ============================================
 
-@mixin rt-icon-button($size: 24px, $hover-color: $wh40k-accent-gold, $icon-size: 0.7rem) {
+@mixin wh40k-icon-button($size: 24px, $hover-color: $wh40k-accent-gold, $icon-size: 0.7rem) {
     width: $size;
     height: $size;
     padding: 0;
@@ -36,7 +36,7 @@
 // Panel Headers
 // ============================================
 
-@mixin rt-panel-header-base($accent-color: $wh40k-accent-gold) {
+@mixin wh40k-panel-header-base($accent-color: $wh40k-accent-gold) {
     display: flex;
     align-items: center;
     gap: $wh40k-space-sm;
@@ -45,7 +45,7 @@
     border-bottom: 1px solid $wh40k-border-light;
 }
 
-@mixin rt-panel-title {
+@mixin wh40k-panel-title {
     flex: 1;
     font-size: 0.85rem;
     font-weight: 600;
@@ -63,7 +63,7 @@
 // Progress Bars
 // ============================================
 
-@mixin rt-progress-gradient($gradient) {
+@mixin wh40k-progress-gradient($gradient) {
     &::-webkit-progress-value {
         border-radius: 999px;
         background: $gradient;
@@ -74,9 +74,9 @@
     }
 }
 
-@mixin rt-panel-vitals-theme($progress-gradient, $title-color, $icon-color) {
+@mixin wh40k-panel-vitals-theme($progress-gradient, $title-color, $icon-color) {
     .wh40k-vitals-progress {
-        @include rt-progress-gradient($progress-gradient);
+        @include wh40k-progress-gradient($progress-gradient);
     }
     .wh40k-vitals-title {
         color: $title-color;
@@ -90,7 +90,7 @@
 // Form Inputs
 // ============================================
 
-@mixin rt-input-base {
+@mixin wh40k-input-base {
     padding: 6px 8px;
     border: 1px solid $wh40k-border-medium;
     border-radius: $wh40k-radius-md;
@@ -105,8 +105,8 @@
     }
 }
 
-@mixin rt-input-number($width: 50px) {
-    @include rt-input-base;
+@mixin wh40k-input-number($width: 50px) {
+    @include wh40k-input-base;
     width: $width;
     text-align: center;
     font-weight: 600;
@@ -116,7 +116,7 @@
 // Degree Badges
 // ============================================
 
-@mixin rt-degree-badge-style($color, $darken-amount: 15%) {
+@mixin wh40k-degree-badge-style($color, $darken-amount: 15%) {
     background: rgba($color, 0.15);
     border: 2px solid $color;
     @if $darken-amount > 0 {
@@ -130,7 +130,7 @@
 // Training Buttons (T/+10/+20)
 // ============================================
 
-@mixin rt-train-button($active-color: $wh40k-accent-skills) {
+@mixin wh40k-train-button($active-color: $wh40k-accent-skills) {
     width: 28px;
     height: 20px;
     padding: 0;
@@ -163,7 +163,7 @@
 // Row Hover Effects
 // ============================================
 
-@mixin rt-row-hover($accent-color: $wh40k-accent-gold) {
+@mixin wh40k-row-hover($accent-color: $wh40k-accent-gold) {
     transition: background $wh40k-transition-fast;
 
     &:hover {
@@ -196,7 +196,7 @@
 // Panel Card Base
 // ============================================
 
-@mixin rt-panel-card {
+@mixin wh40k-panel-card {
     background: $wh40k-bg-paper;
     border: 1px solid $wh40k-border-light;
     border-radius: $wh40k-radius-lg;
@@ -207,14 +207,14 @@
 // Tab Grid Layouts
 // ============================================
 
-@mixin rt-tab-grid($columns: 2, $gap: $wh40k-space-md) {
+@mixin wh40k-tab-grid($columns: 2, $gap: $wh40k-space-md) {
     display: grid;
     grid-template-columns: repeat($columns, 1fr);
     gap: $gap;
     width: 100%;
 }
 
-@mixin rt-tab-column {
+@mixin wh40k-tab-column {
     display: flex;
     flex-direction: column;
     gap: 0;

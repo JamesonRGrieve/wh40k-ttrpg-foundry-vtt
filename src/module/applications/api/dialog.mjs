@@ -1,5 +1,5 @@
 /**
- * @file DialogRT - Base dialog class for WH40K RPG
+ * @file DialogWH40K - Base dialog class for WH40K RPG
  * Based on dnd5e's Dialog5e pattern for Foundry V13+
  */
 
@@ -8,9 +8,9 @@ import ApplicationV2Mixin from './application-v2-mixin.mjs';
 const { ApplicationV2 } = foundry.applications.api;
 
 /**
- * Base dialog class for creating RT dialogs.
+ * Base dialog class for creating WH40K dialogs.
  */
-export default class DialogRT extends ApplicationV2Mixin(ApplicationV2) {
+export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
     /** @override */
     static DEFAULT_OPTIONS = {
         tag: 'dialog',

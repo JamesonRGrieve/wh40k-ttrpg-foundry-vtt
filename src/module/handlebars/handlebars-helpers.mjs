@@ -133,7 +133,7 @@ export function registerHandlebarsHelpers() {
 
     Handlebars.registerHelper('dhlog', (object) => {
         if (object) {
-            game.rt.log('hb template', object);
+            game.wh40k.log('hb template', object);
         }
     });
 
@@ -784,7 +784,7 @@ export function registerHandlebarsHelpers() {
 
         const rtConfig = CONFIG?.rt;
         if (!rtConfig?.weaponQualities) {
-            console.warn('RT | CONFIG.wh40k.weaponQualities not available');
+            console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return [];
         }
 
@@ -840,7 +840,7 @@ export function registerHandlebarsHelpers() {
     Handlebars.registerHelper('craftsmanshipQualities', (weaponSystem) => {
         const rtConfig = CONFIG?.rt;
         if (!rtConfig?.weaponQualities) {
-            console.warn('RT | CONFIG.wh40k.weaponQualities not available');
+            console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return [];
         }
 
@@ -951,7 +951,7 @@ export function registerHandlebarsHelpers() {
     Handlebars.registerHelper('qualityLookup', (identifier) => {
         const rtConfig = CONFIG?.rt;
         if (!rtConfig?.weaponQualities) {
-            console.warn('RT | CONFIG.wh40k.weaponQualities not available');
+            console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return {
                 identifier,
                 label: identifier,

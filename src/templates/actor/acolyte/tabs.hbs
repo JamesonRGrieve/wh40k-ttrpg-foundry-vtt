@@ -1,8 +1,8 @@
 {{!-- Acolyte Sheet Tab Navigation --}}
 {{!-- This part renders the tab navigation bar --}}
-<nav class="rt-navigation tabs" data-group="primary">
+<nav class="wh40k-navigation tabs" data-group="primary">
     {{#each tabs}}
-    <a class="item rt-nav-item {{#if active}}active{{/if}} {{ cssClass }}" 
+    <a class="item wh40k-nav-item {{#if active}}active{{/if}} {{ cssClass }}" 
        data-action="tab" 
        data-group="{{ group }}"
        data-tab="{{ tab }}" 
@@ -11,7 +11,7 @@
     </a>
     {{/each}}
     <button type="button" 
-            class="rt-utility-menu-btn" 
+            class="wh40k-utility-menu-btn" 
             data-action="showUtilityMenu"
             data-tooltip="{{localize 'WH40K.Utility.MenuTooltip'}}">
         <i class="fa-solid fa-gear"></i>

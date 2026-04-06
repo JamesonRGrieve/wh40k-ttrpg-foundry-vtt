@@ -27,53 +27,53 @@
 
 :root {
     // Imperial Gothic Accents (consistent across themes)
-    --rt-gold: #d4af37;
-    --rt-gold-bright: #ffd700;
-    --rt-gold-dark: #b8941f;
-    --rt-gold-glow: rgba(212, 175, 55, 0.3);
-    --rt-bronze: #cd7f32;
-    --rt-bronze-bright: #e89b5a;
-    --rt-bronze-dark: #8b5a2b;
+    --wh40k-gold: #d4af37;
+    --wh40k-gold-bright: #ffd700;
+    --wh40k-gold-dark: #b8941f;
+    --wh40k-gold-glow: rgba(212, 175, 55, 0.3);
+    --wh40k-bronze: #cd7f32;
+    --wh40k-bronze-bright: #e89b5a;
+    --wh40k-bronze-dark: #8b5a2b;
 
     // Combat/Blood accents
-    --rt-red: #8b0000;
-    --rt-red-bright: #dc143c;
-    --rt-red-dark: #5a0000;
+    --wh40k-red: #8b0000;
+    --wh40k-red-bright: #dc143c;
+    --wh40k-red-dark: #5a0000;
 
     // Success/Health accents
-    --rt-green: #2d5a2d;
-    --rt-green-bright: #4ade80;
+    --wh40k-green: #2d5a2d;
+    --wh40k-green-bright: #4ade80;
 
     // Typography
-    --rt-font-header: 'Caslon Antique', 'Trajan Pro', serif;
-    --rt-font-body: 'Garamond', 'Georgia', serif;
-    --rt-font-numbers: 'Cinzel', serif;
-    --rt-font-ui: 'Roboto', sans-serif;
+    --wh40k-font-header: 'Caslon Antique', 'Trajan Pro', serif;
+    --wh40k-font-body: 'Garamond', 'Georgia', serif;
+    --wh40k-font-numbers: 'Cinzel', serif;
+    --wh40k-font-ui: 'Roboto', sans-serif;
 
     // Spacing Scale (based on 8px grid)
-    --rt-space-xs: 0.25rem; // 4px
-    --rt-space-sm: 0.5rem; // 8px
-    --rt-space-md: 1rem; // 16px
-    --rt-space-lg: 1.5rem; // 24px
-    --rt-space-xl: 2rem; // 32px
-    --rt-space-2xl: 3rem; // 48px
+    --wh40k-space-xs: 0.25rem; // 4px
+    --wh40k-space-sm: 0.5rem; // 8px
+    --wh40k-space-md: 1rem; // 16px
+    --wh40k-space-lg: 1.5rem; // 24px
+    --wh40k-space-xl: 2rem; // 32px
+    --wh40k-space-2xl: 3rem; // 48px
 
     // Border Radius
-    --rt-radius-sm: 2px;
-    --rt-radius-md: 4px;
-    --rt-radius-lg: 6px;
+    --wh40k-radius-sm: 2px;
+    --wh40k-radius-md: 4px;
+    --wh40k-radius-lg: 6px;
 
     // Transitions
-    --rt-transition-fast: 0.15s ease;
-    --rt-transition-normal: 0.2s ease;
-    --rt-transition-slow: 0.3s ease;
+    --wh40k-transition-fast: 0.15s ease;
+    --wh40k-transition-normal: 0.2s ease;
+    --wh40k-transition-slow: 0.3s ease;
 
     // Z-Index Scale
-    --rt-z-base: 1;
-    --rt-z-panel: 10;
-    --rt-z-dropdown: 100;
-    --rt-z-modal: 1000;
-    --rt-z-tooltip: 10000;
+    --wh40k-z-base: 1;
+    --wh40k-z-panel: 10;
+    --wh40k-z-dropdown: 100;
+    --wh40k-z-modal: 1000;
+    --wh40k-z-tooltip: 10000;
 }
 
 /* ========================================
@@ -84,95 +84,95 @@
 :root,
 body.theme-light {
     // Sheet backgrounds
-    --rt-sheet-bg: rgba(250, 244, 233, 0.95);
-    --rt-sheet-bg-alt: rgba(245, 235, 220, 0.95);
+    --wh40k-sheet-bg: rgba(250, 244, 233, 0.95);
+    --wh40k-sheet-bg-alt: rgba(245, 235, 220, 0.95);
 
     // Panel backgrounds
-    --rt-panel-bg: rgba(255, 255, 255, 0.5);
-    --rt-panel-bg-solid: rgba(255, 255, 255, 0.85);
-    --rt-panel-bg-translucent: rgba(255, 255, 255, 0.35);
-    --rt-panel-body-bg: rgba(255, 255, 255, 0.4);
+    --wh40k-panel-bg: rgba(255, 255, 255, 0.5);
+    --wh40k-panel-bg-solid: rgba(255, 255, 255, 0.85);
+    --wh40k-panel-bg-translucent: rgba(255, 255, 255, 0.35);
+    --wh40k-panel-body-bg: rgba(255, 255, 255, 0.4);
 
     // Input backgrounds
-    --rt-input-bg: rgba(255, 255, 255, 0.75);
-    --rt-input-bg-focus: rgba(255, 255, 255, 0.9);
+    --wh40k-input-bg: rgba(255, 255, 255, 0.75);
+    --wh40k-input-bg-focus: rgba(255, 255, 255, 0.9);
 
     // Text colors
-    --rt-text-dark: #2a1a0a;
-    --rt-text-medium: #3a2820;
-    --rt-text-muted: #6a5a43;
-    --rt-text-subtle: #8b7355;
+    --wh40k-text-dark: #2a1a0a;
+    --wh40k-text-medium: #3a2820;
+    --wh40k-text-muted: #6a5a43;
+    --wh40k-text-subtle: #8b7355;
 
     // Border colors
-    --rt-border-color: rgba(120, 46, 34, 0.45);
-    --rt-border-color-light: rgba(120, 46, 34, 0.25);
-    --rt-border-color-strong: rgba(120, 46, 34, 0.7);
-    --rt-border-accent: rgba(74, 55, 40, 0.3);
+    --wh40k-border-color: rgba(120, 46, 34, 0.45);
+    --wh40k-border-color-light: rgba(120, 46, 34, 0.25);
+    --wh40k-border-color-strong: rgba(120, 46, 34, 0.7);
+    --wh40k-border-accent: rgba(74, 55, 40, 0.3);
 
     // Shadows
-    --rt-shadow-soft: rgba(0, 0, 0, 0.05);
-    --rt-shadow-medium: rgba(0, 0, 0, 0.12);
-    --rt-text-shadow: rgba(255, 255, 255, 0.8);
+    --wh40k-shadow-soft: rgba(0, 0, 0, 0.05);
+    --wh40k-shadow-medium: rgba(0, 0, 0, 0.12);
+    --wh40k-text-shadow: rgba(255, 255, 255, 0.8);
 
     // HUD and controls
-    --rt-hud-bg: linear-gradient(180deg, rgba(40, 40, 40, 0.28), rgba(20, 20, 20, 0.22));
-    --rt-hud-item-bg: rgba(255, 255, 255, 0.4);
-    --rt-circle-bg: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.85), rgba(210, 210, 210, 0.65));
+    --wh40k-hud-bg: linear-gradient(180deg, rgba(40, 40, 40, 0.28), rgba(20, 20, 20, 0.22));
+    --wh40k-hud-item-bg: rgba(255, 255, 255, 0.4);
+    --wh40k-circle-bg: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.85), rgba(210, 210, 210, 0.65));
 
     // Button colors
-    --rt-btn-bg: rgba(255, 255, 255, 0.4);
-    --rt-btn-bg-hover: rgba(255, 255, 255, 0.6);
+    --wh40k-btn-bg: rgba(255, 255, 255, 0.4);
+    --wh40k-btn-bg-hover: rgba(255, 255, 255, 0.6);
 
     // Accent overlays
-    --rt-accent-overlay: rgba(36, 107, 131, 0.12);
-    --rt-accent-border: rgba(36, 107, 131, 0.25);
+    --wh40k-accent-overlay: rgba(36, 107, 131, 0.12);
+    --wh40k-accent-border: rgba(36, 107, 131, 0.25);
 }
 
 // Dark theme (Gothic style)
 body.theme-dark {
     // Sheet backgrounds
-    --rt-sheet-bg: rgba(30, 25, 22, 0.95);
-    --rt-sheet-bg-alt: rgba(35, 30, 25, 0.95);
+    --wh40k-sheet-bg: rgba(30, 25, 22, 0.95);
+    --wh40k-sheet-bg-alt: rgba(35, 30, 25, 0.95);
 
     // Panel backgrounds
-    --rt-panel-bg: rgba(40, 35, 30, 0.7);
-    --rt-panel-bg-solid: rgba(45, 40, 35, 0.9);
-    --rt-panel-bg-translucent: rgba(50, 45, 40, 0.5);
-    --rt-panel-body-bg: rgba(35, 30, 25, 0.6);
+    --wh40k-panel-bg: rgba(40, 35, 30, 0.7);
+    --wh40k-panel-bg-solid: rgba(45, 40, 35, 0.9);
+    --wh40k-panel-bg-translucent: rgba(50, 45, 40, 0.5);
+    --wh40k-panel-body-bg: rgba(35, 30, 25, 0.6);
 
     // Input backgrounds
-    --rt-input-bg: rgba(50, 45, 40, 0.8);
-    --rt-input-bg-focus: rgba(60, 55, 48, 0.9);
+    --wh40k-input-bg: rgba(50, 45, 40, 0.8);
+    --wh40k-input-bg-focus: rgba(60, 55, 48, 0.9);
 
     // Text colors
-    --rt-text-dark: #e8dcc8;
-    --rt-text-medium: #d4c8b4;
-    --rt-text-muted: #a89880;
-    --rt-text-subtle: #8a7a6a;
+    --wh40k-text-dark: #e8dcc8;
+    --wh40k-text-medium: #d4c8b4;
+    --wh40k-text-muted: #a89880;
+    --wh40k-text-subtle: #8a7a6a;
 
     // Border colors
-    --rt-border-color: rgba(180, 140, 100, 0.4);
-    --rt-border-color-light: rgba(180, 140, 100, 0.25);
-    --rt-border-color-strong: rgba(212, 175, 55, 0.5);
-    --rt-border-accent: rgba(180, 140, 100, 0.35);
+    --wh40k-border-color: rgba(180, 140, 100, 0.4);
+    --wh40k-border-color-light: rgba(180, 140, 100, 0.25);
+    --wh40k-border-color-strong: rgba(212, 175, 55, 0.5);
+    --wh40k-border-accent: rgba(180, 140, 100, 0.35);
 
     // Shadows
-    --rt-shadow-soft: rgba(0, 0, 0, 0.2);
-    --rt-shadow-medium: rgba(0, 0, 0, 0.35);
-    --rt-text-shadow: rgba(0, 0, 0, 0.6);
+    --wh40k-shadow-soft: rgba(0, 0, 0, 0.2);
+    --wh40k-shadow-medium: rgba(0, 0, 0, 0.35);
+    --wh40k-text-shadow: rgba(0, 0, 0, 0.6);
 
     // HUD and controls
-    --rt-hud-bg: linear-gradient(180deg, rgba(50, 45, 40, 0.8), rgba(30, 25, 20, 0.85));
-    --rt-hud-item-bg: rgba(60, 55, 48, 0.6);
-    --rt-circle-bg: radial-gradient(circle at 30% 30%, rgba(70, 65, 58, 0.85), rgba(50, 45, 40, 0.75));
+    --wh40k-hud-bg: linear-gradient(180deg, rgba(50, 45, 40, 0.8), rgba(30, 25, 20, 0.85));
+    --wh40k-hud-item-bg: rgba(60, 55, 48, 0.6);
+    --wh40k-circle-bg: radial-gradient(circle at 30% 30%, rgba(70, 65, 58, 0.85), rgba(50, 45, 40, 0.75));
 
     // Button colors
-    --rt-btn-bg: rgba(60, 55, 48, 0.5);
-    --rt-btn-bg-hover: rgba(80, 72, 62, 0.6);
+    --wh40k-btn-bg: rgba(60, 55, 48, 0.5);
+    --wh40k-btn-bg-hover: rgba(80, 72, 62, 0.6);
 
     // Accent overlays
-    --rt-accent-overlay: rgba(212, 175, 55, 0.08);
-    --rt-accent-border: rgba(212, 175, 55, 0.2);
+    --wh40k-accent-overlay: rgba(212, 175, 55, 0.08);
+    --wh40k-accent-border: rgba(212, 175, 55, 0.2);
 }
 
 /* ========================================
@@ -186,135 +186,135 @@ body.theme-dark {
 body.theme-light,
 body.theme-dark {
     // Wounds/Health Panel - Red/Crimson
-    --rt-wounds-primary: #8b0000;
-    --rt-wounds-secondary: #b63a2b;
-    --rt-wounds-bg: rgba(139, 0, 0, 0.08);
-    --rt-wounds-border: rgba(139, 0, 0, 0.4);
-    --rt-wounds-gradient: linear-gradient(90deg, rgba(120, 15, 15, 0.85), rgba(200, 70, 40, 0.85));
+    --wh40k-wounds-primary: #8b0000;
+    --wh40k-wounds-secondary: #b63a2b;
+    --wh40k-wounds-bg: rgba(139, 0, 0, 0.08);
+    --wh40k-wounds-border: rgba(139, 0, 0, 0.4);
+    --wh40k-wounds-gradient: linear-gradient(90deg, rgba(120, 15, 15, 0.85), rgba(200, 70, 40, 0.85));
 
     // Fatigue Panel - Amber/Orange
-    --rt-fatigue-primary: #a07818;
-    --rt-fatigue-secondary: #c4871d;
-    --rt-fatigue-bg: rgba(160, 120, 24, 0.08);
-    --rt-fatigue-border: rgba(160, 120, 24, 0.4);
-    --rt-fatigue-gradient: linear-gradient(90deg, rgba(180, 120, 20, 0.85), rgba(220, 160, 30, 0.85));
+    --wh40k-fatigue-primary: #a07818;
+    --wh40k-fatigue-secondary: #c4871d;
+    --wh40k-fatigue-bg: rgba(160, 120, 24, 0.08);
+    --wh40k-fatigue-border: rgba(160, 120, 24, 0.4);
+    --wh40k-fatigue-gradient: linear-gradient(90deg, rgba(180, 120, 20, 0.85), rgba(220, 160, 30, 0.85));
 
     // Fate Panel - Blue/Celestial
-    --rt-fate-primary: #2563eb;
-    --rt-fate-secondary: #3b82f6;
-    --rt-fate-bg: rgba(37, 99, 235, 0.08);
-    --rt-fate-border: rgba(37, 99, 235, 0.4);
-    --rt-fate-gradient: linear-gradient(90deg, rgba(37, 99, 235, 0.85), rgba(59, 130, 246, 0.85));
+    --wh40k-fate-primary: #2563eb;
+    --wh40k-fate-secondary: #3b82f6;
+    --wh40k-fate-bg: rgba(37, 99, 235, 0.08);
+    --wh40k-fate-border: rgba(37, 99, 235, 0.4);
+    --wh40k-fate-gradient: linear-gradient(90deg, rgba(37, 99, 235, 0.85), rgba(59, 130, 246, 0.85));
 
     // Corruption Panel - Teal/Dark Green
-    --rt-corruption-primary: #147058;
-    --rt-corruption-secondary: #1a8a6e;
-    --rt-corruption-bg: rgba(20, 112, 88, 0.08);
-    --rt-corruption-border: rgba(20, 112, 88, 0.4);
-    --rt-corruption-gradient: linear-gradient(90deg, rgba(20, 90, 80, 0.85), rgba(40, 140, 120, 0.85));
+    --wh40k-corruption-primary: #147058;
+    --wh40k-corruption-secondary: #1a8a6e;
+    --wh40k-corruption-bg: rgba(20, 112, 88, 0.08);
+    --wh40k-corruption-border: rgba(20, 112, 88, 0.4);
+    --wh40k-corruption-gradient: linear-gradient(90deg, rgba(20, 90, 80, 0.85), rgba(40, 140, 120, 0.85));
 
     // Insanity Panel - Purple/Violet
-    --rt-insanity-primary: #6a2894;
-    --rt-insanity-secondary: #9370db;
-    --rt-insanity-bg: rgba(147, 112, 219, 0.08);
-    --rt-insanity-border: rgba(147, 112, 219, 0.4);
-    --rt-insanity-gradient: linear-gradient(90deg, rgba(90, 60, 120, 0.85), rgba(130, 90, 170, 0.85));
+    --wh40k-insanity-primary: #6a2894;
+    --wh40k-insanity-secondary: #9370db;
+    --wh40k-insanity-bg: rgba(147, 112, 219, 0.08);
+    --wh40k-insanity-border: rgba(147, 112, 219, 0.4);
+    --wh40k-insanity-gradient: linear-gradient(90deg, rgba(90, 60, 120, 0.85), rgba(130, 90, 170, 0.85));
 
     // Skills Panel - Blue/Teal
-    --rt-skills-primary: #2a7a9a;
-    --rt-skills-secondary: #3a9aba;
-    --rt-skills-bg: rgba(42, 122, 154, 0.08);
-    --rt-skills-border: rgba(42, 122, 154, 0.4);
-    --rt-skills-gradient: linear-gradient(90deg, rgba(30, 100, 130, 0.85), rgba(60, 150, 180, 0.85));
+    --wh40k-skills-primary: #2a7a9a;
+    --wh40k-skills-secondary: #3a9aba;
+    --wh40k-skills-bg: rgba(42, 122, 154, 0.08);
+    --wh40k-skills-border: rgba(42, 122, 154, 0.4);
+    --wh40k-skills-gradient: linear-gradient(90deg, rgba(30, 100, 130, 0.85), rgba(60, 150, 180, 0.85));
 
     // Combat Panel - Dark Red/Blood
-    --rt-combat-primary: #a82020;
-    --rt-combat-secondary: #c83030;
-    --rt-combat-bg: rgba(168, 32, 32, 0.08);
-    --rt-combat-border: rgba(168, 32, 32, 0.4);
-    --rt-combat-gradient: linear-gradient(90deg, rgba(140, 25, 25, 0.85), rgba(180, 50, 50, 0.85));
+    --wh40k-combat-primary: #a82020;
+    --wh40k-combat-secondary: #c83030;
+    --wh40k-combat-bg: rgba(168, 32, 32, 0.08);
+    --wh40k-combat-border: rgba(168, 32, 32, 0.4);
+    --wh40k-combat-gradient: linear-gradient(90deg, rgba(140, 25, 25, 0.85), rgba(180, 50, 50, 0.85));
 
     // Talents/Abilities Panel - Bronze/Gold
-    --rt-talents-primary: #a07818;
-    --rt-talents-secondary: #c89828;
-    --rt-talents-bg: rgba(160, 120, 24, 0.08);
-    --rt-talents-border: rgba(160, 120, 24, 0.4);
+    --wh40k-talents-primary: #a07818;
+    --wh40k-talents-secondary: #c89828;
+    --wh40k-talents-bg: rgba(160, 120, 24, 0.08);
+    --wh40k-talents-border: rgba(160, 120, 24, 0.4);
 
     // Traits Panel - Deep Purple (same as powers)
-    --rt-traits-primary: #6a2090;
-    --rt-traits-secondary: #8a40b0;
-    --rt-traits-bg: rgba(106, 32, 144, 0.08);
-    --rt-traits-border: rgba(106, 32, 144, 0.4);
+    --wh40k-traits-primary: #6a2090;
+    --wh40k-traits-secondary: #8a40b0;
+    --wh40k-traits-bg: rgba(106, 32, 144, 0.08);
+    --wh40k-traits-border: rgba(106, 32, 144, 0.4);
 
     // Equipment Panel - Steel/Teal
-    --rt-equipment-primary: #3a5f5f;
-    --rt-equipment-secondary: #4a7f7f;
-    --rt-equipment-bg: rgba(58, 95, 95, 0.08);
-    --rt-equipment-border: rgba(58, 95, 95, 0.4);
+    --wh40k-equipment-primary: #3a5f5f;
+    --wh40k-equipment-secondary: #4a7f7f;
+    --wh40k-equipment-bg: rgba(58, 95, 95, 0.08);
+    --wh40k-equipment-border: rgba(58, 95, 95, 0.4);
 
     // Powers/Psychic Panel - Deep Purple
-    --rt-powers-primary: #6a2090;
-    --rt-powers-secondary: #8a40b0;
-    --rt-powers-bg: rgba(106, 32, 144, 0.08);
-    --rt-powers-border: rgba(106, 32, 144, 0.4);
+    --wh40k-powers-primary: #6a2090;
+    --wh40k-powers-secondary: #8a40b0;
+    --wh40k-powers-bg: rgba(106, 32, 144, 0.08);
+    --wh40k-powers-border: rgba(106, 32, 144, 0.4);
 
     // Dynasty Panel - Imperial Gold
-    --rt-dynasty-primary: #d4a520;
-    --rt-dynasty-secondary: #e8c040;
-    --rt-dynasty-bg: rgba(212, 165, 32, 0.08);
-    --rt-dynasty-border: rgba(212, 165, 32, 0.4);
+    --wh40k-dynasty-primary: #d4a520;
+    --wh40k-dynasty-secondary: #e8c040;
+    --wh40k-dynasty-bg: rgba(212, 165, 32, 0.08);
+    --wh40k-dynasty-border: rgba(212, 165, 32, 0.4);
 
     // Movement Panel - Blue
-    --rt-movement-primary: #2a7a9a;
-    --rt-movement-secondary: #3a9aba;
-    --rt-movement-bg: rgba(42, 122, 154, 0.08);
-    --rt-movement-border: rgba(42, 122, 154, 0.4);
+    --wh40k-movement-primary: #2a7a9a;
+    --wh40k-movement-secondary: #3a9aba;
+    --wh40k-movement-bg: rgba(42, 122, 154, 0.08);
+    --wh40k-movement-border: rgba(42, 122, 154, 0.4);
 
     // Bio/Background Panel - Neutral Brown
-    --rt-bio-primary: #6a5a4a;
-    --rt-bio-secondary: #8a7a6a;
-    --rt-bio-bg: rgba(106, 90, 74, 0.06);
-    --rt-bio-border: rgba(106, 90, 74, 0.3);
+    --wh40k-bio-primary: #6a5a4a;
+    --wh40k-bio-secondary: #8a7a6a;
+    --wh40k-bio-bg: rgba(106, 90, 74, 0.06);
+    --wh40k-bio-border: rgba(106, 90, 74, 0.3);
 
     // Success/Positive - Green
-    --rt-success-primary: #2d5a2d;
-    --rt-success-secondary: #4ade80;
-    --rt-success-bg: rgba(45, 90, 45, 0.1);
+    --wh40k-success-primary: #2d5a2d;
+    --wh40k-success-secondary: #4ade80;
+    --wh40k-success-bg: rgba(45, 90, 45, 0.1);
 
     // Warning - Amber
-    --rt-warning-primary: #d97706;
-    --rt-warning-secondary: #fbbf24;
-    --rt-warning-bg: rgba(217, 119, 6, 0.1);
+    --wh40k-warning-primary: #d97706;
+    --wh40k-warning-secondary: #fbbf24;
+    --wh40k-warning-bg: rgba(217, 119, 6, 0.1);
 
     // Danger/Critical - Red
-    --rt-danger-primary: #dc2626;
-    --rt-danger-secondary: #ef4444;
-    --rt-danger-bg: rgba(220, 38, 38, 0.1);
+    --wh40k-danger-primary: #dc2626;
+    --wh40k-danger-secondary: #ef4444;
+    --wh40k-danger-bg: rgba(220, 38, 38, 0.1);
 }
 
 // Theme-specific adjustments for panel backgrounds
 body.theme-light {
     // Light theme: panels have subtle tinted backgrounds
-    --rt-wounds-panel-bg: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
-    --rt-fatigue-panel-bg: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-    --rt-fate-panel-bg: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-    --rt-corruption-panel-bg: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    --rt-insanity-panel-bg: linear-gradient(135deg, #f4f1f8 0%, #ebe5f5 100%);
-    --rt-skills-panel-bg: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    --rt-combat-panel-bg: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
-    --rt-powers-panel-bg: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+    --wh40k-wounds-panel-bg: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    --wh40k-fatigue-panel-bg: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    --wh40k-fate-panel-bg: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    --wh40k-corruption-panel-bg: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    --wh40k-insanity-panel-bg: linear-gradient(135deg, #f4f1f8 0%, #ebe5f5 100%);
+    --wh40k-skills-panel-bg: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    --wh40k-combat-panel-bg: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+    --wh40k-powers-panel-bg: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
 }
 
 body.theme-dark {
     // Dark theme: panels have subtle dark tinted backgrounds
-    --rt-wounds-panel-bg: linear-gradient(135deg, rgba(80, 20, 20, 0.4) 0%, rgba(60, 15, 15, 0.5) 100%);
-    --rt-fatigue-panel-bg: linear-gradient(135deg, rgba(80, 60, 20, 0.4) 0%, rgba(60, 45, 15, 0.5) 100%);
-    --rt-fate-panel-bg: linear-gradient(135deg, rgba(20, 40, 80, 0.4) 0%, rgba(15, 35, 70, 0.5) 100%);
-    --rt-corruption-panel-bg: linear-gradient(135deg, rgba(20, 60, 50, 0.4) 0%, rgba(15, 45, 40, 0.5) 100%);
-    --rt-insanity-panel-bg: linear-gradient(135deg, rgba(50, 30, 70, 0.4) 0%, rgba(40, 25, 55, 0.5) 100%);
-    --rt-skills-panel-bg: linear-gradient(135deg, rgba(20, 50, 70, 0.4) 0%, rgba(15, 40, 55, 0.5) 100%);
-    --rt-combat-panel-bg: linear-gradient(135deg, rgba(70, 20, 20, 0.4) 0%, rgba(55, 15, 15, 0.5) 100%);
-    --rt-powers-panel-bg: linear-gradient(135deg, rgba(50, 20, 70, 0.4) 0%, rgba(40, 15, 55, 0.5) 100%);
+    --wh40k-wounds-panel-bg: linear-gradient(135deg, rgba(80, 20, 20, 0.4) 0%, rgba(60, 15, 15, 0.5) 100%);
+    --wh40k-fatigue-panel-bg: linear-gradient(135deg, rgba(80, 60, 20, 0.4) 0%, rgba(60, 45, 15, 0.5) 100%);
+    --wh40k-fate-panel-bg: linear-gradient(135deg, rgba(20, 40, 80, 0.4) 0%, rgba(15, 35, 70, 0.5) 100%);
+    --wh40k-corruption-panel-bg: linear-gradient(135deg, rgba(20, 60, 50, 0.4) 0%, rgba(15, 45, 40, 0.5) 100%);
+    --wh40k-insanity-panel-bg: linear-gradient(135deg, rgba(50, 30, 70, 0.4) 0%, rgba(40, 25, 55, 0.5) 100%);
+    --wh40k-skills-panel-bg: linear-gradient(135deg, rgba(20, 50, 70, 0.4) 0%, rgba(15, 40, 55, 0.5) 100%);
+    --wh40k-combat-panel-bg: linear-gradient(135deg, rgba(70, 20, 20, 0.4) 0%, rgba(55, 15, 15, 0.5) 100%);
+    --wh40k-powers-panel-bg: linear-gradient(135deg, rgba(50, 20, 70, 0.4) 0%, rgba(40, 15, 55, 0.5) 100%);
 }
 
 /* ========================================
@@ -324,8 +324,8 @@ body.theme-dark {
 // Gothic Panel - Uses Foundry background colors
 @mixin gothic-panel {
     background: var(--color-bg-secondary);
-    border: 2px solid var(--rt-bronze);
-    border-radius: var(--rt-radius-md);
+    border: 2px solid var(--wh40k-bronze);
+    border-radius: var(--wh40k-radius-md);
     box-shadow: 0 4px 8px var(--color-shadow-primary), 0 0 20px rgba(212, 175, 55, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1);
     position: relative;
 
@@ -339,45 +339,45 @@ body.theme-dark {
         bottom: 0;
         background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(212, 175, 55, 0.02) 2px, rgba(212, 175, 55, 0.02) 4px);
         pointer-events: none;
-        border-radius: var(--rt-radius-md);
+        border-radius: var(--wh40k-radius-md);
     }
 }
 
 // Gothic Panel Header
 @mixin gothic-panel-header {
-    padding: var(--rt-space-sm) var(--rt-space-md);
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: linear-gradient(135deg, var(--color-warm-2) 0%, var(--color-warm-4) 100%);
     border-bottom: 1px solid var(--color-border-highlight);
-    font-family: var(--rt-font-header);
+    font-family: var(--wh40k-font-header);
     font-size: 0.95rem;
     font-weight: bold;
-    color: var(--rt-gold);
+    color: var(--wh40k-gold);
     text-transform: uppercase;
     letter-spacing: 1px;
     text-shadow: 1px 1px 2px var(--color-shadow-primary);
 
     &::before {
         content: '⚜';
-        margin-right: var(--rt-space-sm);
-        color: var(--rt-gold);
+        margin-right: var(--wh40k-space-sm);
+        color: var(--wh40k-gold);
         font-size: 1rem;
     }
 }
 
 // Gothic Button
 @mixin gothic-button {
-    padding: var(--rt-space-sm) var(--rt-space-md);
-    background: linear-gradient(135deg, var(--rt-bronze) 0%, var(--rt-gold-dark) 100%);
-    border: 2px solid var(--rt-gold);
-    border-radius: var(--rt-radius-md);
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
+    background: linear-gradient(135deg, var(--wh40k-bronze) 0%, var(--wh40k-gold-dark) 100%);
+    border: 2px solid var(--wh40k-gold);
+    border-radius: var(--wh40k-radius-md);
     color: var(--color-text-primary);
-    font-family: var(--rt-font-header);
+    font-family: var(--wh40k-font-header);
     font-size: 0.9rem;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     cursor: pointer;
-    transition: all var(--rt-transition-normal);
+    transition: all var(--wh40k-transition-normal);
     position: relative;
     overflow: hidden;
 
@@ -419,17 +419,17 @@ body.theme-dark {
 
 // Gothic Input - Uses Foundry colors
 @mixin gothic-input {
-    padding: var(--rt-space-sm);
+    padding: var(--wh40k-space-sm);
     background: var(--color-bg-option);
     border: 2px solid var(--color-border-secondary);
-    border-radius: var(--rt-radius-sm);
+    border-radius: var(--wh40k-radius-sm);
     color: var(--color-text-primary);
-    font-family: var(--rt-font-body);
-    transition: all var(--rt-transition-normal);
+    font-family: var(--wh40k-font-body);
+    transition: all var(--wh40k-transition-normal);
 
     &:focus {
         outline: none;
-        border-color: var(--rt-gold);
+        border-color: var(--wh40k-gold);
         box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
         background: var(--color-bg-option);
     }
@@ -443,24 +443,24 @@ body.theme-dark {
 // Gothic Divider
 @mixin gothic-divider {
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--rt-gold), transparent);
-    margin: var(--rt-space-md) 0;
+    background: linear-gradient(90deg, transparent, var(--wh40k-gold), transparent);
+    margin: var(--wh40k-space-md) 0;
     opacity: 0.5;
 }
 
 // Stat Bar
-@mixin stat-bar($color: var(--rt-gold)) {
+@mixin stat-bar($color: var(--wh40k-gold)) {
     height: 8px;
     background: var(--color-bg-tertiary);
     border: 1px solid var(--color-border-secondary);
-    border-radius: var(--rt-radius-sm);
+    border-radius: var(--wh40k-radius-sm);
     overflow: hidden;
     position: relative;
 
     .bar-fill {
         height: 100%;
         background: linear-gradient(90deg, darken($color, 10%), $color);
-        transition: width var(--rt-transition-slow);
+        transition: width var(--wh40k-transition-slow);
         box-shadow: 0 0 8px rgba($color, 0.6);
     }
 }
@@ -472,7 +472,7 @@ body.theme-dark {
 
 // Hover Lift
 @mixin hover-lift {
-    transition: transform var(--rt-transition-normal);
+    transition: transform var(--wh40k-transition-normal);
 
     &:hover {
         transform: translateY(-2px);
@@ -492,16 +492,16 @@ body.theme-dark {
 
     &::-webkit-scrollbar-track {
         background: var(--color-bg-primary);
-        border-radius: var(--rt-radius-sm);
+        border-radius: var(--wh40k-radius-sm);
     }
 
     &::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, var(--rt-bronze), var(--rt-gold-dark));
-        border-radius: var(--rt-radius-sm);
-        border: 1px solid var(--rt-gold);
+        background: linear-gradient(135deg, var(--wh40k-bronze), var(--wh40k-gold-dark));
+        border-radius: var(--wh40k-radius-sm);
+        border: 1px solid var(--wh40k-gold);
 
         &:hover {
-            background: linear-gradient(135deg, var(--rt-bronze-bright), var(--rt-gold));
+            background: linear-gradient(135deg, var(--wh40k-bronze-bright), var(--wh40k-gold));
         }
     }
 }
@@ -536,7 +536,7 @@ body.theme-dark {
 
 // Text Colors - Use Foundry variables with accent overrides
 .wh40k-text-gold {
-    color: var(--rt-gold);
+    color: var(--wh40k-gold);
 }
 
 .wh40k-text-primary {
@@ -548,11 +548,11 @@ body.theme-dark {
 }
 
 .wh40k-text-red {
-    color: var(--rt-red-bright);
+    color: var(--wh40k-red-bright);
 }
 
 .wh40k-text-green {
-    color: var(--rt-green-bright);
+    color: var(--wh40k-green-bright);
 }
 
 // Background Colors
@@ -570,43 +570,43 @@ body.theme-dark {
 
 // Spacing Utilities
 .wh40k-m-sm {
-    margin: var(--rt-space-sm);
+    margin: var(--wh40k-space-sm);
 }
 .wh40k-m-md {
-    margin: var(--rt-space-md);
+    margin: var(--wh40k-space-md);
 }
 .wh40k-m-lg {
-    margin: var(--rt-space-lg);
+    margin: var(--wh40k-space-lg);
 }
 
 .wh40k-p-sm {
-    padding: var(--rt-space-sm);
+    padding: var(--wh40k-space-sm);
 }
 .wh40k-p-md {
-    padding: var(--rt-space-md);
+    padding: var(--wh40k-space-md);
 }
 .wh40k-p-lg {
-    padding: var(--rt-space-lg);
+    padding: var(--wh40k-space-lg);
 }
 
 .wh40k-mt-sm {
-    margin-top: var(--rt-space-sm);
+    margin-top: var(--wh40k-space-sm);
 }
 .wh40k-mt-md {
-    margin-top: var(--rt-space-md);
+    margin-top: var(--wh40k-space-md);
 }
 .wh40k-mt-lg {
-    margin-top: var(--rt-space-lg);
+    margin-top: var(--wh40k-space-lg);
 }
 
 .wh40k-mb-sm {
-    margin-bottom: var(--rt-space-sm);
+    margin-bottom: var(--wh40k-space-sm);
 }
 .wh40k-mb-md {
-    margin-bottom: var(--rt-space-md);
+    margin-bottom: var(--wh40k-space-md);
 }
 .wh40k-mb-lg {
-    margin-bottom: var(--rt-space-lg);
+    margin-bottom: var(--wh40k-space-lg);
 }
 
 // Flex Utilities
@@ -632,13 +632,13 @@ body.theme-dark {
 }
 
 .wh40k-gap-sm {
-    gap: var(--rt-space-sm);
+    gap: var(--wh40k-space-sm);
 }
 .wh40k-gap-md {
-    gap: var(--rt-space-md);
+    gap: var(--wh40k-space-md);
 }
 .wh40k-gap-lg {
-    gap: var(--rt-space-lg);
+    gap: var(--wh40k-space-lg);
 }
 
 /* ========================================
@@ -724,11 +724,11 @@ body.theme-dark {
     0%,
     100% {
         box-shadow: 0 0 5px rgba(220, 20, 60, 0.3);
-        border-color: var(--rt-red);
+        border-color: var(--wh40k-red);
     }
     50% {
         box-shadow: 0 0 20px rgba(220, 20, 60, 0.7);
-        border-color: var(--rt-red-bright);
+        border-color: var(--wh40k-red-bright);
     }
 }
 

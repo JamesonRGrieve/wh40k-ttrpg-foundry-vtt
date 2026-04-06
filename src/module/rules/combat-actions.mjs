@@ -7,7 +7,7 @@ import { hitLocationNames } from './hit-locations.mjs';
 export function calculateCombatActionModifier(rollData) {
     const currentAction = rollData.actions[rollData.action];
 
-    game.rt.log('calculateCombatActionModifier', currentAction);
+    game.wh40k.log('calculateCombatActionModifier', currentAction);
     if (rollData.action === 'Called Shot') {
         if (rollData.isCalledShot === false) {
             rollData.isCalledShot = true;

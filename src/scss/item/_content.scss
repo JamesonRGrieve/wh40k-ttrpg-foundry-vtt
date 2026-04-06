@@ -8,7 +8,7 @@
     gap: $wh40k-space-md;
     padding: $wh40k-space-md;
     background: linear-gradient(135deg, rgba(139, 0, 0, 0.1) 0%, transparent 100%);
-    border: 1px solid var(--rt-red-dark);
+    border: 1px solid var(--wh40k-red-dark);
     border-radius: $wh40k-radius-md;
 
     &__dice {
@@ -17,7 +17,7 @@
         justify-content: center;
         width: 48px;
         height: 48px;
-        background: var(--rt-red-dark);
+        background: var(--wh40k-red-dark);
         border-radius: $wh40k-radius-md;
         font-family: $wh40k-font-display;
         font-size: $wh40k-font-size-lg;
@@ -32,23 +32,23 @@
     &__formula {
         font-family: $wh40k-font-display;
         font-size: $wh40k-font-size-xl;
-        color: var(--rt-red-bright);
+        color: var(--wh40k-red-bright);
     }
 
     &__type {
         font-size: $wh40k-font-size-sm;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         text-transform: uppercase;
     }
 
     &__pen {
         padding: $wh40k-space-xs $wh40k-space-sm;
-        background: var(--rt-panel-bg);
+        background: var(--wh40k-panel-bg);
         border-radius: $wh40k-radius-sm;
         font-size: $wh40k-font-size-sm;
 
         span {
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
             font-weight: 600;
         }
     }
@@ -69,45 +69,45 @@
     align-items: center;
     gap: $wh40k-space-xs;
     padding: 2px $wh40k-space-sm;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 12px;
     font-size: $wh40k-font-size-xs;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     transition: all $wh40k-transition-fast;
     cursor: default;
 
     &:hover {
-        background: var(--rt-panel-bg);
-        border-color: var(--rt-border-color);
+        background: var(--wh40k-panel-bg);
+        border-color: var(--wh40k-border-color);
     }
 
     &--positive,
     &--success {
         background: rgba(45, 90, 45, 0.2);
-        border-color: var(--rt-green);
-        color: var(--rt-green-bright);
+        border-color: var(--wh40k-green);
+        color: var(--wh40k-green-bright);
     }
 
     &--negative,
     &--danger {
         background: rgba(139, 0, 0, 0.2);
-        border-color: var(--rt-red);
-        color: var(--rt-red-bright);
+        border-color: var(--wh40k-red);
+        color: var(--wh40k-red-bright);
     }
 
     &--special {
         background: rgba(212, 175, 55, 0.15);
-        border-color: var(--rt-gold-dark);
-        color: var(--rt-gold);
+        border-color: var(--wh40k-gold-dark);
+        color: var(--wh40k-gold);
     }
 
     &--psychic {
         background: rgba(106, 32, 144, 0.15);
-        border-color: var(--rt-powers-primary);
-        color: var(--rt-powers-secondary);
+        border-color: var(--wh40k-powers-primary);
+        color: var(--wh40k-powers-secondary);
     }
 
     &--muted {

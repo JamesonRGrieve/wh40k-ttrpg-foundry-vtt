@@ -1,106 +1,106 @@
 {{!-- Acolyte Sheet Dynasty Tab --}}
 {{!-- This part renders the Dynasty tab content with Profit Factor, acquisitions, and endeavours --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-    <div class="rt-dynasty-grid">
+    <div class="wh40k-dynasty-grid">
         {{!-- Left Column --}}
-        <div class="rt-dynasty-col">
+        <div class="wh40k-dynasty-col">
             {{!-- Profit Factor Panel with Visual Gauge --}}
-            <div class="rt-panel rt-panel-profit-v2">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-coins"></i> Profit Factor</span>
-                    <button type="button" class="rt-acquisition-btn" data-action="openAcquisitionDialog" data-tooltip="Roll Acquisition Test">
+            <div class="wh40k-panel wh40k-panel-profit-v2">
+                <div class="wh40k-panel-header">
+                    <span class="wh40k-panel-title"><i class="fas fa-coins"></i> Profit Factor</span>
+                    <button type="button" class="wh40k-acquisition-btn" data-action="openAcquisitionDialog" data-tooltip="Roll Acquisition Test">
                         <i class="fas fa-dice-d20"></i>
                     </button>
                 </div>
-                <div class="rt-panel-body">
+                <div class="wh40k-panel-body">
                     {{!-- Main PF Display with Wealth Tier --}}
-                    <div class="rt-pf-hero">
-                        <div class="rt-pf-value-display">
-                            <input type="number" class="rt-pf-value-input" name="system.rogueTrader.profitFactor.current" value="{{system.rogueTrader.profitFactor.current}}" data-dtype="Number" />
+                    <div class="wh40k-pf-hero">
+                        <div class="wh40k-pf-value-display">
+                            <input type="number" class="wh40k-pf-value-input" name="system.rogueTrader.profitFactor.current" value="{{system.rogueTrader.profitFactor.current}}" data-dtype="Number" />
                         </div>
-                        <div class="rt-pf-tier rt-pf-tier--{{dynastyData.wealthTier.key}}">
-                            <span class="rt-pf-tier-label">{{dynastyData.wealthTier.label}}</span>
+                        <div class="wh40k-pf-tier wh40k-pf-tier--{{dynastyData.wealthTier.key}}">
+                            <span class="wh40k-pf-tier-label">{{dynastyData.wealthTier.label}}</span>
                         </div>
                     </div>
 
                     {{!-- Visual Wealth Gauge --}}
-                    <div class="rt-pf-gauge">
-                        <div class="rt-pf-gauge-track">
-                            <div class="rt-pf-gauge-fill" style="width: {{dynastyData.pfPercentage}}%"></div>
-                            <div class="rt-pf-gauge-marker" style="left: {{dynastyData.pfPercentage}}%">
+                    <div class="wh40k-pf-gauge">
+                        <div class="wh40k-pf-gauge-track">
+                            <div class="wh40k-pf-gauge-fill" style="width: {{dynastyData.pfPercentage}}%"></div>
+                            <div class="wh40k-pf-gauge-marker" style="left: {{dynastyData.pfPercentage}}%">
                                 <i class="fas fa-caret-down"></i>
                             </div>
                         </div>
-                        <div class="rt-pf-gauge-labels">
-                            <span class="rt-pf-tier-label rt-pf-tier--poor" data-tooltip="1-24: Struggling resources">Poor</span>
-                            <span class="rt-pf-tier-label rt-pf-tier--modest" data-tooltip="25-49: Modest wealth">Modest</span>
-                            <span class="rt-pf-tier-label rt-pf-tier--notable" data-tooltip="50-74: Notable dynasty">Notable</span>
-                            <span class="rt-pf-tier-label rt-pf-tier--mighty" data-tooltip="75-99: Mighty empire">Mighty</span>
-                            <span class="rt-pf-tier-label rt-pf-tier--legendary" data-tooltip="100+: Legendary wealth">Legendary</span>
+                        <div class="wh40k-pf-gauge-labels">
+                            <span class="wh40k-pf-tier-label wh40k-pf-tier--poor" data-tooltip="1-24: Struggling resources">Poor</span>
+                            <span class="wh40k-pf-tier-label wh40k-pf-tier--modest" data-tooltip="25-49: Modest wealth">Modest</span>
+                            <span class="wh40k-pf-tier-label wh40k-pf-tier--notable" data-tooltip="50-74: Notable dynasty">Notable</span>
+                            <span class="wh40k-pf-tier-label wh40k-pf-tier--mighty" data-tooltip="75-99: Mighty empire">Mighty</span>
+                            <span class="wh40k-pf-tier-label wh40k-pf-tier--legendary" data-tooltip="100+: Legendary wealth">Legendary</span>
                         </div>
                     </div>
 
                     {{!-- PF Breakdown --}}
-                    <div class="rt-pf-breakdown">
-                        <div class="rt-pf-breakdown-row">
-                            <span class="rt-pf-breakdown-label">Starting PF:</span>
-                            <input type="number" class="rt-pf-breakdown-input" name="system.rogueTrader.profitFactor.starting" value="{{system.rogueTrader.profitFactor.starting}}" data-dtype="Number" />
+                    <div class="wh40k-pf-breakdown">
+                        <div class="wh40k-pf-breakdown-row">
+                            <span class="wh40k-pf-breakdown-label">Starting PF:</span>
+                            <input type="number" class="wh40k-pf-breakdown-input" name="system.rogueTrader.profitFactor.starting" value="{{system.rogueTrader.profitFactor.starting}}" data-dtype="Number" />
                         </div>
-                        <div class="rt-pf-breakdown-row">
-                            <span class="rt-pf-breakdown-label">Modifier:</span>
-                            <input type="number" class="rt-pf-breakdown-input" name="system.rogueTrader.profitFactor.modifier" value="{{system.rogueTrader.profitFactor.modifier}}" data-dtype="Number" />
+                        <div class="wh40k-pf-breakdown-row">
+                            <span class="wh40k-pf-breakdown-label">Modifier:</span>
+                            <input type="number" class="wh40k-pf-breakdown-input" name="system.rogueTrader.profitFactor.modifier" value="{{system.rogueTrader.profitFactor.modifier}}" data-dtype="Number" />
                         </div>
-                        <div class="rt-pf-breakdown-row rt-pf-breakdown-row--total">
-                            <span class="rt-pf-breakdown-label">Effective PF:</span>
-                            <span class="rt-pf-breakdown-value">{{dynastyData.effectivePF}}</span>
+                        <div class="wh40k-pf-breakdown-row wh40k-pf-breakdown-row--total">
+                            <span class="wh40k-pf-breakdown-label">Effective PF:</span>
+                            <span class="wh40k-pf-breakdown-value">{{dynastyData.effectivePF}}</span>
                         </div>
                     </div>
 
                     {{!-- Misfortunes Section --}}
-                    <div class="rt-pf-misfortunes">
-                        <label class="rt-field-label"><i class="fas fa-exclamation-triangle"></i> Misfortunes & Notes</label>
-                        <textarea class="rt-textarea" name="system.rogueTrader.profitFactor.misfortunes" rows="2" placeholder="Track PF losses, temporary modifiers...">{{system.rogueTrader.profitFactor.misfortunes}}</textarea>
+                    <div class="wh40k-pf-misfortunes">
+                        <label class="wh40k-field-label"><i class="fas fa-exclamation-triangle"></i> Misfortunes & Notes</label>
+                        <textarea class="wh40k-textarea" name="system.rogueTrader.profitFactor.misfortunes" rows="2" placeholder="Track PF losses, temporary modifiers...">{{system.rogueTrader.profitFactor.misfortunes}}</textarea>
                     </div>
 
                     {{!-- Quick Acquisition Reference --}}
-                    <div class="rt-pf-acquisition-ref">
-                        <div class="rt-pf-ref-header">
+                    <div class="wh40k-pf-acquisition-ref">
+                        <div class="wh40k-pf-ref-header">
                             <i class="fas fa-shopping-cart"></i> Acquisition Modifiers
                         </div>
-                        <div class="rt-pf-ref-grid">
-                            <span class="rt-pf-ref-item rt-pf-ref--positive">Ubiquitous +70</span>
-                            <span class="rt-pf-ref-item rt-pf-ref--positive">Abundant +50</span>
-                            <span class="rt-pf-ref-item rt-pf-ref--positive">Plentiful +30</span>
-                            <span class="rt-pf-ref-item rt-pf-ref--positive">Common +10</span>
-                            <span class="rt-pf-ref-item">Average +0</span>
-                            <span class="rt-pf-ref-item rt-pf-ref--negative">Scarce −10</span>
-                            <span class="rt-pf-ref-item rt-pf-ref--negative">Rare −20</span>
-                            <span class="rt-pf-ref-item rt-pf-ref--negative">Very Rare −30</span>
-                            <span class="rt-pf-ref-item rt-pf-ref--negative">Ext. Rare −40</span>
-                            <span class="rt-pf-ref-item rt-pf-ref--negative">Near Unique −50</span>
+                        <div class="wh40k-pf-ref-grid">
+                            <span class="wh40k-pf-ref-item wh40k-pf-ref--positive">Ubiquitous +70</span>
+                            <span class="wh40k-pf-ref-item wh40k-pf-ref--positive">Abundant +50</span>
+                            <span class="wh40k-pf-ref-item wh40k-pf-ref--positive">Plentiful +30</span>
+                            <span class="wh40k-pf-ref-item wh40k-pf-ref--positive">Common +10</span>
+                            <span class="wh40k-pf-ref-item">Average +0</span>
+                            <span class="wh40k-pf-ref-item wh40k-pf-ref--negative">Scarce −10</span>
+                            <span class="wh40k-pf-ref-item wh40k-pf-ref--negative">Rare −20</span>
+                            <span class="wh40k-pf-ref-item wh40k-pf-ref--negative">Very Rare −30</span>
+                            <span class="wh40k-pf-ref-item wh40k-pf-ref--negative">Ext. Rare −40</span>
+                            <span class="wh40k-pf-ref-item wh40k-pf-ref--negative">Near Unique −50</span>
                         </div>
                     </div>
                 </div>
             </div>
             
             {{!-- Experience Panel --}}
-            <div class="rt-panel">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-star"></i> Experience</span>
+            <div class="wh40k-panel">
+                <div class="wh40k-panel-header">
+                    <span class="wh40k-panel-title"><i class="fas fa-star"></i> Experience</span>
                 </div>
-                <div class="rt-panel-body">
-                    <div class="rt-xp-display">
-                        <div class="rt-xp-item">
-                            <span class="rt-xp-label">Total</span>
-                            <input type="number" class="rt-vital-input" name="system.experience.total" value="{{system.experience.total}}" data-dtype="Number" />
+                <div class="wh40k-panel-body">
+                    <div class="wh40k-xp-display">
+                        <div class="wh40k-xp-item">
+                            <span class="wh40k-xp-label">Total</span>
+                            <input type="number" class="wh40k-vital-input" name="system.experience.total" value="{{system.experience.total}}" data-dtype="Number" />
                         </div>
-                        <div class="rt-xp-item">
-                            <span class="rt-xp-label">Spent</span>
-                            <input type="number" class="rt-vital-input" name="system.experience.used" value="{{system.experience.used}}" data-dtype="Number" />
+                        <div class="wh40k-xp-item">
+                            <span class="wh40k-xp-label">Spent</span>
+                            <input type="number" class="wh40k-vital-input" name="system.experience.used" value="{{system.experience.used}}" data-dtype="Number" />
                         </div>
-                        <div class="rt-xp-item rt-xp-available">
-                            <span class="rt-xp-label">Available</span>
-                            <span class="rt-xp-value">{{system.experience.available}}</span>
+                        <div class="wh40k-xp-item wh40k-xp-available">
+                            <span class="wh40k-xp-label">Available</span>
+                            <span class="wh40k-xp-value">{{system.experience.available}}</span>
                         </div>
                     </div>
                 </div>
@@ -111,38 +111,38 @@
         </div>
         
         {{!-- Right Column --}}
-        <div class="rt-dynasty-col">
+        <div class="wh40k-dynasty-col">
             {{!-- Acquisitions --}}
             {{> systems/wh40k-rpg/templates/actor/panel/acquisitions-panel.hbs}}
             
             {{!-- Endeavour Tracker --}}
-            <div class="rt-panel">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-map-marked-alt"></i> Current Endeavour</span>
+            <div class="wh40k-panel">
+                <div class="wh40k-panel-header">
+                    <span class="wh40k-panel-title"><i class="fas fa-map-marked-alt"></i> Current Endeavour</span>
                 </div>
-                <div class="rt-panel-body">
-                    <div class="rt-endeavour-fields">
-                        <div class="rt-field-row">
-                            <label class="rt-field-label">Endeavour Name</label>
-                            <input type="text" class="rt-field-input" name="system.rogueTrader.endeavour.name" value="{{system.rogueTrader.endeavour.name}}" placeholder="Name of current endeavour..." />
+                <div class="wh40k-panel-body">
+                    <div class="wh40k-endeavour-fields">
+                        <div class="wh40k-field-row">
+                            <label class="wh40k-field-label">Endeavour Name</label>
+                            <input type="text" class="wh40k-field-input" name="system.rogueTrader.endeavour.name" value="{{system.rogueTrader.endeavour.name}}" placeholder="Name of current endeavour..." />
                         </div>
-                        <div class="rt-field-row rt-field-row-split">
-                            <div class="rt-field-half">
-                                <label class="rt-field-label">Achievement Points</label>
-                                <div class="rt-ap-tracker">
-                                    <input type="number" class="rt-vital-input" name="system.rogueTrader.endeavour.achievementCurrent" value="{{system.rogueTrader.endeavour.achievementCurrent}}" data-dtype="Number" />
+                        <div class="wh40k-field-row wh40k-field-row-split">
+                            <div class="wh40k-field-half">
+                                <label class="wh40k-field-label">Achievement Points</label>
+                                <div class="wh40k-ap-tracker">
+                                    <input type="number" class="wh40k-vital-input" name="system.rogueTrader.endeavour.achievementCurrent" value="{{system.rogueTrader.endeavour.achievementCurrent}}" data-dtype="Number" />
                                     <span>/</span>
-                                    <input type="number" class="rt-vital-input" name="system.rogueTrader.endeavour.achievementRequired" value="{{system.rogueTrader.endeavour.achievementRequired}}" data-dtype="Number" />
+                                    <input type="number" class="wh40k-vital-input" name="system.rogueTrader.endeavour.achievementRequired" value="{{system.rogueTrader.endeavour.achievementRequired}}" data-dtype="Number" />
                                 </div>
                             </div>
-                            <div class="rt-field-half">
-                                <label class="rt-field-label">PF Reward</label>
-                                <input type="number" class="rt-vital-input" name="system.rogueTrader.endeavour.reward" value="{{system.rogueTrader.endeavour.reward}}" data-dtype="Number" />
+                            <div class="wh40k-field-half">
+                                <label class="wh40k-field-label">PF Reward</label>
+                                <input type="number" class="wh40k-vital-input" name="system.rogueTrader.endeavour.reward" value="{{system.rogueTrader.endeavour.reward}}" data-dtype="Number" />
                             </div>
                         </div>
-                        <div class="rt-field-row">
-                            <label class="rt-field-label">Objectives & Notes</label>
-                            <textarea class="rt-textarea" name="system.rogueTrader.endeavour.notes" rows="3" placeholder="Track objectives and progress...">{{system.rogueTrader.endeavour.notes}}</textarea>
+                        <div class="wh40k-field-row">
+                            <label class="wh40k-field-label">Objectives & Notes</label>
+                            <textarea class="wh40k-textarea" name="system.rogueTrader.endeavour.notes" rows="3" placeholder="Track objectives and progress...">{{system.rogueTrader.endeavour.notes}}</textarea>
                         </div>
                     </div>
                 </div>

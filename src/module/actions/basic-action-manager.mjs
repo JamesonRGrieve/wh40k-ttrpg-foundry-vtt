@@ -15,7 +15,7 @@ export class BasicActionManager {
     initializeHooks() {
         // Add show/hide support for chat messages
         Hooks.on('renderChatMessageHTML', async (message, html, context) => {
-            game.rt.log('renderChatMessageHTML', { message, html, context });
+            game.wh40k.log('renderChatMessageHTML', { message, html, context });
             html.querySelectorAll('.roll-control__hide-control').forEach((el) =>
                 el.addEventListener('click', async (ev) => await this._toggleExpandChatMessage(ev)),
             );
@@ -44,7 +44,7 @@ export class BasicActionManager {
     }
 
     async _toggleExpandChatMessage(event) {
-        game.rt.log('roll-control-toggle');
+        game.wh40k.log('roll-control-toggle');
         event.preventDefault();
         const displayToggle = event.currentTarget;
         const span = displayToggle.querySelector('span');

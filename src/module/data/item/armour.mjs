@@ -274,7 +274,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get typeLabel() {
         return game.i18n.localize(
-            `RT.ArmourType.${this.type
+            `WH40K.ArmourType.${this.type
                 .split('-')
                 .map((s) => s.capitalize())
                 .join('')}`,
@@ -360,7 +360,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     get propertyLabels() {
         return Array.from(this.properties).map((prop) =>
             game.i18n.localize(
-                `RT.ArmourProperty.${prop
+                `WH40K.ArmourProperty.${prop
                     .split('-')
                     .map((s) => s.capitalize())
                     .join('')}`,
@@ -758,10 +758,10 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
                 id: propId,
                 label: config[propId]?.label
                     ? game.i18n.localize(config[propId].label)
-                    : game.i18n.localize(`RT.ArmourProperty.${pascalCase}`) || propId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+                    : game.i18n.localize(`WH40K.ArmourProperty.${pascalCase}`) || propId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
                 description: config[propId]?.description
                     ? game.i18n.localize(config[propId].description)
-                    : game.i18n.localize(`RT.ArmourProperty.${pascalCase}Desc`) || '',
+                    : game.i18n.localize(`WH40K.ArmourProperty.${pascalCase}Desc`) || '',
             });
         }
 
@@ -800,7 +800,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get craftsmanshipLabel() {
         const craft = this.craftsmanship ?? 'common';
-        return game.i18n.localize(`RT.Craftsmanship.${craft.charAt(0).toUpperCase() + craft.slice(1)}`);
+        return game.i18n.localize(`WH40K.Craftsmanship.${craft.charAt(0).toUpperCase() + craft.slice(1)}`);
     }
 
     /**

@@ -152,7 +152,7 @@ export default class QuickActionsBar {
                     .map(([key, value]) => `data-${key}="${value}"`)
                     .join(' ');
 
-                const classList = ['wh40k-quick-action', `rt-quick-action--${action.variant}`, compact ? 'wh40k-quick-action--compact' : ''].join(' ');
+                const classList = ['wh40k-quick-action', `wh40k-quick-action--${action.variant}`, compact ? 'wh40k-quick-action--compact' : ''].join(' ');
 
                 return `
                 <button type="button" 

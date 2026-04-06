@@ -1,12 +1,12 @@
 {{!-- NPC Template - Characteristics Tab --}}
 <section class="tab-content tab-characteristics" data-tab="characteristics" data-group="primary">
     {{!-- Base Characteristics --}}
-    <div class="rt-panel">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel">
+        <header class="wh40k-panel-header">
             <h3><i class="fas fa-dice-d20"></i> {{localize "WH40K.NPC.Template.BaseCharacteristics"}}</h3>
             <span class="panel-note">{{localize "WH40K.NPC.Template.CharacteristicsNote"}}</span>
         </header>
-        <div class="rt-panel-content">
+        <div class="wh40k-panel-content">
             <div class="characteristics-grid">
                 {{#each characteristics as |char key|}}
                 <div class="characteristic-field">
@@ -20,11 +20,11 @@
     </div>
     
     {{!-- Unnatural Characteristics --}}
-    <div class="rt-panel">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel">
+        <header class="wh40k-panel-header">
             <h3><i class="fas fa-bolt"></i> {{localize "WH40K.NPC.Template.UnnaturalCharacteristics"}}</h3>
         </header>
-        <div class="rt-panel-content">
+        <div class="wh40k-panel-content">
             <div class="characteristics-grid small">
                 {{#each characteristics as |char key|}}
                 <div class="characteristic-field compact">
@@ -38,11 +38,11 @@
     </div>
     
     {{!-- Wounds & Movement --}}
-    <div class="rt-panel">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel">
+        <header class="wh40k-panel-header">
             <h3><i class="fas fa-heart"></i> {{localize "WH40K.NPC.Template.VitalStats"}}</h3>
         </header>
-        <div class="rt-panel-content">
+        <div class="wh40k-panel-content">
             <div class="vital-stats-grid">
                 <div class="vital-field">
                     <label>{{localize "WH40K.Wounds"}}</label>
@@ -63,14 +63,14 @@
     </div>
     
     {{!-- Trained Skills --}}
-    <div class="rt-panel">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel">
+        <header class="wh40k-panel-header">
             <h3><i class="fas fa-graduation-cap"></i> {{localize "WH40K.NPC.Template.TrainedSkills"}}</h3>
-            <button type="button" class="rt-btn rt-btn-icon" data-action="addSkill">
+            <button type="button" class="wh40k-btn wh40k-btn-icon" data-action="addSkill">
                 <i class="fas fa-plus"></i>
             </button>
         </header>
-        <div class="rt-panel-content">
+        <div class="wh40k-panel-content">
             {{#if (gt system.trainedSkills.length 0)}}
             <div class="skills-list">
                 {{#each system.trainedSkills as |skill idx|}}
@@ -86,7 +86,7 @@
                     </div>
                     <input type="number" name="system.trainedSkills.{{idx}}.bonus" 
                            value="{{skill.bonus}}" placeholder="+0" class="skill-bonus" />
-                    <button type="button" class="rt-btn rt-btn-icon rt-btn-danger" 
+                    <button type="button" class="wh40k-btn wh40k-btn-icon wh40k-btn-danger" 
                             data-action="removeSkill" data-index="{{idx}}">
                         <i class="fas fa-trash"></i>
                     </button>

@@ -8,7 +8,7 @@
     gap: $wh40k-space-md;
     padding: $wh40k-space-md $wh40k-space-lg;
     background: linear-gradient(180deg, rgba(212, 175, 55, 0.15) 0%, transparent 100%);
-    border-bottom: 2px solid var(--rt-gold-dark);
+    border-bottom: 2px solid var(--wh40k-gold-dark);
     flex-shrink: 0;
 
     // Compact variant for smaller sheets
@@ -23,7 +23,7 @@
 .wh40k-item-image {
     width: 80px;
     height: 80px;
-    border: 2px solid var(--rt-gold);
+    border: 2px solid var(--wh40k-gold);
     border-radius: $wh40k-radius-md;
     overflow: hidden;
     box-shadow: $wh40k-shadow-md, 0 0 10px rgba(212, 175, 55, 0.3);
@@ -60,8 +60,8 @@
     &__name {
         font-family: $wh40k-font-display;
         font-size: $wh40k-font-size-xl;
-        color: var(--rt-gold);
-        text-shadow: 0 1px 2px var(--rt-text-shadow);
+        color: var(--wh40k-gold);
+        text-shadow: 0 1px 2px var(--wh40k-text-shadow);
         border: none;
         background: transparent;
         padding: $wh40k-space-xs $wh40k-space-sm;
@@ -70,12 +70,12 @@
 
         &:focus {
             outline: none;
-            background: var(--rt-input-bg-focus);
+            background: var(--wh40k-input-bg-focus);
             border-radius: $wh40k-radius-sm;
         }
 
         &::placeholder {
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
         }
     }
 
@@ -84,18 +84,18 @@
         align-items: center;
         gap: $wh40k-space-sm;
         font-size: $wh40k-font-size-sm;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.1em;
 
         i {
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
     }
 
     &__source {
         font-size: $wh40k-font-size-xs;
-        color: var(--rt-text-subtle);
+        color: var(--wh40k-text-subtle);
         font-style: italic;
     }
 }
@@ -114,11 +114,11 @@
     align-items: center;
     gap: 3px;
     padding: 2px $wh40k-space-sm;
-    background: var(--rt-panel-bg-translucent);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-sm;
     font-size: $wh40k-font-size-xs;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
 
     i {
         font-size: 10px;
@@ -138,9 +138,9 @@
     }
 
     &--source {
-        background: var(--rt-panel-bg-translucent);
-        border-color: var(--rt-border-color-light);
-        color: var(--rt-text-subtle);
+        background: var(--wh40k-panel-bg-translucent);
+        border-color: var(--wh40k-border-color-light);
+        color: var(--wh40k-text-subtle);
     }
 
     &--aptitudes,
@@ -148,6 +148,6 @@
     &--type {
         background: rgba(212, 175, 55, 0.1);
         border-color: rgba(212, 175, 55, 0.3);
-        color: var(--rt-gold-dark);
+        color: var(--wh40k-gold-dark);
     }
 }

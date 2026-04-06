@@ -12,8 +12,8 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: var(--rt-sheet-bg);
-    color: var(--rt-text-dark);
+    background: var(--wh40k-sheet-bg);
+    color: var(--wh40k-text-dark);
     font-family: 'Roboto', sans-serif;
     font-size: 0.9rem;
     overflow: hidden;
@@ -44,7 +44,7 @@
         width: 64px;
         height: 64px;
         flex-shrink: 0;
-        border: 2px solid var(--rt-bronze);
+        border: 2px solid var(--wh40k-bronze);
         border-radius: 6px;
         overflow: hidden;
         cursor: pointer;
@@ -58,7 +58,7 @@
 
         &:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px var(--rt-shadow-medium);
+            box-shadow: 0 4px 12px var(--wh40k-shadow-medium);
 
             .wh40k-forcefield-header__image-overlay {
                 opacity: 1;
@@ -97,12 +97,12 @@
         font-family: 'Cinzel', serif;
         font-size: 1.3rem;
         font-weight: 600;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         transition: border-color 0.2s ease;
 
         &:hover,
         &:focus {
-            border-bottom-color: var(--rt-gold);
+            border-bottom-color: var(--wh40k-gold);
             outline: none;
         }
     }
@@ -142,19 +142,19 @@
     &--active {
         background: rgba(45, 90, 45, 0.1);
         border-color: rgba(45, 90, 45, 0.4);
-        color: var(--rt-green);
+        color: var(--wh40k-green);
     }
 
     &--inactive {
-        background: var(--rt-panel-bg-translucent);
-        border-color: var(--rt-border-color-light);
-        color: var(--rt-text-muted);
+        background: var(--wh40k-panel-bg-translucent);
+        border-color: var(--wh40k-border-color-light);
+        color: var(--wh40k-text-muted);
     }
 
     &--overloaded {
         background: rgba(139, 0, 0, 0.1);
         border-color: rgba(139, 0, 0, 0.4);
-        color: var(--rt-red);
+        color: var(--wh40k-red);
     }
 
     &--protection {
@@ -169,25 +169,25 @@
         &.wh40k-forcefield-badge--poor {
             background: rgba(139, 0, 0, 0.1);
             border-color: rgba(139, 0, 0, 0.4);
-            color: var(--rt-red);
+            color: var(--wh40k-red);
         }
 
         &.wh40k-forcefield-badge--common {
-            background: var(--rt-panel-bg-translucent);
-            border-color: var(--rt-border-color-light);
-            color: var(--rt-text-muted);
+            background: var(--wh40k-panel-bg-translucent);
+            border-color: var(--wh40k-border-color-light);
+            color: var(--wh40k-text-muted);
         }
 
         &.wh40k-forcefield-badge--good {
             background: rgba(45, 90, 45, 0.1);
             border-color: rgba(45, 90, 45, 0.4);
-            color: var(--rt-green);
+            color: var(--wh40k-green);
         }
 
         &.wh40k-forcefield-badge--best {
             background: rgba(212, 175, 55, 0.15);
             border-color: rgba(212, 175, 55, 0.5);
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
     }
 }
@@ -201,8 +201,8 @@
     flex-wrap: wrap;
     gap: 2px;
     padding: 8px;
-    background: var(--rt-panel-bg-solid);
-    border-bottom: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg-solid);
+    border-bottom: 1px solid var(--wh40k-border-color-light);
 }
 
 .wh40k-forcefield-stat {
@@ -212,13 +212,13 @@
     flex: 1;
     min-width: 60px;
     padding: 8px 6px;
-    background: var(--rt-panel-bg);
+    background: var(--wh40k-panel-bg);
     border-radius: 4px;
-    border: 1px solid var(--rt-border-color-light);
+    border: 1px solid var(--wh40k-border-color-light);
 
     &__icon {
         font-size: 1rem;
-        color: var(--rt-bronze);
+        color: var(--wh40k-bronze);
         margin-bottom: 4px;
     }
 
@@ -234,14 +234,14 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
     }
 
     &__value {
         font-family: 'Cinzel', serif;
         font-size: 1rem;
         font-weight: 700;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
     }
 
     // Stat variants
@@ -256,7 +256,7 @@
 
     &--overload {
         .wh40k-forcefield-stat__icon {
-            color: var(--rt-warning-primary);
+            color: var(--wh40k-warning-primary);
         }
     }
 }
@@ -269,8 +269,8 @@
     display: flex;
     gap: 2px;
     padding: 0 12px;
-    background: var(--rt-panel-bg-solid);
-    border-bottom: 1px solid var(--rt-border-color);
+    background: var(--wh40k-panel-bg-solid);
+    border-bottom: 1px solid var(--wh40k-border-color);
 }
 
 .wh40k-forcefield-tab {
@@ -283,7 +283,7 @@
     border-bottom: 3px solid transparent;
     font-size: 0.85rem;
     font-weight: 500;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     transition: all 0.2s ease;
 
@@ -292,8 +292,8 @@
     }
 
     &:hover {
-        color: var(--rt-text-dark);
-        background: var(--rt-panel-bg-translucent);
+        color: var(--wh40k-text-dark);
+        background: var(--wh40k-panel-bg-translucent);
     }
 
     &.active {
@@ -318,15 +318,15 @@
     }
 
     &::-webkit-scrollbar-track {
-        background: var(--rt-panel-bg);
+        background: var(--wh40k-panel-bg);
     }
 
     &::-webkit-scrollbar-thumb {
-        background: var(--rt-border-color);
+        background: var(--wh40k-border-color);
         border-radius: 4px;
 
         &:hover {
-            background: var(--rt-gold-dark);
+            background: var(--wh40k-gold-dark);
         }
     }
 }
@@ -344,8 +344,8 @@
 // ============================================
 
 .wh40k-forcefield-section {
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 6px;
     margin-bottom: 12px;
     overflow: hidden;
@@ -355,12 +355,12 @@
         align-items: center;
         gap: 8px;
         padding: 10px 12px;
-        background: linear-gradient(135deg, var(--rt-accent-overlay) 0%, transparent 100%);
-        border-bottom: 1px solid var(--rt-border-color-light);
+        background: linear-gradient(135deg, var(--wh40k-accent-overlay) 0%, transparent 100%);
+        border-bottom: 1px solid var(--wh40k-border-color-light);
 
         i {
             font-size: 0.9rem;
-            color: var(--rt-bronze);
+            color: var(--wh40k-bronze);
         }
 
         h3 {
@@ -369,7 +369,7 @@
             font-family: 'Cinzel', serif;
             font-size: 0.95rem;
             font-weight: 600;
-            color: var(--rt-text-dark);
+            color: var(--wh40k-text-dark);
         }
     }
 
@@ -381,9 +381,9 @@
         border-radius: 4px;
         font-size: 0.7rem;
         font-weight: 600;
-        background: var(--rt-panel-bg-translucent);
-        border: 1px solid var(--rt-border-color-light);
-        color: var(--rt-text-muted);
+        background: var(--wh40k-panel-bg-translucent);
+        border: 1px solid var(--wh40k-border-color-light);
+        color: var(--wh40k-text-muted);
     }
 
     &__body {

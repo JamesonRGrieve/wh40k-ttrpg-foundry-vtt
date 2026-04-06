@@ -124,7 +124,7 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         font-family: $wh40k-font-heading;
         font-size: $wh40k-font-size-md;
-        color: var(--rt-text-light);
+        color: var(--wh40k-text-light);
         text-transform: uppercase;
         letter-spacing: 1px;
 
@@ -153,12 +153,12 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
         }
 
         .wh40k-property-value {
             font-size: $wh40k-font-size-sm;
-            color: var(--rt-text-light);
+            color: var(--wh40k-text-light);
             padding: 6px 10px;
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -183,7 +183,7 @@
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: $wh40k-radius-sm;
-            color: var(--rt-text-light);
+            color: var(--wh40k-text-light);
             font-family: $wh40k-font-ui;
 
             &:focus {
@@ -244,7 +244,7 @@
     .wh40k-descriptor-text {
         font-size: $wh40k-font-size-sm;
         line-height: 1.5;
-        color: var(--rt-text-light);
+        color: var(--wh40k-text-light);
         font-family: $wh40k-font-body;
         font-style: italic;
     }
@@ -266,7 +266,7 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         font-family: $wh40k-font-heading;
         font-size: $wh40k-font-size-md;
-        color: var(--rt-text-light);
+        color: var(--wh40k-text-light);
         text-transform: uppercase;
         letter-spacing: 1px;
 
@@ -278,7 +278,7 @@
     .wh40k-uses-content {
         font-size: $wh40k-font-size-sm;
         line-height: 1.6;
-        color: var(--rt-text-light);
+        color: var(--wh40k-text-light);
 
         // ProseMirror editor styling
         .ProseMirror {
@@ -335,7 +335,7 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         font-family: $wh40k-font-heading;
         font-size: $wh40k-font-size-md;
-        color: var(--rt-text-light);
+        color: var(--wh40k-text-light);
         text-transform: uppercase;
         letter-spacing: 1px;
 
@@ -359,7 +359,7 @@
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
-                color: var(--rt-text-muted);
+                color: var(--wh40k-text-muted);
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
                 &:first-child {
@@ -396,7 +396,7 @@
             td {
                 padding: $wh40k-space-sm;
                 font-size: $wh40k-font-size-sm;
-                color: var(--rt-text-light);
+                color: var(--wh40k-text-light);
                 border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 
                 &.wh40k-difficulty-name {
@@ -429,7 +429,7 @@
     .wh40k-difficulties-empty {
         padding: $wh40k-space-lg;
         text-align: center;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         font-size: $wh40k-font-size-sm;
         font-style: italic;
     }
@@ -463,7 +463,7 @@
     .wh40k-special-rules-content {
         font-size: $wh40k-font-size-sm;
         line-height: 1.6;
-        color: var(--rt-text-light);
+        color: var(--wh40k-text-light);
 
         .ProseMirror {
             min-height: 80px;
@@ -496,7 +496,7 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         font-family: $wh40k-font-heading;
         font-size: $wh40k-font-size-md;
-        color: var(--rt-text-light);
+        color: var(--wh40k-text-light);
         text-transform: uppercase;
         letter-spacing: 1px;
 
@@ -534,7 +534,7 @@
         background: rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: $wh40k-radius-sm;
-        color: var(--rt-text-light);
+        color: var(--wh40k-text-light);
         font-size: $wh40k-font-size-sm;
         font-family: $wh40k-font-ui;
 
@@ -545,7 +545,7 @@
         }
 
         &::placeholder {
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
             font-style: italic;
         }
     }
@@ -567,12 +567,12 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         font-family: $wh40k-font-heading;
         font-size: $wh40k-font-size-sm;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.8px;
 
         i {
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
         }
     }
 
@@ -596,7 +596,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--rt-text-muted);
+            color: var(--wh40k-text-muted);
         }
 
         input[type='number'] {
@@ -604,7 +604,7 @@
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: $wh40k-radius-sm;
-            color: var(--rt-text-light);
+            color: var(--wh40k-text-light);
             font-size: $wh40k-font-size-sm;
             font-family: $wh40k-font-ui;
             text-align: center;

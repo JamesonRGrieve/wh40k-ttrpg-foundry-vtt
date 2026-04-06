@@ -71,7 +71,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
      * @type {string}
      */
     get testCharacteristicLabel() {
-        return game.i18n.localize(`RT.Characteristic.${this.test.characteristic.capitalize()}`);
+        return game.i18n.localize(`WH40K.Characteristic.${this.test.characteristic.capitalize()}`);
     }
 
     /**

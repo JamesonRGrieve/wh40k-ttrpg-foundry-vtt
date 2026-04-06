@@ -74,10 +74,10 @@ export default function EnhancedDragDropMixin(Base) {
          * @private
          */
         _setupEnhancedDragDrop() {
-            // Item rows - exclude talent panel rows (rt-tp_row) which should not be draggable
+            // Item rows - exclude talent panel rows (wh40k-tp_row) which should not be draggable
             this.element.querySelectorAll('[data-item-id]').forEach((el) => {
                 // Skip if element is inside a talent panel row
-                if (el.closest('.rt-tp_row') || el.closest('.rt-talent-row')) return;
+                if (el.closest('.wh40k-tp_row') || el.closest('.wh40k-talent-row')) return;
 
                 if (!el.hasAttribute('draggable')) {
                     el.setAttribute('draggable', true);
@@ -190,7 +190,7 @@ export default function EnhancedDragDropMixin(Base) {
         /* -------------------------------------------- */
 
         /**
-         * Create a custom drag ghost image with RT styling
+         * Create a custom drag ghost image with WH40K styling
          * @param {Item} item        The item being dragged
          * @param {DragEvent} event  The drag event
          * @returns {HTMLElement}    The ghost element

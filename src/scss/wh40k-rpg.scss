@@ -39,20 +39,20 @@
 @import 'journals';
 
 // Global components (appended to document.body, not inside wrappers)
-@import 'src/scss/components/rt-tooltip';
+@import 'src/scss/components/wh40k-tooltip';
 @import 'src/scss/components/item-preview';
 @import 'src/scss/components/active-modifiers';
 
-// Armour panel - needs to work both inside rt-wrapper and in ApplicationV2 sheets
+// Armour panel - needs to work both inside wh40k-wrapper and in ApplicationV2 sheets
 @import 'src/scss/components/armour';
 
-// Biography origin panel - ApplicationV2 sheet (outside rt-wrapper)
+// Biography origin panel - ApplicationV2 sheet (outside wh40k-wrapper)
 @import 'src/scss/actor/biography-origin-panel';
 
-// NPC Sheet V2 - ApplicationV2 sheet (outside rt-wrapper)
+// NPC Sheet V2 - ApplicationV2 sheet (outside wh40k-wrapper)
 @import 'src/scss/actor/npc-sheet-v2';
 
-// Vehicle Sheet V2 - ApplicationV2 sheet (outside rt-wrapper)
+// Vehicle Sheet V2 - ApplicationV2 sheet (outside wh40k-wrapper)
 @import 'src/scss/actor/vehicle-sheet-v2';
 
 .wh40k-material {
@@ -89,13 +89,13 @@
     @import 'src/scss/components/header';
     @import 'src/scss/components/navigation';
     @import 'src/scss/components/settings';
-    // NOTE: armour is imported at root level to work with both rt-wrapper and ApplicationV2 sheets
+    // NOTE: armour is imported at root level to work with both wh40k-wrapper and ApplicationV2 sheets
     @import 'src/scss/components/characteristic_roller';
     @import 'src/scss/components/characteristics';
     @import 'src/scss/components/skills';
     @import 'src/scss/components/compendium';
     @import 'src/scss/components/enhanced-skill-roll';
-    // NOTE: rt-tooltip is imported at root level (outside wrapper) because tooltip is appended to document.body
+    // NOTE: wh40k-tooltip is imported at root level (outside wrapper) because tooltip is appended to document.body
     @import 'src/scss/components/stat-animations';
     @import 'src/scss/components/collapsible-panels';
     @import 'src/scss/components/context-menu';
@@ -111,7 +111,7 @@
     @import 'src/scss/actor/index';
 }
 
-// Alias for rt-actor (same as dh-actor)
+// Alias for wh40k-actor (same as dh-actor)
 .wh40k-actor {
     // Inherits from the wrapper context
 }
@@ -580,13 +580,13 @@
         width: 72px !important;
         height: 72px !important;
         object-fit: cover !important;
-        border: 2px solid var(--rt-border-color, #4a3728) !important;
+        border: 2px solid var(--wh40k-border-color, #4a3728) !important;
         border-radius: 4px !important;
         transition: border-color 0.2s !important;
     }
 
     .wh40k-portrait-box:hover .wh40k-portrait {
-        border-color: var(--rt-gold, #d4af37) !important;
+        border-color: var(--wh40k-gold, #d4af37) !important;
     }
 
     .wh40k-bio-fields {
@@ -602,8 +602,8 @@
         font-weight: bold !important;
         border: none !important;
         background: transparent !important;
-        border-bottom: 1px solid var(--rt-border-color) !important;
-        color: var(--rt-text-dark) !important;
+        border-bottom: 1px solid var(--wh40k-border-color) !important;
+        color: var(--wh40k-text-dark) !important;
         padding: 2px 4px !important;
         width: 100% !important;
         margin-bottom: 4px !important;
@@ -611,7 +611,7 @@
 
     .wh40k-bio-name:focus {
         outline: none !important;
-        border-bottom-color: var(--rt-gold, #d4af37) !important;
+        border-bottom-color: var(--wh40k-gold, #d4af37) !important;
     }
 
     .wh40k-bio-row {
@@ -623,12 +623,12 @@
 
     .wh40k-bio-label {
         font-weight: 600 !important;
-        color: var(--rt-text-medium) !important;
+        color: var(--wh40k-text-medium) !important;
         min-width: 40px !important;
     }
 
     .wh40k-bio-value {
-        color: var(--rt-text-dark) !important;
+        color: var(--wh40k-text-dark) !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
@@ -638,15 +638,15 @@
         flex: 1 !important;
         border: none !important;
         background: transparent !important;
-        border-bottom: 1px solid var(--rt-border-color-light) !important;
-        color: var(--rt-text-dark) !important;
+        border-bottom: 1px solid var(--wh40k-border-color-light) !important;
+        color: var(--wh40k-text-dark) !important;
         padding: 1px 4px !important;
         min-width: 50px !important;
     }
 
     .wh40k-bio-input:focus {
         outline: none !important;
-        border-bottom-color: var(--rt-gold, #d4af37) !important;
+        border-bottom-color: var(--wh40k-gold, #d4af37) !important;
     }
 
     // RIGHT: Characteristics HUD (V1 enhanced)
@@ -751,7 +751,7 @@
         }
     }
 
-    // Legacy rt-main-layout for compatibility
+    // Legacy wh40k-main-layout for compatibility
     .wh40k-main-layout {
         display: grid !important;
         grid-template-columns: 160px minmax(0, 1fr) !important;
@@ -823,8 +823,8 @@
         height: 80px !important;
         border-radius: 6px !important;
         overflow: hidden !important;
-        border: 2px solid var(--rt-border-color, #4a3728) !important;
-        box-shadow: 0 2px 8px var(--rt-shadow-medium, rgba(0, 0, 0, 0.2)) !important;
+        border: 2px solid var(--wh40k-border-color, #4a3728) !important;
+        box-shadow: 0 2px 8px var(--wh40k-shadow-medium, rgba(0, 0, 0, 0.2)) !important;
         flex-shrink: 0 !important;
     }
 
@@ -855,14 +855,14 @@
         font-size: 0.85em !important;
         font-weight: bold !important;
         text-transform: uppercase !important;
-        color: var(--rt-text-medium, #666) !important;
+        color: var(--wh40k-text-medium, #666) !important;
         min-width: 70px !important;
         flex-shrink: 0 !important;
     }
 
     .wh40k-header-value {
         font-size: 1em !important;
-        color: var(--rt-text-dark, #333) !important;
+        color: var(--wh40k-text-dark, #333) !important;
         min-width: 0 !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
@@ -872,8 +872,8 @@
     .wh40k-header-input {
         border: none !important;
         background: transparent !important;
-        border-bottom: 1px solid var(--rt-border-color, #4a3728) !important;
-        color: var(--rt-text-dark, #333) !important;
+        border-bottom: 1px solid var(--wh40k-border-color, #4a3728) !important;
+        color: var(--wh40k-text-dark, #333) !important;
         padding: 2px 5px !important;
         flex: 1 !important;
         min-width: 80px !important;
@@ -881,8 +881,8 @@
 
     .wh40k-header-input:focus {
         outline: none !important;
-        border-bottom-color: var(--rt-gold, #d4af37) !important;
-        box-shadow: 0 1px 0 var(--rt-gold, #d4af37) !important;
+        border-bottom-color: var(--wh40k-gold, #d4af37) !important;
+        box-shadow: 0 1px 0 var(--wh40k-gold, #d4af37) !important;
     }
 
     .wh40k-name-input {
@@ -921,10 +921,10 @@
         max-width: 620px !important;
         overflow: visible !important;
         position: relative !important;
-        background: var(--rt-hud-bg, linear-gradient(180deg, #f5f0e6 0%, #ede8dc 100%)) !important;
-        border: 1px solid var(--rt-border-color-strong, rgba(140, 120, 90, 0.5)) !important;
+        background: var(--wh40k-hud-bg, linear-gradient(180deg, #f5f0e6 0%, #ede8dc 100%)) !important;
+        border: 1px solid var(--wh40k-border-color-strong, rgba(140, 120, 90, 0.5)) !important;
         border-radius: 8px !important;
-        box-shadow: inset 0 1px 0 var(--rt-text-shadow, rgba(255, 255, 255, 0.3)), 0 2px 6px var(--rt-shadow-soft, rgba(0, 0, 0, 0.1)) !important;
+        box-shadow: inset 0 1px 0 var(--wh40k-text-shadow, rgba(255, 255, 255, 0.3)), 0 2px 6px var(--wh40k-shadow-soft, rgba(0, 0, 0, 0.1)) !important;
         z-index: 1 !important;
     }
 
@@ -938,15 +938,15 @@
         min-width: 0 !important;
         position: relative !important;
         text-align: center !important;
-        background: var(--rt-hud-item-bg, rgba(255, 255, 255, 0.5)) !important;
-        border: 1px solid var(--rt-border-color, rgba(140, 120, 90, 0.3)) !important;
+        background: var(--wh40k-hud-item-bg, rgba(255, 255, 255, 0.5)) !important;
+        border: 1px solid var(--wh40k-border-color, rgba(140, 120, 90, 0.3)) !important;
         border-radius: 6px !important;
         transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease !important;
     }
 
     .wh40k-char-hud-item:hover {
         transform: translateY(-1px) !important;
-        box-shadow: 0 4px 12px var(--rt-shadow-medium, rgba(0, 0, 0, 0.15)) !important;
+        box-shadow: 0 4px 12px var(--wh40k-shadow-medium, rgba(0, 0, 0, 0.15)) !important;
     }
 
     .wh40k-char-hud-item.wh40k-char-buffed {
@@ -968,7 +968,7 @@
         letter-spacing: 0.12em !important;
         font-weight: 700 !important;
         font-size: 0.78em !important;
-        color: var(--rt-text-dark, #333) !important;
+        color: var(--wh40k-text-dark, #333) !important;
         text-align: center !important;
         width: 100% !important;
         display: block !important;
@@ -976,7 +976,7 @@
     }
 
     .wh40k-char-hud-name:hover {
-        color: var(--rt-gold, #d4af37) !important;
+        color: var(--wh40k-gold, #d4af37) !important;
     }
 
     .wh40k-char-hud-circle {
@@ -988,15 +988,15 @@
         align-items: center !important;
         justify-content: center !important;
         gap: 1px !important;
-        background: var(--rt-circle-bg, linear-gradient(180deg, #f4d03f 0%, #d4af37 70%, #b8860b 100%)) !important;
-        border: 2px solid var(--rt-border-color-strong, #8b6914) !important;
-        box-shadow: inset 0 1px 2px var(--rt-text-shadow, rgba(0, 0, 0, 0.1)), 0 3px 8px var(--rt-shadow-soft, rgba(0, 0, 0, 0.15)) !important;
+        background: var(--wh40k-circle-bg, linear-gradient(180deg, #f4d03f 0%, #d4af37 70%, #b8860b 100%)) !important;
+        border: 2px solid var(--wh40k-border-color-strong, #8b6914) !important;
+        box-shadow: inset 0 1px 2px var(--wh40k-text-shadow, rgba(0, 0, 0, 0.1)), 0 3px 8px var(--wh40k-shadow-soft, rgba(0, 0, 0, 0.15)) !important;
     }
 
     .wh40k-char-hud-mod {
         font-size: 1.2em !important;
         font-weight: 700 !important;
-        color: var(--rt-text-dark, #1a1510) !important;
+        color: var(--wh40k-text-dark, #1a1510) !important;
         text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) !important;
     }
 
@@ -1004,14 +1004,14 @@
         font-size: 0.55em !important;
         text-transform: uppercase !important;
         letter-spacing: 0.12em !important;
-        color: var(--rt-text-muted, rgba(60, 50, 40, 0.75)) !important;
+        color: var(--wh40k-text-muted, rgba(60, 50, 40, 0.75)) !important;
     }
 
     .wh40k-char-hud-base {
         font-size: 0.65em !important;
         text-transform: uppercase !important;
         letter-spacing: 0.1em !important;
-        color: var(--rt-text-muted, rgba(60, 50, 40, 0.75)) !important;
+        color: var(--wh40k-text-muted, rgba(60, 50, 40, 0.75)) !important;
         text-align: center !important;
     }
 
@@ -1019,8 +1019,8 @@
         width: 18px !important;
         height: 18px !important;
         border-radius: 999px !important;
-        background: var(--rt-btn-bg, #f0ebe0) !important;
-        border: 1px solid var(--rt-border-color, rgba(140, 120, 90, 0.3)) !important;
+        background: var(--wh40k-btn-bg, #f0ebe0) !important;
+        border: 1px solid var(--wh40k-border-color, rgba(140, 120, 90, 0.3)) !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -1032,7 +1032,7 @@
 
     .wh40k-char-hud-toggle-icon {
         font-size: 0.7em !important;
-        color: var(--rt-text-muted, #666) !important;
+        color: var(--wh40k-text-muted, #666) !important;
         display: inline-block !important;
         transition: transform 0.15s ease !important;
     }
@@ -1046,10 +1046,10 @@
         gap: 6px !important;
         padding: 8px !important;
         width: 170px !important;
-        background: var(--rt-panel-bg-solid, #f8f4ec) !important;
-        border: 1px solid var(--rt-border-color, rgba(140, 120, 90, 0.5)) !important;
+        background: var(--wh40k-panel-bg-solid, #f8f4ec) !important;
+        border: 1px solid var(--wh40k-border-color, rgba(140, 120, 90, 0.5)) !important;
         border-radius: 8px !important;
-        box-shadow: 0 6px 16px var(--rt-shadow-medium, rgba(0, 0, 0, 0.2)) !important;
+        box-shadow: 0 6px 16px var(--wh40k-shadow-medium, rgba(0, 0, 0, 0.2)) !important;
         z-index: 20 !important;
 
         // Show when expanded
@@ -1068,17 +1068,17 @@
         font-size: 0.6em !important;
         text-transform: uppercase !important;
         letter-spacing: 0.08em !important;
-        color: var(--rt-text-muted, #666) !important;
+        color: var(--wh40k-text-muted, #666) !important;
     }
 
     .wh40k-char-hud-details input,
     .wh40k-char-hud-details select {
         width: 100% !important;
-        border: 1px solid var(--rt-border-color-light, rgba(140, 120, 90, 0.3)) !important;
+        border: 1px solid var(--wh40k-border-color-light, rgba(140, 120, 90, 0.3)) !important;
         border-radius: 4px !important;
         padding: 2px 4px !important;
-        background: var(--rt-input-bg, #fff) !important;
-        color: var(--rt-text-dark, #333) !important;
+        background: var(--wh40k-input-bg, #fff) !important;
+        color: var(--wh40k-text-dark, #333) !important;
         font-size: 0.8em !important;
     }
 }

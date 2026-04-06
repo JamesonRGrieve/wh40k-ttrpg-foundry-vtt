@@ -1,18 +1,18 @@
 {{! NPC Template - Preview Tab }}
 <section class="tab-content tab-preview" data-tab="preview" data-group="primary">
     {{! Threat Selector }}
-    <div class="rt-panel preview-controls">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel preview-controls">
+        <header class="wh40k-panel-header">
             <h3><i class="fas fa-eye"></i> {{localize "WH40K.NPC.Template.PreviewSettings"}}</h3>
         </header>
-        <div class="rt-panel-content">
+        <div class="wh40k-panel-content">
             <div class="preview-threat-control">
                 <label>{{localize "WH40K.NPC.Template.PreviewAtThreat"}}</label>
                 <input type="range" min="1" max="30" value="{{previewThreat}}" class="threat-slider" data-action="updatePreview" />
                 <span class="threat-value">{{previewThreat}}</span>
             </div>
             <div class="preview-actions">
-                <button type="button" class="rt-btn rt-btn-primary" data-action="createFromPreview">
+                <button type="button" class="wh40k-btn wh40k-btn-primary" data-action="createFromPreview">
                     <i class="fas fa-user-plus"></i>
                     {{localize "WH40K.NPC.Template.CreateNPC"}}
                 </button>
@@ -21,11 +21,11 @@
     </div>
 
     {{! Preview Stat Block }}
-    <div class="rt-panel preview-statblock">
-        <header class="rt-panel-header">
+    <div class="wh40k-panel preview-statblock">
+        <header class="wh40k-panel-header">
             <h3>{{item.name}} <span class="threat-badge">{{localize "WH40K.NPC.ThreatLevel"}} {{previewThreat}}</span></h3>
         </header>
-        <div class="rt-panel-content">
+        <div class="wh40k-panel-content">
             {{! Characteristics Preview }}
             <div class="preview-section">
                 <h4>{{localize "WH40K.Characteristics"}}</h4>

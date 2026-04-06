@@ -115,7 +115,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
         try {
             data = JSON.parse(event.dataTransfer.getData('text/plain'));
             if (data.type !== 'Item') {
-                game.rt.log('ItemContainer | Containers only accept items', data);
+                game.wh40k.log('ItemContainer | Containers only accept items', data);
                 return false;
             }
 
@@ -129,11 +129,11 @@ export default class ContainerItemSheet extends BaseItemSheet {
 
             // Check if item already exists
             if (this.item.items?.find((i) => i._id === droppedItem._id)) {
-                game.rt.log('Item already exists in container -- ignoring');
+                game.wh40k.log('Item already exists in container -- ignoring');
                 return false;
             }
         } catch (err) {
-            game.rt.log('ItemContainer | drop error', err);
+            game.wh40k.log('ItemContainer | drop error', err);
             return false;
         }
 

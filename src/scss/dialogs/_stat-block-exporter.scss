@@ -31,9 +31,9 @@
             }
 
             &.active {
-                background: var(--rt-color-accent, #c9a227);
+                background: var(--wh40k-color-accent, #c9a227);
                 color: #fff;
-                border-color: var(--rt-color-accent, #c9a227);
+                border-color: var(--wh40k-color-accent, #c9a227);
             }
 
             i {
@@ -86,7 +86,7 @@
         }
 
         .primary {
-            background: var(--rt-color-accent, #c9a227);
+            background: var(--wh40k-color-accent, #c9a227);
             color: #fff;
 
             &:hover {

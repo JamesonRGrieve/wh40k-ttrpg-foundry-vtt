@@ -357,7 +357,7 @@ export default class ResourceGrantData extends BaseGrantData {
         // Find matching entry
         for (const entry of entries) {
             if (rolled >= entry.min && rolled <= entry.max) {
-                game.rt?.log(`ResourceGrantData: Rolled ${rolled} on lookup table, result: ${entry.value}`);
+                game.wh40k?.log(`ResourceGrantData: Rolled ${rolled} on lookup table, result: ${entry.value}`);
                 return entry.value;
             }
         }

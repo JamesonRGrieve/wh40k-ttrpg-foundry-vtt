@@ -123,7 +123,7 @@ export class RollData {
                     modifiers[m.toUpperCase()] = value;
                 }
             } catch (err) {
-                game.rt.error('Error while calculate roll data modifiers:', err);
+                game.wh40k.error('Error while calculate roll data modifiers:', err);
             }
         }
         return modifiers;

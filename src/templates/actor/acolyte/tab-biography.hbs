@@ -1,87 +1,87 @@
 {{!-- Acolyte Sheet Biography Tab --}}
 {{!-- This part renders the Biography tab content with identity, origin path, and notes --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-<div class="rt-bio-grid">
+<div class="wh40k-bio-grid">
     {{!-- Left Column: Identity & Origin --}}
-    <div class="rt-bio-col">
+    <div class="wh40k-bio-col">
         {{!-- Identity Panel --}}
-        <div class="rt-panel">
-            <div class="rt-panel-header">
-                <span class="rt-panel-title"><i class="fas fa-user"></i> Identity</span>
+        <div class="wh40k-panel">
+            <div class="wh40k-panel-header">
+                <span class="wh40k-panel-title"><i class="fas fa-user"></i> Identity</span>
             </div>
-            <div class="rt-panel-body">
-                <div class="rt-identity-grid">
-                    <div class="rt-field-row">
-                        <label class="rt-field-label">Gender</label>
-                        <input type="text" class="rt-field-input" name="system.bio.gender" value="{{system.bio.gender}}" />
+            <div class="wh40k-panel-body">
+                <div class="wh40k-identity-grid">
+                    <div class="wh40k-field-row">
+                        <label class="wh40k-field-label">Gender</label>
+                        <input type="text" class="wh40k-field-input" name="system.bio.gender" value="{{system.bio.gender}}" />
                     </div>
-                    <div class="rt-field-row">
-                        <label class="rt-field-label">Age</label>
-                        <input type="text" class="rt-field-input" name="system.bio.age" value="{{system.bio.age}}" />
+                    <div class="wh40k-field-row">
+                        <label class="wh40k-field-label">Age</label>
+                        <input type="text" class="wh40k-field-input" name="system.bio.age" value="{{system.bio.age}}" />
                     </div>
-                    <div class="rt-field-row">
-                        <label class="rt-field-label">Build</label>
-                        <input type="text" class="rt-field-input" name="system.bio.build" value="{{system.bio.build}}" />
+                    <div class="wh40k-field-row">
+                        <label class="wh40k-field-label">Build</label>
+                        <input type="text" class="wh40k-field-input" name="system.bio.build" value="{{system.bio.build}}" />
                     </div>
-                    <div class="rt-field-row">
-                        <label class="rt-field-label">Complexion</label>
-                        <input type="text" class="rt-field-input" name="system.bio.complexion" value="{{system.bio.complexion}}" />
+                    <div class="wh40k-field-row">
+                        <label class="wh40k-field-label">Complexion</label>
+                        <input type="text" class="wh40k-field-input" name="system.bio.complexion" value="{{system.bio.complexion}}" />
                     </div>
-                    <div class="rt-field-row">
-                        <label class="rt-field-label">Hair</label>
-                        <input type="text" class="rt-field-input" name="system.bio.hair" value="{{system.bio.hair}}" />
+                    <div class="wh40k-field-row">
+                        <label class="wh40k-field-label">Hair</label>
+                        <input type="text" class="wh40k-field-input" name="system.bio.hair" value="{{system.bio.hair}}" />
                     </div>
-                    <div class="rt-field-row">
-                        <label class="rt-field-label">Eyes</label>
-                        <input type="text" class="rt-field-input" name="system.bio.eyes" value="{{system.bio.eyes}}" />
+                    <div class="wh40k-field-row">
+                        <label class="wh40k-field-label">Eyes</label>
+                        <input type="text" class="wh40k-field-input" name="system.bio.eyes" value="{{system.bio.eyes}}" />
                     </div>
                 </div>
             </div>
         </div>
         
         {{!-- Origin Path Panel - Modern Sleek Design --}}
-        <div class="rt-panel rt-panel--bio rt-origin-panel-modern" data-panel-id="origin-path">
-            <div class="rt-panel-header">
-                <div class="rt-origin-header-left">
+        <div class="wh40k-panel wh40k-panel--bio wh40k-origin-panel-modern" data-panel-id="origin-path">
+            <div class="wh40k-panel-header">
+                <div class="wh40k-origin-header-left">
                     <i class="fas fa-route"></i>
-                    <span class="rt-panel-title">Origin Path</span>
+                    <span class="wh40k-panel-title">Origin Path</span>
                 </div>
             </div>
-            <div class="rt-panel-body">
+            <div class="wh40k-panel-body">
                 {{!-- Visual Step Indicators (always shown) --}}
-                <div class="rt-origin-steps-visual">
+                <div class="wh40k-origin-steps-visual">
                     {{#each originPathSteps as |step|}}
-                    <div class="rt-origin-step-node {{#if step.item}}rt-filled{{else}}rt-empty{{/if}}" 
+                    <div class="wh40k-origin-step-node {{#if step.item}}wh40k-filled{{else}}wh40k-empty{{/if}}" 
                          data-step="{{step.key}}"
                          {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
                          data-tooltip="{{step.label}}{{#if step.item}}: {{step.item.name}}{{/if}}">
-                        <div class="rt-step-circle">
+                        <div class="wh40k-step-circle">
                             {{#if step.item}}
-                                <img src="{{step.item.img}}" alt="{{step.item.name}}" class="rt-step-img" />
+                                <img src="{{step.item.img}}" alt="{{step.item.name}}" class="wh40k-step-img" />
                             {{else}}
                                 <i class="fas {{step.icon}}"></i>
                             {{/if}}
                         </div>
-                        <span class="rt-step-label">{{step.shortLabel}}</span>
+                        <span class="wh40k-step-label">{{step.shortLabel}}</span>
                     </div>
                     {{#unless @last}}
-                        <div class="rt-step-connector {{#if step.item}}rt-active{{/if}}"></div>
+                        <div class="wh40k-step-connector {{#if step.item}}wh40k-active{{/if}}"></div>
                     {{/unless}}
                     {{/each}}
                 </div>
 
                 {{!-- Origin Path Builder Button - Prominent Call-to-Action --}}
-                <div class="rt-origin-builder-cta">
-                    <button type="button" class="rt-btn-origin-builder" data-action="openOriginPathBuilder" data-tooltip="Open the Origin Path Builder to construct your character's journey">
+                <div class="wh40k-origin-builder-cta">
+                    <button type="button" class="wh40k-btn-origin-builder" data-action="openOriginPathBuilder" data-tooltip="Open the Origin Path Builder to construct your character's journey">
                         <i class="fas fa-diagram-project"></i>
-                        <span class="rt-btn-text">Build Origin Path</span>
+                        <span class="wh40k-btn-text">Build Origin Path</span>
                         {{#if originPathSummary.isComplete}}
-                            <span class="rt-builder-badge rt-complete">
+                            <span class="wh40k-builder-badge wh40k-complete">
                                 <i class="fas fa-check-circle"></i>
                                 Complete
                             </span>
                         {{else}}
-                            <span class="rt-builder-badge rt-incomplete">
+                            <span class="wh40k-builder-badge wh40k-incomplete">
                                 {{originPathSummary.completedSteps}}/{{originPathSummary.totalSteps}}
                             </span>
                         {{/if}}
@@ -90,34 +90,34 @@
 
                 {{!-- Empty State Message (only if no steps completed) --}}
                 {{#unless originPathSummary.completedSteps}}
-                <div class="rt-origin-empty-state">
-                    <p class="rt-empty-text">No origin path selected yet. Click the button above to begin your journey.</p>
+                <div class="wh40k-origin-empty-state">
+                    <p class="wh40k-empty-text">No origin path selected yet. Click the button above to begin your journey.</p>
                 </div>
                 {{/unless}}
             </div>
 
             {{!-- Accumulated Bonuses (Collapsible - Start Collapsed) --}}
                 {{#if originPathSummary.isComplete}}
-                <div class="rt-origin-bonuses-modern collapsed" data-panel-id="origin-bonuses" data-collapsed="true">
-                    <button type="button" class="rt-bonuses-toggle" data-action="togglePanel" data-panel-id="origin-bonuses">
+                <div class="wh40k-origin-bonuses-modern collapsed" data-panel-id="origin-bonuses" data-collapsed="true">
+                    <button type="button" class="wh40k-bonuses-toggle" data-action="togglePanel" data-panel-id="origin-bonuses">
                         <i class="fas fa-gift"></i>
                         <span>Accumulated Bonuses</span>
-                        <i class="fas fa-chevron-down rt-toggle-icon"></i>
+                        <i class="fas fa-chevron-down wh40k-toggle-icon"></i>
                     </button>
                     
-                    <div class="rt-bonuses-content">
+                    <div class="wh40k-bonuses-content">
                         {{!-- Characteristics --}}
                         {{#if originPathSummary.characteristics.length}}
-                        <div class="rt-bonus-group">
-                            <span class="rt-bonus-category-label">
+                        <div class="wh40k-bonus-group">
+                            <span class="wh40k-bonus-category-label">
                                 <i class="fas fa-chart-bar"></i>
                                 Characteristics
                             </span>
-                            <div class="rt-bonus-chips">
+                            <div class="wh40k-bonus-chips">
                                 {{#each originPathSummary.characteristics}}
-                                <span class="rt-char-chip {{#if positive}}rt-positive{{else}}rt-negative{{/if}}">
-                                    <span class="rt-chip-stat">{{short}}</span>
-                                    <span class="rt-chip-value">{{#if positive}}+{{/if}}{{value}}</span>
+                                <span class="wh40k-char-chip {{#if positive}}wh40k-positive{{else}}wh40k-negative{{/if}}">
+                                    <span class="wh40k-chip-stat">{{short}}</span>
+                                    <span class="wh40k-chip-value">{{#if positive}}+{{/if}}{{value}}</span>
                                 </span>
                                 {{/each}}
                             </div>
@@ -126,14 +126,14 @@
                         
                         {{!-- Skills --}}
                         {{#if originPathSummary.skills.length}}
-                        <div class="rt-bonus-group">
-                            <span class="rt-bonus-category-label">
+                        <div class="wh40k-bonus-group">
+                            <span class="wh40k-bonus-category-label">
                                 <i class="fas fa-book"></i>
                                 Skills
                             </span>
-                            <div class="rt-bonus-tags">
+                            <div class="wh40k-bonus-tags">
                                 {{#each originPathSummary.skills}}
-                                <span class="rt-bonus-tag rt-tag-skill">{{this}}</span>
+                                <span class="wh40k-bonus-tag wh40k-tag-skill">{{this}}</span>
                                 {{/each}}
                             </div>
                         </div>
@@ -141,14 +141,14 @@
                         
                         {{!-- Talents --}}
                         {{#if originPathSummary.talents.length}}
-                        <div class="rt-bonus-group">
-                            <span class="rt-bonus-category-label">
+                        <div class="wh40k-bonus-group">
+                            <span class="wh40k-bonus-category-label">
                                 <i class="fas fa-star"></i>
                                 Talents
                             </span>
-                            <div class="rt-bonus-tags">
+                            <div class="wh40k-bonus-tags">
                                 {{#each originPathSummary.talents}}
-                                <span class="rt-bonus-tag rt-tag-talent">{{this}}</span>
+                                <span class="wh40k-bonus-tag wh40k-tag-talent">{{this}}</span>
                                 {{/each}}
                             </div>
                         </div>
@@ -156,14 +156,14 @@
                         
                         {{!-- Traits --}}
                         {{#if originPathSummary.traits.length}}
-                        <div class="rt-bonus-group">
-                            <span class="rt-bonus-category-label">
+                        <div class="wh40k-bonus-group">
+                            <span class="wh40k-bonus-category-label">
                                 <i class="fas fa-dna"></i>
                                 Traits
                             </span>
-                            <div class="rt-bonus-tags">
+                            <div class="wh40k-bonus-tags">
                                 {{#each originPathSummary.traits}}
-                                <span class="rt-bonus-tag rt-tag-trait">{{this}}</span>
+                                <span class="wh40k-bonus-tag wh40k-tag-trait">{{this}}</span>
                                 {{/each}}
                             </div>
                         </div>
@@ -175,40 +175,40 @@
         {{!-- End of Origin Path Panel --}}
 
         {{!-- Connections Panel --}}
-            <div class="rt-panel">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-users"></i> Connections</span>
+            <div class="wh40k-panel">
+                <div class="wh40k-panel-header">
+                    <span class="wh40k-panel-title"><i class="fas fa-users"></i> Connections</span>
                 </div>
-                <div class="rt-panel-body">
-                    <div class="rt-connections-section">
-                        <div class="rt-affliction-header">
+                <div class="wh40k-panel-body">
+                    <div class="wh40k-connections-section">
+                        <div class="wh40k-affliction-header">
                             <span>Peers</span>
-                            <button type="button" class="rt-add-btn" data-action="itemCreate" data-type="peer"><i class="fas fa-plus"></i></button>
+                            <button type="button" class="wh40k-add-btn" data-action="itemCreate" data-type="peer"><i class="fas fa-plus"></i></button>
                         </div>
-                        <div class="rt-affliction-list">
+                        <div class="wh40k-affliction-list">
                             {{#each actor.items as |item|}}
                                 {{#if item.isPeer}}
-                                <div class="rt-affliction-row" data-item-id="{{item.id}}">
-                                    <span class="rt-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
-                                    <span class="rt-connection-bonus">+{{item.system.modifier}}</span>
-                                    <button type="button" class="rt-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
+                                <div class="wh40k-affliction-row" data-item-id="{{item.id}}">
+                                    <span class="wh40k-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
+                                    <span class="wh40k-connection-bonus">+{{item.system.modifier}}</span>
+                                    <button type="button" class="wh40k-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
                                 </div>
                                 {{/if}}
                             {{/each}}
                         </div>
                     </div>
-                    <div class="rt-connections-section">
-                        <div class="rt-affliction-header">
+                    <div class="wh40k-connections-section">
+                        <div class="wh40k-affliction-header">
                             <span>Enemies</span>
-                            <button type="button" class="rt-add-btn" data-action="itemCreate" data-type="enemy"><i class="fas fa-plus"></i></button>
+                            <button type="button" class="wh40k-add-btn" data-action="itemCreate" data-type="enemy"><i class="fas fa-plus"></i></button>
                         </div>
-                        <div class="rt-affliction-list">
+                        <div class="wh40k-affliction-list">
                             {{#each actor.items as |item|}}
                                 {{#if item.isEnemy}}
-                                <div class="rt-affliction-row" data-item-id="{{item.id}}">
-                                    <span class="rt-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
-                                    <span class="rt-connection-penalty">{{item.system.modifier}}</span>
-                                    <button type="button" class="rt-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
+                                <div class="wh40k-affliction-row" data-item-id="{{item.id}}">
+                                    <span class="wh40k-affliction-name" data-action="itemEdit" data-item-id="{{item.id}}">{{item.name}}</span>
+                                    <span class="wh40k-connection-penalty">{{item.system.modifier}}</span>
+                                    <button type="button" class="wh40k-affliction-del" data-action="itemDelete" data-item-id="{{item.id}}"><i class="fas fa-times"></i></button>
                                 </div>
                                 {{/if}}
                             {{/each}}
@@ -222,40 +222,40 @@
     {{!-- End of Left Column --}}
         
         {{!-- Right Column: Experience & Journal/Notes --}}
-        <div class="rt-bio-col">
+        <div class="wh40k-bio-col">
             {{!-- Experience Panel (moved above connections) --}}
             {{> systems/wh40k-rpg/templates/actor/panel/experience-panel-v2.hbs}}
             
             {{!-- Character Notes / Journal --}}
-            <div class="rt-panel rt-panel-journal">
-                <div class="rt-panel-header">
-                    <span class="rt-panel-title"><i class="fas fa-book-open"></i> Character Journal</span>
+            <div class="wh40k-panel wh40k-panel-journal">
+                <div class="wh40k-panel-header">
+                    <span class="wh40k-panel-title"><i class="fas fa-book-open"></i> Character Journal</span>
                 </div>
-                <div class="rt-panel-body rt-journal-body">
-                    <div class="rt-journal-section">
-                        <label class="rt-field-label">Personality & Quirks</label>
-                        <textarea class="rt-textarea" name="system.bio.quirks" rows="2" placeholder="Distinctive habits, mannerisms, beliefs...">{{system.bio.quirks}}</textarea>
+                <div class="wh40k-panel-body wh40k-journal-body">
+                    <div class="wh40k-journal-section">
+                        <label class="wh40k-field-label">Personality & Quirks</label>
+                        <textarea class="wh40k-textarea" name="system.bio.quirks" rows="2" placeholder="Distinctive habits, mannerisms, beliefs...">{{system.bio.quirks}}</textarea>
                     </div>
-                    <div class="rt-journal-section">
-                        <label class="rt-field-label">Superstitions & Rituals</label>
-                        <textarea class="rt-textarea" name="system.bio.superstition" rows="2" placeholder="Personal beliefs and observances...">{{system.bio.superstition}}</textarea>
+                    <div class="wh40k-journal-section">
+                        <label class="wh40k-field-label">Superstitions & Rituals</label>
+                        <textarea class="wh40k-textarea" name="system.bio.superstition" rows="2" placeholder="Personal beliefs and observances...">{{system.bio.superstition}}</textarea>
                     </div>
-                    <div class="rt-journal-section">
-                        <label class="rt-field-label">Treasured Mementos</label>
-                        <textarea class="rt-textarea" name="system.bio.mementos" rows="2" placeholder="Important possessions and keepsakes...">{{system.bio.mementos}}</textarea>
+                    <div class="wh40k-journal-section">
+                        <label class="wh40k-field-label">Treasured Mementos</label>
+                        <textarea class="wh40k-textarea" name="system.bio.mementos" rows="2" placeholder="Important possessions and keepsakes...">{{system.bio.mementos}}</textarea>
                     </div>
-                    <div class="rt-journal-section rt-journal-notes">
-                        <label class="rt-field-label">Background & Notes</label>
+                    <div class="wh40k-journal-section wh40k-journal-notes">
+                        <label class="wh40k-field-label">Background & Notes</label>
                         {{#if editable}}
                         <prose-mirror name="system.bio.notes" 
                                       value="{{biography.source.notes}}" 
                                       document-uuid="{{actor.uuid}}"
-                                      class="rt-prose-editor"
+                                      class="wh40k-prose-editor"
                                       compact>
                             {{{biography.enriched.notes}}}
                         </prose-mirror>
                         {{else}}
-                        <div class="rt-prose-content editor-content">
+                        <div class="wh40k-prose-content editor-content">
                             {{{biography.enriched.notes}}}
                         </div>
                         {{/if}}

@@ -38,14 +38,14 @@
     align-items: center;
     gap: $wh40k-space-sm;
     padding: $wh40k-space-sm $wh40k-space-md;
-    background: linear-gradient(135deg, var(--rt-gold-dark) 0%, rgba(212, 175, 55, 0.3) 100%);
+    background: linear-gradient(135deg, var(--wh40k-gold-dark) 0%, rgba(212, 175, 55, 0.3) 100%);
     border-radius: $wh40k-radius-md;
     margin-bottom: $wh40k-space-md;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     font-family: $wh40k-font-heading;
 
     i {
-        color: var(--rt-gold-light);
+        color: var(--wh40k-gold-light);
     }
 }
 
@@ -58,13 +58,13 @@
         gap: $wh40k-space-xs;
         font-size: $wh40k-font-size-sm;
         font-weight: 600;
-        color: var(--rt-text-muted);
+        color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.05em;
         margin-bottom: $wh40k-space-xs;
 
         i {
-            color: var(--rt-gold);
+            color: var(--wh40k-gold);
         }
     }
 }
@@ -80,12 +80,12 @@
     align-items: center;
     gap: $wh40k-space-xs;
     padding: 2px $wh40k-space-sm;
-    background: var(--rt-input-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-input-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-sm;
     font-size: $wh40k-font-size-xs;
     font-weight: 600;
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
 
     &--wounds {
         background: rgba($wh40k-color-crimson, 0.2);
@@ -99,8 +99,8 @@
 
     &--fate {
         background: rgba(212, 175, 55, 0.2);
-        border-color: var(--rt-gold-dark);
-        color: var(--rt-gold);
+        border-color: var(--wh40k-gold-dark);
+        color: var(--wh40k-gold);
     }
 
     &--profit {
@@ -125,14 +125,14 @@
 
     &--talent {
         background: rgba(212, 175, 55, 0.2);
-        border-color: var(--rt-gold-dark);
-        color: var(--rt-gold);
+        border-color: var(--wh40k-gold-dark);
+        color: var(--wh40k-gold);
     }
 }
 
 .wh40k-compact-description {
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: $wh40k-radius-md;
     padding: $wh40k-space-md;
 }
@@ -154,7 +154,7 @@
 }
 
 .wh40k-description-content {
-    color: var(--rt-text-dark);
+    color: var(--wh40k-text-dark);
     line-height: 1.5;
     font-size: $wh40k-font-size-sm;
 
@@ -163,7 +163,7 @@
     }
 
     strong {
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         font-weight: 700;
     }
 }

@@ -1,25 +1,25 @@
 {{!-- Item Header - Physical Item Style
      Header for physical items with image + name + class/type/craftsmanship badges + equipped toggle
 --}}
-<header class="rt-item-header rt-item-header--physical">
-  <div class="rt-item-header__image" data-action="editImage" data-edit="img">
+<header class="wh40k-item-header wh40k-item-header--physical">
+  <div class="wh40k-item-header__image" data-action="editImage" data-edit="img">
     <img src="{{item.img}}" alt="{{item.name}}" />
-    <div class="rt-item-header__image-overlay">
+    <div class="wh40k-item-header__image-overlay">
       <i class="fas fa-edit"></i>
     </div>
   </div>
   
-  <div class="rt-item-header__info">
+  <div class="wh40k-item-header__info">
     <input type="text" 
-           class="rt-item-header__name" 
+           class="wh40k-item-header__name" 
            name="name" 
            value="{{item.name}}" 
            placeholder="{{localize 'WH40K.Item.NamePlaceholder'}}" />
     
-    <div class="rt-item-header__meta">
+    <div class="wh40k-item-header__meta">
       {{!-- Item Class Badge (for weapons) --}}
       {{#if system.class}}
-      <span class="rt-badge rt-badge--class" title="{{system.classLabel}}">
+      <span class="wh40k-badge wh40k-badge--class" title="{{system.classLabel}}">
         <i class="fas {{system.classIcon}}"></i>
         {{system.classLabel}}
       </span>
@@ -27,14 +27,14 @@
       
       {{!-- Item Type Badge --}}
       {{#if system.type}}
-      <span class="rt-badge rt-badge--type" title="{{system.typeLabel}}">
+      <span class="wh40k-badge wh40k-badge--type" title="{{system.typeLabel}}">
         {{system.typeLabel}}
       </span>
       {{/if}}
       
       {{!-- Craftsmanship Badge (if not Common) --}}
       {{#if (and system.craftsmanship (ne system.craftsmanship "common"))}}
-      <span class="rt-badge rt-badge--craft rt-badge--{{system.craftsmanship}}" 
+      <span class="wh40k-badge wh40k-badge--craft wh40k-badge--{{system.craftsmanship}}" 
             title="{{system.craftsmanshipLabel}}">
         <i class="fas fa-hammer"></i>
         {{system.craftsmanshipLabel}}
@@ -43,7 +43,7 @@
       
       {{!-- Two-Handed Indicator (for weapons) --}}
       {{#if system.twoHanded}}
-      <span class="rt-badge rt-badge--hands" title="Two-Handed">
+      <span class="wh40k-badge wh40k-badge--hands" title="Two-Handed">
         <i class="fas fa-hands"></i>
       </span>
       {{/if}}
@@ -52,13 +52,13 @@
   
   {{!-- Equipped Toggle (for equippable items) --}}
   {{#if system.equipped}}
-  <div class="rt-item-header__equipped">
-    <label class="rt-toggle-equipped" title="Toggle Equipped">
+  <div class="wh40k-item-header__equipped">
+    <label class="wh40k-toggle-equipped" title="Toggle Equipped">
       <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
-      <span class="rt-toggle-equipped__indicator">
+      <span class="wh40k-toggle-equipped__indicator">
         <i class="fas {{#if system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
       </span>
-      <span class="rt-toggle-equipped__label">
+      <span class="wh40k-toggle-equipped__label">
         {{#if system.equipped}}Equipped{{else}}Stowed{{/if}}
       </span>
     </label>

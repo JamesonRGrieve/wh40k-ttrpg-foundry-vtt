@@ -23,7 +23,7 @@
 }
 
 .wh40k-add-btn {
-    @include rt-icon-button(20px, $wh40k-accent-gold, 0.65rem);
+    @include wh40k-icon-button(20px, $wh40k-accent-gold, 0.65rem);
 }
 
 .wh40k-affliction-list {

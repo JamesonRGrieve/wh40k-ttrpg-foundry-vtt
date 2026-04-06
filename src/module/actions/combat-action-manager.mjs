@@ -11,7 +11,7 @@ export class CombatActionManager {
     }
 
     disableHooks() {
-        game.rt.log('Disabling Hooks', { cth: this.combatTurnHook, crh: this.combatRoundHook });
+        game.wh40k.log('Disabling Hooks', { cth: this.combatTurnHook, crh: this.combatRoundHook });
         Hooks.off('combatTurn', this.combatTurnHook);
         Hooks.off('combatRound', this.combatRoundHook);
     }
@@ -19,7 +19,7 @@ export class CombatActionManager {
     async updateCombat(combat, data) {
         // Only Run on the first GM -- so it will only run once
         if (game.userId === this.getFirstGM()) {
-            game.rt.log('updateCombat - this should only be running on first GM');
+            game.wh40k.log('updateCombat - this should only be running on first GM');
             this.processCombatActiveEffects(combat, data);
 
             // Reset first attack flags for all combatants at start of new round
@@ -44,7 +44,7 @@ export class CombatActionManager {
 
     async processCombatActiveEffects(combat, data) {
         const currentCombatant = combat.turns[data.turn];
-        game.rt.log('processCombatActiveEffects', currentCombatant);
+        game.wh40k.log('processCombatActiveEffects', currentCombatant);
 
         if (currentCombatant) {
             // Handle Actor Effects

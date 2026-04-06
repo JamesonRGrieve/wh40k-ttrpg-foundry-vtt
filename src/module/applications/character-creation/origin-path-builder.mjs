@@ -369,7 +369,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _getLocalizedStepLabel(key) {
         const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
-        return game.i18n.localize(`RT.OriginPath.${capitalizedKey}`);
+        return game.i18n.localize(`WH40K.OriginPath.${capitalizedKey}`);
     }
 
     /**
@@ -380,7 +380,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _getLocalizedStepDescription(descKey) {
         if (!descKey) return '';
-        return game.i18n.localize(`RT.OriginPath.${descKey}`);
+        return game.i18n.localize(`WH40K.OriginPath.${descKey}`);
     }
 
     /**
@@ -1362,7 +1362,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 // Build list of steps that will be reset
                 const stepNames = stepsToReset
                     .filter((s) => this.selections.has(s.step))
-                    .map((s) => game.i18n.localize(`RT.OriginPath.Step${s.key.charAt(0).toUpperCase() + s.key.slice(1)}`))
+                    .map((s) => game.i18n.localize(`WH40K.OriginPath.Step${s.key.charAt(0).toUpperCase() + s.key.slice(1)}`))
                     .join(', ');
 
                 const confirmed = await Dialog.confirm({
@@ -1643,7 +1643,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         // Show a simple input dialog
         const result = await Dialog.prompt({
-            title: game.i18n.localize(`RT.OriginPath.Enter${statType.charAt(0).toUpperCase() + statType.slice(1)}`),
+            title: game.i18n.localize(`WH40K.OriginPath.Enter${statType.charAt(0).toUpperCase() + statType.slice(1)}`),
             content: `
                 <form>
                     <div class="form-group">

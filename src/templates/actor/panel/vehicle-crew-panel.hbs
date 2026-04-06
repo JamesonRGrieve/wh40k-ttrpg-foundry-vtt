@@ -1,30 +1,30 @@
 {{! Vehicle Crew Panel }}
-<div class="rt-panel spacer rt-grid-col-2">
-    <h1 class="rt-panel-header">
+<div class="wh40k-panel spacer wh40k-grid-col-2">
+    <h1 class="wh40k-panel-header">
         <i class="fas fa-users"></i>
         {{localize "WH40K.Vehicle.Crew"}}
     </h1>
-    <div class="rt-crew-info">
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Vehicle.Crew.Required"}}</span>
+    <div class="wh40k-crew-info">
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Crew.Required"}}</span>
             <input
                 type="number"
                 data-dtype="Number"
-                class="rt-field__input"
+                class="wh40k-field__input"
                 name="system.crew.required"
                 value="{{system.crew.required}}"
                 min="0"
                 placeholder="1"
             />
         </div>
-        <div class="rt-field__wrapper">
-            <span class="rt-field__header">{{localize "WH40K.Vehicle.Passengers"}}</span>
-            <input type="number" data-dtype="Number" class="rt-field__input" name="system.passengers" value="{{system.passengers}}" min="0" placeholder="0" />
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Passengers"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.passengers" value="{{system.passengers}}" min="0" placeholder="0" />
         </div>
-        <div class="rt-field__wrapper rt-field__full">
-            <span class="rt-field__header">{{localize "WH40K.Vehicle.Crew.Notes"}}</span>
+        <div class="wh40k-field__wrapper wh40k-field__full">
+            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Crew.Notes"}}</span>
             <textarea
-                class="rt-field__textarea"
+                class="wh40k-field__textarea"
                 name="system.crew.notes"
                 rows="3"
                 placeholder="Crew positions, roles, requirements..."

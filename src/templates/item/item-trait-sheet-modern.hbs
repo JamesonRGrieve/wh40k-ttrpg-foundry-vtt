@@ -2,33 +2,33 @@
   Rogue Trader Trait Item Sheet - Modern Tabbed Redesign
   Clean trait configuration with tabbed interface
 --}}
-<div class="rt-trait-sheet">
+<div class="wh40k-trait-sheet">
   <form autocomplete="off">
     
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact trait identity with inline badges
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="rt-trait-header">
-      <div class="rt-trait-header__image" data-action="editImage" data-edit="img">
+    <header class="wh40k-trait-header">
+      <div class="wh40k-trait-header__image" data-action="editImage" data-edit="img">
         <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="rt-trait-header__image-overlay">
+        <div class="wh40k-trait-header__image-overlay">
           <i class="fas fa-edit"></i>
         </div>
       </div>
       
-      <div class="rt-trait-header__info">
-        <input type="text" class="rt-trait-header__name" name="name" value="{{item.name}}" placeholder="Trait Name" />
+      <div class="wh40k-trait-header__info">
+        <input type="text" class="wh40k-trait-header__name" name="name" value="{{item.name}}" placeholder="Trait Name" />
         
-        <div class="rt-trait-header__meta">
+        <div class="wh40k-trait-header__meta">
           {{!-- Category Badge --}}
-          <span class="rt-trait-badge rt-trait-badge--category" title="{{item.system.categoryLabel}}">
+          <span class="wh40k-trait-badge wh40k-trait-badge--category" title="{{item.system.categoryLabel}}">
             <i class="fas fa-shield-alt"></i>
             {{item.system.categoryLabel}}
           </span>
           
           {{!-- Level Badge (if applicable) --}}
           {{#if item.system.hasLevel}}
-          <span class="rt-trait-badge rt-trait-badge--level" title="Trait Level/Rating">
+          <span class="wh40k-trait-badge wh40k-trait-badge--level" title="Trait Level/Rating">
             <i class="fas fa-layer-group"></i>
             Level {{item.system.level}}
           </span>
@@ -36,7 +36,7 @@
           
           {{!-- Variable Indicator --}}
           {{#if item.system.isVariable}}
-          <span class="rt-trait-badge rt-trait-badge--variable" title="Variable Trait (X)">
+          <span class="wh40k-trait-badge wh40k-trait-badge--variable" title="Variable Trait (X)">
             <i class="fas fa-question"></i>
             Variable
           </span>
@@ -48,40 +48,40 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          STATS BAR: Key trait info at a glance
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="rt-trait-stats">
+    <div class="wh40k-trait-stats">
       {{!-- Category --}}
-      <div class="rt-trait-stat rt-trait-stat--category">
-        <div class="rt-trait-stat__icon">
+      <div class="wh40k-trait-stat wh40k-trait-stat--category">
+        <div class="wh40k-trait-stat__icon">
           <i class="fas fa-shield-alt"></i>
         </div>
-        <div class="rt-trait-stat__content">
-          <span class="rt-trait-stat__label">Category</span>
-          <span class="rt-trait-stat__value">{{item.system.categoryLabel}}</span>
+        <div class="wh40k-trait-stat__content">
+          <span class="wh40k-trait-stat__label">Category</span>
+          <span class="wh40k-trait-stat__value">{{item.system.categoryLabel}}</span>
         </div>
       </div>
       
       {{!-- Level/Rating --}}
       {{#if (gt item.system.level 0)}}
-      <div class="rt-trait-stat rt-trait-stat--level">
-        <div class="rt-trait-stat__icon">
+      <div class="wh40k-trait-stat wh40k-trait-stat--level">
+        <div class="wh40k-trait-stat__icon">
           <i class="fas fa-layer-group"></i>
         </div>
-        <div class="rt-trait-stat__content">
-          <span class="rt-trait-stat__label">Level</span>
-          <span class="rt-trait-stat__value">{{item.system.level}}</span>
+        <div class="wh40k-trait-stat__content">
+          <span class="wh40k-trait-stat__label">Level</span>
+          <span class="wh40k-trait-stat__value">{{item.system.level}}</span>
         </div>
       </div>
       {{/if}}
       
       {{!-- Variable indicator --}}
       {{#if item.system.isVariable}}
-      <div class="rt-trait-stat">
-        <div class="rt-trait-stat__icon">
+      <div class="wh40k-trait-stat">
+        <div class="wh40k-trait-stat__icon">
           <i class="fas fa-question"></i>
         </div>
-        <div class="rt-trait-stat__content">
-          <span class="rt-trait-stat__label">Type</span>
-          <span class="rt-trait-stat__value">Variable (X)</span>
+        <div class="wh40k-trait-stat__content">
+          <span class="wh40k-trait-stat__label">Type</span>
+          <span class="wh40k-trait-stat__value">Variable (X)</span>
         </div>
       </div>
       {{/if}}
@@ -90,16 +90,16 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="rt-tabs rt-tabs--trait rt-trait-tabs" data-group="primary">
-      <button type="button" class="rt-tab rt-trait-tab active" data-tab="properties" data-group="primary">
+    <nav class="wh40k-tabs wh40k-tabs--trait wh40k-trait-tabs" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-trait-tab active" data-tab="properties" data-group="primary">
         <i class="fas fa-cog"></i>
         <span>Properties</span>
       </button>
-      <button type="button" class="rt-tab rt-trait-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-trait-tab" data-tab="effects" data-group="primary">
         <i class="fas fa-magic"></i>
         <span>Effects</span>
       </button>
-      <button type="button" class="rt-tab rt-trait-tab" data-tab="description" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-trait-tab" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
         <span>Description</span>
       </button>
@@ -108,20 +108,20 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <section class="rt-trait-content rt-tab-content rt-tab-content--trait">
+    <section class="wh40k-trait-content wh40k-tab-content wh40k-tab-content--trait">
       
       {{!-- PROPERTIES TAB --}}
-      <div class="rt-trait-panel tab active" data-tab="properties" data-group="primary">
-        <div class="rt-trait-section">
-          <h3 class="rt-section-title">
+      <div class="wh40k-trait-panel tab active" data-tab="properties" data-group="primary">
+        <div class="wh40k-trait-section">
+          <h3 class="wh40k-section-title">
             <i class="fas fa-info-circle"></i> Basic Properties
           </h3>
           
-          <div class="rt-properties-grid">
+          <div class="wh40k-properties-grid">
             {{!-- Category --}}
-            <div class="rt-property">
-              <label class="rt-property-label">Category</label>
-              <select name="system.category" class="rt-property-input">
+            <div class="wh40k-property">
+              <label class="wh40k-property-label">Category</label>
+              <select name="system.category" class="wh40k-property-input">
                 {{#select item.system.category}}
                 <option value="general">General</option>
                 <option value="creature">Creature</option>
@@ -137,27 +137,27 @@
             </div>
             
             {{!-- Level/Rating --}}
-            <div class="rt-property">
-              <label class="rt-property-label">Level / Rating <span class="rt-field-hint">(0 = none)</span></label>
-              <input type="number" name="system.level" value="{{item.system.level}}" min="0" class="rt-property-input" placeholder="0" />
+            <div class="wh40k-property">
+              <label class="wh40k-property-label">Level / Rating <span class="wh40k-field-hint">(0 = none)</span></label>
+              <input type="number" name="system.level" value="{{item.system.level}}" min="0" class="wh40k-property-input" placeholder="0" />
             </div>
           </div>
         </div>
         
         {{!-- Requirements --}}
-        <div class="rt-trait-section">
-          <h3 class="rt-section-title">
+        <div class="wh40k-trait-section">
+          <h3 class="wh40k-section-title">
             <i class="fas fa-lock"></i> Requirements
           </h3>
           
-          <div class="rt-property">
-            <label class="rt-property-label">Prerequisites <span class="rt-field-hint">(to acquire this trait)</span></label>
-            <input type="text" name="system.requirements" value="{{item.system.requirements}}" class="rt-property-input" placeholder="e.g., Mutant origin, Corruption 50+" />
+          <div class="wh40k-property">
+            <label class="wh40k-property-label">Prerequisites <span class="wh40k-field-hint">(to acquire this trait)</span></label>
+            <input type="text" name="system.requirements" value="{{item.system.requirements}}" class="wh40k-property-input" placeholder="e.g., Mutant origin, Corruption 50+" />
           </div>
           
           {{#if item.system.requirements}}
-          <div class="rt-requirements-display" style="margin-top: 0.75rem;">
-            <div class="rt-requirement-tag">
+          <div class="wh40k-requirements-display" style="margin-top: 0.75rem;">
+            <div class="wh40k-requirement-tag">
               <i class="fas fa-exclamation-triangle"></i>
               {{item.system.requirements}}
             </div>
@@ -167,42 +167,42 @@
       </div>
       
       {{!-- EFFECTS TAB --}}
-      <div class="rt-trait-panel tab" data-tab="effects" data-group="primary">
+      <div class="wh40k-trait-panel tab" data-tab="effects" data-group="primary">
         {{!-- Benefit/Effect Description --}}
-        <div class="rt-trait-section">
-          <h3 class="rt-section-title">
+        <div class="wh40k-trait-section">
+          <h3 class="wh40k-section-title">
             <i class="fas fa-magic"></i> Benefit
           </h3>
           
-          <p class="rt-field-hint" style="margin-bottom: 0.75rem;">
+          <p class="wh40k-field-hint" style="margin-bottom: 0.75rem;">
             <i class="fas fa-info-circle"></i> Describe the mechanical effect or benefit of this trait.
           </p>
           
-          <div class="rt-editor-container">
+          <div class="wh40k-editor-container">
             {{#if inEditMode}}
             {{editor system.benefit target="system.benefit" button=true editable=editable engine="prosemirror"}}
             {{else}}
-            <div class="rt-description-content">{{{system.benefit}}}</div>
+            <div class="wh40k-description-content">{{{system.benefit}}}</div>
             {{/if}}
           </div>
         </div>
         
         {{!-- Modifiers Display --}}
         {{#if (or item.system.modifiers.characteristics item.system.modifiers.skills item.system.modifiers.combat item.system.modifiers.wounds item.system.modifiers.movement)}}
-        <div class="rt-trait-section">
-          <h3 class="rt-section-title">
+        <div class="wh40k-trait-section">
+          <h3 class="wh40k-section-title">
             <i class="fas fa-chart-line"></i> Modifiers
           </h3>
           
-          <div class="rt-modifiers-display">
+          <div class="wh40k-modifiers-display">
             {{#if item.system.modifiers.characteristics}}
-            <div class="rt-modifier-group">
-              <h4 class="rt-modifier-group-title">Characteristics</h4>
-              <div class="rt-modifier-list">
+            <div class="wh40k-modifier-group">
+              <h4 class="wh40k-modifier-group-title">Characteristics</h4>
+              <div class="wh40k-modifier-list">
                 {{#each item.system.modifiers.characteristics}}
-                <div class="rt-modifier-item">
-                  <span class="rt-modifier-name">{{capitalize @key}}</span>
-                  <span class="rt-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                <div class="wh40k-modifier-item">
+                  <span class="wh40k-modifier-name">{{capitalize @key}}</span>
+                  <span class="wh40k-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
                     {{signedNumber this}}
                   </span>
                 </div>
@@ -212,13 +212,13 @@
             {{/if}}
             
             {{#if item.system.modifiers.skills}}
-            <div class="rt-modifier-group">
-              <h4 class="rt-modifier-group-title">Skills</h4>
-              <div class="rt-modifier-list">
+            <div class="wh40k-modifier-group">
+              <h4 class="wh40k-modifier-group-title">Skills</h4>
+              <div class="wh40k-modifier-list">
                 {{#each item.system.modifiers.skills}}
-                <div class="rt-modifier-item">
-                  <span class="rt-modifier-name">{{capitalize @key}}</span>
-                  <span class="rt-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                <div class="wh40k-modifier-item">
+                  <span class="wh40k-modifier-name">{{capitalize @key}}</span>
+                  <span class="wh40k-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
                     {{signedNumber this}}
                   </span>
                 </div>
@@ -228,13 +228,13 @@
             {{/if}}
             
             {{#if item.system.modifiers.combat}}
-            <div class="rt-modifier-group">
-              <h4 class="rt-modifier-group-title">Combat</h4>
-              <div class="rt-modifier-list">
+            <div class="wh40k-modifier-group">
+              <h4 class="wh40k-modifier-group-title">Combat</h4>
+              <div class="wh40k-modifier-list">
                 {{#each item.system.modifiers.combat}}
-                <div class="rt-modifier-item">
-                  <span class="rt-modifier-name">{{capitalize @key}}</span>
-                  <span class="rt-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
+                <div class="wh40k-modifier-item">
+                  <span class="wh40k-modifier-name">{{capitalize @key}}</span>
+                  <span class="wh40k-modifier-value {{#if (gt this 0)}}positive{{else}}negative{{/if}}">
                     {{signedNumber this}}
                   </span>
                 </div>
@@ -244,12 +244,12 @@
             {{/if}}
             
             {{#if item.system.modifiers.wounds}}
-            <div class="rt-modifier-group">
-              <h4 class="rt-modifier-group-title">Other</h4>
-              <div class="rt-modifier-list">
-                <div class="rt-modifier-item">
-                  <span class="rt-modifier-name">Wounds</span>
-                  <span class="rt-modifier-value {{#if (gt item.system.modifiers.wounds 0)}}positive{{else}}negative{{/if}}">
+            <div class="wh40k-modifier-group">
+              <h4 class="wh40k-modifier-group-title">Other</h4>
+              <div class="wh40k-modifier-list">
+                <div class="wh40k-modifier-item">
+                  <span class="wh40k-modifier-name">Wounds</span>
+                  <span class="wh40k-modifier-value {{#if (gt item.system.modifiers.wounds 0)}}positive{{else}}negative{{/if}}">
                     {{signedNumber item.system.modifiers.wounds}}
                   </span>
                 </div>
@@ -258,12 +258,12 @@
             {{/if}}
             
             {{#if item.system.modifiers.movement}}
-            <div class="rt-modifier-group">
-              <h4 class="rt-modifier-group-title">Movement</h4>
-              <div class="rt-modifier-list">
-                <div class="rt-modifier-item">
-                  <span class="rt-modifier-name">Movement Bonus</span>
-                  <span class="rt-modifier-value {{#if (gt item.system.modifiers.movement 0)}}positive{{else}}negative{{/if}}">
+            <div class="wh40k-modifier-group">
+              <h4 class="wh40k-modifier-group-title">Movement</h4>
+              <div class="wh40k-modifier-list">
+                <div class="wh40k-modifier-item">
+                  <span class="wh40k-modifier-name">Movement Bonus</span>
+                  <span class="wh40k-modifier-value {{#if (gt item.system.modifiers.movement 0)}}positive{{else}}negative{{/if}}">
                     {{signedNumber item.system.modifiers.movement}}
                   </span>
                 </div>
@@ -272,65 +272,65 @@
             {{/if}}
           </div>
           
-          <p class="rt-field-hint" style="margin-top: 1rem;">
+          <p class="wh40k-field-hint" style="margin-top: 1rem;">
             <i class="fas fa-info-circle"></i> Modifiers are configured via Active Effects. This panel is read-only.
           </p>
         </div>
         {{else}}
-        <div class="rt-trait-section">
-          <div class="rt-empty-state">
+        <div class="wh40k-trait-section">
+          <div class="wh40k-empty-state">
             <i class="fas fa-chart-line"></i>
             <p>No modifiers defined</p>
-            <p class="rt-field-hint">Use Active Effects tab to add stat bonuses</p>
+            <p class="wh40k-field-hint">Use Active Effects tab to add stat bonuses</p>
           </div>
         </div>
         {{/if}}
       </div>
       
       {{!-- DESCRIPTION TAB --}}
-      <div class="rt-trait-panel tab" data-tab="description" data-group="primary">
+      <div class="wh40k-trait-panel tab" data-tab="description" data-group="primary">
         {{!-- Description --}}
-        <div class="rt-trait-section">
-          <h3 class="rt-section-title">
+        <div class="wh40k-trait-section">
+          <h3 class="wh40k-section-title">
             <i class="fas fa-book"></i> Description
           </h3>
           
-          <p class="rt-field-hint" style="margin-bottom: 0.75rem;">
+          <p class="wh40k-field-hint" style="margin-bottom: 0.75rem;">
             <i class="fas fa-info-circle"></i> Additional lore, flavor text, or detailed explanation.
           </p>
           
-          <div class="rt-editor-container">
+          <div class="wh40k-editor-container">
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}
-            <div class="rt-description-content">{{{system.description.value}}}</div>
+            <div class="wh40k-description-content">{{{system.description.value}}}</div>
             {{/if}}
           </div>
         </div>
         
         {{!-- Notes --}}
-        <div class="rt-trait-section">
-          <h3 class="rt-section-title">
+        <div class="wh40k-trait-section">
+          <h3 class="wh40k-section-title">
             <i class="fas fa-sticky-note"></i> Notes
           </h3>
           
-          <div class="rt-property">
-            <textarea name="system.notes" rows="4" class="rt-property-textarea" placeholder="GM notes, clarifications, house rules, etc.">{{item.system.notes}}</textarea>
+          <div class="wh40k-property">
+            <textarea name="system.notes" rows="4" class="wh40k-property-textarea" placeholder="GM notes, clarifications, house rules, etc.">{{item.system.notes}}</textarea>
           </div>
         </div>
         
         {{!-- Source --}}
-        <div class="rt-trait-section">
-          <h3 class="rt-section-title">
+        <div class="wh40k-trait-section">
+          <h3 class="wh40k-section-title">
             <i class="fas fa-book-bookmark"></i> Source
           </h3>
           
-          <div class="rt-property">
-            <input type="text" name="system.source" value="{{item.system.source}}" class="rt-property-input" placeholder="Core Rulebook, pg. XX" />
+          <div class="wh40k-property">
+            <input type="text" name="system.source" value="{{item.system.source}}" class="wh40k-property-input" placeholder="Core Rulebook, pg. XX" />
           </div>
         </div>
       </div>
       
-    </section>{{!-- .rt-trait-content --}}
+    </section>{{!-- .wh40k-trait-content --}}
   </form>
-</div>{{!-- .rt-trait-sheet --}}
+</div>{{!-- .wh40k-trait-sheet --}}

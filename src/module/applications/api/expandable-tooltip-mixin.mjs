@@ -82,8 +82,8 @@ export default function ExpandableTooltipMixin(Base) {
             const wrapper = this.element.querySelector(`[data-expandable-id="${panelId}"]`);
             if (!wrapper) return;
 
-            const trigger = wrapper.querySelector('.rt-expandable');
-            const panel = wrapper.querySelector('.rt-expansion-panel');
+            const trigger = wrapper.querySelector('.wh40k-expandable');
+            const panel = wrapper.querySelector('.wh40k-expansion-panel');
 
             if (trigger && panel) {
                 trigger.classList.add('wh40k-expandable--expanded');
@@ -104,8 +104,8 @@ export default function ExpandableTooltipMixin(Base) {
             const wrapper = this.element.querySelector(`[data-expandable-id="${panelId}"]`);
             if (!wrapper) return;
 
-            const trigger = wrapper.querySelector('.rt-expandable');
-            const panel = wrapper.querySelector('.rt-expansion-panel');
+            const trigger = wrapper.querySelector('.wh40k-expandable');
+            const panel = wrapper.querySelector('.wh40k-expansion-panel');
 
             if (trigger && panel) {
                 trigger.classList.remove('wh40k-expandable--expanded');
@@ -167,7 +167,7 @@ export default function ExpandableTooltipMixin(Base) {
             // Close panels when clicking outside
             htmlElement.addEventListener('click', (event) => {
                 // Don't close if clicking on trigger or inside panel
-                const clickedExpandable = event.target.closest('.rt-expandable, .rt-expansion-panel');
+                const clickedExpandable = event.target.closest('.wh40k-expandable, .wh40k-expansion-panel');
                 if (!clickedExpandable && this.#openPanels.size > 0) {
                     this.#closeAllPanels();
                 }

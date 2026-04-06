@@ -3,14 +3,14 @@
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
     {{!-- Two Column Layout: Specialist Skills (left) / Talents + Traits (right) --}}
-    <div class="rt-talents-grid rt-talents-grid--2col">
+    <div class="wh40k-talents-grid wh40k-talents-grid--2col">
         {{!-- Left Column - Specialist Skills --}}
-        <div class="rt-talents-col rt-talents-col-left">
+        <div class="wh40k-talents-col wh40k-talents-col-left">
             {{> systems/wh40k-rpg/templates/actor/panel/skills-specialist-panel.hbs}}
         </div>
         
         {{!-- Right Column - Talents & Traits --}}
-        <div class="rt-talents-col rt-talents-col-right">
+        <div class="wh40k-talents-col wh40k-talents-col-right">
             {{> systems/wh40k-rpg/templates/actor/panel/talent-panel.hbs}}
             {{> systems/wh40k-rpg/templates/actor/panel/trait-panel.hbs}}
         </div>

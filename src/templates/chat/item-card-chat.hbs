@@ -1,82 +1,82 @@
 {{!-- Rogue Trader Item Card Chat Template - Modern Design --}}
-<div class="rt-chat">
-    <div class="rt-item-card {{#if isWeapon}}rt-item-card--weapon{{/if}}{{#if isArmour}}rt-item-card--armour{{/if}}{{#if isTalent}}rt-item-card--talent{{/if}}{{#if isPsychicPower}}rt-item-card--power{{/if}}{{#if isShipComponent}}rt-item-card--component{{/if}}" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" {{#if actor}}data-actor-id="{{actor._id}}" data-actor-uuid="{{actor.uuid}}"{{/if}}>
+<div class="wh40k-chat">
+    <div class="wh40k-item-card {{#if isWeapon}}wh40k-item-card--weapon{{/if}}{{#if isArmour}}wh40k-item-card--armour{{/if}}{{#if isTalent}}wh40k-item-card--talent{{/if}}{{#if isPsychicPower}}wh40k-item-card--power{{/if}}{{#if isShipComponent}}wh40k-item-card--component{{/if}}" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" {{#if actor}}data-actor-id="{{actor._id}}" data-actor-uuid="{{actor.uuid}}"{{/if}}>
         {{!-- Header --}}
-        <div class="rt-item-card__header">
-            <img class="rt-item-card__image" src="{{item.img}}" alt="{{item.name}}" />
-            <div class="rt-item-card__title-group">
-                <h2 class="rt-item-card__name">{{item.name}}</h2>
-                <span class="rt-item-card__type">{{itemTypeLabel}}</span>
+        <div class="wh40k-item-card__header">
+            <img class="wh40k-item-card__image" src="{{item.img}}" alt="{{item.name}}" />
+            <div class="wh40k-item-card__title-group">
+                <h2 class="wh40k-item-card__name">{{item.name}}</h2>
+                <span class="wh40k-item-card__type">{{itemTypeLabel}}</span>
             </div>
         </div>
         
         {{!-- Body --}}
-        <div class="rt-item-card__body">
-            <div class="rt-item-card__divider"></div>
+        <div class="wh40k-item-card__body">
+            <div class="wh40k-item-card__divider"></div>
             
             {{#if item.system.category}}
-                <div class="rt-item-card__field">
-                    <span class="rt-item-card__label">Category</span>
-                    <span class="rt-item-card__value">{{item.system.category}}</span>
+                <div class="wh40k-item-card__field">
+                    <span class="wh40k-item-card__label">Category</span>
+                    <span class="wh40k-item-card__value">{{item.system.category}}</span>
                 </div>
             {{/if}}
 
             {{#if item.system.requirements}}
-                <div class="rt-item-card__field">
-                    <span class="rt-item-card__label">Requirements</span>
-                    <span class="rt-item-card__value">{{item.system.requirements}}</span>
+                <div class="wh40k-item-card__field">
+                    <span class="wh40k-item-card__label">Requirements</span>
+                    <span class="wh40k-item-card__value">{{item.system.requirements}}</span>
                 </div>
             {{/if}}
 
             {{#if item.system.effect}}
-                <div class="rt-item-card__section">
-                    <h3 class="rt-item-card__section-title">Effect</h3>
-                    <div class="rt-item-card__description">{{{item.system.effect}}}</div>
+                <div class="wh40k-item-card__section">
+                    <h3 class="wh40k-item-card__section-title">Effect</h3>
+                    <div class="wh40k-item-card__description">{{{item.system.effect}}}</div>
                 </div>
             {{/if}}
 
             {{#if item.system.benefit}}
-                <div class="rt-item-card__section">
-                    <h3 class="rt-item-card__section-title">Benefit</h3>
-                    <div class="rt-item-card__description">{{{item.system.benefit}}}</div>
+                <div class="wh40k-item-card__section">
+                    <h3 class="wh40k-item-card__section-title">Benefit</h3>
+                    <div class="wh40k-item-card__description">{{{item.system.benefit}}}</div>
                 </div>
             {{/if}}
 
             {{!-- Weapon Stats --}}
             {{#if isWeapon}}
-                <div class="rt-item-card__stats">
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">Class</span>
-                        <span class="rt-item-card__stat-value">{{item.system.class}}</span>
+                <div class="wh40k-item-card__stats">
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">Class</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.class}}</span>
                     </div>
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">Type</span>
-                        <span class="rt-item-card__stat-value">{{item.system.type}}</span>
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">Type</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.type}}</span>
                     </div>
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">Damage</span>
-                        <span class="rt-item-card__stat-value">{{item.system.damage}} {{item.system.damageType}}</span>
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">Damage</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.damage}} {{item.system.damageType}}</span>
                     </div>
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">Pen</span>
-                        <span class="rt-item-card__stat-value">{{item.system.penetration}}</span>
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">Pen</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.penetration}}</span>
                     </div>
                     {{#if item.system.range}}
-                        <div class="rt-item-card__stat">
-                            <span class="rt-item-card__stat-name">Range</span>
-                            <span class="rt-item-card__stat-value">{{item.system.range}}</span>
+                        <div class="wh40k-item-card__stat">
+                            <span class="wh40k-item-card__stat-name">Range</span>
+                            <span class="wh40k-item-card__stat-value">{{item.system.range}}</span>
                         </div>
                     {{/if}}
                     {{#if item.system.rof}}
-                        <div class="rt-item-card__stat">
-                            <span class="rt-item-card__stat-name">RoF</span>
-                            <span class="rt-item-card__stat-value">{{item.system.rof}}</span>
+                        <div class="wh40k-item-card__stat">
+                            <span class="wh40k-item-card__stat-name">RoF</span>
+                            <span class="wh40k-item-card__stat-value">{{item.system.rof}}</span>
                         </div>
                     {{/if}}
                     {{#if item.system.special}}
-                        <div class="rt-item-card__stat rt-item-card__stat--full">
-                            <span class="rt-item-card__stat-name">Special</span>
-                            <span class="rt-item-card__stat-value">{{item.system.special}}</span>
+                        <div class="wh40k-item-card__stat wh40k-item-card__stat--full">
+                            <span class="wh40k-item-card__stat-name">Special</span>
+                            <span class="wh40k-item-card__stat-value">{{item.system.special}}</span>
                         </div>
                     {{/if}}
                 </div>
@@ -84,115 +84,115 @@
 
             {{!-- Navigator Power Stats --}}
             {{#if isNavigatorPower}}
-                <div class="rt-item-card__stats">
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">Use Time</span>
-                        <span class="rt-item-card__stat-value">{{item.system.useTime}}</span>
+                <div class="wh40k-item-card__stats">
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">Use Time</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.useTime}}</span>
                     </div>
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">Range</span>
-                        <span class="rt-item-card__stat-value">{{item.system.range}}</span>
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">Range</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.range}}</span>
                     </div>
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">Test</span>
-                        <span class="rt-item-card__stat-value">{{item.system.test}}</span>
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">Test</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.test}}</span>
                     </div>
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">Sustain</span>
-                        <span class="rt-item-card__stat-value">{{item.system.sustain}}</span>
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">Sustain</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.sustain}}</span>
                     </div>
                 </div>
                 {{#if item.system.novice}}
-                    <div class="rt-item-card__section">
-                        <h3 class="rt-item-card__section-title">Novice</h3>
-                        <div class="rt-item-card__description">{{item.system.novice}}</div>
+                    <div class="wh40k-item-card__section">
+                        <h3 class="wh40k-item-card__section-title">Novice</h3>
+                        <div class="wh40k-item-card__description">{{item.system.novice}}</div>
                     </div>
                 {{/if}}
                 {{#if item.system.adept}}
-                    <div class="rt-item-card__section">
-                        <h3 class="rt-item-card__section-title">Adept</h3>
-                        <div class="rt-item-card__description">{{item.system.adept}}</div>
+                    <div class="wh40k-item-card__section">
+                        <h3 class="wh40k-item-card__section-title">Adept</h3>
+                        <div class="wh40k-item-card__description">{{item.system.adept}}</div>
                     </div>
                 {{/if}}
                 {{#if item.system.master}}
-                    <div class="rt-item-card__section">
-                        <h3 class="rt-item-card__section-title">Master</h3>
-                        <div class="rt-item-card__description">{{item.system.master}}</div>
+                    <div class="wh40k-item-card__section">
+                        <h3 class="wh40k-item-card__section-title">Master</h3>
+                        <div class="wh40k-item-card__description">{{item.system.master}}</div>
                     </div>
                 {{/if}}
             {{/if}}
 
             {{!-- Ship Component Stats --}}
             {{#if isShipComponent}}
-                <div class="rt-item-card__stats">
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">Type</span>
-                        <span class="rt-item-card__stat-value">{{item.system.componentType}}</span>
+                <div class="wh40k-item-card__stats">
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">Type</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.componentType}}</span>
                     </div>
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">Hull</span>
-                        <span class="rt-item-card__stat-value">{{item.system.hullType}}</span>
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">Hull</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.hullType}}</span>
                     </div>
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">Power</span>
-                        <span class="rt-item-card__stat-value">{{item.system.powerUsage}}</span>
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">Power</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.powerUsage}}</span>
                     </div>
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">Space</span>
-                        <span class="rt-item-card__stat-value">{{item.system.spaceUsage}}</span>
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">Space</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.spaceUsage}}</span>
                     </div>
-                    <div class="rt-item-card__stat">
-                        <span class="rt-item-card__stat-name">SP Cost</span>
-                        <span class="rt-item-card__stat-value">{{item.system.spCost}}</span>
+                    <div class="wh40k-item-card__stat">
+                        <span class="wh40k-item-card__stat-name">SP Cost</span>
+                        <span class="wh40k-item-card__stat-value">{{item.system.spCost}}</span>
                     </div>
                 </div>
             {{/if}}
 
             {{!-- Generic Description --}}
             {{#if item.system.description.value}}
-                <div class="rt-item-card__section">
-                    <div class="rt-item-card__description">{{{item.system.description.value}}}</div>
+                <div class="wh40k-item-card__section">
+                    <div class="wh40k-item-card__description">{{{item.system.description.value}}}</div>
                 </div>
             {{/if}}
         </div>
 
         {{!-- Properties/Qualities Tags --}}
         {{#if item.system.qualities}}
-            <div class="rt-item-card__properties">
+            <div class="wh40k-item-card__properties">
                 {{#each item.system.qualities as |quality|}}
-                    <span class="rt-item-card__property-tag">{{quality.name}}</span>
+                    <span class="wh40k-item-card__property-tag">{{quality.name}}</span>
                 {{/each}}
             </div>
         {{/if}}
 
         {{!-- Footer --}}
         {{#if item.system.source}}
-            <div class="rt-item-card__footer">
-                <span class="rt-item-card__source">{{item.system.source}}</span>
+            <div class="wh40k-item-card__footer">
+                <span class="wh40k-item-card__source">{{item.system.source}}</span>
             </div>
         {{/if}}
 
         {{!-- Action Buttons --}}
         {{#if hasActions}}
-            <div class="rt-item-card__actions">
+            <div class="wh40k-item-card__actions">
                 {{#if isRollable}}
-                    <button type="button" class="rt-item-card__btn rt-item-card__btn--roll" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="roll">
+                    <button type="button" class="wh40k-item-card__btn wh40k-item-card__btn--roll" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="roll">
                         <i class="fas fa-dice-d20"></i>
                         Roll
                     </button>
                 {{/if}}
                 {{#if isWeapon}}
-                    <button type="button" class="rt-item-card__btn rt-item-card__btn--attack" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="attack">
+                    <button type="button" class="wh40k-item-card__btn wh40k-item-card__btn--attack" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="attack">
                         <i class="fas fa-crosshairs"></i>
                         Attack
                     </button>
-                    <button type="button" class="rt-item-card__btn rt-item-card__btn--damage" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="rollDamage">
+                    <button type="button" class="wh40k-item-card__btn wh40k-item-card__btn--damage" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="rollDamage">
                         <i class="fas fa-burst"></i>
                         Damage
                     </button>
                 {{/if}}
                 {{#if isUsable}}
-                    <button type="button" class="rt-item-card__btn rt-item-card__btn--use" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="useItem">
+                    <button type="button" class="wh40k-item-card__btn wh40k-item-card__btn--use" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" data-action="useItem">
                         <i class="fas fa-hand-sparkles"></i>
                         Use
                     </button>

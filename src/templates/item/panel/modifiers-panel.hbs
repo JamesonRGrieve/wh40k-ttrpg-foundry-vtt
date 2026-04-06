@@ -2,40 +2,40 @@
      Complete modifier editing interface with tabs for different modifier types
      Used in Modifiers tab for talents, traits, conditions, etc.
 --}}
-<div class="rt-modifiers-panel">
+<div class="wh40k-modifiers-panel">
   
   {{!-- Modifier Type Tabs --}}
-  <nav class="rt-modifiers-tabs" data-group="modifiers">
-    <button type="button" class="rt-modifiers-tab active" data-tab="basic" data-group="modifiers">
+  <nav class="wh40k-modifiers-tabs" data-group="modifiers">
+    <button type="button" class="wh40k-modifiers-tab active" data-tab="basic" data-group="modifiers">
       <i class="fas fa-plus-circle"></i>
       <span>Basic</span>
     </button>
-    <button type="button" class="rt-modifiers-tab" data-tab="situational" data-group="modifiers">
+    <button type="button" class="wh40k-modifiers-tab" data-tab="situational" data-group="modifiers">
       <i class="fas fa-exclamation-triangle"></i>
       <span>Situational</span>
     </button>
-    <button type="button" class="rt-modifiers-tab" data-tab="advanced" data-group="modifiers">
+    <button type="button" class="wh40k-modifiers-tab" data-tab="advanced" data-group="modifiers">
       <i class="fas fa-cog"></i>
       <span>Advanced</span>
     </button>
   </nav>
   
   {{!-- Basic Modifiers Tab --}}
-  <div class="rt-modifiers-content active" data-tab="basic" data-group="modifiers">
+  <div class="wh40k-modifiers-content active" data-tab="basic" data-group="modifiers">
     
     {{!-- Characteristic Modifiers --}}
-    <div class="rt-modifier-section">
-      <h4 class="rt-modifier-section__title">
+    <div class="wh40k-modifier-section">
+      <h4 class="wh40k-modifier-section__title">
         <i class="fas fa-user-circle"></i>
         Characteristics
       </h4>
-      <div class="rt-modifier-grid">
+      <div class="wh40k-modifier-grid">
         {{#each config.characteristics}}
-        <div class="rt-modifier-field">
-          <label class="rt-modifier-field__label" title="{{label}}">
+        <div class="wh40k-modifier-field">
+          <label class="wh40k-modifier-field__label" title="{{label}}">
             {{short}}
           </label>
-          <input class="rt-modifier-field__input" 
+          <input class="wh40k-modifier-field__input" 
                  name="system.modifiers.characteristics.{{@key}}" 
                  type="number" 
                  value="{{lookup ../system.modifiers.characteristics @key}}" 
@@ -46,22 +46,22 @@
     </div>
     
     {{!-- Skill Modifiers --}}
-    <div class="rt-modifier-section">
-      <h4 class="rt-modifier-section__title">
+    <div class="wh40k-modifier-section">
+      <h4 class="wh40k-modifier-section__title">
         <i class="fas fa-book"></i>
         Skills
       </h4>
-      <div class="rt-modifier-list">
+      <div class="wh40k-modifier-list">
         {{#each system.modifiers.skills}}
-        <div class="rt-modifier-item">
-          <label class="rt-modifier-item__label">{{capitalize @key}}</label>
-          <input class="rt-modifier-item__input" 
+        <div class="wh40k-modifier-item">
+          <label class="wh40k-modifier-item__label">{{capitalize @key}}</label>
+          <input class="wh40k-modifier-item__input" 
                  name="system.modifiers.skills.{{@key}}" 
                  type="number" 
                  value="{{this}}" 
                  placeholder="0" />
           <button type="button" 
-                  class="rt-btn-control rt-btn-control--remove" 
+                  class="wh40k-btn-control wh40k-btn-control--remove" 
                   data-action="removeSkillModifier" 
                   data-skill="{{@key}}"
                   title="Remove">
@@ -70,7 +70,7 @@
         </div>
         {{/each}}
         
-        <button type="button" class="rt-btn-secondary rt-btn-add" data-action="addSkillModifier">
+        <button type="button" class="wh40k-btn-secondary wh40k-btn-add" data-action="addSkillModifier">
           <i class="fas fa-plus"></i>
           Add Skill Modifier
         </button>
@@ -78,55 +78,55 @@
     </div>
     
     {{!-- Combat Modifiers --}}
-    <div class="rt-modifier-section">
-      <h4 class="rt-modifier-section__title">
+    <div class="wh40k-modifier-section">
+      <h4 class="wh40k-modifier-section__title">
         <i class="fas fa-sword"></i>
         Combat
       </h4>
-      <div class="rt-modifier-grid">
-        <div class="rt-modifier-field">
-          <label class="rt-modifier-field__label">Attack</label>
-          <input class="rt-modifier-field__input" 
+      <div class="wh40k-modifier-grid">
+        <div class="wh40k-modifier-field">
+          <label class="wh40k-modifier-field__label">Attack</label>
+          <input class="wh40k-modifier-field__input" 
                  name="system.modifiers.combat.attack" 
                  type="number" 
                  value="{{system.modifiers.combat.attack}}" 
                  placeholder="0" />
         </div>
-        <div class="rt-modifier-field">
-          <label class="rt-modifier-field__label">Damage</label>
-          <input class="rt-modifier-field__input" 
+        <div class="wh40k-modifier-field">
+          <label class="wh40k-modifier-field__label">Damage</label>
+          <input class="wh40k-modifier-field__input" 
                  name="system.modifiers.combat.damage" 
                  type="number" 
                  value="{{system.modifiers.combat.damage}}" 
                  placeholder="0" />
         </div>
-        <div class="rt-modifier-field">
-          <label class="rt-modifier-field__label">Penetration</label>
-          <input class="rt-modifier-field__input" 
+        <div class="wh40k-modifier-field">
+          <label class="wh40k-modifier-field__label">Penetration</label>
+          <input class="wh40k-modifier-field__input" 
                  name="system.modifiers.combat.penetration" 
                  type="number" 
                  value="{{system.modifiers.combat.penetration}}" 
                  placeholder="0" />
         </div>
-        <div class="rt-modifier-field">
-          <label class="rt-modifier-field__label">Defense</label>
-          <input class="rt-modifier-field__input" 
+        <div class="wh40k-modifier-field">
+          <label class="wh40k-modifier-field__label">Defense</label>
+          <input class="wh40k-modifier-field__input" 
                  name="system.modifiers.combat.defense" 
                  type="number" 
                  value="{{system.modifiers.combat.defense}}" 
                  placeholder="0" />
         </div>
-        <div class="rt-modifier-field">
-          <label class="rt-modifier-field__label">Initiative</label>
-          <input class="rt-modifier-field__input" 
+        <div class="wh40k-modifier-field">
+          <label class="wh40k-modifier-field__label">Initiative</label>
+          <input class="wh40k-modifier-field__input" 
                  name="system.modifiers.combat.initiative" 
                  type="number" 
                  value="{{system.modifiers.combat.initiative}}" 
                  placeholder="0" />
         </div>
-        <div class="rt-modifier-field">
-          <label class="rt-modifier-field__label">Speed</label>
-          <input class="rt-modifier-field__input" 
+        <div class="wh40k-modifier-field">
+          <label class="wh40k-modifier-field__label">Speed</label>
+          <input class="wh40k-modifier-field__input" 
                  name="system.modifiers.combat.speed" 
                  type="number" 
                  value="{{system.modifiers.combat.speed}}" 
@@ -136,39 +136,39 @@
     </div>
     
     {{!-- Resource Modifiers --}}
-    <div class="rt-modifier-section">
-      <h4 class="rt-modifier-section__title">
+    <div class="wh40k-modifier-section">
+      <h4 class="wh40k-modifier-section__title">
         <i class="fas fa-heart"></i>
         Resources
       </h4>
-      <div class="rt-modifier-grid">
-        <div class="rt-modifier-field">
-          <label class="rt-modifier-field__label">Wounds</label>
-          <input class="rt-modifier-field__input" 
+      <div class="wh40k-modifier-grid">
+        <div class="wh40k-modifier-field">
+          <label class="wh40k-modifier-field__label">Wounds</label>
+          <input class="wh40k-modifier-field__input" 
                  name="system.modifiers.resources.wounds" 
                  type="number" 
                  value="{{system.modifiers.resources.wounds}}" 
                  placeholder="0" />
         </div>
-        <div class="rt-modifier-field">
-          <label class="rt-modifier-field__label">Fate</label>
-          <input class="rt-modifier-field__input" 
+        <div class="wh40k-modifier-field">
+          <label class="wh40k-modifier-field__label">Fate</label>
+          <input class="wh40k-modifier-field__input" 
                  name="system.modifiers.resources.fate" 
                  type="number" 
                  value="{{system.modifiers.resources.fate}}" 
                  placeholder="0" />
         </div>
-        <div class="rt-modifier-field">
-          <label class="rt-modifier-field__label">Insanity</label>
-          <input class="rt-modifier-field__input" 
+        <div class="wh40k-modifier-field">
+          <label class="wh40k-modifier-field__label">Insanity</label>
+          <input class="wh40k-modifier-field__input" 
                  name="system.modifiers.resources.insanity" 
                  type="number" 
                  value="{{system.modifiers.resources.insanity}}" 
                  placeholder="0" />
         </div>
-        <div class="rt-modifier-field">
-          <label class="rt-modifier-field__label">Corruption</label>
-          <input class="rt-modifier-field__input" 
+        <div class="wh40k-modifier-field">
+          <label class="wh40k-modifier-field__label">Corruption</label>
+          <input class="wh40k-modifier-field__input" 
                  name="system.modifiers.resources.corruption" 
                  type="number" 
                  value="{{system.modifiers.resources.corruption}}" 
@@ -180,40 +180,40 @@
   </div>
   
   {{!-- Situational Modifiers Tab --}}
-  <div class="rt-modifiers-content" data-tab="situational" data-group="modifiers">
-    <div class="rt-info-box">
+  <div class="wh40k-modifiers-content" data-tab="situational" data-group="modifiers">
+    <div class="wh40k-info-box">
       <i class="fas fa-info-circle"></i>
       <p>Situational modifiers apply only when specific conditions are met. Use the condition field to describe when each modifier applies.</p>
     </div>
     
     {{!-- Situational Characteristics --}}
-    <div class="rt-modifier-section">
-      <h4 class="rt-modifier-section__title">
+    <div class="wh40k-modifier-section">
+      <h4 class="wh40k-modifier-section__title">
         <i class="fas fa-user-circle"></i>
         Conditional Characteristic Bonuses
       </h4>
-      <div class="rt-situational-list">
+      <div class="wh40k-situational-list">
         {{#each system.modifiers.situational.characteristics}}
-        <div class="rt-situational-item">
-          <input class="rt-situational-item__condition" 
+        <div class="wh40k-situational-item">
+          <input class="wh40k-situational-item__condition" 
                  name="system.modifiers.situational.characteristics.{{@index}}.condition" 
                  type="text" 
                  value="{{condition}}" 
                  placeholder="When... (e.g., 'in melee combat')" />
-          <select class="rt-situational-item__key" 
+          <select class="wh40k-situational-item__key" 
                   name="system.modifiers.situational.characteristics.{{@index}}.key">
             <option value="">Select Characteristic</option>
             {{#each ../../config.characteristics}}
             <option value="{{@key}}" {{selected (eq @key ../key)}}>{{label}}</option>
             {{/each}}
           </select>
-          <input class="rt-situational-item__value" 
+          <input class="wh40k-situational-item__value" 
                  name="system.modifiers.situational.characteristics.{{@index}}.value" 
                  type="number" 
                  value="{{value}}" 
                  placeholder="0" />
           <button type="button" 
-                  class="rt-btn-control rt-btn-control--remove" 
+                  class="wh40k-btn-control wh40k-btn-control--remove" 
                   data-action="removeSituationalModifier" 
                   data-type="characteristics" 
                   data-index="{{@index}}"
@@ -224,7 +224,7 @@
         {{/each}}
         
         <button type="button" 
-                class="rt-btn-secondary rt-btn-add" 
+                class="wh40k-btn-secondary wh40k-btn-add" 
                 data-action="addSituationalModifier" 
                 data-type="characteristics">
           <i class="fas fa-plus"></i>
@@ -238,36 +238,36 @@
   </div>
   
   {{!-- Advanced Tab (Other modifiers) --}}
-  <div class="rt-modifiers-content" data-tab="advanced" data-group="modifiers">
-    <div class="rt-info-box">
+  <div class="wh40k-modifiers-content" data-tab="advanced" data-group="modifiers">
+    <div class="wh40k-info-box">
       <i class="fas fa-info-circle"></i>
       <p>Advanced modifiers for custom effects not covered by standard categories.</p>
     </div>
     
-    <div class="rt-modifier-section">
-      <h4 class="rt-modifier-section__title">
+    <div class="wh40k-modifier-section">
+      <h4 class="wh40k-modifier-section__title">
         <i class="fas fa-plus-square"></i>
         Custom Modifiers
       </h4>
-      <div class="rt-other-modifiers-list">
+      <div class="wh40k-other-modifiers-list">
         {{#each system.modifiers.other}}
-        <div class="rt-other-modifier-item">
-          <input class="rt-other-modifier-item__key" 
+        <div class="wh40k-other-modifier-item">
+          <input class="wh40k-other-modifier-item__key" 
                  name="system.modifiers.other.{{@index}}.key" 
                  type="text" 
                  value="{{key}}" 
                  placeholder="Modifier Key" />
-          <input class="rt-other-modifier-item__label" 
+          <input class="wh40k-other-modifier-item__label" 
                  name="system.modifiers.other.{{@index}}.label" 
                  type="text" 
                  value="{{label}}" 
                  placeholder="Display Label" />
-          <input class="rt-other-modifier-item__value" 
+          <input class="wh40k-other-modifier-item__value" 
                  name="system.modifiers.other.{{@index}}.value" 
                  type="number" 
                  value="{{value}}" 
                  placeholder="0" />
-          <select class="rt-other-modifier-item__mode" 
+          <select class="wh40k-other-modifier-item__mode" 
                   name="system.modifiers.other.{{@index}}.mode">
             <option value="add" {{selected (eq mode "add")}}>Add</option>
             <option value="multiply" {{selected (eq mode "multiply")}}>Multiply</option>
@@ -276,7 +276,7 @@
             <option value="downgrade" {{selected (eq mode "downgrade")}}>Downgrade</option>
           </select>
           <button type="button" 
-                  class="rt-btn-control rt-btn-control--remove" 
+                  class="wh40k-btn-control wh40k-btn-control--remove" 
                   data-action="removeOtherModifier" 
                   data-index="{{@index}}"
                   title="Remove">
@@ -286,7 +286,7 @@
         {{/each}}
         
         <button type="button" 
-                class="rt-btn-secondary rt-btn-add" 
+                class="wh40k-btn-secondary wh40k-btn-add" 
                 data-action="addOtherModifier">
           <i class="fas fa-plus"></i>
           Add Custom Modifier

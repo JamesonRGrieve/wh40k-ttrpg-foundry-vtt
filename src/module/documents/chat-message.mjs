@@ -3,7 +3,7 @@
  * Provides custom rendering, interactive action buttons, and DoS/DoF display
  * @extends ChatMessage
  */
-export class ChatMessageRT extends ChatMessage {
+export class ChatMessageWH40K extends ChatMessage {
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
@@ -177,7 +177,7 @@ export class ChatMessageRT extends ChatMessage {
         const message = game.messages.get(messageId);
 
         if (!message) {
-            console.warn('RT | ChatMessage not found for action:', action);
+            console.warn('WH40K | ChatMessage not found for action:', action);
             return;
         }
 
@@ -226,14 +226,14 @@ export class ChatMessageRT extends ChatMessage {
             }
 
             default:
-                game.rt.log(`Unknown chat action: ${action}`);
+                game.wh40k.log(`Unknown chat action: ${action}`);
         }
     }
 
     /**
      * Enrich a degree badge into roll result HTML
      * @param {HTMLElement} html - The message HTML
-     * @param {ChatMessageRT} message - The chat message
+     * @param {ChatMessageWH40K} message - The chat message
      */
     static enrichDegreeBadge(html, message) {
         const result = message.calculateDegrees();
@@ -246,11 +246,11 @@ export class ChatMessageRT extends ChatMessage {
         if (!diceTotal) return;
 
         // Check if badge already exists
-        if (diceTotal.querySelector('.rt-degree-badge')) return;
+        if (diceTotal.querySelector('.wh40k-degree-badge')) return;
 
         // Create degree badge
         const badge = document.createElement('span');
-        badge.className = `rt-degree-badge ${success ? 'wh40k-degree-badge--success' : 'wh40k-degree-badge--failure'}`;
+        badge.className = `wh40k-degree-badge ${success ? 'wh40k-degree-badge--success' : 'wh40k-degree-badge--failure'}`;
         badge.textContent = `${degrees} ${success ? 'DoS' : 'DoF'}`;
 
         diceTotal.appendChild(badge);
@@ -259,7 +259,7 @@ export class ChatMessageRT extends ChatMessage {
     /**
      * Add speaker portrait to message if missing
      * @param {HTMLElement} html - The message HTML
-     * @param {ChatMessageRT} message - The chat message
+     * @param {ChatMessageWH40K} message - The chat message
      */
     static enrichSpeakerPortrait(html, message) {
         const actor = message.speakerActor;
@@ -269,7 +269,7 @@ export class ChatMessageRT extends ChatMessage {
         if (!sender) return;
 
         // Check if portrait already exists
-        if (sender.querySelector('.rt-message-portrait')) return;
+        if (sender.querySelector('.wh40k-message-portrait')) return;
 
         const portrait = document.createElement('img');
         portrait.className = 'wh40k-message-portrait';
@@ -282,7 +282,7 @@ export class ChatMessageRT extends ChatMessage {
     /**
      * Add message ID to action buttons that need it
      * @param {HTMLElement} html - The message HTML
-     * @param {ChatMessageRT} message - The chat message
+     * @param {ChatMessageWH40K} message - The chat message
      */
     static enrichActionButtons(html, message) {
         html.querySelectorAll('[data-action]').forEach((btn) => {
@@ -304,17 +304,17 @@ export class ChatMessageRT extends ChatMessage {
  */
 Hooks.on('renderChatMessageHTML', (message, html, context) => {
     // Enrich the message HTML
-    ChatMessageRT.enrichDegreeBadge(html, message);
-    ChatMessageRT.enrichSpeakerPortrait(html, message);
-    ChatMessageRT.enrichActionButtons(html, message);
+    ChatMessageWH40K.enrichDegreeBadge(html, message);
+    ChatMessageWH40K.enrichSpeakerPortrait(html, message);
+    ChatMessageWH40K.enrichActionButtons(html, message);
 
-    // Add click listeners for RT-specific actions
+    // Add click listeners for WH40K-specific actions
     // Note: Existing roll-control__* listeners are handled by BasicActionManager
     html.querySelectorAll(
         '[data-action]:not(.roll-control__hide-control):not(.roll-control__refund):not(.roll-control__fate-reroll):not(.roll-control__assign-damage):not(.roll-control__apply-damage)',
     ).forEach((btn) => {
         btn.addEventListener('click', async (event) => {
-            await ChatMessageRT.onChatCardAction(event, html);
+            await ChatMessageWH40K.onChatCardAction(event, html);
         });
     });
 });

@@ -12,14 +12,14 @@
 
 .confirmation-dialog-content {
     padding: 20px;
-    color: var(--rt-text-primary, #e8e4d9);
+    color: var(--wh40k-text-primary, #e8e4d9);
     font-family: 'Roboto', sans-serif;
 }
 
 .confirmation-message {
     font-size: 1rem;
     line-height: 1.6;
-    color: var(--rt-text-primary, #e8e4d9);
+    color: var(--wh40k-text-primary, #e8e4d9);
     padding: 16px;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(201, 162, 39, 0.2);
@@ -36,12 +36,12 @@
     }
 
     strong {
-        color: var(--rt-accent-gold, #c9a227);
+        color: var(--wh40k-accent-gold, #c9a227);
         font-weight: 600;
     }
 
     em {
-        color: var(--rt-text-secondary, #9a9a8a);
+        color: var(--wh40k-text-secondary, #9a9a8a);
     }
 }
 

@@ -3,7 +3,7 @@
  * Modern roll classes using three-stage workflow
  */
 
-export { default as BasicRollRT } from './basic-roll.mjs';
+export { default as BasicRollWH40K } from './basic-roll.mjs';
 export { default as D100Roll } from './d100-roll.mjs';
 
 // Re-export the configuration dialog for convenience

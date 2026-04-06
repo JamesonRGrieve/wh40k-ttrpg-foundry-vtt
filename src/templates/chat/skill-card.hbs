@@ -1,19 +1,19 @@
 {{! Skill Chat Card }}
-<div class="rt-chat-card rt-chat-card--skill">
-    <header class="rt-chat-header">
-        <img class="rt-chat-icon" src="{{skill.img}}" alt="{{skill.name}}" />
-        <div class="rt-chat-title">
+<div class="wh40k-chat-card wh40k-chat-card--skill">
+    <header class="wh40k-chat-header">
+        <img class="wh40k-chat-icon" src="{{skill.img}}" alt="{{skill.name}}" />
+        <div class="wh40k-chat-title">
             <h3>{{skill.name}}</h3>
-            <div class="rt-chat-meta">
-                <span class="rt-badge rt-badge--{{skill.system.skillType}}">
+            <div class="wh40k-chat-meta">
+                <span class="wh40k-badge wh40k-badge--{{skill.system.skillType}}">
                     {{skill.system.skillTypeLabel}}
                 </span>
-                <span class="rt-badge rt-badge--characteristic">
+                <span class="wh40k-badge wh40k-badge--characteristic">
                     {{skill.system.characteristicLabel}}
                     ({{skill.system.characteristicAbbr}})
                 </span>
                 {{#if skill.system.isBasic}}
-                    <span class="rt-badge rt-badge--basic">
+                    <span class="wh40k-badge wh40k-badge--basic">
                         <i class="fas fa-check-circle"></i>
                         Can Use Untrained
                     </span>
@@ -23,26 +23,26 @@
     </header>
 
     {{#if skill.system.descriptor}}
-        <div class="rt-chat-section">
-            <p class="rt-chat-descriptor">{{skill.system.descriptor}}</p>
+        <div class="wh40k-chat-section">
+            <p class="wh40k-chat-descriptor">{{skill.system.descriptor}}</p>
         </div>
     {{/if}}
 
     {{#if skill.system.uses}}
-        <div class="rt-chat-section">
+        <div class="wh40k-chat-section">
             <h4><i class="fas fa-list-check"></i> Uses</h4>
-            <div class="rt-chat-content">{{{skill.system.uses}}}</div>
+            <div class="wh40k-chat-content">{{{skill.system.uses}}}</div>
         </div>
     {{/if}}
 
     {{#if skill.system.specialRules}}
-        <div class="rt-chat-section">
+        <div class="wh40k-chat-section">
             <h4><i class="fas fa-book-open"></i> Special Rules</h4>
-            <div class="rt-chat-content">{{{skill.system.specialRules}}}</div>
+            <div class="wh40k-chat-content">{{{skill.system.specialRules}}}</div>
         </div>
     {{/if}}
 
-    <footer class="rt-chat-footer">
+    <footer class="wh40k-chat-footer">
         {{#if skill.system.useTime}}
             <span><strong>Time:</strong> {{skill.system.useTime}}</span>
         {{/if}}
@@ -50,9 +50,9 @@
             <span><strong>Aptitudes:</strong> {{join skill.system.aptitudes ", "}}</span>
         {{/if}}
         {{#if skill.system.hasSpecializations}}
-            <div class="rt-specializations">
+            <div class="wh40k-specializations">
                 <strong>Available Specializations:</strong>
-                <span class="rt-spec-list">{{join skill.system.specializations ", "}}</span>
+                <span class="wh40k-spec-list">{{join skill.system.specializations ", "}}</span>
             </div>
         {{/if}}
     </footer>

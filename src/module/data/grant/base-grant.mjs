@@ -30,7 +30,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel {
      * @type {string}
      */
     static get typeLabel() {
-        return `RT.Grant.Type.${this.TYPE}`;
+        return `WH40K.Grant.Type.${this.TYPE}`;
     }
 
     /* -------------------------------------------- */

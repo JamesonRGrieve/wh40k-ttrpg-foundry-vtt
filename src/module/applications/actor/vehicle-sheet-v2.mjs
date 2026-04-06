@@ -24,7 +24,7 @@ export default class VehicleSheetV2 extends BaseActorSheet {
             width: 1000,
             height: 800,
         },
-        tabs: [{ navSelector: 'nav.rt-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
+        tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
         actions: {
             // Vehicle-specific actions
             rollCharacteristic: VehicleSheetV2.#rollCharacteristic,

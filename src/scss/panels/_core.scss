@@ -3,21 +3,21 @@
 // Single source of truth for panel styling across all tabs
 
 .wh40k-panel {
-    background: var(--rt-panel-bg);
-    border: 1px solid var(--rt-border-color-light);
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: $wh40k-space-md;
-    box-shadow: 0 2px 8px var(--rt-shadow-soft);
+    box-shadow: 0 2px 8px var(--wh40k-shadow-soft);
     position: relative;
 
     &::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: var(--rt-accent-overlay);
-        border-top: 2px solid var(--rt-accent-border);
-        border-bottom: 2px solid var(--rt-accent-border);
+        background: var(--wh40k-accent-overlay);
+        border-top: 2px solid var(--wh40k-accent-border);
+        border-bottom: 2px solid var(--wh40k-accent-border);
         pointer-events: none;
         z-index: 0;
     }
@@ -35,7 +35,7 @@
         --panel-accent: #{$wh40k-color-gold};
     }
     &--fate {
-        --panel-accent: var(--rt-fate-secondary);
+        --panel-accent: var(--wh40k-fate-secondary);
     }
     &--corruption {
         --panel-accent: #2d7a6b;
@@ -81,7 +81,7 @@
     gap: $wh40k-space-sm;
     padding: $wh40k-space-sm $wh40k-space-md;
     background: linear-gradient(180deg, rgba($wh40k-accent-gold, 0.15) 0%, rgba($wh40k-accent-gold, 0.05) 100%);
-    border-bottom: 1px solid var(--rt-border-color-light);
+    border-bottom: 1px solid var(--wh40k-border-color-light);
     transition: box-shadow 0.2s ease, background 0.2s ease;
     width: 100% !important;
     box-sizing: border-box !important;
@@ -89,10 +89,10 @@
 
     .wh40k-panel-title {
         flex: 1 1 auto !important;
-        font-family: var(--rt-font-display, 'Modesto Condensed', serif);
-        font-size: var(--rt-text-h3, 1.1rem);
+        font-family: var(--wh40k-font-display, 'Modesto Condensed', serif);
+        font-size: var(--wh40k-text-h3, 1.1rem);
         font-weight: 600;
-        color: var(--rt-text-dark);
+        color: var(--wh40k-text-dark);
         letter-spacing: 0.02em;
         white-space: nowrap !important;
         overflow: hidden;
@@ -138,7 +138,7 @@
 // Chevron indicator for collapsible panels
 .wh40k-panel-chevron {
     font-size: 0.75rem;
-    color: var(--rt-text-muted);
+    color: var(--wh40k-text-muted);
     transition: transform 0.2s ease, color 0.15s ease;
     margin-left: auto;
     flex-shrink: 0;
@@ -154,7 +154,7 @@
 
 .wh40k-panel-body {
     padding: $wh40k-space-md;
-    background: var(--rt-panel-body-bg);
+    background: var(--wh40k-panel-body-bg);
 }
 
 // Expandable details section within panel body
@@ -170,10 +170,10 @@
 }
 
 .wh40k-panel:hover .wh40k-panel-header {
-    box-shadow: inset 0 -1px 0 var(--rt-text-shadow), 0 6px 14px var(--rt-shadow-soft);
+    box-shadow: inset 0 -1px 0 var(--wh40k-text-shadow), 0 6px 14px var(--wh40k-shadow-soft);
 }
 
-@keyframes rt-panel-in {
+@keyframes wh40k-panel-in {
     0% {
         opacity: 0;
         transform: translateY(6px);
@@ -185,7 +185,7 @@
 }
 
 .wh40k-tab.active .wh40k-panel {
-    animation: rt-panel-in 0.3s ease both;
+    animation: wh40k-panel-in 0.3s ease both;
 }
 
 .wh40k-tab.active .wh40k-panel:nth-of-type(2) {

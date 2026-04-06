@@ -66,7 +66,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @type {string}
      */
     get natureClass() {
-        return `rt-effect-${this.nature}`;
+        return `wh40k-effect-${this.nature}`;
     }
 
     /* -------------------------------------------- */
@@ -215,7 +215,7 @@ export class WH40KActiveEffect extends ActiveEffect {
                 key,
                 label,
                 value,
-                mode: game.i18n.localize(`RT.ActiveEffect.Mode.${change.mode}`),
+                mode: game.i18n.localize(`WH40K.ActiveEffect.Mode.${change.mode}`),
             };
         });
     }
@@ -232,22 +232,22 @@ export class WH40KActiveEffect extends ActiveEffect {
         // Characteristics
         if (parts[1] === 'characteristics' && parts[2]) {
             const char = parts[2].capitalize();
-            return game.i18n.localize(`RT.Characteristic.${char}`);
+            return game.i18n.localize(`WH40K.Characteristic.${char}`);
         }
 
         // Skills
         if (parts[1] === 'skills' && parts[2]) {
-            return game.i18n.localize(`RT.Skill.${parts[2]}`);
+            return game.i18n.localize(`WH40K.Skill.${parts[2]}`);
         }
 
         // Combat
         if (parts[1] === 'combat' && parts[2]) {
-            return game.i18n.localize(`RT.Combat.${parts[2].capitalize()}`);
+            return game.i18n.localize(`WH40K.Combat.${parts[2].capitalize()}`);
         }
 
         // Movement
         if (parts[1] === 'movement' && parts[2]) {
-            return game.i18n.localize(`RT.Movement.${parts[2].capitalize()}`);
+            return game.i18n.localize(`WH40K.Movement.${parts[2].capitalize()}`);
         }
 
         // Default: capitalize last part
