@@ -6,6 +6,8 @@ export { default as BaseActorSheet } from './base-actor-sheet.mjs';
 export { default as AcolyteSheet } from './character-sheet.mjs';
 export { default as AcolyteSheetSidebar } from './character-sheet-sidebar.mjs';
 export { default as BlackCrusadeSheet } from './black-crusade-sheet.mjs';
+export { default as DarkHeresy1Sheet } from './dark-heresy-1-sheet.mjs';
+export { default as DarkHeresy2Sheet } from './dark-heresy-sheet.mjs';
 export { default as DeathwatchSheet } from './deathwatch-sheet.mjs';
 export { default as OnlyWarSheet } from './only-war-sheet.mjs';
 export { default as NPCSheetV2 } from './npc-sheet-v2.mjs';
