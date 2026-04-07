@@ -646,7 +646,7 @@ export default class ThreatCalculator {
      * @param {boolean} options.scaleArmour - Scale armour values.
      * @returns {Object} Updated system data with scaled values.
      */
-    static scaleToThreat(currentData: any, currentThreat: any, newThreat: any, options: Record<string, unknown> = {}): void {
+    static scaleToThreat(currentData: any, currentThreat: any, newThreat: any, options: Record<string, unknown> = {}): any {
         const { scaleCharacteristics = true, scaleWounds = true, scaleSkills = true, scaleWeapons = true, scaleArmour = true } = options;
 
         // Calculate scaling factor (5% per threat level difference)
@@ -726,7 +726,7 @@ export default class ThreatCalculator {
      * @param {Object} options - Scaling options.
      * @returns {Object} Preview object with current and new values.
      */
-    static previewScaling(currentData: any, currentThreat: any, newThreat: any, options: Record<string, unknown> = {}): void {
+    static previewScaling(currentData: any, currentThreat: any, newThreat: any, options: Record<string, unknown> = {}): any {
         const updates = this.scaleToThreat(currentData, currentThreat, newThreat, options);
 
         const preview = {

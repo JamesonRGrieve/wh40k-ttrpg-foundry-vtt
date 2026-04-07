@@ -22,7 +22,19 @@ const TextEditor = foundry.applications.ux.TextEditor.implementation;
 /**
  * Actor sheet for Acolyte/Character type actors.
  */
-export default class CharacterSheet extends BaseActorSheet {
+export default class CharacterSheet extends (BaseActorSheet as any) {
+    [key: string]: any;
+    declare actor: any;
+    declare document: any;
+    declare element: any;
+    declare position: any;
+    declare isEditable: any;
+    declare _powersFilter: any;
+    declare _equipmentFilter: any;
+    declare _skillsFilter: any;
+    declare _traitsFilter: any;
+    declare render: any;
+
 
     /**
      * Whether the sheet is in edit mode (showing inline stat fields).
@@ -259,8 +271,8 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {object} options                 Notification options.
      * @private
      */
-    _notify(type: "info" | "warning" | "error", message: string, options: Record<string, unknown> = {}): void {
-        const toast = foundry.applications?.api?.Toast;
+    _notify(type: "info" | "warning" | "error", message: string, options: Record<string, any> = {}): void {
+        const toast = (foundry.applications?.api as any)?.Toast;
         if (toast && typeof toast[type] === 'function') {
             return toast[type](message, options);
         }
@@ -293,7 +305,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: Record<string, any>): Promise<Record<string, any>> {
         const context = await super._prepareContext(options);
 
         // Edit mode state
@@ -350,8 +362,8 @@ export default class CharacterSheet extends BaseActorSheet {
      * @override
      * @protected
      */
-    async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        context = await super._preparePartContext(partId, context, options);
+    async _preparePartContext(partId: string, context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+        context = await super._preparePartContext(partId, context, options) as any;
 
         switch (partId) {
             case 'header':
@@ -386,9 +398,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {Promise<object>}
      * @protected
      */
-    async _prepareTabPartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    async _prepareTabPartContext(partId: string, context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         // Find the tab configuration
-        const tabConfig = this.constructor.TABS.find((t) => t.tab === partId);
+        const tabConfig = (this.constructor as any).TABS.find((t) => t.tab === partId);
         if (tabConfig) {
             context.tab = {
                 id: tabConfig.tab,
@@ -436,7 +448,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {Promise<object>}
      * @protected
      */
-    async _prepareBiographyContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareBiographyContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         // First prepare the standard tab context
         await this._prepareTabPartContext('biography', context, options);
 
@@ -468,7 +480,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    async _prepareHeaderContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareHeaderContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         // Header-specific preparation (characteristics HUD is already prepared)
         return context;
     }
@@ -482,9 +494,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    async _prepareTabsContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareTabsContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         // Tabs use the static TABS configuration
-        context.tabs = this.constructor.TABS.map((tab) => ({
+        context.tabs = (this.constructor as any).TABS.map((tab) => ({
             ...tab,
             active: this.tabGroups[tab.group] === tab.tab,
             label: game.i18n.localize(tab.label),
@@ -495,7 +507,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    _onFirstRender(context: Record<string, any>, options: Record<string, any>): void {
         super._onFirstRender(context, options);
 
         // Ensure initial tab is active
@@ -523,7 +535,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    async _prepareBodyContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareBodyContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         // All tab data is already prepared in _prepareContext
         return context;
     }
@@ -535,7 +547,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {object} context  Context being prepared.
      * @protected
      */
-    _prepareCharacteristicHUD(context: Record<string, unknown>): void {
+    _prepareCharacteristicHUD(context: Record<string, any>): void {
         const hudCharacteristics = context.actor?.characteristics ?? {};
         const modifierSources = context.system?.modifierSources?.characteristics ?? {};
 
@@ -543,7 +555,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const radius = 52;
         const circumference = 2 * Math.PI * radius; // ~326.7
 
-        Object.entries(hudCharacteristics).forEach(([key, char]) => {
+        (Object.entries(hudCharacteristics) as [string, any][]).forEach(([key, char]) => {
             const total = Number(char?.total ?? 0);
             const advance = Number(char?.advance ?? 0);
 
@@ -573,7 +585,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     _prepareOriginPathSteps(): Record<string, unknown>[] {
-        const steps = CONFIG.wh40k.originPath?.steps || [
+        const steps = (CONFIG as any).wh40k.originPath?.steps || [
             { key: 'homeWorld', label: 'Home World', shortLabel: 'Home', choiceGroup: 'origin.home-world', icon: 'fa-globe' },
             { key: 'birthright', label: 'Birthright', shortLabel: 'Birth', choiceGroup: 'origin.birthright', icon: 'fa-baby' },
             { key: 'lureOfTheVoid', label: 'Lure of the Void', shortLabel: 'Lure', choiceGroup: 'origin.lure-of-the-void', icon: 'fa-meteor' },
@@ -605,7 +617,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 const selectedChoices = system?.selectedChoices || {};
 
                 // Accumulate base characteristics
-                for (const [key, value] of Object.entries(modifiers)) {
+                for (const [key, value] of Object.entries(modifiers) as [string, any][]) {
                     if (value !== 0) {
                         charTotals[key] = (charTotals[key] || 0) + value;
                     }
@@ -702,7 +714,7 @@ export default class CharacterSheet extends BaseActorSheet {
         };
 
         const characteristicBonuses = [];
-        for (const [key, value] of Object.entries(charTotals)) {
+        for (const [key, value] of Object.entries(charTotals) as [string, any][]) {
             if (value !== 0) {
                 characteristicBonuses.push({
                     key: key,
@@ -811,7 +823,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {object} categorized  Categorized items.
      * @protected
      */
-    _prepareLoadoutData(context: Record<string, unknown>, categorized: Record<string, any[]>): void {
+    _prepareLoadoutData(context: Record<string, any>, categorized: Record<string, any[]>): void {
         // Add all items to context for the Backpack panel
         context.allItems = categorized.all;
         context.allCarriedItems = categorized.allCarried; // Personal/backpack items
@@ -852,7 +864,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {object} categorized  Categorized items.
      * @protected
      */
-    _prepareCombatData(context: Record<string, unknown>, categorized: Record<string, any[]>): void {
+    _prepareCombatData(context: Record<string, any>, categorized: Record<string, any[]>): void {
         const weapons = categorized.weapons;
         const system = context.system ?? this.actor.system ?? {};
 
@@ -1055,7 +1067,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    async _prepareOverviewContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareOverviewContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         // Add Active Effects data
         context.effects = this.actor.effects.map((effect) => ({
             id: effect.id,
@@ -1079,7 +1091,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {Promise<object>}
      * @protected
      */
-    async _prepareOverviewDashboardContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareOverviewDashboardContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         // First prepare standard tab context
         await this._prepareTabPartContext('overview', context, options);
 
@@ -1222,7 +1234,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    async _prepareCombatTabContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareCombatTabContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         // Combat data already prepared in _prepareCombatData
         return context;
     }
@@ -1236,7 +1248,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    async _prepareEquipmentContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareEquipmentContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         // Equipment data already prepared in _prepareLoadoutData
         return context;
     }
@@ -1250,7 +1262,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    async _prepareAbilitiesContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareAbilitiesContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         // Talents and traits already prepared in _prepareItems
         return context;
     }
@@ -1264,7 +1276,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    async _prepareNotesContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareNotesContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         return context;
     }
 
@@ -1277,7 +1289,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object}
      * @protected
      */
-    async _prepareEffectsContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareEffectsContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         return context;
     }
 
@@ -1369,11 +1381,11 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #attack(event: Event, target: HTMLElement): Promise<void> {
+    static async #attack(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
-            await DHTargetedActionManager.performWeaponAttack(this.actor);
+            await DHTargetedActionManager.performWeaponAttack((this as any).actor);
         } catch (error) {
-            this._notify('error', `Attack failed: ${error.message}`, {
+            (this as any)._notify('error', `Attack failed: ${error.message}`, {
                 duration: 5000,
             });
             console.error('Attack error:', error);
@@ -1386,11 +1398,11 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #dodge(event: Event, target: HTMLElement): Promise<void> {
+    static async #dodge(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
-            await this.actor.rollSkill?.('dodge');
+            await (this as any).actor.rollSkill?.('dodge');
         } catch (error) {
-            this._notify('error', `Dodge roll failed: ${error.message}`, {
+            (this as any)._notify('error', `Dodge roll failed: ${error.message}`, {
                 duration: 5000,
             });
             console.error('Dodge error:', error);
@@ -1403,11 +1415,11 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #parry(event: Event, target: HTMLElement): Promise<void> {
+    static async #parry(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
-            await this.actor.rollSkill?.('parry');
+            await (this as any).actor.rollSkill?.('parry');
         } catch (error) {
-            this._notify('error', `Parry roll failed: ${error.message}`, {
+            (this as any)._notify('error', `Parry roll failed: ${error.message}`, {
                 duration: 5000,
             });
             console.error('Parry error:', error);
@@ -1420,13 +1432,13 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #assignDamage(event: Event, target: HTMLElement): Promise<void> {
+    static async #assignDamage(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const hitData = new Hit();
-            const assignData = new AssignDamageData(this.actor, hitData);
+            const assignData = new AssignDamageData((this as any).actor, hitData);
             await prepareAssignDamageRoll(assignData);
         } catch (error) {
-            this._notify('error', `Assign damage failed: ${error.message}`, {
+            (this as any)._notify('error', `Assign damage failed: ${error.message}`, {
                 duration: 5000,
             });
             console.error('Assign damage error:', error);
@@ -1441,9 +1453,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollInitiative(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollInitiative(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
-            const agBonus = this.actor.characteristics?.agility?.bonus ?? 0;
+            const agBonus = (this as any).actor.characteristics?.agility?.bonus ?? 0;
             const roll = await new Roll('1d10 + @ab', { ab: agBonus }).evaluate();
 
             const content = `
@@ -1459,7 +1471,7 @@ export default class CharacterSheet extends BaseActorSheet {
             `;
 
             await ChatMessage.create({
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                 content,
                 rolls: [roll],
                 flags: {
@@ -1467,9 +1479,9 @@ export default class CharacterSheet extends BaseActorSheet {
                         type: 'initiative',
                     },
                 },
-            });
+            } as any);
         } catch (error) {
-            this._notify('error', `Initiative roll failed: ${error.message}`, {
+            (this as any)._notify('error', `Initiative roll failed: ${error.message}`, {
                 duration: 5000,
             });
             console.error('Initiative roll error:', error);
@@ -1482,15 +1494,15 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleFavoriteAction(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleFavoriteAction(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent parent action from triggering
         const actionKey = target.dataset.actionKey;
         if (!actionKey) return;
 
-        const currentFavorites = this.actor.system.favoriteCombatActions || [];
+        const currentFavorites = (this as any).actor.system.favoriteCombatActions || [];
         const newFavorites = currentFavorites.includes(actionKey) ? currentFavorites.filter((k) => k !== actionKey) : [...currentFavorites, actionKey];
 
-        await this.actor.update({ 'system.favoriteCombatActions': newFavorites });
+        await (this as any).actor.update({ 'system.favoriteCombatActions': newFavorites });
     }
 
     /**
@@ -1499,26 +1511,26 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #combatAction(event: Event, target: HTMLElement): Promise<void> {
+    static async #combatAction(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const actionKey = target.dataset.combatAction;
         if (!actionKey) return;
 
         // Route to specific handler based on action key
         switch (actionKey) {
             case 'dodge':
-                await this.#dodge.call(this, event, target);
+                await (CharacterSheet as any).#dodge.call(this, event, target);
                 break;
             case 'parry':
-                await this.#parry.call(this, event, target);
+                await (CharacterSheet as any).#parry.call(this, event, target);
                 break;
             case 'assignDamage':
-                await this.#assignDamage.call(this, event, target);
+                await (CharacterSheet as any).#assignDamage.call(this, event, target);
                 break;
             case 'initiative':
-                await this.#rollInitiative.call(this, event, target);
+                await (CharacterSheet as any).#rollInitiative.call(this, event, target);
                 break;
             default:
-                this._notify('warning', `Unknown combat action: ${actionKey}`, {
+                (this as any)._notify('warning', `Unknown combat action: ${actionKey}`, {
                     duration: 3000,
                 });
         }
@@ -1532,7 +1544,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #vocalizeCombatAction(event: Event, target: HTMLElement): Promise<void> {
+    static async #vocalizeCombatAction(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const actionKey = target.dataset.actionKey;
         if (!actionKey) return;
 
@@ -1545,17 +1557,17 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const actionConfig = allActions.find((a) => a.key === actionKey);
         if (!actionConfig) {
-            this._notify('warning', `Unknown combat action: ${actionKey}`, { duration: 3000 });
+            (this as any)._notify('warning', `Unknown combat action: ${actionKey}`, { duration: 3000 });
             return;
         }
 
         // Prepare chat data
         const chatData = {
             user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
             content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/combat-action-card.hbs', {
                 name: game.i18n.localize(actionConfig.label),
-                actor: this.actor.name,
+                actor: (this as any).actor.name,
                 actionType: actionConfig.type,
                 description: game.i18n.localize(actionConfig.description),
                 subtypes: actionConfig.subtypes?.join(', ') || '',
@@ -1573,7 +1585,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #vocalizeMovement(event: Event, target: HTMLElement): Promise<void> {
+    static async #vocalizeMovement(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const movementType = target.dataset.movementType;
         if (!movementType) return;
 
@@ -1587,14 +1599,14 @@ export default class CharacterSheet extends BaseActorSheet {
         const movement = movementData[movementType];
         if (!movement) return;
 
-        const distance = this.actor.system.movement[movementType];
+        const distance = (this as any).actor.system.movement[movementType];
 
         // Prepare chat data
         const chatData = {
             user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
             content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/movement-card.hbs', {
-                actor: this.actor.name,
+                actor: (this as any).actor.name,
                 movementType: movementType,
                 movementLabel: movement.label,
                 distance: distance,
@@ -1614,12 +1626,12 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #setMovementMode(event: Event, target: HTMLElement): Promise<void> {
+    static async #setMovementMode(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const movementType = target.dataset.movementType;
         if (!movementType) return;
 
         // Find the actor's active token on the canvas
-        const token = this.actor.getActiveTokens()?.[0]?.document;
+        const token = (this as any).actor.getActiveTokens()?.[0]?.document;
         if (!token) {
             (ui.notifications as any).info(`${game.i18n.localize('WH40K.MOVEMENT.Label')}: No active token on canvas.`);
             return;
@@ -1630,7 +1642,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const config = CONFIG.wh40k.movementTypes[movementType];
         const label = config ? game.i18n.localize(config.label) : movementType;
-        const speed = this.actor.system.movement[movementType];
+        const speed = (this as any).actor.system.movement[movementType];
         (ui.notifications as any).info(`${label}: ${speed}m set as active movement mode.`);
     }
 
@@ -1645,10 +1657,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #adjustStat(event: Event, target: HTMLElement): Promise<void> {
+    static async #adjustStat(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const field = target.dataset.field;
-        const throttleKey = `adjustStat-${field}-${this.actor.id}`;
-        return await this._throttle(throttleKey, 200, this.#adjustStatImpl, this, [event, target]);
+        const throttleKey = `adjustStat-${field}-${(this as any).actor.id}`;
+        return await (this as any)._throttle(throttleKey, 200, this.#adjustStatImpl, this, [event, target]);
     }
 
     /**
@@ -1705,7 +1717,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #increment(event: Event, target: HTMLElement): Promise<void> {
+    static async #increment(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent header toggle
         target.dataset.statAction = 'increment';
         return CharacterSheet.#adjustStat.call(this, event, target);
@@ -1717,7 +1729,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #decrement(event: Event, target: HTMLElement): Promise<void> {
+    static async #decrement(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent header toggle
         target.dataset.statAction = 'decrement';
         return CharacterSheet.#adjustStat.call(this, event, target);
@@ -1732,10 +1744,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #setCriticalPip(event: Event, target: HTMLElement): Promise<void> {
+    static async #setCriticalPip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent panel toggle
-        const throttleKey = `setCriticalPip-${this.actor.id}`;
-        return await this._throttle(throttleKey, 200, this.#setCriticalPipImpl, this, [event, target]);
+        const throttleKey = `setCriticalPip-${(this as any).actor.id}`;
+        return await (this as any)._throttle(throttleKey, 200, this.#setCriticalPipImpl, this, [event, target]);
     }
 
     /**
@@ -1759,10 +1771,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #setFateStar(event: Event, target: HTMLElement): Promise<void> {
+    static async #setFateStar(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent panel toggle
-        const throttleKey = `setFateStar-${this.actor.id}`;
-        return await this._throttle(throttleKey, 200, this.#setFateStarImpl, this, [event, target]);
+        const throttleKey = `setFateStar-${(this as any).actor.id}`;
+        return await (this as any)._throttle(throttleKey, 200, this.#setFateStarImpl, this, [event, target]);
     }
 
     /**
@@ -1786,10 +1798,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #setFatigueBolt(event: Event, target: HTMLElement): Promise<void> {
+    static async #setFatigueBolt(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent panel toggle
-        const throttleKey = `setFatigueBolt-${this.actor.id}`;
-        return await this._throttle(throttleKey, 200, this.#setFatigueBoltImpl, this, [event, target]);
+        const throttleKey = `setFatigueBolt-${(this as any).actor.id}`;
+        return await (this as any)._throttle(throttleKey, 200, this.#setFatigueBoltImpl, this, [event, target]);
     }
 
     /**
@@ -1813,10 +1825,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #setCorruption(event: Event, target: HTMLElement): Promise<void> {
+    static async #setCorruption(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent panel toggle
-        const throttleKey = `setCorruption-${this.actor.id}`;
-        return await this._throttle(throttleKey, 200, this.#setCorruptionImpl, this, [event, target]);
+        const throttleKey = `setCorruption-${(this as any).actor.id}`;
+        return await (this as any)._throttle(throttleKey, 200, this.#setCorruptionImpl, this, [event, target]);
     }
 
     /**
@@ -1842,10 +1854,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #setInsanity(event: Event, target: HTMLElement): Promise<void> {
+    static async #setInsanity(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent panel toggle
-        const throttleKey = `setInsanity-${this.actor.id}`;
-        return await this._throttle(throttleKey, 200, this.#setInsanityImpl, this, [event, target]);
+        const throttleKey = `setInsanity-${(this as any).actor.id}`;
+        return await (this as any)._throttle(throttleKey, 200, this.#setInsanityImpl, this, [event, target]);
     }
 
     /**
@@ -1871,10 +1883,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #restoreFate(event: Event, target: HTMLElement): Promise<void> {
+    static async #restoreFate(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent panel toggle
-        const throttleKey = `restoreFate-${this.actor.id}`;
-        return await this._throttle(throttleKey, 500, this.#restoreFateImpl, this, [event, target]);
+        const throttleKey = `restoreFate-${(this as any).actor.id}`;
+        return await (this as any)._throttle(throttleKey, 500, this.#restoreFateImpl, this, [event, target]);
     }
 
     /**
@@ -1898,11 +1910,11 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #spendFate(event: Event, target: HTMLElement): Promise<void> {
+    static async #spendFate(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent panel toggle
         const action = target.dataset.fateAction;
-        const throttleKey = `spendFate-${action}-${this.actor.id}`;
-        return await this._throttle(throttleKey, 500, this.#spendFateImpl, this, [event, target]);
+        const throttleKey = `spendFate-${action}-${(this as any).actor.id}`;
+        return await (this as any)._throttle(throttleKey, 500, this.#spendFateImpl, this, [event, target]);
     }
 
     /**
@@ -1980,9 +1992,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleEquip(event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
-        const item = this.actor.items.get(itemId);
+    static async #toggleEquip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({ 'system.equipped': !item.system.equipped });
     }
@@ -1995,9 +2007,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #stowItem(event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
-        const item = this.actor.items.get(itemId);
+    static async #stowItem(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({
             'system.equipped': false,
@@ -2014,9 +2026,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #unstowItem(event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
-        const item = this.actor.items.get(itemId);
+    static async #unstowItem(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({ 'system.inBackpack': false });
     }
@@ -2029,9 +2041,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #stowToShip(event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
-        const item = this.actor.items.get(itemId);
+    static async #stowToShip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({
             'system.equipped': false,
@@ -2048,9 +2060,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #unstowFromShip(event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
-        const item = this.actor.items.get(itemId);
+    static async #unstowFromShip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({ 'system.inShipStorage': false });
     }
@@ -2063,9 +2075,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleActivate(event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
-        const item = this.actor.items.get(itemId);
+    static async #toggleActivate(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({ 'system.activated': !item.system.activated });
     }
@@ -2078,10 +2090,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #bulkEquip(event: Event, target: HTMLElement): Promise<void> {
+    static async #bulkEquip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const action = target.dataset.bulkAction;
-            const items = this.actor.items;
+            const items = (this as any).actor.items;
             let count = 0;
 
             switch (action) {
@@ -2093,7 +2105,7 @@ export default class CharacterSheet extends BaseActorSheet {
                             count++;
                         }
                     }
-                    this._notify('info', `Equipped ${count} armour piece${count !== 1 ? 's' : ''}`, {
+                    (this as any)._notify('info', `Equipped ${count} armour piece${count !== 1 ? 's' : ''}`, {
                         duration: 3000,
                     });
                     break;
@@ -2105,7 +2117,7 @@ export default class CharacterSheet extends BaseActorSheet {
                         await item.update({ 'system.equipped': false });
                         count++;
                     }
-                    this._notify('info', `Unequipped ${count} item${count !== 1 ? 's' : ''}`, {
+                    (this as any)._notify('info', `Unequipped ${count} item${count !== 1 ? 's' : ''}`, {
                         duration: 3000,
                     });
                     break;
@@ -2120,19 +2132,19 @@ export default class CharacterSheet extends BaseActorSheet {
                         });
                         count++;
                     }
-                    this._notify('info', `Stowed ${count} gear item${count !== 1 ? 's' : ''} in backpack`, {
+                    (this as any)._notify('info', `Stowed ${count} gear item${count !== 1 ? 's' : ''} in backpack`, {
                         duration: 3000,
                     });
                     break;
                 }
 
                 default:
-                    this._notify('warning', `Unknown bulk action: ${action}`, {
+                    (this as any)._notify('warning', `Unknown bulk action: ${action}`, {
                         duration: 3000,
                     });
             }
         } catch (error) {
-            this._notify('error', `Bulk operation failed: ${error.message}`, {
+            (this as any)._notify('error', `Bulk operation failed: ${error.message}`, {
                 duration: 5000,
             });
             console.error('Bulk equipment error:', error);
@@ -2149,12 +2161,12 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #addAcquisition(event: Event, target: HTMLElement): Promise<void> {
-        const acquisitions = this.actor.system?.rogueTrader?.acquisitions;
+    static async #addAcquisition(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        const acquisitions = (this as any).actor.system?.rogueTrader?.acquisitions;
         const acquisitionList = Array.isArray(acquisitions) ? acquisitions : [];
         const updatedAcquisitions = structuredClone(acquisitionList);
         updatedAcquisitions.push({ name: '', availability: '', modifier: 0, notes: '', acquired: false });
-        await this.actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions });
+        await (this as any).actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions });
     }
 
     /* -------------------------------------------- */
@@ -2165,19 +2177,19 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #removeAcquisition(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeAcquisition(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.index ?? '-1');
         if (isNaN(index) || index < 0) return;
 
-        const acquisitions = this.actor.system?.rogueTrader?.acquisitions;
+        const acquisitions = (this as any).actor.system?.rogueTrader?.acquisitions;
         if (!Array.isArray(acquisitions)) {
-            await this.actor.update({ 'system.rogueTrader.acquisitions': [] });
+            await (this as any).actor.update({ 'system.rogueTrader.acquisitions': [] });
             return;
         }
 
         const updatedAcquisitions = structuredClone(acquisitions);
         updatedAcquisitions.splice(index, 1);
-        await this.actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions });
+        await (this as any).actor.update({ 'system.rogueTrader.acquisitions': updatedAcquisitions });
     }
 
     /* -------------------------------------------- */
@@ -2188,9 +2200,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #openAcquisitionDialog(event: Event, target: HTMLElement): Promise<void> {
+    static async #openAcquisitionDialog(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await AcquisitionDialog.show(this.actor);
+        await AcquisitionDialog.show((this as any).actor);
     }
 
     /* -------------------------------------------- */
@@ -2203,10 +2215,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #customXP(event: Event, target: HTMLElement): Promise<void> {
+    static async #customXP(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const { openAddXPDialog } = await import('../prompts/add-xp-dialog.ts');
-        await openAddXPDialog(this.actor);
+        await openAddXPDialog((this as any).actor);
     }
 
     /* -------------------------------------------- */
@@ -2217,12 +2229,12 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #openAdvancement(event: Event, target: HTMLElement): Promise<void> {
+    static async #openAdvancement(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         // Default to rogueTrader career for now
         // TODO: Get career from actor.system.originPath.career or rogueTrader.careerPath
-        const careerKey = this.actor.originPath.career;
-        AdvancementDialog.open(this.actor, { careerKey });
+        const careerKey = (this as any).actor.originPath.career;
+        AdvancementDialog.open((this as any).actor, { careerKey });
     }
 
     /* -------------------------------------------- */
@@ -2233,24 +2245,24 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #bonusVocalize(event: Event, target: HTMLElement): Promise<void> {
+    static async #bonusVocalize(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const bonusName = target.dataset.bonusName;
-            const bonus = this.actor.backgroundEffects?.abilities?.find((a) => a.name === bonusName);
+            const bonus = (this as any).actor.backgroundEffects?.abilities?.find((a) => a.name === bonusName);
             if (bonus) {
                 await DHBasicActionManager.sendItemVocalizeChat({
-                    actor: this.actor.name,
+                    actor: (this as any).actor.name,
                     name: bonus.name,
                     type: bonus.source,
                     description: bonus.benefit,
                 });
             } else {
-                this._notify('warning', `Bonus "${bonusName}" not found`, {
+                (this as any)._notify('warning', `Bonus "${bonusName}" not found`, {
                     duration: 3000,
                 });
             }
         } catch (error) {
-            this._notify('error', `Failed to vocalize bonus: ${error.message}`, {
+            (this as any)._notify('error', `Failed to vocalize bonus: ${error.message}`, {
                 duration: 5000,
             });
             console.error('Bonus vocalize error:', error);
@@ -2267,18 +2279,18 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #openOriginPathBuilder(event: Event, target: HTMLElement): Promise<void> {
+    static async #openOriginPathBuilder(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             if (game.wh40k?.openOriginPathBuilder) {
-                await game.wh40k.openOriginPathBuilder(this.actor);
+                await game.wh40k.openOriginPathBuilder((this as any).actor);
             } else {
-                this._notify('warning', 'Origin Path Builder not available', {
+                (this as any)._notify('warning', 'Origin Path Builder not available', {
                     duration: 3000,
                 });
                 console.warn('game.wh40k.openOriginPathBuilder not found');
             }
         } catch (error) {
-            this._notify('error', `Failed to open Origin Path Builder: ${error.message}`, {
+            (this as any)._notify('error', `Failed to open Origin Path Builder: ${error.message}`, {
                 duration: 5000,
             });
             console.error('Origin Path Builder error:', error);
@@ -2293,10 +2305,10 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {PointerEvent} event  The triggering event.
      * @param {HTMLElement} target  The action target.
      */
-    static async #toggleEditMode(event: Event, target: HTMLElement): Promise<void> {
-        if (!this.isEditable) return;
+    static async #toggleEditMode(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        if (!(this as any).isEditable) return;
         this.#editMode = !this.#editMode;
-        this.render();
+        (this as any).render();
     }
 
     /**
@@ -2305,8 +2317,8 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static async #openCharacteristicSetup(event: Event, target: HTMLElement): Promise<void> {
-        await CharacteristicSetupDialog.open(this.actor);
+    static async #openCharacteristicSetup(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        await CharacteristicSetupDialog.open((this as any).actor);
     }
 
     /**
@@ -2314,11 +2326,11 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event     The originating click event
      * @param {HTMLElement} target  The capturing HTML element which defined a [data-action]
      */
-    static async #showUtilityMenu(event: Event, target: HTMLElement): Promise<void> {
+    static async #showUtilityMenu(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         event.stopPropagation();
 
-        const options = this._getUtilityMenuOptions();
+        const options = (this as any)._getUtilityMenuOptions();
         if (options.length === 0) return;
 
         // Create a simple context menu programmatically
@@ -2417,21 +2429,21 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static #filterEquipment(event: Event, target: HTMLElement): void {
-        const equipmentPanel = this.element.querySelector('.wh40k-all-items-grid');
+    static #filterEquipment(this: CharacterSheet, event: Event, target: HTMLElement): void {
+        const equipmentPanel = (this as any).element.querySelector('.wh40k-all-items-grid');
         if (!equipmentPanel) return;
 
         // Get filter values
-        const searchInput = this.element.querySelector('.wh40k-equipment-search');
-        const typeFilter = this.element.querySelector('.wh40k-equipment-type-filter');
-        const statusFilter = this.element.querySelector('.wh40k-equipment-status-filter');
+        const searchInput = (this as any).element.querySelector('.wh40k-equipment-search');
+        const typeFilter = (this as any).element.querySelector('.wh40k-equipment-type-filter');
+        const statusFilter = (this as any).element.querySelector('.wh40k-equipment-status-filter');
 
         const searchTerm = searchInput?.value.toLowerCase() || '';
         const typeValue = typeFilter?.value || '';
         const statusValue = statusFilter?.value || '';
 
         // Store filter state for persistence
-        this._equipmentFilter = {
+        (this as any)._equipmentFilter = {
             search: searchInput?.value || '',
             type: typeValue,
             status: statusValue,
@@ -2462,7 +2474,7 @@ export default class CharacterSheet extends BaseActorSheet {
         });
 
         // Toggle clear button visibility
-        const clearBtn = this.element.querySelector('.wh40k-search-clear');
+        const clearBtn = (this as any).element.querySelector('.wh40k-search-clear');
         if (clearBtn) {
             clearBtn.style.display = searchTerm ? 'flex' : 'none';
         }
@@ -2485,12 +2497,12 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #clearEquipmentSearch(event: Event, target: HTMLElement): void {
-        const searchInput = this.element.querySelector('.wh40k-equipment-search');
+    static #clearEquipmentSearch(this: CharacterSheet, event: Event, target: HTMLElement): void {
+        const searchInput = (this as any).element.querySelector('.wh40k-equipment-search');
         if (searchInput) {
             searchInput.value = '';
             // Clear stored filter state
-            this._equipmentFilter = { search: '', type: '', status: '' };
+            (this as any)._equipmentFilter = { search: '', type: '', status: '' };
             // Trigger filter update
             this.constructor.#filterEquipment.call(this, event, searchInput);
         }
@@ -2506,16 +2518,16 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static async #filterSkills(event: Event, target: HTMLElement): Promise<void> {
+    static async #filterSkills(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const input = event.currentTarget;
         const name = input.name || 'search';
         const value = input.value || '';
 
         // Update filter state
-        this._skillsFilter[name] = value;
+        (this as any)._skillsFilter[name] = value;
 
         // Re-render skills tab only
-        await this.render({ parts: ['skills'] });
+        await (this as any).render({ parts: ['skills'] });
     }
 
     /* -------------------------------------------- */
@@ -2526,12 +2538,12 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static async #clearSkillsSearch(event: Event, target: HTMLElement): Promise<void> {
+    static async #clearSkillsSearch(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         // Reset all filters
-        this._skillsFilter = { search: '', characteristic: '', training: '' };
+        (this as any)._skillsFilter = { search: '', characteristic: '', training: '' };
 
         // Re-render skills tab
-        await this.render({ parts: ['skills'] });
+        await (this as any).render({ parts: ['skills'] });
     }
 
     /**
@@ -2540,12 +2552,12 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static async #toggleFavoriteSkill(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleFavoriteSkill(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
 
         // Get current favorite skills
-        const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
+        const favorites = (this as any).actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
         const index = favorites.indexOf(skillKey);
 
         // Toggle
@@ -2556,10 +2568,10 @@ export default class CharacterSheet extends BaseActorSheet {
         }
 
         // Save
-        await this.actor.setFlag('wh40k-rpg', 'favoriteSkills', favorites);
+        await (this as any).actor.setFlag('wh40k-rpg', 'favoriteSkills', favorites);
 
         // Re-render skills tab and overview tab
-        await this.render({ parts: ['skills', 'overview'] });
+        await (this as any).render({ parts: ['skills', 'overview'] });
     }
 
     /* -------------------------------------------- */
@@ -2571,12 +2583,12 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #cycleSkillTraining(event: Event, target: HTMLElement): Promise<void> {
+    static async #cycleSkillTraining(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
 
-        const skill = this.actor.system.skills?.[skillKey];
+        const skill = (this as any).actor.system.skills?.[skillKey];
         if (!skill) return;
 
         // Determine current level
@@ -2586,7 +2598,7 @@ export default class CharacterSheet extends BaseActorSheet {
         else if (skill.trained) level = 1;
 
         // Cycle: shift-click goes backwards
-        if (event.shiftKey) {
+        if ((event as any).shiftKey) {
             level = level <= 0 ? 3 : level - 1;
         } else {
             level = level >= 3 ? 0 : level + 1;
@@ -2598,7 +2610,7 @@ export default class CharacterSheet extends BaseActorSheet {
             [`system.skills.${skillKey}.plus10`]: level >= 2,
             [`system.skills.${skillKey}.plus20`]: level >= 3,
         };
-        await this.actor.update(update);
+        await (this as any).actor.update(update);
     }
 
     /* -------------------------------------------- */
@@ -2610,14 +2622,14 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #cycleSpecialistTraining(event: Event, target: HTMLElement): Promise<void> {
+    static async #cycleSpecialistTraining(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const row = target.closest('[data-skill]');
         const skillKey = row?.dataset.skill;
         const entryIndex = parseInt(row?.dataset.index, 10);
         if (!skillKey || isNaN(entryIndex)) return;
 
-        const skill = this.actor.system.skills?.[skillKey];
+        const skill = (this as any).actor.system.skills?.[skillKey];
         if (!skill) return;
 
         const entries = Array.isArray(skill.entries) ? [...skill.entries] : skill.entries ? Object.values(skill.entries) : [];
@@ -2631,7 +2643,7 @@ export default class CharacterSheet extends BaseActorSheet {
         else if (entry.trained) level = 1;
 
         // Cycle
-        if (event.shiftKey) {
+        if ((event as any).shiftKey) {
             level = level <= 0 ? 3 : level - 1;
         } else {
             level = level >= 3 ? 0 : level + 1;
@@ -2645,7 +2657,7 @@ export default class CharacterSheet extends BaseActorSheet {
             plus20: level >= 3,
         };
 
-        await this.actor.update({ [`system.skills.${skillKey}.entries`]: entries });
+        await (this as any).actor.update({ [`system.skills.${skillKey}.entries`]: entries });
     }
 
     /* -------------------------------------------- */
@@ -2656,7 +2668,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      * @this {CharacterSheet}
      */
-    static async #toggleFavoriteSpecialistSkill(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleFavoriteSpecialistSkill(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const skillKey = target.dataset.skill;
         const entryIndex = parseInt(target.dataset.index);
         if (!skillKey || isNaN(entryIndex)) return;
@@ -2665,7 +2677,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const favoriteKey = `${skillKey}:${entryIndex}`;
 
         // Get current favorite specialist skills
-        const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') || [];
+        const favorites = (this as any).actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') || [];
         const index = favorites.indexOf(favoriteKey);
 
         // Toggle
@@ -2676,10 +2688,10 @@ export default class CharacterSheet extends BaseActorSheet {
         }
 
         // Save
-        await this.actor.setFlag('wh40k-rpg', 'favoriteSpecialistSkills', favorites);
+        await (this as any).actor.setFlag('wh40k-rpg', 'favoriteSpecialistSkills', favorites);
 
         // Re-render talents tab
-        await this.render({ parts: ['talents'] });
+        await (this as any).render({ parts: ['talents'] });
     }
 
     /* -------------------------------------------- */
@@ -2691,9 +2703,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      * @this {CharacterSheet}
      */
-    static async #openAddSpecialistDialog(event: Event, target: HTMLElement): Promise<void> {
+    static async #openAddSpecialistDialog(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         // Get list of specialist skills for the dropdown
-        const skills = this.actor.system.skills ?? {};
+        const skills = (this as any).actor.system.skills ?? {};
         const specialistSkills = Object.entries(skills)
             .filter(([_, data]) => data.entries !== undefined)
             .map(([key, data]) => ({
@@ -2740,7 +2752,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // Open the existing specialist skill dialog for this skill
         const { prepareCreateSpecialistSkillPrompt } = await import('../prompts/specialist-skill-dialog.ts');
         await prepareCreateSpecialistSkillPrompt({
-            actor: this.actor,
+            actor: (this as any).actor,
             skill: skill,
             skillName: skillKey,
         });
@@ -2756,12 +2768,12 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the event.
      */
-    static async #toggleFavoriteTalent(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleFavoriteTalent(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
         // Get current favorite talents
-        const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
+        const favorites = (this as any).actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
         const index = favorites.indexOf(itemId);
 
         // Toggle
@@ -2772,10 +2784,10 @@ export default class CharacterSheet extends BaseActorSheet {
         }
 
         // Save
-        await this.actor.setFlag('wh40k-rpg', 'favoriteTalents', favorites);
+        await (this as any).actor.setFlag('wh40k-rpg', 'favoriteTalents', favorites);
 
         // Re-render talents tab and overview tab
-        await this.render({ parts: ['talents', 'overview'] });
+        await (this as any).render({ parts: ['talents', 'overview'] });
     }
 
     /* -------------------------------------------- */
@@ -2789,7 +2801,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * @this {CharacterSheet}
      * @private
      */
-    static async #filterTraits(event: Event, target: HTMLElement): Promise<void> {
+    static async #filterTraits(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const form = target.closest('.wh40k-traits-filters');
         if (!form) return;
 
@@ -2797,8 +2809,8 @@ export default class CharacterSheet extends BaseActorSheet {
         const category = form.querySelector('[name=traits-category]')?.value || '';
         const hasLevel = form.querySelector('[name=traits-has-level]')?.checked || false;
 
-        this._traitsFilter = { search, category, hasLevel };
-        await this.render({ parts: ['talents'] }); // Talents tab contains trait panel
+        (this as any)._traitsFilter = { search, category, hasLevel };
+        await (this as any).render({ parts: ['talents'] }); // Talents tab contains trait panel
     }
 
     /**
@@ -2808,9 +2820,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @this {CharacterSheet}
      * @private
      */
-    static async #clearTraitsFilter(event: Event, target: HTMLElement): Promise<void> {
-        this._traitsFilter = { search: '', category: '', hasLevel: false };
-        await this.render({ parts: ['talents'] }); // Talents tab contains trait panel
+    static async #clearTraitsFilter(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        (this as any)._traitsFilter = { search: '', category: '', hasLevel: false };
+        await (this as any).render({ parts: ['talents'] }); // Talents tab contains trait panel
     }
 
     /**
@@ -2820,11 +2832,11 @@ export default class CharacterSheet extends BaseActorSheet {
      * @this {CharacterSheet}
      * @private
      */
-    static async #adjustTraitLevel(event: Event, target: HTMLElement): Promise<void> {
+    static async #adjustTraitLevel(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         const delta = parseInt(target.dataset.delta) || 0;
 
-        const item = this.actor.items.get(itemId);
+        const item = (this as any).actor.items.get(itemId);
         if (!item) return;
 
         const newLevel = Math.max(0, (item.system.level || 0) + delta);
@@ -2844,9 +2856,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #createEffect(event: Event, target: HTMLElement): Promise<void> {
+    static async #createEffect(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
-            await this.actor.createEmbeddedDocuments('ActiveEffect', [
+            await (this as any).actor.createEmbeddedDocuments('ActiveEffect', [
                 {
                     name: 'New Effect',
                     icon: 'icons/svg/aura.svg',
@@ -2856,11 +2868,11 @@ export default class CharacterSheet extends BaseActorSheet {
                 },
             ]);
 
-            this._notify('info', 'New effect created', {
+            (this as any)._notify('info', 'New effect created', {
                 duration: 2000,
             });
         } catch (error) {
-            this._notify('error', `Failed to create effect: ${error.message}`, {
+            (this as any)._notify('error', `Failed to create effect: ${error.message}`, {
                 duration: 5000,
             });
             console.error('Create effect error:', error);
@@ -2875,13 +2887,13 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleEffect(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleEffect(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const effectId = target.dataset.effectId;
-            const effect = this.actor.effects.get(effectId);
+            const effect = (this as any).actor.effects.get(effectId);
 
             if (!effect) {
-                this._notify('warning', 'Effect not found', {
+                (this as any)._notify('warning', 'Effect not found', {
                     duration: 3000,
                 });
                 return;
@@ -2889,11 +2901,11 @@ export default class CharacterSheet extends BaseActorSheet {
 
             await effect.update({ disabled: !effect.disabled });
 
-            this._notify('info', `Effect ${effect.disabled ? 'disabled' : 'enabled'}`, {
+            (this as any)._notify('info', `Effect ${effect.disabled ? 'disabled' : 'enabled'}`, {
                 duration: 2000,
             });
         } catch (error) {
-            this._notify('error', `Failed to toggle effect: ${error.message}`, {
+            (this as any)._notify('error', `Failed to toggle effect: ${error.message}`, {
                 duration: 5000,
             });
             console.error('Toggle effect error:', error);
@@ -2908,13 +2920,13 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #deleteEffect(event: Event, target: HTMLElement): Promise<void> {
+    static async #deleteEffect(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const effectId = target.dataset.effectId;
-            const effect = this.actor.effects.get(effectId);
+            const effect = (this as any).actor.effects.get(effectId);
 
             if (!effect) {
-                this._notify('warning', 'Effect not found', {
+                (this as any)._notify('warning', 'Effect not found', {
                     duration: 3000,
                 });
                 return;
@@ -2929,12 +2941,12 @@ export default class CharacterSheet extends BaseActorSheet {
 
             if (confirmed) {
                 await effect.delete();
-                this._notify('info', 'Effect deleted', {
+                (this as any)._notify('info', 'Effect deleted', {
                     duration: 2000,
                 });
             }
         } catch (error) {
-            this._notify('error', `Failed to delete effect: ${error.message}`, {
+            (this as any)._notify('error', `Failed to delete effect: ${error.message}`, {
                 duration: 5000,
             });
             console.error('Delete effect error:', error);
@@ -2951,19 +2963,19 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollPower(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollPower(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
-            const item = this.actor.items.get(itemId);
+            const item = (this as any).actor.items.get(itemId);
             if (!item) {
-                this._notify('warning', 'Power not found', { duration: 3000 });
+                (this as any)._notify('warning', 'Power not found', { duration: 3000 });
                 return;
             }
 
             // Use the actor's rollItem method for consistent handling
-            await this.actor.rollItem(itemId);
+            await (this as any).actor.rollItem(itemId);
         } catch (error) {
-            this._notify('error', `Power roll failed: ${error.message}`, { duration: 5000 });
+            (this as any)._notify('error', `Power roll failed: ${error.message}`, { duration: 5000 });
             console.error('Power roll error:', error);
         }
     }
@@ -2976,19 +2988,19 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollPowerDamage(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollPowerDamage(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
-            const item = this.actor.items.get(itemId);
+            const item = (this as any).actor.items.get(itemId);
             if (!item) {
-                this._notify('warning', 'Power not found', { duration: 3000 });
+                (this as any)._notify('warning', 'Power not found', { duration: 3000 });
                 return;
             }
 
             // Use the actor's damageItem method
-            await this.actor.damageItem(itemId);
+            await (this as any).actor.damageItem(itemId);
         } catch (error) {
-            this._notify('error', `Damage roll failed: ${error.message}`, { duration: 5000 });
+            (this as any)._notify('error', `Damage roll failed: ${error.message}`, { duration: 5000 });
             console.error('Power damage error:', error);
         }
     }
@@ -3001,12 +3013,12 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #vocalizePower(event: Event, target: HTMLElement): Promise<void> {
+    static async #vocalizePower(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
-            const item = this.actor.items.get(itemId);
+            const item = (this as any).actor.items.get(itemId);
             if (!item) {
-                this._notify('warning', 'Power not found', { duration: 3000 });
+                (this as any)._notify('warning', 'Power not found', { duration: 3000 });
                 return;
             }
 
@@ -3016,12 +3028,12 @@ export default class CharacterSheet extends BaseActorSheet {
             } else {
                 // Fallback: create a simple chat message
                 await ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                    speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                     content: `<div class="wh40k-power-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
             }
         } catch (error) {
-            this._notify('error', `Failed to post power: ${error.message}`, { duration: 5000 });
+            (this as any)._notify('error', `Failed to post power: ${error.message}`, { duration: 5000 });
             console.error('Vocalize power error:', error);
         }
     }
@@ -3034,9 +3046,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #togglePowerDetails(event: Event, target: HTMLElement): void {
+    static #togglePowerDetails(this: CharacterSheet, event: Event, target: HTMLElement): void {
         const itemId = target.dataset.itemId;
-        const detailsEl = this.element.querySelector(`.wh40k-power-details[data-power-id="${itemId}"]`);
+        const detailsEl = (this as any).element.querySelector(`.wh40k-power-details[data-power-id="${itemId}"]`);
 
         if (detailsEl) {
             const isHidden = detailsEl.hasAttribute('hidden');
@@ -3058,12 +3070,12 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollRitual(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollRitual(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
-            await this.actor.rollItem(itemId);
+            await (this as any).actor.rollItem(itemId);
         } catch (error) {
-            this._notify('error', `Ritual roll failed: ${error.message}`, { duration: 5000 });
+            (this as any)._notify('error', `Ritual roll failed: ${error.message}`, { duration: 5000 });
             console.error('Ritual roll error:', error);
         }
     }
@@ -3076,22 +3088,22 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #vocalizeRitual(event: Event, target: HTMLElement): Promise<void> {
+    static async #vocalizeRitual(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
-            const item = this.actor.items.get(itemId);
+            const item = (this as any).actor.items.get(itemId);
             if (!item) return;
 
             if (typeof item.toChat === 'function') {
                 await item.toChat();
             } else {
                 await ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                    speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                     content: `<div class="wh40k-ritual-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
             }
         } catch (error) {
-            this._notify('error', `Failed to post ritual: ${error.message}`, { duration: 5000 });
+            (this as any)._notify('error', `Failed to post ritual: ${error.message}`, { duration: 5000 });
             console.error('Vocalize ritual error:', error);
         }
     }
@@ -3104,12 +3116,12 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollOrder(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollOrder(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
-            await this.actor.rollItem(itemId);
+            await (this as any).actor.rollItem(itemId);
         } catch (error) {
-            this._notify('error', `Order roll failed: ${error.message}`, { duration: 5000 });
+            (this as any)._notify('error', `Order roll failed: ${error.message}`, { duration: 5000 });
             console.error('Order roll error:', error);
         }
     }
@@ -3122,22 +3134,22 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #vocalizeOrder(event: Event, target: HTMLElement): Promise<void> {
+    static async #vocalizeOrder(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const itemId = target.dataset.itemId;
-            const item = this.actor.items.get(itemId);
+            const item = (this as any).actor.items.get(itemId);
             if (!item) return;
 
             if (typeof item.toChat === 'function') {
                 await item.toChat();
             } else {
                 await ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                    speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                     content: `<div class="wh40k-order-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
             }
         } catch (error) {
-            this._notify('error', `Failed to post order: ${error.message}`, { duration: 5000 });
+            (this as any)._notify('error', `Failed to post order: ${error.message}`, { duration: 5000 });
             console.error('Vocalize order error:', error);
         }
     }
@@ -3150,11 +3162,11 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollPhenomena(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollPhenomena(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             // Use the game.wh40k roll helper if available
             if (game.wh40k?.rollPsychicPhenomena) {
-                await game.wh40k.rollPsychicPhenomena(this.actor);
+                await game.wh40k.rollPsychicPhenomena((this as any).actor);
             } else {
                 // Fallback: roll on phenomena table
                 const table =
@@ -3170,14 +3182,14 @@ export default class CharacterSheet extends BaseActorSheet {
                     // Simple d100 roll as last resort
                     const roll = await new Roll('1d100').evaluate();
                     await ChatMessage.create({
-                        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                        speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                         content: `<div class="wh40k-phenomena-roll"><h3>Psychic Phenomena</h3><p>Roll: ${roll.total}</p></div>`,
                         rolls: [roll],
                     });
                 }
             }
         } catch (error) {
-            this._notify('error', `Phenomena roll failed: ${error.message}`, { duration: 5000 });
+            (this as any)._notify('error', `Phenomena roll failed: ${error.message}`, { duration: 5000 });
             console.error('Phenomena roll error:', error);
         }
     }
@@ -3190,11 +3202,11 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollPerils(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollPerils(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             // Use the game.wh40k roll helper if available
             if (game.wh40k?.rollPerilsOfTheWarp) {
-                await game.wh40k.rollPerilsOfTheWarp(this.actor);
+                await game.wh40k.rollPerilsOfTheWarp((this as any).actor);
             } else {
                 // Fallback: roll on perils table
                 const table =
@@ -3210,14 +3222,14 @@ export default class CharacterSheet extends BaseActorSheet {
                     // Simple d100 roll as last resort
                     const roll = await new Roll('1d100').evaluate();
                     await ChatMessage.create({
-                        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                        speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                         content: `<div class="wh40k-perils-roll"><h3>Perils of the Warp</h3><p>Roll: ${roll.total}</p></div>`,
                         rolls: [roll],
                     });
                 }
             }
         } catch (error) {
-            this._notify('error', `Perils roll failed: ${error.message}`, { duration: 5000 });
+            (this as any)._notify('error', `Perils roll failed: ${error.message}`, { duration: 5000 });
             console.error('Perils roll error:', error);
         }
     }
@@ -3230,21 +3242,21 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #filterPowers(event: Event, target: HTMLElement): Promise<void> {
+    static async #filterPowers(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const discipline = target.dataset.discipline || '';
 
         // Initialize filter state if needed
-        if (!this._powersFilter) this._powersFilter = {};
-        this._powersFilter.discipline = discipline;
+        if (!(this as any)._powersFilter) (this as any)._powersFilter = {};
+        (this as any)._powersFilter.discipline = discipline;
 
         // Update active class on filter buttons
-        const filterBtns = this.element.querySelectorAll('.wh40k-panel-psychic-powers .wh40k-filter-btn');
+        const filterBtns = (this as any).element.querySelectorAll('.wh40k-panel-psychic-powers .wh40k-filter-btn');
         filterBtns.forEach((btn) => {
             btn.classList.toggle('active', btn.dataset.discipline === discipline);
         });
 
         // Re-render the powers part
-        await this.render({ parts: ['powers'] });
+        await (this as any).render({ parts: ['powers'] });
     }
 
     /* -------------------------------------------- */
@@ -3255,21 +3267,21 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #filterOrders(event: Event, target: HTMLElement): Promise<void> {
+    static async #filterOrders(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         const category = target.dataset.category || '';
 
         // Initialize filter state if needed
-        if (!this._powersFilter) this._powersFilter = {};
-        this._powersFilter.orderCategory = category;
+        if (!(this as any)._powersFilter) (this as any)._powersFilter = {};
+        (this as any)._powersFilter.orderCategory = category;
 
         // Update active class on filter buttons
-        const filterBtns = this.element.querySelectorAll('.wh40k-panel-orders .wh40k-filter-btn');
+        const filterBtns = (this as any).element.querySelectorAll('.wh40k-panel-orders .wh40k-filter-btn');
         filterBtns.forEach((btn) => {
             btn.classList.toggle('active', btn.dataset.category === category);
         });
 
         // Re-render the powers part
-        await this.render({ parts: ['powers'] });
+        await (this as any).render({ parts: ['powers'] });
     }
 
     /* -------------------------------------------- */

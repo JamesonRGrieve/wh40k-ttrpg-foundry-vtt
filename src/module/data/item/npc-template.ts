@@ -8,7 +8,7 @@
 
 import ItemDataModel from '../abstract/item-data-model.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields as any;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = (foundry.data as any).fields;
 
 /**
  * Data model for NPC template items.

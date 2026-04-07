@@ -5,7 +5,7 @@
  * Follows DND5E pattern: permissive validation (accepts legacy formats)
  * but provides helper for generating kebab-case from names.
  */
-export default class IdentifierField extends foundry.data.fields.StringField {
+export default class IdentifierField extends (foundry.data as any).fields.StringField {
     /** @inheritdoc */
     static get _defaults(): Record<string, unknown> {
         return foundry.utils.mergeObject(super._defaults, {

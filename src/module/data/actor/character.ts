@@ -1,6 +1,6 @@
 import CreatureTemplate from './templates/creature.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField, SetField } = foundry.data.fields as any;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField, SetField } = (foundry.data as any).fields;
 
 /**
  * List of characteristic keys used for character generation.
@@ -373,11 +373,11 @@ export default class CharacterData extends CreatureTemplate {
         this.experience.spentTalents = 0;
         this.experience.spentPsychicPowers = this.psy.cost;
 
-        for (const characteristic of Object.values(this.characteristics)) {
+        for (const characteristic of Object.values(this.characteristics) as any[]) {
             this.experience.spentCharacteristics += parseInt(characteristic.cost, 10);
         }
 
-        for (const skill of Object.values(this.skills)) {
+        for (const skill of Object.values(this.skills) as any[]) {
             if (Array.isArray(skill.entries)) {
                 for (const speciality of skill.entries) {
                     this.experience.spentSkills += parseInt(speciality.cost ?? 0, 10);

@@ -12,6 +12,8 @@ import { getCareerAdvancements, getNextCharacteristicCost, getCareerKeyFromName,
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class AdvancementDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
+
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
@@ -98,7 +100,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {object} options - Options
      * @returns {AdvancementDialog}
      */
-    static open(actor: any, options: Record<string, unknown> = {}): void {
+    static open(actor: any, options: Record<string, unknown> = {}): any {
         const dialog = new this(actor, options);
         dialog.render(true);
         return dialog;
@@ -174,7 +176,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {Object} career - Career advancement data
      * @returns {Array}
      */
-    #prepareCharacteristics(career: any): void {
+    #prepareCharacteristics(career: any): any {
         const costs = career?.CHARACTERISTIC_COSTS ?? {};
         const characteristics = this.actor.system.characteristics ?? {};
         const available = getAvailableXP(this.actor);
@@ -222,7 +224,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {Array} advances - Array of advancement definitions
      * @returns {Array}
      */
-    #prepareAdvances(advances: any[]): void {
+    #prepareAdvances(advances: any[]): any {
         const available = getAvailableXP(this.actor);
 
         return advances.map((advance, index) => {

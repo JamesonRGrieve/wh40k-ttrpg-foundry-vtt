@@ -16,6 +16,8 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class AcquisitionDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
+
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
@@ -395,7 +397,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * Wait for dialog to complete
      * @returns {Promise<object|null>}  Result or null if cancelled
      */
-    async wait(): Promise<void> {
+    async wait(): Promise<any> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
         });

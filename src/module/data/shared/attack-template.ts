@@ -9,7 +9,7 @@ export default class AttackTemplate extends SystemDataModel {
     [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields as any;
+        const fields = (foundry.data as any).fields;
         return {
             attack: new fields.SchemaField({
                 type: new fields.StringField({
