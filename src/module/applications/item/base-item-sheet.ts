@@ -24,8 +24,8 @@ const { ItemSheetV2 } = foundry.applications.sheets;
  */
 export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any)))) {
     [key: string]: any;
-    constructor(options: Record<string, unknown> = {}) {
-        super(options);
+    constructor(...args: any[]) {
+        super(...args);
     }
 
     /* -------------------------------------------- */
@@ -348,7 +348,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         if (firstChar === '=') {
             // Set absolute value
             const absolute = parseFloat(value.slice(1));
-            if (!isNaN(absolute)) input.value = absolute;
+            if (!isNaN(absolute)) input.value = String(absolute);
         } else if (['+', '-'].includes(firstChar)) {
             // Add or subtract delta
             const current = foundry.utils.getProperty(this.item, input.name) as number ?? 0;
@@ -365,7 +365,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {PointerEvent} event  The triggering event.
      * @param {HTMLElement} target  The action target.
      */
-    static async #onEditImage(event: Event, target: HTMLElement): Promise<void> {
+    static async #onEditImage(this: any, event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset.edit ?? 'img';
         const current = foundry.utils.getProperty(this.document._source, attr);
         const fp = new (CONFIG as any).ux.FilePicker({
@@ -388,7 +388,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {PointerEvent} event  The triggering event.
      * @param {HTMLElement} target  The action target.
      */
-    static async #toggleEditMode(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleEditMode(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.canEdit) return;
         this.#editMode = !this.#editMode;
         this.render();
@@ -406,7 +406,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #effectCreate(event: Event, target: HTMLElement): Promise<void> {
+    static async #effectCreate(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.item.createEmbeddedDocuments(
             'ActiveEffect',
             [
@@ -429,7 +429,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #effectEdit(event: Event, target: HTMLElement): void {
+    static #effectEdit(this: any, event: Event, target: HTMLElement): void {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement)?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         effect?.sheet.render(true);
@@ -443,7 +443,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #effectDelete(event: Event, target: HTMLElement): Promise<void> {
+    static async #effectDelete(this: any, event: Event, target: HTMLElement): Promise<void> {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement)?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         await effect?.delete();
@@ -457,7 +457,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #effectToggle(event: Event, target: HTMLElement): Promise<void> {
+    static async #effectToggle(this: any, event: Event, target: HTMLElement): Promise<void> {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement)?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         await effect?.update({ disabled: !effect.disabled });
@@ -471,7 +471,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleSection(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleSection(this: any, event: Event, target: HTMLElement): Promise<void> {
         const sectionName = target.dataset.toggle;
         if (!sectionName) return;
 

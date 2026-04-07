@@ -22,7 +22,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @param {object} simpleSkillData  The skill data.
      * @param {object} [options={}]     Dialog options.
      */
-    constructor(simpleSkillData = {}, options = {}) {
+    constructor(simpleSkillData: any = {}, options: any = {}) {
         super(options);
         this.simpleSkillData = simpleSkillData;
         this._selectedDifficulty = 0; // Challenging (baseline)
@@ -348,7 +348,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onSelectDifficulty(event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectDifficulty(this: any, event: Event, target: HTMLElement): Promise<void> {
         const modifier = parseInt(target.dataset.modifier);
         this._selectedDifficulty = modifier;
 
@@ -367,7 +367,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Checkbox that was clicked.
      */
-    static async #onToggleModifier(event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleModifier(this: any, event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.modifierKey;
         this._commonModifiers[key] = (target as HTMLInputElement).checked;
         await this.render(false, { parts: ['form'] });
@@ -381,7 +381,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Event} event         Triggering input event.
      * @param {HTMLElement} target  Input that was changed.
      */
-    static async #onUpdateCustom(event: Event, target: HTMLElement): Promise<void> {
+    static async #onUpdateCustom(this: any, event: Event, target: HTMLElement): Promise<void> {
         this._customModifier = parseInt((target as HTMLInputElement).value) || 0;
         await this.render(false, { parts: ['form'] });
     }
@@ -394,7 +394,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onRoll(event: Event, target: HTMLElement): Promise<void> {
+    static async #onRoll(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this._performRoll();
     }
 
@@ -406,7 +406,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onRollRepeat(event: Event, target: HTMLElement): Promise<void> {
+    static async #onRollRepeat(this: any, event: Event, target: HTMLElement): Promise<void> {
         const modifier = parseInt(target.dataset.modifier);
 
         // Apply the modifier directly
@@ -423,7 +423,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onCancel(event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.close();
     }
 

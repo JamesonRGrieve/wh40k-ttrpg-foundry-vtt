@@ -226,7 +226,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: any, options: any): Promise<void> {
+    _onRender(context: any, options: any): any {
         super._onRender(context, options);
 
         // Add live update listeners
@@ -389,7 +389,8 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: any = {}): Promise<void> {
+    // @ts-ignore - Foundry override
+    async close(options: any = {}): Promise<any> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
@@ -453,7 +454,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
             if (randomize) {
                 // Randomize characteristics slightly (±5)
-                for (const char of Object.values(systemData.characteristics)) {
+                for (const char of Object.values(systemData.characteristics) as any[]) {
                     const variance = Math.floor(Math.random() * 11) - 5;
                     char.base = Math.max(10, Math.min(99, char.base + variance));
                     char.total = char.base + char.modifier;

@@ -561,7 +561,7 @@ export class GrantsManager {
             case 'choice':
                 // Choice grants contain nested grants, reverse them
                 if (applied.grantResults) {
-                    for (const [key, nestedState] of Object.entries(applied.grantResults)) {
+                    for (const [key, nestedState] of (Object.entries(applied.grantResults) as [string, any][])) {
                         await this._reverseGrant(actor, key, { type: nestedState.type || 'unknown', applied: nestedState });
                     }
                 }
@@ -581,7 +581,7 @@ export class GrantsManager {
     static async _reverseCharacteristicGrant(actor, applied, result) {
         const updates = {};
 
-        for (const [key, state] of Object.entries(applied || {})) {
+        for (const [key, state] of (Object.entries(applied || {}) as [string, any][])) {
             if (state.previousValue !== undefined) {
                 updates[`system.characteristics.${key}.advance`] = state.previousValue;
                 result.notifications.push(`Reversed ${key}: ${state.newValue} → ${state.previousValue}`);
@@ -601,7 +601,7 @@ export class GrantsManager {
         const idsToDelete = [];
         const itemsToUpdate = [];
 
-        for (const [key, state] of Object.entries(applied || {})) {
+        for (const [key, state] of (Object.entries(applied || {}) as [string, any][])) {
             if (state.created && state.itemId) {
                 // Delete created skill
                 idsToDelete.push(state.itemId);
@@ -630,7 +630,7 @@ export class GrantsManager {
     static async _reverseItemGrant(actor, applied, result) {
         const idsToDelete = [];
 
-        for (const [uuid, itemId] of Object.entries(applied || {})) {
+        for (const [uuid, itemId] of (Object.entries(applied || {}) as [string, any][])) {
             if (itemId && actor.items.has(itemId)) {
                 const item = actor.items.get(itemId);
                 idsToDelete.push(itemId);
@@ -657,7 +657,7 @@ export class GrantsManager {
             insanity: { value: 'system.insanity.value' },
         };
 
-        for (const [resourceType, state] of Object.entries(applied || {})) {
+        for (const [resourceType, state] of (Object.entries(applied || {}) as [string, any][])) {
             const paths = resourcePaths[resourceType];
             if (!paths) continue;
 
@@ -888,7 +888,7 @@ export class GrantsManager {
      * @private
      */
     static async _processNestedGrants(actor, appliedItems, options) {
-        for (const [uuid, itemId] of Object.entries(appliedItems)) {
+        for (const [uuid, itemId] of (Object.entries(appliedItems) as [string, any][])) {
             const item = actor.items.get(itemId);
             if (!item) continue;
 

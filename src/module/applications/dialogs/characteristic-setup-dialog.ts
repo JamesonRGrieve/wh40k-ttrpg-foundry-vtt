@@ -274,7 +274,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: any, options: any): Promise<void> {
+    _onRender(context: any, options: any): any {
         super._onRender(context, options);
         this.#activateListeners();
     }
@@ -670,7 +670,8 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: any = {}): Promise<void> {
+    // @ts-ignore - Foundry override
+    async close(options: any = {}): Promise<any> {
         if (!this.#applied && this.#resolve) {
             this.#resolve(false);
         }

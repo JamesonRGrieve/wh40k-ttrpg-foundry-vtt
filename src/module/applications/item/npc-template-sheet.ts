@@ -111,6 +111,13 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      */
     #previewThreat = 5;
 
+    get _previewThreat(): number {
+        return this._previewThreat;
+    }
+    set _previewThreat(value: number) {
+        this._previewThreat = value;
+    }
+
     /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
@@ -201,7 +208,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
         }));
 
         // Generate preview data
-        const preview = sys.previewAtThreat(this.#previewThreat);
+        const preview = sys.previewAtThreat(this._previewThreat);
 
         return {
             ...context,
@@ -233,7 +240,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
             hasVariants: (sys.variants?.length || 0) > 0,
 
             // Preview
-            previewThreat: this.#previewThreat,
+            previewThreat: this._previewThreat,
             preview,
 
             // Scaling rules
@@ -250,8 +257,8 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
         const threatValue = this.element.querySelector('.preview-threat-value');
         if (threatSlider) {
             threatSlider.addEventListener('input', () => {
-                this.#previewThreat = parseInt(threatSlider.value, 10);
-                if (threatValue) threatValue.textContent = this.#previewThreat;
+                this._previewThreat = parseInt(threatSlider.value, 10);
+                if (threatValue) threatValue.textContent = this._previewThreat;
                 this._debounceRender();
             });
         }
@@ -277,7 +284,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addSkill(event: Event, target: HTMLElement): Promise<void> {
+    static async #addSkill(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         const skills = foundry.utils.deepClone(this.item.system.trainedSkills || []);
@@ -296,7 +303,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #removeSkill(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeSkill(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index, 10);
         if (isNaN(index)) return;
@@ -312,7 +319,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addWeapon(event: Event, target: HTMLElement): Promise<void> {
+    static async #addWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         const weapons = foundry.utils.deepClone(this.item.system.customWeapons || []);
@@ -336,7 +343,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #removeWeapon(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index, 10);
         if (isNaN(index)) return;
@@ -352,7 +359,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addTrait(event: Event, target: HTMLElement): Promise<void> {
+    static async #addTrait(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         const traits = foundry.utils.deepClone(this.item.system.traits || []);
@@ -370,7 +377,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #removeTrait(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeTrait(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index, 10);
         if (isNaN(index)) return;
@@ -386,7 +393,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addTalent(event: Event, target: HTMLElement): Promise<void> {
+    static async #addTalent(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         const talents = foundry.utils.deepClone(this.item.system.talents || []);
@@ -404,7 +411,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #removeTalent(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeTalent(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index, 10);
         if (isNaN(index)) return;
@@ -420,7 +427,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addVariant(event: Event, target: HTMLElement): Promise<void> {
+    static async #addVariant(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         const variants = foundry.utils.deepClone(this.item.system.variants || []);
@@ -442,7 +449,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #removeVariant(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeVariant(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const index = parseInt(target.dataset.index, 10);
         if (isNaN(index)) return;
@@ -458,7 +465,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #updatePreview(event: Event, target: HTMLElement): Promise<void> {
+    static async #updatePreview(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.render({ parts: ['preview'] });
     }
 
@@ -467,10 +474,10 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #createFromTemplate(event: Event, target: HTMLElement): Promise<void> {
+    static async #createFromTemplate(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const threatLevel = this.#previewThreat;
+        const threatLevel = this._previewThreat;
         const systemData = this.item.system.generateAtThreat(threatLevel);
 
         const actorData = {
@@ -489,7 +496,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
 
                 for (const trait of this.item.system.traits || []) {
                     if (trait.uuid) {
-                        const item = await fromUuid(trait.uuid);
+                        const item = await fromUuid(trait.uuid) as any;
                         if (item) {
                             itemsToCreate.push({
                                 name: item.name,
@@ -503,7 +510,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
 
                 for (const talent of this.item.system.talents || []) {
                     if (talent.uuid) {
-                        const item = await fromUuid(talent.uuid);
+                        const item = await fromUuid(talent.uuid) as any;
                         if (item) {
                             itemsToCreate.push({
                                 name: item.name,

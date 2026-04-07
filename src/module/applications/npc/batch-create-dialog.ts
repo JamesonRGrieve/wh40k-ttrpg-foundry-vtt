@@ -122,7 +122,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         const types = ThreatCalculator.getTypes();
 
         // Get available folders
-        const folders = game.folders.filter((f) => f.type === 'Actor' && f.displayed).map((f) => ({ id: f.id, name: f.name }));
+        const folders = (game.folders as any).filter((f: any) => f.type === 'Actor' && f.displayed).map((f: any) => ({ id: f.id, name: f.name }));
 
         // Generate preview names
         const previewNames = [];
@@ -157,7 +157,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
-    _onRender(context: any, options: any): Promise<void> {
+    _onRender(context: any, options: any): any {
         super._onRender(context, options);
 
         const form = this.element;
@@ -294,7 +294,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 const variance = this.#state.randomizeAmount / 100;
 
                 // Randomize characteristics
-                for (const char of Object.values(systemData.characteristics)) {
+                for (const char of Object.values(systemData.characteristics) as any[]) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
                     char.total = char.base + char.modifier;
@@ -355,7 +355,8 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: any = {}): Promise<void> {
+    // @ts-ignore - Foundry override
+    async close(options: any = {}): Promise<any> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
         if (!this.#submitted && this.#resolve) {
@@ -434,7 +435,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
             if (randomize) {
                 const variance = randomizeAmount / 100;
-                for (const char of Object.values(systemData.characteristics)) {
+                for (const char of Object.values(systemData.characteristics) as any[]) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
                     char.total = char.base + char.modifier;
