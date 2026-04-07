@@ -17,7 +17,7 @@ export default class DarkHeresy2Sheet extends CharacterSheet {
     static PARTS = {
         ...super.PARTS,
         header: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/header-dh.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/header-dh.hbs',
         },
     };
 }

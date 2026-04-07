@@ -17,7 +17,7 @@ export default class OnlyWarSheet extends CharacterSheet {
     static PARTS = {
         ...super.PARTS,
         header: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/header-ow.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/header-ow.hbs',
         },
     };
 }

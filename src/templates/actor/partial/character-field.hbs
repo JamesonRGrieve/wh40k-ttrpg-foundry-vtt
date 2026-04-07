@@ -1,7 +1,7 @@
 <div class="wh40k-header__item-wrapper--{{cleanFieldName key}}">
     <span class="wh40k-header__title">{{capitalize key}}</span>
     {{#if options}}
-        <select class="wh40k-header__select acolyte-{{key}}" name="system.bio.{{key}}">
+        <select class="wh40k-header__select player-{{key}}" name="system.bio.{{key}}">
             <option value=""></option>
             {{selectOptions (arrayToObject options) selected=this.value}}
         </select>
