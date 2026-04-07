@@ -16,5 +16,10 @@
             data-tooltip="{{localize 'WH40K.Utility.MenuTooltip'}}">
         <i class="fa-solid fa-gear"></i>
     </button>
-
+    <button type="button"
+            class="wh40k-edit-toggle {{#if inEditMode}}active{{/if}}"
+            data-action="toggleEditMode"
+            data-tooltip="{{#if inEditMode}}Lock Sheet{{else}}Edit Stats{{/if}}">
+        <i class="fa-solid {{#if inEditMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
+    </button>
 </nav>
