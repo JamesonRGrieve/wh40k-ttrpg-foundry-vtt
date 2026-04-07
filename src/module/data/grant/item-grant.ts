@@ -65,7 +65,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async apply(actor, data = {}, options: Record<string, any> = {}) {
+    async apply(actor: any, data: any = {}, options: Record<string, any> = {}) {
         const result = {
             success: true,
             applied: {},

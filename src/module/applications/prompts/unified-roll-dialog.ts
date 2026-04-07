@@ -107,7 +107,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
         },
         position: {
             width: 460,
-            height: 'auto',
+            height: 'auto' as const,
         },
         window: {
             title: 'Roll Test',

@@ -51,7 +51,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         },
         position: {
             width: 700,
-            height: 'auto',
+            height: 'auto' as const,
         },
         actions: {
             apply: CharacteristicSetupDialog.#onApply,

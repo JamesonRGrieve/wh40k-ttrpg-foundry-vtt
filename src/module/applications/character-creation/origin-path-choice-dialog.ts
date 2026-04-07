@@ -23,7 +23,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         },
         position: {
             width: 700,
-            height: 'auto',
+            height: 'auto' as const,
         },
         actions: {
             toggleOption: OriginPathChoiceDialog.#toggleOption,
@@ -81,7 +81,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
 
         // Initialize selections from existing selectedChoices
         const existing = item.system?.selectedChoices || {};
-        for (const [label, selected] of Object.entries(existing)) {
+        for (const [label, selected] of Object.entries(existing) as [string, any][]) {
             this.selections.set(label, new Set(selected));
         }
 

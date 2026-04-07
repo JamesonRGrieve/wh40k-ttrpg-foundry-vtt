@@ -32,7 +32,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         },
         position: {
             width: 400,
-            height: 'auto',
+            height: 'auto' as const,
         },
         form: {
             handler: this.#onSubmit,

@@ -323,7 +323,7 @@ export class GrantsProcessor {
 
                 // Characteristics from choice
                 if (optionGrants.characteristics) {
-                    for (const [char, value] of Object.entries(optionGrants.characteristics)) {
+                    for (const [char, value] of Object.entries(optionGrants.characteristics) as [string, any][]) {
                         if (value !== 0) {
                             context.result.characteristics[char] = (context.result.characteristics[char] || 0) + value;
                             game.wh40k?.log(`Origin choice "${choice.label}" grants ${value >= 0 ? '+' : ''}${value} ${char}`);
@@ -680,7 +680,7 @@ export class GrantsProcessor {
         }
 
         try {
-            const doc = await fromUuid(equipGrant.uuid);
+            const doc = await fromUuid(equipGrant.uuid) as any;
             if (doc) {
                 const itemData = doc.toObject();
                 if (equipGrant.quantity && equipGrant.quantity > 1) {

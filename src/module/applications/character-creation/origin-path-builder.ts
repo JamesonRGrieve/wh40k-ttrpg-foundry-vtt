@@ -686,7 +686,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             if (talent.uuid) {
                 try {
-                    const item = await fromUuid(talent.uuid);
+                    const item = await fromUuid(talent.uuid) as any;
                     if (item) {
                         hasItem = true;
                         const desc = item.system?.description?.value;
@@ -725,7 +725,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             if (trait.uuid) {
                 try {
-                    const item = await fromUuid(trait.uuid);
+                    const item = await fromUuid(trait.uuid) as any;
                     if (item) {
                         hasItem = true;
                         const desc = item.system?.description?.value;
@@ -1019,7 +1019,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     async _addTalentModifiers(uuid: string, charTotals: Record<string, number>, skillMap: Record<string, any>): Promise<void> {
         try {
-            const talent = await fromUuid(uuid);
+            const talent = await fromUuid(uuid) as any;
             if (!talent) return;
 
             const talentSystem = talent.system;
