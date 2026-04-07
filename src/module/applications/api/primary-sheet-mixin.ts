@@ -353,8 +353,8 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
         static async #deleteDocument(event: Event, target: HTMLElement): Promise<void> {
             // @ts-expect-error - property access
             if ((await this._deleteDocument(event, target)) === false) return;
-            const uuid = target.closest('[data-uuid]')?.dataset.uuid;
-            const doc = await fromUuid(uuid);
+            const uuid = (target.closest('[data-uuid]') as HTMLElement)?.dataset.uuid;
+            const doc = await fromUuid(uuid) as any;
             doc?.deleteDialog();
         }
 
@@ -376,10 +376,10 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
          * @protected
          */
         async _onChangeSheetMode(event: Event): Promise<void> {
-            const { MODES } = this.constructor;
-            const toggle = event.currentTarget;
+            const { MODES } = (this.constructor as any);
+            const toggle = event.currentTarget as HTMLInputElement;
             const label = game.i18n.localize(`WH40K.SheetMode${toggle.checked ? 'Play' : 'Edit'}`);
-            toggle.dataset.tooltip = label;
+            (toggle as any).dataset.tooltip = label;
             toggle.setAttribute('aria-label', label);
             this._mode = toggle.checked ? MODES.EDIT : MODES.PLAY;
             await this.submit();
@@ -406,7 +406,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
             // @ts-expect-error - property access
             if ((await this._showDocument(event, target)) === false) return;
             if ([HTMLInputElement, HTMLSelectElement].some((el) => event.target instanceof el)) return;
-            const uuid = target.closest('[data-uuid]')?.dataset.uuid;
+            const uuid = (target.closest('[data-uuid]') as HTMLElement)?.dataset.uuid;
             const doc = await fromUuid(uuid);
             doc?.sheet?.render({ force: true });
         }

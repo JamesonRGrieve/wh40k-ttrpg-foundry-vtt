@@ -372,7 +372,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollAttack(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
         const actor = this.item.actor;
         if (!actor) {
             (ui.notifications as any).warn('This weapon must be on an actor to roll.');
@@ -390,7 +390,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollDamage(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollDamage(this: any, event: Event, target: HTMLElement): Promise<void> {
         const actor = this.item.actor;
         if (!actor) {
             (ui.notifications as any).warn('This weapon must be on an actor to roll.');
@@ -443,7 +443,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #expendAmmo(event: Event, target: HTMLElement): Promise<void> {
+    static async #expendAmmo(this: any, event: Event, target: HTMLElement): Promise<void> {
         const system = this.item.system;
 
         // Check if weapon uses ammo
@@ -476,7 +476,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #openQuality(event: Event, target: HTMLElement): Promise<void> {
+    static async #openQuality(this: any, event: Event, target: HTMLElement): Promise<void> {
         const identifier = target.dataset.identifier;
         if (!identifier) return;
 
@@ -520,7 +520,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #nestedItemEdit(event: Event, target: HTMLElement): Promise<void> {
+    static async #nestedItemEdit(this: any, event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
@@ -538,7 +538,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #nestedItemDelete(event: Event, target: HTMLElement): Promise<void> {
+    static async #nestedItemDelete(this: any, event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
@@ -566,7 +566,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onReload(event: Event, target: HTMLElement): Promise<void> {
+    static async #onReload(this: any, event: Event, target: HTMLElement): Promise<void> {
         const actor = this.item.actor;
 
         // Perform reload with validation
@@ -596,7 +596,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onAddModification(event: Event, target: HTMLElement): Promise<void> {
+    static async #onAddModification(this: any, event: Event, target: HTMLElement): Promise<void> {
         // Open a dialog or compendium browser to add modifications
         // For now, show a notification
         (ui.notifications as any).info('Drag a weapon modification from a compendium to add it.');
@@ -610,7 +610,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleModificationActive(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleModificationActive(this: any, event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.modIndex, 10);
         if (isNaN(index)) return;
 
@@ -633,7 +633,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #viewModification(event: Event, target: HTMLElement): Promise<void> {
+    static async #viewModification(this: any, event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.modIndex, 10);
         if (isNaN(index)) return;
 
@@ -657,7 +657,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #removeModification(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeModification(this: any, event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.modIndex, 10);
         if (isNaN(index)) return;
 
@@ -761,7 +761,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #loadAmmo(event: Event, target: HTMLElement): Promise<void> {
+    static async #loadAmmo(this: any, event: Event, target: HTMLElement): Promise<void> {
         const ammoUuid = target.dataset.ammoUuid;
         if (!ammoUuid) return;
 
@@ -783,7 +783,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #ejectAmmo(event: Event, target: HTMLElement): Promise<void> {
+    static async #ejectAmmo(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.item.system.ejectAmmo();
         this.render();
     }
@@ -796,7 +796,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #toggleFab(event: Event, target: HTMLElement): void {
+    static #toggleFab(this: any, event: Event, target: HTMLElement): void {
         this.#fabExpanded = !this.#fabExpanded;
         const fab = this.element.querySelector('.wh40k-fab-container');
         if (fab) {
@@ -812,7 +812,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #toggleSection(event: Event, target: HTMLElement): void {
+    static #toggleSection(this: any, event: Event, target: HTMLElement): void {
         const sectionName = target.dataset.section;
         if (!sectionName) return;
 
@@ -843,7 +843,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #toggleBody(event: Event, target: HTMLElement): void {
+    static #toggleBody(this: any, event: Event, target: HTMLElement): void {
         this.#bodyCollapsed = !this.#bodyCollapsed;
 
         const body = this.element.querySelector('.wh40k-weapon-body');

@@ -240,7 +240,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #toggleModifier(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleModifier(this: any, event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.modifier;
 
         if (this.selectedModifiers.has(key)) {
@@ -261,7 +261,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static async #onSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         // Get custom modifier
         this.customModifier = parseInt(formData.object.customModifier) || 0;
 
@@ -277,7 +277,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #roll(event: Event, target: HTMLElement): Promise<void> {
+    static async #roll(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         // Get form data

@@ -285,7 +285,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {PointerEvent} event - The click event.
      * @param {HTMLElement} target - The target element.
      */
-    static #onAdjustThreat(event: Event, target: HTMLElement): void {
+    static #onAdjustThreat(this: any, event: Event, target: HTMLElement): void {
         const amount = parseInt(target.dataset.amount, 10);
         if (!amount) return;
 
@@ -304,7 +304,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {PointerEvent} event - The click event.
      * @param {HTMLElement} target - The target element.
      */
-    static #onResetThreat(event: Event, target: HTMLElement): void {
+    static #onResetThreat(this: any, event: Event, target: HTMLElement): void {
         this.#state.newThreatLevel = this.#originalThreat;
 
         // Update slider
@@ -319,7 +319,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {Event} event - The input event.
      * @param {HTMLElement} target - The target element.
      */
-    static #onUpdatePreview(event: Event, target: HTMLElement): void {
+    static #onUpdatePreview(this: any, event: Event, target: HTMLElement): void {
         this.#state.newThreatLevel = parseInt(target.value, 10);
 
         // Debounce render
@@ -335,7 +335,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {HTMLFormElement} form - The form element.
      * @param {FormDataExtended} formData - The form data.
      */
-    static async #onSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         const data: any = foundry.utils.expandObject(formData.object);
 
         // Update state from form
@@ -398,7 +398,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {PointerEvent} event - The click event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #onCancel(event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.#submitted = false;
         if (this.#resolve) this.#resolve(false);
         await this.close();

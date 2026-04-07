@@ -1063,7 +1063,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async _onParse(event: Event, target: HTMLElement): Promise<void> {
+    static async _onParse(this: any, event: Event, target: HTMLElement): Promise<void> {
         const result = StatBlockParser.parse(this.#rawInput);
 
         this.#parsedData = result.data;
@@ -1080,7 +1080,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static async _onSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async _onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         if (!this.#parsedData) {
             (ui.notifications as any).error('No valid data to import. Parse input first.');
             return;
@@ -1140,7 +1140,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async _onCancel(event: Event, target: HTMLElement): Promise<void> {
+    static async _onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.#submitted = false;
         if (this.#resolve) this.#resolve(null);
         await this.close();
@@ -1151,7 +1151,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async _onClearInput(event: Event, target: HTMLElement): Promise<void> {
+    static async _onClearInput(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.#rawInput = '';
         this.#parsedData = null;
         this.#errors = [];

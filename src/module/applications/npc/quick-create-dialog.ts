@@ -321,7 +321,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {HTMLFormElement} form - The form element.
      * @param {FormDataExtended} formData - The form data.
      */
-    static async #onSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         const data: any = foundry.utils.expandObject(formData.object);
 
         // Update state from form
@@ -368,7 +368,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {PointerEvent} event - The click event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #onCancel(event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.#submitted = false;
         if (this.#resolve) this.#resolve(null);
         await this.close();
@@ -379,7 +379,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {PointerEvent} event - The click event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #onUpdatePreview(event: Event, target: HTMLElement): Promise<void> {
+    static async #onUpdatePreview(this: any, event: Event, target: HTMLElement): Promise<void> {
         // Re-render to update preview
         this.render({ parts: ['form'] });
     }

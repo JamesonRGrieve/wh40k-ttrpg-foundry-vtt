@@ -239,7 +239,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object} - Plain data object for selection storage
      * @private
      */
-    _itemToSelectionData(item: any): void {
+    _itemToSelectionData(item: any): any {
         const data = item.toObject ? item.toObject() : foundry.utils.deepClone(item);
         // Store original uuid for reference to compendium item
         data._sourceUuid = item.uuid || data._sourceUuid;
@@ -281,7 +281,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         const documents = await pack.getDocuments();
-        const allOriginPaths = documents.filter((d) => d.type === 'originPath');
+        const allOriginPaths = documents.filter((d: any) => d.type === 'originPath');
 
         // Separate lineage origins (stepIndex: 7) from core origins
         this.allOrigins = allOriginPaths.filter((o) => o.system?.stepIndex !== 7);
@@ -293,7 +293,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: any): Promise<any> {
         await this._loadOrigins();
 
         const currentStep = this.currentStep;
@@ -392,7 +392,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Array}
      * @private
      */
-    _prepareLineageOrigins(): void {
+    _prepareLineageOrigins(): any {
         return this.lineageOrigins.map((origin) => {
             const description = origin.system?.description?.value || '';
             const shortDesc = this._stripHtml(description).substring(0, 150);
@@ -431,7 +431,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Array}
      * @private
      */
-    _prepareStepNavigation(): void {
+    _prepareStepNavigation(): any {
         const orderedSteps = this.orderedSteps;
 
         return orderedSteps.map((step, index) => {
@@ -498,7 +498,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Array}
      * @private
      */
-    _prepareOriginsForStep(stepLayout: any): void {
+    _prepareOriginsForStep(stepLayout: any): any {
         if (!stepLayout?.cards) return [];
 
         return stepLayout.cards.map((card) => {
@@ -529,7 +529,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<object>}
      * @private
      */
-    async _prepareSelectedOrigin(item: any): Promise<void> {
+    async _prepareSelectedOrigin(item: any): Promise<any> {
         // Handle both Item instances and plain data objects
         const system = this._getSelectionSystem(item);
         const grants = system?.grants || {};
@@ -678,7 +678,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTalentsWithTooltips(talents: any[]): Promise<void> {
+    async _prepareTalentsWithTooltips(talents: any[]): Promise<any[]> {
         const prepared = [];
         for (const talent of talents) {
             let tooltipText = talent.name;
@@ -717,7 +717,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTraitsWithTooltips(traits: any[]): Promise<void> {
+    async _prepareTraitsWithTooltips(traits: any[]): Promise<any[]> {
         const prepared = [];
         for (const trait of traits) {
             let tooltipText = trait.name;
@@ -783,7 +783,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
-    async _calculatePreview(): Promise<void> {
+    async _calculatePreview(): Promise<any> {
         const preview = {
             characteristics: [],
             skills: [],
@@ -988,7 +988,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<string|null>}
      * @private
      */
-    async _findSkillUuid(skillName: string, specialization: any = null): Promise<void> {
+    async _findSkillUuid(skillName: string, specialization: any = null): Promise<any> {
         try {
             const skillPack = game.packs.find((p) => p.metadata.name === 'wh40k-items-skills');
             if (!skillPack) return null;
@@ -1064,7 +1064,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
-    _calculateStatus(): void {
+    _calculateStatus(): any {
         const stepsCount = this.selections.size;
         let pendingChoices = 0;
         let pendingRolls = 0;
@@ -1215,7 +1215,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         input.accept = '.json';
 
         input.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
+            const file = (e.target as HTMLInputElement).files[0];
             if (!file) return;
 
             try {
@@ -1229,12 +1229,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 (this as any).selections.clear();
 
                 for (const [step, selData] of Object.entries(data.selections)) {
-                    const origin = await fromUuid(selData.uuid);
+                    const origin = await fromUuid((selData as any).uuid) as any;
                     if (origin) {
                         // Store as plain data object (not Item instance)
                         const originData = (this as any)._itemToSelectionData(origin);
-                        originData.system.selectedChoices = selData.selectedChoices;
-                        originData.system.rollResults = selData.rollResults;
+                        originData.system.selectedChoices = (selData as any).selectedChoices;
+                        originData.system.rollResults = (selData as any).rollResults;
                         (this as any).selections.set(step, originData);
                     }
                 }
@@ -1484,7 +1484,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (selection) {
             // For plain data objects, we need to get the original item from compendium
             const uuid = selection.uuid || selection._sourceUuid;
-            let originItem = uuid ? await fromUuid(uuid) : null;
+            let originItem: any = uuid ? await fromUuid(uuid) : null;
 
             // If we can't find the original, create a temporary display item
             if (!originItem) {

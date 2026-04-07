@@ -24,7 +24,8 @@ export const GRANT_MODE = {
  * Context object for grant processing
  */
 class GrantContext {
-    constructor(actor, options = {}) {
+    [key: string]: any;
+    constructor(actor, options: any = {}) {
         this.actor = actor;
         this.mode = options.mode || GRANT_MODE.IMMEDIATE;
         this.depth = options.depth || 0;
@@ -49,6 +50,7 @@ class GrantContext {
 }
 
 export class GrantsProcessor {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Main Entry Points                           */
     /* -------------------------------------------- */
