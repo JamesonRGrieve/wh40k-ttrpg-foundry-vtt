@@ -10,7 +10,8 @@ import ResourceGrantData from './resource-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class ChoiceGrantData extends BaseGrantData {
+export default class ChoiceGrantData extends (BaseGrantData as any) {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */

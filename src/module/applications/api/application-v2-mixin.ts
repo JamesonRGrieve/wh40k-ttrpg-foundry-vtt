@@ -13,7 +13,8 @@ const { HandlebarsApplicationMixin } = foundry.applications.api;
  * @mixin
  */
 export default function ApplicationV2Mixin<T extends new (...args: any[]) => any>(Base: T) {
-    class BaseApplicationWH40K extends HandlebarsApplicationMixin(Base) {
+    class BaseApplicationWH40K extends HandlebarsApplicationMixin(Base as any) {
+        [key: string]: any;
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             actions: {
@@ -184,7 +185,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
          */
         static #toggleCollapsed(this: BaseApplicationWH40K, event: Event, target: HTMLElement): void {
             const collapsible = target.closest('.collapsible');
-            if (!collapsible || event.target.closest('.collapsible-content')) return;
+            if (!collapsible || (event.target as HTMLElement).closest('.collapsible-content')) return;
             collapsible.classList.toggle('collapsed');
             this.#expandedSections.set(target.closest('[data-expand-id]')?.dataset.expandId, !collapsible.classList.contains('collapsed'));
         }

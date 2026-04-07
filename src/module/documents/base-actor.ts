@@ -3,7 +3,36 @@ import { SimpleSkillData } from '../rolls/action-data.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants.ts';
 
+interface WH40KCharacteristic {
+    base?: number;
+    starting?: number;
+    advance?: number;
+    advances?: number;
+    modifier?: number;
+    unnatural?: number;
+    total?: number;
+    bonus?: number;
+    short?: string;
+    label?: string;
+    [key: string]: any;
+}
+
+interface WH40KModifierEntry {
+    source: string;
+    value: number;
+    uuid?: string;
+    icon?: string;
+}
+
+interface WH40KStatBreakdown {
+    label: string;
+    base: number;
+    modifiers: WH40KModifierEntry[];
+    total: number;
+}
+
 export class WH40KBaseActor extends Actor {
+    [key: string]: any;
     declare system: any;
     /* -------------------------------------------- */
     /*  Descendant Document Hooks                   */
@@ -15,8 +44,8 @@ export class WH40KBaseActor extends Actor {
      * Also processes talent grants for newly added talents.
      * @override
      */
-    _onCreateDescendantDocuments(parent: foundry.abstract.Document.Any, collection: string, documents: foundry.abstract.Document.Any[], data: Record<string, unknown>[], options: Record<string, unknown>, userId: string): void {
-        super._onCreateDescendantDocuments(parent, collection, documents, data, options, userId);
+    _onCreateDescendantDocuments(parent: any, collection: string, documents: any[], data: any[], options: any, userId: string): void {
+        (super._onCreateDescendantDocuments as any)(parent, collection, documents, data, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
 
@@ -38,8 +67,8 @@ export class WH40KBaseActor extends Actor {
      * Triggers recalculation of item-based data.
      * @override
      */
-    _onUpdateDescendantDocuments(parent: foundry.abstract.Document.Any, collection: string, documents: foundry.abstract.Document.Any[], changes: Record<string, unknown>[], options: Record<string, unknown>, userId: string): void {
-        super._onUpdateDescendantDocuments(parent, collection, documents, changes, options, userId);
+    _onUpdateDescendantDocuments(parent: any, collection: string, documents: any[], changes: any[], options: any, userId: string): void {
+        (super._onUpdateDescendantDocuments as any)(parent, collection, documents, changes, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
         }
@@ -51,7 +80,7 @@ export class WH40KBaseActor extends Actor {
      * Also handles removal of granted items when a talent is deleted.
      * @override
      */
-    _onDeleteDescendantDocuments(parent: foundry.abstract.Document.Any, collection: string, documents: foundry.abstract.Document.Any[], ids: string[], options: Record<string, unknown>, userId: string): void {
+    _onDeleteDescendantDocuments(parent: any, collection: string, documents: any[], ids: string[], options: any, userId: string): void {
         // Process talent removal BEFORE deletion to access the talent's data
         if (collection === 'items' && game.user.id === userId) {
             for (const item of documents) {
@@ -62,7 +91,7 @@ export class WH40KBaseActor extends Actor {
             }
         }
 
-        super._onDeleteDescendantDocuments(parent, collection, documents, ids, options, userId);
+        (super._onDeleteDescendantDocuments as any)(parent, collection, documents, ids, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
         }
@@ -84,8 +113,8 @@ export class WH40KBaseActor extends Actor {
         }
     }
 
-    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: any): Promise<void> {
-        await super._preCreate(data, options, user);
+    async _preCreate(data: any, options: any, user: any): Promise<void> {
+        await (super._preCreate as any)(data, options, user);
         const initData = {
             'token.bar1': { attribute: 'wounds' },
             'token.bar2': { attribute: 'fate' },
@@ -103,11 +132,11 @@ export class WH40KBaseActor extends Actor {
             initData['token.actorLink'] = true;
 
             // Set default favorite skills for new characters
-            if (!this.getFlag('wh40k-rpg', 'favoriteSkills')) {
+            if (!(this as any).getFlag('wh40k-rpg', 'favoriteSkills')) {
                 initData['flags.wh40k-rpg.favoriteSkills'] = ['dodge', 'awareness', 'scrutiny', 'inquiry', 'commerce', 'techUse', 'command', 'medicae'];
             }
         }
-        this.updateSource(initData);
+        (this as any).updateSource(initData);
     }
 
     get characteristics(): any {
@@ -157,7 +186,7 @@ export class WH40KBaseActor extends Actor {
 
     getCharacteristicFuzzy(char: string): WH40KCharacteristic | undefined {
         // This tries to account for case sensitivity and abbreviations
-        for (const [name, characteristic] of Object.entries(this.characteristics)) {
+        for (const [name, characteristic] of Object.entries(this.characteristics) as [string, any][]) {
             if (char.toUpperCase() === name.toUpperCase() || char.toLocaleString() === characteristic.short.toUpperCase()) {
                 return characteristic;
             }
@@ -172,7 +201,7 @@ export class WH40KBaseActor extends Actor {
     _computeCharacteristics(): void {
         if (!this.characteristics) return;
 
-        for (const [name, characteristic] of Object.entries(this.characteristics)) {
+        for (const [name, characteristic] of Object.entries(this.characteristics) as [string, any][]) {
             const base = Number(characteristic.base ?? characteristic.starting ?? 0);
             const advance = Number(characteristic.advance ?? characteristic.advances ?? 0);
             const modifier = Number(characteristic.modifier ?? 0);
@@ -205,7 +234,7 @@ export class WH40KBaseActor extends Actor {
     }
 
     _findCharacteristic(short: string): any {
-        for (const characteristic of Object.values(this.characteristics)) {
+        for (const characteristic of Object.values(this.characteristics) as any[]) {
             if (characteristic.short === short) {
                 return characteristic;
             }
@@ -538,7 +567,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectCharacteristicModifiers(charKey: string, modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of this.items) {
+        for (const item of this.items as any[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.characteristics) continue;
 
@@ -561,7 +590,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectSkillModifiers(skillKey: string, modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of this.items) {
+        for (const item of this.items as any[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.skills) continue;
 
@@ -583,7 +612,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectWoundsModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of this.items) {
+        for (const item of this.items as any[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.other) continue;
 
@@ -605,7 +634,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectInitiativeModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of this.items) {
+        for (const item of this.items as any[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.other) continue;
 

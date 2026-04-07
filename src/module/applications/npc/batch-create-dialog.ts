@@ -18,6 +18,8 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {ApplicationV2}
  */
 export default class BatchCreateDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -182,11 +184,11 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
             el.addEventListener(field.type === 'boolean' ? 'change' : 'input', () => {
                 if (field.type === 'boolean') {
-                    this.#state[field.name] = el.checked;
+                    this.#state[field.name] = (el as any).checked;
                 } else if (field.type === 'number') {
-                    this.#state[field.name] = parseInt(el.value, 10) || 0;
+                    this.#state[field.name] = parseInt((el as any).value, 10) || 0;
                 } else {
-                    this.#state[field.name] = el.value;
+                    this.#state[field.name] = (el as any).value;
                 }
                 this._debounceRender();
             });
@@ -197,7 +199,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         const threatValue = form.querySelector('.threat-value');
         if (threatSlider && threatValue) {
             threatSlider.addEventListener('input', () => {
-                threatValue.textContent = threatSlider.value;
+                threatValue.textContent = (threatSlider as any).value;
             });
         }
     }

@@ -6,7 +6,8 @@ import BaseGrantData from './base-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class CharacteristicGrantData extends BaseGrantData {
+export default class CharacteristicGrantData extends (BaseGrantData as any) {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -131,7 +132,7 @@ export default class CharacteristicGrantData extends BaseGrantData {
         const restoreData = { characteristics: {} };
         const updates = {};
 
-        for (const [key, state] of Object.entries(appliedState)) {
+        for (const [key, state] of Object.entries(appliedState) as [string, any][]) {
             if (state.previousValue !== undefined) {
                 updates[`system.characteristics.${key}.advance`] = state.previousValue;
                 restoreData.characteristics[key] = state;
@@ -156,7 +157,7 @@ export default class CharacteristicGrantData extends BaseGrantData {
         };
 
         const updates = {};
-        for (const [key, state] of Object.entries(restoreData.characteristics ?? {})) {
+        for (const [key, state] of Object.entries(restoreData.characteristics ?? {}) as [string, any][]) {
             const currentAdvance = actor.system?.characteristics?.[key]?.advance ?? 0;
             const newAdvance = currentAdvance + state.appliedValue;
 

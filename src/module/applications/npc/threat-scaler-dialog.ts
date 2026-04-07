@@ -18,6 +18,8 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {ApplicationV2}
  */
 export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -221,7 +223,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         const threatSlider = form.querySelector('[name="newThreatLevel"]');
         if (threatSlider) {
             threatSlider.addEventListener('input', () => {
-                this.#state.newThreatLevel = parseInt(threatSlider.value, 10);
+                this.#state.newThreatLevel = parseInt((threatSlider as any).value, 10);
                 this._debounceRender();
             });
         }
@@ -233,7 +235,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
             const checkbox = form.querySelector(`[name="${name}"]`);
             if (checkbox) {
                 checkbox.addEventListener('change', () => {
-                    this.#state[name] = checkbox.checked;
+                    this.#state[name] = (checkbox as any).checked;
                     this._debounceRender();
                 });
             }
@@ -243,16 +245,16 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         const tabs = form.querySelectorAll('.wh40k-preview-tab');
         const sections = form.querySelectorAll('.wh40k-preview-section');
 
-        tabs.forEach((tab) => {
+        tabs.forEach((tab: any) => {
             tab.addEventListener('click', () => {
                 const targetTab = tab.dataset.tab;
 
                 // Update active tab
-                tabs.forEach((t) => t.classList.remove('active'));
+                tabs.forEach((t: any) => t.classList.remove('active'));
                 tab.classList.add('active');
 
                 // Update active section
-                sections.forEach((s) => {
+                sections.forEach((s: any) => {
                     if (s.dataset.section === targetTab) {
                         s.classList.add('active');
                     } else {
@@ -291,7 +293,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         this.#state.newThreatLevel = newValue;
 
         // Update slider
-        const slider = this.element.querySelector('[name="newThreatLevel"]');
+        const slider = this.element.querySelector('[name="newThreatLevel"]') as any;
         if (slider) slider.value = newValue;
 
         this.render({ parts: ['form'] });
@@ -306,7 +308,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         this.#state.newThreatLevel = this.#originalThreat;
 
         // Update slider
-        const slider = this.element.querySelector('[name="newThreatLevel"]');
+        const slider = this.element.querySelector('[name="newThreatLevel"]') as any;
         if (slider) slider.value = this.#originalThreat;
 
         this.render({ parts: ['form'] });

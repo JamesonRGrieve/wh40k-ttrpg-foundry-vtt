@@ -8,6 +8,8 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginDetailDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
+
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'origin-detail-dialog'],
@@ -189,7 +191,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTalents(talents: any[]): Promise<void> {
+    async _prepareTalents(talents: any[]): Promise<any> {
         const prepared = [];
         for (const talent of talents) {
             let item = null;
@@ -217,7 +219,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTraits(traits: any[]): Promise<void> {
+    async _prepareTraits(traits: any[]): Promise<any> {
         const prepared = [];
         for (const trait of traits) {
             let item = null;
@@ -274,7 +276,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             fellowship: 'Fellowship',
             influence: 'Influence',
         };
-        return labels[key] || key;
+        return (labels as any)[key] || key;
     }
 
     /**
@@ -296,7 +298,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             fellowship: 'Fel',
             influence: 'Inf',
         };
-        return shorts[key] || key.substring(0, 3).toUpperCase();
+        return (shorts as any)[key] || key.substring(0, 3).toUpperCase();
     }
 
     /**
@@ -311,7 +313,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             plus10: '+10',
             plus20: '+20',
         };
-        return labels[level] || level;
+        return (labels as any)[level] || level;
     }
 
     /**
@@ -328,7 +330,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             equipment: 'Equipment',
             trait: 'Trait',
         };
-        return labels[type] || type;
+        return (labels as any)[type] || type;
     }
 
     /* -------------------------------------------- */

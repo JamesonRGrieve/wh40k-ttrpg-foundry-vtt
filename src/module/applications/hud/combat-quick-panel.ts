@@ -16,6 +16,8 @@
 const { ApplicationV2 } = foundry.applications.api;
 
 export default class CombatQuickPanel extends ApplicationV2 {
+    [key: string]: any;
+
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
@@ -231,7 +233,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @returns {object}  Reaction data
      * @private
      */
-    _prepareReactions(): void {
+    _prepareReactions(): any {
         const dodge = this.actor.system.skills?.dodge;
         const parry = this.actor.system.skills?.parry;
 
@@ -257,7 +259,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @returns {Array}  Quick actions
      * @private
      */
-    _prepareQuickActions(): void {
+    _prepareQuickActions(): any {
         const actions = [];
 
         // Reload (if weapon needs it)

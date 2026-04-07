@@ -6,7 +6,8 @@ import BaseGrantData from './base-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class SkillGrantData extends BaseGrantData {
+export default class SkillGrantData extends (BaseGrantData as any) {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -330,7 +331,7 @@ export default class SkillGrantData extends BaseGrantData {
         const restoreData = { skills: [] };
         const updates = {};
 
-        for (const [key, state] of Object.entries(appliedState)) {
+        for (const [key, state] of Object.entries(appliedState) as [string, any][]) {
             if (!state.schemaKey) continue;
 
             if (state.created && state.specialization !== undefined) {

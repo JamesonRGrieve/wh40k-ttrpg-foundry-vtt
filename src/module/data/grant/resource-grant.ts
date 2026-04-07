@@ -7,7 +7,8 @@ import BaseGrantData from './base-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class ResourceGrantData extends BaseGrantData {
+export default class ResourceGrantData extends (BaseGrantData as any) {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -169,7 +170,7 @@ export default class ResourceGrantData extends BaseGrantData {
         const restoreData = { resources: {} };
         const updates = {};
 
-        for (const [type, state] of Object.entries(appliedState)) {
+        for (const [type, state] of Object.entries(appliedState) as [string, any][]) {
             const resourceDef = this.constructor.RESOURCES[type];
             if (!resourceDef) continue;
 
@@ -202,7 +203,7 @@ export default class ResourceGrantData extends BaseGrantData {
 
         const updates = {};
 
-        for (const [type, state] of Object.entries(restoreData.resources ?? {})) {
+        for (const [type, state] of Object.entries(restoreData.resources ?? {}) as [string, any][]) {
             const resourceDef = this.constructor.RESOURCES[type];
             if (!resourceDef) continue;
 

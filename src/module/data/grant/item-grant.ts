@@ -6,7 +6,8 @@ import BaseGrantData from './base-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class ItemGrantData extends BaseGrantData {
+export default class ItemGrantData extends (BaseGrantData as any) {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -350,7 +351,7 @@ export default class ItemGrantData extends BaseGrantData {
             const index = await pack.getIndex();
 
             // Search for matching name
-            const match = index.find((entry) => {
+            const match = index.find((entry: any) => {
                 // Exact name match
                 if (entry.name === name) return true;
                 // Case-insensitive match

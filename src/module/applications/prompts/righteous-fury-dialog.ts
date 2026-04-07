@@ -11,6 +11,7 @@ const { ApplicationV2 } = foundry.applications.api;
  * Shows the confirmation roll (d100 vs BS/WS) and handles the result.
  */
 export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV2) {
+    [key: string]: any;
     /**
      * @param {object} options - Dialog options
      * @param {Actor} options.actor - The actor performing the RF
@@ -159,7 +160,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Event} event - Triggering click event
      * @param {HTMLElement} target - Button that was clicked
      */
-    static async #onRoll(event: Event, target: HTMLElement): Promise<void> {
+    static async #onRoll(this: any, event: Event, target: HTMLElement): Promise<void> {
         // Create confirmation roll (d100)
         this.confirmationRoll = new Roll('1d100', {});
         await this.confirmationRoll.evaluate();
@@ -184,7 +185,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Event} event - Triggering click event
      * @param {HTMLElement} target - Button that was clicked
      */
-    static async #onCancel(event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (this.confirmationRoll && this.success && this.onConfirm) {
             await this.onConfirm();
         } else if (this.confirmationRoll && !this.success && this.onFail) {

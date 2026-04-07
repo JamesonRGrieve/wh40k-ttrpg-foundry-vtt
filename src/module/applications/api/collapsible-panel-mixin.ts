@@ -11,7 +11,8 @@
  * @mixin
  */
 export default function CollapsiblePanelMixin<T extends new (...args: any[]) => any>(Base: T) {
-    class CollapsiblePanelApplication extends Base {
+    class CollapsiblePanelApplication extends (Base as any) {
+        [key: string]: any;
         /* -------------------------------------------- */
         /*  Properties                                  */
         /* -------------------------------------------- */
@@ -338,7 +339,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @protected
          */
         async _animatePanelToggle(panel: HTMLElement, willBeExpanded: boolean): Promise<void> {
-            const content = panel.querySelector('.panel-content, .collapsible-content');
+            const content = panel.querySelector('.panel-content, .collapsible-content') as HTMLElement | null;
             if (!content) {
                 // No animated content, just toggle class
                 panel.classList.toggle('collapsed', !willBeExpanded);
@@ -409,7 +410,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          */
         _setupPanelKeyboardShortcuts(): void {
             // Alt+1-9 for quick panel access
-            this.element.addEventListener('keydown', (event) => {
+            this.element.addEventListener('keydown', (event: KeyboardEvent) => {
                 if (!event.altKey || event.ctrlKey || event.shiftKey || event.metaKey) return;
 
                 const num = parseInt(event.key);
@@ -419,7 +420,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
                 event.stopPropagation();
 
                 // Get the Nth panel
-                const panels = Array.from(this.element.querySelectorAll('[data-panel-id]'));
+                const panels = Array.from(this.element.querySelectorAll('[data-panel-id]')) as HTMLElement[];
                 const panel = panels[num - 1];
 
                 if (panel) {
