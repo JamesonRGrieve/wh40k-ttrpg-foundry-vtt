@@ -333,7 +333,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @private
      */
     _restorePosition(): void {
-        const savedPos = game.user.getFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position`);
+        const savedPos = (game.user as any).getFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position`);
         if (savedPos) {
             this.setPosition(savedPos as any);
         }
@@ -367,7 +367,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     _onClose(options: any): void {
         // Save position
         const position = this.position;
-        game.user.setFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position` as any, {
+        (game.user as any).setFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position`, {
             left: position.left,
             top: position.top,
         });
@@ -611,9 +611,9 @@ export default class CombatQuickPanel extends ApplicationV2 {
         // Apply aim effect (+10 to next attack)
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: `<p><strong>${this.actor.name}</strong> takes aim (+10 to next attack)</p>` as any,
-            flavor: 'Aim Action' as any,
-        });
+            content: `<p><strong>${this.actor.name}</strong> takes aim (+10 to next attack)</p>`,
+            flavor: 'Aim Action',
+        } as any);
 
         (ui.notifications as any).info('Aim action taken (+10 next attack)');
     }
@@ -689,8 +689,8 @@ export default class CombatQuickPanel extends ApplicationV2 {
         // TODO: Implement consumable use logic
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: `<p><strong>${this.actor.name}</strong> uses ${item.name}</p>` as any,
-        });
+            content: `<p><strong>${this.actor.name}</strong> uses ${item.name}</p>`,
+        } as any);
 
         (ui.notifications as any).info(`Used ${item.name}`);
     }

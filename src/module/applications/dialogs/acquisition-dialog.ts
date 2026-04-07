@@ -266,7 +266,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         this.customModifier = parseInt(formData.object.customModifier) || 0;
 
         // This will trigger roll
-        return true;
+        return true as any;
     }
 
     /* -------------------------------------------- */
@@ -283,7 +283,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         // Get form data
         const form = this.element;
         const formData = new FormDataExtended(form);
-        this.customModifier = parseInt(formData.object.customModifier) || 0;
+        this.customModifier = parseInt(formData.object.customModifier as string) || 0;
 
         // Calculate final target
         const context = await this._prepareContext({});
@@ -386,7 +386,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             content,
             flavor: 'Profit Factor Acquisition Test',
             rolls: [data.roll],
-        });
+        } as any);
     }
 
     /* -------------------------------------------- */

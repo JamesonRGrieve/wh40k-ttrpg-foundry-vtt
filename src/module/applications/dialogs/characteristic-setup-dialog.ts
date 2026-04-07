@@ -346,11 +346,11 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         const input = document.createElement('input');
         input.type = 'number';
         input.className = 'csd-roll-input';
-        input.min = 2;
-        input.max = 40;
+        input.min = 2 as any;
+        input.max = 40 as any;
         input.value = currentValue || '';
         input.placeholder = '2-40';
-        input.dataset.rollIndex = index;
+        input.dataset.rollIndex = index as any;
 
         // Attach event listeners to the dynamically created input
         input.addEventListener('blur', this.#onRollInputBlur.bind(this));

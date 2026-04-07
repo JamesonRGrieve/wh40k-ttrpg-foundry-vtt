@@ -123,7 +123,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                     label: this._getCharacteristicLabel(key),
                     short: this._getCharacteristicShort(key),
                     value: value,
-                    positive: value > 0,
+                    positive: (value as number) > 0,
                 });
             }
         }
