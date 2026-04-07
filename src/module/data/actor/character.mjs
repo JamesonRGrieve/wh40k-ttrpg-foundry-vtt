@@ -100,6 +100,11 @@ export default class CharacterData extends CreatureTemplate {
                 ),
             }),
 
+            // ===== DH2e RESOURCES =====
+            influence: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            requisition: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            throneGelt: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+
             // ===== MENTAL STATE =====
             insanity: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
             // insanityBonus: new NumberField({ required: true, initial: 0, min: 0, integer: true }), // Derived

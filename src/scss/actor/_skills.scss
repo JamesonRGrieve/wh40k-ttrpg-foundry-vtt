@@ -245,6 +245,38 @@
     min-width: 0;
 }
 
+.wh40k-header-resources {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.wh40k-resource-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.wh40k-resource-label {
+    font-size: 0.7em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--wh40k-text-medium);
+    letter-spacing: 0.05em;
+}
+
+.wh40k-resource-input {
+    width: 100%;
+    text-align: center;
+    font-size: 0.9em;
+    padding: 2px 4px;
+    border: 1px solid var(--wh40k-border-color-light, rgba(140, 120, 90, 0.3));
+    border-radius: 3px;
+    background: var(--wh40k-input-bg, #fff);
+    color: var(--wh40k-text-dark, #333);
+}
+
 // Header layout for single column (no HUD)
 .wh40k-header-single-column {
     display: flex;

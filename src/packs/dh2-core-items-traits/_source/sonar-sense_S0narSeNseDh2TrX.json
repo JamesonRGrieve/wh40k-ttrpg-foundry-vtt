@@ -1,0 +1,31 @@
+{
+  "name": "Sonar Sense",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "creature",
+    "requirements": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The creature can perceive its surroundings through reflected sound, detecting objects within 30 metres. Observers can attempt a Difficult (-10) Awareness test to notice the noises it makes while doing so.</p>"
+    },
+    "benefit": "<p>The creature can detect objects within 30 metres by sound, though others may notice the noise it uses with a Difficult (-10) Awareness test.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "sonarSense",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "S0narSeNseDh2TrX"
+}

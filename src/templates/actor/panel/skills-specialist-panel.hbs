@@ -46,7 +46,7 @@
                                 </button>
                             </div>
                             <div class="wh40k-spec-training wh40k-training-display">
-                                {{#if @root.editable}}
+                                {{#if @root.inEditMode}}
                                 <button type="button" class="wh40k-train-indicator {{#if (gte spec.trainingLevel 1)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSpecialistTraining" data-skill="{{spec.skillKey}}" data-index="{{spec.entryIndex}}">T</button>
                                 <button type="button" class="wh40k-train-indicator {{#if (gte spec.trainingLevel 2)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSpecialistTraining" data-skill="{{spec.skillKey}}" data-index="{{spec.entryIndex}}">+10</button>
                                 <button type="button" class="wh40k-train-indicator {{#if (gte spec.trainingLevel 3)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSpecialistTraining" data-skill="{{spec.skillKey}}" data-index="{{spec.entryIndex}}">+20</button>
