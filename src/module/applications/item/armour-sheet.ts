@@ -8,6 +8,7 @@ import ContainerItemSheet from './container-item-sheet.ts';
  * Sheet for armour items with support for armour modifications.
  */
 export default class ArmourSheet extends ContainerItemSheet {
+    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour'],
@@ -116,7 +117,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event   The triggering event
      * @param {HTMLElement} target The target element
      */
-    static async #toggleCoverage(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleCoverage(this: any, event: Event, target: HTMLElement): Promise<void> {
         const location = target.dataset.location;
         const coverage = new Set(this.item.system.coverage || []);
 
@@ -162,7 +163,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event   The triggering event
      * @param {HTMLElement} target The target element
      */
-    static async #addProperty(event: Event, target: HTMLElement): Promise<void> {
+    static async #addProperty(this: any, event: Event, target: HTMLElement): Promise<void> {
         const select = this.element.querySelector("[name='new-property']");
         const property = select?.value;
         if (!property) return;
@@ -181,7 +182,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event   The triggering event
      * @param {HTMLElement} target The target element
      */
-    static async #removeProperty(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeProperty(this: any, event: Event, target: HTMLElement): Promise<void> {
         const property = target.dataset.property;
         const properties = new Set(this.item.system.properties || []);
         properties.delete(property);
@@ -194,7 +195,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event   The triggering event
      * @param {HTMLElement} target The target element
      */
-    static async #addModification(event: Event, target: HTMLElement): Promise<void> {
+    static async #addModification(this: any, event: Event, target: HTMLElement): Promise<void> {
         // Check if slots available
         if (this.item.system.availableModSlots <= 0) {
             (ui.notifications as any).warn(game.i18n.localize('WH40K.Armour.NoSlotsAvailable'));
@@ -210,13 +211,13 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event   The triggering event
      * @param {HTMLElement} target The target element
      */
-    static async #editMod(event: Event, target: HTMLElement): Promise<void> {
+    static async #editMod(this: any, event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.modIndex);
         const mod = this.item.system.modifications[index];
         if (!mod?.uuid) return;
 
         try {
-            const item = await fromUuid(mod.uuid);
+            const item = await fromUuid(mod.uuid) as any;
             if (item) item.sheet.render(true);
         } catch (err) {
             console.error('Failed to open modification:', err);
@@ -228,7 +229,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event   The triggering event
      * @param {HTMLElement} target The target element
      */
-    static async #removeMod(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeMod(this: any, event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.modIndex);
         const modifications = [...this.item.system.modifications];
         modifications.splice(index, 1);

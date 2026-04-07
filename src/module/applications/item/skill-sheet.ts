@@ -8,6 +8,7 @@ import BaseItemSheet from './base-item-sheet.ts';
  * Sheet for skill items (used in compendiums).
  * Redesigned with Imperial Gothic theme and comprehensive layout.
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class SkillSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {

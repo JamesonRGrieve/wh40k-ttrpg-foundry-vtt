@@ -7,6 +7,7 @@ import BaseItemSheet from './base-item-sheet.ts';
 /**
  * Sheet for journal entry items (used for character notes/journals).
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class JournalEntryItemSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {

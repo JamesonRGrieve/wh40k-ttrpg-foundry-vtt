@@ -12,6 +12,7 @@ import BaseActorSheet from './base-actor-sheet.ts';
  *
  * @extends {BaseActorSheet}
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class VehicleSheet extends BaseActorSheet {
     [key: string]: any;
 

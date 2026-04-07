@@ -10,6 +10,7 @@ const { ApplicationV2 } = foundry.applications.api;
  * Dialog for adding or subtracting experience points.
  */
 export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
+    [key: string]: any;
     /**
      * @param {WH40KAcolyte} actor  The actor to modify.
      * @param {object} [options={}]       Dialog options.
@@ -122,7 +123,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {HTMLElement} form    The form element.
      * @param {FormDataExtended} formData  The form data.
      */
-    static async #onFormChange(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #onFormChange(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         const xpAmount = parseInt(formData.object.xpAmount) || 0;
         if (this.xpAmount !== xpAmount) {
             this.xpAmount = xpAmount;
@@ -138,7 +139,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onApply(event: Event, target: HTMLElement): Promise<void> {
+    static async #onApply(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         if (this.xpAmount === 0) {
@@ -165,7 +166,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onCancel(event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         await this.close();
     }

@@ -114,7 +114,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context: any = await super._prepareContext(options);
 
         // Get options
         const roles = ThreatCalculator.getRoles();

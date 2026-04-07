@@ -12,6 +12,7 @@ import FormulaField from '../fields/formula-field.ts';
  * @mixes ActivationTemplate
  * @mixes DamageTemplate
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTemplate, ActivationTemplate, DamageTemplate) {
     [key: string]: any;
     /** @inheritdoc */

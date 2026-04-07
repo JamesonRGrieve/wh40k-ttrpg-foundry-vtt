@@ -10,6 +10,7 @@ import { WH40K } from '../rules/config.ts';
 import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
 
 export class RollData {
+    [key: string]: any;
     difficulties = rollDifficulties();
     aims = aimModifiers();
     locations = hitDropdown();
@@ -175,6 +176,7 @@ export class RollData {
 }
 
 export class WeaponRollData extends RollData {
+    [key: string]: any;
     weapons = [];
     weapon;
     weaponSelect = false;
@@ -344,6 +346,7 @@ export class WeaponRollData extends RollData {
 }
 
 export class PsychicRollData extends RollData {
+    [key: string]: any;
     psychicPowers = [];
     power;
     powerSelect = false;

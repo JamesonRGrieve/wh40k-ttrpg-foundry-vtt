@@ -1,6 +1,7 @@
 import { roll1d100 } from './roll-helpers.ts';
 
 export class ForceFieldData {
+    [key: string]: any;
     actor;
     forceField;
     protectionRating = 0;
@@ -64,6 +65,6 @@ export class ForceFieldData {
         } else if (chatData.rollMode === 'selfroll') {
             chatData.whisper = [game.user];
         }
-        await ChatMessage.create(chatData);
+        await (ChatMessage as any).create(chatData);
     }
 }

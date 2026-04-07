@@ -8,7 +8,9 @@ import ContainerItemSheet from './container-item-sheet.ts';
  * Sheet for armour modification items.
  * Extends ContainerItemSheet to support embedded mods (if needed).
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class ArmourModSheet extends ContainerItemSheet {
+    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour-modification'],
@@ -167,7 +169,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
      * @param {PointerEvent} event  The triggering event
      * @param {HTMLElement} target  The target element
      */
-    static async #onToggleArmourType(event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleArmourType(this: any, event: Event, target: HTMLElement): Promise<void> {
         const type = target.dataset.type;
         const current = new Set(this.item.system.restrictions.armourTypes);
 
@@ -192,7 +194,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
      * @param {PointerEvent} event  The triggering event
      * @param {HTMLElement} target  The target element
      */
-    static async #onAdjustModifier(event: Event, target: HTMLElement): Promise<void> {
+    static async #onAdjustModifier(this: any, event: Event, target: HTMLElement): Promise<void> {
         const field = target.dataset.field;
         const delta = parseInt(target.dataset.delta);
         const current = foundry.utils.getProperty(this.item.system, field) || 0;
@@ -207,7 +209,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
      * @param {PointerEvent} event  The triggering event
      * @param {HTMLElement} target  The target element
      */
-    static async #onAddProperty(event: Event, target: HTMLElement): Promise<void> {
+    static async #onAddProperty(this: any, event: Event, target: HTMLElement): Promise<void> {
         const property = target.dataset.property;
         const list = target.dataset.list; // "added" or "removed"
         const field = `${list}Properties`;
@@ -225,7 +227,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
      * @param {PointerEvent} event  The triggering event
      * @param {HTMLElement} target  The target element
      */
-    static async #onRemoveProperty(event: Event, target: HTMLElement): Promise<void> {
+    static async #onRemoveProperty(this: any, event: Event, target: HTMLElement): Promise<void> {
         const property = target.dataset.property;
         const list = target.dataset.list; // "added" or "removed"
         const field = `${list}Properties`;

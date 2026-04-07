@@ -1,6 +1,6 @@
 function getTokenActor(actorId) {
     // Fetch the actor from the current users token or the actor collection.
-    const speaker = ChatMessage.getSpeaker();
+    const speaker = (ChatMessage as any).getSpeaker();
     let actor;
     if (actorId) actor = game.actors.get(actorId);
     if (!actor && speaker.token) actor = game.actors.tokens[speaker.token];

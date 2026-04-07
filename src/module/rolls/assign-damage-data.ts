@@ -3,6 +3,7 @@ import { getCriticalDamage } from '../rules/critical-damage.ts';
 import { damageTypeDropdown } from '../rules/damage-type.ts';
 
 export class AssignDamageData {
+    [key: string]: any;
     locations = hitDropdown();
     actor;
     hit;
@@ -122,7 +123,7 @@ export class AssignDamageData {
         } else if (chatData.rollMode === 'selfroll') {
             chatData.whisper = [game.user];
         }
-        await ChatMessage.create(chatData);
+        await (ChatMessage as any).create(chatData);
     }
 
     /**

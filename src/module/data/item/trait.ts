@@ -9,7 +9,9 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
         const fields = (foundry.data as any).fields;
@@ -148,7 +150,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         // Prepare chat message data
         const chatData = {
             user: game.user.id,
-            speaker: ChatMessage.getSpeaker(),
+            speaker: (ChatMessage as any).getSpeaker(),
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             content: content,
             flags: {
@@ -163,6 +165,6 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         ChatMessage.applyRollMode(chatData, options.rollMode || game.settings.get('core', 'rollMode'));
 
         // Create and return chat message
-        return ChatMessage.create(chatData);
+        return (ChatMessage as any).create(chatData);
     }
 }

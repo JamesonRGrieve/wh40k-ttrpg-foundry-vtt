@@ -10,6 +10,7 @@ const { ApplicationV2 } = foundry.applications.api;
  * Dialog for adding specialist skill specializations.
  */
 export default class SpecialistSkillDialog extends ApplicationV2Mixin(ApplicationV2) {
+    [key: string]: any;
     /**
      * @param {object} simpleSkillData  The skill data.
      * @param {object} [options={}]     Dialog options.
@@ -151,7 +152,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onAdd(event: Event, target: HTMLElement): Promise<void> {
+    static async #onAdd(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this._addSpecialization();
     }
 
@@ -163,7 +164,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onCancel(event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.close();
     }
 

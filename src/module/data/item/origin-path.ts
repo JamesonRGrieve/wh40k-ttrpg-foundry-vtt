@@ -9,6 +9,7 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class OriginPathData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
     [key: string]: any;
     /** @inheritdoc */

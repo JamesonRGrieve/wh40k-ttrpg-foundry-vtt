@@ -133,7 +133,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context: any = await super._prepareContext(options);
 
         // Actor data
         context.actor = this.actor;

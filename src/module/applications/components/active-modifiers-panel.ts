@@ -62,7 +62,7 @@ export function ActiveModifiersMixin(Base) {
          * @param {PointerEvent} event - Triggering event
          * @param {HTMLElement} target - Action target
          */
-        static async #viewModifierSource(event: Event, target: HTMLElement): Promise<void> {
+        static async #viewModifierSource(this: any, event: Event, target: HTMLElement): Promise<void> {
             const itemId = target.dataset.itemId;
             if (!itemId) return;
 
@@ -78,7 +78,7 @@ export function ActiveModifiersMixin(Base) {
          * @param {PointerEvent} event - Triggering event
          * @param {HTMLElement} target - Action target
          */
-        static async #toggleModifiersPanel(event: Event, target: HTMLElement): Promise<void> {
+        static async #toggleModifiersPanel(this: any, event: Event, target: HTMLElement): Promise<void> {
             this.#modifiersPanelCollapsed = !this.#modifiersPanelCollapsed;
             this.render();
         }

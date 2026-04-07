@@ -8,7 +8,9 @@ import BaseItemSheet from './base-item-sheet.ts';
  * Sheet for ammunition items.
  * Displays modifiers with stat bar and weapon compatibility.
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class AmmoSheet extends BaseItemSheet {
+    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'ammunition'],
@@ -77,7 +79,7 @@ export default class AmmoSheet extends BaseItemSheet {
      * @param {Event} event   The triggering event
      * @param {HTMLElement} target The target element
      */
-    static async #addQuality(event: Event, target: HTMLElement): Promise<void> {
+    static async #addQuality(this: any, event: Event, target: HTMLElement): Promise<void> {
         const type = target.dataset.type; // 'added' or 'removed'
         const input = this.element.querySelector(`[name="new-${type}-quality"]`);
         const quality = input?.value?.trim();
@@ -99,7 +101,7 @@ export default class AmmoSheet extends BaseItemSheet {
      * @param {Event} event   The triggering event
      * @param {HTMLElement} target The target element
      */
-    static async #removeAddedQuality(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeAddedQuality(this: any, event: Event, target: HTMLElement): Promise<void> {
         const quality = target.dataset.quality;
         const qualities = new Set(this.item.system.addedQualities || []);
         qualities.delete(quality);
@@ -112,7 +114,7 @@ export default class AmmoSheet extends BaseItemSheet {
      * @param {Event} event   The triggering event
      * @param {HTMLElement} target The target element
      */
-    static async #removeRemovedQuality(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeRemovedQuality(this: any, event: Event, target: HTMLElement): Promise<void> {
         const quality = target.dataset.quality;
         const qualities = new Set(this.item.system.removedQualities || []);
         qualities.delete(quality);

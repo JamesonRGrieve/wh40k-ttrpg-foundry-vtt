@@ -93,7 +93,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context: any = await super._prepareContext(options);
         const system = this.item.system;
 
         // Add CONFIG reference for templates - ensure dropdown options are available

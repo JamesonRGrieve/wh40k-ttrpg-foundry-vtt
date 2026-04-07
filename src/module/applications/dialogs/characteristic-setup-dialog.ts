@@ -177,7 +177,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context: any = await super._prepareContext(options);
 
         // Ensure rolls array is initialized
         if (!Array.isArray(this.#rolls) || this.#rolls.length !== 9) {
@@ -483,9 +483,9 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     #onDragOver(event: Event): void {
         if (!this.#dragData) return;
         event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
+        (event as any).dataTransfer.dropEffect = 'move';
 
-        const slot = event.currentTarget;
+        const slot = event.currentTarget as any;
         slot.classList.add('drop-valid', 'drop-hover');
     }
 
@@ -497,7 +497,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onDragLeave(event: Event): void {
-        event.currentTarget.classList.remove('drop-hover');
+        (event.currentTarget as any).classList.remove('drop-hover');
     }
 
     /* -------------------------------------------- */
@@ -511,7 +511,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         event.preventDefault();
         if (!this.#dragData) return;
 
-        const slot = event.currentTarget;
+        const slot = event.currentTarget as any;
         const targetChar = slot.dataset.characteristic;
         const draggedIndex = this.#dragData.index;
         const sourceChar = this.#dragData.characteristic;
@@ -548,8 +548,8 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     #onBankDragOver(event: Event): void {
         if (!this.#dragData || this.#dragData.type !== 'assigned') return;
         event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-        event.currentTarget.classList.add('drop-valid', 'drop-hover');
+        (event as any).dataTransfer.dropEffect = 'move';
+        (event.currentTarget as any).classList.add('drop-valid', 'drop-hover');
     }
 
     /* -------------------------------------------- */
@@ -578,7 +578,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onBaseValueChange(event: Event): void {
-        const input = event.currentTarget;
+        const input = event.currentTarget as any;
         const key = input.dataset.characteristic;
         let value = parseInt(input.value);
 

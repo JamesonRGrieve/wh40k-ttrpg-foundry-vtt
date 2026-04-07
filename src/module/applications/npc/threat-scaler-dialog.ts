@@ -132,7 +132,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context: any = await super._prepareContext(options);
 
         const currentThreat = this.#actor.system.threatLevel;
         const newThreat = this.#state.newThreatLevel;

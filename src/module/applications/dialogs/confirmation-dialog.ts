@@ -14,6 +14,7 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class ConfirmationDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
@@ -128,7 +129,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onConfirm(event: Event, target: HTMLElement): Promise<void> {
+    static async #onConfirm(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.#resolved = true;
         this.#resolve?.(true);
         await this.close();
@@ -142,7 +143,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCancel(event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.#resolved = true;
         this.#resolve?.(false);
         await this.close();

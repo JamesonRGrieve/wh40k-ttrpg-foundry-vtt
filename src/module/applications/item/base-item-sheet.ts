@@ -22,7 +22,8 @@ const { ItemSheetV2 } = foundry.applications.sheets;
  * - ExpandableTooltipMixin (click-to-expand tooltips)
  * - StatBreakdownMixin (stat calculation breakdowns)
  */
-export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2)))) {
+export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any)))) {
+    [key: string]: any;
     constructor(options: Record<string, unknown> = {}) {
         super(options);
     }
@@ -271,7 +272,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         // Auto-select number input values on focus for easy editing
         this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
             input.addEventListener('focus', (event) => {
-                event.target.select();
+                (event.target as HTMLInputElement).select();
             });
         });
 
@@ -339,7 +340,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @protected
      */
     _onChangeInputDelta(event: Event): void {
-        const input = event.target;
+        const input = event.target as HTMLInputElement;
         const value = input.value.trim();
         if (!value) return;
 
@@ -350,9 +351,9 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
             if (!isNaN(absolute)) input.value = absolute;
         } else if (['+', '-'].includes(firstChar)) {
             // Add or subtract delta
-            const current = foundry.utils.getProperty(this.item, input.name) ?? 0;
+            const current = foundry.utils.getProperty(this.item, input.name) as number ?? 0;
             const delta = parseFloat(value);
-            if (!isNaN(delta)) input.value = current + delta;
+            if (!isNaN(delta)) input.value = String(current + delta);
         }
     }
 
@@ -367,7 +368,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     static async #onEditImage(event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset.edit ?? 'img';
         const current = foundry.utils.getProperty(this.document._source, attr);
-        const fp = new CONFIG.ux.FilePicker({
+        const fp = new (CONFIG as any).ux.FilePicker({
             current,
             type: 'image',
             callback: (path) => this.document.update({ [attr]: path }),
@@ -429,7 +430,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #effectEdit(event: Event, target: HTMLElement): void {
-        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
+        const effectId = (target.closest('[data-effect-id]') as HTMLElement)?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         effect?.sheet.render(true);
     }
@@ -443,7 +444,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectDelete(event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
+        const effectId = (target.closest('[data-effect-id]') as HTMLElement)?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         await effect?.delete();
     }
@@ -457,7 +458,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectToggle(event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
+        const effectId = (target.closest('[data-effect-id]') as HTMLElement)?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         await effect?.update({ disabled: !effect.disabled });
     }

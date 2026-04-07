@@ -214,7 +214,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context: any = await super._prepareContext(options);
         const parsedData = this.#parsedData;
         const previewSkills = parsedData?.system?.trainedSkills ? Object.values(parsedData.system.trainedSkills) : [];
         const previewTalents = parsedData?.items?.filter((item) => item.type === 'talent') ?? [];

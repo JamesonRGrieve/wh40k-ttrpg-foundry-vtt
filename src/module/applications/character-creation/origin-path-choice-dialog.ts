@@ -9,7 +9,8 @@ import { findSkillUuid } from '../../helpers/skill-uuid-helper.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(ApplicationV2 as any) {
+    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'origin-choice-dialog'],
@@ -95,8 +96,8 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+    async _prepareContext(options: any): Promise<any> {
+        const context = await super._prepareContext(options) as any;
 
         context.item = this.item;
         context.itemName = this.item.name;
@@ -291,7 +292,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         if (!uuid) return;
 
         try {
-            const item = await fromUuid(uuid);
+            const item = await fromUuid(uuid) as any;
             if (item) {
                 item.sheet.render(true);
             }

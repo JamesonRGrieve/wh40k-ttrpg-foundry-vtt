@@ -7,7 +7,9 @@ import BaseRollDialog from './base-roll-dialog.ts';
 /**
  * Dialog for configuring weapon attacks.
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class WeaponAttackDialog extends BaseRollDialog {
+    [key: string]: any;
     /**
      * @param {WeaponActionData} weaponActionData  The weapon action data.
      * @param {object} [options={}]                Dialog options.
@@ -122,7 +124,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the action.
      */
-    static async #onSelectWeapon(event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.rollData.selectWeapon(target.name);
         await this.rollData.update();
         this.render();

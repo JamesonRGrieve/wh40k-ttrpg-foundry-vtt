@@ -14,6 +14,7 @@ const { NumberField, SchemaField, StringField, BooleanField, ArrayField, HTMLFie
  * @extends {CreatureTemplate}
  */
 export default class NPCData extends HordeTemplate(CreatureTemplate) {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */

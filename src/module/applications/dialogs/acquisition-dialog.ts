@@ -119,7 +119,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context: any = await super._prepareContext(options);
 
         // Profit Factor
         const pf = this.actor.system.rogueTrader?.profitFactor || { current: 0, starting: 0 };

@@ -17,6 +17,7 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  *
  * @extends {HandlebarsApplicationMixin(ApplicationV2)}
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class DifficultyCalculatorDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     [key: string]: any;
 

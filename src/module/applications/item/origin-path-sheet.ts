@@ -9,7 +9,9 @@ import BaseItemSheet from './base-item-sheet.ts';
  * Sheet for origin path items
  * @extends BaseItemSheet
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class OriginPathSheet extends BaseItemSheet {
+    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'origin-path-sheet'],

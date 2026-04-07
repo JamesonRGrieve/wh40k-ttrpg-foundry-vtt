@@ -15,7 +15,9 @@ import BaseItemSheet from './base-item-sheet.ts';
  * Redesigned sheet for talent items with modern ApplicationV2 patterns.
  * @extends BaseItemSheet
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class TalentSheetV2 extends BaseItemSheet {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -749,7 +751,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @param {PointerEvent} event - The triggering event
      * @param {HTMLElement} target - The action target
      */
-    static async #rollTalent(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollTalent(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.item.system.isRollable) {
             (ui.notifications as any).warn('This talent cannot be rolled.');
             return;
@@ -789,7 +791,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @param {PointerEvent} event - The triggering event
      * @param {HTMLElement} target - The action target
      */
-    static async #viewGrantedItem(event: Event, target: HTMLElement): Promise<void> {
+    static async #viewGrantedItem(this: any, event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
         if (!uuid) return;
 
@@ -811,7 +813,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @param {PointerEvent} event - The triggering event
      * @param {HTMLElement} target - The action target
      */
-    static async #adjustRank(event: Event, target: HTMLElement): Promise<void> {
+    static async #adjustRank(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.item.system.stackable) return;
 
         const delta = parseInt(target.dataset.delta, 10);
@@ -831,7 +833,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @param {PointerEvent} event - The triggering event
      * @param {HTMLElement} target - The action target
      */
-    static async #openTalentEditor(event: Event, target: HTMLElement): Promise<void> {
+    static async #openTalentEditor(this: any, event: Event, target: HTMLElement): Promise<void> {
         const section = target.dataset.section;
         if (!section) return;
 
@@ -862,9 +864,9 @@ export default class TalentSheetV2 extends BaseItemSheet {
             </div>
         `;
 
-        await ChatMessage.create({
+        await (ChatMessage as any).create({
             content,
-            speaker: ChatMessage.getSpeaker({ actor: this.item.actor }),
+            speaker: (ChatMessage as any).getSpeaker({ actor: this.item.actor }),
         });
     }
 }

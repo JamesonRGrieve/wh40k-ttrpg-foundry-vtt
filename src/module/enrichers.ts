@@ -10,7 +10,7 @@ import { WH40KAcolyte } from './documents/acolyte.ts';
  */
 export function registerCustomEnrichers() {
     // Register enricher patterns
-    CONFIG.TextEditor.enrichers.push(
+    (CONFIG as any).TextEditor.enrichers.push(
         {
             // [[/characteristic ws]], [[/characteristic weaponSkill]]
             pattern: /\[\[\/characteristic (?<config>[^\]]+)]](?:{(?<label>[^}]+)})?/gi,

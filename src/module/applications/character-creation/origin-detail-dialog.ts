@@ -89,7 +89,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context: any = await super._prepareContext(options);
         const system = this.origin.system;
         const grants = system?.grants || {};
         const modifiers = system?.modifiers?.characteristics || {};

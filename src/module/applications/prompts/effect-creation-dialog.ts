@@ -5,7 +5,8 @@
 
 const { DialogV2 } = foundry.applications.api;
 
-export default class EffectCreationDialog extends DialogV2 {
+export default class EffectCreationDialog extends (DialogV2 as any) {
+    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         window: {
@@ -75,8 +76,8 @@ export default class EffectCreationDialog extends DialogV2 {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+    async _prepareContext(options: any): Promise<any> {
+        const context = await super._prepareContext(options) as any;
 
         context.actor = this.actor;
         context.selectedCategory = this.selectedCategory;
@@ -162,7 +163,7 @@ export default class EffectCreationDialog extends DialogV2 {
      * Handle form submission
      */
     static async formHandler(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object);
+        const data = foundry.utils.expandObject(formData.object) as any;
 
         let effectData = null;
 
@@ -305,9 +306,9 @@ export default class EffectCreationDialog extends DialogV2 {
 
         if (!characteristic || value === 0) return null;
 
-        const charLabel = CONFIG.WH40K.characteristics[characteristic] ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
+        const charLabel = (CONFIG as any).WH40K?.characteristics?.[characteristic] ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
 
-        const effectData = {
+        const effectData: any = {
             name: `${charLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/upgrade.svg',
             changes: [
@@ -350,7 +351,7 @@ export default class EffectCreationDialog extends DialogV2 {
 
         const skillLabel = skill.charAt(0).toUpperCase() + skill.slice(1);
 
-        const effectData = {
+        const effectData: any = {
             name: `${skillLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/upgrade.svg',
             changes: [
@@ -393,7 +394,7 @@ export default class EffectCreationDialog extends DialogV2 {
 
         const typeLabel = combatType.charAt(0).toUpperCase() + combatType.slice(1);
 
-        const effectData = {
+        const effectData: any = {
             name: `${typeLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/combat.svg',
             changes: [

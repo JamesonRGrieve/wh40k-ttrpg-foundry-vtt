@@ -8,6 +8,7 @@ import BaseItemSheet from './base-item-sheet.ts';
  * Sheet for condition items (status effects).
  * Displays condition properties with nature-based color coding.
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class ConditionSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {

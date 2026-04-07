@@ -7,6 +7,7 @@ import BaseItemSheet from './base-item-sheet.ts';
 /**
  * Sheet for psychic power items.
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class PsychicPowerSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {

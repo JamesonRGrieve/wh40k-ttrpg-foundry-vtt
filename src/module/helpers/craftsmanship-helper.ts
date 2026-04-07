@@ -7,6 +7,7 @@
  * Uses CONFIG.WH40K.craftsmanshipRules as single source of truth.
  */
 export default class CraftsmanshipHelper {
+    [key: string]: any;
     /**
      * Get craftsmanship modifiers for any item type.
      * Returns an object with stat modifiers based on item type and craftsmanship.

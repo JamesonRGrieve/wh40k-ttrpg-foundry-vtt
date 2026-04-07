@@ -380,7 +380,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      * @returns {object}       Prepared quality data
      */
     _prepareQualityData(system: any): Record<string, unknown> {
-        // Access CONFIG.wh40k (set during init hook)
+        // Access (CONFIG as any).wh40k (set during init hook)
         const rtConfig = (CONFIG as any)?.rt;
 
         if (!rtConfig) {

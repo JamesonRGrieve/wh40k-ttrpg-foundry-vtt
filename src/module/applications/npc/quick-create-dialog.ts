@@ -124,7 +124,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context: any = await super._prepareContext(options);
 
         // Get available options
         const roles = ThreatCalculator.getRoles();

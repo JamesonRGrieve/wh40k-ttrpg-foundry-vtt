@@ -13,6 +13,7 @@ const { NumberField } = (foundry.data as any).fields;
  * @see SystemDataModel for mixin and template delegation details
  */
 export default class ItemDataModel extends SystemDataModel {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Data Model Configuration                    */
     /* -------------------------------------------- */
@@ -56,7 +57,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} [options={}]   Additional options
      * @protected
      */
-    static _cleanData(source?: Record<string, unknown>, options?: Record<string, unknown>): void {
+    static _cleanData(this: any, source?: Record<string, unknown>, options?: Record<string, unknown>): void {
         super._cleanData?.(source, options);
         ItemDataModel.#cleanNumericFields(source, this.schema?.fields ?? {});
     }

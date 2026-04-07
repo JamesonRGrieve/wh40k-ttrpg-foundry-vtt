@@ -4,7 +4,9 @@
  * Similar to dnd5e's modern roll architecture
  * @extends Roll
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class BasicRollWH40K extends Roll {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -147,7 +149,7 @@ export default class BasicRollWH40K extends Roll {
         ChatMessage.applyRollMode(chatData, rollMode);
 
         // Create the chat message
-        const message = await ChatMessage.create(chatData);
+        const message = await (ChatMessage as any).create(chatData);
 
         // Fire post-message hook
         Hooks.callAll('wh40k-rpg.postRollPost', message, roll, config);
@@ -164,7 +166,7 @@ export default class BasicRollWH40K extends Roll {
      */
     static async _prepareChatData(roll, config) {
         // Get speaker data
-        const speaker = config.speaker || ChatMessage.getSpeaker({ actor: config.actor });
+        const speaker = config.speaker || (ChatMessage as any).getSpeaker({ actor: config.actor });
 
         // Render the chat template - V13: use namespaced renderTemplate
         const templateData = await this._prepareTemplateData(roll, config);

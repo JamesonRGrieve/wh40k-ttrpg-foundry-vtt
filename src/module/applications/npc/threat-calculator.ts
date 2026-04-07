@@ -14,6 +14,7 @@
  * All methods are static - no instantiation needed.
  */
 export default class ThreatCalculator {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */

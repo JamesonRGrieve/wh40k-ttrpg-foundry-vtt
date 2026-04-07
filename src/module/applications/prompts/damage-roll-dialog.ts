@@ -12,6 +12,7 @@ const { ApplicationV2 } = foundry.applications.api;
  * Dialog for configuring damage rolls.
  */
 export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) {
+    [key: string]: any;
     /**
      * @param {object} rollData      The roll data.
      * @param {object} [options={}]  Dialog options.
@@ -110,7 +111,7 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onRoll(event: Event, target: HTMLElement): Promise<void> {
+    static async #onRoll(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this._performRoll();
     }
 
@@ -122,7 +123,7 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onCancel(event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.close();
     }
 

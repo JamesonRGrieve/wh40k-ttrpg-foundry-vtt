@@ -11,7 +11,9 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes PhysicalItemTemplate
  * @mixes EquippableTemplate
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
         const fields = (foundry.data as any).fields;

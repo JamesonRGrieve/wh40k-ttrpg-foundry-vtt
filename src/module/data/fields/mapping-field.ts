@@ -3,6 +3,7 @@
  * Similar to DnD5e's MappingField for handling object-based data.
  */
 export default class MappingField extends foundry.data.fields.ObjectField {
+    [key: string]: any;
     model: foundry.data.fields.DataField.Any;
     initialKeys: string[] | null;
     initialKeysOnly: boolean;

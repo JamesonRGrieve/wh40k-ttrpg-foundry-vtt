@@ -13,6 +13,7 @@ import DragDropMixin from './drag-drop-api-mixin.ts';
  */
 export default function PrimarySheetMixin<T extends new (...args: any[]) => any>(Base: T) {
     return class PrimarySheetWH40K extends DragDropMixin(Base) {
+    [key: string]: any;
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             actions: {

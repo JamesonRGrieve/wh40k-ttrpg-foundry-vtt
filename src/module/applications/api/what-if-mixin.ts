@@ -23,6 +23,7 @@ import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
  */
 export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base: T) {
     return class WhatIfApplication extends Base {
+    [key: string]: any;
         /* -------------------------------------------- */
         /*  What-If Mode State                          */
         /* -------------------------------------------- */

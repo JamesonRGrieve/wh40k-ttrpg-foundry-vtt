@@ -10,7 +10,9 @@ import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
  * Item sheet for container-type items (weapons, armour, gear, etc.)
  * that can hold nested items like modifications.
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class ContainerItemSheet extends BaseItemSheet {
+    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         actions: {
@@ -232,7 +234,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #nestedItemCreate(event: Event, target: HTMLElement): Promise<void> {
+    static async #nestedItemCreate(this: any, event: Event, target: HTMLElement): Promise<void> {
         const itemType = target.dataset.type ?? 'gear';
         const data = {
             name: `New ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`,
@@ -249,7 +251,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #nestedItemEdit(event: Event, target: HTMLElement): void {
+    static #nestedItemEdit(this: any, event: Event, target: HTMLElement): void {
         const itemId = target.closest('[data-nested-item-id]')?.dataset.nestedItemId;
         const nestedItem = this.item.items?.get(itemId);
         nestedItem?.sheet.render(true);
@@ -263,7 +265,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #nestedItemDelete(event: Event, target: HTMLElement): Promise<void> {
+    static async #nestedItemDelete(this: any, event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.closest('[data-nested-item-id]')?.dataset.nestedItemId;
         if (!itemId) return;
 

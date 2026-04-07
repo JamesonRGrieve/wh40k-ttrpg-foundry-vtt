@@ -39,7 +39,7 @@ export function ItemPreviewMixin(Base) {
          * @param {PointerEvent} event - Triggering event
          * @param {HTMLElement} target - Action target
          */
-        static async #toggleItemPreview(event: Event, target: HTMLElement): Promise<void> {
+        static async #toggleItemPreview(this: any, event: Event, target: HTMLElement): Promise<void> {
             const itemId = target.dataset.itemId;
             if (!itemId) return;
 
