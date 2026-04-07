@@ -9,10 +9,11 @@
     "packs": "gulp packs",
     "scss": "gulp scss",
     "watch": "gulp",
-    "lint": "eslint src/module/ --ext .mjs",
-    "lint:fix": "eslint src/module/ --ext .mjs --fix",
-    "format": "prettier --check 'src/**/*.{mjs,json,scss,hbs}'",
-    "format:fix": "prettier --write 'src/**/*.{mjs,json,scss,hbs}'",
+    "lint": "eslint src/module/ --ext .mjs,.mts,.ts",
+    "lint:fix": "eslint src/module/ --ext .mjs,.mts,.ts --fix",
+    "format": "prettier --check 'src/**/*.{mjs,mts,ts,json,scss,hbs}'",
+    "format:fix": "prettier --write 'src/**/*.{mjs,mts,ts,json,scss,hbs}'",
+    "typecheck": "tsc --noEmit",
     "validate:json": "node -e \"const fs=require('fs'); const f='src/lang/en.json'; JSON.parse(fs.readFileSync(f,'utf8')); console.log(f+' OK')\"",
     "check": "npm run validate:json && npm run lint && npm run format"
   },
@@ -27,7 +28,6 @@
     "cb": "0.1.0",
     "classic-level": "^1.4.1",
     "decode-uri-component": "0.3.0",
-    "eslint": "8.27.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
     "fancy-log": "2.0.0",
@@ -53,7 +53,11 @@
     "word-wrap": "1.2.5"
   },
   "devDependencies": {
+    "@league-of-foundry-developers/foundry-vtt-types": "^13.346.0-beta.20250812191140",
     "@sumup-oss/foundry": "^9.0.6",
+    "@typescript-eslint/eslint-plugin": "^8.58.0",
+    "@typescript-eslint/parser": "^8.58.0",
+    "eslint": "^8.57.1",
     "fvtt-types": "github:League-of-Foundry-Developers/foundry-vtt-types#main",
     "typescript": "^5.9.3"
   },
