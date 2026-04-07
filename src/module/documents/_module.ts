@@ -1,0 +1,9 @@
+export { WH40KBaseActor } from './base-actor.ts';
+export { WH40KAcolyte } from './acolyte.ts';
+export { WH40KNPC } from './npc.ts';
+export { WH40KNPCV2 } from './npc-v2.ts';
+export { WH40KVehicle } from './vehicle.ts';
+export { WH40KStarship } from './starship.ts';
+export { WH40KActiveEffect } from './active-effect.ts';
+export { ChatMessageWH40K } from './chat-message.ts';
+export { TokenDocumentWH40K } from './token.ts';
