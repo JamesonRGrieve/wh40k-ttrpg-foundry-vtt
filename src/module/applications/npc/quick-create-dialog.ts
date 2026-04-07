@@ -447,7 +447,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const baseData = ThreatCalculator.generateNPCData(baseConfig);
 
         for (let i = 1; i <= count; i++) {
-            const name = namePattern.replace('{n}', i);
+            const name = namePattern.replace('{n}', String(i));
 
             // Clone and optionally randomize
             const systemData = foundry.utils.deepClone(baseData);

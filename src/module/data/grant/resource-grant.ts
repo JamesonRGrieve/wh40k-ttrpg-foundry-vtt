@@ -174,11 +174,11 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
             const resourceDef = (this.constructor as any).RESOURCES[type];
             if (!resourceDef) continue;
 
-            const currentValue = foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0;
+            const currentValue = (foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0) as number;
             updates[resourceDef.valuePath] = currentValue - state.rolledValue;
 
             if (resourceDef.affectsMax && resourceDef.maxPath) {
-                const currentMax = foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0;
+                const currentMax = (foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0) as number;
                 updates[resourceDef.maxPath] = currentMax - state.rolledValue;
             }
 
@@ -207,11 +207,11 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
             const resourceDef = (this.constructor as any).RESOURCES[type];
             if (!resourceDef) continue;
 
-            const currentValue = foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0;
+            const currentValue = (foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0) as number;
             updates[resourceDef.valuePath] = currentValue + state.rolledValue;
 
             if (resourceDef.affectsMax && resourceDef.maxPath) {
-                const currentMax = foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0;
+                const currentMax = (foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0) as number;
                 updates[resourceDef.maxPath] = currentMax + state.rolledValue;
             }
 

@@ -645,7 +645,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             speaker: ChatMessage.getSpeaker({ actor: this.context.actor }),
             type: CONST.CHAT_MESSAGE_TYPES.ROLL,
             rolls: [this.rollResult.roll],
-            sound: CONFIG.sounds.dice,
+            sound: (CONFIG as any).sounds.dice,
         });
     }
 

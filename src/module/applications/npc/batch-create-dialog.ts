@@ -127,7 +127,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         // Generate preview names
         const previewNames = [];
         for (let i = 1; i <= Math.min(this.#state.count, 5); i++) {
-            previewNames.push(this.#state.namePattern.replace('{n}', i));
+            previewNames.push(this.#state.namePattern.replace('{n}', String(i)));
         }
         if (this.#state.count > 5) {
             previewNames.push('...');
@@ -285,7 +285,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         const baseData = ThreatCalculator.generateNPCData(baseConfig);
 
         for (let i = 1; i <= this.#state.count; i++) {
-            const name = this.#state.namePattern.replace('{n}', i);
+            const name = this.#state.namePattern.replace('{n}', String(i));
 
             // Clone and optionally randomize
             const systemData = foundry.utils.deepClone(baseData);
@@ -430,7 +430,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         });
 
         for (let i = 1; i <= count; i++) {
-            const name = namePattern.replace('{n}', i);
+            const name = namePattern.replace('{n}', String(i));
             const systemData = foundry.utils.deepClone(baseData);
 
             if (randomize) {
