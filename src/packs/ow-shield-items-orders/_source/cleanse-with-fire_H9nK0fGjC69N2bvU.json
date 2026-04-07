@@ -1,7 +1,7 @@
 {
   "name": "Cleanse with Fire!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_18.png",
   "system": {
     "typeAndAction": "Basic Order\nHalf Action",
     "requirements": ",Schol. Lore (Imp Creed), Weapon Training (Flame). \nApt: Ballistic Skill, Offence",

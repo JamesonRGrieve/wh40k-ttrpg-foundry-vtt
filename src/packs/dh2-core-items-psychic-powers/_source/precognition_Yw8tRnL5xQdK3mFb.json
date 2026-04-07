@@ -1,7 +1,7 @@
 {
   "name": "Precognition",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/slice-acid-2.jpg",
   "system": {
     "discipline": "Divination",
     "prerequisites": "Psy Rating 5",

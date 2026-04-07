@@ -1,7 +1,7 @@
 {
   "name": "Shock Maul",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-shock.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_09_b.png",
   "system": {
     "identifier": "shock-maul",
     "class": "melee",

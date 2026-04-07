@@ -1,7 +1,7 @@
 {
   "name": "Power Flail",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/flail/flail_02_b.PNG",
   "system": {
     "identifier": "power-flail",
     "class": "melee",

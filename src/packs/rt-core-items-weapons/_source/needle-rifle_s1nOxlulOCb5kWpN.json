@@ -1,7 +1,7 @@
 {
   "name": "Needle Rifle",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_15.png",
   "system": {
     "identifier": "needle-rifle",
     "class": "basic",

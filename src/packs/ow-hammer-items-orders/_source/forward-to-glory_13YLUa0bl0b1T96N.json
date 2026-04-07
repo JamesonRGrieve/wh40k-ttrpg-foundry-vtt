@@ -1,7 +1,7 @@
 {
   "name": "Forward to Glory!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_04.png",
   "system": {
     "typeAndAction": "Basic Order\nFree Action",
     "requirements": ",Radiant Presence Talent\nApt: Fellowship, Offence",

@@ -1,7 +1,7 @@
 {
   "name": "Knave of Pistols",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_06.png",
   "system": {
     "category": "unique",
     "requirements": "Metallican Gunslinger Alternative Advance (Innate)",

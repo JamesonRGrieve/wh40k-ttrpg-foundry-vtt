@@ -2,7 +2,7 @@
   "_id": "71lac5x7lb47kx1z",
   "name": "Explosive Critical - Head",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-air-3.jpg",
   "system": {
     "identifier": "crit_explosive_head",
     "damageType": "explosive",

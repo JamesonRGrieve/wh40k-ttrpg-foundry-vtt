@@ -1,7 +1,7 @@
 {
   "name": "Ritual of Binding",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/light-royal-2.jpg",
   "system": {
     "test": "-60 Forbidden Lore (Daemonology)",
     "requirements": "The Shell of an appropriate Daemon Engine to bind the Daemon into (EG: Blood Slaughterer, Blight Drone, Subjugator, Fire Lord, etc). A Summoned Daemon to bind, appropriate conditions depending on the god of the Daemon Summoned. (See Core Summon Requirements).",

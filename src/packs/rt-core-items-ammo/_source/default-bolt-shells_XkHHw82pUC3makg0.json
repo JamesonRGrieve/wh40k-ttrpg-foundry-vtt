@@ -1,7 +1,7 @@
 {
   "name": "! Default: Bolt Shells",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammunition_11_b.PNG",
   "system": {
     "identifier": "-default-bolt-shells",
     "weaponTypes": [

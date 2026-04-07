@@ -1,7 +1,7 @@
 {
   "name": "Mental Maze",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_08.png",
   "system": {
     "category": "psychic",
     "source": "OW: Hammer of the Emperor",

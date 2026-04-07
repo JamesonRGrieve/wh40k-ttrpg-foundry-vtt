@@ -1,7 +1,7 @@
 {
   "name": "Force Staff",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/staves/stave_06_b.PNG",
   "system": {
     "identifier": "force-staff",
     "class": "melee",
@@ -11,7 +11,7 @@
     "attack": {
       "type": "melee",
       "characteristic": "weaponSkill",
-      "modifier": 10,
+      "modifier": 0,
       "range": {
         "value": 0,
         "units": "m",
@@ -26,7 +26,7 @@
     "damage": {
       "formula": "1d10",
       "type": "impact",
-      "bonus": 2,
+      "bonus": 0,
       "penetration": 2
     },
     "special": [
@@ -38,7 +38,7 @@
       "type": ""
     },
     "reload": "-",
-    "weight": 5,
+    "weight": 2,
     "availability": "extremely-rare",
     "craftsmanship": "common",
     "quantity": 1,

@@ -1,7 +1,7 @@
 {
   "name": "Markov 2 Warp Engine",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_22.PNG",
   "system": {
     "hullType": [
       "light-cruiser",

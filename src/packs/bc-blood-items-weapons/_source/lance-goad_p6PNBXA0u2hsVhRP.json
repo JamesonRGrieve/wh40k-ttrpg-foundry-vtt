@@ -1,7 +1,7 @@
 {
   "name": "Lance Goad",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_02_b.png",
   "system": {
     "identifier": "lance-goad",
     "class": "melee",

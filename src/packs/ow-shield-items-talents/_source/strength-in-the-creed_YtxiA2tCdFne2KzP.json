@@ -1,7 +1,7 @@
 {
   "name": "Strength in the Creed",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_13.PNG",
   "system": {
     "category": "general",
     "source": "OW: Shield of Humanity",

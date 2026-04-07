@@ -1,7 +1,7 @@
 {
   "name": "Jaw of Bloodcharn",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_01_b.png",
   "system": {
     "identifier": "jaw-of-bloodcharn",
     "class": "melee",

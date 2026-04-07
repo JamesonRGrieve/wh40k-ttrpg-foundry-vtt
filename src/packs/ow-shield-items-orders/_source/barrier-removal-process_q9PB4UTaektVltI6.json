@@ -1,7 +1,7 @@
 {
   "name": "Barrier Removal Process",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_26.png",
   "system": {
     "typeAndAction": "Basic Order\nFull Action",
     "requirements": ".Servitor Comrade: Lathe-Pattern Breacher Servitor\nApt: None",

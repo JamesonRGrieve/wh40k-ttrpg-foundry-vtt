@@ -1,7 +1,7 @@
 {
   "name": "Sonar Sense",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_24.png",
   "system": {
     "category": "creature",
     "requirements": "",

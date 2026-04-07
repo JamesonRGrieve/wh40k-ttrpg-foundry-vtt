@@ -1,7 +1,7 @@
 {
   "name": "Dark Mirror [Curse]",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fire-arrows-jade-1.jpg",
   "system": {
     "test": "-30 Forbidden Lore (The Warp) or -30 Scholastic Lore (Occult)",
     "requirements": "Must be Dedicated to Slaanesh. Ritual involves the destruction something that belongs to the target, in full view of a representation of the target (wax effigy, picture, painting done by a relative, etc). They may choose to curse the target's bloodline, however this requires a belonging of exceptional value and significance, and Ritual Test must be made twice (both must pass).",

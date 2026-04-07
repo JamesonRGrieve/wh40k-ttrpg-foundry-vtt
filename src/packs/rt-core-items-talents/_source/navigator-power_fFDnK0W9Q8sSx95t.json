@@ -1,15 +1,15 @@
 {
   "name": "Navigator Power",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_08.png",
   "system": {
     "category": "psychic",
     "source": "Rogue Trader Core",
     "description": {
-      "value": "<p>Gain a new Navigator Power, can take this talent multiple times for different powers.</p>"
+      "value": "<p>The Explorer's trainers or natural ability allows use of an additional Navigator Power. This Talent may be chosen multiple times, each selection granting a new Power.</p>"
     },
     "tier": 1,
-    "benefit": "<p>Gain a new Navigator Power, can take this talent multiple times for different powers.</p>",
+    "benefit": "<p>The Explorer gains an additional Navigator Power. This Talent may be chosen multiple times, each selection granting a new Power.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Navigator",

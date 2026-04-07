@@ -1,7 +1,7 @@
 {
   "name": "Peer (X) (Y)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_10.png",
   "system": {
     "category": "social",
     "source": "Only War Core",

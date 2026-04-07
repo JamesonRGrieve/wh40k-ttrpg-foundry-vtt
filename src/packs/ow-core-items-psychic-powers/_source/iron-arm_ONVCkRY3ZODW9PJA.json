@@ -1,7 +1,7 @@
 {
   "name": "Iron Arm",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-acid-2.jpg",
   "system": {
     "discipline": "Biomancy",
     "prerequisites": "Endurance, Strength 35+, Toughness 35+",

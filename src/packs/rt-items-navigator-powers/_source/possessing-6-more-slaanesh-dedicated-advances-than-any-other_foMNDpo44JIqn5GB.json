@@ -1,7 +1,7 @@
 {
   "name": "Possessing 6 more Slaanesh Dedicated Advances than any other type allows Character to treat Perception Bonus as one higher for one of their 5 senses.\nPossessing 7 or more Nurgle Dedicated Advances than any other type allows Character to treat Toughness Bonus as one higher vs Toxins and Poisons.\nPossessing 8 or more Khorne Dedicated Advances than any other type allows Character to treat Weapon Skill Bonus as one higher for purposes of multiple melee hits.\nPossessing 9 or more Tzeentch Dedicated Advances than any other type allows Character to treat Willpower Bonus as one higher for Psychic Power related tests.",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/shielding-spirit-2.jpg",
   "system": {
     "useTime": null,
     "range": null,

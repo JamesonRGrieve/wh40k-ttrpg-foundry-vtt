@@ -1,7 +1,7 @@
 {
   "name": "Black Priest of Maccabeus",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_18.png",
   "system": {
     "requirements": "Cleric Career, DH Rank 4+. <10 Corruptio when career is taken, must originate or have spent time training on Maccabeus Quintus. Cannot have Mind Cleansed Background.",
     "source": "DH: Inquisitor's Handbook (Page 54)",

@@ -1,7 +1,7 @@
 {
   "name": "Gholam Curse",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-grasp-sky-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Tzeentch)",
     "prerequisites": "Tzeentch Aligned WP 50+, Psy Rating 5",

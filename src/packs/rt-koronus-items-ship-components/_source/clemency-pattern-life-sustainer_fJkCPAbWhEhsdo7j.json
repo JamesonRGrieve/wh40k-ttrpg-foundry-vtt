@@ -1,7 +1,7 @@
 {
   "name": "Clemency-pattern Life Sustainer",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_14.PNG",
   "system": {
     "hullType": [
       "transport",

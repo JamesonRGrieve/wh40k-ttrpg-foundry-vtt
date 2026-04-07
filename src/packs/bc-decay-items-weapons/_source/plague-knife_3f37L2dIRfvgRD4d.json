@@ -1,7 +1,7 @@
 {
   "name": "Plague Knife",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/daggers/dagger_10_b.PNG",
   "system": {
     "identifier": "plague-knife",
     "class": "melee",

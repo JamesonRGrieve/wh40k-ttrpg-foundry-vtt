@@ -1,7 +1,7 @@
 {
   "name": "Astartes Assault Shotgun (alt.) [Good Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/guns/gun_05_b.PNG",
   "system": {
     "identifier": "astartes-assault-shotgun-alt-good",
     "class": "basic",

@@ -1,7 +1,7 @@
 {
   "name": "Pump Shotgun (Westingkrup) \"Slayer\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/guns/gun_03_b.PNG",
   "system": {
     "identifier": "pump-shotgun-westingkrup-slayer",
     "class": "basic",

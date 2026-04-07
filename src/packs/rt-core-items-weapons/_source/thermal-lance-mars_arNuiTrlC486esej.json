@@ -1,7 +1,7 @@
 {
   "name": "Thermal Lance (Mars)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-multimelta.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_10.png",
   "system": {
     "identifier": "thermal-lance-mars",
     "class": "heavy",

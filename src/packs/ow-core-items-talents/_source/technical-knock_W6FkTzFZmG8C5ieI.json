@@ -1,7 +1,7 @@
 {
   "name": "Technical Knock",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_04.png",
   "system": {
     "identifier": "technicalKnock",
     "category": "tech",

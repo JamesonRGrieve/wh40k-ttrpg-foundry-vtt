@@ -1,7 +1,7 @@
 {
   "name": "Do Not Falter!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_16.PNG",
   "system": {
     "typeAndAction": "Basic Order\nHalf Action",
     "requirements": "Prelate-At-Arms Spec\n300xp",

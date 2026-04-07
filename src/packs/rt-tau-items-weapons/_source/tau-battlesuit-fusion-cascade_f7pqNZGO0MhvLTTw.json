@@ -1,7 +1,7 @@
 {
   "name": "Tau Battlesuit Fusion Cascade",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_01.png",
   "system": {
     "identifier": "tau-battlesuit-fusion-cascade",
     "class": "heavy",

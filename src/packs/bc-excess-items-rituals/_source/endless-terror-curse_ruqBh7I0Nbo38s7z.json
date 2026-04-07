@@ -1,7 +1,7 @@
 {
   "name": "Endless Terror [Curse]",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-orange-2.jpg",
   "system": {
     "test": "-20 Forbidden Lore (The Warp) or -20 Scholastic Lore (Occult)",
     "requirements": "Character must know something of their target's fears, be it a figure or entity that terrifies them, someone from their past, something they fear losing, an irrational phobia, etc. They may choose to curse the target's bloodline, requiring the Ritual Test to be made twice (both must pass).",

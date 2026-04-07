@@ -2,7 +2,7 @@
   "_id": "o7uq4koawj6o335s",
   "name": "Impact Critical - Arm",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/slice-acid-3.jpg",
   "system": {
     "identifier": "crit_impact_arm",
     "damageType": "impact",

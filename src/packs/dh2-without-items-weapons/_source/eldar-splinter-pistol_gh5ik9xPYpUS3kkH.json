@@ -1,7 +1,7 @@
 {
   "name": "Eldar Splinter Pistol",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_07.png",
   "system": {
     "identifier": "eldar-splinter-pistol",
     "class": "pistol",

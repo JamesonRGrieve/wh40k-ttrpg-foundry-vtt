@@ -1,7 +1,7 @@
 {
   "name": "Dominate (HB: Mass Compel)",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-magenta-3.jpg",
   "system": {
     "discipline": "Telepathy",
     "prerequisites": "Willpower 40+",

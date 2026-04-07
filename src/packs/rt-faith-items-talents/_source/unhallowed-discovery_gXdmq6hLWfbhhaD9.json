@@ -1,7 +1,7 @@
 {
   "name": "Unhallowed Discovery",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_02.png",
   "system": {
     "identifier": "unhallowedDiscovery",
     "category": "psychic",

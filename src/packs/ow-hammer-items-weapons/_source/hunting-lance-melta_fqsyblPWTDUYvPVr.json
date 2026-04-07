@@ -1,7 +1,7 @@
 {
   "name": "Hunting Lance (Melta)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_07_b.PNG",
   "system": {
     "identifier": "hunting-lance-melta",
     "class": "melee",

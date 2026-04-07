@@ -1,7 +1,7 @@
 {
   "name": "Evil Eye",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-orange-2.jpg",
   "system": {
     "useTime": "Half Action",
     "range": "1m x Perception Bonus",

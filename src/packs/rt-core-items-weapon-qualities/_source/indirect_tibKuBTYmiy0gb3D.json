@@ -1,0 +1,21 @@
+{
+  "name": "Indirect",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_19.PNG",
+  "system": {
+    "identifier": "indirect",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 4</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>4</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tibKuBTYmiy0gb3D"
+}

@@ -1,23 +1,39 @@
 {
   "name": "Manacles",
   "type": "gear",
-  "img": "icons/svg/item-bag.svg",
+  "img": "icons/svg/backpack.svg",
   "system": {
+    "category": "tools",
     "weight": 1,
-    "availability": "common",
-    "quantity": 1,
+    "availability": "plentiful",
+    "craftsmanship": "common",
     "cost": {
-      "value": 15,
+      "value": 35,
       "currency": "throne"
     },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
+    "quantity": 1,
     "description": {
-      "value": "<p>Heavy Imperial-standard restraints, typically made of reinforced steel. Require a Challenging (+0) Strength test or a Hard (-20) Security test to escape. Good-quality manacles increase the difficulty by one step.</p>"
+      "value": "<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 35 T</p>",
+      "chat": "",
+      "summary": "Used for restraining people."
     },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "",
+    "duration": "",
     "notes": "",
-    "source": "DH2e Core",
+    "identifier": "manacles",
     "gameSystems": [
       "dh2e"
     ]

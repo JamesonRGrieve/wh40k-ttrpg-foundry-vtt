@@ -1,7 +1,7 @@
 {
   "name": "Adeptus Arbites",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_16.PNG",
   "system": {
     "identifier": "adeptus-arbites",
     "step": "background",

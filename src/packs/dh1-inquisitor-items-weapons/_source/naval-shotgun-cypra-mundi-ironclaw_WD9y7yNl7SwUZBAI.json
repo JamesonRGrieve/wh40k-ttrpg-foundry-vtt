@@ -1,7 +1,7 @@
 {
   "name": "Naval Shotgun (Cypra Mundi) \"Ironclaw\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/guns/gun_01_b.PNG",
   "system": {
     "identifier": "naval-shotgun-cypra-mundi-ironclaw",
     "class": "basic",

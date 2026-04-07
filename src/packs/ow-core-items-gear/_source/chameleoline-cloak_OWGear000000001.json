@@ -1,0 +1,44 @@
+{
+  "name": "Chameleoline Cloak",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "clothing",
+    "weight": 0.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Made from mimic fibres that blend the wearer's coloration into their surroundings.</p><p><b>Effect:</b> +20 to Stealth Tests. If the wearer remains stationary, Ballistic Skill Tests to target them suffer a -30 penalty.</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Made from mimic fibres that blend the wearer's coloration into their surroundings."
+    },
+    "source": {
+      "book": "Only War Core",
+      "page": "197",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "+20 to Stealth Tests. If the wearer remains stationary, Ballistic Skill Tests to target them suffer a -30 penalty.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "chameleoline-cloak",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OWGear000000001X"
+}

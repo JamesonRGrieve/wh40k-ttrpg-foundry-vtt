@@ -1,7 +1,7 @@
 {
   "name": "Luminen Blast",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_20.PNG",
   "system": {
     "identifier": "luminenBlast",
     "category": "combat",

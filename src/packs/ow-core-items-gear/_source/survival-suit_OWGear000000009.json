@@ -1,0 +1,44 @@
+{
+  "name": "Survival Suit",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "clothing",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>An insulated suit for extreme environments with hydration reclamation and temperature control.</p><p><b>Effect:</b> +20 to Tests against extreme environments. Good and Best Craftsmanship grant +25 and +30 respectively. Poor suits only last three days before needing removal from the environment to recharge.</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "An insulated suit for extreme environments with hydration reclamation and temperature control."
+    },
+    "source": {
+      "book": "Only War Core",
+      "page": "198",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "+20 to Tests against extreme environments. Good and Best Craftsmanship grant +25 and +30 respectively. Poor suits only last three days before needing removal from the environment to recharge.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "survival-suit",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OWGear000000009X"
+}

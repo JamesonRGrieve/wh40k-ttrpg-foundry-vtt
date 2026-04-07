@@ -1,7 +1,7 @@
 {
   "name": "Necron Hyperphase Sword",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_05_b.PNG",
   "system": {
     "identifier": "necron-hyperphase-sword",
     "class": "melee",

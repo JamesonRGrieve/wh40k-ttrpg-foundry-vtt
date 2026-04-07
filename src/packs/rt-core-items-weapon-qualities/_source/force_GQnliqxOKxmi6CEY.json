@@ -1,0 +1,21 @@
+{
+  "name": "Force*",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_04.png",
+  "system": {
+    "identifier": "force",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 20</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>20</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GQnliqxOKxmi6CEY"
+}

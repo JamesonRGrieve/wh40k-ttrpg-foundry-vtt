@@ -1,7 +1,7 @@
 {
   "name": "Shielded by the Warp",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-sky-2.jpg",
   "system": {
     "discipline": "xRenegade",
     "prerequisites": "Desperate Transmogrification\nOW: Psy Rating 6",

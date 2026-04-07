@@ -1,7 +1,7 @@
 {
   "name": "Step 1: Enter the Warp: Navigator makes Navigation (Warp) Test to determine travel time, success gets rough estimate of travel time based on Degrees of Success.\nGM selects travel time, if Navigation (Warp) Test passed, arrive in this amount of time, if 2+ DoS, in half the time. If failed test by 2+ DoF, Double the time and get no estimate. Entering the warp happens regardless of pass or fail.\nExternal effects such as warp storms or Navigator charts may alter test difficulty. For example, if the Astronomicon is blocked out, get -30 to roll.",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rip-acid-3.jpg",
   "system": {
     "useTime": null,
     "range": null,

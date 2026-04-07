@@ -1,7 +1,7 @@
 {
   "name": "Savant",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/brain.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_09.png",
   "system": {
     "identifier": "savant",
     "step": "birthright",

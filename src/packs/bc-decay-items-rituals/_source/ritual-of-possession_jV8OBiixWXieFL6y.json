@@ -1,7 +1,7 @@
 {
   "name": "Ritual of Possession",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fire-arrows-royal-1.jpg",
   "system": {
     "test": "-20 Forbidden Lore (Daemonology) ",
     "requirements": "A Living being to act as a vessel to draw the Daemon in to, doesn't need to be human, but at least sentient (or do they mean sapient?). The Ritual Leader chooses the Daemon they wish to summon and constructs the ritual appropriately.",

@@ -1,7 +1,7 @@
 {
   "name": "Elutrian Devotee",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_25.png",
   "system": {
     "requirements": "Navigator, RT Rank 1+. Had contact with the Elutrian Confederecy and been initiated into the teachings of the order.",
     "source": "RT: The Navis Primer\n(Page 76)",

@@ -1,7 +1,7 @@
 {
   "name": "Hive World",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/hive.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_32.png",
   "system": {
     "identifier": "hive-world",
     "step": "homeWorld",

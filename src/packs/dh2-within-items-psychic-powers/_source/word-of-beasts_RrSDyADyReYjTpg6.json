@@ -1,7 +1,7 @@
 {
   "name": "Word of Beasts",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rip-acid-2.jpg",
   "system": {
     "discipline": "wMinor Power 2E",
     "prerequisites": "Fellowship 35",

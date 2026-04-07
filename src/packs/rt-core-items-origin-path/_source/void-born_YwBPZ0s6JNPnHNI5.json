@@ -1,7 +1,7 @@
 {
   "name": "Void Born",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/spaceship.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_12.PNG",
   "system": {
     "identifier": "void-born",
     "step": "homeWorld",

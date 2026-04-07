@@ -1,7 +1,7 @@
 {
   "name": "Planet-Bound for Millenia",
   "type": "shipUpgrade",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_26.png",
   "system": {
     "spCost": 3,
     "shipAvailability": "All Ships",

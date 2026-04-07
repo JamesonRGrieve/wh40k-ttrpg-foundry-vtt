@@ -1,7 +1,7 @@
 {
   "name": "New Horizons",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/sunrise.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_10.png",
   "system": {
     "identifier": "new-horizons",
     "step": "lureOfTheVoid",

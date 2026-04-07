@@ -1,7 +1,7 @@
 {
   "name": "Inferno Pistol",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-melta.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_10.png",
   "system": {
     "identifier": "inferno-pistol",
     "class": "pistol",

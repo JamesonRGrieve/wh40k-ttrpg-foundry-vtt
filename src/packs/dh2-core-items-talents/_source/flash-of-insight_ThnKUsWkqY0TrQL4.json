@@ -1,7 +1,7 @@
 {
   "name": "Flash of Insight",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_01.png",
   "system": {
     "category": "general",
     "source": "DH2e Core",

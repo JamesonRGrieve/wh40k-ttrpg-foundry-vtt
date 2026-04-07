@@ -1,7 +1,7 @@
 {
   "name": "Child of the Creed",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/holy-symbol.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_06.png",
   "system": {
     "identifier": "child-of-the-creed",
     "step": "birthright",

@@ -1,7 +1,7 @@
 {
   "name": "Penitent",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_32.png",
   "system": {
     "identifier": "penitent",
     "step": "role",
@@ -80,5 +80,5 @@
   },
   "effects": [],
   "flags": {},
-  "_id": "DH2WPenRle00003"
+  "_id": "DH2WPenRle00003A"
 }

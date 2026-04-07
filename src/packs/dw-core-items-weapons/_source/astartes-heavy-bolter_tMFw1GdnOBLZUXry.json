@@ -1,7 +1,7 @@
 {
   "name": "Astartes Heavy Bolter",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-bolter.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_04.png",
   "system": {
     "identifier": "astartes-heavy-bolter",
     "class": "heavy",

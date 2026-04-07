@@ -1,7 +1,7 @@
 {
   "name": "Autopistol (Lyndwyrm) \"Volcano\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_20.png",
   "system": {
     "identifier": "autopistol-lyndwyrm-volcano",
     "class": "pistol",

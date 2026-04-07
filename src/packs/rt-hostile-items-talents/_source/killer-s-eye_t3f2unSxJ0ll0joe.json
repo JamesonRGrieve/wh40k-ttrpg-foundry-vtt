@@ -1,7 +1,7 @@
 {
   "name": "Killer's Eye",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_33.png",
   "system": {
     "identifier": "killersEye",
     "category": "combat",

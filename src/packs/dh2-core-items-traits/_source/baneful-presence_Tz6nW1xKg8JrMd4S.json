@@ -1,7 +1,7 @@
 {
   "name": "Baneful Presence (X)",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_12.png",
   "system": {
     "category": "creature",
     "requirements": "",

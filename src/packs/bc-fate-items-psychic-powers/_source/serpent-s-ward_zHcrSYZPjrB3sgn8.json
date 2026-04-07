@@ -1,7 +1,7 @@
 {
   "name": "Serpent's Ward",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/runes-orange-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Slaanesh)",
     "prerequisites": "Slaanesh Aligned, Psy Rating 5, Infamy 40+",

@@ -1,7 +1,7 @@
 {
   "name": "Get Them!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_04.png",
   "system": {
     "typeAndAction": "Sweeping Order\nFree Action",
     "requirements": "Sergeant Spec\n200xp",

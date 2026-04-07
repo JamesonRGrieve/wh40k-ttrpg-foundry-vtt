@@ -1,7 +1,7 @@
 {
   "name": "Unarmed Warrior",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_24.png",
   "system": {
     "identifier": "unarmedWarrior",
     "category": "combat",

@@ -1,7 +1,7 @@
 {
   "name": "Dynastic Warrant (Child of Dynasty)",
   "type": "talent",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_20.png",
   "system": {
     "identifier": "dynastic-warrant-child-of-dynasty",
     "category": "origin",

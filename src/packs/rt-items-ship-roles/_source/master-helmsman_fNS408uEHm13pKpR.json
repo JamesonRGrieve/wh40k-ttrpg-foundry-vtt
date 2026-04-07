@@ -1,7 +1,7 @@
 {
   "name": "Master Helmsman",
   "type": "shipRole",
-  "img": "icons/svg/crew.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_02.png",
   "system": {
     "rank": 3,
     "purpose": "Directs Vessel movements and the crew that make it so.",

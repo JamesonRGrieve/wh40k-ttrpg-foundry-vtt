@@ -1,7 +1,7 @@
 {
   "name": "Xenos Weapon Proficiency (Ork)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_32.png",
   "system": {
     "identifier": "xenosWeaponProficiencyOrk",
     "category": "combat",

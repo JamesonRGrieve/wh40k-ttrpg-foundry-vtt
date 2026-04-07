@@ -1,7 +1,7 @@
 {
   "name": "Contact Network",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_23.png",
   "system": {
     "identifier": "contactNetwork",
     "category": "social",

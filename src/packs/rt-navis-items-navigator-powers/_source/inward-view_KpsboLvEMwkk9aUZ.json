@@ -1,7 +1,7 @@
 {
   "name": "Inward View",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/ice-sky-3.jpg",
   "system": {
     "useTime": "5 Minutes",
     "range": "Self",

@@ -1,7 +1,7 @@
 {
   "name": "Hellstrike Missiles",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-default.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_01_b.png",
   "system": {
     "identifier": "hellstrike-missiles",
     "class": "melee",

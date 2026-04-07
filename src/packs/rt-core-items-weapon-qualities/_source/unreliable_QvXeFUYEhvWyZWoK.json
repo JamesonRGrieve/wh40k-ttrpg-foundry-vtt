@@ -1,0 +1,21 @@
+{
+  "name": "Unreliable",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_09.png",
+  "system": {
+    "identifier": "unreliable",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 53</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>53</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "QvXeFUYEhvWyZWoK"
+}

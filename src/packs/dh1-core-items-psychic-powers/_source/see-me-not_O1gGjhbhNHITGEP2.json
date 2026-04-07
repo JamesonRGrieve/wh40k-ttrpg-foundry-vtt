@@ -1,7 +1,7 @@
 {
   "name": "See Me Not",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-water-air-1.jpg",
   "system": {
     "discipline": "Telepathy",
     "prerequisites": "-",

@@ -1,7 +1,7 @@
 {
   "name": "! Default: Shot",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammo_10.png",
   "system": {
     "identifier": "-default-shot",
     "weaponTypes": [

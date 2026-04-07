@@ -315,20 +315,16 @@ export default function EnhancedDragDropMixin(Base) {
             event.stopPropagation();
 
             const zone = event.currentTarget;
-            const zoneType = zone.dataset.dropZone;
 
-            // Add drag-over visual feedback
-            if (zoneType === 'personal' || zoneType === 'ship') {
-                zone.classList.add('wh40k-drag-over');
-                event.dataTransfer.dropEffect = 'move';
-            }
-            // Check if this is a valid drop for equipment zones
-            else if (zone.classList.contains('drop-valid')) {
-                zone.classList.add('drop-hover');
-                event.dataTransfer.dropEffect = 'move';
-            } else if (zone.classList.contains('drop-invalid')) {
+            // Check if this is explicitly invalid
+            if (zone.classList.contains('drop-invalid')) {
                 event.dataTransfer.dropEffect = 'none';
+                return;
             }
+
+            // Add drag-over visual feedback for all drop zones
+            zone.classList.add('wh40k-drag-over');
+            event.dataTransfer.dropEffect = 'copy';
         }
 
         /* -------------------------------------------- */

@@ -1,7 +1,7 @@
 {
   "name": "Field Treatment",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_28.png",
   "system": {
     "typeAndAction": "Basic Order\nHalf Action",
     "requirements": "Medic Spec\n300xp",

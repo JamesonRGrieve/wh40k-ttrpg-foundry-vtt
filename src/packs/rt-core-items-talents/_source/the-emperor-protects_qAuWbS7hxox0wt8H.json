@@ -1,7 +1,7 @@
 {
   "name": "The Emperor Protects",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_16.PNG",
   "system": {
     "identifier": "theEmperorProtects",
     "category": "leadership",

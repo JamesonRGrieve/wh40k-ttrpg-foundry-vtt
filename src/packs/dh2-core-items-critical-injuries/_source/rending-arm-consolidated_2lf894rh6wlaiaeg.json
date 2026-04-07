@@ -2,7 +2,7 @@
   "_id": "2lf894rh6wlaiaeg",
   "name": "Rending Critical - Arm",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-blue-3.jpg",
   "system": {
     "identifier": "crit_rending_arm",
     "damageType": "rending",

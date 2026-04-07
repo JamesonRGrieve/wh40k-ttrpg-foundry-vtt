@@ -1,15 +1,15 @@
 {
   "name": "Excessive Wealth",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_16.PNG",
   "system": {
     "category": "general",
     "source": "Black Crusade Core",
     "description": {
-      "value": "<p>Character adds +10 to their Infamy when making Acquisition Tests using Infamy.</p>"
+      "value": "<p>For whatever reason, the character has more resources and hard currency than normal, perhaps because he has been granted a large boon by his secret masters, has found a cache of hidden supplies in the wastes of the Vortex, or has simply stolen it.</p>"
     },
     "tier": 1,
-    "benefit": "<p>Character adds +10 to their Infamy when making Acquisition Tests using Infamy.</p>",
+    "benefit": "<p>The character adds +10 to his Infamy when making Acquisition Tests using Infamy.</p>",
     "aptitudes": [
       "Slaanesh"
     ],
@@ -52,8 +52,8 @@
       "traits": [],
       "specialAbilities": [
         {
-          "name": "Increased Profit Factor",
-          "description": "<p>Your starting Profit Factor is increased by +2.</p>"
+          "name": "Additional Resources",
+          "description": "<p>The character adds +10 to his Infamy when making Acquisition Tests using Infamy.</p>"
         }
       ]
     },

@@ -1,7 +1,7 @@
 {
   "name": "Chameleon",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/ice-sky-1.jpg",
   "system": {
     "discipline": "wMinor Power",
     "prerequisites": "Gain Minor Power Talent",

@@ -1,7 +1,7 @@
 {
   "name": "M41 Multi-Laser",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-lascannon.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_01.png",
   "system": {
     "identifier": "m41-multi-laser",
     "class": "heavy",

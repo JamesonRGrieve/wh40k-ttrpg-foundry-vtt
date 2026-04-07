@@ -1,7 +1,7 @@
 {
   "name": "Summon Slaanesh's Handmaiden",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rip-jade-1.jpg",
   "system": {
     "test": "-20 Forbidden Lore (Daemonology) ",
     "requirements": "Basic Slaanesh Ritual to summon a Daemonette. Requires Site of great Debauchery or excess. Summoning Circle marked by Slaaneshi Symbols with Braziers of Hallucinogenic incense and intoxicating elixirs are spread around the ritual site. Six Adult Humans are made delirious through narcotics, slashed with anointed knives, marked with daemonic runes, then murdered. ",

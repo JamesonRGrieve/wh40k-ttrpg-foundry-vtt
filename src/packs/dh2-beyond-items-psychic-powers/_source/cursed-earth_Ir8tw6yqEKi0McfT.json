@@ -1,7 +1,7 @@
 {
   "name": "Cursed Earth",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/link-royal-1.jpg",
   "system": {
     "discipline": "Malefic Daemonology",
     "prerequisites": "Willpower 40,\nSummoning",

@@ -1,7 +1,7 @@
 {
   "name": "Bastion of the Imperium",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-red-2.jpg",
   "system": {
     "discipline": "Soul Ward (Divine Grace)",
     "prerequisites": "Heresy's Price",

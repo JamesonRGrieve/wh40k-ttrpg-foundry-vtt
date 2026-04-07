@@ -1,7 +1,7 @@
 {
   "name": "Whispers",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_33.png",
   "system": {
     "category": "general",
     "source": "Rogue Trader Core",

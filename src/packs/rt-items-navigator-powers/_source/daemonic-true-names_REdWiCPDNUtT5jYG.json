@@ -1,7 +1,7 @@
 {
   "name": "Daemonic True Names",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fire-arrows-1.jpg",
   "system": {
     "useTime": "Daemonic True Names are utterly incomprehensible to mortals, and the power that name gives over the Daemon makes finding out what the name is all the harder. Ture Names are longer for more powerful daemons.",
     "range": null,

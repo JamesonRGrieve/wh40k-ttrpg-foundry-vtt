@@ -1,7 +1,7 @@
 {
   "name": "Black Sleep",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/enchant-red-1.jpg",
   "system": {
     "discipline": "Voidfrost\n(Cryokinesis)",
     "prerequisites": "Embrace of Emptiness",

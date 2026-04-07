@@ -1,7 +1,7 @@
 {
   "name": "Missile Launcher",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_08.png",
   "system": {
     "identifier": "missile-launcher",
     "class": "heavy",

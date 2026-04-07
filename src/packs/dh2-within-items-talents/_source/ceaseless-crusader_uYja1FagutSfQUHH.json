@@ -1,7 +1,7 @@
 {
   "name": "Ceaseless Crusader",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_06.png",
   "system": {
     "category": "general",
     "source": "DH 2E: Enemies Within",

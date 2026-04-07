@@ -1,7 +1,7 @@
 {
   "name": "Miloslav H-616.b Warp Engine",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_18.png",
   "system": {
     "hullType": [
       "light-cruiser",

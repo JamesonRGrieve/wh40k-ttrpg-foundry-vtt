@@ -1,7 +1,7 @@
 {
   "name": "Weaken Veil",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-grasp-air-3.jpg",
   "system": {
     "discipline": "wMinor Power",
     "prerequisites": "Gain Minor Power Talent",

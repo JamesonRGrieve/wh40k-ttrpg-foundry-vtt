@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Razorflail",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/flail/flail_02_b.PNG",
   "system": {
     "identifier": "dark-eldar-razorflail",
     "class": "melee",

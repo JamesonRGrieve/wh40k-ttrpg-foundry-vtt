@@ -1,7 +1,7 @@
 {
   "name": "Tau Pathfinder",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_26.png",
   "system": {
     "requirements": "Tau, RT Rank 2+, Agility 35+, Nerves of Steel and Silent Move Talents. Proven in the art of stealth by demonstrating some kind of aptitude in it.",
     "source": "RT: Tau Character Guide (Page 20)",

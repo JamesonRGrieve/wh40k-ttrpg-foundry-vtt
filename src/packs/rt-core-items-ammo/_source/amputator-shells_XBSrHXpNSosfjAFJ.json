@@ -1,7 +1,7 @@
 {
   "name": "Amputator Shells",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammo_14.png",
   "system": {
     "identifier": "amputator-shells",
     "weaponTypes": [

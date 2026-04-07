@@ -1,7 +1,7 @@
 {
   "name": "Astropath Transcendant",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/psychic-waves.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_04.png",
   "system": {
     "identifier": "astropath-transcendant",
     "step": "career",

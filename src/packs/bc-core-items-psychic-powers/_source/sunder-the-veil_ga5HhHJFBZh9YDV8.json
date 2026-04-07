@@ -1,7 +1,7 @@
 {
   "name": "Sunder the Veil",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/ice-sky-2.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Exalted Powers)",
     "prerequisites": "Psy Rating 5, Forbidden Lore (Warp) +20",

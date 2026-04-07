@@ -1,7 +1,7 @@
 {
   "name": "Manhunter",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_24.png",
   "system": {
     "requirements": "Any career, RT Rank 1+. Must have murdered or imprisoned another person for personal or financial gain (GM Discretion for taking at Rank 1).",
     "source": "RT: Hostile Acquisitions \n(Page 40)",

@@ -1,7 +1,7 @@
 {
   "name": "Infused Knowledge",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_35.png",
   "system": {
     "identifier": "infusedKnowledge",
     "category": "knowledge",

@@ -1,7 +1,7 @@
 {
   "name": "Grand Oratory",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_09.png",
   "system": {
     "category": "social",
     "source": "RT: Hostile Acquisitions",

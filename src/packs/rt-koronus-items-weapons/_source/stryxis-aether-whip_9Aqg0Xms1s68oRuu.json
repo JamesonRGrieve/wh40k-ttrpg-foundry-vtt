@@ -1,7 +1,7 @@
 {
   "name": "Stryxis Aether Whip",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/flail/flail_02_b.PNG",
   "system": {
     "identifier": "stryxis-aether-whip",
     "class": "melee",

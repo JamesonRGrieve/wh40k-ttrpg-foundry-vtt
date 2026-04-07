@@ -1,7 +1,7 @@
 {
   "name": "Navigator Houses",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-blue-3.jpg",
   "system": {
     "useTime": null,
     "range": null,

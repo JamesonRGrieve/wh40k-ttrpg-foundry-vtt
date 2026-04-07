@@ -1,7 +1,7 @@
 {
   "name": "Whispers Unheard",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_12.PNG",
   "system": {
     "category": "elite",
     "requirements": "15+ Insanity Points, Elite Advance",

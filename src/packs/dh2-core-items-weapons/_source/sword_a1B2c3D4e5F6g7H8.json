@@ -1,7 +1,7 @@
 {
   "name": "Sword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_11_b.PNG",
   "system": {
     "identifier": "sword",
     "class": "melee",

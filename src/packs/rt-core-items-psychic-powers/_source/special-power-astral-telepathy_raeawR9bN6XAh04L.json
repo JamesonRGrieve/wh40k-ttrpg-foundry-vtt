@@ -1,7 +1,7 @@
 {
   "name": "Special Power: Astral Telepathy",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/explosion-magenta-1.jpg",
   "system": {
     "discipline": "Telepathy\n(Communication)",
     "prerequisites": "Soul-Bound to the Emperor (Astropaths)",

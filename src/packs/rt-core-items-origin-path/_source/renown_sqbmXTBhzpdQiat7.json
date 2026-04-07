@@ -1,7 +1,7 @@
 {
   "name": "Renown",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/trumpet-flag.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_22.PNG",
   "system": {
     "identifier": "renown",
     "step": "motivation",

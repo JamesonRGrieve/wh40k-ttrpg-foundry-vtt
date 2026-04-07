@@ -1,7 +1,7 @@
 {
   "name": "Overseer",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_12.PNG",
   "system": {
     "typeAndAction": "Basic Order\nFull Action",
     "requirements": "Sanctioned Psyker Spec\n300xp",

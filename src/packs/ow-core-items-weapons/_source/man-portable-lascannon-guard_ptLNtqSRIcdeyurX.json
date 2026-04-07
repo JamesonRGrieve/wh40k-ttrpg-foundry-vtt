@@ -1,7 +1,7 @@
 {
   "name": "Man Portable Lascannon (Guard)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-lascannon.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_09.png",
   "system": {
     "identifier": "man-portable-lascannon-guard",
     "class": "heavy",

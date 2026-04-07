@@ -1,7 +1,7 @@
 {
   "name": "Chorus of the Righteous",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-red-3.jpg",
   "system": {
     "discipline": "Soul Ward (Divine Grace)",
     "prerequisites": "Know Thy Place",

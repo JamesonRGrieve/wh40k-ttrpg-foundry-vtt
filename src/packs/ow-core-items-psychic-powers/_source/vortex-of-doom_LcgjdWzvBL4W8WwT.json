@@ -1,7 +1,7 @@
 {
   "name": "Vortex of Doom",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/runes-blue-3.jpg",
   "system": {
     "discipline": "Telekinesis",
     "prerequisites": "Psy 5, Crush,Obj Mechanicum, Shockwave",

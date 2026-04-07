@@ -1,7 +1,7 @@
 {
   "name": "Line Up the Shot",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_22.PNG",
   "system": {
     "typeAndAction": "Basic Order\nHalf Action",
     "requirements": "Tank Ace Spec\n400xp",

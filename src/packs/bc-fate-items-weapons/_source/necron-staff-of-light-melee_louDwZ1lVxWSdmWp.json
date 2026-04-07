@@ -1,7 +1,7 @@
 {
   "name": "Necron Staff of Light \n[Melee]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/staves/stave_10_b.PNG",
   "system": {
     "identifier": "necron-staff-of-light-melee",
     "class": "melee",

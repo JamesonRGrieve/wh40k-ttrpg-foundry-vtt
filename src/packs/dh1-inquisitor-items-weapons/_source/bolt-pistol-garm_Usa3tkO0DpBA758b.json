@@ -1,7 +1,7 @@
 {
   "name": "Bolt Pistol (Garm)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_06.png",
   "system": {
     "identifier": "bolt-pistol-garm",
     "class": "pistol",

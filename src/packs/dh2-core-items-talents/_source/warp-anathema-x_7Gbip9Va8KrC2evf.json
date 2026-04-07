@@ -1,7 +1,7 @@
 {
   "name": "Warp Anathema (X)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_34.PNG",
   "system": {
     "category": "psychic",
     "source": "DH2e Core",

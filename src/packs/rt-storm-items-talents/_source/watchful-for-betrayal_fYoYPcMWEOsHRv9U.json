@@ -1,7 +1,7 @@
 {
   "name": "Watchful for Betrayal",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_31.png",
   "system": {
     "identifier": "watchfulForBetrayal",
     "category": "combat",

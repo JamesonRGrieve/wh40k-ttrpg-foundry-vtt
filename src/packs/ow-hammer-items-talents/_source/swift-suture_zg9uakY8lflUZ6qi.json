@@ -1,7 +1,7 @@
 {
   "name": "Swift Suture",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_06.png",
   "system": {
     "identifier": "swiftSuture",
     "category": "knowledge",

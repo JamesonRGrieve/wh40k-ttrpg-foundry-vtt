@@ -1,7 +1,7 @@
 {
   "name": "\"Stingray\" Rifle (Anoxis)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_02.png",
   "system": {
     "identifier": "stingray-rifle-anoxis",
     "class": "basic",

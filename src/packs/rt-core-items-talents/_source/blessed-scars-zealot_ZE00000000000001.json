@@ -1,7 +1,7 @@
 {
   "name": "Blessed Scars (Zealot)",
   "type": "talent",
-  "img": "icons/svg/fire.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_08.png",
   "system": {
     "identifier": "blessed-scars-zealot",
     "category": "origin",

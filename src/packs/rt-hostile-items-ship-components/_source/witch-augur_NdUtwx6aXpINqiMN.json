@@ -1,7 +1,7 @@
 {
   "name": "Witch Augur",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_20.PNG",
   "system": {
     "hullType": [
       "all"

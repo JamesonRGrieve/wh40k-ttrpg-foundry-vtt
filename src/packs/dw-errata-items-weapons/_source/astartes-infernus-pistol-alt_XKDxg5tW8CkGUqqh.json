@@ -1,7 +1,7 @@
 {
   "name": "Astartes Infernus Pistol (alt.)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-melta.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_19.png",
   "system": {
     "identifier": "astartes-infernus-pistol-alt",
     "class": "pistol",

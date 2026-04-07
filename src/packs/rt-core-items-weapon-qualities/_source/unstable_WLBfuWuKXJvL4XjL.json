@@ -1,0 +1,21 @@
+{
+  "name": "Unstable",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_30.png",
+  "system": {
+    "identifier": "unstable",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 6</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>6</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WLBfuWuKXJvL4XjL"
+}

@@ -1,7 +1,7 @@
 {
   "name": "Scourge of the Red Tide",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/vines-plain-3.jpg",
   "system": {
     "useTime": "Full Action",
     "range": "15m (or 5m in fog/mist, etc).",

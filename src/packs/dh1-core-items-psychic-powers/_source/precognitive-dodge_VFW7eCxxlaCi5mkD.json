@@ -1,7 +1,7 @@
 {
   "name": "Precognitive Dodge",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/light-royal-3.jpg",
   "system": {
     "discipline": "Divination",
     "prerequisites": "-",

@@ -1,7 +1,7 @@
 {
   "name": "Reaver",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_01.png",
   "system": {
     "requirements": "Any Human, RT Rank 2+, or RT Rank 1 if Criminal/Darkness/Dark Voyage Origin (GM Discretion, gain 14+1d10 Insanity). 15+ Insanity Points, captured and looted another ship. Killed at least one other person in cold blood. ",
     "source": "RT: Hostile Acquisitions\n(Page 42)",

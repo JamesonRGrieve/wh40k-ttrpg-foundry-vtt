@@ -1,7 +1,7 @@
 {
   "name": "Argonite Whistler",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_09.png",
   "system": {
     "identifier": "argonite-whistler",
     "class": "pistol",

@@ -1,7 +1,7 @@
 {
   "name": "Gate Maker [Melta]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_20.png",
   "system": {
     "identifier": "gate-maker-melta",
     "class": "basic",

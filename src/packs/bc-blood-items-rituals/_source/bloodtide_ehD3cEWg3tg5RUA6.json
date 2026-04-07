@@ -1,7 +1,7 @@
 {
   "name": "Bloodtide",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/light-sky-1.jpg",
   "system": {
     "test": "-20 Forbidden Lore(The Warp)",
     "requirements": "Character must be dedicated to Khorne and possess Forbidden Lore(The Warp). Should be performed in an area of great violence. Requires an altar ideally made of the bones of fresh victims. Finally, a direction and destination for the result of this ritual must be known. Add +10 for Schol. Lore(Occult or Legend), and +5 per ritual sacrifice performed during the ritual.",

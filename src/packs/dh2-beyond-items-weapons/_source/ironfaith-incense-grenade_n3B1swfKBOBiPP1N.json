@@ -1,7 +1,7 @@
 {
   "name": "Ironfaith Incense Grenade",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
+  "img": "systems/wh40k-rpg/icons/items/grenade/grenade_08.png",
   "system": {
     "identifier": "ironfaith-incense-grenade",
     "class": "thrown",

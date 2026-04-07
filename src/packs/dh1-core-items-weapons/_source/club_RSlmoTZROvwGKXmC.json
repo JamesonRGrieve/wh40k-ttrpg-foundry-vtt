@@ -1,7 +1,7 @@
 {
   "name": "Club",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_01_b.png",
   "system": {
     "identifier": "club",
     "class": "melee",

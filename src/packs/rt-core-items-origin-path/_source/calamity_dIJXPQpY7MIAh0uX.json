@@ -1,7 +1,7 @@
 {
   "name": "Calamity",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/meteor-impact.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_22.PNG",
   "system": {
     "identifier": "calamity",
     "step": "trialsAndTravails",

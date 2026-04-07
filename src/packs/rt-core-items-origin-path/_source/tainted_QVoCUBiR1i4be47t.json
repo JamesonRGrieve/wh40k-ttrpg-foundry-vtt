@@ -1,7 +1,7 @@
 {
   "name": "Tainted",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/biohazard.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_26.png",
   "system": {
     "identifier": "tainted",
     "step": "lureOfTheVoid",

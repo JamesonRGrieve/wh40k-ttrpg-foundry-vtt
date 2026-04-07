@@ -1,7 +1,7 @@
 {
   "name": "Fit For Purpose (Forge World)",
   "type": "talent",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_08.png",
   "system": {
     "identifier": "fit-for-purpose-forge-world",
     "category": "origin",

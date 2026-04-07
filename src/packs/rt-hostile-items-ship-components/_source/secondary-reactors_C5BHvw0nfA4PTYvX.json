@@ -1,7 +1,7 @@
 {
   "name": "Secondary Reactors",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_08.png",
   "system": {
     "hullType": [
       "all"

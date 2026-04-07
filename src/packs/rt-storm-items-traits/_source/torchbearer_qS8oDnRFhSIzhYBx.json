@@ -1,7 +1,7 @@
 {
   "name": "Torchbearer",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_26.png",
   "system": {
     "requirements": "Missionary, RT Rank 2+, Toughness 35+, Willpower 35+, Sound Constituion (X) Talent.",
     "source": "RT: Into the Storm\n(Page 98)",

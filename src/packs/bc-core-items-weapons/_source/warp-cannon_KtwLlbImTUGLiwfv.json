@@ -1,7 +1,7 @@
 {
   "name": "Warp Cannon",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_05.png",
   "system": {
     "identifier": "warp-cannon",
     "class": "heavy",

@@ -1,7 +1,7 @@
 {
   "name": "Make It Stop!",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_21.PNG",
   "system": {
     "category": "psychic",
     "source": "RT: The Navis Primer",

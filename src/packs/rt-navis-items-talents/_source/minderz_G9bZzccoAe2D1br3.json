@@ -1,7 +1,7 @@
 {
   "name": "Minderz",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_06.png",
   "system": {
     "category": "psychic",
     "source": "RT: The Navis Primer",

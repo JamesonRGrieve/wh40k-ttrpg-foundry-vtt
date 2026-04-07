@@ -1,7 +1,7 @@
 {
   "name": "Adeptus Astra Telepathica",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_16.png",
   "system": {
     "identifier": "adeptus-astra-telepathica",
     "step": "background",

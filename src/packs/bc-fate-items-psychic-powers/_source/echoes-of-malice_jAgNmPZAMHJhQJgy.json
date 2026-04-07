@@ -1,7 +1,7 @@
 {
   "name": "Echoes of Malice",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-air-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Unaligned)",
     "prerequisites": "Psy Rating 4",

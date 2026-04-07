@@ -1,7 +1,7 @@
 {
   "name": "Heavy Bolter",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_02.png",
   "system": {
     "identifier": "heavy-bolter",
     "class": "heavy",
@@ -20,7 +20,7 @@
       "rateOfFire": {
         "single": false,
         "semi": 0,
-        "full": 10
+        "full": 6
       }
     },
     "damage": {
@@ -38,8 +38,8 @@
       "type": "bolt-shell"
     },
     "reload": "2Full",
-    "weight": 35,
-    "availability": "rare",
+    "weight": 40,
+    "availability": "very-rare",
     "craftsmanship": "common",
     "quantity": 1,
     "cost": {

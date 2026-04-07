@@ -1,7 +1,7 @@
 {
   "name": "Naval Pistol (Mars)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_21.png",
   "system": {
     "identifier": "naval-pistol-mars",
     "class": "pistol",

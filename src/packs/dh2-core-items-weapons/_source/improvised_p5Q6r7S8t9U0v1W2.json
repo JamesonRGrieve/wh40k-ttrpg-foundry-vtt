@@ -1,7 +1,7 @@
 {
   "name": "Improvised",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_01_b.png",
   "system": {
     "identifier": "improvised",
     "class": "melee",

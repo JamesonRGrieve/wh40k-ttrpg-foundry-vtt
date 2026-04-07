@@ -1,7 +1,7 @@
 {
   "name": "Inferno Pistol",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_10.png",
   "system": {
     "identifier": "inferno-pistol",
     "class": "pistol",
@@ -26,7 +26,7 @@
     "damage": {
       "formula": "2d10",
       "type": "energy",
-      "bonus": 4,
+      "bonus": 10,
       "penetration": 12
     },
     "special": [

@@ -1,0 +1,190 @@
+{
+  "name": "Exorcised",
+  "type": "originPath",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_12.PNG",
+  "system": {
+    "identifier": "exorcised",
+    "step": "background",
+    "stepIndex": 2,
+    "description": {
+      "value": "<h2>Exorcised</h2><p>The exorcised have survived one of the Imperium's most terrible ordeals: possession by a daemon and the violent reclamation of their own soul. The experience leaves scars, habits, and insights no ordinary citizen can truly share. Though forever changed by what entered them, they can turn that trauma into a weapon against the Enemy Beyond.</p><h3>Background Aptitudes</h3><p>Defence or Knowledge</p><h3>Starting Skills</h3><p>Awareness, Deceive or Inquiry, Dodge, Forbidden Lore (Daemonology), Intimidate or Scrutiny</p><h3>Starting Talents</h3><p>Hatred (Daemons), Weapon Training (Solid Projectile, Chain)</p><h3>Starting Malignancy</h3><p>An exorcised character starts with one malignancy chosen from the core rules.</p><h3>Background Bonus</h3><p><strong>Touched by a Daemon:</strong> An exorcised character counts his Insanity bonus as 2 higher for purposes of avoiding Fear tests. Additionally, he can never again become possessed by the same daemon that once possessed him.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Background",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Awareness",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Dodge",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Forbidden Lore",
+          "specialization": "Daemonology",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Hatred",
+          "specialization": "Daemons"
+        },
+        {
+          "name": "Weapon Training",
+          "specialization": "Solid Projectile"
+        },
+        {
+          "name": "Weapon Training",
+          "specialization": "Chain"
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [
+        {
+          "name": "Shotgun"
+        },
+        {
+          "name": "Chainblade"
+        },
+        {
+          "name": "Imperial Robes"
+        },
+        {
+          "name": "Disguise Kit"
+        },
+        {
+          "name": "Excruciator Kit"
+        },
+        {
+          "name": "Rebreather"
+        },
+        {
+          "name": "Stablight"
+        },
+        {
+          "name": "Glow-globe"
+        }
+      ],
+      "specialAbilities": [
+        {
+          "name": "Touched by a Daemon",
+          "description": "An exorcised character counts his Insanity bonus as 2 higher for purposes of avoiding Fear tests. Additionally, he can never again become possessed by the same daemon that once possessed him."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Background Aptitude",
+          "type": "aptitude",
+          "options": [
+            {
+              "name": "Defence"
+            },
+            {
+              "name": "Knowledge"
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Deceive",
+              "specialization": ""
+            },
+            {
+              "name": "Inquiry",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Intimidate",
+              "specialization": ""
+            },
+            {
+              "name": "Scrutiny",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Equipment",
+          "type": "gear",
+          "options": [
+            {
+              "name": "Autopistol",
+              "specialization": ""
+            },
+            {
+              "name": "Stub Revolver",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Equipment",
+          "type": "gear",
+          "options": [
+            {
+              "name": "Obscura",
+              "specialization": "3 doses"
+            },
+            {
+              "name": "Tranq",
+              "specialization": "3 doses"
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Starts with one chosen malignancy from the core rules.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EB2ExoBkg000007A"
+}

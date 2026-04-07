@@ -1,7 +1,7 @@
 {
   "name": "Foreshadowing",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/shielding-fire-1.jpg",
   "system": {
     "useTime": "Half Action",
     "range": "Self",

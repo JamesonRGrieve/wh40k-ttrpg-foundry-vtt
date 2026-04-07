@@ -1,7 +1,7 @@
 {
   "name": "Officer's Cutlass",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-shock.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_04_b.PNG",
   "system": {
     "identifier": "officers-cutlass",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Axe",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/axes/axe_08_b.PNG",
   "system": {
     "identifier": "axe",
     "class": "melee",

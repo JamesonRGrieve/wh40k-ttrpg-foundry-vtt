@@ -1,7 +1,7 @@
 {
   "name": "Stryxis Aether Lance",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_11_b.png",
   "system": {
     "identifier": "stryxis-aether-lance",
     "class": "melee",

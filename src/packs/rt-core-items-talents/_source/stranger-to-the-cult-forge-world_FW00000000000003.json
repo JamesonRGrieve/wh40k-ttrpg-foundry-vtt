@@ -1,7 +1,7 @@
 {
   "name": "Stranger to the Cult (Forge World)",
   "type": "talent",
-  "img": "icons/svg/book.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_01.png",
   "system": {
     "identifier": "stranger-to-the-cult-forge-world",
     "category": "origin",

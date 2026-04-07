@@ -1,7 +1,7 @@
 {
   "name": "Las Carbine (Locke)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_02.png",
   "system": {
     "identifier": "las-carbine-locke",
     "class": "basic",

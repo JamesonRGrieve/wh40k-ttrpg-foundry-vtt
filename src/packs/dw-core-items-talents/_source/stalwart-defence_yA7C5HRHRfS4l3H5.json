@@ -1,14 +1,14 @@
 {
   "name": "Stalwart Defence",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_30.png",
   "system": {
     "identifier": "stalwartDefence",
     "category": "combat",
     "source": "Deathwatch: Core",
-    "description": "<p>The Space Marine can adopt an unshakeable defensive stance, sacrificing mobility for ultimate protection.</p>",
+    "description": "<p>The Battle-Brother stands immovable and indomitable, as if he were made of rock and iron against which foes break like water against a cliff.</p>",
     "tier": 1,
-    "benefit": "<p>Character can spend a Fate Point to adopt a Stalwart Defence as a Full Action. Whilst in this condition, character cannot move or dodge, however they may make the Parry Reaction against all strikes against them, and they suffer -2 damage. Additionally, enemies gain no bonus from outnumbering the character in close combat. These effects last until the character chooses to end the effect, or is rendered incapable of fighting.</p>",
+    "benefit": "<p>The Battle-Brother may spend a Fate Point as a Full Action to adopt a Stalwart Defence. While doing so, he may not move and may not Dodge. He may make a Parry reaction against all successful strikes against him, all Damage he suffers is reduced by 2, and enemies gain no benefits for outnumbering him in close combat. These effects last until he ends the stance or is rendered incapable of fighting.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Astartes",

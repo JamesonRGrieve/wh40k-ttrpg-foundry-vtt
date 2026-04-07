@@ -1,7 +1,7 @@
 {
   "name": "Enginseer Prime",
   "type": "shipRole",
-  "img": "icons/svg/crew.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_21.PNG",
   "system": {
     "rank": 2,
     "purpose": "Leads Mechanicus Contingent, directs vessel maintenance.",

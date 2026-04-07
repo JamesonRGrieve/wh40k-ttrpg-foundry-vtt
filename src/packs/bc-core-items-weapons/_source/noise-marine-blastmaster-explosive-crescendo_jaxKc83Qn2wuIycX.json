@@ -1,7 +1,7 @@
 {
   "name": "Noise Marine Blastmaster (Explosive Crescendo)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_03.png",
   "system": {
     "identifier": "noise-marine-blastmaster-explosive-crescendo",
     "class": "heavy",

@@ -1,7 +1,7 @@
 {
   "name": "Brass Knuckles",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/fist_weapon/fist_weapon_11_b.png",
   "system": {
     "identifier": "brass-knuckles",
     "class": "melee",

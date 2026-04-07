@@ -1,7 +1,7 @@
 {
   "name": "Autopistol (Volg) \"Ripper Clip\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_01.png",
   "system": {
     "identifier": "autopistol-volg-ripper-clip",
     "class": "pistol",

@@ -1,7 +1,7 @@
 {
   "name": "Astartes Plasma Gun (Barrage)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-plasma.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_04.png",
   "system": {
     "identifier": "astartes-plasma-gun-barrage",
     "class": "basic",

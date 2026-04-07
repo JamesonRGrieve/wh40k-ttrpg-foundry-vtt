@@ -1,7 +1,7 @@
 {
   "name": "Damnable Knowledge",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lightning-magenta-2.jpg",
   "system": {
     "useTime": "Daemonhost require the knowledge to create them. Something beyond a simple Requisition Test to find. Consider it Unique Availability.",
     "range": null,

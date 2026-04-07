@@ -1,7 +1,7 @@
 {
   "name": "Ferric Summons",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_30.png",
   "system": {
     "identifier": "ferricSummons",
     "category": "general",

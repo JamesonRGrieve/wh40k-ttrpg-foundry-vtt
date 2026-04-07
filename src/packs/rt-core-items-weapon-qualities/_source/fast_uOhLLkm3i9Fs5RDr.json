@@ -1,0 +1,21 @@
+{
+  "name": "Fast",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_15.PNG",
+  "system": {
+    "identifier": "fast",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 5</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>5</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "uOhLLkm3i9Fs5RDr"
+}

@@ -1,7 +1,7 @@
 {
   "name": "Duty Bound",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/shieldcomb.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_36.png",
   "system": {
     "identifier": "duty-bound",
     "step": "lureOfTheVoid",

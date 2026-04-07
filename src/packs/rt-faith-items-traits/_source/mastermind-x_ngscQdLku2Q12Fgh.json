@@ -1,7 +1,7 @@
 {
   "name": "Mastermind (X)",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_17.png",
   "system": {
     "category": "unique",
     "requirements": "Colchite Servo-Master Alternative Advance (Innate), 500xp. Int 30, WP 30, Implanted Colchite Device",

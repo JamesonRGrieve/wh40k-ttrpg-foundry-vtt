@@ -1,7 +1,7 @@
 {
   "name": "Field Repairs",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_18.png",
   "system": {
     "typeAndAction": "Basic Order\nFull Action",
     "requirements": "Tech-Priest Enginseer Spec\nServitor Comrade\n300xp",

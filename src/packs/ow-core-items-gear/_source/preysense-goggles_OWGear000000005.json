@@ -1,0 +1,44 @@
+{
+  "name": "Preysense Goggles",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "clothing",
+    "weight": 0.5,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Thermal goggles that reveal hidden bodies and other heat sources in low lighting.</p><p><b>Effect:</b> The wearer suffers no penalties due to darkness and gains +20 to vision-based Perception Tests at night. Poor models are bulky goggles with glowing lenses; Good and Best models resemble eyeglasses.</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Thermal goggles that reveal hidden bodies and other heat sources in low lighting."
+    },
+    "source": {
+      "book": "Only War Core",
+      "page": "197",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "The wearer suffers no penalties due to darkness and gains +20 to vision-based Perception Tests at night. Poor models are bulky goggles with glowing lenses; Good and Best models resemble eyeglasses.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "preysense-goggles",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OWGear000000005X"
+}

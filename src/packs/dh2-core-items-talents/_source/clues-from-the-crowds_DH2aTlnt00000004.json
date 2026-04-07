@@ -1,7 +1,7 @@
 {
   "name": "Clues from the Crowds",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_12.png",
   "system": {
     "identifier": "cluesFromTheCrowds",
     "category": "investigation",

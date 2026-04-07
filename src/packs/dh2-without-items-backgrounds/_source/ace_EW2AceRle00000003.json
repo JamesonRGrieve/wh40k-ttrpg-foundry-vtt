@@ -1,13 +1,13 @@
 {
   "name": "Ace",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_14.PNG",
   "system": {
     "identifier": "ace",
     "step": "role",
     "stepIndex": 3,
     "description": {
-      "value": "<h2>Ace</h2><p>The Ace is a born pilot, a natural behind the controls of any vehicle from a battered ground car to a screaming fighter craft. Whether threading a shuttle through an asteroid field, outrunning pursuit through hive city streets, or lining up a strafing run on a xenos encampment, the Ace is in their element when speed and reflexes matter most. They bring unmatched mobility and vehicular expertise to any warband fortunate enough to have one.</p><h3>Role Aptitudes</h3><p>Agility, Ballistic Skill, Defence, Perception, Tech</p><h3>Role Talent</h3><p>Hard Target or Hotshot Pilot</p><h3>Role Bonus</h3><p><strong>Right Stuff:</strong> May spend a Fate Point to automatically succeed on an Operate or Dodge test while piloting a vehicle.</p>"
+      "value": "<h2>Ace</h2><p>The ace is an expert driver, pilot, and operator who treats machines as extensions of body and instinct. Whether skimming a speeder through a hive chase, coaxing another burst of speed from a crippled shuttle, or guiding a war machine through impossible ground, the ace pushes vehicles past ordinary limits by feel, nerve, and hard-earned skill.</p><h3>Role Aptitudes</h3><p>Agility, Finesse, Perception, Tech, Willpower</p><h3>Role Talent</h3><p>Hard Target or Hotshot Pilot</p><h3>Role Bonus</h3><p><strong>Right Stuff:</strong> In addition to the normal uses of Fate points, an ace may spend a Fate point to automatically succeed at an Operate or Survival test involving vehicles or living steeds with a number of degrees of success equal to his Agility bonus.</p>"
     },
     "requirements": {
       "text": "Origin Path: Role",
@@ -25,16 +25,16 @@
       "traits": [],
       "aptitudes": [
         "Agility",
-        "Ballistic Skill",
-        "Defence",
+        "Finesse",
         "Perception",
-        "Tech"
+        "Tech",
+        "Willpower"
       ],
       "equipment": [],
       "specialAbilities": [
         {
           "name": "Right Stuff",
-          "description": "May spend a Fate Point to automatically succeed on an Operate or Dodge test while piloting a vehicle."
+          "description": "In addition to the normal uses of Fate points, an ace may spend a Fate point to automatically succeed at an Operate or Survival test involving vehicles or living steeds with a number of degrees of success equal to his Agility bonus."
         }
       ],
       "choices": [
@@ -80,5 +80,5 @@
   },
   "effects": [],
   "flags": {},
-  "_id": "EW2AceRle00000003"
+  "_id": "EW2AceRle0000003"
 }

@@ -1,7 +1,7 @@
 {
   "name": "Unholy Insight",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_27.png",
   "system": {
     "category": "elite",
     "requirements": "Elite Advance, survived a traumatic experience giving at least 5 Insanity/Corruption.",

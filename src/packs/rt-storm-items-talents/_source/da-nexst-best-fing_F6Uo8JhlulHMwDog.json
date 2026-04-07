@@ -1,7 +1,7 @@
 {
   "name": "Da Nexst Best Fing",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_14.PNG",
   "system": {
     "identifier": "daNexstBestFing",
     "category": "combat",

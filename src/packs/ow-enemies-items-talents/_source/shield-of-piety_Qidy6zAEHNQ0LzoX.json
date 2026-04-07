@@ -1,7 +1,7 @@
 {
   "name": "Shield of Piety",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_09.png",
   "system": {
     "category": "social",
     "source": "OW: Enemies of the Imperium",

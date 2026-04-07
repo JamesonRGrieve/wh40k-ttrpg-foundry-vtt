@@ -1,7 +1,7 @@
 {
   "name": "Boarding Gun (Lathe)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_10.png",
   "system": {
     "identifier": "boarding-gun-lathe",
     "class": "basic",

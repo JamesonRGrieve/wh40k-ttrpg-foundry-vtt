@@ -1,0 +1,61 @@
+{
+  "name": "Synthmuscle",
+  "type": "cybernetic",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Gain Unnatural Strength (+1), Best Craftsmanship gives Unnatural Strength (+4) but also gives -10 to Agility Tests.</p>\n<h3>Requirements</h3><p>Uses Only War Unnatural Strength, which adds +X to Strength Bonus rather than adding X*SB, so Unnatural Strenth (4) is SB+4</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Gain Unnatural Strength (+1), Best Craftsmanship gives Unnatural Strength (+4) but also gives -10 to Agility Tests."
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": true,
+    "effect": "Gain Unnatural Strength (+1), Best Craftsmanship gives Unnatural Strength (+4) but also gives -10 to Agility Tests.",
+    "notes": "-",
+    "identifier": "synthmuscle",
+    "gameSystems": [
+      "dh2e"
+    ],
+    "type": "implant",
+    "locations": [
+      "body"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "drawbacks": "<p>Requires implantation surgery and appropriate maintenance.</p>",
+    "installation": {
+      "surgery": "Major surgery required",
+      "difficulty": "-10 Medicae",
+      "recoveryTime": "1 week"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1cycztx5al9xp000"
+}

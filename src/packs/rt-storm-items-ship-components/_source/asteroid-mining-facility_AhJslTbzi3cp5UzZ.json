@@ -1,7 +1,7 @@
 {
   "name": "Asteroid Mining Facility",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_12.PNG",
   "system": {
     "hullType": [
       "all"

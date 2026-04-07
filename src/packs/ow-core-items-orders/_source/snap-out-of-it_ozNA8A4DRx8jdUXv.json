@@ -1,7 +1,7 @@
 {
   "name": "Snap Out of It!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_14.png",
   "system": {
     "typeAndAction": "Sweeping Order\nFree Action",
     "requirements": "Sergeant Spec\n200xp",

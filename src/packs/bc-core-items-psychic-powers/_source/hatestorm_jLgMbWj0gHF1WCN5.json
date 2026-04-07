@@ -1,19 +1,19 @@
 {
   "name": "Hatestorm",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-orange-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Unaligned)",
     "prerequisites": "Psy Rating 4, Frenzy, Hatred (Any One)",
-    "focusPower": "Half Action\nAttack",
-    "action": "5m x Psy Rating Radius",
-    "range": "-10 Willpower",
-    "opposed": "Yes (Half Action)",
-    "sustained": "Whilst Sustained, Psyker and all creatures within power's radius immediately enter a Frenzied State as if they had the Frenzy Talent, remaining so for as long as the power is sustained. The Psyker may continue to manifest Psychic Powers even whilst frenzied.",
-    "effect": "400xp",
+    "focusPower": "Difficult (-10) Willpower Test",
+    "action": "Half Action",
+    "range": "5 metres x Psy Rating radius",
+    "opposed": "No",
+    "sustained": "Half Action",
+    "effect": "While this power remains in effect, the Sorcerer and all creatures within the power's radius immediately enter a Frenzied state as if they had the Frenzy Talent. They remain in this state as long as they remain within the power's radius, and the Sorcerer may continue to manifest psychic powers while Frenzied.",
     "source": "Black Crusade: Core",
     "description": {
-      "value": "<p>400xp</p>"
+      "value": "<p>The Sorcerer calls upon the dark gods to gift him with a portion of their own hatred, and becomes the crackling focus of an aura of dark energy. Anyone caught within this explosion of unholy power finds himself with a psychotic hatred of all living things, hurling themselves at their foes at the first opportunity. The hellish psychic echoes of the warp are easy for a Sorcerer to find, though a challenge to control, often proving overwhelming for the unsuspecting.</p>"
     },
     "focusTime": "Half Action",
     "threshold": 0,

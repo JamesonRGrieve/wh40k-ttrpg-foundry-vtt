@@ -1,7 +1,7 @@
 {
   "name": "Lasgun (Drusus Prime)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_09.png",
   "system": {
     "identifier": "lasgun-drusus-prime",
     "class": "basic",

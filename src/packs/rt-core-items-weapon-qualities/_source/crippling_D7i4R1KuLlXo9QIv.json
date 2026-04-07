@@ -1,0 +1,21 @@
+{
+  "name": "Crippling",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_11.png",
+  "system": {
+    "identifier": "crippling",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 17</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>17</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "D7i4R1KuLlXo9QIv"
+}

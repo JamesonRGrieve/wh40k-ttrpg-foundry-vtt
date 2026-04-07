@@ -1,7 +1,7 @@
 {
   "name": "Paranoid (Death World)",
   "type": "talent",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_14.png",
   "system": {
     "identifier": "paranoid-death-world",
     "category": "origin",

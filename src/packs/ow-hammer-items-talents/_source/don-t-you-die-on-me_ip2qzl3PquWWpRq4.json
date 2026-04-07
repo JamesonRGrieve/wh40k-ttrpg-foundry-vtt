@@ -1,7 +1,7 @@
 {
   "name": "Don't You Die on Me!",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_28.png",
   "system": {
     "identifier": "dontYouDieOnMe",
     "category": "general",

@@ -1,7 +1,7 @@
 {
   "name": "Molten Beam",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-sky-3.jpg",
   "system": {
     "discipline": "Pyromancy",
     "prerequisites": "Psy Rating 4,\nFlame Breath",

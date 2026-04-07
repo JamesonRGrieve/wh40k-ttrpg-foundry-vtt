@@ -1,7 +1,7 @@
 {
   "name": "Augmenticist",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_04.png",
   "system": {
     "requirements": "Not Explorator, Missionary, Ork, or Kroot. RT Rank 2+. At least 1 Bionic Limb and Implant, an implant of Best Quality, No Poor Implants.",
     "source": "RT: Into the Storm\n(Page 74)",

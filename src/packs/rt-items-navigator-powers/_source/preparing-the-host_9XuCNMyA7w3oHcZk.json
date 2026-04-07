@@ -1,7 +1,7 @@
 {
   "name": "Preparing the Host",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-air-3.jpg",
   "system": {
     "useTime": "A Prepared host must be a living human whose body is agonisingly prepared. The human need not be willing.",
     "range": null,

@@ -1,7 +1,7 @@
 {
   "name": "Blazing Exemplar",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_16.PNG",
   "system": {
     "typeAndAction": "Basic Order\nHalf Action",
     "requirements": "Blazing Exemplar Spec\n300xp",

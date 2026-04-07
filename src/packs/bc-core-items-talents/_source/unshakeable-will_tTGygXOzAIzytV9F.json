@@ -1,17 +1,17 @@
 {
   "name": "Unshakeable Will",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_18.png",
   "system": {
     "category": "psychic",
     "source": "Black Crusade Core",
     "description": {
-      "value": "<p>Character can Re-Roll failed Willpower Tests to avoid the effects of Fear. \nJust the heretical version of Unshakeable Faith.</p>"
+      "value": "<p>The character's faith in the gods and in himself are so strong that he can face any danger with a sneer and a ready insult.</p>"
     },
     "tier": 2,
     "isPassive": true,
     "isRollable": true,
-    "benefit": "<p>Character can Re-Roll failed Willpower Tests to avoid the effects of Fear. \nJust the heretical version of Unshakeable Faith.</p>",
+    "benefit": "<p>The character may reroll any failed Willpower Tests to avoid the effects of Fear.</p>",
     "aptitudes": [
       "Nurgle"
     ],
@@ -47,8 +47,8 @@
         "characteristics": [
           {
             "key": "willpower",
-            "value": 20,
-            "condition": "When resisting psychic powers",
+            "value": 0,
+            "condition": "May reroll failed Willpower Tests to avoid the effects of Fear",
             "icon": "fa-solid fa-brain"
           }
         ],
@@ -63,7 +63,7 @@
       "specialAbilities": [
         {
           "name": "Reroll Ability",
-          "description": "<p>You can reroll failed Willpower tests as described in the talent.</p>"
+          "description": "<p>You may reroll any failed Willpower Tests to avoid the effects of Fear.</p>"
         }
       ]
     },

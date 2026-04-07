@@ -1,7 +1,7 @@
 {
   "name": "Basic Technique: Aura Reading",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-grasp-acid-2.jpg",
   "system": {
     "discipline": "Divination",
     "prerequisites": "None",

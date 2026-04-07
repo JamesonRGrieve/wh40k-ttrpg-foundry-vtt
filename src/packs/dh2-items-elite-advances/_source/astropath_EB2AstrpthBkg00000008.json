@@ -1,0 +1,118 @@
+{
+  "name": "Astropath",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "astropath",
+    "step": "background",
+    "stepIndex": 2,
+    "description": {
+      "value": "<h2>Astropath</h2><p>Astropaths are sanctioned psykers who have undergone the ritual of Soul-binding to the Emperor. This process, while granting them the ability to communicate across the vast distances of space, also leaves them permanently blind and forever changed. They are the essential link that holds the Imperium together, their minds capable of projecting messages through the Warp where technology fails. As an Acolyte, an Astropath's psychic abilities and unique perspective make them both a powerful asset and a constant reminder of the Warp's dangerous power.</p><h3>Soul-Bound</h3><p>The character permanently loses their sight but gains the Unnatural Senses (Willpower Characteristic) trait.</p><h3>Starting Skills</h3><p>Common Lore (Adeptus Astra Telepathica), Forbidden Lore (Psykers), Psyniscience, Scholastic Lore (Cryptology)</p><h3>Starting Talent</h3><p>Heightened Senses (Hearing), Psyker, Psy Rating 2</p><h3>Background Bonus</h3><p><strong>Telepathic Link:</strong> The character gains the Telepathy discipline and the Mind Link power. They gain a +10 bonus to Focus Power tests when using powers from the Telepathy discipline.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Background",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Common Lore",
+          "specialization": "Adeptus Astra Telepathica",
+          "level": "trained"
+        },
+        {
+          "name": "Forbidden Lore",
+          "specialization": "Psykers",
+          "level": "trained"
+        },
+        {
+          "name": "Psyniscience",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Scholastic Lore",
+          "specialization": "Cryptology",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Heightened Senses",
+          "specialization": "Hearing"
+        },
+        {
+          "name": "Psyker",
+          "specialization": ""
+        },
+        {
+          "name": "Psy Rating",
+          "specialization": "2"
+        }
+      ],
+      "traits": [
+        {
+          "name": "Unnatural Senses",
+          "specialization": "Willpower Characteristic"
+        }
+      ],
+      "aptitudes": [
+        "Psyker"
+      ],
+      "equipment": [
+        {
+          "name": "Data-Slate"
+        },
+        {
+          "name": "Psy-Focus"
+        },
+        {
+          "name": "Staff",
+          "quality": "best"
+        }
+      ],
+      "specialAbilities": [
+        {
+          "name": "Soul-Bound",
+          "description": "The character permanently loses their sight but gains the Unnatural Senses (Willpower Characteristic) trait."
+        },
+        {
+          "name": "Telepathic Link",
+          "description": "The character gains the Telepathy discipline and the Mind Link power. They gain a +10 bonus to Focus Power tests when using powers from the Telepathy discipline."
+        }
+      ],
+      "choices": []
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Moved into the DH2 elite advances pack family on 2026-04-06. Astropath is an elite advance, not an origin-path background. Soul-binding permanently removes the character's sight.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EB2AstrpthBkg00000008"
+}

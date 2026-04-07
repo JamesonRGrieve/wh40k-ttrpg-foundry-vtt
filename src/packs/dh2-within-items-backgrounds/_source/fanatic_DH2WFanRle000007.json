@@ -1,0 +1,84 @@
+{
+  "name": "Fanatic",
+  "type": "originPath",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_01.png",
+  "system": {
+    "identifier": "fanatic",
+    "step": "role",
+    "stepIndex": 3,
+    "description": {
+      "value": "<h2>Fanatic</h2><p>For the fanatic, belief is not comfort but fuel. It consumes every thought, hardens every doubt into certainty, and turns every enemy into a target for relentless obsession. Whether that conviction is aimed at witches, heretics, xenos, or some other hated foe, the fanatic drives himself and those around him beyond reason in pursuit of destruction, absolution, or both.</p><h3>Role Aptitudes</h3><p>Leadership, Offence, Toughness, Weapon Skill, Willpower</p><h3>Role Talent</h3><p>Deny the Witch or Jaded</p><h3>Role Bonus</h3><p><strong>Death to All Who Oppose Me!:</strong> In addition to the normal uses of Fate points, a fanatic may spend a Fate point to count as having the Hatred talent against his current foe for the duration of the encounter. If he leaves combat against that hated foe during the encounter, he gains 1 Insanity point.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Role",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Leadership",
+        "Offence",
+        "Toughness",
+        "Weapon Skill",
+        "Willpower"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Death to All Who Oppose Me!",
+          "description": "In addition to the normal uses of Fate points, a fanatic may spend a Fate point to count as having the Hatred talent against his current foe for the duration of the encounter. If he leaves combat against that hated foe during the encounter, he gains 1 Insanity point."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Role Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Deny the Witch",
+              "specialization": ""
+            },
+            {
+              "name": "Jaded",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2WFanRle000007"
+}

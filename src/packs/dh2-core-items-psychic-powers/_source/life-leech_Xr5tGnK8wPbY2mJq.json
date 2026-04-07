@@ -1,7 +1,7 @@
 {
   "name": "Life Leech",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/light-air-fire-3.jpg",
   "system": {
     "discipline": "Biomancy",
     "prerequisites": "Psy Rating 4",

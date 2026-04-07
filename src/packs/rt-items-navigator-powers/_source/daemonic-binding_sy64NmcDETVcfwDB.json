@@ -1,7 +1,7 @@
 {
   "name": "Daemonic Binding",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lightning-jade-3.jpg",
   "system": {
     "useTime": "The Binding Strength determines how contained and controllable the Daemonhost is. A More tightly bound daemon is less powerful, yet more easily controllabe. Although even the most tightly bound daemon is a monster to behold and never to be trusted.",
     "range": null,

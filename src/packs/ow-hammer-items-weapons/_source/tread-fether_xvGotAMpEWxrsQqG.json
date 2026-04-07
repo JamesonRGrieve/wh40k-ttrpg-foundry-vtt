@@ -1,7 +1,7 @@
 {
   "name": "Tread Fether",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-launcher.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_02.png",
   "system": {
     "identifier": "tread-fether",
     "class": "heavy",

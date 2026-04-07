@@ -1,7 +1,7 @@
 {
   "name": "Axe of Retribution",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-shock.svg",
+  "img": "systems/wh40k-rpg/icons/items/axes/axe_07_b.PNG",
   "system": {
     "identifier": "axe-of-retribution",
     "class": "melee",

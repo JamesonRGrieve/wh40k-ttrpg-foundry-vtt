@@ -1,7 +1,7 @@
 {
   "name": "Devotional Iconography",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s04.png",
   "system": {
     "effect": "Gain +10 to Command Tests with those faithful to the Imperium, but -10 to Fellowship with those who are not.",
     "availability": "common",

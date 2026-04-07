@@ -1,7 +1,7 @@
 {
   "name": "Cower Not Before the Enemy",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_04.png",
   "system": {
     "typeAndAction": "Sweeping Order\nFree Action",
     "requirements": ".Member of the Ministorum or 10+ Insanity.\nApt: Fellowship, Leadership",

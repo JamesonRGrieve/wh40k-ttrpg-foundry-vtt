@@ -1,7 +1,7 @@
 {
   "name": "Stub Automatic (Guard)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_09.png",
   "system": {
     "identifier": "stub-automatic-guard",
     "class": "pistol",

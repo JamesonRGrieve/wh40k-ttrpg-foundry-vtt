@@ -1,7 +1,7 @@
 {
   "name": "Warden of the Divisio Immoralis",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_28.png",
   "system": {
     "requirements": "Arbitrator Career, DH Rank 1+. ",
     "source": "DH: Inquisitor's Handbook (Page 84)",

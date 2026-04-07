@@ -1,7 +1,7 @@
 {
   "name": "Servo-Manipulators",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s01.png",
   "system": {
     "effect": "Removes penalties to fine manipulation caused by armour.",
     "availability": "rare",

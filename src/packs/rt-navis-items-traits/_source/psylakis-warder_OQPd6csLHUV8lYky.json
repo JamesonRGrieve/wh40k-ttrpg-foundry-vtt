@@ -1,7 +1,7 @@
 {
   "name": "Psylakis Warder",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_12.PNG",
   "system": {
     "requirements": "Not Navigator, Astropath, or Ork. RT Rank 4+, Agility 40+, Perception 35+. Does not have Psy Rating or Untouchable Trait. Must have trained by Psylakis Brotherhood and undergone their Secret Rites.",
     "source": "RT: The Navis Primer\n(Page 78)",

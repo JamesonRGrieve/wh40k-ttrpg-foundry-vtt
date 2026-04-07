@@ -1,7 +1,7 @@
 {
   "name": "Highborn",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_29.png",
   "system": {
     "identifier": "highborn",
     "step": "homeworld",

@@ -1,0 +1,61 @@
+{
+  "name": "Respiratory Filter Implant",
+  "type": "cybernetic",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Makes user immune to inhaled toxic gases, contaminants and pollution.\nAlternate: Grants +20 to resist inhaled poisions, gas weapnons, and atmospheric toxins</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Makes user immune to inhaled toxic gases, contaminants and pollution.\nAlternate: Grants +20 to resist inhaled poisions, gas weapnons, and atmospheric toxins"
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": true,
+    "effect": "Makes user immune to inhaled toxic gases, contaminants and pollution.\nAlternate: Grants +20 to resist inhaled poisions, gas weapnons, and atmospheric toxins",
+    "notes": "-",
+    "identifier": "respiratory-filter-implant",
+    "gameSystems": [
+      "dh2e"
+    ],
+    "type": "implant",
+    "locations": [
+      "body"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "drawbacks": "<p>Requires implantation surgery and appropriate maintenance.</p>",
+    "installation": {
+      "surgery": "Major surgery required",
+      "difficulty": "-10 Medicae",
+      "recoveryTime": "1 week"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6nhu7hx4qo6h0000"
+}

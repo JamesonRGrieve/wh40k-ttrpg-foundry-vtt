@@ -1,7 +1,7 @@
 {
   "name": "Guldaniri Bile Projector",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_13.png",
   "system": {
     "identifier": "guldaniri-bile-projector",
     "class": "basic",

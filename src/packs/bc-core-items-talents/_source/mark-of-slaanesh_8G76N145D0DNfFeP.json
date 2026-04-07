@@ -1,7 +1,7 @@
 {
   "name": "Mark of Slaanesh",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_14.png",
   "system": {
     "category": "social",
     "source": "Black Crusade Core",

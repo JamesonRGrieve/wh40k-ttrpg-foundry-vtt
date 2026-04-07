@@ -1,7 +1,7 @@
 {
   "name": "Fire Gauntlets (Magnus)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-default.svg",
+  "img": "systems/wh40k-rpg/icons/items/fist_weapon/fist_weapon_06_b.PNG",
   "system": {
     "identifier": "fire-gauntlets-magnus",
     "class": "melee",

@@ -1,14 +1,14 @@
 {
   "name": "Hunter of Aliens",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_12.PNG",
   "system": {
     "identifier": "hunterOfAliens",
     "category": "combat",
     "source": "Deathwatch: Core",
-    "description": "<p>Character gains +10 to Weapon Skill and +2 to melee weapon damage when fighting aliens.</p>",
+    "description": "<p>Aliens are a foul and constant threat to the Imperium, and the character has taken a vow to rid the galaxy of their foul presence.</p>",
     "tier": 1,
-    "benefit": "<p>Character gains +10 to Weapon Skill and +2 to melee weapon damage when fighting aliens.</p>",
+    "benefit": "<p>The character gains +10 to Weapon Skill and +2 to melee weapon Damage when combating aliens.</p>",
     "aptitudes": [
       "Weapon Skill",
       "Offence"

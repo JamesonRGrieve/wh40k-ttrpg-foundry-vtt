@@ -1,7 +1,7 @@
 {
   "name": "Witch-knowledge (Lineage)",
   "type": "talent",
-  "img": "icons/svg/book.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_35.png",
   "system": {
     "identifier": "witch-knowledge-lineage",
     "category": "origin",

@@ -1,7 +1,7 @@
 {
   "name": "Astartes Shotgun (alt.)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/guns/gun_10_b.PNG",
   "system": {
     "identifier": "astartes-shotgun-alt",
     "class": "basic",

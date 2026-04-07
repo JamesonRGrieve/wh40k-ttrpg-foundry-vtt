@@ -1,7 +1,7 @@
 {
   "name": "Thulian Explorator Vessel",
   "type": "shipUpgrade",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_17.PNG",
   "system": {
     "spCost": 1,
     "shipAvailability": "Frigates, Light Cruisers, and Cruisers",

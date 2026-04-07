@@ -1,7 +1,7 @@
 {
   "name": "Astartes Chainfist (alt.)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/fist_weapon/fist_weapon_05_b.PNG",
   "system": {
     "identifier": "astartes-chainfist-alt",
     "class": "melee",

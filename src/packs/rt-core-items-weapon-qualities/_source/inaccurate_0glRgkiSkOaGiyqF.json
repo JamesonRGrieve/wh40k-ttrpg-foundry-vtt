@@ -1,0 +1,21 @@
+{
+  "name": "Inaccurate",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_12.png",
+  "system": {
+    "identifier": "inaccurate",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 59</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>59</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "0glRgkiSkOaGiyqF"
+}

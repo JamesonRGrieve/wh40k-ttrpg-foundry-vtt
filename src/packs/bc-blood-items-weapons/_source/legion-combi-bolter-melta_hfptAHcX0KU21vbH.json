@@ -1,7 +1,7 @@
 {
   "name": "Legion Combi-Bolter (Melta)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_19.png",
   "system": {
     "identifier": "legion-combi-bolter-melta",
     "class": "basic",

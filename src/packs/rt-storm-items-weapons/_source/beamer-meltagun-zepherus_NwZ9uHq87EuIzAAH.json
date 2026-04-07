@@ -1,7 +1,7 @@
 {
   "name": "Beamer Meltagun (Zepherus)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-meltagun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_15.png",
   "system": {
     "identifier": "beamer-meltagun-zepherus",
     "class": "basic",

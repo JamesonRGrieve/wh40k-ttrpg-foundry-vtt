@@ -1,7 +1,7 @@
 {
   "name": "Fringe Survivor",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/lantern-flame.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_24.PNG",
   "system": {
     "identifier": "fringe-survivor",
     "step": "birthright",

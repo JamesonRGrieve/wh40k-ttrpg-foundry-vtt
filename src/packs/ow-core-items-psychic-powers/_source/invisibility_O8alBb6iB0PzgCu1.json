@@ -1,7 +1,7 @@
 {
   "name": "Invisibility",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/ice-jade-1.jpg",
   "system": {
     "discipline": "Telepathy",
     "prerequisites": "Psy Rating 4, Agility 30",

@@ -1,7 +1,7 @@
 {
   "name": "Astartes Power Axe (alt.)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/axes/axe_13_b.PNG",
   "system": {
     "identifier": "astartes-power-axe-alt",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Warp Weapons",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_18.png",
   "system": {
     "category": "creature",
     "requirements": "",

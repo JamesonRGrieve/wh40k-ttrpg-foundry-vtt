@@ -1,7 +1,7 @@
 {
   "name": "Stupefy the Soul",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/light-air-fire-2.jpg",
   "system": {
     "useTime": "Full Action",
     "range": "15m (or 5m in fog/mist, etc).",

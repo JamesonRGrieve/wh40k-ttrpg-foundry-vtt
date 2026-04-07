@@ -1,7 +1,7 @@
 {
   "name": "Move",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_10.png",
   "system": {
     "typeAndAction": "Generic Order\nHalf or Full Action",
     "requirements": "--",

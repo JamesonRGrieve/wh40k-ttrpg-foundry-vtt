@@ -1,7 +1,7 @@
 {
   "name": "Galvian Needler (Belasco)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_15.png",
   "system": {
     "identifier": "galvian-needler-belasco",
     "class": "pistol",

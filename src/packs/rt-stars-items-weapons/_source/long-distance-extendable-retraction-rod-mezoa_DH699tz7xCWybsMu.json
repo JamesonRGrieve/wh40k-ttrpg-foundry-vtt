@@ -1,7 +1,7 @@
 {
   "name": "Long-Distance Extendable Retraction Rod (Mezoa)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/staves/stave_06_b.PNG",
   "system": {
     "identifier": "long-distance-extendable-retraction-rod-mezoa",
     "class": "melee",

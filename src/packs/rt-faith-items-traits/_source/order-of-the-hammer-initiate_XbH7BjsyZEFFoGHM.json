@@ -1,7 +1,7 @@
 {
   "name": "Order of the Hammer Initiate",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_19.png",
   "system": {
     "requirements": "Any Human, RT Rank 1+. Intelligence 35+, Toughness 35+. Must have study one or more of the Ascetics of Foulstone, and made at least one Pilgrammage to the Shrine of the Hammer upon that world.",
     "source": "RT: Faith and Coin\n(Page 78)",

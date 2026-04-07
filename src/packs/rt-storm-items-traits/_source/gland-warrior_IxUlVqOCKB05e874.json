@@ -1,7 +1,7 @@
 {
   "name": "Gland Warrior",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_12.PNG",
   "system": {
     "requirements": "Arch-Militant, RT Rank 4+. Toughness 40+, Melee Weapon (Universal), True Grit, and Die Hard Talents.",
     "source": "RT: Into the Storm\n(Page 84)",

@@ -1,7 +1,7 @@
 {
   "name": "Brook No Insult",
   "type": "trait",
-  "img": "modules/game-icons-net/whitetransparent/shield.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_16.PNG",
   "system": {
     "identifier": "brook-no-insult",
     "category": "origin",

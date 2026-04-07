@@ -1,0 +1,21 @@
+{
+  "name": "Accurate",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_24.png",
+  "system": {
+    "identifier": "accurate",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 117</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>117</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rQ7GXFZAu0X6tzNM"
+}

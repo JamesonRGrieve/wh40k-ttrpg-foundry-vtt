@@ -1,7 +1,7 @@
 {
   "name": "Chitin Shell",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-blue-3.jpg",
   "system": {
     "discipline": "Biomancy",
     "prerequisites": "Psy Rating 2, Toughness 30+",

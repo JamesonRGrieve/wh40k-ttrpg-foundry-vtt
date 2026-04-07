@@ -1,7 +1,7 @@
 {
   "name": "Fire Suppression System (Very Large)",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_23.PNG",
   "system": {
     "hullType": [
       "grand-cruiser",

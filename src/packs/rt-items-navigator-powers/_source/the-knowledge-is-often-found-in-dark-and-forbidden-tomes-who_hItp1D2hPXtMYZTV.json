@@ -1,7 +1,7 @@
 {
   "name": "The Knowledge is often found in dark and forbidden tomes, whose owners would be purged for possessing. The primary steps are:\nPreparing the Host, then Summoning and Binding the Daemon. Texts may contain some of these steps, maybe even a Daemon's True name.",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/enchant-red-2.jpg",
   "system": {
     "useTime": null,
     "range": null,

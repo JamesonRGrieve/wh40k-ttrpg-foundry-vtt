@@ -1,7 +1,7 @@
 {
   "name": "Psychic Blade",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-blue-2.jpg",
   "system": {
     "discipline": "Telekinesis",
     "prerequisites": "-",

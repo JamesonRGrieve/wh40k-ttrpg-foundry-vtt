@@ -1,7 +1,7 @@
 {
   "name": "Bone Bolas (Volonx)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/grenade/grenade_03.png",
   "system": {
     "identifier": "bone-bolas-volonx",
     "class": "thrown",

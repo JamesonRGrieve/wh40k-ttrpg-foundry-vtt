@@ -1,7 +1,7 @@
 {
   "name": "Sparky Squigs",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_15.PNG",
   "system": {
     "identifier": "sparkySquigs",
     "category": "combat",

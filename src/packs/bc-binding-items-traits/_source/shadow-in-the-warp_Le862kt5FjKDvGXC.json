@@ -1,7 +1,7 @@
 {
   "name": "Shadow in the Warp",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_01.png",
   "system": {
     "category": "general",
     "requirements": "Tyranid",

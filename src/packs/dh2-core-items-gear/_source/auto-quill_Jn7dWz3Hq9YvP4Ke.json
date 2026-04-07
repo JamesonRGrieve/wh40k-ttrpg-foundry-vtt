@@ -1,23 +1,39 @@
 {
   "name": "Auto-Quill",
   "type": "gear",
-  "img": "icons/svg/item-bag.svg",
+  "img": "icons/svg/backpack.svg",
   "system": {
-    "weight": 0.5,
-    "availability": "average",
-    "quantity": 1,
+    "category": "tools",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
     "cost": {
-      "value": 25,
+      "value": 55,
       "currency": "throne"
     },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
+    "quantity": 1,
     "description": {
-      "value": "<p>A small servo-driven writing device that records spoken words as written text. Useful for scribes and adepts who need to transcribe large volumes of information quickly.</p>"
+      "value": "<p>+10 to Trade (Rememberancer) if you have the skill, or any other Trade Skill that would make sense to involve lots of writing.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 55 T</p>",
+      "chat": "",
+      "summary": "+10 to Trade (Rememberancer) if you have the skill, or any other Trade Skill that would make sense to involve lots of writing."
     },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "+10 to Trade (Rememberancer) if you have the skill, or any other Trade Skill that would make sense to involve lots of writing.",
+    "duration": "",
     "notes": "",
-    "source": "DH2e Core",
+    "identifier": "auto-quill",
     "gameSystems": [
       "dh2e"
     ]

@@ -1,7 +1,7 @@
 {
   "name": "Lathe-Wrought",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s03.png",
   "system": {
     "effect": "Weighs half regular amount, +1 AP, halve PEN of weapons when calculating damage against wearer (round up). Armour is Best Craftsmanship. Usually innate to armour rather than added.",
     "availability": "near-unique",

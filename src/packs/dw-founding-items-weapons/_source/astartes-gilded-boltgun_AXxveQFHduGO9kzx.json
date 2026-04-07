@@ -1,7 +1,7 @@
 {
   "name": "Astartes Gilded Boltgun",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_07.png",
   "system": {
     "identifier": "astartes-gilded-boltgun",
     "class": "basic",

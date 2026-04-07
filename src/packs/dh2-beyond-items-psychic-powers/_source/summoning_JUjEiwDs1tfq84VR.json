@@ -1,7 +1,7 @@
 {
   "name": "Summoning",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-sky-1.jpg",
   "system": {
     "discipline": "Malefic Daemonology",
     "prerequisites": "Willpower 35",

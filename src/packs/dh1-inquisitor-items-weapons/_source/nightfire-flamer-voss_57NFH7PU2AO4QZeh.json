@@ -1,7 +1,7 @@
 {
   "name": "Nightfire Flamer (Voss)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_17.png",
   "system": {
     "identifier": "nightfire-flamer-voss",
     "class": "basic",

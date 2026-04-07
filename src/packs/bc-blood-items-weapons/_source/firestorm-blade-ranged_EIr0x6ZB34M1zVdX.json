@@ -1,7 +1,7 @@
 {
   "name": "Firestorm Blade [Ranged]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_15.png",
   "system": {
     "identifier": "firestorm-blade-ranged",
     "class": "basic",

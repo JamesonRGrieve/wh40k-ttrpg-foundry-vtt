@@ -1,7 +1,7 @@
 {
   "name": "Agony from Afar",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_13.PNG",
   "system": {
     "identifier": "agonyFromAfar",
     "category": "combat",

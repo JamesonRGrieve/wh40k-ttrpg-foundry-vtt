@@ -1,7 +1,7 @@
 {
   "name": "Soft Sword",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_09_b.png",
   "system": {
     "identifier": "soft-sword",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Targeting Matrix",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_04.png",
   "system": {
     "hullType": [
       "all"

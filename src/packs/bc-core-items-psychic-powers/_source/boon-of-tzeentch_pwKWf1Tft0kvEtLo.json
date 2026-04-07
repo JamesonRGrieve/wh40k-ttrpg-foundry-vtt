@@ -1,7 +1,7 @@
 {
   "name": "Boon of Tzeentch",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rip-sky-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Tzeentch)",
     "prerequisites": "Tzeentch Aligned Psy Rating 4",

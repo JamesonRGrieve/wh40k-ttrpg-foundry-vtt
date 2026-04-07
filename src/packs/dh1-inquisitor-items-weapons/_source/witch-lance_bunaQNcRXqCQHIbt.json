@@ -1,7 +1,7 @@
 {
   "name": "Witch Lance",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_08_b.PNG",
   "system": {
     "identifier": "witch-lance",
     "class": "melee",

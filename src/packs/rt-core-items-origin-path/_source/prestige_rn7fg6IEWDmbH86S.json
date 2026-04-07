@@ -1,7 +1,7 @@
 {
   "name": "Prestige",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/medal.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_12.png",
   "system": {
     "identifier": "prestige",
     "step": "motivation",

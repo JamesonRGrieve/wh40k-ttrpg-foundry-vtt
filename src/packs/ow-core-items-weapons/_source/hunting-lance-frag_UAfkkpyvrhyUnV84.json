@@ -1,7 +1,7 @@
 {
   "name": "Hunting Lance (Frag)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_02_b.png",
   "system": {
     "identifier": "hunting-lance-frag",
     "class": "melee",

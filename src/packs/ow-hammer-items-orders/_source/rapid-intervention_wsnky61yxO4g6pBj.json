@@ -1,7 +1,7 @@
 {
   "name": "Rapid Intervention",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_36.png",
   "system": {
     "typeAndAction": "Basic Order\nHalf Action",
     "requirements": "Field Chirurgeon Spec\n300xp",

@@ -1,7 +1,7 @@
 {
   "name": "Bolt Pistol (Ceres)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_11.png",
   "system": {
     "identifier": "bolt-pistol-ceres",
     "class": "pistol",

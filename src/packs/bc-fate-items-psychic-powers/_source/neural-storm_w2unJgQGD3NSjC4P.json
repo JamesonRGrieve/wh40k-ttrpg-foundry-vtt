@@ -1,7 +1,7 @@
 {
   "name": "Neural Storm",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/evil-eye-eerie-3.jpg",
   "system": {
     "discipline": "Biomancy",
     "prerequisites": "None",

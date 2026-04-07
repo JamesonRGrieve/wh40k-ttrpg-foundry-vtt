@@ -1,7 +1,7 @@
 {
   "name": "Finally, To Command a Daemon, make a Daemonic Master Test, requiring an Opposed Willpower Test, with +5 per level of Psy Rating the Summoner has. If a Daemon is forced to go against its fundamental nature, it forces a second Daemonic Mastery Test, where the controller now has -30 as the Daemon actively tries to break control",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-eerie-2.jpg",
   "system": {
     "useTime": null,
     "range": null,

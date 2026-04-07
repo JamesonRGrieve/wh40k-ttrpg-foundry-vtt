@@ -1,7 +1,7 @@
 {
   "name": "Basic Technique: Detect Warp Breach",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rock-plain-3.jpg",
   "system": {
     "discipline": "Theosophamy (Warp Manipulation)",
     "prerequisites": "None",

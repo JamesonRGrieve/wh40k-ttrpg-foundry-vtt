@@ -1,7 +1,7 @@
 {
   "name": "Objuration Mechanicum",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-blue-1.jpg",
   "system": {
     "discipline": "Telekinesis",
     "prerequisites": "Psy Rating 4",

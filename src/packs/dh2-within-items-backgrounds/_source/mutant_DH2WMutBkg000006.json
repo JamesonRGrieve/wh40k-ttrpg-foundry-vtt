@@ -1,0 +1,133 @@
+{
+  "name": "Mutant",
+  "type": "originPath",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_28.png",
+  "system": {
+    "identifier": "mutant",
+    "step": "background",
+    "stepIndex": 2,
+    "description": {
+      "value": "<h2>Mutant</h2><p>Mutants endure lives of hatred, violence, and pain beneath the weight of visible corruption. Shunned by Imperial society and brutalised by those who see only taint, they survive through cunning, tenacity, and whatever unnatural gifts their warped flesh provides. An Inquisitor who binds one into service gains an operative who understands the hunted, the hidden, and the desperate better than most loyal subjects ever could.</p><h3>Background Aptitudes</h3><p>Fieldcraft or Offence</p><h3>Starting Skills</h3><p>Acrobatics or Athletics, Awareness, Deceive or Intimidate, Forbidden Lore (Mutants), Survival</p><h3>Starting Talents</h3><p>Weapon Training (Low-Tech, Solid Projectile)</p><h3>Starting Traits</h3><p>One of the following: Amphibious, Dark-sight, Natural Weapons, Sonar Sense, Sturdy, Toxic (1), Unnatural Agility (1), Unnatural Strength (1), or Unnatural Toughness (1)</p><h3>Background Bonus</h3><p><strong>Twisted Flesh:</strong> A mutant character begins play with 10 Corruption points and one starting mutation. Whenever he would gain a malignancy, he may instead roll on the mutation table to gain a mutation, and he can always choose to fail tests made to resist malignancy or mutation.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Background",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Awareness",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Forbidden Lore",
+          "specialization": "Mutants",
+          "level": "trained"
+        },
+        {
+          "name": "Survival",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Weapon Training",
+          "specialization": "Low-Tech"
+        },
+        {
+          "name": "Weapon Training",
+          "specialization": "Solid Projectile"
+        }
+      ],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Twisted Flesh",
+          "description": "A mutant character begins play with 10 Corruption points and one starting mutation. Whenever he would gain a malignancy, he may instead roll on the mutation table to gain a mutation, and he can always choose to fail tests made to resist malignancy or mutation."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Acrobatics",
+              "specialization": ""
+            },
+            {
+              "name": "Athletics",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Deceive",
+              "specialization": ""
+            },
+            {
+              "name": "Intimidate",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Background Aptitude",
+          "type": "aptitude",
+          "options": [
+            {
+              "name": "Fieldcraft",
+              "specialization": ""
+            },
+            {
+              "name": "Offence",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 10
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Starting trait and mutation are chosen from the sourcebook options during character creation.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2WMutBkg000006"
+}

@@ -1,7 +1,7 @@
 {
   "name": "Cleanse and Purify",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_04.png",
   "system": {
     "identifier": "cleanseAndPurify",
     "category": "combat",

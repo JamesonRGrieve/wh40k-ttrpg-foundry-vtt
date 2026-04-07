@@ -1,7 +1,7 @@
 {
   "name": "Customisation: Horns",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s08.png",
   "system": {
     "effect": "Wearer cannot be parried whilst charging",
     "availability": "Special",

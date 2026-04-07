@@ -1,7 +1,7 @@
 {
   "name": "Blessing of the Ethereals",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_21.PNG",
   "system": {
     "category": "combat",
     "source": "RT: Tau Character Guide",

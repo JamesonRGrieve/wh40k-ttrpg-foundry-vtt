@@ -1,15 +1,15 @@
 {
   "name": "Field Wall Generator",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s02.png",
   "system": {
     "type": "void",
     "weight": 18,
     "availability": "very-rare",
-    "notes": "Requires two or more generators, activated or deactivated as a Full Action, which also activates any linked generators. Generates a wall of force 1.5m high and up to 8m long between them that acts as cover. If a Wall Section Overloads, only the section between two generators shuts down, the rest are unaffected. [AP: 65%]",
+    "notes": "Requires two or more generators, placed and activated or deactivated as a Full Action, which also activates any linked generators. Generates a wall of force 1.5m high and up to 8m long between linked generators in a line that acts as cover. If a wall section overloads, only the section between two generators shuts down; the rest are unaffected. Protection Rating 65%.",
     "source": "DH 2E: Enemies Within",
     "description": {
-      "value": "<p>Requires two or more generators, activated or deactivated as a Full Action, which also activates any linked generators. Generates a wall of force 1.5m high and up to 8m long between them that acts as cover. If a Wall Section Overloads, only the section between two generators shuts down, the rest are unaffected.</p>"
+      "value": "<p>Requires two or more generators, placed and activated or deactivated as a Full Action, which also activates any linked generators. Generates a wall of force 1.5m high and up to 8m long between linked generators in a line that acts as cover. If a wall section overloads, only the section between two generators shuts down; the rest are unaffected.</p>"
     },
     "modificationSlots": 2,
     "coverage": [

@@ -1,7 +1,7 @@
 {
   "name": "Extreme Heat/Cold Protection",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s10.png",
   "system": {
     "effect": "Grants +10 to Toughness Tests to endure the elements, or +20 if armour is fully sealed.",
     "availability": "very-rare",

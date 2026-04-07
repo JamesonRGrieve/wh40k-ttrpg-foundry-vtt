@@ -1,7 +1,7 @@
 {
   "name": "Frontier World",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/horizon-road.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_02.png",
   "system": {
     "identifier": "frontier-world",
     "step": "homeWorld",

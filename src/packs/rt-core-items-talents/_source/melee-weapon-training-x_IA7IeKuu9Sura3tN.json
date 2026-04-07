@@ -1,7 +1,7 @@
 {
   "name": "Melee Weapon Training (X)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_29.png",
   "system": {
     "identifier": "meleeWeaponTraining",
     "category": "combat",

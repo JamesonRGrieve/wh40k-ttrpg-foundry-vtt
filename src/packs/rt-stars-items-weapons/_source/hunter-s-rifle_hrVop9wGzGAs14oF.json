@@ -1,7 +1,7 @@
 {
   "name": "Hunter's Rifle",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_07.png",
   "system": {
     "identifier": "hunters-rifle",
     "class": "basic",

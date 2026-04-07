@@ -1,7 +1,7 @@
 {
   "name": "Foulswarm Grenade",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
+  "img": "systems/wh40k-rpg/icons/items/grenade/grenade_03.png",
   "system": {
     "identifier": "foulswarm-grenade",
     "class": "thrown",

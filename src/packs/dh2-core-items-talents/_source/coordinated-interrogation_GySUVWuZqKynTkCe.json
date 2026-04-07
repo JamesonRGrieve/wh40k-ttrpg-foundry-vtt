@@ -1,7 +1,7 @@
 {
   "name": "Coordinated Interrogation",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_08.png",
   "system": {
     "category": "social",
     "source": "DH2e Core",

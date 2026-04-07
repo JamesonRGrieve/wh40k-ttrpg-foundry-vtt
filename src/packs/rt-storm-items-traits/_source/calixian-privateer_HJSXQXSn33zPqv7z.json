@@ -1,7 +1,7 @@
 {
   "name": "Calixian Privateer",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_16.PNG",
   "system": {
     "requirements": "Rogue Trader, RT Rank 2+. Possesses Renowned Warrant Talent. May need a Patron and their Letter of Marque.",
     "source": "RT: Into the Storm \n(Page 76)",

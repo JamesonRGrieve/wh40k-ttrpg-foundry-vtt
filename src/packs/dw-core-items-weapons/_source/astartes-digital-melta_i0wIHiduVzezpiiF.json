@@ -1,7 +1,7 @@
 {
   "name": "Astartes Digital Melta",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_05.png",
   "system": {
     "identifier": "astartes-digital-melta",
     "class": "pistol",

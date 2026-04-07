@@ -1,7 +1,7 @@
 {
   "name": "Lineage: Disgraced",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/broken-shield.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_02.png",
   "system": {
     "identifier": "lineage-disgraced",
     "step": "lineage",

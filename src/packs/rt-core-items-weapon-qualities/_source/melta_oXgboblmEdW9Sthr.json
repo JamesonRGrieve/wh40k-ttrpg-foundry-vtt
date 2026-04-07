@@ -1,0 +1,21 @@
+{
+  "name": "Melta*",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_16.PNG",
+  "system": {
+    "identifier": "melta",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 30</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>30</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "oXgboblmEdW9Sthr"
+}

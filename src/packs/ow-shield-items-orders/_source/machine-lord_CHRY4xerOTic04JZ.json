@@ -1,7 +1,7 @@
 {
   "name": "Machine Lord",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_16.png",
   "system": {
     "typeAndAction": "Basic Order\nFull Action",
     "requirements": "Enginseer Prime Spec\nServitor Comrade\n600xp",

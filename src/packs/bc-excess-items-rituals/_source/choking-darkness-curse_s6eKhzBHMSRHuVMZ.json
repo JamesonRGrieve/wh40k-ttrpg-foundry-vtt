@@ -1,7 +1,7 @@
 {
   "name": "Choking Darkness [Curse]",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lightning-magenta-1.jpg",
   "system": {
     "test": "+0 Forbidden Lore (Heresy or The Warp)",
     "requirements": "Requires target to have corruption points, no effect on those Pure or Sanctified such as Grey Knights, Sisters of Battle, etc). The character must have comprehensive knowledge of the target's most heinous acts, a list which they speak aloud to the gods themselves as they bessech their power.",

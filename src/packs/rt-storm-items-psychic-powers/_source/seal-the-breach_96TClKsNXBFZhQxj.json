@@ -1,7 +1,7 @@
 {
   "name": "Seal the Breach",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/heal-sky-3.jpg",
   "system": {
     "discipline": "Theosophamy (Warp Manipulation)",
     "prerequisites": "None\nOW: Psy Rating 5",

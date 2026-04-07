@@ -1,7 +1,7 @@
 {
   "name": "Unbalanced Mind",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/needles-sky-2.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Exalted Powers)",
     "prerequisites": "Psy Rating 5, Phantom Parry",

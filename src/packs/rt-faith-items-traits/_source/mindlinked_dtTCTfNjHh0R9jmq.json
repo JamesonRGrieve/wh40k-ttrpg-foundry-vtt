@@ -1,7 +1,7 @@
 {
   "name": "Mindlinked",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_18.png",
   "system": {
     "category": "unique",
     "requirements": "Psylakis Warder Alternative Advance (Innate)",

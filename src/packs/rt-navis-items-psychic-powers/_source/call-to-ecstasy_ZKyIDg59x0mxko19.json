@@ -1,7 +1,7 @@
 {
   "name": "Call to Ecstasy",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/horror-red-1.jpg",
   "system": {
     "discipline": "zNPC - Daemon",
     "prerequisites": "Daemonic Trait",

@@ -1,7 +1,7 @@
 {
   "name": "Metallican Gunslinger",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_29.png",
   "system": {
     "requirements": "Assassin or Scum Career, DH Rank 1+. Ballistic Skill 30+, must originate from Gunmetal City. ",
     "source": "DH: Inquisitor's Handbook (Page 72)",

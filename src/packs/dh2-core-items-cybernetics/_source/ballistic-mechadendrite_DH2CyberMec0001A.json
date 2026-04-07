@@ -1,0 +1,63 @@
+{
+  "_id": "DH2CyberMec0001A",
+  "name": "Ballistic Mechadendrite",
+  "type": "cybernetic",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "identifier": "ballistic-mechadendrite",
+    "type": "mechadendrite",
+    "locations": [
+      "spine"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "effect": "<p>Shoulder-mounted laspistol with the Compact upgrade. The user can fire it once per round as a Half Action or Reaction. If used as a Reaction, it does not count toward the normal limit of one attack action on the user's turn. Some versions can later be refitted with another Compact pistol acquired separately.</p>",
+    "drawbacks": "<p>Requires the relevant Mechadendrite Use talent and Cyber-Mantle. A character may not have more mechadendrites than his Toughness Bonus.</p>",
+    "installation": {
+      "surgery": "Major surgery required",
+      "difficulty": "-20 Medicae",
+      "recoveryTime": "1 week"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    },
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 600,
+      "currency": "throne"
+    },
+    "equipped": true,
+    "inBackpack": false,
+    "container": "",
+    "description": {
+      "value": "<p>A shoulder-mounted weapons mechadendrite fitted with a compact laspistol. In the core rules this is listed under Cybernetics rather than ordinary gear.</p>",
+      "chat": "",
+      "summary": "Cybernetic shoulder-mounted compact laspistol"
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "183",
+      "custom": ""
+    },
+    "notes": "Requires relevant Mechadendrite Use talent and Cyber-Mantle.",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {}
+}

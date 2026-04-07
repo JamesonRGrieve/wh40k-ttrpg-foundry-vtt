@@ -1,7 +1,7 @@
 {
   "name": "Astartes Executioner Axe",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/axes/axe_05_b.png",
   "system": {
     "identifier": "astartes-executioner-axe",
     "class": "melee",

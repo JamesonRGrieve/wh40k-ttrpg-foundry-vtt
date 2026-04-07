@@ -1,7 +1,7 @@
 {
   "name": "In Service to the Throne",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/templar-shield.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_03.png",
   "system": {
     "identifier": "in-service-to-the-throne",
     "step": "birthright",

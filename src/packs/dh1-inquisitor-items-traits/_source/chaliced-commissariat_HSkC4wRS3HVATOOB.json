@@ -1,7 +1,7 @@
 {
   "name": "Chaliced Commissariat",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_16.PNG",
   "system": {
     "requirements": "Guardsman Career, DH Rank 3+",
     "source": "DH: Inquisitor's Handbook (Page 60)",

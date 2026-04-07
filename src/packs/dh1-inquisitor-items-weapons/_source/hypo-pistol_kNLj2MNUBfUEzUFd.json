@@ -1,7 +1,7 @@
 {
   "name": "Hypo Pistol",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_14.png",
   "system": {
     "identifier": "hypo-pistol",
     "class": "pistol",

@@ -1,0 +1,36 @@
+{
+  "name": "Feudal World Plate",
+  "type": "armour",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s07.png",
+  "system": {
+    "type": "primitive",
+    "weight": 30,
+    "availability": "scarce",
+    "notes": "",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Heavy primitive plate armour covering the full body.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 5,
+      "body": 5,
+      "leftArm": 5,
+      "rightArm": 5,
+      "leftLeg": 5,
+      "rightLeg": 5
+    },
+    "modifications": [],
+    "maxAgility": 25,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OWArmr000000001X"
+}

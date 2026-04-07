@@ -1,7 +1,7 @@
 {
   "name": "Needle Pistol",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_03.png",
   "system": {
     "identifier": "needle-pistol",
     "class": "pistol",

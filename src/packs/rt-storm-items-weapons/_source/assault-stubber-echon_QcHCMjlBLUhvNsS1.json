@@ -1,7 +1,7 @@
 {
   "name": "Assault Stubber (Echon)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_05.png",
   "system": {
     "identifier": "assault-stubber-echon",
     "class": "heavy",

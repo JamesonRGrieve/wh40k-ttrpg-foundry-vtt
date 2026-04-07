@@ -1,7 +1,7 @@
 {
   "name": "Jungle Stalker",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_22.PNG",
   "system": {
     "category": "general",
     "source": "OW: Enemies of the Imperium",

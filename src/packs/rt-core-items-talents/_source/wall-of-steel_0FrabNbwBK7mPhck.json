@@ -1,7 +1,7 @@
 {
   "name": "Wall of Steel",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_25.png",
   "system": {
     "identifier": "wallOfSteel",
     "category": "combat",

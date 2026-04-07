@@ -1,7 +1,7 @@
 {
   "name": "Akvran Cutter",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/thrown-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/grenade/grenade_03.png",
   "system": {
     "identifier": "akvran-cutter",
     "class": "thrown",

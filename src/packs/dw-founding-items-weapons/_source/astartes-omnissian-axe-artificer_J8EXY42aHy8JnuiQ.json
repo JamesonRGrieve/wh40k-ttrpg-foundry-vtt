@@ -1,7 +1,7 @@
 {
   "name": "Astartes Omnissian Axe (Artificer)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/axes/axe_08_b.PNG",
   "system": {
     "identifier": "astartes-omnissian-axe-artificer",
     "class": "melee",

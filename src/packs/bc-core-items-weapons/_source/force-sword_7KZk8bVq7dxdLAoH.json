@@ -1,7 +1,7 @@
 {
   "name": "Force Sword",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_11_b.PNG",
   "system": {
     "identifier": "force-sword",
     "class": "melee",

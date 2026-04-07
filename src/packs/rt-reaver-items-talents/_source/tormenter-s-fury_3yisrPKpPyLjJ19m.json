@@ -1,7 +1,7 @@
 {
   "name": "Tormenter's Fury",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_25.png",
   "system": {
     "identifier": "tormentersFury",
     "category": "combat",

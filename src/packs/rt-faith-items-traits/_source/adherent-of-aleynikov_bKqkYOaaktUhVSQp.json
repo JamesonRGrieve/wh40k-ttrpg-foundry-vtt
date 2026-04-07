@@ -1,7 +1,7 @@
 {
   "name": "Adherent of Aleynikov",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_22.PNG",
   "system": {
     "requirements": "Any Human, RT Rank 1+. Fellowship 35+, Willpower 35+, Must have spent time studying the teachings of Nadine Aleynikov and minstering to the afflicted of the Koronus Expanse.",
     "source": "RT: Faith and Coin\n(Page 74)",

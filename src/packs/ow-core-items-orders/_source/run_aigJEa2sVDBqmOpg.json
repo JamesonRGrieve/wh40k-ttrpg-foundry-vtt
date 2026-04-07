@@ -1,7 +1,7 @@
 {
   "name": "Run",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_14.png",
   "system": {
     "typeAndAction": "Generic Order\nFull Action",
     "requirements": "--",

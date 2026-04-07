@@ -1,7 +1,7 @@
 {
   "name": "Forge World",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_18.png",
   "system": {
     "identifier": "forge-world",
     "step": "homeworld",

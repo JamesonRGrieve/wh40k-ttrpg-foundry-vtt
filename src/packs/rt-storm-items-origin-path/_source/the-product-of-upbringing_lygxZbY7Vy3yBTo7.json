@@ -1,7 +1,7 @@
 {
   "name": "A Product of Upbringing",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/graduate-cap.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_03.png",
   "system": {
     "identifier": "the-product-of-upbringing",
     "step": "trialsAndTravails",

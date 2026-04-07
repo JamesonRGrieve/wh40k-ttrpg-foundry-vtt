@@ -1,7 +1,7 @@
 {
   "name": "Auto-Stubber (Wrath)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_14.png",
   "system": {
     "identifier": "auto-stubber-wrath",
     "class": "basic",

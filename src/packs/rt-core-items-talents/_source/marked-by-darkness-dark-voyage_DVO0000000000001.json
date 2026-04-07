@@ -1,7 +1,7 @@
 {
   "name": "Marked by Darkness (Dark Voyage)",
   "type": "talent",
-  "img": "icons/svg/daze.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_10.png",
   "system": {
     "identifier": "marked-by-darkness-dark-voyage",
     "category": "origin",

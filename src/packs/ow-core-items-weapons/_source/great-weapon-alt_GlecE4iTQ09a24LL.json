@@ -1,7 +1,7 @@
 {
   "name": "Great Weapon  (alt.)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_07_b.png",
   "system": {
     "identifier": "great-weapon-alt",
     "class": "melee",

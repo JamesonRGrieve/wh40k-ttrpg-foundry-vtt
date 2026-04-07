@@ -1,7 +1,7 @@
 {
   "name": "Execution Pistol \"Puritan-14\" (Hax-Orthlack) [Shotgun]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_05.png",
   "system": {
     "identifier": "execution-pistol-puritan-14-hax-orthlack-shotgun",
     "class": "pistol",

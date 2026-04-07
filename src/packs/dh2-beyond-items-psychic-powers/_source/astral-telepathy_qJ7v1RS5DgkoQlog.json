@@ -1,7 +1,7 @@
 {
   "name": "Astral Telepathy",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/link-blue-1.jpg",
   "system": {
     "discipline": "Telepathy - Astropath Elite Advance",
     "prerequisites": "Telepathic Link, Willpower 40",

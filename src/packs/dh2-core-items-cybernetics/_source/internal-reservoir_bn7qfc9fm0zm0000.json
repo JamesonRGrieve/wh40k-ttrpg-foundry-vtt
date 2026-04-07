@@ -1,0 +1,61 @@
+{
+  "name": "Internal Reservoir",
+  "type": "cybernetic",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Used to improve Luminen Capacitors by acting as a battery. Do not gain fatigue when Luminen Capacitors are used, instead drain half of the internal reservoir. Takes on day to recharge.</p>\n<h3>Requirements</h3><p>Requires Luminen Capacitors Cybernetic</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Used to improve Luminen Capacitors by acting as a battery. Do not gain fatigue when Luminen Capacitors are used, instead drain half of the internal reservoir. Takes on day to recharge."
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": true,
+    "effect": "Used to improve Luminen Capacitors by acting as a battery. Do not gain fatigue when Luminen Capacitors are used, instead drain half of the internal reservoir. Takes on day to recharge.",
+    "notes": "-",
+    "identifier": "internal-reservoir",
+    "gameSystems": [
+      "dh2e"
+    ],
+    "type": "implant",
+    "locations": [
+      "body"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "drawbacks": "<p>Requires implantation surgery and appropriate maintenance.</p>",
+    "installation": {
+      "surgery": "Major surgery required",
+      "difficulty": "-10 Medicae",
+      "recoveryTime": "1 week"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bn7qfc9fm0zm0000"
+}

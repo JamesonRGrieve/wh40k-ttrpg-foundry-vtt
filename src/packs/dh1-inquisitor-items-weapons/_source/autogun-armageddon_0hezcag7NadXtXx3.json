@@ -1,7 +1,7 @@
 {
   "name": "Autogun (Armageddon)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_19.png",
   "system": {
     "identifier": "autogun-armageddon",
     "class": "basic",

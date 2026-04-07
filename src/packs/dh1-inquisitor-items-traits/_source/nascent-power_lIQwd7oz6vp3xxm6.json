@@ -1,7 +1,7 @@
 {
   "name": "Nascent Power",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_21.png",
   "system": {
     "category": "elite",
     "requirements": "Nascent Psyker Elite Advance Package (Innate)",

@@ -1,7 +1,7 @@
 {
   "name": "Jovian-pattern Nova Cannon",
   "type": "shipWeapon",
-  "img": "icons/svg/energy.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_01.png",
   "system": {
     "type": "Nova Cannon (Archeotech)",
     "hullType": [

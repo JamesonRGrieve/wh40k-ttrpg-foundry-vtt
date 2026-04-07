@@ -1,0 +1,44 @@
+{
+  "name": "Synskin",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "clothing",
+    "weight": 2,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>A bio-reactive body glove with a non-reflective surface that moulds itself to the wearer's form.</p><p><b>Effect:</b> Grants 2 AP to all unarmoured locations, +10 to Stealth Tests, and renders the wearer invisible to infra-red goggles and Dark Sight.</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A bio-reactive body glove with a non-reflective surface that moulds itself to the wearer's form."
+    },
+    "source": {
+      "book": "Only War Core",
+      "page": "198",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Grants 2 AP to all unarmoured locations, +10 to Stealth Tests, and renders the wearer invisible to infra-red goggles and Dark Sight.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "synskin",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OWGear00000000AX"
+}

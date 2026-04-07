@@ -1,7 +1,7 @@
 {
   "name": "Chain Glaive [Best Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
+  "img": "systems/wh40k-rpg/icons/items/flail/flail_05_b.png",
   "system": {
     "identifier": "chain-glaive-best",
     "class": "melee",

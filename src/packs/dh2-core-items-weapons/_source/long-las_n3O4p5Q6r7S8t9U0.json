@@ -1,7 +1,7 @@
 {
   "name": "Long Las",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_05.png",
   "system": {
     "identifier": "long-las",
     "class": "basic",

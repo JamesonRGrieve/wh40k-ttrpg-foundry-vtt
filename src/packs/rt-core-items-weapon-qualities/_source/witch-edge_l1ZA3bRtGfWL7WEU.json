@@ -1,0 +1,21 @@
+{
+  "name": "Witch-Edge",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_02.png",
+  "system": {
+    "identifier": "witch-edge",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 2</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>2</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "l1ZA3bRtGfWL7WEU"
+}

@@ -1,7 +1,7 @@
 {
   "name": "Power Mace",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_07_b.PNG",
   "system": {
     "identifier": "power-mace",
     "class": "melee",

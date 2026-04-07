@@ -1,7 +1,7 @@
 {
   "name": "Carto-Artifex",
   "type": "shipRole",
-  "img": "icons/svg/crew.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_06.png",
   "system": {
     "rank": 4,
     "purpose": "Finds safe warp and realspace travel routes.",

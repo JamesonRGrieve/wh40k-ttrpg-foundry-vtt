@@ -1,7 +1,7 @@
 {
   "name": "Embrace the Emptiness",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-sky-1.jpg",
   "system": {
     "discipline": "Voidfrost\n(Cryokinesis)",
     "prerequisites": "None",

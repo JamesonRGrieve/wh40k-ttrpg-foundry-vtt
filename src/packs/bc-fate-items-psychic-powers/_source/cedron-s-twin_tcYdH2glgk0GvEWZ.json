@@ -1,7 +1,7 @@
 {
   "name": "Cedron's Twin",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/explosion-magenta-2.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Slaanesh)",
     "prerequisites": "Slaanesh Aligned, Fellowship 40+",

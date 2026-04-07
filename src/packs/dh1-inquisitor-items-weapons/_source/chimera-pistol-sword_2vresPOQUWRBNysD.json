@@ -1,7 +1,7 @@
 {
   "name": "Chimera Pistol Sword",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_13.png",
   "system": {
     "identifier": "chimera-pistol-sword",
     "class": "melee",

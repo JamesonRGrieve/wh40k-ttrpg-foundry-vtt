@@ -1,7 +1,7 @@
 {
   "name": "Helm of Varthion",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/helmet_s03.png",
   "system": {
     "type": "power",
     "weight": 18,

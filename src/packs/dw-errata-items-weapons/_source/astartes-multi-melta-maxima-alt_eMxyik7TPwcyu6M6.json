@@ -1,7 +1,7 @@
 {
   "name": "Astartes Multi-Melta (Maxima) (alt.)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-multimelta.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_08.png",
   "system": {
     "identifier": "astartes-multi-melta-maxima-alt",
     "class": "heavy",

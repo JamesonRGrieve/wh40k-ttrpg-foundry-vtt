@@ -1,7 +1,7 @@
 {
   "name": "Weapon Master (Arch-Militant)",
   "type": "talent",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_17.PNG",
   "system": {
     "identifier": "weapon-master-arch-militant",
     "category": "origin",

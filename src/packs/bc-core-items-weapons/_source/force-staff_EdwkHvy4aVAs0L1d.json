@@ -1,7 +1,7 @@
 {
   "name": "Force Staff",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
+  "img": "systems/wh40k-rpg/icons/items/staves/stave_06_b.PNG",
   "system": {
     "identifier": "force-staff",
     "class": "melee",

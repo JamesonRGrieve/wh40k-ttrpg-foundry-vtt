@@ -1,7 +1,7 @@
 {
   "name": "Saturine-Pattern 4A \"Ultra\" Drive",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_18.png",
   "system": {
     "hullType": [
       "battlecruiser",

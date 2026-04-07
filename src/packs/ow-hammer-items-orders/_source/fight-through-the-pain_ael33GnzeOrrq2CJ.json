@@ -1,7 +1,7 @@
 {
   "name": "Fight Through The Pain!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_06.png",
   "system": {
     "typeAndAction": "Veteran Order\nHalf Action",
     "requirements": ".Vet. Comrade\nApt: Fellowship, Social",

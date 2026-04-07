@@ -1,7 +1,7 @@
 {
   "name": "Dowsing",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/horror-acid-2.jpg",
   "system": {
     "discipline": "Divination",
     "prerequisites": "-",

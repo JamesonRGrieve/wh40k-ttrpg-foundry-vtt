@@ -1,7 +1,7 @@
 {
   "name": "Stubjack",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_03.png",
   "system": {
     "identifier": "stubjack",
     "step": "birthright",

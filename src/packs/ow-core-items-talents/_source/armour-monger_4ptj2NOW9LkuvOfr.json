@@ -1,7 +1,7 @@
 {
   "name": "Armour-Monger",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_35.png",
   "system": {
     "identifier": "armourMonger",
     "category": "knowledge",

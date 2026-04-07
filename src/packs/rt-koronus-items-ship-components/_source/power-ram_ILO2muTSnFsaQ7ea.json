@@ -1,7 +1,7 @@
 {
   "name": "Power Ram",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_15.PNG",
   "system": {
     "hullType": [
       "light-cruiser",

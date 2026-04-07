@@ -2,7 +2,7 @@
   "_id": "ruefsep79332z45a",
   "name": "Rending Critical - Leg",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-blue-2.jpg",
   "system": {
     "identifier": "crit_rending_leg",
     "damageType": "rending",

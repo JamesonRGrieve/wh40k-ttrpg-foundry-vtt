@@ -1,7 +1,7 @@
 {
   "name": "Sanctioned Xenos",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_13.PNG",
   "system": {
     "category": "elite",
     "requirements": "Elite Advance, Xenos, Individual willing to perform service, Human Patron.",

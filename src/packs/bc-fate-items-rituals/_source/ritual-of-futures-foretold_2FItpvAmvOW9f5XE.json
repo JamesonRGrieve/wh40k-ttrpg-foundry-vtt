@@ -1,7 +1,7 @@
 {
   "name": "Ritual of Futures Foretold",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/enchant-royal-2.jpg",
   "system": {
     "test": "-30 Psyniscience ",
     "requirements": "Character must have Psyker Trait, Psyniscience, and Forbidden Lore(Daemonology + The Warp). Gains +10 to test for any one of Com. Lore(Astra Telepathica), Sch. Lroe (Numerology or Occult), or Forb.Lore(Psykers). Ritual Performed in area where character wishes to look into the future and find what happens at location. ",

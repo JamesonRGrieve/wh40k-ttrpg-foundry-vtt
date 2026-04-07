@@ -1,7 +1,7 @@
 {
   "name": "Skills and Talents",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rock-royal-2.jpg",
   "system": {
     "useTime": "Khorne: Athletics +10, Dodge +10, Intimidate +10\nTzeentch: Deceive +20, Psyniscience +30\nNurgle: Intimidate +20, Medicae +10\nSlaanesh: Awareness +10, Charm +20, Deceive +10, Dodge +10",
     "range": null,

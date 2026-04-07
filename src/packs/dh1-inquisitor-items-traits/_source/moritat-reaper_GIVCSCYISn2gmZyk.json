@@ -1,7 +1,7 @@
 {
   "name": "Moritat Reaper",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_05.png",
   "system": {
     "requirements": "Assassin Career, DH Rank 6+. Mus be a member of the Moritat and remain true to its code.",
     "source": "DH: Inquisitor's Handbook (Page 74)",

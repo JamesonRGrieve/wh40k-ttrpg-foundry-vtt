@@ -1,7 +1,7 @@
 {
   "name": "Seneschal",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/key.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_25.png",
   "system": {
     "identifier": "seneschal",
     "step": "career",

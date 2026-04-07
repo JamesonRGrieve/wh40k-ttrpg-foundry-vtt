@@ -1,7 +1,7 @@
 {
   "name": "Unleash the Foetid Footman",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/light-blue-3.jpg",
   "system": {
     "test": "-20 Forbidden Lore (Daemonology) ",
     "requirements": "Basic Nurgle Ritual to summon a Plaguebearer. Requires Site touched by disease, a carved ritual circle with cauldrons of putrid liquids filling the area. Rotten corposes fill the centre and a single adult human untouched by disease or illness sits atop the pile, ready to absorb its filth to create a window through which the Plaguebearer emerges.",

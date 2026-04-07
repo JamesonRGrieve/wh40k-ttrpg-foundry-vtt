@@ -1,7 +1,7 @@
 {
   "name": "High Vendetta",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/crossed-swords.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_27.png",
   "system": {
     "identifier": "high-vendetta",
     "step": "trialsAndTravails",

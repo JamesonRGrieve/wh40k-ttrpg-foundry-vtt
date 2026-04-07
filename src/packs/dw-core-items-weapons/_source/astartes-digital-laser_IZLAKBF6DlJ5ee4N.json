@@ -1,7 +1,7 @@
 {
   "name": "Astartes Digital Laser",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_06.png",
   "system": {
     "identifier": "astartes-digital-laser",
     "class": "pistol",

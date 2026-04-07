@@ -1,7 +1,7 @@
 {
   "name": "! Default: Backpack Ammo/Power Pack (Astartes)",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammunition_11_b.PNG",
   "system": {
     "identifier": "-default-backpack-ammopower-pack-astartes",
     "weaponTypes": [],

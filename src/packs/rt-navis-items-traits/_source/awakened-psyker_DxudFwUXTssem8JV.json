@@ -1,7 +1,7 @@
 {
   "name": "Awakened Psyker",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_06.png",
   "system": {
     "requirements": "Any Human, except Astropath or Navigator. RT Rank 3+, Willpower 35+. Does not have \"Untouchable\" Trait.",
     "source": "RT: The Navis Primer\n(Page 68)",

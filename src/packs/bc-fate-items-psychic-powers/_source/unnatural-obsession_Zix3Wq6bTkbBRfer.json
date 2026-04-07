@@ -1,7 +1,7 @@
 {
   "name": "Unnatural Obsession",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/needles-fire-2.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Slaanesh)",
     "prerequisites": "Slaanesh Aligned, Psy Rating 3, Fellowship 40+",

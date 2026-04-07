@@ -2,7 +2,7 @@
   "_id": "a39i7dq73eu2zuos",
   "name": "Explosive Critical - Leg",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/light-air-fire-1.jpg",
   "system": {
     "identifier": "crit_explosive_leg",
     "damageType": "explosive",

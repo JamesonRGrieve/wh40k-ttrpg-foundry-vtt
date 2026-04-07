@@ -1,7 +1,7 @@
 {
   "name": "Nurgle's Breath",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_16.png",
   "system": {
     "identifier": "nurgles-breath",
     "class": "pistol",

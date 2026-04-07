@@ -1,7 +1,7 @@
 {
   "name": "Prominent Ancestry (Lineage)",
   "type": "talent",
-  "img": "icons/svg/book.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_12.PNG",
   "system": {
     "identifier": "prominent-ancestry-lineage",
     "category": "origin",

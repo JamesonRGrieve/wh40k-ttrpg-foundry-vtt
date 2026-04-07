@@ -1,7 +1,7 @@
 {
   "name": "Incinerate",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-grasp-eerie-3.jpg",
   "system": {
     "discipline": "Pyromancy",
     "prerequisites": "-",

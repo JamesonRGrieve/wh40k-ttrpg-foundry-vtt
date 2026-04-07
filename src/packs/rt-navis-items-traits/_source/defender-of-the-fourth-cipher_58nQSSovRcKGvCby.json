@@ -1,7 +1,7 @@
 {
   "name": "Defender of the Fourth Cipher",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_30.png",
   "system": {
     "requirements": "Missionary or Arch-Militant. RT Rank 2+, Willpower 30+. Character is Initiated into the Vigil in the Fourth Cipher, and studied with other members to learn its ways.",
     "source": "RT: The Navis Primer\n(Page 74)",

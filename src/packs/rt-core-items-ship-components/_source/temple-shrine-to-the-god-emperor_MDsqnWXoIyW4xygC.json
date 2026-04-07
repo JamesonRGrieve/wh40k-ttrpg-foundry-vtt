@@ -1,7 +1,7 @@
 {
   "name": "Temple-Shrine to the God Emperor",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_20.png",
   "system": {
     "hullType": [
       "all"

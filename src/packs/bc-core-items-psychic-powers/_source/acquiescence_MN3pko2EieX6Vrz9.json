@@ -1,7 +1,7 @@
 {
   "name": "Acquiescence",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rip-sky-2.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Slaanesh)",
     "prerequisites": "Devoted to Slaanesh WP 50 Psy Rating 4",

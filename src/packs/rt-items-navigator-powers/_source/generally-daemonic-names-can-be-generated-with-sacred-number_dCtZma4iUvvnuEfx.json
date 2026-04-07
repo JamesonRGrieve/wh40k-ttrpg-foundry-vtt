@@ -1,7 +1,7 @@
 {
   "name": "Generally, Daemonic names can be generated with Sacred Numbers worth of Syllables, +1d5 for Herald Daemons, +1d10 on top of that for Daemon Princes or Greater Daemons. Roll 2 1d10 rolls to determine one syllable then reorder to make something vaguely comprehensible. Or just make it up.",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-sky-1.jpg",
   "system": {
     "useTime": null,
     "range": null,

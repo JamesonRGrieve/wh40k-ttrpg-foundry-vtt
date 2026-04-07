@@ -1,7 +1,7 @@
 {
   "name": "Terminator Armour",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s09.png",
   "system": {
     "type": "power",
     "weight": 450,

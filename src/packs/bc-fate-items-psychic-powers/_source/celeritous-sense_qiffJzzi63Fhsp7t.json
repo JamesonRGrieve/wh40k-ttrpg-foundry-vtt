@@ -1,7 +1,7 @@
 {
   "name": "Celeritous Sense",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-magenta-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Slaanesh)",
     "prerequisites": "Slaanesh Aligned, Psy Rating 4, Perception 40+, Lightning Reflexes",

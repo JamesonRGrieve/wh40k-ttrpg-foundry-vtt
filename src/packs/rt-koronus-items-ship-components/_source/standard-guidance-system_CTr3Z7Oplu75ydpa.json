@@ -1,7 +1,7 @@
 {
   "name": "Standard Guidance System",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_06.png",
   "system": {
     "hullType": [
       "all"

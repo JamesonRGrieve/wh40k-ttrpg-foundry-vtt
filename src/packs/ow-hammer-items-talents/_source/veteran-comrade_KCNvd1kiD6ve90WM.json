@@ -1,7 +1,7 @@
 {
   "name": "Veteran Comrade",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_14.PNG",
   "system": {
     "identifier": "veteranComrade",
     "category": "leadership",

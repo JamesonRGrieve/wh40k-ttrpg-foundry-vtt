@@ -1,7 +1,7 @@
 {
   "name": "Neural Whip",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-shock.svg",
+  "img": "systems/wh40k-rpg/icons/items/flail/flail_05_b.png",
   "system": {
     "identifier": "neural-whip",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Incendiary of Tzeentch",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wild-jade-2.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Tzeentch)",
     "prerequisites": "Tzeentch Aligned\nPsy Rating 2, Thousand Sons Sorcerer",

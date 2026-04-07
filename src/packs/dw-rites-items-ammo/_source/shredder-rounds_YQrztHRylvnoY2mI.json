@@ -1,7 +1,7 @@
 {
   "name": "Shredder Rounds",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammunition_05_b.PNG",
   "system": {
     "identifier": "shredder-rounds",
     "weaponTypes": [

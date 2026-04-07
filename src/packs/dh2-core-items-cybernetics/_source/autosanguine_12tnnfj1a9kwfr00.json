@@ -1,0 +1,61 @@
+{
+  "name": "Autosanguine",
+  "type": "cybernetic",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Known to the Mechanicus as Autosanguine. The Dark Mechanicus call it Black Blood. The User is always considered Lightly Wounded, and heals two wounds per day instead of 1.</p>\n<h3>Requirements</h3><p>Generally Mechanicus Only although available through illegal Heretek opeartions.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Known to the Mechanicus as Autosanguine. The Dark Mechanicus call it Black Blood. The User is always considered Lightly Wounded, and heals two wounds per day instead of 1."
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": true,
+    "effect": "Known to the Mechanicus as Autosanguine. The Dark Mechanicus call it Black Blood. The User is always considered Lightly Wounded, and heals two wounds per day instead of 1.",
+    "notes": "-",
+    "identifier": "autosanguine",
+    "gameSystems": [
+      "dh2e"
+    ],
+    "type": "implant",
+    "locations": [
+      "body"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "drawbacks": "<p>Requires implantation surgery and appropriate maintenance.</p>",
+    "installation": {
+      "surgery": "Major surgery required",
+      "difficulty": "-10 Medicae",
+      "recoveryTime": "1 week"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "12tnnfj1a9kwfr00"
+}

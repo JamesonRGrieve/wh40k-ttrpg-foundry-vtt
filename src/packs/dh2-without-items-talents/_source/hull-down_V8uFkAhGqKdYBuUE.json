@@ -1,7 +1,7 @@
 {
   "name": "Hull Down",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_08.png",
   "system": {
     "identifier": "hullDown",
     "category": "combat",

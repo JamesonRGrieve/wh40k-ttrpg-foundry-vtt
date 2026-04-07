@@ -1,7 +1,7 @@
 {
   "name": "Hunter",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/hunter-eyes.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_06.png",
   "system": {
     "identifier": "hunter",
     "step": "lureOfTheVoid",

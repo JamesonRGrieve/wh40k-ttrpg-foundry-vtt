@@ -2,7 +2,7 @@
   "_id": "k8t0trtwpga6iiqw",
   "name": "Rending Critical - Body",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fireball-acid-2.jpg",
   "system": {
     "identifier": "crit_rending_body",
     "damageType": "rending",

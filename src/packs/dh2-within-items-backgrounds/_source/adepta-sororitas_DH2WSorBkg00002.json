@@ -1,7 +1,7 @@
 {
   "name": "Adepta Sororitas",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_25.png",
   "system": {
     "identifier": "adepta-sororitas",
     "step": "background",
@@ -127,5 +127,5 @@
   },
   "effects": [],
   "flags": {},
-  "_id": "DH2WSorBkg00002"
+  "_id": "DH2WSorBkg00002A"
 }

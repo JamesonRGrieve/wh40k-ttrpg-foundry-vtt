@@ -1,7 +1,7 @@
 {
   "name": "Soul-bound",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_15.PNG",
   "system": {
     "category": "creature",
     "requirements": "",

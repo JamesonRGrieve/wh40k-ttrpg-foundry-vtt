@@ -1,7 +1,7 @@
 {
   "name": "But it Dark in Dere!",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_06.png",
   "system": {
     "category": "general",
     "requirements": "Ogryn (Innate)",

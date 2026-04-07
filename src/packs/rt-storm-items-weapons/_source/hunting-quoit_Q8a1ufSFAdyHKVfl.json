@@ -1,7 +1,7 @@
 {
   "name": "Hunting Quoit",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/grenade/grenade_07.png",
   "system": {
     "identifier": "hunting-quoit",
     "class": "thrown",

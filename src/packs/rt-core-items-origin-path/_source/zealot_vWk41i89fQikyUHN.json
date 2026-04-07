@@ -1,7 +1,7 @@
 {
   "name": "Zealot",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/torch.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_03.png",
   "system": {
     "identifier": "zealot",
     "step": "lureOfTheVoid",

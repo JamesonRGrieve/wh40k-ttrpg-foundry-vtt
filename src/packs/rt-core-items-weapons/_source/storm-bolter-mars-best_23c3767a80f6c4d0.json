@@ -1,7 +1,7 @@
 {
   "name": "Storm Bolter (Mars) [Best Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_01.png",
   "system": {
     "identifier": "storm-bolter-mars-best",
     "class": "basic",

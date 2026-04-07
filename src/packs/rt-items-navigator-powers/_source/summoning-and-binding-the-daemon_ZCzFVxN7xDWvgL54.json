@@ -1,7 +1,7 @@
 {
   "name": "Summoning and Binding the Daemon",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fire-arrows-sky-3.jpg",
   "system": {
     "useTime": "Summoning a Daemon requires performing a Daemonic Summoning Ritual and succeeding a Daemonic Mastery Test. As seen elsewhere. ",
     "range": null,

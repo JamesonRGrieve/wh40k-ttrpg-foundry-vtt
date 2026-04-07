@@ -1,0 +1,61 @@
+{
+  "name": "Bionic Arm",
+  "type": "cybernetic",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 1000,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Common Craftsmanship replaces a normal arm in all funcitonality. Poor suffers -5 to Weapon Skill and Ballistic Skill. Good Craftsmanship gives +10 to Agility Tests for Delicate Manipulation. Best Craftsmanship adds +10 to Strength Tests using the arm, and can also store small items such as pistol clips.</p>\n<h3>Requirements</h3><p>Damage works as normal, although inappropriate effects like bleeding just render limb useless</p>\n<p><b>Effect:</b> Scarce / Initiated</p><p><b>Notes:</b> 1000 T</p>",
+      "chat": "",
+      "summary": "Common Craftsmanship replaces a normal arm in all funcitonality. Poor suffers -5 to Weapon Skill and Ballistic Skill. Good Craftsmanship gives +10 to Agility Tests for Delicate Manipulation. Best Craf"
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": true,
+    "effect": "Common Craftsmanship replaces a normal arm in all funcitonality. Poor suffers -5 to Weapon Skill and Ballistic Skill. Good Craftsmanship gives +10 to Agility Tests for Delicate Manipulation. Best Craftsmanship adds +10 to Strength Tests using the arm, and can also store small items such as pistol clips.",
+    "notes": "",
+    "identifier": "bionic-arm",
+    "gameSystems": [
+      "dh2e"
+    ],
+    "type": "implant",
+    "locations": [
+      "body"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "drawbacks": "<p>Requires implantation surgery and appropriate maintenance.</p>",
+    "installation": {
+      "surgery": "Major surgery required",
+      "difficulty": "-10 Medicae",
+      "recoveryTime": "1 week"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "189lffewjxeei000"
+}

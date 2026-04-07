@@ -1,7 +1,7 @@
 {
   "name": "Sabbat-pattern Helm",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/helmet_s07.png",
   "system": {
     "type": "power",
     "weight": 2.5,

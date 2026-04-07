@@ -1,7 +1,7 @@
 {
   "name": "Necron Concussion Beamer",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_16.png",
   "system": {
     "identifier": "necron-concussion-beamer",
     "class": "pistol",

@@ -1,7 +1,7 @@
 {
   "name": "Subsystem (SM): Nutrient Recycling",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s05.png",
   "system": {
     "effect": "Allows wearer to survive without food for up to 2 weeks before having to make a -10 Toughness Test. Failing suffers one fatigue which cannot be eliminated until other nourishment is consumed.",
     "availability": "Special",

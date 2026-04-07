@@ -1,7 +1,7 @@
 {
   "name": "Bow (alt.)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_01.png",
   "system": {
     "identifier": "bow-alt",
     "class": "basic",

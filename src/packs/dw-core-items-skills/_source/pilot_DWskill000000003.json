@@ -4,16 +4,16 @@
   "img": "icons/svg/book.svg",
   "system": {
     "characteristic": "agility",
-    "descriptor": "Pilot covers the operation of aircraft and spacecraft. Each specialisation is a separate skill.",
-    "uses": "Uses: Flying aircraft, piloting spacecraft, performing aerial manoeuvres, landing in difficult conditions.\nPersonal: Jump packs, grav-chutes, and similar personal flight devices.\nMilitary Craft: Atmospheric military vehicles including Thunderhawks, Valkyries, and similar assault craft.\nSpacecraft: Void-capable vessels from system runners to warp-capable ships.\nFlyers: Civilian and light atmospheric craft.\nSpecialisations: Personal, Military Craft, Spacecraft, Flyers. Each specialisation must be taken separately as a distinct skill.",
+    "descriptor": "Characters utilise the Pilot Skill to fly anything from personal jump packs to small atmospheric craft such as landers or gun-cutters, to void-capable fighters, bombers, and capital vessels.",
+    "uses": "Skill Groups: Personal, Flyers, Space Craft.\nUnder normal conditions, piloting does not require a test, but unusual or difficult conditions such as storms, obstacles, or dangerous manoeuvres do require a Skill Test.\nWhen chasing another vehicle or ship or contesting for position, the character makes an opposed Pilot Test against his opponent.",
     "useTime": "Half Action",
     "description": {
-      "value": "<p>Pilot covers the operation of aircraft and spacecraft. Each specialisation is a separate skill.</p>\n<p><strong>Specialisations:</strong> Personal, Military Craft, Spacecraft, Flyers</p>\n<p>In Deathwatch, Pilot is a separate skill from Drive, unlike Dark Heresy 2e where both are folded into Operate.</p>"
+      "value": "<p>Characters utilise the Pilot Skill to fly anything from personal jump packs to small atmospheric craft such as landers or gun-cutters, to void-capable fighters, bombers, and capital vessels.</p>\n<p><strong>Skill Groups:</strong> Personal, Flyers, Space Craft</p>\n<p>Under normal conditions, piloting does not require a test, but unusual or difficult conditions such as storms, obstacles, or dangerous manoeuvres do require a Skill Test.</p>"
     },
     "isBasic": false,
     "skillType": "advanced",
     "aptitudes": ["Agility", "Fieldcraft"],
-    "source": "Deathwatch Core"
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

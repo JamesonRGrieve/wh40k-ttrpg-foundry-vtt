@@ -1,7 +1,7 @@
 {
   "name": "Divine Ministration",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_09.png",
   "system": {
     "identifier": "divineMinistration",
     "category": "general",

@@ -1,7 +1,7 @@
 {
   "name": "Reliquarist",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_08.png",
   "system": {
     "requirements": "Rogue Trader, Explorator, Misisonary, Seneschal, or Void-Master. RT Rank 1+, Intelligence 40+. Uncovered at least one lost holy relic, researched its origins, and determined its place within the Imperial Creed",
     "source": "RT: Faith and Coin\n(Page 72)",

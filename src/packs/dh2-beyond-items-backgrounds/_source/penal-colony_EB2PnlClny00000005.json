@@ -1,0 +1,88 @@
+{
+  "name": "Penal Colony",
+  "type": "originPath",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_34.png",
+  "system": {
+    "identifier": "penal-colony",
+    "step": "homeworld",
+    "stepIndex": 1,
+    "description": {
+      "value": "<h2>Penal Colony</h2><p>Penal colonies are the dumping grounds for the Imperium's most dangerous criminals and political dissidents. Life on such worlds is a brutal struggle for survival, where the only law is that of the strong and the cunning. Those who emerge from these hellish environments are often hardened beyond measure, possessing a keen instinct for danger and an intimate knowledge of the underworld's dark corners.</p><h3>Homeworld Bonus</h3><p>+Toughness, +Perception, –Influence</p><h3>Homeworld Aptitude</h3><p>Toughness</p><h3>Wounds</h3><p>10+1d5</p><h3>Fate Threshold</h3><p>3 (Emperor's Blessing 8+)</p><h3>Starting Skills</h3><p>Common Lore (Underworld) and Scrutiny</p><h3>Homeworld Trait</h3><p><strong>Finger on the Pulse:</strong> The character begins with one rank in the Common Lore (Underworld) and Scrutiny skills, and starts with the Peer (Criminal Cartels) talent.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Homeworld",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "10+1d5",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 3,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Common Lore",
+          "specialization": "Underworld",
+          "level": "trained"
+        },
+        {
+          "name": "Scrutiny",
+          "specialization": "",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Peer",
+          "specialization": "Criminal Cartels"
+        }
+      ],
+      "traits": [],
+      "aptitudes": [
+        "Toughness"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Finger on the Pulse",
+          "description": "The character begins with one rank in the Common Lore (Underworld) and Scrutiny skills, and starts with the Peer (Criminal Cartels) talent."
+        }
+      ],
+      "choices": []
+    },
+    "modifiers": {
+      "characteristics": {
+        "toughness": 5,
+        "perception": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "name": "Influence",
+          "value": -5
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Emperor's Blessing: On a roll of 8+ on 1d10, the character begins with an extra Fate Point.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EB2PnlBkg000005A"
+}

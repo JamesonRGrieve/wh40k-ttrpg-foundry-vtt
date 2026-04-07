@@ -1,7 +1,7 @@
 {
   "name": "Dartcaster (Cadence) \"Widower\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_11.png",
   "system": {
     "identifier": "dartcaster-cadence-widower",
     "class": "pistol",

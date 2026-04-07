@@ -1,7 +1,7 @@
 {
   "name": "Tear 'Em Ter Bits!",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_24.png",
   "system": {
     "identifier": "tearEmTerBits",
     "category": "combat",

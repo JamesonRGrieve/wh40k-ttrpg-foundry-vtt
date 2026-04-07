@@ -1,7 +1,7 @@
 {
   "name": "Burning Blade (Loi)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_08_b.png",
   "system": {
     "identifier": "burning-blade-loi",
     "class": "melee",

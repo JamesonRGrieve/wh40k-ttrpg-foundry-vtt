@@ -1,7 +1,7 @@
 {
   "name": "Krz'at'tchal the Soulburner",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_12.png",
   "system": {
     "identifier": "krzattchal-the-soulburner",
     "class": "basic",

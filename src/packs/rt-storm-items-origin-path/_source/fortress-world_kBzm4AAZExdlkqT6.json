@@ -1,7 +1,7 @@
 {
   "name": "Fortress World",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/castle.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_26.png",
   "system": {
     "identifier": "fortress-world",
     "step": "homeWorld",

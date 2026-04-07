@@ -1,7 +1,7 @@
 {
   "name": "Praecentor of Penance",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_08.png",
   "system": {
     "requirements": "Reach 2,500xp Spent (or any multiple of 2,500). Optional, can choose to stick with current specialty and gain +5 to any one Characteristic character has an Aptitude in. Prerequisite: Ministorum Priest",
     "source": "OW: Shield of Humanity (Page 86)",

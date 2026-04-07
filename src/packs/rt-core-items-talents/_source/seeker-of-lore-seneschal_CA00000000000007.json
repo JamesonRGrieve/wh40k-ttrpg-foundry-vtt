@@ -1,7 +1,7 @@
 {
   "name": "Seeker of Lore (Seneschal)",
   "type": "talent",
-  "img": "icons/svg/book.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_18.png",
   "system": {
     "identifier": "seeker-of-lore-seneschal",
     "category": "origin",

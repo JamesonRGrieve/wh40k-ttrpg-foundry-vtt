@@ -1,7 +1,7 @@
 {
   "name": "Customisation: Chain Loinguard",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s04.png",
   "system": {
     "effect": "Reduces Leg and Right Leg Critical Effect Rolls by 2.",
     "availability": "Special",

@@ -1,7 +1,7 @@
 {
   "name": "Incursion",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-blue-2.jpg",
   "system": {
     "discipline": "Malefic Daemonology",
     "prerequisites": "Willpower 45,\nCursed Earth",

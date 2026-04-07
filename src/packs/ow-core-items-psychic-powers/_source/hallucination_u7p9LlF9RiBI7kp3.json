@@ -1,7 +1,7 @@
 {
   "name": "Hallucination",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/explosion-red-2.jpg",
   "system": {
     "discipline": "Telepathy",
     "prerequisites": "None",

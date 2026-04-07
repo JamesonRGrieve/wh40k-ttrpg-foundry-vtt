@@ -1,7 +1,7 @@
 {
   "name": "Words of Power [Curse]",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/leaf-orange-1.jpg",
   "system": {
     "test": "Two -30 Forbidden Lore (Heresy) or -30 Linguistics (Low Gothic)",
     "requirements": "Character must know a word of power spend extensive time learning the rituals surrounding each word of power, which must be entirely memorised as to write them down robs them of potency. If Character has Trade (Linguist) or Trade (Remembrancer), Ritual Tests are +0 rather than -30. They will then recite the entire curse from memory before speaking the Word of Power.",

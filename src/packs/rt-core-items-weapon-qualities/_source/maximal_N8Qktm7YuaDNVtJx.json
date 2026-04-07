@@ -1,0 +1,21 @@
+{
+  "name": "Maximal",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_02.png",
+  "system": {
+    "identifier": "maximal",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 26</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>26</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "N8Qktm7YuaDNVtJx"
+}

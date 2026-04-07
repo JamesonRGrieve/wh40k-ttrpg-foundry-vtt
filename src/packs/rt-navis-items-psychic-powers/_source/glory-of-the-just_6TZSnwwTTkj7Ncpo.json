@@ -1,7 +1,7 @@
 {
   "name": "Glory of the Just",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/link-eerie-2.jpg",
   "system": {
     "discipline": "Soul Ward (Divine Grace)",
     "prerequisites": "Strength of Truth\nOW: Psy Rating 6",

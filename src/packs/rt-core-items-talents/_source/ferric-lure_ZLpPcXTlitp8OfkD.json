@@ -1,7 +1,7 @@
 {
   "name": "Ferric Lure",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_22.PNG",
   "system": {
     "category": "general",
     "source": "Rogue Trader Core",

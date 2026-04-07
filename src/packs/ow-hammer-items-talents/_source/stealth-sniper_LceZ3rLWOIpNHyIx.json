@@ -1,7 +1,7 @@
 {
   "name": "Stealth Sniper",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_22.PNG",
   "system": {
     "identifier": "stealthSniper",
     "category": "combat",

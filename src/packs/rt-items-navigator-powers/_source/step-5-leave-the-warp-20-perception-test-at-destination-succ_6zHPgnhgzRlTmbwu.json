@@ -1,7 +1,7 @@
 {
   "name": "Step 5: Leave the Warp: -20 Perception Test at Destination, success deposits ship where intended, failiure causes off-target exit.\nWhen ship reaches destination, Navigator makes -20 Perception Test. On success the ship exits the warp at a safe, desired location. If failing, they exit off target, and possibly dangerously close to a planetary body or some other undesired location.",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rock-plain-2.jpg",
   "system": {
     "useTime": null,
     "range": null,

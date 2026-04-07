@@ -1,0 +1,64 @@
+{
+  "name": "Ferric Lure Implants",
+  "type": "cybernetic",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>As a Full Action can make +0 Willpower Test targeting an unsecured metal object within 20m that has a mass no more than 1kg x WP Bonus. Success immediately pulls object to user's hand.</p>\n<h3>Requirements</h3><p>Requires Mechanicus Implants.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "As a Full Action can make +0 Willpower Test targeting an unsecured metal object within 20m that has a mass no more than 1kg x WP Bonus. Success immediately pulls object to user's hand."
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": true,
+    "inBackpack": false,
+    "container": "",
+    "effect": "As a Full Action can make +0 Willpower Test targeting an unsecured metal object within 20m that has a mass no more than 1kg x WP Bonus. Success immediately pulls object to user's hand.",
+    "notes": "-",
+    "identifier": "ferric-lure-implants",
+    "gameSystems": [
+      "dh2e"
+    ],
+    "type": "implant",
+    "locations": [
+      "arms",
+      "nervousSystem"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "drawbacks": "<p>Requires Mechanicus Implants.</p>",
+    "installation": {
+      "surgery": "Minor surgery required",
+      "difficulty": "+0 Medicae",
+      "recoveryTime": "1d5 days"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GizZQ4fZtA6HpPty"
+}

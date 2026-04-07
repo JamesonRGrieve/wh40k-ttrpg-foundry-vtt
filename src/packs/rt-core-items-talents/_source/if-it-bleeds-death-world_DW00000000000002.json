@@ -1,7 +1,7 @@
 {
   "name": "If It Bleeds, I Can Kill It (Death World)",
   "type": "talent",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_28.png",
   "system": {
     "identifier": "if-it-bleeds-death-world",
     "category": "origin",

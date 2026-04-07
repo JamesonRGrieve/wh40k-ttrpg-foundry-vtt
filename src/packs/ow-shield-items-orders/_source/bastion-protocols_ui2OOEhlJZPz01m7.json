@@ -1,7 +1,7 @@
 {
   "name": "Bastion Protocols",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_30.png",
   "system": {
     "typeAndAction": "Basic Order\nHalf Action",
     "requirements": ".Servitor Comrade: Any\nApt: Intelligence, Defence",

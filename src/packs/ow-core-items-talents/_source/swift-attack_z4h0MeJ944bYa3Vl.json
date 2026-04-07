@@ -1,7 +1,7 @@
 {
   "name": "Swift Attack",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_24.png",
   "system": {
     "identifier": "swiftAttack",
     "category": "combat",

@@ -1,7 +1,7 @@
 {
   "name": "Disciple of Mont'Ka",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_28.png",
   "system": {
     "identifier": "discipleOfMontKa",
     "category": "combat",

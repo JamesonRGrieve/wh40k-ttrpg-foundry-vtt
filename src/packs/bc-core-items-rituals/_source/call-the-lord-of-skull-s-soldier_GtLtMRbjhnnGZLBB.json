@@ -1,7 +1,7 @@
 {
   "name": "Call the Lord of Skull's Soldier",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/light-jade-1.jpg",
   "system": {
     "test": "-20 Forbidden Lore (Daemonology) ",
     "requirements": "Basic Khorne Ritual to summon a Bloodletter. Requires Site of battle or murder. Summoning Circle marked by Khornate Symbols with Braziers of boiling blood and burning coals placed cardinally. An Adult human who has killed, or a predatory beast is ritually sacrificed. The Correct prayers are roared with bestial fervour.",

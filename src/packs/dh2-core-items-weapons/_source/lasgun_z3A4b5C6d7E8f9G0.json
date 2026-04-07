@@ -1,7 +1,7 @@
 {
   "name": "Lasgun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_16.png",
   "system": {
     "identifier": "lasgun",
     "class": "basic",

@@ -1,7 +1,7 @@
 {
   "name": "Beacon",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/needles-acid-1.jpg",
   "system": {
     "discipline": "Telepathy (Communication)",
     "prerequisites": "None",

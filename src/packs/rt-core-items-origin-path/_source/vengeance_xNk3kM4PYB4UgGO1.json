@@ -1,7 +1,7 @@
 {
   "name": "Vengeance",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/piercing-sword.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_28.png",
   "system": {
     "identifier": "vengeance",
     "step": "motivation",

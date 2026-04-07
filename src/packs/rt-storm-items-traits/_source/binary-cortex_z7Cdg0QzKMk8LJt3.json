@@ -1,7 +1,7 @@
 {
   "name": "Binary Cortex",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_21.png",
   "system": {
     "category": "elite",
     "requirements": "Elite Advance, Willing Tech-Priest to undergo procedure, Good standing with Mechanicus.",

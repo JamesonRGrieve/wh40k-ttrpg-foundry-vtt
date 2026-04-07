@@ -1,7 +1,7 @@
 {
   "name": "Astartes Plasma Pistol",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-plasma.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_17.png",
   "system": {
     "identifier": "astartes-plasma-pistol",
     "class": "pistol",

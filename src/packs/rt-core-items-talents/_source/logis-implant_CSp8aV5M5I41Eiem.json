@@ -1,14 +1,14 @@
 {
   "name": "Logis Implant",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_14.PNG",
   "system": {
     "identifier": "logisImplant",
     "category": "knowledge",
     "source": "Rogue Trader Core",
-    "description": "<p>An advanced cogitator implant that enhances your combat calculations and targeting protocols.</p>",
+    "description": "<p>The Explorer may use analytical circuits to calculate trajectory and reactions to a preternatural extent. By using his Reaction for the Round, the character may make a Tech-Use Test to make use of this Talent.</p>",
     "tier": 1,
-    "benefit": "<p>Can use Reaction to make Tech-Use Test, on success gain +10 to WS and BS Skill until the start of next turn</p>",
+    "benefit": "<p>By using his Reaction for the Round, the Explorer may make a Tech-Use Test. On a success, he gains a +10 bonus to all Weapon Skill and Ballistic Skill Tests until the end of his next Turn. He must pass a Toughness Test when he uses this ability or gain a level of Fatigue.</p>",
     "aptitudes": [
       "Intelligence",
       "Tech"
@@ -29,7 +29,7 @@
       "characteristic": "",
       "skill": "techUse",
       "modifier": 0,
-      "description": "Tech-Use test to activate combat enhancement"
+      "description": "Spend your Reaction to make a Tech-Use Test and engage the implant's combat calculations."
     },
     "modifiers": {
       "characteristics": {},
@@ -54,13 +54,13 @@
           {
             "key": "weaponSkill",
             "value": 10,
-            "condition": "Until start of next turn after successful Tech-Use test (costs Reaction)",
+            "condition": "Until the end of your next Turn after a successful Tech-Use Test made by spending your Reaction",
             "icon": "fa-solid fa-sword"
           },
           {
             "key": "ballisticSkill",
             "value": 10,
-            "condition": "Until start of next turn after successful Tech-Use test (costs Reaction)",
+            "condition": "Until the end of your next Turn after a successful Tech-Use Test made by spending your Reaction",
             "icon": "fa-solid fa-bullseye"
           }
         ],

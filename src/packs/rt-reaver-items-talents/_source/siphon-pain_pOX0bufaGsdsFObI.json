@@ -1,7 +1,7 @@
 {
   "name": "Siphon Pain",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_30.png",
   "system": {
     "category": "general",
     "source": "RT: The Soul Reaver",

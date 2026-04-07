@@ -1,7 +1,7 @@
 {
   "name": "Astartes Naval Boltgun",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_09.png",
   "system": {
     "identifier": "astartes-naval-boltgun",
     "class": "basic",

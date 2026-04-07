@@ -1,7 +1,7 @@
 {
   "name": "Auto-launcher",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-launcher.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_01.png",
   "system": {
     "identifier": "auto-launcher",
     "class": "heavy",

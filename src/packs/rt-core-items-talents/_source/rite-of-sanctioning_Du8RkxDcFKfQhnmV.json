@@ -1,7 +1,7 @@
 {
   "name": "Rite of Sanctioning",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_04.png",
   "system": {
     "category": "psychic",
     "source": "Rogue Trader Core",

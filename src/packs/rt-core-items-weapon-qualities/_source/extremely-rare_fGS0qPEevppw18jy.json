@@ -1,0 +1,21 @@
+{
+  "name": "Extremely Rare",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_20.png",
+  "system": {
+    "identifier": "extremely-rare",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 153</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>153</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "fGS0qPEevppw18jy"
+}

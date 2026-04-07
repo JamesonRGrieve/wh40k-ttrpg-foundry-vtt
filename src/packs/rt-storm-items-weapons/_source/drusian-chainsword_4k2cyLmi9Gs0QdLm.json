@@ -1,7 +1,7 @@
 {
   "name": "Drusian Chainsword",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_02_b.png",
   "system": {
     "identifier": "drusian-chainsword",
     "class": "melee",

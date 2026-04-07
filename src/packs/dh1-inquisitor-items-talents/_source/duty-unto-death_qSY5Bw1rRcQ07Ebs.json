@@ -1,7 +1,7 @@
 {
   "name": "Duty Unto Death",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_08.png",
   "system": {
     "identifier": "dutyUntoDeath",
     "category": "combat",

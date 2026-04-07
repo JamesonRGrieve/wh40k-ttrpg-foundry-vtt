@@ -1,7 +1,7 @@
 {
   "name": "Astartes Rune Staff",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
+  "img": "systems/wh40k-rpg/icons/items/staves/stave_07_b.PNG",
   "system": {
     "identifier": "astartes-rune-staff",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Astartes Power Spear (alt.)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_10_b.png",
   "system": {
     "identifier": "astartes-power-spear-alt",
     "class": "melee",

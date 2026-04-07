@@ -1,7 +1,7 @@
 {
   "name": "Armour of the Remorseless Crusader [Integrated Sword]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_10_b.png",
   "system": {
     "identifier": "armour-of-the-remorseless-crusader-integrated-sword",
     "class": "melee",

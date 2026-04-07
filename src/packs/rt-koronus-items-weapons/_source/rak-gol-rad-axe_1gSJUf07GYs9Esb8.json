@@ -1,7 +1,7 @@
 {
   "name": "Rak'Gol Rad Axe",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/axes/axe_02_b.png",
   "system": {
     "identifier": "rakgol-rad-axe",
     "class": "melee",

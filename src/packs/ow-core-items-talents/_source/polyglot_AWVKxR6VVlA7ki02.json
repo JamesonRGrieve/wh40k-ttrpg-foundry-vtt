@@ -1,7 +1,7 @@
 {
   "name": "Polyglot",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_17.PNG",
   "system": {
     "identifier": "polyglot",
     "category": "knowledge",

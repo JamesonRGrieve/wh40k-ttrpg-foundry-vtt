@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Darklight Blaster",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_03.png",
   "system": {
     "identifier": "dark-eldar-darklight-blaster",
     "class": "basic",

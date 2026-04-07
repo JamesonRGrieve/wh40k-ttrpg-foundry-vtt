@@ -1,7 +1,7 @@
 {
   "name": "Power Assisted",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s08.png",
   "system": {
     "effect": "Adds +10 to Wearer's Strength Characteristic, weight of armour doesn't count towards carrying capacity. Armour requires power supply that lasts 1d5 hours.",
     "availability": "very-rare",

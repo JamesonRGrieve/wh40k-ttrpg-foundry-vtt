@@ -1,7 +1,7 @@
 {
   "name": "Sacred Numbers",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-air-3.jpg",
   "system": {
     "useTime": "Slaanesh: 6, and Multiples of 6\nNurgle: 7, and Multiples of 7\nKhorne: 8, and Multiples of 8\nTzeentch: 9, and Multiples of 9",
     "range": null,

@@ -1,7 +1,7 @@
 {
   "name": "Combat Flair",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_24.png",
   "system": {
     "identifier": "combatFlair",
     "category": "combat",

@@ -1,7 +1,7 @@
 {
   "name": "Rite of Terror Untold",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-sky-3.jpg",
   "system": {
     "test": "-40 Forbidden Lore (Daemonology) ",
     "requirements": "A Living being is required to act as the Host of the Greater Daemon, either willing or unwilling (+10 to Test if Willing). Ritual is similar to that of relevent lesser Daemon, however its requirements are magnified, EG: 8 sacrifices for a Bloodletter, 800 for a greater daemon of khorne, 6 days of suffering for a Daemonette, 6 weeks for a Greater daemon of slaanesh. It is a massive undertaking.",

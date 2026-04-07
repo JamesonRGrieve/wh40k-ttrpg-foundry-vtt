@@ -1,7 +1,7 @@
 {
   "name": "Blood Boil",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/shielding-acid-3.jpg",
   "system": {
     "discipline": "Biomancy",
     "prerequisites": "-",

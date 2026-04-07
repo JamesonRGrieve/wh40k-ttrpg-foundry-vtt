@@ -1,7 +1,7 @@
 {
   "name": "Flame Weapon Training (X)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_12.PNG",
   "system": {
     "identifier": "flameWeaponTraining",
     "category": "combat",

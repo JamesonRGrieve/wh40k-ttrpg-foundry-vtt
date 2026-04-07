@@ -1,7 +1,7 @@
 {
   "name": "Inferno Grenade",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
+  "img": "systems/wh40k-rpg/icons/items/grenade/grenade_01.png",
   "system": {
     "identifier": "inferno-grenade",
     "class": "thrown",

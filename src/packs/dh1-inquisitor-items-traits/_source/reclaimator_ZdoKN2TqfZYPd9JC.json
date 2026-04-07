@@ -1,7 +1,7 @@
 {
   "name": "Reclaimator",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_06.png",
   "system": {
     "requirements": "Scum Career, DH Rank 1+.  Int 30+, originate from a Hive or Forge World, or Void Born.",
     "source": "DH: Inquisitor's Handbook (Page 76)",

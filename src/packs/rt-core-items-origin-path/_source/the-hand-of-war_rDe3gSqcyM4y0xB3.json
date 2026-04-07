@@ -1,7 +1,7 @@
 {
   "name": "The Hand of War",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/war-axe.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_29.png",
   "system": {
     "identifier": "the-hand-of-war",
     "step": "trialsAndTravails",

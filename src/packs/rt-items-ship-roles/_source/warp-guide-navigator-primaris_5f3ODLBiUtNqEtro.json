@@ -1,7 +1,7 @@
 {
   "name": "Warp Guide/Navigator Primaris",
   "type": "shipRole",
-  "img": "icons/svg/crew.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_24.png",
   "system": {
     "rank": 3,
     "purpose": "Guides the Vessel Through the Warp, avoiding its dangers.",

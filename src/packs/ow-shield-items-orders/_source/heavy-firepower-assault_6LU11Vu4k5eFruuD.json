@@ -1,7 +1,7 @@
 {
   "name": "Heavy Firepower Assault",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_12.PNG",
   "system": {
     "typeAndAction": "Attack Order\nFull Action",
     "requirements": ".Servitor Comrade: Jovian-Pattern Gun Servitor\nApt: None",

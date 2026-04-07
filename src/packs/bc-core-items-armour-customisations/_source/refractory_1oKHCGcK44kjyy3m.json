@@ -1,7 +1,7 @@
 {
   "name": "Refractory",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s06.png",
   "system": {
     "effect": "Add +3 AP vs Las Weapons\nDecrease Armour Availability by 1 (Rare-->Very Rare)",
     "availability": "Special",

@@ -1,7 +1,7 @@
 {
   "name": "Mezoa-pattern Lance Battery",
   "type": "shipWeapon",
-  "img": "icons/svg/energy.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_06.png",
   "system": {
     "type": "Lance",
     "hullType": [

@@ -1,7 +1,7 @@
 {
   "name": "Feral World",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_14.png",
   "system": {
     "identifier": "feral-world",
     "step": "homeworld",

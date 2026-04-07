@@ -1,7 +1,7 @@
 {
   "name": "Leery of Outsiders (Frontier World)",
   "type": "talent",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_06.png",
   "system": {
     "identifier": "leery-of-outsiders-frontier-world",
     "category": "origin",

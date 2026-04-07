@@ -1,7 +1,7 @@
 {
   "name": "Longshot: Flash Slug",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammo_01.PNG",
   "system": {
     "identifier": "longshot-flash-slug",
     "weaponTypes": [

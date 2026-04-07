@@ -1,7 +1,7 @@
 {
   "name": "Protean Form",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/explosion-orange-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Tzeentch)",
     "prerequisites": "Mark of Tzeentch, Corr. 50+, T 50+, WP 50+, Psy 6, CorpusConversion",

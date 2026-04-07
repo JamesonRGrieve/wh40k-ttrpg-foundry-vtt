@@ -1,7 +1,7 @@
 {
   "name": "Crusade",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/knight-banner.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_22.png",
   "system": {
     "identifier": "crusade",
     "step": "lureOfTheVoid",

@@ -1,14 +1,14 @@
 {
   "name": "Psychic Technique (X)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_02.png",
   "system": {
     "identifier": "psychicTechnique",
     "category": "knowledge",
     "source": "Rogue Trader Core",
-    "description": "<p>You may learn additional psychic techniques to expand your mental arsenal.</p>",
+    "description": "<p>The Explorer has learned an additional Psychic Technique.</p>",
     "tier": 1,
-    "benefit": "<p>Can select a new Psychic technique with an XP cost equal to or lower than this talent's XP stated cost, to then gain that technique, pay the cost of the psychic technique, not of this talent (EG, if \"Psychic Technique\" were to cost 200xp, selecting a 100xp Technique would only require spending 100xp, not 200xp). Talent can be taken multiple times to gain more techniques. If there is a number after the Talent (EG Psychic Technique (x2)) it can be purchased that many times that rank, each purchase giving one extra technique.</p>",
+    "benefit": "<p>Once this Talent has been selected, the Explorer may select one new Psychic Technique in any Discipline he possesses with an XP cost equal to or lower than the Talent's XP cost. The Technique is gained through the Talent purchase and this Talent may be chosen multiple times, each selection granting an additional Technique.</p>",
     "aptitudes": [
       "Willpower",
       "Psyker"
@@ -24,7 +24,7 @@
     "stackable": true,
     "rank": 1,
     "specialization": "",
-    "notes": "Each purchase allows learning one additional psychic technique",
+    "notes": "Each purchase grants one additional Psychic Technique in a Discipline the Explorer already possesses, subject to the Talent's XP limit.",
     "rollConfig": {
       "characteristic": "",
       "skill": "",
@@ -62,7 +62,7 @@
       "specialAbilities": [
         {
           "name": "Learn Psychic Technique",
-          "description": "<p>You may select and learn a new Psychic Technique with an XP cost equal to or lower than this talent's stated cost. You pay the cost of the psychic technique itself, not the cost of this talent. This talent can be taken multiple times to gain more techniques.</p>"
+          "description": "<p>Select one new Psychic Technique in a Discipline you possess with an XP cost equal to or lower than this Talent's XP cost. Each purchase of this Talent grants one additional Technique.</p>"
         }
       ]
     },

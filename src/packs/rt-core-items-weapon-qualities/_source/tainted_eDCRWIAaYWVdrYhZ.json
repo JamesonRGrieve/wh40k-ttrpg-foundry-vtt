@@ -1,0 +1,21 @@
+{
+  "name": "Tainted",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_26.png",
+  "system": {
+    "identifier": "tainted",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 6</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>6</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eDCRWIAaYWVdrYhZ"
+}

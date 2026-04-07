@@ -1,7 +1,7 @@
 {
   "name": "Vengeance Rounds (Astartes)",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammunition_05_b.PNG",
   "system": {
     "identifier": "vengeance-rounds-astartes",
     "weaponTypes": [],

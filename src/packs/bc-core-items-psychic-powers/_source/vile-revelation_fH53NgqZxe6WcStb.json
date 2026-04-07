@@ -1,7 +1,7 @@
 {
   "name": "Vile Revelation",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lighting-sky-2.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Tzeentch)",
     "prerequisites": "Mark of Tzeentch, Perception 50+, Psy Rating 5",

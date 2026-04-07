@@ -1,7 +1,7 @@
 {
   "name": "Excellent Cook",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_14.png",
   "system": {
     "category": "psychic",
     "source": "OW: Hammer of the Emperor",

@@ -1,7 +1,7 @@
 {
   "name": "Umbral Halo",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/explosion-sky-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Unaligned)",
     "prerequisites": "Corruption 30+",

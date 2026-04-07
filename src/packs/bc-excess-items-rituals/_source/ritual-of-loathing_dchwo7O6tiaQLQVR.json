@@ -1,7 +1,7 @@
 {
   "name": "Ritual of Loathing",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-jade-3.jpg",
   "system": {
     "test": "+0 Forbidden Lore (Daemonology) Test",
     "requirements": "A Reletively Simple Summoning ritual design requiring a basic Chaos Shrine and minimal Preperation. It summons multiple lesser Daemons of no particular alignment, such as Warp Furies, Ebon Geists, Unclean Spirits, Nether Swarms, etc.",

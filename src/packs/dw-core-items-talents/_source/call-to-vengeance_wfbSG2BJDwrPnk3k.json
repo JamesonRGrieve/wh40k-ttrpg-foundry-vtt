@@ -1,15 +1,15 @@
 {
   "name": "Call to Vengeance",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_06.png",
   "system": {
     "category": "social",
     "source": "Deathwatch: Core",
     "description": {
-      "value": "<p>Whenever another member of the character's squad is killed or otherwise taken out of action, the character can spend a Full Action and Spend a Fate Point to inspire their remaining comrades to vengeance. In doing so the character and all those in Support Range of them return to their starting Cohesion scores.</p>"
+      "value": "<p>When another member of the unit is killed or taken out of action, the Battle-Brother may take a Full Action and spend a Fate Point to call his remaining brothers to revenge the fallen. The character may raise his weapon in defiance and speak an oath of hatred, or recite one of the canticles of vengeance.</p>"
     },
     "tier": 1,
-    "benefit": "<p>Whenever another member of the character's squad is killed or otherwise taken out of action, the character can spend a Full Action and Spend a Fate Point to inspire their remaining comrades to vengeance. In doing so the character and all those in Support Range of them return to their starting Cohesion scores.</p>",
+    "benefit": "<p>No matter how it is embodied, the Battle-Brother's action restores him and all those in Support Range to their starting Cohesion.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Astartes, Fellowship 40",

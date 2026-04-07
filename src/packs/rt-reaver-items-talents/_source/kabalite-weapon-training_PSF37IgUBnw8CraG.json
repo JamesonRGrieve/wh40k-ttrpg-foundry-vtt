@@ -1,7 +1,7 @@
 {
   "name": "Kabalite Weapon Training",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_20.png",
   "system": {
     "identifier": "kabaliteWeaponTraining",
     "category": "combat",

@@ -1,7 +1,7 @@
 {
   "name": "Psychic Shriek",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/needles-fire-3.jpg",
   "system": {
     "discipline": "Telepathy",
     "prerequisites": "Psy Rating 3",

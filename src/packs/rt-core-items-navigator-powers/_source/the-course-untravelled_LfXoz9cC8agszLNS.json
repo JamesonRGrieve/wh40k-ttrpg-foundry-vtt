@@ -1,7 +1,7 @@
 {
   "name": "The Course Untravelled",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-grasp-eerie-1.jpg",
   "system": {
     "useTime": "Half Action",
     "range": "1m x Perception Characteristic",

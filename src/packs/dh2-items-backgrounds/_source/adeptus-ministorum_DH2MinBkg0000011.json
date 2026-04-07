@@ -1,7 +1,7 @@
 {
   "name": "Adeptus Ministorum",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_18.png",
   "system": {
     "identifier": "adeptus-ministorum",
     "step": "background",

@@ -1,0 +1,21 @@
+{
+  "name": "Decay (X)",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_30.png",
+  "system": {
+    "identifier": "decay-x",
+    "hasLevel": false,
+    "level": null,
+    "effect": "Any Living Creature that suffers Critical Damage (including that of Zealous Hatred/Righteous Fury) must make -10*X Toughness Test or instantly die.",
+    "notes": "",
+    "description": {
+      "value": "<p>Any Living Creature that suffers Critical Damage (including that of Zealous Hatred/Righteous Fury) must make -10*X Toughness Test or instantly die.</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aiDgIVxMU8dhqp3a"
+}

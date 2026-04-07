@@ -1,7 +1,7 @@
 {
   "name": "The Torch of the Vigil",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_02.png",
   "system": {
     "identifier": "the-torch-of-the-vigil",
     "class": "heavy",

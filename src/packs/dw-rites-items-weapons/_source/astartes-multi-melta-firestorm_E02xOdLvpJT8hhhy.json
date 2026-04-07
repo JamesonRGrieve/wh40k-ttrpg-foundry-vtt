@@ -1,7 +1,7 @@
 {
   "name": "Astartes Multi-Melta (Firestorm)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-multimelta.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_10.png",
   "system": {
     "identifier": "astartes-multi-melta-firestorm",
     "class": "heavy",

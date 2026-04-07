@@ -1,7 +1,7 @@
 {
   "name": "Gas Torch Flamer",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_19.png",
   "system": {
     "identifier": "gas-torch-flamer",
     "class": "basic",

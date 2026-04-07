@@ -1,7 +1,7 @@
 {
   "name": "Thought Shield",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rock-sky-2.jpg",
   "system": {
     "discipline": "Telepathy - Astropath Elite Advance",
     "prerequisites": "Strong Minded Talent",

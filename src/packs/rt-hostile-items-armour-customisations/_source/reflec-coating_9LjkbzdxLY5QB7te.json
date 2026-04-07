@@ -1,7 +1,7 @@
 {
   "name": "Reflec Coating",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s06.png",
   "system": {
     "effect": "Gives +2 AP vs Las Weapons",
     "availability": "rare",

@@ -1,7 +1,7 @@
 {
   "name": "Baleful Watcher",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-magenta-1.jpg",
   "system": {
     "useTime": "Half Action",
     "range": "Line of Sight",

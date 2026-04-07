@@ -1,7 +1,7 @@
 {
   "name": "Summon the Cackling Spellfiend",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/runes-blue-1.jpg",
   "system": {
     "test": "-20 Forbidden Lore (Daemonology) ",
     "requirements": "Basic Tzeentch Ritaul to summon a Pink Horror. Requires Site recently desolated by fire or magic. Summoning Circle inscribed with Tzeentchian Symbols, enchanted Braziers spewing multicoloured smoke and flame arrayed randomly around the circle. An Adult human branded in arcane runes is reduced to ash by magic and flame. ",

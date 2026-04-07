@@ -1,7 +1,7 @@
 {
   "name": "Veteran's Reflexes",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_02.png",
   "system": {
     "identifier": "veteransReflexes",
     "category": "leadership",

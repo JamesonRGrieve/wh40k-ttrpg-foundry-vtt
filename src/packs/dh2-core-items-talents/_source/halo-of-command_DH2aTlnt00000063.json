@@ -1,7 +1,7 @@
 {
   "name": "Halo of Command",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_23.PNG",
   "system": {
     "identifier": "haloOfCommand",
     "category": "social",

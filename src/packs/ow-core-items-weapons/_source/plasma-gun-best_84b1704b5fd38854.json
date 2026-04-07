@@ -1,7 +1,7 @@
 {
   "name": "Plasma Gun [Best Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-plasma.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_08.png",
   "system": {
     "identifier": "plasma-gun-best",
     "class": "basic",

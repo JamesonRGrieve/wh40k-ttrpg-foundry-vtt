@@ -1,7 +1,7 @@
 {
   "name": "Good Repuation (X)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_06.png",
   "system": {
     "category": "social",
     "source": "Rogue Trader Core",

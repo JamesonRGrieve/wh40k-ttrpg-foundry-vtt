@@ -1,7 +1,7 @@
 {
   "name": "Pangs of Misery",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rock-royal-2.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Slaanesh)",
     "prerequisites": "Slaanesh Aligned, Psy Rating 4",

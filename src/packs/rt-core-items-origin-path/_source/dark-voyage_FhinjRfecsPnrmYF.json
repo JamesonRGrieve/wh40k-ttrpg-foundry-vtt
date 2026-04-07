@@ -1,7 +1,7 @@
 {
   "name": "Dark Voyage",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/eclipse.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_30.PNG",
   "system": {
     "identifier": "dark-voyage",
     "step": "trialsAndTravails",

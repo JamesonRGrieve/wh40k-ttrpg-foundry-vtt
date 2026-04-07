@@ -1,7 +1,7 @@
 {
   "name": "Empyrean Mantle (Large)",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_16.PNG",
   "system": {
     "hullType": [
       "light-cruiser",

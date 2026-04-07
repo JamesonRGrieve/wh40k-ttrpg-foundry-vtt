@@ -1,7 +1,7 @@
 {
   "name": "Necron Resonance Arc",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_10.png",
   "system": {
     "identifier": "necron-resonance-arc",
     "class": "basic",

@@ -1,7 +1,7 @@
 {
   "name": "It Not So Dark",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_22.png",
   "system": {
     "identifier": "itNotSoDark",
     "category": "leadership",

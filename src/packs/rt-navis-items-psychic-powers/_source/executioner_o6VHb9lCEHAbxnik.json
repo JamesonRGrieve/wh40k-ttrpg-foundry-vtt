@@ -1,7 +1,7 @@
 {
   "name": "Executioner",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/explosion-red-3.jpg",
   "system": {
     "discipline": "zNPC - Eldar \n(Warlock)",
     "prerequisites": "Eldar Psyker",

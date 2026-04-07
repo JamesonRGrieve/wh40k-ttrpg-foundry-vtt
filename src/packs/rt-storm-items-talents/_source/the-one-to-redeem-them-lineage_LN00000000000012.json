@@ -1,7 +1,7 @@
 {
   "name": "The One to Redeem Them (Lineage)",
   "type": "talent",
-  "img": "icons/svg/coins.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_02.png",
   "system": {
     "identifier": "the-one-to-redeem-them-lineage",
     "category": "origin",

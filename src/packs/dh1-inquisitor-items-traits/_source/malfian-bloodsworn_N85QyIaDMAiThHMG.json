@@ -1,7 +1,7 @@
 {
   "name": "Malfian Bloodsworn",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_20.PNG",
   "system": {
     "requirements": "Assassin, Arbitrator, Guardsman, or Scum Career, DH Rank 5+. No longer in overt Imperial Service, and have gained a charter from the Blood Guild of Malfi",
     "source": "DH: Inquisitor's Handbook (Page 66)",

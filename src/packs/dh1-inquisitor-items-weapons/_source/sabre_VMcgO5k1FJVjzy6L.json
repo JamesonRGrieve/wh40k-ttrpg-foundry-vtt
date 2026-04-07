@@ -1,7 +1,7 @@
 {
   "name": "Sabre",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_09_b.png",
   "system": {
     "identifier": "sabre",
     "class": "melee",

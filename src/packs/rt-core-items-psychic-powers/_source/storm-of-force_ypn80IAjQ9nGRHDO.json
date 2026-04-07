@@ -1,7 +1,7 @@
 {
   "name": "Storm of Force",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-red-1.jpg",
   "system": {
     "discipline": "Telekinesis\n(Telekinetic Force)",
     "prerequisites": "Telekinetic Weapon\nOW: Psy Rating 6",

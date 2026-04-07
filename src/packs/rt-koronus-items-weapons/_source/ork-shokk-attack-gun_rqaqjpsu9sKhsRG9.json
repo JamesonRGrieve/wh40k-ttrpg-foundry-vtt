@@ -1,7 +1,7 @@
 {
   "name": "Ork Shokk Attack Gun",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_09.png",
   "system": {
     "identifier": "ork-shokk-attack-gun",
     "class": "heavy",

@@ -1,7 +1,7 @@
 {
   "name": "Chainaxe",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
+  "img": "systems/wh40k-rpg/icons/items/axes/axe_02_b.png",
   "system": {
     "identifier": "chainaxe",
     "class": "melee",

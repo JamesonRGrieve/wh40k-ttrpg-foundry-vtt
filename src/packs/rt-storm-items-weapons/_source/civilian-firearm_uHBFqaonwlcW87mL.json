@@ -1,7 +1,7 @@
 {
   "name": "Civilian Firearm",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_13.png",
   "system": {
     "identifier": "civilian-firearm",
     "class": "basic",

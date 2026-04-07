@@ -1,7 +1,7 @@
 {
   "name": "Chosen by Destiny",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/star-cycle.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_22.PNG",
   "system": {
     "identifier": "chosen-by-destiny",
     "step": "lureOfTheVoid",

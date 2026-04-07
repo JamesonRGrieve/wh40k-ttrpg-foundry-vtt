@@ -1,0 +1,61 @@
+{
+  "_id": "1uqorh98svp0p000",
+  "name": "Bionic Legs",
+  "type": "cybernetic",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "identifier": "bionic-legs",
+    "type": "implant",
+    "locations": [
+      "body"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "effect": "<p>Both legs are augmetic replacements. The implant restores locomotion and confers durability appropriate to reinforced cybernetic limbs.</p>",
+    "drawbacks": "<p>Requires implantation surgery and appropriate maintenance.</p>",
+    "installation": {
+      "surgery": "Major surgery required",
+      "difficulty": "-10 Medicae",
+      "recoveryTime": "1 week"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    },
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": true,
+    "description": {
+      "value": "<p>Both legs are augmetic replacements. The implant restores locomotion and confers durability appropriate to reinforced cybernetic limbs.</p>",
+      "chat": "",
+      "summary": "Both legs are augmetic replacements. The implant restores locomotion and confers durability appropriate to reinforced cybernetic limbs."
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "notes": "",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {}
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Hot-Shot Charge Pack",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "weight": 0.5,
+    "availability": "rare",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A specially modified power pack for las weapons that overcharges the weapon's output. Increases Damage by +1 and Penetration by +2, but the charge pack is exhausted after a single shot (effectively making the weapon single-shot). The weapon also gains the Unreliable quality while using hot-shot packs.</p>"
+    },
+    "notes": "",
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Kp4rTn9Hw5PmV3Xf"
+}

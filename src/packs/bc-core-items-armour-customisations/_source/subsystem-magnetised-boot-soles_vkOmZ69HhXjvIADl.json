@@ -1,7 +1,7 @@
 {
   "name": "Subsystem: Magnetised Boot Soles",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s02.png",
   "system": {
     "effect": "Allows user to adhere to metal surfaces such as hull plating in low or zero gravity. This halves their Agility (and as a result movement), but otherwise allows normal movement.",
     "availability": "Special",

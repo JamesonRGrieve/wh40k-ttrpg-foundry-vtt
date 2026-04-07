@@ -1,7 +1,7 @@
 {
   "name": "Rad-Cleanser",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_09.png",
   "system": {
     "identifier": "rad-cleanser",
     "class": "heavy",

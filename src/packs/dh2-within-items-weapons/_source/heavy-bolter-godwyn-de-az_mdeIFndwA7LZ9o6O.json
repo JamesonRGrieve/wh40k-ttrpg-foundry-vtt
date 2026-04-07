@@ -1,7 +1,7 @@
 {
   "name": "Heavy Bolter (Godwyn-De'az)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-bolter.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_17.png",
   "system": {
     "identifier": "heavy-bolter-godwyn-deaz",
     "class": "heavy",

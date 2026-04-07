@@ -1,7 +1,7 @@
 {
   "name": "Ork Grotwhip",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/flail/flail_01_b.PNG",
   "system": {
     "identifier": "ork-grotwhip",
     "class": "melee",

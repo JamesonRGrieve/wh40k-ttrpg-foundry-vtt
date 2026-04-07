@@ -1,7 +1,7 @@
 {
   "name": "Eldar Splinter Cannon",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_22.png",
   "system": {
     "identifier": "eldar-splinter-cannon",
     "class": "heavy",

@@ -1,7 +1,7 @@
 {
   "name": "Photo-Visor",
   "type": "gear",
-  "img": "icons/svg/item-bag.svg",
+  "img": "icons/svg/backpack.svg",
   "system": {
     "weight": 0.5,
     "availability": "rare",

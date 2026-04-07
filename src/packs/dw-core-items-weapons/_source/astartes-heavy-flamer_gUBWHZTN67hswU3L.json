@@ -1,7 +1,7 @@
 {
   "name": "Astartes Heavy Flamer",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-flamer.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_05.png",
   "system": {
     "identifier": "astartes-heavy-flamer",
     "class": "heavy",

@@ -1,7 +1,7 @@
 {
   "name": "Power Sword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_04_b.PNG",
   "system": {
     "identifier": "power-sword",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Tau Battlesuit Ion Accelerator",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_27.png",
   "system": {
     "identifier": "tau-battlesuit-ion-accelerator",
     "class": "heavy",

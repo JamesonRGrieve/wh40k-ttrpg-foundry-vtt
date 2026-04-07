@@ -1,7 +1,7 @@
 {
   "name": "Defraud",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/explosion-orange-1.jpg",
   "system": {
     "discipline": "xRenegade",
     "prerequisites": "None",

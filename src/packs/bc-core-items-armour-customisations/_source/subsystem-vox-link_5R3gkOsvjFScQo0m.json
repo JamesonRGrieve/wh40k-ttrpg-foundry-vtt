@@ -1,7 +1,7 @@
 {
   "name": "Subsystem: Vox Link",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s07.png",
   "system": {
     "effect": "Armour has inbuilt Vox, if armour has a functioning Bio-Monitor it can transmit its information through this link, allowing allies to view wearer's vitals.",
     "availability": "Special",

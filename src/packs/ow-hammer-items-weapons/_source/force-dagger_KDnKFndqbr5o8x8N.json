@@ -1,7 +1,7 @@
 {
   "name": "Force Dagger",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
+  "img": "systems/wh40k-rpg/icons/items/daggers/dagger_07_b.PNG",
   "system": {
     "identifier": "force-dagger",
     "class": "melee",

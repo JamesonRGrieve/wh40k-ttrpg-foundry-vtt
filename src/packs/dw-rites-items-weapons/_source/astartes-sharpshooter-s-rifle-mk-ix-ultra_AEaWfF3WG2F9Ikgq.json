@@ -1,7 +1,7 @@
 {
   "name": "Astartes Sharpshooter's Rifle (Mk.IX Ultra)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_07.png",
   "system": {
     "identifier": "astartes-sharpshooters-rifle-mkix-ultra",
     "class": "heavy",

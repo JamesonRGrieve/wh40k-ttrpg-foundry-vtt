@@ -1,7 +1,7 @@
 {
   "name": "Rite of Punishment",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/explosion-magenta-3.jpg",
   "system": {
     "test": "-20 Forbidden Lore (Daemonology) or Scholastic Lore (Occult)",
     "requirements": "Ritual occurs in an area of minimal Warp Presence, or a place dominated by Khorne's power. They prepare an area they wish to protect lined in fresh blood, spacing skulls, or other bones per 8 metres. Preparation takes ~1 hour within a contained area. Psykers may participate in preperation but are advised to leave before it starts, if they can.",

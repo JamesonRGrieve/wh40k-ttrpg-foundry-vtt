@@ -2,7 +2,7 @@
   "_id": "5dyp1udq6mswa17i",
   "name": "Energy Critical - Head",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-red-2.jpg",
   "system": {
     "identifier": "crit_energy_head",
     "damageType": "energy",

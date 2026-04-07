@@ -1,7 +1,7 @@
 {
   "name": "Chaos Rituals",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lighting-acid-3.jpg",
   "system": {
     "useTime": null,
     "range": null,

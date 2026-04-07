@@ -1,7 +1,7 @@
 {
   "name": "Molten Man",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/link-royal-1.jpg",
   "system": {
     "discipline": "Pyromancy",
     "prerequisites": "Psy Rating 6, 4+ Pyromancy Powers",

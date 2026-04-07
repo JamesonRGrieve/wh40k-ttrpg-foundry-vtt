@@ -1,7 +1,7 @@
 {
   "name": "Lock On",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_10.png",
   "system": {
     "category": "combat",
     "source": "OW: Hammer of the Emperor",

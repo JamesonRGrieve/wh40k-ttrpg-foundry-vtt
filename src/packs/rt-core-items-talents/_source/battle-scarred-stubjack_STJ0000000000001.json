@@ -1,7 +1,7 @@
 {
   "name": "Battle-Scarred (Stubjack)",
   "type": "talent",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_26.png",
   "system": {
     "identifier": "battle-scarred-stubjack",
     "category": "origin",

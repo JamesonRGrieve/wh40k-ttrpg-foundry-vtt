@@ -1,7 +1,7 @@
 {
   "name": "Veteren of the Angevin Crusade",
   "type": "shipUpgrade",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_28.png",
   "system": {
     "spCost": 3,
     "shipAvailability": "All Ships",

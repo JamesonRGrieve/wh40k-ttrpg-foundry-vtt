@@ -1,7 +1,7 @@
 {
   "name": "Drusian Charlatan",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_22.png",
   "system": {
     "requirements": "Not Explorator, Kroot, or Ork. RT Rank 1+, one of Barter, Blather, Charm, Commerce, Scrutiny, or Enemy/Rival (Ecclesiarchy). Fellowship 35+ Benefitted from selling false religious items.",
     "source": "RT: Hostile Acquisitions \n(Page 36)",

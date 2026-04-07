@@ -1,7 +1,7 @@
 {
   "name": "Step 2: Locate the Astronomicon: +10 Awareness Test, success adds +10 per DoS to Navigation (Warp) Tests, fail is -10 per DoF to same tests.\nThe Astronomicon acts as a Psychic Lighthouse, Navigator makes +10 Awareness Test to find it, adding +10 to Navigation (Warp) Tests to Navigation (Warp) Tests for voyage per DoS, or -10 per DoF. If failing by 3+ DoF, Can't find Astronomicon and Charting Vessel Course requires -60 Navigation (Warp) Test. Well-made charts, environmental factors such as Warp Storms, and so on may affect test.",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-magenta-2.jpg",
   "system": {
     "useTime": null,
     "range": null,

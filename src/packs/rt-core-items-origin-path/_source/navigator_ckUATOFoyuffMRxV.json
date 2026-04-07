@@ -1,7 +1,7 @@
 {
   "name": "Navigator",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/third-eye.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_18.png",
   "system": {
     "identifier": "navigator",
     "step": "career",

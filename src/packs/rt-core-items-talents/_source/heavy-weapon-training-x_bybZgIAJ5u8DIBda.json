@@ -1,7 +1,7 @@
 {
   "name": "Heavy Weapon Training (X)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_07.png",
   "system": {
     "identifier": "heavyWeaponTraining",
     "category": "combat",

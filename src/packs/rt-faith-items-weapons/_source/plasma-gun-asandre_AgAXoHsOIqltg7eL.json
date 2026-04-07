@@ -1,7 +1,7 @@
 {
   "name": "Plasma Gun (Asandre)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-plasma.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_14.png",
   "system": {
     "identifier": "plasma-gun-asandre",
     "class": "basic",

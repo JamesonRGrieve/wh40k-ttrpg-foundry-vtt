@@ -1,7 +1,7 @@
 {
   "name": "Two-Weapon Wielder",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_28.png",
   "system": {
     "identifier": "twoWeaponWielder",
     "category": "combat",

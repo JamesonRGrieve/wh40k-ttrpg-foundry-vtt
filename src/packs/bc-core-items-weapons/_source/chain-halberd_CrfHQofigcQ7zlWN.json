@@ -1,7 +1,7 @@
 {
   "name": "Chain Halberd",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
+  "img": "systems/wh40k-rpg/icons/items/flail/flail_03_b.PNG",
   "system": {
     "identifier": "chain-halberd",
     "class": "melee",

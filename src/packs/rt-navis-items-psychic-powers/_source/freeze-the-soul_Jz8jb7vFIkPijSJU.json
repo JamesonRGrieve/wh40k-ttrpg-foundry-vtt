@@ -1,7 +1,7 @@
 {
   "name": "Freeze the Soul",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-magenta-1.jpg",
   "system": {
     "discipline": "Voidfrost\n(Cryokinesis)",
     "prerequisites": "Breathstealing Barrage\nOW: Psy Rating 6",

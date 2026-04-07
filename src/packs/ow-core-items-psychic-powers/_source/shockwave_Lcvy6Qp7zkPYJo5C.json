@@ -1,7 +1,7 @@
 {
   "name": "Shockwave",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/ice-jade-1.jpg",
   "system": {
     "discipline": "Telekinesis",
     "prerequisites": "Assail",

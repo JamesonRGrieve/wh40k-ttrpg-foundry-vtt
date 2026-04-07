@@ -31,7 +31,7 @@
     }
 
     &.wh40k-dashboard-row--bottom {
-        grid-template-columns: 1fr 2fr;
+        grid-template-columns: 1fr 1fr 1fr;
         min-height: 100px;
     }
 }
@@ -201,6 +201,29 @@
         background: var(--color-bg-option);
         padding: 2px 6px;
         border-radius: 3px;
+    }
+}
+
+.wh40k-vital-input {
+    font-size: 1.4rem;
+    font-weight: 700;
+    font-family: 'Modesto Condensed', serif;
+    color: var(--color-text-primary);
+    width: 55px;
+    text-align: center;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    padding: 0 2px;
+
+    &:hover {
+        border-color: var(--color-border-light);
+    }
+
+    &:focus {
+        border-color: $wh40k-color-gold;
+        outline: none;
+        background: var(--color-bg-option);
     }
 }
 
@@ -1336,6 +1359,22 @@
 .wh40k-ov-box-left-leg {
     grid-area: lleg;
     justify-self: start;
+}
+
+// ============================================
+// Zone: Resources (DH2e)
+// ============================================
+
+.wh40k-zone-resources {
+    border-left: 3px solid $wh40k-color-gold;
+
+    .wh40k-zone-header {
+        background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.12) 0%, var(--color-bg-tertiary) 100%);
+
+        i {
+            color: $wh40k-color-gold;
+        }
+    }
 }
 
 // ============================================

@@ -1,7 +1,7 @@
 {
   "name": "Psychometry",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lightning-magenta-1.jpg",
   "system": {
     "discipline": "Divination\n(Emperor's Tarot)",
     "prerequisites": "Augury",

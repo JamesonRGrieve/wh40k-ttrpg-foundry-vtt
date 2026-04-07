@@ -1,7 +1,7 @@
 {
   "name": "Astartes Glaive Encarmine",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_07_b.PNG",
   "system": {
     "identifier": "astartes-glaive-encarmine",
     "class": "melee",

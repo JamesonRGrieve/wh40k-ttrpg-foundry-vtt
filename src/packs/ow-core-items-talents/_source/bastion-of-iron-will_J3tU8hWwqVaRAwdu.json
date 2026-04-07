@@ -1,7 +1,7 @@
 {
   "name": "Bastion of Iron Will",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_18.png",
   "system": {
     "category": "psychic",
     "source": "Only War Core",

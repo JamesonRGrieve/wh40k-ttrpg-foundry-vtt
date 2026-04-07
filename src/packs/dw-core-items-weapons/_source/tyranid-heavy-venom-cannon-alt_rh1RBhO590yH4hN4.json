@@ -1,7 +1,7 @@
 {
   "name": "Tyranid Heavy Venom Cannon (alt.)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_09.png",
   "system": {
     "identifier": "tyranid-heavy-venom-cannon-alt",
     "class": "heavy",

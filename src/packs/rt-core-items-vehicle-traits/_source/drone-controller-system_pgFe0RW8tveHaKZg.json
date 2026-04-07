@@ -1,0 +1,27 @@
+{
+  "name": "Drone Controller System",
+  "type": "vehicleTrait",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_06.png",
+  "system": {
+    "descriptionText": "Wearer counts as having a Tau Drone Controller Gear Item Equipped and gains the benefits of it.",
+    "description": {
+      "value": "<p>Wearer counts as having a Tau Drone Controller Gear Item Equipped and gains the benefits of it.</p>"
+    },
+    "modifiers": {
+      "speed": 0,
+      "manoeuvrability": 0,
+      "armour": 0,
+      "integrity": 0
+    },
+    "identifier": "",
+    "hasLevel": false,
+    "level": null,
+    "notes": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pgFe0RW8tveHaKZg"
+}

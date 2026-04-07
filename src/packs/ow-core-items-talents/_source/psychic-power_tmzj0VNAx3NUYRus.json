@@ -1,7 +1,7 @@
 {
   "name": "Psychic Power",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_13.PNG",
   "system": {
     "category": "psychic",
     "source": "Only War Core",

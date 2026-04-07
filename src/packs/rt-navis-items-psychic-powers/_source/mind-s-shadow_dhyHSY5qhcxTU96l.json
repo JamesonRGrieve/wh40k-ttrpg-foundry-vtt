@@ -1,7 +1,7 @@
 {
   "name": "Mind's Shadow",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/light-air-fire-2.jpg",
   "system": {
     "discipline": "xRenegade",
     "prerequisites": "None",

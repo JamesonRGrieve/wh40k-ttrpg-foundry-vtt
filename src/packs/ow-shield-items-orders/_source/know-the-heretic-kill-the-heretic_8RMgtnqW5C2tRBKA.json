@@ -1,7 +1,7 @@
 {
   "name": "Know the Heretic; Kill the Heretic!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_06.png",
   "system": {
     "typeAndAction": "Basic Order\nFull Action",
     "requirements": "Rector Erudite Spec\n500xp",

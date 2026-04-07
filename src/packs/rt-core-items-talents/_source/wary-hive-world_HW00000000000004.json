@@ -1,7 +1,7 @@
 {
   "name": "Wary (Hive World)",
   "type": "talent",
-  "img": "icons/svg/lightning.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_14.png",
   "system": {
     "identifier": "wary-hive-world",
     "category": "origin",

@@ -1,7 +1,7 @@
 {
   "name": "Sanctified Ammunition",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammo_01.PNG",
   "system": {
     "identifier": "sanctified-ammunition",
     "weaponTypes": [],

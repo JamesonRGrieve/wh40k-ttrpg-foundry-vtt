@@ -1,7 +1,7 @@
 {
   "name": "Mind Scan",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-magenta-1.jpg",
   "system": {
     "discipline": "Telepathy (Communication)",
     "prerequisites": "Mind's Eye, Mind Probe",

@@ -1,7 +1,7 @@
 {
   "name": "Hardened (Death World)",
   "type": "talent",
-  "img": "icons/svg/skull.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_22.PNG",
   "system": {
     "identifier": "hardened-death-world",
     "category": "origin",

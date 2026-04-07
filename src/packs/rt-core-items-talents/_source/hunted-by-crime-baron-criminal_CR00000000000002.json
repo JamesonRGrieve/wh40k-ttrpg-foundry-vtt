@@ -1,7 +1,7 @@
 {
   "name": "Hunted by a Crime Baron (Criminal)",
   "type": "talent",
-  "img": "icons/svg/skull.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_33.png",
   "system": {
     "identifier": "hunted-by-crime-baron-criminal",
     "category": "origin",

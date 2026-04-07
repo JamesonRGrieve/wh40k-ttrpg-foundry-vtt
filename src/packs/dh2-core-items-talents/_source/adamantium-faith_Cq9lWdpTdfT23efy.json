@@ -1,7 +1,7 @@
 {
   "name": "Adamantium Faith",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_08.png",
   "system": {
     "category": "psychic",
     "source": "DH2e Core",

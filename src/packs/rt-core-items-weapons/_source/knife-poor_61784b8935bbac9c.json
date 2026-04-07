@@ -1,7 +1,7 @@
 {
   "name": "Knife [Poor Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/daggers/dagger_01_b.png",
   "system": {
     "identifier": "knife-poor",
     "class": "melee",

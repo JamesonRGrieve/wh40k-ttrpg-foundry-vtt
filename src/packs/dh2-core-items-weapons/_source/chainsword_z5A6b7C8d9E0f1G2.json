@@ -1,7 +1,7 @@
 {
   "name": "Chainsword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_02_b.png",
   "system": {
     "identifier": "chainsword",
     "class": "melee",

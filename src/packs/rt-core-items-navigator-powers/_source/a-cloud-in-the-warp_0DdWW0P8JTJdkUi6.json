@@ -1,7 +1,7 @@
 {
   "name": "A Cloud in the Warp",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-sky-3.jpg",
   "system": {
     "useTime": "Half Action",
     "range": "Self",

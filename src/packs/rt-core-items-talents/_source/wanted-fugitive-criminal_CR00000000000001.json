@@ -1,7 +1,7 @@
 {
   "name": "Wanted Fugitive (Criminal)",
   "type": "talent",
-  "img": "icons/svg/skull.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_24.png",
   "system": {
     "identifier": "wanted-fugitive-criminal",
     "category": "origin",

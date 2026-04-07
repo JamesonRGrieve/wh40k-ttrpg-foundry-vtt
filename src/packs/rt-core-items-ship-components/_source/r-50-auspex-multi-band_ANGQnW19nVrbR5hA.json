@@ -1,7 +1,7 @@
 {
   "name": "R-50 Auspex Multi-Band",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_18.png",
   "system": {
     "hullType": [
       "all"

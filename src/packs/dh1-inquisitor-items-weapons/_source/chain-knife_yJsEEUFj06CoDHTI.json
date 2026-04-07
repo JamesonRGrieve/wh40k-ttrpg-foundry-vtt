@@ -1,7 +1,7 @@
 {
   "name": "Chain Knife",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
+  "img": "systems/wh40k-rpg/icons/items/daggers/dagger_02_b.PNG",
   "system": {
     "identifier": "chain-knife",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Machinator Array",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_11.png",
   "system": {
     "identifier": "machinatorArray",
     "category": "tech",

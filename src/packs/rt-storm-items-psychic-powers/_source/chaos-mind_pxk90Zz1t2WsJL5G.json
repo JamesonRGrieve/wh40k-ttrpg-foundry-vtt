@@ -1,7 +1,7 @@
 {
   "name": "Chaos Mind",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-orange-1.jpg",
   "system": {
     "discipline": "Telepathy (Communication)",
     "prerequisites": "Terrify\nOW: Psy Rating 5",
