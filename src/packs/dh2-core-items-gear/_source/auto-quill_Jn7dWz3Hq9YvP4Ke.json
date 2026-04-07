@@ -13,9 +13,9 @@
     },
     "quantity": 1,
     "description": {
-      "value": "<p>+10 to Trade (Rememberancer) if you have the skill, or any other Trade Skill that would make sense to involve lots of writing.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 55 T</p>",
+      "value": "<p>Often elaborate devices of ink-stained brass and vat-grown or artificial quills, these devices allow a user to copy text or transcribe speech with impressive speed and accuracy. Many scribes carry portable units, suitable for recording interrogation sessions or xenos translations. A character with a relevant Trade skill can use it to gain a +10 bonus to tests involving that skill when recording data.</p>",
       "chat": "",
-      "summary": "+10 to Trade (Rememberancer) if you have the skill, or any other Trade Skill that would make sense to involve lots of writing."
+      "summary": "A character with a relevant Trade skill can use an auto quill to gain a +10 bonus to tests involving that skill when recording data."
     },
     "source": {
       "book": "DH2e Core",
@@ -30,7 +30,7 @@
       "value": 0,
       "max": 0
     },
-    "effect": "+10 to Trade (Rememberancer) if you have the skill, or any other Trade Skill that would make sense to involve lots of writing.",
+    "effect": "A character with a relevant Trade skill can use an auto quill to gain a +10 bonus to tests involving that skill when recording data.",
     "duration": "",
     "notes": "",
     "identifier": "auto-quill",

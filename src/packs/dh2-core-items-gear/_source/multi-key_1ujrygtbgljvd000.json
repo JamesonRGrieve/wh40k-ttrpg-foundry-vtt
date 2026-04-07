@@ -14,9 +14,9 @@
     },
     "quantity": 1,
     "description": {
-      "value": "<p>A compact lock override device used to open or bypass standard Imperial locks.</p>",
+      "value": "<p>In the right hands, a multikey can open most standard Imperial locks and is thus highly suspect for honest citizens to possess. This also makes it very desirable for criminals or those operating outside normal channels. A character with a multikey gains a +30 bonus to any Security test when trying to open locks.</p>",
       "chat": "",
-      "summary": "A compact lock override device used to open or bypass standard Imperial locks."
+      "summary": "In the right hands, a multikey can open most standard Imperial locks and is thus highly suspect for honest citizens to possess. This also makes it very desirable for criminals or those operating outside normal channels. A character with a multikey gains a +30 bonus to any Security test when trying to open locks."
     },
     "source": {
       "book": "DH2e Core",
@@ -31,7 +31,7 @@
       "value": 0,
       "max": 0
     },
-    "effect": "A compact lock override device used to open or bypass standard Imperial locks.",
+    "effect": "A character with a multikey gains a +30 bonus to any Security test when trying to open locks.",
     "duration": "",
     "notes": "",
     "identifier": "multi-key",

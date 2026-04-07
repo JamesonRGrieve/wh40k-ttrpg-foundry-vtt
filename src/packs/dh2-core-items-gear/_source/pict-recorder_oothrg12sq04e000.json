@@ -13,9 +13,9 @@
     },
     "quantity": 1,
     "description": {
-      "value": "<p>Space Camera. Records video and can play it back. Some have holographic capabilities.</p>\n<h3>Requirements</h3><p>Also known as Picters, Can be build into servitors.</p>\n<p><b>Effect:</b> Common / Initiated</p><p><b>Notes:</b> 100 T\n5 R</p>",
+      "value": "<p>A relatively simple recording device, pict recorders or picters can capture audiovisual media. Most models can also display recorded data on integrated screens, with advanced models using holographic imagery. Specialised pict-servitors are essentially ambulatory recorders, brought on hazardous events or missions to autonomously capture occurrences for later codifying.</p>",
       "chat": "",
-      "summary": "Space Camera. Records video and can play it back. Some have holographic capabilities."
+      "summary": "A pict recorder captures audiovisual media and more advanced models can also display it holographically."
     },
     "source": {
       "book": "DH2e Core",
@@ -30,7 +30,7 @@
       "value": 0,
       "max": 0
     },
-    "effect": "Space Camera. Records video and can play it back. Some have holographic capabilities.",
+    "effect": "A pict recorder captures audiovisual media and more advanced models can also display it holographically.",
     "duration": "",
     "notes": "",
     "identifier": "pict-recorder",

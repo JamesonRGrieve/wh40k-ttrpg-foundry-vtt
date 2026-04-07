@@ -4,8 +4,8 @@
   "img": "icons/svg/backpack.svg",
   "system": {
     "category": "tools",
-    "weight": 1.5,
-    "availability": "average",
+    "weight": 2,
+    "availability": "scarce",
     "craftsmanship": "common",
     "cost": {
       "value": 140,
@@ -13,9 +13,9 @@
     },
     "quantity": 1,
     "description": {
-      "value": "<p>When set via a Tech-Use Test, has perception 75, on detecting intruders a loud alarm sounds heard out to a kilometre (varies on doors, walls, etc).\nPoor: Only Detects Loud Noises or Fast Movements, Good: Detects Specific Sounds, Movements, and/or odours, and have more subtle warnings (such as scream via vox) </p>\n<p><b>Effect:</b> Average / Initiated</p><p><b>Notes:</b> 140 T\n5 R</p>",
+      "value": "<p>These proximity alarms set off a piercing wail when they detect intruders. To activate, the user must succeed on a Challenging (+0) Tech-Use test, but the GM rolls this test in secret. Once set, a screamer has a Perception of 75 for detecting sounds or motions; if it detects an intruder, it sounds an alarm that can be heard anywhere out to one kilometre, with doors, walls, and other barriers reducing the range.</p><p>Poor craftsmanship models only detect loud noises or fast movements nearby. Good versions can detect specific sounds, movement, or even odour ranges, and can also have more subtle warning methods such as screaming only into vox channels.</p>",
       "chat": "",
-      "summary": "When set via a Tech-Use Test, has perception 75, on detecting intruders a loud alarm sounds heard out to a kilometre (varies on doors, walls, etc).\nPoor: Only Detects Loud Noises or Fast Movements, Go"
+      "summary": "Once set with a Tech-Use test, a screamer has Perception 75 and sounds an alarm if it detects an intruder."
     },
     "source": {
       "book": "DH2e Core",
@@ -30,7 +30,7 @@
       "value": 0,
       "max": 0
     },
-    "effect": "When set via a Tech-Use Test, has perception 75, on detecting intruders a loud alarm sounds heard out to a kilometre (varies on doors, walls, etc).\nPoor: Only Detects Loud Noises or Fast Movements, Good: Detects Specific Sounds, Movements, and/or odours, and have more subtle warnings (such as scream via vox) ",
+    "effect": "Once set with a Tech-Use test, a screamer has Perception 75 and sounds an alarm if it detects an intruder.",
     "duration": "",
     "notes": "",
     "identifier": "screamer",

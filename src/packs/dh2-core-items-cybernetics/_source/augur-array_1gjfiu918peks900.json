@@ -4,7 +4,7 @@
   "img": "icons/svg/gears.svg",
   "system": {
     "weight": 0,
-    "availability": "average",
+    "availability": "rare",
     "craftsmanship": "common",
     "cost": {
       "value": 1000,
@@ -12,9 +12,9 @@
     },
     "quantity": 1,
     "description": {
-      "value": "<p>Requires Half Action and Concentration. Poor: detect heat, radiation, EM or Daemonic Taint withiin 20 metres, can only do one, may get overwhelmed by excessive concentrations of detections. Common: acts as normal handheld Auspex. Good: acts as normal handheld Auspex and can reroll perception tests using its functions.</p>\n<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 1000 T\n15 R</p>",
+      "value": "<p>These implanted devices duplicate the effects of sensor systems that go beyond normal human senses. In all cases, their use requires concentration and a Half Action. Common systems function identically to a standard hand-held auspex device.</p><p>Poor systems possess only a single detection ability with a limited range of 20 metres. Good systems function as a full auspex, but also allow the character to re-roll all Perception-based tests.</p>",
       "chat": "",
-      "summary": "Requires Half Action and Concentration. Poor: detect heat, radiation, EM or Daemonic Taint withiin 20 metres, can only do one, may get overwhelmed by excessive concentrations of detections. Common: ac"
+      "summary": "An augur array duplicates sensor systems beyond normal human senses and requires concentration and a Half Action to use."
     },
     "source": {
       "book": "DH2e Core",
@@ -22,7 +22,7 @@
       "custom": ""
     },
     "equipped": true,
-    "effect": "Requires Half Action and Concentration. Poor: detect heat, radiation, EM or Daemonic Taint withiin 20 metres, can only do one, may get overwhelmed by excessive concentrations of detections. Common: acts as normal handheld Auspex. Good: acts as normal handheld Auspex and can reroll perception tests using its functions.",
+    "effect": "An augur array duplicates sensor systems beyond normal human senses and requires concentration and a Half Action to use.",
     "notes": "",
     "identifier": "augur-array",
     "gameSystems": [

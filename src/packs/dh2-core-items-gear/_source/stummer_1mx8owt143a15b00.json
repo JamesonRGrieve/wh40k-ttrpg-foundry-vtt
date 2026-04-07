@@ -13,9 +13,9 @@
     },
     "quantity": 1,
     "description": {
-      "value": "<p>+30 to Silent Move Tests, lasts 20 minutes before needing recharge, which takes 1 hour. </p>\n<h3>Requirements</h3><p>Device Cancels out surrounding noise.</p>\n<p><b>Effect:</b> Average / Initiated</p><p><b>Notes:</b> 25 T\n5 R</p>",
+      "value": "<p>A stummer cancels out surrounding noise, granting a +30 bonus to Silent Move tests. Each use lasts 20 minutes before needing a one-hour recharge.</p>",
       "chat": "",
-      "summary": "+30 to Silent Move Tests, lasts 20 minutes before needing recharge, which takes 1 hour. "
+      "summary": "A stummer grants a +30 bonus to Silent Move tests for 20 minutes before needing a one-hour recharge."
     },
     "source": {
       "book": "DH2e Core",
@@ -30,7 +30,7 @@
       "value": 0,
       "max": 0
     },
-    "effect": "+30 to Silent Move Tests, lasts 20 minutes before needing recharge, which takes 1 hour. ",
+    "effect": "A stummer grants a +30 bonus to Silent Move tests for 20 minutes before needing a one-hour recharge.",
     "duration": "",
     "notes": "",
     "identifier": "stummer",

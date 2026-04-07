@@ -5,7 +5,7 @@
   "system": {
     "identifier": "whip",
     "class": "melee",
-    "type": "shock",
+    "type": "rending",
     "twoHanded": false,
     "melee": true,
     "attack": {
@@ -25,13 +25,13 @@
     },
     "damage": {
       "formula": "1d10",
-      "type": "impact",
+      "type": "rending",
       "bonus": 0,
       "penetration": 0
     },
     "special": [
       "flexible",
-      "primitive-3"
+      "primitive-6"
     ],
     "clip": {
       "max": 0,
@@ -39,19 +39,19 @@
       "type": ""
     },
     "reload": "-",
-    "weight": 4,
-    "availability": "rare",
+    "weight": 2,
+    "availability": "average",
     "craftsmanship": "common",
     "quantity": 1,
     "cost": {
-      "value": 500,
+      "value": 0,
       "currency": "throne"
     },
     "equipped": false,
     "stowed": false,
     "container": "",
     "description": {
-      "value": "<p><b>Special:</b> Flexible, Shocking</p>"
+      "value": "<p>Whips have existed across history, used for horrific punishments or merely to encourage worker productivity. Easy to create, many users fashion their own using materials found locally, such as leather hides, vines, or stray wiring.</p><p><b>Special:</b> Flexible, Primitive (6)</p>"
     },
     "modifications": [],
     "notes": "",

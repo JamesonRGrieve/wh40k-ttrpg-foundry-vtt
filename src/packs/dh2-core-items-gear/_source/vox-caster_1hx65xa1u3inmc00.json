@@ -4,8 +4,8 @@
   "img": "icons/svg/backpack.svg",
   "system": {
     "category": "tools",
-    "weight": 0,
-    "availability": "average",
+    "weight": 4,
+    "availability": "scarce",
     "craftsmanship": "common",
     "cost": {
       "value": 300,
@@ -13,9 +13,9 @@
     },
     "quantity": 1,
     "description": {
-      "value": "<p>Space Long-Range Communicator. Can send and receive signals, incliudng to/from a planet and orbit. +10 Tech-use to use if there's interference.</p>\n<p><b>Effect:</b> Scarce / Initiated</p><p><b>Notes:</b> 300 T\n10 R</p>",
+      "value": "<p>A vox-caster is a long-range communicator capable of sending and receiving signals, including communications between a planet and orbit.</p>",
       "chat": "",
-      "summary": "Space Long-Range Communicator. Can send and receive signals, incliudng to/from a planet and orbit. +10 Tech-use to use if there's interference."
+      "summary": "A vox-caster is a long-range communicator capable of sending and receiving signals, including communications between a planet and orbit."
     },
     "source": {
       "book": "DH2e Core",
@@ -30,7 +30,7 @@
       "value": 0,
       "max": 0
     },
-    "effect": "Space Long-Range Communicator. Can send and receive signals, incliudng to/from a planet and orbit. +10 Tech-use to use if there's interference.",
+    "effect": "A vox-caster is a long-range communicator capable of sending and receiving signals, including communications between a planet and orbit.",
     "duration": "",
     "notes": "",
     "identifier": "vox-caster",
