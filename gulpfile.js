@@ -9,6 +9,7 @@ const fs = require("fs");
 const path = require("path");
 const zip = require("gulp-zip");
 const { ClassicLevel } = require("classic-level");
+const { exec } = require("child_process");
 
 const util = require('util');
 if (!util.isDate) {
@@ -20,6 +21,8 @@ const SYSTEM_SCSS = ["src/scss/**/*.scss"];
 const STATIC_FILES = [
   "src/icons/**/*",
   "src/module/**/*",
+  "!src/module/**/*.mts",
+  "!src/module/**/*.ts",
   "!src/module/foundry-core/**",
   "src/templates/**/*",
   "src/images/**/*",
@@ -148,6 +151,18 @@ async function compilePacks() {
 }
 
 /* ----------------------------------------- */
+/*  Compile TypeScript
+/* ----------------------------------------- */
+
+function compileTypeScript(done) {
+  exec('npx tsc', (err, stdout, stderr) => {
+    if (stdout) console.log(stdout);
+    if (stderr) console.error(stderr);
+    done();
+  });
+}
+
+/* ----------------------------------------- */
 /*  Compile Sass
 /* ----------------------------------------- */
 
@@ -191,6 +206,7 @@ function cleanBuild() {
 }
 
 function watchUpdates() {
+  gulp.watch('src/module/**/*.{mts,ts}', gulp.series(compileTypeScript));
   return gulp.watch(STATIC_FILES, gulp.series(cleanBuild, compileScss, compilePacks, copyFiles));
 }
 
@@ -212,5 +228,5 @@ exports.clean = gulp.series(cleanBuild);
 exports.scss = gulp.series(compileScss);
 exports.packs = gulp.series(compilePacks);
 exports.copy = gulp.series(copyFiles, watchCopy);
-exports.build = gulp.series(cleanBuild, compileScss, copyFiles, compilePacks, createArchive);
-exports.default = gulp.series(cleanBuild, compileScss, copyFiles, compilePacks, watchUpdates);
+exports.build = gulp.series(cleanBuild, compileScss, compileTypeScript, copyFiles, compilePacks, createArchive);
+exports.default = gulp.series(cleanBuild, compileScss, compileTypeScript, copyFiles, compilePacks, watchUpdates);
