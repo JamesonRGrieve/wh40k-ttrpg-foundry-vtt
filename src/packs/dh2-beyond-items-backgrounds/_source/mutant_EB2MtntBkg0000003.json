@@ -1,0 +1,112 @@
+{
+  "name": "Mutant",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "mutant",
+    "step": "background",
+    "stepIndex": 2,
+    "description": {
+      "value": "<h2>Mutant</h2><p>In the Imperium, mutation is a mark of damnation — a sign that the touched individual has been corrupted by the Warp or bears the taint of deviant genetics. Mutants live on the fringes of Imperial society, despised and persecuted, surviving through cunning, intimidation, and sheer tenacity. Some hide their deformities beneath robes and bandages, while others bear them openly in the underhives and wastes where no authority holds sway. An Inquisitor who recruits a mutant does so because their unique perspective — and their unique flesh — serves a purpose that outweighs the revulsion of their peers.</p><h3>Background Aptitudes</h3><p>Fieldcraft, Offence</p><h3>Starting Skills</h3><p>Awareness, Deceive or Intimidate, Forbidden Lore (Mutants)</p><h3>Starting Talent</h3><p>Weapon Training (Low-Tech) or Weapon Training (Solid Projectile)</p><h3>Background Bonus</h3><p><strong>Twisted Flesh:</strong> The character starts with one random mutation (rolled or chosen with GM approval). The character gains the Resistance (Mutation) talent for free. Other characters take –10 to Fellowship tests when dealing with the character if the mutation is visible.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Background",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Awareness",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Forbidden Lore",
+          "specialization": "Mutants",
+          "level": "trained"
+        }
+      ],
+      "talents": [
+        {
+          "name": "Resistance",
+          "specialization": "Mutation"
+        }
+      ],
+      "traits": [],
+      "aptitudes": [
+        "Fieldcraft",
+        "Offence"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Twisted Flesh",
+          "description": "The character starts with one random mutation (rolled or chosen with GM approval). The character gains the Resistance (Mutation) talent for free. Other characters take –10 to Fellowship tests when dealing with the character if the mutation is visible."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Deceive",
+              "specialization": ""
+            },
+            {
+              "name": "Intimidate",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Weapon Training",
+              "specialization": "Low-Tech"
+            },
+            {
+              "name": "Weapon Training",
+              "specialization": "Solid Projectile"
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EB2MtntBkg0000003"
+}

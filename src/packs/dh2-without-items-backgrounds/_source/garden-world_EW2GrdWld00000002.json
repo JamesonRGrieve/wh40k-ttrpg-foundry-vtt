@@ -1,0 +1,88 @@
+{
+  "name": "Garden World",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "garden-world",
+    "step": "homeworld",
+    "stepIndex": 1,
+    "description": {
+      "value": "<h2>Garden World</h2><p>Garden worlds are verdant, temperate planets blessed with abundant natural resources and stable ecosystems. Their inhabitants enjoy a quality of life far above that of most Imperial citizens, with clean air, open skies, and plentiful food. This relative comfort breeds sociable, personable individuals — but it can also leave them unprepared for the grim realities of the wider Imperium. Garden worlders bring grace and charm, though they may find the horrors of the galaxy more shocking than most.</p><h3>Homeworld Bonus</h3><p>+Fellowship, +Agility, –Toughness</p><h3>Homeworld Aptitude</h3><p>Social</p><h3>Wounds</h3><p>8+1d5</p><h3>Fate Threshold</h3><p>2 (Emperor's Blessing 5+)</p><h3>Starting Skills</h3><p>Charm or Commerce</p><h3>Homeworld Trait</h3><p><strong>Serenity of the Green:</strong> +10 bonus to Willpower tests to resist Fear caused by natural creatures and environments.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Homeworld",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "8+1d5",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 2,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Social"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Serenity of the Green",
+          "description": "+10 bonus to Willpower tests to resist Fear caused by natural creatures and environments."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Charm",
+              "specialization": ""
+            },
+            {
+              "name": "Commerce",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "fellowship": 5,
+        "agility": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "name": "Toughness",
+          "value": -5
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Emperor's Blessing: On a roll of 5+ on 1d10, the character begins with an extra Fate Point.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EW2GrdWld00000002"
+}

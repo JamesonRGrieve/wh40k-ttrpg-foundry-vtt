@@ -1,0 +1,88 @@
+{
+  "name": "Research Station",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "research-station",
+    "step": "homeworld",
+    "stepIndex": 1,
+    "description": {
+      "value": "<h2>Research Station</h2><p>Research stations are remote outposts dedicated to the pursuit of knowledge, scattered across the Imperium in orbit around dead worlds, drifting through asteroid fields, or hidden in the depths of space. Those raised in such environments grow up surrounded by data-looms, cogitator banks, and the hum of analytical engines. They learn to question, to analyse, and to seek answers — skills that make them invaluable to an Inquisitor's investigations, though their sheltered upbringing often leaves them ill-prepared for the harsh realities of social interaction beyond their academic peers.</p><h3>Homeworld Bonus</h3><p>+Intelligence, +Perception, –Fellowship</p><h3>Homeworld Aptitude</h3><p>Knowledge</p><h3>Wounds</h3><p>8+1d5</p><h3>Fate Threshold</h3><p>3 (Emperor's Blessing 8+)</p><h3>Starting Skills</h3><p>Common Lore (any one) or Scholastic Lore (any one)</p><h3>Homeworld Trait</h3><p><strong>Thirst for Knowledge:</strong> Once per session, the character can re-roll a failed Logic, Lore, or Tech-Use test.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Homeworld",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "8+1d5",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 3,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Knowledge"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Thirst for Knowledge",
+          "description": "Once per session, the character can re-roll a failed Logic, Lore, or Tech-Use test."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Common Lore",
+              "specialization": "any one"
+            },
+            {
+              "name": "Scholastic Lore",
+              "specialization": "any one"
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "intelligence": 5,
+        "perception": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "name": "Fellowship",
+          "value": -5
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Emperor's Blessing: On a roll of 8+ on 1d10, the character begins with an extra Fate Point.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EB2RsrStn00000002"
+}

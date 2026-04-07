@@ -1,0 +1,88 @@
+{
+  "name": "Frontier World",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "frontier-world",
+    "step": "homeworld",
+    "stepIndex": 1,
+    "description": {
+      "value": "<h2>Frontier World</h2><p>Frontier worlds sit at the edges of Imperial space, newly colonised or barely tamed. Their inhabitants are self-reliant settlers, scouts, and pioneers who carve out an existence on the fringe. Life on a frontier world demands sharp eyes and steady aim, for threats — xenos predators, hostile terrain, and renegade raiders — lurk beyond every ridge. These rugged individuals bring hard-won survival instincts and an independent streak to any Inquisitorial warband.</p><h3>Homeworld Bonus</h3><p>+Ballistic Skill, +Perception, –Fellowship</p><h3>Homeworld Aptitude</h3><p>Ballistic Skill</p><h3>Wounds</h3><p>7+1d5</p><h3>Fate Threshold</h3><p>3 (Emperor's Blessing 7+)</p><h3>Starting Skills</h3><p>Navigate (Surface) or Survival</p><h3>Homeworld Trait</h3><p><strong>Frontiersman:</strong> Can survive off the land; reduce all Survival test difficulties by one step.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Homeworld",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "7+1d5",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 3,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Ballistic Skill"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Frontiersman",
+          "description": "Can survive off the land; reduce all Survival test difficulties by one step."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Navigate (Surface)",
+              "specialization": ""
+            },
+            {
+              "name": "Survival",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "ballisticSkill": 5,
+        "perception": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "name": "Fellowship",
+          "value": -5
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Emperor's Blessing: On a roll of 7+ on 1d10, the character begins with an extra Fate Point.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EW2FntWld00000001"
+}

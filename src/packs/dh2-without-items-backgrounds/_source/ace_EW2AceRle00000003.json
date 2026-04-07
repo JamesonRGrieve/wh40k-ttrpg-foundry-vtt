@@ -1,0 +1,84 @@
+{
+  "name": "Ace",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "ace",
+    "step": "role",
+    "stepIndex": 3,
+    "description": {
+      "value": "<h2>Ace</h2><p>The Ace is a born pilot, a natural behind the controls of any vehicle from a battered ground car to a screaming fighter craft. Whether threading a shuttle through an asteroid field, outrunning pursuit through hive city streets, or lining up a strafing run on a xenos encampment, the Ace is in their element when speed and reflexes matter most. They bring unmatched mobility and vehicular expertise to any warband fortunate enough to have one.</p><h3>Role Aptitudes</h3><p>Agility, Ballistic Skill, Defence, Perception, Tech</p><h3>Role Talent</h3><p>Hard Target or Hotshot Pilot</p><h3>Role Bonus</h3><p><strong>Right Stuff:</strong> May spend a Fate Point to automatically succeed on an Operate or Dodge test while piloting a vehicle.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Role",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Agility",
+        "Ballistic Skill",
+        "Defence",
+        "Perception",
+        "Tech"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Right Stuff",
+          "description": "May spend a Fate Point to automatically succeed on an Operate or Dodge test while piloting a vehicle."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Role Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Hard Target",
+              "specialization": ""
+            },
+            {
+              "name": "Hotshot Pilot",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Hotshot Pilot: Count as having Operate at +10 for one vehicle type.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EW2AceRle00000003"
+}
