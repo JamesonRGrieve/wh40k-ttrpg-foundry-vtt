@@ -313,7 +313,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: any, options: any): Promise<void> {
+    _onRender(context: any, options: any): any {
         super._onRender(context, options);
 
         // Apply saved position

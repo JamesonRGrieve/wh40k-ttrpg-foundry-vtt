@@ -13,7 +13,7 @@ export async function handleBleeding(actor) {
 }
 
 export async function handleOnFire(actor) {
-    const context = {
+    const context: any = {
         template: 'systems/wh40k-rpg/templates/chat/burning-chat.hbs',
         actor: actor,
         roll: await roll1d100(),
@@ -30,7 +30,7 @@ export async function handleOnFire(actor) {
 
 export async function sendActiveEffectMessage(activeContext) {
     const html = await foundry.applications.handlebars.renderTemplate(activeContext.template, activeContext);
-    const chatData = {
+    const chatData: any = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
         content: html,

@@ -214,7 +214,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: any, options: any): Promise<void> {
+    _onRender(context: any, options: any): any {
         super._onRender(context, options);
 
         const form = this.element;
@@ -409,7 +409,8 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: any = {}): Promise<void> {
+    // @ts-ignore - Foundry override
+    async close(options: any = {}): Promise<any> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 

@@ -100,7 +100,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @param {Actor} actor - The character actor
      * @param {object} options - Application options
      */
-    constructor(actor, options = {}) {
+    constructor(actor, options: Record<string, any> = {}) {
         super(options);
         this.actor = actor;
         this.currentStepIndex = 0;
@@ -284,8 +284,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const allOriginPaths = documents.filter((d: any) => d.type === 'originPath');
 
         // Separate lineage origins (stepIndex: 7) from core origins
-        this.allOrigins = allOriginPaths.filter((o) => o.system?.stepIndex !== 7);
-        this.lineageOrigins = allOriginPaths.filter((o) => o.system?.stepIndex === 7);
+        this.allOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex !== 7);
+        this.lineageOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex === 7);
     }
 
     /* -------------------------------------------- */
@@ -589,7 +589,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         // Prepare rolls with manual input support
-        const rolls = {};
+        const rolls: any = {};
         const rollResults = system?.rollResults || {};
 
         if (grants.woundsFormula) {
@@ -1820,7 +1820,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _buildRolledValues(): any {
-        const values = {};
+        const values: any = {};
         for (const [step, selection] of this.selections) {
             const rollResults = selection.system?.rollResults || {};
             if (rollResults.wounds?.rolled != null) {

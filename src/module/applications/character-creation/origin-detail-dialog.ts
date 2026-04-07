@@ -406,7 +406,8 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     }
 
     /** @override */
-    async close(options: any = {}): Promise<void> {
+    // @ts-ignore - Foundry override
+    async close(options: any = {}): Promise<any> {
         // Resolve with cancelled if not already resolved
         if (this._resolvePromise) {
             this._resolvePromise({ selected: false, origin: null });
