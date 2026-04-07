@@ -68,6 +68,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             editCharacteristic: BaseActorSheet.#editCharacteristic,
         },
         classes: ['wh40k-rpg', 'sheet', 'actor'],
+        tag: 'form',
         form: {
             submitOnChange: true,
         },
@@ -77,7 +78,6 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         },
         window: {
             resizable: true,
-            contentTag: 'form',
         },
     };
 
