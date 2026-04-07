@@ -1,0 +1,1611 @@
+/**
+ * @file NPCSheetV2 - NPC actor sheet for V2 NPC data model
+ * Phases 0-4: Complete NPC sheet with quick create and threat scaling
+ */
+
+import BaseActorSheet from './base-actor-sheet.ts';
+import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.ts';
+import StatBlockExporter from '../npc/stat-block-exporter.ts';
+import StatBlockParser from '../npc/stat-block-parser.ts';
+import DifficultyCalculatorDialog from '../npc/difficulty-calculator-dialog.ts';
+import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
+
+/**
+ * Actor sheet for npcV2 type actors.
+ * Uses ApplicationV2 PARTS system with simplified NPC-focused UI.
+ *
+ * @extends {BaseActorSheet}
+ */
+export default class NPCSheetV2 extends (BaseActorSheet as any) {
+    [key: string]: any;
+    declare actor: any;
+    declare document: any;
+    declare element: any;
+    declare position: any;
+    declare isEditable: any;
+    declare _notify: any;
+    declare render: any;
+
+    /** NPC sheets default to EDIT mode for GM convenience. */
+    _mode = 2;
+
+    /* -------------------------------------------- */
+    /*  Static Configuration                        */
+    /* -------------------------------------------- */
+
+    /** @override */
+    static DEFAULT_OPTIONS = {
+        classes: ['wh40k-rpg', 'sheet', 'actor', 'npc-v2'],
+        position: {
+            width: 900,
+            height: 700,
+        },
+        actions: {
+            // Horde actions
+            toggleHordeMode: NPCSheetV2.#toggleHordeMode,
+            applyMagnitudeDamage: NPCSheetV2.#applyMagnitudeDamage,
+            restoreMagnitude: NPCSheetV2.#restoreMagnitude,
+            // Roll actions (rollCharacteristic & rollSkill kept for NPC-specific roll paths)
+            rollCharacteristic: NPCSheetV2.#rollCharacteristic,
+            rollSkill: NPCSheetV2.#rollSkill,
+            rollInitiative: NPCSheetV2.#rollInitiative,
+            // Weapon actions
+            reloadWeapon: NPCSheetV2.#reloadWeapon,
+            // Armour actions
+            toggleArmourMode: NPCSheetV2.#toggleArmourMode,
+            // Skill actions
+            addTrainedSkill: NPCSheetV2.#addTrainedSkill,
+            removeTrainedSkill: NPCSheetV2.#removeTrainedSkill,
+            toggleFavoriteSkill: NPCSheetV2.#toggleFavoriteSkill,
+            setSkillLevel: NPCSheetV2.#setSkillLevel,
+            cycleSkillLevel: NPCSheetV2.#cycleSkillLevel,
+            // Ability actions
+            pinAbility: NPCSheetV2.#pinAbility,
+            unpinAbility: NPCSheetV2.#unpinAbility,
+            toggleFavoriteTalent: NPCSheetV2.#toggleFavoriteTalent,
+            // GM utility actions
+            setupToken: NPCSheetV2.#setupToken,
+            duplicateNPC: NPCSheetV2.#duplicateNPC,
+            scaleToThreat: NPCSheetV2.#scaleToThreat,
+            exportStatBlock: NPCSheetV2.#exportStatBlock,
+            importStatBlock: NPCSheetV2.#importStatBlock,
+            calculateDifficulty: NPCSheetV2.#calculateDifficulty,
+            saveCombatPreset: NPCSheetV2.#saveCombatPreset,
+            loadCombatPreset: NPCSheetV2.#loadCombatPreset,
+            deleteNPC: NPCSheetV2.#deleteNPC,
+            editImage: NPCSheetV2.#editImage,
+            applyDamage: NPCSheetV2.#applyDamage,
+            healWounds: NPCSheetV2.#healWounds,
+            applyCustomDamage: NPCSheetV2.#applyCustomDamage,
+            healCustomWounds: NPCSheetV2.#healCustomWounds,
+            // Combat tracker actions
+            rerollInitiative: NPCSheetV2.#rerollInitiative,
+            addToCombat: NPCSheetV2.#addToCombat,
+            removeFromCombat: NPCSheetV2.#removeFromCombat,
+            removeItem: NPCSheetV2.#removeItem,
+            // Tag actions
+            addTag: NPCSheetV2.#addTag,
+            removeTag: NPCSheetV2.#removeTag,
+            // UI actions
+            toggleEditSection: NPCSheetV2.#toggleEditSection,
+            toggleEditMode: NPCSheetV2.#toggleEditMode,
+            toggleGMTools: NPCSheetV2.#toggleGMTools,
+            toggleAbilityDesc: NPCSheetV2.#toggleAbilityDesc,
+        },
+    };
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    static PARTS = {
+        navigation: {
+            template: 'systems/wh40k-rpg/templates/actor/npc-v2/navigation.hbs',
+        },
+        overview: {
+            template: 'systems/wh40k-rpg/templates/actor/npc-v2/tab-overview.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+            scrollable: [''],
+        },
+        combat: {
+            template: 'systems/wh40k-rpg/templates/actor/npc-v2/tab-combat.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+            scrollable: [''],
+        },
+        abilities: {
+            template: 'systems/wh40k-rpg/templates/actor/npc-v2/tab-abilities.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+            scrollable: [''],
+        },
+    };
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    static TABS = [
+        { tab: 'overview', label: 'WH40K.NPC.Interaction', icon: 'fa-solid fa-hand-pointer', group: 'primary', cssClass: 'tab-overview' },
+        { tab: 'combat', label: 'WH40K.Tabs.Combat', icon: 'fa-solid fa-swords', group: 'primary', cssClass: 'tab-combat' },
+        { tab: 'abilities', label: 'WH40K.Tabs.Abilities', icon: 'fa-solid fa-stars', group: 'primary', cssClass: 'tab-abilities' },
+    ];
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    tabGroups = {
+        primary: 'overview',
+    };
+
+    /* -------------------------------------------- */
+    /*  Context Preparation                         */
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    async _prepareContext(options: Record<string, any>): Promise<Record<string, any>> {
+        // Call parent to get base ApplicationV2 context setup
+        const context = await super._prepareContext(options);
+
+        // Add NPC-specific context properties
+        context.isGM = game.user.isGM;
+
+        // Prepare threat tier for header display
+        context.threatTier = this.actor.system.threatTier;
+
+        context.npcTypeOptions = {
+            troop: 'Troop',
+            elite: 'Elite',
+            master: 'Master',
+            horde: 'Horde',
+            swarm: 'Swarm',
+            creature: 'Creature',
+            daemon: 'Daemon',
+            xenos: 'Xenos',
+        };
+
+        context.npcRoleOptions = {
+            bruiser: 'Bruiser',
+            sniper: 'Sniper',
+            caster: 'Caster',
+            support: 'Support',
+            commander: 'Commander',
+            specialist: 'Specialist',
+        };
+
+        context.weaponClassOptions = {
+            melee: 'Melee',
+            pistol: 'Pistol',
+            basic: 'Basic',
+            heavy: 'Heavy',
+            thrown: 'Thrown',
+        };
+
+        // Prepare characteristics for display
+        this._prepareCharacteristicsContext(context);
+
+        // Prepare weapons
+        this._prepareWeaponsContext(context);
+
+        // Prepare horde data
+        this._prepareHordeContext(context);
+
+        // Prepare items (talents, traits)
+        await this._prepareItems(context);
+
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare characteristics data for display.
+     * Creates a 3x3 grid of 9 characteristics (excludes Influence for NPCs).
+     * @param {object} context - The render context.
+     * @protected
+     */
+    _prepareCharacteristicsContext(context: Record<string, any>): void {
+        const chars = context.system.characteristics || {};
+        const charArray = [];
+
+        // Define the 9 characteristics for NPCs (exclude Influence)
+        const npcCharKeys = ['weaponSkill', 'ballisticSkill', 'strength', 'toughness', 'agility', 'intelligence', 'perception', 'willpower', 'fellowship'];
+
+        for (const key of npcCharKeys) {
+            const char = chars[key];
+            if (!char) continue;
+            charArray.push({
+                key,
+                label: char.label,
+                short: char.short,
+                base: char.base,
+                modifier: char.modifier,
+                unnatural: char.unnatural,
+                total: char.total,
+                bonus: char.bonus,
+                hasUnnatural: (char.unnatural || 0) >= 2,
+            });
+        }
+
+        context.characteristicsArray = charArray;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare weapons data for display.
+     * @param {object} context - The render context.
+     * @protected
+     */
+    _prepareWeaponsContext(context: Record<string, any>): void {
+        // Embedded weapons (from items dragged onto the NPC)
+        context.embeddedWeapons = context.items.filter((i) => i.type === 'weapon');
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare horde data for display.
+     * @param {object} context - The render context.
+     * @protected
+     */
+    _prepareHordeContext(context: Record<string, any>): void {
+        const horde = context.system.horde || {};
+        const isHorde = context.system.isHorde;
+
+        context.horde = {
+            enabled: horde.enabled,
+            magnitude: horde.magnitude?.current ?? 30,
+            magnitudeMax: horde.magnitude?.max ?? 30,
+            magnitudePercent: context.system.magnitudePercent ?? 100,
+            damageMultiplier: horde.damageMultiplier ?? 1,
+            sizeModifier: horde.sizeModifier ?? 0,
+            isHorde,
+            destroyed: context.system.hordeDestroyed ?? false,
+        };
+
+        // Magnitude bar styling
+        const pct = context.horde.magnitudePercent;
+        context.horde.barClass = pct > 66 ? 'high' : pct > 33 ? 'medium' : 'low';
+    }
+
+    /* -------------------------------------------- */
+
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    async _preparePartContext(partId: string, context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+        context = await super._preparePartContext(partId, context, options);
+
+        // Prepare tab-specific context
+        switch (partId) {
+            case 'navigation':
+                break;
+            case 'overview':
+                this._prepareOverviewContext(context);
+                this._prepareSkillsContext(context);
+                this._prepareAbilitiesContext(context);
+                this._prepareNotesContext(context);
+                break;
+            case 'combat':
+                this._prepareCombatContext(context);
+                break;
+            case 'abilities':
+                this._prepareAbilitiesContext(context);
+                break;
+        }
+
+        return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare overview tab context.
+     * @param {object} context - The render context.
+     * @protected
+     */
+    _prepareOverviewContext(context: Record<string, any>): void {
+        // Ensure items array exists
+        if (!context.items) {
+            context.items = Array.from(this.actor.items);
+        }
+
+        // Pinned abilities for overview
+        const pinnedIds = context.system.pinnedAbilities || [];
+        context.pinnedAbilities = context.items.filter((i) => pinnedIds.includes(i.id) && (i.type === 'talent' || i.type === 'trait'));
+
+        // Favorite Skills
+        const favoriteSkillKeys = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
+        context.favoriteSkills = favoriteSkillKeys
+            .map((key) => {
+                const skillData = context.system.trainedSkills[key];
+                if (!skillData) return null;
+
+                // Get characteristic for this skill
+                const charMap = {
+                    acrobatics: 'agility',
+                    athletics: 'strength',
+                    awareness: 'perception',
+                    charm: 'fellowship',
+                    command: 'fellowship',
+                    commerce: 'fellowship',
+                    deceive: 'fellowship',
+                    dodge: 'agility',
+                    inquiry: 'fellowship',
+                    interrogation: 'willpower',
+                    intimidate: 'strength',
+                    logic: 'intelligence',
+                    medicae: 'intelligence',
+                    parry: 'weaponSkill',
+                    psyniscience: 'perception',
+                    scrutiny: 'perception',
+                    security: 'intelligence',
+                    sleightOfHand: 'agility',
+                    stealth: 'agility',
+                    survival: 'perception',
+                    techUse: 'intelligence',
+                };
+                const charKey = charMap[key] || 'intelligence';
+                const char = context.system.characteristics[charKey];
+                const target = context.system.getSkillTarget ? context.system.getSkillTarget(key) : char.total;
+
+                return {
+                    key,
+                    label: key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1'),
+                    charShort: char.short,
+                    target,
+                    isFavorite: true,
+                };
+            })
+            .filter((s) => s !== null);
+
+        // Favorite Talents
+        const favoriteTalentIds = this.actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
+        context.favoriteTalents = context.items.filter((i) => favoriteTalentIds.includes(i.id) && i.type === 'talent');
+
+        // Armour data
+        context.armour = {
+            mode: context.system.armour.mode,
+            isSimple: context.system.armour.mode === 'simple',
+            isLocations: context.system.armour.mode === 'locations',
+            total: context.system.armour.total,
+            locations: context.system.armour.locations,
+        };
+
+        // Hit locations for location-based armour
+        context.hitLocations = [
+            { key: 'head', label: 'Head', value: context.system.armour.locations?.head ?? 0 },
+            { key: 'body', label: 'Body', value: context.system.armour.locations?.body ?? 0 },
+            { key: 'leftArm', label: 'Left Arm', value: context.system.armour.locations?.leftArm ?? 0 },
+            { key: 'rightArm', label: 'Right Arm', value: context.system.armour.locations?.rightArm ?? 0 },
+            { key: 'leftLeg', label: 'Left Leg', value: context.system.armour.locations?.leftLeg ?? 0 },
+            { key: 'rightLeg', label: 'Right Leg', value: context.system.armour.locations?.rightLeg ?? 0 },
+        ];
+
+        // Combat summary
+        context.combatSummary = {
+            initiative: context.system.initiative,
+            dodge: context.system.getSkillTarget ? context.system.getSkillTarget('dodge') : '—',
+            parry: context.system.getSkillTarget ? context.system.getSkillTarget('parry') : '—',
+            armour: context.system.armour.mode === 'simple' ? context.system.armour.total : 'By Location',
+        };
+
+        // Toughness bonus for armor display
+        context.toughnessBonus = context.system.characteristics?.toughness?.bonus ?? 0;
+
+        // Threat tier
+        context.threatTier = context.system.threatTier;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare combat tab context.
+     * @param {object} context - The render context.
+     * @protected
+     */
+    _prepareCombatContext(context: Record<string, any>): void {
+        const tb = context.system.characteristics?.toughness?.bonus ?? 0;
+        context.toughnessBonus = tb;
+
+        // Armour data
+        const armourMode = context.system.armour?.mode || 'simple';
+        const armourTotal = context.system.armour?.total ?? 0;
+        const locs = context.system.armour?.locations || {};
+        context.armour = {
+            mode: armourMode,
+            isSimple: armourMode === 'simple',
+            isLocations: armourMode === 'locations',
+            total: armourTotal,
+            locations: locs,
+        };
+
+        // Hit locations with roll ranges (always show, use total AP for simple mode)
+        const getAP = (key) => (armourMode === 'simple' ? armourTotal : locs[key] ?? 0);
+        context.hitLocations = [
+            { key: 'head', label: 'Head', short: 'Head', range: '01–10', value: getAP('head'), dr: getAP('head') + tb },
+            { key: 'body', label: 'Body', short: 'Body', range: '31–70', value: getAP('body'), dr: getAP('body') + tb },
+            { key: 'leftArm', label: 'Left Arm', short: 'L.Arm', range: '21–30', value: getAP('leftArm'), dr: getAP('leftArm') + tb },
+            { key: 'rightArm', label: 'Right Arm', short: 'R.Arm', range: '11–20', value: getAP('rightArm'), dr: getAP('rightArm') + tb },
+            { key: 'leftLeg', label: 'Left Leg', short: 'L.Leg', range: '86–00', value: getAP('leftLeg'), dr: getAP('leftLeg') + tb },
+            { key: 'rightLeg', label: 'Right Leg', short: 'R.Leg', range: '71–85', value: getAP('rightLeg'), dr: getAP('rightLeg') + tb },
+        ];
+
+        // Keyed map for body silhouette template access
+        context.hitLocMap = {};
+        for (const loc of context.hitLocations) {
+            context.hitLocMap[loc.key] = loc;
+        }
+
+        // Movement
+        context.movement = context.system.movement;
+
+        // Combat summary (skill targets for action cards)
+        context.combatSummary = {
+            dodge: context.system.getSkillTarget ? context.system.getSkillTarget('dodge') : '—',
+            parry: context.system.getSkillTarget ? context.system.getSkillTarget('parry') : '—',
+        };
+
+        // Gear items (non-weapon embedded items for inventory section)
+        if (!context.items) {
+            context.items = Array.from(this.actor.items);
+        }
+        context.gearItems = context.items.filter((i) => !['weapon', 'talent', 'trait', 'psychicPower', 'specialAbility'].includes(i.type));
+
+        // All items for inventory table (weapons, armour, gear, ammo, cybernetics, etc.)
+        context.allItems = context.items.filter(
+            (i) => !['talent', 'trait', 'psychicPower', 'specialAbility', 'condition', 'criticalInjury', 'mutation'].includes(i.type),
+        );
+
+        // Flag for weapon rows in actions grid (used for empty state)
+        context.combatWeaponRows = (context.embeddedWeapons?.length ?? 0) > 0;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare skills tab context.
+     * @param {object} context - The render context.
+     * @protected
+     */
+    _prepareSkillsContext(context: Record<string, any>): void {
+        // Get trained skills list from data model
+        context.trainedSkillsList = context.system.trainedSkillsList || [];
+
+        // Get favorite skills
+        const favoriteSkillKeys = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
+
+        // Define all basic skills with their characteristics
+        const allBasicSkills = [
+            { key: 'acrobatics', name: 'Acrobatics', char: 'Ag', category: 'stealth' },
+            { key: 'athletics', name: 'Athletics', char: 'S', category: 'combat' },
+            { key: 'awareness', name: 'Awareness', char: 'Per', category: 'stealth' },
+            { key: 'charm', name: 'Charm', char: 'Fel', category: 'social' },
+            { key: 'command', name: 'Command', char: 'Fel', category: 'social' },
+            { key: 'commerce', name: 'Commerce', char: 'Fel', category: 'social' },
+            { key: 'deceive', name: 'Deceive', char: 'Fel', category: 'social' },
+            { key: 'dodge', name: 'Dodge', char: 'Ag', category: 'combat' },
+            { key: 'inquiry', name: 'Inquiry', char: 'Fel', category: 'social' },
+            { key: 'interrogation', name: 'Interrogation', char: 'WP', category: 'social' },
+            { key: 'intimidate', name: 'Intimidate', char: 'S', category: 'social' },
+            { key: 'logic', name: 'Logic', char: 'Int', category: 'technical' },
+            { key: 'medicae', name: 'Medicae', char: 'Int', category: 'technical' },
+            { key: 'parry', name: 'Parry', char: 'WS', category: 'combat' },
+            { key: 'psyniscience', name: 'Psyniscience', char: 'Per', category: 'technical' },
+            { key: 'scrutiny', name: 'Scrutiny', char: 'Per', category: 'social' },
+            { key: 'security', name: 'Security', char: 'Int', category: 'technical' },
+            { key: 'sleightOfHand', name: 'Sleight of Hand', char: 'Ag', category: 'stealth' },
+            { key: 'stealth', name: 'Stealth', char: 'Ag', category: 'stealth' },
+            { key: 'survival', name: 'Survival', char: 'Per', category: 'stealth' },
+            { key: 'techUse', name: 'Tech-Use', char: 'Int', category: 'technical' },
+        ];
+
+        // Characteristic key mapping
+        const charKeyMap = {
+            WS: 'weaponSkill',
+            BS: 'ballisticSkill',
+            S: 'strength',
+            T: 'toughness',
+            Ag: 'agility',
+            Int: 'intelligence',
+            Per: 'perception',
+            WP: 'willpower',
+            Fel: 'fellowship',
+            Inf: 'influence',
+        };
+
+        // Build basic skills list with training states
+        context.basicSkillsList = allBasicSkills.map((skill) => {
+            const trainedData = context.system.trainedSkills?.[skill.key];
+            const charKey = charKeyMap[skill.char] || 'intelligence';
+            const charData = context.system.characteristics[charKey];
+            const isTrained = !!trainedData;
+
+            // Calculate target
+            let target = charData?.total ?? 30;
+            if (isTrained) {
+                if (trainedData.plus20) target += 20;
+                else if (trainedData.plus10) target += 10;
+                target += trainedData.bonus || 0;
+            } else {
+                target = Math.floor(target / 2); // Untrained: half characteristic
+            }
+
+            // Proficiency cycle display data
+            const plus10 = trainedData?.plus10 || false;
+            const plus20 = trainedData?.plus20 || false;
+            let levelClass = 'untrained';
+            let levelTooltip = 'Untrained (click to train)';
+            if (plus20) {
+                levelClass = 'plus20';
+                levelTooltip = '+20 Expert (click to remove)';
+            } else if (plus10) {
+                levelClass = 'plus10';
+                levelTooltip = '+10 Experienced (click for +20)';
+            } else if (isTrained) {
+                levelClass = 'trained';
+                levelTooltip = 'Trained (click for +10)';
+            }
+
+            return {
+                ...skill,
+                isTrained,
+                trained: isTrained,
+                plus10,
+                plus20,
+                target,
+                levelClass,
+                levelTooltip,
+                isFavorite: favoriteSkillKeys.includes(skill.key),
+            };
+        });
+
+        // Trained skill count for display
+        context.trainedSkillCount = context.basicSkillsList.filter((s) => s.isTrained).length;
+
+        // Mark favorite status on trained skills list
+        context.trainedSkillsList = context.trainedSkillsList.map((skill) => ({
+            ...skill,
+            isFavorite: favoriteSkillKeys.includes(skill.key),
+        }));
+
+        // Skills by category for quick-add
+        const trainedKeys = Object.keys(context.system.trainedSkills || {});
+
+        context.combatSkills = allBasicSkills.filter((s) => s.category === 'combat').map((s) => ({ ...s, added: trainedKeys.includes(s.key) }));
+
+        context.socialSkills = allBasicSkills.filter((s) => s.category === 'social').map((s) => ({ ...s, added: trainedKeys.includes(s.key) }));
+
+        context.stealthSkills = allBasicSkills.filter((s) => s.category === 'stealth').map((s) => ({ ...s, added: trainedKeys.includes(s.key) }));
+
+        context.technicalSkills = allBasicSkills.filter((s) => s.category === 'technical').map((s) => ({ ...s, added: trainedKeys.includes(s.key) }));
+
+        // Legacy: available skills for dropdown (not yet trained)
+        context.availableSkills = allBasicSkills.filter((s) => !trainedKeys.includes(s.key));
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare abilities tab context.
+     * @param {object} context - The render context.
+     * @protected
+     */
+    _prepareAbilitiesContext(context: Record<string, any>): void {
+        // Ensure items array exists
+        if (!context.items) {
+            context.items = Array.from(this.actor.items);
+        }
+
+        const pinnedIds = context.system.pinnedAbilities || [];
+
+        // Talents
+        context.talents = context.items
+            .filter((i) => i.type === 'talent')
+            .map((t) => ({
+                ...t,
+                isPinned: pinnedIds.includes(t.id),
+            }));
+
+        // Traits
+        context.traits = context.items
+            .filter((i) => i.type === 'trait')
+            .map((t) => ({
+                ...t,
+                isPinned: pinnedIds.includes(t.id),
+            }));
+
+        // Psychic powers
+        context.psychicPowers = context.items.filter((i) => i.type === 'psychicPower');
+
+        // Other abilities (special abilities from HTML field)
+        context.hasSpecialAbilities = !!context.system.specialAbilities;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare notes tab context.
+     * @param {object} context - The render context.
+     * @protected
+     */
+    _prepareNotesContext(context: Record<string, any>): void {
+        // Tags
+        context.tags = context.system.tags || [];
+
+        // Source reference
+        context.source = context.system.source || '';
+
+        // Template info
+        context.templateUuid = context.system.template || '';
+    }
+
+    /* -------------------------------------------- */
+    /*  Action Handlers                             */
+    /* -------------------------------------------- */
+
+    /**
+     * Handle toggling horde mode.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #toggleHordeMode(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        await (this as any).actor.system.toggleHordeMode();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle characteristic roll.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #rollCharacteristic(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const charKey = target.dataset.characteristic;
+        if (!charKey) return;
+        await (this as any).actor.rollCharacteristic(charKey);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle weapon attack roll.
+    /**
+     * Reload an embedded weapon using the ReloadActionManager.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #reloadWeapon(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId ?? target.dataset.itemId;
+        if (!itemId) return;
+        const weapon = (this as any).actor.items.get(itemId);
+        if (!weapon) return;
+        const { ReloadActionManager } = await import('../../actions/reload-action-manager.ts');
+        const result = await ReloadActionManager.reloadWeapon(weapon, { skipValidation: (event as any).shiftKey });
+        if (result.success) {
+            (ui.notifications as any).info(result.message);
+            await ReloadActionManager.sendReloadToChat((this as any).actor, weapon, result);
+        } else {
+            (ui.notifications as any).warn(result.message);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle applying magnitude damage.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #applyMagnitudeDamage(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const amount = parseInt(target.dataset.amount || '1', 10);
+        await (this as any).actor.system.applyMagnitudeDamage(amount, 'Manual');
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle restoring magnitude.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #restoreMagnitude(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const amount = parseInt(target.dataset.amount || '1', 10);
+        await (this as any).actor.system.restoreMagnitude(amount, 'Manual');
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle skill roll.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #rollSkill(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const skillKey = target.dataset.skill;
+        if (!skillKey) return;
+        await (this as any).actor.rollSkill(skillKey);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle initiative roll.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #rollInitiative(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        // Roll initiative using the system's initiative formula
+        const initChar = (this as any).actor.system.initiative.characteristic;
+        const char = (this as any).actor.system.characteristics[initChar];
+        if (!char) return;
+
+        const formula = `1d10 + ${char.bonus}`;
+        const roll = new Roll(formula);
+        await roll.evaluate();
+
+        await roll.toMessage({
+            speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
+            flavor: 'Initiative Roll' as any,
+        });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle toggling armour mode.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #toggleArmourMode(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const currentMode = (this as any).actor.system.armour?.mode || 'simple';
+        const newMode = currentMode === 'simple' ? 'locations' : 'simple';
+        await (this as any).actor.system.switchArmourMode(newMode);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle adding a trained skill.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #addTrainedSkill(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const skillKey = target.dataset.skill;
+        if (!skillKey) {
+            // Show skill selection dialog
+            const skills = [
+                { key: 'acrobatics', name: 'Acrobatics' },
+                { key: 'athletics', name: 'Athletics' },
+                { key: 'awareness', name: 'Awareness' },
+                { key: 'charm', name: 'Charm' },
+                { key: 'command', name: 'Command' },
+                { key: 'commerce', name: 'Commerce' },
+                { key: 'deceive', name: 'Deceive' },
+                { key: 'dodge', name: 'Dodge' },
+                { key: 'inquiry', name: 'Inquiry' },
+                { key: 'interrogation', name: 'Interrogation' },
+                { key: 'intimidate', name: 'Intimidate' },
+                { key: 'logic', name: 'Logic' },
+                { key: 'medicae', name: 'Medicae' },
+                { key: 'parry', name: 'Parry' },
+                { key: 'psyniscience', name: 'Psyniscience' },
+                { key: 'scrutiny', name: 'Scrutiny' },
+                { key: 'security', name: 'Security' },
+                { key: 'sleightOfHand', name: 'Sleight of Hand' },
+                { key: 'stealth', name: 'Stealth' },
+                { key: 'survival', name: 'Survival' },
+                { key: 'techUse', name: 'Tech-Use' },
+            ].filter((s) => !(this as any).actor.system.trainedSkills[s.key]);
+
+            const options = skills.map((s) => `<option value="${s.key}">${s.name}</option>`).join('');
+
+            const content = `
+        <form class="wh40k-skill-add-dialog">
+          <div class="wh40k-form-group">
+            <label class="wh40k-form-label">Skill</label>
+            <select name="skill" class="wh40k-form-select">${options}</select>
+          </div>
+          <div class="wh40k-form-group">
+            <label class="wh40k-form-label">Training Level</label>
+            <select name="level" class="wh40k-form-select">
+              <option value="trained">Trained</option>
+              <option value="plus10">+10 (Experienced)</option>
+              <option value="plus20">+20 (Expert)</option>
+            </select>
+          </div>
+        </form>
+      `;
+
+            const dialog = new foundry.applications.api.DialogV2({
+                window: { title: 'Add Trained Skill', icon: 'fa-solid fa-book-open' },
+                content,
+                classes: ['wh40k-rpg', 'wh40k-dialog-skill'],
+                position: { width: 320 },
+                buttons: [
+                    {
+                        action: 'add',
+                        label: 'Add Skill',
+                        icon: 'fa-solid fa-plus',
+                        default: true,
+                        callback: async (event, button, _dialog) => {
+                            const form = button.form;
+                            const skill = (form.querySelector('[name="skill"]') as HTMLSelectElement).value;
+                            const level = (form.querySelector('[name="level"]') as HTMLSelectElement).value;
+                            await (this as any).actor.system.addTrainedSkill(skill, null, level);
+                        },
+                    },
+                    {
+                        action: 'cancel',
+                        label: 'Cancel',
+                        icon: 'fa-solid fa-xmark',
+                    },
+                ],
+            });
+            dialog.render(true);
+            return;
+        }
+        await (this as any).actor.system.addTrainedSkill(skillKey);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle removing a trained skill.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #removeTrainedSkill(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const skillKey = target.dataset.skill;
+        if (!skillKey) return;
+        await (this as any).actor.system.removeSkill(skillKey);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle setting skill training level.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #setSkillLevel(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const skillKey = target.dataset.skill;
+        const level = target.dataset.level;
+        if (!skillKey || !level) return;
+
+        const currentSkills = foundry.utils.deepClone((this as any).actor.system.trainedSkills) || {};
+        const currentState = currentSkills[skillKey];
+
+        // Skill characteristic mapping
+        const skillCharMap = {
+            acrobatics: 'agility',
+            athletics: 'strength',
+            awareness: 'perception',
+            charm: 'fellowship',
+            command: 'fellowship',
+            commerce: 'fellowship',
+            deceive: 'fellowship',
+            dodge: 'agility',
+            inquiry: 'fellowship',
+            interrogation: 'willpower',
+            intimidate: 'strength',
+            logic: 'intelligence',
+            medicae: 'intelligence',
+            parry: 'weaponSkill',
+            psyniscience: 'perception',
+            scrutiny: 'perception',
+            security: 'intelligence',
+            sleightOfHand: 'agility',
+            stealth: 'agility',
+            survival: 'perception',
+            techUse: 'intelligence',
+        };
+
+        // Handle toggle logic
+        switch (level) {
+            case 'untrained':
+                // Remove the skill entirely using Foundry's deletion syntax
+                await (this as any).actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
+                return; // Early return - we've already updated
+            case 'trained':
+                // Add skill at trained level
+                currentSkills[skillKey] = {
+                    name: skillKey,
+                    characteristic: skillCharMap[skillKey] || 'perception',
+                    trained: true,
+                    plus10: false,
+                    plus20: false,
+                    bonus: 0,
+                };
+                break;
+            case 'plus10':
+                // Toggle +10: if already at +10 (and not +20), drop to trained; otherwise set to +10
+                if (currentState?.plus10 && !currentState?.plus20) {
+                    currentSkills[skillKey] = {
+                        name: skillKey,
+                        characteristic: currentState.characteristic || skillCharMap[skillKey] || 'perception',
+                        trained: true,
+                        plus10: false,
+                        plus20: false,
+                        bonus: currentState.bonus || 0,
+                    };
+                } else {
+                    currentSkills[skillKey] = {
+                        name: skillKey,
+                        characteristic: currentState?.characteristic || skillCharMap[skillKey] || 'perception',
+                        trained: true,
+                        plus10: true,
+                        plus20: false,
+                        bonus: currentState?.bonus || 0,
+                    };
+                }
+                break;
+            case 'plus20':
+                // Toggle +20: if already at +20, drop to +10; otherwise set to +20
+                if (currentState?.plus20) {
+                    currentSkills[skillKey] = {
+                        name: skillKey,
+                        characteristic: currentState.characteristic || skillCharMap[skillKey] || 'perception',
+                        trained: true,
+                        plus10: true,
+                        plus20: false,
+                        bonus: currentState.bonus || 0,
+                    };
+                } else {
+                    currentSkills[skillKey] = {
+                        name: skillKey,
+                        characteristic: currentState?.characteristic || skillCharMap[skillKey] || 'perception',
+                        trained: true,
+                        plus10: true,
+                        plus20: true,
+                        bonus: currentState?.bonus || 0,
+                    };
+                }
+                break;
+        }
+
+        await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle cycling skill training level (proficiency cycle).
+     * Click cycles: Untrained → Trained → +10 → +20 → Untrained
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #cycleSkillLevel(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const skillKey = target.dataset.skill;
+        if (!skillKey) return;
+
+        const currentSkills = foundry.utils.deepClone((this as any).actor.system.trainedSkills) || {};
+        const current = currentSkills[skillKey];
+
+        // Skill characteristic mapping
+        const skillCharMap = {
+            acrobatics: 'agility',
+            athletics: 'strength',
+            awareness: 'perception',
+            charm: 'fellowship',
+            command: 'fellowship',
+            commerce: 'fellowship',
+            deceive: 'fellowship',
+            dodge: 'agility',
+            inquiry: 'fellowship',
+            interrogation: 'willpower',
+            intimidate: 'strength',
+            logic: 'intelligence',
+            medicae: 'intelligence',
+            parry: 'weaponSkill',
+            psyniscience: 'perception',
+            scrutiny: 'perception',
+            security: 'intelligence',
+            sleightOfHand: 'agility',
+            stealth: 'agility',
+            survival: 'perception',
+            techUse: 'intelligence',
+        };
+
+        // Determine current level and cycle to next
+        // Untrained → Trained → +10 → +20 → Untrained
+        if (!current) {
+            // Untrained → Trained
+            currentSkills[skillKey] = {
+                name: skillKey,
+                characteristic: skillCharMap[skillKey] || 'perception',
+                trained: true,
+                plus10: false,
+                plus20: false,
+                bonus: 0,
+            };
+            await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
+        } else if (current.trained && !current.plus10 && !current.plus20) {
+            // Trained → +10
+            currentSkills[skillKey] = { ...current, plus10: true, plus20: false };
+            await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
+        } else if (current.plus10 && !current.plus20) {
+            // +10 → +20
+            currentSkills[skillKey] = { ...current, plus10: true, plus20: true };
+            await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
+        } else {
+            // +20 → Untrained (remove)
+            await (this as any).actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle pinning an ability.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #pinAbility(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const itemId = target.dataset.itemId;
+        if (!itemId) return;
+        await (this as any).actor.system.pinAbility(itemId);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle unpinning an ability.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #unpinAbility(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const itemId = target.dataset.itemId;
+        if (!itemId) return;
+        await (this as any).actor.system.unpinAbility(itemId);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle editing the actor image.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #editImage(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const fp = new FilePicker({
+            type: 'image',
+            current: (this as any).actor.img,
+            callback: (path) => {
+                (this as any).actor.update({ img: path });
+            },
+        });
+        fp.render(true);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle setting up token configuration automatically.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #setupToken(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const npc = (this as any).actor;
+        const updates: Record<string, any> = {};
+
+        // Size-based dimensions
+        const sizeMap = {
+            1: 0.5, // Miniscule
+            2: 0.75, // Tiny
+            3: 1, // Small
+            4: 1, // Average
+            5: 2, // Hulking
+            6: 2, // Enormous
+            7: 3, // Massive
+            8: 3, // Immense
+            9: 4, // Gargantuan
+            10: 4, // Colossal
+        };
+        updates.width = sizeMap[npc.system.size] || 1;
+        updates.height = sizeMap[npc.system.size] || 1;
+
+        // Type-based vision/detection
+        if (npc.system.type === 'daemon' || npc.system.type === 'xenos') {
+            updates.sight = { enabled: true, range: 60, visionMode: 'darkvision' };
+        } else {
+            updates.sight = { enabled: true, range: 30 };
+        }
+
+        // Bars
+        updates.bar1 = { attribute: 'wounds' };
+        if (npc.system.horde?.enabled) {
+            updates.bar2 = { attribute: 'horde.magnitude' };
+        }
+
+        // Disposition - hostile by default
+        updates.disposition = -1;
+
+        // Display name mode
+        updates.displayName = 20; // OWNER_HOVER
+
+        await npc.update({ prototypeToken: updates });
+        (ui.notifications as any).info(`Token configured for ${npc.name}`);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle duplicating the NPC.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #duplicateNPC(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        await (this as any).actor.duplicate();
+        (ui.notifications as any).info(`Created copy of ${(this as any).actor.name}`);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle scaling to threat level.
+     * Opens the NPCThreatScalerDialog for full-featured scaling.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #scaleToThreat(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        await NPCThreatScalerDialog.scale((this as any).actor);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle calculating encounter difficulty.
+     * Opens the DifficultyCalculatorDialog for full party-based calculation.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #calculateDifficulty(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const { DifficultyCalculatorDialog: DiffCalcDialog } = (game as any).wh40k.applications;
+        await DiffCalcDialog.show((this as any).actor);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle saving a combat preset from current NPC.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #saveCombatPreset(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        await CombatPresetDialog.savePreset((this as any).actor);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle loading a combat preset to current NPC.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #loadCombatPreset(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        await CombatPresetDialog.loadPreset((this as any).actor);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle deleting the NPC.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #deleteNPC(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const confirmed = await foundry.applications.api.DialogV2.confirm({
+            window: { title: 'Delete NPC' },
+            content: `<p>Are you sure you want to delete <strong>${(this as any).actor.name}</strong>?</p>`,
+            rejectClose: false,
+        });
+
+        if (confirmed) {
+            await (this as any).actor.delete();
+            (ui.notifications as any).info(`Deleted ${(this as any).actor.name}`);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle exporting stat block.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #exportStatBlock(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+
+        // Open the full exporter dialog
+        StatBlockExporter.show((this as any).actor);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle importing from a stat block.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #importStatBlock(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+
+        await StatBlockParser.open({ actor: (this as any).actor } as any);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle applying damage.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #applyDamage(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const amount = parseInt(target.dataset.amount || '1', 10);
+        const location = target.dataset.location || 'body';
+        await (this as any).actor.applyDamage(amount, location);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle healing wounds.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #healWounds(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const amount = parseInt(target.dataset.amount || '1', 10);
+        await (this as any).actor.healWounds(amount);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle adding a tag.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #addTag(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const content = `
+      <form>
+        <div class="form-group">
+          <label>Tag Name</label>
+          <input type="text" name="tag" placeholder="e.g., Boss, Minion, Ranged" />
+        </div>
+      </form>
+    `;
+
+        const dialog = new foundry.applications.api.DialogV2({
+            window: { title: 'Add Tag' },
+            content,
+            buttons: [
+                {
+                    action: 'add',
+                    label: 'Add',
+                    default: true,
+                    callback: async (event, button, _dialog) => {
+                        const form = button.form;
+                        const tag = (form.querySelector('[name="tag"]') as HTMLInputElement).value.trim();
+                        if (tag) {
+                            const tags = [...((this as any).actor.system.tags || []), tag];
+                            await (this as any).actor.update({ 'system.tags': tags });
+                        }
+                    },
+                },
+                {
+                    action: 'cancel',
+                    label: 'Cancel',
+                },
+            ],
+        });
+        dialog.render(true);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle removing a tag.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #removeTag(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const tag = target.dataset.tag;
+        if (!tag) return;
+        const tags = ((this as any).actor.system.tags || []).filter((t) => t !== tag);
+        await (this as any).actor.update({ 'system.tags': tags });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle toggling edit section visibility.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static #toggleEditSection(event: Event, target: HTMLElement): void {
+        event.preventDefault();
+        const sectionId = target.dataset.target;
+        if (!sectionId) return;
+
+        // Find the section to toggle
+        const section = (this as any).element.querySelector(`[data-section-id="${sectionId}"]`);
+        if (!section) return;
+
+        // Toggle hidden attribute
+        section.hidden = !section.hidden;
+
+        // Toggle button state
+        target.classList.toggle('active');
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle between PLAY and EDIT mode from the sidebar button.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #toggleEditMode(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const { MODES } = this.constructor as any;
+        (this as any)._mode = (this as any)._mode === MODES.EDIT ? MODES.PLAY : MODES.EDIT;
+        // Keep header slide-toggle in sync if present
+        const headerToggle = (this as any).element.querySelector('.window-header .mode-slider');
+        if (headerToggle) headerToggle.checked = (this as any)._mode === MODES.EDIT;
+        await (this as any).submit();
+        (this as any).render();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle GM tools panel visibility in the sidebar.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static #toggleGMTools(event: Event, target: HTMLElement): void {
+        event.preventDefault();
+        const wrapper = target.closest('.wh40k-gm-tools-wrapper');
+        if (!wrapper) return;
+        const tools = wrapper.querySelector('.wh40k-gm-tools') as HTMLElement;
+        if (!tools) return;
+        tools.hidden = !tools.hidden;
+        wrapper.classList.toggle('open', !tools.hidden);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Toggle ability description visibility (collapsible cards).
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static #toggleAbilityDesc(event: Event, target: HTMLElement): void {
+        event.preventDefault();
+        const card = target.closest('.wh40k-ability-card');
+        if (!card) return;
+        const desc = card.querySelector('.wh40k-ability-desc') as HTMLElement;
+        if (!desc) return;
+        desc.hidden = !desc.hidden;
+        // Rotate chevron
+        const icon = target.querySelector('i');
+        if (icon) icon.classList.toggle('fa-rotate-180');
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle toggling favorite skill.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #toggleFavoriteSkill(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const skillKey = target.dataset.skill;
+        if (!skillKey) return;
+
+        const currentFavorites = (this as any).actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
+        const isFavorite = currentFavorites.includes(skillKey);
+
+        if (isFavorite) {
+            await (this as any).actor.setFlag(
+                'wh40k-rpg',
+                'favoriteSkills',
+                currentFavorites.filter((k) => k !== skillKey),
+            );
+        } else {
+            await (this as any).actor.setFlag('wh40k-rpg', 'favoriteSkills', [...currentFavorites, skillKey]);
+        }
+
+        await (this as any).render({ parts: ['overview', 'skills'] });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle toggling favorite talent.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #toggleFavoriteTalent(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const itemId = target.dataset.itemId;
+        if (!itemId) return;
+
+        const currentFavorites = (this as any).actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
+        const isFavorite = currentFavorites.includes(itemId);
+
+        if (isFavorite) {
+            await (this as any).actor.setFlag(
+                'wh40k-rpg',
+                'favoriteTalents',
+                currentFavorites.filter((id) => id !== itemId),
+            );
+        } else {
+            await (this as any).actor.setFlag('wh40k-rpg', 'favoriteTalents', [...currentFavorites, itemId]);
+        }
+
+        await (this as any).render({ parts: ['overview', 'abilities'] });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle applying custom damage amount.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #applyCustomDamage(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const input = (this as any).element.querySelector('[data-custom-damage]');
+        const amount = parseInt(input?.value || '1', 10);
+        await (this as any).actor.applyDamage(amount, 'body');
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle healing custom wounds amount.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #healCustomWounds(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const input = (this as any).element.querySelector('[data-custom-damage]');
+        const amount = parseInt(input?.value || '1', 10);
+        await (this as any).actor.healWounds(amount);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle rerolling initiative.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #rerollInitiative(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const combatant = game.combat?.getCombatantByActor((this as any).actor.id);
+        if (combatant) {
+            await game.combat.rollInitiative([combatant.id]);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle adding to combat.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #addToCombat(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        if (!game.combat) {
+            (ui.notifications as any).warn('No active combat encounter.');
+            return;
+        }
+        // Prevent duplicate combatants
+        const existing = game.combat.getCombatantByActor((this as any).actor.id);
+        if (existing) {
+            (ui.notifications as any).info(`${(this as any).actor.name} is already in combat.`);
+            return;
+        }
+        await game.combat.createEmbeddedDocuments('Combatant', [
+            {
+                actorId: (this as any).actor.id,
+                tokenId: (this as any).actor.token?.id,
+            } as any,
+        ]);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle removing from combat.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #removeFromCombat(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const combatant = game.combat?.getCombatantByActor((this as any).actor.id);
+        if (combatant) {
+            await game.combat.deleteEmbeddedDocuments('Combatant', [combatant.id]);
+        }
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Remove an embedded item from the actor.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #removeItem(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        if (!itemId) return;
+        const item = (this as any).actor.items.get(itemId);
+        if (item) await item.delete();
+    }
+    /*  Overrides                                   */
+    /* -------------------------------------------- */
+
+    /**
+     * Override to skip acolyte-specific preparations.
+     * @param {object} context - The render context.
+     * @protected
+     */
+    _prepareCharacteristicsHUD(context: Record<string, any>): void {
+        // NPCSheetV2 uses its own characteristic preparation
+        // Skip the parent implementation
+    }
+
+    /**
+     * Override to skip acolyte-specific skill preparation.
+     * @param {object} context - The render context.
+     * @protected
+     */
+    async _prepareSkills(context: Record<string, any>): Promise<void> {
+        // NPCSheetV2 uses sparse skill system
+        // Will implement in later phases
+        context.skills = {};
+        context.trainedSkillsList = [];
+    }
+
+    /**
+     * Override to skip acolyte-specific item preparation.
+     * @param {object} context - The render context.
+     * @protected
+     */
+    async _prepareItems(context: Record<string, any>): Promise<void> {
+        // NPCSheetV2 uses simplified item system
+        context.talents = context.items.filter((i) => i.type === 'talent');
+        context.traits = context.items.filter((i) => i.type === 'trait');
+    }
+
+    /* -------------------------------------------- */
+}

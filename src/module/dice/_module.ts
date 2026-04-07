@@ -1,0 +1,10 @@
+/**
+ * WH40K RPG VTT - Dice Module
+ * Modern roll classes using three-stage workflow
+ */
+
+export { default as BasicRollWH40K } from './basic-roll.ts';
+export { default as D100Roll } from './d100-roll.ts';
+
+// Re-export the configuration dialog for convenience
+export { default as RollConfigurationDialog } from '../applications/dialogs/roll-configuration-dialog.ts';

@@ -27,7 +27,7 @@
         }
     ],
     "esmodules": [
-        "module/wh40k-rpg.mjs"
+        "module/wh40k-rpg.js"
     ],
     "styles": [
         "css/wh40k-rpg.css"
