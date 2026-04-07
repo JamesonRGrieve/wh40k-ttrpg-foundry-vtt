@@ -21,7 +21,6 @@ const SYSTEM_SCSS = ["src/scss/**/*.scss"];
 const STATIC_FILES = [
   "src/icons/**/*",
   "src/module/**/*",
-  "!src/module/**/*.mts",
   "!src/module/**/*.ts",
   "!src/module/foundry-core/**",
   "src/templates/**/*",
@@ -206,7 +205,7 @@ function cleanBuild() {
 }
 
 function watchUpdates() {
-  gulp.watch('src/module/**/*.{mts,ts}', gulp.series(compileTypeScript));
+  gulp.watch('src/module/**/*.ts', gulp.series(compileTypeScript));
   return gulp.watch(STATIC_FILES, gulp.series(cleanBuild, compileScss, compilePacks, copyFiles));
 }
 

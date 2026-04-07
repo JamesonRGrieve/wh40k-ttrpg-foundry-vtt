@@ -1,0 +1,221 @@
+/**
+ * @file ExpandableTooltipMixin - Click-to-expand rich tooltips
+ *
+ * Adds support for click-to-expand information panels throughout item sheets.
+ * Replaces hover tooltips with clickable panels that can contain rich HTML,
+ * item links, and formatted text.
+ *
+ * Usage:
+ * - Add to mixin stack in sheet class
+ * - Use data-expandable="key" on trigger elements
+ * - Define expandableContent() method to provide content
+ *
+ * @mixin
+ */
+
+/**
+ * Mixin for expandable tooltip functionality
+ * @param {*} Base - The base class to extend
+ * @returns {*} Extended class with expandable tooltip support
+ */
+export default function ExpandableTooltipMixin<T extends new (...args: any[]) => any>(Base: T) {
+    // eslint-disable-next-line no-shadow -- class must match function name for private field access
+    return class ExpandableTooltipMixin extends Base {
+    [key: string]: any;
+        /**
+         * Storage for currently open expandable panels
+         * @type {Set<string>}
+         * @private
+         */
+        #openPanels: Set<string> = new Set();
+
+        /**
+         * Add expandable tooltip action handlers
+         * @override
+         */
+        static DEFAULT_OPTIONS = {
+            // @ts-expect-error - TS2339
+            ...super.DEFAULT_OPTIONS,
+            actions: {
+                // @ts-expect-error - TS2339
+                ...super.DEFAULT_OPTIONS.actions,
+                toggleExpandable: ExpandableTooltipMixin.#toggleExpandable,
+            },
+        };
+
+        /* -------------------------------------------- */
+        /*  Action Handlers                             */
+        /* -------------------------------------------- */
+
+        /**
+         * Toggle an expandable panel
+         * @this {ExpandableTooltipMixin}
+         * @param {PointerEvent} event - Triggering event
+         * @param {HTMLElement} target - Action target
+         * @private
+         */
+        static async #toggleExpandable(event: Event, target: HTMLElement): Promise<void> {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const panelId = target.dataset.targetId;
+            if (!panelId) {
+                console.warn('Expandable element missing data-target-id');
+                return;
+            }
+
+            // Toggle the panel state
+            // @ts-expect-error - dynamic property
+            if (this.#openPanels.has(panelId)) {
+                // @ts-expect-error - dynamic property
+                this.#closePanel(panelId);
+            } else {
+                // @ts-expect-error - dynamic property
+                this.#openPanel(panelId);
+            }
+        }
+
+        /* -------------------------------------------- */
+        /*  Panel Management                            */
+        /* -------------------------------------------- */
+
+        /**
+         * Open an expandable panel
+         * @param {string} panelId - Panel identifier
+         * @private
+         */
+        #openPanel(panelId: string): void {
+            const wrapper = this.element.querySelector(`[data-expandable-id="${panelId}"]`);
+            if (!wrapper) return;
+
+            const trigger = wrapper.querySelector('.wh40k-expandable');
+            const panel = wrapper.querySelector('.wh40k-expansion-panel');
+
+            if (trigger && panel) {
+                trigger.classList.add('wh40k-expandable--expanded');
+                panel.classList.add('wh40k-expansion-panel--open');
+                this.#openPanels.add(panelId);
+
+                // Enrich content if needed
+                this.#enrichPanelContent(panel);
+            }
+        }
+
+        /**
+         * Close an expandable panel
+         * @param {string} panelId - Panel identifier
+         * @private
+         */
+        #closePanel(panelId: string): void {
+            const wrapper = this.element.querySelector(`[data-expandable-id="${panelId}"]`);
+            if (!wrapper) return;
+
+            const trigger = wrapper.querySelector('.wh40k-expandable');
+            const panel = wrapper.querySelector('.wh40k-expansion-panel');
+
+            if (trigger && panel) {
+                trigger.classList.remove('wh40k-expandable--expanded');
+                panel.classList.remove('wh40k-expansion-panel--open');
+                this.#openPanels.delete(panelId);
+            }
+        }
+
+        /**
+         * Close all open panels
+         * @private
+         */
+        #closeAllPanels(): void {
+            for (const panelId of this.#openPanels) {
+                this.#closePanel(panelId);
+            }
+            this.#openPanels.clear();
+        }
+
+        /**
+         * Enrich panel content with text enrichers and item links
+         * @param {HTMLElement} panel - Panel element
+         * @private
+         */
+        async #enrichPanelContent(panel: HTMLElement): Promise<void> {
+            // Check if content needs enriching
+            const unenriched = panel.querySelectorAll('[data-enrich="true"]');
+            if (unenriched.length === 0) return;
+
+            for (const element of unenriched) {
+                const content = element.innerHTML;
+                const enriched = await TextEditor.enrichHTML(content, {
+                    // @ts-expect-error - extended property
+                    async: true,
+                    relativeTo: this.document,
+                });
+                element.innerHTML = enriched;
+                element.removeAttribute('data-enrich');
+            }
+        }
+
+        /* -------------------------------------------- */
+        /*  Event Handlers                              */
+        /* -------------------------------------------- */
+
+        /**
+         * @override
+         */
+        _attachPartListeners(partId: string, htmlElement: HTMLElement, options: Record<string, unknown>): void {
+            super._attachPartListeners(partId, htmlElement, options);
+
+            // Close panels on Escape key
+            htmlElement.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && this.#openPanels.size > 0) {
+                    event.preventDefault();
+                    this.#closeAllPanels();
+                }
+            });
+
+            // Close panels when clicking outside
+            htmlElement.addEventListener('click', (event) => {
+                // Don't close if clicking on trigger or inside panel
+                const clickedExpandable = (event.target as HTMLElement).closest('.wh40k-expandable, .wh40k-expansion-panel');
+                if (!clickedExpandable && this.#openPanels.size > 0) {
+                    this.#closeAllPanels();
+                }
+            });
+        }
+
+        /* -------------------------------------------- */
+        /*  Helper Methods                              */
+        /* -------------------------------------------- */
+
+        /**
+         * Check if a panel is currently open
+         * @param {string} panelId - Panel identifier
+         * @returns {boolean}
+         */
+        isPanelOpen(panelId: string): boolean {
+            return this.#openPanels.has(panelId);
+        }
+
+        /**
+         * Get all currently open panel IDs
+         * @returns {string[]}
+         */
+        getOpenPanels(): string[] {
+            return Array.from(this.#openPanels);
+        }
+
+        /**
+         * Programmatically open a panel
+         * @param {string} panelId - Panel identifier
+         */
+        openExpandable(panelId: string): void {
+            this.#openPanel(panelId);
+        }
+
+        /**
+         * Programmatically close a panel
+         * @param {string} panelId - Panel identifier
+         */
+        closeExpandable(panelId: string): void {
+            this.#closePanel(panelId);
+        }
+    };
+}
