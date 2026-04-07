@@ -566,7 +566,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // Search in compendiums
         for (const pack of game.packs.filter((p) => p.documentName === 'Item')) {
             const index = await pack.getIndex({ fields: ['name', 'type'] });
-            const match = index.find((i) => i.type === 'talent' && i.name.toLowerCase() === talentName.toLowerCase());
+            const match = index.find((i) => (i as any).type === 'talent' && (i as any).name.toLowerCase() === talentName.toLowerCase());
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
@@ -613,7 +613,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // Search for the item in compendiums
         for (const pack of game.packs.filter((p) => p.documentName === 'Item')) {
             const index = await pack.getIndex({ fields: ['name', 'type'] });
-            const match = index.find((i) => i.type === itemType && i.name.toLowerCase() === itemName.toLowerCase());
+            const match = index.find((i) => (i as any).type === itemType && (i as any).name.toLowerCase() === itemName.toLowerCase());
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
@@ -625,7 +625,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // If not found as exact type, try searching all items
         for (const pack of game.packs.filter((p) => p.documentName === 'Item')) {
             const index = await pack.getIndex({ fields: ['name', 'type'] });
-            const match = index.find((i) => i.name.toLowerCase() === itemName.toLowerCase());
+            const match = index.find((i) => (i as any).name.toLowerCase() === itemName.toLowerCase());
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
