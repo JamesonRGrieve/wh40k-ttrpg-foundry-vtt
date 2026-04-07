@@ -131,7 +131,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         }
         if (this.#state.count > 5) {
             previewNames.push('...');
-            previewNames.push(this.#state.namePattern.replace('{n}', this.#state.count));
+            previewNames.push(this.#state.namePattern.replace('{n}', String(this.#state.count)));
         }
 
         // Calculate tier
@@ -429,12 +429,12 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             isHorde,
         });
 
-        for (let i = 1; i <= count; i++) {
-            const name = namePattern.replace('{n}', String(i));
+        for (let i = 1; i <= (count as number); i++) {
+            const name = (namePattern as string).replace('{n}', String(i));
             const systemData = foundry.utils.deepClone(baseData);
 
             if (randomize) {
-                const variance = randomizeAmount / 100;
+                const variance = (randomizeAmount as number) / 100;
                 for (const char of Object.values(systemData.characteristics) as any[]) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
@@ -456,9 +456,9 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         }
 
         if (actors.length > 0) {
-            (ui.notifications as any).info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: actors.length }));
+            (ui.notifications as any).info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: String(actors.length) }));
         }
 
-        return actors;
+        return actors as any;
     }
 }

@@ -156,10 +156,10 @@ export default class CombatQuickPanel extends ApplicationV2 {
         };
 
         // Initiative
-        const combatant = game.combat?.combatants.find((c) => c.actorId === this.actor.id);
+        const combatant = game.combat?.combatants.find((c) => (c as any).actorId === this.actor.id);
         context.initiative = {
-            rolled: combatant?.initiative !== null,
-            value: combatant?.initiative || 0,
+            rolled: (combatant as any)?.initiative !== null,
+            value: (combatant as any)?.initiative || 0,
             bonus: this.actor.system.initiative.bonus || 0,
         };
 
@@ -335,7 +335,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     _restorePosition(): void {
         const savedPos = game.user.getFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position`);
         if (savedPos) {
-            this.setPosition(savedPos);
+            this.setPosition(savedPos as any);
         }
     }
 
@@ -367,7 +367,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     _onClose(options: any): void {
         // Save position
         const position = this.position;
-        game.user.setFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position`, {
+        game.user.setFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position` as any, {
             left: position.left,
             top: position.top,
         });
@@ -444,7 +444,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {HTMLElement} target
      */
     static async #rollInitiative(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const combatant = game.combat?.combatants.find((c) => c.actorId === this.actor.id);
+        const combatant = game.combat?.combatants.find((c) => (c as any).actorId === this.actor.id);
         if (!combatant) {
             (ui.notifications as any).warn('Character not in combat');
             return;
@@ -611,8 +611,8 @@ export default class CombatQuickPanel extends ApplicationV2 {
         // Apply aim effect (+10 to next attack)
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: `<p><strong>${this.actor.name}</strong> takes aim (+10 to next attack)</p>`,
-            flavor: 'Aim Action',
+            content: `<p><strong>${this.actor.name}</strong> takes aim (+10 to next attack)</p>` as any,
+            flavor: 'Aim Action' as any,
         });
 
         (ui.notifications as any).info('Aim action taken (+10 next attack)');
@@ -689,7 +689,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         // TODO: Implement consumable use logic
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: `<p><strong>${this.actor.name}</strong> uses ${item.name}</p>`,
+            content: `<p><strong>${this.actor.name}</strong> uses ${item.name}</p>` as any,
         });
 
         (ui.notifications as any).info(`Used ${item.name}`);
@@ -746,13 +746,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
         if (existing) {
             existing.render(true, { focus: true });
-            return existing;
+            return existing as any;
         }
 
         // Create new panel
         const panel = new CombatQuickPanel(actor);
         panel.render(true);
-        return panel;
+        return panel as any;
     }
 
     /* -------------------------------------------- */
