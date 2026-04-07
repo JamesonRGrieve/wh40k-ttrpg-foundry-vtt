@@ -56,7 +56,7 @@
         {{!-- RIGHT COLUMN: Equipment Lists --}}
         <div class="wh40k-equipment-col wh40k-equipment-items">
             {{!-- Armour Items --}}
-            <div class="wh40k-panel wh40k-panel-armour-list">
+            <div class="wh40k-panel wh40k-panel-armour-list" data-drop-zone="general" data-accepts="armour">
                 <div class="wh40k-panel-header">
                     <span class="wh40k-panel-title"><i class="fas fa-shield-alt"></i> Armour</span>
                     <span class="wh40k-item-count">{{armourItems.length}}</span>
@@ -100,7 +100,7 @@
             </div>
 
             {{!-- Force Fields --}}
-            <div class="wh40k-panel wh40k-panel-forcefields">
+            <div class="wh40k-panel wh40k-panel-forcefields" data-drop-zone="general" data-accepts="forceField">
                 <div class="wh40k-panel-header">
                     <span class="wh40k-panel-title"><i class="fas fa-circle-notch"></i> Force Fields</span>
                     <span class="wh40k-item-count">{{forceFieldItems.length}}</span>
@@ -152,7 +152,7 @@
             </div>
 
             {{!-- Cybernetics --}}
-            <div class="wh40k-panel wh40k-panel-cybernetics">
+            <div class="wh40k-panel wh40k-panel-cybernetics" data-drop-zone="general" data-accepts="cybernetic">
                 <div class="wh40k-panel-header">
                     <span class="wh40k-panel-title"><i class="fas fa-microchip"></i> Cybernetics</span>
                     <span class="wh40k-item-count">{{cyberneticItems.length}}</span>
@@ -192,7 +192,7 @@
             </div>
 
             {{!-- Gear --}}
-            <div class="wh40k-panel wh40k-panel-gear">
+            <div class="wh40k-panel wh40k-panel-gear" data-drop-zone="general" data-accepts="gear">
                 <div class="wh40k-panel-header">
                     <span class="wh40k-panel-title"><i class="fas fa-toolbox"></i> Gear</span>
                     <span class="wh40k-item-count">{{gearItems.length}}</span>

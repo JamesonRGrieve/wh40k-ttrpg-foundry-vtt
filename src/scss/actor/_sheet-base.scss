@@ -480,6 +480,37 @@
     flex-direction: column;
     align-items: flex-end;
     gap: 6px;
+    height: 100%;
+}
+
+.wh40k-header-drop-zone {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: 2px dashed var(--wh40k-border-color-light, rgba(140, 120, 90, 0.25));
+    border-radius: 6px;
+    color: var(--wh40k-text-muted, rgba(60, 50, 40, 0.4));
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    min-height: 40px;
+    transition: all 0.2s ease;
+
+    &.wh40k-drag-over {
+        border-color: var(--wh40k-gold, #d4af37);
+        background: rgba(212, 175, 55, 0.1);
+        color: var(--wh40k-gold, #d4af37);
+    }
+}
+
+// Generic drag-over highlight for any panel drop zone
+[data-drop-zone].wh40k-drag-over {
+    outline: 2px dashed var(--wh40k-gold, #d4af37);
+    outline-offset: -2px;
+    background-color: rgba(212, 175, 55, 0.05);
 }
 
 .wh40k-characteristics-hud {

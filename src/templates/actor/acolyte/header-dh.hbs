@@ -57,26 +57,21 @@
                     </div>
                     <div class="wh40k-header-row">
                         <span class="wh40k-header-label">Elite Advance</span>
-                        <input class="wh40k-header-input" name="system.originPath.elite" type="text" value="{{system.originPath.elite}}" placeholder="Elite Advance" />
+                        <select class="wh40k-header-input" name="system.originPath.elite">
+                            <option value="" {{#unless system.originPath.elite}}selected{{/unless}}>— None —</option>
+                            <option value="Adepta Sororitas" {{#if (eq system.originPath.elite "Adepta Sororitas")}}selected{{/if}}>Adepta Sororitas</option>
+                            <option value="Crusader" {{#if (eq system.originPath.elite "Crusader")}}selected{{/if}}>Crusader</option>
+                            <option value="Inquisitor" {{#if (eq system.originPath.elite "Inquisitor")}}selected{{/if}}>Inquisitor</option>
+                            <option value="Null Maiden" {{#if (eq system.originPath.elite "Null Maiden")}}selected{{/if}}>Null Maiden</option>
+                            <option value="Sage of the Ordos" {{#if (eq system.originPath.elite "Sage of the Ordos")}}selected{{/if}}>Sage of the Ordos</option>
+                            <option value="Sister Hospitaller" {{#if (eq system.originPath.elite "Sister Hospitaller")}}selected{{/if}}>Sister Hospitaller</option>
+                            <option value="Templar Calix" {{#if (eq system.originPath.elite "Templar Calix")}}selected{{/if}}>Templar Calix</option>
+                            <option value="Untouchable" {{#if (eq system.originPath.elite "Untouchable")}}selected{{/if}}>Untouchable</option>
+                        </select>
                     </div>
                     <div class="wh40k-header-row">
                         <span class="wh40k-header-label">Divination</span>
                         <input class="wh40k-header-input" name="system.originPath.divination" type="text" value="{{system.originPath.divination}}" placeholder="Divination" />
-                    </div>
-                    {{!-- DH2e Resources Row --}}
-                    <div class="wh40k-header-resources">
-                        <div class="wh40k-resource-field">
-                            <span class="wh40k-resource-label">Influence</span>
-                            <input class="wh40k-resource-input" name="system.influence" type="number" value="{{system.influence}}" min="0" />
-                        </div>
-                        <div class="wh40k-resource-field">
-                            <span class="wh40k-resource-label">Requisition</span>
-                            <input class="wh40k-resource-input" name="system.requisition" type="number" value="{{system.requisition}}" min="0" />
-                        </div>
-                        <div class="wh40k-resource-field">
-                            <span class="wh40k-resource-label">Throne Gelt</span>
-                            <input class="wh40k-resource-input" name="system.throneGelt" type="number" value="{{system.throneGelt}}" min="0" />
-                        </div>
                     </div>
                 </div>
             </div>
@@ -123,6 +118,10 @@
                         </div>
                         {{/unless}}
                     {{/each}}
+                </div>
+                <div class="wh40k-header-drop-zone" data-drop-zone="general">
+                    <i class="fas fa-download"></i>
+                    <span>Add From Compendium</span>
                 </div>
             </div>
         </div>
