@@ -1,0 +1,3 @@
+[submodule "src/packs"]
+	path = src/packs
+	url = git@github.com:JamesonRGrieve/wh40k-ttrpg-foundry-vtt-content.git
