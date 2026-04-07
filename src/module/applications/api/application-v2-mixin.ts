@@ -105,19 +105,19 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
         _renderContainers(context: Record<string, unknown>, options: Record<string, unknown>): void {
             const containerElements = Array.from(this.element.querySelectorAll('[data-container-id]'));
             const containers = Object.fromEntries(containerElements.map((el) => [(el as HTMLElement).dataset.containerId, el]));
-            for (const [part, config] of Object.entries((this.constructor as any).PARTS)) {
+            for (const [part, config] of Object.entries((this.constructor as any).PARTS) as [string, any][]) {
                 if (!config.container?.id) continue;
                 const element = this.element.querySelector(`[data-application-part="${part}"]`);
                 if (!element) continue;
-                let container = containers[(config as any).container.id];
+                let container = containers[config.container.id];
                 if (!container) {
                     const div = document.createElement('div');
-                    (div as HTMLElement).dataset.containerId = config.container.id;
+                    div.dataset.containerId = config.container.id;
                     div.classList.add(...(config.container.classes ?? []));
                     container = containers[config.container.id] = div;
                     element.replaceWith(div);
                 }
-                if (element.parentElement !== container) container.append(element);
+                if (element.parentElement !== container) (container as HTMLElement).append(element);
             }
         }
 
@@ -138,7 +138,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
         /** @inheritDoc */
         _updateFrame(options: Record<string, unknown>): void {
             super._updateFrame(options);
-            if (options.window && 'subtitle' in options.window) {
+            if (options.window && 'subtitle' in (options.window as object)) {
                 const subtitle = this.element.querySelector('.window-header > .window-subtitle');
                 if (subtitle) subtitle.innerText = (options as any).window.subtitle;
             }

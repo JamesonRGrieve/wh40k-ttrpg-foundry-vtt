@@ -197,7 +197,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             let item = null;
             if (talent.uuid) {
                 try {
-                    item = await fromUuid(talent.uuid);
+                    item = await fromUuid(talent.uuid) as any;
                 } catch (e) {
                     // Item not found
                 }
@@ -225,7 +225,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             let item = null;
             if (trait.uuid) {
                 try {
-                    item = await fromUuid(trait.uuid);
+                    item = await fromUuid(trait.uuid) as any;
                 } catch (e) {
                     // Item not found
                 }
@@ -374,7 +374,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         if (!uuid) return;
 
         try {
-            const item = await fromUuid(uuid);
+            const item = await fromUuid(uuid) as any;
             if (item?.sheet) {
                 item.sheet.render(true);
             }
