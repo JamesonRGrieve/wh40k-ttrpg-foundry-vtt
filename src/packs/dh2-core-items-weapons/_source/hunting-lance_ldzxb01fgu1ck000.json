@@ -50,10 +50,10 @@
     "stowed": false,
     "container": "",
     "description": {
-      "value": "<p><b>Special:</b> Concussive (3)</p><p><b>Note:</b> Single-Use weapon, Treat as Improvised weapon after tip explodes.\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.</p>"
+      "value": "<p>A mainstay weapon amongst the Rough Riders of the Imperial Guard, hunting lances mount a small but powerful explosive charge at the end of a metal spear. On impact, the charge detonates with enough force to rip apart armour and barricades alike, allowing the mounted riders to continue their assault.</p><p><b>Special:</b> Concussive (3)</p><p><b>Note:</b> After a successful attack is made with this weapon, its tip is destroyed and it is treated as a staff.</p>"
     },
     "modifications": [],
-    "notes": "Single-Use weapon, Treat as Improvised weapon after tip explodes.\nCan rearm with spare tips, takes two full actions which can't be sped up. User must stand still and has +30 to be hit during this time.",
+    "notes": "After a successful attack is made with this weapon, its tip is destroyed and it is treated as a staff.",
     "source": "DH2e Core",
     "requiredTraining": "",
     "gameSystems": [

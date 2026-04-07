@@ -4,7 +4,7 @@
   "img": "icons/svg/gears.svg",
   "system": {
     "weight": 0,
-    "availability": "average",
+    "availability": "scarce",
     "craftsmanship": "common",
     "cost": {
       "value": 1000,
@@ -12,9 +12,9 @@
     },
     "quantity": 1,
     "description": {
-      "value": "<p>Common Craftsmanship replaces a normal arm in all funcitonality. Poor suffers -5 to Weapon Skill and Ballistic Skill. Good Craftsmanship gives +10 to Agility Tests for Delicate Manipulation. Best Craftsmanship adds +10 to Strength Tests using the arm, and can also store small items such as pistol clips.</p>\n<h3>Requirements</h3><p>Damage works as normal, although inappropriate effects like bleeding just render limb useless</p>\n<p><b>Effect:</b> Scarce / Initiated</p><p><b>Notes:</b> 1000 T</p>",
+      "value": "<p>A common craftsmanship bionic arm replaces a normal arm in all functionality. Poor craftsmanship arms impose a -5 penalty to Weapon Skill and Ballistic Skill tests made with that arm. Good craftsmanship arms grant a +10 bonus to Agility tests involving delicate manipulation. Best craftsmanship arms grant a +10 bonus to Strength tests using the arm and can store small items such as pistol clips.</p><p>Damage works as normal, although inappropriate effects like bleeding simply render the limb useless.</p>",
       "chat": "",
-      "summary": "Common Craftsmanship replaces a normal arm in all funcitonality. Poor suffers -5 to Weapon Skill and Ballistic Skill. Good Craftsmanship gives +10 to Agility Tests for Delicate Manipulation. Best Craf"
+      "summary": "A bionic arm replaces a normal arm in all functionality, with craftsmanship affecting its performance."
     },
     "source": {
       "book": "DH2e Core",
@@ -22,7 +22,7 @@
       "custom": ""
     },
     "equipped": true,
-    "effect": "Common Craftsmanship replaces a normal arm in all funcitonality. Poor suffers -5 to Weapon Skill and Ballistic Skill. Good Craftsmanship gives +10 to Agility Tests for Delicate Manipulation. Best Craftsmanship adds +10 to Strength Tests using the arm, and can also store small items such as pistol clips.",
+    "effect": "A bionic arm replaces a normal arm in all functionality, with craftsmanship affecting its performance.",
     "notes": "",
     "identifier": "bionic-arm",
     "gameSystems": [

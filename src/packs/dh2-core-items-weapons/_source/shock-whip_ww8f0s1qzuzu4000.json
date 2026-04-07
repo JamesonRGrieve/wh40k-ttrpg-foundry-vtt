@@ -5,7 +5,7 @@
   "system": {
     "identifier": "shock-whip",
     "class": "melee",
-    "type": "rending",
+    "type": "impact",
     "twoHanded": false,
     "melee": true,
     "attack": {
@@ -25,13 +25,13 @@
     },
     "damage": {
       "formula": "1d10",
-      "type": "rending",
+      "type": "impact",
       "bonus": 1,
       "penetration": 0
     },
     "special": [
       "flexible",
-      "shock"
+      "shocking"
     ],
     "clip": {
       "max": 0,
@@ -39,8 +39,8 @@
       "type": ""
     },
     "reload": "-",
-    "weight": 2,
-    "availability": "very-rare",
+    "weight": 3,
+    "availability": "rare",
     "craftsmanship": "common",
     "quantity": 1,
     "cost": {
@@ -51,10 +51,10 @@
     "stowed": false,
     "container": "",
     "description": {
-      "value": "<p>A flexible lash of woven wire and neural disruptors. On contact, it overloads the target's nervous system with agonising pain. A cruel weapon favoured by overseers and interrogators.</p>"
+      "value": "<p>This weapon is common wherever there are workers or slaves requiring additional encouragement to improve their efforts. Though not designed for combat, the extra reach it offers can mean the difference that halts a dark ritual or xenos incursion.</p><p><b>Special:</b> Flexible, Shocking</p>"
     },
     "modifications": [],
-    "notes": "3m reach.",
+    "notes": "",
     "source": "DH2e Core",
     "requiredTraining": "",
     "gameSystems": [

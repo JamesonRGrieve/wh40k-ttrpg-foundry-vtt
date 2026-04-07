@@ -4,8 +4,8 @@
   "type": "gear",
   "img": "icons/svg/backpack.svg",
   "system": {
-    "category": "tools",
-    "weight": 0,
+    "category": "clothing",
+    "weight": 2,
     "availability": "scarce",
     "craftsmanship": "common",
     "cost": {
@@ -14,9 +14,9 @@
     },
     "quantity": 1,
     "description": {
-      "value": "<p>A reinforced vest that provides storage and support for combat gear without replacing dedicated armour.</p>",
+      "value": "<p>Non-armoured vest containing various pouches. It can hold up to 15kg, and items can be taken out of it as a free action during the character's own turn. It is mutually exclusive with a backpack.</p>",
       "chat": "",
-      "summary": "A reinforced vest that provides storage and support for combat gear without replacing dedicated armour."
+      "summary": "Non-armoured vest containing various pouches. It can hold up to 15kg, and items can be taken out of it as a free action during the character's own turn. It is mutually exclusive with a backpack."
     },
     "source": {
       "book": "DH2e Core",
@@ -31,7 +31,7 @@
       "value": 0,
       "max": 0
     },
-    "effect": "A reinforced vest that provides storage and support for combat gear without replacing dedicated armour.",
+    "effect": "Non-armoured vest containing various pouches. It can hold up to 15kg, and items can be taken out of it as a free action during the character's own turn. It is mutually exclusive with a backpack.",
     "duration": "",
     "notes": "",
     "identifier": "combat-vest",

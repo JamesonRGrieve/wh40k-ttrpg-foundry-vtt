@@ -13,9 +13,9 @@
     },
     "quantity": 1,
     "description": {
-      "value": "<p>Space Binoculars. Advanced models have range readouts, IR, recorders, and location positioning</p>\n<p><b>Effect:</b> Average / Initiated</p><p><b>Notes:</b> 55 T\n3 R</p>",
+      "value": "<p>These powerful vision aids can magnify distant items into clear focus, helping ensure no heresy goes unspotted. More advanced, high-quality magnoculars can also give range read-outs, detect heat sources, calculate target location positioning, and take pict-captures of a view for later analysis.</p>",
       "chat": "",
-      "summary": "Space Binoculars. Advanced models have range readouts, IR, recorders, and location positioning"
+      "summary": "These powerful vision aids can magnify distant items into clear focus and advanced models can provide additional tactical read-outs."
     },
     "source": {
       "book": "DH2e Core",
@@ -30,7 +30,7 @@
       "value": 0,
       "max": 0
     },
-    "effect": "Space Binoculars. Advanced models have range readouts, IR, recorders, and location positioning",
+    "effect": "These powerful vision aids can magnify distant items into clear focus and advanced models can provide additional tactical read-outs.",
     "duration": "",
     "notes": "",
     "identifier": "magnoculars",

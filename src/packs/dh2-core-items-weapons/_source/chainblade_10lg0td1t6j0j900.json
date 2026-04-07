@@ -26,8 +26,8 @@
     "damage": {
       "formula": "1d10",
       "type": "rending",
-      "bonus": 2,
-      "penetration": 3
+      "bonus": 1,
+      "penetration": 1
     },
     "special": [
       "tearing"
@@ -38,8 +38,8 @@
       "type": ""
     },
     "reload": "-",
-    "weight": 5,
-    "availability": "rare",
+    "weight": 2,
+    "availability": "scarce",
     "craftsmanship": "common",
     "quantity": 1,
     "cost": {
@@ -50,10 +50,10 @@
     "stowed": false,
     "container": "",
     "description": {
-      "value": "<p><b>Special:</b> Tearing</p><p><b>Note:</b> Can be used whilst gripping something else.</p>"
+      "value": "<p>Chainblades are one of the smallest chain weapons, little more than a knife with a tiny chain around its edge. The size is deceptive, for the extra tearing the chain provides makes it much more effective than any ordinary dagger.</p><p><b>Special:</b> Tearing</p>"
     },
     "modifications": [],
-    "notes": "Can be used whilst gripping something else.",
+    "notes": "",
     "source": "DH2e Core",
     "requiredTraining": "",
     "gameSystems": [

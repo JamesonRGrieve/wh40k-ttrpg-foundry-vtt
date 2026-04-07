@@ -5,7 +5,7 @@
   "system": {
     "category": "tools",
     "weight": 4,
-    "availability": "very-rare",
+    "availability": "rare",
     "craftsmanship": "common",
     "cost": {
       "value": 0,
@@ -13,9 +13,9 @@
     },
     "quantity": 1,
     "description": {
-      "value": "<p>+20 to Medicae or Perception Tests to determine ailments. Success indicates proper medical countermeasures.</p>\n<h3>Requirements</h3><p>Can be installed in servo-skulls and servitors, as well as medkits.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "value": "<p>The diagnostor is a sophisticated medical device used across the galaxy. It can detect and diagnose almost every ailment known to the Imperium, and can be incorporated into medical kits, servo-skulls, and other dedicated servitors. Any individual trained in medical knowledge in the Imperial Guard understands its use.</p><p>A diagnostor provides a +20 bonus to Medicae or Perception tests to determine an ailment; success indicates the proper treatment to be used.</p>",
       "chat": "",
-      "summary": "+20 to Medicae or Perception Tests to determine ailments. Success indicates proper medical countermeasures."
+      "summary": "A diagnostor provides a +20 bonus to Medicae or Perception tests to determine an ailment; success indicates the proper treatment to be used."
     },
     "source": {
       "book": "DH2e Core",
@@ -30,9 +30,9 @@
       "value": 0,
       "max": 0
     },
-    "effect": "+20 to Medicae or Perception Tests to determine ailments. Success indicates proper medical countermeasures.",
+    "effect": "A diagnostor provides a +20 bonus to Medicae or Perception tests to determine an ailment; success indicates the proper treatment to be used.",
     "duration": "",
-    "notes": "-",
+    "notes": "",
     "identifier": "diagnostor",
     "gameSystems": [
       "dh2e"

@@ -4,7 +4,7 @@
   "img": "icons/svg/gears.svg",
   "system": {
     "weight": 0,
-    "availability": "average",
+    "availability": "rare",
     "craftsmanship": "common",
     "cost": {
       "value": 1750,
@@ -12,9 +12,9 @@
     },
     "quantity": 1,
     "description": {
-      "value": "<p>Can directly interface with a machine or device. Poor: requires Willpower test to use, -10 to interact with machine spirits. Common: +10 to Tech-Use, Pilot, or Drive devices capable of MIU linking. Good: +10 to communicate with machine spirits, Tech-Use, Pilot, Drive, Logic, Inquiry, and Ballistic Skill. Can also experience senses of cyber familiars.</p>\n<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 1750 T\n15 R</p>",
+      "value": "<p>These devices, also known as sense-links, allow the owner to interface directly with a machine or technological device. Common models impose no modifiers to machine spirit communication and add a +10 bonus to Tech-Use or Operate tests used in conjunction with devices capable of MIU linking.</p><p>Poor MIU systems require a Challenging (+0) Willpower test to use and impose a -10 penalty when attempting to interface with a device. Good models grant a +10 bonus to commune with machine spirits and for Tech-Use, Operate, Logic, Inquiry, and Ballistic Skill tests made as part of interfacing with MIU systems.</p>",
       "chat": "",
-      "summary": "Can directly interface with a machine or device. Poor: requires Willpower test to use, -10 to interact with machine spirits. Common: +10 to Tech-Use, Pilot, or Drive devices capable of MIU linking. Go"
+      "summary": "A mind impulse unit allows direct machine interfacing and improves tests made through compatible MIU links."
     },
     "source": {
       "book": "DH2e Core",
@@ -22,7 +22,7 @@
       "custom": ""
     },
     "equipped": true,
-    "effect": "Can directly interface with a machine or device. Poor: requires Willpower test to use, -10 to interact with machine spirits. Common: +10 to Tech-Use, Pilot, or Drive devices capable of MIU linking. Good: +10 to communicate with machine spirits, Tech-Use, Pilot, Drive, Logic, Inquiry, and Ballistic Skill. Can also experience senses of cyber familiars.",
+    "effect": "A mind impulse unit allows direct machine interfacing and improves tests made through compatible MIU links.",
     "notes": "",
     "identifier": "mind-impulse-unit",
     "gameSystems": [
