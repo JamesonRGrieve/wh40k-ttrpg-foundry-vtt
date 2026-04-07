@@ -47,7 +47,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @param {boolean} [options.allowSelection=true] - Whether to show the confirm button
      * @param {boolean} [options.isSelected=false] - Whether this origin is already selected
      */
-    constructor(origin, options = {}) {
+    constructor(origin, options: any = {}) {
         super(options);
 
         /**
@@ -88,7 +88,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: any): Promise<any> {
         const context: any = await super._prepareContext(options);
         const system = this.origin.system;
         const grants = system?.grants || {};
@@ -406,7 +406,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     }
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    async close(options: any = {}): Promise<void> {
         // Resolve with cancelled if not already resolved
         if (this._resolvePromise) {
             this._resolvePromise({ selected: false, origin: null });

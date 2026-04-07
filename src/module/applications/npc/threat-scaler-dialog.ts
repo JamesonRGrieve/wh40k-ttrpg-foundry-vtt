@@ -112,7 +112,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {Actor} actor - The NPC actor to scale.
      * @param {Object} [options] - Application options.
      */
-    constructor(actor, options = {}) {
+    constructor(actor, options: any = {}) {
         super(options);
         this.#actor = actor;
         this.#originalThreat = actor.system.threatLevel || 5;
@@ -131,7 +131,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: any): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         const currentThreat = this.#actor.system.threatLevel;
@@ -148,7 +148,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         });
 
         // Prepare characteristics for display
-        const characteristicChanges = Object.entries(preview.characteristics).map(([key, char]) => {
+        const characteristicChanges = Object.entries(preview.characteristics as Record<string, any>).map(([key, char]) => {
             const change = this.#state.scaleCharacteristics ? char.change : 0;
             const newValue = this.#state.scaleCharacteristics ? char.new : char.current;
             const percentChange = char.current > 0 ? Math.round((change / char.current) * 100) : 0;
@@ -214,7 +214,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    _onRender(context: any, options: any): Promise<void> {
         super._onRender(context, options);
 
         const form = this.element;
@@ -409,7 +409,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    async close(options: any = {}): Promise<void> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 

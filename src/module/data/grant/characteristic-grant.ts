@@ -65,7 +65,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async apply(actor, data = {}, options = {}) {
+    async apply(actor, data = {}, options: Record<string, any> = {}) {
         const result = {
             success: true,
             applied: {},
@@ -86,7 +86,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
             const { key, value, optional: charOptional } = charConfig;
 
             // Validate characteristic
-            if (!this.constructor.VALID_CHARACTERISTICS.has(key)) {
+            if (!(this.constructor as any).VALID_CHARACTERISTICS.has(key)) {
                 result.errors.push(`Invalid characteristic: ${key}`);
                 continue;
             }
@@ -186,7 +186,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     /** @inheritDoc */
     async getSummary() {
         const summary = await super.getSummary();
-        summary.icon = this.constructor.ICON;
+        summary.icon = (this.constructor as any).ICON;
 
         for (const charConfig of this.characteristics) {
             const label = game.i18n.localize(`WH40K.Characteristic.${charConfig.key}`);
@@ -208,7 +208,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
 
         const characteristics = this.characteristics ?? [];
         for (const charConfig of characteristics) {
-            if (!this.constructor.VALID_CHARACTERISTICS.has(charConfig.key)) {
+            if (!(this.constructor as any).VALID_CHARACTERISTICS.has(charConfig.key)) {
                 errors.push(`Invalid characteristic key: ${charConfig.key}`);
             }
         }

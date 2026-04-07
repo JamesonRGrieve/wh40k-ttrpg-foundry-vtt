@@ -99,7 +99,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
 
             // Add panel state to context
             context.panelStates = this._getPanelStates();
-            context.panelPresets = this.constructor.PANEL_PRESETS;
+            context.panelPresets = (this.constructor as any).PANEL_PRESETS;
 
             return context;
         }
@@ -284,7 +284,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @returns {Promise<void>}
          */
         async applyPanelPreset(presetName: string): Promise<void> {
-            const preset = this.constructor.PANEL_PRESETS[presetName];
+            const preset = (this.constructor as any).PANEL_PRESETS[presetName];
             if (!preset) return;
 
             // Special handling for "all" and "none"

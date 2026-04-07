@@ -124,7 +124,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
         const tabs = super._getTabs();
 
         // Add icons from TABS definition
-        for (const tabDef of this.constructor.TABS) {
+        for (const tabDef of (this.constructor as any).TABS) {
             if (tabs[tabDef.tab] && tabDef.icon) {
                 tabs[tabDef.tab].icon = tabDef.icon;
             }

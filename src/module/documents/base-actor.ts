@@ -567,7 +567,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectCharacteristicModifiers(charKey: string, modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of this.items as any[]) {
+        for (const item of [...this.items] as any[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.characteristics) continue;
 
@@ -590,7 +590,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectSkillModifiers(skillKey: string, modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of this.items as any[]) {
+        for (const item of [...this.items] as any[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.skills) continue;
 
@@ -612,7 +612,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectWoundsModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of this.items as any[]) {
+        for (const item of [...this.items] as any[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.other) continue;
 
@@ -634,7 +634,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectInitiativeModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of this.items as any[]) {
+        for (const item of [...this.items] as any[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.other) continue;
 

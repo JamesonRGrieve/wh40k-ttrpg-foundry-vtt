@@ -84,7 +84,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async apply(actor, data = {}, options = {}) {
+    async apply(actor, data = {}, options: Record<string, any> = {}) {
         const result = {
             success: true,
             applied: {},
@@ -107,7 +107,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
             const { type, formula, optional: resOptional } = resourceConfig;
 
             // Validate resource type
-            const resourceDef = this.constructor.RESOURCES[type];
+            const resourceDef = (this.constructor as any).RESOURCES[type];
             if (!resourceDef) {
                 result.errors.push(`Invalid resource type: ${type}`);
                 continue;
@@ -171,7 +171,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
         const updates = {};
 
         for (const [type, state] of Object.entries(appliedState) as [string, any][]) {
-            const resourceDef = this.constructor.RESOURCES[type];
+            const resourceDef = (this.constructor as any).RESOURCES[type];
             if (!resourceDef) continue;
 
             const currentValue = foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0;
@@ -204,7 +204,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
         const updates = {};
 
         for (const [type, state] of Object.entries(restoreData.resources ?? {}) as [string, any][]) {
-            const resourceDef = this.constructor.RESOURCES[type];
+            const resourceDef = (this.constructor as any).RESOURCES[type];
             if (!resourceDef) continue;
 
             const currentValue = foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0;
@@ -243,10 +243,10 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     /** @inheritDoc */
     async getSummary() {
         const summary = await super.getSummary();
-        summary.icon = this.constructor.ICON;
+        summary.icon = (this.constructor as any).ICON;
 
         for (const resourceConfig of this.resources) {
-            const resourceDef = this.constructor.RESOURCES[resourceConfig.type];
+            const resourceDef = (this.constructor as any).RESOURCES[resourceConfig.type];
             const label = resourceDef ? game.i18n.localize(resourceDef.label) : resourceConfig.type;
 
             summary.details.push({

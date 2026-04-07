@@ -228,14 +228,14 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         const totalModifier = difficultyMod + commonMod + customMod;
 
         // Prepare difficulty buttons
-        const difficulties = this.constructor.DIFFICULTIES.map((d) => ({
+        const difficulties = (this.constructor as any).DIFFICULTIES.map((d) => ({
             ...d,
             selected: d.modifier === this._selectedDifficulty,
             cssClass: d.modifier === this._selectedDifficulty ? 'selected' : '',
         }));
 
         // Prepare common modifiers
-        const commonModifiers = this.constructor.COMMON_MODIFIERS.map((m) => ({
+        const commonModifiers = (this.constructor as any).COMMON_MODIFIERS.map((m) => ({
             ...m,
             checked: this._commonModifiers[m.key] || false,
         }));
@@ -300,7 +300,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         let total = 0;
         for (const [key, active] of Object.entries(this._commonModifiers)) {
             if (!active) continue;
-            const modifier = this.constructor.COMMON_MODIFIERS.find((m) => m.key === key);
+            const modifier = (this.constructor as any).COMMON_MODIFIERS.find((m) => m.key === key);
             if (modifier) total += modifier.value;
         }
         return total;

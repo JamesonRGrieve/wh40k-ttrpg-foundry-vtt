@@ -103,7 +103,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {Actor} actor  The actor to display
      * @param {object} options  Additional options
      */
-    constructor(actor, options = {}) {
+    constructor(actor, options: any = {}) {
         super(options);
         this.actor = actor;
         this._updatePrimaryWeapon();
@@ -132,7 +132,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: any): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         // Actor data
@@ -313,7 +313,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    _onRender(context: any, options: any): Promise<void> {
         super._onRender(context, options);
 
         // Apply saved position
@@ -364,7 +364,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     /** @override */
-    _onClose(options: Record<string, unknown>): void {
+    _onClose(options: any): void {
         // Save position
         const position = this.position;
         game.user.setFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position`, {

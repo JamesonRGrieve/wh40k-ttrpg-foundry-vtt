@@ -57,7 +57,7 @@ export async function sendActiveEffectMessage(activeContext) {
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}     The created effect
  */
-export async function createEffect(actor, effectData, options = {}) {
+export async function createEffect(actor, effectData, options: Record<string, any> = {}) {
     const data = {
         name: effectData.name,
         icon: effectData.icon ?? 'icons/svg/aura.svg',
@@ -79,7 +79,7 @@ export async function createEffect(actor, effectData, options = {}) {
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
-export async function createCharacteristicEffect(actor, characteristic, value, options = {}) {
+export async function createCharacteristicEffect(actor, characteristic, value, options: Record<string, any> = {}) {
     const charLabel = game.i18n.localize(`WH40K.Characteristic.${characteristic.capitalize()}`);
     const name = options.name ?? `${charLabel} ${value > 0 ? '+' : ''}${value}`;
 
@@ -107,7 +107,7 @@ export async function createCharacteristicEffect(actor, characteristic, value, o
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
-export async function createSkillEffect(actor, skill, value, options = {}) {
+export async function createSkillEffect(actor, skill, value, options: Record<string, any> = {}) {
     const skillLabel = game.i18n.localize(`WH40K.Skill.${skill}`);
     const name = options.name ?? `${skillLabel} ${value > 0 ? '+' : ''}${value}`;
 
@@ -135,7 +135,7 @@ export async function createSkillEffect(actor, skill, value, options = {}) {
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
-export async function createCombatEffect(actor, type, value, options = {}) {
+export async function createCombatEffect(actor, type, value, options: Record<string, any> = {}) {
     const typeLabel = game.i18n.localize(`WH40K.Combat.${type.capitalize()}`);
     const name = options.name ?? `${typeLabel} ${value > 0 ? '+' : ''}${value}`;
 
@@ -162,7 +162,7 @@ export async function createCombatEffect(actor, type, value, options = {}) {
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
-export async function createConditionEffect(actor, condition, options = {}) {
+export async function createConditionEffect(actor, condition, options: Record<string, any> = {}) {
     // Predefined conditions with their effects
     const conditions = {
         stunned: {
@@ -244,7 +244,7 @@ export async function createConditionEffect(actor, condition, options = {}) {
  * @param {object} [options={}]         Additional options
  * @returns {Promise<ActiveEffect>}
  */
-export async function createTemporaryEffect(actor, name, changes, rounds, options = {}) {
+export async function createTemporaryEffect(actor, name, changes, rounds, options: Record<string, any> = {}) {
     const combat = game.combat;
 
     return await createEffect(actor, {

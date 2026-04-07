@@ -82,7 +82,7 @@ export class GrantsManager {
      * @param {number} [options.depth=0] - Current recursion depth
      * @returns {Promise<GrantsApplicationResult>}
      */
-    static async applyItemGrants(item, actor, options = {}) {
+    static async applyItemGrants(item: any, actor: any, options: Record<string, any> = {}) {
         const result = {
             success: true,
             appliedState: {},
@@ -273,7 +273,7 @@ export class GrantsManager {
      * @param {boolean} [options.reverseExisting=false] - Reverse all existing grants before applying
      * @returns {Promise<GrantsApplicationResult>}
      */
-    static async applyBatchGrants(items, actor, options = {}) {
+    static async applyBatchGrants(items: any[], actor: any, options: Record<string, any> = {}) {
         const result = {
             success: true,
             appliedState: {},
@@ -347,7 +347,7 @@ export class GrantsManager {
      * @param {object} [metadata={}] - Additional metadata
      * @returns {Promise<void>}
      */
-    static async saveAppliedState(actor, sourceKey, state, metadata = {}) {
+    static async saveAppliedState(actor: any, sourceKey: any, state: any, metadata: any = {}) {
         if (!actor || !sourceKey) return;
 
         const flagData = {

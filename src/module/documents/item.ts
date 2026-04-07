@@ -469,7 +469,7 @@ export class WH40KItem extends WH40KItemContainer {
             },
         };
 
-        const rollMode = game.settings.get('core', 'rollMode') as string;
+        const rollMode = game.settings.get('core', 'rollMode') as unknown as string;
         if (['gmroll', 'blindroll'].includes(rollMode)) {
             chatData.whisper = ChatMessage.getWhisperRecipients('GM');
         } else if (rollMode === 'selfroll') {
@@ -718,7 +718,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Collect skills to add
         if (modifiers.skills && Array.isArray(modifiers.skills)) {
-            for (const skillName of modifiers.skills as string[]) {
+            for (const skillName of (modifiers as any).skills) {
                 const skillPack = game.packs.get('wh40k-rpg.wh40k-items-skills');
                 if (skillPack) {
                     const index = await skillPack.getIndex({ fields: ['name'] });
@@ -733,7 +733,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Collect talents to add
         if (modifiers.talents && Array.isArray(modifiers.talents)) {
-            for (const talentName of modifiers.talents as string[]) {
+            for (const talentName of (modifiers as any).talents) {
                 const talentPack = game.packs.get('wh40k-rpg.wh40k-items-talents');
                 if (talentPack) {
                     const index = await talentPack.getIndex({ fields: ['name'] });
