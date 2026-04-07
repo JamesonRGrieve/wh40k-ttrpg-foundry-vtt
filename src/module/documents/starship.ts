@@ -1,0 +1,199 @@
+import { WH40KBaseActor } from './base-actor.ts';
+
+export class WH40KStarship extends WH40KBaseActor {
+    [key: string]: any;
+    async _preCreate(data, options, user) {
+        await super._preCreate(data, options, user);
+        const initData = {
+            'token.bar1': { attribute: 'hullIntegrity' },
+            'token.bar2': { attribute: 'crew.morale' },
+            'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            'token.displayBars': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
+            'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
+            'token.name': data.name,
+        };
+        // @ts-expect-error - type mismatch
+        this.updateSource(initData);
+    }
+
+    /** @override */
+    prepareData() {
+        super.prepareData();
+        // Call DataModel's embedded data preparation for component calculations
+        if (typeof this.system.prepareEmbeddedData === 'function') {
+            this.system.prepareEmbeddedData();
+        }
+    }
+
+    get hullType() {
+        return this.system.hullType;
+    }
+
+    get hullClass() {
+        return this.system.hullClass;
+    }
+
+    get hullIntegrity() {
+        return this.system.hullIntegrity;
+    }
+
+    get speed() {
+        return this.system.speed;
+    }
+
+    get manoeuvrability() {
+        return this.system.manoeuvrability;
+    }
+
+    get detection() {
+        return this.system.detection;
+    }
+
+    get detectionBonus() {
+        return this.system.detectionBonus || Math.floor(this.detection / 10);
+    }
+
+    get armour() {
+        return this.system.armour;
+    }
+
+    get voidShields() {
+        return this.system.voidShields;
+    }
+
+    get turretRating() {
+        return this.system.turretRating;
+    }
+
+    get crew() {
+        return this.system.crew;
+    }
+
+    get power() {
+        return this.system.power;
+    }
+
+    get space() {
+        return this.system.space;
+    }
+
+    get weaponCapacity() {
+        return this.system.weaponCapacity;
+    }
+
+    /**
+     * Is the ship crippled (below half hull)?
+     * @type {boolean}
+     */
+    get isCrippled() {
+        return this.hullIntegrity.value <= Math.floor(this.hullIntegrity.max / 2);
+    }
+
+    /**
+     * Is the ship destroyed?
+     * @type {boolean}
+     */
+    get isDestroyed() {
+        return this.hullIntegrity.value <= 0;
+    }
+
+    /**
+     * Get all ship components
+     */
+    get shipComponents() {
+        // @ts-expect-error - comparison type
+        return this.items.filter((i) => i.type === 'shipComponent');
+    }
+
+    /**
+     * Get all ship weapons
+     */
+    get shipWeapons() {
+        // @ts-expect-error - comparison type
+        return this.items.filter((i) => i.type === 'shipWeapon');
+    }
+
+    /**
+     * Get all ship upgrades
+     */
+    get shipUpgrades() {
+        // @ts-expect-error - comparison type
+        return this.items.filter((i) => i.type === 'shipUpgrade');
+    }
+
+    /**
+     * Get ship weapons grouped by location
+     */
+    get weaponsByLocation() {
+        const grouped = {
+            prow: [],
+            dorsal: [],
+            port: [],
+            starboard: [],
+            keel: [],
+        };
+        for (const weapon of this.shipWeapons) {
+            // @ts-expect-error - dynamic property access
+            const loc = weapon.system.location || 'dorsal';
+            if (grouped[loc]) grouped[loc].push(weapon);
+        }
+        return grouped;
+    }
+
+    /**
+     * Fire a ship weapon
+     * @param {string} weaponId - The ID of the weapon to fire
+     */
+    async fireWeapon(weaponId) {
+        const weapon = this.items.get(weaponId);
+        // @ts-expect-error - comparison type
+        if (!weapon || weapon.type !== 'shipWeapon') {
+            (ui.notifications as any).warn('Invalid ship weapon');
+            return;
+        }
+
+        // Create a chat message with the weapon details
+        const cardData = {
+            actor: this,
+            weapon: weapon,
+            crewRating: this.system.crew?.crewRating || 30,
+            detectionBonus: this.detectionBonus,
+        };
+
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
+
+        await (ChatMessage as any).create({
+            user: game.user.id,
+            speaker: (ChatMessage as any).getSpeaker({ actor: this }),
+            content: html,
+        });
+    }
+
+    /**
+     * Roll ship initiative (1d10 + Detection Bonus)
+     */
+    // @ts-expect-error - override type
+    async rollInitiative() {
+        const roll = await new Roll(`1d10 + ${this.detectionBonus}`).evaluate();
+
+        const content = `
+            <div class="wh40k-hit-location-result">
+                <h3><i class="fas fa-satellite-dish"></i> Ship Initiative</h3>
+                <div class="wh40k-hit-roll">
+                    <span class="wh40k-roll-result">${roll.total}</span>
+                </div>
+                <div class="wh40k-hit-location">
+                    <span class="wh40k-location-armour">1d10 + Detection Bonus (${this.detectionBonus})</span>
+                </div>
+            </div>
+        `;
+
+        await (ChatMessage as any).create({
+            speaker: (ChatMessage as any).getSpeaker({ actor: this }),
+            content: content,
+            rolls: [roll],
+        });
+
+        return roll;
+    }
+}

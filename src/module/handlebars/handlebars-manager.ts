@@ -1,0 +1,187 @@
+import { registerHandlebarsHelpers } from './handlebars-helpers.ts';
+
+/**
+ * Manages Handlebars template loading and helper registration.
+ * All templates are loaded at system initialization for simplicity and reliability.
+ */
+export class HandlebarManager {
+    /**
+     * Load all templates at startup.
+     */
+    static async loadTemplates() {
+        return this.preloadHandlebarsTemplates();
+    }
+
+    static registerHelpers() {
+        registerHandlebarsHelpers();
+    }
+
+    /**
+     * Load all system templates at startup.
+     * This is simpler and more reliable than lazy-loading.
+     */
+    static preloadHandlebarsTemplates() {
+        const templates = [
+            // Essential partials
+            'systems/wh40k-rpg/templates/actor/partial/character-field.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/display-toggle.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/trait-toggle.hbs',
+
+            // Acolyte sheet templates
+            'systems/wh40k-rpg/templates/actor/player/header.hbs',
+            'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
+            'systems/wh40k-rpg/templates/actor/player/tabs-sidebar.hbs',
+            'systems/wh40k-rpg/templates/actor/player/body.hbs',
+            'systems/wh40k-rpg/templates/actor/player/tab-overview.hbs',
+            'systems/wh40k-rpg/templates/actor/player/tab-status.hbs',
+            'systems/wh40k-rpg/templates/actor/player/tab-combat.hbs',
+            'systems/wh40k-rpg/templates/actor/player/tab-skills.hbs',
+            'systems/wh40k-rpg/templates/actor/player/tab-talents.hbs',
+            'systems/wh40k-rpg/templates/actor/player/tab-equipment.hbs',
+            'systems/wh40k-rpg/templates/actor/player/tab-powers.hbs',
+            'systems/wh40k-rpg/templates/actor/player/tab-dynasty.hbs',
+            'systems/wh40k-rpg/templates/actor/player/tab-biography.hbs',
+
+            // Actor panels
+            'systems/wh40k-rpg/templates/actor/panel/wounds-panel-v2.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/fatigue-panel-v2.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/fate-panel-v2.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/corruption-panel-v2.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/insanity-panel-v2.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/experience-panel-v2.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/movement-panel-full.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/movement-panel-compact.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/active-effects-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/active-effects-compact.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/combat-station-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/weapon-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/armour-display-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/combat-controls-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/combat-actions-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/skills-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/skills-specialist-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/talent-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/trait-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/loadout-equipment-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/backpack-split-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/psy-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/psy-rating-panel-v2.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/psychic-powers-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/psychic-powers-panel-v2.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/navigator-powers-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/navigator-powers-panel-v2.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/orders-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/orders-panel-v2.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/rituals-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/rituals-panel-v2.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/acquisitions-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ship-role-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/journal-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/characteristic-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/characteristic-roller-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/bonuses-panel.hbs',
+
+            // Vehicle sheet templates
+            'systems/wh40k-rpg/templates/actor/vehicle/header.hbs',
+            'systems/wh40k-rpg/templates/actor/vehicle/tabs.hbs',
+            'systems/wh40k-rpg/templates/actor/vehicle/tab-stats.hbs',
+            'systems/wh40k-rpg/templates/actor/vehicle/tab-weapons.hbs',
+            'systems/wh40k-rpg/templates/actor/vehicle/tab-traits.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/vehicle-armour-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/vehicle-integrity-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/vehicle-movement-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/vehicle-upgrades-panel.hbs',
+
+            // Starship sheet templates
+            'systems/wh40k-rpg/templates/actor/starship/header.hbs',
+            'systems/wh40k-rpg/templates/actor/starship/tabs.hbs',
+            'systems/wh40k-rpg/templates/actor/starship/tab-stats.hbs',
+            'systems/wh40k-rpg/templates/actor/starship/tab-components.hbs',
+            'systems/wh40k-rpg/templates/actor/starship/tab-weapons.hbs',
+            'systems/wh40k-rpg/templates/actor/starship/tab-crew.hbs',
+            'systems/wh40k-rpg/templates/actor/starship/tab-history.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ship-components-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ship-crew-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ship-upgrades-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/ship-weapons-panel.hbs',
+
+            // NPC V2 sheet templates
+            'systems/wh40k-rpg/templates/actor/npc-v2/header.hbs',
+            'systems/wh40k-rpg/templates/actor/npc-v2/tabs.hbs',
+            'systems/wh40k-rpg/templates/actor/npc-v2/tab-overview.hbs',
+            'systems/wh40k-rpg/templates/actor/npc-v2/tab-combat.hbs',
+            'systems/wh40k-rpg/templates/actor/npc-v2/tab-skills.hbs',
+            'systems/wh40k-rpg/templates/actor/npc-v2/tab-abilities.hbs',
+            'systems/wh40k-rpg/templates/actor/npc-v2/tab-notes.hbs',
+
+            // NPC dialogs
+            'systems/wh40k-rpg/templates/dialogs/npc-quick-create.hbs',
+            'systems/wh40k-rpg/templates/dialogs/threat-scaler.hbs',
+            'systems/wh40k-rpg/templates/dialogs/stat-block-exporter.hbs',
+            'systems/wh40k-rpg/templates/dialogs/stat-block-parser.hbs',
+            'systems/wh40k-rpg/templates/dialogs/batch-create.hbs',
+            'systems/wh40k-rpg/templates/dialogs/template-selector.hbs',
+
+            // NPC applications
+            'systems/wh40k-rpg/templates/apps/encounter-builder.hbs',
+
+            // NPC Template sheet templates
+            'systems/wh40k-rpg/templates/item/npc-template/header.hbs',
+            'systems/wh40k-rpg/templates/item/npc-template/tabs.hbs',
+            'systems/wh40k-rpg/templates/item/npc-template/tab-basics.hbs',
+            'systems/wh40k-rpg/templates/item/npc-template/tab-characteristics.hbs',
+            'systems/wh40k-rpg/templates/item/npc-template/tab-equipment.hbs',
+            'systems/wh40k-rpg/templates/item/npc-template/tab-abilities.hbs',
+            'systems/wh40k-rpg/templates/item/npc-template/tab-preview.hbs',
+
+            // Chat templates
+            'systems/wh40k-rpg/templates/chat/item-card-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/talent-roll-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/order-roll-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/ritual-roll-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/simple-roll-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs',
+            'systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs',
+
+            // Unified roll dialog panels
+            'systems/wh40k-rpg/templates/prompt/unified/panels/weapon-panel.hbs',
+            'systems/wh40k-rpg/templates/prompt/unified/panels/psychic-panel.hbs',
+            'systems/wh40k-rpg/templates/prompt/unified/panels/force-field-panel.hbs',
+
+            // Roll prompt templates
+            'systems/wh40k-rpg/templates/prompt/enhanced-skill-roll.hbs',
+            'systems/wh40k-rpg/templates/prompt/simple-roll-prompt.hbs',
+            'systems/wh40k-rpg/templates/prompt/weapon-roll-prompt.hbs',
+            'systems/wh40k-rpg/templates/prompt/damage-roll-prompt.hbs',
+            'systems/wh40k-rpg/templates/prompt/psychic-power-roll-prompt.hbs',
+            'systems/wh40k-rpg/templates/prompt/force-field-prompt.hbs',
+            'systems/wh40k-rpg/templates/prompt/assign-damage-prompt.hbs',
+
+            // Item sheet templates
+            'systems/wh40k-rpg/templates/item/item-sheet-modern.hbs',
+            'systems/wh40k-rpg/templates/item/item-weapon-sheet-modern.hbs',
+            'systems/wh40k-rpg/templates/item/item-armour-sheet-modern.hbs',
+            'systems/wh40k-rpg/templates/item/item-gear-sheet-modern.hbs',
+            'systems/wh40k-rpg/templates/item/item-talent-sheet-modern.hbs',
+            'systems/wh40k-rpg/templates/item/item-trait-sheet-modern.hbs',
+            'systems/wh40k-rpg/templates/item/item-skill-sheet-modern.hbs',
+            'systems/wh40k-rpg/templates/item/item-psychic-power-sheet-modern.hbs',
+            'systems/wh40k-rpg/templates/item/ship-component-sheet.hbs',
+            'systems/wh40k-rpg/templates/item/ship-weapon-sheet.hbs',
+            'systems/wh40k-rpg/templates/item/ship-upgrade-sheet.hbs',
+
+            // Item panels
+            'systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs',
+            'systems/wh40k-rpg/templates/item/panel/modifiers-editor-panel.hbs',
+
+            // Component templates
+            'systems/wh40k-rpg/templates/components/active-modifiers-panel.hbs',
+        ];
+
+        return foundry.applications.handlebars.loadTemplates(templates);
+    }
+}

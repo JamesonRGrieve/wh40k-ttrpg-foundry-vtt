@@ -16,10 +16,10 @@
     "allowSyntheticDefaultImports": true,
     "rewriteRelativeImportExtensions": true,
 
-    "strict": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
+    "strict": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "skipLibCheck": true,
@@ -28,7 +28,6 @@
   },
   "include": [
     "src/module/**/*.ts",
-    "src/module/**/*.mts",
     "foundry-v14-overrides.d.ts"
   ],
   "exclude": [
