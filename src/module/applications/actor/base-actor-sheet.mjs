@@ -70,7 +70,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         classes: ['wh40k-rpg', 'sheet', 'actor'],
         tag: 'form',
         form: {
-            submitOnChange: true,
+            submitOnChange: false,
         },
         position: {
             width: 1050,
@@ -133,7 +133,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             items: Array.from(this.actor.items),
             rollableClass: this.isEditable ? 'rollable' : '',
         };
-        // source is for form editing - uses _source for editable, computed for read-only
+        // Use raw source data for form fields. DocumentSheetV2 expects source context to reflect
+        // persisted data, while `system` may contain derived/prepared values used only for display.
         context.source = this.isEditable ? this.actor.system._source : this.actor.system;
 
         // Prepare characteristics with HUD data
@@ -1049,8 +1050,15 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Add wh40k-sheet class to the form element for CSS styling
-        // With tag: 'form', this.element IS the form element
         this.element.classList.add('wh40k-sheet');
+
+        // Prevent browser/full-form submit. Actor sheets update fields directly.
+        this.element.addEventListener('submit', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+
+        this._bindDirectFormUpdates();
 
         // Attach direct-update listeners for characteristic fields (bypasses form submission)
         this.element.querySelectorAll('.wh40k-char-direct-input').forEach((el) => {
@@ -1316,6 +1324,67 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             },
         });
         await fp.browse();
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Bind direct field updates for standard actor-sheet controls.
+     * @protected
+     */
+    _bindDirectFormUpdates() {
+        if (!this.isEditable || !this.element) return;
+
+        const selector = 'input[name], select[name], textarea[name]';
+        this.element.querySelectorAll(selector).forEach((field) => {
+            // Skip action buttons and non-data controls.
+            if (!field.name || field.disabled) return;
+
+            field.addEventListener('change', async (event) => {
+                const input = event.currentTarget;
+                const update = this._getFieldUpdate(input);
+                if (!update) return;
+                await this.document.update(update);
+            });
+        });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Build a single-field update payload from a form control.
+     * @param {HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement} input
+     * @returns {object|null}
+     */
+    _getFieldUpdate(input) {
+        if (!input?.name) return null;
+
+        let value;
+        if (input.type === 'checkbox') value = input.checked;
+        else if (input.type === 'number' || input.dataset?.dtype === 'Number') value = Number(input.value) || 0;
+        else value = input.value;
+
+        const path = input.name;
+        const segments = path.split('.');
+
+        // Array element updates need to send the full array since Foundry doesn't support
+        // dotted-path updates into array indices.
+        const numericIndex = segments.findIndex((s) => /^\d+$/.test(s));
+        if (numericIndex >= 0) {
+            const arrayPath = segments.slice(0, numericIndex).join('.');
+            const sourceArrayPath = arrayPath.startsWith('system.') ? arrayPath.slice(7) : arrayPath;
+            const itemIndex = Number(segments[numericIndex]);
+            const childPath = segments.slice(numericIndex + 1).join('.');
+            const currentArray = foundry.utils.deepClone(foundry.utils.getProperty(this.document.system._source, sourceArrayPath) ?? []);
+            if (!Array.isArray(currentArray)) return { [path]: value };
+            const currentItem = foundry.utils.deepClone(currentArray[itemIndex] ?? {});
+            if (childPath) foundry.utils.setProperty(currentItem, childPath, value);
+            else currentArray[itemIndex] = value;
+            if (childPath) currentArray[itemIndex] = currentItem;
+            return { [arrayPath]: currentArray };
+        }
+
+        return { [path]: value };
     }
 
     /* -------------------------------------------- */

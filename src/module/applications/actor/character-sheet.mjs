@@ -269,8 +269,6 @@ export default class CharacterSheet extends BaseActorSheet {
      * @private
      */
     async _updateSystemField(field, value) {
-        // Direct field update to avoid overwriting calculated properties
-        console.log(`[WH40K DEBUG] _updateSystemField:`, { field, value, updateData: { [field]: value } });
         await this.actor.update({ [field]: value });
     }
 
@@ -1642,16 +1640,6 @@ export default class CharacterSheet extends BaseActorSheet {
         const field = target.dataset.field;
         const action = target.dataset.statAction;
 
-        // DEBUG: Log before update
-        console.log(`[WH40K DEBUG] adjustStat BEFORE:`, {
-            field,
-            action,
-            woundsMax: this.actor.system.wounds?.max,
-            woundsValue: this.actor.system.wounds?.value,
-            fateMax: this.actor.system.fate?.max,
-            fateValue: this.actor.system.fate?.value,
-        });
-
         // Handle special actions
         if (action === 'clear-fatigue') {
             await this._updateSystemField('system.fatigue.value', 0);
@@ -1685,18 +1673,8 @@ export default class CharacterSheet extends BaseActorSheet {
             if (min !== null && newValue < min) newValue = min;
         }
 
-        console.log(`[WH40K DEBUG] adjustStat update:`, { field, currentValue, newValue, min, max });
-
         if (newValue !== currentValue) {
             await this._updateSystemField(field, newValue);
-
-            // DEBUG: Log after update
-            console.log(`[WH40K DEBUG] adjustStat AFTER:`, {
-                woundsMax: this.actor.system.wounds?.max,
-                woundsValue: this.actor.system.wounds?.value,
-                fateMax: this.actor.system.fate?.max,
-                fateValue: this.actor.system.fate?.value,
-            });
         }
     }
 
@@ -1834,7 +1812,7 @@ export default class CharacterSheet extends BaseActorSheet {
             });
             return;
         }
-        await this.actor.update({ 'system.corruption': targetValue });
+        await this._updateSystemField('system.corruption', targetValue);
     }
 
     /* -------------------------------------------- */
@@ -1863,7 +1841,7 @@ export default class CharacterSheet extends BaseActorSheet {
             });
             return;
         }
-        await this.actor.update({ 'system.insanity': targetValue });
+        await this._updateSystemField('system.insanity', targetValue);
     }
 
     /* -------------------------------------------- */

@@ -124,9 +124,9 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static cleanData(source, options) {
+    static cleanData(source, options, _state) {
         this._cleanData(source, options);
-        return super.cleanData(source, options);
+        return super.cleanData(source, options, _state);
     }
 
     /* -------------------------------------------- */

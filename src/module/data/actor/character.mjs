@@ -73,6 +73,33 @@ export default class CharacterData extends CreatureTemplate {
                 available: new NumberField({ required: true, initial: 0, integer: true }), // Derived
             }),
 
+            // ===== ROGUE TRADER / WH40K FIELDS =====
+            rogueTrader: new SchemaField({
+                profitFactor: new SchemaField({
+                    current: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                    starting: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                    modifier: new NumberField({ required: true, initial: 0, integer: true }),
+                    misfortunes: new StringField({ required: false, blank: true }),
+                }),
+                endeavour: new SchemaField({
+                    name: new StringField({ required: false, blank: true }),
+                    achievementCurrent: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                    achievementRequired: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                    reward: new NumberField({ required: true, initial: 0, integer: true }),
+                    notes: new StringField({ required: false, blank: true }),
+                }),
+                acquisitions: new ArrayField(
+                    new SchemaField({
+                        name: new StringField({ required: false, blank: true }),
+                        availability: new StringField({ required: false, blank: true }),
+                        modifier: new NumberField({ required: true, initial: 0, integer: true }),
+                        notes: new StringField({ required: false, blank: true }),
+                        acquired: new BooleanField({ required: true, initial: false }),
+                    }),
+                    { required: true, initial: [] },
+                ),
+            }),
+
             // ===== MENTAL STATE =====
             insanity: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
             // insanityBonus: new NumberField({ required: true, initial: 0, min: 0, integer: true }), // Derived
@@ -134,6 +161,7 @@ export default class CharacterData extends CreatureTemplate {
         super._cleanData?.(source, options);
         CharacterData.#cleanExperience(source);
         CharacterData.#cleanMentalState(source);
+        CharacterData.#cleanRogueTrader(source);
     }
 
     /**
@@ -188,6 +216,35 @@ export default class CharacterData extends CreatureTemplate {
         }
     }
 
+    /**
+     * Clean Rogue Trader / WH40K fields.
+     * @param {object} source - The source data
+     */
+    static #cleanRogueTrader(source) {
+        const rt = source?.rogueTrader;
+        if (!rt) return;
+
+        const pf = rt.profitFactor;
+        if (pf) {
+            if (pf.current !== undefined) pf.current = this._toInt(pf.current);
+            if (pf.starting !== undefined) pf.starting = this._toInt(pf.starting);
+            if (pf.modifier !== undefined) pf.modifier = this._toInt(pf.modifier);
+        }
+
+        const endeavour = rt.endeavour;
+        if (endeavour) {
+            if (endeavour.achievementCurrent !== undefined) endeavour.achievementCurrent = this._toInt(endeavour.achievementCurrent);
+            if (endeavour.achievementRequired !== undefined) endeavour.achievementRequired = this._toInt(endeavour.achievementRequired);
+            if (endeavour.reward !== undefined) endeavour.reward = this._toInt(endeavour.reward);
+        }
+
+        if (Array.isArray(rt.acquisitions)) {
+            for (const acquisition of rt.acquisitions) {
+                if (acquisition?.modifier !== undefined) acquisition.modifier = this._toInt(acquisition.modifier);
+            }
+        }
+    }
+
     /* -------------------------------------------- */
     /*  Data Preparation                            */
     /* -------------------------------------------- */
@@ -196,7 +253,6 @@ export default class CharacterData extends CreatureTemplate {
     prepareDerivedData() {
         super.prepareDerivedData();
         this._prepareExperience();
-        // this._prepareMentalState();
     }
 
     /** @inheritDoc */
@@ -276,6 +332,7 @@ export default class CharacterData extends CreatureTemplate {
             if (stepMap.motivation?.name) this.originPath.motivation = stepMap.motivation.name;
             if (stepMap.career?.name) this.originPath.career = stepMap.career.name;
         }
+
     }
 
     /**
