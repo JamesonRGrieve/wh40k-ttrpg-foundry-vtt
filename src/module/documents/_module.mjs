@@ -1,9 +1,0 @@
-export { WH40KBaseActor } from './base-actor.mjs';
-export { WH40KAcolyte } from './acolyte.mjs';
-export { WH40KNPC } from './npc.mjs';
-export { WH40KNPCV2 } from './npc-v2.mjs';
-export { WH40KVehicle } from './vehicle.mjs';
-export { WH40KStarship } from './starship.mjs';
-export { WH40KActiveEffect } from './active-effect.mjs';
-export { ChatMessageWH40K } from './chat-message.mjs';
-export { TokenDocumentWH40K } from './token.mjs';
