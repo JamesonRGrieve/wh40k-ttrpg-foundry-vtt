@@ -14,54 +14,54 @@
                     </div>
                     <div class="wh40k-header-row wh40k-player-row">
                         <span class="wh40k-header-label">{{localize "WH40K.Character.Player"}}</span>
-                        <input class="wh40k-header-input wh40k-player-input" name="system.bio.playerName" type="text" value="{{source.bio.playerName}}" placeholder="Player Name" />
+                        <input class="wh40k-header-input wh40k-player-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" />
                     </div>
                     <div class="wh40k-header-row">
                         <span class="wh40k-header-label">Home World</span>
                         <select class="wh40k-header-input" name="system.originPath.homeWorld">
-                            <option value="" {{#unless source.originPath.homeWorld}}selected{{/unless}}>— Select —</option>
-                            <option value="Feral World" {{#if (eq source.originPath.homeWorld "Feral World")}}selected{{/if}}>Feral World</option>
-                            <option value="Forge World" {{#if (eq source.originPath.homeWorld "Forge World")}}selected{{/if}}>Forge World</option>
-                            <option value="Highborn" {{#if (eq source.originPath.homeWorld "Highborn")}}selected{{/if}}>Highborn</option>
-                            <option value="Hive World" {{#if (eq source.originPath.homeWorld "Hive World")}}selected{{/if}}>Hive World</option>
-                            <option value="Shrine World" {{#if (eq source.originPath.homeWorld "Shrine World")}}selected{{/if}}>Shrine World</option>
-                            <option value="Voidborn" {{#if (eq source.originPath.homeWorld "Voidborn")}}selected{{/if}}>Voidborn</option>
+                            <option value="" {{#unless system.originPath.homeWorld}}selected{{/unless}}>— Select —</option>
+                            <option value="Feral World" {{#if (eq system.originPath.homeWorld "Feral World")}}selected{{/if}}>Feral World</option>
+                            <option value="Forge World" {{#if (eq system.originPath.homeWorld "Forge World")}}selected{{/if}}>Forge World</option>
+                            <option value="Highborn" {{#if (eq system.originPath.homeWorld "Highborn")}}selected{{/if}}>Highborn</option>
+                            <option value="Hive World" {{#if (eq system.originPath.homeWorld "Hive World")}}selected{{/if}}>Hive World</option>
+                            <option value="Shrine World" {{#if (eq system.originPath.homeWorld "Shrine World")}}selected{{/if}}>Shrine World</option>
+                            <option value="Voidborn" {{#if (eq system.originPath.homeWorld "Voidborn")}}selected{{/if}}>Voidborn</option>
                         </select>
                     </div>
                     <div class="wh40k-header-row">
                         <span class="wh40k-header-label">Background</span>
                         <select class="wh40k-header-input" name="system.originPath.background">
-                            <option value="" {{#unless source.originPath.background}}selected{{/unless}}>— Select —</option>
-                            <option value="Adeptus Administratum" {{#if (eq source.originPath.background "Adeptus Administratum")}}selected{{/if}}>Adeptus Administratum</option>
-                            <option value="Adeptus Arbites" {{#if (eq source.originPath.background "Adeptus Arbites")}}selected{{/if}}>Adeptus Arbites</option>
-                            <option value="Adeptus Astra Telepathica" {{#if (eq source.originPath.background "Adeptus Astra Telepathica")}}selected{{/if}}>Adeptus Astra Telepathica</option>
-                            <option value="Adeptus Mechanicus" {{#if (eq source.originPath.background "Adeptus Mechanicus")}}selected{{/if}}>Adeptus Mechanicus</option>
-                            <option value="Adeptus Ministorum" {{#if (eq source.originPath.background "Adeptus Ministorum")}}selected{{/if}}>Adeptus Ministorum</option>
-                            <option value="Imperial Guard" {{#if (eq source.originPath.background "Imperial Guard")}}selected{{/if}}>Imperial Guard</option>
-                            <option value="Outcast" {{#if (eq source.originPath.background "Outcast")}}selected{{/if}}>Outcast</option>
+                            <option value="" {{#unless system.originPath.background}}selected{{/unless}}>— Select —</option>
+                            <option value="Adeptus Administratum" {{#if (eq system.originPath.background "Adeptus Administratum")}}selected{{/if}}>Adeptus Administratum</option>
+                            <option value="Adeptus Arbites" {{#if (eq system.originPath.background "Adeptus Arbites")}}selected{{/if}}>Adeptus Arbites</option>
+                            <option value="Adeptus Astra Telepathica" {{#if (eq system.originPath.background "Adeptus Astra Telepathica")}}selected{{/if}}>Adeptus Astra Telepathica</option>
+                            <option value="Adeptus Mechanicus" {{#if (eq system.originPath.background "Adeptus Mechanicus")}}selected{{/if}}>Adeptus Mechanicus</option>
+                            <option value="Adeptus Ministorum" {{#if (eq system.originPath.background "Adeptus Ministorum")}}selected{{/if}}>Adeptus Ministorum</option>
+                            <option value="Imperial Guard" {{#if (eq system.originPath.background "Imperial Guard")}}selected{{/if}}>Imperial Guard</option>
+                            <option value="Outcast" {{#if (eq system.originPath.background "Outcast")}}selected{{/if}}>Outcast</option>
                         </select>
                     </div>
                     <div class="wh40k-header-row">
                         <span class="wh40k-header-label">Role</span>
                         <select class="wh40k-header-input" name="system.originPath.role">
-                            <option value="" {{#unless source.originPath.role}}selected{{/unless}}>— Select —</option>
-                            <option value="Assassin" {{#if (eq source.originPath.role "Assassin")}}selected{{/if}}>Assassin</option>
-                            <option value="Chirurgeon" {{#if (eq source.originPath.role "Chirurgeon")}}selected{{/if}}>Chirurgeon</option>
-                            <option value="Desperado" {{#if (eq source.originPath.role "Desperado")}}selected{{/if}}>Desperado</option>
-                            <option value="Hierophant" {{#if (eq source.originPath.role "Hierophant")}}selected{{/if}}>Hierophant</option>
-                            <option value="Mystic" {{#if (eq source.originPath.role "Mystic")}}selected{{/if}}>Mystic</option>
-                            <option value="Sage" {{#if (eq source.originPath.role "Sage")}}selected{{/if}}>Sage</option>
-                            <option value="Seeker" {{#if (eq source.originPath.role "Seeker")}}selected{{/if}}>Seeker</option>
-                            <option value="Warrior" {{#if (eq source.originPath.role "Warrior")}}selected{{/if}}>Warrior</option>
+                            <option value="" {{#unless system.originPath.role}}selected{{/unless}}>— Select —</option>
+                            <option value="Assassin" {{#if (eq system.originPath.role "Assassin")}}selected{{/if}}>Assassin</option>
+                            <option value="Chirurgeon" {{#if (eq system.originPath.role "Chirurgeon")}}selected{{/if}}>Chirurgeon</option>
+                            <option value="Desperado" {{#if (eq system.originPath.role "Desperado")}}selected{{/if}}>Desperado</option>
+                            <option value="Hierophant" {{#if (eq system.originPath.role "Hierophant")}}selected{{/if}}>Hierophant</option>
+                            <option value="Mystic" {{#if (eq system.originPath.role "Mystic")}}selected{{/if}}>Mystic</option>
+                            <option value="Sage" {{#if (eq system.originPath.role "Sage")}}selected{{/if}}>Sage</option>
+                            <option value="Seeker" {{#if (eq system.originPath.role "Seeker")}}selected{{/if}}>Seeker</option>
+                            <option value="Warrior" {{#if (eq system.originPath.role "Warrior")}}selected{{/if}}>Warrior</option>
                         </select>
                     </div>
                     <div class="wh40k-header-row">
                         <span class="wh40k-header-label">Elite Advance</span>
-                        <input class="wh40k-header-input" name="system.originPath.elite" type="text" value="{{source.originPath.elite}}" placeholder="Elite Advance" />
+                        <input class="wh40k-header-input" name="system.originPath.elite" type="text" value="{{system.originPath.elite}}" placeholder="Elite Advance" />
                     </div>
                     <div class="wh40k-header-row">
                         <span class="wh40k-header-label">Divination</span>
-                        <input class="wh40k-header-input" name="system.originPath.divination" type="text" value="{{source.originPath.divination}}" placeholder="Divination" />
+                        <input class="wh40k-header-input" name="system.originPath.divination" type="text" value="{{system.originPath.divination}}" placeholder="Divination" />
                     </div>
                 </div>
             </div>

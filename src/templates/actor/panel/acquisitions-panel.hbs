@@ -8,9 +8,9 @@
             <div class="table-cell">{{localize "WH40K.Acquisitions.Acquired"}}</div>
             <div class="table-cell--span2">{{localize "WH40K.Acquisitions.Notes"}}</div>
             <div class="table-cell--last">
-                <label class="wh40k-control-button acquisition-add">
+                <button type="button" class="wh40k-control-button acquisition-add" data-action="addAcquisition">
                     <span class="wh40k-control-button__span material-icons">add_circle</span>
-                </label>
+                </button>
             </div>
         </div>
         {{#each system.rogueTrader.acquisitions as |acquisition index|}}
@@ -42,9 +42,9 @@
                     <input class="wh40k-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.notes" value="{{acquisition.notes}}" />
                 </div>
                 <div class="table-cell--last">
-                    <label class="wh40k-control-button acquisition-remove" data-index="{{index}}">
+                    <button type="button" class="wh40k-control-button acquisition-remove" data-action="removeAcquisition" data-index="{{index}}">
                         <span class="wh40k-control-button__span material-icons">delete</span>
-                    </label>
+                    </button>
                 </div>
             </div>
         {{/each}}
