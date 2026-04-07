@@ -41,7 +41,10 @@
                         <span class="wh40k-char-field-label">Base</span>
                         <input
                             type="number"
-                            name="system.characteristics.{{name}}.base"
+                            class="wh40k-char-direct-input"
+                            data-action="editCharacteristicField"
+                            data-characteristic="{{name}}"
+                            data-field="base"
                             data-dtype="Number"
                             value="{{this.base}}"
                             min="0"
@@ -57,7 +60,12 @@
                     {{/if}}
                     <label class="wh40k-char-field">
                         <span class="wh40k-char-field-label">Advances</span>
-                        <select name="system.characteristics.{{name}}.advance" title="Characteristic advancement level">
+                        <select class="wh40k-char-direct-input"
+                            data-action="editCharacteristicField"
+                            data-characteristic="{{name}}"
+                            data-field="advance"
+                            data-dtype="Number"
+                            title="Characteristic advancement level">
                             {{option "0" this.advance "None (+0)"}}
                             {{option "1" this.advance "Simple (+5)"}}
                             {{option "2" this.advance "Intermediate (+10)"}}
@@ -69,7 +77,12 @@
                     {{#if @root.editable}}
                     <label class="wh40k-char-field">
                         <span class="wh40k-char-field-label">Unnatural</span>
-                        <select name="system.characteristics.{{name}}.unnatural" class="wh40k-unnatural-select" data-dtype="Number" title="Unnatural characteristic multiplier">
+                        <select class="wh40k-char-direct-input"
+                            data-action="editCharacteristicField"
+                            data-characteristic="{{name}}"
+                            data-field="unnatural"
+                            data-dtype="Number"
+                            title="Unnatural characteristic multiplier">
                             <option value="0" {{#if (eq this.unnatural 0)}}selected{{/if}}>None</option>
                             <option value="2" {{#if (eq this.unnatural 2)}}selected{{/if}}>×2</option>
                             <option value="3" {{#if (eq this.unnatural 3)}}selected{{/if}}>×3</option>
@@ -81,7 +94,10 @@
                         <span class="wh40k-char-field-label">Modifier</span>
                         <input
                             type="number"
-                            name="system.characteristics.{{name}}.modifier"
+                            class="wh40k-char-direct-input"
+                            data-action="editCharacteristicField"
+                            data-characteristic="{{name}}"
+                            data-field="modifier"
                             data-dtype="Number"
                             value="{{this.modifier}}"
                             min="-100"

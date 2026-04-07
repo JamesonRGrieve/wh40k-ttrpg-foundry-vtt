@@ -1,0 +1,88 @@
+{
+  "name": "Daemon World",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "daemon-world",
+    "step": "homeworld",
+    "stepIndex": 1,
+    "description": {
+      "value": "<h2>Daemon World</h2><p>Daemon worlds are nightmare realms where the fabric of reality has been torn asunder by the power of the Warp. These hellish planets exist in a state of perpetual flux, their landscapes shaped by the whims of daemonic entities and suffused with raw Chaos energy. Those rare few who survive such places — whether born there or stranded by cruel fate — are irrevocably marked by the experience. They carry the taint of the Warp in their very souls, yet many develop an uncanny resilience against its corrupting influence, as if their prolonged exposure has hardened them against its worst effects.</p><h3>Homeworld Bonus</h3><p>+Willpower, +Perception, –Fellowship</p><h3>Homeworld Aptitude</h3><p>Willpower</p><h3>Wounds</h3><p>7+1d5</p><h3>Fate Threshold</h3><p>3 (Emperor's Blessing 9+)</p><h3>Starting Skills</h3><p>Forbidden Lore (Daemonology) or Survival</p><h3>Homeworld Trait</h3><p><strong>Touched by the Warp:</strong> The character counts as a Psyker for the purposes of being detected by Psyniscience, but gains +10 to resist any Daemonic power. The character starts with 1d10+5 Corruption Points.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Homeworld",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "7+1d5",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 3,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Willpower"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Touched by the Warp",
+          "description": "The character counts as a Psyker for the purposes of being detected by Psyniscience, but gains +10 to resist any Daemonic power. The character starts with 1d10+5 Corruption Points."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Forbidden Lore",
+              "specialization": "Daemonology"
+            },
+            {
+              "name": "Survival",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {
+        "willpower": 5,
+        "perception": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "name": "Fellowship",
+          "value": -5
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Emperor's Blessing: On a roll of 9+ on 1d10, the character begins with an extra Fate Point. The character starts with 1d10+5 Corruption Points.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EB2DmnWld00000001"
+}

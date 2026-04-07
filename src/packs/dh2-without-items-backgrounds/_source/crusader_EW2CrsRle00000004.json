@@ -1,0 +1,84 @@
+{
+  "name": "Crusader",
+  "type": "originPath",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "identifier": "crusader",
+    "step": "role",
+    "stepIndex": 3,
+    "description": {
+      "value": "<h2>Crusader</h2><p>The Crusader is a warrior of faith and steel, a holy soldier who charges into the enemies of the God-Emperor with zealous fury. Whether they wield a crackling power sword or a humble war hammer, the Crusader lives for the clash of melee combat, trusting in the Emperor's protection and their own martial prowess. They are the warband's shield and spear — unyielding in defence, devastating in the charge.</p><h3>Role Aptitudes</h3><p>Knowledge, Offence, Strength, Toughness, Weapon Skill</p><h3>Role Talent</h3><p>Hatred (any one) or Resistance (Fear)</p><h3>Role Bonus</h3><p><strong>Knight of the God-Emperor:</strong> When making a Charge action, gain +20 to WS instead of the normal +10.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Role",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Knowledge",
+        "Offence",
+        "Strength",
+        "Toughness",
+        "Weapon Skill"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Knight of the God-Emperor",
+          "description": "When making a Charge action, gain +20 to WS instead of the normal +10."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Role Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Hatred (any one)",
+              "specialization": ""
+            },
+            {
+              "name": "Resistance (Fear)",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EW2CrsRle00000004"
+}
