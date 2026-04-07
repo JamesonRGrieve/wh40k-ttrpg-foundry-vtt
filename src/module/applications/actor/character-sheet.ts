@@ -1470,7 +1470,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                 </div>
             `;
 
-            await ChatMessage.create({
+            await (ChatMessage as any).create({
                 speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                 content,
                 rolls: [roll],
@@ -1550,9 +1550,9 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
 
         // Find the action definition in config
         const allActions = [
-            ...(CONFIG.wh40k.combatActions?.attacks || []),
-            ...(CONFIG.wh40k.combatActions?.movement || []),
-            ...(CONFIG.wh40k.combatActions?.utility || []),
+            ...((CONFIG as any).wh40k?.combatActions?.attacks || []),
+            ...((CONFIG as any).wh40k?.combatActions?.movement || []),
+            ...((CONFIG as any).wh40k?.combatActions?.utility || []),
         ];
 
         const actionConfig = allActions.find((a) => a.key === actionKey);
@@ -1576,7 +1576,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         };
 
         // Create chat message
-        await ChatMessage.create(chatData);
+        await (ChatMessage as any).create(chatData);
     }
 
     /**
@@ -1616,7 +1616,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         };
 
         // Create chat message
-        await ChatMessage.create(chatData);
+        await (ChatMessage as any).create(chatData);
     }
 
     /**
@@ -1678,17 +1678,17 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         }
 
         // Get current value
-        const currentValue = foundry.utils.getProperty(this.actor, field) || 0;
+        const currentValue = foundry.utils.getProperty(this.actor, field) as number || 0;
 
         // Smart min/max derivation: if field ends with .value, check for .max/.min siblings
         const min = target.dataset.min !== undefined ? parseInt(target.dataset.min) : null;
-        let max = target.dataset.max !== undefined ? parseInt(target.dataset.max) : null;
+        let max: number | null = target.dataset.max !== undefined ? parseInt(target.dataset.max) : null;
 
         // Auto-derive max from field structure (e.g., system.wounds.value -> system.wounds.max)
         if (max === null && field.endsWith('.value')) {
             const basePath = field.substring(0, field.lastIndexOf('.value'));
             const maxPath = `${basePath}.max`;
-            const derivedMax = foundry.utils.getProperty(this.actor, maxPath);
+            const derivedMax = foundry.utils.getProperty(this.actor, maxPath) as number | undefined;
             if (derivedMax !== undefined && derivedMax !== null) {
                 max = derivedMax;
             }
@@ -1969,7 +1969,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
 
         await this._updateSystemField('system.fate.value', currentFate - 1);
 
-        await ChatMessage.create({
+        await (ChatMessage as any).create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content: `
                 <div class="wh40k-fate-spend-message">
@@ -2504,7 +2504,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             // Clear stored filter state
             (this as any)._equipmentFilter = { search: '', type: '', status: '' };
             // Trigger filter update
-            this.constructor.#filterEquipment.call(this, event, searchInput);
+            (CharacterSheet as any).#filterEquipment.call(this, event, searchInput);
         }
     }
 
@@ -2519,7 +2519,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {HTMLElement} target  Element that triggered the event.
      */
     static async #filterSkills(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const input = event.currentTarget;
+        const input = event.currentTarget as HTMLInputElement;
         const name = input.name || 'search';
         const value = input.value || '';
 
@@ -2624,7 +2624,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      */
     static async #cycleSpecialistTraining(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const row = target.closest('[data-skill]');
+        const row = target.closest('[data-skill]') as HTMLElement | null;
         const skillKey = row?.dataset.skill;
         const entryIndex = parseInt(row?.dataset.index, 10);
         if (!skillKey || isNaN(entryIndex)) return;
@@ -2706,7 +2706,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     static async #openAddSpecialistDialog(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         // Get list of specialist skills for the dropdown
         const skills = (this as any).actor.system.skills ?? {};
-        const specialistSkills = Object.entries(skills)
+        const specialistSkills = (Object.entries(skills) as [string, any][])
             .filter(([_, data]) => data.entries !== undefined)
             .map(([key, data]) => ({
                 key,
@@ -2729,7 +2729,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         `;
 
         // Show skill selection dialog
-        const result = await foundry.applications.api.DialogV2.prompt({
+        const result = await (foundry.applications.api.DialogV2 as any).prompt({
             window: { title: 'Add Specialist Skill' },
             content,
             ok: {
@@ -2805,9 +2805,9 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         const form = target.closest('.wh40k-traits-filters');
         if (!form) return;
 
-        const search = form.querySelector('[name=traits-search]')?.value || '';
-        const category = form.querySelector('[name=traits-category]')?.value || '';
-        const hasLevel = form.querySelector('[name=traits-has-level]')?.checked || false;
+        const search = (form.querySelector('[name=traits-search]') as HTMLInputElement)?.value || '';
+        const category = (form.querySelector('[name=traits-category]') as HTMLSelectElement)?.value || '';
+        const hasLevel = (form.querySelector('[name=traits-has-level]') as HTMLInputElement)?.checked || false;
 
         (this as any)._traitsFilter = { search, category, hasLevel };
         await (this as any).render({ parts: ['talents'] }); // Talents tab contains trait panel
@@ -3027,7 +3027,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                 await item.toChat();
             } else {
                 // Fallback: create a simple chat message
-                await ChatMessage.create({
+                await (ChatMessage as any).create({
                     speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                     content: `<div class="wh40k-power-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
@@ -3097,7 +3097,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             if (typeof item.toChat === 'function') {
                 await item.toChat();
             } else {
-                await ChatMessage.create({
+                await (ChatMessage as any).create({
                     speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                     content: `<div class="wh40k-ritual-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
@@ -3143,7 +3143,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             if (typeof item.toChat === 'function') {
                 await item.toChat();
             } else {
-                await ChatMessage.create({
+                await (ChatMessage as any).create({
                     speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                     content: `<div class="wh40k-order-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
@@ -3170,18 +3170,18 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             } else {
                 // Fallback: roll on phenomena table
                 const table =
-                    game.tables.getName('Psychic Phenomena') ||
+                    (game.tables as any).getName('Psychic Phenomena') ||
                     (await game.packs
                         .get('wh40k-rpg.wh40k-rolltables-psychic')
                         ?.getDocuments()
-                        .then((docs) => docs.find((d) => d.name.includes('Phenomena'))));
+                        .then((docs: any[]) => docs.find((d: any) => d.name.includes('Phenomena'))));
 
                 if (table) {
                     await table.draw();
                 } else {
                     // Simple d100 roll as last resort
                     const roll = await new Roll('1d100').evaluate();
-                    await ChatMessage.create({
+                    await (ChatMessage as any).create({
                         speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                         content: `<div class="wh40k-phenomena-roll"><h3>Psychic Phenomena</h3><p>Roll: ${roll.total}</p></div>`,
                         rolls: [roll],
@@ -3210,18 +3210,18 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             } else {
                 // Fallback: roll on perils table
                 const table =
-                    game.tables.getName('Perils of the Warp') ||
+                    (game.tables as any).getName('Perils of the Warp') ||
                     (await game.packs
                         .get('wh40k-rpg.wh40k-rolltables-psychic')
                         ?.getDocuments()
-                        .then((docs) => docs.find((d) => d.name.includes('Perils'))));
+                        .then((docs: any[]) => docs.find((d: any) => d.name.includes('Perils'))));
 
                 if (table) {
                     await table.draw();
                 } else {
                     // Simple d100 roll as last resort
                     const roll = await new Roll('1d100').evaluate();
-                    await ChatMessage.create({
+                    await (ChatMessage as any).create({
                         speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                         content: `<div class="wh40k-perils-roll"><h3>Perils of the Warp</h3><p>Roll: ${roll.total}</p></div>`,
                         rolls: [roll],

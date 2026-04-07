@@ -1706,7 +1706,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (!uuid) return;
 
         try {
-            const item = await fromUuid(uuid);
+            const item = await fromUuid(uuid) as any;
             if (item?.sheet) {
                 item.sheet.render(true);
             }
@@ -1803,7 +1803,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
-    _buildGrantSelections(): string {
+    _buildGrantSelections(): any {
         const selections = {};
         for (const [step, selection] of this.selections) {
             const selectedChoices = selection.system?.selectedChoices || {};
@@ -1819,7 +1819,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
-    _buildRolledValues(): string {
+    _buildRolledValues(): any {
         const values = {};
         for (const [step, selection] of this.selections) {
             const rollResults = selection.system?.rollResults || {};
