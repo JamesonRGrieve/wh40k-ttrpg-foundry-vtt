@@ -225,7 +225,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static async #onSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         const data: any = foundry.utils.expandObject(formData.object);
 
         // Update state from form
@@ -335,7 +335,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCancel(event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.#submitted = false;
         if (this.#resolve) this.#resolve([]);
         await this.close();
@@ -346,7 +346,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onUpdatePreview(event: Event, target: HTMLElement): Promise<void> {
+    static async #onUpdatePreview(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.render({ parts: ['form'] });
     }
 

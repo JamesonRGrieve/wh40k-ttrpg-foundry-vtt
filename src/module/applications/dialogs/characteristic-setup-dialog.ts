@@ -597,7 +597,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onApply(event: Event, target: HTMLElement): Promise<void> {
+    static async #onApply(this: any, event: Event, target: HTMLElement): Promise<void> {
         // Validate all rolls are assigned
         const allAssigned = GENERATION_CHARACTERISTICS.every((key) => this.#assignments[key] !== null && this.#rolls[this.#assignments[key]] > 0);
 
@@ -644,7 +644,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onReset(event: Event, target: HTMLElement): Promise<void> {
+    static async #onReset(this: any, event: Event, target: HTMLElement): Promise<void> {
         // Clear all assignments
         for (const key of GENERATION_CHARACTERISTICS) {
             this.#assignments[key] = null;
@@ -660,7 +660,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onToggleAdvanced(event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleAdvanced(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.#advancedMode = !this.#advancedMode;
         this.render();
     }

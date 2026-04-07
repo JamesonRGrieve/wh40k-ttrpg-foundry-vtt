@@ -217,8 +217,8 @@ export default class ContainerItemSheet extends BaseItemSheet {
     async _onNestedItemDragStart(event: Event): Promise<void> {
         event.stopPropagation();
 
-        const element = event.currentTarget;
-        const itemId = element.dataset.nestedItemId;
+        const element = event.currentTarget as HTMLElement;
+        const itemId = (element as any).dataset.nestedItemId;
         if (!itemId) return;
 
         const nestedItem = this.item.items?.get(itemId);
@@ -263,7 +263,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #nestedItemEdit(this: any, event: Event, target: HTMLElement): void {
-        const itemId = target.closest('[data-nested-item-id]')?.dataset.nestedItemId;
+        const itemId = (target.closest('[data-nested-item-id]') as HTMLElement)?.dataset.nestedItemId;
         const nestedItem = this.item.items?.get(itemId);
         nestedItem?.sheet.render(true);
     }
@@ -277,7 +277,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #nestedItemDelete(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest('[data-nested-item-id]')?.dataset.nestedItemId;
+        const itemId = (target.closest('[data-nested-item-id]') as HTMLElement)?.dataset.nestedItemId;
         if (!itemId) return;
 
         const confirmed = await ConfirmationDialog.confirm({

@@ -353,7 +353,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #switchTab(event: Event, target: HTMLElement): Promise<void> {
+    static async #switchTab(this: any, event: Event, target: HTMLElement): Promise<void> {
         const tab = target.dataset.tab;
         if (tab) {
             this.#activeTab = tab;
@@ -368,7 +368,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #purchaseCharacteristic(event: Event, target: HTMLElement): Promise<void> {
+    static async #purchaseCharacteristic(this: any, event: Event, target: HTMLElement): Promise<void> {
         const charKey = target.dataset.characteristic;
         if (!charKey) return;
 
@@ -437,7 +437,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #purchaseAdvance(event: Event, target: HTMLElement): Promise<void> {
+    static async #purchaseAdvance(this: any, event: Event, target: HTMLElement): Promise<void> {
         const advanceIndex = parseInt(target.dataset.index, 10);
         const advanceType = target.dataset.type;
 
@@ -601,7 +601,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #openCompendiumItem(event: Event, target: HTMLElement): Promise<void> {
+    static async #openCompendiumItem(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         event.stopPropagation();
 

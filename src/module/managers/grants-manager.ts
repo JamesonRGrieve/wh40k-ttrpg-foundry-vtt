@@ -53,6 +53,7 @@ function generateDeterministicId(seed) {
 }
 
 export class GrantsManager {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */

@@ -83,6 +83,11 @@ export class WH40KItem extends WH40KItemContainer {
         return (defaultIcons as any)[type] || 'icons/svg/mystery-man.svg';
     }
 
+    /** Helper to get the item type as a plain string for comparison. */
+    get _type(): string {
+        return this.type as string;
+    }
+
     get totalWeight() {
         let weight = this.system.weight || 0;
         if (this.items && this.items.size > 0) {
@@ -96,115 +101,115 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isMentalDisorder() {
-        return this.type === 'mentalDisorder';
+        return this._type === 'mentalDisorder';
     }
 
     get isMalignancy() {
-        return this.type === 'malignancy';
+        return this._type === 'malignancy';
     }
 
     get isMutation() {
-        return this.type === 'mutation';
+        return this._type === 'mutation';
     }
 
     get isTalent() {
-        return this.type === 'talent';
+        return this._type === 'talent';
     }
 
     get isTrait() {
-        return this.type === 'trait';
+        return this._type === 'trait';
     }
 
     get isAptitude() {
-        return this.type === 'aptitude';
+        return this._type === 'aptitude';
     }
 
     get isSpecialAbility() {
-        return this.type === 'specialAbility';
+        return this._type === 'specialAbility';
     }
 
     get isPsychicPower() {
-        return this.type === 'psychicPower';
+        return this._type === 'psychicPower';
     }
 
     get isNavigatorPower() {
-        return this.type === 'navigatorPower';
+        return this._type === 'navigatorPower';
     }
 
     get isPsychicBarrage() {
-        return this.type === 'psychicPower' && this.system.attackType === 'Psychic Barrage';
+        return this._type === 'psychicPower' && this.system.attackType === 'Psychic Barrage';
     }
 
     get isPsychicStorm() {
-        return this.type === 'psychicPower' && this.system.attackType === 'Psychic Storm';
+        return this._type === 'psychicPower' && this.system.attackType === 'Psychic Storm';
     }
 
     get isCriticalInjury() {
-        return this.type === 'criticalInjury';
+        return this._type === 'criticalInjury';
     }
 
     get isOriginPath() {
-        return this.type === 'originPath' || (this.type === 'trait' && this.flags?.rt?.kind === 'origin');
+        return this._type === 'originPath' || (this._type === 'trait' && (this.flags as any)?.rt?.kind === 'origin');
     }
 
     get isSkill() {
-        return this.type === 'skill';
+        return this._type === 'skill';
     }
 
     get isOrder() {
-        return this.type === 'order';
+        return this._type === 'order';
     }
 
     get isRitual() {
-        return this.type === 'ritual';
+        return this._type === 'ritual';
     }
 
     get isShipComponent() {
-        return this.type === 'shipComponent';
+        return this._type === 'shipComponent';
     }
 
     get isShipRole() {
-        return this.type === 'shipRole';
+        return this._type === 'shipRole';
     }
 
     get isShipUpgrade() {
-        return this.type === 'shipUpgrade';
+        return this._type === 'shipUpgrade';
     }
 
     get isShipWeapon() {
-        return this.type === 'shipWeapon';
+        return this._type === 'shipWeapon';
     }
 
     get isVehicleTrait() {
-        return this.type === 'vehicleTrait';
+        return this._type === 'vehicleTrait';
     }
 
     get isVehicleUpgrade() {
-        return this.type === 'vehicleUpgrade';
+        return this._type === 'vehicleUpgrade';
     }
 
     get isWeaponQuality() {
-        return this.type === 'weaponQuality';
+        return this._type === 'weaponQuality';
     }
 
     get isCondition() {
-        return this.type === 'trait' && this.flags?.rt?.kind === 'condition';
+        return this._type === 'trait' && (this.flags as any)?.rt?.kind === 'condition';
     }
 
     get originPathStep() {
-        return this.flags?.rt?.step || this.system?.step || '';
+        return (this.flags as any)?.rt?.step || this.system?.step || '';
     }
 
     get isWeapon() {
-        return this.type === 'weapon';
+        return this._type === 'weapon';
     }
 
     get isRanged() {
-        return this.type === 'weapon' && this.system.class.toLowerCase() !== 'melee';
+        return this._type === 'weapon' && this.system.class.toLowerCase() !== 'melee';
     }
 
     get isThrown() {
-        return this.type === 'weapon' && this.system.class.toLowerCase() === 'thrown';
+        return this._type === 'weapon' && this.system.class.toLowerCase() === 'thrown';
     }
 
     get usesAmmo() {
@@ -212,59 +217,59 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isMelee() {
-        return this.type === 'weapon' && this.system.class.toLowerCase() === 'melee';
+        return this._type === 'weapon' && this.system.class.toLowerCase() === 'melee';
     }
 
     get isArmour() {
-        return this.type === 'armour';
+        return this._type === 'armour';
     }
 
     get isArmourModification() {
-        return this.type === 'armourModification';
+        return this._type === 'armourModification';
     }
 
     get isGear() {
-        return this.type === 'gear' || this.isConsumable || this.isDrug || this.isAmmunition || this.isTool;
+        return this._type === 'gear' || this.isConsumable || this.isDrug || this.isAmmunition || this.isTool;
     }
 
     get isDrug() {
-        return this.type === 'drug';
+        return this._type === 'drug';
     }
 
     get isConsumable() {
-        return this.type === 'consumable';
+        return this._type === 'consumable';
     }
 
     get isTool() {
-        return this.type === 'tool';
+        return this._type === 'tool';
     }
 
     get isCybernetic() {
-        return this.type === 'cybernetic';
+        return this._type === 'cybernetic';
     }
 
     get isWeaponModification() {
-        return this.type === 'weaponModification';
+        return this._type === 'weaponModification';
     }
 
     get isAmmunition() {
-        return this.type === 'ammunition';
+        return this._type === 'ammunition';
     }
 
     get isForceField() {
-        return this.type === 'forceField';
+        return this._type === 'forceField';
     }
 
     get isAttackSpecial() {
-        return this.type === 'attackSpecial';
+        return this._type === 'attackSpecial';
     }
 
     get isStorageLocation() {
-        return this.type === 'storageLocation';
+        return this._type === 'storageLocation';
     }
 
     get isBackpack() {
-        return this.type === 'backpack';
+        return this._type === 'backpack';
     }
 
     get isInBackpack() {
@@ -272,15 +277,15 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isJournalEntry() {
-        return this.type === 'journalEntry';
+        return this._type === 'journalEntry';
     }
 
     get isEnemy() {
-        return this.type === 'enemy';
+        return this._type === 'enemy';
     }
 
     get isPeer() {
-        return this.type === 'peer';
+        return this._type === 'peer';
     }
 
     _onCreate(data, options, user) {
@@ -433,7 +438,7 @@ export class WH40KItem extends WH40KItemContainer {
         let template = 'systems/wh40k-rpg/templates/chat/item-card-chat.hbs';
         if (this.isWeapon) {
             template = 'systems/wh40k-rpg/templates/chat/weapon-card-chat.hbs';
-        } else if (this.type === 'armour') {
+        } else if (this._type === 'armour') {
             template = 'systems/wh40k-rpg/templates/chat/armour-card-chat.hbs';
         }
 

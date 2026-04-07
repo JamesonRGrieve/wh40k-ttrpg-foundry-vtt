@@ -182,7 +182,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #roll(event: Event, target: HTMLElement): Promise<void> {
+    static async #roll(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         try {
@@ -217,7 +217,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #accept(event: Event, target: HTMLElement): Promise<void> {
+    static async #accept(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         if (!this.rollResult) {
@@ -242,7 +242,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #reroll(event: Event, target: HTMLElement): Promise<void> {
+    static async #reroll(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         // Clear current result to return to initial state
@@ -259,7 +259,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #manual(event: Event, target: HTMLElement): Promise<void> {
+    static async #manual(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         const formula = this.formula;
@@ -469,7 +469,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #cancel(event: Event, target: HTMLElement): Promise<void> {
+    static async #cancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         if (this._resolvePromise) {
@@ -486,7 +486,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {FormDataExtended} formData - The form data
      * @private
      */
-    static async #onSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         // Same as accept
         return this.#accept.call(this, event, form);
     }

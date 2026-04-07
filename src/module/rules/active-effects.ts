@@ -40,7 +40,7 @@ export async function sendActiveEffectMessage(activeContext) {
     } else if (chatData.rollMode === 'selfroll') {
         chatData.whisper = [game.user];
     }
-    await ChatMessage.create(chatData);
+    await (ChatMessage as any).create(chatData);
 }
 
 /* -------------------------------------------- */

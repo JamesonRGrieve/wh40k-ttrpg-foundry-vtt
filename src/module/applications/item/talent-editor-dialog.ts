@@ -558,7 +558,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {HTMLFormElement} form - The form element
      * @param {FormDataExtended} formData - The form data
      */
-    static async #formHandler(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #formHandler(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         const data: any = foundry.utils.expandObject(formData.object);
 
         // Process the form data into the proper structure
@@ -778,7 +778,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {Event} event - Click event
      * @param {HTMLElement} target - The clicked button
      */
-    static async #addItem(event: Event, target: HTMLElement): Promise<void> {
+    static async #addItem(this: any, event: Event, target: HTMLElement): Promise<void> {
         const { category, type } = target.dataset;
         if (!category || !type) return;
 
@@ -997,7 +997,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {Event} event - Click event
      * @param {HTMLElement} target - The clicked button
      */
-    static async #removeItem(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeItem(this: any, event: Event, target: HTMLElement): Promise<void> {
         const row = target.closest('.ted-list-row');
         if (row) {
             row.remove();
@@ -1010,7 +1010,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {Event} event - Click event
      * @param {HTMLElement} target - The clicked button
      */
-    static async #switchSection(event: Event, target: HTMLElement): Promise<void> {
+    static async #switchSection(this: any, event: Event, target: HTMLElement): Promise<void> {
         const section = target.dataset.section;
         if (!section) return;
 

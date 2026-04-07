@@ -589,7 +589,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     async spendFate(): Promise<void> {
-        await this.update({
+        await (this as any).update({
             'system.fate.value': this.system.fate.value - 1,
         });
     }

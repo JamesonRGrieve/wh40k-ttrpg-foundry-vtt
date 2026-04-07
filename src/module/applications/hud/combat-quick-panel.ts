@@ -443,7 +443,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #rollInitiative(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollInitiative(this: any, event: Event, target: HTMLElement): Promise<void> {
         const combatant = game.combat?.combatants.find((c) => c.actorId === this.actor.id);
         if (!combatant) {
             (ui.notifications as any).warn('Character not in combat');
@@ -462,7 +462,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #standardAttack(event: Event, target: HTMLElement): Promise<void> {
+    static async #standardAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
             (ui.notifications as any).warn('No weapon equipped');
             return;
@@ -483,7 +483,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #semiAutoAttack(event: Event, target: HTMLElement): Promise<void> {
+    static async #semiAutoAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon?.system.rateOfFire?.semiAuto) {
             (ui.notifications as any).warn('Weapon does not support semi-auto');
             return;
@@ -503,7 +503,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #fullAutoAttack(event: Event, target: HTMLElement): Promise<void> {
+    static async #fullAutoAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon?.system.rateOfFire?.fullAuto) {
             (ui.notifications as any).warn('Weapon does not support full-auto');
             return;
@@ -523,7 +523,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #dodge(event: Event, target: HTMLElement): Promise<void> {
+    static async #dodge(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.dodge) {
             (ui.notifications as any).warn('Already used dodge this round');
             return;
@@ -548,7 +548,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #parry(event: Event, target: HTMLElement): Promise<void> {
+    static async #parry(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.parry) {
             (ui.notifications as any).warn('Already used parry this round');
             return;
@@ -573,7 +573,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #reload(event: Event, target: HTMLElement): Promise<void> {
+    static async #reload(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
             (ui.notifications as any).warn('No weapon equipped');
             return;
@@ -607,7 +607,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #aim(event: Event, target: HTMLElement): Promise<void> {
+    static async #aim(this: any, event: Event, target: HTMLElement): Promise<void> {
         // Apply aim effect (+10 to next attack)
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -626,7 +626,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #drawWeapon(event: Event, target: HTMLElement): Promise<void> {
+    static async #drawWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
         const weapons = this.actor.items.filter((i) => i.type === 'weapon' && !i.system.equipped);
 
         if (weapons.length === 0) {
@@ -654,7 +654,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #switchWeapon(event: Event, target: HTMLElement): Promise<void> {
+    static async #switchWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
         const weaponId = target.dataset.weaponId;
         const weapon = this.actor.items.get(weaponId);
 
@@ -680,7 +680,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #useConsumable(event: Event, target: HTMLElement): Promise<void> {
+    static async #useConsumable(this: any, event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         const item = this.actor.items.get(itemId);
 
@@ -703,7 +703,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #toggleOpacity(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleOpacity(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.opacityLevel = (this.opacityLevel + 1) % 4;
 
         // Apply opacity class
