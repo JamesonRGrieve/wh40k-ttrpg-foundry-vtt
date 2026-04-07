@@ -54,14 +54,14 @@
     "stowed": false,
     "container": "",
     "description": {
-      "value": "<p><b>Special:</b> Blast (3), Corrosive, Flame, Smoke (5), Toxic (2)</p><p><b>Note:</b> Space White Phosphorus. Used for Crowd Control and the elimination of Mutant Hordes. Anyone who begins their turn in the Smoke automatically suffers 1d10 Impact Damage with Corrosive and Toxic (2) Quality and starts Suffocating.</p>"
+      "value": "<p>Whitefire grenades burn with a terrible alchemical intensity, producing clouds of blazing toxins that cling to flesh and armour alike. They are prized by the faithful for purging tightly packed masses of mutants and heretics.</p><p><b>Special:</b> Blast (3), Corrosive, Flame, Smoke (5), Toxic (2)</p>"
     },
     "modifications": [],
-    "notes": "Space White Phosphorus. Used for Crowd Control and the elimination of Mutant Hordes. Anyone who begins their turn in the Smoke automatically suffers 1d10 Impact Damage with Corrosive and Toxic (2) Quality and starts Suffocating.",
+    "notes": "",
     "source": "DH2: Enemies Within",
     "requiredTraining": "",
     "gameSystems": [
-      "rt"
+      "dh2e"
     ]
   },
   "effects": [],

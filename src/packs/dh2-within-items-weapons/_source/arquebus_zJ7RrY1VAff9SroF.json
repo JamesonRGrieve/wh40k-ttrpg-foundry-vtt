@@ -60,7 +60,7 @@
     "source": "DH2: Enemies Within",
     "requiredTraining": "",
     "gameSystems": [
-      "rt"
+      "dh2e"
     ]
   },
   "effects": [],
