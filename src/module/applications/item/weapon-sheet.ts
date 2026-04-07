@@ -126,10 +126,10 @@ export default class WeaponSheet extends ContainerItemSheet {
             const level = match ? parseInt(match[1]) : null;
 
             // Get localized label using CONFIG helper (CONFIG.wh40k not CONFIG.WH40K)
-            const label = CONFIG.wh40k?.getQualityLabel?.(q, level) || q;
+            const label = (CONFIG as any).wh40k?.getQualityLabel?.(q, level) || q;
 
             // Get definition for description
-            const def = CONFIG.wh40k?.getQualityDefinition?.(q) || null;
+            const def = (CONFIG as any).wh40k?.getQualityDefinition?.(q) || null;
 
             return {
                 identifier: q,
@@ -502,7 +502,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             quality?.sheet.render(true);
         } else {
             // Fallback: show tooltip from CONFIG
-            const def = CONFIG.wh40k?.getQualityDefinition?.(identifier);
+            const def = (CONFIG as any).wh40k?.getQualityDefinition?.(identifier);
             if (def) {
                 const label = game.i18n.localize(def.label);
                 const description = game.i18n.localize(def.description);

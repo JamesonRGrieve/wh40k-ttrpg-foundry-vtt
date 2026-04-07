@@ -722,7 +722,7 @@ export class WH40KItem extends WH40KItemContainer {
                 const skillPack = game.packs.get('wh40k-rpg.wh40k-items-skills');
                 if (skillPack) {
                     const index = await skillPack.getIndex({ fields: ['name'] });
-                    const skillEntry = index.find((s) => s.name.toLowerCase() === skillName.toLowerCase());
+                    const skillEntry = index.find((s: any) => s.name.toLowerCase() === skillName.toLowerCase());
                     if (skillEntry) {
                         const skill = await skillPack.getDocument(skillEntry._id);
                         if (skill) itemsToAdd.push(skill.toObject());
@@ -737,7 +737,7 @@ export class WH40KItem extends WH40KItemContainer {
                 const talentPack = game.packs.get('wh40k-rpg.wh40k-items-talents');
                 if (talentPack) {
                     const index = await talentPack.getIndex({ fields: ['name'] });
-                    const talentEntry = index.find((t) => t.name.toLowerCase() === talentName.toLowerCase());
+                    const talentEntry = index.find((t: any) => t.name.toLowerCase() === (talentName as string).toLowerCase());
                     if (talentEntry) {
                         const talent = await talentPack.getDocument(talentEntry._id);
                         if (talent) itemsToAdd.push(talent.toObject());

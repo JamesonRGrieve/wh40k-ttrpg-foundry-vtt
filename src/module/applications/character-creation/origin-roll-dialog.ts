@@ -316,7 +316,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
                 </form>
             `,
             callback: (html) => {
-                const input = html.find('input[name="value"]').val();
+                const input = (html as any).find('input[name="value"]').val();
                 return parseInt(input);
             },
             rejectClose: false,
@@ -414,7 +414,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
                 </form>
             `,
             callback: (html) => {
-                const input = html.find('input[name="value"]').val();
+                const input = (html as any).find('input[name="value"]').val();
                 return parseInt(input);
             },
             rejectClose: false,
@@ -646,7 +646,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             type: CONST.CHAT_MESSAGE_TYPES.ROLL,
             rolls: [this.rollResult.roll],
             sound: (CONFIG as any).sounds.dice,
-        });
+        } as any);
     }
 
     /* -------------------------------------------- */

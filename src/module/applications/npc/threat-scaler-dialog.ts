@@ -320,7 +320,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {HTMLElement} target - The target element.
      */
     static #onUpdatePreview(this: any, event: Event, target: HTMLElement): void {
-        this.#state.newThreatLevel = parseInt(target.value, 10);
+        this.#state.newThreatLevel = parseInt((target as HTMLInputElement).value, 10);
 
         // Debounce render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);

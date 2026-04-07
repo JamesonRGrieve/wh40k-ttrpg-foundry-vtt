@@ -1201,7 +1201,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             input = initialInput.initialInput ?? '';
         }
 
-        const { actor, initialInput: _ignored, ...appOptions } = options;
+        const { actor, initialInput: _ignored, ...appOptions } = options as any;
         const parser = new this(appOptions);
         parser.#rawInput = input;
         parser.#targetActor = actor ?? null;
