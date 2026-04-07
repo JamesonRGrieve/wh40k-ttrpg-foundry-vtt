@@ -45,7 +45,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         },
         position: {
             width: 600,
-            height: 'auto',
+            height: 'auto' as const,
         },
         actions: {
             updateQuantity: DifficultyCalculatorDialog.#updateQuantity,

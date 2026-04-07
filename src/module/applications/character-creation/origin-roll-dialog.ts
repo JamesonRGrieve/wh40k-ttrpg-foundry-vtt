@@ -30,7 +30,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         },
         position: {
             width: 600,
-            height: 'auto',
+            height: 'auto' as const,
         },
         actions: {
             roll: OriginRollDialog.#roll,

@@ -320,7 +320,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             }
 
             try {
-                const actor = await Actor.create(actorData);
+                const actor = await Actor.create(actorData as any);
                 if (actor) actors.push(actor);
             } catch (err) {
                 console.error(`Failed to create NPC "${name}":`, err);
@@ -451,7 +451,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 folder: folder || undefined,
             };
 
-            const actor = await Actor.create(actorData);
+            const actor = await Actor.create(actorData as any);
             if (actor) actors.push(actor);
         }
 

@@ -345,7 +345,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         };
 
         try {
-            const actor = await Actor.create(actorData);
+            const actor = await Actor.create(actorData as any);
 
             if (actor) {
                 (ui.notifications as any).info(`Created NPC: ${actor.name}`);
@@ -469,7 +469,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
                 system: systemData,
             };
 
-            const actor = await Actor.create(actorData);
+            const actor = await Actor.create(actorData as any);
             if (actor) actors.push(actor);
         }
 

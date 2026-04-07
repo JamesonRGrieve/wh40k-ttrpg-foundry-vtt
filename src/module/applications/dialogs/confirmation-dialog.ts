@@ -33,7 +33,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
         },
         position: {
             width: 400,
-            height: 'auto',
+            height: 'auto' as const,
         },
         actions: {
             confirm: ConfirmationDialog.#onConfirm,

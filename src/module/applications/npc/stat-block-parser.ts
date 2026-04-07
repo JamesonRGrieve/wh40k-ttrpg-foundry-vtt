@@ -554,14 +554,14 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     static _applyCharacteristics(systemData: any, characteristicResult: any): void {
-        for (const [key, value] of Object.entries(characteristicResult.values)) {
+        for (const [key, value] of Object.entries(characteristicResult.values) as [string, any][]) {
             if (!systemData.characteristics[key]) continue;
             systemData.characteristics[key].base = value;
             systemData.characteristics[key].total = value;
             systemData.characteristics[key].bonus = Math.floor(value / 10);
         }
 
-        for (const [key, bonusValue] of Object.entries(characteristicResult.unnaturalValues)) {
+        for (const [key, bonusValue] of Object.entries(characteristicResult.unnaturalValues) as [string, any][]) {
             const base = systemData.characteristics[key]?.base ?? 0;
             const baseBonus = Math.floor(base / 10) || 1;
             const multiplier = Math.max(2, Math.round(bonusValue / baseBonus));
@@ -600,7 +600,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         const namedMatches = [...input.matchAll(this.PATTERNS.movementNamed)];
         if (namedMatches.length > 0) {
-            const movement = {};
+            const movement: any = {};
             for (const match of namedMatches) {
                 movement[match[1].toLowerCase()] = parseInt(match[2], 10);
             }
@@ -1015,7 +1015,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return TextPatternExtractor.parseNumericValue(value);
     }
 
-    static _toSkillKey(text: string, capitalize: boolean = false): void {
+    static _toSkillKey(text: string, capitalize: boolean = false): any {
         return TextPatternExtractor.toKey(text, capitalize);
     }
 
@@ -1029,7 +1029,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return match ? match[1].trim() : '';
     }
 
-    static _characteristicKeyFromShort(short: string): void {
+    static _characteristicKeyFromShort(short: string): any {
         if (!short) return null;
         const normalized = this._normalizeShortCharacteristic(short);
         if (normalized === 'A') return this.CHAR_MAP.Ag;
@@ -1040,7 +1040,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return short.replace(/\./g, '').replace(/\s+/g, '');
     }
 
-    static _unnaturalCharacteristicKey(name: string): void {
+    static _unnaturalCharacteristicKey(name: string): any {
         const lowered = name.toLowerCase();
         if (lowered.includes('strength')) return 'strength';
         if (lowered.includes('toughness')) return 'toughness';
@@ -1116,7 +1116,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                 system: this.#parsedData.system,
             };
 
-            const actor = await Actor.create(actorData);
+            const actor = await Actor.create(actorData as any);
 
             // Create embedded items if any
             if (this.#parsedData.items?.length > 0) {

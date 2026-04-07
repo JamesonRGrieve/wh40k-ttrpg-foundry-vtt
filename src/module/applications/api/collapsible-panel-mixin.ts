@@ -132,7 +132,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             if (!game.user) return;
 
             const flagKey = this._getPanelFlagKey();
-            const savedStates = game.user.getFlag('wh40k-rpg', flagKey) || {};
+            const savedStates = (game.user as any).getFlag('wh40k-rpg', flagKey) || {};
 
             // Merge with current states
             Object.entries(savedStates).forEach(([panelId, isExpanded]) => {
@@ -155,11 +155,11 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             if (!game.user || !panelId) return;
 
             const flagKey = this._getPanelFlagKey();
-            const currentStates = game.user.getFlag('wh40k-rpg', flagKey) || {};
+            const currentStates = (game.user as any).getFlag('wh40k-rpg', flagKey) || {};
 
             currentStates[panelId] = isExpanded;
 
-            await game.user.setFlag('wh40k-rpg', flagKey, currentStates);
+            await (game.user as any).setFlag('wh40k-rpg', flagKey, currentStates);
         }
 
         /* -------------------------------------------- */

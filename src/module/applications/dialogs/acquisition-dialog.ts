@@ -35,7 +35,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         },
         position: {
             width: 480,
-            height: 'auto',
+            height: 'auto' as const,
         },
         form: {
             handler: AcquisitionDialog.#onSubmit,

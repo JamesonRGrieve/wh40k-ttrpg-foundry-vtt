@@ -10,6 +10,7 @@ import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
  * Sheet for weapon items with support for weapon modifications and ammunition.
  * Redesigned as a single-page layout with FAB action buttons.
  */
+// @ts-ignore - Foundry ApplicationV2 static override pattern
 export default class WeaponSheet extends ContainerItemSheet {
     [key: string]: any;
     /** @override */
@@ -119,7 +120,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         context.bodyCollapsed = this.#bodyCollapsed;
 
         // Prepare qualities array for clickable tags
-        context.qualitiesArray = Array.from(system.effectiveSpecial || []).map((q) => {
+        context.qualitiesArray = Array.from(system.effectiveSpecial || []).map((q: any) => {
             // Parse level from quality identifier if present
             const match = q.match(/-(\d+)$/);
             const level = match ? parseInt(match[1]) : null;
@@ -263,7 +264,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     _getDragData(event: Event): any {
         try {
             // Check if dataTransfer has the data
-            const types = event.dataTransfer?.types || [];
+            const types = (event as any).dataTransfer?.types || [];
             if (!types.includes('text/plain')) return null;
 
             // For dragenter, we can't access the data due to browser security
@@ -420,7 +421,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
         const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
-        const chatData = {
+        const chatData: any = {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor }),
             rollMode: game.settings.get('core', 'rollMode'),
@@ -432,7 +433,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         } else if (chatData.rollMode === 'selfroll') {
             chatData.whisper = [game.user];
         }
-        await ChatMessage.create(chatData);
+        await (ChatMessage as any).create(chatData);
     }
 
     /* -------------------------------------------- */
@@ -489,7 +490,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Search for the quality by identifier
         const index = await pack.getIndex();
-        const qualityEntry = index.find((e) => {
+        const qualityEntry = index.find((e: any) => {
             // Match by identifier (strip level suffix)
             const baseId = identifier.replace(/-\d+$/, '').replace(/-x$/i, '');
             return e.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === baseId;
@@ -570,7 +571,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         const actor = this.item.actor;
 
         // Perform reload with validation
-        const skipValidation = event.shiftKey; // Hold Shift to skip validation
+        const skipValidation = (event as any).shiftKey; // Hold Shift to skip validation
         const result = await ReloadActionManager.reloadWeapon(this.item, {
             skipValidation,
         });
@@ -640,7 +641,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         const mod = this.item.system.modifications[index];
         if (!mod) return;
 
-        const modItem = await fromUuid(mod.uuid);
+        const modItem: any = await fromUuid(mod.uuid);
         if (!modItem) {
             (ui.notifications as any).error(`Modification "${mod.name}" not found. It may have been deleted.`);
             return;
@@ -927,7 +928,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         if (data.type !== 'Item') return false;
 
-        const droppedItem = await fromUuid(data.uuid);
+        const droppedItem: any = await fromUuid(data.uuid);
         if (!droppedItem) return false;
 
         // Handle weaponModification drops

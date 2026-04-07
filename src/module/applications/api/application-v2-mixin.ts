@@ -54,7 +54,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
          * @type {string}
          */
         get subtitle(): string {
-            return game.i18n.localize(this.options.window.subtitle ?? '');
+            return game.i18n.localize((this as any).options?.window?.subtitle ?? '');
         }
 
         /* -------------------------------------------- */
@@ -66,7 +66,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
             super._configureRenderOptions(options);
             if (options.isFirstRender && this.hasFrame) {
                 options.window ||= {};
-                options.window.subtitle ||= this.subtitle;
+                (options.window as any).subtitle ||= this.subtitle;
             }
         }
 
@@ -104,15 +104,15 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
          */
         _renderContainers(context: Record<string, unknown>, options: Record<string, unknown>): void {
             const containerElements = Array.from(this.element.querySelectorAll('[data-container-id]'));
-            const containers = Object.fromEntries(containerElements.map((el) => [el.dataset.containerId, el]));
-            for (const [part, config] of Object.entries(this.constructor.PARTS)) {
+            const containers = Object.fromEntries(containerElements.map((el) => [(el as HTMLElement).dataset.containerId, el]));
+            for (const [part, config] of Object.entries((this.constructor as any).PARTS)) {
                 if (!config.container?.id) continue;
                 const element = this.element.querySelector(`[data-application-part="${part}"]`);
                 if (!element) continue;
-                let container = containers[config.container.id];
+                let container = containers[(config as any).container.id];
                 if (!container) {
                     const div = document.createElement('div');
-                    div.dataset.containerId = config.container.id;
+                    (div as HTMLElement).dataset.containerId = config.container.id;
                     div.classList.add(...(config.container.classes ?? []));
                     container = containers[config.container.id] = div;
                     element.replaceWith(div);
@@ -127,7 +127,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
         _replaceHTML(result: Record<string, HTMLElement>, content: HTMLElement, options: Record<string, unknown>): void {
             for (const part of Object.values(result)) {
                 for (const element of part.querySelectorAll('[data-expand-id]')) {
-                    element.querySelector('.collapsible')?.classList.toggle('collapsed', !this.#expandedSections.get(element.dataset.expandId));
+                    element.querySelector('.collapsible')?.classList.toggle('collapsed', !this.#expandedSections.get((element as HTMLElement).dataset.expandId));
                 }
             }
             super._replaceHTML(result, content, options);
@@ -140,7 +140,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
             super._updateFrame(options);
             if (options.window && 'subtitle' in options.window) {
                 const subtitle = this.element.querySelector('.window-header > .window-subtitle');
-                if (subtitle) subtitle.innerText = options.window.subtitle;
+                if (subtitle) subtitle.innerText = (options as any).window.subtitle;
             }
         }
 
@@ -187,7 +187,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
             const collapsible = target.closest('.collapsible');
             if (!collapsible || (event.target as HTMLElement).closest('.collapsible-content')) return;
             collapsible.classList.toggle('collapsed');
-            this.#expandedSections.set(target.closest('[data-expand-id]')?.dataset.expandId, !collapsible.classList.contains('collapsed'));
+            this.#expandedSections.set((target.closest('[data-expand-id]') as HTMLElement)?.dataset.expandId, !collapsible.classList.contains('collapsed'));
         }
     }
     return BaseApplicationWH40K;

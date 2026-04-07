@@ -36,7 +36,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         },
         position: {
             width: 340,
-            height: 'auto',
+            height: 'auto' as const,
         },
         actions: {
             rollInitiative: CombatQuickPanel.#rollInitiative,

@@ -50,7 +50,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         },
         position: {
             width: 450,
-            height: 'auto',
+            height: 'auto' as const,
         },
         window: {
             title: 'Skill Test',

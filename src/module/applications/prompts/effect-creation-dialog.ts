@@ -16,7 +16,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
         },
         position: {
             width: 520,
-            height: 'auto',
+            height: 'auto' as const,
         },
         form: {
             handler: EffectCreationDialog.formHandler,
