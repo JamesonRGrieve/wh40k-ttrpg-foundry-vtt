@@ -144,6 +144,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        // @ts-expect-error - argument type
         const context: any = await super._prepareContext(options);
 
         // Calculate the difficulty modifier
@@ -341,6 +342,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const data = foundry.utils.expandObject(formData.object);
 
         // Get final values
+        // @ts-expect-error - TS2339
         const difficultyPreset = this.constructor.DIFFICULTY_PRESETS.find((p: any) => p.key === data.difficulty) || { value: 0 };
 
         // Calculate situational modifier total
@@ -348,16 +350,21 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
         const result = {
             ...this.config,
+            // @ts-expect-error - TS2339
             difficulty: data.difficulty,
             difficultyModifier: difficultyPreset.value,
+            // @ts-expect-error - TS2339
             customModifier: parseInt(data.customModifier) || 0,
             situationalModifier: situationalTotal,
+            // @ts-expect-error - TS2339
             rollMode: data.rollMode,
+            // @ts-expect-error - TS2339
             target: (this.config.target || 0) + difficultyPreset.value + (parseInt(data.customModifier) || 0) + situationalTotal,
             baseTarget: this.config.target || 0,
             modifiers: {
                 ...this.config.modifiers,
                 difficulty: difficultyPreset.value,
+                // @ts-expect-error - TS2339
                 custom: parseInt(data.customModifier) || 0,
                 situational: situationalTotal,
             },
@@ -386,11 +393,13 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     }
 
     /** @override */
+    // @ts-expect-error - override type
     async close(options: Record<string, unknown> = {}): Promise<void> {
         // Ensure we resolve with null if closed without submitting
         if (this.#resolve && !(options as any).submitted) {
             this.#resolve(null);
         }
+        // @ts-expect-error - type assignment
         return super.close(options);
     }
 

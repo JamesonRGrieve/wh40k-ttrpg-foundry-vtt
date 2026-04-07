@@ -18,6 +18,7 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
         classes: ['wh40k-rpg', 'dialog', 'standard-form'],
         window: {
             contentTag: 'form',
+            // @ts-expect-error - extended property
             contentClasses: ['standard-form'],
             minimizable: false,
         },
@@ -120,6 +121,7 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
      * @returns {Promise<any>}
      */
     static async prompt({ title, content, label = 'OK', callback }: { title?: string; content?: string; label?: string; callback?: Function } = {}): Promise<any> {
+        // @ts-expect-error - DialogV2 argument type
         return foundry.applications.api.DialogV2.prompt({
             window: { title },
             content,

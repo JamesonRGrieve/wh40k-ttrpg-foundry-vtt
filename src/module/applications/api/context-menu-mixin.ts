@@ -25,7 +25,7 @@ export class WH40KContextMenu extends foundry.applications.ux.ContextMenu {
         event.stopPropagation();
         const { clientX, clientY } = event;
         const selector = '[data-item-id],[data-characteristic],[data-skill],[data-fate-point]';
-        const target = event.target.closest(selector) ?? event.currentTarget.closest(selector);
+        const target = (event.target as HTMLElement).closest(selector) ?? (event.currentTarget as HTMLElement).closest(selector);
         target?.dispatchEvent(
             new PointerEvent('contextmenu', {
                 view: window,
@@ -54,6 +54,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
         /* -------------------------------------------- */
 
         /** @override */
+        // @ts-expect-error - return type
         _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
             super._onRender(context, options);
 
@@ -383,7 +384,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
             // Call the static method with a fake target that has the data
             const fakeTarget = document.createElement('div');
             fakeTarget.dataset.characteristic = charKey;
-            await this.constructor.actions.editCharacteristic.call(this, null, fakeTarget);
+            await (this.constructor as any).actions.editCharacteristic.call(this, null, fakeTarget);
         }
 
         async _onSkillRoll(skillKey: string): Promise<void> {

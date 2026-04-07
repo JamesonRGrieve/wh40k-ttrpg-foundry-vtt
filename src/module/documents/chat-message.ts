@@ -22,6 +22,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * @type {boolean}
      */
     get isItemCard() {
+        // @ts-expect-error - argument type
         return !!this.getFlag('wh40k-rpg', 'itemCard');
     }
 
@@ -30,6 +31,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * @type {boolean}
      */
     get isTargetedRoll() {
+        // @ts-expect-error - argument type
         return this.isRoll && this.getFlag('wh40k-rpg', 'target') !== undefined;
     }
 
@@ -38,6 +40,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * @type {string|null}
      */
     get itemUuid() {
+        // @ts-expect-error - argument type
         return this.getFlag('wh40k-rpg', 'item.uuid') ?? null;
     }
 
@@ -53,6 +56,7 @@ export class ChatMessageWH40K extends ChatMessage {
         if (!this.isRoll || !this.rolls?.length) return null;
 
         const roll = this.rolls[0];
+        // @ts-expect-error - argument type
         const target = this.getFlag('wh40k-rpg', 'target');
 
         if (target === undefined || target === null) return null;
@@ -87,10 +91,14 @@ export class ChatMessageWH40K extends ChatMessage {
         }
 
         // Check if item has a rollDamage method
+        // @ts-expect-error - dynamic property access
         if (typeof item.rollDamage === 'function') {
+            // @ts-expect-error - dynamic property access
             await item.rollDamage();
+        // @ts-expect-error - dynamic property access
         } else if (item.type === 'weapon') {
             // Fallback for weapons without rollDamage method
+            // @ts-expect-error - dynamic property access
             const actor = item.actor;
             if (actor?.rollWeaponDamage) {
                 await actor.rollWeaponDamage(item);
@@ -119,12 +127,16 @@ export class ChatMessageWH40K extends ChatMessage {
             const actor = token.actor;
             if (!actor) continue;
 
+            // @ts-expect-error - TS2339
             if (typeof actor.applyDamage === 'function') {
+                // @ts-expect-error - TS2339
                 await actor.applyDamage(damage, options);
             } else {
                 // Fallback: directly modify wounds
+                // @ts-expect-error - system data access
                 const currentWounds = actor.system.wounds?.value ?? 0;
                 const newWounds = Math.max(0, currentWounds - damage);
+                // @ts-expect-error - extended property
                 await actor.update({ 'system.wounds.value': newWounds });
             }
         }
@@ -148,9 +160,13 @@ export class ChatMessageWH40K extends ChatMessage {
         }
 
         // Use the item if it has a use method
+        // @ts-expect-error - dynamic property access
         if (typeof item.use === 'function') {
+            // @ts-expect-error - dynamic property access
             await item.use();
+        // @ts-expect-error - dynamic property access
         } else if (typeof item.roll === 'function') {
+            // @ts-expect-error - dynamic property access
             await item.roll();
         }
     }
@@ -175,6 +191,7 @@ export class ChatMessageWH40K extends ChatMessage {
         if (!card) return;
 
         const messageId = card.dataset.messageId;
+        // @ts-expect-error - dynamic property access
         const message = game.messages.get(messageId);
 
         if (!message) {

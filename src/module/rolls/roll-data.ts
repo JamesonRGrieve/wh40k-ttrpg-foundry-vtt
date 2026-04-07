@@ -328,6 +328,7 @@ export class WeaponRollData extends RollData {
             ...this.modifiers,
             ...this.specialModifiers,
             ...this.weaponModifiers,
+            // @ts-expect-error - extended property
             range: this.rangeBonus,
         };
 
@@ -337,6 +338,7 @@ export class WeaponRollData extends RollData {
         // Suppressing Fire ignores other modifiers
         if (this.action.includes('Suppressing Fire')) {
             this.modifiers = {
+                // @ts-expect-error - extended property
                 attack: -20,
             };
         }

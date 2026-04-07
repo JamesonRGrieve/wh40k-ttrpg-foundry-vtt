@@ -4,11 +4,14 @@ import { SYSTEM_ID } from './constants.ts';
 export async function checkAndMigrateWorld() {
     const worldVersion = 185;
 
+    // @ts-expect-error - argument type
     const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
+    // @ts-expect-error - comparison type
     if (worldVersion !== currentVersion && game.user.isGM) {
         (ui.notifications as any).info('Upgrading the world, please wait...');
 
         // Update Actors
+        // @ts-expect-error - dynamic property access
         for (const actor of game.actors.contents) {
             try {
                 await migrateActorData(actor, currentVersion);
@@ -18,6 +21,7 @@ export async function checkAndMigrateWorld() {
         }
 
         // Update Items
+        // @ts-expect-error - dynamic property access
         for (const item of game.items.contents) {
             try {
                 await migrateItemData(item, currentVersion);
@@ -32,6 +36,7 @@ export async function checkAndMigrateWorld() {
         // Display Release Notes
         await displayReleaseNotes(worldVersion);
 
+        // @ts-expect-error - argument type
         game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, worldVersion);
         (ui.notifications as any).info('Upgrade complete!');
     }
@@ -179,6 +184,7 @@ export async function checkAndMigrateWorld() {
             }
         }
 
+        // @ts-expect-error - operator type
         if (currentVersion < 180) {
             // Update User Items to be Nested
             for (const item of actor.items) {
@@ -190,6 +196,7 @@ export async function checkAndMigrateWorld() {
             }
         }
 
+        // @ts-expect-error - operator type
         if (currentVersion < 182) {
             const skills = actor.system?.skills;
 
@@ -210,6 +217,7 @@ export async function checkAndMigrateWorld() {
 
         // V13 Compatibility Migration (v184)
         // Migrate embedded items on actors
+        // @ts-expect-error - operator type
         if (currentVersion < 184) {
             for (const item of actor.items) {
                 const updateData = {};
@@ -252,6 +260,7 @@ export async function checkAndMigrateWorld() {
         }
 
         // Remove deprecated loadout system flags (v185)
+        // @ts-expect-error - operator type
         if (currentVersion < 185) {
             const flags = actor.flags?.['wh40k-rpg'];
             if (flags?.equipmentViewMode !== undefined || flags?.equipmentPresets !== undefined) {

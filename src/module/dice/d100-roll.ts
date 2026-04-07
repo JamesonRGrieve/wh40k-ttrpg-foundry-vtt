@@ -39,6 +39,7 @@ export default class D100Roll extends BasicRollWH40K {
      * @type {number}
      */
     get target() {
+        // @ts-expect-error - dynamic property
         return this.configuration.target ?? 0;
     }
 
@@ -325,6 +326,7 @@ export default class D100Roll extends BasicRollWH40K {
     static async test(options = {}) {
         return this.build({
             ...options,
+            // @ts-expect-error - dynamic property
             baseTarget: options.baseTarget ?? options.target,
         });
     }

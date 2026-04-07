@@ -71,8 +71,8 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
 
             // Set initial mode
             let { mode, renderContext } = options;
-            if (mode === undefined && renderContext === 'createItem') mode = this.constructor.MODES.EDIT;
-            this._mode = mode ?? this._mode ?? this.constructor.MODES.PLAY;
+            if (mode === undefined && renderContext === 'createItem') mode = (this.constructor as any).MODES.EDIT;
+            this._mode = mode ?? this._mode ?? (this.constructor as any).MODES.PLAY;
         }
 
         /* -------------------------------------------- */
@@ -81,7 +81,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
         _configureRenderParts(options: Record<string, unknown>): Record<string, unknown> {
             const parts = super._configureRenderParts(options);
             for (const key of Object.keys(parts)) {
-                const tab = this.constructor.TABS.find((t) => t.tab === key);
+                const tab = (this.constructor as any).TABS.find((t) => t.tab === key);
                 if (tab?.condition && !tab.condition(this.document)) delete parts[key];
             }
             return parts;
@@ -107,6 +107,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
             const toggle = header?.querySelector('.mode-slider');
             if (this.isEditable && !toggle) {
                 const newToggle = document.createElement('slide-toggle');
+                // @ts-expect-error - TS2339
                 newToggle.checked = this._mode === this.constructor.MODES.EDIT;
                 newToggle.classList.add('mode-slider');
                 newToggle.dataset.tooltip = 'WH40K.SheetModeEdit';
@@ -116,7 +117,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
                 newToggle.addEventListener('pointerdown', (event) => event.stopPropagation());
                 header.prepend(newToggle);
             } else if (this.isEditable && toggle) {
-                toggle.checked = this._mode === this.constructor.MODES.EDIT;
+                toggle.checked = this._mode === (this.constructor as any).MODES.EDIT;
             } else if (!this.isEditable && toggle) {
                 toggle.remove();
             }
@@ -129,7 +130,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
             const context = await super._prepareContext(options);
             context.owner = this.document.isOwner;
             context.locked = !this.isEditable;
-            context.editable = this.isEditable && this._mode === this.constructor.MODES.EDIT;
+            context.editable = this.isEditable && this._mode === (this.constructor as any).MODES.EDIT;
             context.tabs = this._getTabs();
             return context;
         }
@@ -151,7 +152,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
          * @protected
          */
         _getTabs(): Record<string, Record<string, unknown>> {
-            return this.constructor.TABS.reduce((tabs, { tab, condition, ...config }) => {
+            return (this.constructor as any).TABS.reduce((tabs, { tab, condition, ...config }) => {
                 if (!condition || condition(this.document))
                     tabs[tab] = {
                         ...config,
@@ -182,8 +183,8 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
 
             // Set toggle state and add status class to frame
             this._renderModeToggle();
-            this.element.classList.toggle('editable', this.isEditable && this._mode === this.constructor.MODES.EDIT);
-            this.element.classList.toggle('interactable', this.isEditable && this._mode === this.constructor.MODES.PLAY);
+            this.element.classList.toggle('editable', this.isEditable && this._mode === (this.constructor as any).MODES.EDIT);
+            this.element.classList.toggle('interactable', this.isEditable && this._mode === (this.constructor as any).MODES.PLAY);
             this.element.classList.toggle('locked', !this.isEditable);
 
             if (this.isEditable) {
@@ -253,14 +254,14 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
 
             // Update nav active states
             nav.querySelectorAll('[data-tab]').forEach((link) => {
-                const isActive = link.dataset.tab === tab;
+                const isActive = (link as HTMLElement).dataset.tab === tab;
                 link.classList.toggle('active', isActive);
                 link.closest('.wh40k-navigation__item, .wh40k-nav-item')?.classList.toggle('active', isActive);
             });
 
             // Update content tab visibility
             content.querySelectorAll(':scope > [data-tab]').forEach((tabContent) => {
-                const isActive = tabContent.dataset.tab === tab;
+                const isActive = (tabContent as HTMLElement).dataset.tab === tab;
                 tabContent.classList.toggle('active', isActive);
             });
 
@@ -350,6 +351,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
          * @param {HTMLElement} target  Button that was clicked.
          */
         static async #deleteDocument(event: Event, target: HTMLElement): Promise<void> {
+            // @ts-expect-error - property access
             if ((await this._deleteDocument(event, target)) === false) return;
             const uuid = target.closest('[data-uuid]')?.dataset.uuid;
             const doc = await fromUuid(uuid);
@@ -401,6 +403,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
          * @param {HTMLElement} target  Button that was clicked.
          */
         static async #showDocument(event: Event, target: HTMLElement): Promise<void> {
+            // @ts-expect-error - property access
             if ((await this._showDocument(event, target)) === false) return;
             if ([HTMLInputElement, HTMLSelectElement].some((el) => event.target instanceof el)) return;
             const uuid = target.closest('[data-uuid]')?.dataset.uuid;

@@ -469,6 +469,7 @@ export function ItemPreviewMixin(Base) {
             if (modifiers.characteristics) {
                 for (const [char, value] of Object.entries(modifiers.characteristics)) {
                     if (value) {
+                        // @ts-expect-error - operator type
                         content += `<li>${char.toUpperCase()}: ${value > 0 ? '+' : ''}${value}</li>`;
                     }
                 }
@@ -477,6 +478,7 @@ export function ItemPreviewMixin(Base) {
             if (modifiers.skills) {
                 for (const [skill, value] of Object.entries(modifiers.skills)) {
                     if (value) {
+                        // @ts-expect-error - operator type
                         content += `<li>${skill}: ${value > 0 ? '+' : ''}${value}</li>`;
                     }
                 }
@@ -485,6 +487,7 @@ export function ItemPreviewMixin(Base) {
             if (modifiers.combat) {
                 for (const [type, value] of Object.entries(modifiers.combat)) {
                     if (value) {
+                        // @ts-expect-error - operator type
                         content += `<li>${type}: ${value > 0 ? '+' : ''}${value}</li>`;
                     }
                 }

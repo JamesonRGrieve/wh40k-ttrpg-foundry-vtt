@@ -178,18 +178,22 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
                 if (!currentChar) continue;
 
                 // Compare totals
+                // @ts-expect-error - dynamic property access
                 if (currentChar.total !== previewChar.total) {
                     this._showComparison(`[data-characteristic="${key}"]`, {
                         current: currentChar.total,
+                        // @ts-expect-error - dynamic property access
                         preview: previewChar.total,
                         type: 'characteristic',
                     });
                 }
 
                 // Compare bonuses
+                // @ts-expect-error - dynamic property access
                 if (currentChar.bonus !== previewChar.bonus) {
                     this._showComparison(`[data-characteristic-bonus="${key}"]`, {
                         current: currentChar.bonus,
+                        // @ts-expect-error - dynamic property access
                         preview: previewChar.bonus,
                         type: 'bonus',
                     });
@@ -212,16 +216,20 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
                 if (!currentSkill) continue;
 
                 // Compare current values
+                // @ts-expect-error - dynamic property access
                 if (currentSkill.current !== previewSkill.current) {
                     this._showComparison(`[data-skill="${key}"]`, {
                         current: currentSkill.current,
+                        // @ts-expect-error - dynamic property access
                         preview: previewSkill.current,
                         type: 'skill',
                     });
                 }
 
                 // For specialist skills, compare entries
+                // @ts-expect-error - dynamic property access
                 if (currentSkill.entries && previewSkill.entries) {
+                    // @ts-expect-error - dynamic property access
                     previewSkill.entries.forEach((previewEntry, index) => {
                         const currentEntry = currentSkill.entries[index];
                         if (currentEntry && currentEntry.current !== previewEntry.current) {
@@ -260,7 +268,9 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
 
                 if (currentValue !== previewValue) {
                     this._showComparison(comp.selector, {
+                        // @ts-expect-error - type assignment
                         current: currentValue,
+                        // @ts-expect-error - type assignment
                         preview: previewValue,
                         type: comp.type,
                     });
@@ -371,7 +381,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
             const previewData = foundry.utils.mergeObject(baseData, this._whatIfChanges, { inplace: false });
 
             // Create temporary actor (not in world)
-            this._whatIfPreview = new CONFIG.Actor.documentClass(previewData, { parent: null });
+            this._whatIfPreview = new (CONFIG as any).Actor.documentClass(previewData, { parent: null });
             this._whatIfPreview.prepareData();
 
             // Calculate impacts
@@ -394,9 +404,11 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
             // Check characteristic bonus changes
             for (const [key, previewChar] of Object.entries(preview.system.characteristics)) {
                 const currentChar = current.system.characteristics[key];
+                // @ts-expect-error - dynamic property access
                 if (currentChar.bonus !== previewChar.bonus) {
                     impacts.push({
                         type: 'characteristic',
+                        // @ts-expect-error - dynamic property access
                         message: `${previewChar.label} Bonus: ${currentChar.bonus} → ${previewChar.bonus}`,
                     });
                 }

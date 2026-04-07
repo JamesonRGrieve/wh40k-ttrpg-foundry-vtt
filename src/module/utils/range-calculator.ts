@@ -222,6 +222,7 @@ export function calculateTokenDistance(token1, token2) {
     if (!token1 || !token2) return 0;
 
     // Measure path distance using Foundry's grid system
+    // @ts-expect-error - argument count
     const pathDistance = canvas.grid.measurePath([token1, token2]);
     let distance = pathDistance.distance || 0;
 

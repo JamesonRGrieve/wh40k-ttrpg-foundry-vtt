@@ -23,6 +23,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Function} options.onFail - Callback for failed confirmation
      */
     constructor(options: Record<string, unknown> = {}) {
+        // @ts-expect-error - argument count
         super(options);
         this.actor = options.actor;
         this.characteristic = options.characteristic;

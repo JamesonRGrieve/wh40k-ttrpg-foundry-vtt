@@ -37,6 +37,7 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
         /* -------------------------------------------- */
 
         /** @override */
+        // @ts-expect-error - return type
         _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
             super._onRender(context, options);
 
@@ -222,11 +223,13 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
                 const eased = 1 - Math.pow(1 - progress, 3);
                 const current = Math.round(fromValue + difference * eased);
 
+                // @ts-expect-error - type assignment
                 element.textContent = current;
 
                 if (progress < 1) {
                     requestAnimationFrame(animate);
                 } else {
+                    // @ts-expect-error - type assignment
                     element.textContent = toValue;
                 }
             };

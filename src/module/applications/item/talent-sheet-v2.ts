@@ -158,6 +158,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
 
         // Format characteristics requirements
         const characteristicReqs = Object.entries(chars)
+            // @ts-expect-error - operator type
             .filter(([_, value]) => value > 0)
             .map(([key, value]) => ({
                 key,
@@ -199,6 +200,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
                 label: this._getCharacteristicLabel(key),
                 short: this._getCharacteristicShort(key),
                 value,
+                // @ts-expect-error - operator type
                 positive: value > 0,
             }));
 
@@ -209,6 +211,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
                 key,
                 label: this._formatSkillLabel(key),
                 value,
+                // @ts-expect-error - operator type
                 positive: value > 0,
             }));
 
@@ -220,6 +223,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
                 key,
                 label: this._formatCombatLabel(key),
                 value,
+                // @ts-expect-error - operator type
                 positive: value > 0,
             }));
 
@@ -231,6 +235,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
                 key,
                 label: this._formatResourceLabel(key),
                 value,
+                // @ts-expect-error - operator type
                 positive: value > 0,
             }));
 
@@ -780,6 +785,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @param {HTMLElement} target - The action target
      */
     static async #postToChat(event: Event, target: HTMLElement): Promise<void> {
+        // @ts-expect-error - TS2339
         (await this.item.system.toChat?.()) ?? this._postTalentToChat();
     }
 
@@ -796,7 +802,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
         if (!uuid) return;
 
         try {
-            const item = await fromUuid(uuid);
+            const item = await fromUuid(uuid) as any;
             if (item) {
                 item.sheet.render(true);
             }

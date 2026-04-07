@@ -81,14 +81,20 @@ export class TooltipsWH40K {
                 const item = await pack.getDocument(entry._id);
                 if (item) {
                     // Normalize the skill name to match skill keys
+                    // @ts-expect-error - dynamic property access
                     const key = entry.name.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
 
                     this.#skillDescriptions.set(key, {
                         name: entry.name,
+                        // @ts-expect-error - system data access
                         descriptor: item.system?.descriptor || '',
+                        // @ts-expect-error - system data access
                         uses: item.system?.uses || '',
+                        // @ts-expect-error - system data access
                         useTime: item.system?.useTime || '',
+                        // @ts-expect-error - system data access
                         isBasic: item.system?.isBasic ?? true,
+                        // @ts-expect-error - system data access
                         aptitudes: item.system?.aptitudes || [],
                     });
                 }
@@ -347,8 +353,10 @@ export class TooltipsWH40K {
         if (actorUuid) {
             const actor = await fromUuid(actorUuid);
             if (actor) {
+                // @ts-expect-error - system data access
                 const skill = actor.system.skills?.[name];
                 const charKey = skill?.characteristic || characteristic;
+                // @ts-expect-error - system data access
                 const char = actor.system.characteristics?.[charKey];
 
                 if (skill && char) {
@@ -385,6 +393,7 @@ export class TooltipsWH40K {
         const bonus = dataBonus ?? 0;
 
         // Get skill description from cache
+        // @ts-expect-error - dynamic property access
         const skillInfo = game.wh40k?.tooltips?.getSkillDescription(name);
         const descriptor = skillInfo?.descriptor || '';
 
@@ -726,17 +735,22 @@ export class TooltipsWH40K {
         // Default to LEFT if no direction specified
         if (!direction) {
             direction = 'LEFT';
+            // @ts-expect-error - private access
             game.tooltip._setAnchor?.(direction);
         }
 
         // Adjust direction if tooltip would go off-screen
         if (direction === 'LEFT' && pos.x < 0) {
+            // @ts-expect-error - private access
             game.tooltip._setAnchor?.('RIGHT');
         } else if (direction === 'RIGHT' && pos.x + this.#tooltip.offsetWidth > innerWidth) {
+            // @ts-expect-error - private access
             game.tooltip._setAnchor?.('LEFT');
         } else if (direction === 'UP' && pos.y < 0) {
+            // @ts-expect-error - private access
             game.tooltip._setAnchor?.('DOWN');
         } else if (direction === 'DOWN' && pos.y + this.#tooltip.offsetHeight > innerHeight) {
+            // @ts-expect-error - private access
             game.tooltip._setAnchor?.('UP');
         }
     }
@@ -921,6 +935,7 @@ export function prepareQualityTooltipData(identifier, level = null) {
     if (!config) return '{}';
 
     // Get quality definition
+    // @ts-expect-error - TS2349
     const def = config.getQualityDefinition?.(identifier);
     if (!def) return '{}';
 

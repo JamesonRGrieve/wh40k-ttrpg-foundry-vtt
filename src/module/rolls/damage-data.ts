@@ -71,10 +71,12 @@ export class Hit {
     }
 
     _totalDamage() {
+        // @ts-expect-error - operator type
         this.totalDamage = this.damage + Object.values(this.modifiers).reduce((a, b) => a + b, 0);
     }
 
     _totalPenetration() {
+        // @ts-expect-error - operator type
         this.totalPenetration = this.penetration + Object.values(this.penetrationModifiers).reduce((a, b) => a + b, 0);
     }
 

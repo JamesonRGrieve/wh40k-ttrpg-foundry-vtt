@@ -328,7 +328,9 @@ async function handleEnricherClick(event) {
         case 'characteristic':
             if (actorUuid) {
                 const actor = await fromUuid(actorUuid);
+                // @ts-expect-error - dynamic property access
                 if (actor?.rollCharacteristic) {
+                    // @ts-expect-error - dynamic property access
                     await actor.rollCharacteristic(config);
                 }
             }
@@ -337,8 +339,10 @@ async function handleEnricherClick(event) {
         case 'skill':
             if (actorUuid) {
                 const actor = await fromUuid(actorUuid);
+                // @ts-expect-error - dynamic property access
                 if (actor?.rollSkill) {
                     const [skillKey, specialization] = config.split(':');
+                    // @ts-expect-error - dynamic property access
                     await actor.rollSkill(skillKey, specialization);
                 }
             }
@@ -353,15 +357,18 @@ async function handleEnricherClick(event) {
                 if (item) {
                     // Check for Shift+Click to post to chat
                     if (event.shiftKey) {
+                        // @ts-expect-error - dynamic property access
                         item.toMessage();
                     }
                     // Check for Ctrl+Click to open sheet
                     else if (event.ctrlKey || event.metaKey) {
+                        // @ts-expect-error - dynamic property access
                         item.sheet.render(true);
                     }
                     // Default: show inline preview
                     else {
                         // TODO: Integrate with ItemPreviewCard when available
+                        // @ts-expect-error - dynamic property access
                         item.sheet.render(true);
                     }
                 }
@@ -394,6 +401,7 @@ async function enrichQuality(match, options) {
 
     if (qualityPack) {
         const index = await qualityPack.getIndex();
+        // @ts-expect-error - dynamic property access
         const entry = index.find((e) => e.name.toLowerCase() === config || e.name.toLowerCase().includes(config));
         if (entry) {
             quality = await qualityPack.getDocument(entry._id);
@@ -435,6 +443,7 @@ async function enrichProperty(match, options) {
 
     if (propertyPack) {
         const index = await propertyPack.getIndex();
+        // @ts-expect-error - dynamic property access
         const entry = index.find((e) => e.name.toLowerCase() === config || e.name.toLowerCase().includes(config));
         if (entry) {
             property = await propertyPack.getDocument(entry._id);
@@ -476,6 +485,7 @@ async function enrichCondition(match, options) {
 
     if (conditionPack) {
         const index = await conditionPack.getIndex();
+        // @ts-expect-error - dynamic property access
         const entry = index.find((e) => e.name.toLowerCase() === config || e.name.toLowerCase().includes(config));
         if (entry) {
             condition = await conditionPack.getDocument(entry._id);

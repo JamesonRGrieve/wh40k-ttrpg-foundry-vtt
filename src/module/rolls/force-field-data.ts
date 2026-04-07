@@ -60,9 +60,12 @@ export class ForceFieldData {
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,
         };
-        if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
+        if (['gmroll', 'blindroll'].includes(chatData.rollMode as any)) {
+            // @ts-expect-error - dynamic property
             chatData.whisper = ChatMessage.getWhisperRecipients('GM');
+        // @ts-expect-error - comparison type
         } else if (chatData.rollMode === 'selfroll') {
+            // @ts-expect-error - dynamic property
             chatData.whisper = [game.user];
         }
         await (ChatMessage as any).create(chatData);

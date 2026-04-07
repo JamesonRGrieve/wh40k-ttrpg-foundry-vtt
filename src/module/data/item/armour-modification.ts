@@ -18,6 +18,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // What armour types this can be applied to
@@ -274,6 +275,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         if (types.includes('any')) return game.i18n.localize('WH40K.Modification.AnyArmour');
 
         const labels = types.map((type) => {
+            // @ts-expect-error - index type
             const config = CONFIG.wh40k?.armourTypes?.[type];
             return config ? game.i18n.localize(config.label) : type;
         });
@@ -349,6 +351,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /** @override */
     get chatProperties() {
+        // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this)];
 
         // Restrictions

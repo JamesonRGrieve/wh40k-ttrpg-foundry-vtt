@@ -16,6 +16,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Component type/category
@@ -235,6 +236,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
             .map((h) =>
                 game.i18n.localize(
                     `WH40K.HullType.${h
+                        // @ts-expect-error - dynamic property access
                         .split('-')
                         .map((s) => s.capitalize())
                         .join('')}`,

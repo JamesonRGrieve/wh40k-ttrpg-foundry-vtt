@@ -17,6 +17,7 @@ export default class MutationData extends ItemDataModel.mixin(DescriptionTemplat
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Mutation category

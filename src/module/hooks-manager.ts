@@ -489,6 +489,7 @@ export class HooksManager {
 
         game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
 
+        // @ts-expect-error - argument type
         if (!game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.processActiveEffectsDuringCombat)) {
             DHCombatActionManager.disableHooks();
         }
@@ -545,8 +546,10 @@ export class HooksManager {
         // Auto-select vehicle sheet for vehicle/ship NPCs
         if (primaryUse === 'vehicle' || primaryUse === 'ship') {
             // Find VehicleSheet in registered sheets
+            // @ts-expect-error - dynamic property access
             const vehicleSheet = Object.values(sheetData).find((s) => s.id === 'wh40k-rpg.VehicleSheet');
             if (vehicleSheet) {
+                // @ts-expect-error - dynamic property access
                 return vehicleSheet.id;
             }
         }

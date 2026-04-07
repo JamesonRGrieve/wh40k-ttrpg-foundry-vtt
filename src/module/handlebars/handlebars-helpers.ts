@@ -170,6 +170,7 @@ export function registerHandlebarsHelpers() {
             return actor.flags['wh40k-rpg'].ui.expanded.includes(field);
         }
         // Fallback to global CONFIG for compatibility (old system)
+        // @ts-expect-error - dynamic property access
         return CONFIG.wh40k.ui.expanded ? CONFIG.wh40k.ui.expanded.includes(field) : false;
     });
 

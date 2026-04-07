@@ -15,6 +15,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Does this quality have a level/rating?

@@ -34,8 +34,10 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
          * @override
          */
         static DEFAULT_OPTIONS = {
+            // @ts-expect-error - TS2339
             ...super.DEFAULT_OPTIONS,
             actions: {
+                // @ts-expect-error - TS2339
                 ...super.DEFAULT_OPTIONS.actions,
                 toggleExpandable: ExpandableTooltipMixin.#toggleExpandable,
             },
@@ -63,9 +65,12 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
             }
 
             // Toggle the panel state
+            // @ts-expect-error - dynamic property
             if (this.#openPanels.has(panelId)) {
+                // @ts-expect-error - dynamic property
                 this.#closePanel(panelId);
             } else {
+                // @ts-expect-error - dynamic property
                 this.#openPanel(panelId);
             }
         }
@@ -139,6 +144,7 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
             for (const element of unenriched) {
                 const content = element.innerHTML;
                 const enriched = await TextEditor.enrichHTML(content, {
+                    // @ts-expect-error - extended property
                     async: true,
                     relativeTo: this.document,
                 });
@@ -168,7 +174,7 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
             // Close panels when clicking outside
             htmlElement.addEventListener('click', (event) => {
                 // Don't close if clicking on trigger or inside panel
-                const clickedExpandable = event.target.closest('.wh40k-expandable, .wh40k-expansion-panel');
+                const clickedExpandable = (event.target as HTMLElement).closest('.wh40k-expandable, .wh40k-expansion-panel');
                 if (!clickedExpandable && this.#openPanels.size > 0) {
                     this.#closeAllPanels();
                 }

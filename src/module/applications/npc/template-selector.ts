@@ -117,6 +117,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        // @ts-expect-error - argument type
         const context: any = await super._prepareContext(options);
 
         // Load templates if not cached
@@ -432,6 +433,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
+    // @ts-expect-error - override type
     async close(options: Record<string, unknown> = {}): Promise<void> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
@@ -439,6 +441,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             this.#resolve(null);
         }
 
+        // @ts-expect-error - type assignment
         return super.close(options);
     }
 

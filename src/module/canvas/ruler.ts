@@ -37,9 +37,11 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
      */
     #getSpeedBasedStyle(waypoint, style) {
         // Only apply to the local user's movement
+        // @ts-expect-error - TS2339
         if (!(game.user.id in this.token._plannedMovement) || CONFIG.Token.movement.actions[waypoint.action]?.teleport) return style;
 
         // Get actor's movement speed for the current action
+        // @ts-expect-error - system data access
         const movement = this.token.actor?.system?.movement;
         if (!movement) return style;
 
@@ -47,6 +49,7 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
         if (!speed) return style;
 
         // Color based on cost/speed ratio
+        // @ts-expect-error - dynamic property
         const { normal, double, triple } = CONFIG.wh40k.tokenRulerColors;
         const increment = (waypoint.measurement.cost - 0.1) / speed;
         if (increment <= 1) style.color = normal ?? style.color;

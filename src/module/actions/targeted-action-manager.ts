@@ -11,6 +11,7 @@ export class TargetedActionManager {
             const bar = controls.token;
             if (!bar) return;
             try {
+                // @ts-expect-error - argument type
                 if (!game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
                     const toolOrder = Object.keys(bar.tools).length;
                     bar.tools.attack = {

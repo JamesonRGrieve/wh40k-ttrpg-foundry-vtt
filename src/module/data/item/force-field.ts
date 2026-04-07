@@ -38,6 +38,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Protection rating (1-100 roll threshold)
@@ -199,6 +200,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     /** @override */
     get chatProperties() {
         const props = [
+            // @ts-expect-error - TS2339
             ...PhysicalItemTemplate.prototype.chatProperties.call(this),
             `Protection: ${this.protectionRating}%`,
             `Overload: ${this.overloadRangeLabel}`,
@@ -271,11 +273,13 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
 
         // Show roll to chat
         await roll.toMessage({
+            // @ts-expect-error - type assignment
             flavor: game.i18n.format('WH40K.ForceField.ProtectionRoll', {
                 name: this.parent?.name || 'Force Field',
                 isProtected: isProtected ? game.i18n.localize('WH40K.ForceField.Protected') : game.i18n.localize('WH40K.ForceField.NotProtected'),
                 overloaded: overloaded ? ` (${game.i18n.localize('WH40K.ForceField.Overloaded')}!)` : '',
             }),
+            // @ts-expect-error - dynamic property
             speaker: options.speaker,
         });
 

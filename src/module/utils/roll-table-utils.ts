@@ -21,9 +21,11 @@ export class RollTableUtils {
      * @returns {Promise<TableResult>} The table result
      */
     static async rollTable(tableName, options = {}) {
+        // @ts-expect-error - dynamic property
         const { displayChat = true, roll = null } = options;
 
         // Find the table in world tables first, then compendiums
+        // @ts-expect-error - dynamic property access
         let table = game.tables.getName(tableName);
 
         if (!table) {
@@ -201,6 +203,7 @@ export class RollTableUtils {
             </form>
         `;
 
+        // @ts-expect-error - DialogV2 argument type
         foundry.applications.api.DialogV2.prompt({
             window: { title: 'Roll Table' },
             content,
@@ -227,6 +230,7 @@ export class RollTableUtils {
 
 // Register global access
 Hooks.once('ready', () => {
+    // @ts-expect-error - type assignment
     game.wh40k = game.wh40k || {};
     game.wh40k.rollTable = RollTableUtils;
 });

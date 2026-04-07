@@ -17,6 +17,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Is this a beneficial or harmful condition?

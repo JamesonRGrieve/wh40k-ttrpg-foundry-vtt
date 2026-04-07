@@ -175,6 +175,7 @@ export class ReloadActionManager {
 
         // Check if in combat
         const combat = game.combat;
+        // @ts-expect-error - property access
         const isInCombat = combat?.started && combat.combatants.some((c) => c.actorId === actor.id);
 
         if (!isInCombat) {
@@ -188,6 +189,7 @@ export class ReloadActionManager {
 
         // Check if it's the actor's turn
         const currentCombatant = combat.combatant;
+        // @ts-expect-error - property access
         const isActorsTurn = currentCombatant?.actorId === actor.id;
 
         if (!isActorsTurn) {

@@ -18,6 +18,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Origin path step
@@ -298,6 +299,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         const charMods = this.modifiers.characteristics;
         for (const [char, value] of Object.entries(charMods)) {
             if (value !== 0) {
+                // @ts-expect-error - operator type
                 summary.push(`${char}: ${value >= 0 ? '+' : ''}${value}`);
             }
         }

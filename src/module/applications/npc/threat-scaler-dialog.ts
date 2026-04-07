@@ -336,7 +336,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {FormDataExtended} formData - The form data.
      */
     static async #onSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object);
+        const data: any = foundry.utils.expandObject(formData.object);
 
         // Update state from form
         this.#state.newThreatLevel = parseInt(data.newThreatLevel, 10);
@@ -367,7 +367,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         });
 
         // Prepare update object with system prefix
-        const actorUpdates = {};
+        const actorUpdates: any = {};
         for (const [key, value] of Object.entries(updates)) {
             actorUpdates[`system.${key}`] = value;
         }

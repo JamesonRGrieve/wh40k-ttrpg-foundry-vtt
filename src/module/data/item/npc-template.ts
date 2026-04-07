@@ -257,6 +257,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * @returns {Object} NPC system data ready for Actor.create().
      */
     generateAtThreat(targetThreat, options = {}) {
+        // @ts-expect-error - dynamic property
         const { isHorde = false, variant = null } = options;
 
         // Calculate scaling factor
@@ -286,6 +287,7 @@ export default class NPCTemplateData extends ItemDataModel {
         };
 
         for (const [key, base] of Object.entries(this.baseCharacteristics)) {
+            // @ts-expect-error - arithmetic type
             let value = Math.round(base * clampedScale);
 
             // Apply variant modifier if present
@@ -343,6 +345,7 @@ export default class NPCTemplateData extends ItemDataModel {
             // Use ThreatCalculator for preset weapons
             const ThreatCalculator = game.wh40k?.ThreatCalculator;
             if (ThreatCalculator) {
+                // @ts-expect-error - dynamic property access
                 weapons = ThreatCalculator.generateWeapons(this.equipmentPreset, targetThreat);
             } else {
                 weapons = { mode: 'simple', simple: [] };
@@ -434,7 +437,9 @@ export default class NPCTemplateData extends ItemDataModel {
             threatLevel: targetThreat,
             characteristics: Object.entries(data.characteristics).map(([key, char]) => ({
                 key,
+                // @ts-expect-error - dynamic property access
                 label: char.short,
+                // @ts-expect-error - dynamic property access
                 value: char.base,
             })),
             wounds: data.wounds.max,

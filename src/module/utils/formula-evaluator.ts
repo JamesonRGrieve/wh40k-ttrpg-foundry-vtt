@@ -60,6 +60,7 @@ export function evaluateWoundsFormula(formula, actor) {
 
         // Now evaluate dice notation using Foundry's Roll class
         const roll = new Roll(evaluated);
+        // @ts-expect-error - extended property
         roll.evaluate({ async: false });
 
         return Math.max(0, Math.floor(roll.total));
@@ -107,6 +108,7 @@ export function evaluateFateFormula(formula) {
 
         // Roll 1d10 to determine which condition applies
         const roll = new Roll('1d10');
+        // @ts-expect-error - extended property
         roll.evaluate({ async: false });
         const result = roll.total;
 

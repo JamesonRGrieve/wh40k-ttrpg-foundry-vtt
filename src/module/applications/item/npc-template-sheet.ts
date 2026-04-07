@@ -11,7 +11,8 @@ import BaseItemSheet from './base-item-sheet.ts';
  *
  * @extends {BaseItemSheet}
  */
-export default class NPCTemplateSheet extends BaseItemSheet {
+export default class NPCTemplateSheet extends (BaseItemSheet as any) {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -241,7 +242,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         super._onRender(context, options);
 
         // Preview threat slider
@@ -480,7 +481,7 @@ export default class NPCTemplateSheet extends BaseItemSheet {
         };
 
         try {
-            const actor = await Actor.create(actorData);
+            const actor = await (Actor as any).create(actorData);
 
             if (actor) {
                 // Create embedded traits and talents

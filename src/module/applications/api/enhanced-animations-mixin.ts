@@ -45,6 +45,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
         /* -------------------------------------------- */
 
         /** @override */
+        // @ts-expect-error - return type
         _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
             super._onRender?.(context, options);
 
@@ -75,7 +76,9 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             // Capture characteristic bonuses
             for (const [key, char] of Object.entries(this.document.system.characteristics || {})) {
                 this._previousState.characteristics[key] = {
+                    // @ts-expect-error - dynamic property access
                     total: char.total,
+                    // @ts-expect-error - dynamic property access
                     bonus: char.bonus,
                 };
             }
@@ -94,6 +97,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
                 for (const mutation of mutations) {
                     if (mutation.type === 'attributes' && mutation.attributeName === 'data-percent') {
                         // Progress bar percentage changed
+                        // @ts-expect-error - type mismatch
                         this._animateProgressBar(mutation.target);
                     }
                 }
@@ -361,7 +365,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             const fill = barElement.querySelector('.wh40k-wounds-bar-fill, .progress-fill');
 
             if (fill) {
-                fill.style.transition = `width ${this._animationConfig.barDuration}ms ease-out`;
+                (fill as HTMLElement).style.transition = `width ${this._animationConfig.barDuration}ms ease-out`;
             }
         }
 
