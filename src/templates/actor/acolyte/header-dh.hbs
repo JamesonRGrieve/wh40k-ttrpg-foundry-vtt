@@ -79,13 +79,6 @@
         <div class="wh40k-header-right">
             <div class="wh40k-hud-stack">
                 {{!-- Characteristics HUD --}}
-                <div class="wh40k-characteristics-hud-header">
-                    <button class="wh40k-edit-toggle {{#if inEditMode}}active{{/if}}" type="button"
-                            data-action="toggleEditMode"
-                            title="{{#if inEditMode}}Lock Sheet{{else}}Edit Stats{{/if}}">
-                        <i class="fa-solid {{#if inEditMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
-                    </button>
-                </div>
                 <div class="wh40k-characteristics-hud">
                     {{#each actor.characteristics as |characteristic name|}}
                         {{#unless (eq name "influence")}}
@@ -119,9 +112,9 @@
                         {{/unless}}
                     {{/each}}
                 </div>
-                <div class="wh40k-header-drop-zone" data-drop-zone="general">
-                    <i class="fas fa-download"></i>
-                    <span>Add From Compendium</span>
+                <div class="wh40k-dropzone wh40k-dropzone-small" data-drop-zone="general">
+                    <i class="fas fa-plus-circle wh40k-dropzone-icon"></i>
+                    <span class="wh40k-dropzone-text">Add From Compendium</span>
                 </div>
             </div>
         </div>
