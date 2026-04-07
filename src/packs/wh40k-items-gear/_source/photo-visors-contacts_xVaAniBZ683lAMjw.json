@@ -1,0 +1,44 @@
+{
+  "name": "Photo-Visors/Contacts",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "clothing",
+    "weight": 0.5,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Gain Dark Sight Trait while wearing, Good Craftmanship or better make user immune to photo flash grenades</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 100 T</p>",
+      "chat": "",
+      "summary": "Gain Dark Sight Trait while wearing, Good Craftmanship or better make user immune to photo flash grenades"
+    },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Gain Dark Sight Trait while wearing, Good Craftmanship or better make user immune to photo flash grenades",
+    "duration": "",
+    "notes": "",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xVaAniBZ683lAMjw"
+}

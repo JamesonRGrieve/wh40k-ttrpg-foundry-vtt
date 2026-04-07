@@ -1,0 +1,36 @@
+{
+  "name": "Carapace Chestplate",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "carapace",
+    "weight": 7,
+    "availability": "scarce",
+    "notes": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>A moulded plate of layered ceramite and plasteel worn over the torso. Provides excellent protection against ballistic and energy weapons.</p>"
+    },
+    "modificationSlots": 0,
+    "coverage": [
+      "body"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 6,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": 0,
+    "properties": [],
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Lw3mKtP8rVn5Yb7G"
+}

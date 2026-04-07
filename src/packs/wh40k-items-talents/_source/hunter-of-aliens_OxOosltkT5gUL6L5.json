@@ -1,0 +1,73 @@
+{
+  "name": "Hunter of Aliens",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "hunterOfAliens",
+    "category": "combat",
+    "source": "Deathwatch: Core",
+    "description": "<p>Character gains +10 to Weapon Skill and +2 to melee weapon damage when fighting aliens.</p>",
+    "tier": 1,
+    "benefit": "<p>Character gains +10 to Weapon Skill and +2 to melee weapon damage when fighting aliens.</p>",
+    "aptitudes": [
+      "Weapon Skill",
+      "Offence"
+    ],
+    "prerequisites": {
+      "text": "",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "weaponSkill",
+            "value": 10,
+            "condition": "When fighting aliens",
+            "icon": "fa-solid fa-alien-8bit"
+          }
+        ],
+        "skills": [],
+        "combat": [
+          {
+            "key": "damage",
+            "value": 2,
+            "condition": "Melee damage vs aliens",
+            "icon": "fa-solid fa-alien-8bit"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OxOosltkT5gUL6L5"
+}

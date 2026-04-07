@@ -986,7 +986,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     async _findSkillUuid(skillName, specialization = null) {
         try {
-            const skillPack = game.packs.find((p) => p.metadata.name === 'rt-items-skills');
+            const skillPack = game.packs.find((p) => p.metadata.name === 'wh40k-items-skills');
             if (!skillPack) return null;
 
             const index = skillPack.index;

@@ -1,0 +1,31 @@
+{
+  "name": "Unnatural Characteristic",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "creature",
+    "requirements": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>One or more of the creature's characteristics are unnaturally enhanced. The affected characteristic's bonus is doubled for the purposes of all calculations. For example, a creature with Strength 40 and Unnatural Strength would have an effective Strength bonus of 8 instead of 4. The specific characteristics affected and the multiplication factor are noted in the creature's profile. Common variants include Unnatural Strength, Unnatural Toughness, Unnatural Agility, Unnatural Weapon Skill, Unnatural Ballistic Skill, Unnatural Intelligence, Unnatural Perception, Unnatural Willpower, and Unnatural Fellowship.</p>"
+    },
+    "benefit": "<p>The affected characteristic's bonus is doubled for all calculations. The specific characteristics affected are noted in the creature's profile. Common variants: Unnatural Strength, Toughness, Agility, Weapon Skill, Ballistic Skill, Intelligence, Perception, Willpower, Fellowship.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "unnaturalCharacteristic",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Be4dS9GUu1JuEa3R"
+}

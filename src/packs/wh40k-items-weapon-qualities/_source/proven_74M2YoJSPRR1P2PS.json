@@ -1,0 +1,21 @@
+{
+  "name": "Proven",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "proven",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 27</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>27</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "74M2YoJSPRR1P2PS"
+}

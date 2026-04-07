@@ -1,0 +1,44 @@
+{
+  "name": "Narthecium",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 3,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Arm/Wrist Mounted, has three auto-injectors and a saw for cutting through armour. Provides all benefits of Good-Craftsmanship Medikit, user can administer a dose of drugs from one of the injectors as a Free Action. Each injector can store a different drug. Saw can be used in melee: Profile (1d10+1 R, Pen 2, Tearing, Unwieldy).</p>\n<h3>Requirements</h3><p>Medical saw can be used as melee weapon, but shouldn’t be.\nGood Quality Medikit: +20 to Medicae, even if use doesn't possess Medicae Skill</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Arm/Wrist Mounted, has three auto-injectors and a saw for cutting through armour. Provides all benefits of Good-Craftsmanship Medikit, user can administer a dose of drugs from one of the injectors as "
+    },
+    "source": {
+      "book": "OW: Hammer of the Emperor",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Arm/Wrist Mounted, has three auto-injectors and a saw for cutting through armour. Provides all benefits of Good-Craftsmanship Medikit, user can administer a dose of drugs from one of the injectors as a Free Action. Each injector can store a different drug. Saw can be used in melee: Profile (1d10+1 R, Pen 2, Tearing, Unwieldy).",
+    "duration": "",
+    "notes": "-",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CS5fYocLKXQcNRZD"
+}

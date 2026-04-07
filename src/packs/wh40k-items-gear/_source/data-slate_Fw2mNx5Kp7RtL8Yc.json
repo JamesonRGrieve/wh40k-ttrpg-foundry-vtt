@@ -1,0 +1,28 @@
+{
+  "name": "Data-Slate",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 0.5,
+    "availability": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 25,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A common portable data storage and display device used across the Imperium. Can store text, picts, maps, and other data. Many adepts carry several loaded with reference materials, orders, and correspondence.</p>"
+    },
+    "notes": "",
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Fw2mNx5Kp7RtL8Yc"
+}

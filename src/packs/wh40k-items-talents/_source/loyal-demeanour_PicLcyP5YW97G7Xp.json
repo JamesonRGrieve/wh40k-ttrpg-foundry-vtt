@@ -1,0 +1,56 @@
+{
+  "name": "Loyal Demeanour",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "social",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character does not suffer penalties to Fellowship Tests due to being an Ogryn and/or not being taken seriously, and can re-roll one failed Charm Test per game session.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>Character does not suffer penalties to Fellowship Tests due to being an Ogryn and/or not being taken seriously, and can re-roll one failed Charm Test per game session.</p>",
+    "aptitudes": [
+      "Fellowship",
+      "Leadership"
+    ],
+    "prerequisites": {
+      "text": "is an Ogryn",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "loyalDemeanour",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Ogryn Respect",
+          "description": "<p>Do not suffer penalties for being an Ogryn or not being taken seriously. Can re-roll one failed Charm Test per session.</p>"
+        }
+      ]
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "PicLcyP5YW97G7Xp"
+}

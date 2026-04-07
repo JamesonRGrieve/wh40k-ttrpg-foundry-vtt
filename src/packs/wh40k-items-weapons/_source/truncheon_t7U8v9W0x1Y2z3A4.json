@@ -1,0 +1,66 @@
+{
+  "name": "Truncheon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "truncheon",
+    "class": "melee",
+    "type": "impact",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": 0,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [
+      "primitive-7"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 2,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A simple bludgeoning weapon — a heavy stick, club, or baton. Cheap and common, it serves as a basic weapon for gangers, enforcers, and anyone in need of a blunt instrument.</p>"
+    },
+    "modifications": [],
+    "notes": "",
+    "source": "DH2e Core",
+    "requiredTraining": "",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "t7U8v9W0x1Y2z3A4"
+}

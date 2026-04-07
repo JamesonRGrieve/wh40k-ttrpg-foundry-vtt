@@ -1,0 +1,31 @@
+{
+  "name": "Customisation: Careful Maintenance",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "effect": "The Armour has two additional Power Armour Subsystems.",
+    "availability": "Special",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>The Armour has two additional Power Armour Subsystems.</p>"
+    },
+    "modifiers": {
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 0
+    },
+    "restrictions": {
+      "armourTypes": [
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dz5TesCtsEQt40hp"
+}

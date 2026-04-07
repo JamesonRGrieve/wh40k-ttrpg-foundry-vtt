@@ -1,0 +1,44 @@
+{
+  "name": "Rations: Civilian Relief Rations",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "consumable",
+    "weight": 0.5,
+    "availability": "plentiful",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 2,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>A Ration Brick of recycled food waste and other organic materials delivered to Civilians in areas of intense fighting. Referred to as \"Emperor's Mercy\" bars, each can barely keep someone satiated for a day. They Taste truly awful.</p>\n<h3>Requirements</h3><p>One day's worth of food for one person</p>\n<p><b>Effect:</b> Plentiful</p><p><b>Notes:</b> 2 T</p>",
+      "chat": "",
+      "summary": "A Ration Brick of recycled food waste and other organic materials delivered to Civilians in areas of intense fighting. Referred to as \"Emperor's Mercy\" bars, each can barely keep someone satiated for "
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "A Ration Brick of recycled food waste and other organic materials delivered to Civilians in areas of intense fighting. Referred to as \"Emperor's Mercy\" bars, each can barely keep someone satiated for a day. They Taste truly awful.",
+    "duration": "",
+    "notes": "",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "c0XSmufBNVUnkX9p"
+}

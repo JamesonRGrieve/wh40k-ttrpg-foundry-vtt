@@ -1,0 +1,36 @@
+{
+  "name": "Archeotech Blur Shield",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "void",
+    "weight": 3,
+    "availability": "near-unique",
+    "notes": "Rather than provide a protection rating, this forcefield imposes -20 to WS and BS for anyone targeting the user. Does little to protect against explosions or flame weapons.",
+    "source": "RT: Into the Storm",
+    "description": {
+      "value": "<p>Rather than provide a protection rating, this forcefield imposes -20 to WS and BS for anyone targeting the user. Does little to protect against explosions or flame weapons.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HhoHc8a1jrEQWTQy"
+}

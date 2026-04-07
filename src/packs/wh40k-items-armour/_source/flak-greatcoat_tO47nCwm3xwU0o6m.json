@@ -1,0 +1,38 @@
+{
+  "name": "Flak Greatcoat",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "flak",
+    "weight": 9,
+    "availability": "average",
+    "notes": "+1 AP against Blast Weapons if not at centre of blast.",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>+1 AP against Blast Weapons if not at centre of blast.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "leftArm",
+      "rightArm",
+      "body"
+    ],
+    "armourPoints": {
+      "head": 4,
+      "body": 4,
+      "leftArm": 4,
+      "rightArm": 4,
+      "leftLeg": 4,
+      "rightLeg": 4
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "tO47nCwm3xwU0o6m"
+}

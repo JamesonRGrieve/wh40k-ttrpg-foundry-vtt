@@ -1,0 +1,71 @@
+{
+  "name": "Wrestler",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "wrestler",
+    "category": "combat",
+    "source": "OW: Hammer of the Emperor",
+    "description": "<p>The character is a skilled grappler who can use technique to overcome stronger opponents.</p>",
+    "tier": 1,
+    "benefit": "<p>Character can use Athletics Skill in place of Strength Characteristic for any Strength Tests made as part of a Grapple. When successfully using the Damage Opponent Grapple Option, they deal additional Damage equal to the number of Degrees of Success by which they won the Opposed Test.</p>",
+    "aptitudes": [
+      "Strength",
+      "General"
+    ],
+    "prerequisites": {
+      "text": "Strength 30, Athletics",
+      "characteristics": {
+        "strength": 30
+      },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Grappling Mastery",
+          "description": "<p>Use Athletics instead of Strength for grapple tests. When damaging grappled opponent, add extra damage equal to your Degrees of Success.</p>"
+        }
+      ]
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7OuMiM1wzh4ZPotS"
+}

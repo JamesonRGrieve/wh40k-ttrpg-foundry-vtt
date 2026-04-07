@@ -1,0 +1,71 @@
+{
+  "name": "Child of the Warp",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "psychic",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Gain +1 Psy Rating when Pushing Psychic Powers, however at the start of the game roll 1d10 to determine a persistent Psychic effect that haunts them for the duration of the session. Alternatively with GM Discretion player chooses one result that always affects the character: 1: All Noises echo around the character, 2: The air around smells off, 3: A thin frost coats everything within 10m, 4: Animals within 30m are spooked and agitated, 5: Those that see the character forget something trivial, 6: Food and Drink within 10m go bad. 7: Surrounding Winds cause light objects to be blown about within 10m. 8: Reflective Surfaces within 10m are distorted. 9: Plant Life within 10m withers and dies. 10: Blood weeps from stone and wood within 10m.</p>"
+    },
+    "tier": 2,
+    "benefit": "<p>Gain +1 Psy Rating when Pushing Psychic Powers, however at the start of the game roll 1d10 to determine a persistent Psychic effect that haunts them for the duration of the session. Alternatively with GM Discretion player chooses one result that always affects the character: 1: All Noises echo around the character, 2: The air around smells off, 3: A thin frost coats everything within 10m, 4: Animals within 30m are spooked and agitated, 5: Those that see the character forget something trivial, 6: Food and Drink within 10m go bad. 7: Surrounding Winds cause light objects to be blown about within 10m. 8: Reflective Surfaces within 10m are distorted. 9: Plant Life within 10m withers and dies. 10: Blood weeps from stone and wood within 10m.</p>",
+    "aptitudes": [
+      "Unaligned"
+    ],
+    "prerequisites": {
+      "text": "Tier 2: Psy Rating",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true,
+    "identifier": "childOfTheWarp",
+    "modifiers": {
+      "characteristics": {
+        "willpower": 5
+      },
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "key": "psyRating",
+          "label": "Psy Rating",
+          "value": 1,
+          "mode": "add"
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "IcAjUW6QO9CZiIHh"
+}

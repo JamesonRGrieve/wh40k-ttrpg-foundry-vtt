@@ -1,0 +1,56 @@
+{
+  "name": "Tox Rounds",
+  "type": "ammunition",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "identifier": "tox-rounds",
+    "weaponTypes": [
+      "solid-projectile"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [
+      "toxic-2"
+    ],
+    "removedQualities": [],
+    "clipModifier": 0,
+    "effect": "<p>Weapon gains Toxic(2) Quality</p>",
+    "notes": "",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Weapon gains Toxic(2) Quality</p><p><b>Qualities:</b> Toxic(2)</p>"
+    },
+    "source": "Black Crusade: Core",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LeH1plqOoi869KIW"
+}

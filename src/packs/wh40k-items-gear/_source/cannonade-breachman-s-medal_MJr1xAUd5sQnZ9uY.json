@@ -1,0 +1,44 @@
+{
+  "name": "Cannonade Breachman's Medal",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "general",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Gain +10 to Dodge Tests to avoid attacks from weapons with the Blast Quality.\nMedals can't be acquired, only earned. Looks like a Silver Medallion with a Bronze Circle stamped in the centre.</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Infiltrate behind Enemy Lines to destroy an active Rebel Artillery Battery.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Gain +10 to Dodge Tests to avoid attacks from weapons with the Blast Quality.\nMedals can't be acquired, only earned. Looks like a Silver Medallion with a Bronze Circle stamped in the centre."
+    },
+    "source": {
+      "book": "OW: Enemies of the Imperium",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Gain +10 to Dodge Tests to avoid attacks from weapons with the Blast Quality.\nMedals can't be acquired, only earned. Looks like a Silver Medallion with a Bronze Circle stamped in the centre.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "MJr1xAUd5sQnZ9uY"
+}

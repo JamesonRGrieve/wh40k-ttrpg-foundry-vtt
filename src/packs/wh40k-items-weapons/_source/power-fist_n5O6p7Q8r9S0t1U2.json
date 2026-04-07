@@ -1,0 +1,67 @@
+{
+  "name": "Power Fist",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "power-fist",
+    "class": "melee",
+    "type": "energy",
+    "twoHanded": false,
+    "melee": true,
+    "attack": {
+      "type": "melee",
+      "characteristic": "weaponSkill",
+      "modifier": -10,
+      "range": {
+        "value": 0,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 0,
+      "penetration": 9
+    },
+    "special": [
+      "power-field",
+      "unwieldy"
+    ],
+    "clip": {
+      "max": 0,
+      "value": 0,
+      "type": ""
+    },
+    "reload": "-",
+    "weight": 13,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A massive armoured gauntlet surrounded by a disruptive power field. Slow and cumbersome, but capable of crushing ceramite and tearing open vehicle hulls with a single blow.</p>"
+    },
+    "modifications": [],
+    "notes": "",
+    "source": "DH2e Core",
+    "requiredTraining": "",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "n5O6p7Q8r9S0t1U2"
+}

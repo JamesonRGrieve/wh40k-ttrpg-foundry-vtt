@@ -1,0 +1,41 @@
+{
+  "name": "Heavy Plate",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "primitive",
+    "weight": 28,
+    "availability": "scarce",
+    "notes": "Often worn by Fuedal Nobles\nHalve primitive armour AP vs non primitive weapons",
+    "source": "DH: The Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Often worn by Fuedal Nobles\nHalve primitive armour AP vs non primitive weapons</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "head",
+      "leftArm",
+      "rightArm",
+      "body",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 6,
+      "body": 6,
+      "leftArm": 6,
+      "rightArm": 6,
+      "leftLeg": 6,
+      "rightLeg": 6
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pXF8ZuMM3SKPNhTQ"
+}

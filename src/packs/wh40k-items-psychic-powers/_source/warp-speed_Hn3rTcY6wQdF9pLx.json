@@ -1,0 +1,27 @@
+{
+  "name": "Warp Speed",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Psy Rating 5",
+    "focusPower": "Half Action",
+    "action": "Half Action",
+    "range": "Self",
+    "opposed": "No",
+    "sustained": "Free Action",
+    "effect": "The psyker channels the warp to supercharge his reflexes and speed, gaining Unnatural Agility and Unnatural Weapon Skill equal to half his Psy Rating (rounded up) for the duration of the power.",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The psyker floods his body with warp energy, accelerating his movements to superhuman speed. For the duration of the power, the psyker gains Unnatural Weapon Skill and Unnatural Agility with values equal to half his Psy Rating (rounded up). He also gains a +20 bonus to Initiative and an additional Half Action each turn that may only be used for Movement or a Standard Attack.</p>"
+    },
+    "focusTime": "Half Action",
+    "threshold": 16,
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Hn3rTcY6wQdF9pLx"
+}

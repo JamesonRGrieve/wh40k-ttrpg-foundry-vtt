@@ -1,0 +1,28 @@
+{
+  "name": "Void Suit",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 8,
+    "availability": "rare",
+    "quantity": 1,
+    "cost": {
+      "value": 500,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A sealed, full-body suit designed for survival in vacuum or hostile atmospheres. Provides life support for approximately 12 hours, including air recycling, temperature regulation, and radiation shielding. Includes a built-in micro-bead and mag-boots. Bulky but essential for void operations.</p>"
+    },
+    "notes": "",
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Bn8rTn5Kw3PmV7Yf"
+}

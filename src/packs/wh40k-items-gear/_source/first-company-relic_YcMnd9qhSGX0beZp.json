@@ -1,0 +1,44 @@
+{
+  "name": "First Company Relic",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "luxury",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Relic of the First Tyrannic War (Ultramarines). Bearer gains Fearless Talent and +20 to any opposed test made against Tyranids. If the character is a squad leader, they passes these benefits on to any other Ultramarines in their Squad.</p>\n<h3>Requirements</h3><p>Ultramarines only</p>\n<p><b>Effect:</b> Distinguished</p><p><b>Notes:</b> 25 R</p>",
+      "chat": "",
+      "summary": "Relic of the First Tyrannic War (Ultramarines). Bearer gains Fearless Talent and +20 to any opposed test made against Tyranids. If the character is a squad leader, they passes these benefits on to any"
+    },
+    "source": {
+      "book": "DW: First Founding",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Relic of the First Tyrannic War (Ultramarines). Bearer gains Fearless Talent and +20 to any opposed test made against Tyranids. If the character is a squad leader, they passes these benefits on to any other Ultramarines in their Squad.",
+    "duration": "",
+    "notes": "25 R",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YcMnd9qhSGX0beZp"
+}

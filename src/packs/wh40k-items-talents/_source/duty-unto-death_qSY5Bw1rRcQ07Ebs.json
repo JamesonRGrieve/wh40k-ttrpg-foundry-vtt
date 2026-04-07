@@ -1,0 +1,68 @@
+{
+  "name": "Duty Unto Death",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "dutyUntoDeath",
+    "category": "combat",
+    "source": "DH: Inquisitor's Handbook",
+    "description": {
+      "value": "<p>Ignore effects of Injury, Fatigue, and Stunning during combat. Does not prevent damage or death.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>Ignore effects of Injury, Fatigue, and Stunning during combat. Does not prevent damage or death.</p>",
+    "aptitudes": [
+      "Willpower",
+      "Defence"
+    ],
+    "prerequisites": {
+      "text": "Sister Oblatia Alternative Advance, 300xp, WP 45",
+      "characteristics": {
+        "willpower": 45
+      },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Ignore Status Effects",
+          "description": "<p>During combat, ignore all effects of Injury, Fatigue, and Stunning. Does not prevent damage or death.</p>"
+        }
+      ]
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qSY5Bw1rRcQ07Ebs"
+}

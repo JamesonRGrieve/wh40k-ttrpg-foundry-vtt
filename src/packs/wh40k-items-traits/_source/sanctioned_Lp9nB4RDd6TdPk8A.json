@@ -1,0 +1,31 @@
+{
+  "name": "Sanctioned",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "creature",
+    "requirements": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The creature is a sanctioned psyker, having undergone the Soul Binding or other sanctioning process. It gains a +10 bonus to resist the effects of Psychic Phenomena and Perils of the Warp, but may have suffered physical or mental side effects from the process.</p>"
+    },
+    "benefit": "<p>The psyker has been sanctioned, gaining +10 to resist Psychic Phenomena and Perils of the Warp.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "sanctioned",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Lp9nB4RDd6TdPk8A"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Acrobatics",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "agility",
+    "descriptor": "Acrobatics covers feats of agile movement, balance, and flexibility beyond normal physical capability.",
+    "uses": "Uses: Leaping across gaps, keeping balance on narrow surfaces, contorting through tight spaces, reducing falling damage, performing flips and rolls.\nSpecial Use: Contortionist: As a Full Action, make a +0 Acrobatics test to escape from bonds or restraints. Can only attempt once per set of restraints.\nSpecial Use: Manoeuvring: As a Half Action, test Acrobatics to perform the function of the Disengage Action.\nSpecial Use: Jumping: Can use Acrobatics in place of Agility or Strength tests for Jumping and Leaping.\nSpecial Use: Reduce Falling Damage: Test Acrobatics to reduce effective fall distance by 1 metre per Degree of Success.",
+    "useTime": "Half Action or Full Action",
+    "description": {
+      "value": "<p>Acrobatics covers feats of agile movement, balance, and flexibility beyond normal physical capability.</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": [
+      "Agility",
+      "General"
+    ],
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ga9jZe2fOv6pQy4C"
+}

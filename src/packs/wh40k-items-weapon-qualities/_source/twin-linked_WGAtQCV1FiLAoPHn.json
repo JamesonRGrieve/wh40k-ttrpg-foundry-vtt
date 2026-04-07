@@ -1,0 +1,21 @@
+{
+  "name": "Twin-Linked",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "twin-linked",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 6</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>6</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "WGAtQCV1FiLAoPHn"
+}

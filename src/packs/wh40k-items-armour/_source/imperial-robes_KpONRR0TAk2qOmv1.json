@@ -1,0 +1,40 @@
+{
+  "name": "Imperial Robes",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "flak",
+    "weight": 4,
+    "availability": "average",
+    "notes": null,
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": ""
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "leftArm",
+      "rightArm",
+      "body",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 1,
+      "body": 1,
+      "leftArm": 1,
+      "rightArm": 1,
+      "leftLeg": 1,
+      "rightLeg": 1
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KpONRR0TAk2qOmv1"
+}

@@ -1,0 +1,44 @@
+{
+  "name": "Blade-Tines",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tech",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Implants Blades and thin Scalpels into user's hands. Is unpleasent to look at. Grants +5 to Medicae and Interrogation Tests. Can be used as a melee weapon, dealing 1d5+2 Damage with Penetration 2. Good vcersions gain Tearing Quality. Best Versions gain Toxic Quality. Poor Versions have no Penetration and only deal 1d5 Damage.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Implants Blades and thin Scalpels into user's hands. Is unpleasent to look at. Grants +5 to Medicae and Interrogation Tests. Can be used as a melee weapon, dealing 1d5+2 Damage with Penetration 2. Goo"
+    },
+    "source": {
+      "book": "Black Crusade: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Implants Blades and thin Scalpels into user's hands. Is unpleasent to look at. Grants +5 to Medicae and Interrogation Tests. Can be used as a melee weapon, dealing 1d5+2 Damage with Penetration 2. Good vcersions gain Tearing Quality. Best Versions gain Toxic Quality. Poor Versions have no Penetration and only deal 1d5 Damage.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "8JPvIOQOwvXdb0cM"
+}

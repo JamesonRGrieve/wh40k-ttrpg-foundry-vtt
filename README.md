@@ -1,43 +1,130 @@
-# Rogue Trader
+# WH40K RPG — Foundry VTT System
 
-This is an _unofficial_ system for playing Rogue Trader on [Foundry VTT](https://foundryvtt.com/). This requires >= Foundry 12.
+Unified Foundry VTT system for FFG/Cubicle 7 Warhammer 40,000 RPGs: Dark Heresy 2e, Rogue Trader, Black Crusade, Only War, Deathwatch.
 
-It offers extensive support for character sheets, compendium packs, and automated management to save you time and allow you to focus on role playing. The existing system listed on Foundry was character sheet only and thus this system was created to facilitate the automation features I desired.
+Forked from [AndruQuiroga/RogueTraderVTT](https://github.com/AndruQuiroga/RogueTraderVTT), which was forked from [mrkeathley/dark-heresy-2nd-vtt](https://github.com/mrkeathley/dark-heresy-2nd-vtt).
 
-## Features
+## Requirements
 
-🗡️ The system includes a variety of compendium packs, such as weapons, weapon mods, talents, armor, psychic abilities, ammunition, tools, traits, attack specials (toxic, corrosive, etc.), and consumables and drugs.
+- Foundry VTT 13+ (verified on 14.359)
+- Node.js 18+
+- `game-icons-net` module (recommended, provides item icons)
 
-💪 During character creation, there are automated bonuses for birthrights, career paths, and elite advances.
+## Development Setup
 
-🧰 You can easily manage your inventory by dragging and dropping items, such as weapon mods and custom ammunition to build weapons, or storing items in a location on your ship to reduce encumbrance.
+```bash
+npm install
+```
 
-🔫 You can also drag weapons and skills to the macro bar for easy access, and the system offers automation support for weapon specials, most talents, attack types, and custom ammunition when you attack. Modifiers like distance and character size are automatically taken into account when targeting an attack.
+## Build
 
+```bash
+npm run build        # Full build: clean → SCSS → copy → packs → archive
+npm run scss         # Compile SCSS only
+npm run packs        # Compile compendium packs only
+npx gulp             # Build + watch for changes
+```
 
-## Install
- - Go to the setup page and choose _Game Systems_.
- - Click the _Install System_ button, and paste in this [manifest link](https://github.com/AndruQuiroga/RogueTraderVTT/releases/latest/download/system.json)
- - Create a Game World using the "Rogue Trader" system.
+Build output goes to `dist/`.
 
-## Links
-  - [Foundry VTT](https://foundryvtt.com/)
-  - [Rogue Trader Core Rulebook](https://www.drivethrurpg.com/product/65991/Rogue-Trader-Core-Rulebook)
+## Code Quality
+
+```bash
+npm run lint         # ESLint check
+npm run lint:fix     # ESLint auto-fix
+npm run format       # Prettier check
+npm run format:fix   # Prettier auto-fix
+npm run validate:json # Validate lang/en.json
+npm run check        # All of the above
+```
+
+## Deploy to Foundry VTT
+
+The system is deployed via SCP to the Foundry VTT container. Foundry hot-reloads system files — no service restart needed, just refresh the browser.
+
+```bash
+# 1. Build
+npm run build
+
+# 2. Clear old deploy and copy new build
+ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/systems/wh40k-rpg; mkdir -p /opt/foundry-vtt/data/Data/systems/wh40k-rpg"
+scp -r dist/* root@192.168.5.40:/opt/foundry-vtt/data/Data/systems/wh40k-rpg/
+
+# 3. Fix ownership (Foundry runs as foundry-vtt user)
+ssh root@192.168.5.40 "chown -R foundry-vtt:foundry-vtt /opt/foundry-vtt/data/Data/systems/wh40k-rpg"
+
+# 4. Refresh browser
+```
+
+### One-liner
+
+```bash
+npm run build && ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/systems/wh40k-rpg; mkdir -p /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null && scp -r dist/* root@192.168.5.40:/opt/foundry-vtt/data/Data/systems/wh40k-rpg/ 2>/dev/null && ssh root@192.168.5.40 "chown -R foundry-vtt:foundry-vtt /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null
+```
+
+### Server Details
+
+| Field | Value |
+|-------|-------|
+| Foundry URL | https://vtt.jamesonrgrieve.ca |
+| CT | 5040 on PVE (192.168.9.4), IP 192.168.5.40:30000 |
+| System path | `/opt/foundry-vtt/data/Data/systems/wh40k-rpg` |
+| Service | `foundry-vtt.service` (systemd) |
+| Runs as | `foundry-vtt:foundry-vtt` |
+
+## Architecture
+
+### Actor Types
+
+| Type | Sheet Classes | Description |
+|------|--------------|-------------|
+| `character` | DarkHeresySheet, RogueTraderSheet, CharacterSheetSidebar | Player characters |
+| `npc` | NPCSheetV2 | Non-player characters |
+| `vehicle` | VehicleSheet | Land vehicles |
+| `starship` | StarshipSheet | Void ships |
+
+### Sheet Inheritance
+
+```
+ActorSheetV2 (Foundry core)
+  └─ ApplicationV2Mixin
+      └─ PrimarySheetMixin (edit/play mode toggle)
+          └─ BaseActorSheet (shared mechanics)
+              └─ CharacterSheet (common PC sheet)
+                  ├─ DarkHeresySheet (DH2e header: Home World, Background, Role, Elite, Divination)
+                  └─ RogueTraderSheet (RT header: Home World, Career, Rank)
+```
+
+### Key Directories
+
+```
+src/
+├── module/                    # JavaScript source
+│   ├── applications/actor/    # Sheet classes
+│   ├── data/actor/            # DataModel schemas
+│   ├── documents/             # Document classes
+│   ├── rules/                 # Game rules (config, combat, etc.)
+│   └── rolls/                 # Roll/damage system
+├── templates/                 # Handlebars templates
+│   ├── actor/acolyte/         # PC sheet parts (header-dh, header-rt, tabs, etc.)
+│   ├── actor/panel/           # Shared panels (skills, characteristics, combat, etc.)
+│   └── item/                  # Item sheet templates
+├── scss/                      # Stylesheets
+├── packs/                     # Compendium pack source (JSON)
+├── lang/en.json               # i18n translations (WH40K.* namespace)
+└── system.json                # System manifest
+```
 
 ## Content Policy
-This repo does not include copyrighted book text or art. See `docs/CONTENT_POLICY.md`.
 
-## Screenshots
-
-| ![Character Sheet](.github/char_sheet.png)   | ![Weapon Sheet](.github/weapon_sheet.png) |
-|:---------------------------------------------|:---:|
-| ![Attack Prompt](.github/attack_prompt.png)  | ![Damage Chat](.github/damage_chat.png) |
-
-
-### Thanks
-- I liked the layout of the WH4e sheet on Roll20 and tried to mimic that where possible. Thanks to the authors for that inspiration.
-- I studied the original Rogue Trader Foundry VTT project by moo-man. I ended up not using much from there but learned a lot about Foundry. I appreciate the head start!
-- My tabletop group for play testing and feedback.
+This repo does not include copyrighted book text or art.
 
 ## License
+
 [GNU General Public License v3.0](https://choosealicense.com/licenses/gpl-3.0/)
+
+## Credits
+
+- [Matt Keathley](https://github.com/mrkeathley) — Original DH2e system
+- [AndruQuiroga](https://github.com/AndruQuiroga) — ApplicationV2 rewrite, RT adaptation
+- [moo-man](https://github.com/moo-man) — Original DH2e Foundry system

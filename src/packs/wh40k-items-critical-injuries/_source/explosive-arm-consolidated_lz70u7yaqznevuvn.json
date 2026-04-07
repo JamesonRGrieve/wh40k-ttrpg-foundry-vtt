@@ -1,0 +1,78 @@
+{
+  "_id": "lz70u7yaqznevuvn",
+  "name": "Explosive Critical - Arm",
+  "type": "criticalInjury",
+  "img": "icons/svg/blood.svg",
+  "system": {
+    "identifier": "crit_explosive_arm",
+    "damageType": "explosive",
+    "bodyPart": "arm",
+    "severity": 1,
+    "effects": {
+      "1": {
+        "text": "<p>The blast knocks the target's arm aside. He drops anything held in that hand and suffers a –10 penalty to all tests using that arm for 1 round.</p>",
+        "permanent": false
+      },
+      "2": {
+        "text": "<p>The concussive force numbs the target's arm and peppers it with shrapnel. He drops anything held in that hand and suffers 1 level of Fatigue.</p>",
+        "permanent": false
+      },
+      "3": {
+        "text": "<p>The explosion shreds the target's arm with jagged fragments, opening deep cuts along its length. He drops anything held in that hand, and the arm is Useless for [[1d5]] rounds. He must make a Challenging (+0) Toughness test or suffer Blood Loss.</p>",
+        "permanent": false
+      },
+      "4": {
+        "text": "<p>The blast fractures the bones of the target's arm and tears away chunks of flesh. He suffers [[1d5]] levels of Fatigue, drops anything held in that hand, and is Stunned for 1 round. The arm is Useless for [[1d10]] rounds.</p>",
+        "permanent": false
+      },
+      "5": {
+        "text": "<p>The explosive force crushes and shreds the target's hand, destroying [[1d5]] fingers. He suffers Blood Loss and drops anything held in that hand. The arm is Useless until he receives medical attention. Permanently reduce his Weapon Skill and Ballistic Skill by 2 each.</p>",
+        "permanent": true
+      },
+      "6": {
+        "text": "<p>The blast shatters the bones of the target's forearm and drives shrapnel deep into the muscle. He is Stunned for [[1d5]] rounds and suffers Blood Loss. The arm is Useless until medical attention is received. Permanently reduce his Strength characteristic by [[1d5]].</p>",
+        "permanent": true
+      },
+      "7": {
+        "text": "<p>The explosion reduces the target's arm to a ragged stump of shattered bone and torn flesh. He must make a Challenging (+0) Toughness test or die from shock. If he survives, he suffers [[1d10]] levels of Fatigue, is Stunned for [[1d10]] rounds, and suffers Blood Loss. He now suffers the Lost Arm condition.</p>",
+        "permanent": true
+      },
+      "8": {
+        "text": "<p>The target's arm is blown clean off by the explosive force, the stump left a ragged mess of torn flesh and protruding bone. He must make a Hard (–20) Toughness test or die from shock. If he survives, he is Stunned for [[1d10]] rounds and suffers Blood Loss. He now suffers the Lost Arm condition.</p>",
+        "permanent": true
+      },
+      "9": {
+        "text": "<p>The explosion tears the arm away and rips open the target's side, shredding ribs and organs. He is slain instantly.</p>",
+        "permanent": true
+      },
+      "10": {
+        "text": "<p>The blast vaporises the target's arm and tears open his torso in a devastating eruption of gore. He is slain instantly. If the target was carrying any ammunition it detonates, inflicting a single hit for [[1d10+5]] Impact damage to a randomly determined Hit Location upon each character within [[1d10]] metres. If the target was carrying any grenades or missiles, they detonate immediately with their normal effects.</p>",
+        "permanent": true
+      }
+    },
+    "effect": "",
+    "permanent": false,
+    "notes": "",
+    "description": {
+      "value": "",
+      "chat": "",
+      "summary": "Explosive Arm injury"
+    },
+    "source": {
+      "book": "Dark Heresy 2nd Edition Core Rulebook",
+      "page": "236-239",
+      "custom": ""
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {
+    "dh2e": {
+      "generated": false,
+      "consolidated": true,
+      "version": "1.0"
+    }
+  }
+}

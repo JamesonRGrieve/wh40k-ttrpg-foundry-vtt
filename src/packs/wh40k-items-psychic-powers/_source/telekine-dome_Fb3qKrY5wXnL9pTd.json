@@ -1,0 +1,27 @@
+{
+  "name": "Telekine Dome",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Telekinesis",
+    "prerequisites": "Psy Rating 4",
+    "focusPower": "Half Action",
+    "action": "Half Action",
+    "range": "Self",
+    "opposed": "No",
+    "sustained": "Free Action",
+    "effect": "The psyker creates a dome of telekinetic force that shields him and nearby allies. All allies within Psy Rating metres of the psyker gain a number of Armour Points equal to half the psyker's Psy Rating (rounded up) against all attacks from outside the dome.",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The psyker erects a shimmering dome of telekinetic energy around himself and his allies. All friendly creatures within Psy Rating metres of the psyker gain additional Armour Points equal to half the psyker's Psy Rating (rounded up) against all attacks originating from outside the dome. The dome does not impede outgoing attacks or movement.</p>"
+    },
+    "focusTime": "Half Action",
+    "threshold": 14,
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Fb3qKrY5wXnL9pTd"
+}

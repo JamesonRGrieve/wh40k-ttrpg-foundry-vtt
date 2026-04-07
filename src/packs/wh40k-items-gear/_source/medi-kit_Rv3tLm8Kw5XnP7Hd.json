@@ -1,0 +1,28 @@
+{
+  "name": "Medi-Kit",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 2,
+    "availability": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A standard Imperial medical kit containing bandages, counterseptics, synth-skin patches, stimm injectors, and basic surgical tools. Required for most Medicae tests to treat injuries. Can be used to perform First Aid as a Full Action, restoring 1d5 wounds on a successful Medicae test.</p>"
+    },
+    "notes": "",
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Rv3tLm8Kw5XnP7Hd"
+}

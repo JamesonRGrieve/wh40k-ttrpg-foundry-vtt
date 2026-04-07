@@ -1,0 +1,73 @@
+{
+  "name": "Flagellant",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "flagellant",
+    "category": "general",
+    "source": "DH2e Core",
+    "description": "<p>The character draws strength from self-inflicted pain, using it to fuel their devotion.</p>",
+    "tier": 2,
+    "benefit": "<p>As a Full Action, the character may voluntarily take 1d5 points of damage (not reduced by Toughness or Armour) to gain a +10 bonus to Willpower tests for the remainder of the encounter.</p>",
+    "aptitudes": [
+      "Willpower",
+      "Offence"
+    ],
+    "prerequisites": {
+      "text": "Willpower 35",
+      "characteristics": {
+        "willpower": 35
+      },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Full Action: take 1d5 damage for +10 WP for the encounter.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000036"
+}

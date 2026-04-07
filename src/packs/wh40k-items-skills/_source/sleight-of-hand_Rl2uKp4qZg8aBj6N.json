@@ -1,0 +1,27 @@
+{
+  "name": "Sleight of Hand",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "agility",
+    "descriptor": "Sleight of Hand is the art of manual dexterity and misdirection — picking pockets, palming objects, and performing feats of legerdemain.",
+    "uses": "Uses: Picking pockets, palming objects, planting items on others, concealing small items on one's person, performing magic tricks.\nSleight of Hand is typically opposed by the target's Awareness or Scrutiny. The size of the object, the number of observers, and the lighting conditions all affect the difficulty. Objects larger than a pistol generally cannot be concealed through Sleight of Hand alone.",
+    "useTime": "Half Action",
+    "description": {
+      "value": "<p>Sleight of Hand is the art of manual dexterity and misdirection — picking pockets, palming objects, and performing feats of legerdemain.</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": [
+      "Agility",
+      "Knowledge"
+    ],
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Rl2uKp4qZg8aBj6N"
+}

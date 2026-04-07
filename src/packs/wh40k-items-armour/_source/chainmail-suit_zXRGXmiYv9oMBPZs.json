@@ -1,0 +1,40 @@
+{
+  "name": "Chainmail Suit",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "primitive",
+    "weight": 15,
+    "availability": "common",
+    "notes": null,
+    "source": "Only War Core",
+    "description": {
+      "value": ""
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "leftArm",
+      "rightArm",
+      "body",
+      "leftLeg",
+      "rightLeg"
+    ],
+    "armourPoints": {
+      "head": 3,
+      "body": 3,
+      "leftArm": 3,
+      "rightArm": 3,
+      "leftLeg": 3,
+      "rightLeg": 3
+    },
+    "modifications": [],
+    "maxAgility": 35,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zXRGXmiYv9oMBPZs"
+}

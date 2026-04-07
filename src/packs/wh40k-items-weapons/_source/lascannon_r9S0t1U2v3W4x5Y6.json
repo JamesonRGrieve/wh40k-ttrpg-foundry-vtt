@@ -1,0 +1,66 @@
+{
+  "name": "Lascannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "lascannon",
+    "class": "heavy",
+    "type": "energy",
+    "twoHanded": true,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "5d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 10
+    },
+    "special": [
+      "proven-3"
+    ],
+    "clip": {
+      "max": 5,
+      "value": 5,
+      "type": "charge-pack"
+    },
+    "reload": "2Full",
+    "weight": 55,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>The premier anti-vehicle weapon of the Imperial Guard, the lascannon fires an extremely powerful focused laser beam capable of burning through the thickest armour. Usually tripod-mounted or vehicle-mounted.</p>"
+    },
+    "modifications": [],
+    "notes": "Requires Bracing or mounting to fire.",
+    "source": "DH2e Core",
+    "requiredTraining": "",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "r9S0t1U2v3W4x5Y6"
+}

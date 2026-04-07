@@ -69,7 +69,7 @@ export class TooltipsWH40K {
      */
     async _loadSkillDescriptions() {
         try {
-            const pack = game.packs.get('wh40k-rpg.rt-items-skills');
+            const pack = game.packs.get('wh40k-rpg.wh40k-items-skills');
             if (!pack) {
                 console.warn('WH40K Tooltips | Could not find skills compendium');
                 return;

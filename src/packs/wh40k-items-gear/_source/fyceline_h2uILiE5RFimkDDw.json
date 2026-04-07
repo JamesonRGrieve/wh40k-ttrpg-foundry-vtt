@@ -1,0 +1,44 @@
+{
+  "name": "Fyceline",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 1,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 70,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>A Chemical mined and refined from rare ores, used in many standard Imperial Explosives. It can be used to fashion crude explosives, dealing 1d10+5 X Damage per kilogram, with a radius 5x the number of kg.</p>\n<h3>Requirements</h3><p>Effects are advised to taper off to prevent blowing up a planet with a few tonnes of the stuff.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 70 T</p>",
+      "chat": "",
+      "summary": "A Chemical mined and refined from rare ores, used in many standard Imperial Explosives. It can be used to fashion crude explosives, dealing 1d10+5 X Damage per kilogram, with a radius 5x the number of"
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "A Chemical mined and refined from rare ores, used in many standard Imperial Explosives. It can be used to fashion crude explosives, dealing 1d10+5 X Damage per kilogram, with a radius 5x the number of kg.",
+    "duration": "",
+    "notes": "",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h2uILiE5RFimkDDw"
+}

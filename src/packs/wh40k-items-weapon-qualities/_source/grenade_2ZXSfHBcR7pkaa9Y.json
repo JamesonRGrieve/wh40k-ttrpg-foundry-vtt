@@ -1,0 +1,21 @@
+{
+  "name": "Grenade*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "grenade",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 84</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>84</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2ZXSfHBcR7pkaa9Y"
+}

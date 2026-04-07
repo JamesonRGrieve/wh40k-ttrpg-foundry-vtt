@@ -1,0 +1,66 @@
+{
+  "name": "Tyrant",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "social",
+    "source": "BC: Tome of Excess",
+    "description": {
+      "value": "<p>Base Loyalty of the Character's minions is equal to their Infamy instead of their Fellowship.</p>"
+    },
+    "tier": 2,
+    "benefit": "<p>Base Loyalty of the Character's minions is equal to their Infamy instead of their Fellowship.</p>",
+    "aptitudes": [
+      "Unaligned."
+    ],
+    "prerequisites": {
+      "text": "Any Minion of Chaos Talent, Fellowship 35.",
+      "characteristics": {
+        "fellowship": 35
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true,
+    "identifier": "tyrant",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "fellowship",
+            "value": -10,
+            "condition": "When trying to gain allies or make friends (penalty)",
+            "icon": "fa-solid fa-skull"
+          }
+        ],
+        "skills": [
+          {
+            "key": "command",
+            "value": 20,
+            "condition": "When commanding through fear and intimidation",
+            "icon": "fa-solid fa-crown"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "vsKdic73pcSVqxCq"
+}

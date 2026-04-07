@@ -1,0 +1,28 @@
+{
+  "name": "Disguise Kit",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 2,
+    "availability": "rare",
+    "quantity": 1,
+    "cost": {
+      "value": 200,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A case containing cosmetics, prosthetics, wigs, and other materials for altering one's appearance. Grants +20 bonus to Deceive tests made to disguise the user's identity. Contents are consumed with use and must be periodically restocked.</p>"
+    },
+    "notes": "",
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Rt5wLm2Kx9NpV7Hd"
+}

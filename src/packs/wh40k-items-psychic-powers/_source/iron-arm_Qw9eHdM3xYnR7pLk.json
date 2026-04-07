@@ -1,0 +1,27 @@
+{
+  "name": "Iron Arm",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Psy Rating 4",
+    "focusPower": "Half Action",
+    "action": "Half Action",
+    "range": "Self",
+    "opposed": "No",
+    "sustained": "Free Action",
+    "effect": "The psyker transmutes his flesh into living metal, gaining Unnatural Strength and Unnatural Toughness equal to half his Psy Rating (rounded up) for the duration of the power.",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The psyker channels the warp to transform his body into a form of living metal, his skin hardening to the consistency of ceramite. For the duration of the power, the psyker gains Unnatural Strength and Unnatural Toughness with values equal to half his Psy Rating (rounded up).</p>"
+    },
+    "focusTime": "Half Action",
+    "threshold": 14,
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Qw9eHdM3xYnR7pLk"
+}

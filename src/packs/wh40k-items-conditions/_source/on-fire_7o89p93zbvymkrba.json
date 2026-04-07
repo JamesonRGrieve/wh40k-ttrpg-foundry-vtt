@@ -1,0 +1,38 @@
+{
+  "name": "On Fire",
+  "type": "condition",
+  "img": "icons/svg/fire.svg",
+  "system": {
+    "identifier": "onFire",
+    "nature": "harmful",
+    "effect": "<p>At the start of each Round, the character takes 1d10 Energy damage, ignoring Armour. They must spend a Full Action and pass an Agility test to extinguish the flames.</p>",
+    "removal": "<p>The character must spend a Full Action to attempt to put out the flames, requiring a successful Agility test. Jumping into water or being smothered automatically extinguishes the fire.</p>",
+    "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>The character is ablaze. At the start of each Round, they suffer 1d10 Energy damage that ignores Armour. The character must spend a Full Action to try to put themselves out, requiring a successful Agility test. If they fail, they continue burning. Jumping into water or being smothered with an appropriate material automatically extinguishes the flames. While On Fire, the character may be forced to make a Fear (1) test at the GM's discretion.</p>",
+      "source": {
+        "book": "DH2e Core",
+        "page": "",
+        "custom": ""
+      }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    },
+    "notes": "Damage ignores Armour but not Toughness Bonus.",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7o89p93zbvymkrba"
+}

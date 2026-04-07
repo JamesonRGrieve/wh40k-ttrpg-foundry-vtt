@@ -1,0 +1,44 @@
+{
+  "name": "Mech-Implants: Cyber-Mantle",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tech",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Attached to the Spine and Lower Ribcage, acts as an anchorage for further implants, such as Mechadendrites.</p>\n<h3>Requirements</h3><p>Gained only through \"Mechanicus Implants\" Trait, cannot be removed.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Attached to the Spine and Lower Ribcage, acts as an anchorage for further implants, such as Mechadendrites."
+    },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Attached to the Spine and Lower Ribcage, acts as an anchorage for further implants, such as Mechadendrites.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "CMPT3aNMyNeRow14"
+}

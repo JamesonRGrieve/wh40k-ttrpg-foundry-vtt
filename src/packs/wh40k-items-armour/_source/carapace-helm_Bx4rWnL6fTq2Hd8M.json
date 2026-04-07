@@ -1,0 +1,36 @@
+{
+  "name": "Carapace Helm",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "carapace",
+    "weight": 2,
+    "availability": "scarce",
+    "notes": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>A full helmet of moulded carapace armour, often fitted with an integral visor. Provides superior head protection compared to flak equivalents.</p>"
+    },
+    "modificationSlots": 0,
+    "coverage": [
+      "head"
+    ],
+    "armourPoints": {
+      "head": 4,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": 0,
+    "properties": [],
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Bx4rWnL6fTq2Hd8M"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Security",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "intelligence",
+    "descriptor": "Security is the skill of bypassing, disabling, or setting locks, alarms, traps, and other security measures.",
+    "uses": "Uses: Picking locks, disabling alarms, bypassing security systems, setting traps, cracking safes, detecting security measures.\nSecurity tests are typically opposed by the quality of the security system. Simple locks may require a +20 test, while sophisticated Mechanicus-forged systems may impose -30 or worse. Proper tools (such as a multikey or lascutter) may be required; improvised tools impose penalties.",
+    "useTime": "Full Action or Extended",
+    "description": {
+      "value": "<p>Security is the skill of bypassing, disabling, or setting locks, alarms, traps, and other security measures.</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": [
+      "Intelligence",
+      "Tech"
+    ],
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Qk1tJo3pYf7zAi5M"
+}

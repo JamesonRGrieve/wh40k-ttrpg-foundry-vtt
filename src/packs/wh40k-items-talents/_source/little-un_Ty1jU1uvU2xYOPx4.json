@@ -1,0 +1,65 @@
+{
+  "name": "Little 'Un",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "social",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character scores +2 Degrees of Success whenever suceeding on a Fellowship-Based Test directed at an Ogryn.\nOgryn Allies may reroll any failed Tests to resist Coercion or other inducement to betray or turn against the Character.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>Character scores +2 Degrees of Success whenever suceeding on a Fellowship-Based Test directed at an Ogryn.\nOgryn Allies may reroll any failed Tests to resist Coercion or other inducement to betray or turn against the Character.</p>",
+    "aptitudes": [
+      "Fellowship",
+      "General"
+    ],
+    "prerequisites": {
+      "text": "Fellowship 30, not an Ogryn",
+      "characteristics": {
+        "fellowship": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "littleUn",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [
+          {
+            "key": "charm",
+            "value": 20,
+            "condition": "When interacting with Ogryns (+2 DoS on success)",
+            "icon": "fa-solid fa-hand-fist"
+          }
+        ],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Ogryn Loyalty",
+          "description": "<p>Ogryn allies may reroll failed tests to resist coercion or betrayal against you.</p>"
+        }
+      ]
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ty1jU1uvU2xYOPx4"
+}

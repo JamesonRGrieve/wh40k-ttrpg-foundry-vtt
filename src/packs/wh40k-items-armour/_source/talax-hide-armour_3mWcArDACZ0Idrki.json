@@ -1,0 +1,36 @@
+{
+  "name": "Talax Hide Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "primitive",
+    "weight": 6,
+    "availability": "extremely-rare",
+    "notes": "Rare on the War Moons of Talax. Gives +10 to resist effects of Concussive Weapon Quality.\nHalve primitive armour AP vs non primitive weapons",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p>Rare on the War Moons of Talax. Gives +10 to resist effects of Concussive Weapon Quality.\nHalve primitive armour AP vs non primitive weapons</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 6,
+      "body": 6,
+      "leftArm": 6,
+      "rightArm": 6,
+      "leftLeg": 6,
+      "rightLeg": 6
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3mWcArDACZ0Idrki"
+}

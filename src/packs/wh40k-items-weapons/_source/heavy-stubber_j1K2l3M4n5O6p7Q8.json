@@ -1,0 +1,64 @@
+{
+  "name": "Heavy Stubber",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "heavy-stubber",
+    "class": "heavy",
+    "type": "impact",
+    "twoHanded": true,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": false,
+        "semi": 0,
+        "full": 8
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "impact",
+      "bonus": 4,
+      "penetration": 3
+    },
+    "special": [],
+    "clip": {
+      "max": 75,
+      "value": 75,
+      "type": "bullet"
+    },
+    "reload": "2Full",
+    "weight": 30,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A belt-fed heavy machine gun firing solid rounds at a high rate. Crude but effective, heavy stubbers are common on vehicles and in defensive positions across the Imperium.</p>"
+    },
+    "modifications": [],
+    "notes": "Requires Bracing or mounting to fire.",
+    "source": "DH2e Core",
+    "requiredTraining": "",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "j1K2l3M4n5O6p7Q8"
+}

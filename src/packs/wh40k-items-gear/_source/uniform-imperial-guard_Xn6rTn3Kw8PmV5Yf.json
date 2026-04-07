@@ -1,0 +1,28 @@
+{
+  "name": "Uniform (Imperial Guard)",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 2,
+    "availability": "average",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A standard-issue Imperial Guard uniform, consisting of fatigues, boots, belt, and regimental insignia. The specific pattern varies by regiment, but all share a functional military design. Wearing a Guard uniform identifies the wearer as a member of the Imperial military -- a useful or dangerous distinction depending on circumstances.</p>"
+    },
+    "notes": "",
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Xn6rTn3Kw8PmV5Yf"
+}

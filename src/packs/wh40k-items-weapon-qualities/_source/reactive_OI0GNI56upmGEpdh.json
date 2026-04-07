@@ -1,0 +1,21 @@
+{
+  "name": "Reactive",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "reactive",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 0</p>",
+    "notes": "",
+    "description": {
+      "value": ""
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OI0GNI56upmGEpdh"
+}

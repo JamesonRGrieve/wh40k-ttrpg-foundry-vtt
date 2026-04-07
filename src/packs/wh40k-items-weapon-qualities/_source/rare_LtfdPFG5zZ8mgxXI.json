@@ -1,0 +1,21 @@
+{
+  "name": "Rare",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "rare",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 144</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>144</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LtfdPFG5zZ8mgxXI"
+}

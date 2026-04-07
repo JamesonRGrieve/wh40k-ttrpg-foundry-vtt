@@ -1,0 +1,71 @@
+{
+  "name": "Warp Conduit",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "psychic",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>When the Character pushes a Psyhcic Power, they can spend a Fate Point to add 1d5 to their Psy Rating when determining the effects of the psychic power they are manifesting. However they add +30 to any resulting Psycic Phenomena Rolls.</p>"
+    },
+    "tier": 2,
+    "benefit": "<p>When the Character pushes a Psyhcic Power, they can spend a Fate Point to add 1d5 to their Psy Rating when determining the effects of the psychic power they are manifesting. However they add +30 to any resulting Psycic Phenomena Rolls.</p>",
+    "aptitudes": [
+      "Willpower",
+      "Psyker",
+      "Tzeentch"
+    ],
+    "prerequisites": {
+      "text": "Psy Rating, Srong Minded, WP 50",
+      "characteristics": {
+        "wp": 50
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 600,
+    "isPassive": true,
+    "identifier": "warpConduit",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Warp Conduit",
+          "description": "<p>When pushing a psychic power, you can spend a Fate Point to add 1d5 to your Psy Rating for that manifestation. However, you add +30 to any resulting Psychic Phenomena rolls.</p>"
+        }
+      ]
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DO1rTxuYJ5fDC4LS"
+}

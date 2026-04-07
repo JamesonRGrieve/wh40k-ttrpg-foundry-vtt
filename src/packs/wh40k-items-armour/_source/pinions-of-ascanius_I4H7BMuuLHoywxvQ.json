@@ -1,0 +1,37 @@
+{
+  "name": "Pinions of Ascanius",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "power",
+    "weight": 0,
+    "availability": "Hero",
+    "notes": "Master Crafted Relic Astartes Powered Gauntlets of the Eagle Warriors Chapter. Can replace Standard or Artificer Astartes Armour Arms, replacing their AP with that of these. Also increases Head AP by +1, and grants +10 to all Weapon Skill Tests whilst wielding a Melee weapon with the Balanced Quality.",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p>Master Crafted Relic Astartes Powered Gauntlets of the Eagle Warriors Chapter. Can replace Standard or Artificer Astartes Armour Arms, replacing their AP with that of these. Also increases Head AP by +1, and grants +10 to all Weapon Skill Tests whilst wielding a Melee weapon with the Balanced Quality.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "leftArm",
+      "rightArm"
+    ],
+    "armourPoints": {
+      "head": 12,
+      "body": 12,
+      "leftArm": 12,
+      "rightArm": 12,
+      "leftLeg": 12,
+      "rightLeg": 12
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "I4H7BMuuLHoywxvQ"
+}

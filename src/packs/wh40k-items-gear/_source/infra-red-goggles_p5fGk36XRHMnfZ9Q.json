@@ -1,0 +1,44 @@
+{
+  "name": "Infra-Red Goggles",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "clothing",
+    "weight": 0.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 275,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>When worn, allow seeing in darkness with no Penalties. Gives +20 to Vision-Based Perception Tests at Night.\nHigher Craftsmanship versions can be disguised as eyeglasses.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> 275 T</p>",
+      "chat": "",
+      "summary": "When worn, allow seeing in darkness with no Penalties. Gives +20 to Vision-Based Perception Tests at Night.\nHigher Craftsmanship versions can be disguised as eyeglasses."
+    },
+    "source": {
+      "book": "Dark Heresy: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "When worn, allow seeing in darkness with no Penalties. Gives +20 to Vision-Based Perception Tests at Night.\nHigher Craftsmanship versions can be disguised as eyeglasses.",
+    "duration": "",
+    "notes": "",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "p5fGk36XRHMnfZ9Q"
+}

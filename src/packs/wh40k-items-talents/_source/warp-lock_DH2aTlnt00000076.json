@@ -1,0 +1,75 @@
+{
+  "name": "Warp Lock",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "warpLock",
+    "category": "psychic",
+    "source": "DH2e Core",
+    "description": "<p>The character can seal their mind against the Warp, shutting down psychic phenomena around them.</p>",
+    "tier": 3,
+    "benefit": "<p>As a Full Action, the character may make a Willpower test to negate one psychic power being maintained within a number of metres equal to 5 times their Willpower Bonus. The psyker maintaining the power must re-establish it on their next turn.</p>",
+    "aptitudes": [
+      "Willpower",
+      "Psyker"
+    ],
+    "prerequisites": {
+      "text": "Willpower 50, Strong Minded, Psyker",
+      "characteristics": {
+        "willpower": 50
+      },
+      "skills": {},
+      "talents": [
+        "Strong Minded"
+      ]
+    },
+    "cost": 0,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Full Action WP test: negate 1 maintained psychic power within 5xWPB metres.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000076"
+}

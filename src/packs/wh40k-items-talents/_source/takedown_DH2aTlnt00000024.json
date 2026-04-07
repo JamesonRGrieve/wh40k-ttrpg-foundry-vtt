@@ -1,0 +1,71 @@
+{
+  "name": "Takedown",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "takedown",
+    "category": "combat",
+    "source": "DH2e Core",
+    "description": "<p>The character can take an enemy down without killing them.</p>",
+    "tier": 1,
+    "benefit": "<p>The character may make a Special Attack to try to stun an opponent. The character makes a Weapon Skill test; on success, the target must make a Toughness test or be Stunned for 1 round per degree of failure. If the target succeeds, they are still knocked Prone.</p>",
+    "aptitudes": [
+      "Weapon Skill",
+      "Offence"
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Special melee attack to stun. Target must pass Toughness or be Stunned.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000024"
+}

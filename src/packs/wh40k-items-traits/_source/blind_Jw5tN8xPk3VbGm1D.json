@@ -1,0 +1,31 @@
+{
+  "name": "Blind",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "creature",
+    "requirements": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The creature has no functional eyes and perceives its surroundings through other senses. It is immune to effects that rely on sight (such as photon flash grenades) and suffers no penalties due to lighting. However, any test that would normally benefit from sight suffers a –30 penalty unless the creature has another trait (such as Sonar Sense) that compensates.</p>"
+    },
+    "benefit": "<p>Immune to sight-based effects. Suffers –30 on tests normally benefiting from sight unless compensated by another sense.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "blind",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Jw5tN8xPk3VbGm1D"
+}

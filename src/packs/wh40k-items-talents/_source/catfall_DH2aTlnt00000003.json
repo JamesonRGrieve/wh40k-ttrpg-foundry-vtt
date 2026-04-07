@@ -1,0 +1,73 @@
+{
+  "name": "Catfall",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "catfall",
+    "category": "physical",
+    "source": "DH2e Core",
+    "description": "<p>The character has an innate sense of balance and is able to fall great distances without harm.</p>",
+    "tier": 1,
+    "benefit": "<p>The character treats any falling distance as if it were half the actual distance for the purposes of determining falling damage, rounding down. The character also adds +20 to their Agility test when trying to land on their feet.</p>",
+    "aptitudes": [
+      "Agility",
+      "Fieldcraft"
+    ],
+    "prerequisites": {
+      "text": "Agility 30",
+      "characteristics": {
+        "agility": 30
+      },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Halves effective falling distance for damage. +20 to land on feet.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000003"
+}

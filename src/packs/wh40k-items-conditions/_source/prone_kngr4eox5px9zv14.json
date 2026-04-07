@@ -1,0 +1,40 @@
+{
+  "name": "Prone",
+  "type": "condition",
+  "img": "icons/svg/falling.svg",
+  "system": {
+    "identifier": "prone",
+    "nature": "harmful",
+    "effect": "<p>The character suffers &minus;10 to Weapon Skill tests. Melee attackers gain +10 to hit them. Ranged attackers suffer &minus;10 to hit them at range. Standing up costs a Half Action.</p>",
+    "removal": "<p>The character may spend a Half Action to stand up.</p>",
+    "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>The character is on the ground. They suffer &minus;10 to Weapon Skill tests. Melee attacks against a Prone target gain +10 to hit, while ranged attacks against a Prone target at more than 2 metres suffer &minus;10 to hit. A Prone character may stand as a Half Action. A Prone character who wishes to move without standing can only crawl at a rate of one metre per Half Action.</p>",
+      "source": {
+        "book": "DH2e Core",
+        "page": "",
+        "custom": ""
+      }
+    },
+    "modifiers": {
+      "characteristics": {
+        "ws": -10
+      },
+      "skills": {},
+      "combat": {}
+    },
+    "notes": "",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "kngr4eox5px9zv14"
+}

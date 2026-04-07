@@ -1,0 +1,73 @@
+{
+  "name": "Ferric Summons",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "source": "Only War Core",
+    "description": {
+      "value": "<p>Character can call an unsecured Metal Object to their hand from up to 40 metres away using Ferric Lure Implants. Object may be up to 2kg*WP Bonus in weight.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>Character can call an unsecured Metal Object to their hand from up to 40 metres away using Ferric Lure Implants. Object may be up to 2kg*WP Bonus in weight.</p>",
+    "aptitudes": [
+      "Willpower",
+      "Tech",
+      "Unaligned"
+    ],
+    "prerequisites": {
+      "text": "Ferric Lure, Mechanicus Implants",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "ferricSummons",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Pull Metal Objects",
+          "description": "<p>You can pull weapons from enemies hands or attract larger metal objects within 10m.</p>"
+        }
+      ]
+    },
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "aIXvU83xPosyzrYB"
+}

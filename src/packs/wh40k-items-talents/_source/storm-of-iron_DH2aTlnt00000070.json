@@ -1,0 +1,75 @@
+{
+  "name": "Storm of Iron",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "stormOfIron",
+    "category": "combat",
+    "source": "DH2e Core",
+    "description": "<p>The character can lay down a withering hail of suppressive fire.</p>",
+    "tier": 3,
+    "benefit": "<p>When firing a weapon on Full Auto, the character may spend an extra Half Action to double the number of hits scored. In addition, targets caught in the character's suppressive fire suffer an additional -10 to Pinning tests.</p>",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Offence"
+    ],
+    "prerequisites": {
+      "text": "Ballistic Skill 50, Mighty Shot",
+      "characteristics": {
+        "ballisticSkill": 50
+      },
+      "skills": {},
+      "talents": [
+        "Mighty Shot"
+      ]
+    },
+    "cost": 0,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Full Auto: extra Half Action to double hits. -10 to enemy Pinning tests.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000070"
+}

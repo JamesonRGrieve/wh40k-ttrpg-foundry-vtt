@@ -1,0 +1,27 @@
+{
+  "name": "Scholastic Lore",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "intelligence",
+    "descriptor": "Scholastic Lore represents deep, academic knowledge of a subject gained through formal study or intensive research. Each specialisation is a separate skill.",
+    "uses": "Uses: Recalling detailed, academic information about a subject. Scholastic Lore covers knowledge that requires formal education or extensive study, beyond what Common Lore would provide.\nDegrees of Success determine the depth and accuracy of recalled information. Highly obscure or ancient knowledge may require multiple Degrees of Success.\nSpecialisations: Astromancy, Beasts, Bureaucracy, Chymistry, Cryptology, Heraldry, Imperial Warrants, Judgement, Legend, Numerology, Occult, Philosophy, Tactica Imperialis. Each specialisation must be taken separately as a distinct skill.",
+    "useTime": "Free Action",
+    "description": {
+      "value": "<p>Scholastic Lore represents deep, academic knowledge of a subject gained through formal study or intensive research. Each specialisation is a separate skill.</p>\n<p><strong>Specialisations:</strong> Astromancy, Beasts, Bureaucracy, Chymistry, Cryptology, Heraldry, Imperial Warrants, Judgement, Legend, Numerology, Occult, Philosophy, Tactica Imperialis</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": [
+      "Intelligence",
+      "Knowledge"
+    ],
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Pj9sIn2oXe6yZh4L"
+}

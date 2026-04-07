@@ -1,0 +1,36 @@
+{
+  "name": "Xenos Chitin Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "flak",
+    "weight": 3,
+    "availability": "near-unique",
+    "notes": "Heretical and incredibly rare armour composed of Tyranid Chitin. May attract unwanted attention from the Inquisition, Arbites, Ecclesiarchy, etc. ",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Heretical and incredibly rare armour composed of Tyranid Chitin. May attract unwanted attention from the Inquisition, Arbites, Ecclesiarchy, etc. </p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "body"
+    ],
+    "armourPoints": {
+      "head": 5,
+      "body": 5,
+      "leftArm": 5,
+      "rightArm": 5,
+      "leftLeg": 5,
+      "rightLeg": 5
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "iouuEY3Zl5U6QvcI"
+}

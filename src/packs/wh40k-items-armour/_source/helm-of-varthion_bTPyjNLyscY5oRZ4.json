@@ -1,0 +1,36 @@
+{
+  "name": "Helm of Varthion",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "power",
+    "weight": 18,
+    "availability": "Hero",
+    "notes": "Grants +10 to all Attack Rolls, +3 to Penetration of any weapon wielded by wearer. Increases Effective Rank by 1 for determining Squad Cohesion or for Ultramarine Chapter Abilities in Solo Mode.",
+    "source": "Deathwatch: Core",
+    "description": {
+      "value": "<p>Grants +10 to all Attack Rolls, +3 to Penetration of any weapon wielded by wearer. Increases Effective Rank by 1 for determining Squad Cohesion or for Ultramarine Chapter Abilities in Solo Mode.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "head"
+    ],
+    "armourPoints": {
+      "head": 12,
+      "body": 12,
+      "leftArm": 12,
+      "rightArm": 12,
+      "leftLeg": 12,
+      "rightLeg": 12
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "bTPyjNLyscY5oRZ4"
+}

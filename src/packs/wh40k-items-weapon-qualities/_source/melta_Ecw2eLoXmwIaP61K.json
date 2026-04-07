@@ -1,0 +1,21 @@
+{
+  "name": "Melta",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "melta",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 19</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>19</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ecw2eLoXmwIaP61K"
+}

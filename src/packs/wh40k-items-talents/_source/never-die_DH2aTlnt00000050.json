@@ -1,0 +1,74 @@
+{
+  "name": "Never Die",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "neverDie",
+    "category": "physical",
+    "source": "DH2e Core",
+    "description": "<p>The character refuses to give in to death, clinging to life through sheer determination.</p>",
+    "tier": 2,
+    "benefit": "<p>When the character suffers Critical Damage, they may spend a Fate Point to count the result as one less (to a minimum of 1). In addition, the character gains +20 to tests to resist the effects of Blood Loss.</p>",
+    "aptitudes": [
+      "Willpower",
+      "Defence"
+    ],
+    "prerequisites": {
+      "text": "Willpower 50, Toughness 40",
+      "characteristics": {
+        "willpower": 50,
+        "toughness": 40
+      },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Fate Point to reduce Critical Damage by 1. +20 to resist Blood Loss.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000050"
+}

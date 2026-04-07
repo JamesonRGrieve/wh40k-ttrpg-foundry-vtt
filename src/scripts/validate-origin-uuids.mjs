@@ -17,9 +17,9 @@ const __dirname = path.dirname(__filename);
 // Configuration
 const PACKS_DIR = path.join(__dirname, '../../packs');
 const ORIGIN_PATH_DIR = path.join(PACKS_DIR, 'rt-items-origin-path/_source');
-const TALENTS_DIR = path.join(PACKS_DIR, 'rt-items-talents/_source');
-const TRAITS_DIR = path.join(PACKS_DIR, 'rt-items-traits/_source');
-const GEAR_DIR = path.join(PACKS_DIR, 'rt-items-gear/_source');
+const TALENTS_DIR = path.join(PACKS_DIR, 'wh40k-items-talents/_source');
+const TRAITS_DIR = path.join(PACKS_DIR, 'wh40k-items-traits/_source');
+const GEAR_DIR = path.join(PACKS_DIR, 'wh40k-items-gear/_source');
 
 // Colors for terminal output
 const colors = {
@@ -177,9 +177,9 @@ function main() {
 
     // Load compendia
     console.log('Loading compendia...');
-    const talents = loadCompendium(TALENTS_DIR, 'rt-items-talents');
-    const traits = loadCompendium(TRAITS_DIR, 'rt-items-traits');
-    const gear = loadCompendium(GEAR_DIR, 'rt-items-gear');
+    const talents = loadCompendium(TALENTS_DIR, 'wh40k-items-talents');
+    const traits = loadCompendium(TRAITS_DIR, 'wh40k-items-traits');
+    const gear = loadCompendium(GEAR_DIR, 'wh40k-items-gear');
 
     console.log(`  ${colors.green}✓${colors.reset} Loaded ${talents.size / 2} talents`);
     console.log(`  ${colors.green}✓${colors.reset} Loaded ${traits.size / 2} traits`);

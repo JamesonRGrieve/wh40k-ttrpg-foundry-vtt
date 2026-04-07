@@ -1,0 +1,71 @@
+{
+  "name": "Las Weapon Mastery",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "lasWeaponMastery",
+    "category": "combat",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Whenever this character makes a ranged attack with a las weapon, they deal +1 damage per two Degrees of Success scored beyond the first.</p>"
+    },
+    "tier": 3,
+    "isPassive": true,
+    "isRollable": false,
+    "benefit": "<p>Whenever this character makes a ranged attack with a las weapon, they deal +1 damage per two Degrees of Success scored beyond the first.</p>",
+    "aptitudes": [
+      "Ballistic Skill",
+      "General"
+    ],
+    "prerequisites": {
+      "text": "BS 45, Las Weapon Expertise",
+      "characteristics": {
+        "bs": 45
+      },
+      "skills": [],
+      "talents": [
+        "Las Weapon Expertise"
+      ]
+    },
+    "cost": 900,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Focused Beams",
+          "description": "<p>When you attack with las weapons, deal +1 damage per two Degrees of Success beyond the first.</p>"
+        }
+      ]
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7oetJqEOZ7JkxtO6"
+}
