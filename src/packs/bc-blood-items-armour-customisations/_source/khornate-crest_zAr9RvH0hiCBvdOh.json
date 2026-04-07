@@ -1,7 +1,7 @@
 {
   "name": "Khornate Crest",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s05.png",
   "system": {
     "effect": "Attached to the Head, provides +1 AP to head and +10 to all Interaction Tests with followers of Khorne. Counts as Dvotional Iconography. Must be dedicated to Khorne to wear,",
     "availability": "extremely-rare",

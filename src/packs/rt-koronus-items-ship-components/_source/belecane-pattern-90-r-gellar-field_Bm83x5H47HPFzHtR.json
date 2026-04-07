@@ -1,7 +1,7 @@
 {
   "name": "Belecane-Pattern 90.r Gellar Field",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_16.png",
   "system": {
     "hullType": [
       "all"

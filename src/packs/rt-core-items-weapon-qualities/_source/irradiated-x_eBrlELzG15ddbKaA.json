@@ -1,0 +1,21 @@
+{
+  "name": "Irradiated(X)",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_01.png",
+  "system": {
+    "identifier": "irradiated-x",
+    "hasLevel": false,
+    "level": null,
+    "effect": "When a character is hit by this weapon, regardless of whether they take damage, they must make -10*X Toughness Test or suffer 2d10 nonpermenant Toughness Damage.",
+    "notes": "",
+    "description": {
+      "value": "<p>When a character is hit by this weapon, regardless of whether they take damage, they must make -10*X Toughness Test or suffer 2d10 nonpermenant Toughness Damage.</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "eBrlELzG15ddbKaA"
+}

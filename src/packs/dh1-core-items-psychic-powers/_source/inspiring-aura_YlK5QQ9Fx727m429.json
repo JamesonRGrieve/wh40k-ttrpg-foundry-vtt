@@ -1,7 +1,7 @@
 {
   "name": "Inspiring Aura",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/link-spirit-1.jpg",
   "system": {
     "discipline": "wMinor Power",
     "prerequisites": "Gain Minor Power Talent",

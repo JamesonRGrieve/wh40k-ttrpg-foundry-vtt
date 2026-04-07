@@ -1,7 +1,7 @@
 {
   "name": "Play Dead",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_01.png",
   "system": {
     "typeAndAction": "Basic Order\nFull Action",
     "requirements": ",Deceive Skill\nApt: General, Social",

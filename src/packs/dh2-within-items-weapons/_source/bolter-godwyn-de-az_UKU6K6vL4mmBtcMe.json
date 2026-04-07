@@ -1,7 +1,7 @@
 {
   "name": "Bolter (Godwyn-De'az)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_02.png",
   "system": {
     "identifier": "bolter-godwyn-deaz",
     "class": "basic",

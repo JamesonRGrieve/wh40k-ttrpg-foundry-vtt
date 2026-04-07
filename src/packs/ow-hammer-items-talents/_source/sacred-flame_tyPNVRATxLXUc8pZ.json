@@ -1,7 +1,7 @@
 {
   "name": "Sacred Flame",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_28.png",
   "system": {
     "identifier": "sacredFlame",
     "category": "combat",

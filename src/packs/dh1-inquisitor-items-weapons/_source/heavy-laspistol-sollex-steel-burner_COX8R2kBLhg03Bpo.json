@@ -1,7 +1,7 @@
 {
   "name": "Heavy Laspistol (Sollex) \"Steel Burner\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_14.png",
   "system": {
     "identifier": "heavy-laspistol-sollex-steel-burner",
     "class": "pistol",

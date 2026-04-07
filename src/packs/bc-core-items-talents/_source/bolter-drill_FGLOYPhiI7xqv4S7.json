@@ -1,7 +1,7 @@
 {
   "name": "Bolter Drill",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_23.png",
   "system": {
     "category": "combat",
     "source": "Black Crusade Core",

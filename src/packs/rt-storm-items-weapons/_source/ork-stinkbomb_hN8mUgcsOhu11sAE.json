@@ -1,7 +1,7 @@
 {
   "name": "Ork Stinkbomb",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/thrown-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/grenade/grenade_07.png",
   "system": {
     "identifier": "ork-stinkbomb",
     "class": "thrown",

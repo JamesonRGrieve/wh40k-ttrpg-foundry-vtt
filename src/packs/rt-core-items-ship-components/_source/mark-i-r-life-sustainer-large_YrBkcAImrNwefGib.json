@@ -1,7 +1,7 @@
 {
   "name": "Mark I.R Life Sustainer (Large)",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_20.png",
   "system": {
     "hullType": [
       "light-cruiser",

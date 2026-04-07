@@ -1,7 +1,7 @@
 {
   "name": "Wall of Fire",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fire-arrows-magenta-1.jpg",
   "system": {
     "discipline": "Pyromancy",
     "prerequisites": "-",

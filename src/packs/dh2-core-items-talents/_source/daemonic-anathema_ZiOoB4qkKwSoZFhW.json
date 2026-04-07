@@ -1,7 +1,7 @@
 {
   "name": "Daemonic Anathema",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_15.PNG",
   "system": {
     "category": "psychic",
     "source": "DH2e Core",

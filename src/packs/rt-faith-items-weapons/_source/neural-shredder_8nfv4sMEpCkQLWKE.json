@@ -1,7 +1,7 @@
 {
   "name": "Neural Shredder",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_18.png",
   "system": {
     "identifier": "neural-shredder",
     "class": "basic",

@@ -1,0 +1,63 @@
+{
+  "_id": "DH2CyberMec0002A",
+  "name": "Manipulator Mechadendrite",
+  "type": "cybernetic",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "identifier": "manipulator-mechadendrite",
+    "type": "mechadendrite",
+    "locations": [
+      "spine"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "effect": "<p>A shoulder-mounted crane arm extending to roughly 1.5 metres. It grants +20 to Strength Tests, can be locked to an anchor point as a Free Action, and can be used as an improvised Primitive club dealing 1d5+2 Impact damage. It cannot perform fine manipulation.</p>",
+    "drawbacks": "<p>Requires the relevant Mechadendrite Use talent and Cyber-Mantle. A character may not have more mechadendrites than his Toughness Bonus.</p>",
+    "installation": {
+      "surgery": "Major surgery required",
+      "difficulty": "-20 Medicae",
+      "recoveryTime": "1 week"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    },
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 500,
+      "currency": "throne"
+    },
+    "equipped": true,
+    "inBackpack": false,
+    "container": "",
+    "description": {
+      "value": "<p>A heavy manipulator arm for lifting, bracing, and crude striking. In DH2 core this belongs in Cybernetics.</p>",
+      "chat": "",
+      "summary": "Cybernetic manipulator arm"
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "183",
+      "custom": ""
+    },
+    "notes": "Requires relevant Mechadendrite Use talent and Cyber-Mantle.",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {}
+}

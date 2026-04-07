@@ -1,7 +1,7 @@
 {
   "name": "Field Vivisection",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_12.PNG",
   "system": {
     "identifier": "fieldVivisection",
     "category": "combat",

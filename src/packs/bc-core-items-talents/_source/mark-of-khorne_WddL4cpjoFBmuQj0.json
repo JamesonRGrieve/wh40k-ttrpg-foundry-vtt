@@ -1,7 +1,7 @@
 {
   "name": "Mark of Khorne",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_05.png",
   "system": {
     "category": "psychic",
     "source": "Black Crusade Core",

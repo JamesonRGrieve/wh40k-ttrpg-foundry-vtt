@@ -1,7 +1,7 @@
 {
   "name": "Underground Resources (Penal World)",
   "type": "talent",
-  "img": "icons/svg/coins.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_30.png",
   "system": {
     "identifier": "underground-resources-penal-world",
     "category": "origin",

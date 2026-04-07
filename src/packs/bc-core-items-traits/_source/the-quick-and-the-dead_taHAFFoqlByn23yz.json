@@ -1,22 +1,24 @@
 {
   "name": "The Quick and the Dead",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_03.png",
   "system": {
     "category": "general",
     "requirements": "Heretic Human (Innate)",
     "source": "Black Crusade Core",
     "description": {
-      "value": "<p>Gain +2 to Initiative Rolls.</p>"
+      "value": "<p>To survive in the Vortex, particularly as a human, one must be quick, both in wits and action. Sometimes fast reflexes can compensate for ceramite armour.</p>"
     },
-    "benefit": "<p>Gain +2 to Initiative Rolls.</p>",
+    "benefit": "<p>All Heretics with this Trait add a +2 bonus to Initiative Rolls.</p>",
     "level": 0,
     "notes": "",
     "identifier": "",
     "modifiers": {
       "characteristics": {},
       "skills": {},
-      "combat": {},
+      "combat": {
+        "initiative": 2
+      },
       "wounds": 0,
       "fate": 0,
       "movement": 0

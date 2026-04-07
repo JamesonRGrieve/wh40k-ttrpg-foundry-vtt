@@ -1,7 +1,7 @@
 {
   "name": "Templar Calix of the Scholastica Psykana",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_24.png",
   "system": {
     "requirements": "Psyker Career, DH Rank 4+. <10 Insanity and Corruption Points.",
     "source": "DH: Inquisitor's Handbook (Page 80)",

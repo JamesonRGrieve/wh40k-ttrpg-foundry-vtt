@@ -1,7 +1,7 @@
 {
   "name": "Meltagun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_03.png",
   "system": {
     "identifier": "meltagun",
     "class": "basic",
@@ -26,7 +26,7 @@
     "damage": {
       "formula": "2d10",
       "type": "energy",
-      "bonus": 4,
+      "bonus": 10,
       "penetration": 12
     },
     "special": [

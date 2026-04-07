@@ -1,7 +1,7 @@
 {
   "name": "Void Watcher",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-magenta-2.jpg",
   "system": {
     "discipline": "zNPC - Eldar \n(Void Dreamer)",
     "prerequisites": "Eldar Psyker",

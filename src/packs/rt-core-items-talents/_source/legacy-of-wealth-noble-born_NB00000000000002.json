@@ -1,7 +1,7 @@
 {
   "name": "Legacy of Wealth (Noble Born)",
   "type": "talent",
-  "img": "icons/svg/coins.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_28.png",
   "system": {
     "identifier": "legacy-of-wealth-noble-born",
     "category": "origin",

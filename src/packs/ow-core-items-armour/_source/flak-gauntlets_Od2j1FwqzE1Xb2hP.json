@@ -1,7 +1,7 @@
 {
   "name": "Flak Gauntlets",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/gloves_s10.png",
   "system": {
     "type": "flak",
     "weight": 1,

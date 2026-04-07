@@ -1,7 +1,7 @@
 {
   "name": "Shifting Lines of Fate",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/horror-acid-3.jpg",
   "system": {
     "discipline": "xRenegade",
     "prerequisites": "Desperate Transmog-rification\nOW: Psy Rating 5",

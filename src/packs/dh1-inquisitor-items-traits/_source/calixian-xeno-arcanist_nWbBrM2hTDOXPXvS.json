@@ -1,7 +1,7 @@
 {
   "name": "Calixian Xeno-Arcanist",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_09.png",
   "system": {
     "requirements": "Adept Career, DH Rank 4+. Intelligence 40+",
     "source": "DH: Inquisitor's Handbook (Page 58)",

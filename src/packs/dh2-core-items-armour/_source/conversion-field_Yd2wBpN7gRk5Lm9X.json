@@ -1,11 +1,11 @@
 {
   "name": "Conversion Field",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s01.png",
   "system": {
     "type": "force-field",
-    "weight": 0.5,
-    "availability": "near-unique",
+    "weight": 1,
+    "availability": "extremely-rare",
     "notes": "Protection Rating 50. Overload on 01-10. When the field stops damage, it converts the attack's energy into a blinding flash of light.",
     "source": "DH2e Core",
     "description": {

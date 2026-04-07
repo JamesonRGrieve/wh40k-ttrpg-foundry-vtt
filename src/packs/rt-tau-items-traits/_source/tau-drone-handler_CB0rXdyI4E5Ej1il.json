@@ -1,7 +1,7 @@
 {
   "name": "Tau Drone Handler",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_03.png",
   "system": {
     "requirements": "Tau, RT Rank 3+, Intelligence 40+, Tech-Use +10. Proven to display aptitude for technology.",
     "source": "RT: Tau Character Guide (Page 22)",

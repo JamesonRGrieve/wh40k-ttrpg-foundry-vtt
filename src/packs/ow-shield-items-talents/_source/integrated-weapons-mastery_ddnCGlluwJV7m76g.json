@@ -1,7 +1,7 @@
 {
   "name": "Integrated Weapons Mastery",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_30.PNG",
   "system": {
     "identifier": "integratedWeaponsMastery",
     "category": "combat",

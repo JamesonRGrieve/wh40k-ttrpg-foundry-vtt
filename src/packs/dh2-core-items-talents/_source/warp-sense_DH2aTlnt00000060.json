@@ -1,7 +1,7 @@
 {
   "name": "Warp Sense",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_18.PNG",
   "system": {
     "identifier": "warpSense",
     "category": "psychic",

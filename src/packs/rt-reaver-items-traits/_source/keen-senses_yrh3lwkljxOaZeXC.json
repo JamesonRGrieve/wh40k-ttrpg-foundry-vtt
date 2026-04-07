@@ -1,7 +1,7 @@
 {
   "name": "Keen Senses",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_06.png",
   "system": {
     "category": "general",
     "requirements": "Dark Eldar (Innate)",

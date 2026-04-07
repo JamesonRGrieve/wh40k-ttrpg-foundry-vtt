@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Hydra Gauntlets",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/fist_weapon/fist_weapon_08_b.PNG",
   "system": {
     "identifier": "dark-eldar-hydra-gauntlets",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Astartes Power Lance [Best Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_09_b.PNG",
   "system": {
     "identifier": "astartes-power-lance-best",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Warp Vigil",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/enchant-blue-3.jpg",
   "system": {
     "useTime": "Full Action",
     "range": "Self",

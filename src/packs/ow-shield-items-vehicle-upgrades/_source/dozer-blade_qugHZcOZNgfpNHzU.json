@@ -1,7 +1,7 @@
 {
   "name": "Dozer Blade",
   "type": "vehicleUpgrade",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_08.png",
   "system": {
     "descriptionText": "Add +4 Armour to Front Face, Treat Heavy Rubble and other detritus as Open Ground as long as moving at Tactical Speed or less each turn. Can be used as an Improvised Weapon.\nMutually Exclusive with Minesweeper.",
     "description": {

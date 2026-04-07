@@ -1,7 +1,7 @@
 {
   "name": "Regeneration (X)",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_31.png",
   "system": {
     "category": "creature",
     "requirements": "",

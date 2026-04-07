@@ -1,7 +1,7 @@
 {
   "name": "Sharpened Senses",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-acid-2.jpg",
   "system": {
     "discipline": "Biomancy",
     "prerequisites": "Psy Rating 3, Perception 30+",

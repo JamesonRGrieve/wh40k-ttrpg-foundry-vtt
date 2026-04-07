@@ -1,7 +1,7 @@
 {
   "name": "Glaive (Relic)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_03_b.png",
   "system": {
     "identifier": "glaive-relic",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Tau Pulse Rifle",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_07.png",
   "system": {
     "identifier": "tau-pulse-rifle",
     "class": "basic",

@@ -1,7 +1,7 @@
 {
   "name": "Favoured by the Warp",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_22.PNG",
   "system": {
     "category": "psychic",
     "source": "Only War Core",

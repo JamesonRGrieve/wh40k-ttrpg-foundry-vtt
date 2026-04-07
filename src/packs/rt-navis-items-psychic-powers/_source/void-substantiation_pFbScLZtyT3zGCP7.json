@@ -1,7 +1,7 @@
 {
   "name": "Void Substantiation",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rock-sky-2.jpg",
   "system": {
     "discipline": "Voidfrost\n(Cryokinesis)",
     "prerequisites": "Black Sleep\nOW: Psy Rating 6",

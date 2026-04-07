@@ -1,7 +1,7 @@
 {
   "name": "Eviscerator",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_04_b.PNG",
   "system": {
     "identifier": "eviscerator",
     "class": "melee",
@@ -24,10 +24,10 @@
       }
     },
     "damage": {
-      "formula": "1d10",
+      "formula": "2d10",
       "type": "rending",
-      "bonus": 9,
-      "penetration": 5
+      "bonus": 0,
+      "penetration": 9
     },
     "special": [
       "razor-sharp",

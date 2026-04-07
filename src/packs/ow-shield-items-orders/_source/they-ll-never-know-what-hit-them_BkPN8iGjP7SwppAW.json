@@ -1,7 +1,7 @@
 {
   "name": "They'll Never Know What Hit Them!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_26.png",
   "system": {
     "typeAndAction": "Basic Order\nHalf or Full Action",
     "requirements": ".Ratling, Ratling Comrade, Stealth +10.\nApt: Agility, Fieldcraft",

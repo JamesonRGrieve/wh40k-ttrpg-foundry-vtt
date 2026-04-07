@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Stinger Pistol",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_06.png",
   "system": {
     "identifier": "dark-eldar-stinger-pistol",
     "class": "pistol",

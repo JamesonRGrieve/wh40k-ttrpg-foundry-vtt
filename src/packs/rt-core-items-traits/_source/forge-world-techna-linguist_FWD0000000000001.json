@@ -1,7 +1,7 @@
 {
   "name": "Forge World Techna-Linguist",
   "type": "trait",
-  "img": "modules/game-icons-net/whitetransparent/cog.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_32.png",
   "system": {
     "identifier": "forge-world-techna-linguist",
     "category": "origin",

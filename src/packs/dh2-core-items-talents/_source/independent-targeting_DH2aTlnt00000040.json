@@ -1,7 +1,7 @@
 {
   "name": "Independent Targeting",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_30.png",
   "system": {
     "identifier": "independentTargeting",
     "category": "combat",

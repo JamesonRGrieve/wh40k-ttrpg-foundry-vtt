@@ -1,0 +1,44 @@
+{
+  "_id": "1ujrygtbgljvd000",
+  "name": "Multi-Key",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>A compact lock override device used to open or bypass standard Imperial locks.</p>",
+      "chat": "",
+      "summary": "A compact lock override device used to open or bypass standard Imperial locks."
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "A compact lock override device used to open or bypass standard Imperial locks.",
+    "duration": "",
+    "notes": "",
+    "identifier": "multi-key",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {}
+}

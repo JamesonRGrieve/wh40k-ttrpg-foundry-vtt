@@ -1,7 +1,7 @@
 {
   "name": "Mask of Deceit",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-sky-2.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Tzeentch)",
     "prerequisites": "Tzeentch Aligned, Psy Rating 4, Fellowship 40+",

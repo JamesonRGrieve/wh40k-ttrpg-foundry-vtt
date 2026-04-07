@@ -1,7 +1,7 @@
 {
   "name": "Ork Kommando",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_33.png",
   "system": {
     "requirements": "Ork, RT Rank 4+, Agility 35+ and Perception 35+",
     "source": "RT: Into the Storm\n(Page 92)",

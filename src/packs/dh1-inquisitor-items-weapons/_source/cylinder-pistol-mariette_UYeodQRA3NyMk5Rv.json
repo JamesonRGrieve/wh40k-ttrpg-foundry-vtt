@@ -1,7 +1,7 @@
 {
   "name": "Cylinder Pistol (Mariette)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_17.png",
   "system": {
     "identifier": "cylinder-pistol-mariette",
     "class": "pistol",

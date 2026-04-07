@@ -1,7 +1,7 @@
 {
   "name": "Basic Technique: Powa' Burst",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fireball-sky-2.jpg",
   "system": {
     "discipline": "Waaagh!",
     "prerequisites": "None",

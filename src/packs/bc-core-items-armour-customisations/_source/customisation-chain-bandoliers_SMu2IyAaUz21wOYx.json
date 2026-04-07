@@ -1,7 +1,7 @@
 {
   "name": "Customisation: Chain Bandoliers",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s06.png",
   "system": {
     "effect": "Non Power-Field melee attacks that hit the wearer's body must test as if damaged by a power weapon.",
     "availability": "Special",

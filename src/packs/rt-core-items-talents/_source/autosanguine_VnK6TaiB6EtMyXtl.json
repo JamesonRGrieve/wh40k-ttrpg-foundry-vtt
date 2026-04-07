@@ -1,14 +1,14 @@
 {
   "name": "Autosanguine",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_10.png",
   "system": {
     "identifier": "autosanguine",
     "category": "general",
     "source": "Rogue Trader Core",
-    "description": "<p>Always at least considered as \"Lightly Wounded\", remove 2 points of damage per day.</p>",
+    "description": "<p>The ancient and blessed technology of the Mechanicus or some corrupt xeno tech flows through the Explorer's blood. These miniscule machines repair minor injuries and speed healing. When applying healing, he is always considered Lightly Wounded, and heals at an increased rate, removing 2 points of Damage per day.</p>",
     "tier": 1,
-    "benefit": "<p>Always at least considered as \"Lightly Wounded\", remove 2 points of damage per day.</p>",
+    "benefit": "<p>The Explorer is always considered Lightly Wounded when applying healing and removes 2 points of Damage per day.</p>",
     "aptitudes": [
       "Toughness",
       "Fieldcraft"
@@ -24,7 +24,7 @@
     "stackable": false,
     "rank": 1,
     "specialization": "",
-    "notes": "Grants accelerated natural healing. Always treated as at least Lightly Wounded for recovery purposes.",
+    "notes": "Always treated as Lightly Wounded for healing and natural recovery. This is accelerated natural healing, not per-round regeneration.",
     "rollConfig": {
       "characteristic": "",
       "skill": "",
@@ -59,12 +59,7 @@
       "skills": [],
       "talents": [],
       "traits": [],
-      "specialAbilities": [
-        {
-          "name": "Regeneration",
-          "description": "<p>At the start of each turn, you regain 1 Wound. This does not function if you are at 0 Wounds or lower.</p>"
-        }
-      ]
+      "specialAbilities": []
     },
     "gameSystems": [
       "rt"

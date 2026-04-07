@@ -1,7 +1,7 @@
 {
   "name": "Truncheon",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_09_b.png",
   "system": {
     "identifier": "truncheon",
     "class": "melee",

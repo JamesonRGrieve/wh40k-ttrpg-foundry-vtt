@@ -1,7 +1,7 @@
 {
   "name": "Cypra-Pattern Class 1 Drive",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_28.png",
   "system": {
     "hullType": [
       "transport"

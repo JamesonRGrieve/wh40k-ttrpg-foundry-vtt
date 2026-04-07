@@ -1,7 +1,7 @@
 {
   "name": "Eye of Oblivion",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/runes-magenta-3.jpg",
   "system": {
     "useTime": "Full Action",
     "range": "Line of Sight",

@@ -1,7 +1,7 @@
 {
   "name": "Stiletto (Landunder) \"Devil's Kiss\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/daggers/dagger_07_b.PNG",
   "system": {
     "identifier": "stiletto-landunder-devils-kiss",
     "class": "melee",

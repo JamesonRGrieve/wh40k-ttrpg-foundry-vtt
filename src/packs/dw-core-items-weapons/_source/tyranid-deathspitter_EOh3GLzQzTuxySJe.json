@@ -1,7 +1,7 @@
 {
   "name": "Tyranid Deathspitter",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_19.png",
   "system": {
     "identifier": "tyranid-deathspitter",
     "class": "basic",

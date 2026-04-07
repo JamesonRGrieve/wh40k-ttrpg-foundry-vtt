@@ -1,7 +1,7 @@
 {
   "name": "Witness of Dusk",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_12.PNG",
   "system": {
     "requirements": "Astropath, RT Rank 1+, Intelligence 40+. Character has history with the Witnesses of Dusk, and trained with their order for some time before selecting rank.",
     "source": "RT: The Navis Primer\n(Page 80)",

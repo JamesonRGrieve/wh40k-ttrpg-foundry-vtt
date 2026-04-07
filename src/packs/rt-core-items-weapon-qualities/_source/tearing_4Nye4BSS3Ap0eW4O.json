@@ -1,0 +1,21 @@
+{
+  "name": "Tearing",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_26.png",
+  "system": {
+    "identifier": "tearing",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 213</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>213</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "4Nye4BSS3Ap0eW4O"
+}

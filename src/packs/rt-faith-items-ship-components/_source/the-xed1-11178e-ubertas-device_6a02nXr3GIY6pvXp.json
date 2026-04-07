@@ -1,7 +1,7 @@
 {
   "name": "The XED1.11178E \"Ubertas\" Device",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_03.png",
   "system": {
     "hullType": [
       "all"

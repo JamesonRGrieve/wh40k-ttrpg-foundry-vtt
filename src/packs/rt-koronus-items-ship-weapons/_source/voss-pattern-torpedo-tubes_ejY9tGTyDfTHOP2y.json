@@ -1,7 +1,7 @@
 {
   "name": "Voss-pattern Torpedo Tubes",
   "type": "shipWeapon",
-  "img": "icons/svg/energy.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_05.png",
   "system": {
     "type": "Torpedo Tubes",
     "hullType": [

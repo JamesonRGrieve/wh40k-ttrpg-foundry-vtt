@@ -1,7 +1,7 @@
 {
   "name": "Basic Technique: Mind over Matter",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/ice-jade-2.jpg",
   "system": {
     "discipline": "Telekinesis\n",
     "prerequisites": "None",

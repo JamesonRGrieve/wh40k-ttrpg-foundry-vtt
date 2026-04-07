@@ -1,7 +1,7 @@
 {
   "name": "Meltagun (Mars)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-meltagun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_02.png",
   "system": {
     "identifier": "meltagun-mars",
     "class": "basic",

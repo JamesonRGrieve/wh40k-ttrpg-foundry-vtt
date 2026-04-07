@@ -1,0 +1,44 @@
+{
+  "name": "Monotask Servo-Skull",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tech",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Servo-Skull designed for a singular utility function. Examples include: Auger, Courier, Illuminator, Loud Hailer, Medicae, Utility, etc.</p>\n<h3>Requirements</h3><p>See Bestiary/InqHandbook Pg 145. Augur: (Rare/1500), Courier (Rare/1800), Illuminator (Scarce/950), Loud Hailer(Scarce/1000), Medicae(Rare/2500), Utility(Scarce/1500)</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> Varies T</p>",
+      "chat": "",
+      "summary": "Servo-Skull designed for a singular utility function. Examples include: Auger, Courier, Illuminator, Loud Hailer, Medicae, Utility, etc."
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Servo-Skull designed for a singular utility function. Examples include: Auger, Courier, Illuminator, Loud Hailer, Medicae, Utility, etc.",
+    "duration": "",
+    "notes": "Varies T",
+    "identifier": "monotask-servo-skull",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1r7mtfhybx36h000"
+}

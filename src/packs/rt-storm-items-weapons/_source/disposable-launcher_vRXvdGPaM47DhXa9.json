@@ -1,7 +1,7 @@
 {
   "name": "Disposable Launcher",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-launcher.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_01.png",
   "system": {
     "identifier": "disposable-launcher",
     "class": "heavy",

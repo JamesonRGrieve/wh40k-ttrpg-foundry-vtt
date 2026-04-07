@@ -1,7 +1,7 @@
 {
   "name": "Laspistol (Accatran, Heavy)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_09.png",
   "system": {
     "identifier": "laspistol-accatran-heavy",
     "class": "pistol",

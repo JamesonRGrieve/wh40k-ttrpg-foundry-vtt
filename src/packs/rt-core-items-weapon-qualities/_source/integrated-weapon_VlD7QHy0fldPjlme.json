@@ -1,0 +1,21 @@
+{
+  "name": "Integrated Weapon",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_20.png",
+  "system": {
+    "identifier": "integrated-weapon",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 4</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>4</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "VlD7QHy0fldPjlme"
+}

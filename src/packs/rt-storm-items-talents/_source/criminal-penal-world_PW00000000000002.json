@@ -1,7 +1,7 @@
 {
   "name": "Criminal (Penal World)",
   "type": "talent",
-  "img": "icons/svg/skull.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_37.png",
   "system": {
     "identifier": "criminal-penal-world",
     "category": "origin",

@@ -1,7 +1,7 @@
 {
   "name": "Shattertime",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fire-arrows-sky-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Exalted Powers)",
     "prerequisites": "Precognition\nPsy Rating 6, ",

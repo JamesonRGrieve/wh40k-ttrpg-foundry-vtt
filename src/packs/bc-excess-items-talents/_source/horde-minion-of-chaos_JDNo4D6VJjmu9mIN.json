@@ -1,7 +1,7 @@
 {
   "name": "Horde Minion of Chaos",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_32.png",
   "system": {
     "category": "general",
     "source": "BC: Tome of Excess",

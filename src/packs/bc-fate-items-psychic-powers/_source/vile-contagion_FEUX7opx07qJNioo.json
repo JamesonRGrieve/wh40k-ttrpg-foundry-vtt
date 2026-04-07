@@ -1,7 +1,7 @@
 {
   "name": "Vile Contagion",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/evil-eye-red-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Nurgle)",
     "prerequisites": "Mark of Nurgle, Nurgle's Rot",

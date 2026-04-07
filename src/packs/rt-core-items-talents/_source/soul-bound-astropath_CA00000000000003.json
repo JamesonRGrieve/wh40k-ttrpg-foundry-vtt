@@ -1,7 +1,7 @@
 {
   "name": "Soul-Bound (Astropath Transcendent)",
   "type": "talent",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_24.png",
   "system": {
     "identifier": "soul-bound-astropath",
     "category": "origin",

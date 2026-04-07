@@ -1,7 +1,7 @@
 {
   "name": "Eldar Singing Spear",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_02_b.png",
   "system": {
     "identifier": "eldar-singing-spear",
     "class": "melee",

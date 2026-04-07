@@ -1,7 +1,7 @@
 {
   "name": "Harpoon Gun (Heavy)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_03.png",
   "system": {
     "identifier": "harpoon-gun-heavy",
     "class": "heavy",

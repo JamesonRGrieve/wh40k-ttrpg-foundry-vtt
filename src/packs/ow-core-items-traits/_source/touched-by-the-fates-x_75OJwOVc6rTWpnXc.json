@@ -1,7 +1,7 @@
 {
   "name": "Touched by the Fates (X)",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_14.PNG",
   "system": {
     "category": "general",
     "requirements": "NPC of Importance",

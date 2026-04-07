@@ -1,7 +1,7 @@
 {
   "name": "Man-Portable Ectoplasma Cannon",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-plasma.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_01.png",
   "system": {
     "identifier": "man-portable-ectoplasma-cannon",
     "class": "heavy",

@@ -1,7 +1,7 @@
 {
   "name": "Dragonfire Bolts",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammo_08.png",
   "system": {
     "identifier": "dragonfire-bolts",
     "weaponTypes": [

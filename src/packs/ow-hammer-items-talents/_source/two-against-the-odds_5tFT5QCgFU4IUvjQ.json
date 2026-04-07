@@ -1,7 +1,7 @@
 {
   "name": "Two Against The Odds",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_04.png",
   "system": {
     "identifier": "twoAgainstTheOdds",
     "category": "combat",

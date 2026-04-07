@@ -1,7 +1,7 @@
 {
   "name": "Knife",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/daggers/dagger_03_b.PNG",
   "system": {
     "identifier": "knife",
     "class": "melee",

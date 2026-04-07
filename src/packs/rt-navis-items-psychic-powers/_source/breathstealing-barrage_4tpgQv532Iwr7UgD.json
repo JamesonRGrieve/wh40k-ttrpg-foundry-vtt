@@ -1,7 +1,7 @@
 {
   "name": "Breathstealing Barrage",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-grasp-sky-2.jpg",
   "system": {
     "discipline": "Voidfrost\n(Cryokinesis)",
     "prerequisites": "The Void's Touch\nOW: Psy Rating 5",

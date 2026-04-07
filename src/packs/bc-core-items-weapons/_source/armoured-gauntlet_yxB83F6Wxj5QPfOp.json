@@ -1,7 +1,7 @@
 {
   "name": "Armoured Gauntlet",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/fist_weapon/fist_weapon_02_b.PNG",
   "system": {
     "identifier": "armoured-gauntlet",
     "class": "melee",

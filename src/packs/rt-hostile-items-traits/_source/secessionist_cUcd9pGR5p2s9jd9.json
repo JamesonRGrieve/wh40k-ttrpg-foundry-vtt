@@ -1,7 +1,7 @@
 {
   "name": "Secessionist",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_22.PNG",
   "system": {
     "requirements": "Any Career, RT Rank 1+, Must have led a population of a region, voidstation, or starship from the rule of the imperium. (GM Discretion if taken at RT Rank 1).",
     "source": "RT: Hostile Acquisitions \n(Page 46)",

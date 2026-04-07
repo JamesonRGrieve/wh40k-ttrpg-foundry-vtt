@@ -1,7 +1,7 @@
 {
   "name": "Puppet Master (HB: Alternate Dominate)",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lighting-fire-3.jpg",
   "system": {
     "discipline": "Telepathy",
     "prerequisites": "Dominate",

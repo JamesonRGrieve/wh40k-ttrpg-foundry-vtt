@@ -1,7 +1,7 @@
 {
   "name": "Douse Flames",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/explosion-magenta-3.jpg",
   "system": {
     "discipline": "Pyromancy",
     "prerequisites": "-",

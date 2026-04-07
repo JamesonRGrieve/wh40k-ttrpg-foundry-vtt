@@ -1,7 +1,7 @@
 {
   "name": "Navis Scion",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_11.png",
   "system": {
     "requirements": "Navigator, RT Rank 1 Only, Not from Renegade House.",
     "source": "RT: Into the Storm\n(Page 90)",

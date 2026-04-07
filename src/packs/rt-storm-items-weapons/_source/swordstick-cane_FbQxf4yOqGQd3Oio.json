@@ -1,7 +1,7 @@
 {
   "name": "Swordstick Cane",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_12_b.PNG",
   "system": {
     "identifier": "swordstick-cane",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Mob Rule",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_28.png",
   "system": {
     "category": "general",
     "requirements": "Ork (Innate)",

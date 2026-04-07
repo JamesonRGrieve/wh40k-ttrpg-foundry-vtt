@@ -1,7 +1,7 @@
 {
   "name": "Dartcaster",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_01.png",
   "system": {
     "identifier": "dartcaster",
     "class": "pistol",

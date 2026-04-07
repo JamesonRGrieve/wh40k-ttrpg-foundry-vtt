@@ -1,7 +1,7 @@
 {
   "name": "Augmented Interior Bulkheads (Large)",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_29.png",
   "system": {
     "hullType": [
       "light-cruiser",

@@ -1,7 +1,7 @@
 {
   "name": "Long Las [Best Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_15.png",
   "system": {
     "identifier": "long-las-best",
     "class": "basic",

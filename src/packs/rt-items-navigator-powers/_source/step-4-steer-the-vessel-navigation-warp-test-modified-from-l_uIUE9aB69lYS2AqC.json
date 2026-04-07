@@ -1,7 +1,7 @@
 {
   "name": "Step 4: Steer the Vessel: Navigation (Warp) Test, modified from \"Locate the Astronomicon\" Result as well as passage difficulty. Pass Speeds up Journey, fail slows it.\nNavigator makes Navigation (Warp) Test, modified by how well or badly they did on locating the Astronomicon as well as passage difficulty. Result of this test determines the actual speed of their journey. If test is failed and Navigator rolls a 9 on either dice from test, ship is thrown off course and appears in the wrong system or wrong part of space (determined by GM).",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-jade-1.jpg",
   "system": {
     "useTime": null,
     "range": null,

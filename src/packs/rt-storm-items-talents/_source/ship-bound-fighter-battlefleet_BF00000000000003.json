@@ -1,7 +1,7 @@
 {
   "name": "Ship-Bound Fighter (Battlefleet)",
   "type": "talent",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_04.png",
   "system": {
     "identifier": "ship-bound-fighter-battlefleet",
     "category": "origin",

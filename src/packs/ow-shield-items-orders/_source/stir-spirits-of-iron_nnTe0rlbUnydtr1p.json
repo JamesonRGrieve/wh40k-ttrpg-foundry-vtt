@@ -1,7 +1,7 @@
 {
   "name": "Stir, Spirits of Iron!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_27.png",
   "system": {
     "typeAndAction": "Basic Order\nFull Action",
     "requirements": "Architectus Magna Spec\nServitor Comrade\n400xp",

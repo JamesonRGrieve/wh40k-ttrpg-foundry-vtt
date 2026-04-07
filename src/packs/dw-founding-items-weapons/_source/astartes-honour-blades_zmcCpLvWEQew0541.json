@@ -1,7 +1,7 @@
 {
   "name": "Astartes Honour Blades",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_06_b.PNG",
   "system": {
     "identifier": "astartes-honour-blades",
     "class": "melee",

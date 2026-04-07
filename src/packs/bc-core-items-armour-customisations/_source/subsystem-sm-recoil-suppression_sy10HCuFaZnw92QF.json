@@ -1,7 +1,7 @@
 {
   "name": "Subsystem (SM): Recoil Suppression",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s01.png",
   "system": {
     "effect": "Allows wearer to fire Basic Weapons one-handed, although not in melee.",
     "availability": "Special",

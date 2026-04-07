@@ -1,7 +1,7 @@
 {
   "name": "Step 1: Determine Duration:  Navigation(Warp) Test if passage is known, give rough estimate to travel duration. Pass/Fail kept secret by GM, as are additional modifiers.\nWhen setting out on a journey the GM selects an appropriate duration of the voyage. If the Navigator knows the passage, or has good information such as via a Navigational Chart or Cipher they may make a Navigation (Warp) Test (whether it passes or fails is known only to the GM, who applies secret modifiers to it). Pass gives rough estimate, fail gives increasingly incorrect estimate. If the Navigator does not know passage, can only make \"Educated Guess\".",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/haste-sky-2.jpg",
   "system": {
     "useTime": null,
     "range": null,

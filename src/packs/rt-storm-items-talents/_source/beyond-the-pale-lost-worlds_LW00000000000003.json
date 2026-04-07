@@ -1,7 +1,7 @@
 {
   "name": "Beyond the Pale (Lost Worlds)",
   "type": "talent",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_13.png",
   "system": {
     "identifier": "beyond-the-pale-lost-worlds",
     "category": "origin",

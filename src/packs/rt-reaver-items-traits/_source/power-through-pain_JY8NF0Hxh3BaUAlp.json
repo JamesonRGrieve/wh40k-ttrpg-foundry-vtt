@@ -1,7 +1,7 @@
 {
   "name": "Power Through Pain",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_20.PNG",
   "system": {
     "category": "general",
     "requirements": "Dark Eldar (Innate)",

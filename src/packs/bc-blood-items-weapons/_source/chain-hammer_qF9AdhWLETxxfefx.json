@@ -1,7 +1,7 @@
 {
   "name": "Chain Hammer",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_03_b.png",
   "system": {
     "identifier": "chain-hammer",
     "class": "melee",

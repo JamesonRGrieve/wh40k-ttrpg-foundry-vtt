@@ -1,23 +1,39 @@
 {
   "name": "Psy Focus",
   "type": "gear",
-  "img": "icons/svg/item-bag.svg",
+  "img": "icons/svg/backpack.svg",
   "system": {
+    "category": "tools",
     "weight": 0,
-    "availability": "rare",
-    "quantity": 1,
+    "availability": "average",
+    "craftsmanship": "common",
     "cost": {
       "value": 100,
       "currency": "throne"
     },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
+    "quantity": 1,
     "description": {
-      "value": "<p>A small personal item -- often a medallion, ring, carved bone, or crystal -- that a psyker uses as a focus for their powers. Grants +10 bonus to Focus Power tests. Each psy focus is unique to its user and must be personally attuned over a period of days.</p>"
+      "value": "<p>+10 to Invocation Skill Tests when used by a Psyker</p>\n<h3>Requirements</h3><p>Often an item with some meaning to the Psyker</p>\n<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 100 T\n15 R</p>",
+      "chat": "",
+      "summary": "+10 to Invocation Skill Tests when used by a Psyker"
     },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "+10 to Invocation Skill Tests when used by a Psyker",
+    "duration": "",
     "notes": "",
-    "source": "DH2e Core",
+    "identifier": "psy-focus",
     "gameSystems": [
       "dh2e"
     ]

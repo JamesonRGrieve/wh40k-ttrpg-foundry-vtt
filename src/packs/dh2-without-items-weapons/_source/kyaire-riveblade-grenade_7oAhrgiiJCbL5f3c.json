@@ -1,7 +1,7 @@
 {
   "name": "Kyaire Riveblade Grenade",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/thrown-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/grenade/grenade_04.png",
   "system": {
     "identifier": "kyaire-riveblade-grenade",
     "class": "thrown",

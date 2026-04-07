@@ -1,7 +1,7 @@
 {
   "name": "Outcast",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_15.PNG",
   "system": {
     "identifier": "outcast",
     "step": "background",

@@ -1,7 +1,7 @@
 {
   "name": "House Operative",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_35.png",
   "system": {
     "requirements": "Not Rogue Trader, Kroot, or Ork. RT Rank 4+. Fellowship 30+, and Intelligence or Willpower 40+. Worked closely with relevent political body, such as Noble House, Rogue Trader Dynasty, Navigator House, etc.",
     "source": "RT: Hostile Acquisitions \n(Page 38)",

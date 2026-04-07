@@ -1,7 +1,7 @@
 {
   "name": "Customisation: The Black Legion's Armour",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s01.png",
   "system": {
     "effect": "If a Chaos Space Marine not aligned to a Chaos God, gain +1 AP.",
     "availability": "Special",

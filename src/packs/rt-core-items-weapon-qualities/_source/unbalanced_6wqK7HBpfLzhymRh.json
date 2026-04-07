@@ -1,0 +1,21 @@
+{
+  "name": "Unbalanced",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_16.png",
+  "system": {
+    "identifier": "unbalanced",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 68</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>68</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6wqK7HBpfLzhymRh"
+}

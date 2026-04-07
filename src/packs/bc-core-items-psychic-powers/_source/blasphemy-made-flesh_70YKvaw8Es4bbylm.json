@@ -1,7 +1,7 @@
 {
   "name": "Blasphemy made Flesh",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-air-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Exalted Powers)",
     "prerequisites": "Abhorrent Ward\nCorruption 60+, Psy Rating 6, ",

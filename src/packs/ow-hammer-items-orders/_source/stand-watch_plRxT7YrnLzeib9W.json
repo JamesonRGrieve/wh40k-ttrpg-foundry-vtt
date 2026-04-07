@@ -1,7 +1,7 @@
 {
   "name": "Stand Watch",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_28.png",
   "system": {
     "typeAndAction": "Basic Order\nFull Action",
     "requirements": ",Vigilant Talent\nApt: Defence, Perception",

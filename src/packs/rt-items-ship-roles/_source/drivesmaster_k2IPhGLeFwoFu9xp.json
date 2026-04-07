@@ -1,7 +1,7 @@
 {
   "name": "Drivesmaster",
   "type": "shipRole",
-  "img": "icons/svg/crew.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_12.PNG",
   "system": {
     "rank": 4,
     "purpose": "Master and Maintainer of the Plasma Drives.",

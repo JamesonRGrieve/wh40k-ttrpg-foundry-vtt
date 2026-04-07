@@ -1,7 +1,7 @@
 {
   "name": "Spore Caster",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_17.png",
   "system": {
     "identifier": "spore-caster",
     "class": "basic",

@@ -2,7 +2,7 @@
   "_id": "0000000000kv3ibu",
   "name": "Explosive Critical - Body",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/slice-sky-1.jpg",
   "system": {
     "identifier": "crit_explosive_body_consolidated",
     "damageType": "explosive",

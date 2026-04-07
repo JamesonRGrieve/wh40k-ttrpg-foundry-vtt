@@ -1,7 +1,7 @@
 {
   "name": "Constant Combat Training (Fortress World)",
   "type": "talent",
-  "img": "icons/svg/combat.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_16.PNG",
   "system": {
     "identifier": "constant-combat-training-fortress-world",
     "category": "origin",

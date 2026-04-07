@@ -1,0 +1,28 @@
+{
+  "name": "Expander Rounds",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "weight": 0.5,
+    "availability": "rare",
+    "quantity": 1,
+    "cost": {
+      "value": 30,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>Bolt-type ammunition fitted with a delayed-activation mass-reactive core that causes the round to expand violently after penetrating the target. Adds +1 to Damage and gains the Tearing quality. Per clip/reload.</p>"
+    },
+    "notes": "",
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Hm7rTn2Kw6PxV9Ld"
+}

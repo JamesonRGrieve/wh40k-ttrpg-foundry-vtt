@@ -1,7 +1,7 @@
 {
   "name": "Heavy Stubber (Volg) \"Crank Cannon\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_20.png",
   "system": {
     "identifier": "heavy-stubber-volg-crank-cannon",
     "class": "heavy",

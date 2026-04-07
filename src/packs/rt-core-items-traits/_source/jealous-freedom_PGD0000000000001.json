@@ -1,7 +1,7 @@
 {
   "name": "Jealous Freedom",
   "type": "trait",
-  "img": "modules/game-icons-net/whitetransparent/broken-chains.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_08.png",
   "system": {
     "identifier": "jealous-freedom",
     "category": "origin",

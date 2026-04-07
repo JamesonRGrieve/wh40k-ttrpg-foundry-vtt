@@ -1,7 +1,7 @@
 {
   "name": "Laspistol (Clovis FP-14) \"Twist\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_07.png",
   "system": {
     "identifier": "laspistol-clovis-fp-14-twist",
     "class": "pistol",

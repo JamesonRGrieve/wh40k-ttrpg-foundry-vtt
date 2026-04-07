@@ -1,0 +1,21 @@
+{
+  "name": "Living Ammunition",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_08.png",
+  "system": {
+    "identifier": "living-ammunition",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 15</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>15</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "wF27V8x63ooma78r"
+}

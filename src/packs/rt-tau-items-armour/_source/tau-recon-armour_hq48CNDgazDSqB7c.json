@@ -1,7 +1,7 @@
 {
   "name": "Tau Recon Armour",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s05.png",
   "system": {
     "type": "xenos",
     "weight": 3,

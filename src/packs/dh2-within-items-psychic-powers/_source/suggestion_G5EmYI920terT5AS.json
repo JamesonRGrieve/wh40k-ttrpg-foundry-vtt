@@ -1,7 +1,7 @@
 {
   "name": "Suggestion",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-acid-3.jpg",
   "system": {
     "discipline": "wMinor Power 2E",
     "prerequisites": "Deceive Skill",

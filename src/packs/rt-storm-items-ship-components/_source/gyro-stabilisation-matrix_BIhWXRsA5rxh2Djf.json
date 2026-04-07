@@ -1,7 +1,7 @@
 {
   "name": "Gyro-stabilisation Matrix",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_11.png",
   "system": {
     "hullType": [
       "all"

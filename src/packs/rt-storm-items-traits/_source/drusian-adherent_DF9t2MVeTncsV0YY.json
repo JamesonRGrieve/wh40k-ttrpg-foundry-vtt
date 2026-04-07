@@ -1,7 +1,7 @@
 {
   "name": "Drusian Adherent",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_06.png",
   "system": {
     "requirements": "Not Astropath, Explorator, Ork, or Kroot. RT Rank 1+, <10 Corruption.",
     "source": "RT: Into the Storm\n(Page 78)",

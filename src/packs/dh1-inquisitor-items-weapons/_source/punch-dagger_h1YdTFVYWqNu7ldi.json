@@ -1,7 +1,7 @@
 {
   "name": "Punch Dagger",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/daggers/dagger_10_b.PNG",
   "system": {
     "identifier": "punch-dagger",
     "class": "melee",

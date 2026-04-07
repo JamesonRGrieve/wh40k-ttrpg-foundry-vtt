@@ -1,7 +1,7 @@
 {
   "name": "Pump-Action Shotgun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/guns/gun_05_b.PNG",
   "system": {
     "identifier": "pump-action-shotgun",
     "class": "basic",

@@ -1,7 +1,7 @@
 {
   "name": "Mechanicus Implants",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_28.png",
   "system": {
     "category": "general",
     "requirements": "",

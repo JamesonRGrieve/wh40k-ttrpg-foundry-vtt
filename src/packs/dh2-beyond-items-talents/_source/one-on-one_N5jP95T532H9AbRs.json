@@ -1,7 +1,7 @@
 {
   "name": "One on One",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_16.PNG",
   "system": {
     "identifier": "oneOnOne",
     "category": "combat",

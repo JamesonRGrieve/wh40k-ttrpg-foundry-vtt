@@ -1,7 +1,7 @@
 {
   "name": "Javelin (Relic) [Master Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/thrown-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/grenade/grenade_03.png",
   "system": {
     "identifier": "javelin-relic-master",
     "class": "thrown",

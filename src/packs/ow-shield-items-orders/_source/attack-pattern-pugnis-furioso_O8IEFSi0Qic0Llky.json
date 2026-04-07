@@ -1,7 +1,7 @@
 {
   "name": "Attack Pattern Pugnis Furioso",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_22.png",
   "system": {
     "typeAndAction": "Basic Order\nHalf Action",
     "requirements": ".Servitor Comrade: Pugnis-Class Combat Servitor\nApt: None",

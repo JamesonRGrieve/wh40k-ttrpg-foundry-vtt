@@ -2,7 +2,7 @@
   "_id": "0000000000vww92x",
   "name": "Impact Critical - Head",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lighting-acid-1.jpg",
   "system": {
     "identifier": "crit_impact_head_consolidated",
     "damageType": "impact",

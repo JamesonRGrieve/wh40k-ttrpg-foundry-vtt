@@ -1,7 +1,7 @@
 {
   "name": "Lasgun (Lucius) [Good Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_05.png",
   "system": {
     "identifier": "lasgun-lucius-good",
     "class": "basic",

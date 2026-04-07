@@ -1,7 +1,7 @@
 {
   "name": "Armour-Breaker",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_24.PNG",
   "system": {
     "identifier": "armourBreaker",
     "category": "combat",

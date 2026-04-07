@@ -1,7 +1,7 @@
 {
   "name": "Erasure",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rip-sky-1.jpg",
   "system": {
     "discipline": "Telepathy",
     "prerequisites": "Psy Rating 4",

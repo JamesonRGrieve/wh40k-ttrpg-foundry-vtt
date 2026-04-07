@@ -1,7 +1,7 @@
 {
   "name": "Through Unity, Devastation",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_26.png",
   "system": {
     "identifier": "throughUnityDevastation",
     "category": "leadership",

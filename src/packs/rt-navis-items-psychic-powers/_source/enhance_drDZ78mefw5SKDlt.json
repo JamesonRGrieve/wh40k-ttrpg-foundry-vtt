@@ -1,7 +1,7 @@
 {
   "name": "Enhance",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/explosion-royal-1.jpg",
   "system": {
     "discipline": "zNPC - Eldar \n(Warlock)",
     "prerequisites": "Eldar Psyker",

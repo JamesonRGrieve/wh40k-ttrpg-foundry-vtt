@@ -1,7 +1,7 @@
 {
   "name": "Ripper Charge",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_10.png",
   "system": {
     "identifier": "ripperCharge",
     "category": "combat",

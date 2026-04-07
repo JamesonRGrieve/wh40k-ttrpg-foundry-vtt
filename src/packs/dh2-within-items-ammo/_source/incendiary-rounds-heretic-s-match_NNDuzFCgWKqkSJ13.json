@@ -1,7 +1,7 @@
 {
   "name": "Incendiary Rounds \"Heretic's Match\"",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammunition_06_b.PNG",
   "system": {
     "identifier": "incendiary-rounds-heretics-match",
     "weaponTypes": [

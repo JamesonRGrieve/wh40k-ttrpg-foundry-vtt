@@ -1,7 +1,7 @@
 {
   "name": "Impel",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-sky-1.jpg",
   "system": {
     "discipline": "wMinor Power 2E",
     "prerequisites": "Willpower 30",

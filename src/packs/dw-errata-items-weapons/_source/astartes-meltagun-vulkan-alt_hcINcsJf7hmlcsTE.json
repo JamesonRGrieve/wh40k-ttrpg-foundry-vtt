@@ -1,7 +1,7 @@
 {
   "name": "Astartes Meltagun (Vulkan) (alt.)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-meltagun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_04.png",
   "system": {
     "identifier": "astartes-meltagun-vulkan-alt",
     "class": "basic",

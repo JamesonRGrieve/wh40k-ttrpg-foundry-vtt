@@ -1,7 +1,7 @@
 {
   "name": "Attend the Machine Spirit",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_22.PNG",
   "system": {
     "typeAndAction": "Basic Order\nHalf Action",
     "requirements": ".Mechanicus Related, Common Lore (Mechanicus), Tech-Use +10. Apt: Intelligence, Tech",

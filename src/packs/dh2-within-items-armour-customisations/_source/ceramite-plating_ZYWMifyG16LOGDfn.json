@@ -1,7 +1,7 @@
 {
   "name": "Ceramite Plating",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s08.png",
   "system": {
     "effect": "Add +3 AP vs weapons with the Flame or Melta Quality.",
     "availability": "rare",

@@ -1,7 +1,7 @@
 {
   "name": "Child of Dynasty",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/crown.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_22.PNG",
   "system": {
     "identifier": "child-of-dynasty",
     "step": "homeWorld",

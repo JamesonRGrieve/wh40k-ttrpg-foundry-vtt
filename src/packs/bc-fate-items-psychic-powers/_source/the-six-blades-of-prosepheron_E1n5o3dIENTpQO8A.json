@@ -1,7 +1,7 @@
 {
   "name": "The Six Blades of Prosepheron",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/slice-acid-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Slaanesh)",
     "prerequisites": "Slaanesh Aligned, Agility 50+, Lightning Attack, Two-Weapon Wielder",

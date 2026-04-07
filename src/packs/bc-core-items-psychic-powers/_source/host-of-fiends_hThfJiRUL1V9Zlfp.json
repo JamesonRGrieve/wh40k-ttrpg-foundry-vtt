@@ -1,7 +1,7 @@
 {
   "name": "Host of Fiends",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lighting-royal-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Unaligned)",
     "prerequisites": "Psy Rating 3",

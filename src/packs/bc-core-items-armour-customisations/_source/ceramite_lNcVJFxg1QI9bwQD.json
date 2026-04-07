@@ -1,7 +1,7 @@
 {
   "name": "Ceramite",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s01.png",
   "system": {
     "effect": "Add +3 AP vs Flamer or Melta Weapons.\nDecrease Armour Availability by 1 (Rare-->Very Rare)",
     "availability": "Special",

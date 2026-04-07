@@ -1,17 +1,17 @@
 {
   "name": "Improved Warp Sense",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_19.png",
   "system": {
     "category": "psychic",
     "source": "Rogue Trader Core",
     "description": {
-      "value": "<p>Can make Psynscience Skill as a Free Action</p>"
+      "value": "<p>The Explorer can now see the warp and physical universe side by side, no longer taking any concentration on his part. After gaining this Talent, the character may use the Psyniscience Skill as a Free Action.</p>"
     },
     "isPassive": false,
     "isRollable": false,
     "tier": 1,
-    "benefit": "<p>Can make Psynscience Skill as a Free Action</p>",
+    "benefit": "<p>The Explorer may use the Psyniscience Skill as a Free Action.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Warp Sense",
@@ -24,7 +24,7 @@
     "modifiers": {
       "characteristics": {},
       "skills": {
-        "psyniscience": 20
+        "psyniscience": 0
       },
       "combat": {
         "attack": 0,

@@ -1,7 +1,7 @@
 {
   "name": "Rite of Sundering",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rip-jade-3.jpg",
   "system": {
     "test": "-10 Forbidden Lore (The Warp) ",
     "requirements": "Character must have Psyker Trait, and Psyniscience and Forbidden Lore(Warp), Scholastic Lore (Occult) or Forbidden Lore(Psykers) adds +10 to Test. Ritual performed in area undergoing upheaval such as a battle or horde of cultists chanting, or another ritual involving Daemon Summoning. ",

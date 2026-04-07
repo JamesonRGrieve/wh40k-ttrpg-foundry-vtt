@@ -1,7 +1,7 @@
 {
   "name": "Force Barrage",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fire-arrows-royal-2.jpg",
   "system": {
     "discipline": "Telekinesis",
     "prerequisites": "-",

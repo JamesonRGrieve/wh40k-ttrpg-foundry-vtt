@@ -1,7 +1,7 @@
 {
   "name": "Frost Blade",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_09_b.png",
   "system": {
     "identifier": "frost-blade",
     "class": "melee",

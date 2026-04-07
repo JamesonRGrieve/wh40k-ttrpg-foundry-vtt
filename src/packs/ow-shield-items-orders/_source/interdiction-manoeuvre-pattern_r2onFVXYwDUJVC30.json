@@ -1,7 +1,7 @@
 {
   "name": "Interdiction Manoeuvre Pattern",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_04.png",
   "system": {
     "typeAndAction": "Basic Order\nFull Action",
     "requirements": ".Servitor Comrade: Clipaeus-Class Combat Servitor\nApt: Weapon Skill, Defence",

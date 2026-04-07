@@ -1,7 +1,7 @@
 {
   "name": "Power Sword (Mordian)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_10_b.png",
   "system": {
     "identifier": "power-sword-mordian",
     "class": "melee",

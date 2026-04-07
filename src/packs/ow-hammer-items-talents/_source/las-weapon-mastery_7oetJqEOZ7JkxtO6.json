@@ -1,7 +1,7 @@
 {
   "name": "Las Weapon Mastery",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_29.png",
   "system": {
     "identifier": "lasWeaponMastery",
     "category": "combat",

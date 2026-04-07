@@ -1,7 +1,7 @@
 {
   "name": "Scapegrace",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/rogue.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_16.png",
   "system": {
     "identifier": "scapegrace",
     "step": "birthright",

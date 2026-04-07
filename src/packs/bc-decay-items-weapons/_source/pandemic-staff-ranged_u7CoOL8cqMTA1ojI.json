@@ -1,7 +1,7 @@
 {
   "name": "Pandemic Staff [Ranged]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_08.png",
   "system": {
     "identifier": "pandemic-staff-ranged",
     "class": "basic",

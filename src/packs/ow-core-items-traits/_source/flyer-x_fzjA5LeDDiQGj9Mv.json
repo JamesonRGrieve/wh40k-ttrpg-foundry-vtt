@@ -1,7 +1,7 @@
 {
   "name": "Flyer (X)",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_02.png",
   "system": {
     "category": "general",
     "requirements": "",

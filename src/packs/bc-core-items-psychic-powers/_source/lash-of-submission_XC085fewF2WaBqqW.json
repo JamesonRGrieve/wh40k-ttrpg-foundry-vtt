@@ -1,7 +1,7 @@
 {
   "name": "Lash of Submission",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-eerie-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Slaanesh)",
     "prerequisites": "Slaanesh Aligned WP 50+, Psy Rating 4",

@@ -1,13 +1,13 @@
 {
   "name": "Death from Above",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_10.png",
   "system": {
     "category": "combat",
     "source": "Deathwatch: Core",
-    "description": "<p>The character has mastered jump pack assault tactics, delivering devastating attacks from above.</p>",
+    "description": "<p>A Space Marine descending into battle on trails of fire is a true angel of death come to bring ruin and ending on all who stand in his way.</p>",
     "tier": 1,
-    "benefit": "<p>When the character makes a Charge Action whilst using a Junp Pack, their melee attack deals an extra 1d10 damage per two degrees of success on the melee attack they make at the end of their charge. Max 2d10.</p>",
+    "benefit": "<p>When the Battle-Brother makes a Charge Action using a jump pack, his melee attack deals an extra 1d10 Damage for every two Degrees of Success, to a maximum bonus of 2d10.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Astartes, Pilot (Personal)",

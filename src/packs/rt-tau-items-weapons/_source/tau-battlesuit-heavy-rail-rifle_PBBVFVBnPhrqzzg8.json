@@ -1,7 +1,7 @@
 {
   "name": "Tau Battlesuit Heavy Rail Rifle",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_08.png",
   "system": {
     "identifier": "tau-battlesuit-heavy-rail-rifle",
     "class": "heavy",

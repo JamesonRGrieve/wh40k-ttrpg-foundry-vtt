@@ -1,7 +1,7 @@
 {
   "name": "Hunting Lance (Krak)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_08_b.PNG",
   "system": {
     "identifier": "hunting-lance-krak",
     "class": "melee",

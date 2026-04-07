@@ -1,7 +1,7 @@
 {
   "name": "Necron Gauntlet of Fire [Ranged]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_01.png",
   "system": {
     "identifier": "necron-gauntlet-of-fire-ranged",
     "class": "pistol",

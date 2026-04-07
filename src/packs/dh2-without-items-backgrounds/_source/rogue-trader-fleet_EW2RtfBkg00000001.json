@@ -1,0 +1,128 @@
+{
+  "name": "Rogue Trader Fleet",
+  "type": "originPath",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_10.png",
+  "system": {
+    "identifier": "rogue-trader-fleet",
+    "step": "background",
+    "stepIndex": 2,
+    "description": {
+      "value": "<h2>Rogue Trader Fleet</h2><p>Rogue Trader fleets operate on the fringes of Imperial space and beyond, where the law of the Lex Imperialis is secondary to the will of the Rogue Trader. Those who grow up or serve within such a fleet are accustomed to the strange and the exotic, often dealing with xenos as much as they do with humans. They possess a unique perspective on the galaxy, unburdened by the extreme xenophobia of the core worlds, though they remain loyal servants of the Emperor—mostly.</p><h3>Background Aptitudes</h3><p>Finesse or Social</p><h3>Starting Skills</h3><p>Charm or Deceive, Common Lore (Rogue Traders), Linguistics (any one Xenos language), Operate (Surface or Voidship)</p><h3>Starting Talent</h3><p>Weapon Training (Las or Solid Projectile)</p><h3>Background Bonus</h3><p><strong>Inured to the Xenos:</strong> A character from a Rogue Trader Fleet gains a +10 bonus to Fear tests caused by aliens and a +20 bonus to Interaction skill tests with alien characters.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Background",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Common Lore",
+          "specialization": "Rogue Traders",
+          "level": "trained"
+        },
+        {
+          "name": "Linguistics",
+          "specialization": "Xenos",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Inured to the Xenos",
+          "description": "A character from a Rogue Trader Fleet gains a +10 bonus to Fear tests caused by aliens and a +20 bonus to Interaction skill tests with alien characters."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Background Aptitude",
+          "type": "aptitude",
+          "options": [
+            "Finesse",
+            "Social"
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Charm",
+              "specialization": ""
+            },
+            {
+              "name": "Deceive",
+              "specialization": ""
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Operate",
+              "specialization": "Surface"
+            },
+            {
+              "name": "Operate",
+              "specialization": "Voidship"
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Weapon Training",
+              "specialization": "Las"
+            },
+            {
+              "name": "Weapon Training",
+              "specialization": "Solid Projectile"
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EW2RtfBkg0000001"
+}

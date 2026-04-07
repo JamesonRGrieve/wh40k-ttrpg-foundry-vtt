@@ -1,7 +1,7 @@
 {
   "name": "Short Range Telepathy",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/enchant-eerie-2.jpg",
   "system": {
     "discipline": "Telepathy (Communication)",
     "prerequisites": "None",

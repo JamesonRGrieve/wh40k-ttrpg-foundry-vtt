@@ -1,7 +1,7 @@
 {
   "name": "Sculpt Flame",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/link-spirit-3.jpg",
   "system": {
     "discipline": "Pyromancy",
     "prerequisites": "-",

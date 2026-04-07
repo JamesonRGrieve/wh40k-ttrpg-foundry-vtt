@@ -1,7 +1,7 @@
 {
   "name": "Back Them Up!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_19.png",
   "system": {
     "typeAndAction": "Sweeping Order\nFree Action",
     "requirements": "Commander Spec\n400xp",

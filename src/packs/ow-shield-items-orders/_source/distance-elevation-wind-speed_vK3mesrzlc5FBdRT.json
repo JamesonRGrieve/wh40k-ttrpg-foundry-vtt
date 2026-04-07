@@ -1,7 +1,7 @@
 {
   "name": "Distance, Elevation, Wind Speed?",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_24.PNG",
   "system": {
     "typeAndAction": "Basic Order\nFull Action",
     "requirements": ".Ratling Comrade, Perception 35\nApt: Ballistic Skill, Fieldcraft",

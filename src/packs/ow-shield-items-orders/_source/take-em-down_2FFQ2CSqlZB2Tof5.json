@@ -1,7 +1,7 @@
 {
   "name": "Take 'em Down!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_08.png",
   "system": {
     "typeAndAction": "Basic Order\nHalf Action",
     "requirements": ".Ogryn, Strength 45, \nApt: Strength, Offence",

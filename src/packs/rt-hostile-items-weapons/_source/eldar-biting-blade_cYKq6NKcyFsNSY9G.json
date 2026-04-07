@@ -1,7 +1,7 @@
 {
   "name": "Eldar Biting Blade",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_02_b.png",
   "system": {
     "identifier": "eldar-biting-blade",
     "class": "melee",

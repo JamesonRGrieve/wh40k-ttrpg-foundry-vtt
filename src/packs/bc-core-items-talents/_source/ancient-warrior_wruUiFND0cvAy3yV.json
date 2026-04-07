@@ -1,7 +1,7 @@
 {
   "name": "Ancient Warrior",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_28.png",
   "system": {
     "identifier": "ancientWarrior",
     "category": "social",

@@ -1,7 +1,7 @@
 {
   "name": "Gaze into the Abyss",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fireball-acid-3.jpg",
   "system": {
     "useTime": "Half Action",
     "range": "Varies",

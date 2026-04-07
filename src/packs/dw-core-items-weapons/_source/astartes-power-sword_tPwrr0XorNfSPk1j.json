@@ -1,7 +1,7 @@
 {
   "name": "Astartes Power Sword",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_03_b.PNG",
   "system": {
     "identifier": "astartes-power-sword",
     "class": "melee",

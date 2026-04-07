@@ -1,7 +1,7 @@
 {
   "name": "Shotgun (Double Barrelled)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/guns/gun_07_b.PNG",
   "system": {
     "identifier": "shotgun-double-barrelled",
     "class": "basic",

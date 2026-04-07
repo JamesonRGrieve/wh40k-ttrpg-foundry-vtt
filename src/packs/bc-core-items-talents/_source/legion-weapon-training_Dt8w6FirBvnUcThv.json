@@ -1,16 +1,16 @@
 {
   "name": "Legion Weapon Training",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_13.png",
   "system": {
     "identifier": "legionWeaponTraining",
     "category": "combat",
     "source": "Black Crusade Core",
     "description": {
-      "value": "<p>Gain Weapon Training Talents for all Bolt, Chain, Melta, Plasma, Power, Flame, Primitive, Las, SP, Thrown, and Launcher Weapons. Effectively, become trained in all non-exotic weapons.</p>"
+      "value": "<p>Chaos Space Marines spend years becoming proficient with all manner of weapons, and by the time a Space Marine enters service in a Legion he has not only trained with both heavy and melee weapons, but used those weapons on countless battlefields.</p>"
     },
     "tier": 1,
-    "benefit": "<p>Gain Weapon Training Talents for all Bolt, Chain, Melta, Plasma, Power, Flame, Primitive, Las, SP, Thrown, and Launcher Weapons. Effectively, become trained in all non-exotic weapons.</p>",
+    "benefit": "<p>Chaos Space Marines are proficient with all weapons of the Bolt, Chain, Melta, Plasma, Power, Flame, Primary, Las, Solid Projectile, Thrown, and Launcher categories. In essence, the only weapons that a Chaos Space Marine is not proficient with are Exotic Weapons.</p>",
     "aptitudes": [
       "Unaligned"
     ],
@@ -51,7 +51,7 @@
       "specialAbilities": [
         {
           "name": "Universal Weapon Proficiency",
-          "description": "<p>You are trained in all non-exotic weapon groups: Bolt, Chain, Melta, Plasma, Power, Flame, Primitive, Las, Solid Projectile, Thrown, and Launcher. You do not suffer the -20 untrained penalty when using these weapons.</p>"
+          "description": "<p>You are proficient with Bolt, Chain, Melta, Plasma, Power, Flame, Primary, Las, Solid Projectile, Thrown, and Launcher weapons. Only Exotic Weapons still require separate Talents.</p>"
         }
       ]
     },

@@ -1,7 +1,7 @@
 {
   "name": "Ship's Steward",
   "type": "shipRole",
-  "img": "icons/svg/crew.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_09.png",
   "system": {
     "rank": 4,
     "purpose": "Monitors resource stocks such as food/water/air.",

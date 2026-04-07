@@ -1,7 +1,7 @@
 {
   "name": "Phoenix Spirit",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/light-royal-1.jpg",
   "system": {
     "discipline": "zNPC - Eldar\n(Farseer)",
     "prerequisites": "Eldar Psyker",

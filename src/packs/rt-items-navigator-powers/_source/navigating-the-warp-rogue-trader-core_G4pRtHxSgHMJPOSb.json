@@ -1,7 +1,7 @@
 {
   "name": "Navigating the Warp\n(Rogue Trader: Core)",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-magenta-3.jpg",
   "system": {
     "useTime": null,
     "range": null,

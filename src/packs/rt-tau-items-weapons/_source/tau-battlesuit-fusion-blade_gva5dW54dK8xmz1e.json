@@ -1,7 +1,7 @@
 {
   "name": "Tau Battlesuit Fusion Blade",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_04_b.PNG",
   "system": {
     "identifier": "tau-battlesuit-fusion-blade",
     "class": "melee",

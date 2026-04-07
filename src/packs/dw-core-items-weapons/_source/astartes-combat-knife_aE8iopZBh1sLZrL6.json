@@ -1,7 +1,7 @@
 {
   "name": "Astartes Combat Knife",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/daggers/dagger_11_b.PNG",
   "system": {
     "identifier": "astartes-combat-knife",
     "class": "melee",

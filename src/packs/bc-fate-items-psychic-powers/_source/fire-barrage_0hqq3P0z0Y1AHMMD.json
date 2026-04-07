@@ -1,7 +1,7 @@
 {
   "name": "Fire Barrage",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lighting-sky-1.jpg",
   "system": {
     "discipline": "Pyromancy",
     "prerequisites": "Fire Bolt",

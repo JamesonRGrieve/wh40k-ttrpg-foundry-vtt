@@ -1,7 +1,7 @@
 {
   "name": "Ork Burna [Ranged]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_02.png",
   "system": {
     "identifier": "ork-burna-ranged",
     "class": "basic",

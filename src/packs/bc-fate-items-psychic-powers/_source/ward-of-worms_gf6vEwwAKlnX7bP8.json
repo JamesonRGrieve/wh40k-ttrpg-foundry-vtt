@@ -1,7 +1,7 @@
 {
   "name": "Ward of Worms",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/leaf-jade-2.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Nurgle)",
     "prerequisites": "Nurgle Aligned, Psy Rating 5, Infamy 40+",

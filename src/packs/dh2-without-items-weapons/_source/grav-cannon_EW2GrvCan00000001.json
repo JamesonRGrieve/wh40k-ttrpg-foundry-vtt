@@ -1,0 +1,55 @@
+{
+  "name": "Grav-Cannon",
+  "type": "weapon",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_07.png",
+  "system": {
+    "category": "heavy",
+    "range": 60,
+    "rof": {
+      "single": true,
+      "semi": false,
+      "full": false
+    },
+    "damage": {
+      "formula": "2d10+10",
+      "type": "I"
+    },
+    "penetration": 0,
+    "clip": 10,
+    "reload": 2,
+    "weight": 40,
+    "availability": "near-unique",
+    "craftsmanship": "common",
+    "qualities": [
+      "graviton",
+      "concussive-3",
+      "blast-5"
+    ],
+    "description": {
+      "value": "<p>The Grav-cannon is a massive weapon typically found on Imperial tanks or in the hands of the most powerful heavy infantry. It uses graviton pulses to crush targets under their own weight and armor. It is particularly devastating against vehicles and heavily armored foes.</p><h3>Special Qualities</h3><p><strong>Graviton:</strong> Inflicts additional damage equal to the target's Armour points on the struck location. Against vehicles, inflicts additional damage equal to the Armour points of the facing struck; Critical damage always affects Motive Systems.</p><p><strong>Concussive (3):</strong> Target takes -30 Toughness test or is Stunned for 1 round per DoF.</p><p><strong>Blast (5):</strong> Affects everyone within 5 metres.</p>",
+      "chat": "",
+      "summary": "Massive graviton weapon that crushes targets under their own armor. Inflicts additional damage equal to target's Armour."
+    },
+    "source": {
+      "book": "DH 2E: Enemies Without",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "notes": "-",
+    "identifier": "grav-cannon",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EW2GrvCan0000001"
+}

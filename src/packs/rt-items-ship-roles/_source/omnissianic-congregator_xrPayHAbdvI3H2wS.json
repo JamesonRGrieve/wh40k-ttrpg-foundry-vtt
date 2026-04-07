@@ -1,7 +1,7 @@
 {
   "name": "Omnissianic Congregator",
   "type": "shipRole",
-  "img": "icons/svg/crew.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_10.png",
   "system": {
     "rank": 4,
     "purpose": "Performs rites to appease the Vessel's Machine Spirits.",

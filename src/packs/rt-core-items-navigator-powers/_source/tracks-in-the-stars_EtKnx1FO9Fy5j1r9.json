@@ -1,7 +1,7 @@
 {
   "name": "Tracks in the Stars",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-blue-3.jpg",
   "system": {
     "useTime": "Half Action",
     "range": "Ship",

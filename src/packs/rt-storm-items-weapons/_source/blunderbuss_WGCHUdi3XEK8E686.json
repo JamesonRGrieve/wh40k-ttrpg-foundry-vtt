@@ -1,7 +1,7 @@
 {
   "name": "Blunderbuss",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_13.png",
   "system": {
     "identifier": "blunderbuss",
     "class": "basic",

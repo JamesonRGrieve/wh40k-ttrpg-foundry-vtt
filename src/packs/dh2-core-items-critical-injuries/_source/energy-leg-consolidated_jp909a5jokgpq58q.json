@@ -2,7 +2,7 @@
   "_id": "jp909a5jokgpq58q",
   "name": "Energy Critical - Leg",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rock-plain-2.jpg",
   "system": {
     "identifier": "crit_energy_leg",
     "damageType": "energy",

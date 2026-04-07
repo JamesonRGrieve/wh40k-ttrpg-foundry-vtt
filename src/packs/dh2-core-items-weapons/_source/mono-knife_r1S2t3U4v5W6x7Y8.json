@@ -1,7 +1,7 @@
 {
   "name": "Mono Knife",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/daggers/dagger_07_b.PNG",
   "system": {
     "identifier": "mono-knife",
     "class": "melee",

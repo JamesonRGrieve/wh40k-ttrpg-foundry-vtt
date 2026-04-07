@@ -1,7 +1,7 @@
 {
   "name": "Twistcatcher",
   "type": "shipRole",
-  "img": "icons/svg/crew.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_10.png",
   "system": {
     "rank": 4,
     "purpose": "Keep Mutants in check and press them to work",

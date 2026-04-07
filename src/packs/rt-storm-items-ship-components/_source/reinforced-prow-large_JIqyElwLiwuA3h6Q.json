@@ -1,7 +1,7 @@
 {
   "name": "Reinforced Prow (Large)",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_20.PNG",
   "system": {
     "hullType": [
       "light-cruiser",

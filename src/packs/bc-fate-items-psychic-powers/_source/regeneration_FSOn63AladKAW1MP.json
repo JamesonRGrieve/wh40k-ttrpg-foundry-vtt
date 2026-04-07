@@ -1,7 +1,7 @@
 {
   "name": "Regeneration",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/enchant-magenta-3.jpg",
   "system": {
     "discipline": "Biomancy",
     "prerequisites": "Psy Rating 5, Tougness 40+, Unnatural Healing",

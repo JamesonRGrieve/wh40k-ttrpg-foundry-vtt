@@ -1,7 +1,7 @@
 {
   "name": "Reweave",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/enchant-acid-3.jpg",
   "system": {
     "discipline": "zNPC - Rak 'Gol",
     "prerequisites": "Resonator Implants",

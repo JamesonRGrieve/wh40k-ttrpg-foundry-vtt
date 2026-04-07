@@ -1,7 +1,7 @@
 {
   "name": "Organgrinder Rounds",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammo_06.PNG",
   "system": {
     "identifier": "organgrinder-rounds",
     "weaponTypes": [

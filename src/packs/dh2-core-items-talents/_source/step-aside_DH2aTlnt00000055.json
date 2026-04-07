@@ -1,7 +1,7 @@
 {
   "name": "Step Aside",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_05.png",
   "system": {
     "identifier": "stepAside",
     "category": "combat",

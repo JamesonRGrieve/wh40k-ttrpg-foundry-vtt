@@ -1,7 +1,7 @@
 {
   "name": "Tough as Grox-Hide (Frontier World)",
   "type": "talent",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_10.png",
   "system": {
     "identifier": "tough-as-grox-hide-frontier-world",
     "category": "origin",

@@ -1,7 +1,7 @@
 {
   "name": "Inferno Shells",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammunition_09_b.png",
   "system": {
     "identifier": "inferno-shells",
     "weaponTypes": [

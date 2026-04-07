@@ -1,7 +1,7 @@
 {
   "name": "Wrath of the Righteous",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_26.png",
   "system": {
     "identifier": "wrathOfTheRighteous",
     "category": "combat",

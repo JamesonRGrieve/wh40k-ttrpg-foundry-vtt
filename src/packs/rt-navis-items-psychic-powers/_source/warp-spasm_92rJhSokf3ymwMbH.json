@@ -1,7 +1,7 @@
 {
   "name": "Warp Spasm",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-orange-1.jpg",
   "system": {
     "discipline": "xRenegade",
     "prerequisites": "Shielded by the Warp\nOW: Psy Rating 6",

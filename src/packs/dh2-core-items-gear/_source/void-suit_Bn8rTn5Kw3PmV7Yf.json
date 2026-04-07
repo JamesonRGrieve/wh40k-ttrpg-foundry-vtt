@@ -1,7 +1,7 @@
 {
   "name": "Void Suit",
   "type": "gear",
-  "img": "icons/svg/item-bag.svg",
+  "img": "icons/svg/backpack.svg",
   "system": {
     "weight": 8,
     "availability": "rare",

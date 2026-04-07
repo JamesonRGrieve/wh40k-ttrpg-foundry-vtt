@@ -1,7 +1,7 @@
 {
   "name": "Feral Warrior",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_04.png",
   "system": {
     "requirements": "Guardsman Career, DH Rank 3+. Originate from a Feral World.",
     "source": "DH: Inquisitor's Handbook (Page 62)",

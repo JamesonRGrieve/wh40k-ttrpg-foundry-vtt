@@ -1,7 +1,7 @@
 {
   "name": "Endurance",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/strongbox.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_10.png",
   "system": {
     "identifier": "endurance",
     "step": "motivation",

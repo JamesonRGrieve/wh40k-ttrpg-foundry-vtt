@@ -1,7 +1,7 @@
 {
   "name": "Force Hammer",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_07_b.PNG",
   "system": {
     "identifier": "force-hammer",
     "class": "melee",

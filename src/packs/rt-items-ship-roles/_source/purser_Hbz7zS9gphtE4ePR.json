@@ -1,7 +1,7 @@
 {
   "name": "Purser",
   "type": "shipRole",
-  "img": "icons/svg/crew.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_16.png",
   "system": {
     "rank": 4,
     "purpose": "Balance the books, crew payments.",

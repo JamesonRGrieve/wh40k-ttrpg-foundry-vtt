@@ -1,7 +1,7 @@
 {
   "name": "Astartes Omnissian Axe",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/axes/axe_12_b.PNG",
   "system": {
     "identifier": "astartes-omnissian-axe",
     "class": "melee",

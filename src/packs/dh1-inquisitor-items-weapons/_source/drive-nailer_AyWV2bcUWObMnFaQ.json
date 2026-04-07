@@ -1,7 +1,7 @@
 {
   "name": "Drive Nailer",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_04.png",
   "system": {
     "identifier": "drive-nailer",
     "class": "basic",

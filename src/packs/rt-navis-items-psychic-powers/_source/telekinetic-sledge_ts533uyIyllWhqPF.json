@@ -1,7 +1,7 @@
 {
   "name": "Telekinetic Sledge",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/haste-sky-2.jpg",
   "system": {
     "discipline": "zNPC - Rak 'Gol",
     "prerequisites": "Resonator Implants",

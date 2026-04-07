@@ -1,7 +1,7 @@
 {
   "name": "A Daemon of one of the 4 Chaos Gods is chosen, and a Forbidden Lore (Daemonology) Test is made, by default at -20 (Harder for more powerful Daemons).",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-sky-3.jpg",
   "system": {
     "useTime": null,
     "range": null,

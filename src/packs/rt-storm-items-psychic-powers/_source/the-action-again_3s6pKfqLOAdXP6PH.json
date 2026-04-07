@@ -1,7 +1,7 @@
 {
   "name": "The Action Again",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-blue-3.jpg",
   "system": {
     "discipline": "Divination\n(Emperor's Tarot)",
     "prerequisites": "Divining the Future",

@@ -1,7 +1,7 @@
 {
   "name": "Personal Augury",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-magenta-1.jpg",
   "system": {
     "discipline": "Divination",
     "prerequisites": "-",

@@ -1,7 +1,7 @@
 {
   "name": "Light-Bringer Torch",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_21.png",
   "system": {
     "identifier": "light-bringer-torch",
     "class": "pistol",

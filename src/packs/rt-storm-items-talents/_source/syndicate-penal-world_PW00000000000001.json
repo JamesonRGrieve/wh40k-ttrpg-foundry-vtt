@@ -1,7 +1,7 @@
 {
   "name": "Syndicate (Penal World)",
   "type": "talent",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_23.PNG",
   "system": {
     "identifier": "syndicate-penal-world",
     "category": "origin",

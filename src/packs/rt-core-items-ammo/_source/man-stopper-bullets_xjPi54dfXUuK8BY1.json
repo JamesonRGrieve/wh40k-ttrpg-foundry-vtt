@@ -1,7 +1,7 @@
 {
   "name": "Man-Stopper Bullets",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammunition_08_b.png",
   "system": {
     "identifier": "man-stopper-bullets",
     "weaponTypes": [

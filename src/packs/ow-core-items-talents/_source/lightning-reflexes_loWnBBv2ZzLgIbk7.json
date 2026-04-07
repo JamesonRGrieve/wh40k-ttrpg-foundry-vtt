@@ -1,7 +1,7 @@
 {
   "name": "Lightning Reflexes",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_13.png",
   "system": {
     "category": "general",
     "source": "Only War Core",

@@ -1,21 +1,21 @@
 {
   "name": "Foul Cage",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/needles-sky-2.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Unaligned)",
     "prerequisites": "Psy Rating 4",
-    "focusPower": "Half Action\nAttack, Concentration",
-    "action": "25m x Psy Rating",
-    "range": "Willpower",
-    "opposed": "Yes (Half Action)",
-    "sustained": "Psyker creates an Psy Rating Radius Psychic Blast centred around a point in range that deals 1d10+3 Rending Damage with Crippling(1d10), Snare(2), and Tearing Qualities.\nCrippling(X): If target suffers at least 1 Wound, for rest of encounter or until healed of all damage, if it takes more than a half action it suffers X damage to the same location it took damage originally from (Ignores Armour/Toughness).\nSnare(X): Target makes Agility Test with -10*X. Failiure causes target to be immobilised, target can make Strength or Agility Test to Escape (same Penalty Applies).\nTearing: Roll one additional damage die, discard the lower result.",
-    "effect": "300xp",
+    "focusPower": "Opposed Challenging (+0) Willpower Test",
+    "action": "Full Action",
+    "range": "25 metres x Psy Rating",
+    "opposed": "Yes",
+    "sustained": "Half Action",
+    "effect": "Foul Cage is a Psychic Blast with a radius equal to the power's Psy Rating that deals 1d10+3 R Damage with the Crippling (1d10), Snare (2), and Tearing qualities.",
     "source": "Black Crusade: Core",
     "description": {
-      "value": "<p>300xp</p>"
+      "value": "<p>Great long bonds of warp-spawned ropes, chains, and lengths of barbed sinew erupt from the ground and wind themselves around any creatures within reach. These bonds ensnare and constrict as if alive, and sprout barbs and thorns which dig deep into the flesh of those so ensnared.</p>"
     },
-    "focusTime": "Half Action",
+    "focusTime": "Full Action",
     "threshold": 0,
     "gameSystems": [
       "rt"

@@ -1,7 +1,7 @@
 {
   "name": "Bolt Pistol (Godwyn-De'az) [Best Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_16.png",
   "system": {
     "identifier": "bolt-pistol-godwyn-deaz-best",
     "class": "pistol",

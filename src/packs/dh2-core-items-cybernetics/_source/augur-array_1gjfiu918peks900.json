@@ -1,0 +1,61 @@
+{
+  "name": "Augur Array",
+  "type": "cybernetic",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 1000,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Requires Half Action and Concentration. Poor: detect heat, radiation, EM or Daemonic Taint withiin 20 metres, can only do one, may get overwhelmed by excessive concentrations of detections. Common: acts as normal handheld Auspex. Good: acts as normal handheld Auspex and can reroll perception tests using its functions.</p>\n<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 1000 T\n15 R</p>",
+      "chat": "",
+      "summary": "Requires Half Action and Concentration. Poor: detect heat, radiation, EM or Daemonic Taint withiin 20 metres, can only do one, may get overwhelmed by excessive concentrations of detections. Common: ac"
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": true,
+    "effect": "Requires Half Action and Concentration. Poor: detect heat, radiation, EM or Daemonic Taint withiin 20 metres, can only do one, may get overwhelmed by excessive concentrations of detections. Common: acts as normal handheld Auspex. Good: acts as normal handheld Auspex and can reroll perception tests using its functions.",
+    "notes": "",
+    "identifier": "augur-array",
+    "gameSystems": [
+      "dh2e"
+    ],
+    "type": "implant",
+    "locations": [
+      "body"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "drawbacks": "<p>Requires implantation surgery and appropriate maintenance.</p>",
+    "installation": {
+      "surgery": "Major surgery required",
+      "difficulty": "-10 Medicae",
+      "recoveryTime": "1 week"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1gjfiu918peks900"
+}

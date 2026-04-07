@@ -1,7 +1,7 @@
 {
   "name": "Razor Web",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_01.png",
   "system": {
     "identifier": "razor-web",
     "class": "basic",

@@ -1,7 +1,7 @@
 {
   "name": "Hand Bow",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_14.png",
   "system": {
     "identifier": "hand-bow",
     "class": "pistol",

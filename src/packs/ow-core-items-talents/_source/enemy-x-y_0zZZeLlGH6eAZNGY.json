@@ -1,7 +1,7 @@
 {
   "name": "Enemy (X) (Y)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_05.png",
   "system": {
     "category": "social",
     "source": "Only War Core",

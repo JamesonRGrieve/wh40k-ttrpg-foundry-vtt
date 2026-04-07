@@ -1,7 +1,7 @@
 {
   "name": "Storm of Change",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/enchant-orange-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Tzeentch)",
     "prerequisites": "Mark of Tzeentch, Willpower 50+, Psy Rating 5",

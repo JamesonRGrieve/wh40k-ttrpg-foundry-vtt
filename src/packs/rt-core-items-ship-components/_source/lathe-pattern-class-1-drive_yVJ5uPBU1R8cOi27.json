@@ -1,7 +1,7 @@
 {
   "name": "Lathe Pattern Class 1 Drive",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_09.png",
   "system": {
     "hullType": [
       "transport"

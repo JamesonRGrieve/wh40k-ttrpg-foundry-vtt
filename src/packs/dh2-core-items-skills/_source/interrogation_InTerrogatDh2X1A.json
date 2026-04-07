@@ -1,0 +1,27 @@
+{
+  "name": "Interrogation",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "willpower",
+    "descriptor": "Interrogation allows a character to extract information from an unwilling subject through psychology, specialised tools, serums, and other invasive methods.",
+    "uses": "Uses: Opposed test against the target's Willpower. If the character wins, he gets one answer for each degree of success. If the opponent wins, the interrogator gets nothing of worth. A roll with two or more degrees of failure inflicts 1d10 plus the interrogator's Willpower bonus in damage to the subject and prevents further interrogation for 1d5 days. A roll with four or more degrees of failure also gives the subject +30 to resist further Interrogation by the character or his allies. Each Interrogation test inflicts one level of Fatigue on the target.",
+    "useTime": "One hour or more",
+    "description": {
+      "value": "<p>Interrogation allows a character to extract information from an unwilling subject through psychology, specialised tools, serums, and other invasive methods.</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": [
+      "Willpower",
+      "Social"
+    ],
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "InTerrogatDh2X1A"
+}

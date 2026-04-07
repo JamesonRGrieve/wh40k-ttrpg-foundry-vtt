@@ -1,0 +1,72 @@
+{
+  "name": "Frontier World",
+  "type": "originPath",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_02.png",
+  "system": {
+    "identifier": "frontier-world",
+    "step": "homeworld",
+    "stepIndex": 1,
+    "description": {
+      "value": "<h2>Frontier World</h2><p>Frontier worlds lie on the lawless margins of the Imperium where settlers, scavengers, missionaries, raiders, and worse all struggle to survive with little support from the wider Imperium. Life there breeds stubborn self-reliance, technical improvisation, and a hard eye for threats creeping out of the dark. A frontier native who survives long enough to join an Inquisitorial warband is already used to making do without mercy, protection, or certainty.</p><h3>Homeworld Bonus</h3><p>+Ballistic Skill, +Perception, -Fellowship</p><h3>Homeworld Aptitude</h3><p>Ballistic Skill</p><h3>Wounds</h3><p>7+1d5</p><h3>Fate Threshold</h3><p>3 (Emperor's Blessing 7+)</p><h3>Homeworld Trait</h3><p><strong>Rely on None but Yourself:</strong> A frontier world character gains a +20 bonus to Tech-Use tests when applying personal weapon modifications, and a +10 bonus when repairing damaged items.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Homeworld",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "7+1d5",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 3,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Ballistic Skill"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Rely on None but Yourself",
+          "description": "A frontier world character gains a +20 bonus to Tech-Use tests when applying personal weapon modifications, and a +10 bonus when repairing damaged items."
+        }
+      ],
+      "choices": []
+    },
+    "modifiers": {
+      "characteristics": {
+        "ballisticSkill": 5,
+        "perception": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "name": "Fellowship",
+          "value": -5
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Emperor's Blessing: On a roll of 7+ on 1d10, the character begins with an extra Fate Point.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2WFrtWld000005"
+}

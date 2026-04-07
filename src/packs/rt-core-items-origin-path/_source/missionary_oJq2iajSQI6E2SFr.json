@@ -1,7 +1,7 @@
 {
   "name": "Missionary",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/crucifix.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_16.PNG",
   "system": {
     "identifier": "missionary",
     "step": "career",

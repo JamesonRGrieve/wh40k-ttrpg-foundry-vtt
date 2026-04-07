@@ -1,7 +1,7 @@
 {
   "name": "Explorator",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/cogsplosion.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_13.PNG",
   "system": {
     "identifier": "explorator",
     "step": "career",

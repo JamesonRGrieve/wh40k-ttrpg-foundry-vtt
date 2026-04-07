@@ -1,7 +1,7 @@
 {
   "name": "Might Makes Right",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_22.png",
   "system": {
     "category": "general",
     "requirements": "Ork (Innate)",

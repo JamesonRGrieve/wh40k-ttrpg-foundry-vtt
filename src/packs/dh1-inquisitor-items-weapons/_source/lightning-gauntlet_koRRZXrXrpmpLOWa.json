@@ -1,7 +1,7 @@
 {
   "name": "Lightning Gauntlet",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/fist_weapon/fist_weapon_10_b.PNG",
   "system": {
     "identifier": "lightning-gauntlet",
     "class": "melee",

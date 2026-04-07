@@ -1,7 +1,7 @@
 {
   "name": "Father of Blades",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_08_b.png",
   "system": {
     "identifier": "father-of-blades",
     "class": "melee",

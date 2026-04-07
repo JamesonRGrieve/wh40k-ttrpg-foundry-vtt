@@ -1,7 +1,7 @@
 {
   "name": "This test is then modified by various Ritual Modifiers. The Ritual likely requires a summoning circle, braziers containing a god-relevent substance, and a number of sacrifices who may need to fill some conditions prior to sacrifice, and finally a prayer to the god in question.",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fireball-eerie-1.jpg",
   "system": {
     "useTime": null,
     "range": null,

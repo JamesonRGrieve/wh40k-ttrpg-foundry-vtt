@@ -1,0 +1,44 @@
+{
+  "name": "Clip/Drop Harness",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "clothing",
+    "weight": 2,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>A safety line and harness for rooftop work, rappelling, and vertical descents.</p><p><b>Effect:</b> +30 to Climb Tests while descending a vertical surface and the wearer cannot fall from failing those Tests. Common quality holds 150 kg; Good quality holds 200 kg.</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A safety line and harness for rooftop work, rappelling, and vertical descents."
+    },
+    "source": {
+      "book": "Only War Core",
+      "page": "197",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "+30 to Climb Tests while descending a vertical surface and the wearer cannot fall from failing those Tests. Common quality holds 150 kg; Good quality holds 200 kg.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "clip-drop-harness",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OWGear000000002X"
+}

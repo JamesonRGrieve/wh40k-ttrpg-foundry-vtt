@@ -1,7 +1,7 @@
 {
   "name": "Legion Thunder Hammer",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_11_b.png",
   "system": {
     "identifier": "legion-thunder-hammer",
     "class": "melee",

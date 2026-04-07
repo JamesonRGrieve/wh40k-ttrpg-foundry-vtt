@@ -1,7 +1,7 @@
 {
   "name": "Precise Blow",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_19.png",
   "system": {
     "identifier": "preciseBlow",
     "category": "combat",

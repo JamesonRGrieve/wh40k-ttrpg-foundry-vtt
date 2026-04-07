@@ -1,7 +1,7 @@
 {
   "name": "Peer (X)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_23.PNG",
   "system": {
     "category": "social",
     "source": "Rogue Trader Core",

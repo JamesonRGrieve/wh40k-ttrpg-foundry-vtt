@@ -1,7 +1,7 @@
 {
   "name": "Tau Longshot Pulse Rifle",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_02.png",
   "system": {
     "identifier": "tau-longshot-pulse-rifle",
     "class": "basic",

@@ -1,7 +1,7 @@
 {
   "name": "Power Hammer (Ebenus)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_02_b.png",
   "system": {
     "identifier": "power-hammer-ebenus",
     "class": "melee",

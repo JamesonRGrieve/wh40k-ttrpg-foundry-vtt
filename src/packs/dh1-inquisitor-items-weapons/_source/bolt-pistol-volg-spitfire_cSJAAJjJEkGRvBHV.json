@@ -1,7 +1,7 @@
 {
   "name": "Bolt Pistol (Volg) \"Spitfire\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-bolt.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_14.png",
   "system": {
     "identifier": "bolt-pistol-volg-spitfire",
     "class": "pistol",

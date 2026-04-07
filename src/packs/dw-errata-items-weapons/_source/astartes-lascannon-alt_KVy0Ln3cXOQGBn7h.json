@@ -1,7 +1,7 @@
 {
   "name": "Astartes Lascannon (alt.)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-lascannon.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_01.png",
   "system": {
     "identifier": "astartes-lascannon-alt",
     "class": "heavy",

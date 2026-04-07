@@ -1,7 +1,7 @@
 {
   "name": "Skilled Rider",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_16.PNG",
   "system": {
     "category": "general",
     "source": "OW: Hammer of the Emperor",

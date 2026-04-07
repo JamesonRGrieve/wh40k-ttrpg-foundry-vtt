@@ -1,7 +1,7 @@
 {
   "name": "Mining Melta [Focused]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-multimelta.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_09.png",
   "system": {
     "identifier": "mining-melta-focused",
     "class": "heavy",

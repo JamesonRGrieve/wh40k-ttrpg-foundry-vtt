@@ -1,7 +1,7 @@
 {
   "name": "Abhorrent Ward",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/vines-eerie-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Unaligned)",
     "prerequisites": "Corruption 30+\nPsy Rating 4",

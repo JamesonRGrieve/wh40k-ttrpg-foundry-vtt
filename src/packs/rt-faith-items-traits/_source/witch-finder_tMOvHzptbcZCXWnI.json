@@ -1,7 +1,7 @@
 {
   "name": "Witch Finder",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_32.png",
   "system": {
     "requirements": "Any Non-Psyker, RT Rank 3+, Perception 40+. Must have defeated at least one hostile Psyker using non-lethal methods.",
     "source": "RT: Faith and Coin\n(Page 70)",

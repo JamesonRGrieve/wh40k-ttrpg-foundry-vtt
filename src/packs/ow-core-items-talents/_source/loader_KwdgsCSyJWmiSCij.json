@@ -1,7 +1,7 @@
 {
   "name": "Loader",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_24.png",
   "system": {
     "identifier": "loader",
     "category": "combat",

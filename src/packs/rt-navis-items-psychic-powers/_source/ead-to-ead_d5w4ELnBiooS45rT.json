@@ -1,7 +1,7 @@
 {
   "name": "'Ead to 'Ead",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-royal-1.jpg",
   "system": {
     "discipline": "Waaagh!\n(WAAAGH!)",
     "prerequisites": "Dis is Takin' Too Long, Smash da Gitz",

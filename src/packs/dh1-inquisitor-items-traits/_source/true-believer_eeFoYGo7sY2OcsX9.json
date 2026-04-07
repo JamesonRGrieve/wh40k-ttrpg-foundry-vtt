@@ -1,7 +1,7 @@
 {
   "name": "True Believer",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_08.png",
   "system": {
     "category": "elite",
     "requirements": "The Cult of the Red Redemption Elite Advance Package (Innate)",

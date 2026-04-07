@@ -1,7 +1,7 @@
 {
   "name": "Ecstatic Oblivion",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/runes-royal-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Slaanesh)",
     "prerequisites": "Mark of Slaanesh, T 40+, Psy Rating 4",

@@ -1,7 +1,7 @@
 {
   "name": "Thermal Bolts \"Emperor's Light\"",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammo_07.png",
   "system": {
     "identifier": "thermal-bolts-emperors-light",
     "weaponTypes": [

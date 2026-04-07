@@ -1,0 +1,21 @@
+{
+  "name": "Toxic",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_26.png",
+  "system": {
+    "identifier": "toxic",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 33</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>33</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qkAc7I12yrcjv2UA"
+}

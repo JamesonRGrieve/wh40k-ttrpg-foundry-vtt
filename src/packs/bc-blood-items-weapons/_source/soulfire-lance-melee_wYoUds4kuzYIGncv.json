@@ -1,7 +1,7 @@
 {
   "name": "Soulfire Lance [Melee]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_06_b.PNG",
   "system": {
     "identifier": "soulfire-lance-melee",
     "class": "melee",

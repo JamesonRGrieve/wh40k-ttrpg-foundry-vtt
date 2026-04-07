@@ -1,7 +1,7 @@
 {
   "name": "Bone Maul",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_05_b.PNG",
   "system": {
     "identifier": "bone-maul",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Compartmentalised Cargo Hold",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_30.png",
   "system": {
     "hullType": [
       "raider",

@@ -1,7 +1,7 @@
 {
   "name": "Hostiles Detected!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_02.png",
   "system": {
     "typeAndAction": "Sweeping Order\nSpecial",
     "requirements": ".Ratling, Perception 40\nApt: Perception, Fieldcraft",

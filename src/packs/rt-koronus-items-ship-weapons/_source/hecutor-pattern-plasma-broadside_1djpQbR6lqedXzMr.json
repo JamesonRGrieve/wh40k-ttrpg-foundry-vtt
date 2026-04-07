@@ -1,7 +1,7 @@
 {
   "name": "Hecutor-pattern Plasma Broadside",
   "type": "shipWeapon",
-  "img": "icons/svg/energy.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_08.png",
   "system": {
     "type": "Macrocannon",
     "hullType": [

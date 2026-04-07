@@ -1,7 +1,7 @@
 {
   "name": "Beastmaster",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_30.PNG",
   "system": {
     "requirements": "Any Career, RT Rank 3+, Agility 35+, Intelligence 35+. Must have tamed a wild creature in the past without being fatally mauled in the process.",
     "source": "RT: Faith and Coin\n(Page 68)",

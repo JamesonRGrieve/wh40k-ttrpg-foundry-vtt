@@ -1,7 +1,7 @@
 {
   "name": "Saturine-Pattern 5 Drive",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_18.PNG",
   "system": {
     "hullType": [
       "grand-cruiser",

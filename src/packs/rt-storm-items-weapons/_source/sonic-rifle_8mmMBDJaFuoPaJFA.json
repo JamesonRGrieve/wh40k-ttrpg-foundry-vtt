@@ -1,7 +1,7 @@
 {
   "name": "Sonic Rifle",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_12.png",
   "system": {
     "identifier": "sonic-rifle",
     "class": "basic",

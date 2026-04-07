@@ -1,7 +1,7 @@
 {
   "name": "Rite of Wild Fury",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rock-acid-1.jpg",
   "system": {
     "test": "-10 Forbidden Lore (Daemonology) ",
     "requirements": "Try to bring fourth a Daemonic Beast, exact ritual depends on the God the Beast is from (see Core Summon Requirements). ",

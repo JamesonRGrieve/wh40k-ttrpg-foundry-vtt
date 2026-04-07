@@ -1,7 +1,7 @@
 {
   "name": "Fate Loom",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/link-royal-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Tzeentch)",
     "prerequisites": "Tzeentch Aligned,\nPsy Rating 6, Corruption 40+, Infamy 40+",

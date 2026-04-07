@@ -1,14 +1,14 @@
 {
   "name": "Astartes Weapon Training",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_01.png",
   "system": {
     "identifier": "astartesWeaponTraining",
     "category": "combat",
     "source": "Deathwatch: Core",
-    "description": "<p>Character is trained in Bolt, Chain, Melta, Plasma, Power, Flame, Primitive (Ranged and Melee), Las, Launcher, SP, and Thrown weapons. Effectively, they are trained in all weapon types except exotic weapons.</p>",
+    "description": "<p>The Battle-Brother has received training in the broad spectrum of armaments employed by the Adeptus Astartes.</p>",
     "tier": 1,
-    "benefit": "<p>Character is trained in Bolt, Chain, Melta, Plasma, Power, Flame, Primitive (Ranged and Melee), Las, Launcher, SP, and Thrown weapons. Effectively, they are trained in all weapon types except exotic weapons.</p>",
+    "benefit": "<p>The character is trained in Bolt, Chain, Flame, Las, Launcher, Melta, Plasma, Power, Primitive, SP, and Thrown weapons. In effect, Space Marines are trained in all standard weapon types except Exotic weapons.</p>",
     "aptitudes": [
       "Weapon Skill",
       "Ballistic Skill"

@@ -1,7 +1,7 @@
 {
   "name": "Seize the Machine",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rock-royal-3.jpg",
   "system": {
     "discipline": "zNPC - Rak 'Gol",
     "prerequisites": "Resonator Implants",

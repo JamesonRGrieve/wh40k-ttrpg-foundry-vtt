@@ -1,7 +1,7 @@
 {
   "name": "Once a Daemon is summoned a -60 Daemonic Mastery Test is made, modified based on the Binding Modifiers (listed below). This is an Opposed Willpower Test vs the Daemon. If succeeded the Daemon is bound, if failed the Daemonhost is unbound, if failed by 3+ DoF, the Daemon is not bound at all and can do as it pleases, usually attacking immediately. Unbound Daemonhosts are in the host but uncontrolled, there is a very small chance they may not attack and be willing to negotiate regardless of the failiure, it is inadvisable to trust such things.",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/horror-eerie-1.jpg",
   "system": {
     "useTime": null,
     "range": null,

@@ -1,7 +1,7 @@
 {
   "name": "Lascannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_10.png",
   "system": {
     "identifier": "lascannon",
     "class": "heavy",

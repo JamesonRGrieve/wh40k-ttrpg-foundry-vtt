@@ -1,7 +1,7 @@
 {
   "name": "Acolyte of Abraxas",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_04.png",
   "system": {
     "requirements": "Explorator, RT Rank 3+, Willpower 35+, Forbidden Lore (Archeotech) +10 Skill. Does not have \"Untouchable\" Trait, has uncovered at least one psychically active artifact to which they have a morbid fascination of.",
     "source": "RT: The Navis Primer\n(Page 65)",

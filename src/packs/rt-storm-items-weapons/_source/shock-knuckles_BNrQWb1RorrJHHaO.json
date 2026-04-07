@@ -1,7 +1,7 @@
 {
   "name": "Shock Knuckles",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-shock.svg",
+  "img": "systems/wh40k-rpg/icons/items/fist_weapon/fist_weapon_04_b.PNG",
   "system": {
     "identifier": "shock-knuckles",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Flintlock Musket",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_12.png",
   "system": {
     "identifier": "flintlock-musket",
     "class": "basic",

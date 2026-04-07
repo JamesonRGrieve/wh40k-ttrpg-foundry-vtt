@@ -1,7 +1,7 @@
 {
   "name": "Unnerving Clarity (Zealot)",
   "type": "talent",
-  "img": "icons/svg/fire.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_06.png",
   "system": {
     "identifier": "unnerving-clarity-zealot",
     "category": "origin",

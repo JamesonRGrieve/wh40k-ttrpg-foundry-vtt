@@ -1,7 +1,7 @@
 {
   "name": "Autocannon (Reaper)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_18.png",
   "system": {
     "identifier": "autocannon-reaper",
     "class": "heavy",

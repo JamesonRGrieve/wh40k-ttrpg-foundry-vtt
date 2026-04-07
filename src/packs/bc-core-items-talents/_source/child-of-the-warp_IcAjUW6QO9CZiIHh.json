@@ -1,7 +1,7 @@
 {
   "name": "Child of the Warp",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_22.PNG",
   "system": {
     "category": "psychic",
     "source": "Black Crusade Core",

@@ -1,7 +1,7 @@
 {
   "name": "Heavy Crossbow (Selvanus) \"Castigator\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-default.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_05.png",
   "system": {
     "identifier": "heavy-crossbow-selvanus-castigator",
     "class": "heavy",

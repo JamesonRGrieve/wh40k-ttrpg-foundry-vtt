@@ -1,7 +1,7 @@
 {
   "name": "Mono Sword",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_12_b.PNG",
   "system": {
     "identifier": "mono-sword",
     "class": "melee",

@@ -1,0 +1,72 @@
+{
+  "name": "Research Station",
+  "type": "originPath",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_12.png",
+  "system": {
+    "identifier": "research-station",
+    "step": "homeworld",
+    "stepIndex": 1,
+    "description": {
+      "value": "<h2>Research Station</h2><p>Research stations are isolated installations devoted to observation, analysis, and data collection on behalf of the Imperium or the Mechanicus. Their inhabitants grow up within rigid schedules, specialised duties, and cultures where the demands of the project eclipse personal comfort. That environment breeds focused minds who excel at turning formal study into deeper insight, especially when one body of lore points toward another hidden beneath it.</p><h3>Homeworld Bonus</h3><p>+Intelligence, +Perception, -Fellowship</p><h3>Homeworld Aptitude</h3><p>Knowledge</p><h3>Wounds</h3><p>8+1d5</p><h3>Fate Threshold</h3><p>3 (Emperor's Blessing 8+)</p><h3>Homeworld Trait</h3><p><strong>Pursuit of Data:</strong> Whenever a research station character reaches Rank 2 (Trained) in a Scholastic Lore skill, he also gains Rank 1 (Known) in one related or identical Forbidden Lore skill specialisation of his choice. The GM is the final arbiter of whether the two specialisations are related.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Homeworld",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "8+1d5",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 3,
+      "blessedByEmperor": false,
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [
+        "Knowledge"
+      ],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "Thirst for Knowledge",
+          "description": "Once per session, the character can re-roll a failed Logic, Lore, or Tech-Use test."
+        }
+      ],
+      "choices": []
+    },
+    "modifiers": {
+      "characteristics": {
+        "intelligence": 5,
+        "perception": 5
+      },
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [
+        {
+          "name": "Fellowship",
+          "value": -5
+        }
+      ],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "Emperor's Blessing: On a roll of 8+ on 1d10, the character begins with an extra Fate Point.",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EW2RsrStn0000002"
+}

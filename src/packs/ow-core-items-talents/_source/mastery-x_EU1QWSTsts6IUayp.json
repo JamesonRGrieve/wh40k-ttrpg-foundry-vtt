@@ -1,7 +1,7 @@
 {
   "name": "Mastery (X)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_28.png",
   "system": {
     "identifier": "mastery",
     "category": "knowledge",

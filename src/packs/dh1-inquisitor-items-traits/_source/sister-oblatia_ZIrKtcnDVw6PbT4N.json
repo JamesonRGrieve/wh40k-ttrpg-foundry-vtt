@@ -1,7 +1,7 @@
 {
   "name": "Sister Oblatia",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_10.png",
   "system": {
     "requirements": "Adeptus Sororitas Career, DH Rank 5+. Fully Ordained Sister, undergoign Ritual Fasting, who wish to undertake a suitably pure oath to atone for the sins of another.",
     "source": "DH: Inquisitor's Handbook (Page 78)",

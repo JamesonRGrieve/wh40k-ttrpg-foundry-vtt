@@ -1,7 +1,7 @@
 {
   "name": "Astartes Thunder Hammer [Best Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_08_b.PNG",
   "system": {
     "identifier": "astartes-thunder-hammer-best",
     "class": "melee",

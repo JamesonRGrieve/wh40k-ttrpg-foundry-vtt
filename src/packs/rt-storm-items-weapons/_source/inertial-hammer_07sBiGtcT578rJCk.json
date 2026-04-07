@@ -1,7 +1,7 @@
 {
   "name": "Inertial Hammer",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_06_b.PNG",
   "system": {
     "identifier": "inertial-hammer",
     "class": "melee",

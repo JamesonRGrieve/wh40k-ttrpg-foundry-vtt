@@ -1,7 +1,7 @@
 {
   "name": "Arch-Militant",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/warlord-helmet.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_18.png",
   "system": {
     "identifier": "arch-militant",
     "step": "career",

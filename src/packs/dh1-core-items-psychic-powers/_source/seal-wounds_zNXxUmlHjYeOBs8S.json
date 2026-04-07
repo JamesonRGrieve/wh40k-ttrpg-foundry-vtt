@@ -1,7 +1,7 @@
 {
   "name": "Seal Wounds",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/enchant-eerie-1.jpg",
   "system": {
     "discipline": "Biomancy",
     "prerequisites": "-",

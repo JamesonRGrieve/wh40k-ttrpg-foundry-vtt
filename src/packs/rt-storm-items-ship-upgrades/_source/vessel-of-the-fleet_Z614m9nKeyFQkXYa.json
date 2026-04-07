@@ -1,7 +1,7 @@
 {
   "name": "Vessel of the Fleet",
   "type": "shipUpgrade",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_12.PNG",
   "system": {
     "spCost": 0,
     "shipAvailability": "All Ships",

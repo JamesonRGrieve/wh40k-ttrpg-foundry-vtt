@@ -1,7 +1,7 @@
 {
   "name": "Blessed Radiance",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_08.png",
   "system": {
     "category": "combat",
     "source": "Rogue Trader Core",

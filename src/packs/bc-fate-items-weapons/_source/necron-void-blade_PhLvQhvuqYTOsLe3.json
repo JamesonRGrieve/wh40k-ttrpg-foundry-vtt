@@ -1,7 +1,7 @@
 {
   "name": "Necron Void Blade",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_04_b.PNG",
   "system": {
     "identifier": "necron-void-blade",
     "class": "melee",

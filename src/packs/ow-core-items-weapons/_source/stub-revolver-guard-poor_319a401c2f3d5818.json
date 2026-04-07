@@ -1,7 +1,7 @@
 {
   "name": "Stub Revolver (Guard) [Poor Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_08.png",
   "system": {
     "identifier": "stub-revolver-guard-poor",
     "class": "pistol",

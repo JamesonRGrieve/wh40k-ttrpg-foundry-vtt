@@ -1,0 +1,63 @@
+{
+  "_id": "DH2CyberMec0004A",
+  "name": "Optical Mechadendrite",
+  "type": "cybernetic",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "identifier": "optical-mechadendrite",
+    "type": "mechadendrite",
+    "locations": [
+      "spine"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "effect": "<p>This highly flexible mechadendrite extends to roughly three metres and can reduce its width to pencil thickness. It grants +10 to Perception Tests and +20 to vision-based Tests in darkness, can inspect surfaces at a microscopic level, and can function as a telescopic sight. It also includes normal and infrared illumination.</p>",
+    "drawbacks": "<p>Requires the relevant Mechadendrite Use talent and Cyber-Mantle. A character may not have more mechadendrites than his Toughness Bonus.</p>",
+    "installation": {
+      "surgery": "Major surgery required",
+      "difficulty": "-20 Medicae",
+      "recoveryTime": "1 week"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    },
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 400,
+      "currency": "throne"
+    },
+    "equipped": true,
+    "inBackpack": false,
+    "container": "",
+    "description": {
+      "value": "<p>An optical sensor array mechadendrite with pict-capture and precision inspection capability.</p>",
+      "chat": "",
+      "summary": "Cybernetic optical sensor mechadendrite"
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "183",
+      "custom": ""
+    },
+    "notes": "Requires relevant Mechadendrite Use talent and Cyber-Mantle.",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {}
+}

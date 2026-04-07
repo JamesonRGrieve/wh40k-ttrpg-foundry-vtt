@@ -1,7 +1,7 @@
 {
   "name": "Rabbit Punch",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_18.png",
   "system": {
     "identifier": "rabbitPunch",
     "category": "combat",

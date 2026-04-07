@@ -1,7 +1,7 @@
 {
   "name": "Bonetrader",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_29.png",
   "system": {
     "requirements": "Not Astropath, Navigator, or Ork Weirdboy. RT Rank 3+, Intelligence 35+, Willpower 35+. Does not have a Psy Rating or Untouchable Trait. Has sold a psychic artiface, or been involved with dealings with psykers.",
     "source": "RT: The Navis Primer\n(Page 70)",

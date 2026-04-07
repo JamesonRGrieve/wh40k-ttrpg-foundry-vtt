@@ -1,7 +1,7 @@
 {
   "name": "Gift of Chaos",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/slice-spirit-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Unaligned)",
     "prerequisites": "Psy Rating 5, Infamy 40+",

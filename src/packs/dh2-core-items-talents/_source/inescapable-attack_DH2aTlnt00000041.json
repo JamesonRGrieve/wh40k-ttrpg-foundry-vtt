@@ -1,7 +1,7 @@
 {
   "name": "Inescapable Attack",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_08.png",
   "system": {
     "identifier": "inescapableAttack",
     "category": "combat",

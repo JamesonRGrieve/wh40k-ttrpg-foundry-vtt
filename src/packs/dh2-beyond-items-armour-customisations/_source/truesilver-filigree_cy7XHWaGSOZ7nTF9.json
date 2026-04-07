@@ -1,7 +1,7 @@
 {
   "name": "Truesilver Filigree",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s04.png",
   "system": {
     "effect": "Characters with the Daemonic trait engaged in melee with wearer suffers penalty to Weapon Skill Tests equal to -5 x Wearer's Willpower Bonus.",
     "availability": "very-rare",

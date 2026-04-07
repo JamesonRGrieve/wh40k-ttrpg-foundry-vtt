@@ -1,7 +1,7 @@
 {
   "name": "Panoptic 0-5 Automata Pistol",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_02.png",
   "system": {
     "identifier": "panoptic-0-5-automata-pistol",
     "class": "pistol",

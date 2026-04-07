@@ -1,7 +1,7 @@
 {
   "name": "Heavy Stubber",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_03.png",
   "system": {
     "identifier": "heavy-stubber",
     "class": "heavy",

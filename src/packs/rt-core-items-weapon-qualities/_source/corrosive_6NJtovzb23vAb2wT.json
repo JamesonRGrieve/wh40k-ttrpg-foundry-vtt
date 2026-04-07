@@ -1,0 +1,21 @@
+{
+  "name": "Corrosive",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_20.png",
+  "system": {
+    "identifier": "corrosive",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 10</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>10</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6NJtovzb23vAb2wT"
+}

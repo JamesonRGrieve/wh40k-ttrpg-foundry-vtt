@@ -1,7 +1,7 @@
 {
   "name": "Dark Patronage",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-royal-1.jpg",
   "system": {
     "useTime": "Dark Patronage is the act of gaining power through performing contractual obligations or favours for the Chaos Gods, or more commonly one of their Daemonic Minions",
     "range": null,

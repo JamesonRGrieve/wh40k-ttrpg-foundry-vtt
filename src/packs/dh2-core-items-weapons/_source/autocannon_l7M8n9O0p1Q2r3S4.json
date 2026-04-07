@@ -1,7 +1,7 @@
 {
   "name": "Autocannon",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_08.png",
   "system": {
     "identifier": "autocannon",
     "class": "heavy",
@@ -19,18 +19,17 @@
       },
       "rateOfFire": {
         "single": true,
-        "semi": 0,
-        "full": 6
+        "semi": 3,
+        "full": 0
       }
     },
     "damage": {
       "formula": "3d10",
       "type": "impact",
-      "bonus": 0,
+      "bonus": 8,
       "penetration": 6
     },
     "special": [
-      "ogryn-proof",
       "reliable"
     ],
     "clip": {
@@ -40,7 +39,7 @@
     },
     "reload": "2Full",
     "weight": 40,
-    "availability": "very-rare",
+    "availability": "rare",
     "craftsmanship": "common",
     "quantity": 1,
     "cost": {

@@ -1,7 +1,7 @@
 {
   "name": "Legate Investigator",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_26.png",
   "system": {
     "requirements": "Adept, Arbitrator, Cleric, Guardsman, or Psyker Career, DH Rank 4+. Possess Literacy Skill, can only take rank if offered it by an Inquisitor.",
     "source": "DH: Inquisitor's Handbook (Page 64)",

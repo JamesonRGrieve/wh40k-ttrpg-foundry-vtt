@@ -1,7 +1,7 @@
 {
   "name": "Charged Gauntlet",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-shock.svg",
+  "img": "systems/wh40k-rpg/icons/items/fist_weapon/fist_weapon_03_b.PNG",
   "system": {
     "identifier": "charged-gauntlet",
     "class": "melee",

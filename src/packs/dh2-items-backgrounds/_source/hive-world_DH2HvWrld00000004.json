@@ -1,7 +1,7 @@
 {
   "name": "Hive World",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_32.png",
   "system": {
     "identifier": "hive-world",
     "step": "homeworld",

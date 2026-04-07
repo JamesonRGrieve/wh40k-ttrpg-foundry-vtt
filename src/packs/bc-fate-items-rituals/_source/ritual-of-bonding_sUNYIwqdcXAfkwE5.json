@@ -1,7 +1,7 @@
 {
   "name": "Ritual of Bonding",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-blue-2.jpg",
   "system": {
     "test": "-30 Forbidden Lore (The Warp)\n-30 Opposed Willpower ",
     "requirements": "The Character has a Minion of Chaos (Lesser, Standard, or Greater), and someone with the Pskyer Trait to perform the Ritual. The ritual is performed somewhere quiet and isolated from others (if not, -20 to test). Psyker makes Lore Test, if passed, Character makes Opposed WP Test vs Minion's WP, with +10 per DoS on Psyker's Test. Test is modified by Summoning Ritual Modifiers.",

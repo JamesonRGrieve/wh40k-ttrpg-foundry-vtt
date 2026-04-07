@@ -1,7 +1,7 @@
 {
   "name": "Accursed",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_22.PNG",
   "system": {
     "category": "elite",
     "requirements": "Psy Rating, Elite Advance",

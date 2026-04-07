@@ -1,7 +1,7 @@
 {
   "name": "Necron Rod of Covenant [Melee]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/staves/stave_10_b.PNG",
   "system": {
     "identifier": "necron-rod-of-covenant-melee",
     "class": "melee",

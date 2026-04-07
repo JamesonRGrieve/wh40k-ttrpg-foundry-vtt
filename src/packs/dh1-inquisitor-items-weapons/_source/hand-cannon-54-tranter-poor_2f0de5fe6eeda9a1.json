@@ -1,7 +1,7 @@
 {
   "name": "Hand Cannon (.54 Tranter) [Poor Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_13.png",
   "system": {
     "identifier": "hand-cannon-54-tranter-poor",
     "class": "pistol",

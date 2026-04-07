@@ -1,7 +1,7 @@
 {
   "name": "Characteristics",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-magenta-2.jpg",
   "system": {
     "useTime": "Characteristic      Unbound      Once-Bound       Twice-Bound     Thrice-Bound\nWeapon Skill                +5                         +0                              +0                               -5\nBallistic Skill                +0                         +0                              +0                               +0\nStrength                        +10                        +5                               -5                              -10\nToughness                   +10                        +5                               -5                             -10 \nAgility                              +0                          -5                               -5                              -10\nIntelligence                   +5                         +0                              +0                               +0\nPerception                    +0                         +0                              -5                               -10\nWillpower                    +0                          -5                               -10                           -15\nFellowship                   +0                         +0                               +0                               +5\nInfluence                       +0                          -5                              -10                            -15\nWounds                         +5                         +0                               +0                               +0",
     "range": null,

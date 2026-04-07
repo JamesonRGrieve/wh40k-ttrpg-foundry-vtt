@@ -1,7 +1,7 @@
 {
   "name": "Dig In",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_20.PNG",
   "system": {
     "typeAndAction": "Sweeping Order\nFree Action",
     "requirements": "Commander Spec\n500xp",

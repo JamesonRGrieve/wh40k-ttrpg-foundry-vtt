@@ -1,7 +1,7 @@
 {
   "name": "Q'Sal Glass Dagger",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/daggers/dagger_13_b.PNG",
   "system": {
     "identifier": "qsal-glass-dagger",
     "class": "melee",

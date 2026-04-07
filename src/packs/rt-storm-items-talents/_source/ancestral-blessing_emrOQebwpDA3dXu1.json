@@ -1,7 +1,7 @@
 {
   "name": "Ancestral Blessing",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_16.PNG",
   "system": {
     "identifier": "ancestralBlessing",
     "category": "combat",

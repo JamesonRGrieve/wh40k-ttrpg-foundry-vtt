@@ -1,7 +1,7 @@
 {
   "name": "Bilge-Rat Quarters (Large)",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_04.png",
   "system": {
     "hullType": [
       "light-cruiser",

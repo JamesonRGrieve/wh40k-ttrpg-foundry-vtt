@@ -1,7 +1,7 @@
 {
   "name": "Lesser Minion of Chaos",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_29.png",
   "system": {
     "category": "general",
     "source": "Black Crusade Core",

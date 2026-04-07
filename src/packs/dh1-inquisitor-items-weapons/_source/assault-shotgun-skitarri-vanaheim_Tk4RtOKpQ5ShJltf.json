@@ -1,7 +1,7 @@
 {
   "name": "Assault Shotgun (Skitarri Vanaheim)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/guns/gun_09_b.PNG",
   "system": {
     "identifier": "assault-shotgun-skitarri-vanaheim",
     "class": "basic",

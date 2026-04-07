@@ -1,7 +1,7 @@
 {
   "name": "Bola Launcher",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-default.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_09.png",
   "system": {
     "identifier": "bola-launcher",
     "class": "basic",

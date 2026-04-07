@@ -1,7 +1,7 @@
 {
   "name": "Compel",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wild-orange-2.jpg",
   "system": {
     "discipline": "Telepathy (Domination)",
     "prerequisites": "Delude",

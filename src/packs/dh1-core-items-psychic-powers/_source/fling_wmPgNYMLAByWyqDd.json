@@ -1,7 +1,7 @@
 {
   "name": "Fling",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/light-eerie-3.jpg",
   "system": {
     "discipline": "Telekinesis",
     "prerequisites": "-",

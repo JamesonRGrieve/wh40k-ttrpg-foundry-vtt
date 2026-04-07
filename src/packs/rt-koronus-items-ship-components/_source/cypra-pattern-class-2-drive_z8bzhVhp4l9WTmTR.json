@@ -1,7 +1,7 @@
 {
   "name": "Cypra-Pattern Class 2 Drive",
   "type": "shipComponent",
-  "img": "icons/svg/gears.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_16.PNG",
   "system": {
     "hullType": [
       "raider",

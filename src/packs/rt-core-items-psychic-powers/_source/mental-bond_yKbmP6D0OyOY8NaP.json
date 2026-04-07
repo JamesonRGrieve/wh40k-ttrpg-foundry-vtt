@@ -1,7 +1,7 @@
 {
   "name": "Mental Bond",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rock-orange-2.jpg",
   "system": {
     "discipline": "Telepathy (Communication)",
     "prerequisites": "Mind Link\nOW: Psy Rating 5",

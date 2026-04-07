@@ -1,7 +1,7 @@
 {
   "name": "The Krixian Chainglaive",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_12_b.PNG",
   "system": {
     "identifier": "the-krixian-chainglaive",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Stun Shells",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammunition_10_b.PNG",
   "system": {
     "identifier": "stun-shells",
     "weaponTypes": [

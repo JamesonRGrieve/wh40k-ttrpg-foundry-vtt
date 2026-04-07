@@ -1,15 +1,15 @@
 {
   "name": "Psychic Discipline",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_26.png",
   "system": {
     "category": "psychic",
     "source": "Rogue Trader Core",
     "description": {
-      "value": "<p>Gain access to a new Psychic Discipline, may access a maximum of three. Talent can be taken multiple times.</p>"
+      "value": "<p>The Explorer gains access to a new Psychic Discipline, and may select techniques from this new field of study as his abilities increase. Psykers may access a maximum of three separate Disciplines.</p>"
     },
     "tier": 1,
-    "benefit": "<p>Gain access to a new Psychic Discipline, may access a maximum of three. Talent can be taken multiple times.</p>",
+    "benefit": "<p>The Explorer gains access to a new Psychic Discipline. Psykers may access a maximum of three separate Disciplines.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Psy Rating",
@@ -51,7 +51,7 @@
       "specialAbilities": [
         {
           "name": "New Discipline",
-          "description": "<p>You learn a new psychic discipline and one power from that discipline.</p>"
+          "description": "<p>You gain access to a new Psychic Discipline and may select techniques from it as your abilities increase.</p>"
         }
       ]
     },

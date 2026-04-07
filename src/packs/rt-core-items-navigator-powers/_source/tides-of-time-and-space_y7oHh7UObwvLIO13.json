@@ -1,7 +1,7 @@
 {
   "name": "Tides of Time and Space",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/ice-sky-2.jpg",
   "system": {
     "useTime": "Free Action",
     "range": "Self",

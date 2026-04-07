@@ -1,7 +1,7 @@
 {
   "name": "Disposable Handgun",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_19.png",
   "system": {
     "identifier": "disposable-handgun",
     "class": "pistol",

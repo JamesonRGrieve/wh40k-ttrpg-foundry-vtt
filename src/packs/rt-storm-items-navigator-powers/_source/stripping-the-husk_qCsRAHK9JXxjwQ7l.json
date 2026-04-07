@@ -1,7 +1,7 @@
 {
   "name": "Stripping the Husk",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/leaf-jade-1.jpg",
   "system": {
     "useTime": "Half Action",
     "range": "100m",

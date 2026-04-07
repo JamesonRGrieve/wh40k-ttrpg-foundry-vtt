@@ -1,7 +1,7 @@
 {
   "name": "Hail of Fire",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_02.png",
   "system": {
     "typeAndAction": "Basic Order\nHalf Action",
     "requirements": "Weapons Specialist Spec\n300xp",

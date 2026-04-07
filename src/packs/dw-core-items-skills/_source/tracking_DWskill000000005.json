@@ -4,16 +4,16 @@
   "img": "icons/svg/book.svg",
   "system": {
     "characteristic": "intelligence",
-    "descriptor": "Tracking covers the ability to follow trails and tracks, whether of beasts, men, or vehicles, across varied terrain.",
-    "uses": "Uses: Following tracks and trails, identifying what left a trail, estimating how old tracks are, concealing one's own trail.\nSpecial Use: Shadow: Make an opposed Tracking vs. Awareness test to follow a target through populated areas without being noticed.\nSpecial Use: Cover Tracks: Make a Tracking test to disguise or eliminate signs of passage. Others attempting to follow the concealed trail suffer a penalty equal to your Degrees of Success on the roll.",
+    "descriptor": "With the Tracking Skill, the character can follow the signs left by his quarry, allowing him to hunt them down.",
+    "uses": "Following obvious tracks does not require a Skill Test and is considered part of a character's movement.\nTracking Tests are required when time, weather, darkness, fog, or the environment make signs difficult to follow.\nWhen the difficulty is harder than Challenging (+0), the tracker's Movement rate drops to half.\nIf an opponent has attempted to conceal or erase tracks, make an Opposed Test against the prey's Concealment.",
     "useTime": "Full Action",
     "description": {
-      "value": "<p>Tracking covers the ability to follow trails and tracks, whether of beasts, men, or vehicles, across varied terrain.</p>\n<p>In Deathwatch, Tracking is a standalone skill. In Dark Heresy 2e, this functionality is covered by the Survival skill.</p>"
+      "value": "<p>With the Tracking Skill, the character can follow the signs left by his quarry, allowing him to hunt them down. Following obvious tracks does not require a Skill Test and is considered part of a character's movement.</p>\n<p>In instances where time or the elements have eroded the signs, or where darkness, fog, or the environment make them difficult to see, Tracking Tests are required.</p>"
     },
-    "isBasic": true,
-    "skillType": "basic",
+    "isBasic": false,
+    "skillType": "advanced",
     "aptitudes": ["Intelligence", "Fieldcraft"],
-    "source": "Deathwatch Core"
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

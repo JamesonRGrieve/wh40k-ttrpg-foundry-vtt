@@ -1,7 +1,7 @@
 {
   "name": "Boltgun (Mars) \"Scourge\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-bolter.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_13.png",
   "system": {
     "identifier": "boltgun-mars-scourge",
     "class": "basic",

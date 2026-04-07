@@ -1,7 +1,7 @@
 {
   "name": "Lumen Heraldry",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s09.png",
   "system": {
     "effect": "+10 to Intimidate and Command Tests, -30 to Concealment Tests. Uses a power source if armour doesn't already have one, recharged every 5 days (draw on power armour is negligable).",
     "availability": "scarce",

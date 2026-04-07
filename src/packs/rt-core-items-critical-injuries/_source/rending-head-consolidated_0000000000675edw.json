@@ -2,7 +2,7 @@
   "_id": "0000000000675edw",
   "name": "Rending Critical - Head",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/enchant-red-2.jpg",
   "system": {
     "identifier": "crit_rending_head_consolidated",
     "damageType": "rending",

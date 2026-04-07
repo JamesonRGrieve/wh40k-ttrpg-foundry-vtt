@@ -1,0 +1,118 @@
+{
+  "name": "Imperial Navy",
+  "type": "originPath",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_25.png",
+  "system": {
+    "identifier": "imperial-navy",
+    "step": "background",
+    "stepIndex": 2,
+    "description": {
+      "value": "<h2>Imperial Navy</h2><p>The Imperial Navy is the shield of the Imperium, its vast fleets plying the cold void to protect humanity from the xenos and the heretic. Those who serve within the Navy are forged by strict discipline, technical expertise, and the experience of void-warfare. Whether officers of the bridge or ratings in the gun-decks, Navy personnel are accustomed to the unique challenges of life aboard a starship and the coordinate efforts required to keep such a behemoth operational.</p><h3>Background Aptitudes</h3><p>Leadership or Tech</p><h3>Starting Skills</h3><p>Athletics, Common Lore (Imperial Navy), Navigate (Stellar), Operate (Aeronautica or Voidship)</p><h3>Starting Talent</h3><p>Weapon Training (Las or Solid Projectile)</p><h3>Background Bonus</h3><p><strong>The Imperium’s Shield:</strong> When giving or receiving assistance on a skill test, the character grants or receives an additional +5 bonus. Additionally, when using Operate (Aeronautica or Voidship), the character receives a +10 bonus to rolls related to formation maneuvers.</p>"
+    },
+    "requirements": {
+      "text": "Origin Path: Background",
+      "previousSteps": [],
+      "excludedSteps": []
+    },
+    "grants": {
+      "woundsFormula": "",
+      "wounds": 0,
+      "fateFormula": "",
+      "fateThreshold": 0,
+      "blessedByEmperor": false,
+      "skills": [
+        {
+          "name": "Athletics",
+          "specialization": "",
+          "level": "trained"
+        },
+        {
+          "name": "Common Lore",
+          "specialization": "Imperial Navy",
+          "level": "trained"
+        },
+        {
+          "name": "Navigate",
+          "specialization": "Stellar",
+          "level": "trained"
+        }
+      ],
+      "talents": [],
+      "traits": [],
+      "aptitudes": [],
+      "equipment": [],
+      "specialAbilities": [
+        {
+          "name": "The Imperium’s Shield",
+          "description": "When giving or receiving assistance on a skill test, the character grants or receives an additional +5 bonus. Additionally, when using Operate (Aeronautica or Voidship), the character receives a +10 bonus to rolls related to formation maneuvers."
+        }
+      ],
+      "choices": [
+        {
+          "name": "Background Aptitude",
+          "type": "aptitude",
+          "options": [
+            "Leadership",
+            "Tech"
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Skill",
+          "type": "skill",
+          "options": [
+            {
+              "name": "Operate",
+              "specialization": "Aeronautica"
+            },
+            {
+              "name": "Operate",
+              "specialization": "Voidship"
+            }
+          ],
+          "count": 1
+        },
+        {
+          "name": "Starting Talent",
+          "type": "talent",
+          "options": [
+            {
+              "name": "Weapon Training",
+              "specialization": "Las"
+            },
+            {
+              "name": "Weapon Training",
+              "specialization": "Solid Projectile"
+            }
+          ],
+          "count": 1
+        }
+      ]
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "effectText": "",
+    "notes": "",
+    "selectedChoices": {},
+    "activeModifiers": [],
+    "positions": []
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "EW2NavBkg0000001"
+}

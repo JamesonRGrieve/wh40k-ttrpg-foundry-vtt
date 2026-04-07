@@ -1,7 +1,7 @@
 {
   "name": "Voidborn",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_05.png",
   "system": {
     "identifier": "voidborn",
     "step": "homeworld",

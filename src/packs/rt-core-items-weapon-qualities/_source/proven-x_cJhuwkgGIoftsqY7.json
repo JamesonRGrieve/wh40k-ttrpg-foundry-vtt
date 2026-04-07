@@ -1,0 +1,21 @@
+{
+  "name": "Proven (X)",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_24.PNG",
+  "system": {
+    "identifier": "proven-x",
+    "hasLevel": false,
+    "level": null,
+    "effect": "Damage Rolls below X count as if X was Rolled",
+    "notes": "",
+    "description": {
+      "value": "<p>Damage Rolls below X count as if X was Rolled</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "cJhuwkgGIoftsqY7"
+}

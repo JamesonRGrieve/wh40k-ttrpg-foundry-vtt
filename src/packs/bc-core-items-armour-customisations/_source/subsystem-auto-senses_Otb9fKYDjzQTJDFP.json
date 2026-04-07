@@ -1,7 +1,7 @@
 {
   "name": "Subsystem: Auto-Senses",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s06.png",
   "system": {
     "effect": "Whilst Helmet is on, wearer has Dark Sight and Heightened Senses(Sight, Sound). Immune to Photon Flash and Stun Grenades. Can make a Called Shot as a Half Action.",
     "availability": "Special",

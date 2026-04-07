@@ -1,7 +1,7 @@
 {
   "name": "Helmetless",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/helmet_s05.png",
   "system": {
     "type": "power",
     "weight": 0,

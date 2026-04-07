@@ -1,7 +1,7 @@
 {
   "name": "Cauterise",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lighting-sky-2.jpg",
   "system": {
     "discipline": "Pyromancy",
     "prerequisites": "Psy Rating 2",

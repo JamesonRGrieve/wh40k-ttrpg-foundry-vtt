@@ -1,7 +1,7 @@
 {
   "name": "Subsystem: Sustainable Power Source",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s06.png",
   "system": {
     "effect": "Suit of armour does not need to be recharged.\nLoyalist Astartes Suits have this by default.",
     "availability": "Special",

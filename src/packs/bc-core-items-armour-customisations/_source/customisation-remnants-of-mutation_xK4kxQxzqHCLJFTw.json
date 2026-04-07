@@ -1,7 +1,7 @@
 {
   "name": "Customisation: Remnants of Mutation",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s02.png",
   "system": {
     "effect": "Choose One Mutation of: Animal Hybrid, Bestial, Winged, Boneless, Eye-Stalks, Centauroid, Flaming Skull, Grossly Fat, Slayer Limb, Additional Limb, Tail, Magnificent Horns, or Tentacle. When next gaining a mutation, gain this one, the armour adapts to it.",
     "availability": "Special",

@@ -1,7 +1,7 @@
 {
   "name": "Pentagramatic Wards",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s07.png",
   "system": {
     "effect": "Characters with the Daemonic or Warp Instability trait that goes into melee range, or starts their turn within melee range of wearer, must make -20 Willpower Test. If failed they suffer 1d5 Energy Damage per Degree of Failiure ignoring Armour and Toughness. If they succeed by 4+ DoS the wards shatter and break.",
     "availability": "extremely-rare",

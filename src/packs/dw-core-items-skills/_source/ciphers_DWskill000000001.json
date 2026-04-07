@@ -4,16 +4,16 @@
   "img": "icons/svg/book.svg",
   "system": {
     "characteristic": "intelligence",
-    "descriptor": "Ciphers represents knowledge of coded languages and secret signs used by various organisations. Each specialisation is a separate skill.",
-    "uses": "Uses: Encoding and decoding secret messages, recognising coded communication, creating ciphered documents.\nChapter Runes: The unique coded language of a Space Marine Chapter.\nDeathwatch: Cipher systems used by the Deathwatch for inter-Kill-team communication.\nInquisition: Codes used by the Inquisition and its agents.\nWar Cant: Standardised military battle-codes used across the Imperium.\nXenos Markings: Alien sigils, glyphs, and symbolic systems.\nSpecialisations: Chapter Runes, Deathwatch, Inquisition, War Cant, Xenos Markings. Each specialisation must be taken separately as a distinct skill.",
+    "descriptor": "Many groups and organisations employ ciphers as a secret shorthand code for communicating basic ideas, warnings, or information rapidly. Each skill group is acquired and used separately.",
+    "uses": "Skill Groups: Xenos Markings, Deathwatch, Chapter Runes, Imperial Codes, Mercenary Cant, Inquisition, Underworld.\nUses: Leave or read basic messages without a test; communicate complex meanings or decipher signs obscured by time or circumstance with a test.\nXenos Markings: Alien symbols warning of danger, territory, ownership, or similar meanings.\nDeathwatch: Kill-team shorthand for secret communication in the presence of outsiders.\nChapter Runes: Closely guarded Chapter ciphers used between Battle-Brothers.\nImperial Codes: Numerical and abbreviated battle-language used by the Imperial Guard and Imperial Navy.\nMercenary Cant: Abbreviated battle-language used by mercenary companies.\nInquisition: Private, pre-arranged ciphers used by agents of the Inquisition.\nUnderworld: Criminal shorthand and signs used by smugglers, gangs, and other lawbreakers.",
     "useTime": "Full Action",
     "description": {
-      "value": "<p>Ciphers represents knowledge of coded languages and secret signs used by various organisations. Each specialisation is a separate skill.</p>\n<p><strong>Specialisations:</strong> Chapter Runes, Deathwatch, Inquisition, War Cant, Xenos Markings</p>"
+      "value": "<p>Many groups and organisations employ ciphers as a secret shorthand code for communicating basic ideas, warnings, or information rapidly. The character can use and understand the signals, physical markings, or other subtle signs employed to express these concepts.</p>\n<p><strong>Skill Groups:</strong> Xenos Markings, Deathwatch, Chapter Runes, Imperial Codes, Mercenary Cant, Inquisition, Underworld</p>"
     },
     "isBasic": false,
     "skillType": "advanced",
     "aptitudes": ["Intelligence", "Knowledge"],
-    "source": "Deathwatch Core"
+    "source": "Deathwatch: Core"
   },
   "effects": [],
   "flags": {},

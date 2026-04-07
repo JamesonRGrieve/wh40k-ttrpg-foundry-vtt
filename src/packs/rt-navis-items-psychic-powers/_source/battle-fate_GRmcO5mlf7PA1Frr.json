@@ -1,7 +1,7 @@
 {
   "name": "Battle Fate",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/link-blue-3.jpg",
   "system": {
     "discipline": "zNPC - Eldar\n(Farseer)",
     "prerequisites": "Eldar Psyker",

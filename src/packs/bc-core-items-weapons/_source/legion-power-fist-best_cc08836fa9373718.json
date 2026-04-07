@@ -1,7 +1,7 @@
 {
   "name": "Legion Power Fist [Best Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/fist_weapon/fist_weapon_02_b.PNG",
   "system": {
     "identifier": "legion-power-fist-best",
     "class": "melee",

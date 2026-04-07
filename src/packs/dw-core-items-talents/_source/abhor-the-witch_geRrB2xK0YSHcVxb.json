@@ -1,14 +1,14 @@
 {
   "name": "Abhor the Witch",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_04.png",
   "system": {
     "identifier": "abhorTheWitch",
     "category": "combat",
     "source": "Deathwatch: Core",
-    "description": "<p>Character can spent a Fate Point prior to the mission (during the Oath Taking Phase), and counts as having spent the Fate Point for the duration of the mission. During the mission the character must make a +0 Willpower Test whenever subjected to a Psychic Power, Daemonic Power, or other Warp-based power. If the test is successful the character is unaffected by the power, if failed it affects them as normal. This effect also applies to powers that cause damage indirectly such as blasts, as well as those used by Friendly Talents. Powers resisted in this way are not negated, and may still affect others.</p>",
+    "description": "<p>The Battle-Brother spends the time before battle armouring himself against the power of the warp by reciting canticles and litanies of hate and contempt against the unclean powers.</p>",
     "tier": 1,
-    "benefit": "<p>Character can spent a Fate Point prior to the mission (during the Oath Taking Phase), and counts as having spent the Fate Point for the duration of the mission. During the mission the character must make a +0 Willpower Test whenever subjected to a Psychic Power, Daemonic Power, or other Warp-based power. If the test is successful the character is unaffected by the power, if failed it affects them as normal. This effect also applies to powers that cause damage indirectly such as blasts, as well as those used by Friendly Talents. Powers resisted in this way are not negated, and may still affect others.</p>",
+    "benefit": "<p>This Talent may be used in the Oath Making phase before undertaking a mission. The Battle-Brother spends a Fate Point in the Oath Making phase and counts as having spent it for the mission. During the mission, whenever he is subjected to a Psychic Power, Daemonic Power, or other warp-based power, he may make a Challenging (+0) Willpower Test. If successful, he is unaffected by the power; if he fails, it affects him as normal. This also applies to powers that cause damage indirectly, such as blasts, and to friendly powers. Powers resisted in this way are not negated and may still affect others.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Astartes without Psy Rating",

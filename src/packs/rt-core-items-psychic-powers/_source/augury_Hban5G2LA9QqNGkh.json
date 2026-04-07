@@ -1,7 +1,7 @@
 {
   "name": "Augury",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/enchant-red-2.jpg",
   "system": {
     "discipline": "Divination\n(Emperor's Tarot)",
     "prerequisites": "Foreshadow",

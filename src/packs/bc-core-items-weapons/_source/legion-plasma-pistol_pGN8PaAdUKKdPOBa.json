@@ -1,7 +1,7 @@
 {
   "name": "Legion Plasma Pistol",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-plasma.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_15.png",
   "system": {
     "identifier": "legion-plasma-pistol",
     "class": "pistol",

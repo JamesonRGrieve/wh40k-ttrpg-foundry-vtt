@@ -1,7 +1,7 @@
 {
   "name": "Rite of Fleshmoulding",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/shielding-spirit-3.jpg",
   "system": {
     "test": "-30 Medicae Test or \n-10 Scholastic Lore (Occult)",
     "requirements": "Requires a Subject, and one or more sacrificial flesh donors, who do not need to be willing. Takes place within an operating theatre that doubles as a Shrine to Slaanesh. If Character is an actual Flesh Shaper, they get +10 to test, if the subject is unwilling, it is +20.",

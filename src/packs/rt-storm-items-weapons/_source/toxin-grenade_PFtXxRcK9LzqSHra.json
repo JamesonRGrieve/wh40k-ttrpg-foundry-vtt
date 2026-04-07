@@ -1,7 +1,7 @@
 {
   "name": "Toxin Grenade",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/thrown-grenade.svg",
+  "img": "systems/wh40k-rpg/icons/items/grenade/grenade_06.png",
   "system": {
     "identifier": "toxin-grenade",
     "class": "thrown",

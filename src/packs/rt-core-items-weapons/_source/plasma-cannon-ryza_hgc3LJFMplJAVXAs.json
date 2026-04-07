@@ -1,7 +1,7 @@
 {
   "name": "Plasma Cannon (Ryza)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-plasma.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_09.png",
   "system": {
     "identifier": "plasma-cannon-ryza",
     "class": "heavy",

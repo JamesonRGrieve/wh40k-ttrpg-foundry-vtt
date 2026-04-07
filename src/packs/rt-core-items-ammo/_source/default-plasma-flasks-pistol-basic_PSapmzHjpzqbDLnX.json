@@ -1,7 +1,7 @@
 {
   "name": "! Default: Plasma Flasks (pistol/basic)",
   "type": "ammunition",
-  "img": "icons/svg/ammo.svg",
+  "img": "systems/wh40k-rpg/icons/items/ammo/ammo_13.png",
   "system": {
     "identifier": "-default-plasma-flasks-pistolbasic",
     "weaponTypes": [

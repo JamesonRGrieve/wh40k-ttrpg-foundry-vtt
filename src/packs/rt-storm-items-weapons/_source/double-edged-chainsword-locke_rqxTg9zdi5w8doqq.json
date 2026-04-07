@@ -1,7 +1,7 @@
 {
   "name": "Double-Edged Chainsword (Locke)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_03_b.PNG",
   "system": {
     "identifier": "double-edged-chainsword-locke",
     "class": "melee",

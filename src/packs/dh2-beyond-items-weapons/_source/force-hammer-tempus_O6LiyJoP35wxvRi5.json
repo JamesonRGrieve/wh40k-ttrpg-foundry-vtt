@@ -1,7 +1,7 @@
 {
   "name": "Force Hammer (Tempus)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_11_b.png",
   "system": {
     "identifier": "force-hammer-tempus",
     "class": "melee",

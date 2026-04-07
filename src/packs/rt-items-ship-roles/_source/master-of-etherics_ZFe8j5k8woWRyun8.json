@@ -1,7 +1,7 @@
 {
   "name": "Master of Etherics",
   "type": "shipRole",
-  "img": "icons/svg/crew.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_26.png",
   "system": {
     "rank": 3,
     "purpose": "Responsible for the Auspex and Vox relays.",

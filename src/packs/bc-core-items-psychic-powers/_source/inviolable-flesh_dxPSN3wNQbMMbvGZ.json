@@ -1,7 +1,7 @@
 {
   "name": "Inviolable Flesh",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lightning-blue-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Nurgle)",
     "prerequisites": "Nurgle Aligned, Toughness 40+",

@@ -1,7 +1,7 @@
 {
   "name": "Dark Eldar Darklight Blast Pistol",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_05.png",
   "system": {
     "identifier": "dark-eldar-darklight-blast-pistol",
     "class": "pistol",

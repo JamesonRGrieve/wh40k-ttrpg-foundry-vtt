@@ -1,7 +1,7 @@
 {
   "name": "Arch-Heretek",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_21.PNG",
   "system": {
     "requirements": "Not Kroot, Ork, Navigator, Astropath, or Missionary. RT Rank 2+. Has Tech-Use Skill and heretically experimented or defiled technology.",
     "source": "RT: Hostile Acquisitions \n(Page 32)",

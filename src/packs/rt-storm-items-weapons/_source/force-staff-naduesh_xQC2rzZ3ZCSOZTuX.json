@@ -1,7 +1,7 @@
 {
   "name": "Force Staff (Naduesh)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
+  "img": "systems/wh40k-rpg/icons/items/staves/stave_11_b.PNG",
   "system": {
     "identifier": "force-staff-naduesh",
     "class": "melee",

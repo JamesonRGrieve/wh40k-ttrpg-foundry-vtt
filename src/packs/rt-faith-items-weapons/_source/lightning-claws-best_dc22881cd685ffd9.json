@@ -1,7 +1,7 @@
 {
   "name": "Lightning Claws [Best Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/fist_weapon/fist_weapon_10_b.PNG",
   "system": {
     "identifier": "lightning-claws-best",
     "class": "melee",

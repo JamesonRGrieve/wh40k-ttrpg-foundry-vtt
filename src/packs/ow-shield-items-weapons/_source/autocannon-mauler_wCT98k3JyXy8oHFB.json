@@ -1,7 +1,7 @@
 {
   "name": "Autocannon (Mauler)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-cannon.svg",
+  "img": "systems/wh40k-rpg/icons/items/machine gun/machine_gun_02.png",
   "system": {
     "identifier": "autocannon-mauler",
     "class": "heavy",

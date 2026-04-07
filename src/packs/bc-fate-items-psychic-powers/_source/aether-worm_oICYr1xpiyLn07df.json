@@ -1,7 +1,7 @@
 {
   "name": "Aether Worm",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/needles-acid-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Tzeentch)",
     "prerequisites": "Tzeentch Aligned, Psy Rating 5, Mindscourge",

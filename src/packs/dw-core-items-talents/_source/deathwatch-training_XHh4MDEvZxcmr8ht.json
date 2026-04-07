@@ -1,13 +1,13 @@
 {
   "name": "Deathwatch Training",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_29.png",
   "system": {
     "category": "combat",
     "source": "Deathwatch: Core",
-    "description": "<p>The character has received the elite training of the Deathwatch, granting them exceptional effectiveness against xenos threats.</p>",
+    "description": "<p>The Battle-Brother is a sworn member of the Deathwatch, trained and sanctified for the war against the alien.</p>",
     "tier": 1,
-    "benefit": "<p>Righteous Fury is automatically confirmed against alien enemies without requiring Ballistic Skill Tests or Weapon Skill Tests.</p>",
+    "benefit": "<p>All Deathwatch Space Marines automatically confirm any Righteous Fury results against alien enemies without needing to re-roll the Ballistic Skill Test or Weapon Skill Test.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Astartes, Deathwatch member.",

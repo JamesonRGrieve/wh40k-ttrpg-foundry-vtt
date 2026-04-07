@@ -1,7 +1,7 @@
 {
   "name": "Rak'Gol Rad-Beam Cannon",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_05.png",
   "system": {
     "identifier": "rakgol-rad-beam-cannon",
     "class": "heavy",

@@ -1,7 +1,7 @@
 {
   "name": "Renegade",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/breaking-chain.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_34.png",
   "system": {
     "identifier": "renegade",
     "step": "lureOfTheVoid",

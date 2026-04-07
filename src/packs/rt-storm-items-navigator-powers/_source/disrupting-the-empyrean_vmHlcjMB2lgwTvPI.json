@@ -1,7 +1,7 @@
 {
   "name": "Disrupting the Empyrean",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-sky-1.jpg",
   "system": {
     "useTime": "Half Action",
     "range": "1 VU x Willpower Bonus",

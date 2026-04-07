@@ -1,7 +1,7 @@
 {
   "name": "Beast Hunter",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_18.png",
   "system": {
     "identifier": "beastHunter",
     "category": "combat",

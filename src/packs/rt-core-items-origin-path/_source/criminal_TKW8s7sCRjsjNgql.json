@@ -1,7 +1,7 @@
 {
   "name": "Criminal",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/robber.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_22.PNG",
   "system": {
     "identifier": "criminal",
     "step": "lureOfTheVoid",

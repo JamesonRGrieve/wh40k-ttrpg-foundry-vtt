@@ -2,7 +2,7 @@
   "_id": "0000000000uuhg6x",
   "name": "Energy Critical - Body",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/air-burst-air-2.jpg",
   "system": {
     "identifier": "crit_energy_body_consolidated",
     "damageType": "energy",

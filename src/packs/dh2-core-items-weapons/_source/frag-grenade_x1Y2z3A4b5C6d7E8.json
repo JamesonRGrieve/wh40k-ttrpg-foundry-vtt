@@ -1,7 +1,7 @@
 {
   "name": "Frag Grenade",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/grenade/grenade_06.png",
   "system": {
     "identifier": "frag-grenade",
     "class": "thrown",

@@ -1,7 +1,7 @@
 {
   "name": "Purge Soul",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wild-eerie-2.jpg",
   "system": {
     "discipline": "Sanctic Daemonology",
     "prerequisites": "Willpower 35,\nWord of the Emperor",

@@ -1,7 +1,7 @@
 {
   "name": "Melta Torpedo",
   "type": "shipWeapon",
-  "img": "icons/svg/energy.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_03.png",
   "system": {
     "type": "Topedo Warhead",
     "hullType": [

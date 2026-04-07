@@ -1,7 +1,7 @@
 {
   "name": "Thrown Weapon Training (X)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_20.png",
   "system": {
     "identifier": "thrownWeaponTraining",
     "category": "combat",

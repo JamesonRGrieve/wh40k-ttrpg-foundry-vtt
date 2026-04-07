@@ -1,7 +1,7 @@
 {
   "name": "Almace's Last Conquest",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_05_b.PNG",
   "system": {
     "identifier": "almaces-last-conquest",
     "class": "melee",

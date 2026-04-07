@@ -1,7 +1,7 @@
 {
   "name": "Telepathy",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-sky-1.jpg",
   "system": {
     "discipline": "Telepathy",
     "prerequisites": "-",

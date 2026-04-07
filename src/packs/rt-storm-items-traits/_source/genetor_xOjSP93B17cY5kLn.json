@@ -1,7 +1,7 @@
 {
   "name": "Genetor",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_06.png",
   "system": {
     "requirements": "Explorator, RT Rank 3+. Toughness 35+, Intelligence 40+,  Autosanguine or Prosanguine Talents.",
     "source": "RT: Into the Storm \n(Page 82)",

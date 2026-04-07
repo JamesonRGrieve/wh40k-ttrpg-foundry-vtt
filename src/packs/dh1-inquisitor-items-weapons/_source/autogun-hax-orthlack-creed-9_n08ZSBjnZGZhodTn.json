@@ -1,7 +1,7 @@
 {
   "name": "Autogun (Hax-Orthlack) \"Creed-9\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_04.png",
   "system": {
     "identifier": "autogun-hax-orthlack-creed-9",
     "class": "basic",

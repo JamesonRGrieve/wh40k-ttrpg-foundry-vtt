@@ -1,7 +1,7 @@
 {
   "name": "Eldar Shimmershield",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s02.png",
   "system": {
     "type": "xenos",
     "weight": 1,

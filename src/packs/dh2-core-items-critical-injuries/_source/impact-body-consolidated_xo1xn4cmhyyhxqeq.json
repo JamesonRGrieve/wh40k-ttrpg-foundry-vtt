@@ -2,7 +2,7 @@
   "_id": "xo1xn4cmhyyhxqeq",
   "name": "Impact Critical - Body",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/runes-magenta-1.jpg",
   "system": {
     "identifier": "crit_impact_body",
     "damageType": "impact",

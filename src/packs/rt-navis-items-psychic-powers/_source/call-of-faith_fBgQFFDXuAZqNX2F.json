@@ -1,7 +1,7 @@
 {
   "name": "Call of Faith",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/needles-royal-2.jpg",
   "system": {
     "discipline": "Soul Ward (Divine Grace)",
     "prerequisites": "Enduring Faith\nOW: Psy Rating 6",

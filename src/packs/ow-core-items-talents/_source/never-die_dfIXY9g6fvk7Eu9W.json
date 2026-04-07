@@ -1,7 +1,7 @@
 {
   "name": "Never Die",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_14.PNG",
   "system": {
     "identifier": "neverDie",
     "category": "combat",

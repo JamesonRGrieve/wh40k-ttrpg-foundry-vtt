@@ -1,7 +1,7 @@
 {
   "name": "Discerning Eye",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_26.png",
   "system": {
     "identifier": "discerningEye",
     "category": "knowledge",

@@ -1,7 +1,7 @@
 {
   "name": "Astartes Plasma Cannon",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-plasma.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_02.png",
   "system": {
     "identifier": "astartes-plasma-cannon",
     "class": "heavy",

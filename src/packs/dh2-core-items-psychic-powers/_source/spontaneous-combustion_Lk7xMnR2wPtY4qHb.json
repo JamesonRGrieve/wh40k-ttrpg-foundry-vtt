@@ -1,7 +1,7 @@
 {
   "name": "Spontaneous Combustion",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/haste-sky-3.jpg",
   "system": {
     "discipline": "Pyromancy",
     "prerequisites": "Psy Rating 4",

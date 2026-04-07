@@ -1,7 +1,7 @@
 {
   "name": "Soul of Adamantium",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lighting-acid-2.jpg",
   "system": {
     "discipline": "Theosophamy (Warp Manipulation)",
     "prerequisites": "None",

@@ -1,7 +1,7 @@
 {
   "name": "Boarding Pike (Anoxis)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_09_b.PNG",
   "system": {
     "identifier": "boarding-pike-anoxis",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Colchite Servo-Master",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_11.png",
   "system": {
     "requirements": "Any Career, RT Rank 3+, Intelligence 35+, Willpower 30+. Does not have Untouchable Trait. Acquired \"Colchite\" implant from Stryxis Trader or other appropriate market, and had it implanted to control servitors.",
     "source": "RT: The Navis Primer\n(Page 72)",

@@ -1,7 +1,7 @@
 {
   "name": "Pandemonium Stave",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/staves/stave_04_b.PNG",
   "system": {
     "identifier": "pandemonium-stave",
     "class": "melee",

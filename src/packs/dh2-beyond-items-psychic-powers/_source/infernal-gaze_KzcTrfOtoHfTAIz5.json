@@ -1,7 +1,7 @@
 {
   "name": "Infernal Gaze",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-sky-2.jpg",
   "system": {
     "discipline": "Malefic Daemonology",
     "prerequisites": "15+ Corruption, Willpower 45, Dark Flame",

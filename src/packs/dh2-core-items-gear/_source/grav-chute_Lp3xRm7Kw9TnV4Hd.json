@@ -1,23 +1,39 @@
 {
   "name": "Grav Chute",
   "type": "gear",
-  "img": "icons/svg/item-bag.svg",
+  "img": "icons/svg/backpack.svg",
   "system": {
-    "weight": 5,
-    "availability": "very rare",
-    "quantity": 1,
+    "category": "tools",
+    "weight": 15,
+    "availability": "rare",
+    "craftsmanship": "common",
     "cost": {
-      "value": 500,
+      "value": 0,
       "currency": "throne"
     },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
+    "quantity": 1,
     "description": {
-      "value": "<p>A back-mounted anti-gravity descent device that allows safe jumps from extreme heights or low-flying aircraft. When activated, it slows the wearer's fall to a safe speed. Allows a safe descent from any height, though strong winds or hostile fire can disrupt the landing.</p>"
+      "value": "<p>Allows user to slow and guide their fall, or hover for up to a minute. Has a one-hour use before power supply needs replacing.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Allows user to slow and guide their fall, or hover for up to a minute. Has a one-hour use before power supply needs replacing."
     },
-    "notes": "",
-    "source": "DH2e Core",
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Allows user to slow and guide their fall, or hover for up to a minute. Has a one-hour use before power supply needs replacing.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "grav-chute",
     "gameSystems": [
       "dh2e"
     ]

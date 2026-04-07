@@ -1,7 +1,7 @@
 {
   "name": "Preserve the Burning Chariot",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_16.PNG",
   "system": {
     "typeAndAction": "Basic Order\nFull Action",
     "requirements": ".Mechanicus Related Any Essential Repair Skill +10\nApt: Intelligence, Tech",

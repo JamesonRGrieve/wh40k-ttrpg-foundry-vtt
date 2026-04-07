@@ -1,7 +1,7 @@
 {
   "name": "Fiery Form",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/leaf-orange-3.jpg",
   "system": {
     "discipline": "Pyromancy",
     "prerequisites": "Psy Rating 4, Fire Shield",

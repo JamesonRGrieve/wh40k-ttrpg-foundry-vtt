@@ -2,7 +2,7 @@
   "_id": "0000000000zedddl",
   "name": "Impact Critical - Leg",
   "type": "criticalInjury",
-  "img": "icons/svg/blood.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/needles-fire-1.jpg",
   "system": {
     "identifier": "crit_impact_leg_consolidated",
     "damageType": "impact",

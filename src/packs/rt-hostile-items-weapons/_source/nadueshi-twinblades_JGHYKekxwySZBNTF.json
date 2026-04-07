@@ -1,7 +1,7 @@
 {
   "name": "Nadueshi Twinblades",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_11_b.PNG",
   "system": {
     "identifier": "nadueshi-twinblades",
     "class": "melee",

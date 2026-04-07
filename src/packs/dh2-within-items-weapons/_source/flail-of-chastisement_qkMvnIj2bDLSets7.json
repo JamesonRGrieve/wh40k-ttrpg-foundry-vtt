@@ -1,7 +1,7 @@
 {
   "name": "Flail of Chastisement",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/flail/flail_01_b.PNG",
   "system": {
     "identifier": "flail-of-chastisement",
     "class": "melee",

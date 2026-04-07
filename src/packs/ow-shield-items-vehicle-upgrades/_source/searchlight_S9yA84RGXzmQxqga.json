@@ -1,7 +1,7 @@
 {
   "name": "Searchlight",
   "type": "vehicleUpgrade",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_14.png",
   "system": {
     "descriptionText": "Any Crew or Passenger may activate the Search Light as a Half Action by making a +0 Perception Test to find targets. If successful they are illuminated. For as long as the Searchlight stays active attacks made against illuminated targets suffer no penalties due to darkness.",
     "description": {

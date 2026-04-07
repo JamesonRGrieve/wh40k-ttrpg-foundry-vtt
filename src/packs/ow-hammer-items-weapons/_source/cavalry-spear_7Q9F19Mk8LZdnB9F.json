@@ -1,7 +1,7 @@
 {
   "name": "Cavalry Spear",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/spear/stave_01_b.PNG",
   "system": {
     "identifier": "cavalry-spear",
     "class": "melee",

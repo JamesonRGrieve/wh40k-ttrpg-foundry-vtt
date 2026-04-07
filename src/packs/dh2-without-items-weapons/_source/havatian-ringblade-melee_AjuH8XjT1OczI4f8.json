@@ -1,7 +1,7 @@
 {
   "name": "Havatian Ringblade [Melee]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_04_b.PNG",
   "system": {
     "identifier": "havatian-ringblade-melee",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Rite of Slaughter",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-eerie-1.jpg",
   "system": {
     "test": "-20 Forbidden Lore (Daemonology) ",
     "requirements": "This Ritual is used to gain some usually temporary favour from the Blood God or one of his Greater Daemons. This is something the Player and GM agree to that is suitably violent and bloody in nature. An Ritual, with a promise of slaughter to come with a shrine to khorne and an appropriate sacrifice of flesh, skulls, or blood-drenched brass icons is performed.",

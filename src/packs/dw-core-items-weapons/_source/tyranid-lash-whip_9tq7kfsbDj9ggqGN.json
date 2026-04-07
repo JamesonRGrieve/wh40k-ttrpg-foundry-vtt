@@ -1,7 +1,7 @@
 {
   "name": "Tyranid Lash Whip",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/flail/flail_03_b.PNG",
   "system": {
     "identifier": "tyranid-lash-whip",
     "class": "melee",

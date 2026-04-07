@@ -1,7 +1,7 @@
 {
   "name": "Maglev Transcendence",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_24.PNG",
   "system": {
     "identifier": "maglevTranscendence",
     "category": "tech",

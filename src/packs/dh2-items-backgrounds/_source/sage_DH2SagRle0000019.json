@@ -1,7 +1,7 @@
 {
   "name": "Sage",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_02.png",
   "system": {
     "identifier": "sage",
     "step": "role",

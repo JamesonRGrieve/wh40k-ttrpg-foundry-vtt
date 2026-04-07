@@ -1,7 +1,7 @@
 {
   "name": "Warpath",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/link-spirit-3.jpg",
   "system": {
     "discipline": "Waaagh!\n(WAAAGH!)",
     "prerequisites": "None",

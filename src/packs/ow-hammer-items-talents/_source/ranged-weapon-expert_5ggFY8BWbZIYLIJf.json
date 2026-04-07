@@ -1,7 +1,7 @@
 {
   "name": "Ranged Weapon Expert",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_30.PNG",
   "system": {
     "identifier": "rangedWeaponExpert",
     "category": "combat",

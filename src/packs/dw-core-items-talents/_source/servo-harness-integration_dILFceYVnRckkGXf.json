@@ -1,15 +1,15 @@
 {
   "name": "Servo-Harness Integration",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_34.png",
   "system": {
     "category": "general",
     "source": "Deathwatch: Core",
     "description": {
-      "value": "<p>Character is fitted with a Servo-Harness and may use it proficiently.</p>"
+      "value": "<p>The Techmarine has the implants, training, and machine communion necessary to control a full servo-harness.</p>"
     },
     "tier": 1,
-    "benefit": "<p>Character is fitted with a Servo-Harness and may use it proficiently.</p>",
+    "benefit": "<p>The Servo-Harness Integration Talent is required in order to use a Servo-Harness.</p>",
     "aptitudes": [],
     "prerequisites": {
       "text": "Techmarine Implants, Mechadendrite Use (Servo-Arm/Utility)",

@@ -1,7 +1,7 @@
 {
   "name": "Perfect Timing",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/horror-red-2.jpg",
   "system": {
     "discipline": "Divination",
     "prerequisites": "Prescience",

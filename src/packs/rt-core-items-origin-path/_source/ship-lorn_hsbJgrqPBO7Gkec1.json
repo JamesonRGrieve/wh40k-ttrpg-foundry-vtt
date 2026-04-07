@@ -1,7 +1,7 @@
 {
   "name": "Ship Lorn",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/ship-wreck.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_16.PNG",
   "system": {
     "identifier": "ship-lorn",
     "step": "trialsAndTravails",

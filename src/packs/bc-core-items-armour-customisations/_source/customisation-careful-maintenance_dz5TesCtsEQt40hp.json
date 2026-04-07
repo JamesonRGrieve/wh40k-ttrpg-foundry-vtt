@@ -1,7 +1,7 @@
 {
   "name": "Customisation: Careful Maintenance",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s06.png",
   "system": {
     "effect": "The Armour has two additional Power Armour Subsystems.",
     "availability": "Special",

@@ -1,14 +1,14 @@
 {
   "name": "Astartes Weapon Specialisation (X)",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_22.png",
   "system": {
     "identifier": "astartesWeaponSpecialisation",
     "category": "combat",
     "source": "Deathwatch: Core",
-    "description": "<p>When taken choose a weapon type and class, such as Bolt (Pistols) or Melee (Chain), when using this weapon type, can never suffer a penalty of greater than -30 when using the weapon.\nTalent can be taken multiple times.</p>",
+    "description": "<p>A Space Marine is a master of the tools of warfare, but through long practice and affinity he may reach a level of mastery with a particular type of weapon so that it becomes a tool of perfect destruction.</p>",
     "tier": 1,
-    "benefit": "<p>When taken choose a weapon type and class, such as Bolt (Pistols) or Melee (Chain), when using this weapon type, can never suffer a penalty of greater than -30 when using the weapon.\nTalent can be taken multiple times.</p>",
+    "benefit": "<p>When this Talent is taken, a type and class of weapons must be specified, such as Bolt (Pistols) or Melee (Chain). This Talent may be taken multiple times for different types and classes of weapons. When using the specified weapon type and class, penalties to Weapon Skill or Ballistic Skill Tests with that weapon can never be worse than &ndash;30.</p>",
     "aptitudes": [
       "Weapon Skill",
       "Ballistic Skill"

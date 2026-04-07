@@ -1,7 +1,7 @@
 {
   "name": "Attack Pattern Gladius Ultra",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_29.png",
   "system": {
     "typeAndAction": "Attack Order\nHalf Action",
     "requirements": ".Servitor Comrade: Clipaeus-Class Combat Servitor\nApt: None",

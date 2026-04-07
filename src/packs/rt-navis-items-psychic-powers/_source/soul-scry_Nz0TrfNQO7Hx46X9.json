@@ -1,7 +1,7 @@
 {
   "name": "Soul Scry",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-sky-2.jpg",
   "system": {
     "discipline": "zNPC - Eldar \n(Void Dreamer)",
     "prerequisites": "Eldar Psyker",

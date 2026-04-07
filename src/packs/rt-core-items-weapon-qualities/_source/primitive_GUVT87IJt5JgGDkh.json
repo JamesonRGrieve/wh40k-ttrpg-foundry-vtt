@@ -1,0 +1,21 @@
+{
+  "name": "Primitive*",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_22.PNG",
+  "system": {
+    "identifier": "primitive",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 175</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>175</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "GUVT87IJt5JgGDkh"
+}

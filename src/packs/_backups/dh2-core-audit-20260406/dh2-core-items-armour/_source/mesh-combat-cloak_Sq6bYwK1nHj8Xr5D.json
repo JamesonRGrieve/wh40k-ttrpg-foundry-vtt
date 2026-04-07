@@ -1,0 +1,36 @@
+{
+  "name": "Mesh Combat Cloak",
+  "type": "armour",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s07.png",
+  "system": {
+    "type": "mesh",
+    "weight": 4,
+    "availability": "rare",
+    "notes": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>A full-body mesh cloak with an integrated hood, providing complete coverage. Favoured by agents who need protection without the bulk of heavier armour.</p>"
+    },
+    "modificationSlots": 0,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 4,
+      "body": 4,
+      "leftArm": 4,
+      "rightArm": 4,
+      "leftLeg": 4,
+      "rightLeg": 4
+    },
+    "modifications": [],
+    "maxAgility": 0,
+    "properties": [],
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Sq6bYwK1nHj8Xr5D"
+}

@@ -1,7 +1,7 @@
 {
   "name": "Devotion",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/prayer.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_26.png",
   "system": {
     "identifier": "devotion",
     "step": "motivation",

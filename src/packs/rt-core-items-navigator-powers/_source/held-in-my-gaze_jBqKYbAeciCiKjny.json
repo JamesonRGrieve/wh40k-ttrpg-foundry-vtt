@@ -1,7 +1,7 @@
 {
   "name": "Held in my Gaze",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-red-1.jpg",
   "system": {
     "useTime": "Half Action",
     "range": "5m x Perception Bonus",

@@ -1,7 +1,7 @@
 {
   "name": "Combat Shotgun",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/guns/gun_12_b.PNG",
   "system": {
     "identifier": "combat-shotgun",
     "class": "basic",

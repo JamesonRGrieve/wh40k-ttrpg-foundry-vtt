@@ -1,7 +1,7 @@
 {
   "name": "High Factotum",
   "type": "shipRole",
-  "img": "icons/svg/crew.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_08.png",
   "system": {
     "rank": 2,
     "purpose": "Manages Finances, Trade, and the making of Profits.",

@@ -1,7 +1,7 @@
 {
   "name": "Cold Trade Broker",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_29.png",
   "system": {
     "requirements": "Any career, RT Rank 2+, Has one of the Barter, Commerce, or Forbidden Lore (Xenos). Has particpated in the trade of xenos artifacts.",
     "source": "RT: Hostile Acquisitions \n(Page 34)",

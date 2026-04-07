@@ -1,7 +1,7 @@
 {
   "name": "Compact Laspistol (Takara) \"Palatine\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_13.png",
   "system": {
     "identifier": "compact-laspistol-takara-palatine",
     "class": "pistol",

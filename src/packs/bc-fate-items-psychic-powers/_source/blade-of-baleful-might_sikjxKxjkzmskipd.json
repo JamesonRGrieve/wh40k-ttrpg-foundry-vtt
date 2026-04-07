@@ -1,7 +1,7 @@
 {
   "name": "Blade of Baleful Might",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/heal-sky-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Unaligned)",
     "prerequisites": "Psy Rating 4,\nInfamy 30+\nForce Weapon",

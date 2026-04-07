@@ -1,7 +1,7 @@
 {
   "name": "Subsystem: Osmotic Gill Life Sustainer",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s04.png",
   "system": {
     "effect": "Armour is Environmentally Sealed and can maintain adequate oxygen as long as armour is powered.",
     "availability": "Special",

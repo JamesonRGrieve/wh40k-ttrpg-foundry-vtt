@@ -1,7 +1,7 @@
 {
   "name": "Ork Tusk Squigknife",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/daggers/dagger_07_b.PNG",
   "system": {
     "identifier": "ork-tusk-squigknife",
     "class": "melee",

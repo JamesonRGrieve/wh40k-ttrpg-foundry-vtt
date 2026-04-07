@@ -1,7 +1,7 @@
 {
   "name": "Tau Battlesuit Pilot",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_25.png",
   "system": {
     "requirements": "Tau, RT Rank 5+, Agility 45+. A Fire Caste Tau who has earned a RT Rank of honour to be proven worthy of piloting a Battlesuit.",
     "source": "RT: Tau Character Guide (Page 24)",

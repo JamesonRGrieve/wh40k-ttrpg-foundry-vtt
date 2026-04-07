@@ -1,7 +1,7 @@
 {
   "name": "Mesh Gloves",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/gloves_s02.png",
   "system": {
     "type": "mesh",
     "weight": 0.5,

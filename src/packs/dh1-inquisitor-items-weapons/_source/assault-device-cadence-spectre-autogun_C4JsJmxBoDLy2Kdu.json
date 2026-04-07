@@ -1,7 +1,7 @@
 {
   "name": "Assault Device (Cadence)\n\"Spectre\" [Autogun]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-autogun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_19.png",
   "system": {
     "identifier": "assault-device-cadence-spectre-autogun",
     "class": "basic",

@@ -1,7 +1,7 @@
 {
   "name": "Port of Call (Footfallen)",
   "type": "talent",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_20.png",
   "system": {
     "identifier": "port-of-call-footfallen",
     "category": "origin",

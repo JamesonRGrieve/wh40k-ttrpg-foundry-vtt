@@ -1,7 +1,7 @@
 {
   "name": "Deathwatch Graviton Cannon [Broad]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_08.png",
   "system": {
     "identifier": "deathwatch-graviton-cannon-broad",
     "class": "heavy",

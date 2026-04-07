@@ -1,7 +1,7 @@
 {
   "name": "First Officer",
   "type": "shipRole",
-  "img": "icons/svg/crew.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_20.PNG",
   "system": {
     "rank": 2,
     "purpose": "Right hand of the Lord-Captain and acts with their Authority.",

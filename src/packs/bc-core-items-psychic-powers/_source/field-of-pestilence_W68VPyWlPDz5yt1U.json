@@ -1,21 +1,21 @@
 {
   "name": "Field of Pestilence",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fireball-red-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Nurgle)",
     "prerequisites": "Nurgle Aligned",
-    "focusPower": "Full Action Concentration",
-    "action": "5m x Psy Rating",
-    "range": "-20 Willpower",
-    "opposed": "Yes",
-    "sustained": "Whilst Sustained, all Ground within range turns swamp-like, any creature except the Psyker within range that attempts to move faster than their normal Half-Action Movement Rate must pass a +0 Agility Test or fall over.",
-    "effect": "300xp",
+    "focusPower": "Hard (-20) Willpower Test",
+    "action": "Full Action",
+    "range": "5 metres x Psy Rating radius",
+    "opposed": "No",
+    "sustained": "Free Action",
+    "effect": "While this power remains in effect, the ground around the Sorcerer becomes swamp-like and moves with him, centred on him at all times. Any creature other than the Sorcerer within the power's radius must pass a Challenging (+0) Agility Test or fall whenever attempting to move faster than a normal Half Action movement rate.",
     "source": "Black Crusade: Core",
     "description": {
-      "value": "<p>300xp</p>"
+      "value": "<p>While touching the ground beneath his feet, the Sorcerer conjures forth a wave of pestilence and decay, turning hardened soil into a morass of greenish-grey sludge. Many sorcerers invoke litanies of infertility or speak prayers of desecration, while others trace abhorrent runes in the dirt or pour jars of diseased blood onto the ground. Many sorcerers believe that this power was granted to mortals by one of the most renowned of Nurgle's daemons.</p>"
     },
-    "focusTime": "Half Action",
+    "focusTime": "Full Action",
     "threshold": 0,
     "gameSystems": [
       "rt"

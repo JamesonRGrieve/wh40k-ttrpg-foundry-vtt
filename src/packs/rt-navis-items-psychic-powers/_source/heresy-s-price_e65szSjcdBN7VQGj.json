@@ -1,7 +1,7 @@
 {
   "name": "Heresy's Price",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/beam-sky-3.jpg",
   "system": {
     "discipline": "Soul Ward (Divine Grace)",
     "prerequisites": "None",

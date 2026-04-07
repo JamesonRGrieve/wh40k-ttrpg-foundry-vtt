@@ -1,7 +1,7 @@
 {
   "name": "Hecutor-pattern Plasma Battery",
   "type": "shipWeapon",
-  "img": "icons/svg/energy.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_09.png",
   "system": {
     "type": "Macrocannon",
     "hullType": [

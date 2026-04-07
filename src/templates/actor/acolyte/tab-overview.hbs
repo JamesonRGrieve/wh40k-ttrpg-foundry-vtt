@@ -345,6 +345,55 @@
                 </div>
             </div>
             
+            {{!-- Zone: DH2e Resources --}}
+            <div class="wh40k-dashboard-zone wh40k-zone-resources">
+                <div class="wh40k-zone-header">
+                    <i class="fas fa-coins"></i>
+                    <span>Resources</span>
+                </div>
+                <div class="wh40k-zone-content">
+                    <div class="wh40k-vital-row">
+                        <span class="wh40k-vital-icon"><i class="fas fa-handshake"></i></span>
+                        <span class="wh40k-vital-label">Influence</span>
+                        <div class="wh40k-vital-controls">
+                            <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.influence" data-min="0" title="-1">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" class="wh40k-vital-input" name="system.influence" value="{{system.influence}}" min="0" />
+                            <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.influence" data-max="100" title="+1">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="wh40k-vital-row">
+                        <span class="wh40k-vital-icon"><i class="fas fa-stamp"></i></span>
+                        <span class="wh40k-vital-label">Requisition</span>
+                        <div class="wh40k-vital-controls">
+                            <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.requisition" data-min="0" title="-1">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" class="wh40k-vital-input" name="system.requisition" value="{{system.requisition}}" min="0" />
+                            <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.requisition" title="+1">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="wh40k-vital-row">
+                        <span class="wh40k-vital-icon"><i class="fas fa-coins"></i></span>
+                        <span class="wh40k-vital-label">Throne Gelt</span>
+                        <div class="wh40k-vital-controls">
+                            <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.throneGelt" data-min="0" title="-1">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" class="wh40k-vital-input" name="system.throneGelt" value="{{system.throneGelt}}" min="0" />
+                            <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.throneGelt" title="+1">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{!-- Zone 8: Active Effects (takes 2fr column) --}}
             <div class="wh40k-dashboard-zone wh40k-zone-effects">
                 <div class="wh40k-zone-header">

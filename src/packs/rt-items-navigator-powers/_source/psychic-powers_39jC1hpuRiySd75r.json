@@ -1,7 +1,7 @@
 {
   "name": "Psychic Powers",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/haste-royal-1.jpg",
   "system": {
     "useTime": "Unbound: Psy 7, \nOnce-Bound: Psy 6\nTwice-Bound: Psy 5, \nThrice-Bound: Psy 4\nKhorne Daemonhosts do not gain Psychic Powers. Powers should be appropriate for the patron god of the Daemonhost.\n",
     "range": null,

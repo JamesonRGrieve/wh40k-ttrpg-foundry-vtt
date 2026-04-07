@@ -1,7 +1,7 @@
 {
   "name": "Banishment",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fire-arrows-jade-1.jpg",
   "system": {
     "discipline": "Theosophamy (Warp Manipulation)",
     "prerequisites": "Seal the Breach\nOW: Psy Rating 6",

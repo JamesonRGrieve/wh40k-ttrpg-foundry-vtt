@@ -1,7 +1,7 @@
 {
   "name": "Legion Combat Knife [Good Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/daggers/dagger_06_b.PNG",
   "system": {
     "identifier": "legion-combat-knife-good",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Desperado",
   "type": "originPath",
-  "img": "icons/svg/mystery-man.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_16.png",
   "system": {
     "identifier": "desperado",
     "step": "role",

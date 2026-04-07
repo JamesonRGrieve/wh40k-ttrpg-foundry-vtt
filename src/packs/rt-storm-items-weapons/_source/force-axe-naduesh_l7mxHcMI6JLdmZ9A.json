@@ -1,7 +1,7 @@
 {
   "name": "Force Axe (Naduesh)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-force.svg",
+  "img": "systems/wh40k-rpg/icons/items/axes/axe_04_b.png",
   "system": {
     "identifier": "force-axe-naduesh",
     "class": "melee",

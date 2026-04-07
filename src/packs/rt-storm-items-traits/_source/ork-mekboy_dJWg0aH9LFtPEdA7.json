@@ -1,7 +1,7 @@
 {
   "name": "Ork Mekboy",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_24.png",
   "system": {
     "requirements": "Ork, RT Rank 4+, Intelligence 30+, Trained Tech-Use Skill, 2+ Exotic Weapon Proficiencies.",
     "source": "RT: Into the Storm \n(Page 94)",

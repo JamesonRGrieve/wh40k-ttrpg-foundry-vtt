@@ -1,7 +1,7 @@
 {
   "name": "Tainted Psyker",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_18.png",
   "system": {
     "category": "psychic",
     "source": "DH 2E: Enemies Within",

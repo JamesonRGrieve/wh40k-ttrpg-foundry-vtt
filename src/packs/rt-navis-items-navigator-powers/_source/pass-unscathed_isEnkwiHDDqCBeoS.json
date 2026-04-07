@@ -1,7 +1,7 @@
 {
   "name": "Pass Unscathed",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fire-arrows-magenta-1.jpg",
   "system": {
     "useTime": "Half Action",
     "range": "3m x Perception Bonus",

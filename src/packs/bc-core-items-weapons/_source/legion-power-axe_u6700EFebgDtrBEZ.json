@@ -1,7 +1,7 @@
 {
   "name": "Legion Power Axe",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/axes/axe_12_b.PNG",
   "system": {
     "identifier": "legion-power-axe",
     "class": "melee",

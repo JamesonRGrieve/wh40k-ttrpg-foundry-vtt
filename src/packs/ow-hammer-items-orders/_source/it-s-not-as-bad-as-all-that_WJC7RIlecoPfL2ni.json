@@ -1,7 +1,7 @@
 {
-  "name": "It's Not as Bad as all that\u2026",
+  "name": "It's Not as Bad as all that…",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_16.PNG",
   "system": {
     "typeAndAction": "Basic Order\nFull Action",
     "requirements": "Field Chirurgeon Spec\n600xp",

@@ -1,7 +1,7 @@
 {
   "name": "Target Selection",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_31.png",
   "system": {
     "identifier": "targetSelection",
     "category": "combat",

@@ -1,7 +1,7 @@
 {
   "name": "Choir of Poxes",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/vines-acid-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Nurgle)",
     "prerequisites": "Nurgle Aligned",

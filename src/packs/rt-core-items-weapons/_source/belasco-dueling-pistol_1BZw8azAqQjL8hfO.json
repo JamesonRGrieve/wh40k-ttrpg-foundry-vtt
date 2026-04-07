@@ -1,7 +1,7 @@
 {
   "name": "Belasco Dueling Pistol",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-las.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_18.png",
   "system": {
     "identifier": "belasco-dueling-pistol",
     "class": "pistol",

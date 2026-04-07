@@ -1,7 +1,7 @@
 {
   "name": "Open the Mind's Eye",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/rock-plain-2.jpg",
   "system": {
     "discipline": "zNPC - Rak 'Gol",
     "prerequisites": "Resonator Implants",

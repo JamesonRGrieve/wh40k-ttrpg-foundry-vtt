@@ -1,7 +1,7 @@
 {
   "name": "Spikes",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s09.png",
   "system": {
     "effect": "Any Melee Hits against wearer cause attacker to suffer 1d5+1 R Damage (can be dodged/parried), if spikes are on arms, wearer counts as having a Knife. Decrease Armour Availability by 1 ",
     "availability": "Special",

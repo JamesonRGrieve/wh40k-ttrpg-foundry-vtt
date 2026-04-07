@@ -1,7 +1,7 @@
 {
   "name": "Red Consecrator",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_30.png",
   "system": {
     "requirements": "Any Human except Explorator, Astropath, or Navigator. RT Rank 1+, Weapon skill 35+, Fellowship 35+. Must have had the opportunity to train with the Blood Tears on Loretta, or with a fellow Red Consecrator acolyte.",
     "source": "RT: Faith and Coin\n(Page 76)",

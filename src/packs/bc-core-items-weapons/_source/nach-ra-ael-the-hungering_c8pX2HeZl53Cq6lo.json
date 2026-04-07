@@ -1,7 +1,7 @@
 {
   "name": "Nach'ra'ael the Hungering",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-primitive.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_01_b.png",
   "system": {
     "identifier": "nachraael-the-hungering",
     "class": "melee",

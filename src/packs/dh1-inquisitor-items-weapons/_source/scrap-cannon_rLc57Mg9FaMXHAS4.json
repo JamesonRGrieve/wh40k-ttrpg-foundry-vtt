@@ -1,7 +1,7 @@
 {
   "name": "Scrap Cannon",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-default.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_10.png",
   "system": {
     "identifier": "scrap-cannon",
     "class": "heavy",

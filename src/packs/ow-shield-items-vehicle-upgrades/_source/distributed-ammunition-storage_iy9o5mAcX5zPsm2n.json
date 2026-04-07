@@ -1,7 +1,7 @@
 {
   "name": "Distributed Ammunition Storage",
   "type": "vehicleUpgrade",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_21.png",
   "system": {
     "descriptionText": "Whenever this Vehicle suffers Critical Damage to the Weapon Systems or Turret, reduce Damage the crew would suffer by 10.",
     "description": {

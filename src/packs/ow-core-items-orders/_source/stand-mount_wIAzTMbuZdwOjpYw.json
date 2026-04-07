@@ -1,7 +1,7 @@
 {
   "name": "Stand/Mount",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_04.png",
   "system": {
     "typeAndAction": "Generic Order\nHalf Action",
     "requirements": "--",

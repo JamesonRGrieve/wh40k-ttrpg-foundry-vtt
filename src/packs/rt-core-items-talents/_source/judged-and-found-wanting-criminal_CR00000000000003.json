@@ -1,7 +1,7 @@
 {
   "name": "Judged and Found Wanting (Criminal)",
   "type": "talent",
-  "img": "icons/svg/skull.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_01.png",
   "system": {
     "identifier": "judged-and-found-wanting-criminal",
     "category": "origin",

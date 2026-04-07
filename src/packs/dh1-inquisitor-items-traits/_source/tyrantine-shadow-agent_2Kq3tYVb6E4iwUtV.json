@@ -1,7 +1,7 @@
 {
   "name": "Tyrantine Shadow Agent",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_06.png",
   "system": {
     "requirements": "Non Sororitas or Tech-Priest Career, DH Rank 5+. Have been singled out by the Tyrantine Cabal, to take this path means becoming part of their secret orders and goals.",
     "source": "DH: Inquisitor's Handbook (Page 82)",

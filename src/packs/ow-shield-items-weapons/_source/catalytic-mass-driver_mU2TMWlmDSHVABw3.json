@@ -1,7 +1,7 @@
 {
   "name": "Catalytic Mass Driver",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_11.png",
   "system": {
     "identifier": "catalytic-mass-driver",
     "class": "basic",

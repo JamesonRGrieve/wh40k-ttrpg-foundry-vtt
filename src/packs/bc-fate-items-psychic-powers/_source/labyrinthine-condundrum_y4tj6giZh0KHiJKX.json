@@ -1,7 +1,7 @@
 {
   "name": "Labyrinthine Condundrum",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/wind-blue-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Tzeentch)",
     "prerequisites": "Tzeentch Aligned, Psy Rating 4, Intelligence 50+, Logic Skill",

@@ -1,7 +1,7 @@
 {
   "name": "Enduring Faith",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/shielding-fire-1.jpg",
   "system": {
     "discipline": "Soul Ward (Divine Grace)",
     "prerequisites": "Chorus of the Righteous\nOW: Psy Rating 5",

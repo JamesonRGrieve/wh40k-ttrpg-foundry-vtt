@@ -1,7 +1,7 @@
 {
   "name": "Legend of the Expanse",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_32.png",
   "system": {
     "requirements": "Any Career, RT Rank 6+, two or more characteristics of 50+. Two skills with 20+, another three with 10+. 70+ Profit Factor.",
     "source": "RT: Into the Storm \n(Page 88)",

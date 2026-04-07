@@ -1,7 +1,7 @@
 {
   "name": "Combi-Tool",
   "type": "gear",
-  "img": "icons/svg/item-bag.svg",
+  "img": "icons/svg/backpack.svg",
   "system": {
     "weight": 1,
     "availability": "average",

@@ -1,7 +1,7 @@
 {
   "name": "Temporal Exile",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/lightning-jade-2.jpg",
   "system": {
     "discipline": "zNPC - Eldar\n(Farseer)",
     "prerequisites": "Eldar Psyker",

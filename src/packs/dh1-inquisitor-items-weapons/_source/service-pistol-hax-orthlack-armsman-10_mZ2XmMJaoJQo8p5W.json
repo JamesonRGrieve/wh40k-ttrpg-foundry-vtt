@@ -1,7 +1,7 @@
 {
   "name": "Service Pistol(Hax-Orthlack)\n\"Armsman-10\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/pistol-autopistol.svg",
+  "img": "systems/wh40k-rpg/icons/items/pistols/pistols_18.png",
   "system": {
     "identifier": "service-pistolhax-orthlack-armsman-10",
     "class": "pistol",

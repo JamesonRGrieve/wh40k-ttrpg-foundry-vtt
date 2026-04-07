@@ -1,7 +1,7 @@
 {
   "name": "Coordinated Strike",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_15.PNG",
   "system": {
     "identifier": "coordinatedStrike",
     "category": "combat",

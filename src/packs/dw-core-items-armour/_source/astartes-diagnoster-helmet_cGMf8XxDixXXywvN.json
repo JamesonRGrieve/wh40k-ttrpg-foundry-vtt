@@ -1,7 +1,7 @@
 {
   "name": "Astartes Diagnoster Helmet",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/helmet_s09.png",
   "system": {
     "type": "power",
     "weight": 30,

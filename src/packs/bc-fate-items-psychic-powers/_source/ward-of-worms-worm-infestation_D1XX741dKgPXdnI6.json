@@ -1,7 +1,7 @@
 {
   "name": "Ward of Worms (Worm Infestation)",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fireball-sky-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Nurgle)",
     "prerequisites": "Ward of Worms",

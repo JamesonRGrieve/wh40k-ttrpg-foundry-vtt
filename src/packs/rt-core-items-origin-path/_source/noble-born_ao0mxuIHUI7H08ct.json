@@ -1,7 +1,7 @@
 {
   "name": "Noble Born",
   "type": "originPath",
-  "img": "modules/game-icons-net/whitetransparent/jewel-crown.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_14.PNG",
   "system": {
     "identifier": "noble-born",
     "step": "homeWorld",

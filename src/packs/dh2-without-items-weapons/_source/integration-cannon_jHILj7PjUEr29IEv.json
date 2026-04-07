@@ -1,7 +1,7 @@
 {
   "name": "Integration Cannon",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/heavy-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_02.png",
   "system": {
     "identifier": "integration-cannon",
     "class": "heavy",

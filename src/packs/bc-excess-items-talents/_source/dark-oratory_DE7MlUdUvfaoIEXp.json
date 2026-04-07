@@ -1,7 +1,7 @@
 {
   "name": "Dark Oratory",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_24.png",
   "system": {
     "category": "general",
     "source": "BC: Tome of Excess",

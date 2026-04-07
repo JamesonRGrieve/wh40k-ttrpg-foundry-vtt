@@ -1,0 +1,61 @@
+{
+  "_id": "krrsqh1x0zqsv000",
+  "name": "Bionic Respiratory System",
+  "type": "cybernetic",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "identifier": "bionic-respiratory-system",
+    "type": "implant",
+    "locations": [
+      "body"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "effect": "<p>Cybernetic respiratory organs augment or replace the lungs, allowing respiration in contaminated or oxygen-poor environments.</p>",
+    "drawbacks": "<p>Requires implantation surgery and appropriate maintenance.</p>",
+    "installation": {
+      "surgery": "Major surgery required",
+      "difficulty": "-10 Medicae",
+      "recoveryTime": "1 week"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    },
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": true,
+    "description": {
+      "value": "<p>Cybernetic respiratory organs augment or replace the lungs, allowing respiration in contaminated or oxygen-poor environments.</p>",
+      "chat": "",
+      "summary": "Cybernetic respiratory organs augment or replace the lungs, allowing respiration in contaminated or oxygen-poor environments."
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "notes": "",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {}
+}

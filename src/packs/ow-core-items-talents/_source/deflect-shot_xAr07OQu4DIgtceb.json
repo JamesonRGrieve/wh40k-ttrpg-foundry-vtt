@@ -1,7 +1,7 @@
 {
   "name": "Deflect Shot",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/violet/p_28.png",
   "system": {
     "category": "combat",
     "source": "Only War Core",

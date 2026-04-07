@@ -1,7 +1,7 @@
 {
   "name": "Mechanicus Secutor",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_02.png",
   "system": {
     "requirements": "Tech-Priest Career, DH Rank 4+. Weapon Skill 35+, Ballistic Skill 35+, at least four Weapon Training Talents.",
     "source": "DH: Inquisitor's Handbook (Page 68)",

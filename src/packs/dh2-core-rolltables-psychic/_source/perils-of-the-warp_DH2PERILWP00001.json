@@ -1,0 +1,212 @@
+{
+  "name": "Perils of the Warp",
+  "img": "icons/svg/d20.svg",
+  "formula": "1d100",
+  "replacement": true,
+  "displayRoll": true,
+  "results": [
+    {
+      "_id": "DH2PW00000000001",
+      "type": 0,
+      "text": "<p><b>The Gibbering</b>: The psyker screams in pain as uncontrolled Warp energies surge through his unprepared mind. He must make a Challenging (+0) Willpower test or be Stunned for 1d5 rounds.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [1, 5],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000002",
+      "type": 0,
+      "text": "<p><b>Warp Burn</b>: A violent burst of energy from the Warp smashes into the psyker's mind, sending him reeling. He suffers 2d5 Energy damage, ignoring Toughness bonus and Armour, and is Stunned for 1d5 rounds.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [6, 9],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000003",
+      "type": 0,
+      "text": "<p><b>Psychic Concussion</b>: With a crack of energy, the psyker is knocked unconscious for 1d5 rounds, and everyone within 3d10 metres must make an Ordinary (+10) Willpower test or be Stunned for one round.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [10, 13],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000004",
+      "type": 0,
+      "text": "<p><b>Psy Blast</b>: There is an explosion of power and the psyker is thrown 3d10 metres into the air, plummeting to the ground moments later.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [14, 18],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000005",
+      "type": 0,
+      "text": "<p><b>Soul Sear</b>: Warp power courses through the psyker's body, scorching his soul. The psyker cannot use any psychic powers for the next hour, and gains 2d5 Corruption points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [19, 24],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000006",
+      "type": 0,
+      "text": "<p><b>Locked In</b>: The power cages the psyker's mind in an ethereal prison, tormented by visions of the Warp. The psyker falls to the ground Prone and Unconscious. At the beginning of each of his turns until he breaks free, he must spend a Full Action to make a Difficult (-10) Willpower test. If he succeeds, his mind is freed and restored to his body, haunted by his experiences but otherwise unharmed.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [25, 30],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000007",
+      "type": 0,
+      "text": "<p><b>Chronological Incontinence</b>: Time warps around the psyker. He winks out of existence and reappears in 1d10 rounds, or one minute in narrative time, in the exact location. He suffers one point of permanent Toughness and Intelligence damage as his body and mind rebel against the experience, and gains 1d5 Corruption points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [31, 38],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000008",
+      "type": 0,
+      "text": "<p><b>Psychic Mirror</b>: The psyker's power is turned back on him. Resolve the power's effects, but the power targets the psyker instead. If the power is beneficial, it deals 1d10+5 Energy damage, ignoring Armour, to the psyker's Body instead of having its normal effect.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [39, 46],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000009",
+      "type": 0,
+      "text": "<p><b>Warp Whispers</b>: The voices of Daemons fill the air within 4d10 metres of the psyker, whispering terrible secrets and shocking truths. Each character in range, including the psyker, must make a Hard (-20) Willpower test or gain 1d5 Corruption points and suffer an equal amount of Willpower damage. Whether or not the psyker passes the Willpower test, he suffers an additional 1d5+5 Willpower damage.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [47, 55],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000010",
+      "type": 0,
+      "text": "<p><b>Vice Versa</b>: The psyker's mind is thrown out of his body and into another nearby creature or person. The psyker and a random living creature, friend or foe, but not a Daemon, machine, or other soulless entity, within 50 metres swap consciousness for 1d10 rounds. Each creature retains its Weapon Skill, Ballistic Skill, Intelligence, Perception, Willpower, and Fellowship during the swap, but uses the other characteristics of the host body. If either body is slain, the effect ends immediately and both parties return to their original bodies. Both suffer 1d5 Intelligence damage from the experience. If there are no creatures within range, the psyker becomes catatonic for 1d5 rounds while his mind wanders the Warp. This journey inflicts 1d10 Willpower damage, 1d10 Intelligence damage, and 1d10 Corruption points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [56, 58],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000011",
+      "type": 0,
+      "text": "<p><b>Dark Summoning</b>: The Empyrean buckles and tears at the arrogance of the psyker, and a Plaguebearer or another lesser Daemon at the GM's discretion rips its way into existence. The pestilent fiend appears within 3d10 metres of the psyker for a number of rounds equal to 1d5 plus the psyker's Toughness bonus. The psyker's turn immediately ends, and the Daemon takes its turn immediately. It detests the psyker and focuses all of its attacks upon the fool who unwittingly summoned it. It does not attack anyone else, even if others attack it; if the psyker is slain, it returns back to the Warp, satisfied with its kill.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [59, 67],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000012",
+      "type": 0,
+      "text": "<p><b>Rending the Veil</b>: The air vibrates with images of cackling Daemons and the kaleidoscopic fabric of the Warp is rendered visible to mortal eyes. All sentient creatures within 1d100 metres must test against Fear (2). The psyker must test against Fear (4) instead. This effect lasts for 1d5 rounds.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [68, 72],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000013",
+      "type": 0,
+      "text": "<p><b>Blood Rain</b>: A psychic storm erupts, covering an area of 5d10 metres. Each character in range, including the psyker, must make a Challenging (+0) Strength test or be knocked Prone. In addition to howling winds and rains of blood, any psychic powers used in the area for 1d5 rounds automatically invoke Perils of the Warp, in addition to any Psychic Phenomena caused. The psyker gains 1d5+1 Corruption points.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [73, 78],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000014",
+      "type": 0,
+      "text": "<p><b>Cataclysmic Blast</b>: The psyker's power overloads, arcing out in great bolts of Warp energy. Each character within 1d10 metres, including the psyker, takes 1d10 Energy damage with a Pen of 5. The psyker may not Dodge this, or stop the attack with a force field. In addition, all of the psyker's clothing, armour, and gear is destroyed, leaving him naked and smoking on the ground, and he cannot use further powers for 1d5 hours after the event.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [79, 82],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000015",
+      "type": 0,
+      "text": "<p><b>Mass Incursion</b>: Chaos Furies emerge from the Warp, hungry for souls. Each character within 1d100 metres of the psyker, including himself, must make a Hard (-20) Willpower test or gain 1d10 Corruption and Insanity points, and suffer 1d10 Willpower damage. Each character who succeeds is attacked physically by a Fury, which departs after 1d5 rounds.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [83, 86],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000016",
+      "type": 0,
+      "text": "<p><b>Reality Quake</b>: Reality buckles around the psyker, and an area radiating out 3d10 metres from him is sundered: solid objects alternately rot, burn, and freeze, and everyone and everything in the area suffers a single hit for 2d10 Rending damage that ignores Armour and cannot be Dodged. Warded objects, Daemons, and Untouchables halve the damage they would suffer.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [87, 90],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000017",
+      "type": 0,
+      "text": "<p><b>Grand Incursion</b>: A great and terrible Warp entity takes an interest in the psyker's flesh. Use the profile for Putricifex, Herald of Nurgle, or another suitably powerful Daemon, to represent the attacker, who instantly makes an Opposed Very Hard (-20) Willpower test against the psyker. If the Daemon wins, it possesses the psyker's body for 1 hour per degree by which it won the test. The psyker gains 2d10 Insanity and Corruption points and is controlled by the Daemon until the effect ends. If he dies while possessed, the Daemon physically manifests for the remainder of the effect's duration. If the psyker wins the test, he suffers 2d10 Toughness damage, and forever adds +10 to all rolls on Psychic Phenomena and Perils of the Warp, as his polluted body now serves as a Warp conduit.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [91, 99],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    },
+    {
+      "_id": "DH2PW00000000018",
+      "type": 0,
+      "text": "<p><b>Annihilation</b>: The psyker is immediately burned to ashes by the screaming fires of the Immaterium or dragged into the deepest maelstrom of the Warp. He cannot burn Fate to avert this death and is irrevocably destroyed. There is a chance that a daemonic entity of some sort appears in his place. The type of Daemon is determined by the GM, based on how powerful the psyker was, as more powerful psykers draw more powerful Daemons. The percentage chance that the Daemon appears is equal to the psyker's Willpower characteristic.</p>",
+      "img": "icons/svg/d20.svg",
+      "weight": 1,
+      "range": [100, 100],
+      "drawn": false,
+      "documentCollection": null,
+      "documentId": null
+    }
+  ],
+  "flags": {},
+  "_id": "DH2PERILWP00001",
+  "gameSystems": [
+    "dh2e"
+  ]
+}

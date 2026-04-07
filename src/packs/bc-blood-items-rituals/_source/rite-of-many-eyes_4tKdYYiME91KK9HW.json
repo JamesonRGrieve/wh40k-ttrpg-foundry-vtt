@@ -1,7 +1,7 @@
 {
   "name": "Rite of Many Eyes",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-acid-3.jpg",
   "system": {
     "test": "-20 Forbidden Lore (Daemonology) ",
     "requirements": "Requires knowledge of Daemonic Entities that may be able to aid in informing the characters of something that cannot be learnt through normal means (may need -20 Scholastic Lore Test). If possessing this information, they decide on one question which they will ask then summon the daemon to answer it. The difficulty of the question may affect the test difficulty.",

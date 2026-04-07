@@ -1,7 +1,7 @@
 {
   "name": "Power Axe (Mezoa)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-power.svg",
+  "img": "systems/wh40k-rpg/icons/items/axes/axe_02_b.png",
   "system": {
     "identifier": "power-axe-mezoa",
     "class": "melee",

@@ -1,7 +1,7 @@
 {
   "name": "Dark Curse",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/enchant-royal-1.jpg",
   "system": {
     "discipline": "xChaos Powers",
     "prerequisites": "Warp Secrets\nOW: Psy Rating 5",

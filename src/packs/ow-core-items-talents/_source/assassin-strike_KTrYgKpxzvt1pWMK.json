@@ -1,7 +1,7 @@
 {
   "name": "Assassin Strike",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_08.png",
   "system": {
     "identifier": "assassinStrike",
     "category": "combat",

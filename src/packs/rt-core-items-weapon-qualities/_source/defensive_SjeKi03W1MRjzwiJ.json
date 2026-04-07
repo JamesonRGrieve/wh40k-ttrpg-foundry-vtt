@@ -1,0 +1,21 @@
+{
+  "name": "Defensive",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_30.png",
+  "system": {
+    "identifier": "defensive",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 25</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>25</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SjeKi03W1MRjzwiJ"
+}

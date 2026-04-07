@@ -1,7 +1,7 @@
 {
   "name": "Thunderstrike Macrocannon",
   "type": "shipWeapon",
-  "img": "icons/svg/energy.svg",
+  "img": "systems/wh40k-rpg/icons/items/heavy/heavy_02.png",
   "system": {
     "type": "Macrocannon",
     "hullType": [

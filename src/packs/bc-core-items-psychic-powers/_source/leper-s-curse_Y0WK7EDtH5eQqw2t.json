@@ -1,7 +1,7 @@
 {
   "name": "Leper's Curse",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fireball-eerie-3.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Nurgle)",
     "prerequisites": "Mark of Nurgle, Psy Rating 5",

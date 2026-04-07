@@ -1,7 +1,7 @@
 {
   "name": "Sanctuary",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-jade-3.jpg",
   "system": {
     "discipline": "Theosophamy (Warp Manipulation)",
     "prerequisites": "Soul of Adamantium\nOW: Psy Rating 5",

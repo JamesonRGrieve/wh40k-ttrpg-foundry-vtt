@@ -1,7 +1,7 @@
 {
   "name": "Hardy",
   "type": "talent",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_19.PNG",
   "system": {
     "identifier": "hardy",
     "category": "combat",

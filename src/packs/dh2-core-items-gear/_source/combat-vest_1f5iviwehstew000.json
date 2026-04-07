@@ -1,0 +1,44 @@
+{
+  "_id": "1f5iviwehstew000",
+  "name": "Combat Vest",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>A reinforced vest that provides storage and support for combat gear without replacing dedicated armour.</p>",
+      "chat": "",
+      "summary": "A reinforced vest that provides storage and support for combat gear without replacing dedicated armour."
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "A reinforced vest that provides storage and support for combat gear without replacing dedicated armour.",
+    "duration": "",
+    "notes": "",
+    "identifier": "combat-vest",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {}
+}

@@ -1,7 +1,7 @@
 {
   "name": "Swashbuckler",
   "type": "trait",
-  "img": "icons/svg/aura.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_19.png",
   "system": {
     "requirements": "Any Career, RT Rank 3+, Fellowship 35+, captured and looted another ship, performed memorably chivalrous act detrimental to their own interest (such as sparing a well-fought foe).",
     "source": "RT: Hostile Acquisitions \n(Page 44)",

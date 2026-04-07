@@ -1,7 +1,7 @@
 {
   "name": "Basic Technique: Ward the Chill",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/vines-eerie-2.jpg",
   "system": {
     "discipline": "Voidfrost\n",
     "prerequisites": "None",

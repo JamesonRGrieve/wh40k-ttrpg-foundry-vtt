@@ -1,7 +1,7 @@
 {
   "name": "Shipwise (Void Born)",
   "type": "talent",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/talents/green/g_04.png",
   "system": {
     "identifier": "shipwise-void-born",
     "category": "origin",

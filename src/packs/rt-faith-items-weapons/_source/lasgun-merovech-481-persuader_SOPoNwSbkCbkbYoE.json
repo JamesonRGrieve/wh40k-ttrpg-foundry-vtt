@@ -1,7 +1,7 @@
 {
   "name": "Lasgun (Merovech 481) \"Persuader\"",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-lasgun.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_20.png",
   "system": {
     "identifier": "lasgun-merovech-481-persuader",
     "class": "basic",

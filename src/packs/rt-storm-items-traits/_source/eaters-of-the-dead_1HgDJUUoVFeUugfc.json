@@ -1,7 +1,7 @@
 {
   "name": "Eaters of the Dead",
   "type": "trait",
-  "img": "icons/svg/target.svg",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_18.PNG",
   "system": {
     "category": "general",
     "requirements": "Kroot (Innate)",

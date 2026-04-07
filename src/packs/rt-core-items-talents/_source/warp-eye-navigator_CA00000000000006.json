@@ -1,7 +1,7 @@
 {
   "name": "Warp Eye (Navigator)",
   "type": "talent",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_27.png",
   "system": {
     "identifier": "warp-eye-navigator",
     "category": "origin",

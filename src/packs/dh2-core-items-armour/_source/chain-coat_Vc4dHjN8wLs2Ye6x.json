@@ -1,32 +1,34 @@
 {
-  "name": "Chain Coat",
+  "name": "Chainmail Suit",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s05.png",
   "system": {
     "type": "primitive",
-    "weight": 8,
-    "availability": "scarce",
+    "weight": 15,
+    "availability": "common",
     "notes": "",
     "source": "DH2e Core",
     "description": {
-      "value": "<p>A long coat of interlocking metal rings, commonly found on feudal and feral worlds. Covers the torso and arms.</p>"
+      "value": "<p>A suit of interlocking mail rings that covers the arms, body, and legs. Crude by Imperial standards, but still reliable protection on primitive worlds.</p>"
     },
     "modificationSlots": 0,
     "coverage": [
       "body",
       "leftArm",
-      "rightArm"
+      "rightArm",
+      "leftLeg",
+      "rightLeg"
     ],
     "armourPoints": {
       "head": 0,
       "body": 3,
       "leftArm": 3,
       "rightArm": 3,
-      "leftLeg": 0,
-      "rightLeg": 0
+      "leftLeg": 3,
+      "rightLeg": 3
     },
     "modifications": [],
-    "maxAgility": 0,
+    "maxAgility": 35,
     "properties": [],
     "gameSystems": [
       "dh2e"

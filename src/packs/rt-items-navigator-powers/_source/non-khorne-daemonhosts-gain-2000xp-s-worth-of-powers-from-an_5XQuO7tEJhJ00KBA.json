@@ -1,7 +1,7 @@
 {
   "name": "Non-Khorne Daemonhosts gain 2000xp's worth of powers, from any disciplines and ignoring requirements.",
   "type": "navigatorPower",
-  "img": "icons/svg/anchor.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/protect-jade-2.jpg",
   "system": {
     "useTime": null,
     "range": null,

@@ -1,0 +1,21 @@
+{
+  "name": "Concussive",
+  "type": "weaponQuality",
+  "img": "systems/wh40k-rpg/icons/talents/red/r_01.png",
+  "system": {
+    "identifier": "concussive",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 45</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>45</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "OgDW5xcvDOLbApRv"
+}

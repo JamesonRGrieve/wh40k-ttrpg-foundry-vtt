@@ -1,7 +1,7 @@
 {
   "name": "Mantle of Lies",
   "type": "psychicPower",
-  "img": "icons/svg/eye.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-sky-1.jpg",
   "system": {
     "discipline": "xChaos Powers\n(Tzeentch)",
     "prerequisites": "Tzeentch Aligned, Int 40+, Fel 40+",

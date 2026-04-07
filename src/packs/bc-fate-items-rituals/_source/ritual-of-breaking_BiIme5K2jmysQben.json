@@ -1,7 +1,7 @@
 {
   "name": "Ritual of Breaking",
   "type": "ritual",
-  "img": "icons/svg/scroll.svg",
+  "img": "systems/wh40k-rpg/icons/psykana/fog-sky-2.jpg",
   "system": {
     "test": "-20 Forbidden Lore (Daemonology) \nOpposed Willpower ",
     "requirements": "Character summons a Daemonic Beast, usually thorugh Rite of Wild Fury, this ritual replaces Daemonic Mastery Test. After making Lore Test, character then makes Opposed Willpower Test vs Daemonic Beast's Willpower.  (A Screamer of Tzeentch adds -20 to test, due to having to be reshaped into a disk). ",

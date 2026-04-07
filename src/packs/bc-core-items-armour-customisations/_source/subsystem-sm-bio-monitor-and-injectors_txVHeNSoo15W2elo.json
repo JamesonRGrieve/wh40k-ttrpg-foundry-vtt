@@ -1,7 +1,7 @@
 {
   "name": "Subsystem (SM): Bio-Monitor and Injectors",
   "type": "armourModification",
-  "img": "icons/svg/upgrade.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/armor_s10.png",
   "system": {
     "effect": "Gain +10 to tests to resist Toxins/Poisons. Has 6 Pain Suppressant doses, Allowing Wearer to ignore Chacteristic Damage/Penalties from crit-damage for 1d10 rounds. If wearer is stunned, effect is automatically ended after one round.",
     "availability": "Special",

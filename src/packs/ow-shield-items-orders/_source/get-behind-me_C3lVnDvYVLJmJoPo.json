@@ -1,7 +1,7 @@
 {
   "name": "Get Behind Me!",
   "type": "order",
-  "img": "icons/svg/compass.svg",
+  "img": "systems/wh40k-rpg/icons/talents/blue/b_21.png",
   "system": {
     "typeAndAction": "Basic Order\nHalf Action",
     "requirements": ".Ogryn, Non-Ogryn Comrade, Toughness 50,\nApt: Toughness, Defence",

@@ -1,0 +1,61 @@
+{
+  "name": "Mind Impulse Unit",
+  "type": "cybernetic",
+  "img": "icons/svg/gears.svg",
+  "system": {
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 1750,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Can directly interface with a machine or device. Poor: requires Willpower test to use, -10 to interact with machine spirits. Common: +10 to Tech-Use, Pilot, or Drive devices capable of MIU linking. Good: +10 to communicate with machine spirits, Tech-Use, Pilot, Drive, Logic, Inquiry, and Ballistic Skill. Can also experience senses of cyber familiars.</p>\n<p><b>Effect:</b> Rare / Initiated</p><p><b>Notes:</b> 1750 T\n15 R</p>",
+      "chat": "",
+      "summary": "Can directly interface with a machine or device. Poor: requires Willpower test to use, -10 to interact with machine spirits. Common: +10 to Tech-Use, Pilot, or Drive devices capable of MIU linking. Go"
+    },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": true,
+    "effect": "Can directly interface with a machine or device. Poor: requires Willpower test to use, -10 to interact with machine spirits. Common: +10 to Tech-Use, Pilot, or Drive devices capable of MIU linking. Good: +10 to communicate with machine spirits, Tech-Use, Pilot, Drive, Logic, Inquiry, and Ballistic Skill. Can also experience senses of cyber familiars.",
+    "notes": "",
+    "identifier": "mind-impulse-unit",
+    "gameSystems": [
+      "dh2e"
+    ],
+    "type": "implant",
+    "locations": [
+      "body"
+    ],
+    "hasArmourPoints": false,
+    "armourPoints": {
+      "head": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "body": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "drawbacks": "<p>Requires implantation surgery and appropriate maintenance.</p>",
+    "installation": {
+      "surgery": "Major surgery required",
+      "difficulty": "-10 Medicae",
+      "recoveryTime": "1 week"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": []
+    }
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "1uhnkbfm0wphj000"
+}

@@ -1,7 +1,7 @@
 {
   "name": "Warhammer",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/maces/mace_11_b.png",
   "system": {
     "identifier": "warhammer",
     "class": "melee",
@@ -26,11 +26,11 @@
     "damage": {
       "formula": "1d10",
       "type": "impact",
-      "bonus": 4,
+      "bonus": 3,
       "penetration": 1
     },
     "special": [
-      "concussive-2",
+      "concussive-1",
       "primitive-8"
     ],
     "clip": {
@@ -40,7 +40,7 @@
     },
     "reload": "-",
     "weight": 4.5,
-    "availability": "common",
+    "availability": "scarce",
     "craftsmanship": "common",
     "quantity": 1,
     "cost": {

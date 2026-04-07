@@ -1,23 +1,39 @@
 {
   "name": "Lascutter",
   "type": "gear",
-  "img": "icons/svg/item-bag.svg",
+  "img": "icons/svg/backpack.svg",
   "system": {
-    "weight": 8,
+    "category": "tools",
+    "weight": 4,
     "availability": "average",
-    "quantity": 1,
+    "craftsmanship": "common",
     "cost": {
-      "value": 100,
+      "value": 65,
       "currency": "throne"
     },
-    "equipped": false,
-    "stowed": false,
-    "container": "",
+    "quantity": 1,
     "description": {
-      "value": "<p>A heavy cutting tool that projects a short, intense laser beam for slicing through metal, rock, and other hard materials. Used primarily in mining, construction, and shipboard repair. Can cut through up to 10cm of metal per round. In desperation it can be used as a weapon, but is unwieldy for combat.</p>"
+      "value": "<p>Can cut or weld ~10cm of metal depending on thickness. Can be used as a weapon (2m, 2d10+16 E. Pen 10, Clip 5, Rld 2 Full), but only on stationary targets.</p>\n<p><b>Effect:</b> Average</p><p><b>Notes:</b> 65 T</p>",
+      "chat": "",
+      "summary": "Can cut or weld ~10cm of metal depending on thickness. Can be used as a weapon (2m, 2d10+16 E. Pen 10, Clip 5, Rld 2 Full), but only on stationary targets."
     },
+    "source": {
+      "book": "DH2e Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Can cut or weld ~10cm of metal depending on thickness. Can be used as a weapon (2m, 2d10+16 E. Pen 10, Clip 5, Rld 2 Full), but only on stationary targets.",
+    "duration": "",
     "notes": "",
-    "source": "DH2e Core",
+    "identifier": "lascutter",
     "gameSystems": [
       "dh2e"
     ]

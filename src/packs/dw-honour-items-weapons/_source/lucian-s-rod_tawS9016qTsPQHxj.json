@@ -1,7 +1,7 @@
 {
   "name": "Lucian's Rod",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-exotic.svg",
+  "img": "systems/wh40k-rpg/icons/items/staves/stave_07_b.PNG",
   "system": {
     "identifier": "lucians-rod",
     "class": "melee",

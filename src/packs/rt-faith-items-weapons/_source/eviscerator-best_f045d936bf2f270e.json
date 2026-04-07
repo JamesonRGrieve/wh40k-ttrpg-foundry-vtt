@@ -1,7 +1,7 @@
 {
   "name": "Eviscerator [Best Quality]",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/melee-chain.svg",
+  "img": "systems/wh40k-rpg/icons/items/swords/swords_01_b.png",
   "system": {
     "identifier": "eviscerator-best",
     "class": "melee",

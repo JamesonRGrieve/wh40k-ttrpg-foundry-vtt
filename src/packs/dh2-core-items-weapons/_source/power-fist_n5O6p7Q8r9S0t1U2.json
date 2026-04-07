@@ -1,7 +1,7 @@
 {
   "name": "Power Fist",
   "type": "weapon",
-  "img": "icons/svg/sword.svg",
+  "img": "systems/wh40k-rpg/icons/items/fist_weapon/fist_weapon_01_b.png",
   "system": {
     "identifier": "power-fist",
     "class": "melee",

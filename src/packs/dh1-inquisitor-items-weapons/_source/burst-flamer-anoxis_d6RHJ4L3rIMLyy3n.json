@@ -1,7 +1,7 @@
 {
   "name": "Burst Flamer (Anoxis)",
   "type": "weapon",
-  "img": "systems/rogue-trader/assets/icons/weapons/basic-flamer.svg",
+  "img": "systems/wh40k-rpg/icons/items/rifles/rifle_15.png",
   "system": {
     "identifier": "burst-flamer-anoxis",
     "class": "basic",

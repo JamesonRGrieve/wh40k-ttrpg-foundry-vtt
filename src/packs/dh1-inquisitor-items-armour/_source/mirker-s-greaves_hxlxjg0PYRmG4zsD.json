@@ -1,7 +1,7 @@
 {
   "name": "Mirker's Greaves",
   "type": "armour",
-  "img": "icons/svg/shield.svg",
+  "img": "systems/wh40k-rpg/icons/items/armor/pants_s03.png",
   "system": {
     "type": "primitive",
     "weight": 8,
