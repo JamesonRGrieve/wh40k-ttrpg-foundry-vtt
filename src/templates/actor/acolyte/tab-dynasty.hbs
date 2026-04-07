@@ -16,7 +16,7 @@
                     {{!-- Main PF Display with Wealth Tier --}}
                     <div class="wh40k-pf-hero">
                         <div class="wh40k-pf-value-display">
-                            <input type="number" class="wh40k-pf-value-input" name="system.rogueTrader.profitFactor.current" value="{{source.rogueTrader.profitFactor.current}}" data-dtype="Number" />
+                            <input type="number" class="wh40k-pf-value-input" name="system.rogueTrader.profitFactor.current" value="{{system.rogueTrader.profitFactor.current}}" data-dtype="Number" />
                         </div>
                         <div class="wh40k-pf-tier wh40k-pf-tier--{{dynastyData.wealthTier.key}}">
                             <span class="wh40k-pf-tier-label">{{dynastyData.wealthTier.label}}</span>
@@ -44,11 +44,11 @@
                     <div class="wh40k-pf-breakdown">
                         <div class="wh40k-pf-breakdown-row">
                             <span class="wh40k-pf-breakdown-label">Starting PF:</span>
-                            <input type="number" class="wh40k-pf-breakdown-input" name="system.rogueTrader.profitFactor.starting" value="{{source.rogueTrader.profitFactor.starting}}" data-dtype="Number" />
+                            <input type="number" class="wh40k-pf-breakdown-input" name="system.rogueTrader.profitFactor.starting" value="{{system.rogueTrader.profitFactor.starting}}" data-dtype="Number" />
                         </div>
                         <div class="wh40k-pf-breakdown-row">
                             <span class="wh40k-pf-breakdown-label">Modifier:</span>
-                            <input type="number" class="wh40k-pf-breakdown-input" name="system.rogueTrader.profitFactor.modifier" value="{{source.rogueTrader.profitFactor.modifier}}" data-dtype="Number" />
+                            <input type="number" class="wh40k-pf-breakdown-input" name="system.rogueTrader.profitFactor.modifier" value="{{system.rogueTrader.profitFactor.modifier}}" data-dtype="Number" />
                         </div>
                         <div class="wh40k-pf-breakdown-row wh40k-pf-breakdown-row--total">
                             <span class="wh40k-pf-breakdown-label">Effective PF:</span>
@@ -92,11 +92,11 @@
                     <div class="wh40k-xp-display">
                         <div class="wh40k-xp-item">
                             <span class="wh40k-xp-label">Total</span>
-                            <input type="number" class="wh40k-vital-input" name="system.experience.total" value="{{source.experience.total}}" data-dtype="Number" />
+                            <input type="number" class="wh40k-vital-input" name="system.experience.total" value="{{system.experience.total}}" data-dtype="Number" />
                         </div>
                         <div class="wh40k-xp-item">
                             <span class="wh40k-xp-label">Spent</span>
-                            <input type="number" class="wh40k-vital-input" name="system.experience.used" value="{{source.experience.used}}" data-dtype="Number" />
+                            <input type="number" class="wh40k-vital-input" name="system.experience.used" value="{{system.experience.used}}" data-dtype="Number" />
                         </div>
                         <div class="wh40k-xp-item wh40k-xp-available">
                             <span class="wh40k-xp-label">Available</span>
@@ -124,20 +124,20 @@
                     <div class="wh40k-endeavour-fields">
                         <div class="wh40k-field-row">
                             <label class="wh40k-field-label">Endeavour Name</label>
-                            <input type="text" class="wh40k-field-input" name="system.rogueTrader.endeavour.name" value="{{source.rogueTrader.endeavour.name}}" placeholder="Name of current endeavour..." />
+                            <input type="text" class="wh40k-field-input" name="system.rogueTrader.endeavour.name" value="{{system.rogueTrader.endeavour.name}}" placeholder="Name of current endeavour..." />
                         </div>
                         <div class="wh40k-field-row wh40k-field-row-split">
                             <div class="wh40k-field-half">
                                 <label class="wh40k-field-label">Achievement Points</label>
                                 <div class="wh40k-ap-tracker">
-                                    <input type="number" class="wh40k-vital-input" name="system.rogueTrader.endeavour.achievementCurrent" value="{{source.rogueTrader.endeavour.achievementCurrent}}" data-dtype="Number" />
+                                    <input type="number" class="wh40k-vital-input" name="system.rogueTrader.endeavour.achievementCurrent" value="{{system.rogueTrader.endeavour.achievementCurrent}}" data-dtype="Number" />
                                     <span>/</span>
-                                    <input type="number" class="wh40k-vital-input" name="system.rogueTrader.endeavour.achievementRequired" value="{{source.rogueTrader.endeavour.achievementRequired}}" data-dtype="Number" />
+                                    <input type="number" class="wh40k-vital-input" name="system.rogueTrader.endeavour.achievementRequired" value="{{system.rogueTrader.endeavour.achievementRequired}}" data-dtype="Number" />
                                 </div>
                             </div>
                             <div class="wh40k-field-half">
                                 <label class="wh40k-field-label">PF Reward</label>
-                                <input type="number" class="wh40k-vital-input" name="system.rogueTrader.endeavour.reward" value="{{source.rogueTrader.endeavour.reward}}" data-dtype="Number" />
+                                <input type="number" class="wh40k-vital-input" name="system.rogueTrader.endeavour.reward" value="{{system.rogueTrader.endeavour.reward}}" data-dtype="Number" />
                             </div>
                         </div>
                         <div class="wh40k-field-row">
