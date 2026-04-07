@@ -714,6 +714,42 @@
                 "PLAYER": "OBSERVER",
                 "ASSISTANT": "OWNER"
             }
+        },
+        {
+            "name": "dh2-within-items-backgrounds",
+            "label": "DH2e Enemies Within Backgrounds",
+            "path": "packs/dh2-within-items-backgrounds",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-without-items-backgrounds",
+            "label": "DH2e Enemies Without Backgrounds",
+            "path": "packs/dh2-without-items-backgrounds",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
+        },
+        {
+            "name": "dh2-beyond-items-backgrounds",
+            "label": "DH2e Enemies Beyond Backgrounds",
+            "path": "packs/dh2-beyond-items-backgrounds",
+            "system": "wh40k-rpg",
+            "type": "Item",
+            "ownership": {
+                "PLAYER": "OBSERVER",
+                "ASSISTANT": "OWNER"
+            },
+            "flags": {}
         }
     ],
     "packFolders": [
@@ -825,6 +861,9 @@
                         "dh2-items-talents",
                         "dh2-items-traits",
                         "dh2-items-backgrounds",
+                        "dh2-within-items-backgrounds",
+                        "dh2-without-items-backgrounds",
+                        "dh2-beyond-items-backgrounds",
                         "dh2-items-conditions",
                         "dh2-items-critical-injuries"
                     ]

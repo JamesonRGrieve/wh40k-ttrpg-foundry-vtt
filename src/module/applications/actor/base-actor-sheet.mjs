@@ -404,35 +404,6 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     /* -------------------------------------------- */
 
     /**
-     * Handle input changes manually - updates actor when input changes.
-     * @param {Event} event  The change event
-     * @returns {Promise<void>}
-     * @private
-     */
-    async _onInputChange(event) {
-        const input = event.currentTarget;
-        if (!input.name) return;
-
-        // Get the value based on input type
-        let value = input.value;
-        if (input.type === 'checkbox') {
-            value = input.checked;
-        } else if (input.type === 'number' || input.dataset.dtype === 'Number') {
-            value = parseFloat(value) || 0;
-        }
-
-        // Update the actor
-        try {
-            await this.document.update({ [input.name]: value });
-        } catch (error) {
-            console.error('Failed to update actor:', error);
-            ui.notifications.error('Failed to save changes');
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
      * Prepare skills context for rendering.
      * @param {object} context  Context being prepared.
      * @protected
@@ -1078,10 +1049,19 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Add wh40k-sheet class to the form element for CSS styling
-        const form = this.element.querySelector('form');
-        if (form) {
-            form.classList.add('wh40k-sheet');
-        }
+        // With tag: 'form', this.element IS the form element
+        this.element.classList.add('wh40k-sheet');
+
+        // Attach direct-update listeners for characteristic fields (bypasses form submission)
+        this.element.querySelectorAll('.wh40k-char-direct-input').forEach((el) => {
+            el.addEventListener('change', async (event) => {
+                const { characteristic, field, dtype } = event.target.dataset;
+                if (!characteristic || !field) return;
+                let value = event.target.value;
+                if (dtype === 'Number') value = Number(value) || 0;
+                await this.actor.update({ [`system.characteristics.${characteristic}.${field}`]: value });
+            });
+        });
 
         // Setup document update listener for visual feedback
         if (!this._updateListener) {
@@ -1122,13 +1102,6 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                 el.addEventListener('dragstart', this._onDragItem.bind(this), false);
             }
         });
-
-        // MANUAL FORM HANDLING: Add change listeners to all inputs with names
-        if (this.isEditable) {
-            this.element.querySelectorAll('input[name], select[name], textarea[name]').forEach((input) => {
-                input.addEventListener('change', this._onInputChange.bind(this));
-            });
-        }
 
         // Legacy item action handlers for V1 templates
         // These use .item-edit, .item-delete, .item-vocalize classes
