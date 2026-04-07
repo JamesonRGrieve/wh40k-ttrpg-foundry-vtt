@@ -1,0 +1,69 @@
+{
+  "name": "Plasma Cannon",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "plasma-cannon",
+    "class": "heavy",
+    "type": "energy",
+    "twoHanded": true,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 120,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "2d10",
+      "type": "energy",
+      "bonus": 10,
+      "penetration": 8
+    },
+    "special": [
+      "blast-1",
+      "maximal",
+      "overheats",
+      "recharge"
+    ],
+    "clip": {
+      "max": 16,
+      "value": 16,
+      "type": "plasma-flask"
+    },
+    "reload": "5Full",
+    "weight": 40,
+    "availability": "extremely-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A devastating heavy weapon that fires massive bolts of searing plasma. Capable of incinerating armoured targets whole, but dangerously prone to overheating. On Maximal: 3d10+10 E, Pen 10, Blast(2), 4 ammo per shot.</p>"
+    },
+    "modifications": [],
+    "notes": "Requires Bracing or mounting to fire. On Maximal: 3d10+10 E, Pen 10, Blast(2), uses 4 ammo per shot.",
+    "source": "DH2e Core",
+    "requiredTraining": "",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "h5I6j7K8l9M0n1O2"
+}

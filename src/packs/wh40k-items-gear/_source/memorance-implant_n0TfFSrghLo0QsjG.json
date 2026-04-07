@@ -1,0 +1,44 @@
+{
+  "name": "Memorance Implant",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tech",
+    "weight": 0,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Helps with remembering things, linked to eyes and lets you record things and replay them later. +10 to Trade (Rememberancer) or any other test relying on memory and grants Total Recall Talent.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Helps with remembering things, linked to eyes and lets you record things and replay them later. +10 to Trade (Rememberancer) or any other test relying on memory and grants Total Recall Talent."
+    },
+    "source": {
+      "book": "Rogue Trader Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Helps with remembering things, linked to eyes and lets you record things and replay them later. +10 to Trade (Rememberancer) or any other test relying on memory and grants Total Recall Talent.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "n0TfFSrghLo0QsjG"
+}

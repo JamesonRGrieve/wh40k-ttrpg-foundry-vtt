@@ -1,0 +1,64 @@
+{
+  "name": "Missile Launcher",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "missile-launcher",
+    "class": "heavy",
+    "type": "explosive",
+    "twoHanded": true,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 300,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "0",
+      "type": "explosive",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [],
+    "clip": {
+      "max": 1,
+      "value": 1,
+      "type": "missile"
+    },
+    "reload": "Full",
+    "weight": 35,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A shoulder-fired tube launcher that can fire a variety of guided and unguided missiles. Damage depends on the missile type loaded: Frag (2d10+2 X, Pen 4, Blast 6), Krak (3d10+10 X, Pen 8).</p>"
+    },
+    "modifications": [],
+    "notes": "Damage varies by missile type. Frag: 2d10+2 X Pen 4 Blast(6). Krak: 3d10+10 X Pen 8.",
+    "source": "DH2e Core",
+    "requiredTraining": "",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "z7A8b9C0d1E2f3G4"
+}

@@ -1,0 +1,56 @@
+{
+  "name": "Penetrator Rounds",
+  "type": "ammunition",
+  "img": "icons/svg/ammo.svg",
+  "system": {
+    "identifier": "penetrator-rounds",
+    "weaponTypes": [
+      "solid-projectile"
+    ],
+    "modifiers": {
+      "damage": 0,
+      "penetration": 0,
+      "range": 0,
+      "rateOfFire": {
+        "single": 0,
+        "semi": 0,
+        "full": 0
+      }
+    },
+    "addedQualities": [],
+    "removedQualities": [
+      "scatter"
+    ],
+    "clipModifier": 0,
+    "effect": "<p>Increase PEN by 5. Shotguns loaded with this lose Scatter Quality.</p>",
+    "notes": "",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 6,
+      "currency": "renown"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p><b>Damage/Effect:</b> Increase PEN by 5. Shotguns loaded with this lose Scatter Quality.</p><p><b>Qualities:</b> Scatter (lose)</p>"
+    },
+    "source": "DW: Rites of Battle",
+    "damage": {
+      "formula": "",
+      "type": "impact",
+      "bonus": 0,
+      "penetration": 0
+    },
+    "special": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "K0Gz9edmfOsiGn2I"
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Eldar Shimmershield",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "xenos",
+    "weight": 1,
+    "availability": "near-unique",
+    "notes": "Extends out 5m, protects everyone within that range from ranged attacks that originate outside of the fields area, but not within it. Doesn't protect against Melee Attacks. [AP: 30%]",
+    "source": "DH 2E: Enemies Without",
+    "description": {
+      "value": "<p>Extends out 5m, protects everyone within that range from ranged attacks that originate outside of the fields area, but not within it. Doesn't protect against Melee Attacks.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "gaOQCd1VJmtBgmFR"
+}

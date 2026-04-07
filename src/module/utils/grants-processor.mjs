@@ -516,7 +516,7 @@ export class GrantsProcessor {
 
         // Fallback: search compendium
         if (!talentItem) {
-            talentItem = await this._findInCompendium('wh40k-rpg.rt-items-talents', talentGrant.name);
+            talentItem = await this._findInCompendium('wh40k-rpg.wh40k-items-talents', talentGrant.name);
         }
 
         if (!talentItem) {
@@ -616,7 +616,7 @@ export class GrantsProcessor {
         }
 
         if (!traitItem) {
-            traitItem = await this._findInCompendium('wh40k-rpg.rt-items-traits', traitGrant.name);
+            traitItem = await this._findInCompendium('wh40k-rpg.wh40k-items-traits', traitGrant.name);
         }
 
         if (!traitItem) {

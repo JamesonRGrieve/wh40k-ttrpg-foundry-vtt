@@ -1,0 +1,73 @@
+{
+  "name": "Thunder Charge",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "thunderCharge",
+    "category": "combat",
+    "source": "DH2e Core",
+    "description": "<p>The character can slam into enemies with devastating force.</p>",
+    "tier": 3,
+    "benefit": "<p>When the character makes a Charge attack, they may make a Strength test to knock the target Prone as a Free Action in addition to the normal Charge attack. For every two degrees of success on the Strength test, the target is pushed back 1 metre. The character also adds +2 to Charge damage.</p>",
+    "aptitudes": [
+      "Strength",
+      "Offence"
+    ],
+    "prerequisites": {
+      "text": "Strength 50",
+      "characteristics": {
+        "strength": 50
+      },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Charge: free Strength test to knock Prone and push. +2 Charge damage.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000073"
+}

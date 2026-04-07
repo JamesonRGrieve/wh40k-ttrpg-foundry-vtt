@@ -1,0 +1,38 @@
+{
+  "name": "Underhive Leathers",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "primitive",
+    "weight": 5,
+    "availability": "common",
+    "notes": "Halve primitive armour AP vs non primitive weapons",
+    "source": "Black Crusade: Core",
+    "description": {
+      "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "leftArm",
+      "rightArm",
+      "body"
+    ],
+    "armourPoints": {
+      "head": 1,
+      "body": 1,
+      "leftArm": 1,
+      "rightArm": 1,
+      "leftLeg": 1,
+      "rightLeg": 1
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rzr9gUsCvPjfdNO7"
+}

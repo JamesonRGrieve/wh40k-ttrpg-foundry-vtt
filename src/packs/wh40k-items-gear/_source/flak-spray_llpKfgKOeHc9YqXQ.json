@@ -1,0 +1,44 @@
+{
+  "name": "Flak Spray",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 4,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Allows clothing or other similarly soft materials to act as Guard Flak Armour (AP 4,  AP 5 against blasts when not at centre) for 3d10 Rounds when sprayed onto it.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Allows clothing or other similarly soft materials to act as Guard Flak Armour (AP 4,  AP 5 against blasts when not at centre) for 3d10 Rounds when sprayed onto it."
+    },
+    "source": {
+      "book": "RT: Into the Storm",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Allows clothing or other similarly soft materials to act as Guard Flak Armour (AP 4,  AP 5 against blasts when not at centre) for 3d10 Rounds when sprayed onto it.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "llpKfgKOeHc9YqXQ"
+}

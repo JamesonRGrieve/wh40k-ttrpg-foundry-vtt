@@ -1,0 +1,70 @@
+{
+  "name": "Don't You Die on Me!",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "dontYouDieOnMe",
+    "category": "general",
+    "source": "OW: Hammer of the Emperor",
+    "description": {
+      "value": "<p>Whenever an ally dies from Blood Loss or due to a failed Characteristic Test, the character has Intelligence Bonus Rounds where they can bring them back from the dead by spending a Fate Point and as a Full Action making a -30 Medicae Test. On success the ally is resuscitated, although not cured of any lost limbs or characteristic damage.</p>"
+    },
+    "tier": 3,
+    "isPassive": false,
+    "isRollable": true,
+    "benefit": "<p>Whenever an ally dies from Blood Loss or due to a failed Characteristic Test, the character has Intelligence Bonus Rounds where they can bring them back from the dead by spending a Fate Point and as a Full Action making a -30 Medicae Test. On success the ally is resuscitated, although not cured of any lost limbs or characteristic damage.</p>",
+    "aptitudes": [
+      "Intelligence",
+      "Knowledge"
+    ],
+    "prerequisites": {
+      "text": "Master Chirurgeon, Methodical Care",
+      "characteristics": {},
+      "skills": {},
+      "talents": [
+        "Master Chirurgeon",
+        "Methodical Care"
+      ]
+    },
+    "cost": 900,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "medicae",
+      "modifier": -30,
+      "description": "Medicae test to resuscitate recently deceased ally"
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Revive Dying",
+          "description": "<p>Once per encounter, you may automatically stabilize a dying character within 2m as a Free Action.</p>"
+        }
+      ]
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ip2qzl3PquWWpRq4"
+}

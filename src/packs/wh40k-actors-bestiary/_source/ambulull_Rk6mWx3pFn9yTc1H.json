@@ -1,0 +1,56 @@
+{
+  "name": "Ambulull",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": "40",
+      "bs": "-",
+      "s": "55",
+      "t": "50",
+      "ag": "20",
+      "int": "10",
+      "per": "25",
+      "wp": "30",
+      "fel": "-"
+    },
+    "wounds": "35",
+    "armourPoints": "Natural Armour 6 all",
+    "move": "4/8/12/24",
+    "size": "Enormous (+20)",
+    "weapons": [
+      {
+        "name": "Massive Claws",
+        "range": "-",
+        "rof": "-",
+        "damage": "2d10+5 R",
+        "pen": "3",
+        "clip": null,
+        "reload": null,
+        "qualities": "Natural Weapon, Tearing"
+      },
+      {
+        "name": "Talents/\nTraits",
+        "range": "Burrower (6), Deadly Natural Weapons, Fear (2), Natural Armour (6), Size (Enormous), Stuff of Nightmares, Sturdy, Unnatural Strength (3), Unnatural Toughness (3)",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      }
+    ],
+    "skills": "S: | T: | Ag:\nInt:\nPer: Awareness +10\nWP:\nFel:",
+    "training": "",
+    "description": {
+      "value": "<p>The Ambulull is a massive subterranean predator native to the death world of Luther McIntyre IX, though they have since spread to many other worlds. They burrow through solid rock with their enormous claws and ambush prey from below. Their thick carapace makes them nearly impervious to small-arms fire.</p><p><b>Tactics:</b> The Ambulull burrows beneath its prey, then erupts from the ground for a devastating surprise attack. It uses its massive claws to tear through armour and flesh alike. If wounded, it may retreat underground to ambush again from a different angle. It causes Fear (2) — all characters seeing it must pass a Challenging (+0) Willpower test or suffer Fear effects.</p>"
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "Rk6mWx3pFn9yTc1H"
+}

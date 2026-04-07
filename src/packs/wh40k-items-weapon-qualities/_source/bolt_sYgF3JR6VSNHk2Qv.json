@@ -1,0 +1,21 @@
+{
+  "name": "Bolt*",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "bolt",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 60</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>60</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "sYgF3JR6VSNHk2Qv"
+}

@@ -1,0 +1,73 @@
+{
+  "name": "Hard Target",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "hardTarget",
+    "category": "combat",
+    "source": "DH2e Core",
+    "description": "<p>The character is constantly in motion during combat, making them difficult to hit with ranged attacks.</p>",
+    "tier": 2,
+    "benefit": "<p>When the character performs a Charge or Run action, opponents suffer a -20 penalty (instead of -10) to Ballistic Skill tests targeting the character until the start of the character's next turn.</p>",
+    "aptitudes": [
+      "Agility",
+      "Defence"
+    ],
+    "prerequisites": {
+      "text": "Agility 40",
+      "characteristics": {
+        "agility": 40
+      },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "-20 BS penalty (instead of -10) for enemies targeting character during Charge/Run.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000037"
+}

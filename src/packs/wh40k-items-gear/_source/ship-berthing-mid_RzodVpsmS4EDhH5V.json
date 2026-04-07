@@ -1,0 +1,44 @@
+{
+  "name": "Ship Berthing: Mid",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "general",
+    "weight": 0,
+    "availability": "common",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 20,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>The Living Quarters whilst aboard a Void Craft. Basic Quarters, passenger cabins, small staterooms. Decently Comfortable and mostly safe.</p>\n<h3>Requirements</h3><p>Cost is per day</p>\n<p><b>Effect:</b> Common</p><p><b>Notes:</b> 20 T</p>",
+      "chat": "",
+      "summary": "The Living Quarters whilst aboard a Void Craft. Basic Quarters, passenger cabins, small staterooms. Decently Comfortable and mostly safe."
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "The Living Quarters whilst aboard a Void Craft. Basic Quarters, passenger cabins, small staterooms. Decently Comfortable and mostly safe.",
+    "duration": "",
+    "notes": "",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "RzodVpsmS4EDhH5V"
+}

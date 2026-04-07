@@ -1,0 +1,32 @@
+{
+  "name": "Lathe-Wrought",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "effect": "Weighs half regular amount, +1 AP, halve PEN of weapons when calculating damage against wearer (round up). Armour is Best Craftsmanship. Usually innate to armour rather than added.",
+    "availability": "near-unique",
+    "source": "RT: Hostile Acq.",
+    "description": {
+      "value": "<p>Weighs half regular amount, +1 AP, halve PEN of weapons when calculating damage against wearer (round up). Armour is Best Craftsmanship. Usually innate to armour rather than added.</p>"
+    },
+    "modifiers": {
+      "armourPoints": 1,
+      "maxAgility": 0,
+      "weight": 1
+    },
+    "restrictions": {
+      "armourTypes": [
+        "carapace",
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "rlPfSh2ELMua9wn1"
+}

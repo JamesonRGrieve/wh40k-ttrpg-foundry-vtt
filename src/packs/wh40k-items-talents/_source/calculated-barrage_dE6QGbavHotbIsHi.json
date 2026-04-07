@@ -1,0 +1,71 @@
+{
+  "name": "Calculated Barrage",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "calculatedBarrage",
+    "category": "combat",
+    "source": "OW: Hammer of the Emperor",
+    "description": "<p>The character uses their intellect to precisely place indirect fire, maximizing the psychological impact on enemies.</p>",
+    "tier": 1,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "benefit": "<p>Whenever character or their Comrade fire a weapon with the Indirect quality, if at least one hit lands within Intelligence Bonus Metres of an enemy, the target must make a +20 Pinning Test.</p>",
+    "aptitudes": [
+      "Ballistic Skill",
+      "Knowledge"
+    ],
+    "prerequisites": {
+      "text": "Intelligence 35",
+      "characteristics": {
+        "intelligence": 35
+      },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 300,
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": [
+        {
+          "name": "Precision Bombardment",
+          "description": "<p>When using weapons with the Indirect quality, if at least one hit lands within Intelligence Bonus Metres of an enemy, the target must make a +20 Pinning Test (easier for them to resist).</p>"
+        }
+      ]
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "dE6QGbavHotbIsHi"
+}

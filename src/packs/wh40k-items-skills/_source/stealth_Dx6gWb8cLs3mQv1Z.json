@@ -1,0 +1,27 @@
+{
+  "name": "Stealth",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "agility",
+    "descriptor": "Stealth is the art of moving unseen and unheard, concealing oneself, and avoiding detection.",
+    "uses": "Uses: Sneaking past guards, hiding, shadowing a target, concealing objects.\nStealth is typically opposed by Awareness. Movement rate affects difficulty: moving at Half rate imposes no penalty, Full rate imposes -10, running imposes -30. Size, lighting, and cover modify the test. A character in heavy armour suffers -30 to Stealth unless the armour has special qualities.",
+    "useTime": "Free Action (part of movement)",
+    "description": {
+      "value": "<p>Stealth is the art of moving unseen and unheard, concealing oneself, and avoiding detection.</p>"
+    },
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Agility",
+      "Fieldcraft"
+    ],
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Dx6gWb8cLs3mQv1Z"
+}

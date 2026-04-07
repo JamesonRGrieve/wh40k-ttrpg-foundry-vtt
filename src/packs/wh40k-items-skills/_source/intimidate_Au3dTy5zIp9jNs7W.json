@@ -1,0 +1,27 @@
+{
+  "name": "Intimidate",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "strength",
+    "descriptor": "Intimidate is the ability to frighten, cow, or bully others through physical presence, threats, or displays of power.",
+    "uses": "Uses: Frightening enemies, coercing information from unwilling subjects, forcing compliance through threats, staring down opponents.\nSpecial Use: Opposed by Willpower. In combat, a successful Intimidate test as a Full Action can force a single target to flee, cower, or surrender depending on Degrees of Success. NPCs with lower Willpower are more susceptible.",
+    "useTime": "Full Action",
+    "description": {
+      "value": "<p>Intimidate is the ability to frighten, cow, or bully others through physical presence, threats, or displays of power.</p>"
+    },
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Strength",
+      "Social"
+    ],
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Au3dTy5zIp9jNs7W"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Scrier's Gaze",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Divination",
+    "prerequisites": "Psy Rating 4",
+    "focusPower": "Half Action",
+    "action": "Full Action",
+    "range": "1 kilometre x Psy Rating",
+    "opposed": "No",
+    "sustained": "Half Action",
+    "effect": "The psyker projects his psychic senses to a distant location, allowing him to see and hear events there as though he were present. While sustaining this power, the psyker is unaware of his immediate surroundings.",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The psyker sends his consciousness forth from his body, perceiving a distant location as though he were physically present. He can see and hear events at the target location for the duration of the power. While sustaining, the psyker is unaware of his own surroundings and is treated as Stunned for the purposes of attacks against his physical body.</p>"
+    },
+    "focusTime": "Full Action",
+    "threshold": 14,
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Lk9xMnR4wPtY6qHb"
+}

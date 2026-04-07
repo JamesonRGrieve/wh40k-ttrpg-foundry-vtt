@@ -1,0 +1,74 @@
+{
+  "name": "Bolter Drill",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "combat",
+    "source": "Black Crusade Core",
+    "description": {
+      "value": "<p>Character firing any Bolt Weapon on Semi or Full Auto scores one extra Degree of Success on any successful test as long as they did not take the Move Action that turn.</p>"
+    },
+    "tier": 3,
+    "benefit": "<p>Character firing any Bolt Weapon on Semi or Full Auto scores one extra Degree of Success on any successful test as long as they did not take the Move Action that turn.</p>",
+    "aptitudes": [
+      "Unaligned"
+    ],
+    "prerequisites": {
+      "text": "Tier 3: Weapon Training(Bolt), BS 40",
+      "characteristics": {
+        "ballisticSkill": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true,
+    "identifier": "bolterDrill",
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "FGLOYPhiI7xqv4S7"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Elite Advance Packages",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "",
+    "descriptor": "",
+    "uses": "Sets of Skills, Talents, and Abilities to diversify one's character. Taken only with GM Permission and if requirements are met, cost XP.",
+    "useTime": null,
+    "description": {
+      "value": ""
+    },
+    "rollConfig": {
+      "characteristic": null
+    },
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [],
+    "source": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "LepVSm06MuKQGtLA"
+}

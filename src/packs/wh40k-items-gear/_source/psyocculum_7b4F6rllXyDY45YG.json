@@ -1,0 +1,44 @@
+{
+  "name": "Psyocculum",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 1.5,
+    "availability": "rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Set of sensors and scrying devices worn and looked through. As a Half Action, wearer enable/disable device, whilst enabled can make +10 Awareness test to detect Psykers and Daemonic Creatures without the need for normal lighting as well as +10 to BS Tests to hit them until the end of the encounter. All other sight-based tests have -20 however. </p>\n<h3>Requirements</h3><p>Can't be used alongside another piece of headgear such as a helmet. For evety 5 minutes used beyond the first minute wearer gains 1 fatigue.</p>\n<p><b>Effect:</b> Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Set of sensors and scrying devices worn and looked through. As a Half Action, wearer enable/disable device, whilst enabled can make +10 Awareness test to detect Psykers and Daemonic Creatures without "
+    },
+    "source": {
+      "book": "DH 2E: Enemies Beyond",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Set of sensors and scrying devices worn and looked through. As a Half Action, wearer enable/disable device, whilst enabled can make +10 Awareness test to detect Psykers and Daemonic Creatures without the need for normal lighting as well as +10 to BS Tests to hit them until the end of the encounter. All other sight-based tests have -20 however. ",
+    "duration": "",
+    "notes": "-",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "7b4F6rllXyDY45YG"
+}

@@ -3151,7 +3151,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 const table =
                     game.tables.getName('Psychic Phenomena') ||
                     (await game.packs
-                        .get('wh40k-rpg.rt-rolltables-psychic')
+                        .get('wh40k-rpg.wh40k-rolltables-psychic')
                         ?.getDocuments()
                         .then((docs) => docs.find((d) => d.name.includes('Phenomena'))));
 
@@ -3191,7 +3191,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 const table =
                     game.tables.getName('Perils of the Warp') ||
                     (await game.packs
-                        .get('wh40k-rpg.rt-rolltables-psychic')
+                        .get('wh40k-rpg.wh40k-rolltables-psychic')
                         ?.getDocuments()
                         .then((docs) => docs.find((d) => d.name.includes('Perils'))));
 

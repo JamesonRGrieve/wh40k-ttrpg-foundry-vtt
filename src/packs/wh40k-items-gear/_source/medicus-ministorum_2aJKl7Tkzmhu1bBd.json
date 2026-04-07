@@ -1,0 +1,44 @@
+{
+  "name": "Medicus Ministorum",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "consumable",
+    "weight": 4,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>A High-quality medikit. User gains 2 additional Degrees of Success on successful medicae tests and reduces Degress of Faiiure on failed Medicae Tests by 2 to a minimum of 0.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A High-quality medikit. User gains 2 additional Degrees of Success on successful medicae tests and reduces Degress of Faiiure on failed Medicae Tests by 2 to a minimum of 0."
+    },
+    "source": {
+      "book": "RT: Faith and Coin",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "A High-quality medikit. User gains 2 additional Degrees of Success on successful medicae tests and reduces Degress of Faiiure on failed Medicae Tests by 2 to a minimum of 0.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "2aJKl7Tkzmhu1bBd"
+}

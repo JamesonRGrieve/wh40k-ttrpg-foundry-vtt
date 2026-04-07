@@ -1,0 +1,44 @@
+{
+  "name": "Transportation: High Grade",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "general",
+    "weight": 0,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 150,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>A Single Trip from one place to another on a planet. Aboard a Low Orbital Flight, or Luxury Sedan, will get you there quickly and in good comfort.</p>\n<h3>Requirements</h3><p>Cost of service may vary with location and the honesty/charitability of those that offer it.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 150 T</p>",
+      "chat": "",
+      "summary": "A Single Trip from one place to another on a planet. Aboard a Low Orbital Flight, or Luxury Sedan, will get you there quickly and in good comfort."
+    },
+    "source": {
+      "book": "Dark Heresy: Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "A Single Trip from one place to another on a planet. Aboard a Low Orbital Flight, or Luxury Sedan, will get you there quickly and in good comfort.",
+    "duration": "",
+    "notes": "",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "qhMlDU8d4sn9t0yf"
+}

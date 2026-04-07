@@ -1,0 +1,36 @@
+{
+  "name": "Descent into Flames",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "power",
+    "weight": 100,
+    "availability": "Hero",
+    "notes": "Master Crafted Relic Astartes Mk VI \"Corvus\" Armour of the Fire Lords Chapter. Provides all bonuses of Mk VI \"Corvus\" Armour plus wearer is immune to fire attacks and cannot be set on fire. Heat-based attacks such as melta and plasma guns have their Penetration reduced by 6.",
+    "source": "DW: Honour the Chapter",
+    "description": {
+      "value": "<p>Master Crafted Relic Astartes Mk VI \"Corvus\" Armour of the Fire Lords Chapter. Provides all bonuses of Mk VI \"Corvus\" Armour plus wearer is immune to fire attacks and cannot be set on fire. Heat-based attacks such as melta and plasma guns have their Penetration reduced by 6.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 12,
+      "body": 12,
+      "leftArm": 12,
+      "rightArm": 12,
+      "leftLeg": 12,
+      "rightLeg": 12
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "JJ0mE1R27X8J9LlO"
+}

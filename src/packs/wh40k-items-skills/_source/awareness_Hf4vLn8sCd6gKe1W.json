@@ -1,0 +1,27 @@
+{
+  "name": "Awareness",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "perception",
+    "descriptor": "Awareness reflects a character's ability to notice subtle clues and detect hidden threats using their senses.",
+    "uses": "Uses: Spotting ambushes, detecting hidden enemies, noticing important details, searching an area, eavesdropping on conversations.\nSpecial Use: Lip Reading: With a successful Awareness test at -20, a character can read the lips of anyone they can clearly see. This requires a clear line of sight and the target must be speaking a language the character knows.",
+    "useTime": "Free Action or Full Action",
+    "description": {
+      "value": "<p>Awareness reflects a character's ability to notice subtle clues and detect hidden threats using their senses.</p>"
+    },
+    "isBasic": true,
+    "skillType": "basic",
+    "aptitudes": [
+      "Perception",
+      "Fieldcraft"
+    ],
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Hf4vLn8sCd6gKe1W"
+}

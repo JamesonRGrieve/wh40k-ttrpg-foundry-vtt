@@ -1,0 +1,27 @@
+{
+  "name": "Smite",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Psy Rating 3",
+    "focusPower": "Half Action",
+    "action": "Half Action",
+    "range": "20 metres x Psy Rating",
+    "opposed": "No",
+    "sustained": "No",
+    "effect": "The psyker projects a bolt of bio-lightning at a single target, dealing 1d10 + Psy Rating Energy damage with Pen 4.",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The psyker conjures a bolt of bio-electric energy and hurls it at his foe. This is a Psychic Bolt that deals 1d10 + Psy Rating Energy damage with a Penetration of 4. The bolt strikes a single target within range.</p>"
+    },
+    "focusTime": "Half Action",
+    "threshold": 12,
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Ks7wXmP4nRtL2bYq"
+}

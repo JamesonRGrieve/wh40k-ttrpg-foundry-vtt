@@ -1,0 +1,44 @@
+{
+  "name": "Twitch-mask",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tech",
+    "weight": 0,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Allows user to adjust facial features at will, alterting shape and texture rapidly. Gain +10 to Disguise Tests. Poor Craftsmanship give a level of fatigue whenever a character changes their appearance. Good versions also change pigments and voice, granting +20 to Disguise Tests.</p>\n<p><b>Effect:</b> Very Rare</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "Allows user to adjust facial features at will, alterting shape and texture rapidly. Gain +10 to Disguise Tests. Poor Craftsmanship give a level of fatigue whenever a character changes their appearance"
+    },
+    "source": {
+      "book": "RT: Hostile Acquisitions",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Allows user to adjust facial features at will, alterting shape and texture rapidly. Gain +10 to Disguise Tests. Poor Craftsmanship give a level of fatigue whenever a character changes their appearance. Good versions also change pigments and voice, granting +20 to Disguise Tests.",
+    "duration": "",
+    "notes": "-",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "HVK4IxOzo6dK0Y2a"
+}

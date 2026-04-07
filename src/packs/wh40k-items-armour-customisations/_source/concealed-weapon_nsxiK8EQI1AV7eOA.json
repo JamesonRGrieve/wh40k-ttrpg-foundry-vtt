@@ -1,0 +1,31 @@
+{
+  "name": "Concealed Weapon",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "effect": "Hides Compact Pistol, Micro-weapon, or knife-sized melee wep in the armour.   -30 to tests to detect weapon. Availability is one higher than weapon, minimum rare.",
+    "availability": "Special",
+    "source": "RT: Hostile Acq.",
+    "description": {
+      "value": "<p>Hides Compact Pistol, Micro-weapon, or knife-sized melee wep in the armour.   -30 to tests to detect weapon. Availability is one higher than weapon, minimum rare.</p>"
+    },
+    "modifiers": {
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 0
+    },
+    "restrictions": {
+      "armourTypes": [
+        "any"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nsxiK8EQI1AV7eOA"
+}

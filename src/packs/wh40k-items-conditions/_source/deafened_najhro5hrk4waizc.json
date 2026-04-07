@@ -1,0 +1,42 @@
+{
+  "name": "Deafened",
+  "type": "condition",
+  "img": "icons/svg/deaf.svg",
+  "system": {
+    "identifier": "deafened",
+    "nature": "harmful",
+    "effect": "<p>The character suffers &minus;30 to all Perception-based tests that rely on hearing. They cannot use verbal communication or respond to auditory commands.</p>",
+    "removal": "<p>Depends on the source. Temporary deafening wears off after the specified duration. Permanent deafening requires medical or bionic intervention.</p>",
+    "stackable": false,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>The character cannot hear. They suffer &minus;30 to all Perception-based tests that rely on hearing and cannot use or benefit from verbal communication. They automatically fail any test that relies solely on hearing. This also imposes a &minus;10 penalty to Initiative.</p>",
+      "source": {
+        "book": "DH2e Core",
+        "page": "",
+        "custom": ""
+      }
+    },
+    "modifiers": {
+      "characteristics": {
+        "per": -30
+      },
+      "skills": {},
+      "combat": {
+        "initiative": -10
+      }
+    },
+    "notes": "",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "najhro5hrk4waizc"
+}

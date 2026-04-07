@@ -1,0 +1,44 @@
+{
+  "name": "Toxin Wands",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 0.2,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 100,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>A device to detect poisons and display recommended counter-agents and immnisers, Can make a +0 Perception Test or +20 Medicae Test to use on a perons to determine whether they are poisoned and the best response to it, if 2+ Degrees of Success, also grants enough information to identify any existing antidote.</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 100 T</p>",
+      "chat": "",
+      "summary": "A device to detect poisons and display recommended counter-agents and immnisers, Can make a +0 Perception Test or +20 Medicae Test to use on a perons to determine whether they are poisoned and the bes"
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "A device to detect poisons and display recommended counter-agents and immnisers, Can make a +0 Perception Test or +20 Medicae Test to use on a perons to determine whether they are poisoned and the best response to it, if 2+ Degrees of Success, also grants enough information to identify any existing antidote.",
+    "duration": "",
+    "notes": "",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "nlmRo3DenmbgkBtw"
+}

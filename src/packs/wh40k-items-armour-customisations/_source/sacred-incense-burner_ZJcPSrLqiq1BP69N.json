@@ -1,0 +1,31 @@
+{
+  "name": "Sacred Incense Burner",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "effect": "Incense burner affixed to the backpack, helmet, or similar item. Setting it aflame with a Half Action allows it to burn for 1 hour. Whilst alight creatures with the Daemonic Trait within 3m of the bearer suffers -10 to Weapon Skill and -10 to Warp Instability Tests.",
+    "availability": "rare",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>Incense burner affixed to the backpack, helmet, or similar item. Setting it aflame with a Half Action allows it to burn for 1 hour. Whilst alight creatures with the Daemonic Trait within 3m of the bearer suffers -10 to Weapon Skill and -10 to Warp Instability Tests.</p>"
+    },
+    "modifiers": {
+      "armourPoints": 0,
+      "maxAgility": 0,
+      "weight": 3
+    },
+    "restrictions": {
+      "armourTypes": [
+        "any"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "ZJcPSrLqiq1BP69N"
+}

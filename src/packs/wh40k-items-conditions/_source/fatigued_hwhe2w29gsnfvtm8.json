@@ -1,0 +1,38 @@
+{
+  "name": "Fatigued",
+  "type": "condition",
+  "img": "icons/svg/sleep.svg",
+  "system": {
+    "identifier": "fatigued",
+    "nature": "harmful",
+    "effect": "<p>Each level of Fatigue imposes a &minus;10 penalty to all tests. When Fatigue levels equal the character's Toughness Bonus, they fall Unconscious.</p>",
+    "removal": "<p>Each level of Fatigue is removed by a period of rest (typically several hours). Some levels can be removed by stimulants or medical treatment.</p>",
+    "stackable": true,
+    "stacks": 1,
+    "appliesTo": "self",
+    "duration": {
+      "value": 0,
+      "units": "permanent"
+    },
+    "description": {
+      "value": "<p>The character is physically worn down. Each level of Fatigue imposes a cumulative &minus;10 penalty to all tests. Fatigue stacks with itself; a character with 3 levels of Fatigue suffers &minus;30 to all tests. When a character's Fatigue levels equal their Toughness Bonus, they immediately fall Unconscious and cannot be roused until at least one level of Fatigue is removed.</p>",
+      "source": {
+        "book": "DH2e Core",
+        "page": "",
+        "custom": ""
+      }
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {}
+    },
+    "notes": "Track Fatigue levels via stacks. Unconsciousness occurs at TB levels of Fatigue.",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "hwhe2w29gsnfvtm8"
+}

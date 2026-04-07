@@ -1,0 +1,72 @@
+{
+  "name": "Urge the Penitent",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "general",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character gains +10 bonus whenever rerolling a Test with a Fate Point after failing the initial attempt. They may spend a Reaction to pass this beenfit to any ally spending Fate Points to re-roll a Test as long as the Ally is within Line of Sight and Communication Range.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>Character gains +10 bonus whenever rerolling a Test with a Fate Point after failing the initial attempt. They may spend a Reaction to pass this beenfit to any ally spending Fate Points to re-roll a Test as long as the Ally is within Line of Sight and Communication Range.</p>",
+    "aptitudes": [
+      "Fellowship",
+      "Social"
+    ],
+    "prerequisites": {
+      "text": "Command +10,Scholastic Lore (Imperial Creed).",
+      "characteristics": {},
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "urgeThePenitent",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "skills": [
+          {
+            "key": "command",
+            "value": 10,
+            "condition": "When leading penitent troops or flagellants",
+            "icon": "fa-solid fa-cross"
+          }
+        ]
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "YMtsIebBo6LvPhWF"
+}

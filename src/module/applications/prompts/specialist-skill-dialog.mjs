@@ -91,7 +91,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
      * @protected
      */
     async _loadSpecializations() {
-        const skillsCompendium = game.packs.get('wh40k-rpg.rt-items-skills');
+        const skillsCompendium = game.packs.get('wh40k-rpg.wh40k-items-skills');
         if (!skillsCompendium) return;
 
         // Find the skill in the compendium by matching the label

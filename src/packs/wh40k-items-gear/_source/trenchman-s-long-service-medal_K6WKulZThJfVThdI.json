@@ -1,0 +1,44 @@
+{
+  "name": "Trenchman's Long Service medal",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "general",
+    "weight": 0,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>+5 to Ballistic Skill Tests made whilst the Squad is firing from cover.\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Two Crossed Spades, hanging from a triangular grey ribbon</p>\n<h3>Requirements</h3><p>Distinguished Service Medal: Awarded for Participating in a single trench deployment lasting for two months or more.</p>\n<p><b>Effect:</b> Special</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "+5 to Ballistic Skill Tests made whilst the Squad is firing from cover.\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Two Crossed Spades, hanging from a trian"
+    },
+    "source": {
+      "book": "Only War Core",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "+5 to Ballistic Skill Tests made whilst the Squad is firing from cover.\nMedals can't be acquired, only earned, benefit applied to the whole squad. Looks Like a Two Crossed Spades, hanging from a triangular grey ribbon",
+    "duration": "",
+    "notes": "-",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "K6WKulZThJfVThdI"
+}

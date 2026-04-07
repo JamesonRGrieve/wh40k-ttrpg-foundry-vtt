@@ -1,0 +1,27 @@
+{
+  "name": "Common Lore",
+  "type": "skill",
+  "img": "icons/svg/book.svg",
+  "system": {
+    "characteristic": "intelligence",
+    "descriptor": "Common Lore represents general knowledge about a particular subject that is widely known within the Imperium. Each specialisation is a separate skill.",
+    "uses": "Uses: Recalling commonly known facts about an organisation, culture, or subject. More obscure information requires more Degrees of Success.\nCommon Lore tests represent knowledge that an educated or well-travelled Imperial citizen might know. Highly specific or secret information falls under Scholastic Lore or Forbidden Lore instead.\nSpecialisations: Adepta Sororitas, Adeptus Arbites, Adeptus Astra Telepathica, Adeptus Mechanicus, Administratum, Ecclesiarchy, Imperial Creed, Imperial Guard, Imperial Navy, Imperium, Tech, Underworld, War. Each specialisation must be taken separately as a distinct skill.",
+    "useTime": "Free Action",
+    "description": {
+      "value": "<p>Common Lore represents general knowledge about a particular subject that is widely known within the Imperium. Each specialisation is a separate skill.</p>\n<p><strong>Specialisations:</strong> Adepta Sororitas, Adeptus Arbites, Adeptus Astra Telepathica, Adeptus Mechanicus, Administratum, Ecclesiarchy, Imperial Creed, Imperial Guard, Imperial Navy, Imperium, Tech, Underworld, War</p>"
+    },
+    "isBasic": false,
+    "skillType": "advanced",
+    "aptitudes": [
+      "Intelligence",
+      "Knowledge"
+    ],
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Hb1kAf3gPw7qRz5D"
+}

@@ -1,0 +1,44 @@
+{
+  "name": "Undead Heart",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tech",
+    "weight": 1.5,
+    "availability": "unique",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>A Character can be implanted with this mass of heresy with a -30 Medicae Test over the course of several hours. If successful they gain Regeneration(1d5) and The Stuff of Nightmares Traits. If fail, permenantly reduce Toughness Characteristic by 1d5. </p>\n<h3>Requirements</h3><p>Once implanted, can never be removed without killing the host. Very Heretical.</p>\n<p><b>Effect:</b> Unique</p><p><b>Notes:</b> -</p>",
+      "chat": "",
+      "summary": "A Character can be implanted with this mass of heresy with a -30 Medicae Test over the course of several hours. If successful they gain Regeneration(1d5) and The Stuff of Nightmares Traits. If fail, p"
+    },
+    "source": {
+      "book": "BC: Tome of Decay",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "A Character can be implanted with this mass of heresy with a -30 Medicae Test over the course of several hours. If successful they gain Regeneration(1d5) and The Stuff of Nightmares Traits. If fail, permenantly reduce Toughness Characteristic by 1d5. ",
+    "duration": "",
+    "notes": "-",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "KSAsL16Jq8oW3lLH"
+}

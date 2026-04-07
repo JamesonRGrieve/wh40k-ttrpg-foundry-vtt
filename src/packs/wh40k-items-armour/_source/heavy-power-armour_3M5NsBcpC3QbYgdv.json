@@ -1,0 +1,36 @@
+{
+  "name": "Heavy Power Armour",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "power",
+    "weight": 65,
+    "availability": "extremely-rare",
+    "notes": "Grants wearer Auto-Stabilised and Unnatural Strength (+1) Trait. Increases Size Trait by 1 (typically Average to Hulking). Environmentally sealed when helmet is on with its own Oxygen Supply. Power Supply lasts 2d5 Hours before needing recharging or refueling. Whilst powered doesn't count towards carry limit.",
+    "source": "DH 2E: Enemies Beyond",
+    "description": {
+      "value": "<p>Grants wearer Auto-Stabilised and Unnatural Strength (+1) Trait. Increases Size Trait by 1 (typically Average to Hulking). Environmentally sealed when helmet is on with its own Oxygen Supply. Power Supply lasts 2d5 Hours before needing recharging or refueling. Whilst powered doesn't count towards carry limit.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 8,
+      "body": 8,
+      "leftArm": 8,
+      "rightArm": 8,
+      "leftLeg": 8,
+      "rightLeg": 8
+    },
+    "modifications": [],
+    "maxAgility": 35,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "3M5NsBcpC3QbYgdv"
+}

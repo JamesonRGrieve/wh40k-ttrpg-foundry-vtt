@@ -1,0 +1,56 @@
+{
+  "name": "Imperial Commander",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "social",
+    "source": "OW: Shield of Humanity",
+    "description": {
+      "value": "<p>Character doesn’t suffer penalties due to an unfamiliarity or outsider status on Interaction Tests made with Soldiers of the Imperial Guard, including auxiliaries from the Adeptus Mechanicus, Ministorum, or elsewhere. When commanding a combined force of multiple different elements (such as Guardsman, Ogryns, Crimson Guard, and Sisters of Battle), character gains +20 to Command Tests to maintain order in the ranks.</p>"
+    },
+    "tier": 3,
+    "benefit": "<p>Character doesn’t suffer penalties due to an unfamiliarity or outsider status on Interaction Tests made with Soldiers of the Imperial Guard, including auxiliaries from the Adeptus Mechanicus, Ministorum, or elsewhere. When commanding a combined force of multiple different elements (such as Guardsman, Ogryns, Crimson Guard, and Sisters of Battle), character gains +20 to Command Tests to maintain order in the ranks.</p>",
+    "aptitudes": [
+      "Fellowship",
+      "Leadership"
+    ],
+    "prerequisites": {
+      "text": "Fellowship 45, Willpower 40;",
+      "characteristics": {
+        "fellowship": 45,
+        "willpower": 40
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 900,
+    "isPassive": true,
+    "identifier": "imperialCommander",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {
+        "command": 20
+      },
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "SFlCt9lOolKofeQQ"
+}

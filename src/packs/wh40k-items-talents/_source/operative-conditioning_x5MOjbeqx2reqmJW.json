@@ -1,0 +1,57 @@
+{
+  "name": "Operative Conditioning",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "social",
+    "source": "RT: Hostile Acquisitions",
+    "description": {
+      "value": "<p>Whilst being Interrogated, if the character ever wins an opposed Interrogation vs Willpower Test performed by their Interrogator, they can immediately make a +0 Scrutiny Test. If successful, for each degree of success they can learn one detail of value about their captors.</p>"
+    },
+    "tier": 1,
+    "benefit": "<p>Whilst being Interrogated, if the character ever wins an opposed Interrogation vs Willpower Test performed by their Interrogator, they can immediately make a +0 Scrutiny Test. If successful, for each degree of success they can learn one detail of value about their captors.</p>",
+    "aptitudes": [],
+    "prerequisites": {
+      "text": "House Operative Alternate Advance, 750xp",
+      "characteristics": {
+        "willpower": 30
+      },
+      "skills": [],
+      "talents": []
+    },
+    "cost": 300,
+    "isPassive": true,
+    "identifier": "operativeConditioning",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "resources": {},
+      "other": [],
+      "situational": {
+        "characteristics": [
+          {
+            "key": "willpower",
+            "value": 20,
+            "condition": "When resisting interrogation or torture",
+            "icon": "fa-solid fa-user-secret"
+          }
+        ],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "x5MOjbeqx2reqmJW"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Fire Shield",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Pyromancy",
+    "prerequisites": "Psy Rating 4",
+    "focusPower": "Half Action",
+    "action": "Half Action",
+    "range": "Self",
+    "opposed": "No",
+    "sustained": "Free Action",
+    "effect": "The psyker surrounds himself with a wall of roaring flame. All creatures within 2 metres suffer 1d10 + Psy Rating Energy damage with the Flame quality. The fire shield also provides AP equal to the psyker's Psy Rating against ranged attacks.",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The psyker wraps himself in a protective shroud of roaring flame. Any creature that enters or begins its turn within 2 metres of the psyker suffers 1d10 + Psy Rating Energy damage with the Flame quality. The shield also provides Armour Points equal to the psyker's Psy Rating against all incoming ranged attacks.</p>"
+    },
+    "focusTime": "Half Action",
+    "threshold": 12,
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Yq8tRnM4wXbK6pLd"
+}

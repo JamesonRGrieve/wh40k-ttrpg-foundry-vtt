@@ -1,0 +1,76 @@
+{
+  "name": "Imperial Guardsman",
+  "type": "npc",
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "characteristics": {
+      "ws": "30",
+      "bs": "30",
+      "s": "30",
+      "t": "30",
+      "ag": "30",
+      "int": "25",
+      "per": "30",
+      "wp": "30",
+      "fel": "25"
+    },
+    "wounds": "10",
+    "armourPoints": "Flak 4 all",
+    "move": "3/6/9/18",
+    "size": "Average",
+    "weapons": [
+      {
+        "name": "Lasgun",
+        "range": "100m",
+        "rof": "S/3/-",
+        "damage": "1d10+3 E",
+        "pen": "0",
+        "clip": "60",
+        "reload": "Full",
+        "qualities": "Reliable"
+      },
+      {
+        "name": "Knife",
+        "range": "-",
+        "rof": "-",
+        "damage": "1d5+3 R",
+        "pen": "0",
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Gear/\nOther",
+        "range": "Flak Armour, Imperial Guard kit (uniform, poor weather gear, lho-sticks, ration pack, mess kit and water canteen, blanket and sleep bag, rechargeable lamp pack, grooming kit, dog tags, Imperial Infantryman's Uplifting Primer, 2 frag grenades).",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      },
+      {
+        "name": "Talents/\nTraits",
+        "range": "Rapid Reload, Weapon Training (Las, Low-Tech)",
+        "rof": null,
+        "damage": null,
+        "pen": null,
+        "clip": null,
+        "reload": null,
+        "qualities": null
+      }
+    ],
+    "skills": "S: | T: | Ag: Dodge\nInt: Common Lore (Imperial Guard), Navigate (Surface)\nPer: Awareness\nWP:\nFel:",
+    "training": "Basic(Las), Melee(Low-Tech), Thrown()",
+    "description": {
+      "value": "<p>The backbone of the Imperium's military might. Imperial Guardsmen are drawn from every world in the Imperium, trained to fight and die in the Emperor's name. Though individually unremarkable, their strength lies in numbers and discipline.</p><p><b>Tactics:</b> Guardsmen fight in squads of 8-12, using cover and overlapping fields of fire. They follow orders from their commanding officer without question. If leadership is lost, morale breaks quickly.</p>"
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "items": [],
+  "flags": {},
+  "_id": "Qk4tRw8mNx2bHf6J"
+}

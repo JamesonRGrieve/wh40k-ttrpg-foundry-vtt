@@ -1,0 +1,75 @@
+{
+  "name": "Constant Vigilance",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "constantVigilance",
+    "category": "investigation",
+    "source": "DH2e Core",
+    "description": "<p>The character is ever-watchful and nearly impossible to surprise.</p>",
+    "tier": 2,
+    "benefit": "<p>The character and all allies within 10 metres gain a +10 bonus to Awareness tests to avoid being Surprised. The character may always act in a Surprise round, even if they would normally be Surprised.</p>",
+    "aptitudes": [
+      "Perception",
+      "Defence"
+    ],
+    "prerequisites": {
+      "text": "Perception 40, Awareness +10",
+      "characteristics": {
+        "perception": 40
+      },
+      "skills": {
+        "awareness": 10
+      },
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "+10 Awareness vs Surprise for self and allies within 10m. Always acts in Surprise round.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000032"
+}

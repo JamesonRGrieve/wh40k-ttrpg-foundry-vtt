@@ -1,0 +1,28 @@
+{
+  "name": "Combi-Tool",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 1,
+    "availability": "average",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>A compact, multi-function tool containing various implements for mechanical and electrical work. Grants +10 bonus to Tech-Use tests for repair and maintenance tasks. Essential equipment for any servant of the Omnissiah.</p>"
+    },
+    "notes": "",
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Hd3nLw7Fp2XkR9Tc"
+}

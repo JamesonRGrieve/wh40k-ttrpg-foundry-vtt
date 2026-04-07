@@ -1,0 +1,31 @@
+{
+  "name": "Dark-sight",
+  "type": "trait",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "category": "creature",
+    "requirements": "",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The creature can see in darkness as if it were daylight. This trait allows the creature to ignore penalties for operating in areas of dim or no lighting.</p>"
+    },
+    "benefit": "<p>The creature can see normally in darkness and suffers no penalties from dim or no lighting.</p>",
+    "level": 0,
+    "notes": "",
+    "identifier": "darkSight",
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {},
+      "wounds": 0,
+      "fate": 0,
+      "movement": 0
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Tw6vJ1yMq3AlXs5H"
+}

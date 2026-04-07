@@ -1,0 +1,28 @@
+{
+  "name": "Inferno Shells",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 1,
+    "availability": "rare",
+    "quantity": 1,
+    "cost": {
+      "value": 40,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>Specialised shotgun ammunition containing a volatile incendiary compound. On impact, the shell bursts into a spray of burning chemicals. The weapon gains the Flame quality for that shot. Devastating against lightly armoured infantry and particularly feared by those who have faced them.</p>"
+    },
+    "notes": "",
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Nt6rTn3Kw8PxV7Hm"
+}

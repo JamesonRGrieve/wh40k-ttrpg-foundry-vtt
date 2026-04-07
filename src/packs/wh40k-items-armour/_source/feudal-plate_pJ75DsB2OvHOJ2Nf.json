@@ -1,0 +1,36 @@
+{
+  "name": "Feudal Plate",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "primitive",
+    "weight": 30,
+    "availability": "scarce",
+    "notes": "Halve primitive armour AP vs non primitive weapons",
+    "source": "Rogue Trader Core",
+    "description": {
+      "value": "<p>Halve primitive armour AP vs non primitive weapons</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 5,
+      "body": 5,
+      "leftArm": 5,
+      "rightArm": 5,
+      "leftLeg": 5,
+      "rightLeg": 5
+    },
+    "modifications": [],
+    "maxAgility": 25,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "pJ75DsB2OvHOJ2Nf"
+}

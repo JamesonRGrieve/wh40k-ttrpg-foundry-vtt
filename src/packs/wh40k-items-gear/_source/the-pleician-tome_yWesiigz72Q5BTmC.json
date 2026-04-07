@@ -1,0 +1,44 @@
+{
+  "name": "The Pleician Tome",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "luxury",
+    "weight": 5,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Master-Crafted Relic Tome of the Deathwatch. A Tome of archives, templates, and lore of the Mechanicus. Difficult to navigate and study, but possessing lots of information.\nGrants +10 to Forbidden Lore (Mechanicus), and +2d10 to Tech-Use Tests (roll each  time).</p>\n<h3>Requirements</h3><p>Can only be Requisitioned by Techmarines</p>\n<p><b>Effect:</b> Hero</p><p><b>Notes:</b> 30 R</p>",
+      "chat": "",
+      "summary": "Master-Crafted Relic Tome of the Deathwatch. A Tome of archives, templates, and lore of the Mechanicus. Difficult to navigate and study, but possessing lots of information.\nGrants +10 to Forbidden Lor"
+    },
+    "source": {
+      "book": "DW: Rites of Battle",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Master-Crafted Relic Tome of the Deathwatch. A Tome of archives, templates, and lore of the Mechanicus. Difficult to navigate and study, but possessing lots of information.\nGrants +10 to Forbidden Lore (Mechanicus), and +2d10 to Tech-Use Tests (roll each  time).",
+    "duration": "",
+    "notes": "30 R",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "yWesiigz72Q5BTmC"
+}

@@ -1,0 +1,66 @@
+{
+  "name": "Boltgun",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "identifier": "boltgun",
+    "class": "basic",
+    "type": "explosive",
+    "twoHanded": true,
+    "melee": false,
+    "attack": {
+      "type": "ranged",
+      "characteristic": "ballisticSkill",
+      "modifier": 0,
+      "range": {
+        "value": 100,
+        "units": "m",
+        "special": ""
+      },
+      "rateOfFire": {
+        "single": true,
+        "semi": 3,
+        "full": 0
+      }
+    },
+    "damage": {
+      "formula": "1d10",
+      "type": "explosive",
+      "bonus": 5,
+      "penetration": 4
+    },
+    "special": [
+      "tearing"
+    ],
+    "clip": {
+      "max": 24,
+      "value": 24,
+      "type": "bolt-shell"
+    },
+    "reload": "Full",
+    "weight": 7,
+    "availability": "very-rare",
+    "craftsmanship": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>The iconic weapon of the Adeptus Astartes, though also employed by the Sisters of Battle and senior Imperial officers. It fires self-propelled mass-reactive shells that detonate inside the target, causing devastating wounds.</p>"
+    },
+    "modifications": [],
+    "notes": "",
+    "source": "DH2e Core",
+    "requiredTraining": "",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "x7Y8z9A0b1C2d3E4"
+}

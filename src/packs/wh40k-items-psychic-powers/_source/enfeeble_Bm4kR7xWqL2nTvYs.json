@@ -1,0 +1,27 @@
+{
+  "name": "Enfeeble",
+  "type": "psychicPower",
+  "img": "icons/svg/eye.svg",
+  "system": {
+    "discipline": "Biomancy",
+    "prerequisites": "Psy Rating 3",
+    "focusPower": "Half Action",
+    "action": "Half Action",
+    "range": "20 metres x Psy Rating",
+    "opposed": "Toughness",
+    "sustained": "Half Action",
+    "effect": "The psyker manipulates the biomass of his foe, weakening muscles and leeching vitality. The target suffers -10 to Strength and Toughness for the duration of the power. If Strength or Toughness reach 0, the target is helpless.",
+    "source": "DH2e Core",
+    "description": {
+      "value": "<p>The psyker reaches out with his mind and saps the physical vitality from his foe, leaving them weakened and feeble. The target suffers a -10 penalty to both Strength and Toughness characteristics. For every 10 points by which the Focus Power test is passed, the penalty increases by -10.</p>"
+    },
+    "focusTime": "Half Action",
+    "threshold": 10,
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Bm4kR7xWqL2nTvYs"
+}

@@ -1,0 +1,44 @@
+{
+  "name": "Reliquiary of Spite",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "luxury",
+    "weight": 7,
+    "availability": "average",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 0,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Master Crafted Relic Reliquary of the Sons of Medusa Chapter. Bearer adds twice their Willpower Bonus to all Toughness Tests. Can also spend a Fate Point to ignore Stunning, Fatigue, and Critical Effects (excluding limb loss and death) for 1d5 Rounds.</p>\n<p><b>Effect:</b> Famed</p><p><b>Notes:</b> 30 R</p>",
+      "chat": "",
+      "summary": "Master Crafted Relic Reliquary of the Sons of Medusa Chapter. Bearer adds twice their Willpower Bonus to all Toughness Tests. Can also spend a Fate Point to ignore Stunning, Fatigue, and Critical Effe"
+    },
+    "source": {
+      "book": "DW: Honour the Chapter",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Master Crafted Relic Reliquary of the Sons of Medusa Chapter. Bearer adds twice their Willpower Bonus to all Toughness Tests. Can also spend a Fate Point to ignore Stunning, Fatigue, and Critical Effects (excluding limb loss and death) for 1d5 Rounds.",
+    "duration": "",
+    "notes": "30 R",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "AEwKLsIJpoFwXMC5"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Magnoculars",
+  "type": "gear",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "weight": 0.5,
+    "availability": "common",
+    "quantity": 1,
+    "cost": {
+      "value": 50,
+      "currency": "throne"
+    },
+    "equipped": false,
+    "stowed": false,
+    "container": "",
+    "description": {
+      "value": "<p>Powerful optical magnification devices that allow detailed viewing of distant objects. Can magnify up to 40x, with built-in auto-focus and light amplification for low-light conditions. Grants detailed sight out to about 2km in clear conditions.</p>"
+    },
+    "notes": "",
+    "source": "DH2e Core",
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "Bw5xTn8Kp3RvL7Hm"
+}

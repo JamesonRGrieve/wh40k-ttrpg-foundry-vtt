@@ -1,0 +1,31 @@
+{
+  "name": "Adamantine Chainguard",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "effect": "When hit by a melee weapon, if 1's digit of the attacker's attack roll is a 1 (EG: 21, 31, 41, etc), then weapon is destroyed. Power Fielded, Warp Weapons, Natural Weapons, or other similar Power Field immune weapons are not destroyed. -5 max agility.",
+    "availability": "very-rare",
+    "source": "DH 2E: Enemies Within",
+    "description": {
+      "value": "<p>When hit by a melee weapon, if 1's digit of the attacker's attack roll is a 1 (EG: 21, 31, 41, etc), then weapon is destroyed. Power Fielded, Warp Weapons, Natural Weapons, or other similar Power Field immune weapons are not destroyed. -5 max agility.</p>"
+    },
+    "modifiers": {
+      "armourPoints": 0,
+      "maxAgility": -5,
+      "weight": 4
+    },
+    "restrictions": {
+      "armourTypes": [
+        "any"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "TsWsfRbpS0Pj2yfC"
+}

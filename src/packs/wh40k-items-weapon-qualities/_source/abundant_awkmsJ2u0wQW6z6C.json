@@ -1,0 +1,21 @@
+{
+  "name": "Abundant",
+  "type": "weaponQuality",
+  "img": "icons/svg/aura.svg",
+  "system": {
+    "identifier": "abundant",
+    "hasLevel": false,
+    "level": null,
+    "effect": "<p>Effect reference: 3</p>",
+    "notes": "",
+    "description": {
+      "value": "<p>3</p>"
+    },
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "awkmsJ2u0wQW6z6C"
+}

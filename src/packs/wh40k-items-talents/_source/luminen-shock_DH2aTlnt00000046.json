@@ -1,0 +1,73 @@
+{
+  "name": "Luminen Shock",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "luminenShock",
+    "category": "combat",
+    "source": "DH2e Core",
+    "description": "<p>The character can channel bioelectrical energy through their cybernetics to deliver a devastating shock.</p>",
+    "tier": 2,
+    "benefit": "<p>The character may make a melee attack that deals 1d10+WPB Energy damage with the Shocking quality. This attack requires a Toughness test; on failure, the character suffers 1 level of Fatigue. Requires Mechanicus Implants.</p>",
+    "aptitudes": [
+      "Willpower",
+      "Tech"
+    ],
+    "prerequisites": {
+      "text": "Willpower 40, Mechanicus Implants",
+      "characteristics": {
+        "willpower": 40
+      },
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": false,
+    "stackable": false,
+    "rank": 1,
+    "specialization": "",
+    "notes": "Melee attack: 1d10+WPB Energy, Shocking. Toughness test or gain Fatigue.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 0,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000046"
+}

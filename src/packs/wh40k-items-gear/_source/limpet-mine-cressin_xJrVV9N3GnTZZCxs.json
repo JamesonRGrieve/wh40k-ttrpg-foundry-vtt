@@ -1,0 +1,44 @@
+{
+  "name": "Limpet Mine (Cressin)",
+  "type": "gear",
+  "img": "icons/svg/backpack.svg",
+  "system": {
+    "category": "tools",
+    "weight": 3,
+    "availability": "scarce",
+    "craftsmanship": "common",
+    "cost": {
+      "value": 55,
+      "currency": "throne"
+    },
+    "quantity": 1,
+    "description": {
+      "value": "<p>Applied to a target structure to create a focused blast against it. Good for breaching, being designed as a cheaper and more portable Melta Bomb. Deals 4d10 X, Pen 8 Damage with Blast(1)</p>\n<p><b>Effect:</b> Scarce</p><p><b>Notes:</b> 55 T</p>",
+      "chat": "",
+      "summary": "Applied to a target structure to create a focused blast against it. Good for breaching, being designed as a cheaper and more portable Melta Bomb. Deals 4d10 X, Pen 8 Damage with Blast(1)"
+    },
+    "source": {
+      "book": "DH: The Inquisitor's Handbook",
+      "page": "",
+      "custom": ""
+    },
+    "equipped": false,
+    "inBackpack": false,
+    "container": "",
+    "consumable": false,
+    "uses": {
+      "value": 0,
+      "max": 0
+    },
+    "effect": "Applied to a target structure to create a focused blast against it. Good for breaching, being designed as a cheaper and more portable Melta Bomb. Deals 4d10 X, Pen 8 Damage with Blast(1)",
+    "duration": "",
+    "notes": "",
+    "identifier": "",
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "xJrVV9N3GnTZZCxs"
+}

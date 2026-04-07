@@ -1,0 +1,71 @@
+{
+  "name": "Sound Constitution",
+  "type": "talent",
+  "img": "icons/svg/target.svg",
+  "system": {
+    "identifier": "soundConstitution",
+    "category": "physical",
+    "source": "DH2e Core",
+    "description": "<p>The character's constitution is hardier than most.</p>",
+    "tier": 2,
+    "benefit": "<p>The character gains +1 Wound. This talent may be taken multiple times, each time gaining an additional Wound.</p>",
+    "aptitudes": [
+      "Toughness",
+      "General"
+    ],
+    "prerequisites": {
+      "text": "None",
+      "characteristics": {},
+      "skills": {},
+      "talents": []
+    },
+    "cost": 0,
+    "isPassive": true,
+    "stackable": true,
+    "rank": 1,
+    "specialization": "",
+    "notes": "+1 Wound per rank of this talent.",
+    "rollConfig": {
+      "characteristic": "",
+      "skill": "",
+      "modifier": 0,
+      "description": ""
+    },
+    "modifiers": {
+      "characteristics": {},
+      "skills": {},
+      "combat": {
+        "attack": 0,
+        "damage": 0,
+        "penetration": 0,
+        "defense": 0,
+        "initiative": 0,
+        "speed": 0
+      },
+      "resources": {
+        "wounds": 1,
+        "fate": 0,
+        "insanity": 0,
+        "corruption": 0
+      },
+      "other": [],
+      "situational": {
+        "characteristics": [],
+        "skills": [],
+        "combat": []
+      }
+    },
+    "grants": {
+      "skills": [],
+      "talents": [],
+      "traits": [],
+      "specialAbilities": []
+    },
+    "gameSystems": [
+      "dh2e"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "DH2aTlnt00000054"
+}

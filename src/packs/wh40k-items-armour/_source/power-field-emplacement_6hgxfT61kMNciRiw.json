@@ -1,0 +1,36 @@
+{
+  "name": "Power Field (Emplacement)",
+  "type": "armour",
+  "img": "icons/svg/shield.svg",
+  "system": {
+    "type": "void",
+    "weight": 500,
+    "availability": "very-rare",
+    "notes": "Massive emplacements that cover an area. Imposes -20 on Stealth Tests and doesn't defend against attacks made within 1m of the wall it produces  or melee attacks. [AP: 80%]",
+    "source": "Dark Heresy 2E: Core",
+    "description": {
+      "value": "<p>Massive emplacements that cover an area. Imposes -20 on Stealth Tests and doesn't defend against attacks made within 1m of the wall it produces  or melee attacks.</p>"
+    },
+    "modificationSlots": 2,
+    "coverage": [
+      "all"
+    ],
+    "armourPoints": {
+      "head": 0,
+      "body": 0,
+      "leftArm": 0,
+      "rightArm": 0,
+      "leftLeg": 0,
+      "rightLeg": 0
+    },
+    "modifications": [],
+    "maxAgility": null,
+    "properties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "6hgxfT61kMNciRiw"
+}

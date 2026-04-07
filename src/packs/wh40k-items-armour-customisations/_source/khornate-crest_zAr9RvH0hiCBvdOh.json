@@ -1,0 +1,31 @@
+{
+  "name": "Khornate Crest",
+  "type": "armourModification",
+  "img": "icons/svg/upgrade.svg",
+  "system": {
+    "effect": "Attached to the Head, provides +1 AP to head and +10 to all Interaction Tests with followers of Khorne. Counts as Dvotional Iconography. Must be dedicated to Khorne to wear,",
+    "availability": "extremely-rare",
+    "source": "BC: Tome of Blood",
+    "description": {
+      "value": "<p>Attached to the Head, provides +1 AP to head and +10 to all Interaction Tests with followers of Khorne. Counts as Dvotional Iconography. Must be dedicated to Khorne to wear,</p>"
+    },
+    "modifiers": {
+      "armourPoints": 1,
+      "maxAgility": 0,
+      "weight": 2
+    },
+    "restrictions": {
+      "armourTypes": [
+        "power"
+      ]
+    },
+    "addedProperties": [],
+    "removedProperties": [],
+    "gameSystems": [
+      "rt"
+    ]
+  },
+  "effects": [],
+  "flags": {},
+  "_id": "zAr9RvH0hiCBvdOh"
+}
