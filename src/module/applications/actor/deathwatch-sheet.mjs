@@ -17,7 +17,7 @@ export default class DeathwatchSheet extends CharacterSheet {
     static PARTS = {
         ...super.PARTS,
         header: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/header-dw.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/header-dw.hbs',
         },
     };
 }

@@ -7,6 +7,9 @@
         display: block !important;
     }
     padding: $wh40k-space-md;
+    overflow: hidden;
+    min-width: 0;
+    max-width: 100%;
 }
 
 // Identity Grid

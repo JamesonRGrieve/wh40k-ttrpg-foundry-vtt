@@ -64,6 +64,7 @@
     flex-direction: column;
     gap: 0;
     overflow: visible;
+    min-width: 0;
 
     .wh40k-panel {
         margin-bottom: $wh40k-space-md;
