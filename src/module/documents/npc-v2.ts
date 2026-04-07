@@ -78,8 +78,8 @@ export class WH40KNPCV2 extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: any): Promise<void> {
-        await super._preCreate(data, options, user);
+    async _preCreate(data: any, options: any, user: any): Promise<void> {
+        await (super._preCreate as any)(data, options, user);
 
         // Configure token defaults for NPC V2
         const initData = {
@@ -95,7 +95,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
             initData['token.bar1'] = { attribute: 'horde.magnitude' };
         }
 
-        this.updateSource(initData);
+        (this as any).updateSource(initData);
     }
 
     /* -------------------------------------------- */
@@ -103,13 +103,13 @@ export class WH40KNPCV2 extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     hasTalent(talent: string): boolean {
-        return !!this.items.filter((i: any) => i.type === 'talent').find((t: any) => t.name === talent);
+        return !!(this.items as any).filter((i: any) => i.type === 'talent').find((t: any) => t.name === talent);
     }
 
     hasTalentFuzzyWords(words: string[]): boolean {
-        return !!this.items
-            .filter((i) => i.type === 'talent')
-            .find((t) => {
+        return !!(this.items as any)
+            .filter((i: any) => i.type === 'talent')
+            .find((t: any) => {
                 for (const word of words) {
                     if (!t.name.includes(word)) return false;
                 }
@@ -183,12 +183,12 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @returns {Promise}
      */
     async rollItem(itemId) {
-        const item = this.items.get(itemId);
+        const item = this.items.get(itemId) as any;
         if (!item) return;
 
         switch (item.type) {
             case 'weapon': {
-                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
+                if ((game.settings as any).get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
                     const charKey = item.system.isMeleeWeapon ? 'weaponSkill' : 'ballisticSkill';
                     await this.rollCharacteristic(charKey, item.name);
                 } else {
@@ -197,7 +197,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
                 return;
             }
             case 'psychicPower': {
-                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
+                if ((game.settings as any).get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
                     await this.rollCharacteristic('willpower', item.name);
                 } else {
                     await DHTargetedActionManager.performPsychicAttack(this, null, item);
@@ -255,11 +255,11 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {boolean} [options.ignoreToughness=false] - Whether to ignore toughness bonus.
      * @returns {Promise<Actor>}
      */
-    async applyDamage(amount, location = 'body', options = {}) {
+    async applyDamage(amount, location = 'body', options: any = {}) {
         const { ignoreArmour = false, ignoreToughness = false } = options;
 
         // Mark actor as hit this round (for Good armour bonus tracking)
-        await this.setFlag('wh40k-rpg', 'hitThisRound', true);
+        await (this as any).setFlag('wh40k-rpg', 'hitThisRound', true);
 
         // Calculate damage reduction
         let reduction = 0;
@@ -283,7 +283,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
         const newWounds = Math.max(0, this.system.wounds.value - finalDamage);
         const critical = newWounds === 0 ? this.system.wounds.critical + (this.system.wounds.value - newWounds) : this.system.wounds.critical;
 
-        return this.update({
+        return (this as any).update({
             'system.wounds.value': newWounds,
             'system.wounds.critical': critical,
         });
@@ -296,7 +296,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      */
     async healWounds(amount) {
         const newWounds = Math.min(this.system.wounds.max, this.system.wounds.value + amount);
-        return this.update({ 'system.wounds.value': newWounds });
+        return (this as any).update({ 'system.wounds.value': newWounds });
     }
 
     /* -------------------------------------------- */
@@ -327,7 +327,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
         const updates = {};
 
         // Scale characteristics
-        for (const [key, char] of Object.entries(this.system.characteristics)) {
+        for (const [key, char] of Object.entries(this.system.characteristics) as [string, any][]) {
             const newBase = Math.round(char.base * factor);
             updates[`system.characteristics.${key}.base`] = Math.max(1, Math.min(99, newBase));
         }
@@ -346,7 +346,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
             const newArmour = Math.round(this.system.armour.total * factor);
             updates['system.armour.total'] = Math.max(0, newArmour);
         } else {
-            for (const [loc, value] of Object.entries(this.system.armour.locations)) {
+            for (const [loc, value] of Object.entries(this.system.armour.locations) as [string, any][]) {
                 const newArmour = Math.round(value * factor);
                 updates[`system.armour.locations.${loc}`] = Math.max(0, newArmour);
             }
@@ -359,7 +359,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
             updates['system.horde.magnitude.current'] = Math.max(1, newMag);
         }
 
-        return this.update(updates);
+        return (this as any).update(updates);
     }
 
     /**
@@ -370,7 +370,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
     async convertToSingleEnemy() {
         if (!this.isHordeMode) return this;
 
-        return this.update({
+        return (this as any).update({
             'system.horde.enabled': false,
             'system.type': this.system.type === 'swarm' ? 'creature' : 'elite',
         });
@@ -387,8 +387,8 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {boolean} [options.randomize] - Whether to randomize stats slightly.
      * @returns {Promise<Actor>} The created duplicate.
      */
-    async duplicate(options = {}) {
-        const data = this.toObject();
+    async duplicate(options: any = {}) {
+        const data = this.toObject() as any;
 
         // Modify name
         if (options.name) {
@@ -408,7 +408,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
         // Clear the ID to create a new actor
         delete data._id;
 
-        return Actor.create(data);
+        return (Actor as any).create(data);
     }
 
     /**
@@ -424,7 +424,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
 
         // Characteristics
         block += `--- Characteristics ---\n`;
-        for (const [key, char] of Object.entries(s.characteristics)) {
+        for (const [key, char] of Object.entries(s.characteristics) as [string, any][]) {
             const unnat = char.unnatural >= 2 ? ` (×${char.unnatural})` : '';
             block += `${char.short}: ${char.total}${unnat}\n`;
         }
@@ -440,7 +440,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
         // Skills
         if (Object.keys(s.trainedSkills).length > 0) {
             block += `--- Skills ---\n`;
-            for (const [key, skill] of Object.entries(s.trainedSkills)) {
+            for (const [key, skill] of Object.entries(s.trainedSkills) as [string, any][]) {
                 const level = skill.plus20 ? '+20' : skill.plus10 ? '+10' : '';
                 block += `${skill.name || key}${level}: ${s.getSkillTarget(key)}\n`;
             }
@@ -460,8 +460,8 @@ export class WH40KNPCV2 extends WH40KBaseActor {
         }
 
         // Talents & Traits
-        const talents = this.items.filter((i) => i.type === 'talent');
-        const traits = this.items.filter((i) => i.type === 'trait');
+        const talents = (this.items as any).filter((i: any) => i.type === 'talent');
+        const traits = (this.items as any).filter((i: any) => i.type === 'trait');
 
         if (talents.length > 0) {
             block += `--- Talents ---\n`;

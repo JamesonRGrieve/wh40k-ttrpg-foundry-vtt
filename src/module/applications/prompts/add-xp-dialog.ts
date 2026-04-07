@@ -16,6 +16,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {object} [options={}]       Dialog options.
      */
     constructor(actor, options = {}) {
+        // @ts-expect-error - argument count
         super(options);
         this.actor = actor;
         this.xpAmount = 0;

@@ -174,8 +174,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const modifiers = [];
 
         // Collect from all modifier-providing items
-        const modifierItems = this.items.filter(
-            (item) =>
+        const modifierItems = (this.items as any).filter(
+            (item: any) =>
                 item.isTalent ||
                 item.isTrait ||
                 item.isCondition ||
@@ -378,14 +378,14 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     async rollItem(itemId: string): Promise<void> {
         game.wh40k.log('RollItem', itemId);
-        const item = this.items.get(itemId);
+        const item = this.items.get(itemId) as any;
         switch (item.type) {
             case 'weapon':
                 if (!item.system.equipped) {
                     (ui.notifications as any).warn('Actor must have weapon equipped!');
                     return;
                 }
-                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
+                if ((game.settings as any).get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
                     if (item.isRanged) {
                         await this.rollCharacteristic('ballisticSkill', item.name);
                     } else {
@@ -396,7 +396,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 }
                 return;
             case 'psychicPower':
-                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
+                if ((game.settings as any).get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
                     await this.rollCharacteristic('willpower', item.name);
                 } else {
                     await DHTargetedActionManager.performPsychicAttack(this, null, item);
@@ -430,7 +430,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} itemId - The item ID
      */
     async damageItem(itemId: string): Promise<void> {
-        const item = this.items.get(itemId);
+        const item = this.items.get(itemId) as any;
         switch (item.type) {
             case 'weapon':
                 await this.rollWeaponDamage(item);
@@ -492,7 +492,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     async opposedCharacteristicTest(targetActor: Actor | null, characteristic: string): Promise<any> {
         const sourceRoll = await this.rollCharacteristicCheck(characteristic);
-        const targetRoll = targetActor ? await targetActor.rollCharacteristicCheck(characteristic) : null;
+        const targetRoll = targetActor ? await (targetActor as any).rollCharacteristicCheck(characteristic) : null;
         return this.opposedTest(sourceRoll, targetRoll);
     }
 
@@ -547,7 +547,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         if (!Array.isArray(skill?.entries)) return;
         if (Number.isInteger(specialityName)) return skill.entries[specialityName];
 
-        const index = Number.parseInt(specialityName, 10);
+        const index = Number.parseInt(String(specialityName), 10);
         if (!Number.isNaN(index) && skill.entries[index]) return skill.entries[index];
 
         return skill.entries.find((entry) => entry.name?.toLowerCase() === `${specialityName}`.toLowerCase());
@@ -570,13 +570,13 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     hasTalent(talent: string): boolean {
-        return !!this.items.filter((i) => i.type === 'talent').find((t) => t.name === talent);
+        return !!(this.items as any).filter((i: any) => i.type === 'talent').find((t: any) => t.name === talent);
     }
 
     hasTalentFuzzyWords(words: string[]): boolean {
-        return !!this.items
-            .filter((i) => i.type === 'talent')
-            .find((t) => {
+        return !!(this.items as any)
+            .filter((i: any) => i.type === 'talent')
+            .find((t: any) => {
                 for (const word of words) {
                     if (!t.name.includes(word)) return false;
                 }

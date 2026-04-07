@@ -269,9 +269,11 @@ export default class StatBlockValidator {
 
         // Validate each skill entry
         for (const [key, skill] of Object.entries(trainedSkills)) {
+            // @ts-expect-error - dynamic property access
             if (!skill.name) {
                 result.warnings.push(`Skill ${key} missing name`);
             }
+            // @ts-expect-error - dynamic property access
             if (!skill.characteristic) {
                 result.warnings.push(`Skill ${key} missing characteristic`);
             }

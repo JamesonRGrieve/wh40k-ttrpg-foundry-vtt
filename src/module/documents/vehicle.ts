@@ -12,6 +12,7 @@ export class WH40KVehicle extends WH40KBaseActor {
             'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
             'token.name': data.name,
         };
+        // @ts-expect-error - type mismatch
         this.updateSource(initData);
     }
 
@@ -78,6 +79,7 @@ export class WH40KVehicle extends WH40KBaseActor {
 
         game.wh40k.log(`Vehicle ${this.name} is rolling ${item.name} for character ${character.name}`);
         switch (item.type) {
+            // @ts-expect-error - TS2678
             case 'weapon':
                 await DHTargetedActionManager.performWeaponAttack(character, null, item);
                 return;

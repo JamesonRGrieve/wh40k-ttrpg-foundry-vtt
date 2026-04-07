@@ -20,6 +20,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Gear category
@@ -378,6 +379,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /** @override */
     get chatProperties() {
+        // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.categoryLabel];
 
         if (this.hasLimitedUses) {

@@ -16,6 +16,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
      * @param {object} [options={}]     Dialog options.
      */
     constructor(simpleSkillData = {}, options = {}) {
+        // @ts-expect-error - argument count
         super(options);
         this.simpleSkillData = simpleSkillData;
         this.specializations = [];
@@ -97,19 +98,23 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
 
         // Find the skill in the compendium by matching the label
         const index = await skillsCompendium.getIndex();
+        // @ts-expect-error - dynamic property access
         const skillEntries = index.filter((entry) => entry.name.includes('(X)'));
 
         const skillLabel = this.simpleSkillData.skill?.label;
         if (!skillLabel) return;
 
         const skillEntry = skillEntries.find((entry) => {
+            // @ts-expect-error - dynamic property access
             const baseName = entry.name.replace(/\s*\(X\)\s*$/i, '').trim();
             return baseName.toLowerCase() === skillLabel.toLowerCase();
         });
 
         if (skillEntry) {
             const skillDoc = await skillsCompendium.getDocument(skillEntry._id);
+            // @ts-expect-error - system data access
             if (skillDoc?.system?.specializations) {
+                // @ts-expect-error - system data access
                 this.specializations = skillDoc.system.specializations;
                 this.simpleSkillData.specializations = this.specializations;
             }

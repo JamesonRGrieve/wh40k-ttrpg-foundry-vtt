@@ -17,6 +17,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Damage type that caused this

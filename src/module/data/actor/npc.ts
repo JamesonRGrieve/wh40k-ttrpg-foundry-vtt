@@ -136,9 +136,13 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
         if (source.trainedSkills && source.skills) {
             for (const [skillName, skillData] of Object.entries(source.trainedSkills)) {
                 if (source.skills[skillName]) {
+                    // @ts-expect-error - dynamic property access
                     source.skills[skillName].trained = skillData.trained || false;
+                    // @ts-expect-error - dynamic property access
                     source.skills[skillName].plus10 = skillData.plus10 || false;
+                    // @ts-expect-error - dynamic property access
                     source.skills[skillName].plus20 = skillData.plus20 || false;
+                    // @ts-expect-error - dynamic property access
                     source.skills[skillName].bonus = skillData.bonus || 0;
                 }
             }
@@ -272,14 +276,23 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
     async addSimpleWeapon(data = {}) {
         const weapons = foundry.utils.deepClone(this.weapons.simple || []);
         weapons.push({
+            // @ts-expect-error - dynamic property
             name: data.name || 'New Weapon',
+            // @ts-expect-error - dynamic property
             damage: data.damage || '1d10',
+            // @ts-expect-error - dynamic property
             pen: data.pen || 0,
+            // @ts-expect-error - dynamic property
             range: data.range || 'Melee',
+            // @ts-expect-error - dynamic property
             rof: data.rof || 'S/-/-',
+            // @ts-expect-error - dynamic property
             clip: data.clip || 0,
+            // @ts-expect-error - dynamic property
             reload: data.reload || '-',
+            // @ts-expect-error - dynamic property
             special: data.special || '',
+            // @ts-expect-error - dynamic property
             class: data.class || 'melee',
         });
         return this.parent.update({ 'system.weapons.simple': weapons });

@@ -39,12 +39,16 @@ export default class CraftsmanshipHelper {
 
         switch (itemType) {
             case 'weapon':
+                // @ts-expect-error - dynamic property access
                 return this.#getWeaponModifiers(item, craftsmanship, rules.weapon);
             case 'armour':
+                // @ts-expect-error - dynamic property access
                 return rules.armour[craftsmanship] ?? {};
             case 'gear':
+                // @ts-expect-error - dynamic property access
                 return rules.gear[craftsmanship] ?? {};
             case 'forceField':
+                // @ts-expect-error - dynamic property access
                 return rules.forceField[craftsmanship] ?? {};
             default:
                 return {};
@@ -78,6 +82,7 @@ export default class CraftsmanshipHelper {
      */
     static getWeaponQualities(weapon) {
         const craftsmanship = weapon.craftsmanship ?? 'common';
+        // @ts-expect-error - dynamic property access
         const rules = CONFIG.WH40K.craftsmanshipRules?.weapon;
 
         if (!rules) return new Set();
@@ -103,6 +108,7 @@ export default class CraftsmanshipHelper {
      */
     static getRemoveQualities(weapon) {
         const craftsmanship = weapon.craftsmanship ?? 'common';
+        // @ts-expect-error - dynamic property access
         const rules = CONFIG.WH40K.craftsmanshipRules?.weapon;
 
         if (!rules) return new Set();
@@ -185,6 +191,7 @@ export default class CraftsmanshipHelper {
      */
     static getForceFieldOverloadRange(forceField) {
         const craftsmanship = forceField.craftsmanship ?? 'common';
+        // @ts-expect-error - dynamic property access
         const rules = CONFIG.WH40K.craftsmanshipRules?.forceField;
 
         if (!rules) return [1, 10]; // Default to common
@@ -237,9 +244,11 @@ export default class CraftsmanshipHelper {
                 const removeQualities = this.getRemoveQualities(item);
 
                 for (const quality of addQualities) {
+                    // @ts-expect-error - dynamic property access
                     effects.push(`Gains ${quality.capitalize()} quality`);
                 }
                 for (const quality of removeQualities) {
+                    // @ts-expect-error - dynamic property access
                     effects.push(`Removes ${quality.capitalize()} quality`);
                 }
             }

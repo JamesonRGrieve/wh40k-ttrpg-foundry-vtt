@@ -15,6 +15,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Resource requirements

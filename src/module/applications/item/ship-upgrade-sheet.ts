@@ -55,8 +55,11 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
         context.availabilities = this._getAvailabilityChoices();
 
         // Add display helpers
+        // @ts-expect-error - dynamic property access
         context.hasModifiers = context.system.hasModifiers;
+        // @ts-expect-error - dynamic property access
         context.isPowerConsumer = context.system.power > 0;
+        // @ts-expect-error - dynamic property access
         context.isPowerGenerator = context.system.power < 0;
 
         return context;

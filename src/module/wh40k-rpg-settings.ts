@@ -11,6 +11,7 @@ export class WH40KSettings {
     };
 
     static registerSettings() {
+        // @ts-expect-error - argument type
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, {
             name: 'World Version',
             hint: 'Used to handle data migration during system upgrades.',
@@ -20,6 +21,7 @@ export class WH40KSettings {
             default: 0,
             type: Number,
         });
+        // @ts-expect-error - argument type
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.processActiveEffectsDuringCombat, {
             name: 'Active Effect Processing',
             hint: 'Process effects like Fire or Blood Loss on combat turn change.',
@@ -29,6 +31,7 @@ export class WH40KSettings {
             default: true,
             type: Boolean,
         });
+        // @ts-expect-error - argument type
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls, {
             name: 'Simple Attack Rolls',
             hint: 'Changes the default weapon automation behavior to disabled. Attack rolls will trigger a WeaponSkill or BallisticSkill roll as needed.',
@@ -38,6 +41,7 @@ export class WH40KSettings {
             default: false,
             type: Boolean,
         });
+        // @ts-expect-error - argument type
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls, {
             name: 'Simple Psychic Rolls',
             hint: 'Changes the default psychic power automation behavior to disabled. Psychic rolls will trigger a simple WillPower roll.',
@@ -47,6 +51,7 @@ export class WH40KSettings {
             default: false,
             type: Boolean,
         });
+        // @ts-expect-error - argument type
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.combatPresets, {
             name: 'Combat Presets',
             hint: 'Saved NPC combat presets (templates).',
@@ -55,6 +60,7 @@ export class WH40KSettings {
             default: [],
             type: Array,
         });
+        // @ts-expect-error - argument type
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.movementAutomation, {
             name: 'WH40K.SETTINGS.MovementAutomation.Name',
             hint: 'WH40K.SETTINGS.MovementAutomation.Hint',

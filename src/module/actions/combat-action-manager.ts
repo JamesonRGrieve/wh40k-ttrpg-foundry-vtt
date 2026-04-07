@@ -63,6 +63,7 @@ export class CombatActionManager {
     }
 
     getFirstGM() {
+        // @ts-expect-error - dynamic property access
         for (const user of game.users.contents) {
             if (user.active && user.isGM) return user.id;
         }

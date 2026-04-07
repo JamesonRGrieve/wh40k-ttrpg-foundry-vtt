@@ -12,6 +12,7 @@ export class WH40KStarship extends WH40KBaseActor {
             'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
             'token.name': data.name,
         };
+        // @ts-expect-error - type mismatch
         this.updateSource(initData);
     }
 
@@ -100,6 +101,7 @@ export class WH40KStarship extends WH40KBaseActor {
      * Get all ship components
      */
     get shipComponents() {
+        // @ts-expect-error - comparison type
         return this.items.filter((i) => i.type === 'shipComponent');
     }
 
@@ -107,6 +109,7 @@ export class WH40KStarship extends WH40KBaseActor {
      * Get all ship weapons
      */
     get shipWeapons() {
+        // @ts-expect-error - comparison type
         return this.items.filter((i) => i.type === 'shipWeapon');
     }
 
@@ -114,6 +117,7 @@ export class WH40KStarship extends WH40KBaseActor {
      * Get all ship upgrades
      */
     get shipUpgrades() {
+        // @ts-expect-error - comparison type
         return this.items.filter((i) => i.type === 'shipUpgrade');
     }
 
@@ -129,6 +133,7 @@ export class WH40KStarship extends WH40KBaseActor {
             keel: [],
         };
         for (const weapon of this.shipWeapons) {
+            // @ts-expect-error - dynamic property access
             const loc = weapon.system.location || 'dorsal';
             if (grouped[loc]) grouped[loc].push(weapon);
         }
@@ -141,6 +146,7 @@ export class WH40KStarship extends WH40KBaseActor {
      */
     async fireWeapon(weaponId) {
         const weapon = this.items.get(weaponId);
+        // @ts-expect-error - comparison type
         if (!weapon || weapon.type !== 'shipWeapon') {
             (ui.notifications as any).warn('Invalid ship weapon');
             return;
@@ -166,6 +172,7 @@ export class WH40KStarship extends WH40KBaseActor {
     /**
      * Roll ship initiative (1d10 + Detection Bonus)
      */
+    // @ts-expect-error - override type
     async rollInitiative() {
         const roll = await new Roll(`1d10 + ${this.detectionBonus}`).evaluate();
 

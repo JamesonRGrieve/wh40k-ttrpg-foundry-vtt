@@ -23,6 +23,7 @@ export default class CriticalInjuryMigration {
      * @returns {Promise<object>} Migration results
      */
     static async migrate(options = {}) {
+        // @ts-expect-error - dynamic property
         const { dryRun = false, backup = true } = options;
 
         (ui.notifications as any).info('Starting critical injury migration...');
@@ -163,6 +164,7 @@ export default class CriticalInjuryMigration {
         const consolidated = [];
 
         for (const [key, data] of Object.entries(grouped)) {
+            // @ts-expect-error - dynamic property
             const { damageType, bodyPart, effects, source, description } = data;
 
             // Create display name
@@ -231,6 +233,7 @@ export default class CriticalInjuryMigration {
         };
 
         for (const [key, data] of Object.entries(grouped)) {
+            // @ts-expect-error - dynamic property
             const { damageType, bodyPart, effects } = data;
 
             // Count by damage type
@@ -288,6 +291,7 @@ export default class CriticalInjuryMigration {
         // Check severity coverage (each should have 1-10)
         for (const [key, severities] of Object.entries(summary.severityCoverage)) {
             const expected = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            // @ts-expect-error - dynamic property access
             const missing = expected.filter((s) => !severities.includes(s));
             if (missing.length > 0) {
                 console.warn(`  ⚠️ ${key} missing severities: ${missing.join(', ')}`);

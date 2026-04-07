@@ -728,6 +728,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
             const progress = Math.min(elapsed / duration, 1);
             const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
             const current = Math.round(from + diff * eased);
+            // @ts-expect-error - type assignment
             el.textContent = current;
             if (progress < 1) requestAnimationFrame(step);
         };
@@ -743,6 +744,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
      */
     _playTickSound(): void {
         const src = 'sounds/dice.wav';
+        // @ts-expect-error - type assignment
         foundry.audio.AudioHelper.play({ src, volume: 0.15, autoplay: true, loop: false }, false);
     }
 

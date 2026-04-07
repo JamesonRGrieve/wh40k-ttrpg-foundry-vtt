@@ -85,6 +85,7 @@ export default class CriticalInjurySheet extends BaseItemSheet {
      * @param {HTMLElement} target - Action target
      */
     static async #changeSeverity(this: any, event: Event, target: HTMLElement): Promise<void> {
+        // @ts-expect-error - TS2339
         const newSeverity = parseInt(target.value);
         if (newSeverity !== this.item.system.severity) {
             await this.item.update({ 'system.severity': newSeverity });

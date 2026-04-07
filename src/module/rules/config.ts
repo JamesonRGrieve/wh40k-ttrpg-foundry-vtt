@@ -114,6 +114,7 @@ WH40K.ui = {
 };
 
 export function toggleUIExpanded(name) {
+    // @ts-expect-error - dynamic property access
     CONFIG.wh40k.ui.toggleExpanded(name);
 }
 

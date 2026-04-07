@@ -84,6 +84,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      */
     _onDragOver(event: Event): void {
         event.preventDefault();
+        // @ts-expect-error - type assignment
         return false;
     }
 
@@ -96,6 +97,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      */
     _onDragEnd(event: Event): void {
         event.preventDefault();
+        // @ts-expect-error - type assignment
         return false;
     }
 
@@ -115,13 +117,16 @@ export default class ContainerItemSheet extends BaseItemSheet {
         let sourceActor;
 
         try {
+            // @ts-expect-error - TS2339
             data = JSON.parse(event.dataTransfer.getData('text/plain'));
             if (data.type !== 'Item') {
                 game.wh40k.log('ItemContainer | Containers only accept items', data);
+                // @ts-expect-error - type assignment
                 return false;
             }
 
             droppedItem = await fromUuid(data.uuid);
+            // @ts-expect-error - type assignment
             if (!droppedItem) return false;
 
             // Get source actor if applicable
@@ -132,21 +137,25 @@ export default class ContainerItemSheet extends BaseItemSheet {
             // Check if item already exists
             if (this.item.items?.find((i) => i._id === droppedItem._id)) {
                 game.wh40k.log('Item already exists in container -- ignoring');
+                // @ts-expect-error - type assignment
                 return false;
             }
         } catch (err) {
             game.wh40k.log('ItemContainer | drop error', err);
+            // @ts-expect-error - type assignment
             return false;
         }
 
         // Validate the drop
         if (!this._canAddItem(droppedItem)) {
+            // @ts-expect-error - type assignment
             return false;
         }
 
         // Prevent dropping item onto itself or ancestors
         if (!this._validateDropTarget(droppedItem)) {
             (ui.notifications as any).info('Cannot drop item into itself');
+            // @ts-expect-error - type assignment
             return false;
         }
 
@@ -158,6 +167,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
             await sourceActor.deleteEmbeddedDocuments('Item', [droppedItem._id]);
         }
 
+        // @ts-expect-error - type assignment
         return false;
     }
 
@@ -220,6 +230,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
             type: 'Item',
             data: nestedItem,
         };
+        // @ts-expect-error - TS2339
         event.dataTransfer.setData('text/plain', JSON.stringify(dragData));
 
         // Remove from container

@@ -22,6 +22,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Cybernetic type
@@ -93,6 +94,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
     get locationsLabel() {
         if (!this.locations.size) return '-';
         return Array.from(this.locations)
+            // @ts-expect-error - dynamic property access
             .map((l) => game.i18n.localize(`WH40K.BodyLocation.${l.capitalize()}`))
             .join(', ');
     }
@@ -103,10 +105,12 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @override */
     get chatProperties() {
+        // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.typeLabel, `Location: ${this.locationsLabel}`];
 
         if (this.hasArmourPoints) {
             const apValues = Object.entries(this.armourPoints)
+                // @ts-expect-error - operator type
                 .filter(([_, v]) => v > 0)
                 .map(([k, v]) => `${k}: ${v}`);
             if (apValues.length) {

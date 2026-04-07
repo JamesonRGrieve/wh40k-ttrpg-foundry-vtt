@@ -18,6 +18,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Ritual type
@@ -96,6 +97,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @override */
     get chatProperties() {
+        // @ts-expect-error - TS2339
         const props = [this.typeLabel, `Test: ${this.testLabel}`, ...ActivationTemplate.prototype.chatProperties.call(this)];
 
         return props;

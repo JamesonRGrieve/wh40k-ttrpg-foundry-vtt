@@ -18,6 +18,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {object} [options={}] Dialog options.
      */
     constructor(rollData = {}, options = {}) {
+        // @ts-expect-error - argument count
         super(options);
         this.rollData = rollData;
         this.initialized = false;

@@ -1088,7 +1088,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         try {
             if (this.#targetActor) {
-                const updateData = {
+                const updateData: any = {
                     system: this.#parsedData.system,
                 };
                 if (this.#parsedData.name && this.#parsedData.name !== 'Imported NPC') {

@@ -16,6 +16,7 @@ export default function DragDropMixin<T extends new (...args: any[]) => any>(Bas
     return class DragDropApplication extends Base {
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+            // @ts-expect-error - extended property
             dragDrop: [
                 { dragSelector: '[data-item-id] .item-row', dropSelector: null },
                 { dragSelector: '[data-effect-id] .item-row', dropSelector: null },
@@ -49,6 +50,7 @@ export default function DragDropMixin<T extends new (...args: any[]) => any>(Bas
          */
         _defaultDropBehavior(event: DragEvent, data: Record<string, unknown>): string {
             if (!data?.uuid) return 'copy';
+            // @ts-expect-error - argument type
             const d = foundry.utils.parseUuid(data.uuid);
             const t = foundry.utils.parseUuid(this.document.uuid);
             const base = d.embedded?.length ? 'document' : 'primary';
@@ -65,10 +67,12 @@ export default function DragDropMixin<T extends new (...args: any[]) => any>(Bas
          */
         _dropBehavior(event: DragEvent): string {
             const data = TextEditor.getDragEventData(event);
+            // @ts-expect-error - type mismatch
             const allowed = this._allowedDropBehaviors(event, data);
             if (event.shiftKey && allowed.has('copy')) return 'copy';
             if (event.altKey && allowed.has('link')) return 'link';
             if (event.ctrlKey && allowed.has('none')) return 'none';
+            // @ts-expect-error - type mismatch
             const defaultBehavior = this._defaultDropBehavior(event, data);
             return allowed.has(defaultBehavior) ? defaultBehavior : allowed.first();
         }

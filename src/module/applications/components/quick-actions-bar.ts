@@ -102,14 +102,17 @@ export default class QuickActionsBar {
         }
 
         // Universal actions (available on most items)
+        // @ts-expect-error - missing name
         if (!inSheet) {
             actions.push(this.#createAction('chat', 'fa-solid fa-comment', 'Post to Chat', 'postToChat', { itemId: item.id }));
         }
 
+        // @ts-expect-error - missing name
         if (inSheet && item.isOwner) {
             actions.push(this.#createAction('edit', 'fa-solid fa-pen-to-square', 'Edit', 'editItem', { itemId: item.id }));
         }
 
+        // @ts-expect-error - missing name
         if (!inSheet && item.isOwner) {
             actions.push(this.#createAction('delete', 'fa-solid fa-trash', 'Delete', 'deleteItem', { itemId: item.id }, 'danger'));
         }

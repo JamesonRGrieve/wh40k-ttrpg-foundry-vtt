@@ -226,7 +226,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {FormDataExtended} formData
      */
     static async #onSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object);
+        const data: any = foundry.utils.expandObject(formData.object);
 
         // Update state from form
         this.#state.namePattern = data.namePattern || 'NPC {n}';
@@ -307,7 +307,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 systemData.wounds.value = systemData.wounds.max;
             }
 
-            const actorData = {
+            const actorData: any = {
                 name,
                 type: 'npcV2',
                 img: 'icons/svg/mystery-man.svg',

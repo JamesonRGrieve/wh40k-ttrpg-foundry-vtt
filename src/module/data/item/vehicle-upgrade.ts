@@ -15,6 +15,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Upgrade type (Standard, Integral, Custom)
@@ -101,6 +102,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
                     key,
                     label,
                     value,
+                    // @ts-expect-error - operator type
                     formatted: `${value >= 0 ? '+' : ''}${value}`,
                 });
             }

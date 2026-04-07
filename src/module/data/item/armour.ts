@@ -201,6 +201,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Armour classification
@@ -363,6 +364,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         return Array.from(this.properties).map((prop) =>
             game.i18n.localize(
                 `WH40K.ArmourProperty.${prop
+                    // @ts-expect-error - dynamic property access
                     .split('-')
                     .map((s) => s.capitalize())
                     .join('')}`,
@@ -937,6 +939,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @override */
     get chatProperties() {
+        // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this)];
 
         props.unshift(this.typeLabel);

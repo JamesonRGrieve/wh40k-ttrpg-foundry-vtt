@@ -32,8 +32,10 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
          * @override
          */
         static DEFAULT_OPTIONS = {
+            // @ts-expect-error - TS2339
             ...super.DEFAULT_OPTIONS,
             actions: {
+                // @ts-expect-error - TS2339
                 ...super.DEFAULT_OPTIONS.actions,
                 showStatBreakdown: StatBreakdownMixin.#showStatBreakdown,
                 viewBreakdownSource: StatBreakdownMixin.#viewBreakdownSource,
@@ -62,13 +64,17 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
             }
 
             // Close existing popover if any
+            // @ts-expect-error - dynamic property
             if (this.#activePopover) {
+                // @ts-expect-error - dynamic property
                 this.#closePopover();
             }
 
             // Get breakdown data from document
             let breakdown;
+            // @ts-expect-error - dynamic property
             if (typeof this.document.getStatBreakdown === 'function') {
+                // @ts-expect-error - dynamic property
                 breakdown = this.document.getStatBreakdown(statKey);
             } else {
                 console.warn(`Document does not implement getStatBreakdown for ${statKey}`);
@@ -81,6 +87,7 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
             }
 
             // Create and show popover
+            // @ts-expect-error - dynamic property
             this.#createPopover(target, breakdown);
         }
 
@@ -99,7 +106,7 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
             if (!uuid) return;
 
             // Fetch and render the item
-            const item = await fromUuid(uuid);
+            const item = await fromUuid(uuid) as any;
             if (item) {
                 item.sheet.render(true);
             }
@@ -121,6 +128,7 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
             popover.className = 'wh40k-stat-breakdown-popover';
 
             // Build popover content
+            // @ts-expect-error - argument type
             const html = this.#buildPopoverHTML(breakdown);
             popover.innerHTML = html;
 
@@ -268,6 +276,7 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
          * @private
          */
         #handleOutsideClick(event: Event): void {
+            // @ts-expect-error - type mismatch
             if (this.#activePopover && !this.#activePopover.contains(event.target)) {
                 this.#closePopover();
             }

@@ -15,6 +15,7 @@ export class WH40KItemContainer extends Item {
     async update(data: Record<string, unknown> = {}, options: Record<string, unknown> = {}): Promise<any> {
         data._id = this.id;
         if (this.isNestedItem()) {
+            // @ts-expect-error - property access
             await this.parent.updateNestedDocuments(data);
         } else {
             return super.update(data, options);
@@ -38,10 +39,12 @@ export class WH40KItemContainer extends Item {
     async setNested(data: Record<string, unknown> | Record<string, unknown>[]): Promise<any> {
         // Make array if not
         if (!Array.isArray(data)) data = [data];
+        // @ts-expect-error - argument type
         return await this.setFlag(SYSTEM_ID, DH_CONTAINER_ID, data);
     }
 
     getNested(): any[] {
+        // @ts-expect-error - argument type
         return this.getFlag(SYSTEM_ID, DH_CONTAINER_ID) ?? [];
     }
 
@@ -54,7 +57,7 @@ export class WH40KItemContainer extends Item {
         game.wh40k.log(`Convert ${this.name} Nested`, this.hasNested());
         this.items = new foundry.utils.Collection();
         for (const nestedData of this.getNested()) {
-            const item = new CONFIG.Item.documentClass(nestedData, { parent: this });
+            const item = new (CONFIG as any).Item.documentClass(nestedData, { parent: this });
             await this.items.set(nestedData._id, item);
         }
         game.wh40k.log(`Item ${this.name} items:`, this.items);
@@ -88,6 +91,7 @@ export class WH40KItemContainer extends Item {
     hasItemByType(item: string, type: string): boolean {
         game.wh40k.log('Check for Has Nested Item', item);
         if (!this.system.container) return false;
+        // @ts-expect-error - system data access
         return !!this.items.find((i) => i.name === item && i.type === type && (i.system.equipped || i.system.enabled));
     }
 
@@ -110,7 +114,7 @@ export class WH40KItemContainer extends Item {
             for (const itemData of data) {
                 let clone = JSON.parse(JSON.stringify(itemData));
                 clone._id = foundry.utils.randomID();
-                clone = new CONFIG.Item.documentClass(clone, { parent: this }).toJSON();
+                clone = new (CONFIG as any).Item.documentClass(clone, { parent: this }).toJSON();
                 currentItems.push(clone);
             }
 
@@ -164,7 +168,7 @@ export class WH40KItemContainer extends Item {
         this.items = new foundry.utils.Collection();
         containedItems.forEach((idata) => {
             if (!oldItems?.has(idata._id)) {
-                const theItem = new CONFIG.Item.documentClass(idata, { parent: this });
+                const theItem = new (CONFIG as any).Item.documentClass(idata, { parent: this });
                 this.items.set(idata._id, theItem);
             } else {
                 // Reuse existing item instance and update its data
@@ -173,6 +177,7 @@ export class WH40KItemContainer extends Item {
                 currentItem.prepareData();
                 this.items.set(idata._id, currentItem);
                 if (this.sheet) {
+                    // @ts-expect-error - extended property
                     currentItem.render(false, { action: 'update', data: currentItem.system });
                 }
             }

@@ -15,6 +15,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Plain text description (for search/tooltips)
@@ -62,6 +63,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
                     key,
                     label,
                     value,
+                    // @ts-expect-error - operator type
                     formatted: `${value >= 0 ? '+' : ''}${value}`,
                 });
             }

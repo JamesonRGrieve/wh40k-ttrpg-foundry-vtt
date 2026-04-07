@@ -322,7 +322,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {FormDataExtended} formData - The form data.
      */
     static async #onSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object);
+        const data: any = foundry.utils.expandObject(formData.object);
 
         // Update state from form
         this.#state.name = data.name || 'New NPC';

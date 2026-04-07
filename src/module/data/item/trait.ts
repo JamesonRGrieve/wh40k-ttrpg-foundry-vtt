@@ -18,6 +18,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Category/type of trait
@@ -162,6 +163,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         };
 
         // Apply roll mode
+        // @ts-expect-error - argument type
         ChatMessage.applyRollMode(chatData, options.rollMode || game.settings.get('core', 'rollMode'));
 
         // Create and return chat message

@@ -95,6 +95,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
         // Prepare added properties array
         context.addedPropertiesArray = Array.from(this.item.system.addedProperties).map((key) => {
+            // @ts-expect-error - index type
             const config = context.armourProperties[key];
             return {
                 key,
@@ -105,6 +106,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
         // Prepare removed properties array
         context.removedPropertiesArray = Array.from(this.item.system.removedProperties).map((key) => {
+            // @ts-expect-error - index type
             const config = context.armourProperties[key];
             return {
                 key,
@@ -200,6 +202,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
         const current = foundry.utils.getProperty(this.item.system, field) || 0;
 
         await this.item.update({
+            // @ts-expect-error - operator type
             [`system.${field}`]: current + delta,
         });
     }

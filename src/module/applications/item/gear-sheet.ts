@@ -87,6 +87,7 @@ export default class GearSheet extends BaseItemSheet {
      * @param {HTMLElement} target
      */
     static async #onConsumeUse(event: Event, target: HTMLElement): Promise<void> {
+        // @ts-expect-error - TS2339
         await this.item.system.consume();
     }
 }

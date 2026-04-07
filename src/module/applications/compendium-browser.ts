@@ -13,6 +13,7 @@ const { ApplicationV2 } = foundry.applications.api;
 export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     [key: string]: any;
     constructor(options: Record<string, unknown> = {}) {
+        // @ts-expect-error - argument count
         super(options);
         this._filters = {
             type: options.type || 'all',

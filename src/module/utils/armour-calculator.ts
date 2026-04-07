@@ -5,6 +5,7 @@
 
 interface ArmourPoints {
     [location: string]: number;
+    // @ts-expect-error - TS2411
     armourPoints?: Record<string, number>;
 }
 

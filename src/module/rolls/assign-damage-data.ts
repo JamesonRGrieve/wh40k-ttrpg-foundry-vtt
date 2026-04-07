@@ -34,7 +34,9 @@ export class AssignDamageData {
         if (location) {
             for (const [name, locationArmour] of Object.entries(this.actor.system.armour)) {
                 if (location.replace(/\s/g, '').toUpperCase() === name.toUpperCase()) {
+                    // @ts-expect-error - dynamic property access
                     this.armour = locationArmour.value;
+                    // @ts-expect-error - dynamic property access
                     this.tb = locationArmour.toughnessBonus;
                 }
             }
@@ -118,9 +120,12 @@ export class AssignDamageData {
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,
         };
-        if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
+        if (['gmroll', 'blindroll'].includes(chatData.rollMode as any)) {
+            // @ts-expect-error - dynamic property
             chatData.whisper = ChatMessage.getWhisperRecipients('GM');
+        // @ts-expect-error - comparison type
         } else if (chatData.rollMode === 'selfroll') {
+            // @ts-expect-error - dynamic property
             chatData.whisper = [game.user];
         }
         await (ChatMessage as any).create(chatData);

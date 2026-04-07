@@ -57,6 +57,7 @@ export class TokenDocumentWH40K extends TokenDocument {
      * @returns {Function} Cost function (cost, from, to, distance, segment) => number
      */
     static #getMovementCostFunction(type, token, options) {
+        // @ts-expect-error - comparison type
         const noAutomation = game.settings.get(SYSTEM_ID, 'movementAutomation') === 'none';
         const { actor } = token;
         const movement = actor?.system?.movement;

@@ -146,6 +146,7 @@ export default class BasicRollWH40K extends Roll {
 
         // Apply roll mode visibility
         const rollMode = config.rollMode || game.settings.get('core', 'rollMode');
+        // @ts-expect-error - argument type
         ChatMessage.applyRollMode(chatData, rollMode);
 
         // Create the chat message
@@ -237,6 +238,7 @@ export default class BasicRollWH40K extends Roll {
      * @returns {Promise<ChatMessage|null>}
      */
     static async roll(config = {}) {
+        // @ts-expect-error - dynamic property
         config.configure = false;
         return this.build(config);
     }
@@ -263,6 +265,7 @@ export default class BasicRollWH40K extends Roll {
      */
     toJSON() {
         const json = super.toJSON();
+        // @ts-expect-error - dynamic property
         json.configuration = this.configuration;
         return json;
     }
@@ -280,6 +283,7 @@ export default class BasicRollWH40K extends Roll {
 
             // Restore our custom configuration
             if (data.configuration) {
+                // @ts-expect-error - TS2339
                 roll.configuration = data.configuration;
             }
 

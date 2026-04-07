@@ -15,6 +15,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
      * @param {object} [options={}]                  Dialog options.
      */
     constructor(psychicActionData = {}, options = {}) {
+        // @ts-expect-error - dynamic property
         super(psychicActionData.rollData, options);
         this.psychicAttackData = psychicActionData;
     }
@@ -85,7 +86,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
      * @protected
      */
     async _onPowerSelectChange(event: Event): Promise<void> {
-        this.rollData.selectPower(event.target.name);
+        this.rollData.selectPower((event.target as HTMLInputElement).name);
         await this.rollData.update();
         this.render();
     }
@@ -125,6 +126,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
      * @param {HTMLElement} target  Element that triggered the action.
      */
     static async #onSelectPower(this: any, event: Event, target: HTMLElement): Promise<void> {
+        // @ts-expect-error - TS2339
         this.rollData.selectPower(target.name);
         await this.rollData.update();
         this.render();

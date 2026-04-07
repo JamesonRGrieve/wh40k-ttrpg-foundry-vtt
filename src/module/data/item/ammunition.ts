@@ -20,6 +20,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
+            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // What weapon types can use this ammo
@@ -87,6 +88,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         if (!this.weaponTypes || !this.weaponTypes.size) return game.i18n.localize('WH40K.Ammunition.AllWeapons');
         return Array.from(this.weaponTypes)
             .map((t) => {
+                // @ts-expect-error - index type
                 const label = CONFIG.WH40K?.weaponTypes?.[t]?.label;
                 return label ? game.i18n.localize(label) : t;
             })
@@ -112,6 +114,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @override */
     get chatProperties() {
+        // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), `For: ${this.weaponTypesLabel}`];
 
         const mods = this.modifiers;

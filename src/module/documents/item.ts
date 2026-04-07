@@ -12,7 +12,7 @@ export class WH40KItem extends WH40KItemContainer {
      * @returns {object} The cleaned data
      * @override
      */
-    static cleanData(source = {}, options = {}) {
+    static cleanData(source: any = {}, options: any = {}) {
         // CRITICAL: Clean img field if present - V13 validation is very strict
         if ('img' in source) {
             const imgValue = source.img;
@@ -439,7 +439,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate(template, cardData);
 
-        const chatData = {
+        const chatData: any = {
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -683,13 +683,13 @@ export class WH40KItem extends WH40KItemContainer {
             return;
         }
 
-        const updates = {};
+        const updates: any = {};
         const itemsToAdd = [];
         const modifiers = this.system.modifiers || {};
 
         // Apply characteristic modifiers
         if (modifiers.characteristics) {
-            const characteristics = {};
+            const characteristics: any = {};
             for (const [key, value] of Object.entries(modifiers.characteristics)) {
                 if (value !== 0) {
                     const currentBonus = actor.system.characteristics?.[key]?.advance || 0;

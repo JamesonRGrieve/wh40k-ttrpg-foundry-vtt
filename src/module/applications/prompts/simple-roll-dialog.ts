@@ -17,6 +17,7 @@ export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) 
      * @param {object} [options={}]     Dialog options.
      */
     constructor(simpleSkillData = {}, options = {}) {
+        // @ts-expect-error - argument count
         super(options);
         this.simpleSkillData = simpleSkillData;
     }

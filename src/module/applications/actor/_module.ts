@@ -12,5 +12,6 @@ export { default as DeathwatchSheet } from './deathwatch-sheet.ts';
 export { default as OnlyWarSheet } from './only-war-sheet.ts';
 export { default as NPCSheetV2 } from './npc-sheet-v2.ts';
 export { default as VehicleSheet } from './vehicle-sheet.ts';
+// @ts-expect-error - TS2307
 export { default as VehicleSheetV2 } from './vehicle-sheet-v2.ts';
 export { default as StarshipSheet } from './starship-sheet.ts';

@@ -2,8 +2,11 @@ function getTokenActor(actorId) {
     // Fetch the actor from the current users token or the actor collection.
     const speaker = (ChatMessage as any).getSpeaker();
     let actor;
+    // @ts-expect-error - dynamic property access
     if (actorId) actor = game.actors.get(actorId);
+    // @ts-expect-error - dynamic property access
     if (!actor && speaker.token) actor = game.actors.tokens[speaker.token];
+    // @ts-expect-error - dynamic property access
     if (!actor) actor = game.actors.get(speaker.actor);
     if (!actor) return (ui.notifications as any).warn(`Cannot find controlled Actor. Is an Actor selector and do you have permissions?`);
     return actor;
@@ -31,6 +34,7 @@ function checkMacroCanCreate() {
 }
 
 function checkExistingMacro(name, command) {
+    // @ts-expect-error - dynamic property access
     const existingMacro = game.macros.find((m) => m.name === name && m.command === command);
     if (existingMacro) {
         (ui.notifications as any).warn(`Macro already exists`);
@@ -49,10 +53,13 @@ export async function createItemMacro(data, slot) {
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
+        // @ts-expect-error - type assignment
         name: macroName,
         type: 'script',
         img: data.data.img,
+        // @ts-expect-error - type assignment
         command: command,
+        // @ts-expect-error - extended property
         flags: { 'dh.itemMacro': true },
     });
     if (macro) await game.user.assignHotbarMacro(macro, slot);
@@ -84,10 +91,13 @@ export async function createSkillMacro(data, slot) {
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
+        // @ts-expect-error - type assignment
         name: macroName,
         img: 'systems/wh40k-rpg/icons/talents/red/r_36.png',
         type: 'script',
+        // @ts-expect-error - type assignment
         command: command,
+        // @ts-expect-error - extended property
         flags: { 'dh.skillMacro': true },
     });
     if (macro) await game.user.assignHotbarMacro(macro, slot);
@@ -114,10 +124,13 @@ export async function createCharacteristicMacro(data, slot) {
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
+        // @ts-expect-error - type assignment
         name: macroName,
         img: 'systems/wh40k-rpg/icons/talents/violet/p_05.png',
         type: 'script',
+        // @ts-expect-error - type assignment
         command: command,
+        // @ts-expect-error - extended property
         flags: { 'dh.characteristicMacro': true },
     });
     if (macro) await game.user.assignHotbarMacro(macro, slot);

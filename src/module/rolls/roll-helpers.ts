@@ -51,11 +51,15 @@ export async function sendActionDataToChat(actionData) {
         content: html,
     };
     if (actionData.rollData.roll && !actionData.rollData.isManualRoll) {
+        // @ts-expect-error - dynamic property
         chatData.rolls = [actionData.rollData.roll];
     }
-    if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
+    if (['gmroll', 'blindroll'].includes(chatData.rollMode as any)) {
+        // @ts-expect-error - dynamic property
         chatData.whisper = ChatMessage.getWhisperRecipients('GM');
+    // @ts-expect-error - comparison type
     } else if (chatData.rollMode === 'selfroll') {
+        // @ts-expect-error - dynamic property
         chatData.whisper = [game.user];
     }
     await (ChatMessage as any).create(chatData);
