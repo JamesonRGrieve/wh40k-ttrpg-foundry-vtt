@@ -10,7 +10,7 @@ import * as dice from './dice/_module.mjs';
 // Import V2 Actor Sheets (ApplicationV2-based)
 import CharacterSheetSidebar from './applications/actor/character-sheet-sidebar.mjs';
 import DarkHeresy1Sheet from './applications/actor/dark-heresy-1-sheet.mjs';
-import DarkHeresy2Sheet from './applications/actor/dark-heresy-sheet.mjs';
+import DarkHeresy2Sheet from './applications/actor/dark-heresy-2-sheet.mjs';
 import RogueTraderSheet from './applications/actor/rogue-trader-sheet.mjs';
 import BlackCrusadeSheet from './applications/actor/black-crusade-sheet.mjs';
 import OnlyWarSheet from './applications/actor/only-war-sheet.mjs';

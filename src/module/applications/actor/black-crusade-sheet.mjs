@@ -17,7 +17,7 @@ export default class BlackCrusadeSheet extends CharacterSheet {
     static PARTS = {
         ...super.PARTS,
         header: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/header-bc.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/header-bc.hbs',
         },
     };
 }

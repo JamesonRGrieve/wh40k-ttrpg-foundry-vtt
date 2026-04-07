@@ -132,7 +132,7 @@ export default class CharacterSheet extends BaseActorSheet {
             // Misc actions
             'bonusVocalize': CharacterSheet.#bonusVocalize,
         },
-        classes: ['wh40k-rpg', 'sheet', 'actor', 'acolyte'],
+        classes: ['wh40k-rpg', 'sheet', 'actor', 'player'],
         position: {
             width: 1050,
             height: 800,
@@ -151,43 +151,43 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static PARTS = {
         header: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/header.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/header.hbs',
         },
         tabs: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tabs.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
         },
         overview: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-overview.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-overview.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         combat: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-combat.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-combat.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         skills: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-skills.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-skills.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         talents: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-talents.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-talents.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         equipment: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-equipment.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-equipment.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         powers: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-powers.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-powers.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         biography: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-biography.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-biography.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },

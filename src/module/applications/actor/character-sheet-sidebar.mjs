@@ -6,14 +6,14 @@
 import CharacterSheet from './character-sheet.mjs';
 
 /**
- * Acolyte sheet variant with sidebar navigation instead of horizontal tabs.
+ * Player sheet variant with sidebar navigation instead of horizontal tabs.
  * Extends the base CharacterSheet and overrides layout-specific options.
  */
 export default class CharacterSheetSidebar extends CharacterSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
         ...CharacterSheet.DEFAULT_OPTIONS,
-        classes: ['acolyte', 'sidebar-nav'],
+        classes: ['player', 'sidebar-nav'],
         // Tab configuration for sidebar layout
         tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
     };
@@ -27,49 +27,49 @@ export default class CharacterSheetSidebar extends CharacterSheet {
      */
     static PARTS = {
         header: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/header.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/header.hbs',
         },
         tabs: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tabs-sidebar.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tabs-sidebar.hbs',
             container: { classes: ['wh40k-main-layout'], id: 'main' },
         },
         overview: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-overview.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-overview.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
             scrollable: [''],
         },
         combat: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-combat.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-combat.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
             scrollable: [''],
         },
         skills: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-skills.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-skills.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
             scrollable: [''],
         },
         talents: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-talents.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-talents.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
             scrollable: [''],
         },
         equipment: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-equipment.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-equipment.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
             scrollable: [''],
         },
         powers: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-powers.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-powers.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
             scrollable: [''],
         },
         dynasty: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-dynasty.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-dynasty.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
             scrollable: [''],
         },
         biography: {
-            template: 'systems/wh40k-rpg/templates/actor/acolyte/tab-biography.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-biography.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
             scrollable: [''],
         },
