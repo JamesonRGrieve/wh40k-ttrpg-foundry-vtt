@@ -142,8 +142,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @private
          */
         async _onEnhancedDragStart(event: DragEvent): Promise<void> {
-            const element = event.currentTarget;
-            const itemId = element.dataset.itemId;
+            const element = event.currentTarget as HTMLElement;
+            const itemId = (element as any).dataset.itemId;
             const item = this.document.items.get(itemId);
 
             if (!item) return;
@@ -156,7 +156,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                 id: itemId,
                 item: item,
                 element: element,
-                sourceList: element.closest('.inventory-list, .item-list'),
+                sourceList: (element as any).closest('.inventory-list, .item-list'),
             };
 
             // Check for split modifier (Ctrl key)
@@ -180,7 +180,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             event.dataTransfer.setData('text/plain', JSON.stringify(item.toDragData()));
 
             // Visual feedback
-            element.classList.add('dragging');
+            (element as any).classList.add('dragging');
             this.element.classList.add('drag-active');
 
             // Show valid drop zones
@@ -251,7 +251,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
         async _showSplitDialog(item: any): Promise<{ quantity: number } | null> {
             const quantity = item.system.quantity || 1;
 
-            return foundry.applications.api.DialogV2.prompt({
+            return (foundry.applications.api as any).DialogV2.prompt({
                 window: { title: `Split ${item.name}` },
                 content: `
                     <form class="wh40k-split-dialog">
@@ -314,7 +314,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             event.preventDefault();
             event.stopPropagation();
 
-            const zone = event.currentTarget;
+            const zone = event.currentTarget as HTMLElement;
 
             // Check if this is explicitly invalid
             if (zone.classList.contains('drop-invalid')) {
@@ -335,7 +335,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @private
          */
         _onEnhancedDragLeave(event: DragEvent): void {
-            const zone = event.currentTarget;
+            const zone = event.currentTarget as HTMLElement;
             zone.classList.remove('drop-hover');
             zone.classList.remove('wh40k-drag-over');
         }
@@ -354,7 +354,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             if (!this._draggedItem) return;
 
             // Find the item row being hovered over
-            const targetRow = event.target.closest('[data-item-id]');
+            const targetRow = (event.target as HTMLElement).closest('[data-item-id]');
             if (!targetRow || targetRow === this._draggedItem.element) return;
 
             // Determine if we should insert before or after
@@ -386,7 +386,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             event.preventDefault();
             event.stopPropagation();
 
-            const favBar = event.currentTarget;
+            const favBar = event.currentTarget as HTMLElement;
             favBar.classList.add('drop-hover');
             event.dataTransfer.dropEffect = 'copy';
         }
@@ -404,19 +404,19 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             event.preventDefault();
             event.stopPropagation();
 
-            const zone = event.currentTarget;
+            const zone = event.currentTarget as HTMLElement;
             zone.classList.remove('drop-hover');
 
             // Parse drag data
-            const data = TextEditor.getDragEventData(event);
+            const data = TextEditor.getDragEventData(event) as any;
             if (!data?.uuid) return;
 
-            const item = await fromUuid(data.uuid);
+            const item = await fromUuid(data.uuid) as any;
             if (!item) return;
 
             // Get zone type and slot
-            const zoneType = zone.dataset.dropZone;
-            const slot = zone.dataset.slot;
+            const zoneType = (zone as any).dataset.dropZone;
+            const slot = (zone as any).dataset.slot;
 
             // Handle ship/personal storage zone drops
             if (zoneType === 'personal') {
@@ -594,7 +594,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             if (!this._draggedItem) return;
 
-            const targetRow = event.target.closest('[data-item-id]');
+            const targetRow = (event.target as HTMLElement).closest('[data-item-id]') as HTMLElement;
             if (!targetRow) return;
 
             const targetId = targetRow.dataset.itemId;
@@ -619,11 +619,11 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          */
         async _reorderItems(sourceId: string, targetId: string, clientY: number): Promise<void> {
             // Get all items in order
-            const items = Array.from(this.document.items);
+            const items = Array.from(this.document.items) as any[];
 
             // Find source and target
-            const sourceIndex = items.findIndex((i) => i.id === sourceId);
-            const targetIndex = items.findIndex((i) => i.id === targetId);
+            const sourceIndex = items.findIndex((i: any) => i.id === sourceId);
+            const targetIndex = items.findIndex((i: any) => i.id === targetId);
 
             if (sourceIndex === -1 || targetIndex === -1) return;
 
@@ -653,14 +653,14 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             event.preventDefault();
             event.stopPropagation();
 
-            const favBar = event.currentTarget;
+            const favBar = event.currentTarget as HTMLElement;
             favBar.classList.remove('drop-hover');
 
             // Parse drag data
-            const data = TextEditor.getDragEventData(event);
+            const data = TextEditor.getDragEventData(event) as any;
             if (!data?.uuid) return;
 
-            const item = await fromUuid(data.uuid);
+            const item = await fromUuid(data.uuid) as any;
             if (!item || item.actor?.id !== this.document.id) return;
 
             // Add to favorites

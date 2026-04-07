@@ -236,7 +236,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const nameInput = form.querySelector('[name="name"]');
         if (nameInput) {
             nameInput.addEventListener('input', () => {
-                this.#state.name = nameInput.value || 'New NPC';
+                this.#state.name = (nameInput as any).value || 'New NPC';
             });
         }
 
@@ -245,8 +245,8 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const threatValue = form.querySelector('.threat-value');
         if (threatSlider) {
             threatSlider.addEventListener('input', () => {
-                this.#state.threatLevel = parseInt(threatSlider.value, 10);
-                if (threatValue) threatValue.textContent = this.#state.threatLevel;
+                this.#state.threatLevel = parseInt((threatSlider as any).value, 10);
+                if (threatValue) threatValue.textContent = String(this.#state.threatLevel);
                 this._debounceRender();
             });
         }
@@ -255,7 +255,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const roleSelect = form.querySelector('[name="role"]');
         if (roleSelect) {
             roleSelect.addEventListener('change', () => {
-                this.#state.role = roleSelect.value;
+                this.#state.role = (roleSelect as any).value;
                 this._debounceRender();
             });
         }
@@ -264,7 +264,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const typeSelect = form.querySelector('[name="type"]');
         if (typeSelect) {
             typeSelect.addEventListener('change', () => {
-                this.#state.type = typeSelect.value;
+                this.#state.type = (typeSelect as any).value;
                 // Auto-enable horde mode for horde/swarm types
                 if (this.#state.type === 'horde' || this.#state.type === 'swarm') {
                     this.#state.isHorde = true;
@@ -277,7 +277,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const presetSelect = form.querySelector('[name="preset"]');
         if (presetSelect) {
             presetSelect.addEventListener('change', () => {
-                this.#state.preset = presetSelect.value;
+                this.#state.preset = (presetSelect as any).value;
                 this._debounceRender();
             });
         }
@@ -286,7 +286,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const factionInput = form.querySelector('[name="faction"]');
         if (factionInput) {
             factionInput.addEventListener('input', () => {
-                this.#state.faction = factionInput.value;
+                this.#state.faction = (factionInput as any).value;
             });
         }
 
@@ -294,7 +294,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const hordeCheckbox = form.querySelector('[name="isHorde"]');
         if (hordeCheckbox) {
             hordeCheckbox.addEventListener('change', () => {
-                this.#state.isHorde = hordeCheckbox.checked;
+                this.#state.isHorde = (hordeCheckbox as any).checked;
                 this._debounceRender();
             });
         }

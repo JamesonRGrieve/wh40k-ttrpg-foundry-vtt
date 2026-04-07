@@ -197,7 +197,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             'Near Unique': -50,
             'Unique': -60,
         };
-        return modifiers[availability] || 0;
+        return (modifiers as any)[availability] || 0;
     }
 
     /* -------------------------------------------- */
@@ -215,7 +215,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             Good: -10,
             Best: -20,
         };
-        return modifiers[craftsmanship] || 0;
+        return (modifiers as any)[craftsmanship] || 0;
     }
 
     /* -------------------------------------------- */

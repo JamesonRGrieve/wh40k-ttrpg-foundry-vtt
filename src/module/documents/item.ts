@@ -2,6 +2,8 @@ import { WH40KItemContainer } from './item-container.ts';
 import { capitalize } from '../handlebars/handlebars-helpers.ts';
 
 export class WH40KItem extends WH40KItemContainer {
+    [key: string]: any;
+
     /**
      * Override to clean/validate img field before validation runs.
      * Foundry V13 has strict img validation - ensure valid file extension.
@@ -78,7 +80,7 @@ export class WH40KItem extends WH40KItemContainer {
         };
 
         // Return type-specific icon or generic mystery-man fallback
-        return defaultIcons[type] || 'icons/svg/mystery-man.svg';
+        return (defaultIcons as any)[type] || 'icons/svg/mystery-man.svg';
     }
 
     get totalWeight() {
@@ -387,7 +389,7 @@ export class WH40KItem extends WH40KItemContainer {
             ammunition: 'Ammunition',
             forceField: 'Force Field',
         };
-        return typeLabels[this.type] || this.type;
+        return (typeLabels as any)[this.type] || this.type;
     }
 
     /**

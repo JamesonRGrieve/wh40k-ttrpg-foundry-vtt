@@ -98,20 +98,20 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         context.filters = this._filters;
         context.results = await this._getFilteredResults();
         context.groupByOptions = this._getGroupByOptions();
-        context.groupedResults = this._groupResults(context.results);
+        context.groupedResults = this._groupResults(context.results as any[]);
 
         // Add armour-specific filters if filtering armour
-        const hasArmour = context.results.some((r) => r.type === 'armour');
+        const hasArmour = (context.results as any[]).some((r: any) => r.type === 'armour');
         if (hasArmour) {
-            context.armourTypes = CONFIG.WH40K?.armourTypes || {};
+            context.armourTypes = (CONFIG as any).WH40K?.armourTypes || {};
             context.hasArmourFilters = true;
         }
 
         // Add armour modification filters if filtering armour mods
-        const hasArmourMods = context.results.some((r) => r.type === 'armourModification');
+        const hasArmourMods = (context.results as any[]).some((r: any) => r.type === 'armourModification');
         if (hasArmourMods) {
             context.hasArmourModFilters = true;
-            context.armourTypesForMods = CONFIG.WH40K?.armourTypes || {};
+            context.armourTypesForMods = (CONFIG as any).WH40K?.armourTypes || {};
         }
 
         return context;
@@ -185,7 +185,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
 
     async _getFilteredResults(): Promise<any> {
         const results = [];
-        const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg');
+        const packs = game.packs.filter((p: any) => p.metadata.system === 'wh40k-rpg');
 
         for (const pack of packs) {
             const index = await pack.getIndex({
@@ -213,33 +213,34 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
             });
 
             for (const entry of index) {
-                if (!this._passesFilters(entry, pack)) continue;
+                const e = entry as any;
+                if (!this._passesFilters(e, pack)) continue;
 
-                const sourceLabel = this._getEntrySource(entry);
-                const categoryLabel = this._getEntryCategory(entry);
+                const sourceLabel = this._getEntrySource(e);
+                const categoryLabel = this._getEntryCategory(e);
 
-                const result = {
-                    ...entry,
+                const result: any = {
+                    ...e,
                     pack: pack.metadata.label,
                     packId: pack.metadata.id,
                     sourceLabel,
                     categoryLabel,
-                    uuid: `Compendium.${pack.collection}.${entry._id}`,
+                    uuid: `Compendium.${pack.collection}.${e._id}`,
                 };
 
                 // Add armour-specific metadata
-                if (entry.type === 'armour' && entry.system) {
-                    result.armourData = this._prepareArmourData(entry.system);
+                if (e.type === 'armour' && e.system) {
+                    result.armourData = this._prepareArmourData(e.system);
                 }
 
                 // Add armour modification metadata
-                if (entry.type === 'armourModification' && entry.system) {
-                    result.armourModData = this._prepareArmourModData(entry.system);
+                if (e.type === 'armourModification' && e.system) {
+                    result.armourModData = this._prepareArmourModData(e.system);
                 }
 
                 // Add weapon quality metadata
-                if (entry.type === 'weaponQuality' && entry.system) {
-                    result.qualityData = this._prepareQualityData(entry.system);
+                if (e.type === 'weaponQuality' && e.system) {
+                    result.qualityData = this._prepareQualityData(e.system);
                 }
 
                 results.push(result);
@@ -380,7 +381,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      */
     _prepareQualityData(system: any): Record<string, unknown> {
         // Access CONFIG.wh40k (set during init hook)
-        const rtConfig = CONFIG?.rt;
+        const rtConfig = (CONFIG as any)?.rt;
 
         if (!rtConfig) {
             console.warn('WH40K | CONFIG.wh40k not available in compendium browser');
@@ -448,7 +449,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         ];
     }
 
-    _groupResults(results: any[]): Record<string, any[]> {
+    _groupResults(results: any[]): any {
         const groups = new Map();
         for (const entry of results) {
             const label = this._getGroupLabel(entry);
@@ -626,7 +627,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     async _onItemClick(event: Event): Promise<void> {
         event.preventDefault();
         const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
-        const doc = await fromUuid(uuid);
+        const doc = await fromUuid(uuid) as any;
         if (doc) doc.sheet.render(true);
     }
 
@@ -651,7 +652,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #clearFilters(event: Event, target: HTMLElement): void {
+    static #clearFilters(this: any, event: Event, target: HTMLElement): void {
         this._filters = { type: 'all', search: '', source: 'all', category: 'all', groupBy: 'source' };
         this.render();
     }
@@ -664,7 +665,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      */
     static async #openItem(event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
-        const doc = await fromUuid(uuid);
+        const doc = await fromUuid(uuid) as any;
         if (doc) doc.sheet.render(true);
     }
 

@@ -22,6 +22,8 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {ApplicationV2}
  */
 export default class StatBlockParser extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -254,8 +256,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         // Track input changes
         const textarea = this.element.querySelector('[name="rawInput"]');
         if (textarea) {
-            textarea.addEventListener('input', (e) => {
-                this.#rawInput = e.target.value;
+            textarea.addEventListener('input', (e: Event) => {
+                this.#rawInput = (e.target as HTMLTextAreaElement).value;
             });
         }
     }

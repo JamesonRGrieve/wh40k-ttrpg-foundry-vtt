@@ -8,7 +8,8 @@
  *
  * @abstract
  */
-export default class BaseGrantData extends foundry.abstract.DataModel {
+export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */

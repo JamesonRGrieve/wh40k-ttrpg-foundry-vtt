@@ -335,7 +335,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onRollChipClick(event: Event): void {
-        const chip = event.currentTarget;
+        const chip = event.currentTarget as any;
         const index = parseInt(chip.dataset.rollIndex);
 
         // If already editing, don't restart
@@ -372,7 +372,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onRollInputBlur(event: Event): void {
-        const input = event.currentTarget;
+        const input = event.currentTarget as any;
         this.#saveRollInput(input);
     }
 
@@ -384,12 +384,12 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onRollInputKeydown(event: Event): void {
-        if (event.key === 'Enter') {
+        if ((event as any).key === 'Enter') {
             event.preventDefault();
-            this.#saveRollInput(event.currentTarget);
-        } else if (event.key === 'Escape') {
+            this.#saveRollInput(event.currentTarget as any);
+        } else if ((event as any).key === 'Escape') {
             event.preventDefault();
-            this.#cancelRollInput(event.currentTarget);
+            this.#cancelRollInput(event.currentTarget as any);
         }
     }
 
@@ -433,7 +433,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onDragStart(event: Event): void {
-        const target = event.currentTarget;
+        const target = event.currentTarget as any;
         const rollIndex = parseInt(target.dataset.rollIndex);
         const fromCharacteristic = target.dataset.characteristic || null;
 
@@ -450,8 +450,8 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         };
 
         target.classList.add('dragging');
-        event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setData('text/plain', JSON.stringify(this.#dragData));
+        (event as any).dataTransfer.effectAllowed = 'move';
+        (event as any).dataTransfer.setData('text/plain', JSON.stringify(this.#dragData));
 
         // Add drag-active class to dialog
         this.element.classList.add('drag-active');
@@ -465,7 +465,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onDragEnd(event: Event): void {
-        event.currentTarget.classList.remove('dragging');
+        (event.currentTarget as any).classList.remove('dragging');
         this.element.classList.remove('drag-active');
         this.element.querySelectorAll('.drop-valid, .drop-hover').forEach((el) => {
             el.classList.remove('drop-valid', 'drop-hover');
