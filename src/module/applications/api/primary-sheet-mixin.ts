@@ -407,7 +407,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
             if ((await this._showDocument(event, target)) === false) return;
             if ([HTMLInputElement, HTMLSelectElement].some((el) => event.target instanceof el)) return;
             const uuid = (target.closest('[data-uuid]') as HTMLElement)?.dataset.uuid;
-            const doc = await fromUuid(uuid);
+            const doc = await fromUuid(uuid) as any;
             doc?.sheet?.render({ force: true });
         }
 

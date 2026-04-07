@@ -91,7 +91,7 @@ export class WH40KItem extends WH40KItemContainer {
     get totalWeight() {
         let weight = this.system.weight || 0;
         if (this.items && this.items.size > 0) {
-            this.items.forEach((item) => (weight += item.totalWeight));
+            this.items.forEach((item: any) => (weight += item.totalWeight));
         }
         return weight;
     }
@@ -356,7 +356,7 @@ export class WH40KItem extends WH40KItemContainer {
         const specials = [];
         for (const special of Object.keys(specialData)) {
             const specialName = capitalize(special);
-            const attackSpecial = index.find((n) => n.name === specialName);
+            const attackSpecial: any = index.find((n) => n.name === specialName);
             if (attackSpecial) {
                 if (attackSpecial.system.hasLevel) {
                     attackSpecial.system.level = specialData[special];
@@ -469,14 +469,14 @@ export class WH40KItem extends WH40KItemContainer {
             },
         };
 
-        const rollMode = game.settings.get('core', 'rollMode');
+        const rollMode = game.settings.get('core', 'rollMode') as string;
         if (['gmroll', 'blindroll'].includes(rollMode)) {
             chatData.whisper = ChatMessage.getWhisperRecipients('GM');
         } else if (rollMode === 'selfroll') {
             chatData.whisper = [game.user];
         }
 
-        return ChatMessage.create(chatData);
+        return (ChatMessage as any).create(chatData);
     }
 
     /**
@@ -485,10 +485,10 @@ export class WH40KItem extends WH40KItemContainer {
     async performAction() {
         if (this.isWeapon) {
             // Weapon attack - handled by the actor sheet
-            return this.actor?.rollWeaponAction?.(this) || this.sendToChat();
+            return (this.actor as any)?.rollWeaponAction?.(this) || this.sendToChat();
         } else if (this.isPsychicPower) {
             // Psychic power - handled by the actor sheet
-            return this.actor?.rollPsychicPower?.(this) || this.sendToChat();
+            return (this.actor as any)?.rollPsychicPower?.(this) || this.sendToChat();
         } else if (this.isNavigatorPower) {
             // Navigator power - roll navigator power
             return this.rollNavigatorPower();
@@ -522,7 +522,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Get the characteristic value
         const charKey = rollConfig.characteristic.toLowerCase();
-        const characteristic = this.actor.characteristics?.[charKey];
+        const characteristic = (this.actor as any).characteristics?.[charKey];
         if (!characteristic) {
             return this.sendToChat();
         }
@@ -551,7 +551,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-roll-chat.hbs', cardData);
 
-        return ChatMessage.create({
+        return (ChatMessage as any).create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -568,11 +568,11 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         // Navigator powers typically use Perception or Willpower
-        const perception = this.actor.characteristics?.perception;
-        const willpower = this.actor.characteristics?.willpower;
+        const perception = (this.actor as any).characteristics?.perception;
+        const willpower = (this.actor as any).characteristics?.willpower;
 
         // Use the higher of the two as base, modified by Navigator Rank
-        const navigatorRank = this.actor.system?.navigatorRank || 0;
+        const navigatorRank = (this.actor as any).system?.navigatorRank || 0;
         const baseChar = perception?.total > willpower?.total ? perception : willpower;
         const targetValue = (baseChar?.total || 30) + navigatorRank * 5;
 
@@ -594,7 +594,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs', cardData);
 
-        return ChatMessage.create({
+        return (ChatMessage as any).create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -611,7 +611,7 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         // Orders typically use Command or relevant skill
-        const command = this.actor.skills?.command;
+        const command = (this.actor as any).skills?.command;
         const targetValue = command?.current || 50;
 
         const roll = new Roll('1d100');
@@ -632,7 +632,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/order-roll-chat.hbs', cardData);
 
-        return ChatMessage.create({
+        return (ChatMessage as any).create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -649,7 +649,7 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         // Rituals typically use Willpower
-        const willpower = this.actor.characteristics?.willpower;
+        const willpower = (this.actor as any).characteristics?.willpower;
         const targetValue = willpower?.total || 30;
 
         const roll = new Roll('1d100');
@@ -670,7 +670,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ritual-roll-chat.hbs', cardData);
 
-        return ChatMessage.create({
+        return (ChatMessage as any).create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -718,7 +718,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Collect skills to add
         if (modifiers.skills && Array.isArray(modifiers.skills)) {
-            for (const skillName of modifiers.skills) {
+            for (const skillName of modifiers.skills as string[]) {
                 const skillPack = game.packs.get('wh40k-rpg.wh40k-items-skills');
                 if (skillPack) {
                     const index = await skillPack.getIndex({ fields: ['name'] });
@@ -733,7 +733,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Collect talents to add
         if (modifiers.talents && Array.isArray(modifiers.talents)) {
-            for (const talentName of modifiers.talents) {
+            for (const talentName of modifiers.talents as string[]) {
                 const talentPack = game.packs.get('wh40k-rpg.wh40k-items-talents');
                 if (talentPack) {
                     const index = await talentPack.getIndex({ fields: ['name'] });
@@ -785,7 +785,7 @@ export class WH40KItem extends WH40KItemContainer {
                     const charName = key.charAt(0).toUpperCase() + key.slice(1);
                     preview.characteristics.push({
                         name: charName,
-                        value: value > 0 ? `+${value}` : value,
+                        value: (value as number) > 0 ? `+${value}` : value,
                     });
                 }
             }
