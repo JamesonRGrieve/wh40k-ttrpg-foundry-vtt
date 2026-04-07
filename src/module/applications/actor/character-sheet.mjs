@@ -23,9 +23,25 @@ const TextEditor = foundry.applications.ux.TextEditor.implementation;
  * Actor sheet for Acolyte/Character type actors.
  */
 export default class CharacterSheet extends BaseActorSheet {
+
+    /**
+     * Whether the sheet is in edit mode (showing inline stat fields).
+     * @type {boolean}
+     */
+    #editMode = false;
+
+    /**
+     * Whether the sheet is currently in edit mode.
+     * @type {boolean}
+     */
+    get inEditMode() {
+        return this.#editMode && this.isEditable;
+    }
+
     /** @override */
     static DEFAULT_OPTIONS = {
         actions: {
+            'toggleEditMode': CharacterSheet.#toggleEditMode,
             // Combat actions
             'attack': CharacterSheet.#attack,
             'dodge': CharacterSheet.#dodge,
@@ -279,6 +295,9 @@ export default class CharacterSheet extends BaseActorSheet {
     /** @inheritDoc */
     async _prepareContext(options) {
         const context = await super._prepareContext(options);
+
+        // Edit mode state
+        context.inEditMode = this.inEditMode;
 
         // WH40K-specific configuration
         context.dh = CONFIG.wh40k || WH40K;
@@ -2267,6 +2286,18 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /* -------------------------------------------- */
+
+    /**
+     * Toggle edit mode for inline characteristic editing.
+     * @this {CharacterSheet}
+     * @param {PointerEvent} event  The triggering event.
+     * @param {HTMLElement} target  The action target.
+     */
+    static async #toggleEditMode(event, target) {
+        if (!this.isEditable) return;
+        this.#editMode = !this.#editMode;
+        this.render();
+    }
 
     /**
      * Open the characteristic setup dialog.

@@ -63,16 +63,39 @@
                         <span class="wh40k-header-label">Divination</span>
                         <input class="wh40k-header-input" name="system.originPath.divination" type="text" value="{{system.originPath.divination}}" placeholder="Divination" />
                     </div>
+                    {{!-- DH2e Resources Row --}}
+                    <div class="wh40k-header-resources">
+                        <div class="wh40k-resource-field">
+                            <span class="wh40k-resource-label">Influence</span>
+                            <input class="wh40k-resource-input" name="system.influence" type="number" value="{{system.influence}}" min="0" />
+                        </div>
+                        <div class="wh40k-resource-field">
+                            <span class="wh40k-resource-label">Requisition</span>
+                            <input class="wh40k-resource-input" name="system.requisition" type="number" value="{{system.requisition}}" min="0" />
+                        </div>
+                        <div class="wh40k-resource-field">
+                            <span class="wh40k-resource-label">Throne Gelt</span>
+                            <input class="wh40k-resource-input" name="system.throneGelt" type="number" value="{{system.throneGelt}}" min="0" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="wh40k-header-right">
             <div class="wh40k-hud-stack">
                 {{!-- Characteristics HUD --}}
+                <div class="wh40k-characteristics-hud-header">
+                    <button class="wh40k-edit-toggle {{#if inEditMode}}active{{/if}}" type="button"
+                            data-action="toggleEditMode"
+                            title="{{#if inEditMode}}Lock Sheet{{else}}Edit Stats{{/if}}">
+                        <i class="fa-solid {{#if inEditMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
+                    </button>
+                </div>
                 <div class="wh40k-characteristics-hud">
                     {{#each actor.characteristics as |characteristic name|}}
                         {{#unless (eq name "influence")}}
                         <div class="wh40k-char-hud-item {{#if (gt this.modifier 0)}}wh40k-char-buffed{{/if}}{{#if (lt this.modifier 0)}}wh40k-char-debuffed{{/if}}"
+                             data-characteristic="{{name}}"
                              data-advance="{{this.advance}}"
                              style="--advance-progress: {{divide this.advance 5}};">
                             <button
@@ -90,7 +113,13 @@
                                 <span class="wh40k-char-hud-mod">{{this.bonus}}</span>
                                 <span class="wh40k-char-hud-mod-label">MOD</span>
                             </div>
+                            {{#if ../inEditMode}}
+                            <div class="wh40k-char-hud-base wh40k-char-hud-base--edit">
+                                <input type="number" class="wh40k-char-direct-input wh40k-char-inline-input" data-characteristic="{{name}}" data-field="base" data-dtype="Number" value="{{this.base}}" title="Base {{this.label}}" />
+                            </div>
+                            {{else}}
                             <div class="wh40k-char-hud-base">Total {{this.total}}</div>
+                            {{/if}}
                         </div>
                         {{/unless}}
                     {{/each}}

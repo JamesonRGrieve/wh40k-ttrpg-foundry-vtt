@@ -727,6 +727,28 @@
     }
 }
 
+.wh40k-characteristics-hud-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 4px 4px;
+}
+
+.wh40k-char-inline-input {
+    width: 50px;
+    text-align: center;
+    font-size: 0.75em;
+    padding: 1px 2px;
+    border: 1px solid var(--wh40k-border-color-light, rgba(140, 120, 90, 0.3));
+    border-radius: 3px;
+    background: var(--wh40k-input-bg, #fff);
+    color: var(--wh40k-text-dark, #333);
+}
+
+.wh40k-char-hud-base--edit {
+    font-size: 0.65em;
+    text-align: center;
+}
+
 .wh40k-char-hud-field {
     display: grid;
     gap: 4px;
