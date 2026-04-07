@@ -89,7 +89,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @type {string}
      */
     get displayLabel() {
-        return this.label || game.i18n.localize(this.constructor.typeLabel);
+        return this.label || game.i18n.localize((this.constructor as any).typeLabel);
     }
 
     /* -------------------------------------------- */
@@ -146,9 +146,9 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      */
     async getSummary() {
         return {
-            type: this.constructor.TYPE,
+            type: (this.constructor as any).TYPE,
             label: this.displayLabel,
-            icon: this.constructor.ICON,
+            icon: (this.constructor as any).ICON,
             details: [],
         };
     }
@@ -181,7 +181,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
             'wh40k-rpg': {
                 sourceId: sourceUuid,
                 grantId: this._id,
-                grantType: this.constructor.TYPE,
+                grantType: (this.constructor as any).TYPE,
                 grantedBy: this.item?.name,
                 grantedById: this.item?.id,
                 autoGranted: true,

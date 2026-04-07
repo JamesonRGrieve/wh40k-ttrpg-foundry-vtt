@@ -76,7 +76,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {object} options - Additional options
      * @param {string} [options.careerKey] - Career key for advancement options
      */
-    constructor(actor, options = {}) {
+    constructor(actor, options: any = {}) {
         super(options);
         this.actor = actor;
         this.careerKey = options.careerKey ?? 'rogueTrader';
@@ -111,7 +111,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: any): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         // Check if character has completed origin path (has career selected)

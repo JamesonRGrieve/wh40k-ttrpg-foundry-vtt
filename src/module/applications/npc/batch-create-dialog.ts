@@ -103,7 +103,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {Object} [config] - Initial configuration.
      * @param {Object} [options] - Application options.
      */
-    constructor(config = {}, options = {}) {
+    constructor(config = {}, options: any = {}) {
         super(options);
         Object.assign(this.#state, config);
     }
@@ -113,7 +113,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: any): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         // Get options
@@ -157,7 +157,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    _onRender(context: any, options: any): Promise<void> {
         super._onRender(context, options);
 
         const form = this.element;
@@ -355,7 +355,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    async close(options: any = {}): Promise<void> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
         if (!this.#submitted && this.#resolve) {

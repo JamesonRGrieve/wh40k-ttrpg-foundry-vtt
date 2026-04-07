@@ -105,7 +105,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {boolean} [config.isHorde] - Default horde mode.
      * @param {Object} [options] - Application options.
      */
-    constructor(config = {}, options = {}) {
+    constructor(config: any = {}, options: any = {}) {
         super(options);
         this.#state = {
             name: config.name ?? 'New NPC',
@@ -123,7 +123,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: any): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         // Get available options
@@ -136,7 +136,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const tier = ThreatCalculator.getTier(this.#state.threatLevel);
 
         // Prepare characteristics for display
-        const characteristics = Object.entries(previewData.characteristics).map(([key, char]) => ({
+        const characteristics = Object.entries(previewData.characteristics as Record<string, any>).map(([key, char]) => ({
             key,
             label: char.label,
             short: char.short,
@@ -145,7 +145,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         }));
 
         // Prepare skills for display
-        const skills = Object.entries(previewData.trainedSkills).map(([key, skill]) => {
+        const skills = Object.entries(previewData.trainedSkills as Record<string, any>).map(([key, skill]) => {
             let level = '';
             if (skill.plus20) level = '+20';
             else if (skill.plus10) level = '+10';
@@ -226,7 +226,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    _onRender(context: any, options: any): Promise<void> {
         super._onRender(context, options);
 
         // Add live update listeners
@@ -389,7 +389,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    async close(options: any = {}): Promise<void> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 

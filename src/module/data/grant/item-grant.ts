@@ -65,7 +65,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async apply(actor, data = {}, options = {}) {
+    async apply(actor, data = {}, options: Record<string, any> = {}) {
         const result = {
             success: true,
             applied: {},
@@ -128,7 +128,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
             }
 
             // Validate item type
-            if (!this.constructor.VALID_TYPES.has(sourceItem.type)) {
+            if (!(this.constructor as any).VALID_TYPES.has(sourceItem.type)) {
                 result.errors.push(`Invalid item type "${sourceItem.type}" for ${sourceItem.name}`);
                 continue;
             }
@@ -233,7 +233,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     /** @inheritDoc */
     async getSummary() {
         const summary = await super.getSummary();
-        summary.icon = this.constructor.ICON;
+        summary.icon = (this.constructor as any).ICON;
 
         for (const itemConfig of this.items) {
             const item = await this._fetchItem(itemConfig.uuid);

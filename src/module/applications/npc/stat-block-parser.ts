@@ -213,7 +213,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: any): Promise<any> {
         const context: any = await super._prepareContext(options);
         const parsedData = this.#parsedData;
         const previewSkills = parsedData?.system?.trainedSkills ? Object.values(parsedData.system.trainedSkills) : [];
@@ -250,7 +250,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    _onRender(context: any, options: any): Promise<void> {
         super._onRender(context, options);
 
         // Track input changes
@@ -1165,7 +1165,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    async close(options: any = {}): Promise<void> {
         if (!this.#submitted && this.#resolve) {
             this.#resolve(null);
         }

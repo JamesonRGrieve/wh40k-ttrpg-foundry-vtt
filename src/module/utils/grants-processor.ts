@@ -69,7 +69,7 @@ export class GrantsProcessor {
      * @param {WH40KItem} options.sourceItem - Item granting this (for nested grants)
      * @returns {Promise<object>} Result object with grants processed
      */
-    static async processGrants(item, actor, options = {}) {
+    static async processGrants(item, actor, options: Record<string, any> = {}) {
         if (!item || !actor) {
             console.warn('GrantsProcessor: Missing item or actor');
             return null;
@@ -125,7 +125,7 @@ export class GrantsProcessor {
      * @param {object} options - Application options
      * @returns {Promise<void>}
      */
-    static async applyGrants(actor, result, options = {}) {
+    static async applyGrants(actor, result, options: Record<string, any> = {}) {
         if (!actor || !result) return;
 
         const updates = {};

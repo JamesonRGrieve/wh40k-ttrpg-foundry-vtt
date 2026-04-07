@@ -202,7 +202,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      */
     _getTabs(): any {
         const tabs = {};
-        for (const { tab, group, label, condition } of this.constructor.TABS) {
+        for (const { tab, group, label, condition } of (this.constructor as any).TABS) {
             if (condition && !condition(this.document)) continue;
             tabs[tab] = {
                 id: tab,

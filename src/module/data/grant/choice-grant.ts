@@ -70,7 +70,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async apply(actor, data = {}, options = {}) {
+    async apply(actor, data = {}, options: Record<string, any> = {}) {
         const result = {
             success: true,
             applied: {
@@ -158,7 +158,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
             if (!option || !option.grants[index]) continue;
 
             const grantConfig = option.grants[index];
-            const GrantClass = this.constructor.GRANT_TYPES[grantConfig.type];
+            const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
             if (!GrantClass) continue;
 
             const grant = new GrantClass(grantConfig);
@@ -178,7 +178,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
     /** @inheritDoc */
     async getSummary() {
         const summary = await super.getSummary();
-        summary.icon = this.constructor.ICON;
+        summary.icon = (this.constructor as any).ICON;
         summary.choiceCount = this.count;
         summary.options = [];
 
@@ -190,7 +190,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
             };
 
             for (const grantConfig of option.grants) {
-                const GrantClass = this.constructor.GRANT_TYPES[grantConfig.type];
+                const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
                 if (GrantClass) {
                     const grant = new GrantClass(grantConfig);
                     const grantSummary = await grant.getSummary();
@@ -223,7 +223,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
         for (const option of options) {
             const grants = option.grants ?? [];
             for (const grantConfig of grants) {
-                const GrantClass = this.constructor.GRANT_TYPES[grantConfig.type];
+                const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
                 if (!GrantClass) {
                     errors.push(`Unknown grant type "${grantConfig.type}" in option "${option.label}"`);
                 }
@@ -247,7 +247,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
      * @private
      */
     async _applySubGrant(actor, grantConfig, data, options) {
-        const GrantClass = this.constructor.GRANT_TYPES[grantConfig.type];
+        const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
         if (!GrantClass) {
             return {
                 success: false,

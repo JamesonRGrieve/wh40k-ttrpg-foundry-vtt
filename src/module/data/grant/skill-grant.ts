@@ -66,7 +66,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async apply(actor, data = {}, options = {}) {
+    async apply(actor, data = {}, options: Record<string, any> = {}) {
         const result = {
             success: true,
             applied: {},
@@ -141,8 +141,8 @@ export default class SkillGrantData extends (BaseGrantData as any) {
     _applyStandardSkillUpgrade(actor, schemaKey, targetLevel, updates, result) {
         const currentSkill = actor.system.skills[schemaKey];
         const currentLevel = this._getSchemaSkillLevel(currentSkill);
-        const currentOrder = this.constructor.TRAINING_LEVELS[currentLevel]?.order ?? 0;
-        const targetOrder = this.constructor.TRAINING_LEVELS[targetLevel]?.order ?? 0;
+        const currentOrder = (this.constructor as any).TRAINING_LEVELS[currentLevel]?.order ?? 0;
+        const targetOrder = (this.constructor as any).TRAINING_LEVELS[targetLevel]?.order ?? 0;
 
         if (targetOrder <= currentOrder) {
             result.notifications.push(`${currentSkill.label || schemaKey} already at or above ${targetLevel}`);
@@ -155,7 +155,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
             updates[`system.skills.${schemaKey}.${field.replace('system.', '')}`] = value;
         }
 
-        const levelLabel = game.i18n.localize(this.constructor.TRAINING_LEVELS[targetLevel].label);
+        const levelLabel = game.i18n.localize((this.constructor as any).TRAINING_LEVELS[targetLevel].label);
         result.notifications.push(`${currentSkill.label || schemaKey}: ${levelLabel}`);
 
         return {
@@ -183,8 +183,8 @@ export default class SkillGrantData extends (BaseGrantData as any) {
             // Upgrade existing entry
             const entry = entries[entryIndex];
             const currentLevel = this._getSchemaSkillLevel(entry);
-            const currentOrder = this.constructor.TRAINING_LEVELS[currentLevel]?.order ?? 0;
-            const targetOrder = this.constructor.TRAINING_LEVELS[targetLevel]?.order ?? 0;
+            const currentOrder = (this.constructor as any).TRAINING_LEVELS[currentLevel]?.order ?? 0;
+            const targetOrder = (this.constructor as any).TRAINING_LEVELS[targetLevel]?.order ?? 0;
 
             if (targetOrder <= currentOrder) {
                 result.notifications.push(`${currentSkill.label || schemaKey} (${specialization}) already at or above ${targetLevel}`);
@@ -198,7 +198,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
                 updates[`system.skills.${schemaKey}.entries.${entryIndex}.${cleanField}`] = value;
             }
 
-            const levelLabel = game.i18n.localize(this.constructor.TRAINING_LEVELS[targetLevel].label);
+            const levelLabel = game.i18n.localize((this.constructor as any).TRAINING_LEVELS[targetLevel].label);
             result.notifications.push(`${currentSkill.label || schemaKey} (${specialization}): ${levelLabel}`);
 
             return {
@@ -224,7 +224,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
             const newEntries = [...entries, newEntry];
             updates[`system.skills.${schemaKey}.entries`] = newEntries;
 
-            const levelLabel = game.i18n.localize(this.constructor.TRAINING_LEVELS[targetLevel].label);
+            const levelLabel = game.i18n.localize((this.constructor as any).TRAINING_LEVELS[targetLevel].label);
             result.notifications.push(`${currentSkill.label || schemaKey} (${specialization}): ${levelLabel} (new)`);
 
             return {
@@ -380,10 +380,10 @@ export default class SkillGrantData extends (BaseGrantData as any) {
     /** @inheritDoc */
     async getSummary() {
         const summary = await super.getSummary();
-        summary.icon = this.constructor.ICON;
+        summary.icon = (this.constructor as any).ICON;
 
         for (const skillConfig of this.skills) {
-            const levelLabel = game.i18n.localize(this.constructor.TRAINING_LEVELS[skillConfig.level]?.label ?? skillConfig.level);
+            const levelLabel = game.i18n.localize((this.constructor as any).TRAINING_LEVELS[skillConfig.level]?.label ?? skillConfig.level);
 
             let skillLabel = skillConfig.key;
             if (skillConfig.specialization) {
@@ -460,7 +460,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
             if (!skill.key) {
                 errors.push('Skill grant entry missing key');
             }
-            if (!this.constructor.TRAINING_LEVELS[skill.level]) {
+            if (!(this.constructor as any).TRAINING_LEVELS[skill.level]) {
                 errors.push(`Invalid training level: ${skill.level}`);
             }
         }

@@ -100,7 +100,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {Actor} actor  The actor
      * @param {object} options  Additional options
      */
-    constructor(actor, options = {}) {
+    constructor(actor, options: any = {}) {
         super(options);
         this.actor = actor;
         this.item = options.item || null;
@@ -118,7 +118,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: any): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         // Profit Factor
@@ -406,7 +406,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    async close(options: any = {}): Promise<void> {
         if (this.#resolve && !options._skipResolve) {
             this.#resolve(null);
         }
