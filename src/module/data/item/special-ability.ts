@@ -9,6 +9,7 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class SpecialAbilityData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
     /** @inheritdoc */
     static defineSchema() {

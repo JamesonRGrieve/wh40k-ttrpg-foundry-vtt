@@ -11,6 +11,7 @@
  */
 
 export class RollTableUtils {
+    [key: string]: any;
     /**
      * Roll on a roll table by name and send results to chat.
      * @param {string} tableName - The name of the roll table
@@ -42,7 +43,7 @@ export class RollTableUtils {
             await table.toMessage(rollResult.results, {
                 roll: rollResult.roll,
                 messageData: {
-                    speaker: ChatMessage.getSpeaker(),
+                    speaker: (ChatMessage as any).getSpeaker(),
                 },
             });
         }

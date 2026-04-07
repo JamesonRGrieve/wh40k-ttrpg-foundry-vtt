@@ -112,7 +112,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context: any = await super._prepareContext(options);
 
         // Check if character has completed origin path (has career selected)
         const originCareer = this.actor.system.originPath?.career;

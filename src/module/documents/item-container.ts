@@ -3,6 +3,7 @@ import { SYSTEM_ID } from '../constants.ts';
 export const DH_CONTAINER_ID = 'nested';
 
 export class WH40KItemContainer extends Item {
+    [key: string]: any;
     declare system: any;
     declare items: foundry.utils.Collection<Item>;
 

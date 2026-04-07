@@ -118,7 +118,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context: any = await super._prepareContext(options);
 
         context.rollType = this.rollType;
         context.rollTypeLabel = this.rollType === 'wounds' ? 'Wounds' : 'Fate Points';

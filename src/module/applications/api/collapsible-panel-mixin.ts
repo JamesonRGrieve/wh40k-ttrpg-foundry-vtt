@@ -446,13 +446,13 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @protected
          */
         static async _onTogglePanel(this: CollapsiblePanelApplication, event: Event, target: HTMLElement): Promise<void> {
-            const panel = target.closest('[data-panel-id]');
+            const panel = target.closest('[data-panel-id]') as HTMLElement | null;
             if (!panel) return;
 
             const panelId = panel.dataset.panelId;
 
             // Shift+Click = Collapse all except this one
-            if (event.shiftKey) {
+            if ((event as MouseEvent).shiftKey) {
                 await this.collapseAllExcept(panelId);
                 return;
             }

@@ -8,7 +8,9 @@ import BaseItemSheet from './base-item-sheet.ts';
  * Sheet for ship upgrade items.
  * Handles ship history templates, quirks, and other vessel modifications.
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class ShipUpgradeSheet extends BaseItemSheet {
+    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'ship-upgrade'],

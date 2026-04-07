@@ -17,10 +17,10 @@ export class TokenDocumentWH40K extends TokenDocument {
      * their cost functions and animation options.
      * Called during system init after CONFIG.wh40k is set.
      */
-    static registerMovementActions() {
+    static registerMovementActions(this: any, ) {
         for (const [type, config] of Object.entries(CONFIG.wh40k.movementTypes)) {
             // Create the action entry if it doesn't already exist (WH40K-specific actions)
-            CONFIG.Token.movement.actions[type] ??= {
+            (CONFIG as any).Token.movement.actions[type] ??= {
                 label: config.label,
                 icon: config.icon,
                 order: config.order,
@@ -33,12 +33,12 @@ export class TokenDocumentWH40K extends TokenDocument {
                 },
             };
 
-            const actionConfig = CONFIG.Token.movement.actions[type];
+            const actionConfig = (CONFIG as any).Token.movement.actions[type];
             actionConfig.getAnimationOptions = (token) => {
                 const movement = token?.actor?.system?.movement;
                 // Slow animation if actor has no speed for this type
                 if (!movement?.[type]) {
-                    return { movementSpeed: CONFIG.Token.movement.defaultSpeed / 2 };
+                    return { movementSpeed: (CONFIG as any).Token.movement.defaultSpeed / 2 };
                 }
                 return {};
             };

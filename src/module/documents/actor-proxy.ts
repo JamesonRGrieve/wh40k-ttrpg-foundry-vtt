@@ -6,7 +6,7 @@ import { WH40KBaseActor } from './base-actor.ts';
 const actorHandler: ProxyHandler<typeof WH40KBaseActor> = {
     construct(_: typeof WH40KBaseActor, args: any[]): Actor {
         const type: string | undefined = args[0]?.type;
-        const cls = CONFIG.Actor.documentClasses[type as string] ?? WH40KBaseActor;
+        const cls = (CONFIG as any).Actor.documentClasses[type as string] ?? WH40KBaseActor;
         return new (cls as any)(...args);
     },
 };

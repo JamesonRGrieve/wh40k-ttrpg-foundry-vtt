@@ -12,6 +12,7 @@ const { ApplicationV2 } = foundry.applications.api;
  * Provides common functionality for weapon, psychic, force field, and other roll dialogs.
  */
 export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
+    [key: string]: any;
     /**
      * @param {object} rollData     The roll data to configure.
      * @param {object} [options={}] Dialog options.
@@ -110,7 +111,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {HTMLFormElement} form  The form element.
      * @param {FormDataExtended} formData  The form data.
      */
-    static async #onFormSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #onFormSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         const data = foundry.utils.expandObject(formData.object);
         this._updateRollData(data);
 
@@ -140,7 +141,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onRoll(event: Event, target: HTMLElement): Promise<void> {
+    static async #onRoll(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this._performRoll();
     }
 
@@ -152,7 +153,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onCancel(event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.close();
     }
 

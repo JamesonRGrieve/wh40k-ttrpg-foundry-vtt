@@ -9,6 +9,7 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
     [key: string]: any;
     /** @inheritdoc */
@@ -394,9 +395,9 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-card.hbs', templateData);
 
-        return ChatMessage.create({
+        return (ChatMessage as any).create({
             content: html,
-            speaker: ChatMessage.getSpeaker({ actor: this.parent.actor }),
+            speaker: (ChatMessage as any).getSpeaker({ actor: this.parent.actor }),
         });
     }
 }

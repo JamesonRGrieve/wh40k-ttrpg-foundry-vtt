@@ -13,6 +13,7 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes EquippableTemplate
  * @mixes ModifiersTemplate
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class CyberneticData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, ModifiersTemplate) {
     [key: string]: any;
     /** @inheritdoc */

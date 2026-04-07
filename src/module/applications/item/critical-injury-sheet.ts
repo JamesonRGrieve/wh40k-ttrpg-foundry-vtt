@@ -8,7 +8,9 @@ import BaseItemSheet from './base-item-sheet.ts';
  * Sheet for critical injury items.
  * Displays injury details with severity slider and body location visual.
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class CriticalInjurySheet extends BaseItemSheet {
+    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'critical-injury'],
@@ -82,7 +84,7 @@ export default class CriticalInjurySheet extends BaseItemSheet {
      * @param {PointerEvent} event - Triggering event
      * @param {HTMLElement} target - Action target
      */
-    static async #changeSeverity(event: Event, target: HTMLElement): Promise<void> {
+    static async #changeSeverity(this: any, event: Event, target: HTMLElement): Promise<void> {
         const newSeverity = parseInt(target.value);
         if (newSeverity !== this.item.system.severity) {
             await this.item.update({ 'system.severity': newSeverity });

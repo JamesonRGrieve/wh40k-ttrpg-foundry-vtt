@@ -9,7 +9,9 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes DescriptionTemplate
  * @mixes PhysicalItemTemplate
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class WeaponModificationData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate) {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
         const fields = (foundry.data as any).fields;

@@ -7,6 +7,7 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) {
     /** @inheritdoc */
     static defineSchema() {
@@ -171,7 +172,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     async toChat() {
         const messageData = {
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-            speaker: ChatMessage.getSpeaker(),
+            speaker: (ChatMessage as any).getSpeaker(),
             content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/skill-card.hbs', { skill: this.parent }),
             flags: {
                 'wh40k-rpg': {
@@ -182,6 +183,6 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
             },
         };
 
-        return ChatMessage.create(messageData);
+        return (ChatMessage as any).create(messageData);
     }
 }

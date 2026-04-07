@@ -3,6 +3,7 @@
  * Colors ruler segments based on movement speed budget (green/yellow/red).
  */
 export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.TokenRuler {
+    [key: string]: any;
     /** @inheritDoc */
     _getWaypointStyle(waypoint) {
         const style = super._getWaypointStyle(waypoint);

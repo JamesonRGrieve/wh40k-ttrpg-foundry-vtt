@@ -10,6 +10,7 @@ import WH40K from '../../config.ts';
  * Actor sheet for Starship type actors.
  * Uses V2 PARTS system for modular template rendering.
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class StarshipSheet extends BaseActorSheet {
     [key: string]: any;
 

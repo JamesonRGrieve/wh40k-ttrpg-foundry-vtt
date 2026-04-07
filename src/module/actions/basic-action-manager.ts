@@ -9,6 +9,7 @@ import { SYSTEM_ID } from '../constants.ts';
 import { ConfirmationDialog } from '../applications/dialogs/_module.ts';
 
 export class BasicActionManager {
+    [key: string]: any;
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
     storedRolls = {};
 
@@ -97,7 +98,7 @@ export class BasicActionManager {
         } else if (chatData.rollMode === 'selfroll') {
             chatData.whisper = [game.user];
         }
-        await ChatMessage.create(chatData);
+        await (ChatMessage as any).create(chatData);
     }
 
     async _refundResources(event) {
@@ -293,7 +294,7 @@ export class BasicActionManager {
         } else if (chatData.rollMode === 'selfroll') {
             chatData.whisper = [game.user];
         }
-        await ChatMessage.create(chatData);
+        await (ChatMessage as any).create(chatData);
     }
 }
 

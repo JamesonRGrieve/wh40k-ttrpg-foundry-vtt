@@ -23,6 +23,7 @@
  */
 export default function EnhancedDragDropMixin<T extends new (...args: any[]) => any>(Base: T) {
     return class EnhancedDragDropApplication extends Base {
+    [key: string]: any;
         /* -------------------------------------------- */
         /*  Initialization                              */
         /* -------------------------------------------- */

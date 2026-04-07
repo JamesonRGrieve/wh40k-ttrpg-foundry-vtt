@@ -559,17 +559,17 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {FormDataExtended} formData - The form data
      */
     static async #formHandler(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object);
+        const data: any = foundry.utils.expandObject(formData.object);
 
         // Process the form data into the proper structure
-        const updateData = {};
+        const updateData: any = {};
 
         // Process prerequisites
         if (data.prerequisites) {
             updateData['system.prerequisites.text'] = data.prerequisites.text || '';
 
             // Convert characteristics array back to object
-            const charReqs = {};
+            const charReqs: any = {};
             if (data.prerequisites.characteristics) {
                 for (const entry of Object.values(data.prerequisites.characteristics)) {
                     if (entry.key && entry.value) {

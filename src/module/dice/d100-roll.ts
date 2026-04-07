@@ -7,6 +7,7 @@ import RollConfigurationDialog from '../applications/dialogs/roll-configuration-
  * @extends BasicRollWH40K
  */
 export default class D100Roll extends BasicRollWH40K {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -347,7 +348,7 @@ export default class D100Roll extends BasicRollWH40K {
             target: charData.total,
             baseTarget: charData.total,
             flavor: `${charData.label || characteristic} Test`,
-            speaker: ChatMessage.getSpeaker({ actor }),
+            speaker: (ChatMessage as any).getSpeaker({ actor }),
             ...options,
         });
     }
@@ -371,7 +372,7 @@ export default class D100Roll extends BasicRollWH40K {
             target: skillData.current,
             baseTarget: skillData.current,
             flavor: `${skillData.label || skill} Test`,
-            speaker: ChatMessage.getSpeaker({ actor }),
+            speaker: (ChatMessage as any).getSpeaker({ actor }),
             ...options,
         });
     }

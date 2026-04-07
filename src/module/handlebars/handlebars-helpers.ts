@@ -525,7 +525,7 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('skillIcon', (skillKey) => {
-        const config = CONFIG?.rt?.getSkillIcon ? CONFIG.wh40k : WH40K;
+        const config = CONFIG?.rt?.getSkillIcon ? (CONFIG as any).wh40k : WH40K;
         const icon = config?.getSkillIcon?.(skillKey) || 'modules/game-icons-net/blacktransparent/skills.svg';
         if (foundry?.utils?.getRoute) return foundry.utils.getRoute(icon);
         return icon;

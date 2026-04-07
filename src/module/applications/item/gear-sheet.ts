@@ -7,7 +7,9 @@ import BaseItemSheet from './base-item-sheet.ts';
 /**
  * Sheet for gear items (consumables, drugs, tools, etc.).
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class GearSheet extends BaseItemSheet {
+    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'gear'],
@@ -75,7 +77,7 @@ export default class GearSheet extends BaseItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #onResetUses(event: Event, target: HTMLElement): Promise<void> {
+    static async #onResetUses(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.item.system.resetUses();
     }
 

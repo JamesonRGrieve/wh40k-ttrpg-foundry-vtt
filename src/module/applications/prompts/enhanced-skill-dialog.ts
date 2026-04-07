@@ -16,7 +16,8 @@ const { ApplicationV2 } = foundry.applications.api;
 /**
  * Enhanced dialog for configuring skill or characteristic rolls.
  */
-export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV2) {
+export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV2 as any) {
+    [key: string]: any;
     /**
      * @param {object} simpleSkillData  The skill data.
      * @param {object} [options={}]     Dialog options.
@@ -216,7 +217,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: any): Promise<any> {
         const context = await super._prepareContext(options);
         const rollData = this.simpleSkillData.rollData;
 
@@ -261,19 +262,19 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    async _onRender(context: any, options: any): Promise<void> {
         await super._onRender(context, options);
 
         // Auto-select number input values on focus for easy editing
         this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
             input.addEventListener('focus', (event) => {
-                event.target.select();
+                (event.target as HTMLInputElement).select();
             });
         });
 
         // Focus custom modifier input
         this.element.querySelector('#customModifier')?.addEventListener('input', (e) => {
-            this._customModifier = parseInt(e.target.value) || 0;
+            this._customModifier = parseInt((e.target as HTMLInputElement).value) || 0;
             this.render(false, { parts: ['form'] });
         });
 
@@ -295,7 +296,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @returns {number}
      * @private
      */
-    _calculateCommonModifiers(): void {
+    _calculateCommonModifiers(): number {
         let total = 0;
         for (const [key, active] of Object.entries(this._commonModifiers)) {
             if (!active) continue;
@@ -313,7 +314,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @private
      */
     _getRecentRolls(): any {
-        const recent = game.user.getFlag('wh40k-rpg', 'recentRolls') || [];
+        const recent = (game.user as any).getFlag('wh40k-rpg', 'recentRolls') || [];
         return recent.slice(0, 3); // Last 3 rolls
     }
 
@@ -325,7 +326,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @private
      */
     async _saveToRecentRolls(modifier: any): Promise<void> {
-        const recent = game.user.getFlag('wh40k-rpg', 'recentRolls') || [];
+        const recent = (game.user as any).getFlag('wh40k-rpg', 'recentRolls') || [];
         recent.unshift({
             name: this.simpleSkillData.name || 'Test',
             modifier,
@@ -334,7 +335,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
         // Keep only last 10
         const trimmed = recent.slice(0, 10);
-        await game.user.setFlag('wh40k-rpg', 'recentRolls', trimmed);
+        await (game.user as any).setFlag('wh40k-rpg', 'recentRolls', trimmed);
     }
 
     /* -------------------------------------------- */
@@ -368,7 +369,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      */
     static async #onToggleModifier(event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.modifierKey;
-        this._commonModifiers[key] = target.checked;
+        this._commonModifiers[key] = (target as HTMLInputElement).checked;
         await this.render(false, { parts: ['form'] });
     }
 
@@ -381,7 +382,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @param {HTMLElement} target  Input that was changed.
      */
     static async #onUpdateCustom(event: Event, target: HTMLElement): Promise<void> {
-        this._customModifier = parseInt(target.value) || 0;
+        this._customModifier = parseInt((target as HTMLInputElement).value) || 0;
         await this.render(false, { parts: ['form'] });
     }
 

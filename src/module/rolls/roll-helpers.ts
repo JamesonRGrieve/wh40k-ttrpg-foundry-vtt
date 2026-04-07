@@ -58,7 +58,7 @@ export async function sendActionDataToChat(actionData) {
     } else if (chatData.rollMode === 'selfroll') {
         chatData.whisper = [game.user];
     }
-    await ChatMessage.create(chatData);
+    await (ChatMessage as any).create(chatData);
 }
 
 export function recursiveUpdate(targetObject, updateObject) {

@@ -11,6 +11,7 @@ const { ApplicationV2 } = foundry.applications.api;
  * Dialog for configuring simple skill or characteristic rolls.
  */
 export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) {
+    [key: string]: any;
     /**
      * @param {object} simpleSkillData  The skill data.
      * @param {object} [options={}]     Dialog options.
@@ -108,7 +109,7 @@ export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) 
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onRoll(event: Event, target: HTMLElement): Promise<void> {
+    static async #onRoll(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this._performRoll();
     }
 
@@ -120,7 +121,7 @@ export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) 
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onCancel(event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.close();
     }
 

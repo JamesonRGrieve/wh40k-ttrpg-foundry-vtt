@@ -7,6 +7,7 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTemplate) {
     /** @inheritdoc */
     static defineSchema() {

@@ -9,7 +9,9 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes DescriptionTemplate
  * @mixes ActivationTemplate
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate, ActivationTemplate) {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
         const fields = (foundry.data as any).fields;

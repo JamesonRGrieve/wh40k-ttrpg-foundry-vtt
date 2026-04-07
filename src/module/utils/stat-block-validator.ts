@@ -12,6 +12,7 @@
  * Validator for stat block data.
  */
 export default class StatBlockValidator {
+    [key: string]: any;
     /**
      * Characteristic value ranges (min/max)
      */

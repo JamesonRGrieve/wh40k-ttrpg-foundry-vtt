@@ -156,9 +156,9 @@ export class WH40KStarship extends WH40KBaseActor {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
-        await ChatMessage.create({
+        await (ChatMessage as any).create({
             user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: this }),
+            speaker: (ChatMessage as any).getSpeaker({ actor: this }),
             content: html,
         });
     }
@@ -181,8 +181,8 @@ export class WH40KStarship extends WH40KBaseActor {
             </div>
         `;
 
-        await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this }),
+        await (ChatMessage as any).create({
+            speaker: (ChatMessage as any).getSpeaker({ actor: this }),
             content: content,
             rolls: [roll],
         });

@@ -15,6 +15,7 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {ApplicationV2}
  */
 export default class StatBlockExporter extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -350,7 +351,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCopyToClipboard(event: Event, target: HTMLElement): Promise<void> {
+    static async #onCopyToClipboard(this: any, event: Event, target: HTMLElement): Promise<void> {
         const content = this.#format === 'json' ? StatBlockExporter.toJSON(this.#actor) : StatBlockExporter.toText(this.#actor);
 
         try {
@@ -367,7 +368,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onExportJson(event: Event, target: HTMLElement): Promise<void> {
+    static async #onExportJson(this: any, event: Event, target: HTMLElement): Promise<void> {
         const content = StatBlockExporter.toJSON(this.#actor);
         const filename = `${this.#actor.name.slugify()}.json`;
 
@@ -380,7 +381,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onExportText(event: Event, target: HTMLElement): Promise<void> {
+    static async #onExportText(this: any, event: Event, target: HTMLElement): Promise<void> {
         const content = StatBlockExporter.toText(this.#actor);
         const filename = `${this.#actor.name.slugify()}.txt`;
 
@@ -393,7 +394,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onClose(event: Event, target: HTMLElement): Promise<void> {
+    static async #onClose(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.close();
     }
 

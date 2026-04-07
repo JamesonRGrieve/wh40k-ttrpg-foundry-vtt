@@ -8,7 +8,9 @@ import BaseItemSheet from './base-item-sheet.ts';
  * Sheet for ship component items.
  * Handles essential components, supplemental systems, bridges, drives, etc.
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class ShipComponentSheet extends BaseItemSheet {
+    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'ship-component'],

@@ -16,6 +16,7 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes AttackTemplate
  * @mixes DamageTemplate
  */
+// @ts-expect-error - TS2417 static side inheritance
 export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, AttackTemplate, DamageTemplate) {
     [key: string]: any;
     /** @inheritdoc */
