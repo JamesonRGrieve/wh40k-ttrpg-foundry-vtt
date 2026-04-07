@@ -1763,7 +1763,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Try to find the skill item in the compendium
-        const pack = game.packs.get('wh40k-rpg.rt-items-skills');
+        const pack = game.packs.get('wh40k-rpg.wh40k-items-skills');
         if (!pack) {
             ui.notifications.warn('Skills compendium not found.');
             return;

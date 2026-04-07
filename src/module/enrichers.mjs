@@ -389,7 +389,7 @@ async function enrichQuality(match, options) {
     config = config.trim().toLowerCase();
 
     // Try to find the quality in compendiums
-    const qualityPack = game.packs.get('wh40k-rpg.rt-items-weapon-qualities');
+    const qualityPack = game.packs.get('wh40k-rpg.wh40k-items-weapon-qualities');
     let quality = null;
 
     if (qualityPack) {
@@ -471,7 +471,7 @@ async function enrichCondition(match, options) {
     config = config.trim().toLowerCase();
 
     // Try to find the condition in compendiums
-    const conditionPack = game.packs.get('wh40k-rpg.rt-items-conditions');
+    const conditionPack = game.packs.get('wh40k-rpg.wh40k-items-conditions');
     let condition = null;
 
     if (conditionPack) {
