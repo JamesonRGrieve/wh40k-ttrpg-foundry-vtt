@@ -1621,7 +1621,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // Find the actor's active token on the canvas
         const token = this.actor.getActiveTokens()?.[0]?.document;
         if (!token) {
-            ui.notifications.info(`${game.i18n.localize('WH40K.MOVEMENT.Label')}: No active token on canvas.`);
+            (ui.notifications as any).info(`${game.i18n.localize('WH40K.MOVEMENT.Label')}: No active token on canvas.`);
             return;
         }
 
@@ -1631,7 +1631,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const config = CONFIG.wh40k.movementTypes[movementType];
         const label = config ? game.i18n.localize(config.label) : movementType;
         const speed = this.actor.system.movement[movementType];
-        ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
+        (ui.notifications as any).info(`${label}: ${speed}m set as active movement mode.`);
     }
 
     /* -------------------------------------------- */
@@ -2399,10 +2399,10 @@ export default class CharacterSheet extends BaseActorSheet {
             if (game.wh40k?.openOriginPathBuilder) {
                 await game.wh40k.openOriginPathBuilder(this.actor);
             } else {
-                ui.notifications.warn(game.i18n.localize('WH40K.Utility.OriginPathNotAvailable'));
+                (ui.notifications as any).warn(game.i18n.localize('WH40K.Utility.OriginPathNotAvailable'));
             }
         } catch (error) {
-            ui.notifications.error(`${game.i18n.localize('WH40K.Utility.OriginPathError')}: ${error.message}`);
+            (ui.notifications as any).error(`${game.i18n.localize('WH40K.Utility.OriginPathError')}: ${error.message}`);
             console.error('Origin Path Builder error:', error);
         }
     }
@@ -2831,7 +2831,7 @@ export default class CharacterSheet extends BaseActorSheet {
         await item.update({ 'system.level': newLevel });
 
         // Provide visual feedback
-        ui.notifications.info(`${item.name} level ${delta > 0 ? 'increased' : 'decreased'} to ${newLevel}`);
+        (ui.notifications as any).info(`${item.name} level ${delta > 0 ? 'increased' : 'decreased'} to ${newLevel}`);
     }
 
     /* -------------------------------------------- */

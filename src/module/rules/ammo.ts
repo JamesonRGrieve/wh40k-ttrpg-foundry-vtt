@@ -25,7 +25,7 @@ export async function useAmmo(actionData) {
         });
 
         if (actionItem.system.clip.value === 0) {
-            ui.notifications.warn(`Clip is now empty. Ammo should be removed or reloaded.`);
+            (ui.notifications as any).warn(`Clip is now empty. Ammo should be removed or reloaded.`);
         }
     }
 }

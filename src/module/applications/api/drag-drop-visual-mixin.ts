@@ -270,7 +270,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                         if (qty > 0 && qty <= quantity) {
                             return { quantity: qty };
                         }
-                        ui.notifications.warn('Invalid quantity');
+                        (ui.notifications as any).warn('Invalid quantity');
                         return null;
                     },
                 },
@@ -476,14 +476,14 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
         async _handleEquipmentDrop(item: any, slot: string): Promise<void> {
             // Check if item belongs to this actor
             if (item.actor?.id !== this.document.id) {
-                ui.notifications.warn('Cannot equip items from other actors');
+                (ui.notifications as any).warn('Cannot equip items from other actors');
                 return;
             }
 
             // Check if item can be equipped in this slot
             const validSlot = this._validateEquipmentSlot(item, slot);
             if (!validSlot) {
-                ui.notifications.warn(`${item.name} cannot be equipped in ${slot} slot`);
+                (ui.notifications as any).warn(`${item.name} cannot be equipped in ${slot} slot`);
                 return;
             }
 
@@ -491,7 +491,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             await item.update({ 'system.equipped': true });
 
             // Show feedback
-            ui.notifications.info(`Equipped ${item.name}`);
+            (ui.notifications as any).info(`Equipped ${item.name}`);
 
             // Animate snap-to-slot
             this._animateSnapToSlot(item);
@@ -542,10 +542,10 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             if (behavior === 'copy') {
                 const itemData = item.toObject();
                 await this.document.createEmbeddedDocuments('Item', [itemData]);
-                ui.notifications.info(`Added ${item.name} to inventory`);
+                (ui.notifications as any).info(`Added ${item.name} to inventory`);
             } else if (behavior === 'move') {
                 // Item is already on this actor, no action needed
-                ui.notifications.info(`Moved ${item.name}`);
+                (ui.notifications as any).info(`Moved ${item.name}`);
             }
         }
 
@@ -561,7 +561,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const remaining = (item.system.quantity || 1) - quantity;
 
             if (remaining <= 0) {
-                ui.notifications.error('Cannot split entire stack');
+                (ui.notifications as any).error('Cannot split entire stack');
                 return;
             }
 
@@ -575,7 +575,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             // Update original item quantity
             await item.update({ 'system.quantity': remaining });
 
-            ui.notifications.info(`Split ${item.name}: ${quantity} moved, ${remaining} remaining`);
+            (ui.notifications as any).info(`Split ${item.name}: ${quantity} moved, ${remaining} remaining`);
         }
 
         /* -------------------------------------------- */
@@ -639,7 +639,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             await this.document.updateEmbeddedDocuments('Item', updates);
 
-            ui.notifications.info('Items reordered');
+            (ui.notifications as any).info('Items reordered');
         }
 
         /* -------------------------------------------- */
@@ -680,19 +680,19 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const favorites = this.document.getFlag('wh40k-rpg', 'favorites') || [];
 
             if (favorites.includes(item.id)) {
-                ui.notifications.warn(`${item.name} is already in favorites`);
+                (ui.notifications as any).warn(`${item.name} is already in favorites`);
                 return;
             }
 
             if (favorites.length >= 8) {
-                ui.notifications.warn('Favorites bar is full (max 8 items)');
+                (ui.notifications as any).warn('Favorites bar is full (max 8 items)');
                 return;
             }
 
             favorites.push(item.id);
             await this.document.setFlag('wh40k-rpg', 'favorites', favorites);
 
-            ui.notifications.info(`Added ${item.name} to favorites`);
+            (ui.notifications as any).info(`Added ${item.name} to favorites`);
         }
 
         /* -------------------------------------------- */

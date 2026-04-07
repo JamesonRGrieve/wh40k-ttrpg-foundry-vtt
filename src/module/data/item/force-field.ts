@@ -32,7 +32,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
 

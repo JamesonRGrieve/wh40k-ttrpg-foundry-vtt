@@ -6,9 +6,10 @@ import FormulaField from '../fields/formula-field.ts';
  * @mixin
  */
 export default class AttackTemplate extends SystemDataModel {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = foundry.data.fields as any;
         return {
             attack: new fields.SchemaField({
                 type: new fields.StringField({

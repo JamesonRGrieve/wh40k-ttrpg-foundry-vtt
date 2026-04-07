@@ -5,9 +5,10 @@ import ActorDataModel from '../abstract/actor-data-model.ts';
  * Matches template.json "starship" structure.
  */
 export default class StarshipData extends ActorDataModel {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = foundry.data.fields as any;
         return {
             ...super.defineSchema(),
 

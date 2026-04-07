@@ -444,12 +444,12 @@ export default class CombatQuickPanel extends ApplicationV2 {
     static async #rollInitiative(event: Event, target: HTMLElement): Promise<void> {
         const combatant = game.combat?.combatants.find((c) => c.actorId === this.actor.id);
         if (!combatant) {
-            ui.notifications.warn('Character not in combat');
+            (ui.notifications as any).warn('Character not in combat');
             return;
         }
 
         await game.combat.rollInitiative([combatant.id]);
-        ui.notifications.info(`Rolled initiative for ${this.actor.name}`);
+        (ui.notifications as any).info(`Rolled initiative for ${this.actor.name}`);
     }
 
     /* -------------------------------------------- */
@@ -462,7 +462,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #standardAttack(event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
-            ui.notifications.warn('No weapon equipped');
+            (ui.notifications as any).warn('No weapon equipped');
             return;
         }
 
@@ -483,7 +483,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #semiAutoAttack(event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon?.system.rateOfFire?.semiAuto) {
-            ui.notifications.warn('Weapon does not support semi-auto');
+            (ui.notifications as any).warn('Weapon does not support semi-auto');
             return;
         }
 
@@ -503,7 +503,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #fullAutoAttack(event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon?.system.rateOfFire?.fullAuto) {
-            ui.notifications.warn('Weapon does not support full-auto');
+            (ui.notifications as any).warn('Weapon does not support full-auto');
             return;
         }
 
@@ -523,13 +523,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #dodge(event: Event, target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.dodge) {
-            ui.notifications.warn('Already used dodge this round');
+            (ui.notifications as any).warn('Already used dodge this round');
             return;
         }
 
         const skill = this.actor.system.skills?.dodge;
         if (!skill) {
-            ui.notifications.warn('No dodge skill');
+            (ui.notifications as any).warn('No dodge skill');
             return;
         }
 
@@ -548,13 +548,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #parry(event: Event, target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.parry) {
-            ui.notifications.warn('Already used parry this round');
+            (ui.notifications as any).warn('Already used parry this round');
             return;
         }
 
         const skill = this.actor.system.skills?.parry;
         if (!skill) {
-            ui.notifications.warn('No parry skill');
+            (ui.notifications as any).warn('No parry skill');
             return;
         }
 
@@ -573,25 +573,25 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #reload(event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
-            ui.notifications.warn('No weapon equipped');
+            (ui.notifications as any).warn('No weapon equipped');
             return;
         }
 
         const clip = this.primaryWeapon.system.clip;
         if (!clip) {
-            ui.notifications.warn('Weapon does not use ammunition');
+            (ui.notifications as any).warn('Weapon does not use ammunition');
             return;
         }
 
         if (clip.value >= clip.max) {
-            ui.notifications.warn('Weapon is fully loaded');
+            (ui.notifications as any).warn('Weapon is fully loaded');
             return;
         }
 
         // Reload to max
         await this.primaryWeapon.update({ 'system.clip.value': clip.max });
 
-        ui.notifications.info(`Reloaded ${this.primaryWeapon.name}`);
+        (ui.notifications as any).info(`Reloaded ${this.primaryWeapon.name}`);
 
         // Play reload animation
         this._animateReload();
@@ -613,7 +613,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
             flavor: 'Aim Action',
         });
 
-        ui.notifications.info('Aim action taken (+10 next attack)');
+        (ui.notifications as any).info('Aim action taken (+10 next attack)');
     }
 
     /* -------------------------------------------- */
@@ -628,20 +628,20 @@ export default class CombatQuickPanel extends ApplicationV2 {
         const weapons = this.actor.items.filter((i) => i.type === 'weapon' && !i.system.equipped);
 
         if (weapons.length === 0) {
-            ui.notifications.warn('No weapons to draw');
+            (ui.notifications as any).warn('No weapons to draw');
             return;
         }
 
         // Show weapon selection if multiple
         if (weapons.length > 1) {
             // TODO: Show weapon selection dialog
-            ui.notifications.info('Multiple weapons available - use character sheet to select');
+            (ui.notifications as any).info('Multiple weapons available - use character sheet to select');
             return;
         }
 
         // Equip the weapon
         await weapons[0].update({ 'system.equipped': true });
-        ui.notifications.info(`Drew ${weapons[0].name}`);
+        (ui.notifications as any).info(`Drew ${weapons[0].name}`);
     }
 
     /* -------------------------------------------- */
@@ -666,7 +666,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         // Equip new
         await weapon.update({ 'system.equipped': true });
 
-        ui.notifications.info(`Switched to ${weapon.name}`);
+        (ui.notifications as any).info(`Switched to ${weapon.name}`);
         this.render(false);
     }
 
@@ -690,7 +690,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
             content: `<p><strong>${this.actor.name}</strong> uses ${item.name}</p>`,
         });
 
-        ui.notifications.info(`Used ${item.name}`);
+        (ui.notifications as any).info(`Used ${item.name}`);
     }
 
     /* -------------------------------------------- */

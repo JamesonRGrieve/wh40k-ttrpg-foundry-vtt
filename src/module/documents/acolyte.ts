@@ -20,6 +20,7 @@ const SKILL_ALIASES = {
  * @extends {WH40KBaseActor}
  */
 export class WH40KAcolyte extends WH40KBaseActor {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Getters                                     */
     /* -------------------------------------------- */
@@ -246,7 +247,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     async rollCharacteristic(charKey: string, flavorOverride?: string, options: Record<string, unknown> = {}): Promise<void> {
         const char = this.system.characteristics?.[charKey];
         if (!char) {
-            ui.notifications.warn(`Characteristic "${charKey}" not found`);
+            (ui.notifications as any).warn(`Characteristic "${charKey}" not found`);
             return null;
         }
 
@@ -281,7 +282,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const resolvedSkillName = this._resolveSkillName(skillName);
         const skill = this.skills[resolvedSkillName];
         if (!skill) {
-            ui.notifications.warn(`Unable to find skill ${skillName}`);
+            (ui.notifications as any).warn(`Unable to find skill ${skillName}`);
             return null;
         }
         let label = skill.label;
@@ -322,7 +323,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     async rollWeaponDamage(weapon: any): Promise<void> {
         if (!weapon.system.equipped) {
-            ui.notifications.warn('Actor must have weapon equipped!');
+            (ui.notifications as any).warn('Actor must have weapon equipped!');
             return;
         }
 
@@ -381,7 +382,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         switch (item.type) {
             case 'weapon':
                 if (!item.system.equipped) {
-                    ui.notifications.warn('Actor must have weapon equipped!');
+                    (ui.notifications as any).warn('Actor must have weapon equipped!');
                     return;
                 }
                 if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
@@ -403,7 +404,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 return;
             case 'forceField':
                 if (!item.system.equipped || !item.system.activated) {
-                    ui.notifications.warn('Actor must have force field equipped and activated!');
+                    (ui.notifications as any).warn('Actor must have force field equipped and activated!');
                     return;
                 }
                 await prepareUnifiedRoll(new ForceFieldData(this, item));
@@ -438,7 +439,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 await this.rollPsychicPowerDamage(item);
                 return;
             default:
-                return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
+                return (ui.notifications as any).warn(`No actions implemented for item type: ${item.type}`);
         }
     }
 

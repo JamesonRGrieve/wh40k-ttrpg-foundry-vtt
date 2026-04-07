@@ -600,7 +600,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         const allAssigned = GENERATION_CHARACTERISTICS.every((key) => this.#assignments[key] !== null && this.#rolls[this.#assignments[key]] > 0);
 
         if (!allAssigned) {
-            ui.notifications.warn(game.i18n.localize('WH40K.CharacteristicSetup.NotAllAssigned'));
+            (ui.notifications as any).warn(game.i18n.localize('WH40K.CharacteristicSetup.NotAllAssigned'));
             return;
         }
 
@@ -630,7 +630,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         this.#applied = true;
         this.#resolve?.(true);
 
-        ui.notifications.info(game.i18n.localize('WH40K.CharacteristicSetup.Applied'));
+        (ui.notifications as any).info(game.i18n.localize('WH40K.CharacteristicSetup.Applied'));
         await this.close();
     }
 
@@ -700,7 +700,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      */
     static async open(actor: any): Promise<void> {
         if (!actor || actor.type !== 'acolyte') {
-            ui.notifications.error('Characteristic setup is only available for characters.');
+            (ui.notifications as any).error('Characteristic setup is only available for characters.');
             return false;
         }
         const dialog = new this(actor);

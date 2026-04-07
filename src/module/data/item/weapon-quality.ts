@@ -10,7 +10,7 @@ import IdentifierField from '../fields/identifier-field.ts';
 export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTemplate) {
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
 

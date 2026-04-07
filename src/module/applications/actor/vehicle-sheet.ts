@@ -13,6 +13,11 @@ import BaseActorSheet from './base-actor-sheet.ts';
  * @extends {BaseActorSheet}
  */
 export default class VehicleSheet extends BaseActorSheet {
+    [key: string]: any;
+
+    declare actor: any;
+    declare document: any;
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -107,7 +112,7 @@ export default class VehicleSheet extends BaseActorSheet {
 
     /** @inheritDoc */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = {
+        const context: any = {
             actor: this.actor,
             system: this.actor.system,
             source: this.isEditable ? this.actor.system._source : this.actor.system,
@@ -116,7 +121,7 @@ export default class VehicleSheet extends BaseActorSheet {
             items: Array.from(this.actor.items),
             limited: this.actor.limited,
             rollableClass: this.isEditable ? 'rollable' : '',
-            isGM: game.user.isGM,
+            isGM: (game as any).user.isGM,
             editable: this.isEditable,
             isVehicle: true,
             isShip: this.actor.system.primaryUse === 'ship',
@@ -144,8 +149,8 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {object} Vehicle stats object.
      * @protected
      */
-    _prepareVehicleStats(context: Record<string, unknown>): void {
-        const sys = context.system;
+    _prepareVehicleStats(context: Record<string, unknown>): any {
+        const sys = context.system as any;
 
         return {
             size: sys.size || 4,
@@ -173,8 +178,8 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {object} Crew stats object.
      * @protected
      */
-    _prepareCrewStats(context: Record<string, unknown>): void {
-        const sys = context.system;
+    _prepareCrewStats(context: Record<string, unknown>): any {
+        const sys = context.system as any;
 
         return {
             required: sys.crew?.required || 1,
@@ -207,11 +212,11 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {Array} Characteristics array.
      * @protected
      */
-    _prepareCharacteristics(context: Record<string, unknown>): void {
-        const chars = context.system.characteristics || {};
+    _prepareCharacteristics(context: Record<string, unknown>): any {
+        const chars = (context.system as any).characteristics || {};
         const charArray = [];
 
-        for (const [key, char] of Object.entries(chars)) {
+        for (const [key, char] of Object.entries(chars) as any) {
             charArray.push({
                 key,
                 label: char.label,
@@ -235,7 +240,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    async _prepareItems(context: Record<string, unknown>): Promise<void> {
+    async _prepareItems(context: Record<string, any>): Promise<void> {
         const weapons = [];
         const vehicleTraits = [];
         const vehicleUpgrades = [];
@@ -277,11 +282,11 @@ export default class VehicleSheet extends BaseActorSheet {
      * @protected
      */
     _prepareTabs(): Record<string, unknown>[] {
-        return this.constructor.TABS.map((tab) => ({
+        return (this.constructor as any).TABS.map((tab: any) => ({
             id: tab.tab,
             tab: tab.tab,
             group: tab.group,
-            label: game.i18n.localize(tab.label),
+            label: (game as any).i18n.localize(tab.label),
             active: this.tabGroups[tab.group] === tab.tab,
             cssClass: tab.cssClass,
         }));
@@ -296,7 +301,7 @@ export default class VehicleSheet extends BaseActorSheet {
         // Add tab metadata for all tab parts
         const tabParts = ['overview', 'combat', 'crew', 'components', 'notes'];
         if (tabParts.includes(partId)) {
-            const tabConfig = this.constructor.TABS.find((t) => t.tab === partId);
+            const tabConfig = (this.constructor as any).TABS.find((t: any) => t.tab === partId);
             context.tab = {
                 id: partId,
                 group: tabConfig?.group || 'primary',
@@ -317,7 +322,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollCharacteristic(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollCharacteristic(this: any, event: Event, target: HTMLElement): Promise<void> {
         const char = target.dataset.characteristic;
         if (!char) return;
 
@@ -331,7 +336,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollSkill(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollSkill(this: any, event: Event, target: HTMLElement): Promise<void> {
         const skill = target.dataset.skill;
         const spec = target.dataset.specialization;
         if (!skill) return;
@@ -346,7 +351,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollWeapon(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
@@ -363,7 +368,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollInitiative(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollInitiative(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.actor.rollInitiative({ createCombatants: true });
     }
 
@@ -374,8 +379,8 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #adjustStructure(event: Event, target: HTMLElement): Promise<void> {
-        const delta = parseInt(target.dataset.delta) || 0;
+    static async #adjustStructure(this: any, event: Event, target: HTMLElement): Promise<void> {
+        const delta = parseInt(target.dataset.delta as string) || 0;
         const current = this.actor.system.wounds.value;
         const max = this.actor.system.wounds.max;
 
@@ -390,15 +395,15 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #repairDamage(event: Event, target: HTMLElement): Promise<void> {
-        const amount = parseInt(target.dataset.amount) || 1;
+    static async #repairDamage(this: any, event: Event, target: HTMLElement): Promise<void> {
+        const amount = parseInt(target.dataset.amount as string) || 1;
         const current = this.actor.system.wounds.value;
         const max = this.actor.system.wounds.max;
 
         const newValue = Math.min(max, current + amount);
         await this.actor.update({ 'system.wounds.value': newValue });
 
-        ui.notifications.info(`Repaired ${amount} structure points.`);
+        (ui.notifications as any).info(`Repaired ${amount} structure points.`);
     }
 
     /* -------------------------------------------- */
@@ -408,8 +413,8 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #modifyCrew(event: Event, target: HTMLElement): Promise<void> {
-        const delta = parseInt(target.dataset.delta) || 0;
+    static async #modifyCrew(this: any, event: Event, target: HTMLElement): Promise<void> {
+        const delta = parseInt(target.dataset.delta as string) || 0;
         const current = this.actor.system.crew?.rating || 30;
 
         const newValue = Math.max(1, Math.min(100, current + delta));
@@ -423,8 +428,8 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #adjustCrewMorale(event: Event, target: HTMLElement): Promise<void> {
-        const delta = parseInt(target.dataset.delta) || 0;
+    static async #adjustCrewMorale(this: any, event: Event, target: HTMLElement): Promise<void> {
+        const delta = parseInt(target.dataset.delta as string) || 0;
         const current = this.actor.system.crew?.morale || 50;
 
         const newValue = Math.max(0, Math.min(100, current + delta));
@@ -438,7 +443,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleComponentActive(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleComponentActive(this: any, event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
@@ -455,7 +460,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #damageComponent(event: Event, target: HTMLElement): Promise<void> {
+    static async #damageComponent(this: any, event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
@@ -466,6 +471,6 @@ export default class VehicleSheet extends BaseActorSheet {
         const damaged = item.system.damaged || false;
         await item.update({ 'system.damaged': !damaged });
 
-        ui.notifications.info(`${item.name} ${damaged ? 'repaired' : 'damaged'}.`);
+        (ui.notifications as any).info(`${item.name} ${damaged ? 'repaired' : 'damaged'}.`);
     }
 }

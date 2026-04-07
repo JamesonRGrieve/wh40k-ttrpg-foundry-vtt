@@ -319,14 +319,14 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         // On success, add item to inventory
         if (success && this.item) {
             await this.actor.createEmbeddedDocuments('Item', [this.item]);
-            ui.notifications.info(`Acquired ${this.item.name}`);
+            (ui.notifications as any).info(`Acquired ${this.item.name}`);
         }
 
         // Critical failure: reduce PF
         if (dos <= -3) {
             const newPF = Math.max(0, this.actor.system.rogueTrader.profitFactor.current - 1);
             await this.actor.update({ 'system.rogueTrader.profitFactor.current': newPF });
-            ui.notifications.warn(`Critical failure! Profit Factor reduced to ${newPF}`);
+            (ui.notifications as any).warn(`Critical failure! Profit Factor reduced to ${newPF}`);
         }
 
         // Resolve and close

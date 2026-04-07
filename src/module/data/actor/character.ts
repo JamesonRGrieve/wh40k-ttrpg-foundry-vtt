@@ -1,6 +1,6 @@
 import CreatureTemplate from './templates/creature.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField, SetField } = foundry.data.fields;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField, SetField } = foundry.data.fields as any;
 
 /**
  * List of characteristic keys used for character generation.
@@ -24,6 +24,7 @@ const GENERATION_CHARACTERISTICS = [
  * @extends {CreatureTemplate}
  */
 export default class CharacterData extends CreatureTemplate {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */

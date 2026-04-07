@@ -12,7 +12,7 @@ import IdentifierField from '../fields/identifier-field.ts';
 export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionTemplate, ActivationTemplate) {
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
 

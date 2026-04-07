@@ -4,6 +4,7 @@
  * @extends ChatMessage
  */
 export class ChatMessageWH40K extends ChatMessage {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
@@ -75,13 +76,13 @@ export class ChatMessageWH40K extends ChatMessage {
     async rollDamage() {
         const itemUuid = this.itemUuid;
         if (!itemUuid) {
-            ui.notifications.warn('WH40K.Chat.NoItemFound', { localize: true });
+            (ui.notifications as any).warn('WH40K.Chat.NoItemFound', { localize: true });
             return;
         }
 
         const item = await fromUuid(itemUuid);
         if (!item) {
-            ui.notifications.warn('WH40K.Chat.ItemNotFound', { localize: true });
+            (ui.notifications as any).warn('WH40K.Chat.ItemNotFound', { localize: true });
             return;
         }
 
@@ -110,7 +111,7 @@ export class ChatMessageWH40K extends ChatMessage {
         const targets = game.user.targets;
 
         if (targets.size === 0) {
-            ui.notifications.warn('WH40K.Chat.NoTokensTargeted', { localize: true });
+            (ui.notifications as any).warn('WH40K.Chat.NoTokensTargeted', { localize: true });
             return;
         }
 
@@ -136,13 +137,13 @@ export class ChatMessageWH40K extends ChatMessage {
     async useItem() {
         const itemUuid = this.itemUuid;
         if (!itemUuid) {
-            ui.notifications.warn('WH40K.Chat.NoItemFound', { localize: true });
+            (ui.notifications as any).warn('WH40K.Chat.NoItemFound', { localize: true });
             return;
         }
 
         const item = await fromUuid(itemUuid);
         if (!item) {
-            ui.notifications.warn('WH40K.Chat.ItemNotFound', { localize: true });
+            (ui.notifications as any).warn('WH40K.Chat.ItemNotFound', { localize: true });
             return;
         }
 

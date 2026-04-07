@@ -12,6 +12,7 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes EquippableTemplate
  */
 export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Data Migration                              */
     /* -------------------------------------------- */
@@ -183,7 +184,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = foundry.data.fields as any;
 
         // Body location schema (reused for armour points)
         const LocationSchema = () =>

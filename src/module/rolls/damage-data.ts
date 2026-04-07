@@ -276,7 +276,7 @@ export class Hit {
                 await this.penetrationRoll.evaluate();
                 this.penetration = this.penetrationRoll.total;
             } catch (error) {
-                ui.notifications.warn('Penetration formula failed - setting to 0');
+                (ui.notifications as any).warn('Penetration formula failed - setting to 0');
                 this.penetration = 0;
             }
         }

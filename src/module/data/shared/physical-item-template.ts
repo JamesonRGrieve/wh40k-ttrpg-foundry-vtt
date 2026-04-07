@@ -5,9 +5,10 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  * @mixin
  */
 export default class PhysicalItemTemplate extends SystemDataModel {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = (foundry.data as any).fields;
         return {
             weight: new fields.NumberField({
                 required: true,

@@ -15,6 +15,8 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends ApplicationV2
  */
 export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -74,7 +76,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /*  Constructor                                 */
     /* -------------------------------------------- */
 
-    constructor(options: Record<string, unknown> = {}) {
+    constructor(options: any = {}) {
         super(options);
         this.item = options.item;
         this.#activeSection = options.initialSection || 'prerequisites';
@@ -455,7 +457,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             fellowship: 'Fellowship',
             influence: 'Influence',
         };
-        return labels[key] || key;
+        return (labels as any)[key] || key;
     }
 
     /**
@@ -487,7 +489,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             initiative: 'Initiative',
             speed: 'Movement Speed',
         };
-        return labels[key] || key;
+        return (labels as any)[key] || key;
     }
 
     /**
@@ -503,7 +505,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             insanity: 'Insanity Threshold',
             corruption: 'Corruption Threshold',
         };
-        return labels[key] || key;
+        return (labels as any)[key] || key;
     }
 
     /* -------------------------------------------- */
@@ -524,19 +526,19 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _setupSectionTabs(): void {
         const tabs = this.element.querySelectorAll('.ted-section-tab');
-        tabs.forEach((tab) => {
-            tab.addEventListener('click', (event) => {
+        tabs.forEach((tab: any) => {
+            tab.addEventListener('click', (event: Event) => {
                 event.preventDefault();
                 const section = tab.dataset.section;
                 if (!section) return;
 
                 // Update active tab
-                tabs.forEach((t) => t.classList.remove('active'));
+                tabs.forEach((t: any) => t.classList.remove('active'));
                 tab.classList.add('active');
 
                 // Show/hide panels
                 const panels = this.element.querySelectorAll('.ted-section-panel');
-                panels.forEach((panel) => {
+                panels.forEach((panel: any) => {
                     panel.classList.toggle('active', panel.dataset.section === section);
                 });
 
@@ -767,7 +769,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
         // Update the item
         await this.item.update(updateData);
-        ui.notifications.info(`Updated ${this.item.name}`);
+        (ui.notifications as any).info(`Updated ${this.item.name}`);
     }
 
     /**

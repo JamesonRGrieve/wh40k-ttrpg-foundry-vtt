@@ -5,16 +5,16 @@ function getTokenActor(actorId) {
     if (actorId) actor = game.actors.get(actorId);
     if (!actor && speaker.token) actor = game.actors.tokens[speaker.token];
     if (!actor) actor = game.actors.get(speaker.actor);
-    if (!actor) return ui.notifications.warn(`Cannot find controlled Actor. Is an Actor selector and do you have permissions?`);
+    if (!actor) return (ui.notifications as any).warn(`Cannot find controlled Actor. Is an Actor selector and do you have permissions?`);
     return actor;
 }
 
 function checkCanRollMacro(data) {
     if (!game || !game.actors) {
-        ui.notifications.warn(`Game or Actors not found. Unable to perform roll`);
+        (ui.notifications as any).warn(`Game or Actors not found. Unable to perform roll`);
         return false;
     } else if (!data) {
-        ui.notifications.warn(`Must provide data to perform roll`);
+        (ui.notifications as any).warn(`Must provide data to perform roll`);
         return false;
     } else {
         return true;
@@ -23,7 +23,7 @@ function checkCanRollMacro(data) {
 
 function checkMacroCanCreate() {
     if (!game.macros || !game.user) {
-        ui.notifications.warn(`Game or User not found. Unable to create macro`);
+        (ui.notifications as any).warn(`Game or User not found. Unable to create macro`);
         return false;
     } else {
         return true;
@@ -33,7 +33,7 @@ function checkMacroCanCreate() {
 function checkExistingMacro(name, command) {
     const existingMacro = game.macros.find((m) => m.name === name && m.command === command);
     if (existingMacro) {
-        ui.notifications.warn(`Macro already exists`);
+        (ui.notifications as any).warn(`Macro already exists`);
         return true;
     } else {
         return false;
@@ -65,7 +65,7 @@ export function rollItemMacro(actorId, itemId) {
     if (!actor) return;
 
     const item = actor ? actor.items.find((i) => i._id === itemId) : null;
-    if (!item) return ui.notifications.warn(`Actor does not have an item id: ${itemId}`);
+    if (!item) return (ui.notifications as any).warn(`Actor does not have an item id: ${itemId}`);
     return actor.rollItem(item._id);
 }
 
@@ -99,7 +99,7 @@ export async function rollSkillMacro(actorId, skillName, speciality) {
     if (!actor) return;
 
     const skill = actor?.getSkillFuzzy ? actor.getSkillFuzzy(skillName) : actor?.skills?.[skillName];
-    if (!skill) return ui.notifications.warn(`Your controlled Actor does not have a skill named ${skillName}`);
+    if (!skill) return (ui.notifications as any).warn(`Your controlled Actor does not have a skill named ${skillName}`);
     await actor.rollSkill(skillName, speciality);
 }
 
@@ -129,6 +129,6 @@ export async function rollCharacteristicMacro(actorId, characteristic) {
     if (!actor) return;
 
     const charCheck = actor ? actor.characteristics[characteristic] : null;
-    if (!charCheck) return ui.notifications.warn(`Your controlled Actor does not have a characteristic named ${characteristic}`);
+    if (!charCheck) return (ui.notifications as any).warn(`Your controlled Actor does not have a characteristic named ${characteristic}`);
     await actor.rollCharacteristic(characteristic);
 }

@@ -1,7 +1,7 @@
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import HordeTemplate from './mixins/horde-template.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields as any;
 
 /**
  * Data model for NPC V2 actors.
@@ -15,7 +15,8 @@ const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectF
  *
  * @extends {ActorDataModel}
  */
-export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
+export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */

@@ -4,6 +4,7 @@ import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants.ts';
 
 export class WH40KBaseActor extends Actor {
+    declare system: any;
     /* -------------------------------------------- */
     /*  Descendant Document Hooks                   */
     /* -------------------------------------------- */
@@ -216,14 +217,14 @@ export class WH40KBaseActor extends Actor {
         const parent = this.system.skills[skill];
         const specialityKey = toCamelCase(speciality);
         if (!parent) {
-            ui.notifications.warn(`Skill not specified -- unexpected error.`);
+            (ui.notifications as any).warn(`Skill not specified -- unexpected error.`);
             return;
         }
 
         const entries = Array.isArray(parent.entries) ? [...parent.entries] : [];
 
         if (entries.some((entry) => entry.name?.toLowerCase() === speciality.toLowerCase() || entry.slug === specialityKey)) {
-            ui.notifications.warn(`Speciality already exists. Unable to create.`);
+            (ui.notifications as any).warn(`Speciality already exists. Unable to create.`);
             return;
         }
 

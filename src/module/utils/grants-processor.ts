@@ -192,7 +192,7 @@ export class GrantsProcessor {
 
         // Show notification
         if (options.showNotification !== false && result.itemsToCreate.length > 0) {
-            ui.notifications.info(`Applied grants: ${result.itemsToCreate.length} items created/upgraded`);
+            (ui.notifications as any).info(`Applied grants: ${result.itemsToCreate.length} items created/upgraded`);
         }
     }
 
@@ -750,7 +750,7 @@ export class GrantsProcessor {
         if (context.depth === 0 && context.showNotification && context.result.notifications.length > 0) {
             const sourceItemName = context.sourceItem?.name || 'Item';
             const message = `<strong>${sourceItemName}</strong> granted:<br/>• ${context.result.notifications.join('<br/>• ')}`;
-            ui.notifications.info(message, { permanent: false });
+            (ui.notifications as any).info(message, { permanent: false });
         }
     }
 
@@ -899,6 +899,6 @@ export async function handleGrantRemoval(item, actor) {
     if (remove) {
         const ids = grantedItems.map((i) => i.id);
         await actor.deleteEmbeddedDocuments('Item', ids);
-        ui.notifications.info(`Removed ${grantedItems.length} granted abilities from ${item.name}`);
+        (ui.notifications as any).info(`Removed ${grantedItems.length} granted abilities from ${item.name}`);
     }
 }

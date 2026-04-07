@@ -144,7 +144,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
 
         // Prevent dropping item onto itself or ancestors
         if (!this._validateDropTarget(droppedItem)) {
-            ui.notifications.info('Cannot drop item into itself');
+            (ui.notifications as any).info('Cannot drop item into itself');
             return false;
         }
 

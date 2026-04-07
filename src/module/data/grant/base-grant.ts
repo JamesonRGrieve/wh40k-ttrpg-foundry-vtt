@@ -39,7 +39,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel {
 
     /** @inheritDoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = (foundry.data as any).fields;
         return {
             // Unique identifier for this grant within its parent
             _id: new fields.DocumentIdField({ initial: () => foundry.utils.randomID() }),

@@ -8,7 +8,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
 export default class JournalEntryItemData extends ItemDataModel.mixin(DescriptionTemplate) {
     /** @override */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
             time: new fields.StringField({ initial: '' }),

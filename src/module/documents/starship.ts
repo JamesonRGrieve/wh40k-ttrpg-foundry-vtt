@@ -1,6 +1,7 @@
 import { WH40KBaseActor } from './base-actor.ts';
 
 export class WH40KStarship extends WH40KBaseActor {
+    [key: string]: any;
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);
         const initData = {
@@ -141,7 +142,7 @@ export class WH40KStarship extends WH40KBaseActor {
     async fireWeapon(weaponId) {
         const weapon = this.items.get(weaponId);
         if (!weapon || weapon.type !== 'shipWeapon') {
-            ui.notifications.warn('Invalid ship weapon');
+            (ui.notifications as any).warn('Invalid ship weapon');
             return;
         }
 

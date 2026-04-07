@@ -17,9 +17,10 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes DamageTemplate
  */
 export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, AttackTemplate, DamageTemplate) {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = foundry.data.fields as any;
         return {
             ...super.defineSchema(),
 
@@ -951,7 +952,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     async loadAmmo(ammoItem) {
         if (!ammoItem || ammoItem.type !== 'ammunition') {
-            ui.notifications.warn('Invalid ammunition item');
+            (ui.notifications as any).warn('Invalid ammunition item');
             return this.parent;
         }
 
@@ -973,7 +974,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             'system.clip.value': this.clip.max, // Reload on ammo change
         });
 
-        ui.notifications.info(`${ammoItem.name} loaded into ${this.parent.name}`);
+        (ui.notifications as any).info(`${ammoItem.name} loaded into ${this.parent.name}`);
         return this.parent;
     }
 
@@ -983,7 +984,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     async ejectAmmo() {
         if (!this.hasLoadedAmmo) {
-            ui.notifications.warn('No ammunition loaded');
+            (ui.notifications as any).warn('No ammunition loaded');
             return this.parent;
         }
 
@@ -998,7 +999,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             'system.clip.value': 0, // Empty clip on eject
         });
 
-        ui.notifications.info(`Ammunition ejected from ${this.parent.name}`);
+        (ui.notifications as any).info(`Ammunition ejected from ${this.parent.name}`);
         return this.parent;
     }
 }

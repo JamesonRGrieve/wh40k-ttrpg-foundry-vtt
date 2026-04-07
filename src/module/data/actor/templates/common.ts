@@ -20,6 +20,7 @@ import ActorDataModel from '../../abstract/actor-data-model.ts';
  * @extends {ActorDataModel}
  */
 export default class CommonTemplate extends ActorDataModel {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */

@@ -518,12 +518,12 @@ export default class NPCTemplateSheet extends BaseItemSheet {
                     await actor.createEmbeddedDocuments('Item', itemsToCreate);
                 }
 
-                ui.notifications.info(`Created NPC: ${actor.name}`);
+                (ui.notifications as any).info(`Created NPC: ${actor.name}`);
                 actor.sheet.render(true);
             }
         } catch (err) {
             console.error('Failed to create NPC from template:', err);
-            ui.notifications.error('Failed to create NPC from template');
+            (ui.notifications as any).error('Failed to create NPC from template');
         }
     }
 }

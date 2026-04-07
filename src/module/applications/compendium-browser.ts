@@ -11,6 +11,7 @@ const { ApplicationV2 } = foundry.applications.api;
  * Compendium browser for browsing and filtering WH40K system compendiums.
  */
 export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
+    [key: string]: any;
     constructor(options: Record<string, unknown> = {}) {
         super(options);
         this._filters = {
@@ -573,65 +574,65 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     /* -------------------------------------------- */
 
     _onSearch(event: Event): void {
-        this._filters.search = event.target.value;
+        this._filters.search = (event.target as HTMLInputElement).value;
         this.render();
     }
 
     _onFilterSource(event: Event): void {
-        this._filters.source = event.target.value;
+        this._filters.source = (event.target as HTMLSelectElement).value;
         this.render();
     }
 
     _onFilterCategory(event: Event): void {
-        this._filters.category = event.target.value;
+        this._filters.category = (event.target as HTMLSelectElement).value;
         this.render();
     }
 
     _onGroupBy(event: Event): void {
-        this._filters.groupBy = event.target.value;
+        this._filters.groupBy = (event.target as HTMLSelectElement).value;
         this.render();
     }
 
     _onFilterArmourType(event: Event): void {
-        this._filters.armourType = event.target.value;
+        this._filters.armourType = (event.target as HTMLSelectElement).value;
         this.render();
     }
 
     _onFilterMinAP(event: Event): void {
-        this._filters.minAP = parseInt(event.target.value) || 0;
+        this._filters.minAP = parseInt((event.target as HTMLInputElement).value) || 0;
         this.render();
     }
 
     _onFilterCoverage(event: Event): void {
-        this._filters.coverage = event.target.value;
+        this._filters.coverage = (event.target as HTMLSelectElement).value;
         this.render();
     }
 
     _onFilterModType(event: Event): void {
-        this._filters.modType = event.target.value;
+        this._filters.modType = (event.target as HTMLSelectElement).value;
         this.render();
     }
 
     _onFilterHasModifiers(event: Event): void {
-        this._filters.hasModifiers = event.target.checked;
+        this._filters.hasModifiers = (event.target as HTMLInputElement).checked;
         this.render();
     }
 
     _onFilterHasProperties(event: Event): void {
-        this._filters.hasProperties = event.target.checked;
+        this._filters.hasProperties = (event.target as HTMLInputElement).checked;
         this.render();
     }
 
     async _onItemClick(event: Event): Promise<void> {
         event.preventDefault();
-        const uuid = event.currentTarget.dataset.uuid;
+        const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
         const doc = await fromUuid(uuid);
         if (doc) doc.sheet.render(true);
     }
 
     _onDragStart(event: Event): void {
-        const uuid = event.currentTarget.dataset.uuid;
-        event.dataTransfer.setData(
+        const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
+        (event as any).dataTransfer.setData(
             'text/plain',
             JSON.stringify({
                 type: 'Item',
@@ -676,7 +677,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      * @param {object} options  Options to pass to the browser.
      * @returns {RTCompendiumBrowser}
      */
-    static open(options: Record<string, unknown> = {}): void {
+    static open(options: Record<string, unknown> = {}): any {
         return new RTCompendiumBrowser(options).render(true);
     }
 }

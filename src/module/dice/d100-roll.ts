@@ -338,7 +338,7 @@ export default class D100Roll extends BasicRollWH40K {
     static async characteristicTest(actor, characteristic, options = {}) {
         const charData = actor.system.characteristics?.[characteristic];
         if (!charData) {
-            ui.notifications.warn(`Characteristic "${characteristic}" not found`);
+            (ui.notifications as any).warn(`Characteristic "${characteristic}" not found`);
             return null;
         }
 
@@ -362,7 +362,7 @@ export default class D100Roll extends BasicRollWH40K {
     static async skillTest(actor, skill, options = {}) {
         const skillData = actor.system.skills?.[skill];
         if (!skillData) {
-            ui.notifications.warn(`Skill "${skill}" not found`);
+            (ui.notifications as any).warn(`Skill "${skill}" not found`);
             return null;
         }
 

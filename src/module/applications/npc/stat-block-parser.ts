@@ -1080,7 +1080,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      */
     static async _onSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         if (!this.#parsedData) {
-            ui.notifications.error('No valid data to import. Parse input first.');
+            (ui.notifications as any).error('No valid data to import. Parse input first.');
             return;
         }
 
@@ -1099,7 +1099,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                     await this.#targetActor.createEmbeddedDocuments('Item', this.#parsedData.items);
                 }
 
-                ui.notifications.info(game.i18n.format('WH40K.NPC.Import.Success', { name: this.#targetActor.name }));
+                (ui.notifications as any).info(game.i18n.format('WH40K.NPC.Import.Success', { name: this.#targetActor.name }));
                 this.#targetActor.sheet.render(true);
 
                 this.#submitted = true;
@@ -1121,14 +1121,14 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                 await actor.createEmbeddedDocuments('Item', this.#parsedData.items);
             }
 
-            ui.notifications.info(game.i18n.format('WH40K.NPC.Import.Success', { name: actor.name }));
+            (ui.notifications as any).info(game.i18n.format('WH40K.NPC.Import.Success', { name: actor.name }));
             actor.sheet.render(true);
 
             this.#submitted = true;
             if (this.#resolve) this.#resolve(actor);
         } catch (err) {
             console.error('Failed to import NPC:', err);
-            ui.notifications.error(game.i18n.localize('WH40K.NPC.Import.Failed'));
+            (ui.notifications as any).error(game.i18n.localize('WH40K.NPC.Import.Failed'));
             if (this.#resolve) this.#resolve(null);
         }
     }
