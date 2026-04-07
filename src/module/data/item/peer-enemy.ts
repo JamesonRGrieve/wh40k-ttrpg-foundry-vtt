@@ -8,7 +8,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
 export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTemplate) {
     /** @override */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
             group: new fields.StringField({ initial: '' }),

@@ -4,6 +4,7 @@
  * @extends {ActiveEffect}
  */
 export class WH40KActiveEffect extends ActiveEffect {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */

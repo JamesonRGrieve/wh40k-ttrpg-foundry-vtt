@@ -10,7 +10,7 @@ import EquippableTemplate from '../shared/equippable-template.ts';
 export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
     /** @override */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
             capacity: new fields.NumberField({ initial: 30, min: 0 }),

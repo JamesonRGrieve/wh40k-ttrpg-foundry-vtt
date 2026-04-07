@@ -2,6 +2,7 @@ import { WH40KBaseActor } from './base-actor.ts';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
 
 export class WH40KVehicle extends WH40KBaseActor {
+    [key: string]: any;
     async _preCreate(data, options, user) {
         await super._preCreate(data, options, user);
         const initData = {
@@ -71,7 +72,7 @@ export class WH40KVehicle extends WH40KBaseActor {
         const item = this.items.get(itemId);
         const character = game.user.character;
         if (!character) {
-            ui.notifications.warn("Vehicle items are rolled using the current users' character. However, no character found.");
+            (ui.notifications as any).warn("Vehicle items are rolled using the current users' character. However, no character found.");
             return;
         }
 
@@ -81,7 +82,7 @@ export class WH40KVehicle extends WH40KBaseActor {
                 await DHTargetedActionManager.performWeaponAttack(character, null, item);
                 return;
             default:
-                return ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
+                return (ui.notifications as any).warn(`No actions implemented for item type: ${item.type}`);
         }
     }
 }

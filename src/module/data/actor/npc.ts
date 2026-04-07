@@ -1,7 +1,7 @@
 import HordeTemplate from './mixins/horde-template.ts';
 import CreatureTemplate from './templates/creature.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, HTMLField } = foundry.data.fields;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, HTMLField } = (foundry.data as any).fields;
 
 /**
  * Data model for NPC actors.

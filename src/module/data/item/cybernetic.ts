@@ -14,9 +14,10 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes ModifiersTemplate
  */
 export default class CyberneticData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, ModifiersTemplate) {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = foundry.data.fields as any;
         return {
             ...super.defineSchema(),
 

@@ -207,4 +207,10 @@ declare global {
     }
 }
 
+
+/** Extended render context for WH40K application sheets */
+interface WH40KRenderContext extends Record<string, any> {
+    tabs?: Record<string, any>;
+}
+
 export {};

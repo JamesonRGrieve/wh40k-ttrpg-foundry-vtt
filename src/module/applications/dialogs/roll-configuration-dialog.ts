@@ -13,6 +13,8 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class RollConfigurationDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
+
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
@@ -85,37 +87,37 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * The actor making the roll
      * @type {Actor|null}
      */
-    actor = null;
+    actor: any = null;
 
     /**
      * Roll configuration data
      * @type {Object}
      */
-    config = {};
+    config: any = {};
 
     /**
      * Selected difficulty key
      * @type {string}
      */
-    selectedDifficulty = 'difficult';
+    selectedDifficulty: string = 'difficult';
 
     /**
      * Custom modifier value
      * @type {number}
      */
-    customModifier = 0;
+    customModifier: number = 0;
 
     /**
      * Active situational modifiers (those checked by the user)
      * @type {Set<string>}
      */
-    activeSituationalModifiers = new Set();
+    activeSituationalModifiers: Set<string> = new Set();
 
     /**
      * Promise resolver for async result
      * @type {Function|null}
      */
-    #resolve = null;
+    #resolve: Function | null = null;
 
     /* -------------------------------------------- */
     /*  Constructor                                 */
@@ -128,7 +130,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {string} [config.flavor] - Roll flavor/name
      * @param {Object} [options] - Application options
      */
-    constructor(config = {}, options = {}) {
+    constructor(config: any = {}, options = {}) {
         super(options);
         this.config = foundry.utils.deepClone(config);
         this.actor = config.actor || null;
@@ -142,17 +144,17 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context: any = await super._prepareContext(options);
 
         // Calculate the difficulty modifier
-        const difficultyPreset = this.constructor.DIFFICULTY_PRESETS.find((p) => p.key === this.selectedDifficulty) || { value: 0 };
+        const difficultyPreset = (this.constructor as any).DIFFICULTY_PRESETS.find((p: any) => p.key === this.selectedDifficulty) || { value: 0 };
         const difficultyModifier = difficultyPreset.value;
 
         // Calculate situational modifier from active checkboxes
         const situationalModifierTotal = this._calculateSituationalTotal();
 
         // Prepare permanent modifiers (from items, conditions, etc.)
-        const permanentModifiers = (this.config.permanentModifiers || []).map((mod) => ({
+        const permanentModifiers = (this.config.permanentModifiers || []).map((mod: any) => ({
             ...mod,
             valueDisplay: mod.value > 0 ? `+${mod.value}` : mod.value.toString(),
             hasSource: !!mod.uuid,
@@ -160,7 +162,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const hasPermanentModifiers = permanentModifiers.length > 0;
 
         // Calculate permanent modifier total
-        const permanentModifierTotal = permanentModifiers.reduce((sum, mod) => sum + (mod.value || 0), 0);
+        const permanentModifierTotal = permanentModifiers.reduce((sum: number, mod: any) => sum + (mod.value || 0), 0);
 
         // Calculate total modifier and final target
         const totalModifier = difficultyModifier + this.customModifier + situationalModifierTotal + permanentModifierTotal;
@@ -168,7 +170,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const finalTarget = Math.max(1, Math.min(100, baseTarget + totalModifier));
 
         // Prepare situational modifiers for display
-        const situationalModifiers = (this.config.situationalModifiers || []).map((mod, index) => ({
+        const situationalModifiers = (this.config.situationalModifiers || []).map((mod: any, index: number) => ({
             ...mod,
             id: `sit-${index}`,
             active: this.activeSituationalModifiers.has(`sit-${index}`),
@@ -204,19 +206,19 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             hasPermanentModifiers,
 
             // Difficulty presets
-            difficulties: this.constructor.DIFFICULTY_PRESETS.map((d) => ({
+            difficulties: (this.constructor as any).DIFFICULTY_PRESETS.map((d: any) => ({
                 ...d,
-                label: game.i18n.localize(d.label),
+                label: (game as any).i18n.localize(d.label),
                 selected: d.key === this.selectedDifficulty,
                 cssClass: d.value > 0 ? 'positive' : d.value < 0 ? 'negative' : 'neutral',
             })),
             selectedDifficulty: this.selectedDifficulty,
 
             // Roll modes - V13: rollModes values are objects with a label property
-            rollModes: Object.entries(CONFIG.Dice.rollModes).map(([key, mode]) => ({
+            rollModes: Object.entries((CONFIG as any).Dice.rollModes).map(([key, mode]: [string, any]) => ({
                 key: key,
-                label: game.i18n.localize(mode.label),
-                selected: key === (this.config.rollMode || game.settings.get('core', 'rollMode')),
+                label: (game as any).i18n.localize(mode.label),
+                selected: key === (this.config.rollMode || (game as any).settings.get('core', 'rollMode')),
             })),
 
             // Form buttons
@@ -232,7 +234,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @returns {number}
      * @private
      */
-    _calculateSituationalTotal(): void {
+    _calculateSituationalTotal(): any {
         let total = 0;
         const situationalModifiers = this.config.situationalModifiers || [];
         for (let i = 0; i < situationalModifiers.length; i++) {
@@ -244,7 +246,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
         super._onRender(context, options);
 
         // Add live update for custom modifier
@@ -269,7 +271,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {Event} event
      */
     #onCustomModifierChange(event: Event): void {
-        this.customModifier = parseInt(event.currentTarget.value) || 0;
+        this.customModifier = parseInt((event.currentTarget as HTMLInputElement).value) || 0;
         this.render({ parts: ['form'] });
     }
 
@@ -278,7 +280,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {Event} event
      */
     #onDifficultyChange(event: Event): void {
-        this.selectedDifficulty = event.currentTarget.value;
+        this.selectedDifficulty = (event.currentTarget as HTMLSelectElement).value;
         this.render({ parts: ['form'] });
     }
 
@@ -287,7 +289,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #cancel(event: Event, target: HTMLElement): void {
+    static #cancel(this: any, event: Event, target: HTMLElement): void {
         // Note: 'this' is bound to the instance by ApplicationV2 action handler system
         this.close();
     }
@@ -297,14 +299,14 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #viewModifierSource(event: Event, target: HTMLElement): Promise<void> {
+    static async #viewModifierSource(this: any, event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
         if (!uuid) return;
 
-        const item = await fromUuid(uuid);
+        const item = await (fromUuid as any)(uuid);
         if (item) {
             // Check for Shift+Click to post to chat
-            if (event.shiftKey) {
+            if ((event as any).shiftKey) {
                 item.toMessage();
             } else {
                 // Default: open sheet
@@ -319,7 +321,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static #toggleSituational(event: Event, target: HTMLElement): void {
+    static #toggleSituational(this: any, event: Event, target: HTMLElement): void {
         const modId = target.dataset.modifierId;
         if (this.activeSituationalModifiers.has(modId)) {
             this.activeSituationalModifiers.delete(modId);
@@ -335,11 +337,11 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static async #onSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<any> {
         const data = foundry.utils.expandObject(formData.object);
 
         // Get final values
-        const difficultyPreset = this.constructor.DIFFICULTY_PRESETS.find((p) => p.key === data.difficulty) || { value: 0 };
+        const difficultyPreset = this.constructor.DIFFICULTY_PRESETS.find((p: any) => p.key === data.difficulty) || { value: 0 };
 
         // Calculate situational modifier total
         const situationalTotal = this._calculateSituationalTotal();
@@ -376,7 +378,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * Show the dialog and wait for result
      * @returns {Promise<Object|null>} The configuration result, or null if cancelled
      */
-    async wait(): Promise<void> {
+    async wait(): Promise<any> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             this.render(true);
@@ -386,7 +388,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /** @override */
     async close(options: Record<string, unknown> = {}): Promise<void> {
         // Ensure we resolve with null if closed without submitting
-        if (this.#resolve && !options.submitted) {
+        if (this.#resolve && !(options as any).submitted) {
             this.#resolve(null);
         }
         return super.close(options);
@@ -401,7 +403,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {Object} config - Roll configuration
      * @returns {Promise<Object|null>} Configuration result or null if cancelled
      */
-    static async configure(config: Record<string, unknown> = {}): Promise<void> {
+    static async configure(config: Record<string, unknown> = {}): Promise<any> {
         const dialog = new this(config);
         return dialog.wait();
     }

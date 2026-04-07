@@ -5,9 +5,10 @@ import ActorDataModel from '../abstract/actor-data-model.ts';
  * Enhanced V13 schema with proper structure for all vehicle data.
  */
 export default class VehicleData extends ActorDataModel {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = foundry.data.fields as any;
         return {
             ...super.defineSchema(),
 

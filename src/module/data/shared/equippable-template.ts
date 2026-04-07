@@ -5,9 +5,10 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  * @mixin
  */
 export default class EquippableTemplate extends SystemDataModel {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = (foundry.data as any).fields;
         return {
             equipped: new fields.BooleanField({ required: true, initial: false }),
             inBackpack: new fields.BooleanField({ required: true, initial: false }),

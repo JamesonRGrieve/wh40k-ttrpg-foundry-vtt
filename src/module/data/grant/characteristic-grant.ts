@@ -36,7 +36,7 @@ export default class CharacteristicGrantData extends BaseGrantData {
 
     /** @inheritDoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
 

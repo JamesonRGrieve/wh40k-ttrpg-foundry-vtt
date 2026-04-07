@@ -11,6 +11,11 @@ import WH40K from '../../config.ts';
  * Uses V2 PARTS system for modular template rendering.
  */
 export default class StarshipSheet extends BaseActorSheet {
+    [key: string]: any;
+
+    declare actor: any;
+    declare document: any;
+
     /** @override */
     static DEFAULT_OPTIONS = {
         actions: {
@@ -86,8 +91,8 @@ export default class StarshipSheet extends BaseActorSheet {
 
     /** @inheritDoc */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
-        context.dh = CONFIG.wh40k || WH40K;
+        const context: any = await super._prepareContext(options);
+        context.dh = (CONFIG as any).wh40k || WH40K;
 
         // Prepare ship-specific data
         this._prepareShipData(context);
@@ -102,14 +107,14 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {object} context  The template render context.
      * @protected
      */
-    _prepareShipData(context: Record<string, unknown>): void {
+    _prepareShipData(context: any): void {
         const items = this.actor.items;
 
         // Get ship components grouped by type
-        context.shipComponents = items.filter((item) => item.type === 'shipComponent');
-        context.shipWeapons = items.filter((item) => item.type === 'shipWeapon');
-        context.shipUpgrades = items.filter((item) => item.type === 'shipUpgrade');
-        context.shipRoles = items.filter((item) => item.type === 'shipRole');
+        context.shipComponents = items.filter((item: any) => item.type === 'shipComponent');
+        context.shipWeapons = items.filter((item: any) => item.type === 'shipWeapon');
+        context.shipUpgrades = items.filter((item: any) => item.type === 'shipUpgrade');
+        context.shipRoles = items.filter((item: any) => item.type === 'shipRole');
 
         // Calculate power and space usage (use DataModel fields)
         context.powerGenerated = 0;
@@ -150,7 +155,7 @@ export default class StarshipSheet extends BaseActorSheet {
 
         // Add tab metadata for tab parts
         if (['stats', 'components', 'weapons', 'crew', 'history'].includes(partId)) {
-            const tabConfig = this.constructor.TABS.find((t) => t.tab === partId);
+            const tabConfig = (this.constructor as any).TABS.find((t: any) => t.tab === partId);
             context.tab = {
                 id: partId,
                 group: tabConfig?.group || 'primary',
@@ -172,8 +177,8 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #fireShipWeapon(event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
+    static async #fireShipWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
+        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
         const weapon = this.actor.items.get(itemId);
         if (!weapon) return;
 
@@ -183,11 +188,11 @@ export default class StarshipSheet extends BaseActorSheet {
             crewRating: this.actor.system.crew?.crewRating || 30,
         };
 
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
+        const html = await (foundry as any).applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
-        ChatMessage.create({
-            user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        (ChatMessage as any).create({
+            user: (game as any).user.id,
+            speaker: (ChatMessage as any).getSpeaker({ actor: this.actor }),
             content: html,
         });
     }
@@ -200,7 +205,7 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollInitiative(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollInitiative(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.actor.rollInitiative?.();
     }
 }

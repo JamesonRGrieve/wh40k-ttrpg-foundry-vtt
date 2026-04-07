@@ -6,9 +6,10 @@ import FormulaField from '../fields/formula-field.ts';
  * @mixin
  */
 export default class DamageTemplate extends SystemDataModel {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = (foundry.data as any).fields;
         return {
             damage: new fields.SchemaField({
                 formula: new FormulaField({ required: true, blank: true, initial: '' }),

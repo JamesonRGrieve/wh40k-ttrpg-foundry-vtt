@@ -199,7 +199,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         }
 
         if (!speciality) {
-            ui.notifications.warn('Please enter or select a specialization name');
+            (ui.notifications as any).warn('Please enter or select a specialization name');
             return;
         }
 

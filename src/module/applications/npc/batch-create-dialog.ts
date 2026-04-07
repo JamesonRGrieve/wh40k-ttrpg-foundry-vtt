@@ -244,7 +244,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         const actors = await this._createNPCs();
 
         if (actors.length > 0) {
-            ui.notifications.info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: actors.length }));
+            (ui.notifications as any).info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: actors.length }));
 
             // Open sheets if requested (only first 5 to avoid overwhelming)
             if (this.#state.openSheets) {
@@ -257,7 +257,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             this.#submitted = true;
             if (this.#resolve) this.#resolve(actors);
         } else {
-            ui.notifications.error(game.i18n.localize('WH40K.NPC.BatchCreate.Failed'));
+            (ui.notifications as any).error(game.i18n.localize('WH40K.NPC.BatchCreate.Failed'));
             if (this.#resolve) this.#resolve([]);
         }
     }
@@ -453,7 +453,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         }
 
         if (actors.length > 0) {
-            ui.notifications.info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: actors.length }));
+            (ui.notifications as any).info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: actors.length }));
         }
 
         return actors;

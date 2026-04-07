@@ -13,9 +13,10 @@ import FormulaField from '../fields/formula-field.ts';
  * @mixes DamageTemplate
  */
 export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTemplate, ActivationTemplate, DamageTemplate) {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = foundry.data.fields as any;
         return {
             ...super.defineSchema(),
 

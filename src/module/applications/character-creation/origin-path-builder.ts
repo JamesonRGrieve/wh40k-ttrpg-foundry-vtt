@@ -1199,7 +1199,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         a.click();
 
         URL.revokeObjectURL(url);
-        ui.notifications.info(game.i18n.localize('WH40K.OriginPath.ExportSuccess'));
+        (ui.notifications as any).info(game.i18n.localize('WH40K.OriginPath.ExportSuccess'));
     }
 
     /**
@@ -1239,10 +1239,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
                 this.currentStepIndex = 0;
                 this.render();
-                ui.notifications.info(game.i18n.localize('WH40K.OriginPath.ImportSuccess'));
+                (ui.notifications as any).info(game.i18n.localize('WH40K.OriginPath.ImportSuccess'));
             } catch (err) {
                 console.error('Import failed:', err);
-                ui.notifications.error(game.i18n.localize('WH40K.OriginPath.ImportFailed'));
+                (ui.notifications as any).error(game.i18n.localize('WH40K.OriginPath.ImportFailed'));
             }
         });
 
@@ -1301,7 +1301,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         // Check if accessible in guided mode
         if (this.guidedMode && !this._isStepAccessible(stepIndex)) {
-            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompletePreviousStep'));
+            (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.CompletePreviousStep'));
             return;
         }
 
@@ -1322,7 +1322,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         // Check if disabled
         if (target.classList.contains('disabled')) {
-            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.OriginNotAvailable'));
+            (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.OriginNotAvailable'));
             return;
         }
 
@@ -1345,7 +1345,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     static async #confirmSelection(event: Event, target: HTMLElement): Promise<void> {
         if (!this.previewedOrigin) {
-            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.NoPreviewedOrigin'));
+            (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.NoPreviewedOrigin'));
             return;
         }
 
@@ -1707,7 +1707,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 item.sheet.render(true);
             }
         } catch (e) {
-            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.ItemNotFound'));
+            (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.ItemNotFound'));
         }
     }
 
@@ -1719,9 +1719,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if (!status.canCommit) {
             if (!status.stepsComplete) {
-                ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
+                (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
             } else if (!status.choicesComplete) {
-                ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllChoices'));
+                (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.CompleteAllChoices'));
             }
             return;
         }
@@ -1786,11 +1786,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             await this.actor.createEmbeddedDocuments('Item', cleanOriginItems);
 
             // Success
-            ui.notifications.info(game.i18n.localize('WH40K.OriginPath.CommitSuccess'));
+            (ui.notifications as any).info(game.i18n.localize('WH40K.OriginPath.CommitSuccess'));
             this.close();
         } catch (err) {
             console.error('Failed to commit origin path:', err);
-            ui.notifications.error(game.i18n.localize('WH40K.OriginPath.CommitFailed'));
+            (ui.notifications as any).error(game.i18n.localize('WH40K.OriginPath.CommitFailed'));
         }
     }
 

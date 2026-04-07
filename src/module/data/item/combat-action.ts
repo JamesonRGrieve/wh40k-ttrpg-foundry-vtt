@@ -9,7 +9,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
 export default class CombatActionData extends ItemDataModel.mixin(DescriptionTemplate) {
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
 

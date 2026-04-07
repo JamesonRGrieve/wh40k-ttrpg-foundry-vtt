@@ -223,7 +223,7 @@ export async function createConditionEffect(actor, condition, options = {}) {
 
     const conditionData = conditions[condition.toLowerCase()];
     if (!conditionData) {
-        ui.notifications.warn(`Unknown condition: ${condition}`);
+        (ui.notifications as any).warn(`Unknown condition: ${condition}`);
         return null;
     }
 

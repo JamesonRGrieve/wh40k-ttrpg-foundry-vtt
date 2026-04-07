@@ -197,12 +197,12 @@ export default class ArmourSheet extends ContainerItemSheet {
     static async #addModification(event: Event, target: HTMLElement): Promise<void> {
         // Check if slots available
         if (this.item.system.availableModSlots <= 0) {
-            ui.notifications.warn(game.i18n.localize('WH40K.Armour.NoSlotsAvailable'));
+            (ui.notifications as any).warn(game.i18n.localize('WH40K.Armour.NoSlotsAvailable'));
             return;
         }
 
         // Open compendium browser or item picker
-        ui.notifications.info(game.i18n.localize('WH40K.Armour.DragModification'));
+        (ui.notifications as any).info(game.i18n.localize('WH40K.Armour.DragModification'));
     }
 
     /**

@@ -674,10 +674,10 @@ export default class NPCSheetV2 extends BaseActorSheet {
         const { ReloadActionManager } = await import('../../actions/reload-action-manager.ts');
         const result = await ReloadActionManager.reloadWeapon(weapon, { skipValidation: event.shiftKey });
         if (result.success) {
-            ui.notifications.info(result.message);
+            (ui.notifications as any).info(result.message);
             await ReloadActionManager.sendReloadToChat(this.actor, weapon, result);
         } else {
-            ui.notifications.warn(result.message);
+            (ui.notifications as any).warn(result.message);
         }
     }
 
@@ -1129,7 +1129,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         updates.displayName = 20; // OWNER_HOVER
 
         await npc.update({ prototypeToken: updates });
-        ui.notifications.info(`Token configured for ${npc.name}`);
+        (ui.notifications as any).info(`Token configured for ${npc.name}`);
     }
 
     /* -------------------------------------------- */
@@ -1142,7 +1142,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
     static async #duplicateNPC(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         await this.actor.duplicate();
-        ui.notifications.info(`Created copy of ${this.actor.name}`);
+        (ui.notifications as any).info(`Created copy of ${this.actor.name}`);
     }
 
     /* -------------------------------------------- */
@@ -1213,7 +1213,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
 
         if (confirmed) {
             await this.actor.delete();
-            ui.notifications.info(`Deleted ${this.actor.name}`);
+            (ui.notifications as any).info(`Deleted ${this.actor.name}`);
         }
     }
 
@@ -1516,13 +1516,13 @@ export default class NPCSheetV2 extends BaseActorSheet {
     static async #addToCombat(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         if (!game.combat) {
-            ui.notifications.warn('No active combat encounter.');
+            (ui.notifications as any).warn('No active combat encounter.');
             return;
         }
         // Prevent duplicate combatants
         const existing = game.combat.getCombatantByActor(this.actor.id);
         if (existing) {
-            ui.notifications.info(`${this.actor.name} is already in combat.`);
+            (ui.notifications as any).info(`${this.actor.name} is already in combat.`);
             return;
         }
         await game.combat.createEmbeddedDocuments('Combatant', [

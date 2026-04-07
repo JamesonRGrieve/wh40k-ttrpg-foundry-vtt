@@ -274,13 +274,13 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         }
 
         if (!actor) {
-            ui.notifications.warn('Could not find the dropped actor.');
+            (ui.notifications as any).warn('Could not find the dropped actor.');
             return;
         }
 
         // Only allow NPC types
         if (actor.type !== 'npc' && actor.type !== 'npcV2') {
-            ui.notifications.warn('Only NPC actors can be added to encounters.');
+            (ui.notifications as any).warn('Only NPC actors can be added to encounters.');
             return;
         }
 
@@ -350,7 +350,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         const actors = game.actors.filter((a) => a.type === 'npc' || a.type === 'npcV2');
 
         if (actors.length === 0) {
-            ui.notifications.warn('No NPC actors found in the world.');
+            (ui.notifications as any).warn('No NPC actors found in the world.');
             return;
         }
 
@@ -452,7 +452,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      */
     static async #saveTemplate(event: Event, target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
-            ui.notifications.warn('No NPCs to save.');
+            (ui.notifications as any).warn('No NPCs to save.');
             return;
         }
 
@@ -473,7 +473,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             savedAt: Date.now(),
         });
 
-        ui.notifications.info(`Saved encounter template: ${name}`);
+        (ui.notifications as any).info(`Saved encounter template: ${name}`);
         this.render({ parts: ['content'] });
     }
 
@@ -492,7 +492,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             this.#party = foundry.utils.deepClone(template.party);
         }
 
-        ui.notifications.info(`Loaded encounter: ${template.name}`);
+        (ui.notifications as any).info(`Loaded encounter: ${template.name}`);
         this.render({ parts: ['content'] });
     }
 
@@ -503,7 +503,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      */
     static async #deployToCombat(event: Event, target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
-            ui.notifications.warn('No NPCs to deploy.');
+            (ui.notifications as any).warn('No NPCs to deploy.');
             return;
         }
 
@@ -536,7 +536,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         await combat.createEmbeddedDocuments('Combatant', combatants);
 
-        ui.notifications.info(game.i18n.format('WH40K.NPC.Encounter.Deployed', { count: combatants.length }));
+        (ui.notifications as any).info(game.i18n.format('WH40K.NPC.Encounter.Deployed', { count: combatants.length }));
     }
 
     /**

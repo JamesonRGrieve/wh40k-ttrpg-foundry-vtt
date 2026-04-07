@@ -31,7 +31,7 @@ export class RollTableUtils {
         }
 
         if (!table) {
-            ui.notifications.warn(`Roll table "${tableName}" not found.`);
+            (ui.notifications as any).warn(`Roll table "${tableName}" not found.`);
             return null;
         }
 

@@ -152,7 +152,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
         await this.actor.update({ 'system.experience.total': newTotal });
 
         const verb = this.xpAmount > 0 ? 'added' : 'removed';
-        ui.notifications.info(`${Math.abs(this.xpAmount)} XP ${verb}. Total: ${newTotal}`);
+        (ui.notifications as any).info(`${Math.abs(this.xpAmount)} XP ${verb}. Total: ${newTotal}`);
 
         await this.close();
     }

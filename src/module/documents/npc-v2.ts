@@ -12,6 +12,7 @@ import { WH40KSettings } from '../wh40k-rpg-settings.ts';
  * @extends {WH40KBaseActor}
  */
 export class WH40KNPCV2 extends WH40KBaseActor {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
@@ -129,7 +130,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
     async rollCharacteristic(characteristicKey, flavor) {
         const char = this.system.characteristics[characteristicKey];
         if (!char) {
-            ui.notifications.warn(`Unknown characteristic: ${characteristicKey}`);
+            (ui.notifications as any).warn(`Unknown characteristic: ${characteristicKey}`);
             return null;
         }
 
@@ -154,7 +155,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
         const weapons = this.system.weapons?.simple || [];
         const weapon = weapons[weaponIndex];
         if (!weapon) {
-            ui.notifications.warn(`No weapon at index ${weaponIndex}`);
+            (ui.notifications as any).warn(`No weapon at index ${weaponIndex}`);
             return null;
         }
 

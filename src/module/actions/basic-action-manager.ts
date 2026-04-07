@@ -64,7 +64,7 @@ export class BasicActionManager {
         const rollId = btn.dataset.rollId;
         const actionData = this.getActionData(rollId);
         if (!actionData) {
-            ui.notifications.warn('Roll data no longer available. Cannot roll damage.');
+            (ui.notifications as any).warn('Roll data no longer available. Cannot roll damage.');
             return;
         }
 
@@ -107,7 +107,7 @@ export class BasicActionManager {
         const actionData = this.getActionData(rollId);
 
         if (!actionData) {
-            ui.notifications.warn(`Action data expired. Unable to perform action.`);
+            (ui.notifications as any).warn(`Action data expired. Unable to perform action.`);
             return;
         }
 
@@ -120,7 +120,7 @@ export class BasicActionManager {
 
         if (confirmed) {
             await actionData.refundResources();
-            ui.notifications.info(`Resources refunded`);
+            (ui.notifications as any).info(`Resources refunded`);
         }
     }
 
@@ -131,12 +131,12 @@ export class BasicActionManager {
         const actionData = this.getActionData(rollId);
 
         if (!actionData) {
-            ui.notifications.warn(`Action data expired. Unable to perform action.`);
+            (ui.notifications as any).warn(`Action data expired. Unable to perform action.`);
             return;
         }
 
         if (actionData.rollData?.sourceActor?.system?.fate?.value <= 0) {
-            ui.notifications.warn(`Actor does not have enough fate points!`);
+            (ui.notifications as any).warn(`Actor does not have enough fate points!`);
             return;
         }
 
@@ -194,7 +194,7 @@ export class BasicActionManager {
             }
         }
         if (!targetActor) {
-            ui.notifications.warn(`Cannot determine target actor to assign hit.`);
+            (ui.notifications as any).warn(`Cannot determine target actor to assign hit.`);
             return;
         }
 
@@ -215,12 +215,12 @@ export class BasicActionManager {
 
         const actor = (await fromUuid(targetUuid)).actor;
         if (!actor) {
-            ui.notifications.warn(`Cannot determine actor to assign hit.`);
+            (ui.notifications as any).warn(`Cannot determine actor to assign hit.`);
             return;
         }
         for (const field of [damage, penetration, fatigue]) {
             if (field && isNaN(parseInt(field))) {
-                ui.notifications.warn(`Unable to determine damage/penetration/fatigue to assign.`);
+                (ui.notifications as any).warn(`Unable to determine damage/penetration/fatigue to assign.`);
                 return;
             }
         }

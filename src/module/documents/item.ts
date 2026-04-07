@@ -677,7 +677,7 @@ export class WH40KItem extends WH40KItemContainer {
      */
     async applyOriginToActor(actor) {
         if (!this.isOriginPath) {
-            ui.notifications.warn('This item is not an origin path and cannot be auto-applied.');
+            (ui.notifications as any).warn('This item is not an origin path and cannot be auto-applied.');
             return;
         }
 
@@ -752,7 +752,7 @@ export class WH40KItem extends WH40KItemContainer {
         // Add the origin path itself
         await actor.createEmbeddedDocuments('Item', [this.toObject()]);
 
-        ui.notifications.info(`Applied ${this.name} to ${actor.name}`);
+        (ui.notifications as any).info(`Applied ${this.name} to ${actor.name}`);
     }
 
     /**

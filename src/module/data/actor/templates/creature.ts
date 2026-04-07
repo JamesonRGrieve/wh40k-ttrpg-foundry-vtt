@@ -2,7 +2,7 @@ import CommonTemplate from './common.ts';
 import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = (foundry.data as any).fields;
 
 /**
  * Creature template for actors that are living beings (Characters, NPCs).
@@ -10,6 +10,7 @@ const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectF
  * @extends {CommonTemplate}
  */
 export default class CreatureTemplate extends CommonTemplate {
+    [key: string]: any;
     /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */

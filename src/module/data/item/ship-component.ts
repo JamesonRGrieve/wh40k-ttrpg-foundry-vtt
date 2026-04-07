@@ -8,9 +8,10 @@ import IdentifierField from '../fields/identifier-field.ts';
  * @mixes DescriptionTemplate
  */
 export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTemplate) {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = foundry.data.fields as any;
         return {
             ...super.defineSchema(),
 

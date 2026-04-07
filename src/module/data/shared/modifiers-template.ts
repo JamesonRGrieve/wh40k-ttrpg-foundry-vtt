@@ -164,9 +164,10 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  * @mixin
  */
 export default class ModifiersTemplate extends SystemDataModel {
+    [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields;
+        const fields = foundry.data.fields as any;
         return {
             modifiers: new fields.SchemaField({
                 characteristics: new fields.ObjectField({ required: true, initial: {} }),

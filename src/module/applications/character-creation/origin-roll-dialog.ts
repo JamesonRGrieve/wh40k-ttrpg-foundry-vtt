@@ -16,6 +16,7 @@ import { evaluateWoundsFormula, evaluateFateFormula } from '../../utils/formula-
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginRollDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         id: 'origin-roll-dialog-{rollType}',
@@ -163,7 +164,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @returns {string}
      * @private
      */
-    _expandWoundsFormula(formula: string, tb: number): void {
+    _expandWoundsFormula(formula: string, tb: number): any {
         // Replace "TB" with actual value for display
         // e.g., "2xTB+1d5+2" becomes "2×4+1d5+2"
         return formula.replace(/(\d+)xTB/gi, (match, multiplier) => {
@@ -206,7 +207,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             await this.render();
         } catch (error) {
             console.error('Error rolling:', error);
-            ui.notifications.error('Error rolling dice. Check console for details.');
+            (ui.notifications as any).error('Error rolling dice. Check console for details.');
         }
     }
 
@@ -220,7 +221,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         event.preventDefault();
 
         if (!this.rollResult) {
-            ui.notifications.warn('Please roll or input a value first!');
+            (ui.notifications as any).warn('Please roll or input a value first!');
             return;
         }
 
@@ -499,7 +500,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @returns {Promise<object>}
      * @private
      */
-    async _rollWounds(): Promise<void> {
+    async _rollWounds(): Promise<any> {
         const actor = this.context.actor;
         const formula = this.formula;
 
@@ -537,7 +538,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @returns {Promise<object>}
      * @private
      */
-    async _rollFate(): Promise<void> {
+    async _rollFate(): Promise<any> {
         const formula = this.formula;
 
         // Fate formulas are typically conditional: "(1-5|=2),(6-10|=3)"
@@ -623,7 +624,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @returns {Promise<ChatMessage>}
      * @private
      */
-    async _postRollToChat(): Promise<void> {
+    async _postRollToChat(): Promise<any> {
         const templateData = {
             actor: this.context.actor.name,
             actorImg: this.context.actor.img,
