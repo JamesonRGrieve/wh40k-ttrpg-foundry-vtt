@@ -9,7 +9,7 @@ import SystemDataModel from './system-data-model.ts';
  * - prepareEmbeddedData() hook for item-dependent calculations
  * - getRollData() base for dice roll commands
  */
-export default class ActorDataModel extends (SystemDataModel as any) {
+export default class ActorDataModel extends SystemDataModel {
     [key: string]: any;
     /**
      * Actor-specific metadata.

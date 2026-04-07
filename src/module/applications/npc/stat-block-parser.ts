@@ -887,7 +887,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         };
     }
 
-    static _inferWeaponClass(name: string, range: string): void {
+    static _inferWeaponClass(name: string, range: string): any {
         const lower = name.toLowerCase();
         if (range.toLowerCase() === 'melee') return 'melee';
         if (lower.includes('pistol')) return 'pistol';
@@ -1178,7 +1178,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * Wait for import completion.
      * @returns {Promise<Actor|null>} Created actor or null.
      */
-    async wait(): Promise<void> {
+    async wait(): Promise<any> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             this.render(true);
@@ -1190,7 +1190,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} [initialInput=""] - Optional initial input.
      * @returns {Promise<Actor|null>} Created actor or null.
      */
-    static async open(initialInput: string = ''): Promise<void> {
+    static async open(initialInput: any = ''): Promise<any> {
         let input = initialInput;
         let options = {};
         if (typeof initialInput === 'object' && initialInput !== null) {

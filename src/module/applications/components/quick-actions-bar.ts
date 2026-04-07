@@ -145,7 +145,7 @@ export default class QuickActionsBar {
      * @param {boolean} compact - Compact mode (icons only)
      * @returns {string} HTML string
      */
-    static renderActions(actions: any, compact: boolean = false): void {
+    static renderActions(actions: any, compact: boolean = false): any {
         return actions
             .map((action) => {
                 const dataAttrs = Object.entries(action.dataset)

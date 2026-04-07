@@ -24,7 +24,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {SchemaField}
      */
     static SkillField(label, charShort, advanced = false, hasEntries = false) {
-        const schema = {
+        const schema: Record<string, any> = {
             label: new StringField({ required: true, initial: label }),
             characteristic: new StringField({ required: true, initial: charShort }),
             advanced: new BooleanField({ required: true, initial: advanced }),
@@ -310,7 +310,7 @@ export default class CreatureTemplate extends CommonTemplate {
      */
     static #migrateCharacteristics(source) {
         if (source.characteristics) {
-            for (const char of Object.values(source.characteristics)) {
+            for (const char of Object.values(source.characteristics as Record<string, any>)) {
                 if (char.base !== undefined) char.base = this._toInt(char.base);
                 if (char.advance !== undefined) char.advance = this._toInt(char.advance);
                 if (char.modifier !== undefined) char.modifier = this._toInt(char.modifier);
@@ -561,7 +561,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _prepareCharacteristics() {
-        for (const [key, char] of Object.entries(this.characteristics)) {
+        for (const [key, char] of Object.entries(this.characteristics as Record<string, any>)) {
             // Calculate total: base + (advance * 5) + modifier
             char.total = char.base + char.advance * 5 + char.modifier;
 
@@ -585,7 +585,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _prepareSkills() {
-        for (const [key, skill] of Object.entries(this.skills)) {
+        for (const [key, skill] of Object.entries(this.skills as Record<string, any>)) {
             const char = this.getCharacteristic(skill.characteristic);
             const charTotal = char?.total ?? 0;
 
@@ -740,7 +740,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _applyModifiersToCharacteristics() {
-        for (const [name, char] of Object.entries(this.characteristics)) {
+        for (const [name, char] of Object.entries(this.characteristics as Record<string, any>)) {
             const originPathMod = this._getOriginPathCharacteristicModifier(name);
             const itemMod = this._getTotalCharacteristicModifier(name);
             const totalMod = originPathMod + itemMod;
@@ -789,7 +789,7 @@ export default class CreatureTemplate extends CommonTemplate {
         // Recalculate skills from updated characteristic totals (which now include item modifiers)
         this._prepareSkills();
 
-        for (const [skillKey, skill] of Object.entries(this.skills)) {
+        for (const [skillKey, skill] of Object.entries(this.skills as Record<string, any>)) {
             const itemMod = this._getTotalSkillModifier(skillKey);
             if (itemMod !== 0) {
                 skill.itemModifier = itemMod;
@@ -979,7 +979,7 @@ export default class CreatureTemplate extends CommonTemplate {
         const data = super.getRollData();
 
         // Add characteristic values and bonuses for formulas
-        for (const [key, char] of Object.entries(this.characteristics)) {
+        for (const [key, char] of Object.entries(this.characteristics as Record<string, any>)) {
             data[char.short] = char.total;
             data[`${char.short}B`] = char.bonus;
             data[key] = char.total;

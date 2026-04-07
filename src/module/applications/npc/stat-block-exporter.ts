@@ -85,7 +85,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     get title() {
-        return game.i18n.format('WH40K.NPC.Export.Title', { name: this.#actor?.name || 'NPC' });
+        return (game as any).i18n.format('WH40K.NPC.Export.Title', { name: this.#actor?.name || 'NPC' });
     }
 
     /* -------------------------------------------- */
@@ -181,7 +181,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
             lines.push('─'.repeat(50));
 
             const skillLines = [];
-            for (const [key, skill] of Object.entries(sys.trainedSkills)) {
+            for (const [key, skill] of Object.entries(sys.trainedSkills) as any) {
                 let level = '';
                 if (skill.plus20) level = '+20';
                 else if (skill.plus10) level = '+10';
@@ -263,7 +263,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {boolean} [options.prettyPrint=true] - Pretty print JSON.
      * @returns {string} JSON string.
      */
-    static toJSON(actor: any, options: Record<string, unknown> = {}): void {
+    static toJSON(actor: any, options: Record<string, unknown> = {}): any {
         const { includeItems = true, prettyPrint = true } = options;
 
         const exportData = {
@@ -305,8 +305,8 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+    async _prepareContext(options: any): Promise<any> {
+        const context: any = await super._prepareContext(options);
 
         // Generate export content based on format
         const textContent = StatBlockExporter.toText(this.#actor);
@@ -328,14 +328,14 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    _onRender(context: any, options: any): any {
         super._onRender(context, options);
 
         // Handle format toggle
         const formatTabs = this.element.querySelectorAll('[data-format]');
         for (const tab of formatTabs) {
-            tab.addEventListener('click', (e) => {
-                this.#format = e.currentTarget.dataset.format;
+            tab.addEventListener('click', (e: any) => {
+                this.#format = (e.currentTarget as HTMLElement).dataset.format;
                 this.render({ parts: ['content'] });
             });
         }
@@ -355,10 +355,10 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
         try {
             await navigator.clipboard.writeText(content);
-            (ui.notifications as any).info(game.i18n.localize('WH40K.NPC.Export.CopiedToClipboard'));
+            (ui.notifications as any).info((game as any).i18n.localize('WH40K.NPC.Export.CopiedToClipboard'));
         } catch (err) {
             console.error('Failed to copy to clipboard:', err);
-            (ui.notifications as any).error(game.i18n.localize('WH40K.NPC.Export.CopyFailed'));
+            (ui.notifications as any).error((game as any).i18n.localize('WH40K.NPC.Export.CopyFailed'));
         }
     }
 
@@ -372,7 +372,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         const filename = `${this.#actor.name.slugify()}.json`;
 
         StatBlockExporter._downloadFile(content, filename, 'application/json');
-        (ui.notifications as any).info(game.i18n.format('WH40K.NPC.Export.Downloaded', { filename }));
+        (ui.notifications as any).info((game as any).i18n.format('WH40K.NPC.Export.Downloaded', { filename }));
     }
 
     /**
@@ -385,7 +385,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         const filename = `${this.#actor.name.slugify()}.txt`;
 
         StatBlockExporter._downloadFile(content, filename, 'text/plain');
-        (ui.notifications as any).info(game.i18n.format('WH40K.NPC.Export.Downloaded', { filename }));
+        (ui.notifications as any).info((game as any).i18n.format('WH40K.NPC.Export.Downloaded', { filename }));
     }
 
     /**
@@ -430,7 +430,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {Actor} actor - The actor to export.
      * @returns {StatBlockExporter} The exporter instance.
      */
-    static show(actor: any): Promise<any> {
+    static show(actor: any): any {
         const exporter = new this(actor);
         exporter.render(true);
         return exporter;
@@ -447,10 +447,10 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
         try {
             await navigator.clipboard.writeText(content);
-            (ui.notifications as any).info(game.i18n.localize('WH40K.NPC.Export.CopiedToClipboard'));
+            (ui.notifications as any).info((game as any).i18n.localize('WH40K.NPC.Export.CopiedToClipboard'));
         } catch (err) {
             console.error('Failed to copy to clipboard:', err);
-            (ui.notifications as any).error(game.i18n.localize('WH40K.NPC.Export.CopyFailed'));
+            (ui.notifications as any).error((game as any).i18n.localize('WH40K.NPC.Export.CopyFailed'));
         }
     }
 }

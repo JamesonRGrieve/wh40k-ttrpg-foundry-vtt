@@ -103,7 +103,7 @@ export class TooltipsWH40K {
      * @param {string} skillKey  The skill key (e.g., "acrobatics", "commonLore").
      * @returns {object|null}    Skill description data or null.
      */
-    getSkillDescription(skillKey: string): void {
+    getSkillDescription(skillKey: string): any {
         // Try direct lookup first
         const normalizedKey = skillKey.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
         return this.#skillDescriptions.get(normalizedKey) || null;

@@ -31,6 +31,8 @@ const GENERATION_CHARACTERISTICS = [
 const DEFAULT_BASE = 25;
 
 export default class CharacteristicSetupDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
+
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
@@ -398,7 +400,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @param {HTMLInputElement} input
      * @private
      */
-    #saveRollInput(input: string): void {
+    #saveRollInput(input: any): void {
         const index = parseInt(input.dataset.rollIndex);
         let value = parseInt(input.value);
 
@@ -417,7 +419,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @param {HTMLInputElement} input
      * @private
      */
-    #cancelRollInput(input: string): boolean {
+    #cancelRollInput(input: any): void {
         this.render();
     }
 
@@ -683,7 +685,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * Wait for dialog to complete.
      * @returns {Promise<boolean>} True if applied, false if cancelled
      */
-    async wait(): Promise<void> {
+    async wait(): Promise<any> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             this.render(true);
@@ -698,7 +700,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @returns {Promise<boolean>} True if applied, false if cancelled
      * @static
      */
-    static async open(actor: any): Promise<void> {
+    static async open(actor: any): Promise<any> {
         if (!actor || actor.type !== 'acolyte') {
             (ui.notifications as any).error('Characteristic setup is only available for characters.');
             return false;

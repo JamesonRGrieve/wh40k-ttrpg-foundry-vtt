@@ -18,6 +18,8 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {ApplicationV2}
  */
 export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -407,7 +409,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * Wait for the dialog to complete.
      * @returns {Promise<Actor|null>} The created actor, or null if cancelled.
      */
-    async wait(): Promise<void> {
+    async wait(): Promise<any> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             this.render(true);
@@ -423,7 +425,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {Object} [config] - Initial configuration.
      * @returns {Promise<Actor|null>} The created actor, or null if cancelled.
      */
-    static async create(config: Record<string, unknown> = {}): Promise<void> {
+    static async create(config: Record<string, unknown> = {}): Promise<any> {
         const dialog = new this(config);
         return dialog.wait();
     }
@@ -437,7 +439,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {Object} config.baseConfig - Base NPC configuration.
      * @returns {Promise<Array<Actor>>} Array of created actors.
      */
-    static async createBatch(config: Record<string, unknown>): Promise<void> {
+    static async createBatch(config: Record<string, unknown>): Promise<any> {
         const { count = 1, namePattern = 'NPC {n}', randomize = false, baseConfig = {} } = config;
 
         const actors = [];

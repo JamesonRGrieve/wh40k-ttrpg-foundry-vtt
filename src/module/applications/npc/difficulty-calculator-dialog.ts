@@ -18,11 +18,13 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {HandlebarsApplicationMixin(ApplicationV2)}
  */
 export default class DifficultyCalculatorDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
+
     /**
      * Internal state for the dialog.
      * @type {Object}
      */
-    #state = {
+    #state: any = {
         npc: null,
         quantity: 1,
     };
@@ -90,11 +92,11 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+    async _prepareContext(options: any): Promise<any> {
+        const context: any = await super._prepareContext(options);
 
         // Get party info
-        const party = game.users.filter((u) => u.active && u.character);
+        const party = (game as any).users.filter((u: any) => u.active && u.character);
         const partySize = party.length;
 
         // Calculate average party rank
@@ -134,7 +136,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         context.difficulty = difficulty;
 
         // Add party members list
-        context.partyMembers = party.map((u) => ({
+        context.partyMembers = party.map((u: any) => ({
             name: u.character?.name ?? u.name,
             rank: u.character?.system?.rank ?? 1,
             img: u.character?.img ?? u.avatar,
@@ -211,9 +213,9 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #updateQuantity(event: Event, target: HTMLElement): Promise<void> {
+    static async #updateQuantity(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const input = target.closest('form').querySelector('[name="quantity"]');
+        const input = (target.closest('form') as HTMLFormElement).querySelector('[name="quantity"]') as HTMLInputElement;
         const quantity = parseInt(input.value, 10) || 1;
         this.#state.quantity = Math.max(1, quantity);
         this.render();
@@ -230,8 +232,8 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         // Listen for quantity input changes
         const quantityInput = htmlElement.querySelector('[name="quantity"]');
         if (quantityInput) {
-            quantityInput.addEventListener('input', (event) => {
-                const quantity = parseInt(event.target.value, 10) || 1;
+            quantityInput.addEventListener('input', (event: any) => {
+                const quantity = parseInt((event.target as HTMLInputElement).value, 10) || 1;
                 this.#state.quantity = Math.max(1, quantity);
                 this.render();
             });

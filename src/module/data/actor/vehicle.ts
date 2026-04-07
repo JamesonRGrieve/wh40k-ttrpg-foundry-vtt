@@ -8,7 +8,7 @@ export default class VehicleData extends ActorDataModel {
     [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields as any;
+        const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
 

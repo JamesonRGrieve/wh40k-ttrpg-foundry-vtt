@@ -16,7 +16,16 @@ import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
  *
  * @extends {BaseActorSheet}
  */
-export default class NPCSheetV2 extends BaseActorSheet {
+export default class NPCSheetV2 extends (BaseActorSheet as any) {
+    [key: string]: any;
+    declare actor: any;
+    declare document: any;
+    declare element: any;
+    declare position: any;
+    declare isEditable: any;
+    declare _notify: any;
+    declare render: any;
+
     /** NPC sheets default to EDIT mode for GM convenience. */
     _mode = 2;
 
@@ -130,7 +139,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: Record<string, any>): Promise<Record<string, any>> {
         // Call parent to get base ApplicationV2 context setup
         const context = await super._prepareContext(options);
 
@@ -191,7 +200,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareCharacteristicsContext(context: Record<string, unknown>): Record<string, unknown> {
+    _prepareCharacteristicsContext(context: Record<string, any>): void {
         const chars = context.system.characteristics || {};
         const charArray = [];
 
@@ -224,7 +233,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareWeaponsContext(context: Record<string, unknown>): Record<string, unknown> {
+    _prepareWeaponsContext(context: Record<string, any>): void {
         // Embedded weapons (from items dragged onto the NPC)
         context.embeddedWeapons = context.items.filter((i) => i.type === 'weapon');
     }
@@ -236,7 +245,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareHordeContext(context: Record<string, unknown>): Record<string, unknown> {
+    _prepareHordeContext(context: Record<string, any>): void {
         const horde = context.system.horde || {};
         const isHorde = context.system.isHorde;
 
@@ -261,7 +270,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _preparePartContext(partId: string, context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
         context = await super._preparePartContext(partId, context, options);
 
         // Prepare tab-specific context
@@ -292,7 +301,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareOverviewContext(context: Record<string, unknown>): Record<string, unknown> {
+    _prepareOverviewContext(context: Record<string, any>): void {
         // Ensure items array exists
         if (!context.items) {
             context.items = Array.from(this.actor.items);
@@ -392,7 +401,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareCombatContext(context: Record<string, unknown>): Record<string, unknown> {
+    _prepareCombatContext(context: Record<string, any>): void {
         const tb = context.system.characteristics?.toughness?.bonus ?? 0;
         context.toughnessBonus = tb;
 
@@ -456,7 +465,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareSkillsContext(context: Record<string, unknown>): Record<string, unknown> {
+    _prepareSkillsContext(context: Record<string, any>): void {
         // Get trained skills list from data model
         context.trainedSkillsList = context.system.trainedSkillsList || [];
 
@@ -579,7 +588,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareAbilitiesContext(context: Record<string, unknown>): Record<string, unknown> {
+    _prepareAbilitiesContext(context: Record<string, any>): void {
         // Ensure items array exists
         if (!context.items) {
             context.items = Array.from(this.actor.items);
@@ -617,7 +626,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareNotesContext(context: Record<string, unknown>): Record<string, unknown> {
+    _prepareNotesContext(context: Record<string, any>): void {
         // Tags
         context.tags = context.system.tags || [];
 
@@ -639,7 +648,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #toggleHordeMode(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await this.actor.system.toggleHordeMode();
+        await (this as any).actor.system.toggleHordeMode();
     }
 
     /* -------------------------------------------- */
@@ -653,7 +662,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         const charKey = target.dataset.characteristic;
         if (!charKey) return;
-        await this.actor.rollCharacteristic(charKey);
+        await (this as any).actor.rollCharacteristic(charKey);
     }
 
     /* -------------------------------------------- */
@@ -667,15 +676,15 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #reloadWeapon(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const itemId = target.closest('[data-item-id]')?.dataset.itemId ?? target.dataset.itemId;
+        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId ?? target.dataset.itemId;
         if (!itemId) return;
-        const weapon = this.actor.items.get(itemId);
+        const weapon = (this as any).actor.items.get(itemId);
         if (!weapon) return;
         const { ReloadActionManager } = await import('../../actions/reload-action-manager.ts');
-        const result = await ReloadActionManager.reloadWeapon(weapon, { skipValidation: event.shiftKey });
+        const result = await ReloadActionManager.reloadWeapon(weapon, { skipValidation: (event as any).shiftKey });
         if (result.success) {
             (ui.notifications as any).info(result.message);
-            await ReloadActionManager.sendReloadToChat(this.actor, weapon, result);
+            await ReloadActionManager.sendReloadToChat((this as any).actor, weapon, result);
         } else {
             (ui.notifications as any).warn(result.message);
         }
@@ -691,7 +700,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
     static async #applyMagnitudeDamage(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const amount = parseInt(target.dataset.amount || '1', 10);
-        await this.actor.system.applyMagnitudeDamage(amount, 'Manual');
+        await (this as any).actor.system.applyMagnitudeDamage(amount, 'Manual');
     }
 
     /* -------------------------------------------- */
@@ -704,7 +713,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
     static async #restoreMagnitude(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const amount = parseInt(target.dataset.amount || '1', 10);
-        await this.actor.system.restoreMagnitude(amount, 'Manual');
+        await (this as any).actor.system.restoreMagnitude(amount, 'Manual');
     }
 
     /* -------------------------------------------- */
@@ -718,7 +727,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
-        await this.actor.rollSkill(skillKey);
+        await (this as any).actor.rollSkill(skillKey);
     }
 
     /* -------------------------------------------- */
@@ -731,8 +740,8 @@ export default class NPCSheetV2 extends BaseActorSheet {
     static async #rollInitiative(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         // Roll initiative using the system's initiative formula
-        const initChar = this.actor.system.initiative.characteristic;
-        const char = this.actor.system.characteristics[initChar];
+        const initChar = (this as any).actor.system.initiative.characteristic;
+        const char = (this as any).actor.system.characteristics[initChar];
         if (!char) return;
 
         const formula = `1d10 + ${char.bonus}`;
@@ -740,8 +749,8 @@ export default class NPCSheetV2 extends BaseActorSheet {
         await roll.evaluate();
 
         await roll.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: 'Initiative Roll',
+            speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
+            flavor: 'Initiative Roll' as any,
         });
     }
 
@@ -754,9 +763,9 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #toggleArmourMode(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const currentMode = this.actor.system.armour?.mode || 'simple';
+        const currentMode = (this as any).actor.system.armour?.mode || 'simple';
         const newMode = currentMode === 'simple' ? 'locations' : 'simple';
-        await this.actor.system.switchArmourMode(newMode);
+        await (this as any).actor.system.switchArmourMode(newMode);
     }
 
     /* -------------------------------------------- */
@@ -793,7 +802,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
                 { key: 'stealth', name: 'Stealth' },
                 { key: 'survival', name: 'Survival' },
                 { key: 'techUse', name: 'Tech-Use' },
-            ].filter((s) => !this.actor.system.trainedSkills[s.key]);
+            ].filter((s) => !(this as any).actor.system.trainedSkills[s.key]);
 
             const options = skills.map((s) => `<option value="${s.key}">${s.name}</option>`).join('');
 
@@ -827,9 +836,9 @@ export default class NPCSheetV2 extends BaseActorSheet {
                         default: true,
                         callback: async (event, button, _dialog) => {
                             const form = button.form;
-                            const skill = form.querySelector('[name="skill"]').value;
-                            const level = form.querySelector('[name="level"]').value;
-                            await this.actor.system.addTrainedSkill(skill, null, level);
+                            const skill = (form.querySelector('[name="skill"]') as HTMLSelectElement).value;
+                            const level = (form.querySelector('[name="level"]') as HTMLSelectElement).value;
+                            await (this as any).actor.system.addTrainedSkill(skill, null, level);
                         },
                     },
                     {
@@ -842,7 +851,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
             dialog.render(true);
             return;
         }
-        await this.actor.system.addTrainedSkill(skillKey);
+        await (this as any).actor.system.addTrainedSkill(skillKey);
     }
 
     /* -------------------------------------------- */
@@ -856,7 +865,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
-        await this.actor.system.removeSkill(skillKey);
+        await (this as any).actor.system.removeSkill(skillKey);
     }
 
     /* -------------------------------------------- */
@@ -872,7 +881,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         const level = target.dataset.level;
         if (!skillKey || !level) return;
 
-        const currentSkills = foundry.utils.deepClone(this.actor.system.trainedSkills) || {};
+        const currentSkills = foundry.utils.deepClone((this as any).actor.system.trainedSkills) || {};
         const currentState = currentSkills[skillKey];
 
         // Skill characteristic mapping
@@ -904,7 +913,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         switch (level) {
             case 'untrained':
                 // Remove the skill entirely using Foundry's deletion syntax
-                await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
+                await (this as any).actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
                 return; // Early return - we've already updated
             case 'trained':
                 // Add skill at trained level
@@ -963,7 +972,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
                 break;
         }
 
-        await this.actor.update({ 'system.trainedSkills': currentSkills });
+        await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
     }
 
     /* -------------------------------------------- */
@@ -979,7 +988,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
 
-        const currentSkills = foundry.utils.deepClone(this.actor.system.trainedSkills) || {};
+        const currentSkills = foundry.utils.deepClone((this as any).actor.system.trainedSkills) || {};
         const current = currentSkills[skillKey];
 
         // Skill characteristic mapping
@@ -1019,18 +1028,18 @@ export default class NPCSheetV2 extends BaseActorSheet {
                 plus20: false,
                 bonus: 0,
             };
-            await this.actor.update({ 'system.trainedSkills': currentSkills });
+            await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
         } else if (current.trained && !current.plus10 && !current.plus20) {
             // Trained → +10
             currentSkills[skillKey] = { ...current, plus10: true, plus20: false };
-            await this.actor.update({ 'system.trainedSkills': currentSkills });
+            await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
         } else if (current.plus10 && !current.plus20) {
             // +10 → +20
             currentSkills[skillKey] = { ...current, plus10: true, plus20: true };
-            await this.actor.update({ 'system.trainedSkills': currentSkills });
+            await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
         } else {
             // +20 → Untrained (remove)
-            await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
+            await (this as any).actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
         }
     }
 
@@ -1045,7 +1054,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         const itemId = target.dataset.itemId;
         if (!itemId) return;
-        await this.actor.system.pinAbility(itemId);
+        await (this as any).actor.system.pinAbility(itemId);
     }
 
     /* -------------------------------------------- */
@@ -1059,7 +1068,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         const itemId = target.dataset.itemId;
         if (!itemId) return;
-        await this.actor.system.unpinAbility(itemId);
+        await (this as any).actor.system.unpinAbility(itemId);
     }
 
     /* -------------------------------------------- */
@@ -1073,9 +1082,9 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         const fp = new FilePicker({
             type: 'image',
-            current: this.actor.img,
+            current: (this as any).actor.img,
             callback: (path) => {
-                this.actor.update({ img: path });
+                (this as any).actor.update({ img: path });
             },
         });
         fp.render(true);
@@ -1090,8 +1099,8 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #setupToken(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const npc = this.actor;
-        const updates = {};
+        const npc = (this as any).actor;
+        const updates: Record<string, any> = {};
 
         // Size-based dimensions
         const sizeMap = {
@@ -1141,8 +1150,8 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #duplicateNPC(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await this.actor.duplicate();
-        (ui.notifications as any).info(`Created copy of ${this.actor.name}`);
+        await (this as any).actor.duplicate();
+        (ui.notifications as any).info(`Created copy of ${(this as any).actor.name}`);
     }
 
     /* -------------------------------------------- */
@@ -1155,7 +1164,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #scaleToThreat(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await NPCThreatScalerDialog.scale(this.actor);
+        await NPCThreatScalerDialog.scale((this as any).actor);
     }
 
     /* -------------------------------------------- */
@@ -1168,8 +1177,8 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #calculateDifficulty(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const { DifficultyCalculatorDialog: DiffCalcDialog } = game.wh40k.applications;
-        await DiffCalcDialog.show(this.actor);
+        const { DifficultyCalculatorDialog: DiffCalcDialog } = (game as any).wh40k.applications;
+        await DiffCalcDialog.show((this as any).actor);
     }
 
     /* -------------------------------------------- */
@@ -1181,7 +1190,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #saveCombatPreset(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await CombatPresetDialog.savePreset(this.actor);
+        await CombatPresetDialog.savePreset((this as any).actor);
     }
 
     /* -------------------------------------------- */
@@ -1193,7 +1202,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #loadCombatPreset(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await CombatPresetDialog.loadPreset(this.actor);
+        await CombatPresetDialog.loadPreset((this as any).actor);
     }
 
     /* -------------------------------------------- */
@@ -1207,13 +1216,13 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         const confirmed = await foundry.applications.api.DialogV2.confirm({
             window: { title: 'Delete NPC' },
-            content: `<p>Are you sure you want to delete <strong>${this.actor.name}</strong>?</p>`,
+            content: `<p>Are you sure you want to delete <strong>${(this as any).actor.name}</strong>?</p>`,
             rejectClose: false,
         });
 
         if (confirmed) {
-            await this.actor.delete();
-            (ui.notifications as any).info(`Deleted ${this.actor.name}`);
+            await (this as any).actor.delete();
+            (ui.notifications as any).info(`Deleted ${(this as any).actor.name}`);
         }
     }
 
@@ -1228,7 +1237,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
 
         // Open the full exporter dialog
-        StatBlockExporter.show(this.actor);
+        StatBlockExporter.show((this as any).actor);
     }
 
     /* -------------------------------------------- */
@@ -1241,7 +1250,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
     static async #importStatBlock(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        await StatBlockParser.open({ actor: this.actor });
+        await StatBlockParser.open({ actor: (this as any).actor } as any);
     }
 
     /* -------------------------------------------- */
@@ -1255,7 +1264,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         const amount = parseInt(target.dataset.amount || '1', 10);
         const location = target.dataset.location || 'body';
-        await this.actor.applyDamage(amount, location);
+        await (this as any).actor.applyDamage(amount, location);
     }
 
     /* -------------------------------------------- */
@@ -1268,7 +1277,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
     static async #healWounds(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const amount = parseInt(target.dataset.amount || '1', 10);
-        await this.actor.healWounds(amount);
+        await (this as any).actor.healWounds(amount);
     }
 
     /* -------------------------------------------- */
@@ -1299,10 +1308,10 @@ export default class NPCSheetV2 extends BaseActorSheet {
                     default: true,
                     callback: async (event, button, _dialog) => {
                         const form = button.form;
-                        const tag = form.querySelector('[name="tag"]').value.trim();
+                        const tag = (form.querySelector('[name="tag"]') as HTMLInputElement).value.trim();
                         if (tag) {
-                            const tags = [...(this.actor.system.tags || []), tag];
-                            await this.actor.update({ 'system.tags': tags });
+                            const tags = [...((this as any).actor.system.tags || []), tag];
+                            await (this as any).actor.update({ 'system.tags': tags });
                         }
                     },
                 },
@@ -1326,8 +1335,8 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         const tag = target.dataset.tag;
         if (!tag) return;
-        const tags = (this.actor.system.tags || []).filter((t) => t !== tag);
-        await this.actor.update({ 'system.tags': tags });
+        const tags = ((this as any).actor.system.tags || []).filter((t) => t !== tag);
+        await (this as any).actor.update({ 'system.tags': tags });
     }
 
     /* -------------------------------------------- */
@@ -1343,7 +1352,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         if (!sectionId) return;
 
         // Find the section to toggle
-        const section = this.element.querySelector(`[data-section-id="${sectionId}"]`);
+        const section = (this as any).element.querySelector(`[data-section-id="${sectionId}"]`);
         if (!section) return;
 
         // Toggle hidden attribute
@@ -1362,13 +1371,13 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #toggleEditMode(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const { MODES } = this.constructor;
-        this._mode = this._mode === MODES.EDIT ? MODES.PLAY : MODES.EDIT;
+        const { MODES } = this.constructor as any;
+        (this as any)._mode = (this as any)._mode === MODES.EDIT ? MODES.PLAY : MODES.EDIT;
         // Keep header slide-toggle in sync if present
-        const headerToggle = this.element.querySelector('.window-header .mode-slider');
-        if (headerToggle) headerToggle.checked = this._mode === MODES.EDIT;
-        await this.submit();
-        this.render();
+        const headerToggle = (this as any).element.querySelector('.window-header .mode-slider');
+        if (headerToggle) headerToggle.checked = (this as any)._mode === MODES.EDIT;
+        await (this as any).submit();
+        (this as any).render();
     }
 
     /* -------------------------------------------- */
@@ -1382,7 +1391,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         const wrapper = target.closest('.wh40k-gm-tools-wrapper');
         if (!wrapper) return;
-        const tools = wrapper.querySelector('.wh40k-gm-tools');
+        const tools = wrapper.querySelector('.wh40k-gm-tools') as HTMLElement;
         if (!tools) return;
         tools.hidden = !tools.hidden;
         wrapper.classList.toggle('open', !tools.hidden);
@@ -1399,7 +1408,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
         event.preventDefault();
         const card = target.closest('.wh40k-ability-card');
         if (!card) return;
-        const desc = card.querySelector('.wh40k-ability-desc');
+        const desc = card.querySelector('.wh40k-ability-desc') as HTMLElement;
         if (!desc) return;
         desc.hidden = !desc.hidden;
         // Rotate chevron
@@ -1419,20 +1428,20 @@ export default class NPCSheetV2 extends BaseActorSheet {
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
 
-        const currentFavorites = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
+        const currentFavorites = (this as any).actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
         const isFavorite = currentFavorites.includes(skillKey);
 
         if (isFavorite) {
-            await this.actor.setFlag(
+            await (this as any).actor.setFlag(
                 'wh40k-rpg',
                 'favoriteSkills',
                 currentFavorites.filter((k) => k !== skillKey),
             );
         } else {
-            await this.actor.setFlag('wh40k-rpg', 'favoriteSkills', [...currentFavorites, skillKey]);
+            await (this as any).actor.setFlag('wh40k-rpg', 'favoriteSkills', [...currentFavorites, skillKey]);
         }
 
-        await this.render({ parts: ['overview', 'skills'] });
+        await (this as any).render({ parts: ['overview', 'skills'] });
     }
 
     /* -------------------------------------------- */
@@ -1447,20 +1456,20 @@ export default class NPCSheetV2 extends BaseActorSheet {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
-        const currentFavorites = this.actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
+        const currentFavorites = (this as any).actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
         const isFavorite = currentFavorites.includes(itemId);
 
         if (isFavorite) {
-            await this.actor.setFlag(
+            await (this as any).actor.setFlag(
                 'wh40k-rpg',
                 'favoriteTalents',
                 currentFavorites.filter((id) => id !== itemId),
             );
         } else {
-            await this.actor.setFlag('wh40k-rpg', 'favoriteTalents', [...currentFavorites, itemId]);
+            await (this as any).actor.setFlag('wh40k-rpg', 'favoriteTalents', [...currentFavorites, itemId]);
         }
 
-        await this.render({ parts: ['overview', 'abilities'] });
+        await (this as any).render({ parts: ['overview', 'abilities'] });
     }
 
     /* -------------------------------------------- */
@@ -1472,9 +1481,9 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #applyCustomDamage(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const input = this.element.querySelector('[data-custom-damage]');
+        const input = (this as any).element.querySelector('[data-custom-damage]');
         const amount = parseInt(input?.value || '1', 10);
-        await this.actor.applyDamage(amount, 'body');
+        await (this as any).actor.applyDamage(amount, 'body');
     }
 
     /* -------------------------------------------- */
@@ -1486,9 +1495,9 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #healCustomWounds(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const input = this.element.querySelector('[data-custom-damage]');
+        const input = (this as any).element.querySelector('[data-custom-damage]');
         const amount = parseInt(input?.value || '1', 10);
-        await this.actor.healWounds(amount);
+        await (this as any).actor.healWounds(amount);
     }
 
     /* -------------------------------------------- */
@@ -1500,7 +1509,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #rerollInitiative(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const combatant = game.combat?.getCombatantByActor(this.actor.id);
+        const combatant = game.combat?.getCombatantByActor((this as any).actor.id);
         if (combatant) {
             await game.combat.rollInitiative([combatant.id]);
         }
@@ -1520,16 +1529,16 @@ export default class NPCSheetV2 extends BaseActorSheet {
             return;
         }
         // Prevent duplicate combatants
-        const existing = game.combat.getCombatantByActor(this.actor.id);
+        const existing = game.combat.getCombatantByActor((this as any).actor.id);
         if (existing) {
-            (ui.notifications as any).info(`${this.actor.name} is already in combat.`);
+            (ui.notifications as any).info(`${(this as any).actor.name} is already in combat.`);
             return;
         }
         await game.combat.createEmbeddedDocuments('Combatant', [
             {
-                actorId: this.actor.id,
-                tokenId: this.actor.token?.id,
-            },
+                actorId: (this as any).actor.id,
+                tokenId: (this as any).actor.token?.id,
+            } as any,
         ]);
     }
 
@@ -1542,7 +1551,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #removeFromCombat(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const combatant = game.combat?.getCombatantByActor(this.actor.id);
+        const combatant = game.combat?.getCombatantByActor((this as any).actor.id);
         if (combatant) {
             await game.combat.deleteEmbeddedDocuments('Combatant', [combatant.id]);
         }
@@ -1557,9 +1566,9 @@ export default class NPCSheetV2 extends BaseActorSheet {
      */
     static async #removeItem(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
+        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
         if (!itemId) return;
-        const item = this.actor.items.get(itemId);
+        const item = (this as any).actor.items.get(itemId);
         if (item) await item.delete();
     }
     /*  Overrides                                   */
@@ -1570,7 +1579,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareCharacteristicsHUD(context: Record<string, unknown>): void {
+    _prepareCharacteristicsHUD(context: Record<string, any>): void {
         // NPCSheetV2 uses its own characteristic preparation
         // Skip the parent implementation
     }
@@ -1580,7 +1589,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    async _prepareSkills(context: Record<string, unknown>): Promise<void> {
+    async _prepareSkills(context: Record<string, any>): Promise<void> {
         // NPCSheetV2 uses sparse skill system
         // Will implement in later phases
         context.skills = {};
@@ -1592,7 +1601,7 @@ export default class NPCSheetV2 extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    async _prepareItems(context: Record<string, unknown>): Promise<void> {
+    async _prepareItems(context: Record<string, any>): Promise<void> {
         // NPCSheetV2 uses simplified item system
         context.talents = context.items.filter((i) => i.type === 'talent');
         context.traits = context.items.filter((i) => i.type === 'trait');

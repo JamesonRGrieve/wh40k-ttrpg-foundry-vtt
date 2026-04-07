@@ -27,7 +27,7 @@ export default class CommonTemplate extends ActorDataModel {
 
     /** @inheritDoc */
     static defineSchema() {
-        return this.mergeSchema(super.defineSchema(), {
+        return (this as any).mergeSchema(super.defineSchema(), {
             // Truly shared schema elements go here
             // Currently empty - creature-specific data stays in CreatureTemplate
         });

@@ -17,6 +17,8 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {ApplicationV2}
  */
 export default class EncounterBuilder extends HandlebarsApplicationMixin(ApplicationV2) {
+    [key: string]: any;
+
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -84,13 +86,13 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * NPCs in the current encounter.
      * @type {Array<{uuid: string, name: string, img: string, threat: number, count: number}>}
      */
-    #npcs = [];
+    #npcs: any[] = [];
 
     /**
      * Party configuration.
      * @type {{count: number, averageLevel: number}}
      */
-    #party = {
+    #party: any = {
         count: 4,
         averageLevel: 5,
     };
@@ -99,7 +101,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Saved templates.
      * @type {Array<{name: string, npcs: Array}>}
      */
-    #templates = [];
+    #templates: any[] = [];
 
     /* -------------------------------------------- */
     /*  Singleton Pattern                           */
@@ -109,7 +111,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Singleton instance.
      * @type {EncounterBuilder|null}
      */
-    static #instance = null;
+    static #instance: any = null;
 
     /**
      * Get or create the singleton instance.
@@ -126,7 +128,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Show the encounter builder.
      * @returns {EncounterBuilder}
      */
-    static show(): Promise<any> {
+    static show(): any {
         const instance = this.instance;
         instance.render(true);
         return instance;
@@ -137,8 +139,8 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+    async _prepareContext(options: any): Promise<any> {
+        const context: any = await super._prepareContext(options);
 
         // Calculate encounter metrics
         const totalThreat = this.#npcs.reduce((sum, npc) => sum + npc.threat * npc.count, 0);
@@ -180,7 +182,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
             // Difficulty
             difficulty,
-            difficultyLabel: game.i18n.localize(difficulty.label),
+            difficultyLabel: (game as any).i18n.localize(difficulty.label),
             difficultyColor: difficulty.color,
             threatRatio: ratio.toFixed(1),
 
@@ -196,12 +198,12 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             hasTemplates: this.#templates.length > 0,
 
             // Combat availability
-            hasCombat: game.combat !== null,
+            hasCombat: (game as any).combat !== null,
         };
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    _onRender(context: any, options: any): any {
         super._onRender(context, options);
 
         // Party configuration inputs
@@ -209,15 +211,15 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         const partyLevel = this.element.querySelector('[name="partyLevel"]');
 
         if (partyCount) {
-            partyCount.addEventListener('change', (e) => {
-                this.#party.count = parseInt(e.target.value, 10) || 4;
+            partyCount.addEventListener('change', (e: any) => {
+                this.#party.count = parseInt((e.target as HTMLInputElement).value, 10) || 4;
                 this.render({ parts: ['content'] });
             });
         }
 
         if (partyLevel) {
-            partyLevel.addEventListener('change', (e) => {
-                this.#party.averageLevel = parseInt(e.target.value, 10) || 5;
+            partyLevel.addEventListener('change', (e: any) => {
+                this.#party.averageLevel = parseInt((e.target as HTMLInputElement).value, 10) || 5;
                 this.render({ parts: ['content'] });
             });
         }
@@ -234,21 +236,21 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         const dropZone = this.element.querySelector('.encounter-drop-zone');
         if (!dropZone) return;
 
-        dropZone.addEventListener('dragover', (e) => {
+        dropZone.addEventListener('dragover', (e: any) => {
             e.preventDefault();
             dropZone.classList.add('drag-over');
         });
 
-        dropZone.addEventListener('dragleave', (e) => {
+        dropZone.addEventListener('dragleave', (e: any) => {
             dropZone.classList.remove('drag-over');
         });
 
-        dropZone.addEventListener('drop', async (e) => {
+        dropZone.addEventListener('drop', async (e: any) => {
             e.preventDefault();
             dropZone.classList.remove('drag-over');
 
             try {
-                const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                const data = JSON.parse((e as DragEvent).dataTransfer!.getData('text/plain'));
 
                 if (data.type === 'Actor') {
                     await this._handleActorDrop(data);
@@ -268,9 +270,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         let actor;
 
         if (data.uuid) {
-            actor = await fromUuid(data.uuid);
+            actor = await (fromUuid as any)(data.uuid);
         } else if (data.id) {
-            actor = game.actors.get(data.id);
+            actor = (game as any).actors.get(data.id);
         }
 
         if (!actor) {
@@ -330,10 +332,10 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     _getActionAdvantage(partyActions: number, enemyActions: number): any {
         const diff = enemyActions - partyActions;
 
-        if (diff <= -2) return { text: game.i18n.localize('WH40K.NPC.Encounter.PartyAdvantage'), color: '#4ade80' };
-        if (diff <= 0) return { text: game.i18n.localize('WH40K.NPC.Encounter.Balanced'), color: '#facc15' };
-        if (diff <= 2) return { text: game.i18n.localize('WH40K.NPC.Encounter.EnemyAdvantage'), color: '#fb923c' };
-        return { text: game.i18n.localize('WH40K.NPC.Encounter.EnemyOverwhelming'), color: '#ef4444' };
+        if (diff <= -2) return { text: (game as any).i18n.localize('WH40K.NPC.Encounter.PartyAdvantage'), color: '#4ade80' };
+        if (diff <= 0) return { text: (game as any).i18n.localize('WH40K.NPC.Encounter.Balanced'), color: '#facc15' };
+        if (diff <= 2) return { text: (game as any).i18n.localize('WH40K.NPC.Encounter.EnemyAdvantage'), color: '#fb923c' };
+        return { text: (game as any).i18n.localize('WH40K.NPC.Encounter.EnemyOverwhelming'), color: '#ef4444' };
     }
 
     /* -------------------------------------------- */
@@ -345,16 +347,16 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addNPC(event: Event, target: HTMLElement): Promise<void> {
+    static async #addNPC(this: any, event: Event, target: HTMLElement): Promise<void> {
         // Show a simple actor picker
-        const actors = game.actors.filter((a) => a.type === 'npc' || a.type === 'npcV2');
+        const actors = (game as any).actors.filter((a: any) => a.type === 'npc' || a.type === 'npcV2');
 
         if (actors.length === 0) {
             (ui.notifications as any).warn('No NPC actors found in the world.');
             return;
         }
 
-        const options = actors.map((a) => `<option value="${a.uuid}">${a.name}</option>`).join('');
+        const options = actors.map((a: any) => `<option value="${a.uuid}">${a.name}</option>`).join('');
 
         const content = `
       <form>
@@ -369,11 +371,11 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
       </form>
     `;
 
-        const result = await Dialog.prompt({
+        const result = await (Dialog as any).prompt({
             title: 'Add NPC',
             content,
             label: 'Add',
-            callback: (html) => {
+            callback: (html: any) => {
                 const form = html[0].querySelector('form');
                 return {
                     uuid: form.querySelector('[name="uuid"]').value,
@@ -385,10 +387,10 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         if (!result) return;
 
-        const actor = await fromUuid(result.uuid);
+        const actor = await (fromUuid as any)(result.uuid);
         if (!actor) return;
 
-        const existing = this.#npcs.find((n) => n.uuid === result.uuid);
+        const existing = this.#npcs.find((n: any) => n.uuid === result.uuid);
         if (existing) {
             existing.count += result.count;
         } else {
@@ -409,7 +411,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #removeNPC(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeNPC(this: any, event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.index, 10);
         if (isNaN(index) || index < 0 || index >= this.#npcs.length) return;
 
@@ -422,7 +424,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #adjustCount(event: Event, target: HTMLElement): Promise<void> {
+    static async #adjustCount(this: any, event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.index, 10);
         const delta = parseInt(target.dataset.delta, 10);
 
@@ -440,7 +442,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #clearAll(event: Event, target: HTMLElement): Promise<void> {
+    static async #clearAll(this: any, event: Event, target: HTMLElement): Promise<void> {
         this.#npcs = [];
         this.render({ parts: ['content'] });
     }
@@ -450,17 +452,17 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #saveTemplate(event: Event, target: HTMLElement): Promise<void> {
+    static async #saveTemplate(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
             (ui.notifications as any).warn('No NPCs to save.');
             return;
         }
 
-        const name = await Dialog.prompt({
+        const name = await (Dialog as any).prompt({
             title: 'Save Encounter Template',
             content: '<form><div class="form-group"><label>Template Name</label><input type="text" name="name" placeholder="My Encounter"/></div></form>',
             label: 'Save',
-            callback: (html) => html[0].querySelector('[name="name"]').value,
+            callback: (html: any) => html[0].querySelector('[name="name"]').value,
             rejectClose: false,
         });
 
@@ -482,7 +484,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #loadTemplate(event: Event, target: HTMLElement): Promise<void> {
+    static async #loadTemplate(this: any, event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.index, 10);
         if (isNaN(index) || index < 0 || index >= this.#templates.length) return;
 
@@ -501,22 +503,22 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #deployToCombat(event: Event, target: HTMLElement): Promise<void> {
+    static async #deployToCombat(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
             (ui.notifications as any).warn('No NPCs to deploy.');
             return;
         }
 
         // Ensure combat exists
-        let combat = game.combat;
+        let combat = (game as any).combat;
         if (!combat) {
-            combat = await Combat.create({ scene: game.scenes.active?.id });
+            combat = await (Combat as any).create({ scene: (game as any).scenes.active?.id } as any);
         }
 
-        const combatants = [];
+        const combatants: any[] = [];
 
         for (const npcEntry of this.#npcs) {
-            const actor = await fromUuid(npcEntry.uuid);
+            const actor = await (fromUuid as any)(npcEntry.uuid);
             if (!actor) continue;
 
             for (let i = 0; i < npcEntry.count; i++) {
@@ -536,7 +538,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         await combat.createEmbeddedDocuments('Combatant', combatants);
 
-        (ui.notifications as any).info(game.i18n.format('WH40K.NPC.Encounter.Deployed', { count: combatants.length }));
+        (ui.notifications as any).info((game as any).i18n.format('WH40K.NPC.Encounter.Deployed', { count: combatants.length }));
     }
 
     /**
@@ -544,13 +546,13 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #openNPC(event: Event, target: HTMLElement): Promise<void> {
+    static async #openNPC(this: any, event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
         if (!uuid) return;
 
-        const actor = await fromUuid(uuid);
+        const actor = await (fromUuid as any)(uuid);
         if (actor) {
-            actor.sheet.render(true);
+            (actor as any).sheet.render(true);
         }
     }
 
@@ -569,7 +571,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         if (typeof actorOrUuid === 'string') {
             uuid = actorOrUuid;
-            actor = await fromUuid(uuid);
+            actor = await (fromUuid as any)(uuid);
         } else {
             actor = actorOrUuid;
             uuid = actor.uuid;
@@ -577,7 +579,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         if (!actor) return;
 
-        const existing = this.#npcs.find((n) => n.uuid === uuid);
+        const existing = this.#npcs.find((n: any) => n.uuid === uuid);
         if (existing) {
             existing.count += count;
         } else {
@@ -613,7 +615,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Get current encounter data.
      * @returns {Object} Encounter data.
      */
-    getData(): void {
+    getData(): any {
         return {
             npcs: foundry.utils.deepClone(this.#npcs),
             party: foundry.utils.deepClone(this.#party),

@@ -87,7 +87,7 @@ export function ActiveModifiersMixin(Base) {
          * Prepare active modifiers data for rendering
          * @returns {Object} Modifiers data structure
          */
-        prepareActiveModifiers(): void {
+        prepareActiveModifiers(): any {
             const actor = this.actor;
             const modifiers = {
                 conditions: [],

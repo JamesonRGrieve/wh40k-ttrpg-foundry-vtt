@@ -184,7 +184,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields as any;
+        const fields = (foundry.data as any).fields;
 
         // Body location schema (reused for armour points)
         const LocationSchema = () =>

@@ -93,45 +93,46 @@ export class HooksManager {
     static init() {
         console.log('Loading WH40K RPG System v1.0.0');
 
+        const CFG = CONFIG as any;
         const consolePrefix = 'WH40K RPG | ';
-        game.wh40k = {
+        (game as any).wh40k = {
             debug: false,
-            log: (s, o) => (game.wh40k.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
-            warn: (s, o) => console.warn(`${consolePrefix}${s}`, o),
-            error: (s, o) => console.error(`${consolePrefix}${s}`, o),
+            log: (s: any, o?: any) => ((game as any).wh40k.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
+            warn: (s: any, o?: any) => console.warn(`${consolePrefix}${s}`, o),
+            error: (s: any, o?: any) => console.error(`${consolePrefix}${s}`, o),
             rollItemMacro,
             rollSkillMacro,
             rollCharacteristicMacro,
             // Roll table utilities
             rollTable: RollTableUtils,
             // Convenience methods for common roll tables
-            rollPsychicPhenomena: (actor, mod) => RollTableUtils.rollPsychicPhenomena(actor, mod),
-            rollPerilsOfTheWarp: (actor) => RollTableUtils.rollPerilsOfTheWarp(actor),
-            rollFearEffects: (fear, dof) => RollTableUtils.rollFearEffects(fear, dof),
+            rollPsychicPhenomena: (actor: any, mod: any) => RollTableUtils.rollPsychicPhenomena(actor, mod),
+            rollPerilsOfTheWarp: (actor: any) => RollTableUtils.rollPerilsOfTheWarp(actor),
+            rollFearEffects: (fear: any, dof: any) => RollTableUtils.rollFearEffects(fear, dof),
             rollMutation: () => RollTableUtils.rollMutation(),
             rollMalignancy: () => RollTableUtils.rollMalignancy(),
             showRollTableDialog: () => RollTableUtils.showRollTableDialog(),
             // Compendium browser
-            openCompendiumBrowser: (options) => RTCompendiumBrowser.open(options),
+            openCompendiumBrowser: (options: any) => RTCompendiumBrowser.open(options),
             // Character creation
             OriginPathBuilder: characterCreation.OriginPathBuilder,
-            openOriginPathBuilder: (actor) => characterCreation.OriginPathBuilder.show(actor),
+            openOriginPathBuilder: (actor: any) => characterCreation.OriginPathBuilder.show(actor),
             // NPC utilities
             npc: npcApplications,
             applications: npcApplications, // Alias for shorter access
             ThreatCalculator: npcApplications.ThreatCalculator,
-            quickCreateNPC: (config) => npcApplications.NPCQuickCreateDialog.create(config),
-            batchCreateNPCs: (config) => npcApplications.BatchCreateDialog.open(config),
+            quickCreateNPC: (config: any) => npcApplications.NPCQuickCreateDialog.create(config),
+            batchCreateNPCs: (config: any) => npcApplications.BatchCreateDialog.open(config),
             openEncounterBuilder: () => npcApplications.EncounterBuilder.show(),
-            exportStatBlock: (actor, format) => npcApplications.StatBlockExporter.quickExport(actor, format),
-            importStatBlock: (input) => npcApplications.StatBlockParser.open(input),
-            openTemplateSelector: (options) => npcApplications.TemplateSelector.open(options),
+            exportStatBlock: (actor: any, format: any) => npcApplications.StatBlockExporter.quickExport(actor, format),
+            importStatBlock: (input: any) => npcApplications.StatBlockParser.open(input),
+            openTemplateSelector: (options: any) => npcApplications.TemplateSelector.open(options),
             // Phase 7: QoL Features
             DifficultyCalculatorDialog: npcApplications.DifficultyCalculatorDialog,
-            calculateDifficulty: (actor) => npcApplications.DifficultyCalculatorDialog.show(actor),
+            calculateDifficulty: (actor: any) => npcApplications.DifficultyCalculatorDialog.show(actor),
             CombatPresetDialog: npcApplications.CombatPresetDialog,
-            savePreset: (actor) => npcApplications.CombatPresetDialog.savePreset(actor),
-            loadPreset: (actor) => npcApplications.CombatPresetDialog.loadPreset(actor),
+            savePreset: (actor: any) => npcApplications.CombatPresetDialog.savePreset(actor),
+            loadPreset: (actor: any) => npcApplications.CombatPresetDialog.loadPreset(actor),
             openPresetLibrary: () => npcApplications.CombatPresetDialog.showLibrary(),
             // Dice/Roll classes
             dice: dice,
@@ -142,32 +143,32 @@ export class HooksManager {
         //CONFIG.debug.hooks = true;
 
         // Add custom constants for configuration.
-        CONFIG.wh40k = WH40K;
-        CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
-        CONFIG.MeasuredTemplate.defaults.angle = 30.0;
+        CFG.wh40k = WH40K;
+        CFG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
+        CFG.MeasuredTemplate.defaults.angle = 30.0;
 
         // Define custom Document classes
-        CONFIG.Actor.documentClass = WH40KActorProxy;
-        CONFIG.Actor.documentClasses = {
+        CFG.Actor.documentClass = WH40KActorProxy;
+        CFG.Actor.documentClasses = {
             character: documents.WH40KAcolyte,
             npc: documents.WH40KNPCV2,
             vehicle: documents.WH40KVehicle,
             starship: documents.WH40KStarship,
         };
-        CONFIG.Item.documentClass = WH40KItem;
-        CONFIG.ActiveEffect.documentClass = documents.WH40KActiveEffect;
-        CONFIG.ChatMessage.documentClass = documents.ChatMessageWH40K;
+        CFG.Item.documentClass = WH40KItem;
+        CFG.ActiveEffect.documentClass = documents.WH40KActiveEffect;
+        CFG.ChatMessage.documentClass = documents.ChatMessageWH40K;
 
         // Token document and movement
-        CONFIG.Token.documentClass = documents.TokenDocumentWH40K;
-        CONFIG.Token.rulerClass = TokenRulerWH40K;
+        CFG.Token.documentClass = documents.TokenDocumentWH40K;
+        CFG.Token.rulerClass = TokenRulerWH40K;
 
         // Register custom Roll classes for serialization/deserialization
-        CONFIG.Dice.rolls.push(dice.BasicRollWH40K, dice.D100Roll);
+        CFG.Dice.rolls.push(dice.BasicRollWH40K, dice.D100Roll);
 
         // Register data models for actors
         // DataModels handle schema validation and data preparation
-        CONFIG.Actor.dataModels = {
+        CFG.Actor.dataModels = {
             character: dataModels.CharacterData,
             npc: dataModels.NPCDataV2,
             vehicle: dataModels.VehicleData,
@@ -176,7 +177,7 @@ export class HooksManager {
 
         // Register Item data models
         // DataModels handle schema validation, migration, and data preparation
-        CONFIG.Item.dataModels = {
+        CFG.Item.dataModels = {
             // Equipment
             weapon: dataModels.WeaponData,
             armour: dataModels.ArmourData,
@@ -228,7 +229,7 @@ export class HooksManager {
 
         // Register sheet application classes
         // V2 Sheets use DocumentSheetConfig API
-        const DocumentSheetConfig = foundry.applications.apps.DocumentSheetConfig;
+        const DocumentSheetConfig = foundry.applications.apps.DocumentSheetConfig as any;
 
         // Unregister core V1 actor sheet and register V2 actor sheets
         DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.appv1.sheets.ActorSheet);
@@ -473,8 +474,8 @@ export class HooksManager {
         // Register movement actions and Token HUD hooks (after settings are available)
         documents.TokenDocumentWH40K.registerMovementActions();
         documents.TokenDocumentWH40K.registerHUDListeners();
-        CONFIG.Token.movement.costAggregator = (results, distance, segment) => {
-            return Math.max(...results.map((i) => i.cost));
+        CFG.Token.movement.costAggregator = (results: any, distance: any, segment: any) => {
+            return Math.max(...results.map((i: any) => i.cost));
         };
     }
 
@@ -482,8 +483,8 @@ export class HooksManager {
         await checkAndMigrateWorld();
 
         // Initialize rich tooltip system
-        game.wh40k.tooltips = new TooltipsWH40K();
-        await game.wh40k.tooltips.initialize();
+        (game as any).wh40k.tooltips = new TooltipsWH40K();
+        await (game as any).wh40k.tooltips.initialize();
 
         game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
 
@@ -493,7 +494,7 @@ export class HooksManager {
     }
 
     static hotbarDrop(bar, data, slot) {
-        game.wh40k.log('Hotbar Drop:', data);
+        (game as any).wh40k.log('Hotbar Drop:', data);
         switch (data.type) {
             case 'characteristic':
                 createCharacteristicMacro(data, slot);

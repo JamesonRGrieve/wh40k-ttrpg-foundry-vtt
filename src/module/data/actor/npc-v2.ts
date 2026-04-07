@@ -1,7 +1,7 @@
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import HordeTemplate from './mixins/horde-template.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields as any;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = (foundry.data as any).fields;
 
 /**
  * Data model for NPC V2 actors.
@@ -311,12 +311,12 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
         };
 
         // Copy characteristics
-        for (const [key, char] of Object.entries(this.characteristics)) {
+        for (const [key, char] of Object.entries(this.characteristics) as [string, any][]) {
             stats.characteristics[key] = char.total;
         }
 
         // Copy trained skills
-        for (const [key, skill] of Object.entries(this.trainedSkills)) {
+        for (const [key, skill] of Object.entries(this.trainedSkills) as [string, any][]) {
             stats.skills[key] = this.getSkillTarget(key);
         }
 
@@ -363,7 +363,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      */
     get trainedSkillsList() {
         const list = [];
-        for (const [key, skill] of Object.entries(this.trainedSkills)) {
+        for (const [key, skill] of Object.entries(this.trainedSkills) as [string, any][]) {
             list.push({
                 key,
                 name: skill.name || key,
@@ -556,7 +556,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {Object} data - Weapon data
      * @returns {Promise<Actor>}
      */
-    async addSimpleWeapon(data = {}) {
+    async addSimpleWeapon(data: Record<string, any> = {}) {
         const weapons = foundry.utils.deepClone(this.weapons.simple || []);
         weapons.push({
             name: data.name || 'New Weapon',
@@ -765,7 +765,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @protected
      */
     _prepareCharacteristics() {
-        for (const [key, char] of Object.entries(this.characteristics)) {
+        for (const [key, char] of Object.entries(this.characteristics) as [string, any][]) {
             // Total = base + modifier
             char.total = char.base + char.modifier;
 
@@ -815,7 +815,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
         const data = super.getRollData ? super.getRollData() : {};
 
         // Add characteristic values and bonuses for formulas
-        for (const [key, char] of Object.entries(this.characteristics)) {
+        for (const [key, char] of Object.entries(this.characteristics) as [string, any][]) {
             data[char.short] = char.total;
             data[`${char.short}B`] = char.bonus;
             data[key] = char.total;

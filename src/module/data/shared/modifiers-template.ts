@@ -167,7 +167,7 @@ export default class ModifiersTemplate extends SystemDataModel {
     [key: string]: any;
     /** @inheritdoc */
     static defineSchema() {
-        const fields = foundry.data.fields as any;
+        const fields = (foundry.data as any).fields;
         return {
             modifiers: new fields.SchemaField({
                 characteristics: new fields.ObjectField({ required: true, initial: {} }),
