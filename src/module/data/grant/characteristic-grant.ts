@@ -65,66 +65,34 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async apply(actor: any, data: any = {}, options: Record<string, any> = {}) {
-        const result = {
-            success: true,
-            applied: {},
-            notifications: [],
-            errors: [],
-        };
-
-        if (!actor) {
-            result.success = false;
-            result.errors.push('No actor provided');
-            return result;
-        }
-
+    async _applyGrant(actor: any, data: any, options: Record<string, any>, result: any): Promise<void> {
         const selectedChars = data.selected ?? this.characteristics.map((c) => c.key);
         const updates = {};
 
         for (const charConfig of this.characteristics) {
             const { key, value, optional: charOptional } = charConfig;
 
-            // Validate characteristic
             if (!(this.constructor as any).VALID_CHARACTERISTICS.has(key)) {
                 result.errors.push(`Invalid characteristic: ${key}`);
                 continue;
             }
-
-            // Skip if not selected
             if (!selectedChars.includes(key)) {
-                if (!charOptional && !this.optional) {
-                    result.errors.push(`Required characteristic ${key} not selected`);
-                }
+                if (!charOptional && !this.optional) result.errors.push(`Required characteristic ${key} not selected`);
                 continue;
             }
-
-            // Skip zero values
             if (value === 0) continue;
 
-            // Get current advance value
             const currentAdvance = actor.system?.characteristics?.[key]?.advance ?? 0;
             const newAdvance = currentAdvance + value;
 
             updates[`system.characteristics.${key}.advance`] = newAdvance;
-            result.applied[key] = {
-                previousValue: currentAdvance,
-                appliedValue: value,
-                newValue: newAdvance,
-            };
+            result.applied[key] = { previousValue: currentAdvance, appliedValue: value, newValue: newAdvance };
 
             const charLabel = game.i18n.localize(`WH40K.Characteristic.${key}`);
-            const sign = value > 0 ? '+' : '';
-            result.notifications.push(`${charLabel} ${sign}${value}`);
+            result.notifications.push(`${charLabel} ${value > 0 ? '+' : ''}${value}`);
         }
 
-        // Apply if not dry run
-        if (!options.dryRun && Object.keys(updates).length > 0) {
-            await actor.update(updates);
-        }
-
-        result.success = result.errors.length === 0;
-        return result;
+        await this._applyUpdates(actor, updates, options);
     }
 
     /** @inheritDoc */
@@ -148,31 +116,17 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
 
     /** @inheritDoc */
     async restore(actor, restoreData) {
-        // Re-apply with the original applied values
-        const result = {
-            success: true,
-            applied: {},
-            notifications: [],
-            errors: [],
-        };
-
+        const result = this._initResult();
         const updates = {};
+
         for (const [key, state] of Object.entries(restoreData.characteristics ?? {}) as [string, any][]) {
             const currentAdvance = actor.system?.characteristics?.[key]?.advance ?? 0;
             const newAdvance = currentAdvance + state.appliedValue;
-
             updates[`system.characteristics.${key}.advance`] = newAdvance;
-            result.applied[key] = {
-                previousValue: currentAdvance,
-                appliedValue: state.appliedValue,
-                newValue: newAdvance,
-            };
+            result.applied[key] = { previousValue: currentAdvance, appliedValue: state.appliedValue, newValue: newAdvance };
         }
 
-        if (Object.keys(updates).length > 0) {
-            await actor.update(updates);
-        }
-
+        await this._applyUpdates(actor, updates, {});
         return result;
     }
 

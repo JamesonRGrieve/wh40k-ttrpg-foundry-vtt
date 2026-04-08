@@ -66,72 +66,34 @@ export default class SkillGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async apply(actor: any, data: any = {}, options: Record<string, any> = {}) {
-        const result = {
-            success: true,
-            applied: {},
-            notifications: [],
-            errors: [],
-        };
-
-        if (!actor) {
-            result.success = false;
-            result.errors.push('No actor provided');
-            return result;
-        }
-
+    async _applyGrant(actor: any, data: any, options: Record<string, any>, result: any): Promise<void> {
         const selectedSkills = data.selected ?? this.skills.map((s) => this._getSkillKey(s));
         const updates = {};
 
         for (const skillConfig of this.skills) {
             const skillKey = this._getSkillKey(skillConfig);
 
-            // Skip if not selected
             if (!selectedSkills.includes(skillKey)) {
-                if (!skillConfig.optional && !this.optional) {
-                    result.errors.push(`Required skill ${skillKey} not selected`);
-                }
+                if (!skillConfig.optional && !this.optional) result.errors.push(`Required skill ${skillKey} not selected`);
                 continue;
             }
 
-            // Get the schema skill key and current state
             const schemaKey = this._getSchemaSkillKey(skillConfig.key);
             const specialization = skillConfig.specialization;
 
-            if (!schemaKey) {
-                result.errors.push(`Unknown skill: ${skillConfig.key}`);
-                continue;
-            }
+            if (!schemaKey) { result.errors.push(`Unknown skill: ${skillConfig.key}`); continue; }
 
-            // Check current skill level and calculate upgrade
             const currentSkill = actor.system.skills[schemaKey];
-            if (!currentSkill) {
-                result.errors.push(`Skill not found on actor: ${schemaKey}`);
-                continue;
-            }
+            if (!currentSkill) { result.errors.push(`Skill not found on actor: ${schemaKey}`); continue; }
 
-            // Handle specialist skills (ones with entries array)
-            if (specialization && Array.isArray(currentSkill.entries)) {
-                const upgradeResult = this._applySpecialistSkillUpgrade(actor, schemaKey, specialization, skillConfig.level, updates, result);
-                if (upgradeResult) {
-                    result.applied[skillKey] = upgradeResult;
-                }
-            } else {
-                // Standard skill - upgrade the training level
-                const upgradeResult = this._applyStandardSkillUpgrade(actor, schemaKey, skillConfig.level, updates, result);
-                if (upgradeResult) {
-                    result.applied[skillKey] = upgradeResult;
-                }
-            }
+            const upgradeResult = specialization && Array.isArray(currentSkill.entries)
+                ? this._applySpecialistSkillUpgrade(actor, schemaKey, specialization, skillConfig.level, updates, result)
+                : this._applyStandardSkillUpgrade(actor, schemaKey, skillConfig.level, updates, result);
+
+            if (upgradeResult) result.applied[skillKey] = upgradeResult;
         }
 
-        // Apply updates if not dry run
-        if (!options.dryRun && Object.keys(updates).length > 0) {
-            await actor.update(updates);
-        }
-
-        result.success = result.errors.length === 0;
-        return result;
+        await this._applyUpdates(actor, updates, options);
     }
 
     /**
