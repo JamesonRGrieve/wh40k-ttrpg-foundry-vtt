@@ -8,7 +8,7 @@
  * - Animated feedback
  */
 
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 import { sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
@@ -267,12 +267,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     async _onRender(context: any, options: any): Promise<void> {
         await super._onRender(context, options);
 
-        // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
-            input.addEventListener('focus', (event) => {
-                (event.target as HTMLInputElement).select();
-            });
-        });
+        setupNumberInputAutoSelect(this.element);
 
         // Focus custom modifier input
         this.element.querySelector('#customModifier')?.addEventListener('input', (e) => {

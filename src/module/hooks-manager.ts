@@ -9,12 +9,7 @@ import * as dice from './dice/_module.ts';
 
 // Import V2 Actor Sheets (ApplicationV2-based)
 import CharacterSheetSidebar from './applications/actor/character-sheet-sidebar.ts';
-import DarkHeresy1Sheet from './applications/actor/dark-heresy-1-sheet.ts';
-import DarkHeresy2Sheet from './applications/actor/dark-heresy-2-sheet.ts';
-import RogueTraderSheet from './applications/actor/rogue-trader-sheet.ts';
-import BlackCrusadeSheet from './applications/actor/black-crusade-sheet.ts';
-import OnlyWarSheet from './applications/actor/only-war-sheet.ts';
-import DeathwatchSheet from './applications/actor/deathwatch-sheet.ts';
+import { DarkHeresy1Sheet, DarkHeresy2Sheet, RogueTraderSheet, BlackCrusadeSheet, OnlyWarSheet, DeathwatchSheet } from './applications/actor/game-system-sheets.ts';
 import NPCSheetV2 from './applications/actor/npc-sheet-v2.ts';
 import VehicleSheet from './applications/actor/vehicle-sheet.ts';
 import StarshipSheet from './applications/actor/starship-sheet.ts';

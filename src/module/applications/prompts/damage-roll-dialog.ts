@@ -2,43 +2,31 @@
  * @file DamageRollDialog - V2 dialog for damage rolls
  */
 
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import BaseRollDialog from './base-roll-dialog.ts';
 import { sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { ActionData } from '../../rolls/action-data.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Dialog for configuring damage rolls.
  */
-export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) {
+// @ts-expect-error - TS2417 static side inheritance
+export default class DamageRollDialog extends BaseRollDialog {
     [key: string]: any;
-    /**
-     * @param {object} rollData      The roll data.
-     * @param {object} [options={}]  Dialog options.
-     */
+
     constructor(rollData = {}, options = {}) {
-        // @ts-expect-error - argument count
-        super(options);
-        this.rollData = rollData;
+        super(rollData, options);
     }
 
     /* -------------------------------------------- */
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        tag: 'form',
-        classes: ['wh40k-rpg', 'dialog', 'damage-roll', 'standard-form'],
-        actions: {
-            roll: DamageRollDialog.#onRoll,
-            cancel: DamageRollDialog.#onCancel,
-        },
+        classes: ['damage-roll'],
         position: {
             width: 300,
         },
         window: {
             title: 'Damage Roll',
-            minimizable: false,
         },
     };
 
@@ -53,103 +41,22 @@ export default class DamageRollDialog extends ApplicationV2Mixin(ApplicationV2) 
     };
 
     /* -------------------------------------------- */
-    /*  Properties                                  */
-    /* -------------------------------------------- */
-
-    /**
-     * The roll data.
-     * @type {object}
-     */
-    rollData;
-
-    /* -------------------------------------------- */
-    /*  Rendering                                   */
-    /* -------------------------------------------- */
-
-    /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
-        return {
-            ...context,
-            ...this.rollData,
-            dh: CONFIG.wh40k,
-        };
-    }
-
-    /* -------------------------------------------- */
-    /*  Event Listeners                             */
-    /* -------------------------------------------- */
-
-    /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
-        await super._onRender(context, options);
-
-        // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
-            input.addEventListener('focus', (event) => {
-                event.target.select();
-            });
-        });
-
-        // Set up button listeners for V1-style templates
-        this.element.querySelector("[data-action='roll']")?.addEventListener('click', (e) => {
-            e.preventDefault();
-            this._performRoll();
-        });
-        this.element.querySelector("[data-action='cancel']")?.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.close();
-        });
-    }
-
-    /* -------------------------------------------- */
-    /*  Action Handlers                             */
-    /* -------------------------------------------- */
-
-    /**
-     * Handle roll button click.
-     * @this {DamageRollDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #onRoll(this: any, event: Event, target: HTMLElement): Promise<void> {
-        await this._performRoll();
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle cancel button click.
-     * @this {DamageRollDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
-        await this.close();
-    }
-
-    /* -------------------------------------------- */
     /*  Roll Methods                                */
     /* -------------------------------------------- */
 
-    /**
-     * Perform the damage roll.
-     * @protected
-     */
+    /** @override */
     async _performRoll(): Promise<void> {
         const form = this.element.querySelector('form') ?? this.element;
 
         const actionData = new ActionData();
         actionData.template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
 
-        // Get form values
         this.rollData.damage = form.querySelector('#damage')?.value ?? this.rollData.damage;
         this.rollData.penetration = form.querySelector('#penetration')?.value ?? this.rollData.penetration;
         this.rollData.damageType = form.querySelector('[name=damageType]')?.value ?? this.rollData.damageType;
         this.rollData.pr = form.querySelector('#pr')?.value;
         this.rollData.template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
 
-        // Perform the roll
         this.rollData.roll = new Roll(this.rollData.damage, this.rollData);
         await this.rollData.roll.evaluate();
 

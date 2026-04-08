@@ -61,13 +61,6 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
-        // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
-            input.addEventListener('focus', (event) => {
-                event.target.select();
-            });
-        });
-
         // Set up weapon selection listeners
         this.element.querySelectorAll('.weapon-select').forEach((el) => {
             el.addEventListener('change', this._onWeaponSelectChange.bind(this));

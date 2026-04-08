@@ -3,7 +3,7 @@
  * Based on dnd5e's RollConfigurationDialog pattern for Foundry V13+
  */
 
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -99,6 +99,16 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
             dh: CONFIG.wh40k,
             isEditable: true,
         };
+    }
+
+    /* -------------------------------------------- */
+    /*  Rendering                                   */
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+        await super._onRender(context, options);
+        setupNumberInputAutoSelect(this.element);
     }
 
     /* -------------------------------------------- */
