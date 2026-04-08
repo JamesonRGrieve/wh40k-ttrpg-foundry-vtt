@@ -481,6 +481,7 @@
     align-items: flex-end;
     gap: 6px;
     height: 100%;
+    width: fit-content; // establishes sizing context so child width:100% resolves correctly
 }
 
 
@@ -669,7 +670,12 @@
     color: var(--wh40k-text-muted);
     text-align: center;
     transition: color 0.3s ease;
-    min-width: 50px;  // match .wh40k-char-inline-input width so edit toggle doesn't shift layout
+    // Match .wh40k-char-inline-input dimensions so edit toggle doesn't shift layout
+    min-width: 50px;
+    min-height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     // Value change animation for total
     &.value-changed {
@@ -739,9 +745,7 @@
 
 // Drop zone in header fills remaining space
 .wh40k-hud-stack > .wh40k-dropzone {
-    flex: 1;
     width: 100%;
-    align-self: stretch;
     box-sizing: border-box;
     margin: 0;
 
