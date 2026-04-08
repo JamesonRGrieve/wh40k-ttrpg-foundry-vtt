@@ -1,4 +1,4 @@
-import { roll1d100 } from '../rolls/roll-helpers.ts';
+import { roll1d100, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 
 /* -------------------------------------------- */
 /*  Legacy Combat Effects                       */
@@ -30,16 +30,12 @@ export async function handleOnFire(actor) {
 
 export async function sendActiveEffectMessage(activeContext) {
     const html = await foundry.applications.handlebars.renderTemplate(activeContext.template, activeContext);
-    const chatData: any = {
+    const chatData: Record<string, any> = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
         content: html,
     };
-    if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
-        chatData.whisper = ChatMessage.getWhisperRecipients('GM');
-    } else if (chatData.rollMode === 'selfroll') {
-        chatData.whisper = [game.user];
-    }
+    applyRollModeWhispers(chatData);
     await (ChatMessage as any).create(chatData);
 }
 

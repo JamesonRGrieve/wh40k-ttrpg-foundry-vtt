@@ -1,5 +1,5 @@
 import { refundAmmo } from '../rules/ammo.ts';
-import { uuid } from '../rolls/roll-helpers.ts';
+import { uuid, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import { AssignDamageData } from '../rolls/assign-damage-data.ts';
 import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
@@ -87,20 +87,13 @@ export class BasicActionManager {
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
         const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
-        const chatData = {
+        const chatData: Record<string, any> = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,
             rolls: damageRolls,
         };
-        if (['gmroll', 'blindroll'].includes(chatData.rollMode as any)) {
-            // @ts-expect-error - dynamic property
-            chatData.whisper = ChatMessage.getWhisperRecipients('GM');
-        // @ts-expect-error - comparison type
-        } else if (chatData.rollMode === 'selfroll') {
-            // @ts-expect-error - dynamic property
-            chatData.whisper = [game.user];
-        }
+        applyRollModeWhispers(chatData);
         await (ChatMessage as any).create(chatData);
     }
 
@@ -291,19 +284,12 @@ export class BasicActionManager {
      */
     async sendItemVocalizeChat(data) {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
-        const chatData = {
+        const chatData: Record<string, any> = {
             user: game.user.id,
             content: html,
             rollMode: game.settings.get('core', 'rollMode'),
         };
-        if (['gmroll', 'blindroll'].includes(chatData.rollMode as any)) {
-            // @ts-expect-error - dynamic property
-            chatData.whisper = ChatMessage.getWhisperRecipients('GM');
-        // @ts-expect-error - comparison type
-        } else if (chatData.rollMode === 'selfroll') {
-            // @ts-expect-error - dynamic property
-            chatData.whisper = [game.user];
-        }
+        applyRollModeWhispers(chatData);
         await (ChatMessage as any).create(chatData);
     }
 }

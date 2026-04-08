@@ -1,5 +1,81 @@
 import { WeaponRollData } from '../rolls/roll-data.ts';
 
+/* -------------------------------------------- */
+/*  Ammo Effects Table                          */
+/* -------------------------------------------- */
+
+type AttackSpecialEffect = {
+    remove?: string;
+    add?: { name: string; level: any };
+};
+
+type HitEffect = {
+    key: string;
+    description: string;
+};
+
+type AmmoEffects = {
+    attackBonuses?: Record<string, number>;
+    attackSpecials?: AttackSpecialEffect[];
+    hitEffects?: HitEffect[];
+    hitDamageType?: string;
+    damageModifiers?: Record<string, number>;
+    penetrationModifiers?: Record<string, number>;
+    fireRate?: number;
+};
+
+/**
+ * All ammo type effects in one place.
+ * To add a new ammo type, add a single entry here — no function changes needed.
+ */
+const AMMO_EFFECTS: Record<string, AmmoEffects> = {
+    'Amputator Shells': {
+        damageModifiers: { 'amputator shells': 2 },
+    },
+    'Bleeder Rounds': {
+        hitEffects: [{ key: 'Bleeder Rounds', description: 'If the target takes damage, they suffer blood loss for [[1d5]] rounds.' }],
+    },
+    'Dumdum Bullets': {
+        hitEffects: [{ key: 'Dumdum Bullets', description: 'Armour points count double against this hit.' }],
+        damageModifiers: { 'dumdum bullets': 2 },
+    },
+    'Expander Rounds': {
+        damageModifiers: { 'expander rounds': 1 },
+        penetrationModifiers: { 'expander rounds': 1 },
+    },
+    'Explosive Arrows/Quarrels': {
+        attackBonuses: { 'explosive arrows': -10 },
+        attackSpecials: [
+            { remove: 'Primitive' },
+            { add: { name: 'Blast', level: 1 } },
+        ],
+        hitDamageType: 'Explosive',
+    },
+    'Hot-Shot Charge Packs': {
+        attackSpecials: [
+            { remove: 'Reliable' },
+            { add: { name: 'Tearing', level: true } },
+        ],
+        damageModifiers: { 'hot-shot charge pack': 1 },
+        penetrationModifiers: { 'hot-shot charge pack': 4 },
+        fireRate: 1,
+    },
+    'Inferno Shells': {
+        attackSpecials: [{ add: { name: 'Flame', level: true } }],
+    },
+    'Man-Stopper Bullets': {
+        penetrationModifiers: { 'man-stopper bullets': 3 },
+    },
+    'Tox Rounds': {
+        attackSpecials: [{ add: { name: 'Toxic', level: 1 } }],
+        damageModifiers: { 'tox rounds': -1 },
+    },
+};
+
+/* -------------------------------------------- */
+/*  Ammo Utility Functions                      */
+/* -------------------------------------------- */
+
 export function ammoText(item) {
     game.wh40k.log('ammoText', item);
     if (item.usesAmmo) {
@@ -39,73 +115,48 @@ export async function refundAmmo(actionData) {
     }
 }
 
+/* -------------------------------------------- */
+/*  Attack Phase                                */
+/* -------------------------------------------- */
+
 /**
  * @param rollData {WeaponRollData}
  */
 export async function calculateAmmoAttackBonuses(rollData) {
-    const weapon = rollData.weapon;
-    const ammo = weapon.items.find((i) => i.isAmmunition);
+    const ammo = rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
-
-    switch (ammo.name) {
-        case 'Explosive Arrows/Quarrels':
-            rollData.specialModifiers['explosive arrows'] = -10;
-            break;
+    const effects = AMMO_EFFECTS[ammo.name];
+    if (!effects?.attackBonuses) return;
+    for (const [key, value] of Object.entries(effects.attackBonuses)) {
+        rollData.specialModifiers[key] = value;
     }
 }
 
 export async function calculateAmmoAttackSpecials(rollData) {
-    const weapon = rollData.weapon;
-    const ammo = weapon.items.find((i) => i.isAmmunition);
+    const ammo = rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
-
     game.wh40k.log('calculateAmmoAttackSpecials', ammo.name);
-    switch (ammo.name) {
-        case 'Explosive Arrows/Quarrels':
-            rollData.attackSpecials.findSplice((i) => i.name === 'Primitive');
-            rollData.attackSpecials.push({
-                name: 'Blast',
-                level: 1,
-            });
-            break;
-        case 'Hot-Shot Charge Packs':
-            rollData.attackSpecials.findSplice((i) => i.name === 'Reliable');
-            rollData.attackSpecials.push({
-                name: 'Tearing',
-                level: true,
-            });
-            break;
-        case 'Inferno Shells':
-            rollData.attackSpecials.push({
-                name: 'Flame',
-                level: true,
-            });
-            break;
-        case 'Tox Rounds':
-            rollData.attackSpecials.push({
-                name: 'Toxic',
-                level: 1,
-            });
-            break;
+    const effects = AMMO_EFFECTS[ammo.name];
+    if (!effects?.attackSpecials) return;
+    for (const spec of effects.attackSpecials) {
+        if (spec.remove) rollData.attackSpecials.findSplice((i) => i.name === spec.remove);
+        if (spec.add) rollData.attackSpecials.push(spec.add);
     }
 }
 
-export async function calculateAmmoSpecials(actionData, hit) {
-    const weapon = actionData.rollData.weapon;
-    const ammo = weapon.items.find((i) => i.isAmmunition);
-    if (!ammo) return;
+/* -------------------------------------------- */
+/*  Hit Phase                                   */
+/* -------------------------------------------- */
 
-    switch (ammo.name) {
-        case 'Bleeder Rounds':
-            hit.addEffect('Bleeder Rounds', 'If the target takes damage, they suffer blood loss for [[1d5]] rounds.');
-            break;
-        case 'Dumdum Bullets':
-            hit.addEffect('Dumdum Bullets', 'Armour points count double against this hit.');
-            break;
-        case 'Explosive Arrows/Quarrels':
-            hit.damageType = 'Explosive';
-            break;
+export async function calculateAmmoSpecials(actionData, hit) {
+    const ammo = actionData.rollData.weapon.items.find((i) => i.isAmmunition);
+    if (!ammo) return;
+    const effects = AMMO_EFFECTS[ammo.name];
+    if (!effects) return;
+    if (effects.hitEffects) {
+        for (const e of effects.hitEffects) hit.addEffect(e.key, e.description);
     }
+    if (effects.hitDamageType) hit.damageType = effects.hitDamageType;
 }
 
 /**
@@ -113,26 +164,12 @@ export async function calculateAmmoSpecials(actionData, hit) {
  * @param hit {Hit}
  */
 export async function calculateAmmoDamageBonuses(actionData, hit) {
-    const weapon = actionData.rollData.weapon;
-    const ammo = weapon.items.find((i) => i.isAmmunition);
+    const ammo = actionData.rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
-
-    switch (ammo.name) {
-        case 'Amputator Shells':
-            hit.modifiers['amputator shells'] = 2;
-            break;
-        case 'Dumdum Bullets':
-            hit.modifiers['dumdum bullets'] = 2;
-            break;
-        case 'Expander Rounds':
-            hit.modifiers['expander rounds'] = 1;
-            break;
-        case 'Hot-Shot Charge Packs':
-            hit.modifiers['hot-shot charge pack'] = 1;
-            break;
-        case 'Tox Rounds':
-            hit.modifiers['tox rounds'] = -1;
-            break;
+    const effects = AMMO_EFFECTS[ammo.name];
+    if (!effects?.damageModifiers) return;
+    for (const [key, value] of Object.entries(effects.damageModifiers)) {
+        hit.modifiers[key] = value;
     }
 }
 
@@ -141,22 +178,18 @@ export async function calculateAmmoDamageBonuses(actionData, hit) {
  * @param hit {Hit}
  */
 export async function calculateAmmoPenetrationBonuses(actionData, hit) {
-    const weapon = actionData.rollData.weapon;
-    const ammo = weapon.items.find((i) => i.isAmmunition);
+    const ammo = actionData.rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
-
-    switch (ammo.name) {
-        case 'Expander Rounds':
-            hit.penetrationModifiers['expander rounds'] = 1;
-            break;
-        case 'Hot-Shot Charge Packs':
-            hit.penetrationModifiers['hot-shot charge pack'] = 4;
-            break;
-        case 'Man-Stopper Bullets':
-            hit.penetrationModifiers['man-stopper bullets'] = 3;
-            break;
+    const effects = AMMO_EFFECTS[ammo.name];
+    if (!effects?.penetrationModifiers) return;
+    for (const [key, value] of Object.entries(effects.penetrationModifiers)) {
+        hit.penetrationModifiers[key] = value;
     }
 }
+
+/* -------------------------------------------- */
+/*  Ammo Information                            */
+/* -------------------------------------------- */
 
 /**
  * @param rollData {WeaponRollData}
@@ -203,13 +236,11 @@ export function calculateAmmoInformation(rollData) {
         fireRate = maximumHits;
     }
 
-    // Ammunition Modification
+    // Ammunition fire rate override
     const ammunition = rollData.weapon.items.find((i) => i.isAmmunition);
     if (ammunition) {
-        switch (ammunition.name) {
-            case 'Hot-Shot Charge Packs':
-                fireRate = 1;
-        }
+        const effects = AMMO_EFFECTS[ammunition.name];
+        if (effects?.fireRate !== undefined) fireRate = effects.fireRate;
     }
 
     rollData.ammoPerShot = ammoPerShot;
