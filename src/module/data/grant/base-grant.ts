@@ -97,16 +97,46 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
     /* -------------------------------------------- */
 
     /**
+     * Initialise a blank result object. Override to customise the `applied` shape.
+     * @returns {GrantApplicationResult}
+     */
+    _initResult(): any {
+        return { success: true, applied: {}, notifications: [], errors: [] };
+    }
+
+    /**
      * Apply this grant to an actor.
-     * @param {WH40KActor} actor - The actor to receive the grant
-     * @param {object} data - Data from the grant flow (player selections, etc)
-     * @param {object} [options={}] - Application options
-     * @param {boolean} [options.dryRun=false] - Preview mode, don't actually apply
-     * @returns {Promise<GrantApplicationResult>} Result of the application
+     * Handles the result scaffolding, null-actor guard, and success calculation.
+     * Subclasses implement {@link _applyGrant}.
+     * @param {WH40KActor} actor
+     * @param {object} [data={}]
+     * @param {object} [options={}]
+     * @param {boolean} [options.dryRun=false]
+     * @returns {Promise<GrantApplicationResult>}
+     */
+    async apply(actor, data: any = {}, options: any = {}) {
+        const result = this._initResult();
+        if (!actor) {
+            result.success = false;
+            result.errors.push('No actor provided');
+            return result;
+        }
+        await this._applyGrant(actor, data, options, result);
+        result.success = result.errors.length === 0;
+        return result;
+    }
+
+    /**
+     * Type-specific grant logic. Mutates `result` in place.
+     * @param {WH40KActor} actor
+     * @param {object} data
+     * @param {object} options
+     * @param {GrantApplicationResult} result
+     * @protected
      * @abstract
      */
-    async apply(actor, data, options = {}) {
-        throw new Error(`${this.constructor.name} must implement apply()`);
+    async _applyGrant(actor, data, options, result): Promise<void> {
+        throw new Error(`${this.constructor.name} must implement _applyGrant()`);
     }
 
     /**
@@ -127,8 +157,20 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @returns {Promise<GrantApplicationResult>}
      */
     async restore(actor, restoreData) {
-        // Default implementation re-applies with stored data
         return this.apply(actor, restoreData, { restore: true });
+    }
+
+    /**
+     * Conditionally apply an actor update, skipping in dry-run mode.
+     * @param {WH40KActor} actor
+     * @param {object} updates
+     * @param {object} options
+     * @protected
+     */
+    async _applyUpdates(actor, updates: Record<string, any>, options: any): Promise<void> {
+        if (!options.dryRun && Object.keys(updates).length > 0) {
+            await actor.update(updates);
+        }
     }
 
     /**
