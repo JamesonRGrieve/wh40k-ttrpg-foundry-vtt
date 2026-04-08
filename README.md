@@ -40,7 +40,10 @@ npm run check        # All of the above
 
 ## Deploy to Foundry VTT
 
-The system is deployed via SCP to the Foundry VTT container. Foundry hot-reloads system files — no service restart needed, just refresh the browser.
+The system is deployed via SCP to the Foundry VTT container.
+
+- **System files only** (JS/CSS/templates): Foundry hot-reloads — just refresh the browser.
+- **Compendium packs updated**: Purge world pack copies and restart the service so Foundry reimports from the new system packs.
 
 ```bash
 # 1. Build
@@ -53,13 +56,22 @@ scp -r dist/* root@192.168.5.40:/opt/foundry-vtt/data/Data/systems/wh40k-rpg/
 # 3. Fix ownership (Foundry runs as foundry-vtt user)
 ssh root@192.168.5.40 "chown -R foundry-vtt:foundry-vtt /opt/foundry-vtt/data/Data/systems/wh40k-rpg"
 
-# 4. Refresh browser
+# 4a. Refresh browser (system files only)
+# OR
+# 4b. Purge world packs + restart service (compendiums updated)
+ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/worlds/dark-heresy/packs && systemctl restart foundry-vtt.service"
 ```
 
-### One-liner
+### One-liners
 
+System files only (browser refresh after):
 ```bash
 npm run build && ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/systems/wh40k-rpg; mkdir -p /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null && scp -r dist/* root@192.168.5.40:/opt/foundry-vtt/data/Data/systems/wh40k-rpg/ 2>/dev/null && ssh root@192.168.5.40 "chown -R foundry-vtt:foundry-vtt /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null
+```
+
+Full deploy with compendium reset:
+```bash
+npm run build && ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/systems/wh40k-rpg; mkdir -p /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null && scp -r dist/* root@192.168.5.40:/opt/foundry-vtt/data/Data/systems/wh40k-rpg/ 2>/dev/null && ssh root@192.168.5.40 "chown -R foundry-vtt:foundry-vtt /opt/foundry-vtt/data/Data/systems/wh40k-rpg && rm -rf /opt/foundry-vtt/data/Data/worlds/dark-heresy/packs && systemctl restart foundry-vtt.service" 2>/dev/null
 ```
 
 ### Server Details

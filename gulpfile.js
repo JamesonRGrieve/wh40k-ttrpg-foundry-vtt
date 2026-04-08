@@ -40,28 +40,31 @@ const BUILD_DIR = "dist";
  * V13 uses folder-based LevelDB databases instead of .db files.
  */
 async function compilePacks() {
-  // Determine the source folders to process
-  const folders = fs.readdirSync(PACK_SRC).filter((file) => {
-    return fs.statSync(path.join(PACK_SRC, file)).isDirectory();
-  });
+  // Collect all pack directories: src/packs/{group}/{pack-name}/_source
+  const packEntries = [];
+  for (const group of fs.readdirSync(PACK_SRC)) {
+    const groupPath = path.join(PACK_SRC, group);
+    if (!fs.statSync(groupPath).isDirectory()) continue;
+    for (const pack of fs.readdirSync(groupPath)) {
+      const packPath = path.join(groupPath, pack);
+      if (!fs.statSync(packPath).isDirectory()) continue;
+      const sourceDir = path.join(packPath, "_source");
+      if (fs.existsSync(sourceDir)) {
+        packEntries.push({ group, pack, sourceDir, relPath: path.join(group, pack) });
+      }
+    }
+  }
 
   const packsDir = path.resolve(__dirname, BUILD_DIR, "packs");
-  
+
   // Ensure packs directory exists
   if (!fs.existsSync(packsDir)) {
     fs.mkdirSync(packsDir, { recursive: true });
   }
 
-  // Process each folder into a LevelDB compendium
-  for (const folder of folders) {
-    const sourceDir = path.join(PACK_SRC, folder, "_source");
-    
-    // Skip if no _source directory (contains JSON files)
-    if (!fs.existsSync(sourceDir)) {
-      continue;
-    }
-
-    const dbPath = path.join(packsDir, folder);
+  // Process each pack into a LevelDB compendium
+  for (const { pack: folder, sourceDir, relPath } of packEntries) {
+    const dbPath = path.join(packsDir, relPath);
     
     // Remove existing database folder if it exists
     if (fs.existsSync(dbPath)) {
