@@ -46,13 +46,15 @@ let _globalDragListenersSetup = false;
 function ensureGlobalDragTracking(): void {
     if (_globalDragListenersSetup) return;
     _globalDragListenersSetup = true;
+    // Bubble phase (false) so this fires AFTER the target's dragstart handler
+    // has already called setData — capture phase would read empty data.
     document.addEventListener('dragstart', (e: DragEvent) => {
         try {
             const raw = e.dataTransfer?.getData('text/plain');
             _activeDragType = raw ? (JSON.parse(raw).type ?? null) : null;
         } catch { _activeDragType = null; }
-    }, true);
-    document.addEventListener('dragend', () => { _activeDragType = null; }, true);
+    }, false);
+    document.addEventListener('dragend', () => { _activeDragType = null; }, false);
 }
 
 export default function EnhancedDragDropMixin<T extends new (...args: any[]) => any>(Base: T) {
