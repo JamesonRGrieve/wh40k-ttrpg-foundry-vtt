@@ -3109,7 +3109,7 @@
     },
     {
       "name": "Dark Heresy 2e",
-      "color": "#1a1a2e",
+      "color": "#4a0a14",
       "sorting": "a",
       "folders": [
         {
@@ -3127,7 +3127,11 @@
             "dh2-core-items-talents",
             "dh2-core-items-traits",
             "dh2-core-items-weapons",
-            "dh2-core-rolltables"
+            "dh2-core-rolltables",
+            "dh2-core-elite-advances",
+            "dh2-core-items-weapon-mods",
+            "dh2-core-talents-specializations",
+            "dh2-core-locations"
           ]
         },
         {
@@ -3141,7 +3145,8 @@
             "dh2-beyond-psychic-powers",
             "dh2-beyond-items-talents",
             "dh2-beyond-items-weapons",
-            "dh2-beyond-items-weapon-mods"
+            "dh2-beyond-items-weapon-mods",
+            "dh2-beyond-actors-reinforcements"
           ]
         },
         {
@@ -3154,7 +3159,8 @@
             "dh2-within-items-gear",
             "dh2-within-psychic-powers",
             "dh2-within-items-talents",
-            "dh2-within-items-weapons"
+            "dh2-within-items-weapons",
+            "dh2-within-locations"
           ]
         },
         {
@@ -3165,7 +3171,9 @@
             "dh2-without-items-backgrounds",
             "dh2-without-items-gear",
             "dh2-without-items-talents",
-            "dh2-without-items-weapons"
+            "dh2-without-items-weapons",
+            "dh2-without-actors-reinforcements",
+            "dh2-without-actors-vehicles"
           ]
         },
         {
@@ -3179,7 +3187,7 @@
     },
     {
       "name": "Deathwatch",
-      "color": "#1a1a1a",
+      "color": "#1a2a3a",
       "sorting": "a",
       "folders": [
         {
@@ -3250,7 +3258,7 @@
     },
     {
       "name": "Only War",
-      "color": "#556B2F",
+      "color": "#3a4a28",
       "sorting": "a",
       "folders": [
         {
@@ -3302,7 +3310,7 @@
     },
     {
       "name": "Rogue Trader",
-      "color": "#8B4513",
+      "color": "#7a5c00",
       "sorting": "a",
       "folders": [
         {
