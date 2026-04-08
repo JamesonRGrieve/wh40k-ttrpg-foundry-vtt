@@ -4,6 +4,7 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
 import IdentifierField from '../fields/identifier-field.ts';
+import { bodyLocationsSchema } from '../shared/body-locations.ts';
 
 /**
  * Data model for Cybernetic items.
@@ -43,14 +44,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
 
             // Provides armour points?
             hasArmourPoints: new fields.BooleanField({ required: true, initial: false }),
-            armourPoints: new fields.SchemaField({
-                head: new fields.NumberField({ required: true, initial: 0, min: 0 }),
-                leftArm: new fields.NumberField({ required: true, initial: 0, min: 0 }),
-                rightArm: new fields.NumberField({ required: true, initial: 0, min: 0 }),
-                body: new fields.NumberField({ required: true, initial: 0, min: 0 }),
-                leftLeg: new fields.NumberField({ required: true, initial: 0, min: 0 }),
-                rightLeg: new fields.NumberField({ required: true, initial: 0, min: 0 }),
-            }),
+            armourPoints: bodyLocationsSchema(),
 
             // Effect description
             effect: new fields.HTMLField({ required: true, blank: true }),

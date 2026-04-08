@@ -192,3 +192,18 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
     }
     return BaseApplicationWH40K;
 }
+
+/* -------------------------------------------- */
+
+/**
+ * Auto-select number input contents on focus for easy editing.
+ * Call from _onRender in any ApplicationV2-based application.
+ * @param {Element} element  The application's root element.
+ */
+export function setupNumberInputAutoSelect(element: Element): void {
+    element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
+        input.addEventListener('focus', (event) => {
+            (event.target as HTMLInputElement).select();
+        });
+    });
+}

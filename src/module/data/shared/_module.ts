@@ -9,3 +9,4 @@ export { default as AttackTemplate } from './attack-template.ts';
 export { default as DamageTemplate } from './damage-template.ts';
 export { default as ModifiersTemplate } from './modifiers-template.ts';
 export { default as ActivationTemplate } from './activation-template.ts';
+export { bodyLocationsSchema } from './body-locations.ts';
