@@ -5,6 +5,7 @@
 import ContainerItemSheet from './container-item-sheet.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
 import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
+import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
 
 /**
  * Sheet for weapon items with support for weapon modifications and ammunition.
@@ -421,18 +422,14 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
         const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
-        const chatData: any = {
+        const chatData: Record<string, any> = {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor }),
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,
             rolls: [damageRoll],
         };
-        if (['gmroll', 'blindroll'].includes(chatData.rollMode)) {
-            chatData.whisper = ChatMessage.getWhisperRecipients('GM');
-        } else if (chatData.rollMode === 'selfroll') {
-            chatData.whisper = [game.user];
-        }
+        applyRollModeWhispers(chatData);
         await (ChatMessage as any).create(chatData);
     }
 
