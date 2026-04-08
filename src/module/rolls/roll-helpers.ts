@@ -43,25 +43,30 @@ export async function roll1d100() {
     return roll;
 }
 
+/**
+ * Apply whisper recipients to a chatData object based on the current rollMode.
+ * Mutates chatData in place.
+ */
+export function applyRollModeWhispers(chatData: Record<string, any>): void {
+    const rollMode = chatData.rollMode;
+    if (['gmroll', 'blindroll'].includes(rollMode)) {
+        chatData.whisper = ChatMessage.getWhisperRecipients('GM');
+    } else if (rollMode === 'selfroll') {
+        chatData.whisper = [game.user];
+    }
+}
+
 export async function sendActionDataToChat(actionData) {
     const html = await foundry.applications.handlebars.renderTemplate(actionData.template, actionData);
-    const chatData = {
+    const chatData: Record<string, any> = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
         content: html,
     };
     if (actionData.rollData.roll && !actionData.rollData.isManualRoll) {
-        // @ts-expect-error - dynamic property
         chatData.rolls = [actionData.rollData.roll];
     }
-    if (['gmroll', 'blindroll'].includes(chatData.rollMode as any)) {
-        // @ts-expect-error - dynamic property
-        chatData.whisper = ChatMessage.getWhisperRecipients('GM');
-    // @ts-expect-error - comparison type
-    } else if (chatData.rollMode === 'selfroll') {
-        // @ts-expect-error - dynamic property
-        chatData.whisper = [game.user];
-    }
+    applyRollModeWhispers(chatData);
     await (ChatMessage as any).create(chatData);
 }
 

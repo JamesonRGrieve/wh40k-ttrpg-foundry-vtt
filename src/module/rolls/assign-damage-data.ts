@@ -1,6 +1,7 @@
 import { hitDropdown } from '../rules/hit-locations.ts';
 import { getCriticalDamage } from '../rules/critical-damage.ts';
 import { damageTypeDropdown } from '../rules/damage-type.ts';
+import { applyRollModeWhispers } from './roll-helpers.ts';
 
 export class AssignDamageData {
     [key: string]: any;
@@ -115,19 +116,12 @@ export class AssignDamageData {
         }
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs', this);
-        const chatData = {
+        const chatData: Record<string, any> = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,
         };
-        if (['gmroll', 'blindroll'].includes(chatData.rollMode as any)) {
-            // @ts-expect-error - dynamic property
-            chatData.whisper = ChatMessage.getWhisperRecipients('GM');
-        // @ts-expect-error - comparison type
-        } else if (chatData.rollMode === 'selfroll') {
-            // @ts-expect-error - dynamic property
-            chatData.whisper = [game.user];
-        }
+        applyRollModeWhispers(chatData);
         await (ChatMessage as any).create(chatData);
     }
 

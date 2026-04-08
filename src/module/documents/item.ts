@@ -1,5 +1,6 @@
 import { WH40KItemContainer } from './item-container.ts';
 import { capitalize } from '../handlebars/handlebars-helpers.ts';
+import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 
 export class WH40KItem extends WH40KItemContainer {
     [key: string]: any;
@@ -469,12 +470,8 @@ export class WH40KItem extends WH40KItemContainer {
             },
         };
 
-        const rollMode = game.settings.get('core', 'rollMode') as unknown as string;
-        if (['gmroll', 'blindroll'].includes(rollMode)) {
-            chatData.whisper = ChatMessage.getWhisperRecipients('GM');
-        } else if (rollMode === 'selfroll') {
-            chatData.whisper = [game.user];
-        }
+        chatData.rollMode = game.settings.get('core', 'rollMode');
+        applyRollModeWhispers(chatData);
 
         return (ChatMessage as any).create(chatData);
     }
