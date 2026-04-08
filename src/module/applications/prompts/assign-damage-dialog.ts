@@ -46,13 +46,6 @@ export default class AssignDamageDialog extends BaseRollDialog {
     async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
-        // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
-            input.addEventListener('focus', (event) => {
-                event.target.select();
-            });
-        });
-
         // Set up button listeners
         this.element.querySelector('#assign-damage')?.addEventListener('click', this._onAssignDamage.bind(this));
         this.element.querySelector('#cancel-prompt')?.addEventListener('click', this._onCancelPrompt.bind(this));

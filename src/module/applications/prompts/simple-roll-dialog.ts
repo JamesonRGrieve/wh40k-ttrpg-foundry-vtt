@@ -2,23 +2,18 @@
  * @file SimpleRollDialog - V2 dialog for simple skill/characteristic rolls
  */
 
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import BaseRollDialog from './base-roll-dialog.ts';
 import { sendActionDataToChat } from '../../rolls/roll-helpers.ts';
-
-const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Dialog for configuring simple skill or characteristic rolls.
  */
-export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) {
+// @ts-expect-error - TS2417 static side inheritance
+export default class SimpleRollDialog extends BaseRollDialog {
     [key: string]: any;
-    /**
-     * @param {object} simpleSkillData  The skill data.
-     * @param {object} [options={}]     Dialog options.
-     */
+
     constructor(simpleSkillData = {}, options = {}) {
-        // @ts-expect-error - argument count
-        super(options);
+        super(simpleSkillData, options);
         this.simpleSkillData = simpleSkillData;
     }
 
@@ -26,18 +21,12 @@ export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) 
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        tag: 'form',
-        classes: ['wh40k-rpg', 'dialog', 'simple-roll', 'standard-form'],
-        actions: {
-            roll: SimpleRollDialog.#onRoll,
-            cancel: SimpleRollDialog.#onCancel,
-        },
+        classes: ['simple-roll'],
         position: {
             width: 300,
         },
         window: {
             title: 'Roll Modifier',
-            minimizable: false,
         },
     };
 
@@ -52,93 +41,14 @@ export default class SimpleRollDialog extends ApplicationV2Mixin(ApplicationV2) 
     };
 
     /* -------------------------------------------- */
-    /*  Properties                                  */
-    /* -------------------------------------------- */
-
-    /**
-     * The skill data.
-     * @type {object}
-     */
-    simpleSkillData;
-
-    /* -------------------------------------------- */
-    /*  Rendering                                   */
-    /* -------------------------------------------- */
-
-    /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
-        return {
-            ...context,
-            ...this.simpleSkillData,
-        };
-    }
-
-    /* -------------------------------------------- */
-    /*  Event Listeners                             */
-    /* -------------------------------------------- */
-
-    /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
-        await super._onRender(context, options);
-
-        // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
-            input.addEventListener('focus', (event) => {
-                event.target.select();
-            });
-        });
-
-        // Set up button listeners for V1-style templates
-        this.element.querySelector("[data-action='roll']")?.addEventListener('click', (e) => {
-            e.preventDefault();
-            this._performRoll();
-        });
-        this.element.querySelector("[data-action='cancel']")?.addEventListener('click', (e) => {
-            e.preventDefault();
-            this.close();
-        });
-    }
-
-    /* -------------------------------------------- */
-    /*  Action Handlers                             */
-    /* -------------------------------------------- */
-
-    /**
-     * Handle roll button click.
-     * @this {SimpleRollDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #onRoll(this: any, event: Event, target: HTMLElement): Promise<void> {
-        await this._performRoll();
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle cancel button click.
-     * @this {SimpleRollDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
-        await this.close();
-    }
-
-    /* -------------------------------------------- */
     /*  Roll Methods                                */
     /* -------------------------------------------- */
 
-    /**
-     * Perform the simple roll.
-     * @protected
-     */
+    /** @override */
     async _performRoll(): Promise<void> {
         const form = this.element.querySelector('form') ?? this.element;
         const rollData = this.simpleSkillData.rollData;
 
-        // Get form values
         const difficultySelect = form.querySelector('#difficulty');
         const modifierInput = form.querySelector('#modifier');
 

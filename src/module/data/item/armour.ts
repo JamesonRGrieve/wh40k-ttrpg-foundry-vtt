@@ -3,6 +3,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import IdentifierField from '../fields/identifier-field.ts';
+import { bodyLocationsSchema } from '../shared/body-locations.ts';
 
 /**
  * Data model for Armour items.
@@ -187,17 +188,6 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     static defineSchema() {
         const fields = (foundry.data as any).fields;
 
-        // Body location schema (reused for armour points)
-        const LocationSchema = () =>
-            new fields.SchemaField({
-                head: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                leftArm: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                rightArm: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                body: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                leftLeg: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                rightLeg: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
-            });
-
         return {
             ...super.defineSchema(),
 
@@ -225,7 +215,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             }),
 
             // Armour points per location
-            armourPoints: LocationSchema(),
+            armourPoints: bodyLocationsSchema(),
 
             // Coverage - which locations does this cover?
             coverage: new fields.SetField(

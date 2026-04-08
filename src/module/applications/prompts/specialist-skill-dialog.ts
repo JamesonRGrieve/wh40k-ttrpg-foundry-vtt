@@ -2,7 +2,7 @@
  * @file SpecialistSkillDialog - V2 dialog for adding specialist skills
  */
 
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -129,12 +129,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
-        // Auto-select number input values on focus for easy editing
-        this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
-            input.addEventListener('focus', (event) => {
-                event.target.select();
-            });
-        });
+        setupNumberInputAutoSelect(this.element);
 
         // Set up button listeners for V1-style templates
         this.element.querySelector("[data-action='add']")?.addEventListener('click', (e) => {
