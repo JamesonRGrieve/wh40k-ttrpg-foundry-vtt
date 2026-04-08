@@ -21,6 +21,40 @@
  * @returns {typeof EnhancedDragDropApplication}
  * @mixin
  */
+/** Human-readable labels for item types shown in the header drop zone. */
+const DROP_ZONE_LABELS: Record<string, string> = {
+    weapon:        'Add Weapon',
+    armour:        'Add Armour',
+    gear:          'Add Item',
+    ammunition:    'Add Ammunition',
+    cybernetic:    'Add Cybernetic',
+    talent:        'Add Talent',
+    trait:         'Add Trait',
+    psychicPower:  'Add Psychic Power',
+    forceField:    'Add Force Field',
+    criticalInjury:'Add Critical Injury',
+    condition:     'Add Condition',
+    skill:         'Add Skill',
+    specialAbility:'Add Special Ability',
+};
+const DROP_ZONE_DEFAULT_LABEL = 'Drop to Add';
+
+/** Captured at dragstart so dragover handlers can read the item type. */
+let _activeDragType: string | null = null;
+let _globalDragListenersSetup = false;
+
+function ensureGlobalDragTracking(): void {
+    if (_globalDragListenersSetup) return;
+    _globalDragListenersSetup = true;
+    document.addEventListener('dragstart', (e: DragEvent) => {
+        try {
+            const raw = e.dataTransfer?.getData('text/plain');
+            _activeDragType = raw ? (JSON.parse(raw).type ?? null) : null;
+        } catch { _activeDragType = null; }
+    }, true);
+    document.addEventListener('dragend', () => { _activeDragType = null; }, true);
+}
+
 export default function EnhancedDragDropMixin<T extends new (...args: any[]) => any>(Base: T) {
     return class EnhancedDragDropApplication extends Base {
     [key: string]: any;
@@ -103,6 +137,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @private
          */
         _setupDropZones(): void {
+            ensureGlobalDragTracking();
             const dropZones = this.element.querySelectorAll('[data-drop-zone]');
 
             dropZones.forEach((zone) => {
@@ -326,6 +361,13 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             // Add drag-over visual feedback for all drop zones
             zone.classList.add('wh40k-drag-over');
             event.dataTransfer.dropEffect = 'copy';
+
+            // Update drop zone label based on dragged item type
+            const textEl = zone.querySelector('.wh40k-dropzone-text') as HTMLElement | null;
+            if (textEl) {
+                const type = _activeDragType ?? this._draggedItem?.item?.type ?? null;
+                textEl.textContent = type ? (DROP_ZONE_LABELS[type] ?? DROP_ZONE_DEFAULT_LABEL) : DROP_ZONE_DEFAULT_LABEL;
+            }
         }
 
         /* -------------------------------------------- */
@@ -339,6 +381,10 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const zone = event.currentTarget as HTMLElement;
             zone.classList.remove('drop-hover');
             zone.classList.remove('wh40k-drag-over');
+
+            // Reset label
+            const textEl = zone.querySelector('.wh40k-dropzone-text') as HTMLElement | null;
+            if (textEl) textEl.textContent = 'Drop to Add';
         }
 
         /* -------------------------------------------- */
