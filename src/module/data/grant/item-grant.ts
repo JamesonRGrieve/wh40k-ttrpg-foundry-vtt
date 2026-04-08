@@ -65,25 +65,11 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async apply(actor: any, data: any = {}, options: Record<string, any> = {}) {
-        const result = {
-            success: true,
-            applied: {},
-            notifications: [],
-            errors: [],
-        };
-
-        if (!actor) {
-            result.success = false;
-            result.errors.push('No actor provided');
-            return result;
-        }
-
-        // Handle missing items gracefully
+    async _applyGrant(actor: any, data: any, options: Record<string, any>, result: any): Promise<void> {
         const items = this.items ?? [];
         if (items.length === 0) {
             result.notifications.push('Item grant has no items to apply');
-            return result;
+            return;
         }
 
         const itemsToCreate = [];
@@ -164,8 +150,6 @@ export default class ItemGrantData extends (BaseGrantData as any) {
             });
         }
 
-        result.success = result.errors.length === 0;
-        return result;
     }
 
     /** @inheritDoc */
@@ -195,28 +179,14 @@ export default class ItemGrantData extends (BaseGrantData as any) {
 
     /** @inheritDoc */
     async restore(actor, restoreData) {
-        const result = {
-            success: true,
-            applied: {},
-            notifications: [],
-            errors: [],
-        };
-
+        const result = this._initResult();
         if (!restoreData?.items?.length) return result;
 
-        const itemsToCreate = restoreData.items.map(({ uuid, data }) => {
-            // Preserve the original item data
-            return { uuid, data };
-        });
-
-        const created = await actor.createEmbeddedDocuments(
-            'Item',
-            itemsToCreate.map((i) => i.data),
-        );
+        const itemsToCreate = restoreData.items.map(({ uuid, data }) => ({ uuid, data }));
+        const created = await actor.createEmbeddedDocuments('Item', itemsToCreate.map((i) => i.data));
 
         created.forEach((item, index) => {
-            const sourceUuid = itemsToCreate[index].uuid;
-            result.applied[sourceUuid] = item.id;
+            result.applied[itemsToCreate[index].uuid] = item.id;
             result.notifications.push(`Restored: ${item.name}`);
         });
 

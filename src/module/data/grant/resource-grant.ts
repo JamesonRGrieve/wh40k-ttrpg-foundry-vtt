@@ -84,85 +84,46 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async apply(actor: any, data: any = {}, options: Record<string, any> = {}) {
-        const result = {
-            success: true,
-            applied: {},
-            notifications: [],
-            errors: [],
-        };
-
-        if (!actor) {
-            result.success = false;
-            result.errors.push('No actor provided');
-            return result;
-        }
-
+    async _applyGrant(actor: any, data: any, options: Record<string, any>, result: any): Promise<void> {
         const updates = {};
         const selectedResources = data.selected ?? this.resources.map((r) => r.type);
-        // Pre-rolled values from dialog
         const rolledValues = data.rolledValues ?? {};
 
         for (const resourceConfig of this.resources) {
             const { type, formula, optional: resOptional } = resourceConfig;
 
-            // Validate resource type
             const resourceDef = (this.constructor as any).RESOURCES[type];
-            if (!resourceDef) {
-                result.errors.push(`Invalid resource type: ${type}`);
-                continue;
-            }
+            if (!resourceDef) { result.errors.push(`Invalid resource type: ${type}`); continue; }
 
-            // Skip if not selected
             if (!selectedResources.includes(type)) {
-                if (!resOptional && !this.optional) {
-                    result.errors.push(`Required resource ${type} not selected`);
-                }
+                if (!resOptional && !this.optional) result.errors.push(`Required resource ${type} not selected`);
                 continue;
             }
 
-            // Get value - either pre-rolled or evaluate now
-            let value = rolledValues[type];
-            if (value === undefined) {
-                value = await this._evaluateFormula(formula, actor);
-            }
-
+            let value = rolledValues[type] ?? await this._evaluateFormula(formula, actor);
             if (value === 0) continue;
 
-            // Get current values
             const currentValue = foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0;
             let currentMax = null;
 
-            // Apply to value path
             updates[resourceDef.valuePath] = currentValue + value;
 
-            // Also apply to max if applicable
             if (resourceDef.affectsMax && resourceDef.maxPath) {
                 currentMax = foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0;
                 updates[resourceDef.maxPath] = currentMax + value;
             }
 
             result.applied[type] = {
-                formula,
-                rolledValue: value,
-                previousValue: currentValue,
-                previousMax: currentMax,
-                newValue: currentValue + value,
-                newMax: currentMax !== null ? currentMax + value : null,
+                formula, rolledValue: value,
+                previousValue: currentValue, previousMax: currentMax,
+                newValue: currentValue + value, newMax: currentMax !== null ? currentMax + value : null,
             };
 
             const label = game.i18n.localize(resourceDef.label);
-            const sign = value > 0 ? '+' : '';
-            result.notifications.push(`${label} ${sign}${value}`);
+            result.notifications.push(`${label} ${value > 0 ? '+' : ''}${value}`);
         }
 
-        // Apply if not dry run
-        if (!options.dryRun && Object.keys(updates).length > 0) {
-            await actor.update(updates);
-        }
-
-        result.success = result.errors.length === 0;
-        return result;
+        await this._applyUpdates(actor, updates, options);
     }
 
     /** @inheritDoc */
@@ -194,13 +155,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
 
     /** @inheritDoc */
     async restore(actor, restoreData) {
-        const result = {
-            success: true,
-            applied: {},
-            notifications: [],
-            errors: [],
-        };
-
+        const result = this._initResult();
         const updates = {};
 
         for (const [type, state] of Object.entries(restoreData.resources ?? {}) as [string, any][]) {
@@ -218,10 +173,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
             result.applied[type] = state;
         }
 
-        if (Object.keys(updates).length > 0) {
-            await actor.update(updates);
-        }
-
+        await this._applyUpdates(actor, updates, {});
         return result;
     }
 

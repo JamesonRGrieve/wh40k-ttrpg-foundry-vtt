@@ -70,76 +70,48 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async apply(actor: any, data: any = {}, options: Record<string, any> = {}) {
-        const result = {
-            success: true,
-            applied: {
-                selectedOptions: [],
-                grantResults: {},
-            },
-            notifications: [],
-            errors: [],
-        };
+    _initResult() {
+        return { success: true, applied: { selectedOptions: [], grantResults: {} }, notifications: [], errors: [] };
+    }
 
-        if (!actor) {
-            result.success = false;
-            result.errors.push('No actor provided');
-            return result;
-        }
-
-        // Handle missing/undefined options gracefully
+    /** @inheritDoc */
+    async _applyGrant(actor: any, data: any, options: Record<string, any>, result: any): Promise<void> {
         const choiceOptions = this.options ?? [];
         if (choiceOptions.length === 0) {
             result.notifications.push('Choice grant has no options to apply');
-            return result;
+            return;
         }
 
         const selectedOptions = data.selected ?? [];
 
-        // Validate selection count
         if (selectedOptions.length < this.count && !this.optional) {
             result.errors.push(`Must select ${this.count} options, only ${selectedOptions.length} selected`);
-            result.success = false;
-            return result;
+            return;
         }
 
-        // Check for duplicates
         if (!this.allowDuplicates) {
             const unique = new Set(selectedOptions);
             if (unique.size !== selectedOptions.length) {
                 result.errors.push('Duplicate selections not allowed');
-                result.success = false;
-                return result;
+                return;
             }
         }
 
-        // Apply each selected option
         for (const optionLabel of selectedOptions) {
             const option = choiceOptions.find((o) => o.label === optionLabel);
-            if (!option) {
-                result.errors.push(`Unknown option: ${optionLabel}`);
-                continue;
-            }
+            if (!option) { result.errors.push(`Unknown option: ${optionLabel}`); continue; }
 
             result.applied.selectedOptions.push(optionLabel);
             result.notifications.push(`Selected: ${optionLabel}`);
 
-            // Apply each grant in this option
             const grants = option.grants ?? [];
             for (let i = 0; i < grants.length; i++) {
-                const grantConfig = grants[i];
-                const grantKey = `${optionLabel}:${i}`;
-
-                const grantResult = await this._applySubGrant(actor, grantConfig, data, options);
-                result.applied.grantResults[grantKey] = grantResult.applied;
-
+                const grantResult = await this._applySubGrant(actor, grants[i], data, options);
+                result.applied.grantResults[`${optionLabel}:${i}`] = grantResult.applied;
                 result.notifications.push(...grantResult.notifications);
                 result.errors.push(...grantResult.errors);
             }
         }
-
-        result.success = result.errors.length === 0;
-        return result;
     }
 
     /** @inheritDoc */
