@@ -44,12 +44,14 @@
               <option value="trialsAndTravails" {{#if (eq item.system.step "trialsAndTravails")}}selected{{/if}}>Trials &amp; Travails</option>
               <option value="motivation" {{#if (eq item.system.step "motivation")}}selected{{/if}}>Motivation</option>
               <option value="career" {{#if (eq item.system.step "career")}}selected{{/if}}>Career</option>
+              <option value="lineage" {{#if (eq item.system.step "lineage")}}selected{{/if}}>Lineage</option>
+              <option value="eliteAdvance" {{#if (eq item.system.step "eliteAdvance")}}selected{{/if}}>Elite Advance</option>
             </select>
           </div>
           
           <div class="wh40k-config-field">
             <label>Step Index</label>
-            <input type="number" name="system.stepIndex" value="{{item.system.stepIndex}}" min="0" max="5" class="wh40k-config-input" />
+            <input type="number" name="system.stepIndex" value="{{item.system.stepIndex}}" min="0" max="8" class="wh40k-config-input" />
           </div>
         </div>
       </div>

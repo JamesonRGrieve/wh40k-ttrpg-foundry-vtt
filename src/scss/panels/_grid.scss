@@ -87,10 +87,7 @@
 }
 
 .wh40k-hud-stack {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
+    @apply tw-flex tw-flex-col tw-items-end tw-justify-center;
 }
 
 // ============================================

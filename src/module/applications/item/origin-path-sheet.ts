@@ -171,8 +171,19 @@ export default class OriginPathSheet extends BaseItemSheet {
 
     _getStepLabel(step: any): string {
         if (!step) return '';
+        const labels = {
+            homeWorld: 'Home World',
+            birthright: 'Birthright',
+            lureOfTheVoid: 'Lure of the Void',
+            trialsAndTravails: 'Trials and Travails',
+            motivation: 'Motivation',
+            career: 'Career',
+            lineage: 'Lineage',
+            eliteAdvance: 'Elite Advance',
+        };
         const key = step.charAt(0).toUpperCase() + step.slice(1);
-        return game.i18n.localize(`WH40K.OriginPath.${key}`);
+        const localizationKey = `WH40K.OriginPath.${key}`;
+        return game.i18n.has?.(localizationKey) ? game.i18n.localize(localizationKey) : labels[step] || step;
     }
 
     _getCharacteristicLabel(key: string): string {
