@@ -806,15 +806,8 @@
 // ============================================
 
 .wh40k-dropzone {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: $wh40k-space-sm;
-    margin: $wh40k-space-sm;
-    padding: $wh40k-space-lg;
+    @apply tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-m-2 tw-p-4 tw-rounded tw-cursor-pointer tw-transition-all tw-min-h-[80px];
     border: 2px dashed var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-md;
     background: linear-gradient(
         135deg,
         rgba(255, 255, 255, 0.02) 25%,
@@ -883,18 +876,9 @@
 
 // Small variant (for inline use)
 .wh40k-dropzone-small {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-xs $wh40k-space-sm;
-    margin-top: $wh40k-space-sm;
+    @apply tw-flex tw-items-center tw-justify-center tw-gap-1 tw-py-1 tw-px-2 tw-mt-2 tw-rounded-sm tw-cursor-pointer tw-transition-all tw-text-[0.8rem];
     background: rgba($wh40k-accent-gold, 0.05);
     border: 1px dashed rgba($wh40k-accent-gold, 0.25);
-    border-radius: $wh40k-radius-sm;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 0.8rem;
     color: $wh40k-text-muted;
 
     i {

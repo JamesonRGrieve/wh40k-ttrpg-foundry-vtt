@@ -892,14 +892,16 @@
     }
 
     .wh40k-header-right {
+        position: relative !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: flex-end !important;
         gap: 8px !important;
-        justify-self: end !important;
+        justify-self: stretch !important;
         justify-content: flex-start !important;
         padding: 4px 12px 4px 0 !important;
         max-width: 620px !important;
+        box-sizing: border-box !important;
     }
 
     .wh40k-hud-stack {
@@ -907,6 +909,18 @@
         display: flex !important;
         flex-direction: column !important;
         align-items: flex-end !important;
+        gap: 6px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .wh40k-hud-stack > .wh40k-dropzone {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        min-height: 0 !important;
+        padding: 4px 8px !important;
+        flex-direction: row !important;
         gap: 6px !important;
     }
 
@@ -1147,3 +1161,6 @@
         min-height: 0 !important;
     }
 }
+
+// Tailwind utility layer — processed by PostCSS after sass compilation
+@tailwind utilities;
