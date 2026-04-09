@@ -475,13 +475,7 @@
 }
 
 .wh40k-hud-stack {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
-    height: 100%;
-    width: fit-content; // establishes sizing context so child width:100% resolves correctly
+    @apply tw-relative tw-flex tw-flex-col tw-items-end tw-gap-1.5 tw-h-full;
 }
 
 
@@ -664,18 +658,8 @@
 }
 
 .wh40k-char-hud-base {
-    font-size: 0.65em;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    @apply tw-text-[0.65em] tw-uppercase tw-tracking-[0.1em] tw-text-center tw-min-w-[50px] tw-h-[22px] tw-flex tw-items-center tw-justify-center tw-transition-colors tw-duration-300;
     color: var(--wh40k-text-muted);
-    text-align: center;
-    transition: color 0.3s ease;
-    // Match .wh40k-char-inline-input dimensions so edit toggle doesn't shift layout
-    min-width: 50px;
-    min-height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
     // Value change animation for total
     &.value-changed {
@@ -745,9 +729,7 @@
 
 // Drop zone in header fills remaining space
 .wh40k-hud-stack > .wh40k-dropzone {
-    width: 100%;
-    box-sizing: border-box;
-    margin: 0;
+    @apply tw-w-full tw-box-border tw-m-0;
 
     &.wh40k-drag-over {
         border-color: $wh40k-accent-gold;
@@ -761,12 +743,8 @@
 }
 
 .wh40k-char-inline-input {
-    width: 50px;
-    text-align: center;
-    font-size: 0.75em;
-    padding: 1px 2px;
+    @apply tw-w-[50px] tw-h-5 tw-box-border tw-text-center tw-text-[0.75em] tw-py-[1px] tw-px-[2px] tw-rounded-[3px];
     border: 1px solid var(--wh40k-border-color-light, rgba(140, 120, 90, 0.3));
-    border-radius: 3px;
     background: var(--wh40k-input-bg, #fff);
     color: var(--wh40k-text-dark, #333);
 }

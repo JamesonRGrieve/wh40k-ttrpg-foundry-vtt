@@ -1,5 +1,7 @@
 const gulp = require('gulp');
-const prefix = require('gulp-autoprefixer');
+const postcss = require('gulp-postcss');
+const tailwindcss = require('tailwindcss');
+const autoprefixer = require('autoprefixer');
 const through2 = require("through2");
 const yaml = require("js-yaml");
 const merge = require("merge-stream");
@@ -184,9 +186,10 @@ function compileScss() {
       sass(options)
         .on('error', handleError)
     )
-    .pipe(prefix({
-      cascade: false
-    }))
+    .pipe(postcss([
+      tailwindcss,
+      autoprefixer({ cascade: false }),
+    ]))
     .pipe(gulp.dest(BUILD_DIR + "/css"))
 }
 const css = gulp.series(compileScss);

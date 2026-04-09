@@ -1808,6 +1808,42 @@
       "flags": {}
     },
     {
+      "name": "ow-hammer-actors-mounts",
+      "label": "Hammer of the Emperor Mounts",
+      "path": "packs/only-war/ow-hammer-actors-mounts",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-surrender-actors-bestiary",
+      "label": "No Surrender Bestiary",
+      "path": "packs/only-war/ow-surrender-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-surrender-actors-vehicles",
+      "label": "No Surrender Vehicles",
+      "path": "packs/only-war/ow-surrender-actors-vehicles",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "rt-abyss-items-gear",
       "label": "Edge of the Abyss Gear",
       "path": "packs/rogue-trader/rt-abyss-items-gear",
@@ -2925,7 +2961,7 @@
     },
     {
       "name": "dh2-core-elite-advances",
-      "label": "Core Rulebook Elite Advances",
+      "label": "Dark Heresy 2E Elite Advances",
       "path": "packs/dark-heresy-2/dh2-core-elite-advances",
       "system": "wh40k-rpg",
       "type": "Item",
@@ -2977,6 +3013,18 @@
       "path": "packs/dark-heresy-2/dh2-within-locations",
       "system": "wh40k-rpg",
       "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh2-within-actors-vehicles",
+      "label": "Enemies Within Vehicles",
+      "path": "packs/dark-heresy-2/dh2-within-actors-vehicles",
+      "system": "wh40k-rpg",
+      "type": "Actor",
       "ownership": {
         "PLAYER": "OBSERVER",
         "ASSISTANT": "OWNER"
@@ -3160,7 +3208,8 @@
             "dh2-within-psychic-powers",
             "dh2-within-items-talents",
             "dh2-within-items-weapons",
-            "dh2-within-locations"
+            "dh2-within-locations",
+            "dh2-within-actors-vehicles"
           ]
         },
         {

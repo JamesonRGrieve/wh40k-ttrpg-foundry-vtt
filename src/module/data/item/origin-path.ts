@@ -33,11 +33,12 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     'motivation',
                     'career',
                     'lineage', // Optional step for dynasty lineage
+                    'eliteAdvance',
                 ],
             }),
 
             // Step order (for display)
-            stepIndex: new fields.NumberField({ required: true, initial: 0, min: 0, max: 7, integer: true }),
+            stepIndex: new fields.NumberField({ required: true, initial: 0, min: 0, max: 8, integer: true }),
 
             // Position(s) in the step's row (0-8)
             // Array of positions this origin occupies in the flowchart
@@ -224,7 +225,25 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @type {string}
      */
     get stepLabel() {
-        return game.i18n.localize(`WH40K.OriginPath.${this.step.capitalize()}`);
+        const fallbackLabels = {
+            homeWorld: 'Home World',
+            birthright: 'Birthright',
+            lureOfTheVoid: 'Lure of the Void',
+            trialsAndTravails: 'Trials and Travails',
+            motivation: 'Motivation',
+            career: 'Career',
+            lineage: 'Lineage',
+            eliteAdvance: 'Elite Advance',
+        };
+
+        const key = this.step?.charAt?.(0)?.toUpperCase() + this.step?.slice?.(1);
+        const localizationKey = key ? `WH40K.OriginPath.${key}` : '';
+
+        if (localizationKey && game.i18n.has?.(localizationKey)) {
+            return game.i18n.localize(localizationKey);
+        }
+
+        return fallbackLabels[this.step] || this.step || '';
     }
 
     /**
