@@ -374,6 +374,15 @@ export default class CharacterData extends CreatureTemplate {
             role: 'Role',
             elite: 'Elite Advance',
             divination: 'Divination',
+            // Black Crusade
+            race: 'Race',
+            archetype: 'Archetype',
+            pride: 'Pride',
+            disgrace: 'Disgrace',
+            // Only War / Deathwatch
+            regiment: 'Regiment',
+            speciality: 'Speciality',
+            chapter: 'Chapter',
         };
         return labels[step] || step;
     }

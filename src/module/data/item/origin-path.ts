@@ -40,6 +40,15 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     'role',
                     'elite',
                     'divination',
+                    // Black Crusade steps
+                    'race',
+                    'archetype',
+                    'pride',
+                    'disgrace',
+                    // Only War / Deathwatch steps
+                    'regiment',
+                    'speciality',
+                    'chapter',
                 ],
             }),
 
