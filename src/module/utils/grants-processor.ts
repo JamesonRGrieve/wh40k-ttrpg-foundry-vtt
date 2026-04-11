@@ -267,7 +267,7 @@ export class GrantsProcessor {
             context.result.woundsBonus += await this._evaluateWounds(grants.woundsFormula, context.actor, originItem);
         } else if (grants.wounds && grants.wounds !== 0) {
             context.result.woundsBonus += grants.wounds;
-            console.warn(`Origin "${originItem.name}" uses legacy grants.wounds field. Consider migrating to woundsFormula.`);
+            console.debug(`Origin "${originItem.name}" uses legacy grants.wounds field. Consider migrating to woundsFormula.`);
         }
 
         // Fate - prefer formula over legacy field
@@ -275,7 +275,7 @@ export class GrantsProcessor {
             context.result.fateBonus += await this._evaluateFate(grants.fateFormula, originItem);
         } else if (grants.fateThreshold && grants.fateThreshold !== 0) {
             context.result.fateBonus += grants.fateThreshold;
-            console.warn(`Origin "${originItem.name}" uses legacy grants.fateThreshold field. Consider migrating to fateFormula.`);
+            console.debug(`Origin "${originItem.name}" uses legacy grants.fateThreshold field. Consider migrating to fateFormula.`);
         }
 
         // Process grant arrays
