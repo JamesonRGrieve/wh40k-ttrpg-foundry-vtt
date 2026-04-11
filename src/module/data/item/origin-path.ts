@@ -525,10 +525,10 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     static #migrateWoundsAndFate(source) {
         const grants = source.grants || {};
         if (grants.wounds && !grants.woundsFormula) {
-            console.warn(`Origin Path "${source.name}" uses legacy grants.wounds field. Consider adding a woundsFormula instead.`);
+            console.debug(`Origin Path "${source.identifier || '?'}" uses legacy grants.wounds field. Consider adding a woundsFormula instead.`);
         }
         if (grants.fateThreshold && !grants.fateFormula) {
-            console.warn(`Origin Path "${source.name}" uses legacy grants.fateThreshold field. Consider adding a fateFormula instead.`);
+            console.debug(`Origin Path "${source.identifier || '?'}" uses legacy grants.fateThreshold field. Consider adding a fateFormula instead.`);
         }
     }
 

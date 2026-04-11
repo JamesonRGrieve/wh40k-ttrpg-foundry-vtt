@@ -644,6 +644,18 @@
       "flags": {}
     },
     {
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {},
+      "name": "bc-core-items-origin-path",
+      "label": "Origin Path",
+      "path": "packs/black-crusade/bc-core-items-origin-path"
+    },
+    {
       "name": "dh1-core-items-armour",
       "label": "Core Rulebook Armour",
       "path": "packs/dark-heresy-1/dh1-core-items-armour",
@@ -1616,6 +1628,42 @@
       "flags": {}
     },
     {
+      "name": "ow-enemies-actors-vehicles",
+      "label": "Enemies of the Imperium Vehicles",
+      "path": "packs/only-war/ow-enemies-actors-vehicles",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-enemies-actors-bestiary",
+      "label": "Enemies of the Imperium Bestiary",
+      "path": "packs/only-war/ow-enemies-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-enemies-journals",
+      "label": "Enemies of the Imperium Reference",
+      "path": "packs/only-war/ow-enemies-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "ow-enemies-items-gear",
       "label": "Enemies of the Imperium Gear",
       "path": "packs/only-war/ow-enemies-items-gear",
@@ -1832,6 +1880,18 @@
       "flags": {}
     },
     {
+      "name": "ow-surrender-journals",
+      "label": "No Surrender Reference",
+      "path": "packs/only-war/ow-surrender-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "ow-surrender-actors-vehicles",
       "label": "No Surrender Vehicles",
       "path": "packs/only-war/ow-surrender-actors-vehicles",
@@ -1844,11 +1904,71 @@
       "flags": {}
     },
     {
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {},
+      "name": "ow-core-items-origin-path",
+      "label": "Origin Path",
+      "path": "packs/only-war/ow-core-items-origin-path"
+    },
+    {
       "name": "rt-abyss-items-gear",
       "label": "Edge of the Abyss Gear",
       "path": "packs/rogue-trader/rt-abyss-items-gear",
       "system": "wh40k-rpg",
       "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-abyss-actors-ships",
+      "label": "Edge of the Abyss Ships",
+      "path": "packs/rogue-trader/rt-abyss-actors-ships",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-abyss-actors-vehicles",
+      "label": "Edge of the Abyss Vehicles",
+      "path": "packs/rogue-trader/rt-abyss-actors-vehicles",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-abyss-actors-bestiary",
+      "label": "Edge of the Abyss Bestiary",
+      "path": "packs/rogue-trader/rt-abyss-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-abyss-journals",
+      "label": "Edge of the Abyss Reference",
+      "path": "packs/rogue-trader/rt-abyss-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
       "ownership": {
         "PLAYER": "OBSERVER",
         "ASSISTANT": "OWNER"
@@ -2456,6 +2576,30 @@
       "flags": {}
     },
     {
+      "name": "rt-koronus-actors-bestiary",
+      "label": "Koronus Bestiary Bestiary",
+      "path": "packs/rogue-trader/rt-koronus-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-koronus-journals",
+      "label": "Koronus Bestiary Reference",
+      "path": "packs/rogue-trader/rt-koronus-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "rt-koronus-items-gear",
       "label": "Koronus Bestiary Gear",
       "path": "packs/rogue-trader/rt-koronus-items-gear",
@@ -3054,6 +3198,126 @@
         "ASSISTANT": "OWNER"
       },
       "flags": {}
+    },
+    {
+      "name": "dw-achilus-journals",
+      "label": "The Achilus Assault Reference",
+      "path": "packs/deathwatch/dw-achilus-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-achilus-actors-bestiary",
+      "label": "The Achilus Assault Bestiary",
+      "path": "packs/deathwatch/dw-achilus-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-chosen-journals",
+      "label": "The Emperor's Chosen Reference",
+      "path": "packs/deathwatch/dw-chosen-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-jericho-journals",
+      "label": "The Jericho Reach Reference",
+      "path": "packs/deathwatch/dw-jericho-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-jericho-actors-bestiary",
+      "label": "The Jericho Reach Bestiary",
+      "path": "packs/deathwatch/dw-jericho-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-outer-journals",
+      "label": "The Outer Reach Reference",
+      "path": "packs/deathwatch/dw-outer-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-outer-actors-vehicles",
+      "label": "The Outer Reach Vehicles",
+      "path": "packs/deathwatch/dw-outer-actors-vehicles",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-outer-actors-bestiary",
+      "label": "The Outer Reach Bestiary",
+      "path": "packs/deathwatch/dw-outer-actors-bestiary",
+      "system": "wh40k-rpg",
+      "type": "Actor",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {},
+      "name": "dw-core-items-origin-path",
+      "label": "Origin Path",
+      "path": "packs/deathwatch/dw-core-items-origin-path"
+    },
+    {
+      "name": "rt-kin-journals",
+      "label": "The Dark Kin Reference",
+      "path": "packs/rogue-trader/rt-kin-journals",
+      "system": "wh40k-rpg",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
     }
   ],
   "packFolders": [
@@ -3073,7 +3337,8 @@
             "bc-core-items-rituals",
             "bc-core-items-talents",
             "bc-core-items-traits",
-            "bc-core-items-weapons"
+            "bc-core-items-weapons",
+            "bc-core-items-origin-path"
           ]
         },
         {
@@ -3247,7 +3512,8 @@
             "dw-core-items-gear",
             "dw-core-items-skills",
             "dw-core-items-talents",
-            "dw-core-items-weapons"
+            "dw-core-items-weapons",
+            "dw-core-items-origin-path"
           ]
         },
         {
@@ -3285,6 +3551,34 @@
             "dw-rites-items-gear",
             "dw-rites-items-weapons"
           ]
+        },
+        {
+          "name": "The Achilus Assault",
+          "packs": [
+            "dw-achilus-journals",
+            "dw-achilus-actors-bestiary"
+          ]
+        },
+        {
+          "name": "The Emperor's Chosen",
+          "packs": [
+            "dw-chosen-journals"
+          ]
+        },
+        {
+          "name": "The Jericho Reach",
+          "packs": [
+            "dw-jericho-journals",
+            "dw-jericho-actors-bestiary"
+          ]
+        },
+        {
+          "name": "The Outer Reach",
+          "packs": [
+            "dw-outer-journals",
+            "dw-outer-actors-bestiary",
+            "dw-outer-actors-vehicles"
+          ]
         }
       ]
     },
@@ -3320,7 +3614,8 @@
             "ow-core-psychic-powers",
             "ow-core-items-talents",
             "ow-core-items-traits",
-            "ow-core-items-weapons"
+            "ow-core-items-weapons",
+            "ow-core-items-origin-path"
           ]
         },
         {
@@ -3328,7 +3623,10 @@
           "packs": [
             "ow-enemies-items-armour",
             "ow-enemies-items-gear",
-            "ow-enemies-items-talents"
+            "ow-enemies-items-talents",
+            "ow-enemies-journals",
+            "ow-enemies-actors-bestiary",
+            "ow-enemies-actors-vehicles"
           ]
         },
         {
@@ -3353,6 +3651,12 @@
             "ow-shield-items-traits",
             "ow-shield-items-vehicle-upgrades",
             "ow-shield-items-weapons"
+          ]
+        },
+        {
+          "name": "No Surrender",
+          "packs": [
+            "ow-surrender-journals"
           ]
         }
       ]
@@ -3395,7 +3699,11 @@
             "rt-abyss-items-gear",
             "rt-abyss-psychic-powers",
             "rt-abyss-items-talents",
-            "rt-abyss-items-weapons"
+            "rt-abyss-items-weapons",
+            "rt-abyss-journals",
+            "rt-abyss-actors-bestiary",
+            "rt-abyss-actors-vehicles",
+            "rt-abyss-actors-ships"
           ]
         },
         {
@@ -3463,7 +3771,9 @@
             "rt-koronus-items-gear",
             "rt-koronus-items-ship-components",
             "rt-koronus-items-ship-weapons",
-            "rt-koronus-items-weapons"
+            "rt-koronus-items-weapons",
+            "rt-koronus-journals",
+            "rt-koronus-actors-bestiary"
           ]
         },
         {
@@ -3507,6 +3817,12 @@
             "rt-reaver-items-talents",
             "rt-reaver-items-traits",
             "rt-reaver-items-weapons"
+          ]
+        },
+        {
+          "name": "The Dark Kin",
+          "packs": [
+            "rt-kin-journals"
           ]
         }
       ]
