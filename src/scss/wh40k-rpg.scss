@@ -918,8 +918,8 @@
         width: 100% !important;
         box-sizing: border-box !important;
         margin: 0 !important;
-        min-height: 0 !important;
-        padding: 4px 8px !important;
+        flex: 1 1 0% !important;
+        align-self: stretch !important;
         flex-direction: row !important;
         gap: 6px !important;
     }

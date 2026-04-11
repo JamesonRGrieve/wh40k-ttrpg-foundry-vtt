@@ -2591,17 +2591,22 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         const skill = (this as any).actor.system.skills?.[skillKey];
         if (!skill) return;
 
+        // Max level from training config (3 for RT, 4 for DH2e)
+        const config = (this as any)._getSkillTrainingConfig();
+        const maxLevel = config.length;
+
         // Determine current level
         let level = 0;
-        if (skill.plus20) level = 3;
+        if (skill.plus30) level = 4;
+        else if (skill.plus20) level = 3;
         else if (skill.plus10) level = 2;
         else if (skill.trained) level = 1;
 
         // Cycle: shift-click goes backwards
         if ((event as any).shiftKey) {
-            level = level <= 0 ? 3 : level - 1;
+            level = level <= 0 ? maxLevel : level - 1;
         } else {
-            level = level >= 3 ? 0 : level + 1;
+            level = level >= maxLevel ? 0 : level + 1;
         }
 
         // Update flags
@@ -2609,6 +2614,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             [`system.skills.${skillKey}.trained`]: level >= 1,
             [`system.skills.${skillKey}.plus10`]: level >= 2,
             [`system.skills.${skillKey}.plus20`]: level >= 3,
+            [`system.skills.${skillKey}.plus30`]: level >= 4,
         };
         await (this as any).actor.update(update);
     }
@@ -2636,17 +2642,22 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         const entry = entries[entryIndex];
         if (!entry) return;
 
+        // Max level from training config (3 for RT, 4 for DH2e)
+        const config = (this as any)._getSkillTrainingConfig();
+        const maxLevel = config.length;
+
         // Determine current level
         let level = 0;
-        if (entry.plus20) level = 3;
+        if (entry.plus30) level = 4;
+        else if (entry.plus20) level = 3;
         else if (entry.plus10) level = 2;
         else if (entry.trained) level = 1;
 
         // Cycle
         if ((event as any).shiftKey) {
-            level = level <= 0 ? 3 : level - 1;
+            level = level <= 0 ? maxLevel : level - 1;
         } else {
-            level = level >= 3 ? 0 : level + 1;
+            level = level >= maxLevel ? 0 : level + 1;
         }
 
         // Update entry
@@ -2655,6 +2666,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             trained: level >= 1,
             plus10: level >= 2,
             plus20: level >= 3,
+            plus30: level >= 4,
         };
 
         await (this as any).actor.update({ [`system.skills.${skillKey}.entries`]: entries });

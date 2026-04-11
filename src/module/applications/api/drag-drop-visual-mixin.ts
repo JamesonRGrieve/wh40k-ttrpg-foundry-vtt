@@ -37,7 +37,7 @@ const DROP_ZONE_LABELS: Record<string, string> = {
     skill:         'Add Skill',
     specialAbility:'Add Special Ability',
 };
-const DROP_ZONE_DEFAULT_LABEL = 'Drop to Add';
+const DROP_ZONE_DEFAULT_LABEL = 'Drag and Drop from Compendium to Add';
 
 /** Captured at dragstart so dragover handlers can read the item type. */
 let _activeDragType: string | null = null;
@@ -386,7 +386,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             // Reset label
             const textEl = zone.querySelector('.wh40k-dropzone-text') as HTMLElement | null;
-            if (textEl) textEl.textContent = 'Drop to Add';
+            if (textEl) textEl.textContent = 'Drag and Drop from Compendium to Add';
         }
 
         /* -------------------------------------------- */
