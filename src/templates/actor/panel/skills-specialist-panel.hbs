@@ -46,15 +46,13 @@
                                 </button>
                             </div>
                             <div class="wh40k-spec-training wh40k-training-display">
+                                {{#each spec.trainingIndicators as |ind|}}
                                 {{#if @root.inEditMode}}
-                                <button type="button" class="wh40k-train-indicator {{#if (gte spec.trainingLevel 1)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSpecialistTraining" data-skill="{{spec.skillKey}}" data-index="{{spec.entryIndex}}">T</button>
-                                <button type="button" class="wh40k-train-indicator {{#if (gte spec.trainingLevel 2)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSpecialistTraining" data-skill="{{spec.skillKey}}" data-index="{{spec.entryIndex}}">+10</button>
-                                <button type="button" class="wh40k-train-indicator {{#if (gte spec.trainingLevel 3)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSpecialistTraining" data-skill="{{spec.skillKey}}" data-index="{{spec.entryIndex}}">+20</button>
+                                <button type="button" class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}} — Click to cycle (Shift+click to reverse)" data-action="cycleSpecialistTraining" data-skill="{{../spec.skillKey}}" data-index="{{../spec.entryIndex}}">{{ind.label}}</button>
                                 {{else}}
-                                <span class="wh40k-train-indicator {{#if (gte spec.trainingLevel 1)}}active{{/if}}">T</span>
-                                <span class="wh40k-train-indicator {{#if (gte spec.trainingLevel 2)}}active{{/if}}">+10</span>
-                                <span class="wh40k-train-indicator {{#if (gte spec.trainingLevel 3)}}active{{/if}}">+20</span>
+                                <span class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
                                 {{/if}}
+                                {{/each}}
                             </div>
                             <div class="wh40k-spec-total" title="{{spec.breakdown}}">
                                 <span>{{spec.current}}</span>

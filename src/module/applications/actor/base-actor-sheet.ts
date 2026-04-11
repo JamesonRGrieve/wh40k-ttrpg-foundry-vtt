@@ -163,6 +163,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Prepare characteristics with HUD data
         this._prepareCharacteristicsHUD(context);
 
+        // Skill training rank config (system-specific)
+        context.skillTrainingConfig = this._getSkillTrainingConfig();
+
         // Prepare skills
         await this._prepareSkills(context);
 
@@ -589,8 +592,16 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         const charKey = this._charShortToKey(charShort);
         const char = characteristics[charKey];
 
-        // Training level (0-3)
+        // Training level (0-4)
         data.trainingLevel = this._getTrainingLevel(data);
+
+        // Training indicators for template iteration
+        const config = this._getSkillTrainingConfig();
+        data.trainingIndicators = config.map(rank => ({
+            label: rank.label,
+            tooltip: rank.tooltip,
+            active: data.trainingLevel >= rank.level,
+        }));
 
         // Characteristic short name
         data.charShort = char?.short || charKey;
@@ -610,12 +621,29 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     }
 
     /**
+     * Get skill training rank definitions for the current game system.
+     * Override in subclasses for system-specific ranks.
+     * Each rank maps a training level (1+) to its display label, tooltip, and bonus.
+     * @returns {Array<{level: number, key: string, label: string, tooltip: string, bonus: number}>}
+     * @protected
+     */
+    _getSkillTrainingConfig(): Array<{level: number; key: string; label: string; tooltip: string; bonus: number}> {
+        // Default: Rogue Trader style (T / +10 / +20)
+        return [
+            { level: 1, key: 'trained', label: 'T',   tooltip: 'Trained',  bonus: 0  },
+            { level: 2, key: 'plus10',  label: '+10',  tooltip: '+10',      bonus: 10 },
+            { level: 3, key: 'plus20',  label: '+20',  tooltip: '+20',      bonus: 20 },
+        ];
+    }
+
+    /**
      * Get training level from skill data.
      * @param {object} skill  Skill or entry data
-     * @returns {number}  Training level (0-3)
+     * @returns {number}  Training level (0-4)
      * @protected
      */
     _getTrainingLevel(skill: any): number {
+        if (skill.plus30) return 4;
         if (skill.plus20) return 3;
         if (skill.plus10) return 2;
         if (skill.trained) return 1;
@@ -633,7 +661,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         const charTotal = char?.total ?? 0;
         const level = this._getTrainingLevel(skill);
         const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
-        const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
+        const trainingBonus = level >= 4 ? 30 : level >= 3 ? 20 : level >= 2 ? 10 : 0;
         const bonus = skill.bonus || 0;
 
         const parts = [];
