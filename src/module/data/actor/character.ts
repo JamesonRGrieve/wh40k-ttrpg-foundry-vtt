@@ -296,8 +296,9 @@ export default class CharacterData extends CreatureTemplate {
 
         const originItems = actor.items.filter((item) => item.isOriginPath);
 
-        // Map step keys (camelCase from schema) to items
+        // Map step keys (camelCase from schema) to items — covers both RT and DH2e steps
         const stepMap = {
+            // Rogue Trader
             homeWorld: null,
             birthright: null,
             lureOfTheVoid: null,
@@ -305,6 +306,11 @@ export default class CharacterData extends CreatureTemplate {
             motivation: null,
             career: null,
             lineage: null,
+            // Dark Heresy 2e
+            background: null,
+            role: null,
+            elite: null,
+            divination: null,
         };
 
         // Reset background abilities
@@ -331,12 +337,18 @@ export default class CharacterData extends CreatureTemplate {
 
         // Update the originPath system data with the names (only if origin builder items exist)
         if (this.originPath) {
+            // RT steps
             if (stepMap.homeWorld?.name) this.originPath.homeWorld = stepMap.homeWorld.name;
             if (stepMap.birthright?.name) this.originPath.birthright = stepMap.birthright.name;
             if (stepMap.lureOfTheVoid?.name) this.originPath.lureOfTheVoid = stepMap.lureOfTheVoid.name;
             if (stepMap.trialsAndTravails?.name) this.originPath.trialsAndTravails = stepMap.trialsAndTravails.name;
             if (stepMap.motivation?.name) this.originPath.motivation = stepMap.motivation.name;
             if (stepMap.career?.name) this.originPath.career = stepMap.career.name;
+            // DH2e steps
+            if (stepMap.background?.name) this.originPath.background = stepMap.background.name;
+            if (stepMap.role?.name) this.originPath.role = stepMap.role.name;
+            if (stepMap.elite?.name) this.originPath.elite = stepMap.elite.name;
+            if (stepMap.divination?.name) this.originPath.divination = stepMap.divination.name;
         }
 
     }
@@ -349,6 +361,7 @@ export default class CharacterData extends CreatureTemplate {
      */
     _getStepLabel(step) {
         const labels = {
+            // RT
             homeWorld: 'Home World',
             birthright: 'Birthright',
             lureOfTheVoid: 'Lure of the Void',
@@ -356,6 +369,11 @@ export default class CharacterData extends CreatureTemplate {
             motivation: 'Motivation',
             career: 'Career',
             lineage: 'Lineage',
+            // DH2e
+            background: 'Background',
+            role: 'Role',
+            elite: 'Elite Advance',
+            divination: 'Divination',
         };
         return labels[step] || step;
     }

@@ -18,21 +18,41 @@ import OriginDetailDialog from './origin-detail-dialog.ts';
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
- * Core steps (1-6) - these are the required origin path steps
+ * Per-system step configurations
  */
-const CORE_STEPS = [
-    { key: 'homeWorld', step: 'homeWorld', icon: 'fa-globe', descKey: 'HomeWorldDesc', stepIndex: 1 },
-    { key: 'birthright', step: 'birthright', icon: 'fa-baby', descKey: 'BirthrightDesc', stepIndex: 2 },
-    { key: 'lureOfTheVoid', step: 'lureOfTheVoid', icon: 'fa-meteor', descKey: 'LureDesc', stepIndex: 3 },
-    { key: 'trialsAndTravails', step: 'trialsAndTravails', icon: 'fa-skull', descKey: 'TrialsDesc', stepIndex: 4 },
-    { key: 'motivation', step: 'motivation', icon: 'fa-fire', descKey: 'MotivationDesc', stepIndex: 5 },
-    { key: 'career', step: 'career', icon: 'fa-user-tie', descKey: 'CareerDesc', stepIndex: 6 },
-];
+const SYSTEM_STEP_CONFIGS = {
+    rt: {
+        coreSteps: [
+            { key: 'homeWorld', step: 'homeWorld', icon: 'fa-globe', descKey: 'HomeWorldDesc', stepIndex: 1 },
+            { key: 'birthright', step: 'birthright', icon: 'fa-baby', descKey: 'BirthrightDesc', stepIndex: 2 },
+            { key: 'lureOfTheVoid', step: 'lureOfTheVoid', icon: 'fa-meteor', descKey: 'LureDesc', stepIndex: 3 },
+            { key: 'trialsAndTravails', step: 'trialsAndTravails', icon: 'fa-skull', descKey: 'TrialsDesc', stepIndex: 4 },
+            { key: 'motivation', step: 'motivation', icon: 'fa-fire', descKey: 'MotivationDesc', stepIndex: 5 },
+            { key: 'career', step: 'career', icon: 'fa-user-tie', descKey: 'CareerDesc', stepIndex: 6 },
+        ],
+        optionalStep: { key: 'lineage', step: 'lineage', icon: 'fa-crown', descKey: 'LineageDesc', stepIndex: 7 },
+        packs: ['rt-items-origin-path'],
+    },
+    dh2e: {
+        coreSteps: [
+            { key: 'homeWorld', step: 'homeWorld', icon: 'fa-globe', descKey: 'HomeWorldDesc', stepIndex: 1 },
+            { key: 'background', step: 'background', icon: 'fa-scroll', descKey: 'BackgroundDesc', stepIndex: 2 },
+            { key: 'role', step: 'role', icon: 'fa-user-shield', descKey: 'RoleDesc', stepIndex: 3 },
+        ],
+        optionalStep: { key: 'elite', step: 'elite', icon: 'fa-star', descKey: 'EliteDesc', stepIndex: 4 },
+        packs: [
+            'dh2-core-backgrounds',
+            'dh2-core-elite-advances',
+            'dh2-beyond-items-backgrounds',
+            'dh2-within-items-backgrounds',
+            'dh2-without-items-backgrounds',
+        ],
+    },
+};
 
-/**
- * Lineage step - optional, shown at the end
- */
-const LINEAGE_STEP = { key: 'lineage', step: 'lineage', icon: 'fa-crown', descKey: 'LineageDesc', stepIndex: 7 };
+/** Backwards-compatible alias — defaults to RT */
+const CORE_STEPS = SYSTEM_STEP_CONFIGS.rt.coreSteps;
+const LINEAGE_STEP = SYSTEM_STEP_CONFIGS.rt.optionalStep;
 
 /**
  * Direction modes for origin path creation
@@ -103,15 +123,17 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     constructor(actor, options: Record<string, any> = {}) {
         super(options);
         this.actor = actor;
+        this.gameSystem = options.gameSystem || 'rt';
+        this.systemConfig = SYSTEM_STEP_CONFIGS[this.gameSystem] || SYSTEM_STEP_CONFIGS.rt;
         this.currentStepIndex = 0;
         this.guidedMode = true;
         this.direction = DIRECTION.FORWARD; // Forward or backward
-        this.showLineage = false; // Whether we're on the lineage step
+        this.showLineage = false; // Whether we're on the optional step
         this.selections = new Map(); // step -> Item (confirmed selections)
         this.previewedOrigin = null; // Currently previewed origin (unconfirmed)
-        this.lineageSelection = null; // Separate storage for lineage
-        this.allOrigins = []; // All origins from compendium (excluding lineage)
-        this.lineageOrigins = []; // Lineage origins (stepIndex: 7)
+        this.lineageSelection = null; // Separate storage for optional step
+        this.allOrigins = []; // All origins from compendium (excluding optional)
+        this.lineageOrigins = []; // Optional step origins
 
         // Initialize from actor's existing origin paths
         this._initializeFromActor();
@@ -131,10 +153,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @type {Array}
      */
     get orderedSteps() {
+        const steps = this.systemConfig.coreSteps;
         if (this.direction === DIRECTION.BACKWARD) {
-            return [...CORE_STEPS].reverse();
+            return [...steps].reverse();
         }
-        return CORE_STEPS;
+        return steps;
     }
 
     /**
@@ -143,7 +166,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     get currentStep() {
         if (this.showLineage) {
-            return LINEAGE_STEP;
+            return this.systemConfig.optionalStep;
         }
         return this.orderedSteps[this.currentStepIndex];
     }
@@ -273,19 +296,29 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     async _loadOrigins(): Promise<void> {
         if (this.allOrigins.length > 0 && this.lineageOrigins.length > 0) return;
 
-        // Find origin path compendium
-        const pack = game.packs.find((p) => p.metadata.name === 'rt-items-origin-path');
-        if (!pack) {
-            console.warn('Origin path compendium not found');
+        // Load from all configured packs for this game system
+        const packNames = this.systemConfig.packs;
+        const optionalStepIndex = this.systemConfig.optionalStep?.stepIndex;
+        const allOriginPaths: any[] = [];
+
+        for (const packName of packNames) {
+            const pack = game.packs.find((p) => p.metadata.name === packName);
+            if (!pack) {
+                console.warn(`Origin path compendium '${packName}' not found`);
+                continue;
+            }
+            const documents = await pack.getDocuments();
+            allOriginPaths.push(...documents.filter((d: any) => d.type === 'originPath'));
+        }
+
+        if (allOriginPaths.length === 0) {
+            console.warn('No origin path items found in configured compendiums');
             return;
         }
 
-        const documents = await pack.getDocuments();
-        const allOriginPaths = documents.filter((d: any) => d.type === 'originPath');
-
-        // Separate lineage origins (stepIndex: 7) from core origins
-        this.allOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex !== 7);
-        this.lineageOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex === 7);
+        // Separate optional step origins from core origins
+        this.allOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex !== optionalStepIndex);
+        this.lineageOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex === optionalStepIndex);
     }
 
     /* -------------------------------------------- */
@@ -315,7 +348,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             );
 
             // Find the step layout matching current step
-            const stepIndex = CORE_STEPS.findIndex((s) => s.key === currentStep.key);
+            const stepIndex = this.systemConfig.coreSteps.findIndex((s) => s.key === currentStep.key);
             const stepLayout = chartLayout.steps[stepIndex];
             currentOrigins = this._prepareOriginsForStep(stepLayout);
             // Use previewed origin if available, otherwise use confirmed selection
@@ -1124,7 +1157,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const chartLayout = OriginChartLayout.computeFullChart((this as any).allOrigins, (this as any).selections, false);
 
-        for (let i = 0; i < CORE_STEPS.length; i++) {
+        const coreSteps = (this as any).systemConfig.coreSteps;
+        for (let i = 0; i < coreSteps.length; i++) {
             const stepLayout = chartLayout.steps[i];
             const validOrigins = stepLayout.cards.filter((c) => c.isSelectable);
 
@@ -1134,7 +1168,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
                 // Store as plain data object (not Item instance)
                 const originData = (this as any)._itemToSelectionData(selected.origin);
-                (this as any).selections.set(CORE_STEPS[i].step, originData);
+                (this as any).selections.set(coreSteps[i].step, originData);
             }
         }
 
@@ -1459,7 +1493,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             this.selections.set(currentStep.step, originData);
 
             // Auto-advance to next step if in guided mode
-            if (this.guidedMode && this.currentStepIndex < CORE_STEPS.length - 1) {
+            if (this.guidedMode && this.currentStepIndex < this.systemConfig.coreSteps.length - 1) {
                 this.currentStepIndex++;
             }
         }

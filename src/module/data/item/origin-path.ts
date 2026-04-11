@@ -26,6 +26,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 required: true,
                 initial: 'homeWorld',
                 choices: [
+                    // Rogue Trader steps
                     'homeWorld',
                     'birthright',
                     'lureOfTheVoid',
@@ -34,6 +35,11 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     'career',
                     'lineage', // Optional step for dynasty lineage
                     'eliteAdvance',
+                    // Dark Heresy 2e steps
+                    'background',
+                    'role',
+                    'elite',
+                    'divination',
                 ],
             }),
 
@@ -45,6 +51,13 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             // Most origins have a single position [4], multi-position origins have multiple [1, 5]
             // Connectivity is automatically calculated as ±1 from each position
             positions: new fields.ArrayField(new fields.NumberField({ required: true, min: 0, max: 8 }), { required: true, initial: [] }),
+
+            // Which game system this origin path belongs to
+            gameSystem: new fields.StringField({
+                required: true,
+                initial: 'rt',
+                choices: ['rt', 'dh2e', 'dh1e', 'bc', 'ow', 'dw'],
+            }),
 
             // XP cost (for Into The Storm advanced origins)
             xpCost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
