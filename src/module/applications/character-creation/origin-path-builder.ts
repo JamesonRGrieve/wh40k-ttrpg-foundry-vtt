@@ -48,6 +48,33 @@ const SYSTEM_STEP_CONFIGS = {
             'dh2-without-items-backgrounds',
         ],
     },
+    bc: {
+        coreSteps: [
+            { key: 'race', step: 'race', icon: 'fa-skull-crossbones', descKey: 'RaceDesc', stepIndex: 1 },
+            { key: 'archetype', step: 'archetype', icon: 'fa-helmet-battle', descKey: 'ArchetypeDesc', stepIndex: 2 },
+            { key: 'pride', step: 'pride', icon: 'fa-crown', descKey: 'PrideDesc', stepIndex: 3 },
+            { key: 'disgrace', step: 'disgrace', icon: 'fa-chain-broken', descKey: 'DisgraceDesc', stepIndex: 4 },
+            { key: 'motivation', step: 'motivation', icon: 'fa-fire', descKey: 'MotivationDesc', stepIndex: 5 },
+        ],
+        optionalStep: null,
+        packs: [],
+    },
+    ow: {
+        coreSteps: [
+            { key: 'regiment', step: 'regiment', icon: 'fa-shield', descKey: 'RegimentDesc', stepIndex: 1 },
+            { key: 'speciality', step: 'speciality', icon: 'fa-crosshairs', descKey: 'SpecialityDesc', stepIndex: 2 },
+        ],
+        optionalStep: null,
+        packs: [],
+    },
+    dw: {
+        coreSteps: [
+            { key: 'chapter', step: 'chapter', icon: 'fa-shield-alt', descKey: 'ChapterDesc', stepIndex: 1 },
+            { key: 'speciality', step: 'speciality', icon: 'fa-crosshairs', descKey: 'SpecialityDesc', stepIndex: 2 },
+        ],
+        optionalStep: null,
+        packs: [],
+    },
 };
 
 /** Backwards-compatible alias — defaults to RT */

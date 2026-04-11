@@ -9,8 +9,8 @@ import CharacterSheet from './character-sheet.ts';
 
 const HEADER = 'systems/wh40k-rpg/templates/actor/player/';
 
-/** DH2e skill ranks: Known (+0) / Trained (+10) / Experienced (+20) / Veteran (+30) */
-const DH2E_SKILL_TRAINING = [
+/** 4-level skill ranks used by DH2e, Black Crusade, and Only War: Known / Trained / Experienced / Veteran */
+const FOUR_LEVEL_SKILL_TRAINING = [
     { level: 1, key: 'trained', label: 'Kn', tooltip: 'Known',       bonus: 0  },
     { level: 2, key: 'plus10',  label: 'Tr', tooltip: 'Trained',     bonus: 10 },
     { level: 3, key: 'plus20',  label: 'Ex', tooltip: 'Experienced', bonus: 20 },
@@ -41,9 +41,9 @@ function makeSystemSheet(className: string, cssClass: string, headerFile: string
     return cls;
 }
 
-export const DarkHeresy2Sheet = makeSystemSheet('DarkHeresy2Sheet', 'dark-heresy',    'header-dh.hbs', { skillTraining: DH2E_SKILL_TRAINING });
+export const DarkHeresy2Sheet = makeSystemSheet('DarkHeresy2Sheet', 'dark-heresy',    'header-dh.hbs', { skillTraining: FOUR_LEVEL_SKILL_TRAINING });
 export const RogueTraderSheet  = makeSystemSheet('RogueTraderSheet',  'rogue-trader',  'header-rt.hbs');
-export const BlackCrusadeSheet = makeSystemSheet('BlackCrusadeSheet', 'black-crusade', 'header-bc.hbs');
-export const OnlyWarSheet      = makeSystemSheet('OnlyWarSheet',      'only-war',      'header-ow.hbs');
+export const BlackCrusadeSheet = makeSystemSheet('BlackCrusadeSheet', 'black-crusade', 'header-bc.hbs', { skillTraining: FOUR_LEVEL_SKILL_TRAINING });
+export const OnlyWarSheet      = makeSystemSheet('OnlyWarSheet',      'only-war',      'header-ow.hbs', { skillTraining: FOUR_LEVEL_SKILL_TRAINING });
 export const DeathwatchSheet   = makeSystemSheet('DeathwatchSheet',   'deathwatch',    'header-dw.hbs');
 export const DarkHeresy1Sheet  = makeSystemSheet('DarkHeresy1Sheet',  'dark-heresy-1e','header-dh1.hbs');
