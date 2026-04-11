@@ -32,6 +32,7 @@ export default class CreatureTemplate extends CommonTemplate {
             trained: new BooleanField({ required: true, initial: false }),
             plus10: new BooleanField({ required: true, initial: false }),
             plus20: new BooleanField({ required: true, initial: false }),
+            plus30: new BooleanField({ required: true, initial: false }),
             bonus: new NumberField({ required: true, initial: 0, integer: true }),
             notes: new StringField({ required: false, blank: true }),
             hidden: new BooleanField({ required: true, initial: false }),
@@ -51,6 +52,7 @@ export default class CreatureTemplate extends CommonTemplate {
                     trained: new BooleanField({ required: true, initial: false }),
                     plus10: new BooleanField({ required: true, initial: false }),
                     plus20: new BooleanField({ required: true, initial: false }),
+                    plus30: new BooleanField({ required: true, initial: false }),
                     bonus: new NumberField({ required: true, initial: 0, integer: true }),
                     notes: new StringField({ required: false, blank: true }),
                     cost: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
@@ -589,14 +591,14 @@ export default class CreatureTemplate extends CommonTemplate {
             const char = this.getCharacteristic(skill.characteristic);
             const charTotal = char?.total ?? 0;
 
-            // Determine training level
-            const level = skill.plus20 ? 3 : skill.plus10 ? 2 : skill.trained ? 1 : 0;
+            // Determine training level (0-4: untrained/known/trained/+20/+30)
+            const level = skill.plus30 ? 4 : skill.plus20 ? 3 : skill.plus10 ? 2 : skill.trained ? 1 : 0;
 
-            // Base value: full characteristic if trained, half if not
+            // Base value: full characteristic if trained (level >= 1), half if not
             const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
 
-            // Training bonus: +10 for plus10, +20 for plus20
-            const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
+            // Training bonus: +10 for plus10, +20 for plus20, +30 for plus30
+            const trainingBonus = level >= 4 ? 30 : level >= 3 ? 20 : level >= 2 ? 10 : 0;
 
             // Calculate total
             skill.current = baseValue + trainingBonus + (skill.bonus || 0);
@@ -609,9 +611,9 @@ export default class CreatureTemplate extends CommonTemplate {
                     const entryChar = this.getCharacteristic(entryCharKey);
                     const entryCharTotal = entryChar?.total ?? 0;
 
-                    const entryLevel = entry.plus20 ? 3 : entry.plus10 ? 2 : entry.trained ? 1 : 0;
+                    const entryLevel = entry.plus30 ? 4 : entry.plus20 ? 3 : entry.plus10 ? 2 : entry.trained ? 1 : 0;
                     const entryBaseValue = entryLevel > 0 ? entryCharTotal : Math.floor(entryCharTotal / 2);
-                    const entryTrainingBonus = entryLevel >= 3 ? 20 : entryLevel >= 2 ? 10 : 0;
+                    const entryTrainingBonus = entryLevel >= 4 ? 30 : entryLevel >= 3 ? 20 : entryLevel >= 2 ? 10 : 0;
                     entry.current = entryBaseValue + entryTrainingBonus + (entry.bonus || 0);
                 }
             }

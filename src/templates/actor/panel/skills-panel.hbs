@@ -14,13 +14,13 @@
                                 title="Click to view {{entry.[1].label}} skill details">
                             <span class="wh40k-skill-label">{{entry.[1].label}} <span class="wh40k-skill-char">({{entry.[1].charShort}})</span></span>
                         </button>
-                        <button type="button" class="wh40k-skill-roll" 
+                        <button type="button" class="wh40k-skill-roll"
                                 data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
                                 title="Roll {{entry.[1].label}} Test">
                             <i class="fas fa-dice-d20"></i>
                         </button>
                         {{!-- Favorite toggle button --}}
-                        <button type="button" class="wh40k-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}" 
+                        <button type="button" class="wh40k-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}"
                                 data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
                                 title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
                             <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
@@ -28,15 +28,13 @@
                     </div>
                 </div>
                 <div class="wh40k-spec-training wh40k-training-display">
+                    {{#each entry.[1].trainingIndicators as |ind|}}
                     {{#if @root.inEditMode}}
-                    <button type="button" class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">T</button>
-                    <button type="button" class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">+10</button>
-                    <button type="button" class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">+20</button>
+                    <button type="button" class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}} — Click to cycle (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{../entry.[0]}}">{{ind.label}}</button>
                     {{else}}
-                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}">T</span>
-                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}">+10</span>
-                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}">+20</span>
+                    <span class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
                     {{/if}}
+                    {{/each}}
                 </div>
                 <div class="wh40k-skill-total" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>
@@ -51,20 +49,20 @@
                 <div class="wh40k-skill-info">
                     <span class="wh40k-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
                     <div class="wh40k-skill-name-wrapper">
-                        <button type="button" class="wh40k-skill-name" 
+                        <button type="button" class="wh40k-skill-name"
                                 data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
                                 data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
                                 data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
                                 title="Click to view {{entry.[1].label}} skill details">
                             <span class="wh40k-skill-label">{{entry.[1].label}} <span class="wh40k-skill-char">({{entry.[1].charShort}})</span></span>
                         </button>
-                        <button type="button" class="wh40k-skill-roll" 
+                        <button type="button" class="wh40k-skill-roll"
                                 data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
                                 title="Roll {{entry.[1].label}} Test">
                             <i class="fas fa-dice-d20"></i>
                         </button>
                         {{!-- Favorite toggle button --}}
-                        <button type="button" class="wh40k-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}" 
+                        <button type="button" class="wh40k-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}"
                                 data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
                                 title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
                             <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
@@ -72,15 +70,13 @@
                     </div>
                 </div>
                 <div class="wh40k-spec-training wh40k-training-display">
+                    {{#each entry.[1].trainingIndicators as |ind|}}
                     {{#if @root.inEditMode}}
-                    <button type="button" class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">T</button>
-                    <button type="button" class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">+10</button>
-                    <button type="button" class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}" title="Click to cycle training (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">+20</button>
+                    <button type="button" class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}} — Click to cycle (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{../entry.[0]}}">{{ind.label}}</button>
                     {{else}}
-                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 1)}}active{{/if}}">T</span>
-                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 2)}}active{{/if}}">+10</span>
-                    <span class="wh40k-train-indicator {{#if (gte entry.[1].trainingLevel 3)}}active{{/if}}">+20</span>
+                    <span class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
                     {{/if}}
+                    {{/each}}
                 </div>
                 <div class="wh40k-skill-total" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>

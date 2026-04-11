@@ -730,6 +730,8 @@
 // Drop zone in header fills remaining space
 .wh40k-hud-stack > .wh40k-dropzone {
     @apply tw-w-full tw-box-border tw-m-0;
+    flex: 1 1 0%;
+    align-self: stretch;
 
     &.wh40k-drag-over {
         border-color: $wh40k-accent-gold;
