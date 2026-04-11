@@ -65,6 +65,15 @@ export default class CharacterData extends CreatureTemplate {
                 role: new StringField({ required: false, blank: true }),
                 elite: new StringField({ required: false, blank: true }),
                 divination: new StringField({ required: false, blank: true }),
+                // Black Crusade fields
+                race: new StringField({ required: false, blank: true }),
+                archetype: new StringField({ required: false, blank: true }),
+                pride: new StringField({ required: false, blank: true }),
+                disgrace: new StringField({ required: false, blank: true }),
+                // Only War / Deathwatch fields
+                regiment: new StringField({ required: false, blank: true }),
+                speciality: new StringField({ required: false, blank: true }),
+                chapter: new StringField({ required: false, blank: true }),
             }),
 
             // ===== EXPERIENCE =====
@@ -296,7 +305,7 @@ export default class CharacterData extends CreatureTemplate {
 
         const originItems = actor.items.filter((item) => item.isOriginPath);
 
-        // Map step keys (camelCase from schema) to items — covers both RT and DH2e steps
+        // Map step keys (camelCase from schema) to items — covers all game systems
         const stepMap = {
             // Rogue Trader
             homeWorld: null,
@@ -311,6 +320,15 @@ export default class CharacterData extends CreatureTemplate {
             role: null,
             elite: null,
             divination: null,
+            // Black Crusade
+            race: null,
+            archetype: null,
+            pride: null,
+            disgrace: null,
+            // Only War / Deathwatch
+            regiment: null,
+            speciality: null,
+            chapter: null,
         };
 
         // Reset background abilities
@@ -349,6 +367,15 @@ export default class CharacterData extends CreatureTemplate {
             if (stepMap.role?.name) this.originPath.role = stepMap.role.name;
             if (stepMap.elite?.name) this.originPath.elite = stepMap.elite.name;
             if (stepMap.divination?.name) this.originPath.divination = stepMap.divination.name;
+            // BC steps
+            if (stepMap.race?.name) this.originPath.race = stepMap.race.name;
+            if (stepMap.archetype?.name) this.originPath.archetype = stepMap.archetype.name;
+            if (stepMap.pride?.name) this.originPath.pride = stepMap.pride.name;
+            if (stepMap.disgrace?.name) this.originPath.disgrace = stepMap.disgrace.name;
+            // OW / DW steps
+            if (stepMap.regiment?.name) this.originPath.regiment = stepMap.regiment.name;
+            if (stepMap.speciality?.name) this.originPath.speciality = stepMap.speciality.name;
+            if (stepMap.chapter?.name) this.originPath.chapter = stepMap.chapter.name;
         }
 
     }
