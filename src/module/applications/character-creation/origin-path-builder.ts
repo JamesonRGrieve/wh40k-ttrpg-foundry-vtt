@@ -57,7 +57,7 @@ const SYSTEM_STEP_CONFIGS = {
             { key: 'motivation', step: 'motivation', icon: 'fa-fire', descKey: 'MotivationDesc', stepIndex: 5 },
         ],
         optionalStep: null,
-        packs: [],
+        packs: ['bc-core-items-origin-path'],
     },
     ow: {
         coreSteps: [
@@ -65,7 +65,7 @@ const SYSTEM_STEP_CONFIGS = {
             { key: 'speciality', step: 'speciality', icon: 'fa-crosshairs', descKey: 'SpecialityDesc', stepIndex: 2 },
         ],
         optionalStep: null,
-        packs: [],
+        packs: ['ow-core-items-origin-path'],
     },
     dw: {
         coreSteps: [
@@ -73,7 +73,7 @@ const SYSTEM_STEP_CONFIGS = {
             { key: 'speciality', step: 'speciality', icon: 'fa-crosshairs', descKey: 'SpecialityDesc', stepIndex: 2 },
         ],
         optionalStep: null,
-        packs: [],
+        packs: ['dw-core-items-origin-path'],
     },
 };
 
