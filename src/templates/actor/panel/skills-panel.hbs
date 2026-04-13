@@ -30,7 +30,7 @@
                 <div class="wh40k-spec-training wh40k-training-display">
                     {{#each entry.[1].trainingIndicators as |ind|}}
                     {{#if @root.inEditMode}}
-                    <button type="button" class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}} — Click to cycle (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{../entry.[0]}}">{{ind.label}}</button>
+                    <button type="button" class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}} — Click to cycle (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">{{ind.label}}</button>
                     {{else}}
                     <span class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
                     {{/if}}
@@ -72,7 +72,7 @@
                 <div class="wh40k-spec-training wh40k-training-display">
                     {{#each entry.[1].trainingIndicators as |ind|}}
                     {{#if @root.inEditMode}}
-                    <button type="button" class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}} — Click to cycle (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{../entry.[0]}}">{{ind.label}}</button>
+                    <button type="button" class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}} — Click to cycle (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">{{ind.label}}</button>
                     {{else}}
                     <span class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
                     {{/if}}

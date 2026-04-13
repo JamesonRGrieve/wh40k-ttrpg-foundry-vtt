@@ -2585,7 +2585,8 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      */
     static async #cycleSkillTraining(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const skillKey = target.dataset.skill;
+        const row = target.closest('[data-skill]') as HTMLElement | null;
+        const skillKey = row?.dataset.skill;
         if (!skillKey) return;
 
         const skill = (this as any).actor.system.skills?.[skillKey];
