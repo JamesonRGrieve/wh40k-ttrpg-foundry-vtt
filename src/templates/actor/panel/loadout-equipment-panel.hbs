@@ -8,7 +8,7 @@
     {{!-- Two Column Layout --}}
     <div class="wh40k-equipment-grid">
         {{!-- LEFT COLUMN: Armour & Protection --}}
-        <div class="wh40k-equipment-col wh40k-equipment-protection">
+        <div class="wh40k-equipment-col wh40k-equipment-protection tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
             {{!-- Armour Body Diagram (already has panel wrapper) --}}
             {{> systems/wh40k-rpg/templates/actor/panel/armour-display-panel.hbs}}
 
@@ -54,7 +54,7 @@
         </div>
 
         {{!-- RIGHT COLUMN: Equipment Lists --}}
-        <div class="wh40k-equipment-col wh40k-equipment-items">
+        <div class="wh40k-equipment-col wh40k-equipment-items tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
             {{!-- Armour Items --}}
             <div class="wh40k-panel wh40k-panel-armour-list" data-drop-zone="general" data-accepts="armour">
                 <div class="wh40k-panel-header">
