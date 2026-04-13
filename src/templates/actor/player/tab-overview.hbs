@@ -69,6 +69,7 @@
                     </div>
                     
                     {{!-- Fate Points --}}
+                    {{#if (gt system.fate.max 0)}}
                     <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
                         <span class="wh40k-vital-icon"><i class="fas fa-star"></i></span>
                         <span class="wh40k-vital-label">Fate</span>
@@ -87,6 +88,7 @@
                             <i class="fas fa-redo"></i>
                         </button>
                     </div>
+                    {{/if}}
                 </div>
                 
                 {{!-- Mental State (compact) --}}

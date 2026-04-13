@@ -1,6 +1,8 @@
 import CommonTemplate from './common.ts';
 import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
+import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
+import { BaseSystemConfig } from '../../../config/game-systems/base-system-config.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = (foundry.data as any).fields;
 
@@ -29,6 +31,9 @@ export default class CreatureTemplate extends CommonTemplate {
             characteristic: new StringField({ required: true, initial: charShort }),
             advanced: new BooleanField({ required: true, initial: advanced }),
             basic: new BooleanField({ required: true, initial: !advanced }),
+            // XP-purchased rank advances (0-4). Effective rank = origin path rank + advance.
+            advance: new NumberField({ required: true, initial: 0, min: 0, max: 4, integer: true }),
+            // Derived boolean flags — computed from effective rank in _prepareSkills() for template compat
             trained: new BooleanField({ required: true, initial: false }),
             plus10: new BooleanField({ required: true, initial: false }),
             plus20: new BooleanField({ required: true, initial: false }),
@@ -49,6 +54,7 @@ export default class CreatureTemplate extends CommonTemplate {
                     characteristic: new StringField({ required: false }),
                     advanced: new BooleanField({ required: true, initial: advanced }),
                     basic: new BooleanField({ required: true, initial: !advanced }),
+                    advance: new NumberField({ required: true, initial: 0, min: 0, max: 4, integer: true }),
                     trained: new BooleanField({ required: true, initial: false }),
                     plus10: new BooleanField({ required: true, initial: false }),
                     plus20: new BooleanField({ required: true, initial: false }),
@@ -256,6 +262,41 @@ export default class CreatureTemplate extends CommonTemplate {
         CreatureTemplate.#migrateCharacteristics(source);
         CreatureTemplate.#migrateFate(source);
         CreatureTemplate.#migratePsy(source);
+        CreatureTemplate.#migrateSkillsToAdvance(source);
+    }
+
+    /**
+     * Migrate skills from boolean training flags to numeric advance field.
+     * Resets all training booleans — effective rank is now computed at runtime
+     * from origin path items + the advance field (XP purchases).
+     * @param {object} source - The source data
+     */
+    static #migrateSkillsToAdvance(source) {
+        if (!source.skills) return;
+        for (const skill of Object.values(source.skills as Record<string, any>)) {
+            // If advance field already exists, skip this skill
+            if (skill.advance !== undefined) continue;
+
+            // Initialize advance to 0 — training will be recomputed from origin path items
+            skill.advance = 0;
+            // Reset boolean flags — these are now derived in _prepareSkills()
+            skill.trained = false;
+            skill.plus10 = false;
+            skill.plus20 = false;
+            skill.plus30 = false;
+
+            // Also migrate specialist entries
+            if (Array.isArray(skill.entries)) {
+                for (const entry of skill.entries) {
+                    if (entry.advance !== undefined) continue;
+                    entry.advance = 0;
+                    entry.trained = false;
+                    entry.plus10 = false;
+                    entry.plus20 = false;
+                    entry.plus30 = false;
+                }
+            }
+        }
     }
 
     /**
@@ -514,6 +555,7 @@ export default class CreatureTemplate extends CommonTemplate {
     prepareEmbeddedData() {
         this._computeItemModifiers();
         this._applyModifiersToCharacteristics();
+        this._registerOriginPathSkillSources();
         this._applyModifiersToSkills();
         this._computeArmour();
         this._computeEncumbrance();
@@ -583,7 +625,9 @@ export default class CreatureTemplate extends CommonTemplate {
     }
 
     /**
-     * Prepare skill totals.
+     * Prepare skill totals. Effective rank is computed at runtime:
+     *   effectiveRank = min(originPathRank + advance, maxRank)
+     * Boolean flags (trained/plus10/plus20/plus30) are derived for template compat.
      * @protected
      */
     _prepareSkills() {
@@ -591,29 +635,47 @@ export default class CreatureTemplate extends CommonTemplate {
             const char = this.getCharacteristic(skill.characteristic);
             const charTotal = char?.total ?? 0;
 
-            // Determine training level (0-4: untrained/known/trained/+20/+30)
-            const level = skill.plus30 ? 4 : skill.plus20 ? 3 : skill.plus10 ? 2 : skill.trained ? 1 : 0;
+            // Compute effective rank from origin path grants + XP advances
+            const originRank = this._getOriginPathSkillRank(key);
+            const effectiveRank = Math.min(originRank + (skill.advance || 0), 4);
 
-            // Base value: full characteristic if trained (level >= 1), half if not
-            const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
+            // Store rank data for display and advancement dialog
+            skill.rank = effectiveRank;
+            skill.originRank = originRank;
 
-            // Training bonus: +10 for plus10, +20 for plus20, +30 for plus30
-            const trainingBonus = level >= 4 ? 30 : level >= 3 ? 20 : level >= 2 ? 10 : 0;
+            // Derive boolean flags from effective rank (template backward compat)
+            skill.trained = effectiveRank >= 1;
+            skill.plus10 = effectiveRank >= 2;
+            skill.plus20 = effectiveRank >= 3;
+            skill.plus30 = effectiveRank >= 4;
 
-            // Calculate total
+            // Base value: full characteristic if rank >= 1, half if untrained
+            const baseValue = effectiveRank > 0 ? charTotal : Math.floor(charTotal / 2);
+
+            // Training bonus: rank 2 = +10, rank 3 = +20, rank 4 = +30
+            const trainingBonus = effectiveRank >= 4 ? 30 : effectiveRank >= 3 ? 20 : effectiveRank >= 2 ? 10 : 0;
+
             skill.current = baseValue + trainingBonus + (skill.bonus || 0);
 
             // Process specialist entries
             if (Array.isArray(skill.entries)) {
                 for (const entry of skill.entries) {
-                    // Use entry's characteristic if set, otherwise inherit from parent skill
                     const entryCharKey = entry.characteristic || skill.characteristic;
                     const entryChar = this.getCharacteristic(entryCharKey);
                     const entryCharTotal = entryChar?.total ?? 0;
 
-                    const entryLevel = entry.plus30 ? 4 : entry.plus20 ? 3 : entry.plus10 ? 2 : entry.trained ? 1 : 0;
-                    const entryBaseValue = entryLevel > 0 ? entryCharTotal : Math.floor(entryCharTotal / 2);
-                    const entryTrainingBonus = entryLevel >= 4 ? 30 : entryLevel >= 3 ? 20 : entryLevel >= 2 ? 10 : 0;
+                    const entryOriginRank = this._getOriginPathSkillRank(key, entry.name || entry.specialization);
+                    const entryEffectiveRank = Math.min(entryOriginRank + (entry.advance || 0), 4);
+
+                    entry.rank = entryEffectiveRank;
+                    entry.originRank = entryOriginRank;
+                    entry.trained = entryEffectiveRank >= 1;
+                    entry.plus10 = entryEffectiveRank >= 2;
+                    entry.plus20 = entryEffectiveRank >= 3;
+                    entry.plus30 = entryEffectiveRank >= 4;
+
+                    const entryBaseValue = entryEffectiveRank > 0 ? entryCharTotal : Math.floor(entryCharTotal / 2);
+                    const entryTrainingBonus = entryEffectiveRank >= 4 ? 30 : entryEffectiveRank >= 3 ? 20 : entryEffectiveRank >= 2 ? 10 : 0;
                     entry.current = entryBaseValue + entryTrainingBonus + (entry.bonus || 0);
                 }
             }
@@ -970,6 +1032,91 @@ export default class CreatureTemplate extends CommonTemplate {
                             value: mod.value,
                         });
                     }
+                }
+            }
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Origin Path Skill Methods                   */
+    /* -------------------------------------------- */
+
+    /**
+     * Get the highest skill rank granted by origin path items for a given skill.
+     * Scans embedded origin path items for matching skill grants.
+     * @param {string} skillKey - Schema skill key (e.g. 'dodge', 'commonLore')
+     * @param {string} [specialization] - For specialist skills (e.g. 'Imperial Guard')
+     * @returns {number} Highest rank granted (0 = not granted, 1-4 = rank)
+     */
+    _getOriginPathSkillRank(skillKey: string, specialization?: string): number {
+        const actor = this.parent;
+        if (!actor?.items) return 0;
+
+        let maxRank = 0;
+        const originItems = actor.items.filter((item) => item.isOriginPath);
+        const isSpecialist = SkillKeyHelper.SPECIALIST_KEYS.has(skillKey);
+
+        for (const item of originItems) {
+            // Check base skill grants
+            const skills = item.system?.grants?.skills || [];
+            for (const grant of skills) {
+                const grantKey = SkillKeyHelper.nameToKey(grant.name);
+                if (grantKey !== skillKey) continue;
+
+                // For specialist skills, also match specialization
+                if (isSpecialist && specialization) {
+                    const grantSpec = (grant.specialization || '').toLowerCase();
+                    if (grantSpec && grantSpec !== specialization.toLowerCase()) continue;
+                }
+
+                const rank = BaseSystemConfig.skillLevelToRank(grant.level || 'trained');
+                maxRank = Math.max(maxRank, rank);
+            }
+
+            // Check choice-based skill grants from activeModifiers
+            const activeMods = item.system?.activeModifiers;
+            if (Array.isArray(activeMods)) {
+                for (const mod of activeMods) {
+                    if (mod.type !== 'skill') continue;
+                    const modKey = SkillKeyHelper.nameToKey(mod.key);
+                    if (modKey !== skillKey) continue;
+                    // Choice-based skill grants default to rank 1 (Known/Trained)
+                    maxRank = Math.max(maxRank, 1);
+                }
+            }
+        }
+
+        return maxRank;
+    }
+
+    /**
+     * Register origin path skill sources into modifierSources.skills
+     * for tooltip transparency.
+     * @protected
+     */
+    _registerOriginPathSkillSources() {
+        const actor = this.parent;
+        if (!actor?.items) return;
+
+        const originItems = actor.items.filter((item) => item.isOriginPath);
+        for (const item of originItems) {
+            const skills = item.system?.grants?.skills || [];
+            for (const grant of skills) {
+                const grantKey = SkillKeyHelper.nameToKey(grant.name);
+                if (!grantKey) continue;
+
+                const rank = BaseSystemConfig.skillLevelToRank(grant.level || 'trained');
+                if (rank > 0) {
+                    if (!this.modifierSources.skills[grantKey]) {
+                        this.modifierSources.skills[grantKey] = [];
+                    }
+                    this.modifierSources.skills[grantKey].push({
+                        name: item.name,
+                        type: 'originPath',
+                        id: item.id,
+                        value: rank,
+                        specialization: grant.specialization || undefined,
+                    });
                 }
             }
         }

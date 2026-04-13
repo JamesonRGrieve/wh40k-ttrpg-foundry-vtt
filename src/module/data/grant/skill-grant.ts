@@ -20,10 +20,13 @@ export default class SkillGrantData extends (BaseGrantData as any) {
      * @type {object}
      */
     static TRAINING_LEVELS = {
-        known: { order: 0, label: 'WH40K.Skill.Level.Known' },
-        trained: { order: 1, label: 'WH40K.Skill.Level.Trained', bonus: 0 },
-        plus10: { order: 2, label: 'WH40K.Skill.Level.Plus10', bonus: 10 },
-        plus20: { order: 3, label: 'WH40K.Skill.Level.Plus20', bonus: 20 },
+        known: { order: 1, label: 'WH40K.Skill.Level.Known', bonus: 0 },
+        trained: { order: 1, label: 'WH40K.Skill.Level.Trained', bonus: 0 },        // RT/DH1e/DW rank 1 alias
+        plus10: { order: 2, label: 'WH40K.Skill.Level.Plus10', bonus: 10 },          // RT/DH1e/DW rank 2 alias
+        experienced: { order: 3, label: 'WH40K.Skill.Level.Experienced', bonus: 20 },
+        plus20: { order: 3, label: 'WH40K.Skill.Level.Plus20', bonus: 20 },          // RT/DH1e/DW rank 3 alias
+        veteran: { order: 4, label: 'WH40K.Skill.Level.Veteran', bonus: 30 },
+        plus30: { order: 4, label: 'WH40K.Skill.Level.Plus30', bonus: 30 },          // DH2e/BC/OW rank 4 alias
     };
 
     /* -------------------------------------------- */
