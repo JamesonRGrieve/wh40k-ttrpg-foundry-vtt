@@ -6,16 +6,10 @@
     padding: 14px 10px 10px;
 }
 
-.wh40k-skills-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
+// Layout (grid, gap) now in template utilities via Phase 3
 
+// Layout (flex-col, gap) now in template utilities via Phase 3
 .wh40k-skills-column {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
     background: var(--wh40k-panel-bg-solid);
     border-radius: 10px;
     overflow: hidden;
