@@ -112,7 +112,7 @@ export class HooksManager {
             openCompendiumBrowser: (options: any) => RTCompendiumBrowser.open(options),
             // Character creation
             OriginPathBuilder: characterCreation.OriginPathBuilder,
-            openOriginPathBuilder: (actor: any) => characterCreation.OriginPathBuilder.show(actor),
+            openOriginPathBuilder: (actor: any, options?: Record<string, unknown>) => characterCreation.OriginPathBuilder.show(actor, options),
             // NPC utilities
             npc: npcApplications,
             applications: npcApplications, // Alias for shorter access

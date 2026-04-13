@@ -159,7 +159,7 @@ interface WH40KGameSystem {
     showRollTableDialog: () => unknown;
     openCompendiumBrowser: (options?: unknown) => unknown;
     OriginPathBuilder: unknown;
-    openOriginPathBuilder: (actor: unknown) => unknown;
+    openOriginPathBuilder: (actor: unknown, options?: Record<string, unknown>) => unknown;
     npc: unknown;
     applications: unknown;
     ThreatCalculator: unknown;

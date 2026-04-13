@@ -2282,7 +2282,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     static async #openOriginPathBuilder(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             if (game.wh40k?.openOriginPathBuilder) {
-                await game.wh40k.openOriginPathBuilder((this as any).actor);
+                await game.wh40k.openOriginPathBuilder((this as any).actor, { gameSystem: (this as any).actor.system?.gameSystem || 'rt' });
             } else {
                 (this as any)._notify('warning', 'Origin Path Builder not available', {
                     duration: 3000,
@@ -2409,7 +2409,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     async _openOriginPathBuilder(): Promise<void> {
         try {
             if (game.wh40k?.openOriginPathBuilder) {
-                await game.wh40k.openOriginPathBuilder(this.actor);
+                await game.wh40k.openOriginPathBuilder(this.actor, { gameSystem: this.actor.system?.gameSystem || 'rt' });
             } else {
                 (ui.notifications as any).warn(game.i18n.localize('WH40K.Utility.OriginPathNotAvailable'));
             }
