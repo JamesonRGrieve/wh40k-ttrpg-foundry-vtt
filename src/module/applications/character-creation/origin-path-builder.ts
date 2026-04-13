@@ -1814,6 +1814,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 originItems.push(itemData);
             }
 
+            // Delete existing origin path items before applying new ones.
+            // Without this, re-committing would accumulate duplicate origin items
+            // and _getOriginPathCharacteristicModifier() would double-count modifiers.
+            const existingOriginItems = (this as any).actor.items.filter((i) => i.type === 'originPath');
+            if (existingOriginItems.length > 0) {
+                const idsToDelete = existingOriginItems.map((i) => i.id);
+                await (this as any).actor.deleteEmbeddedDocuments('Item', idsToDelete);
+            }
+
             // Use GrantsManager to apply all grants in batch
             // This handles characteristics, skills, talents, traits, wounds, fate, etc.
             // reverseExisting ensures old grants are reversed before applying new ones
