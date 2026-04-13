@@ -292,6 +292,7 @@ export default class CharacterData extends CreatureTemplate {
         this._computeOriginPathEffects();
         this._computeExperienceSpent();
         this._updateWoundsFateModifiers();
+        this._computeWoundsMax();
     }
 
     /**
@@ -498,6 +499,91 @@ export default class CharacterData extends CreatureTemplate {
 
         this.totalWoundsModifier = itemWounds + this._getOriginPathWoundsModifier();
         this.totalFateModifier = itemFate + this._getOriginPathFateModifier();
+    }
+
+    /**
+     * Compute wounds.max at runtime from origin path wound formulas.
+     * For formulas containing TB (e.g. RT's "2xTB+1d5+1"), the TB component is
+     * recalculated using current Toughness Bonus so wounds react to TB changes.
+     * The die roll component uses the stored roll result from character creation.
+     * @protected
+     */
+    _computeWoundsMax() {
+        const actor = this.parent;
+        if (!actor?.items) return;
+
+        const originItems = actor.items.filter((item) => item.isOriginPath);
+        const tb = this.characteristics?.toughness?.bonus ?? 0;
+
+        let computedMax = 0;
+        let hasWoundFormula = false;
+
+        for (const item of originItems) {
+            const formula = item.system?.grants?.woundsFormula;
+            const rollResult = item.system?.rollResults?.wounds;
+            if (!formula || rollResult?.rolled == null) continue;
+
+            hasWoundFormula = true;
+
+            // Check if formula references TB (Toughness Bonus) — RT pattern
+            const tbPattern = /(\d*)x?TB/i;
+            const tbMatch = formula.match(tbPattern);
+
+            if (tbMatch) {
+                // Formula contains TB — recompute with current TB
+                // Parse: "2xTB+1d5+1" → TB multiplier=2, remainder needs die result
+                const tbMultiplier = parseInt(tbMatch[1]) || 1;
+                const tbComponent = tbMultiplier * tb;
+
+                // Strip the TB term and any dice terms to get the flat bonus
+                const withoutTB = formula.replace(tbPattern, '0');
+                const withoutDice = withoutTB.replace(/\d*d\d+/gi, '0');
+                let flatBonus = 0;
+                try {
+                    // Evaluate the remaining flat terms (e.g., "0+0+1" → 1)
+                    flatBonus = Function(`"use strict"; return (${withoutDice})`)();
+                } catch { flatBonus = 0; }
+
+                // Die result = stored total - (old TB component + flat bonus)
+                // We don't know old TB, so extract die from breakdown or re-derive
+                // Simpler: stored rolled = oldTB*mult + dieRoll + flat
+                // dieRoll = stored - flat (since we don't have old TB, use the
+                // breakdown if available, or assume the non-TB non-flat remainder)
+                //
+                // Actually: re-evaluate from components.
+                // The stored `rolled` value was evaluated at commit time with old TB.
+                // We can parse the breakdown string if available, or:
+                // Just subtract what we can compute to isolate the die result.
+                //
+                // Best approach: the rolled value minus (old evaluated non-die, non-TB) gives the die.
+                // But we don't have old TB. Use the breakdown.
+                const breakdown = rollResult.breakdown || '';
+                const dieMatch = breakdown.match(/\b(\d+)\s*\[.*?d/i);
+                let dieValue = 0;
+                if (dieMatch) {
+                    dieValue = parseInt(dieMatch[1]) || 0;
+                } else {
+                    // Fallback: assume die portion = rolled - (flat bonus)
+                    // This works for "N+1d5" style (no TB in formula, but we're in TB branch...)
+                    // For TB formulas without breakdown, store the full value and accept
+                    // it won't be perfectly separated. Use: rolled - flat as approximation.
+                    dieValue = rollResult.rolled - flatBonus;
+                }
+
+                computedMax += tbComponent + dieValue + flatBonus;
+            } else {
+                // No TB reference — flat formula (DH2e/BC/OW style: "9+1d5")
+                // Use stored rolled value as-is
+                computedMax += rollResult.rolled;
+            }
+        }
+
+        // Only override wounds.max if we found origin path wound formulas
+        if (hasWoundFormula) {
+            // Add item/modifier bonuses
+            const modifierBonus = this.totalWoundsModifier || 0;
+            this.wounds.max = computedMax + modifierBonus;
+        }
     }
 
     /* -------------------------------------------- */

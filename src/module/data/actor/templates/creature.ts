@@ -544,8 +544,8 @@ export default class CreatureTemplate extends CommonTemplate {
         this._prepareCharacteristics();
         this._prepareSkills();
         this._preparePsy();
-        this._prepareFatigue();
-        this._prepareMovement();
+        // NOTE: _prepareFatigue and _prepareMovement are called in prepareEmbeddedData
+        // AFTER characteristic modifiers are applied, so they use final totals.
     }
 
     /**
@@ -557,6 +557,9 @@ export default class CreatureTemplate extends CommonTemplate {
         this._applyModifiersToCharacteristics();
         this._registerOriginPathSkillSources();
         this._applyModifiersToSkills();
+        // Fatigue/movement/lifting depend on final characteristic bonuses (after all modifiers)
+        this._prepareFatigue();
+        this._prepareMovement();
         this._computeArmour();
         this._computeEncumbrance();
     }
