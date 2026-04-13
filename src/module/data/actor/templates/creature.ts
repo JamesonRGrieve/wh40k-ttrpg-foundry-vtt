@@ -742,6 +742,9 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _applyModifiersToCharacteristics() {
+        // Collect origin path modifier sources for tooltip transparency
+        this._registerOriginPathModifierSources();
+
         for (const [name, char] of Object.entries(this.characteristics as Record<string, any>)) {
             const originPathMod = this._getOriginPathCharacteristicModifier(name);
             const itemMod = this._getTotalCharacteristicModifier(name);
@@ -896,6 +899,8 @@ export default class CreatureTemplate extends CommonTemplate {
 
     /**
      * Get total characteristic modifier from origin path items.
+     * Includes both base modifiers (from ModifiersTemplate) and choice-based
+     * modifiers (from activeModifiers computed by selected choices).
      * @param {string} charKey - The characteristic key
      * @returns {number}
      */
@@ -905,12 +910,69 @@ export default class CreatureTemplate extends CommonTemplate {
         let total = 0;
         const originItems = actor.items.filter((item) => item.isOriginPath);
         for (const item of originItems) {
+            // Base characteristic modifiers from ModifiersTemplate
             const mods = item.system?.modifiers?.characteristics;
             if (mods && mods[charKey]) {
                 total += mods[charKey];
             }
+
+            // Choice-based characteristic modifiers from activeModifiers
+            const activeMods = item.system?.activeModifiers;
+            if (Array.isArray(activeMods)) {
+                for (const mod of activeMods) {
+                    if (mod.type === 'characteristic' && mod.key === charKey && mod.value) {
+                        total += mod.value;
+                    }
+                }
+            }
         }
         return total;
+    }
+
+    /**
+     * Register origin path modifier sources into modifierSources.characteristics
+     * so that tooltips and stat breakdowns can display where bonuses come from.
+     * @protected
+     */
+    _registerOriginPathModifierSources() {
+        const actor = this.parent;
+        if (!actor?.items) return;
+
+        const originItems = actor.items.filter((item) => item.isOriginPath);
+        for (const item of originItems) {
+            const source = { name: item.name, type: 'originPath', id: item.id };
+
+            // Base modifiers from ModifiersTemplate
+            const mods = item.system?.modifiers?.characteristics;
+            if (mods) {
+                for (const [charKey, value] of Object.entries(mods)) {
+                    if (value && typeof value === 'number') {
+                        if (!this.modifierSources.characteristics[charKey]) {
+                            this.modifierSources.characteristics[charKey] = [];
+                        }
+                        this.modifierSources.characteristics[charKey].push({ ...source, value });
+                    }
+                }
+            }
+
+            // Choice-based modifiers from activeModifiers
+            const activeMods = item.system?.activeModifiers;
+            if (Array.isArray(activeMods)) {
+                for (const mod of activeMods) {
+                    if (mod.type === 'characteristic' && mod.key && mod.value) {
+                        if (!this.modifierSources.characteristics[mod.key]) {
+                            this.modifierSources.characteristics[mod.key] = [];
+                        }
+                        this.modifierSources.characteristics[mod.key].push({
+                            name: `${item.name} (${mod.source})`,
+                            type: 'originPath',
+                            id: item.id,
+                            value: mod.value,
+                        });
+                    }
+                }
+            }
+        }
     }
 
     /* -------------------------------------------- */
