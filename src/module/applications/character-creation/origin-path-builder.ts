@@ -21,6 +21,10 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 /**
  * Per-system step configurations
  */
+/**
+ * Legacy inline step configs — kept as fallback if SystemConfigRegistry is unavailable.
+ * Canonical source of truth is now the system config registry (config/game-systems/).
+ */
 const SYSTEM_STEP_CONFIGS = {
     rt: {
         coreSteps: [
@@ -32,7 +36,12 @@ const SYSTEM_STEP_CONFIGS = {
             { key: 'career', step: 'career', icon: 'fa-user-tie', descKey: 'CareerDesc', stepIndex: 6 },
         ],
         optionalStep: { key: 'lineage', step: 'lineage', icon: 'fa-crown', descKey: 'LineageDesc', stepIndex: 7 },
-        packs: ['rt-items-origin-path'],
+        packs: [
+            'rt-core-homeworlds', 'rt-core-birthrights', 'rt-core-lure-of-the-void',
+            'rt-core-trials-and-travails', 'rt-core-motivations', 'rt-core-careers',
+            'rt-storm-homeworlds', 'rt-storm-birthrights', 'rt-storm-lure-of-the-void',
+            'rt-storm-trials-and-travails', 'rt-storm-motivations', 'rt-storm-lineages',
+        ],
     },
     dh2e: {
         coreSteps: [
@@ -42,11 +51,10 @@ const SYSTEM_STEP_CONFIGS = {
         ],
         optionalStep: { key: 'elite', step: 'elite', icon: 'fa-star', descKey: 'EliteDesc', stepIndex: 4 },
         packs: [
-            'dh2-core-backgrounds',
-            'dh2-core-elite-advances',
-            'dh2-beyond-items-backgrounds',
-            'dh2-within-items-backgrounds',
-            'dh2-without-items-backgrounds',
+            'dh2-core-homeworlds', 'dh2-core-backgrounds', 'dh2-core-roles', 'dh2-core-elite-advances',
+            'dh2-beyond-homeworlds', 'dh2-beyond-backgrounds', 'dh2-beyond-roles',
+            'dh2-within-backgrounds', 'dh2-within-roles',
+            'dh2-without-homeworlds', 'dh2-without-backgrounds', 'dh2-without-roles',
         ],
     },
     bc: {
@@ -58,7 +66,11 @@ const SYSTEM_STEP_CONFIGS = {
             { key: 'motivation', step: 'motivation', icon: 'fa-fire', descKey: 'MotivationDesc', stepIndex: 5 },
         ],
         optionalStep: null,
-        packs: ['bc-core-items-origin-path'],
+        packs: [
+            'bc-core-races', 'bc-core-archetypes', 'bc-core-prides',
+            'bc-core-disgraces', 'bc-core-motivations',
+            'bc-blood-archetypes', 'bc-decay-archetypes', 'bc-excess-archetypes', 'bc-fate-archetypes',
+        ],
     },
     ow: {
         coreSteps: [
@@ -66,7 +78,12 @@ const SYSTEM_STEP_CONFIGS = {
             { key: 'speciality', step: 'speciality', icon: 'fa-crosshairs', descKey: 'SpecialityDesc', stepIndex: 2 },
         ],
         optionalStep: null,
-        packs: ['ow-core-items-origin-path'],
+        packs: [
+            'ow-core-homeworlds', 'ow-core-regiment-types', 'ow-core-specialities',
+            'ow-core-commanding-officers', 'ow-core-training-doctrines', 'ow-core-special-equipment-doctrines',
+            'ow-hammer-homeworlds', 'ow-hammer-regiment-types', 'ow-hammer-training-doctrines', 'ow-hammer-special-equipment-doctrines',
+            'ow-shield-homeworlds', 'ow-shield-regiment-types', 'ow-shield-training-doctrines', 'ow-shield-special-equipment-doctrines',
+        ],
     },
     dw: {
         coreSteps: [
@@ -74,7 +91,10 @@ const SYSTEM_STEP_CONFIGS = {
             { key: 'speciality', step: 'speciality', icon: 'fa-crosshairs', descKey: 'SpecialityDesc', stepIndex: 2 },
         ],
         optionalStep: null,
-        packs: ['dw-core-items-origin-path'],
+        packs: [
+            'dw-core-chapters', 'dw-core-specialities',
+            'dw-founding-chapters', 'dw-rites-chapters',
+        ],
     },
 };
 
