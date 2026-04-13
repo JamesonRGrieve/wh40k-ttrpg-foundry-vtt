@@ -644,16 +644,64 @@
       "flags": {}
     },
     {
+      "name": "bc-core-races",
+      "label": "Races",
+      "path": "packs/black-crusade/bc-core-races",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
         "PLAYER": "OBSERVER",
         "ASSISTANT": "OWNER"
       },
-      "flags": {},
-      "name": "bc-core-items-origin-path",
-      "label": "Origin Path",
-      "path": "packs/black-crusade/bc-core-items-origin-path"
+      "flags": {}
+    },
+    {
+      "name": "bc-core-archetypes",
+      "label": "Archetypes",
+      "path": "packs/black-crusade/bc-core-archetypes",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-core-prides",
+      "label": "Prides",
+      "path": "packs/black-crusade/bc-core-prides",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-core-disgraces",
+      "label": "Disgraces",
+      "path": "packs/black-crusade/bc-core-disgraces",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-core-motivations",
+      "label": "Motivations",
+      "path": "packs/black-crusade/bc-core-motivations",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
     },
     {
       "name": "dh1-core-items-armour",
@@ -836,9 +884,33 @@
       "flags": {}
     },
     {
-      "name": "dh2-beyond-items-backgrounds",
+      "name": "dh2-beyond-homeworlds",
+      "label": "Enemies Beyond Homeworlds",
+      "path": "packs/dark-heresy-2/dh2-beyond-homeworlds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh2-beyond-backgrounds",
       "label": "Enemies Beyond Backgrounds",
-      "path": "packs/dark-heresy-2/dh2-beyond-items-backgrounds",
+      "path": "packs/dark-heresy-2/dh2-beyond-backgrounds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh2-beyond-roles",
+      "label": "Enemies Beyond Roles",
+      "path": "packs/dark-heresy-2/dh2-beyond-roles",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
@@ -1064,9 +1136,33 @@
       "flags": {}
     },
     {
+      "name": "dh2-core-homeworlds",
+      "label": "Homeworlds",
+      "path": "packs/dark-heresy-2/dh2-core-homeworlds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "dh2-core-backgrounds",
       "label": "Backgrounds",
       "path": "packs/dark-heresy-2/dh2-core-backgrounds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh2-core-roles",
+      "label": "Roles",
+      "path": "packs/dark-heresy-2/dh2-core-roles",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
@@ -1124,9 +1220,21 @@
       "flags": {}
     },
     {
-      "name": "dh2-within-items-backgrounds",
+      "name": "dh2-within-backgrounds",
       "label": "Enemies Within Backgrounds",
-      "path": "packs/dark-heresy-2/dh2-within-items-backgrounds",
+      "path": "packs/dark-heresy-2/dh2-within-backgrounds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh2-within-roles",
+      "label": "Enemies Within Roles",
+      "path": "packs/dark-heresy-2/dh2-within-roles",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
@@ -1208,9 +1316,33 @@
       "flags": {}
     },
     {
-      "name": "dh2-without-items-backgrounds",
+      "name": "dh2-without-homeworlds",
+      "label": "Enemies Without Homeworlds",
+      "path": "packs/dark-heresy-2/dh2-without-homeworlds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh2-without-backgrounds",
       "label": "Enemies Without Backgrounds",
-      "path": "packs/dark-heresy-2/dh2-without-items-backgrounds",
+      "path": "packs/dark-heresy-2/dh2-without-backgrounds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dh2-without-roles",
+      "label": "Enemies Without Roles",
+      "path": "packs/dark-heresy-2/dh2-without-roles",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
@@ -1904,16 +2036,196 @@
       "flags": {}
     },
     {
+      "name": "ow-core-homeworlds",
+      "label": "Homeworlds",
+      "path": "packs/only-war/ow-core-homeworlds",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
         "PLAYER": "OBSERVER",
         "ASSISTANT": "OWNER"
       },
-      "flags": {},
-      "name": "ow-core-items-origin-path",
-      "label": "Origin Path",
-      "path": "packs/only-war/ow-core-items-origin-path"
+      "flags": {}
+    },
+    {
+      "name": "ow-core-commanding-officers",
+      "label": "Commanding Officers",
+      "path": "packs/only-war/ow-core-commanding-officers",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-core-regiment-types",
+      "label": "Regiment Types",
+      "path": "packs/only-war/ow-core-regiment-types",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-core-training-doctrines",
+      "label": "Training Doctrines",
+      "path": "packs/only-war/ow-core-training-doctrines",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-core-special-equipment-doctrines",
+      "label": "Special Equipment Doctrines",
+      "path": "packs/only-war/ow-core-special-equipment-doctrines",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-hammer-homeworlds",
+      "label": "Hammer Homeworlds",
+      "path": "packs/only-war/ow-hammer-homeworlds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-hammer-regiment-types",
+      "label": "Hammer Regiment Types",
+      "path": "packs/only-war/ow-hammer-regiment-types",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-hammer-training-doctrines",
+      "label": "Hammer Training Doctrines",
+      "path": "packs/only-war/ow-hammer-training-doctrines",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-hammer-special-equipment-doctrines",
+      "label": "Hammer Special Equipment Doctrines",
+      "path": "packs/only-war/ow-hammer-special-equipment-doctrines",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-hammer-regimental-drawbacks",
+      "label": "Hammer Regimental Drawbacks",
+      "path": "packs/only-war/ow-hammer-regimental-drawbacks",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-shield-homeworlds",
+      "label": "Shield Homeworlds",
+      "path": "packs/only-war/ow-shield-homeworlds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-shield-regiment-types",
+      "label": "Shield Regiment Types",
+      "path": "packs/only-war/ow-shield-regiment-types",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-shield-training-doctrines",
+      "label": "Shield Training Doctrines",
+      "path": "packs/only-war/ow-shield-training-doctrines",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-shield-special-equipment-doctrines",
+      "label": "Shield Special Equipment Doctrines",
+      "path": "packs/only-war/ow-shield-special-equipment-doctrines",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-shield-regimental-drawbacks",
+      "label": "Shield Regimental Drawbacks",
+      "path": "packs/only-war/ow-shield-regimental-drawbacks",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "ow-core-specialities",
+      "label": "Specialities",
+      "path": "packs/only-war/ow-core-specialities",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
     },
     {
       "name": "rt-abyss-items-gear",
@@ -2144,9 +2456,69 @@
       "flags": {}
     },
     {
-      "name": "rt-core-items-origin-path",
-      "label": "Core Rulebook Origin Path",
-      "path": "packs/rogue-trader/rt-core-items-origin-path",
+      "name": "rt-core-homeworlds",
+      "label": "Core Rulebook Homeworlds",
+      "path": "packs/rogue-trader/rt-core-homeworlds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-core-birthrights",
+      "label": "Core Rulebook Birthrights",
+      "path": "packs/rogue-trader/rt-core-birthrights",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-core-lure-of-the-void",
+      "label": "Core Rulebook Lure of the Void",
+      "path": "packs/rogue-trader/rt-core-lure-of-the-void",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-core-trials-and-travails",
+      "label": "Core Rulebook Trials and Travails",
+      "path": "packs/rogue-trader/rt-core-trials-and-travails",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-core-motivations",
+      "label": "Core Rulebook Motivations",
+      "path": "packs/rogue-trader/rt-core-motivations",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-core-careers",
+      "label": "Core Rulebook Careers",
+      "path": "packs/rogue-trader/rt-core-careers",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
@@ -2459,18 +2831,6 @@
       "name": "rt-items-navigator-powers",
       "label": "Navigator Powers",
       "path": "packs/rogue-trader/rt-items-navigator-powers",
-      "system": "wh40k-rpg",
-      "type": "Item",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
-      "flags": {}
-    },
-    {
-      "name": "rt-items-origin-path",
-      "label": "Origin Path",
-      "path": "packs/rogue-trader/rt-items-origin-path",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
@@ -2924,9 +3284,69 @@
       "flags": {}
     },
     {
-      "name": "rt-storm-items-origin-path",
-      "label": "Into the Storm Origin Path",
-      "path": "packs/rogue-trader/rt-storm-items-origin-path",
+      "name": "rt-storm-homeworlds",
+      "label": "Into the Storm Homeworlds",
+      "path": "packs/rogue-trader/rt-storm-homeworlds",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-storm-birthrights",
+      "label": "Into the Storm Birthrights",
+      "path": "packs/rogue-trader/rt-storm-birthrights",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-storm-lure-of-the-void",
+      "label": "Into the Storm Lure of the Void",
+      "path": "packs/rogue-trader/rt-storm-lure-of-the-void",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-storm-trials-and-travails",
+      "label": "Into the Storm Trials and Travails",
+      "path": "packs/rogue-trader/rt-storm-trials-and-travails",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-storm-motivations",
+      "label": "Into the Storm Motivations",
+      "path": "packs/rogue-trader/rt-storm-motivations",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "rt-storm-lineages",
+      "label": "Into the Storm Lineages",
+      "path": "packs/rogue-trader/rt-storm-lineages",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
@@ -3296,16 +3716,28 @@
       "flags": {}
     },
     {
+      "name": "dw-core-chapters",
+      "label": "Chapters",
+      "path": "packs/deathwatch/dw-core-chapters",
       "system": "wh40k-rpg",
       "type": "Item",
       "ownership": {
         "PLAYER": "OBSERVER",
         "ASSISTANT": "OWNER"
       },
-      "flags": {},
-      "name": "dw-core-items-origin-path",
-      "label": "Origin Path",
-      "path": "packs/deathwatch/dw-core-items-origin-path"
+      "flags": {}
+    },
+    {
+      "name": "dw-core-specialities",
+      "label": "Specialities",
+      "path": "packs/deathwatch/dw-core-specialities",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
     },
     {
       "name": "rt-kin-journals",
