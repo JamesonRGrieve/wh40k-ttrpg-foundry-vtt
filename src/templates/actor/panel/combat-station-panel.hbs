@@ -7,10 +7,10 @@
         {{!-- LEFT SIDE: Vitals + Armour (nested grid for weapons below) --}}
         <div class="wh40k-combat-left-side">
             {{!-- LEFT COLUMN: Vitals HUD --}}
-            <div class="wh40k-combat-col wh40k-combat-vitals">
+            <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2 wh40k-combat-vitals">
             {{!-- Compact Vitals Monitor --}}
-            <div class="wh40k-vitals-hud">
-                <div class="wh40k-vitals-hud-header">
+            <div class="wh40k-vitals-hud tw-flex tw-flex-col tw-gap-2 tw-pt-0 tw-px-2 tw-pb-2">
+                <div class="wh40k-vitals-hud-header tw-flex tw-items-center tw-gap-1 tw-py-[6px] tw-px-2">
                     <i class="fas fa-heartbeat"></i>
                     <span>VITALS</span>
                 </div>
@@ -132,7 +132,7 @@
                         </div>
                     </div>
                     <div class="wh40k-vital-stat-body">
-                        <div class="wh40k-fatigue-bolts-combat">
+                        <div class="wh40k-fatigue-bolts-combat tw-flex tw-items-center tw-justify-center tw-gap-1 tw-py-[6px] tw-flex-wrap">
                             {{#each (range 1 system.fatigue.max) as |index|}}
                                 <button type="button"
                                         class="wh40k-fatigue-pip {{#if (lte index ../system.fatigue.value)}}wh40k-fatigue-pip--filled{{/if}}"
@@ -205,7 +205,7 @@
                         </div>
                     </div>
                     <div class="wh40k-vital-stat-body">
-                        <div class="wh40k-fate-stars">
+                        <div class="wh40k-fate-stars tw-flex tw-items-center tw-justify-center tw-gap-1 tw-py-[6px]">
                             {{#each (range 1 system.fate.max) as |index|}}
                                 <button type="button"
                                         class="wh40k-fate-pip {{#if (lte index ../system.fate.value)}}wh40k-fate-pip--active{{/if}}"
@@ -290,7 +290,7 @@
         </div>
 
             {{!-- CENTER COLUMN: Armour (using existing panel directly) --}}
-            <div class="wh40k-combat-col">
+            <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2">
                 {{> systems/wh40k-rpg/templates/actor/panel/armour-display-panel.hbs}}
                 
                 {{!-- Force Field Status --}}
@@ -356,7 +356,7 @@
         </div>
 
         {{!-- RIGHT COLUMN: Combat Actions & Info --}}
-        <div class="wh40k-combat-col wh40k-combat-actions">
+        <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2 wh40k-combat-actions">
             {{!-- Combat Actions Panel --}}
             {{> systems/wh40k-rpg/templates/actor/panel/combat-actions-panel.hbs}}
 
@@ -367,7 +367,7 @@
                 </div>
                 <div class="wh40k-panel-body">
                     {{#if criticalInjuries.length}}
-                    <div class="wh40k-injuries-list">
+                    <div class="wh40k-injuries-list tw-flex tw-flex-col tw-gap-1">
                         {{#each criticalInjuries as |injury|}}
                         <div class="wh40k-injury-row" data-item-id="{{injury.id}}">
                             <span class="wh40k-injury-name item-edit" data-item-id="{{injury.id}}">{{injury.name}}</span>
