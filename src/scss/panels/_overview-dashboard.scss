@@ -3,22 +3,10 @@
 // ============================================
 // New dashboard design for Overview tab - all critical info visible without scrolling
 
-// Dashboard Container
-.wh40k-dashboard {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
+// Layout (flex-col, gap, padding, h-full, overflow) now in template utilities
 
-// Dashboard Rows
-// Uses --wh40k-columns CSS variable set by ResizeObserver
+// Layout (grid, gap) now in template utilities; grid-template-columns stays (CSS vars)
 .wh40k-dashboard-row {
-    display: grid;
-    gap: $wh40k-space-sm;
 
     &.wh40k-dashboard-row--top {
         grid-template-columns: repeat(var(--wh40k-columns, 3), 1fr);
@@ -36,22 +24,15 @@
     }
 }
 
-// Dashboard Zones
+// Layout (flex-col, overflow) now in template utilities
 .wh40k-dashboard-zone {
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-secondary);
     border-radius: 6px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
 }
 
-// Zone Header
+// Layout (flex, items, gap, padding) now in template utilities
 .wh40k-zone-header {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 10px;
     background: var(--color-bg-tertiary);
     border-bottom: 1px solid var(--color-border-secondary);
     font-size: 0.75rem;
@@ -66,14 +47,7 @@
     }
 }
 
-// Zone Content
-.wh40k-zone-content {
-    padding: 8px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
+// Layout (padding, flex-1, flex-col, gap) now in template utilities
 
 // Zone Subsection
 .wh40k-zone-subsection {
@@ -99,11 +73,8 @@
     }
 }
 
+// Layout (flex, items, gap, padding) now in template utilities
 .wh40k-vital-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 2px 0;
 
     &.wh40k-vital-row--critical {
         background: rgba(139, 0, 0, 0.1);
@@ -133,12 +104,7 @@
     min-width: 50px;
 }
 
-.wh40k-vital-controls {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-left: auto;
-}
+// Layout (flex, items, gap, ml-auto) now in template utilities
 
 .wh40k-vital-btn {
     width: 20px;

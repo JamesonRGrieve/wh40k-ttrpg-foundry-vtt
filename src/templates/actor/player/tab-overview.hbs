@@ -2,22 +2,22 @@
 {{!-- At-a-glance view of all critical information --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
-    <div class="wh40k-dashboard">
+    <div class="wh40k-dashboard tw-flex tw-flex-col tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden">
         {{!-- Row 1: Vitals | Key Skills --}}
-        <div class="wh40k-dashboard-row wh40k-dashboard-row--top">
+        <div class="wh40k-dashboard-row tw-grid tw-gap-2 wh40k-dashboard-row--top">
             
             {{!-- Zone 1: Vitals (Top-Left) --}}
-            <div class="wh40k-dashboard-zone wh40k-zone-vitals">
-                <div class="wh40k-zone-header">
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-vitals">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
                     <i class="fas fa-heartbeat"></i>
                     <span>Vitals</span>
                 </div>
-                <div class="wh40k-zone-content">
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     {{!-- Wounds --}}
-                    <div class="wh40k-vital-row">
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
                         <span class="wh40k-vital-icon"><i class="fas fa-heart"></i></span>
                         <span class="wh40k-vital-label">Wounds</span>
-                        <div class="wh40k-vital-controls">
+                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
                             <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.wounds.value" data-min="0" title="−1">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -32,7 +32,7 @@
                     
                     {{!-- Critical Wounds - Below wounds, always visible if critical > 0 --}}
                     {{#if (or (gt system.wounds.critical 0) (eq system.wounds.value 0))}}
-                    <div class="wh40k-vital-row wh40k-vital-critical-row">
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px] wh40k-vital-critical-row">
                         <span class="wh40k-vital-icon"><i class="fas fa-skull"></i></span>
                         <span class="wh40k-vital-label">Critical</span>
                         <div class="wh40k-critical-pips-inline">
@@ -49,7 +49,7 @@
                     {{/if}}
                     
                     {{!-- Fatigue --}}
-                    <div class="wh40k-vital-row">
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
                         <span class="wh40k-vital-icon"><i class="fas fa-bolt"></i></span>
                         <span class="wh40k-vital-label">Fatigue</span>
                         <div class="wh40k-fatigue-bolts-inline">
@@ -69,7 +69,7 @@
                     </div>
                     
                     {{!-- Fate Points --}}
-                    <div class="wh40k-vital-row">
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
                         <span class="wh40k-vital-icon"><i class="fas fa-star"></i></span>
                         <span class="wh40k-vital-label">Fate</span>
                         <div class="wh40k-fate-stars-inline">
@@ -94,7 +94,7 @@
                     <div class="wh40k-mental-row">
                         <span class="wh40k-mental-icon"><i class="fas fa-skull"></i></span>
                         <span class="wh40k-mental-label">Corruption</span>
-                        <div class="wh40k-vital-controls">
+                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
                             <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.corruption" data-min="0" title="−1">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -108,7 +108,7 @@
                     <div class="wh40k-mental-row">
                         <span class="wh40k-mental-icon"><i class="fas fa-brain"></i></span>
                         <span class="wh40k-mental-label">Insanity</span>
-                        <div class="wh40k-vital-controls">
+                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
                             <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.insanity" data-min="0" title="−1">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -123,12 +123,12 @@
             </div>
             
             {{!-- Zone 2: Favorite Skills (Top-Right) --}}
-            <div class="wh40k-dashboard-zone wh40k-zone-skills">
-                <div class="wh40k-zone-header">
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-skills">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
                     <i class="fas fa-star"></i>
                     <span>Favorite Skills</span>
                 </div>
-                <div class="wh40k-zone-content">
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     <div class="wh40k-skill-list-compact">
                         {{#if favoriteSkills}}
                             {{#each favoriteSkills as |skill|}}
@@ -160,12 +160,12 @@
             </div>
             
             {{!-- Zone 3: Favorite Talents --}}
-            <div class="wh40k-dashboard-zone wh40k-zone-talents">
-                <div class="wh40k-zone-header">
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-talents">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
                     <i class="fas fa-star-half-alt"></i>
                     <span>Favorite Talents</span>
                 </div>
-                <div class="wh40k-zone-content">
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     <div class="wh40k-talent-list-compact">
                         {{#if favoriteTalents}}
                             {{#each favoriteTalents as |talent|}}
@@ -199,15 +199,15 @@
         </div>
         
         {{!-- Row 2: Equipped Weapons | Movement & Load | Armour --}}
-        <div class="wh40k-dashboard-row wh40k-dashboard-row--middle">
+        <div class="wh40k-dashboard-row tw-grid tw-gap-2 wh40k-dashboard-row--middle">
             
             {{!-- Zone 4: Equipped Weapons --}}
-            <div class="wh40k-dashboard-zone wh40k-zone-weapons">
-                <div class="wh40k-zone-header">
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-weapons">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
                     <i class="fas fa-crosshairs"></i>
                     <span>Equipped Weapons</span>
                 </div>
-                <div class="wh40k-zone-content">
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     {{#if equippedWeapons.length}}
                     <div class="wh40k-ew-list">
                         {{#each equippedWeapons as |weapon|}}
@@ -234,12 +234,12 @@
             </div>
             
             {{!-- Zone 5: Movement & Load --}}
-            <div class="wh40k-dashboard-zone wh40k-zone-movement">
-                <div class="wh40k-zone-header">
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-movement">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
                     <i class="fas fa-running"></i>
                     <span>Movement & Load</span>
                 </div>
-                <div class="wh40k-zone-content wh40k-movement-compact">
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1 wh40k-movement-compact">
                     <div class="wh40k-movement-speeds">
                         <div class="wh40k-speed-item">
                             <span class="wh40k-speed-value">{{actor.movement.half}}</span>
@@ -272,12 +272,12 @@
             </div>
             
             {{!-- Zone 6: Armour --}}
-            <div class="wh40k-dashboard-zone wh40k-zone-armour">
-                <div class="wh40k-zone-header">
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-armour">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
                     <i class="fas fa-shield-alt"></i>
                     <span>Armour</span>
                 </div>
-                <div class="wh40k-zone-content">
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     <div class="wh40k-ov-armour-silhouette">
                         <div class="wh40k-ov-armour-box wh40k-ov-box-head" title="Head: 01-10">
                             <span class="wh40k-ov-box-label">Head</span>
@@ -309,15 +309,15 @@
         </div>
         
         {{!-- Row 3: Progression | Active Effects (2-wide) --}}
-        <div class="wh40k-dashboard-row wh40k-dashboard-row--bottom">
+        <div class="wh40k-dashboard-row tw-grid tw-gap-2 wh40k-dashboard-row--bottom">
             
             {{!-- Zone 7: Progression --}}
-            <div class="wh40k-dashboard-zone wh40k-zone-progression">
-                <div class="wh40k-zone-header">
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-progression">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
                     <i class="fas fa-graduation-cap"></i>
                     <span>Progression</span>
                 </div>
-                <div class="wh40k-zone-content">
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     <div class="wh40k-xp-row">
                         <span class="wh40k-xp-label">Available XP</span>
                         <span class="wh40k-xp-value wh40k-xp-available">{{system.experience.available}}</span>
@@ -346,16 +346,16 @@
             </div>
             
             {{!-- Zone: DH2e Resources --}}
-            <div class="wh40k-dashboard-zone wh40k-zone-resources">
-                <div class="wh40k-zone-header">
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-resources">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
                     <i class="fas fa-coins"></i>
                     <span>Resources</span>
                 </div>
-                <div class="wh40k-zone-content">
-                    <div class="wh40k-vital-row">
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
                         <span class="wh40k-vital-icon"><i class="fas fa-handshake"></i></span>
                         <span class="wh40k-vital-label">Influence</span>
-                        <div class="wh40k-vital-controls">
+                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
                             <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.influence" data-min="0" title="-1">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -365,10 +365,10 @@
                             </button>
                         </div>
                     </div>
-                    <div class="wh40k-vital-row">
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
                         <span class="wh40k-vital-icon"><i class="fas fa-stamp"></i></span>
                         <span class="wh40k-vital-label">Requisition</span>
-                        <div class="wh40k-vital-controls">
+                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
                             <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.requisition" data-min="0" title="-1">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -378,10 +378,10 @@
                             </button>
                         </div>
                     </div>
-                    <div class="wh40k-vital-row">
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
                         <span class="wh40k-vital-icon"><i class="fas fa-coins"></i></span>
                         <span class="wh40k-vital-label">Throne Gelt</span>
-                        <div class="wh40k-vital-controls">
+                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
                             <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.throneGelt" data-min="0" title="-1">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -395,12 +395,12 @@
             </div>
 
             {{!-- Zone 8: Active Effects (takes 2fr column) --}}
-            <div class="wh40k-dashboard-zone wh40k-zone-effects">
-                <div class="wh40k-zone-header">
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-effects">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
                     <i class="fas fa-magic"></i>
                     <span>Active Effects</span>
                 </div>
-                <div class="wh40k-zone-content">
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     {{#if effects.length}}
                     <div class="wh40k-effects-preview">
                         {{#each effects as |effect|}}
