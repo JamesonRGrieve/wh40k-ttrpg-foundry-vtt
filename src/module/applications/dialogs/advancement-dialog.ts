@@ -8,6 +8,9 @@
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { getAvailableXP, spendXP, canAfford } from '../../utils/xp-transaction.ts';
 import { getCareerAdvancements, getNextCharacteristicCost, getCareerKeyFromName, TIER_ORDER } from '../../config/advancements/index.ts';
+import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
+import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -155,13 +158,26 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             { id: 'talents', label: 'WH40K.Advancement.Tab.Talents', icon: 'fa-star', active: this.#activeTab === 'talents' },
         ];
 
+        // Get system config for this actor's game system
+        const systemConfig = SystemConfigRegistry.getOrNull(this.actor.system?.gameSystem);
+        context.systemConfig = systemConfig;
+        context.usesAptitudes = systemConfig?.usesAptitudes ?? false;
+
         // Prepare characteristic advances
-        context.characteristics = this.#prepareCharacteristics(career);
+        context.characteristics = this.#prepareCharacteristics(career, systemConfig);
 
         // Prepare skill and talent advances
-        const advances = career?.RANK_1_ADVANCES ?? [];
-        context.skills = this.#prepareAdvances(advances.filter((a) => a.type === 'skill'));
-        context.talents = this.#prepareAdvances(advances.filter((a) => a.type === 'talent'));
+        if (systemConfig?.usesCareerTables || !systemConfig) {
+            // Career-based: use fixed advance list
+            const advances = career?.RANK_1_ADVANCES ?? [];
+            context.skills = this.#prepareAdvances(advances.filter((a) => a.type === 'skill'));
+            context.talents = this.#prepareAdvances(advances.filter((a) => a.type === 'talent'));
+        } else {
+            // Aptitude-based: all skills available, costs computed dynamically
+            // TODO: Build full skill browser with aptitude-based costs
+            context.skills = [];
+            context.talents = [];
+        }
 
         // Recent purchases for animation
         context.recentPurchases = [...this.#recentPurchases];
@@ -172,27 +188,37 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /**
-     * Prepare characteristic advancement data
-     * @param {Object} career - Career advancement data
+     * Prepare characteristic advancement data.
+     * Uses system config for cost calculation when available, falls back to career registry.
+     * @param {Object} career - Career advancement data (for career-based systems)
+     * @param {BaseSystemConfig|null} systemConfig - System config (for all systems)
      * @returns {Array}
      */
-    #prepareCharacteristics(career: any): any {
-        const costs = career?.CHARACTERISTIC_COSTS ?? {};
+    #prepareCharacteristics(career: any, systemConfig: BaseSystemConfig | null): any {
         const characteristics = this.actor.system.characteristics ?? {};
         const available = getAvailableXP(this.actor);
 
+        // Use system config tier order if available, fall back to career registry
+        const tierOrder = systemConfig
+            ? systemConfig.characteristicTierOrder
+            : TIER_ORDER;
+
         return Object.entries(CONFIG.wh40k?.characteristics ?? {})
-            .filter(([key]) => key !== 'influence') // Influence typically can't be advanced
+            .filter(([key]) => key !== 'influence')
             .map(([key, config]) => {
                 const char = characteristics[key] ?? {};
                 const currentAdvances = char.advance ?? 0;
-                const nextCost = getNextCharacteristicCost(this.careerKey, key, currentAdvances);
 
-                const isMaxed = currentAdvances >= TIER_ORDER.length;
+                // Compute cost using system config or career registry
+                const nextCost = systemConfig
+                    ? systemConfig.getCharacteristicAdvanceCost(this.actor, key, currentAdvances)
+                    : getNextCharacteristicCost(this.careerKey, key, currentAdvances);
+
+                const isMaxed = currentAdvances >= tierOrder.length;
                 const canPurchase = !isMaxed && nextCost && available >= nextCost.cost;
 
-                // Build tier display
-                const tiers = TIER_ORDER.map((tier, index) => ({
+                // Build tier display from system config tiers
+                const tiers = tierOrder.map((tier, index) => ({
                     tier,
                     label: game.i18n.localize(CONFIG.wh40k?.advancementTiers?.[tier]?.label ?? tier),
                     purchased: index < currentAdvances,
@@ -376,7 +402,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         if (!char) return;
 
         const currentAdvances = char.advance ?? 0;
-        const nextCost = getNextCharacteristicCost(this.careerKey, charKey, currentAdvances);
+
+        // Use system config for cost calculation when available, fall back to career registry
+        const systemConfig = SystemConfigRegistry.getOrNull(this.actor.system?.gameSystem);
+        const nextCost = systemConfig
+            ? systemConfig.getCharacteristicAdvanceCost(this.actor, charKey, currentAdvances)
+            : getNextCharacteristicCost(this.careerKey, charKey, currentAdvances);
 
         if (!nextCost) {
             (ui.notifications as any).warn(game.i18n.localize('WH40K.Advancement.Error.MaxedOut'));
@@ -504,49 +535,53 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /**
-     * Apply a skill advance to the actor
+     * Apply a skill advance to the actor.
+     * Increments the skill's `advance` field (XP-purchased rank increases).
+     * Effective rank is computed at runtime from origin path rank + advance.
      * @param {Object} advance - Skill advance data
      */
     async #applySkillAdvance(advance: any): Promise<void> {
-        const keyMap = {
-            'awareness': 'awareness',
-            'command': 'command',
-            'commerce': 'commerce',
-            'charm': 'charm',
-            'ciphers': 'ciphers',
-            'common lore': 'commonLore',
-            'dodge': 'dodge',
-            'evaluate': 'evaluate',
-            'literacy': 'literacy',
-            'pilot': 'pilot',
-            'scholastic lore': 'scholasticLore',
-            'secret tongue': 'secretTongue',
-            'speak language': 'speakLanguage',
-        };
-
-        const skillKey = keyMap[advance.name.toLowerCase()] ?? advance.name.toLowerCase().replace(/\s+/g, '');
+        const skillKey = SkillKeyHelper.nameToKey(advance.name);
+        if (!skillKey) {
+            console.warn(`AdvancementDialog: Unknown skill name "${advance.name}"`);
+            return;
+        }
 
         if (advance.specialization) {
-            // Specialist skill - add entry
+            // Specialist skill — find or create entry, increment its advance
             const currentEntries = this.actor.system.skills?.[skillKey]?.entries ?? [];
-            const newEntry = {
-                name: advance.specialization,
-                slug: advance.specialization.toLowerCase().replace(/\s+/g, '-'),
-                trained: true,
-                plus10: false,
-                plus20: false,
-                bonus: 0,
-                cost: advance.cost,
-            };
+            const entryIndex = currentEntries.findIndex(
+                (e) => (e.name || '').toLowerCase() === advance.specialization.toLowerCase(),
+            );
 
-            await this.actor.update({
-                [`system.skills.${skillKey}.entries`]: [...currentEntries, newEntry],
-            });
+            if (entryIndex >= 0) {
+                // Existing entry — increment advance
+                const currentAdvance = currentEntries[entryIndex].advance ?? 0;
+                const currentCost = currentEntries[entryIndex].cost ?? 0;
+                await this.actor.update({
+                    [`system.skills.${skillKey}.entries.${entryIndex}.advance`]: currentAdvance + 1,
+                    [`system.skills.${skillKey}.entries.${entryIndex}.cost`]: currentCost + advance.cost,
+                });
+            } else {
+                // New specialist entry
+                const newEntry = {
+                    name: advance.specialization,
+                    slug: advance.specialization.toLowerCase().replace(/\s+/g, '-'),
+                    advance: 1,
+                    bonus: 0,
+                    cost: advance.cost,
+                };
+                await this.actor.update({
+                    [`system.skills.${skillKey}.entries`]: [...currentEntries, newEntry],
+                });
+            }
         } else {
-            // Standard skill
+            // Standard skill — increment advance
+            const currentAdvance = this.actor.system.skills?.[skillKey]?.advance ?? 0;
+            const currentCost = this.actor.system.skills?.[skillKey]?.cost ?? 0;
             await this.actor.update({
-                [`system.skills.${skillKey}.trained`]: true,
-                [`system.skills.${skillKey}.cost`]: advance.cost,
+                [`system.skills.${skillKey}.advance`]: currentAdvance + 1,
+                [`system.skills.${skillKey}.cost`]: currentCost + advance.cost,
             });
         }
     }

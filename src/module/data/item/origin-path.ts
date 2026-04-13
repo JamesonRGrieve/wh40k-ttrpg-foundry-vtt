@@ -116,7 +116,9 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                         level: new fields.StringField({
                             required: true,
                             initial: 'trained',
-                            choices: ['trained', 'plus10', 'plus20'],
+                            // RT/DH1e/DW: trained, plus10, plus20
+                            // DH2e/BC/OW: known, trained, experienced, veteran
+                            choices: ['known', 'trained', 'plus10', 'experienced', 'plus20', 'veteran', 'plus30'],
                         }),
                     }),
                     { required: true, initial: [] },
