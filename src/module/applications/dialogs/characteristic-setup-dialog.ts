@@ -702,7 +702,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @static
      */
     static async open(actor: any): Promise<any> {
-        if (!actor || actor.type !== 'acolyte') {
+        if (!actor || (actor.type !== 'acolyte' && actor.type !== 'character')) {
             (ui.notifications as any).error('Characteristic setup is only available for characters.');
             return false;
         }
