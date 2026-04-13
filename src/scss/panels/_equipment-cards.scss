@@ -3,26 +3,18 @@
 // ============================================
 // Sleek, modern, single-line layout for equipment items
 
-// Equipment Table Container
+// Layout (flex-col, gap) now in template utilities
 .wh40k-equipment-table {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
     margin-bottom: $wh40k-space-sm;
 }
 
-// Equipment Row (Single Line)
+// Layout (flex, items, gap, padding, min-h) now in template utilities
 .wh40k-equip-row {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-xs $wh40k-space-sm;
     background: var(--wh40k-panel-bg-solid);
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
     transition: all 0.2s ease;
     cursor: grab;
-    min-height: 36px;
 
     &:hover {
         background: var(--wh40k-panel-bg);
@@ -149,12 +141,7 @@
 }
 
 // Actions Container
-.wh40k-equip-actions {
-    display: flex;
-    gap: 4px;
-    margin-left: auto;
-    flex-shrink: 0;
-}
+// Layout (flex, gap, ml-auto, shrink-0) now in template utilities
 
 // Action Buttons (Small & Stylistic)
 .wh40k-equip-btn {
