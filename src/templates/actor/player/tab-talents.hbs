@@ -5,12 +5,12 @@
     {{!-- Two Column Layout: Specialist Skills (left) / Talents + Traits (right) --}}
     <div class="wh40k-talents-grid wh40k-talents-grid--2col">
         {{!-- Left Column - Specialist Skills --}}
-        <div class="wh40k-talents-col wh40k-talents-col-left">
+        <div class="wh40k-talents-col wh40k-talents-col-left tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
             {{> systems/wh40k-rpg/templates/actor/panel/skills-specialist-panel.hbs}}
         </div>
         
         {{!-- Right Column - Talents & Traits --}}
-        <div class="wh40k-talents-col wh40k-talents-col-right">
+        <div class="wh40k-talents-col wh40k-talents-col-right tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
             {{> systems/wh40k-rpg/templates/actor/panel/talent-panel.hbs}}
             {{> systems/wh40k-rpg/templates/actor/panel/trait-panel.hbs}}
         </div>

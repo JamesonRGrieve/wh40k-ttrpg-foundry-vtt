@@ -52,6 +52,7 @@
     width: 100%;
 }
 
+// Layout (flex-col, gap-0, overflow-visible, min-w-0) now in template utilities
 .wh40k-overview-col,
 .wh40k-status-col,
 .wh40k-combat-col,
@@ -60,12 +61,6 @@
 .wh40k-dynasty-col,
 .wh40k-bio-col,
 .wh40k-talents-col {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    overflow: visible;
-    min-width: 0;
-
     .wh40k-panel {
         margin-bottom: $wh40k-space-md;
         overflow: visible;
@@ -76,19 +71,8 @@
 // Header HUD Alignment Fix
 // ============================================
 
-.wh40k-header-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
-    padding-right: $wh40k-space-xl;
-    padding-top: $wh40k-space-md;
-    padding-bottom: $wh40k-space-md;
-}
-
-.wh40k-hud-stack {
-    @apply tw-flex tw-flex-col tw-items-end tw-justify-center;
-}
+// wh40k-header-right: layout defined in _sheet-base.scss, utilities added in Phase 8
+// wh40k-hud-stack: layout now in template utilities
 
 // ============================================
 
