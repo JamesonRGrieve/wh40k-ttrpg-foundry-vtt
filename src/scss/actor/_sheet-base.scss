@@ -474,9 +474,7 @@
     }
 }
 
-.wh40k-hud-stack {
-    @apply tw-relative tw-flex tw-flex-col tw-items-end tw-gap-1.5 tw-h-full;
-}
+// wh40k-hud-stack: layout now in template utilities
 
 
 // Generic drag-over highlight for any panel drop zone
