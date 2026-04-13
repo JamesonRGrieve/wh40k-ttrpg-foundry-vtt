@@ -63,9 +63,9 @@
                 </div>
                 <div class="wh40k-panel-body">
                     {{#if armourItems.length}}
-                    <div class="wh40k-equipment-table">
+                    <div class="wh40k-equipment-table tw-flex tw-flex-col tw-gap-[2px]">
                         {{#each armourItems as |item|}}
-                        <div class="wh40k-equip-row item-drag {{#if item.system.equipped}}wh40k-equip-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="armour">
+                        <div class="wh40k-equip-row tw-flex tw-items-center tw-gap-2 tw-py-1 tw-px-2 tw-min-h-[36px] item-drag {{#if item.system.equipped}}wh40k-equip-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="armour">
                             <img class="wh40k-equip-icon" src="{{item.img}}" alt="{{item.name}}" />
                             <button type="button" class="wh40k-equip-name" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">{{item.name}}</button>
                             <span class="wh40k-equip-meta">{{item.system.type}}</span>
@@ -76,7 +76,7 @@
                             {{#if item.system.weight}}
                             <span class="wh40k-equip-stat"><span class="wh40k-stat-l">Wt:</span> {{item.system.weight}}kg</span>
                             {{/if}}
-                            <div class="wh40k-equip-actions">
+                            <div class="wh40k-equip-actions tw-flex tw-gap-1 tw-ml-auto tw-shrink-0">
                                 <button type="button" class="wh40k-equip-btn wh40k-equip-toggle" data-action="toggleEquip" data-item-id="{{item.id}}" title="{{#if item.system.equipped}}Unequip{{else}}Equip{{/if}}">
                                     <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
                                 </button>
@@ -107,9 +107,9 @@
                 </div>
                 <div class="wh40k-panel-body">
                     {{#if forceFieldItems.length}}
-                    <div class="wh40k-equipment-table">
+                    <div class="wh40k-equipment-table tw-flex tw-flex-col tw-gap-[2px]">
                         {{#each forceFieldItems as |item|}}
-                        <div class="wh40k-equip-row item-drag {{#if item.system.activated}}wh40k-equip-active{{/if}} {{#if item.system.overloaded}}wh40k-equip-overloaded{{/if}}" data-item-id="{{item.id}}" data-item-type="forceField">
+                        <div class="wh40k-equip-row tw-flex tw-items-center tw-gap-2 tw-py-1 tw-px-2 tw-min-h-[36px] item-drag {{#if item.system.activated}}wh40k-equip-active{{/if}} {{#if item.system.overloaded}}wh40k-equip-overloaded{{/if}}" data-item-id="{{item.id}}" data-item-type="forceField">
                             <img class="wh40k-equip-icon" src="{{item.img}}" alt="{{item.name}}" />
                             <button type="button" class="wh40k-equip-name" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">{{item.name}}</button>
                             <span class="wh40k-equip-status">
@@ -123,7 +123,7 @@
                             </span>
                             <span class="wh40k-equip-stat"><span class="wh40k-stat-l">Rating:</span> <strong>{{item.system.protectionRating}}</strong></span>
                             <span class="wh40k-equip-stat"><span class="wh40k-stat-l">Overload:</span> {{item.system.overloadRoll}}</span>
-                            <div class="wh40k-equip-actions">
+                            <div class="wh40k-equip-actions tw-flex tw-gap-1 tw-ml-auto tw-shrink-0">
                                 {{#unless item.system.overloaded}}
                                 <button type="button" class="wh40k-equip-btn wh40k-equip-toggle" data-action="toggleActivate" data-item-id="{{item.id}}" title="{{#if item.system.activated}}Deactivate{{else}}Activate{{/if}}">
                                     <i class="fas {{#if item.system.activated}}fa-bolt{{else}}fa-power-off{{/if}}"></i>
@@ -159,16 +159,16 @@
                 </div>
                 <div class="wh40k-panel-body">
                     {{#if cyberneticItems.length}}
-                    <div class="wh40k-equipment-table">
+                    <div class="wh40k-equipment-table tw-flex tw-flex-col tw-gap-[2px]">
                         {{#each cyberneticItems as |item|}}
-                        <div class="wh40k-equip-row item-drag {{#if item.system.equipped}}wh40k-equip-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="cybernetic">
+                        <div class="wh40k-equip-row tw-flex tw-items-center tw-gap-2 tw-py-1 tw-px-2 tw-min-h-[36px] item-drag {{#if item.system.equipped}}wh40k-equip-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="cybernetic">
                             <img class="wh40k-equip-icon" src="{{item.img}}" alt="{{item.name}}" />
                             <button type="button" class="wh40k-equip-name" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">{{item.name}}</button>
                             <span class="wh40k-equip-meta">{{item.system.location}}</span>
                             {{#if item.system.craftsmanship}}
                             <span class="wh40k-equip-stat"><span class="wh40k-stat-l">Quality:</span> {{item.system.craftsmanship}}</span>
                             {{/if}}
-                            <div class="wh40k-equip-actions">
+                            <div class="wh40k-equip-actions tw-flex tw-gap-1 tw-ml-auto tw-shrink-0">
                                 <button type="button" class="wh40k-equip-btn wh40k-equip-toggle" data-action="toggleEquip" data-item-id="{{item.id}}" title="{{#if item.system.equipped}}Uninstall{{else}}Install{{/if}}">
                                     <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
                                 </button>
@@ -199,9 +199,9 @@
                 </div>
                 <div class="wh40k-panel-body">
                     {{#if gearItems.length}}
-                    <div class="wh40k-equipment-table">
+                    <div class="wh40k-equipment-table tw-flex tw-flex-col tw-gap-[2px]">
                         {{#each gearItems as |item|}}
-                        <div class="wh40k-equip-row item-drag {{#if item.system.inBackpack}}wh40k-equip-stowed{{/if}}" data-item-id="{{item.id}}" data-item-type="gear">
+                        <div class="wh40k-equip-row tw-flex tw-items-center tw-gap-2 tw-py-1 tw-px-2 tw-min-h-[36px] item-drag {{#if item.system.inBackpack}}wh40k-equip-stowed{{/if}}" data-item-id="{{item.id}}" data-item-type="gear">
                             <img class="wh40k-equip-icon" src="{{item.img}}" alt="{{item.name}}" />
                             <button type="button" class="wh40k-equip-name" data-action="itemEdit" data-item-id="{{item.id}}" title="{{item.name}}">{{item.name}}</button>
                             <span class="wh40k-equip-status">
@@ -217,7 +217,7 @@
                             {{#if item.system.availability}}
                             <span class="wh40k-equip-stat"><span class="wh40k-stat-l">Avail:</span> {{item.system.availability}}</span>
                             {{/if}}
-                            <div class="wh40k-equip-actions">
+                            <div class="wh40k-equip-actions tw-flex tw-gap-1 tw-ml-auto tw-shrink-0">
                                 {{#if item.system.inBackpack}}
                                 <button type="button" class="wh40k-equip-btn" data-action="unstowItem" data-item-id="{{item.id}}" title="Remove from Backpack">
                                     <i class="fas fa-box-open"></i>
