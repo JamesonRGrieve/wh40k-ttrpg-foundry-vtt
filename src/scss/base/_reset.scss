@@ -43,7 +43,7 @@ input,
 input[type='number'],
 textarea,
 select,
-button,
+button:not([class*='wh40k-']),
 button[type='roll'],
 label {
     display: unset;
