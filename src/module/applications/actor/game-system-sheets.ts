@@ -29,10 +29,11 @@ function makeSystemSheet(className: string, cssClass: string, headerFile: string
             header: { template: HEADER + headerFile },
         };
     };
-    // Skill training config sourced from the system config registry
+    // System config sourced from the registry
     const systemConfig = SystemConfigRegistry.get(opts.gameSystemId);
     const skillRanks = systemConfig.getSkillRanks();
     cls.prototype._getSkillTrainingConfig = function() { return skillRanks; };
+    cls.prototype._gameSystemId = opts.gameSystemId;
     Object.defineProperty(cls, 'name', { value: className });
     return cls;
 }
