@@ -52,11 +52,7 @@
     }
 }
 
-.wh40k-combat-col {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-sm;
-}
+// Layout (flex-col, gap) now in template utilities
 
 // Actions column on the right
 .wh40k-combat-actions {
@@ -92,22 +88,16 @@
 // VITALS HUD - Modern Status Display
 // ============================================
 
+// Layout (flex-col, gap, padding) now in template utilities
 .wh40k-vitals-hud {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-sm;
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.05) 100%);
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    padding: 0 $wh40k-space-sm $wh40k-space-sm;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+// Layout (flex, items, gap, padding) now in template utilities
 .wh40k-vitals-hud-header {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
-    padding: 6px $wh40k-space-sm;
     background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.1) 0%, rgba($wh40k-accent-gold, 0.05) 100%);
     border-left: 3px solid $wh40k-accent-gold;
     border-radius: 4px;
@@ -306,14 +296,7 @@
 // FATIGUE BOLTS DISPLAY
 // ============================================
 
-.wh40k-fatigue-bolts-combat {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 6px 0;
-    flex-wrap: wrap;
-}
+// Layout (flex, items, justify, gap, padding, wrap) now in template utilities
 
 .wh40k-fatigue-pip {
     font-size: 1.2rem;
@@ -354,13 +337,7 @@
 // FATE STARS DISPLAY
 // ============================================
 
-.wh40k-fate-stars {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 6px 0;
-}
+// Layout (flex, items, justify, gap, padding) now in template utilities
 
 .wh40k-fate-pip {
     font-size: 1.2rem;
@@ -991,11 +968,7 @@
     }
 }
 
-.wh40k-injuries-list {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
+// Layout (flex-col, gap) now in template utilities
 
 .wh40k-injury-row {
     display: flex;
