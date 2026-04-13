@@ -668,6 +668,54 @@
       "flags": {}
     },
     {
+      "name": "bc-blood-archetypes",
+      "label": "Tome of Blood Archetypes",
+      "path": "packs/black-crusade/bc-blood-archetypes",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-decay-archetypes",
+      "label": "Tome of Decay Archetypes",
+      "path": "packs/black-crusade/bc-decay-archetypes",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-excess-archetypes",
+      "label": "Tome of Excess Archetypes",
+      "path": "packs/black-crusade/bc-excess-archetypes",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "bc-fate-archetypes",
+      "label": "Tome of Fate Archetypes",
+      "path": "packs/black-crusade/bc-fate-archetypes",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "bc-core-prides",
       "label": "Prides",
       "path": "packs/black-crusade/bc-core-prides",
@@ -3745,6 +3793,30 @@
       "path": "packs/rogue-trader/rt-kin-journals",
       "system": "wh40k-rpg",
       "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-rites-chapters",
+      "label": "Rites of Battle Chapters",
+      "path": "packs/deathwatch/dw-rites-chapters",
+      "system": "wh40k-rpg",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "dw-founding-chapters",
+      "label": "First Founding Chapters",
+      "path": "packs/deathwatch/dw-founding-chapters",
+      "system": "wh40k-rpg",
+      "type": "Item",
       "ownership": {
         "PLAYER": "OBSERVER",
         "ASSISTANT": "OWNER"
