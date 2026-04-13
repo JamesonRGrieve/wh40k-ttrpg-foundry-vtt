@@ -1,12 +1,12 @@
-<div class="wh40k-skills-panel">
-    <div class="wh40k-skills-columns">
+<div class="wh40k-skills-panel tw-p-2">
+    <div class="wh40k-skills-columns tw-grid tw-grid-cols-2 tw-gap-4 tw-relative">
         <!-- Left Column -->
-        <div class="wh40k-skills-column">
+        <div class="wh40k-skills-column tw-flex tw-flex-col tw-gap-[3px]">
             {{#each skillLists.standardColumns.[0] as |entry|}}
-            <div class="wh40k-skill-row{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
-                <div class="wh40k-skill-info">
+            <div class="wh40k-skill-row tw-grid tw-grid-cols-[1fr_auto_40px] tw-gap-2 tw-items-center tw-py-1 tw-px-2{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
+                <div class="wh40k-skill-info tw-flex tw-items-center tw-gap-[6px]">
                     <span class="wh40k-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
-                    <div class="wh40k-skill-name-wrapper">
+                    <div class="wh40k-skill-name-wrapper tw-flex tw-items-center tw-gap-1 tw-flex-1">
                         <button type="button" class="wh40k-skill-name"
                                 data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
                                 data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
@@ -27,7 +27,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="wh40k-spec-training wh40k-training-display">
+                <div class="wh40k-spec-training wh40k-training-display tw-flex tw-gap-[2px] tw-p-[2px]">
                     {{#each entry.[1].trainingIndicators as |ind|}}
                     {{#if @root.inEditMode}}
                     <button type="button" class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}} — Click to cycle (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">{{ind.label}}</button>
@@ -36,19 +36,19 @@
                     {{/if}}
                     {{/each}}
                 </div>
-                <div class="wh40k-skill-total" title="{{entry.[1].breakdown}}">
+                <div class="wh40k-skill-total tw-min-w-[34px] tw-h-[26px] tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>
                 </div>
             </div>
             {{/each}}
         </div>
         <!-- Right Column -->
-        <div class="wh40k-skills-column">
+        <div class="wh40k-skills-column tw-flex tw-flex-col tw-gap-[3px]">
             {{#each skillLists.standardColumns.[1] as |entry|}}
-            <div class="wh40k-skill-row{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
-                <div class="wh40k-skill-info">
+            <div class="wh40k-skill-row tw-grid tw-grid-cols-[1fr_auto_40px] tw-gap-2 tw-items-center tw-py-1 tw-px-2{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
+                <div class="wh40k-skill-info tw-flex tw-items-center tw-gap-[6px]">
                     <span class="wh40k-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
-                    <div class="wh40k-skill-name-wrapper">
+                    <div class="wh40k-skill-name-wrapper tw-flex tw-items-center tw-gap-1 tw-flex-1">
                         <button type="button" class="wh40k-skill-name"
                                 data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
                                 data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
@@ -69,7 +69,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="wh40k-spec-training wh40k-training-display">
+                <div class="wh40k-spec-training wh40k-training-display tw-flex tw-gap-[2px] tw-p-[2px]">
                     {{#each entry.[1].trainingIndicators as |ind|}}
                     {{#if @root.inEditMode}}
                     <button type="button" class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}} — Click to cycle (Shift+click to reverse)" data-action="cycleSkillTraining" data-skill="{{entry.[0]}}">{{ind.label}}</button>
@@ -78,7 +78,7 @@
                     {{/if}}
                     {{/each}}
                 </div>
-                <div class="wh40k-skill-total" title="{{entry.[1].breakdown}}">
+                <div class="wh40k-skill-total tw-min-w-[34px] tw-h-[26px] tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>
                 </div>
             </div>
