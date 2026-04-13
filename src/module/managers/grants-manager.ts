@@ -713,7 +713,7 @@ export class GrantsManager {
      * @param {object} [modifiers] - Optional modifiers object from item.system.modifiers
      * @returns {object[]} Array of grant configurations
      */
-    static migrateOldGrants(oldGrants, modifiers = null) {
+    static migrateOldGrants(oldGrants, modifiers = null, options: { skipSkills?: boolean } = {}) {
         const newGrants = [];
 
         // NOTE: Characteristic modifiers from origin paths are applied via ModifiersTemplate
@@ -765,8 +765,8 @@ export class GrantsManager {
             });
         }
 
-        // Migrate skills
-        if (oldGrants.skills?.length > 0) {
+        // Migrate skills (skip for origin path items — handled at runtime via _prepareSkills)
+        if (!options.skipSkills && oldGrants.skills?.length > 0) {
             const skillKeys = oldGrants.skills
                 .map((s) => s.key || s.name)
                 .sort()
@@ -873,8 +873,11 @@ export class GrantsManager {
         // Check for old-style grants object and migrate
         // NOTE: For origin path items, characteristic modifiers are applied via ModifiersTemplate
         // during prepareEmbeddedData, NOT as grants. Don't pass modifiers here.
+        // NOTE: For origin path items, skill training is computed at runtime from embedded items
+        // during _prepareSkills(), NOT as grants. Skip skills for origin paths.
+        const isOriginPath = item.type === 'originPath';
         if (item.system?.grants) {
-            return this.migrateOldGrants(item.system.grants, null);
+            return this.migrateOldGrants(item.system.grants, null, { skipSkills: isOriginPath });
         }
 
         return [];

@@ -37,6 +37,13 @@ export default class CharacterData extends CreatureTemplate {
             rank: new NumberField({ required: true, initial: 1, min: 1, integer: true }),
             mutations: new StringField({ required: false, blank: true }),
 
+            // ===== GAME SYSTEM =====
+            gameSystem: new StringField({
+                required: true,
+                initial: 'rt',
+                choices: ['rt', 'dh1e', 'dh2e', 'bc', 'ow', 'dw'],
+            }),
+
             // ===== CHARACTER BIOGRAPHY =====
             bio: new SchemaField({
                 playerName: new StringField({ required: false, blank: true }),
@@ -121,8 +128,17 @@ export default class CharacterData extends CreatureTemplate {
             corruption: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
             // corruptionBonus: new NumberField({ required: true, initial: 0, min: 0, integer: true }), // Derived
 
-            // ===== OTHER =====
-            // aptitudes: new ObjectField({ required: true, initial: {} }),
+            // ===== APTITUDES (DH2e/BC/OW) =====
+            // Collected at runtime from origin path items during prepareEmbeddedData.
+            // Used by aptitude-based systems for XP cost calculation.
+            aptitudes: new ArrayField(new StringField({ required: true }), { required: true, initial: [] }),
+
+            // ===== BLACK CRUSADE =====
+            chaosAlignment: new StringField({
+                required: true,
+                initial: 'unaligned',
+                choices: ['unaligned', 'khorne', 'nurgle', 'slaanesh', 'tzeentch'],
+            }),
 
             // Effects computed from origin path items - populated during prepareEmbeddedData
             backgroundEffects: new SchemaField({
@@ -378,6 +394,25 @@ export default class CharacterData extends CreatureTemplate {
             if (stepMap.chapter?.name) this.originPath.chapter = stepMap.chapter.name;
         }
 
+        // Collect aptitudes from all origin path items (DH2e/BC/OW use aptitudes for XP costs)
+        const allAptitudes = new Set<string>();
+        for (const item of originItems) {
+            const aptitudes = item.system?.grants?.aptitudes;
+            if (Array.isArray(aptitudes)) {
+                for (const apt of aptitudes) {
+                    if (apt) allAptitudes.add(apt);
+                }
+            }
+        }
+        this.aptitudes = [...allAptitudes];
+
+        // Derive gameSystem from origin path items if not already set
+        if (originItems.length > 0 && (!this.gameSystem || this.gameSystem === 'rt')) {
+            const firstSystem = originItems[0]?.system?.gameSystem;
+            if (firstSystem && firstSystem !== this.gameSystem) {
+                this.gameSystem = firstSystem;
+            }
+        }
     }
 
     /**

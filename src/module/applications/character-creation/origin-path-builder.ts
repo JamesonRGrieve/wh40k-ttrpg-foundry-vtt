@@ -11,6 +11,7 @@
 
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { GrantsManager } from '../../managers/grants-manager.ts';
+import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import OriginPathChoiceDialog from './origin-path-choice-dialog.ts';
 import OriginRollDialog from './origin-roll-dialog.ts';
 import OriginDetailDialog from './origin-detail-dialog.ts';
@@ -151,7 +152,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         super(options);
         this.actor = actor;
         this.gameSystem = options.gameSystem || 'rt';
-        this.systemConfig = SYSTEM_STEP_CONFIGS[this.gameSystem] || SYSTEM_STEP_CONFIGS.rt;
+        // Prefer system config registry, fall back to inline SYSTEM_STEP_CONFIGS for compat
+        const registryConfig = SystemConfigRegistry.getOrNull(this.gameSystem);
+        this.systemConfig = registryConfig
+            ? registryConfig.getOriginStepConfig()
+            : (SYSTEM_STEP_CONFIGS[this.gameSystem] || SYSTEM_STEP_CONFIGS.rt);
         this.currentStepIndex = 0;
         this.guidedMode = true;
         this.direction = DIRECTION.FORWARD; // Forward or backward

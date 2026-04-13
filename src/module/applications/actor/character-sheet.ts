@@ -94,8 +94,8 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             'clearSkillsSearch': CharacterSheet.#clearSkillsSearch,
             'toggleFavoriteSkill': CharacterSheet.#toggleFavoriteSkill,
             'toggleFavoriteSpecialistSkill': CharacterSheet.#toggleFavoriteSpecialistSkill,
-            'cycleSkillTraining': CharacterSheet.#cycleSkillTraining,
-            'cycleSpecialistTraining': CharacterSheet.#cycleSpecialistTraining,
+            // cycleSkillTraining/cycleSpecialistTraining removed — skill ranks are now
+            // live-computed from origin path items + XP advances. Use Advancement Dialog.
 
             // Talents actions
             'toggleFavoriteTalent': CharacterSheet.#toggleFavoriteTalent,
