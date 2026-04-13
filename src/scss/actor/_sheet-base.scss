@@ -297,27 +297,11 @@
     object-fit: cover;
 }
 
-.wh40k-header-grid {
-    display: grid;
-    grid-template-columns: minmax(280px, 1fr) auto;
-    grid-template-rows: auto;
-    gap: 12px;
-    align-items: start;
-    padding: 8px 12px 6px;
-}
+// Layout (grid, cols, gap, items, padding) now in template utilities
 
-.wh40k-header-left {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+// Layout (flex-col, gap) now in template utilities
 
-.wh40k-header-topline {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 10px;
-    align-items: center;
-}
+// Layout (grid, cols, gap, items) now in template utilities
 
 .wh40k-header-bio {
     display: flex;
@@ -342,15 +326,9 @@
     }
 }
 
+// Layout (flex-col, items-end, gap, justify-self, justify-start, max-w) now in template utilities
 .wh40k-header-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
-    justify-self: end;
-    justify-content: flex-start;
     padding: 4px 12px 4px 0;
-    max-width: 620px;
 }
 
 // ============================================
