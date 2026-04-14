@@ -12,95 +12,13 @@
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { GrantsManager } from '../../managers/grants-manager.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
+import { normalizeOrigin } from './normalized-origin.ts';
 import OriginPathChoiceDialog from './origin-path-choice-dialog.ts';
 import OriginRollDialog from './origin-roll-dialog.ts';
 import OriginDetailDialog from './origin-detail-dialog.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
-
-/**
- * Per-system step configurations
- */
-/**
- * Legacy inline step configs — kept as fallback if SystemConfigRegistry is unavailable.
- * Canonical source of truth is now the system config registry (config/game-systems/).
- */
-const SYSTEM_STEP_CONFIGS = {
-    rt: {
-        coreSteps: [
-            { key: 'homeWorld', step: 'homeWorld', icon: 'fa-globe', descKey: 'HomeWorldDesc', stepIndex: 1 },
-            { key: 'birthright', step: 'birthright', icon: 'fa-baby', descKey: 'BirthrightDesc', stepIndex: 2 },
-            { key: 'lureOfTheVoid', step: 'lureOfTheVoid', icon: 'fa-meteor', descKey: 'LureDesc', stepIndex: 3 },
-            { key: 'trialsAndTravails', step: 'trialsAndTravails', icon: 'fa-skull', descKey: 'TrialsDesc', stepIndex: 4 },
-            { key: 'motivation', step: 'motivation', icon: 'fa-fire', descKey: 'MotivationDesc', stepIndex: 5 },
-            { key: 'career', step: 'career', icon: 'fa-user-tie', descKey: 'CareerDesc', stepIndex: 6 },
-        ],
-        optionalStep: { key: 'lineage', step: 'lineage', icon: 'fa-crown', descKey: 'LineageDesc', stepIndex: 7 },
-        packs: [
-            'rt-core-homeworlds', 'rt-core-birthrights', 'rt-core-lure-of-the-void',
-            'rt-core-trials-and-travails', 'rt-core-motivations', 'rt-core-careers',
-            'rt-storm-homeworlds', 'rt-storm-birthrights', 'rt-storm-lure-of-the-void',
-            'rt-storm-trials-and-travails', 'rt-storm-motivations', 'rt-storm-lineages',
-        ],
-    },
-    dh2e: {
-        coreSteps: [
-            { key: 'homeWorld', step: 'homeWorld', icon: 'fa-globe', descKey: 'HomeWorldDesc', stepIndex: 1 },
-            { key: 'background', step: 'background', icon: 'fa-scroll', descKey: 'BackgroundDesc', stepIndex: 2 },
-            { key: 'role', step: 'role', icon: 'fa-user-shield', descKey: 'RoleDesc', stepIndex: 3 },
-        ],
-        optionalStep: { key: 'elite', step: 'elite', icon: 'fa-star', descKey: 'EliteDesc', stepIndex: 4 },
-        packs: [
-            'dh2-core-homeworlds', 'dh2-core-backgrounds', 'dh2-core-roles', 'dh2-core-elite-advances',
-            'dh2-beyond-homeworlds', 'dh2-beyond-backgrounds', 'dh2-beyond-roles',
-            'dh2-within-backgrounds', 'dh2-within-roles',
-            'dh2-without-homeworlds', 'dh2-without-backgrounds', 'dh2-without-roles',
-        ],
-    },
-    bc: {
-        coreSteps: [
-            { key: 'race', step: 'race', icon: 'fa-skull-crossbones', descKey: 'RaceDesc', stepIndex: 1 },
-            { key: 'archetype', step: 'archetype', icon: 'fa-helmet-battle', descKey: 'ArchetypeDesc', stepIndex: 2 },
-            { key: 'pride', step: 'pride', icon: 'fa-crown', descKey: 'PrideDesc', stepIndex: 3 },
-            { key: 'disgrace', step: 'disgrace', icon: 'fa-chain-broken', descKey: 'DisgraceDesc', stepIndex: 4 },
-            { key: 'motivation', step: 'motivation', icon: 'fa-fire', descKey: 'MotivationDesc', stepIndex: 5 },
-        ],
-        optionalStep: null,
-        packs: [
-            'bc-core-races', 'bc-core-archetypes', 'bc-core-prides',
-            'bc-core-disgraces', 'bc-core-motivations',
-            'bc-blood-archetypes', 'bc-decay-archetypes', 'bc-excess-archetypes', 'bc-fate-archetypes',
-        ],
-    },
-    ow: {
-        coreSteps: [
-            { key: 'regiment', step: 'regiment', icon: 'fa-shield', descKey: 'RegimentDesc', stepIndex: 1 },
-            { key: 'speciality', step: 'speciality', icon: 'fa-crosshairs', descKey: 'SpecialityDesc', stepIndex: 2 },
-        ],
-        optionalStep: null,
-        packs: [
-            'ow-core-homeworlds', 'ow-core-regiment-types', 'ow-core-specialities',
-            'ow-core-commanding-officers', 'ow-core-training-doctrines', 'ow-core-special-equipment-doctrines',
-            'ow-hammer-homeworlds', 'ow-hammer-regiment-types', 'ow-hammer-training-doctrines', 'ow-hammer-special-equipment-doctrines',
-            'ow-shield-homeworlds', 'ow-shield-regiment-types', 'ow-shield-training-doctrines', 'ow-shield-special-equipment-doctrines',
-        ],
-    },
-    dw: {
-        coreSteps: [
-            { key: 'chapter', step: 'chapter', icon: 'fa-shield-alt', descKey: 'ChapterDesc', stepIndex: 1 },
-            { key: 'speciality', step: 'speciality', icon: 'fa-crosshairs', descKey: 'SpecialityDesc', stepIndex: 2 },
-        ],
-        optionalStep: null,
-        packs: [
-            'dw-core-chapters', 'dw-core-specialities',
-            'dw-founding-chapters', 'dw-rites-chapters',
-        ],
-    },
-};
-
-/** Backwards-compatible alias — defaults to RT */
-const CORE_STEPS = SYSTEM_STEP_CONFIGS.rt.coreSteps;
-const LINEAGE_STEP = SYSTEM_STEP_CONFIGS.rt.optionalStep;
 
 /**
  * Direction modes for origin path creation
@@ -172,11 +90,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         super(options);
         this.actor = actor;
         this.gameSystem = options.gameSystem || 'rt';
-        // Prefer system config registry, fall back to inline SYSTEM_STEP_CONFIGS for compat
-        const registryConfig = SystemConfigRegistry.getOrNull(this.gameSystem);
-        this.systemConfig = registryConfig
-            ? registryConfig.getOriginStepConfig()
-            : (SYSTEM_STEP_CONFIGS[this.gameSystem] || SYSTEM_STEP_CONFIGS.rt);
+        // System config from registry — used for labels, ranks, and step config
+        this.registryConfig = SystemConfigRegistry.get(this.gameSystem);
+        this.systemConfig = this.registryConfig.getOriginStepConfig();
         this.currentStepIndex = 0;
         this.guidedMode = true;
         this.direction = DIRECTION.FORWARD; // Forward or backward
@@ -371,9 +287,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return;
         }
 
+        // Normalize all origins at load time — guarantees non-null IDs, sorted positions, normalized choices
+        const normalized = allOriginPaths.map(normalizeOrigin);
+
         // Separate optional step origins from core origins
-        this.allOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex !== optionalStepIndex);
-        this.lineageOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex === optionalStepIndex);
+        this.allOrigins = normalized.filter((o) => o.stepIndex !== optionalStepIndex);
+        this.lineageOrigins = normalized.filter((o) => o.stepIndex === optionalStepIndex);
     }
 
     /* -------------------------------------------- */
@@ -414,12 +333,28 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const selectedOrigin = selectedItem ? await this._prepareSelectedOrigin(selectedItem) : null;
 
+        // System-aware values for template
+        const journeyTitleKey = `WH40K.OriginPath.JourneyTitle.${this.gameSystem}`;
+        const journeyTitle = game.i18n.localize(journeyTitleKey);
+        const hasOptionalStep = !!this.systemConfig.optionalStep;
+        const optionalStepLabel = hasOptionalStep
+            ? this._getLocalizedStepLabel(this.systemConfig.optionalStep.key)
+            : '';
+        const optionalStepIcon = this.systemConfig.optionalStep?.icon ?? 'fa-crown';
+
         return {
             actor: this.actor,
+            gameSystem: this.gameSystem,
             guidedMode: this.guidedMode,
             isForward: this.direction === DIRECTION.FORWARD,
             isBackward: this.direction === DIRECTION.BACKWARD,
             showLineage: this.showLineage,
+
+            // System-aware content
+            journeyTitle: journeyTitle !== journeyTitleKey ? journeyTitle : game.i18n.localize('WH40K.OriginPath.YourJourney'),
+            hasOptionalStep: hasOptionalStep,
+            optionalStepLabel: optionalStepLabel,
+            optionalStepIcon: optionalStepIcon,
 
             // Step navigation
             steps: this._prepareStepNavigation(),
@@ -484,22 +419,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _prepareLineageOrigins(): any {
         return this.lineageOrigins.map((origin) => {
-            const description = origin.system?.description?.value || '';
-            const shortDesc = this._stripHtml(description).substring(0, 150);
-
-            const oid = origin.id || origin._id;
             return {
-                id: oid,
+                id: origin.id,
                 uuid: origin.uuid,
                 name: origin.name,
                 img: origin.img,
-                shortDescription: shortDesc + (shortDesc.length >= 150 ? '...' : ''),
-                isSelected: (this.lineageSelection?.id || this.lineageSelection?._id) === oid,
+                shortDescription: origin.shortDescription,
+                isSelected: (this.lineageSelection?.id || this.lineageSelection?._id) === origin.id,
                 isDisabled: false,
-                isValidNext: true, // All lineage options are always valid
-                hasChoices: origin.system?.hasChoices || origin.system?.grants?.choices?.length > 0,
-                isAdvanced: origin.system?.isAdvancedOrigin || false,
-                xpCost: origin.system?.xpCost || 0,
+                isValidNext: true,
+                hasChoices: origin.hasChoices,
+                isAdvanced: origin.isAdvanced,
+                xpCost: origin.xpCost,
                 badges: true,
             };
         });
@@ -571,15 +502,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _getShortLabel(key: string): string {
-        const labels = {
-            homeWorld: 'World',
-            birthright: 'Birth',
-            lureOfTheVoid: 'Lure',
-            trialsAndTravails: 'Trials',
-            motivation: 'Motive',
-            career: 'Career',
-            lineage: 'Lineage',
-        };
+        const labels = this.registryConfig?.getStepShortLabels?.() ?? {};
         return labels[key] || key;
     }
 
@@ -594,22 +517,20 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         return stepLayout.cards.map((card) => {
             const origin = card.origin;
-            const description = origin.system?.description?.value || '';
-            const shortDesc = this._stripHtml(description).substring(0, 100);
 
             return {
-                id: origin.id || origin._id,
+                id: origin.id,
                 uuid: origin.uuid,
                 name: origin.name,
                 img: origin.img,
-                shortDescription: shortDesc + (shortDesc.length >= 100 ? '...' : ''),
+                shortDescription: origin.shortDescription || '',
                 isSelected: card.isSelected,
                 isDisabled: card.isDisabled,
                 isValidNext: card.isValidNext && !card.isSelected,
-                hasChoices: card.hasChoices || origin.system?.grants?.choices?.length > 0,
+                hasChoices: origin.hasChoices || card.hasChoices,
                 isAdvanced: card.isAdvanced,
                 xpCost: card.xpCost,
-                badges: card.hasChoices || card.isAdvanced || card.xpCost > 0,
+                badges: card.hasChoices || origin.hasChoices || card.isAdvanced || card.xpCost > 0,
             };
         });
     }
@@ -627,23 +548,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const modifiers = system?.modifiers?.characteristics || {};
 
         // Prepare characteristics with proper labels
-        const charLabels = {
-            weaponSkill: { label: 'Weapon Skill', short: 'WS' },
-            ballisticSkill: { label: 'Ballistic Skill', short: 'BS' },
-            strength: { label: 'Strength', short: 'S' },
-            toughness: { label: 'Toughness', short: 'T' },
-            agility: { label: 'Agility', short: 'Ag' },
-            intelligence: { label: 'Intelligence', short: 'Int' },
-            perception: { label: 'Perception', short: 'Per' },
-            willpower: { label: 'Willpower', short: 'WP' },
-            fellowship: { label: 'Fellowship', short: 'Fel' },
-            influence: { label: 'Influence', short: 'Inf' },
-        };
-
         const characteristics = [];
         for (const [key, value] of Object.entries(modifiers) as [string, any][]) {
             if (value !== 0) {
-                const info = charLabels[key] || { label: key, short: key.substring(0, 3).toUpperCase() };
+                const info = getCharacteristicDisplayInfo(key);
                 characteristics.push({
                     key: key,
                     label: info.label,
@@ -848,9 +756,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {string}
      * @private
      */
-    _getTrainingLabel(level: number): string {
-        const labels = { trained: 'Trained', plus10: '+10', plus20: '+20' };
-        return labels[level] || level || 'Trained';
+    _getTrainingLabel(level: string): string {
+        return getTrainingLabel(level, this.registryConfig);
     }
 
     /**
@@ -860,14 +767,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _getChoiceTypeLabel(type: string): string {
-        const labels = {
-            talent: 'Talent',
-            skill: 'Skill',
-            characteristic: 'Characteristic',
-            equipment: 'Equipment',
-            trait: 'Trait',
-        };
-        return labels[type] || type || 'Choice';
+        return getChoiceTypeLabel(type);
     }
 
     /**
@@ -1043,23 +943,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         // Convert char totals to array
-        const charShorts = {
-            weaponSkill: 'WS',
-            ballisticSkill: 'BS',
-            strength: 'S',
-            toughness: 'T',
-            agility: 'Ag',
-            intelligence: 'Int',
-            perception: 'Per',
-            willpower: 'WP',
-            fellowship: 'Fel',
-            influence: 'Inf',
-        };
-
         for (const [key, value] of Object.entries(charTotals) as [string, any][]) {
+            const info = getCharacteristicDisplayInfo(key);
             preview.characteristics.push({
                 key: key,
-                short: charShorts[key] || key.substring(0, 3).toUpperCase(),
+                short: info.short,
                 value: value,
             });
         }
@@ -1427,9 +1315,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         // Find the origin (check both main and lineage origins)
-        let origin = (this as any).allOrigins.find((o) => (o.id || o._id) === originId);
+        let origin = (this as any).allOrigins.find((o) => o.id === originId);
         if (!origin) {
-            origin = (this as any).lineageOrigins.find((o) => (o.id || o._id) === originId);
+            origin = (this as any).lineageOrigins.find((o) => o.id === originId);
         }
         if (!origin) return;
 
@@ -1500,9 +1388,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (!originId && !originUuid) return;
 
         // Find the origin (check both main and lineage origins)
-        let origin = (this as any).allOrigins.find((o) => (o.id || o._id) === originId);
+        let origin = (this as any).allOrigins.find((o) => o.id === originId);
         if (!origin) {
-            origin = (this as any).lineageOrigins.find((o) => (o.id || o._id) === originId);
+            origin = (this as any).lineageOrigins.find((o) => o.id === originId);
         }
         if (!origin) return;
 

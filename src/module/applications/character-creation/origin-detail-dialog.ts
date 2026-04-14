@@ -5,6 +5,8 @@
  * with a confirm button to select it.
  */
 
+import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
+
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginDetailDialog extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -120,8 +122,8 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             if (value !== 0) {
                 context.characteristics.push({
                     key: key,
-                    label: this._getCharacteristicLabel(key),
-                    short: this._getCharacteristicShort(key),
+                    label: getCharacteristicDisplayInfo(key).label,
+                    short: getCharacteristicDisplayInfo(key).short,
                     value: value,
                     positive: (value as number) > 0,
                 });
@@ -139,7 +141,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             name: skill.name,
             specialization: skill.specialization || null,
             level: skill.level || 'trained',
-            levelLabel: this._getTrainingLabel(skill.level),
+            levelLabel: getTrainingLabel(skill.level),
             displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
         context.hasSkills = context.skills.length > 0;
@@ -167,7 +169,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         // Choices
         context.choices = (grants.choices || []).map((choice) => ({
             type: choice.type,
-            typeLabel: this._getChoiceTypeLabel(choice.type),
+            typeLabel: getChoiceTypeLabel(choice.type),
             label: choice.label,
             count: choice.count || 1,
             options: choice.options.map((opt) => ({
@@ -257,81 +259,6 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         return game.i18n.localize(`WH40K.OriginPath.${key}`);
     }
 
-    /**
-     * Get localized characteristic label
-     * @param {string} key
-     * @returns {string}
-     * @private
-     */
-    _getCharacteristicLabel(key: string): string {
-        const labels = {
-            weaponSkill: 'Weapon Skill',
-            ballisticSkill: 'Ballistic Skill',
-            strength: 'Strength',
-            toughness: 'Toughness',
-            agility: 'Agility',
-            intelligence: 'Intelligence',
-            perception: 'Perception',
-            willpower: 'Willpower',
-            fellowship: 'Fellowship',
-            influence: 'Influence',
-        };
-        return (labels as any)[key] || key;
-    }
-
-    /**
-     * Get characteristic short label
-     * @param {string} key
-     * @returns {string}
-     * @private
-     */
-    _getCharacteristicShort(key: string): string {
-        const shorts = {
-            weaponSkill: 'WS',
-            ballisticSkill: 'BS',
-            strength: 'S',
-            toughness: 'T',
-            agility: 'Ag',
-            intelligence: 'Int',
-            perception: 'Per',
-            willpower: 'WP',
-            fellowship: 'Fel',
-            influence: 'Inf',
-        };
-        return (shorts as any)[key] || key.substring(0, 3).toUpperCase();
-    }
-
-    /**
-     * Get training level label
-     * @param {string} level
-     * @returns {string}
-     * @private
-     */
-    _getTrainingLabel(level: number): string {
-        const labels = {
-            trained: 'Trained',
-            plus10: '+10',
-            plus20: '+20',
-        };
-        return (labels as any)[level] || level;
-    }
-
-    /**
-     * Get choice type label
-     * @param {string} type
-     * @returns {string}
-     * @private
-     */
-    _getChoiceTypeLabel(type: string): string {
-        const labels = {
-            talent: 'Talent',
-            skill: 'Skill',
-            characteristic: 'Characteristic',
-            equipment: 'Equipment',
-            trait: 'Trait',
-        };
-        return (labels as any)[type] || type;
-    }
 
     /* -------------------------------------------- */
     /*  Action Handlers                             */

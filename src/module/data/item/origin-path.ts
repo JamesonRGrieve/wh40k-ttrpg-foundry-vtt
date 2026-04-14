@@ -393,10 +393,12 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         const activeModifiers = [];
 
         for (const choice of this.grants.choices) {
-            const selected = this.selectedChoices[choice.label] || [];
+            // DH2e/BC/OW packs use 'name' while RT uses 'label' — handle both
+            const choiceKey = choice.label || choice.name;
+            const selected = this.selectedChoices[choiceKey] || [];
 
             for (const selectedValue of selected) {
-                const option = choice.options.find((opt) => opt.value === selectedValue);
+                const option = choice.options.find((opt) => (opt.value || opt.name) === selectedValue);
                 if (!option?.grants) continue;
 
                 // Extract characteristic modifiers
@@ -404,7 +406,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     for (const [char, value] of Object.entries(option.grants.characteristics)) {
                         if (value !== 0) {
                             activeModifiers.push({
-                                source: choice.label,
+                                source: choiceKey,
                                 type: 'characteristic',
                                 key: char,
                                 value: value,
@@ -418,7 +420,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 if (option.grants.skills) {
                     for (const skill of option.grants.skills) {
                         activeModifiers.push({
-                            source: choice.label,
+                            source: choiceKey,
                             type: 'skill',
                             key: skill.name,
                             value: null,
@@ -431,7 +433,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 if (option.grants.talents) {
                     for (const talent of option.grants.talents) {
                         activeModifiers.push({
-                            source: choice.label,
+                            source: choiceKey,
                             type: 'talent',
                             key: talent.name,
                             value: null,
@@ -444,7 +446,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 if (option.grants.traits) {
                     for (const trait of option.grants.traits) {
                         activeModifiers.push({
-                            source: choice.label,
+                            source: choiceKey,
                             type: 'trait',
                             key: trait.name,
                             value: trait.level,
@@ -457,7 +459,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 if (option.grants.equipment) {
                     for (const equip of option.grants.equipment) {
                         activeModifiers.push({
-                            source: choice.label,
+                            source: choiceKey,
                             type: 'equipment',
                             key: equip.name,
                             value: equip.quantity,

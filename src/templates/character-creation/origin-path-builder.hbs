@@ -15,7 +15,7 @@
         </div>
 
         <div class="toolbar-center">
-            <h1 class="toolbar-title">{{localize "WH40K.OriginPath.YourJourney"}}</h1>
+            <h1 class="toolbar-title">{{journeyTitle}}</h1>
             
             {{!-- Mode and Direction Controls (inline with title) --}}
             <div class="toolbar-controls">
@@ -79,21 +79,23 @@
                 <div class="step-connector {{#if step.isComplete}}active{{/if}}"></div>
             {{/unless}}
         {{/each}}
-        {{!-- Lineage Step (shown after all 6 steps are complete) --}}
+        {{!-- Optional Step (e.g. Lineage for RT, Elite Advance for DH2e) --}}
+        {{#if hasOptionalStep}}
         {{#if status.stepsComplete}}
             <div class="step-connector {{#if hasLineageSelection}}active{{/if}}"></div>
-            <div class="step-nav-item lineage-step {{#if showLineage}}active{{/if}} {{#if hasLineageSelection}}complete{{/if}}" 
+            <div class="step-nav-item lineage-step {{#if showLineage}}active{{/if}} {{#if hasLineageSelection}}complete{{/if}}"
                  data-action="goToLineage"
-                 data-tooltip="{{localize 'WH40K.OriginPath.Lineage'}}{{#if hasLineageSelection}}: {{lineageSelection.name}}{{/if}}">
+                 data-tooltip="{{optionalStepLabel}}{{#if hasLineageSelection}}: {{lineageSelection.name}}{{/if}}">
                 <div class="step-number">
                     {{#if hasLineageSelection}}
                         <img src="{{lineageSelection.img}}" alt="{{lineageSelection.name}}" class="step-icon-img" />
                     {{else}}
-                        <i class="fa-solid fa-crown"></i>
+                        <i class="fa-solid {{optionalStepIcon}}"></i>
                     {{/if}}
                 </div>
-                <span class="step-label">{{localize "WH40K.OriginPath.Lineage"}}</span>
+                <span class="step-label">{{optionalStepLabel}}</span>
             </div>
+        {{/if}}
         {{/if}}
     </nav>
 
@@ -472,21 +474,22 @@
             {{/if}}
         </div>
         <div class="footer-actions">
-            {{!-- Lineage controls when on lineage step --}}
-            {{#if showLineage}}
-                <button type="button" class="skip-lineage-btn" data-action="skipLineage">
-                    <i class="fa-solid fa-forward"></i>
-                    {{localize "WH40K.OriginPath.SkipLineage"}}
-                </button>
-            {{/if}}
-            {{!-- Go to Lineage button when all 6 steps are complete but not on lineage step --}}
-            {{#if status.stepsComplete}}
-                {{#unless showLineage}}
-                    <button type="button" class="lineage-btn" data-action="goToLineage">
-                        <i class="fa-solid fa-crown"></i>
-                        {{localize "WH40K.OriginPath.GoToLineage"}}
+            {{!-- Optional step controls (Lineage for RT, Elite for DH2e, etc.) --}}
+            {{#if hasOptionalStep}}
+                {{#if showLineage}}
+                    <button type="button" class="skip-lineage-btn" data-action="skipLineage">
+                        <i class="fa-solid fa-forward"></i>
+                        {{localize "WH40K.OriginPath.SkipLineage"}}
                     </button>
-                {{/unless}}
+                {{/if}}
+                {{#if status.stepsComplete}}
+                    {{#unless showLineage}}
+                        <button type="button" class="lineage-btn" data-action="goToLineage">
+                            <i class="fa-solid {{optionalStepIcon}}"></i>
+                            {{optionalStepLabel}}
+                        </button>
+                    {{/unless}}
+                {{/if}}
             {{/if}}
             <button type="button" class="commit-btn" data-action="commit" {{#unless status.canCommit}}disabled{{/unless}}>
                 <i class="fa-solid fa-save"></i>

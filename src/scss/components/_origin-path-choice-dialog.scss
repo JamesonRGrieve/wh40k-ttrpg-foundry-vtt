@@ -269,6 +269,66 @@
 }
 
 /* -------------------------------------------- */
+/*  Specialization Sub-Select                   */
+/* -------------------------------------------- */
+
+.choice-card.pending-spec {
+    border-color: var(--wh40k-gold);
+    background: linear-gradient(135deg, rgba(201, 162, 39, 0.08), rgba(201, 162, 39, 0.02));
+    box-shadow: 0 0 10px rgba(201, 162, 39, 0.2);
+}
+
+.specialization-select {
+    display: flex;
+    align-items: center;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-sm);
+    margin-top: var(--wh40k-space-xs);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--wh40k-radius-sm);
+    border: 1px solid var(--wh40k-bronze);
+
+    .spec-label {
+        font-size: 0.8rem;
+        color: var(--wh40k-gold);
+        font-weight: 600;
+        white-space: nowrap;
+
+        i {
+            margin-right: 0.25rem;
+        }
+    }
+
+    select {
+        flex: 1;
+        padding: 0.35rem 0.5rem;
+        background: var(--wh40k-input-bg);
+        border: 1px solid var(--wh40k-bronze);
+        border-radius: var(--wh40k-radius-xs);
+        color: var(--wh40k-text-light);
+        font-size: 0.9rem;
+        cursor: pointer;
+
+        &:focus {
+            outline: none;
+            border-color: var(--wh40k-gold);
+            box-shadow: 0 0 6px rgba(201, 162, 39, 0.3);
+        }
+
+        option {
+            background: var(--wh40k-bg-dark);
+            color: var(--wh40k-text-light);
+        }
+    }
+}
+
+.chosen-spec {
+    font-weight: normal;
+    color: var(--wh40k-gold);
+    font-size: 0.9em;
+}
+
+/* -------------------------------------------- */
 /*  Footer Actions                              */
 /* -------------------------------------------- */
 
