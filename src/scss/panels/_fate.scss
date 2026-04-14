@@ -19,32 +19,66 @@
     .wh40k-fate-display {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-md;
+        gap: $wh40k-space-sm;
         align-items: center;
     }
 
-    // Current/Max Label
-    .wh40k-fate-label {
+    // Tracker with +/- buttons (mirrors fatigue tracker)
+    .wh40k-fate-tracker {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        gap: 2px;
+        gap: $wh40k-space-sm;
     }
 
-    .wh40k-fate-count {
+    .wh40k-fate-btn {
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--wh40k-panel-bg-translucent);
+        border: 2px solid var(--wh40k-fate-border);
+        border-radius: 6px;
+        color: var(--wh40k-fate-secondary);
+        cursor: pointer;
+        font-size: 0.75rem;
+        transition: all 0.15s ease;
+
+        &:hover {
+            background: var(--wh40k-fate-bg);
+            border-color: var(--wh40k-fate-secondary);
+            transform: scale(1.1);
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+
+    .wh40k-fate-value {
+        display: flex;
+        align-items: baseline;
+        gap: 2px;
         font-family: 'Modesto Condensed', serif;
-        font-size: 1.8rem;
+    }
+
+    .wh40k-fate-current {
+        font-size: 1.6rem;
         font-weight: 700;
         color: var(--wh40k-fate-secondary);
         text-shadow: 0 1px 3px var(--wh40k-fate-bg);
     }
 
-    .wh40k-fate-subtitle {
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+    .wh40k-fate-sep {
+        font-size: 1rem;
         color: var(--wh40k-text-subtle);
+    }
+
+    .wh40k-fate-max {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--wh40k-text-muted);
     }
 
     // ============================================
@@ -59,7 +93,7 @@
         padding: $wh40k-space-sm 0;
     }
 
-    .wh40k-fate-star {
+    .wh40k-fate-pip {
         width: 42px;
         height: 42px;
         padding: 0;
@@ -94,7 +128,7 @@
     }
 
     // Filled star (available fate)
-    .wh40k-fate-star--filled {
+    .wh40k-fate-pip--filled {
         i {
             color: var(--wh40k-fate-secondary);
             filter: drop-shadow(0 3px 8px var(--wh40k-fate-border));
@@ -134,7 +168,7 @@
         }
     }
 
-    .wh40k-fate-star.wh40k-sparkle {
+    .wh40k-fate-pip.wh40k-sparkle {
         animation: sparkle 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
@@ -154,12 +188,12 @@
         }
     }
 
-    .wh40k-fate-star.wh40k-spending {
+    .wh40k-fate-pip.wh40k-spending {
         animation: fade-spend 0.5s ease-out forwards;
     }
 
     // Empty state
-    .wh40k-fate-empty {
+    .wh40k-fate-none {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -468,7 +502,7 @@
     // ============================================
 
     .wh40k-fate-pips-edit {
-        .wh40k-fate-star {
+        .wh40k-fate-pip {
             width: 48px;
             height: 48px;
             position: relative;
@@ -488,7 +522,7 @@
                 pointer-events: none;
             }
 
-            &.wh40k-fate-star--filled .wh40k-star-number {
+            &.wh40k-fate-pip--filled .wh40k-star-number {
                 color: var(--wh40k-fate-secondary);
                 background: var(--wh40k-fate-bg);
                 border-color: var(--wh40k-fate-border);
