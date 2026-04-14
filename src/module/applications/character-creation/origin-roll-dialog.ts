@@ -125,6 +125,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         context.formula = this.formula;
         context.description = this._getDescription();
         context.originName = this.context.originItem.name;
+        context.originImg = this.context.originItem.img;
         context.actorName = this.context.actor.name;
 
         // Roll result data
@@ -331,32 +332,37 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             diceResult = Math.ceil(diceValue / 2);
         }
 
-        // Calculate static components
+        // Parse all components of the formula (e.g. "8+1d5", "2xTB+1d5+2")
         let staticTotal = 0;
-        const breakdownParts = [];
+        const breakdownParts: string[] = [];
+
+        // Strip the dice term to isolate static parts
+        const withoutDice = formula
+            .replace(/\d+d\d+/i, '')
+            .replace(/\+\s*\+/g, '+')
+            .replace(/^\+|\+$/g, '');
 
         // Handle TB multiplier
-        const tbMatch = formula.match(/(\d+)xTB/i);
+        const tbMatch = withoutDice.match(/(\d+)xTB/i);
         if (tbMatch) {
             const multiplier = parseInt(tbMatch[1]);
             staticTotal += multiplier * tb;
             breakdownParts.push(`${multiplier}×${tb}`);
         }
 
-        // Handle the dice
-        if (is1d5) {
-            breakdownParts.push(`[${diceResult}]`);
-        } else if (is1d10) {
-            breakdownParts.push(`[${diceResult}]`);
+        // Handle all plain number terms (leading, trailing, or multiple)
+        const staticWithoutTB = withoutDice.replace(/\d+xTB/i, '');
+        const numberMatches = staticWithoutTB.match(/\d+/g);
+        if (numberMatches) {
+            for (const n of numberMatches) {
+                const val = parseInt(n);
+                staticTotal += val;
+                breakdownParts.push(`${val}`);
+            }
         }
 
-        // Handle additional static modifiers like +2
-        const additionalMatch = formula.match(/\+(\d+)$/);
-        if (additionalMatch) {
-            const additional = parseInt(additionalMatch[1]);
-            staticTotal += additional;
-            breakdownParts.push(`${additional}`);
-        }
+        // Add the dice result
+        breakdownParts.push(`[${diceResult}]`);
 
         const finalValue = staticTotal + diceResult;
         const breakdownText = `${breakdownParts.join(' + ')} = ${finalValue}`;
@@ -388,6 +394,23 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      */
     async _handleManualFate(): Promise<void> {
         const formula = this.formula;
+
+        // Plain number formula (e.g. "3") — no roll needed
+        if (/^\d+$/.test(formula.trim())) {
+            const total = parseInt(formula.trim());
+            this.rollResult = {
+                type: this.rollType,
+                formula: this.formula,
+                rolled: total,
+                total: total,
+                breakdown: `${total} Fate Points (fixed)`,
+                manual: true,
+                timestamp: Date.now(),
+            };
+            this.rollHistory.push({ timestamp: Date.now(), result: total, breakdown: `${total} (fixed)` });
+            await this.render();
+            return;
+        }
 
         // Parse the conditional format: "(1-5|=2),(6-10|=3)"
         const conditionRegex = /\((\d+)-(\d+)\|=(\d+)\)/g;
@@ -540,6 +563,19 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      */
     async _rollFate(): Promise<any> {
         const formula = this.formula;
+
+        // Plain number formula (e.g. "3") — no roll needed, fixed value
+        if (/^\d+$/.test(formula.trim())) {
+            const total = parseInt(formula.trim());
+            return {
+                type: 'fate',
+                formula: formula,
+                rolled: total,
+                total: total,
+                breakdown: `${total} Fate Points (fixed)`,
+                timestamp: Date.now(),
+            };
+        }
 
         // Fate formulas are typically conditional: "(1-5|=2),(6-10|=3)"
         // This means: roll 1d10, if 1-5 → 2 fate, if 6-10 → 3 fate
