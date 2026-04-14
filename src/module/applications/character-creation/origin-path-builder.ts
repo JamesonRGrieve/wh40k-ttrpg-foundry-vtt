@@ -1419,6 +1419,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static async #previewOriginCard(event: Event, target: HTMLElement): Promise<void> {
         const originId = target.dataset.originId;
         const originUuid = target.dataset.originUuid;
+        console.log(`previewOriginCard: id=${originId}, uuid=${originUuid}, disabled=${target.classList.contains('disabled')}, allOrigins=${(this as any).allOrigins.length}`);
 
         if (!originId && !originUuid) return;
 
