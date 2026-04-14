@@ -179,23 +179,21 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                         (choice.options || []).map(async (option) => {
                             const optValue = option.value || option.label;
                             const optLabel = option.label || option.value;
-                            const optDesc = option.description || null;
+                            let optDesc = option.description || null;
                             const optSpecs = option.specializations || null;
+                            let statBlock: string | null = null;
 
-                            // Extract UUID from option.uuid OR from grants (talents/skills/traits/equipment)
+                            // Extract UUID from option.uuid OR from grants
                             let optUuid = typeof option === 'object' ? option.uuid : null;
                             if (!optUuid && typeof option === 'object' && option.grants) {
-                                // Check grants for items with UUIDs
                                 const grants = option.grants;
                                 if (grants.talents?.length > 0 && grants.talents[0].uuid) {
                                     optUuid = grants.talents[0].uuid;
                                 } else if (grants.skills?.length > 0) {
-                                    // Handle skills - they may need UUID lookup
                                     const skillData = grants.skills[0];
                                     if (skillData.uuid) {
                                         optUuid = skillData.uuid;
                                     } else {
-                                        // Parse skill name and specialization, then look up UUID
                                         const skillName = skillData.name || skillData;
                                         const specialization = skillData.specialization || null;
                                         optUuid = await findSkillUuid(skillName, specialization);
@@ -207,19 +205,33 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                                 }
                             }
 
-                            // Determine if this option is selected (check composite value for specialization options)
+                            // Fetch compendium description and stat block for item-type choices
+                            const itemChoiceTypes = new Set(['talent', 'equipment', 'gear', 'trait', 'psychicPower']);
+                            if (!optDesc && itemChoiceTypes.has(choice.type)) {
+                                const resolved = await this._resolveCompendiumItem(optLabel, optUuid);
+                                if (resolved) {
+                                    if (!optUuid) optUuid = resolved.uuid;
+                                    const rawDesc = resolved.system?.description?.value || '';
+                                    if (rawDesc) {
+                                        optDesc = this._stripAndTruncate(rawDesc, 200);
+                                    }
+                                    statBlock = this._buildStatBlock(resolved);
+                                }
+                            }
+
+                            // Determine if this option is selected
                             const specKey = `${choiceKey}::${optValue}`;
                             const chosenSpec = this.specializationSelections.get(specKey) || '';
                             const compositeValue = optSpecs && chosenSpec ? `${optValue} (${chosenSpec})` : optValue;
                             const isSelected = selections.has(compositeValue);
 
-                            // Check if this option is pending specialization selection
                             const isPendingSpec = this._pendingSpecOption?.choiceKey === choiceKey && this._pendingSpecOption?.optionValue === optValue;
 
                             return {
                                 value: optValue,
                                 label: optLabel,
                                 description: optDesc,
+                                statBlock: statBlock,
                                 uuid: optUuid,
                                 selected: !!isSelected,
                                 disabled: !isSelected && !isPendingSpec && remaining <= 0,
@@ -238,6 +250,85 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         context.allChoicesComplete = context.choices.every((c) => c.remaining === 0);
 
         return context;
+    }
+
+    /**
+     * Resolve a compendium item by UUID or name search.
+     * @private
+     */
+    async _resolveCompendiumItem(name: string, uuid?: string | null): Promise<any> {
+        if (uuid) {
+            try {
+                const item = await fromUuid(uuid);
+                if (item) return item;
+            } catch {
+                /* fall through to name search */
+            }
+        }
+        if (!name) return null;
+        const nameLower = name.toLowerCase();
+        for (const pack of game.packs) {
+            if (pack.documentName !== 'Item') continue;
+            const index = await pack.getIndex();
+            const match = index.find((e: any) => e.name.toLowerCase() === nameLower);
+            if (match) return pack.getDocument(match._id);
+        }
+        return null;
+    }
+
+    /**
+     * Strip HTML and truncate to a max length.
+     * @private
+     */
+    _stripAndTruncate(html: string, maxLen: number): string {
+        const text = html
+            .replace(/<\/(?:h[1-6]|p|div|li|tr|blockquote)>/gi, ' ')
+            .replace(/<[^>]*>/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        return text.length > maxLen ? `${text.substring(0, maxLen)}...` : text;
+    }
+
+    /**
+     * Build a compact stat summary for weapons/armour/gear.
+     * @private
+     */
+    _buildStatBlock(item: any): string | null {
+        const sys = item.system;
+        if (!sys) return null;
+        const parts: string[] = [];
+
+        if (item.type === 'weapon') {
+            const atk = sys.attack || {};
+            const dmg = sys.damage || {};
+            if (atk.type) parts.push(atk.type === 'melee' ? 'Melee' : 'Ranged');
+            if (sys.class) parts.push(sys.class);
+            if (atk.range?.value) parts.push(`Range ${atk.range.value}m`);
+            const rof = atk.rateOfFire;
+            if (rof) {
+                const modes = [];
+                if (rof.single) modes.push('S');
+                if (rof.semi) modes.push(`${rof.semi}`);
+                if (rof.full) modes.push(`${rof.full}`);
+                if (modes.length) parts.push(`RoF ${modes.join('/')}`);
+            }
+            if (dmg.formula) {
+                let dmgStr = dmg.formula;
+                if (dmg.bonus) dmgStr += `+${dmg.bonus}`;
+                if (dmg.type) dmgStr += ` ${dmg.type[0].toUpperCase()}`;
+                parts.push(`Dmg ${dmgStr}`);
+            }
+            if (dmg.penetration) parts.push(`Pen ${dmg.penetration}`);
+            if (sys.clip?.max) parts.push(`Clip ${sys.clip.max}`);
+            if (sys.reload) parts.push(`Rld ${sys.reload}`);
+        } else if (item.type === 'armour') {
+            if (sys.armourPoints != null) parts.push(`AP ${sys.armourPoints}`);
+            if (sys.maxAgility != null) parts.push(`Max Ag ${sys.maxAgility}`);
+            if (sys.coverage) parts.push(sys.coverage);
+        }
+
+        if (sys.weight) parts.push(`${sys.weight} kg`);
+        return parts.length > 0 ? parts.join(' · ') : null;
     }
 
     /**
