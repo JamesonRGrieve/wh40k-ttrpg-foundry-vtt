@@ -355,13 +355,6 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const optionalStepIndex = this.systemConfig.optionalStep?.stepIndex;
         const allOriginPaths: any[] = [];
 
-        // Debug: log available packs to diagnose lookup failures
-        if (packNames.length > 0) {
-            const availablePacks = [...game.packs.keys()];
-            console.log(`OriginPathBuilder: Looking for packs:`, packNames.map(n => `wh40k-rpg.${n}`));
-            console.log(`OriginPathBuilder: ALL available packs (${availablePacks.length}):`, availablePacks);
-        }
-
         for (const packName of packNames) {
             // Try fully qualified ID first, then metadata.name fallback
             const pack = (game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`)) as any;
@@ -373,25 +366,21 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             allOriginPaths.push(...documents.filter((d: any) => d.type === 'originPath'));
         }
 
-        console.log(`OriginPathBuilder: Loaded ${allOriginPaths.length} origin items from ${packNames.length} packs`);
-        for (const packName of packNames) {
-            const pack = (game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`)) as any;
-            if (pack) {
-                const docs = await pack.getDocuments();
-                const origins = docs.filter((d: any) => d.type === 'originPath');
-                console.log(`  Pack ${packName}: ${docs.length} docs, ${origins.length} originPath items`);
-            }
-        }
-
         if (allOriginPaths.length === 0) {
             console.warn('No origin path items found in configured compendiums');
             return;
         }
 
+        // Normalize IDs — compendium documents may have null .id but valid ._id
+        for (const origin of allOriginPaths) {
+            if (!origin.id && origin._id) {
+                origin.id = origin._id;
+            }
+        }
+
         // Separate optional step origins from core origins
         this.allOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex !== optionalStepIndex);
         this.lineageOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex === optionalStepIndex);
-        console.log(`OriginPathBuilder: ${this.allOrigins.length} core origins, ${this.lineageOrigins.length} optional origins (optionalStepIndex=${optionalStepIndex})`);
     }
 
     /* -------------------------------------------- */
