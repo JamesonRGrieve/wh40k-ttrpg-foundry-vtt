@@ -347,7 +347,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _loadOrigins(): Promise<void> {
-        if (this.allOrigins.length > 0 && this.lineageOrigins.length > 0) return;
+        if (this._originsLoaded) return;
+        this._originsLoaded = true;
 
         // Load from all configured packs for this game system
         const packNames = this.systemConfig.packs;
@@ -372,6 +373,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             allOriginPaths.push(...documents.filter((d: any) => d.type === 'originPath'));
         }
 
+        console.log(`OriginPathBuilder: Loaded ${allOriginPaths.length} origin items from ${packNames.length} packs`);
+        for (const packName of packNames) {
+            const pack = (game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`)) as any;
+            if (pack) {
+                const docs = await pack.getDocuments();
+                const origins = docs.filter((d: any) => d.type === 'originPath');
+                console.log(`  Pack ${packName}: ${docs.length} docs, ${origins.length} originPath items`);
+            }
+        }
+
         if (allOriginPaths.length === 0) {
             console.warn('No origin path items found in configured compendiums');
             return;
@@ -380,6 +391,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Separate optional step origins from core origins
         this.allOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex !== optionalStepIndex);
         this.lineageOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex === optionalStepIndex);
+        console.log(`OriginPathBuilder: ${this.allOrigins.length} core origins, ${this.lineageOrigins.length} optional origins (optionalStepIndex=${optionalStepIndex})`);
     }
 
     /* -------------------------------------------- */
@@ -1161,6 +1173,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _calculateStatus(): any {
+        const totalSteps = this.systemConfig.coreSteps.length;
         const stepsCount = this.selections.size;
         let pendingChoices = 0;
         let pendingRolls = 0;
@@ -1192,11 +1205,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         return {
             stepsCount: stepsCount,
-            stepsComplete: stepsCount === 6,
+            totalSteps: totalSteps,
+            stepsComplete: stepsCount >= totalSteps,
             choicesComplete: pendingChoices === 0,
             pendingChoices: pendingChoices,
             pendingRolls: pendingRolls,
-            canCommit: stepsCount === 6 && pendingChoices === 0,
+            canCommit: stepsCount >= totalSteps && pendingChoices === 0,
         };
     }
 
