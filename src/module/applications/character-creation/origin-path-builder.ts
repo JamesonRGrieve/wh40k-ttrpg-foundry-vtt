@@ -391,12 +391,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             currentOrigins = this._prepareLineageOrigins();
             selectedItem = this.lineageSelection;
         } else {
-            // Use chart layout for core steps - pass direction for correct connectivity
+            // Use chart layout for core steps - pass direction and step keys for system support
+            const stepKeys = this.systemConfig.coreSteps.map((s) => s.key || s.step);
             const chartLayout = OriginChartLayout.computeFullChart(
                 this.allOrigins,
                 this.selections,
                 this.guidedMode,
-                this.direction, // Pass direction for bidirectional navigation support
+                this.direction,
+                stepKeys,
             );
 
             // Find the step layout matching current step
@@ -1207,7 +1209,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Clear and randomize
         (this as any).selections.clear();
 
-        const chartLayout = OriginChartLayout.computeFullChart((this as any).allOrigins, (this as any).selections, false);
+        const coreStepKeys = (this as any).systemConfig.coreSteps.map((s) => s.key || s.step);
+        const chartLayout = OriginChartLayout.computeFullChart((this as any).allOrigins, (this as any).selections, false, 'forward', coreStepKeys);
 
         const coreSteps = (this as any).systemConfig.coreSteps;
         for (let i = 0; i < coreSteps.length; i++) {

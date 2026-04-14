@@ -29,7 +29,7 @@ export class OriginChartLayout {
      * @param {string} direction - Direction of navigation ("forward" or "backward")
      * @returns {Object} Layout data organized by step
      */
-    static computeFullChart(allOrigins, currentSelections, guidedMode = true, direction = DIRECTION.FORWARD) {
+    static computeFullChart(allOrigins, currentSelections, guidedMode = true, direction = DIRECTION.FORWARD, stepKeys?: string[]) {
         const layout = {
             steps: [],
             maxColumns: 0,
@@ -38,8 +38,8 @@ export class OriginChartLayout {
         // Group origins by step
         const stepGroups = this._groupByStep(allOrigins);
 
-        // Get step order based on direction
-        const stepOrder = this._getStepOrder();
+        // Get step order — use provided keys or fall back to RT default
+        const stepOrder = stepKeys ?? this._getStepOrder();
 
         // Compute layout for each step (always in forward order for consistent indexing)
         for (const [stepIndex, stepKey] of stepOrder.entries()) {
