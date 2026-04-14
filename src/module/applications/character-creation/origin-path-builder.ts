@@ -347,6 +347,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             journeyTitle: journeyTitle !== journeyTitleKey ? journeyTitle : game.i18n.localize('WH40K.OriginPath.YourJourney'),
             hasOptionalStep: hasOptionalStep,
             optionalStepLabel: optionalStepLabel,
+            optionalStepDesc: hasOptionalStep ? this._getLocalizedStepDescription(this.systemConfig.optionalStep.descKey) : '',
             optionalStepIcon: optionalStepIcon,
 
             // Step navigation
@@ -1339,12 +1340,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Confirm the currently previewed selection and advance to next step
      */
     static async #confirmSelection(event: Event, target: HTMLElement): Promise<void> {
+        const currentStep = (this as any).currentStep;
+
+        // Use previewed origin, or fall back to already-confirmed selection for this step
         if (!(this as any).previewedOrigin) {
+            const existing = (this as any).selections.get(currentStep.step);
+            if (existing) {
+                // Already confirmed — nothing to do, just advance
+                (this as any).render();
+                return;
+            }
             (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.NoPreviewedOrigin'));
             return;
         }
-
-        const currentStep = (this as any).currentStep;
 
         // Check if we're changing an existing selection in guided mode
         if ((this as any).guidedMode && (this as any).selections.has(currentStep.step)) {

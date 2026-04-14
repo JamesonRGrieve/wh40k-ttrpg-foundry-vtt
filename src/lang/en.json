@@ -552,6 +552,7 @@
             "NoPreviewedOrigin": "No origin selected to confirm",
             "Lineage": "Lineage",
             "LineageDesc": "Noble bloodlines may grant additional abilities and connections. This step is optional.",
+            "Skip": "Skip",
             "SkipLineage": "Skip Lineage",
             "GoToLineage": "Choose Lineage",
             "Optional": "Optional",
