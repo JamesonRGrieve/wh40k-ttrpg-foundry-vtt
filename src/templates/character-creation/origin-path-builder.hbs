@@ -203,7 +203,7 @@
                             {{!-- Skills (clickable) --}}
                             {{#if selectedOrigin.grants.hasSkills}}
                                 <div class="grants-category">
-                                    <span class="category-label">{{localize "WH40K.Skills"}}</span>
+                                    <span class="category-label">{{localize "WH40K.Skills.Header"}}</span>
                                     <div class="category-items">
                                         {{#each selectedOrigin.grants.skills as |skill|}}
                                             <div class="grant-tag skill-tag clickable" 
@@ -258,7 +258,7 @@
                             {{!-- Equipment --}}
                             {{#if selectedOrigin.grants.hasEquipment}}
                                 <div class="grants-category">
-                                    <span class="category-label">{{localize "WH40K.Equipment"}}</span>
+                                    <span class="category-label">{{localize "WH40K.EquipmentGranted"}}</span>
                                     <div class="category-items">
                                         {{#each selectedOrigin.grants.equipment as |item|}}
                                             <div class="grant-tag equipment-tag">
@@ -328,7 +328,7 @@
                                 <div class="roll-actions">
                                     <button type="button" class="roll-btn" data-action="rollStat" data-stat-type="wounds" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
                                         <i class="fa-solid fa-dice"></i>
-                                        {{#if selectedOrigin.rolls.wounds.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll"}}{{/if}}
+                                        {{#if selectedOrigin.rolls.wounds.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll.Roll"}}{{/if}}
                                     </button>
                                 </div>
                             </div>
@@ -348,7 +348,7 @@
                                 <div class="roll-actions">
                                     <button type="button" class="roll-btn" data-action="rollStat" data-stat-type="fate" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
                                         <i class="fa-solid fa-dice"></i>
-                                        {{#if selectedOrigin.rolls.fate.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll"}}{{/if}}
+                                        {{#if selectedOrigin.rolls.fate.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll.Roll"}}{{/if}}
                                     </button>
                                 </div>
                             </div>
@@ -396,7 +396,7 @@
             {{/if}}
             {{#if preview.skills.length}}
                 <div class="preview-category">
-                    <div class="category-title">{{localize "WH40K.Skills"}}</div>
+                    <div class="category-title">{{localize "WH40K.Skills.Header"}}</div>
                     <div class="category-items">
                         {{#each preview.skills as |skill|}}
                             <div class="grant-tag skill-tag {{#if skill.uuid}}clickable{{/if}} {{#if skill.fromChoice}}from-choice{{/if}}"
