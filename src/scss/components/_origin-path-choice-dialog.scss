@@ -223,15 +223,22 @@
     line-height: 1.3;
 }
 
+.option-stat-block {
+    margin: 0;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    font-family: var(--wh40k-font-mono, monospace);
+    color: var(--wh40k-gold);
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--wh40k-radius-sm);
+    letter-spacing: 0.02em;
+}
+
 .option-description {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--wh40k-text-muted);
-    line-height: 1.5;
-    display: -webkit-box;
-    -webkit-line-clamp: 4; /* Show up to 4 lines */
-    -webkit-box-orient: vertical;
-    overflow: visible; /* Changed from hidden to show full text */
+    line-height: 1.4;
 }
 
 .view-item-btn {
