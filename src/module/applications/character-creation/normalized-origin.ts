@@ -82,8 +82,12 @@ export interface NormalizedOrigin {
  */
 function stripHtml(html: string): string {
     if (!html) return '';
-    // Use a simple regex for server-side or pre-render contexts
-    return html.replace(/<[^>]*>/g, '').trim();
+    // Replace block-level closing tags with a space so headings don't merge with body text
+    return html
+        .replace(/<\/(?:h[1-6]|p|div|li|tr|blockquote)>/gi, ' ')
+        .replace(/<[^>]*>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
 }
 
 /**
@@ -162,7 +166,12 @@ export function normalizeOrigin(doc: any): NormalizedOrigin {
     const grants = normalizeGrants(system.grants);
     const positions = resolvePositions(system);
     const description = system.description?.value || '';
-    const stripped = stripHtml(description);
+    const name = doc.name || '';
+    // Strip HTML and remove leading heading that duplicates the name
+    let stripped = stripHtml(description);
+    if (name && stripped.startsWith(name)) {
+        stripped = stripped.substring(name.length).trim();
+    }
 
     return {
         id: resolveId(doc),
@@ -175,7 +184,7 @@ export function normalizeOrigin(doc: any): NormalizedOrigin {
         positions: positions,
         primaryPosition: system.primaryPosition ?? positions[Math.floor(positions.length / 2)] ?? 4,
         description: description,
-        shortDescription: stripped.length > 150 ? stripped.substring(0, 150) + '...' : stripped,
+        shortDescription: stripped.length > 150 ? `${stripped.substring(0, 150)}...` : stripped,
         requirements: {
             previousSteps: system.requirements?.previousSteps || [],
             excludedSteps: system.requirements?.excludedSteps || [],
