@@ -9,14 +9,14 @@
  * - Live preview of accumulated bonuses
  */
 
-import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
-import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
+import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import { normalizeOrigin } from './normalized-origin.ts';
+import OriginDetailDialog from './origin-detail-dialog.ts';
 import OriginPathChoiceDialog from './origin-path-choice-dialog.ts';
 import OriginRollDialog from './origin-roll-dialog.ts';
-import OriginDetailDialog from './origin-detail-dialog.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -273,7 +273,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         for (const packName of packNames) {
             // Try fully qualified ID first, then metadata.name fallback
-            const pack = (game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`)) as any;
+            const pack = (game.packs.get(`wh40k-rpg.${packName}`) ??
+                game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`)) as any;
             if (!pack) {
                 console.warn(`Origin path compendium '${packName}' not found`);
                 continue;
@@ -315,13 +316,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         } else {
             // Use chart layout for core steps - pass direction and step keys for system support
             const stepKeys = this.systemConfig.coreSteps.map((s) => s.key || s.step);
-            const chartLayout = OriginChartLayout.computeFullChart(
-                this.allOrigins,
-                this.selections,
-                this.guidedMode,
-                this.direction,
-                stepKeys,
-            );
+            const chartLayout = OriginChartLayout.computeFullChart(this.allOrigins, this.selections, this.guidedMode, this.direction, stepKeys);
 
             // Find the step layout matching current step
             const stepIndex = this.systemConfig.coreSteps.findIndex((s) => s.key === currentStep.key);
@@ -337,9 +332,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const journeyTitleKey = `WH40K.OriginPath.JourneyTitle.${this.gameSystem}`;
         const journeyTitle = game.i18n.localize(journeyTitleKey);
         const hasOptionalStep = !!this.systemConfig.optionalStep;
-        const optionalStepLabel = hasOptionalStep
-            ? this._getLocalizedStepLabel(this.systemConfig.optionalStep.key)
-            : '';
+        const optionalStepLabel = hasOptionalStep ? this._getLocalizedStepLabel(this.systemConfig.optionalStep.key) : '';
         const optionalStepIcon = this.systemConfig.optionalStep?.icon ?? 'fa-crown';
 
         return {
@@ -549,7 +542,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         // Prepare characteristics with proper labels
         const characteristics = [];
-        for (const [key, value] of Object.entries(modifiers) as [string, any][]) {
+        for (const [key, value] of Object.entries(modifiers)) {
             if (value !== 0) {
                 const info = getCharacteristicDisplayInfo(key);
                 characteristics.push({
@@ -565,9 +558,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Prepare choices with detailed info
         const choices = [];
         const selectedChoices = system?.selectedChoices || {};
+        const choiceLabelCounts: Record<string, number> = {};
         if (grants.choices?.length > 0) {
             for (const choice of grants.choices) {
-                const choiceKey = choice.label || choice.name || '';
+                const baseLabel = choice.label || choice.name || '';
+                choiceLabelCounts[baseLabel] = (choiceLabelCounts[baseLabel] || 0) + 1;
+                const suffix = choiceLabelCounts[baseLabel] > 1 ? ` (${choiceLabelCounts[baseLabel]})` : '';
+                const choiceKey = `${baseLabel}${suffix}`;
                 const selection = selectedChoices[choiceKey];
                 const selectedLabels = [];
                 if (selection && Array.isArray(selection)) {
@@ -686,7 +683,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             if (talent.uuid) {
                 try {
-                    const item = await fromUuid(talent.uuid) as any;
+                    const item = (await fromUuid(talent.uuid)) as any;
                     if (item) {
                         hasItem = true;
                         const desc = item.system?.description?.value;
@@ -725,7 +722,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             if (trait.uuid) {
                 try {
-                    const item = await fromUuid(trait.uuid) as any;
+                    const item = (await fromUuid(trait.uuid)) as any;
                     if (item) {
                         hasItem = true;
                         const desc = item.system?.description?.value;
@@ -799,7 +796,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const selectedChoices = system?.selectedChoices || {};
 
             // Accumulate base characteristics from modifiers
-            for (const [key, value] of Object.entries(modifiers) as [string, any][]) {
+            for (const [key, value] of Object.entries(modifiers)) {
                 if (value !== 0) {
                     charTotals[key] = (charTotals[key] || 0) + value;
                 }
@@ -856,10 +853,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 }
             }
 
-            // Process choice grants
+            // Process choice grants (deduplicate labels to match dialog keys)
+            const previewLabelCounts: Record<string, number> = {};
             if (grants.choices && grants.choices.length > 0) {
                 for (const choice of grants.choices) {
-                    const selectedValues = selectedChoices[choice.label || choice.name] || [];
+                    const base = choice.label || choice.name || '';
+                    previewLabelCounts[base] = (previewLabelCounts[base] || 0) + 1;
+                    const suffix = previewLabelCounts[base] > 1 ? ` (${previewLabelCounts[base]})` : '';
+                    const choiceKey = `${base}${suffix}`;
+                    const selectedValues = selectedChoices[choiceKey] || [];
                     for (const selectedValue of selectedValues) {
                         const option = choice.options?.find((o) => o.value === selectedValue);
                         if (!option?.grants) continue;
@@ -943,7 +945,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         // Convert char totals to array
-        for (const [key, value] of Object.entries(charTotals) as [string, any][]) {
+        for (const [key, value] of Object.entries(charTotals)) {
             const info = getCharacteristicDisplayInfo(key);
             preview.characteristics.push({
                 key: key,
@@ -999,14 +1001,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     async _addTalentModifiers(uuid: string, charTotals: Record<string, number>, skillMap: Record<string, any>): Promise<void> {
         try {
-            const talent = await fromUuid(uuid) as any;
+            const talent = (await fromUuid(uuid)) as any;
             if (!talent) return;
 
             const talentSystem = talent.system;
 
             // Add characteristic modifiers from talent
             const charMods = talentSystem?.modifiers?.characteristics || {};
-            for (const [key, value] of Object.entries(charMods) as [string, any][]) {
+            for (const [key, value] of Object.entries(charMods)) {
                 if (value !== 0) {
                     charTotals[key] = (charTotals[key] || 0) + value;
                 }
@@ -1056,11 +1058,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const selectedChoices = system?.selectedChoices || {};
             const rollResults = system?.rollResults || {};
 
-            // Count pending choices
+            // Count pending choices (deduplicate labels to match dialog keys)
             if (grants.choices?.length > 0) {
+                const statusLabelCounts: Record<string, number> = {};
                 for (const choice of grants.choices) {
-                    const selection = selectedChoices[choice.label || choice.name];
-                    if (!selection || selection.length < (choice.count || 1)) {
+                    const base = choice.label || choice.name || '';
+                    statusLabelCounts[base] = (statusLabelCounts[base] || 0) + 1;
+                    const suffix = statusLabelCounts[base] > 1 ? ` (${statusLabelCounts[base]})` : '';
+                    const choiceKey = `${base}${suffix}`;
+                    const sel = selectedChoices[choiceKey];
+                    if (!sel || sel.length < (choice.count || 1)) {
                         pendingChoices++;
                     }
                 }
@@ -1213,7 +1220,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 (this as any).selections.clear();
 
                 for (const [step, selData] of Object.entries(data.selections)) {
-                    const origin = await fromUuid((selData as any).uuid) as any;
+                    const origin = (await fromUuid((selData as any).uuid)) as any;
                     if (origin) {
                         // Store as plain data object (not Item instance)
                         const originData = (this as any)._itemToSelectionData(origin);
@@ -1548,7 +1555,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Always directly mutate the plain data object
             if (!selection.system) selection.system = {};
             if (!selection.system.selectedChoices) selection.system.selectedChoices = {};
-            for (const [label, selections] of Object.entries(result) as [string, any][]) {
+            for (const [label, selections] of Object.entries(result)) {
                 selection.system.selectedChoices[label] = selections;
             }
 
@@ -1691,7 +1698,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (!uuid) return;
 
         try {
-            const item = await fromUuid(uuid) as any;
+            const item = (await fromUuid(uuid)) as any;
             if (item?.sheet) {
                 item.sheet.render(true);
             }
@@ -1802,13 +1809,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         for (const [_step, selection] of this.selections) {
             const choices = selection.system?.grants?.choices || [];
             const selectedChoices = selection.system?.selectedChoices || {};
-            // Key by deterministic ID matching what migrateOldGrants produces
+            // Deduplicate labels the same way the choice dialog does,
+            // so we look up the right key in selectedChoices.
+            const labelCounts: Record<string, number> = {};
             for (let i = 0; i < choices.length; i++) {
-                const label = choices[i].label || choices[i].name || 'choice';
-                const selected = selectedChoices[label];
+                const baseLabel = choices[i].label || choices[i].name || 'choice';
+                labelCounts[baseLabel] = (labelCounts[baseLabel] || 0) + 1;
+                const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
+                const choiceKey = `${baseLabel}${suffix}`;
+                const selected = selectedChoices[choiceKey];
                 if (selected) {
-                    const key = generateDeterministicId(`choice-${i}-${label}`);
-                    selections[key] = {
+                    const grantId = generateDeterministicId(`choice-${i}-${baseLabel}`);
+                    selections[grantId] = {
                         selected: Array.isArray(selected) ? selected : [selected],
                     };
                 }
