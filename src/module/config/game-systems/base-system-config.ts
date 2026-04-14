@@ -99,6 +99,15 @@ export abstract class BaseSystemConfig {
      */
     abstract getAvailableAdvances(actor: any): AdvanceOption[];
 
+    // ── Skill Visibility ─────────────────────────────────────────
+
+    /**
+     * Get the set of skill keys visible for this game system.
+     * Skills not in this set are hidden on the character sheet.
+     * The schema contains all skills from all systems; this filters to the relevant ones.
+     */
+    abstract getVisibleSkills(): Set<string>;
+
     // ── Skill Level Mapping ──────────────────────────────────────
 
     /**
