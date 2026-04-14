@@ -164,13 +164,14 @@ export class OriginChartLayout {
             const position = origin.system?.primaryPosition || 4;
             maxPosition = Math.max(maxPosition, position);
 
-            const isSelected = selectedOrigin?.id === origin.id;
+            const selectedId = selectedOrigin?.id || selectedOrigin?._id;
+            const isSelected = selectedId === originId;
             const isSelectable = this._isSelectable(origin, lastSelection, allowedPositions, guidedMode);
             const isValidNext = this._isPositionAllowed(origin, allowedPositions);
 
             cards.push({
                 origin: origin,
-                id: origin.id,
+                id: originId,
                 uuid: origin.uuid,
                 name: origin.name,
                 img: origin.img,

@@ -371,12 +371,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        // Normalize IDs — compendium documents may have null .id but valid ._id
-        for (const origin of allOriginPaths) {
-            if (!origin.id && origin._id) {
-                origin.id = origin._id;
-            }
-        }
+        // NOTE: Compendium documents have null .id (it's a getter). Use ._id for lookups.
 
         // Separate optional step origins from core origins
         this.allOrigins = allOriginPaths.filter((o: any) => o.system?.stepIndex !== optionalStepIndex);
@@ -494,13 +489,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const description = origin.system?.description?.value || '';
             const shortDesc = this._stripHtml(description).substring(0, 150);
 
+            const oid = origin.id || origin._id;
             return {
-                id: origin.id,
+                id: oid,
                 uuid: origin.uuid,
                 name: origin.name,
                 img: origin.img,
                 shortDescription: shortDesc + (shortDesc.length >= 150 ? '...' : ''),
-                isSelected: this.lineageSelection?.id === origin.id,
+                isSelected: (this.lineageSelection?.id || this.lineageSelection?._id) === oid,
                 isDisabled: false,
                 isValidNext: true, // All lineage options are always valid
                 hasChoices: origin.system?.hasChoices || origin.system?.grants?.choices?.length > 0,
@@ -604,7 +600,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const shortDesc = this._stripHtml(description).substring(0, 100);
 
             return {
-                id: origin.id,
+                id: origin.id || origin._id,
                 uuid: origin.uuid,
                 name: origin.name,
                 img: origin.img,
@@ -1433,9 +1429,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         // Find the origin (check both main and lineage origins)
-        let origin = (this as any).allOrigins.find((o) => o.id === originId);
+        let origin = (this as any).allOrigins.find((o) => (o.id || o._id) === originId);
         if (!origin) {
-            origin = (this as any).lineageOrigins.find((o) => o.id === originId);
+            origin = (this as any).lineageOrigins.find((o) => (o.id || o._id) === originId);
         }
         if (!origin) return;
 
@@ -1506,9 +1502,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (!originId && !originUuid) return;
 
         // Find the origin (check both main and lineage origins)
-        let origin = (this as any).allOrigins.find((o) => o.id === originId);
+        let origin = (this as any).allOrigins.find((o) => (o.id || o._id) === originId);
         if (!origin) {
-            origin = (this as any).lineageOrigins.find((o) => o.id === originId);
+            origin = (this as any).lineageOrigins.find((o) => (o.id || o._id) === originId);
         }
         if (!origin) return;
 
@@ -1516,9 +1512,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const currentStep = (this as any).currentStep;
         let isSelected = false;
         if ((this as any).showLineage) {
-            isSelected = (this as any).lineageSelection?.id === originId;
+            isSelected = ((this as any).lineageSelection?.id || (this as any).lineageSelection?._id) === originId;
         } else {
-            isSelected = (this as any).selections.get(currentStep.step)?.id === originId;
+            const sel = (this as any).selections.get(currentStep.step);
+            isSelected = (sel?.id || sel?._id) === originId;
         }
 
         // Show detail dialog for PREVIEW ONLY (no selection)
