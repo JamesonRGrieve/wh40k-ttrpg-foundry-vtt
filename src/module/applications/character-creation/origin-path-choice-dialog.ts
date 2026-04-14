@@ -250,9 +250,25 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         return getChoiceTypeLabel(type);
     }
 
+    /**
+     * Save scroll position before re-render so it can be restored.
+     * @private
+     */
+    _saveScrollPosition(): void {
+        const list = this.element?.querySelector('.choices-list');
+        this._savedScrollTop = list ? list.scrollTop : 0;
+    }
+
     /** @override */
     _onRender(context: any, options: any): void {
         super._onRender(context, options);
+
+        // Restore scroll position after re-render
+        if (this._savedScrollTop) {
+            const list = this.element?.querySelector('.choices-list');
+            if (list) list.scrollTop = this._savedScrollTop;
+            this._savedScrollTop = 0;
+        }
 
         // Attach change listeners to specialization selects (data-action doesn't fire on change)
         const selects = this.element.querySelectorAll('select[data-action="selectSpecialization"]');
@@ -309,6 +325,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             // to show the dropdown — don't add to selections until spec is picked
             if (hasSpecs && !chosenSpec) {
                 this._pendingSpecOption = { choiceKey, optionValue };
+                this._saveScrollPosition();
                 await this.render();
                 return;
             }
@@ -320,6 +337,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                 selections.clear();
                 if (hasSpecs && !chosenSpec) {
                     this._pendingSpecOption = { choiceKey, optionValue };
+                    this._saveScrollPosition();
                     await this.render();
                     return;
                 }
@@ -331,6 +349,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         }
 
         this._pendingSpecOption = null;
+        this._saveScrollPosition();
         await this.render();
     }
 
@@ -376,6 +395,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         }
 
         this._pendingSpecOption = null;
+        this._saveScrollPosition();
         await this.render();
     }
 
