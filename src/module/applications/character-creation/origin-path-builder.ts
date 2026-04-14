@@ -676,18 +676,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const selectedChoices = system?.selectedChoices || {};
         if (grants.choices?.length > 0) {
             for (const choice of grants.choices) {
-                const selection = selectedChoices[choice.label];
+                const choiceKey = choice.label || choice.name || '';
+                const selection = selectedChoices[choiceKey];
                 const selectedLabels = [];
                 if (selection && Array.isArray(selection)) {
                     for (const sel of selection) {
-                        const option = choice.options?.find((o) => o.value === sel);
-                        selectedLabels.push(option?.label || sel);
+                        const option = choice.options?.find((o) => o.value === sel || o.name === sel);
+                        selectedLabels.push(option?.label || option?.name || sel);
                     }
                 }
                 choices.push({
                     type: choice.type,
                     typeLabel: this._getChoiceTypeLabel(choice.type),
-                    label: choice.label,
+                    label: choiceKey,
                     count: choice.count || 1,
                     options: choice.options || [],
                     isComplete: selection && selection.length >= (choice.count || 1),
@@ -975,7 +976,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Process choice grants
             if (grants.choices && grants.choices.length > 0) {
                 for (const choice of grants.choices) {
-                    const selectedValues = selectedChoices[choice.label] || [];
+                    const selectedValues = selectedChoices[choice.label || choice.name] || [];
                     for (const selectedValue of selectedValues) {
                         const option = choice.options?.find((o) => o.value === selectedValue);
                         if (!option?.grants) continue;
@@ -1187,7 +1188,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Count pending choices
             if (grants.choices?.length > 0) {
                 for (const choice of grants.choices) {
-                    const selection = selectedChoices[choice.label];
+                    const selection = selectedChoices[choice.label || choice.name];
                     if (!selection || selection.length < (choice.count || 1)) {
                         pendingChoices++;
                     }
@@ -1658,7 +1659,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const system = (this as any)._getSelectionSystem(selection);
         const choices = system?.grants?.choices || [];
-        const choice = choices.find((c) => c.label === choiceLabel);
+        const choice = choices.find((c) => (c.label || c.name) === choiceLabel);
         if (!choice) return;
 
         // Create a temporary wrapper for the dialog that behaves like an Item
