@@ -4,6 +4,7 @@
  */
 
 import BaseItemSheet from './base-item-sheet.ts';
+import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 
 /**
  * Sheet for origin path items
@@ -81,8 +82,8 @@ export default class OriginPathSheet extends BaseItemSheet {
                 // @ts-expect-error - dynamic property access
                 context.characteristics.push({
                     key: key,
-                    label: this._getCharacteristicLabel(key),
-                    short: this._getCharacteristicShort(key),
+                    label: getCharacteristicDisplayInfo(key).label,
+                    short: getCharacteristicDisplayInfo(key).short,
                     value: value,
                     // @ts-expect-error - operator type
                     positive: value > 0,
@@ -102,7 +103,7 @@ export default class OriginPathSheet extends BaseItemSheet {
             name: skill.name,
             specialization: skill.specialization || null,
             level: skill.level || 'trained',
-            levelLabel: this._getTrainingLabel(skill.level),
+            levelLabel: getTrainingLabel(skill.level),
             displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
         // @ts-expect-error - dynamic property access
@@ -145,7 +146,7 @@ export default class OriginPathSheet extends BaseItemSheet {
         // Choices
         context.choices = (grants.choices || []).map((choice) => ({
             type: choice.type,
-            typeLabel: this._getChoiceTypeLabel(choice.type),
+            typeLabel: getChoiceTypeLabel(choice.type),
             label: choice.label,
             count: choice.count || 1,
             options: choice.options.map((opt) => ({
@@ -186,51 +187,4 @@ export default class OriginPathSheet extends BaseItemSheet {
         return game.i18n.has?.(localizationKey) ? game.i18n.localize(localizationKey) : labels[step] || step;
     }
 
-    _getCharacteristicLabel(key: string): string {
-        const labels = {
-            weaponSkill: 'Weapon Skill',
-            ballisticSkill: 'Ballistic Skill',
-            strength: 'Strength',
-            toughness: 'Toughness',
-            agility: 'Agility',
-            intelligence: 'Intelligence',
-            perception: 'Perception',
-            willpower: 'Willpower',
-            fellowship: 'Fellowship',
-            influence: 'Influence',
-        };
-        return labels[key] || key;
-    }
-
-    _getCharacteristicShort(key: string): string {
-        const shorts = {
-            weaponSkill: 'WS',
-            ballisticSkill: 'BS',
-            strength: 'S',
-            toughness: 'T',
-            agility: 'Ag',
-            intelligence: 'Int',
-            perception: 'Per',
-            willpower: 'WP',
-            fellowship: 'Fel',
-            influence: 'Inf',
-        };
-        return shorts[key] || key.substring(0, 3).toUpperCase();
-    }
-
-    _getTrainingLabel(level: number): string {
-        const labels = { trained: 'Trained', plus10: '+10', plus20: '+20' };
-        return labels[level] || level;
-    }
-
-    _getChoiceTypeLabel(type: string): string {
-        const labels = {
-            talent: 'Talent',
-            skill: 'Skill',
-            characteristic: 'Characteristic',
-            equipment: 'Equipment',
-            trait: 'Trait',
-        };
-        return labels[type] || type;
-    }
 }

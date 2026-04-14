@@ -454,6 +454,14 @@
             "Chapter": "Chapter",
             "Lineage": "Lineage",
             "YourJourney": "Your Journey Through the Void",
+            "JourneyTitle": {
+                "rt": "Your Journey Through the Void",
+                "dh1e": "Your Path of Inquiry",
+                "dh2e": "Your Path to Service",
+                "bc": "Your Path to Glory",
+                "ow": "Your Regiment and Role",
+                "dw": "Your Chapter and Calling"
+            },
             "DragHere": "Drag an origin here or click Browse",
             "Browse": "Browse",
             "Randomize": "Randomize Path",
@@ -562,7 +570,33 @@
             "Choose": "Choose",
             "Remaining": "remaining",
             "ConfirmSelection": "Confirm Selection",
-            "ConfirmSelectionHint": "Lock in this choice and advance to the next step"
+            "ConfirmSelectionHint": "Lock in this choice and advance to the next step",
+            "Short": {
+                "homeWorld": "World",
+                "birthright": "Birth",
+                "lureOfTheVoid": "Lure",
+                "trialsAndTravails": "Trials",
+                "motivation": "Motive",
+                "career": "Career",
+                "lineage": "Lineage",
+                "background": "Bg",
+                "role": "Role",
+                "elite": "Elite",
+                "race": "Race",
+                "archetype": "Arch",
+                "pride": "Pride",
+                "disgrace": "Disg",
+                "regiment": "Reg",
+                "speciality": "Spec",
+                "chapter": "Chapter"
+            }
+        },
+        "ChoiceType": {
+            "talent": "Talent",
+            "skill": "Skill",
+            "characteristic": "Characteristic",
+            "equipment": "Equipment",
+            "trait": "Trait"
         },
         "Biography": {
             "Header": "Biography",

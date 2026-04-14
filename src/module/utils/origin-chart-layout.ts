@@ -21,18 +21,16 @@ export const DIRECTION = {
 };
 
 export class OriginChartLayout {
-    /** Active step order for the current computation. Set by computeFullChart. */
-    static _activeStepOrder: string[] = [];
-
     /**
      * Compute layout data for all origins grouped by step.
      * @param {Array<Item>} allOrigins - All origin items from compendium
      * @param {Map<string, Item>} currentSelections - Currently selected origins
      * @param {boolean} guidedMode - Whether to enforce requirements
      * @param {string} direction - Direction of navigation ("forward" or "backward")
+     * @param {string[]} stepKeys - Ordered step keys for this game system (required)
      * @returns {Object} Layout data organized by step
      */
-    static computeFullChart(allOrigins, currentSelections, guidedMode = true, direction = DIRECTION.FORWARD, stepKeys?: string[]) {
+    static computeFullChart(allOrigins, currentSelections, guidedMode = true, direction = DIRECTION.FORWARD, stepKeys: string[]) {
         const layout = {
             steps: [],
             maxColumns: 0,
@@ -41,29 +39,18 @@ export class OriginChartLayout {
         // Group origins by step
         const stepGroups = this._groupByStep(allOrigins);
 
-        // Get step order — use provided keys or fall back to RT default
-        const stepOrder = stepKeys ?? this._getStepOrder();
-        this._activeStepOrder = stepOrder;
+        const stepOrder = stepKeys;
 
         // Compute layout for each step (always in forward order for consistent indexing)
         for (const [stepIndex, stepKey] of stepOrder.entries()) {
             const origins = stepGroups[stepKey] || [];
-            const stepLayout = this._computeStepLayout(origins, stepIndex, stepKey, currentSelections, guidedMode, direction);
+            const stepLayout = this._computeStepLayout(origins, stepIndex, stepKey, currentSelections, guidedMode, direction, stepOrder);
 
             layout.steps.push(stepLayout);
             layout.maxColumns = Math.max(layout.maxColumns, stepLayout.maxPosition + 1);
         }
 
         return layout;
-    }
-
-    /**
-     * Get the ordered list of step keys.
-     * @returns {Array<string>}
-     * @private
-     */
-    static _getStepOrder() {
-        return ['homeWorld', 'birthright', 'lureOfTheVoid', 'trialsAndTravails', 'motivation', 'career'];
     }
 
     /**
@@ -145,10 +132,10 @@ export class OriginChartLayout {
      * @returns {Object}
      * @private
      */
-    static _computeStepLayout(origins, stepIndex, stepKey, currentSelections, guidedMode, direction = DIRECTION.FORWARD) {
+    static _computeStepLayout(origins, stepIndex, stepKey, currentSelections, guidedMode, direction = DIRECTION.FORWARD, stepOrder: string[]) {
         const selectedOrigin = currentSelections.get(stepKey);
 
-        const lastSelection = this._getLastSelection(stepIndex, currentSelections, direction);
+        const lastSelection = this._getLastSelection(stepIndex, currentSelections, direction, stepOrder);
         const allowedPositions = this._getAllowedPositions(lastSelection);
 
         const cards = [];
@@ -286,8 +273,7 @@ export class OriginChartLayout {
      * @returns {Item|null}
      * @private
      */
-    static _getLastSelection(stepIndex, currentSelections, direction) {
-        const stepOrder = this._activeStepOrder;
+    static _getLastSelection(stepIndex, currentSelections, direction, stepOrder: string[]) {
         if (direction === DIRECTION.FORWARD) {
             for (let i = stepIndex - 1; i >= 0; i--) {
                 const prevStepKey = stepOrder[i];

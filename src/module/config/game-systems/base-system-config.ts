@@ -108,6 +108,27 @@ export abstract class BaseSystemConfig {
      */
     abstract getVisibleSkills(): Set<string>;
 
+    // ── UI Labels ─────────────────────────────────────────────────
+
+    /**
+     * Short labels for step navigation buttons.
+     * Default implementation uses i18n keys: WH40K.OriginPath.Short.{StepKey}
+     * Override in subclasses only if the i18n keys are insufficient.
+     */
+    getStepShortLabels(): Record<string, string> {
+        const config = this.getOriginStepConfig();
+        const labels: Record<string, string> = {};
+        const allSteps = [...config.coreSteps];
+        if (config.optionalStep) allSteps.push(config.optionalStep);
+
+        for (const step of allSteps) {
+            const key = `WH40K.OriginPath.Short.${step.key}`;
+            const localized = game.i18n.localize(key);
+            labels[step.key] = localized !== key ? localized : step.key;
+        }
+        return labels;
+    }
+
     // ── Skill Level Mapping ──────────────────────────────────────
 
     /**

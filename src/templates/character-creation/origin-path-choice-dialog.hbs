@@ -29,30 +29,57 @@
                 {{!-- Card-based options --}}
                 <div class="choice-options-cards">
                     {{#each choice.options as |option|}}
-                        <div class="choice-card {{#if option.selected}}selected{{/if}} {{#if option.disabled}}disabled{{/if}}"
+                        <div class="choice-card {{#if option.selected}}selected{{/if}} {{#if option.pendingSpec}}pending-spec{{/if}} {{#if option.disabled}}disabled{{/if}}"
                              data-action="toggleOption"
                              data-choice="{{../label}}"
                              data-option="{{option.value}}"
                              {{#if option.disabled}}disabled{{/if}}>
-                            
+
                             <div class="choice-card-header">
                                 <span class="option-checkbox">
                                     {{#if option.selected}}
                                         <i class="fa-solid fa-check-square"></i>
+                                    {{else if option.pendingSpec}}
+                                        <i class="fa-solid fa-caret-down"></i>
                                     {{else}}
                                         <i class="fa-regular fa-square"></i>
                                     {{/if}}
                                 </span>
-                                <h4 class="option-label">{{option.label}}</h4>
+                                <h4 class="option-label">
+                                    {{option.label}}
+                                    {{#if option.chosenSpecialization}}
+                                        <span class="chosen-spec">({{option.chosenSpecialization}})</span>
+                                    {{/if}}
+                                </h4>
                                 {{#if option.selected}}
                                     <i class="fa-solid fa-check choice-checkmark"></i>
                                 {{/if}}
                             </div>
-                            
+
                             {{#if option.description}}
                                 <p class="option-description">{{option.description}}</p>
                             {{/if}}
-                            
+
+                            {{!-- Specialization dropdown (shown when option selected or pending) --}}
+                            {{#if option.hasSpecializations}}
+                                {{#if (or option.pendingSpec option.selected)}}
+                                    <div class="specialization-select" onclick="event.stopPropagation()">
+                                        <label class="spec-label">
+                                            <i class="fa-solid fa-crosshairs"></i>
+                                            {{localize "WH40K.OriginPath.Choose"}}:
+                                        </label>
+                                        <select data-action="selectSpecialization"
+                                                data-choice="{{../label}}"
+                                                data-option="{{option.value}}">
+                                            <option value="">-- Select --</option>
+                                            {{#each option.specializations as |spec|}}
+                                                <option value="{{spec}}" {{#if (eq spec ../chosenSpecialization)}}selected{{/if}}>{{spec}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                {{/if}}
+                            {{/if}}
+
                             {{!-- View Item Sheet Button (if applicable) --}}
                             {{#if option.uuid}}
                                 <button type="button" class="view-item-btn" data-action="viewItem" data-uuid="{{option.uuid}}" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">
