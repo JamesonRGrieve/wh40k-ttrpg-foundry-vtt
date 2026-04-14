@@ -1,2 +1,4 @@
 dist
 package-lock.json
+# Handlebars templates use {{#if}} in HTML attributes (valid HBS, unsupported by prettier)
+src/templates/**/*.hbs
