@@ -516,9 +516,9 @@ export class GrantsProcessor {
             }
         }
 
-        // Fallback: search compendium
+        // Fallback: search all Item packs by name
         if (!talentItem) {
-            talentItem = await this._findInCompendium('wh40k-rpg.wh40k-items-talents', talentGrant.name);
+            talentItem = await this._findInAllPacks(talentGrant.name);
         }
 
         if (!talentItem) {
@@ -618,7 +618,7 @@ export class GrantsProcessor {
         }
 
         if (!traitItem) {
-            traitItem = await this._findInCompendium('wh40k-rpg.wh40k-items-traits', traitGrant.name);
+            traitItem = await this._findInAllPacks(traitGrant.name);
         }
 
         if (!traitItem) {
@@ -674,28 +674,38 @@ export class GrantsProcessor {
      * @private
      */
     static async _processEquipmentGrant(equipGrant, context) {
-        if (!equipGrant.uuid) {
-            console.warn(`Equipment grant "${equipGrant.name}" has no UUID - cannot create item.`);
+        let doc = null;
+
+        // Try UUID first
+        if (equipGrant.uuid) {
+            try {
+                doc = await fromUuid(equipGrant.uuid) as any;
+                if (!doc) {
+                    console.warn(`Could not find equipment with UUID: ${equipGrant.uuid}`);
+                }
+            } catch (err) {
+                console.error(`Error fetching equipment ${equipGrant.uuid}:`, err);
+            }
+        }
+
+        // Fallback: search all Item packs by name
+        if (!doc && equipGrant.name) {
+            doc = await this._findInAllPacks(equipGrant.name);
+        }
+
+        if (!doc) {
+            console.warn(`Could not find equipment: ${equipGrant.name || equipGrant.uuid}`);
             return;
         }
 
-        try {
-            const doc = await fromUuid(equipGrant.uuid) as any;
-            if (doc) {
-                const itemData = doc.toObject();
-                if (equipGrant.quantity && equipGrant.quantity > 1) {
-                    itemData.system.quantity = equipGrant.quantity;
-                }
-                context.result.itemsToCreate.push(itemData);
+        const itemData = doc.toObject();
+        if (equipGrant.quantity && equipGrant.quantity > 1) {
+            itemData.system.quantity = equipGrant.quantity;
+        }
+        context.result.itemsToCreate.push(itemData);
 
-                if (context.showNotification) {
-                    context.result.notifications.push(`Equipment: ${equipGrant.name}`);
-                }
-            } else {
-                console.warn(`Could not find equipment with UUID: ${equipGrant.uuid}`);
-            }
-        } catch (err) {
-            console.error(`Error fetching equipment ${equipGrant.uuid}:`, err);
+        if (context.showNotification) {
+            context.result.notifications.push(`Equipment: ${equipGrant.name}`);
         }
     }
 
@@ -829,6 +839,30 @@ export class GrantsProcessor {
         const entry = index.find((i) => i.name === itemName);
         if (entry) {
             return await pack.getDocument(entry._id);
+        }
+
+        return null;
+    }
+
+    /**
+     * Find an item by name across all Item compendium packs.
+     * Talents/traits/gear are spread across system-specific packs
+     * (dh2-core-items-talents, rt-core-items-traits, etc.).
+     * @private
+     */
+    static async _findInAllPacks(itemName) {
+        if (!itemName) return null;
+
+        const nameLower = itemName.toLowerCase();
+
+        for (const pack of game.packs) {
+            if (pack.documentName !== 'Item') continue;
+
+            const index = await pack.getIndex({ fields: ['name'] });
+            const entry = index.find((i) => i.name === itemName || i.name.toLowerCase() === nameLower);
+            if (entry) {
+                return await pack.getDocument(entry._id);
+            }
         }
 
         return null;

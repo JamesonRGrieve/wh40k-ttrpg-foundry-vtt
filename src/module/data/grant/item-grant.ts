@@ -125,8 +125,13 @@ export default class ItemGrantData extends (BaseGrantData as any) {
                 continue;
             }
 
-            // Create item data
-            const itemData = await this._createItemData(sourceItem, resolvedUuid, overrides);
+            // Create item data, applying specialization if present
+            const effectiveOverrides = { ...overrides };
+            if (_legacySpecialization && sourceItem.type === 'talent') {
+                effectiveOverrides['system.specialization'] = _legacySpecialization;
+                effectiveOverrides['name'] = `${sourceItem.name} (${_legacySpecialization})`;
+            }
+            const itemData = await this._createItemData(sourceItem, resolvedUuid, effectiveOverrides);
             itemsToCreate.push({ uuid: resolvedUuid, data: itemData });
         }
 
@@ -304,32 +309,20 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     async _findItemByName(name, specialization = '') {
         if (!name) return null;
 
-        // Determine which pack to search based on expected item type
-        const packIds = [
-            'wh40k-rpg.wh40k-items-talents',
-            'wh40k-rpg.wh40k-items-traits',
-            'wh40k-rpg.wh40k-items-weapons',
-            'wh40k-rpg.wh40k-items-armour',
-            'wh40k-rpg.wh40k-items-gear',
-        ];
+        const nameLower = name.toLowerCase();
+        const compositeLower = specialization ? `${name} (${specialization})`.toLowerCase() : '';
 
-        for (const packId of packIds) {
-            const pack = game.packs.get(packId);
-            if (!pack) continue;
+        // Search all Item packs — talents/traits/gear are spread across
+        // system-specific packs (dh2-core-items-talents, rt-core-items-traits, etc.)
+        for (const pack of game.packs) {
+            if (pack.documentName !== 'Item') continue;
 
-            // Get the index
             const index = await pack.getIndex();
 
-            // Search for matching name
             const match = index.find((entry: any) => {
-                // Exact name match
-                if (entry.name === name) return true;
-                // Case-insensitive match
-                if (entry.name.toLowerCase() === name.toLowerCase()) return true;
-                // Handle specialization in name like "Melee Weapon Training (Universal)"
-                if (specialization && entry.name.toLowerCase() === `${name} (${specialization})`.toLowerCase()) {
-                    return true;
-                }
+                const entryLower = entry.name.toLowerCase();
+                if (entryLower === nameLower) return true;
+                if (compositeLower && entryLower === compositeLower) return true;
                 return false;
             });
 
