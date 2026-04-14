@@ -195,6 +195,7 @@ export class HooksManager {
             peer: dataModels.PeerEnemyData,
             enemy: dataModels.PeerEnemyData,
             combatAction: dataModels.CombatActionData,
+            condition: dataModels.ConditionData,
             // Powers
             psychicPower: dataModels.PsychicPowerData,
             navigatorPower: dataModels.NavigatorPowerData,
