@@ -354,11 +354,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const optionalStepIndex = this.systemConfig.optionalStep?.stepIndex;
         const allOriginPaths: any[] = [];
 
+        // Debug: log available packs once to help diagnose lookup failures
+        if (packNames.length > 0) {
+            const availablePacks = [...game.packs.keys()];
+            console.log(`OriginPathBuilder: Looking for packs:`, packNames.map(n => `wh40k-rpg.${n}`));
+            console.log(`OriginPathBuilder: Available packs (${availablePacks.length}):`, availablePacks.filter(k => k.includes('origin') || k.includes('homeworld') || k.includes('background') || k.includes('role') || k.includes('career')));
+        }
+
         for (const packName of packNames) {
             // Try fully qualified ID first, then metadata.name fallback
             const pack = (game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`)) as any;
             if (!pack) {
-                console.warn(`Origin path compendium '${packName}' not found (tried wh40k-rpg.${packName} and metadata.name match)`);
+                console.warn(`Origin path compendium '${packName}' not found`);
                 continue;
             }
             const documents = await pack.getDocuments();
