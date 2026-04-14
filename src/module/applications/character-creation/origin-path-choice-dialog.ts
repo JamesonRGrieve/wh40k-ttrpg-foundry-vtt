@@ -73,46 +73,71 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
          * Pending choices that need selection
          * @type {Array<{type: string, label: string, options: object[], count: number}>}
          */
-        // Normalize choices: DH2e uses 'name' while RT uses 'label'
-        this.pendingChoices = (item.system?.grants?.choices || []).map((c) => ({
+        // Normalize choices: DH2e uses 'name' while RT uses 'label'.
+        // Disambiguate duplicate labels (e.g. two "Starting Skill" choices)
+        // by appending " (2)", " (3)", etc. so each choice has a unique key.
+        const rawChoices = (item.system?.grants?.choices || []).map((c) => ({
             ...c,
             label: c.label || c.name || '',
-            options: (c.options || []).map((o) => ({
-                ...o,
-                value: o.value || o.name || '',
-                label: o.label || o.name || '',
-                specializations: o.specializations || null,
-            })),
+            options: (c.options || []).map((o) => {
+                // Handle plain string options (e.g. aptitude choices: ["Offence", "Tech"])
+                if (typeof o === 'string') {
+                    return { value: o, label: o, specializations: null };
+                }
+                // For options with specialization (singular) but no specializations picker,
+                // use the full label as the value to avoid duplicates
+                // (e.g. two "Weapon Training" options with different specializations)
+                let optValue = o.value || o.name || '';
+                if (o.specialization && !o.specializations?.length) {
+                    const fullLabel = o.label || `${o.name} (${o.specialization})`;
+                    optValue = fullLabel;
+                }
+                return {
+                    ...o,
+                    value: optValue,
+                    label: o.label || o.name || '',
+                    specializations: o.specializations || null,
+                };
+            }),
         }));
+
+        // Deduplicate choice labels
+        const labelCounts: Record<string, number> = {};
+        this.pendingChoices = rawChoices.map((c) => {
+            const base = c.label;
+            labelCounts[base] = (labelCounts[base] || 0) + 1;
+            const suffix = labelCounts[base] > 1 ? ` (${labelCounts[base]})` : '';
+            return { ...c, _key: `${base}${suffix}` };
+        });
 
         /**
          * Selected options for each choice.
          * Values are the final composite strings, e.g. "Weapon Training (Chain)".
+         * Keyed by choice._key (disambiguated label).
          * @type {Map<string, Set<string>>}
          */
         this.selections = new Map();
 
         /**
-         * Chosen specialization per option, keyed by `choiceLabel::optionValue`.
+         * Chosen specialization per option, keyed by `choiceKey::optionValue`.
          * @type {Map<string, string>}
          */
         this.specializationSelections = new Map();
 
         // Initialize selections from existing selectedChoices
         const existing = item.system?.selectedChoices || {};
-        for (const [label, selected] of Object.entries(existing) as [string, any][]) {
-            this.selections.set(label, new Set(selected));
+        for (const [key, selected] of Object.entries(existing)) {
+            this.selections.set(key, new Set(selected));
             // Reverse-engineer specialization selections from composite values
             for (const sel of selected) {
                 const match = sel.match(/^(.+?)\s*\((.+)\)$/);
                 if (match) {
                     const baseValue = match[1].trim();
                     const spec = match[2].trim();
-                    // Find the option that has specializations
-                    const choice = this.pendingChoices.find((c) => (c.label || c.name) === label);
+                    const choice = this.pendingChoices.find((c) => c._key === key);
                     const option = choice?.options?.find((o) => o.value === baseValue || o.label === baseValue);
                     if (option?.specializations) {
-                        this.specializationSelections.set(`${label}::${option.value}`, spec);
+                        this.specializationSelections.set(`${key}::${option.value}`, spec);
                     }
                 }
             }
@@ -130,7 +155,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
 
     /** @override */
     async _prepareContext(options: any): Promise<any> {
-        const context = await super._prepareContext(options) as any;
+        const context = await super._prepareContext(options);
 
         context.item = this.item;
         context.itemName = this.item.name;
@@ -139,22 +164,23 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         // Prepare choices with selection state
         context.choices = await Promise.all(
             this.pendingChoices.map(async (choice) => {
-                const selections = this.selections.get(choice.label) || new Set();
+                const choiceKey = choice._key;
+                const selections = this.selections.get(choiceKey) || new Set();
                 const remaining = choice.count - selections.size;
 
                 return {
                     type: choice.type,
                     typeLabel: this._getChoiceTypeLabel(choice.type),
                     label: choice.label,
+                    choiceKey: choiceKey,
                     count: choice.count,
                     remaining: remaining,
                     options: await Promise.all(
                         (choice.options || []).map(async (option) => {
-                            // Handle both string and object option formats
-                            const optValue = typeof option === 'string' ? option : option.value || option.label;
-                            const optLabel = typeof option === 'string' ? option : option.label || option.value;
-                            const optDesc = typeof option === 'object' ? option.description : null;
-                            const optSpecs = typeof option === 'object' ? (option.specializations || null) : null;
+                            const optValue = option.value || option.label;
+                            const optLabel = option.label || option.value;
+                            const optDesc = option.description || null;
+                            const optSpecs = option.specializations || null;
 
                             // Extract UUID from option.uuid OR from grants (talents/skills/traits/equipment)
                             let optUuid = typeof option === 'object' ? option.uuid : null;
@@ -182,14 +208,13 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                             }
 
                             // Determine if this option is selected (check composite value for specialization options)
-                            const specKey = `${choice.label}::${optValue}`;
+                            const specKey = `${choiceKey}::${optValue}`;
                             const chosenSpec = this.specializationSelections.get(specKey) || '';
                             const compositeValue = optSpecs && chosenSpec ? `${optValue} (${chosenSpec})` : optValue;
-                            const isSelected = selections.has(compositeValue) || (optSpecs && chosenSpec && selections.has(compositeValue));
+                            const isSelected = selections.has(compositeValue);
 
                             // Check if this option is pending specialization selection
-                            const isPendingSpec = this._pendingSpecOption?.choiceLabel === choice.label
-                                && this._pendingSpecOption?.optionValue === optValue;
+                            const isPendingSpec = this._pendingSpecOption?.choiceKey === choiceKey && this._pendingSpecOption?.optionValue === optValue;
 
                             return {
                                 value: optValue,
@@ -249,23 +274,23 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @private
      */
     static async #toggleOption(event: Event, target: HTMLElement): Promise<void> {
-        const choiceLabel = target.dataset.choice;
+        const choiceKey = target.dataset.choice;
         const optionValue = target.dataset.option;
 
-        if (!choiceLabel || !optionValue) return;
+        if (!choiceKey || !optionValue) return;
 
         // Get the choice config
-        const choice = this.pendingChoices.find((c) => c.label === choiceLabel);
+        const choice = this.pendingChoices.find((c) => c._key === choiceKey);
         if (!choice) return;
 
         const option = choice.options.find((o) => o.value === optionValue);
 
         // Get current selections for this choice
-        if (!this.selections.has(choiceLabel)) {
-            this.selections.set(choiceLabel, new Set());
+        if (!this.selections.has(choiceKey)) {
+            this.selections.set(choiceKey, new Set());
         }
-        const selections = this.selections.get(choiceLabel);
-        const specKey = `${choiceLabel}::${optionValue}`;
+        const selections = this.selections.get(choiceKey);
+        const specKey = `${choiceKey}::${optionValue}`;
 
         // Build the composite value (includes specialization if present)
         const chosenSpec = this.specializationSelections.get(specKey) || '';
@@ -273,9 +298,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         const compositeValue = hasSpecs && chosenSpec ? `${optionValue} (${chosenSpec})` : optionValue;
 
         // Find any existing composite for this base option (to remove when deselecting)
-        const existingComposite = [...selections].find((v) =>
-            v === optionValue || v.startsWith(`${optionValue} (`)
-        );
+        const existingComposite = [...selections].find((v) => v === optionValue || v.startsWith(`${optionValue} (`));
 
         // Toggle selection
         if (existingComposite) {
@@ -285,10 +308,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             // If this option has specializations but none chosen yet, just re-render
             // to show the dropdown — don't add to selections until spec is picked
             if (hasSpecs && !chosenSpec) {
-                // Mark as "pending specialization" by not adding to selections yet
-                // The template will show the dropdown since the card is in a
-                // "needs-spec" state. We'll store a temporary flag.
-                this._pendingSpecOption = { choiceLabel, optionValue };
+                this._pendingSpecOption = { choiceKey, optionValue };
                 await this.render();
                 return;
             }
@@ -296,19 +316,17 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             // Check if we can add more
             if (selections.size < choice.count) {
                 selections.add(compositeValue);
-            } else {
-                if (choice.count === 1) {
-                    selections.clear();
-                    if (hasSpecs && !chosenSpec) {
-                        this._pendingSpecOption = { choiceLabel, optionValue };
-                        await this.render();
-                        return;
-                    }
-                    selections.add(compositeValue);
-                } else {
-                    (ui.notifications as any).warn(`You can only select ${choice.count} option(s).`);
+            } else if (choice.count === 1) {
+                selections.clear();
+                if (hasSpecs && !chosenSpec) {
+                    this._pendingSpecOption = { choiceKey, optionValue };
+                    await this.render();
                     return;
                 }
+                selections.add(compositeValue);
+            } else {
+                (ui.notifications as any).warn(`You can only select ${choice.count} option(s).`);
+                return;
             }
         }
 
@@ -323,32 +341,30 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      */
     static async #selectSpecialization(event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation();
-        const select = target.tagName === 'SELECT' ? target as HTMLSelectElement : target.querySelector('select') as HTMLSelectElement;
+        const select = target.tagName === 'SELECT' ? (target as HTMLSelectElement) : target.querySelector('select');
         if (!select) return;
 
-        const choiceLabel = select.dataset.choice;
+        const choiceKey = select.dataset.choice;
         const optionValue = select.dataset.option;
         const specValue = select.value;
 
-        if (!choiceLabel || !optionValue || !specValue) return;
+        if (!choiceKey || !optionValue || !specValue) return;
 
-        const choice = this.pendingChoices.find((c) => c.label === choiceLabel);
+        const choice = this.pendingChoices.find((c) => c._key === choiceKey);
         if (!choice) return;
 
-        const specKey = `${choiceLabel}::${optionValue}`;
+        const specKey = `${choiceKey}::${optionValue}`;
         this.specializationSelections.set(specKey, specValue);
 
         // Build composite value and add to selections
         const compositeValue = `${optionValue} (${specValue})`;
-        if (!this.selections.has(choiceLabel)) {
-            this.selections.set(choiceLabel, new Set());
+        if (!this.selections.has(choiceKey)) {
+            this.selections.set(choiceKey, new Set());
         }
-        const selections = this.selections.get(choiceLabel);
+        const selections = this.selections.get(choiceKey);
 
         // Remove any existing composite for this base option
-        const existing = [...selections].find((v) =>
-            v === optionValue || v.startsWith(`${optionValue} (`)
-        );
+        const existing = [...selections].find((v) => v === optionValue || v.startsWith(`${optionValue} (`));
         if (existing) selections.delete(existing);
 
         // Add the new composite
@@ -372,7 +388,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     static async #confirm(event: Event, target: HTMLElement): Promise<void> {
         // Validate all choices are complete
         const incomplete = this.pendingChoices.filter((choice) => {
-            const selections = this.selections.get(choice.label) || new Set();
+            const selections = this.selections.get(choice._key) || new Set();
             return selections.size < choice.count;
         });
 
@@ -422,7 +438,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         if (!uuid) return;
 
         try {
-            const item = await fromUuid(uuid) as any;
+            const item = (await fromUuid(uuid)) as any;
             if (item) {
                 item.sheet.render(true);
             }

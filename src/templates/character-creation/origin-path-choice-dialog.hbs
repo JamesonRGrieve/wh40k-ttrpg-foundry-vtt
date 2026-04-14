@@ -31,7 +31,7 @@
                     {{#each choice.options as |option|}}
                         <div class="choice-card {{#if option.selected}}selected{{/if}} {{#if option.pendingSpec}}pending-spec{{/if}} {{#if option.disabled}}disabled{{/if}}"
                              data-action="toggleOption"
-                             data-choice="{{../label}}"
+                             data-choice="{{../choiceKey}}"
                              data-option="{{option.value}}"
                              {{#if option.disabled}}disabled{{/if}}>
 
@@ -69,7 +69,7 @@
                                             {{localize "WH40K.OriginPath.Choose"}}:
                                         </label>
                                         <select data-action="selectSpecialization"
-                                                data-choice="{{../label}}"
+                                                data-choice="{{../choiceKey}}"
                                                 data-option="{{option.value}}">
                                             <option value="">-- Select --</option>
                                             {{#each option.specializations as |spec|}}
