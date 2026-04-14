@@ -21,6 +21,9 @@ export const DIRECTION = {
 };
 
 export class OriginChartLayout {
+    /** Active step order for the current computation. Set by computeFullChart. */
+    static _activeStepOrder: string[] = [];
+
     /**
      * Compute layout data for all origins grouped by step.
      * @param {Array<Item>} allOrigins - All origin items from compendium
@@ -40,11 +43,12 @@ export class OriginChartLayout {
 
         // Get step order — use provided keys or fall back to RT default
         const stepOrder = stepKeys ?? this._getStepOrder();
+        this._activeStepOrder = stepOrder;
 
         // Compute layout for each step (always in forward order for consistent indexing)
         for (const [stepIndex, stepKey] of stepOrder.entries()) {
             const origins = stepGroups[stepKey] || [];
-            const stepLayout = this._computeStepLayout(origins, stepIndex, currentSelections, guidedMode, direction);
+            const stepLayout = this._computeStepLayout(origins, stepIndex, stepKey, currentSelections, guidedMode, direction);
 
             layout.steps.push(stepLayout);
             layout.maxColumns = Math.max(layout.maxColumns, stepLayout.maxPosition + 1);
@@ -141,8 +145,7 @@ export class OriginChartLayout {
      * @returns {Object}
      * @private
      */
-    static _computeStepLayout(origins, stepIndex, currentSelections, guidedMode, direction = DIRECTION.FORWARD) {
-        const stepKey = this._getStepOrder()[stepIndex];
+    static _computeStepLayout(origins, stepIndex, stepKey, currentSelections, guidedMode, direction = DIRECTION.FORWARD) {
         const selectedOrigin = currentSelections.get(stepKey);
 
         const lastSelection = this._getLastSelection(stepIndex, currentSelections, direction);
@@ -282,9 +285,10 @@ export class OriginChartLayout {
      * @private
      */
     static _getLastSelection(stepIndex, currentSelections, direction) {
+        const stepOrder = this._activeStepOrder;
         if (direction === DIRECTION.FORWARD) {
             for (let i = stepIndex - 1; i >= 0; i--) {
-                const prevStepKey = this._getStepOrder()[i];
+                const prevStepKey = stepOrder[i];
                 if (currentSelections.has(prevStepKey)) {
                     return currentSelections.get(prevStepKey);
                 }
@@ -292,8 +296,8 @@ export class OriginChartLayout {
             return null;
         }
 
-        for (let i = stepIndex + 1; i < 6; i++) {
-            const nextStepKey = this._getStepOrder()[i];
+        for (let i = stepIndex + 1; i < stepOrder.length; i++) {
+            const nextStepKey = stepOrder[i];
             if (currentSelections.has(nextStepKey)) {
                 return currentSelections.get(nextStepKey);
             }
