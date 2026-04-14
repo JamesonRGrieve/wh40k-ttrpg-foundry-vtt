@@ -156,7 +156,6 @@ export class OriginChartLayout {
         const seenOrigins = new Set();
 
         for (const origin of origins) {
-            console.log(`ChartLayout origin: name=${origin.name}, id=${JSON.stringify(origin.id)}, _id=${JSON.stringify(origin._id)}, uuid=${JSON.stringify(origin.uuid)}, hasOwnId=${origin.hasOwnProperty?.('id')}, keys=${Object.keys(origin).filter(k => k.includes('id') || k.includes('Id')).join(',')}`);
             const originId = origin.id || origin._id || origin.uuid || origin.name;
             if (seenOrigins.has(originId)) continue;
             seenOrigins.add(originId);
