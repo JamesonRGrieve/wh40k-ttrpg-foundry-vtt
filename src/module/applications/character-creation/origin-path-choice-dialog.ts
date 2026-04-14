@@ -71,7 +71,16 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
          * Pending choices that need selection
          * @type {Array<{type: string, label: string, options: string[], count: number}>}
          */
-        this.pendingChoices = item.system?.grants?.choices || [];
+        // Normalize choices: DH2e uses 'name' while RT uses 'label'
+        this.pendingChoices = (item.system?.grants?.choices || []).map((c) => ({
+            ...c,
+            label: c.label || c.name || '',
+            options: (c.options || []).map((o) => ({
+                ...o,
+                value: o.value || o.name || '',
+                label: o.label || o.name || '',
+            })),
+        }));
 
         /**
          * Selected options for each choice
