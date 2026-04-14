@@ -109,8 +109,8 @@
                 </div>
                 <div class="step-info">
                     {{#if currentStep.isLineage}}
-                        <h2>{{localize "WH40K.OriginPath.Lineage"}} <span class="optional-badge">{{localize "WH40K.OriginPath.Optional"}}</span></h2>
-                        <p>{{localize "WH40K.OriginPath.LineageDesc"}}</p>
+                        <h2>{{optionalStepLabel}} <span class="optional-badge">{{localize "WH40K.OriginPath.Optional"}}</span></h2>
+                        <p>{{optionalStepDesc}}</p>
                     {{else}}
                         <h2>{{localize "WH40K.OriginPath.Step"}} {{add currentStep.index 1}}: {{currentStep.label}}</h2>
                         <p>{{currentStep.description}}</p>
@@ -479,7 +479,7 @@
                 {{#if showLineage}}
                     <button type="button" class="skip-lineage-btn" data-action="skipLineage">
                         <i class="fa-solid fa-forward"></i>
-                        {{localize "WH40K.OriginPath.SkipLineage"}}
+                        {{localize "WH40K.OriginPath.Skip"}} {{optionalStepLabel}}
                     </button>
                 {{/if}}
                 {{#if status.stepsComplete}}
