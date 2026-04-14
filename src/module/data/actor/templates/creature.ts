@@ -1079,11 +1079,20 @@ export default class CreatureTemplate extends CommonTemplate {
         const originItems = actor.items.filter((item) => item.isOriginPath);
         const isSpecialist = SkillKeyHelper.SPECIALIST_KEYS.has(skillKey);
 
+        if (originItems.length === 0) {
+            // Only log once per preparation cycle, not per skill
+            if (skillKey === 'awareness') {
+                console.log(`_getOriginPathSkillRank: No origin path items found on actor ${actor.name}`);
+            }
+            return 0;
+        }
+
         for (const item of originItems) {
             // Check base skill grants
             const skills = item.system?.grants?.skills || [];
             for (const grant of skills) {
                 const grantKey = SkillKeyHelper.nameToKey(grant.name);
+
                 if (grantKey !== skillKey) continue;
 
                 // For specialist skills, also match specialization
@@ -1093,6 +1102,7 @@ export default class CreatureTemplate extends CommonTemplate {
                 }
 
                 const rank = BaseSystemConfig.skillLevelToRank(grant.level || 'trained');
+                console.log(`  Skill grant: ${grant.name} (key: ${grantKey}) level: ${grant.level || 'trained'} → rank ${rank} from ${item.name}`);
                 maxRank = Math.max(maxRank, rank);
             }
 
@@ -1103,12 +1113,15 @@ export default class CreatureTemplate extends CommonTemplate {
                     if (mod.type !== 'skill') continue;
                     const modKey = SkillKeyHelper.nameToKey(mod.key);
                     if (modKey !== skillKey) continue;
-                    // Choice-based skill grants default to rank 1 (Known/Trained)
+                    console.log(`  Choice skill grant: ${mod.key} (key: ${modKey}) → rank 1 from ${item.name} (choice: ${mod.source})`);
                     maxRank = Math.max(maxRank, 1);
                 }
             }
         }
 
+        if (maxRank > 0) {
+            console.log(`_getOriginPathSkillRank('${skillKey}'${specialization ? `, '${specialization}'` : ''}): ${maxRank}`);
+        }
         return maxRank;
     }
 
