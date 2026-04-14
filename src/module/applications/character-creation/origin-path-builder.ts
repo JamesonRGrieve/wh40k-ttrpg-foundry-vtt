@@ -250,11 +250,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _initializeFromActor(): void {
         const originItems = this.actor.items.filter((i) => i.type === 'originPath');
+        const optionalStepKey = this.systemConfig.optionalStep?.step ?? this.systemConfig.optionalStep?.key;
         for (const item of originItems) {
             const step = item.system?.step;
             // Store as plain data objects with metadata for tracking
             const originData = this._itemToSelectionData(item);
-            if (step === 'lineage') {
+            if (optionalStepKey && step === optionalStepKey) {
                 this.lineageSelection = originData;
             } else if (step) {
                 this.selections.set(step, originData);
