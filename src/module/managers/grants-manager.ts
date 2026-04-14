@@ -24,7 +24,7 @@ import { GRANT_TYPES, createGrant } from '../data/grant/_module.ts';
  * @param {string} seed - Input string to hash
  * @returns {string} 16-character alphanumeric ID
  */
-function generateDeterministicId(seed) {
+export function generateDeterministicId(seed) {
     // Simple string hash
     let hash = 0;
     for (let i = 0; i < seed.length; i++) {
@@ -845,7 +845,7 @@ export class GrantsManager {
                     count: choice.count || 1,
                     options: choice.options.map((opt) => ({
                         label: opt.name || opt.label || 'Option',
-                        grants: this._migrateChoiceOption(opt),
+                        grants: this._migrateChoiceOption(opt, choice.type),
                     })),
                 });
             }
@@ -910,7 +910,7 @@ export class GrantsManager {
      * @returns {object[]}
      * @private
      */
-    static _migrateChoiceOption(option) {
+    static _migrateChoiceOption(option, choiceType = '') {
         const grants = [];
 
         // If option has a nested grants object, migrate it recursively
@@ -941,7 +941,7 @@ export class GrantsManager {
             });
         }
 
-        // Talent (flat structure)
+        // Talent (flat structure — explicit option.talent or UUID-only)
         if (option.talent || (option.uuid && !option.grants)) {
             grants.push({
                 type: 'item',
@@ -949,6 +949,21 @@ export class GrantsManager {
                     {
                         uuid: option.uuid || '',
                         _legacyName: option.talent || option.name,
+                    },
+                ],
+            });
+        }
+
+        // Typed choice fallback — DH2e flat choices use option.name, not dedicated fields.
+        // Covers talent, equipment, gear, trait, and psychicPower choice types.
+        const ITEM_CHOICE_TYPES = new Set(['talent', 'equipment', 'gear', 'trait', 'psychicPower']);
+        if (grants.length === 0 && ITEM_CHOICE_TYPES.has(choiceType) && option.name) {
+            grants.push({
+                type: 'item',
+                items: [
+                    {
+                        uuid: option.uuid || '',
+                        _legacyName: option.name,
                     },
                 ],
             });

@@ -288,8 +288,8 @@ export default class CharacterData extends CreatureTemplate {
 
     /** @inheritDoc */
     prepareEmbeddedData() {
+        this._computeOriginPathEffects(); // Must run before super to set gameSystem before _prepareSkills
         super.prepareEmbeddedData();
-        this._computeOriginPathEffects();
         this._computeExperienceSpent();
         this._updateWoundsFateModifiers();
         this._computeWoundsMax();

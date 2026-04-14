@@ -10,7 +10,7 @@
  */
 
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
-import { GrantsManager } from '../../managers/grants-manager.ts';
+import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import { normalizeOrigin } from './normalized-origin.ts';
@@ -1799,10 +1799,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _buildGrantSelections(): any {
         const selections = {};
-        for (const [step, selection] of this.selections) {
+        for (const [_step, selection] of this.selections) {
+            const choices = selection.system?.grants?.choices || [];
             const selectedChoices = selection.system?.selectedChoices || {};
-            for (const [choiceLabel, selected] of Object.entries(selectedChoices) as [string, any][]) {
-                selections[`${step}:${choiceLabel}`] = { selected };
+            // Key by deterministic ID matching what migrateOldGrants produces
+            for (let i = 0; i < choices.length; i++) {
+                const label = choices[i].label || choices[i].name || 'choice';
+                const selected = selectedChoices[label];
+                if (selected) {
+                    const key = generateDeterministicId(`choice-${i}-${label}`);
+                    selections[key] = {
+                        selected: Array.isArray(selected) ? selected : [selected],
+                    };
+                }
             }
         }
         return selections;
