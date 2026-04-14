@@ -355,9 +355,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const allOriginPaths: any[] = [];
 
         for (const packName of packNames) {
-            const pack = game.packs.get(`wh40k-rpg.${packName}`) as any;
+            // Try fully qualified ID first, then metadata.name fallback
+            const pack = (game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`)) as any;
             if (!pack) {
-                console.warn(`Origin path compendium '${packName}' not found`);
+                console.warn(`Origin path compendium '${packName}' not found (tried wh40k-rpg.${packName} and metadata.name match)`);
                 continue;
             }
             const documents = await pack.getDocuments();
