@@ -98,7 +98,18 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
         }
 
         for (const optionLabel of selectedOptions) {
-            const option = choiceOptions.find((o) => o.label === optionLabel);
+            let option = choiceOptions.find((o) => o.label === optionLabel);
+            let extractedSpec: string | null = null;
+
+            // Composite match: "Weapon Training (Solid Projectile)" → base "Weapon Training"
+            if (!option) {
+                const parenIdx = optionLabel.indexOf(' (');
+                if (parenIdx > 0) {
+                    const baseName = optionLabel.substring(0, parenIdx);
+                    extractedSpec = optionLabel.substring(parenIdx + 2, optionLabel.length - 1);
+                    option = choiceOptions.find((o) => o.label === baseName);
+                }
+            }
             if (!option) { result.errors.push(`Unknown option: ${optionLabel}`); continue; }
 
             result.applied.selectedOptions.push(optionLabel);
@@ -106,7 +117,18 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
 
             const grants = option.grants ?? [];
             for (let i = 0; i < grants.length; i++) {
-                const grantResult = await this._applySubGrant(actor, grants[i], data, options);
+                const grantConfig = grants[i];
+
+                // Propagate extracted specialization to item grants
+                if (extractedSpec && grantConfig.type === 'item' && Array.isArray(grantConfig.items)) {
+                    for (const item of grantConfig.items) {
+                        if (!item._legacySpecialization) {
+                            item._legacySpecialization = extractedSpec;
+                        }
+                    }
+                }
+
+                const grantResult = await this._applySubGrant(actor, grantConfig, data, options);
                 result.applied.grantResults[`${optionLabel}:${i}`] = grantResult.applied;
                 result.notifications.push(...grantResult.notifications);
                 result.errors.push(...grantResult.errors);
