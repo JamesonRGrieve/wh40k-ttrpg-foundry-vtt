@@ -454,7 +454,7 @@
         <div class="footer-status">
             <span class="status-item {{#if status.stepsComplete}}complete{{else}}pending{{/if}}">
                 <i class="fa-solid {{#if status.stepsComplete}}fa-check-circle{{else}}fa-circle-half-stroke{{/if}}"></i>
-                {{status.stepsCount}}/6 {{localize "WH40K.OriginPath.Steps"}}
+                {{status.stepsCount}}/{{status.totalSteps}} {{localize "WH40K.OriginPath.Steps"}}
             </span>
             <span class="status-item {{#if status.choicesComplete}}complete{{else}}pending{{/if}}">
                 <i class="fa-solid {{#if status.choicesComplete}}fa-check-circle{{else}}fa-exclamation-triangle{{/if}}"></i>
