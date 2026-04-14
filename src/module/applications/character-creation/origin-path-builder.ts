@@ -354,11 +354,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const optionalStepIndex = this.systemConfig.optionalStep?.stepIndex;
         const allOriginPaths: any[] = [];
 
-        // Debug: log available packs once to help diagnose lookup failures
+        // Debug: log available packs to diagnose lookup failures
         if (packNames.length > 0) {
             const availablePacks = [...game.packs.keys()];
             console.log(`OriginPathBuilder: Looking for packs:`, packNames.map(n => `wh40k-rpg.${n}`));
-            console.log(`OriginPathBuilder: Available packs (${availablePacks.length}):`, availablePacks.filter(k => k.includes('origin') || k.includes('homeworld') || k.includes('background') || k.includes('role') || k.includes('career')));
+            console.log(`OriginPathBuilder: ALL available packs (${availablePacks.length}):`, availablePacks);
         }
 
         for (const packName of packNames) {
