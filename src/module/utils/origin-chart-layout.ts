@@ -155,13 +155,10 @@ export class OriginChartLayout {
         let maxPosition = 0;
         const seenOrigins = new Set();
 
-        console.log(`ChartLayout step '${stepKey}': ${origins.length} origins received`);
         for (const origin of origins) {
-            if (seenOrigins.has(origin.id)) {
-                console.log(`  DUPLICATE skipped: ${origin.name} (id: ${origin.id})`);
-                continue;
-            }
-            seenOrigins.add(origin.id);
+            const originId = origin.id || origin._id || origin.uuid || origin.name;
+            if (seenOrigins.has(originId)) continue;
+            seenOrigins.add(originId);
 
             const positions = this._getPositions(origin);
             const position = origin.system?.primaryPosition || 4;
