@@ -90,4 +90,24 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         const career = this.getCareerRegistry()[careerKey];
         return career?.RANK_1_ADVANCES ?? [];
     }
+
+    // ── RT/DH1e/DW Skill Visibility ─────────────────────────────
+
+    /** Skills available in 3-rank career-based systems (RT, DH1e, DW) */
+    getVisibleSkills(): Set<string> {
+        return new Set([
+            // Standard skills
+            'acrobatics', 'awareness', 'barter', 'blather', 'carouse', 'charm',
+            'chemUse', 'climb', 'command', 'commerce', 'concealment', 'contortionist',
+            'deceive', 'demolition', 'disguise', 'dodge', 'evaluate', 'gamble',
+            'inquiry', 'interrogation', 'intimidate', 'invocation', 'literacy',
+            'logic', 'medicae', 'psyniscience', 'scrutiny', 'search', 'security',
+            'shadowing', 'silentMove', 'sleightOfHand', 'survival', 'swim',
+            'tracking', 'wrangling',
+            // Specialist groups
+            'ciphers', 'commonLore', 'drive', 'forbiddenLore', 'navigation',
+            'performer', 'pilot', 'scholasticLore', 'secretTongue', 'speakLanguage',
+            'techUse', 'trade',
+        ]);
+    }
 }

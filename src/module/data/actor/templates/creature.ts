@@ -3,6 +3,7 @@ import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
 import { BaseSystemConfig } from '../../../config/game-systems/base-system-config.ts';
+import { SystemConfigRegistry } from '../../../config/game-systems/index.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = (foundry.data as any).fields;
 
@@ -155,59 +156,68 @@ export default class CreatureTemplate extends CommonTemplate {
                 currentRating: new NumberField({ required: true, initial: 0, integer: true }),
             }),
 
-            // Skills - Type: Basic=false, Advanced=true per SKILL_TABLE.md
+            // Skills — union of all game lines. Per-system visibility controlled by
+            // BaseSystemConfig.getVisibleSkills(); hidden skills don't render on sheet.
             skills: new SchemaField({
-                // Standard skills (non-specialist)
-                acrobatics: this.SkillField('Acrobatics', 'Ag', true), // Advanced
-                awareness: this.SkillField('Awareness', 'Per', false), // Basic
-                barter: this.SkillField('Barter', 'Fel', false), // Basic
-                blather: this.SkillField('Blather', 'Fel', true), // Advanced
-                carouse: this.SkillField('Carouse', 'T', false), // Basic
-                charm: this.SkillField('Charm', 'Fel', false), // Basic
-                chemUse: this.SkillField('Chem-Use', 'Int', true), // Advanced
-                climb: this.SkillField('Climb', 'S', false), // Basic
-                command: this.SkillField('Command', 'Fel', false), // Basic
-                commerce: this.SkillField('Commerce', 'Fel', true), // Advanced
-                concealment: this.SkillField('Concealment', 'Ag', false), // Basic
-                contortionist: this.SkillField('Contortionist', 'Ag', false), // Basic
-                deceive: this.SkillField('Deceive', 'Fel', false), // Basic
-                demolition: this.SkillField('Demolition', 'Int', true), // Advanced
-                disguise: this.SkillField('Disguise', 'Fel', false), // Basic
-                dodge: this.SkillField('Dodge', 'Ag', false), // Basic
-                evaluate: this.SkillField('Evaluate', 'Int', false), // Basic
-                gamble: this.SkillField('Gamble', 'Int', false), // Basic
-                inquiry: this.SkillField('Inquiry', 'Fel', false), // Basic
-                interrogation: this.SkillField('Interrogation', 'WP', true), // Advanced
-                intimidate: this.SkillField('Intimidate', 'S', false), // Basic
-                invocation: this.SkillField('Invocation', 'WP', true), // Advanced
-                literacy: this.SkillField('Literacy', 'Int', false), // Basic
-                logic: this.SkillField('Logic', 'Int', false), // Basic
-                medicae: this.SkillField('Medicae', 'Int', true), // Advanced
-                psyniscience: this.SkillField('Psyniscience', 'Per', true), // Advanced
-                scrutiny: this.SkillField('Scrutiny', 'Per', false), // Basic
-                search: this.SkillField('Search', 'Per', false), // Basic
-                security: this.SkillField('Security', 'Ag', true), // Advanced
-                shadowing: this.SkillField('Shadowing', 'Ag', true), // Advanced
-                silentMove: this.SkillField('Silent Move', 'Ag', false), // Basic
-                sleightOfHand: this.SkillField('Sleight of Hand', 'Ag', true), // Advanced
-                survival: this.SkillField('Survival', 'Int', false), // Basic
-                swim: this.SkillField('Swim', 'S', false), // Basic
-                tracking: this.SkillField('Tracking', 'Int', true), // Advanced
-                wrangling: this.SkillField('Wrangling', 'Int', true), // Advanced
+                // === RT/DH1e Standard Skills ===
+                acrobatics: this.SkillField('Acrobatics', 'Ag', true),
+                awareness: this.SkillField('Awareness', 'Per', false),
+                barter: this.SkillField('Barter', 'Fel', false),           // RT/DH1e only
+                blather: this.SkillField('Blather', 'Fel', true),          // RT/DH1e only
+                carouse: this.SkillField('Carouse', 'T', false),           // RT/DH1e only
+                charm: this.SkillField('Charm', 'Fel', false),
+                chemUse: this.SkillField('Chem-Use', 'Int', true),         // RT/DH1e only
+                climb: this.SkillField('Climb', 'S', false),              // RT/DH1e only
+                command: this.SkillField('Command', 'Fel', false),
+                commerce: this.SkillField('Commerce', 'Fel', true),
+                concealment: this.SkillField('Concealment', 'Ag', false),  // RT/DH1e only
+                contortionist: this.SkillField('Contortionist', 'Ag', false), // RT/DH1e only
+                deceive: this.SkillField('Deceive', 'Fel', false),
+                demolition: this.SkillField('Demolition', 'Int', true),    // RT/DH1e only
+                disguise: this.SkillField('Disguise', 'Fel', false),       // RT/DH1e only
+                dodge: this.SkillField('Dodge', 'Ag', false),
+                evaluate: this.SkillField('Evaluate', 'Int', false),       // RT/DH1e only
+                gamble: this.SkillField('Gamble', 'Int', false),           // RT/DH1e only
+                inquiry: this.SkillField('Inquiry', 'Fel', false),
+                interrogation: this.SkillField('Interrogation', 'WP', true),
+                intimidate: this.SkillField('Intimidate', 'S', false),
+                invocation: this.SkillField('Invocation', 'WP', true),     // RT/DH1e only
+                literacy: this.SkillField('Literacy', 'Int', false),       // RT/DH1e only
+                logic: this.SkillField('Logic', 'Int', false),
+                medicae: this.SkillField('Medicae', 'Int', true),
+                psyniscience: this.SkillField('Psyniscience', 'Per', true),
+                scrutiny: this.SkillField('Scrutiny', 'Per', false),
+                search: this.SkillField('Search', 'Per', false),           // RT/DH1e only
+                security: this.SkillField('Security', 'Ag', true),
+                shadowing: this.SkillField('Shadowing', 'Ag', true),       // RT/DH1e only
+                silentMove: this.SkillField('Silent Move', 'Ag', false),   // RT/DH1e only
+                sleightOfHand: this.SkillField('Sleight of Hand', 'Ag', true),
+                survival: this.SkillField('Survival', 'Int', false),
+                swim: this.SkillField('Swim', 'S', false),                // RT/DH1e only
+                tracking: this.SkillField('Tracking', 'Int', true),        // RT/DH1e only
+                wrangling: this.SkillField('Wrangling', 'Int', true),      // RT/DH1e only
 
-                // Specialist skill groups (IsSkillGroup=true) - Advanced with entries
-                ciphers: this.SkillField('Ciphers', 'Int', true, true), // Advanced, Group
-                commonLore: this.SkillField('Common Lore', 'Int', true, true), // Advanced, Group
-                drive: this.SkillField('Drive', 'Ag', true, true), // Advanced, Group
-                forbiddenLore: this.SkillField('Forbidden Lore', 'Int', true, true), // Advanced, Group
-                navigation: this.SkillField('Navigation', 'Int', true, true), // Advanced, Group
-                performer: this.SkillField('Performer', 'Fel', true, true), // Advanced, Group
-                pilot: this.SkillField('Pilot', 'Ag', true, true), // Advanced, Group
-                scholasticLore: this.SkillField('Scholastic Lore', 'Int', true, true), // Advanced, Group
-                secretTongue: this.SkillField('Secret Tongue', 'Int', true, true), // Advanced, Group
-                speakLanguage: this.SkillField('Speak Language', 'Int', true, true), // Advanced, Group
-                techUse: this.SkillField('Tech-Use', 'Int', true, true), // Advanced, Group
-                trade: this.SkillField('Trade', 'Int', true, true), // Advanced, Group
+                // === DH2e/BC/OW Standard Skills (not in RT) ===
+                athletics: this.SkillField('Athletics', 'S', false),       // DH2e/BC/OW
+                linguistics: this.SkillField('Linguistics', 'Int', true, true), // DH2e/BC/OW, Group
+                navigate: this.SkillField('Navigate', 'Int', true, true),  // DH2e/BC/OW, Group
+                operate: this.SkillField('Operate', 'Ag', true, true),     // DH2e/BC/OW, Group
+                parry: this.SkillField('Parry', 'WS', true),              // DH2e/BC/OW
+                stealth: this.SkillField('Stealth', 'Ag', false),         // DH2e/BC/OW
+
+                // === Specialist Skill Groups (all systems) ===
+                ciphers: this.SkillField('Ciphers', 'Int', true, true),         // RT/DH1e only
+                commonLore: this.SkillField('Common Lore', 'Int', true, true),
+                drive: this.SkillField('Drive', 'Ag', true, true),              // RT/DH1e only
+                forbiddenLore: this.SkillField('Forbidden Lore', 'Int', true, true),
+                navigation: this.SkillField('Navigation', 'Int', true, true),   // RT/DH1e only
+                performer: this.SkillField('Performer', 'Fel', true, true),     // RT/DH1e only
+                pilot: this.SkillField('Pilot', 'Ag', true, true),             // RT/DH1e only
+                scholasticLore: this.SkillField('Scholastic Lore', 'Int', true, true),
+                secretTongue: this.SkillField('Secret Tongue', 'Int', true, true), // RT/DH1e only
+                speakLanguage: this.SkillField('Speak Language', 'Int', true, true), // RT/DH1e only
+                techUse: this.SkillField('Tech-Use', 'Int', true),              // Standard in DH2e, Group in RT
+                trade: this.SkillField('Trade', 'Int', true, true),
             }),
 
             // Computed armor by location
@@ -634,7 +644,17 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _prepareSkills() {
+        // Determine visible skills for this actor's game system
+        const gameSystem = (this as any).gameSystem;
+        const systemConfig = gameSystem ? SystemConfigRegistry.getOrNull(gameSystem) : null;
+        const visibleSkills = systemConfig?.getVisibleSkills() ?? null;
+
         for (const [key, skill] of Object.entries(this.skills as Record<string, any>)) {
+            // Set visibility based on game system
+            if (visibleSkills) {
+                skill.hidden = !visibleSkills.has(key);
+            }
+
             const char = this.getCharacteristic(skill.characteristic);
             const charTotal = char?.total ?? 0;
 

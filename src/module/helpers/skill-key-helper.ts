@@ -68,8 +68,11 @@ export class SkillKeyHelper {
         'Tech-Use': 'techUse',
         'Trade': 'trade',
 
-        // Compatibility Skills - Basic (3 skills from other game lines)
+        // DH2e/BC/OW Standard Skills (not in RT)
         'Athletics': 'athletics',
+        'Linguistics': 'linguistics',
+        'Navigate': 'navigate',
+        'Operate': 'operate',
         'Parry': 'parry',
         'Stealth': 'stealth',
     };
@@ -85,6 +88,7 @@ export class SkillKeyHelper {
      * @type {Set<string>}
      */
     static SPECIALIST_KEYS = new Set([
+        // RT/DH1e specialist groups
         'ciphers',
         'commonLore',
         'drive',
@@ -95,8 +99,11 @@ export class SkillKeyHelper {
         'scholasticLore',
         'secretTongue',
         'speakLanguage',
-        'techUse',
         'trade',
+        // DH2e/BC/OW specialist groups
+        'linguistics',
+        'navigate',
+        'operate',
     ]);
 
     /**
@@ -171,6 +178,11 @@ export class SkillKeyHelper {
 
         // Weapon Skill-based
         parry: 'WS',
+
+        // DH2e/BC/OW skills (athletics, stealth already above)
+        linguistics: 'Int',
+        navigate: 'Int',
+        operate: 'Ag',
     };
 
     /**

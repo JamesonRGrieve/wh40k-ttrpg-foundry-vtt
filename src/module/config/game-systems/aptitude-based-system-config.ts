@@ -168,4 +168,20 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         // queries compendiums and computes costs dynamically.
         return [];
     }
+
+    // ── DH2e/BC/OW Skill Visibility ─────────────────────────────
+
+    /** Skills available in 4-rank aptitude-based systems (DH2e, BC, OW) */
+    getVisibleSkills(): Set<string> {
+        return new Set([
+            // Standard skills
+            'acrobatics', 'athletics', 'awareness', 'charm', 'command', 'commerce',
+            'deceive', 'dodge', 'inquiry', 'interrogation', 'intimidate', 'logic',
+            'medicae', 'parry', 'psyniscience', 'scrutiny', 'security',
+            'sleightOfHand', 'stealth', 'survival', 'techUse',
+            // Specialist groups
+            'commonLore', 'forbiddenLore', 'linguistics', 'navigate', 'operate',
+            'scholasticLore', 'trade',
+        ]);
+    }
 }
