@@ -90,6 +90,26 @@ $csd-danger: #dc143c;
     }
 }
 
+.csd-section-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.csd-workspace {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.csd-main-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 // ============================================
 // Rolls Bank
 // ============================================
@@ -98,6 +118,11 @@ $csd-danger: #dc143c;
     flex-wrap: wrap;
     gap: 0.5rem;
     justify-content: center;
+
+    &--vertical {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
 
 .csd-roll-chip {
@@ -113,6 +138,14 @@ $csd-danger: #dc143c;
     cursor: pointer;
     transition: all $wh40k-transition-base;
     position: relative;
+
+    .csd-rolls-container--vertical & {
+        width: 100%;
+        height: 56px;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0 0.75rem;
+    }
 
     &:hover:not(.assigned):not(.empty) {
         transform: translateY(-3px);
@@ -172,6 +205,11 @@ $csd-danger: #dc143c;
     color: rgba($csd-bone, 0.6);
     text-transform: uppercase;
     margin-top: 0.25rem;
+
+    .csd-rolls-container--vertical & {
+        margin-top: 0;
+        text-align: right;
+    }
 }
 
 .csd-roll-input {
@@ -221,7 +259,7 @@ $csd-danger: #dc143c;
 
 .csd-char-slot {
     flex: 1;
-    max-width: 200px;
+    max-width: none;
     background: linear-gradient(135deg, rgba($csd-primary, 0.15), rgba($csd-primary, 0.05));
     border: 2px solid rgba($csd-primary, 0.35);
     border-radius: 8px;
@@ -303,6 +341,7 @@ $csd-danger: #dc143c;
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
+    flex-wrap: wrap;
 }
 
 .csd-char-base {
@@ -354,6 +393,37 @@ $csd-danger: #dc143c;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.csd-char-origin {
+    min-width: 52px;
+    min-height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0.35rem;
+    background: rgba($csd-primary, 0.14);
+    border: 2px solid rgba($csd-primary, 0.25);
+    border-radius: 6px;
+
+    &.has-origin {
+        background: rgba($csd-gold, 0.12);
+        border-color: rgba($csd-gold, 0.45);
+    }
+}
+
+.csd-char-origin-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $csd-bone;
+}
+
+.csd-char-origin-label {
+    font-size: 0.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba($csd-bone, 0.55);
 }
 
 .csd-drop-zone {
@@ -478,6 +548,10 @@ $csd-danger: #dc143c;
     i {
         color: $csd-gold;
     }
+}
+
+.csd-reset-btn {
+    @extend .csd-toggle-btn;
 }
 
 .csd-toggle-hint {
@@ -613,5 +687,20 @@ $csd-danger: #dc143c;
     .csd-drop-zone i {
         animation: none !important;
         transition: none !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .csd-workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .csd-rolls-container--vertical {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    }
+
+    .csd-rolls-container--vertical .csd-roll-chip {
+        width: 100%;
     }
 }
