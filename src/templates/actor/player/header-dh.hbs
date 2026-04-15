@@ -1,41 +1,41 @@
 {{!-- Dark Heresy 2e Character Sheet Header --}}
 {{!-- Two-column layout: Left (portrait + bio) | Right (characteristics HUD) --}}
-<div class="wh40k-header wh40k-grid-col-6 wh40k-panel wh40k-character-header" style="position: relative;">
-    <i class="fa-solid fa-dice-d20 wh40k-origin-builder-btn {{#unless originPathComplete}}pulse{{/unless}}"
+<div class="wh40k-header wh40k-grid-col-6 wh40k-panel wh40k-character-header tw-relative">
+    <i class="fa-solid fa-dice-d20 wh40k-origin-builder-btn tw-absolute tw-text-[1.5rem] tw-top-4 tw-left-4 tw-z-10 {{#unless originPathComplete}}pulse{{/unless}}"
        data-action="openOriginPathBuilder"
        data-tooltip="{{localize 'WH40K.Utility.SetupOriginPath'}}"></i>
-    <div class="wh40k-header__info wh40k-header-grid tw-grid tw-grid-cols-[minmax(280px,1fr)_auto] tw-gap-3 tw-items-start tw-pt-2 tw-px-3 tw-pb-[6px]">
+    <div class="wh40k-header__info wh40k-header-grid tw-grid tw-grid-cols-[minmax(280px,1fr)_auto] tw-gap-3 tw-items-start tw-pt-2 tw-px-3 tw-pb-1.5">
         <div class="wh40k-header-left tw-flex tw-flex-col tw-gap-2">
-            <div class="wh40k-header-topline tw-grid tw-grid-cols-[auto_1fr] tw-gap-[10px] tw-items-center">
-                <div class="wh40k-header__logo wh40k-portrait-container wh40k-portrait-full">
-                    <img class="wh40k-header__logo-image wh40k-portrait" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+            <div class="wh40k-header-topline tw-grid tw-grid-cols-[auto_1fr] tw-gap-2.5 tw-items-center">
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-shrink-0">
+                    <div class="wh40k-header__logo wh40k-portrait-container wh40k-portrait-full">
+                        <img class="wh40k-header__logo-image wh40k-portrait" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+                    </div>
                     {{#if system.originPath.divination}}
-                    <p class="wh40k-divination">"{{system.originPath.divination}}"</p>
+                    <p class="wh40k-divination tw-italic tw-opacity-50">{{system.originPath.divination}}</p>
                     {{/if}}
                 </div>
-                <div class="wh40k-header-info">
-                    <div class="wh40k-header-row wh40k-name-row">
+                <div class="wh40k-header-info tw-grid tw-grid-cols-4 tw-gap-1.5 tw-items-center">
+                    <div class="wh40k-header-row wh40k-name-row tw-col-span-4">
                         <span class="wh40k-header-label">{{localize "WH40K.Character.Name"}}</span>
                         <input class="wh40k-header-input wh40k-name-input" name="name" type="text" value="{{actor.name}}" />
                     </div>
-                    <div class="wh40k-header-row wh40k-player-row">
+                    <div class="wh40k-header-row wh40k-player-row tw-col-span-4">
                         <span class="wh40k-header-label">{{localize "WH40K.Character.Player"}}</span>
                         <input class="wh40k-header-input wh40k-player-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" />
                     </div>
                     {{!-- Origin Path Step Icons --}}
-                    <div class="wh40k-header-origin-steps">
-                        {{#each originPathSteps as |step|}}
-                        <div class="wh40k-header-step {{#if step.item}}filled{{else}}empty{{/if}}"
-                             {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
-                             data-tooltip="{{step.label}}{{#if step.item}}: {{step.item.name}}{{/if}}">
-                            {{#if step.item}}
-                                <img src="{{step.item.img}}" alt="{{step.item.name}}" class="wh40k-header-step-img" />
-                            {{else}}
-                                <i class="fas {{step.icon}} wh40k-header-step-icon"></i>
-                            {{/if}}
-                        </div>
-                        {{/each}}
+                    {{#each originPathSteps as |step|}}
+                    <div class="tw-flex tw-items-center tw-justify-center tw-w-14 tw-h-14 tw-rounded-full tw-overflow-hidden tw-border-2 tw-border-solid tw-bg-[rgba(0,0,0,0.2)] tw-justify-self-center tw-transition-all {{#if step.item}}tw-border-[#d4af37] tw-cursor-pointer hover:tw-border-[#f0d060] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)] hover:tw-scale-110{{else}}tw-border-[var(--wh40k-border-color,#4a3728)] tw-opacity-40 tw-cursor-default{{/if}}"
+                         {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
+                         data-tooltip="{{step.label}}{{#if step.item}}: {{step.item.name}}{{/if}}">
+                        {{#if step.item}}
+                            <img src="{{step.item.img}}" alt="{{step.item.name}}" class="tw-w-12 tw-h-12 tw-max-w-12 tw-max-h-12 tw-object-cover tw-rounded-full tw-border-2 tw-border-solid tw-border-[#d4af37]" />
+                        {{else}}
+                            <i class="fas {{step.icon}} tw-text-xl tw-text-[var(--wh40k-text-muted)]"></i>
+                        {{/if}}
                     </div>
+                    {{/each}}
                 </div>
             </div>
         </div>
