@@ -616,9 +616,18 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Tooltip data (JSON string)
         data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
 
-        // Check if skill is favorite
+        // Check if skill is favorite (auto-remove if untrained advanced)
         const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
-        data.isFavorite = favorites.includes(key);
+        const isUntrainedAdvanced = data.advanced && (data.trainingLevel || 0) === 0;
+        if (isUntrainedAdvanced && favorites.includes(key)) {
+            // Auto-unfavourite untrained advanced skills
+            const updated = favorites.filter((f) => f !== key);
+            this.actor.setFlag('wh40k-rpg', 'favoriteSkills', updated);
+            data.isFavorite = false;
+        } else {
+            data.isFavorite = favorites.includes(key);
+        }
+        data.showFavorite = !isUntrainedAdvanced;
 
         // Check if advanced skill is granted (for locking)
         data.isGranted = this._isSkillGranted(key, data);
