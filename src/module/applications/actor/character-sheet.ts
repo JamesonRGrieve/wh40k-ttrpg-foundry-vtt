@@ -740,6 +740,13 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                 }
             }
 
+            const tooltipData = item
+                ? JSON.stringify({
+                      title: `${step.label}: ${item.name}`,
+                      content: item.system?.description?.value || '',
+                  })
+                : null;
+
             return {
                 ...step,
                 item: item
@@ -750,6 +757,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                           system: item.system,
                       }
                     : null,
+                tooltipData,
             };
         });
 
@@ -2764,63 +2772,15 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
 
     /**
      * Open dialog to add a new specialist skill.
-     * First shows skill selector, then opens the existing specialist skill dialog.
+     * Single-page dialog with cascading dropdowns populated from compendium indexes.
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      * @this {CharacterSheet}
      */
     static async #openAddSpecialistDialog(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        // Get list of specialist skills for the dropdown
-        const skills = (this as any).actor.system.skills ?? {};
-        const specialistSkills = Object.entries(skills)
-            .filter(([_, data]) => data.entries !== undefined)
-            .map(([key, data]) => ({
-                key,
-                label: data.label || key,
-                characteristic: data.charShort || data.characteristic,
-            }))
-            .sort((a, b) => a.label.localeCompare(b.label));
-
-        // Build the skill selector content
-        const content = `
-            <form class="wh40k-add-specialist-form">
-                <div class="form-group">
-                    <label for="skill-select">Select Skill Type</label>
-                    <select id="skill-select" name="skillKey" required style="width: 100%; padding: 8px; font-size: 1rem;">
-                        <option value="">-- Choose a skill --</option>
-                        ${specialistSkills.map((s) => `<option value="${s.key}">${s.label} (${s.characteristic})</option>`).join('')}
-                    </select>
-                </div>
-            </form>
-        `;
-
-        // Show skill selection dialog
-        const result = await (foundry.applications.api.DialogV2 as any).prompt({
-            window: { title: 'Add Specialist Skill' },
-            content,
-            ok: {
-                label: 'Next',
-                icon: 'fas fa-arrow-right',
-                callback: (event, button, dialog) => {
-                    return button.form.querySelector('[name="skillKey"]').value;
-                },
-            },
-            rejectClose: false,
-        });
-
-        if (!result) return;
-
-        // Get the selected skill data
-        const skillKey = result;
-        const skill = skills[skillKey];
-        if (!skill) return;
-
-        // Open the existing specialist skill dialog for this skill
         const { prepareCreateSpecialistSkillPrompt } = await import('../prompts/specialist-skill-dialog.ts');
         await prepareCreateSpecialistSkillPrompt({
             actor: (this as any).actor,
-            skill: skill,
-            skillName: skillKey,
         });
     }
 

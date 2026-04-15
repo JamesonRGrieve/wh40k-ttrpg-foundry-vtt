@@ -142,7 +142,7 @@
     border: 2px solid var(--wh40k-border-color);
     border-radius: var(--wh40k-radius-md);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     min-height: 120px;
 
     &:hover:not(.disabled) {
@@ -190,7 +190,7 @@
     i {
         font-size: 1.2rem;
         color: var(--wh40k-text-muted);
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
     }
 }
 
@@ -256,7 +256,7 @@
     color: var(--wh40k-gold);
     cursor: pointer;
     opacity: 0;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     z-index: 10;
 
     &:hover {
@@ -358,7 +358,7 @@
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     border: none;
 
     i {

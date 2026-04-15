@@ -105,7 +105,7 @@
     border-radius: $wh40k-radius-md;
     color: var(--color-text-light-primary);
     font-size: 0.85rem;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:focus {
         outline: none;
@@ -158,7 +158,7 @@
     color: var(--color-text-light-primary);
     font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:focus {
         outline: none;
@@ -416,7 +416,7 @@
     border: none;
     color: var(--color-text-light-6);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     font-size: 0.75rem;
     display: inline-flex;
     align-items: center;
@@ -523,7 +523,7 @@
     border-radius: $wh40k-radius-sm;
     color: $wh40k-color-gold;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     font-size: 0.7rem;
     display: inline-block;
 

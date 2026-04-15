@@ -665,7 +665,7 @@
     background: var(--wh40k-panel-bg);
     border: 1px solid $wh40k-border-light;
     border-radius: 6px;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     position: relative;
     overflow: hidden;
     min-width: 0;
@@ -681,7 +681,7 @@
         bottom: 0;
         width: 3px;
         background: var(--vital-color, $wh40k-border-medium);
-        transition: all 0.3s ease;
+        transition: all $wh40k-transition-medium;
     }
 
     &:hover {
@@ -820,7 +820,7 @@
     );
     background-size: 20px 20px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     min-height: 80px;
 
     &:hover {

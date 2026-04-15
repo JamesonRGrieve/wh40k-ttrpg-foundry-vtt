@@ -667,7 +667,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     white-space: nowrap;
 
     .material-icons {
@@ -968,7 +968,7 @@
     font-size: 0.8rem;
     font-weight: 600;
     cursor: help;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: rgba(75, 192, 115, 0.25);

@@ -351,7 +351,7 @@
     font-family: 'Roboto', sans-serif;
     font-size: 0.85rem;
     color: var(--wh40k-text-dark);
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         border-color: var(--wh40k-border-color);

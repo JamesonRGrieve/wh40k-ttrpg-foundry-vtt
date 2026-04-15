@@ -279,7 +279,7 @@
 .wh40k-fatigue-pip {
     font-size: 1.2rem;
     color: rgba(#c08020, 0.25); // Unfilled: faded amber
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     cursor: pointer;
     background: none;
     border: none;
@@ -318,7 +318,7 @@
 .wh40k-fate-pip {
     font-size: 1.2rem;
     color: rgba(#3498db, 0.25); // Unfilled: faded blue
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     cursor: pointer;
     background: none;
     border: none;
@@ -380,7 +380,7 @@
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
     border-radius: 3px;
     border: 1px solid transparent;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     cursor: pointer;
     width: 100%;
 
@@ -403,7 +403,7 @@
     }
 
     .wh40k-speed-value {
-        font-family: 'Modesto Condensed', serif;
+        font-family: $wh40k-font-alt;
         font-size: 0.95rem;
         font-weight: 700;
         line-height: 1;
@@ -449,7 +449,7 @@
 }
 
 .wh40k-combat-vital-value {
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--vital-color, $wh40k-text-primary);
@@ -478,7 +478,7 @@
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
     border-left: 2px solid $wh40k-accent-gold;
     border-radius: 3px;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
@@ -538,7 +538,7 @@
     color: $wh40k-text-muted;
     cursor: pointer;
     border-radius: 2px;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     i {
         font-size: 0.7rem;
@@ -633,7 +633,7 @@
     border: 1px solid rgba($wh40k-accent-combat, 0.3);
     border-radius: 2px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     flex-shrink: 0;
 
     &:hover {
@@ -681,7 +681,7 @@
     font-size: 0.85rem;
     font-weight: 600;
     color: $wh40k-text-primary;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:focus {
         outline: none;
@@ -805,7 +805,7 @@
     border: 1px solid $wh40k-border-light;
     border-radius: $wh40k-radius-md;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     min-height: 80px;
     position: relative;
     overflow: hidden;
@@ -826,7 +826,7 @@
     i {
         font-size: 1.1rem;
         color: var(--action-color, $wh40k-text-secondary);
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
     }
 
     &:hover {
@@ -868,7 +868,7 @@
 }
 
 .wh40k-combat-action-value {
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     font-size: 0.85rem;
     font-weight: 700;
     color: var(--action-color, $wh40k-accent-gold);
@@ -1111,7 +1111,7 @@
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     i {
         font-size: 0.85rem;
@@ -1149,7 +1149,7 @@
     color: $wh40k-text-muted;
     font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     flex-shrink: 0;
 
     &:hover {

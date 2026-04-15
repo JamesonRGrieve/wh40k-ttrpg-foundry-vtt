@@ -72,7 +72,7 @@
     overflow: hidden;
     border: 2px solid var(--color-border-secondary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     img {
         width: 100%;
@@ -160,7 +160,7 @@
     border-radius: $wh40k-radius-md;
     color: var(--color-text-secondary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: var(--color-bg-secondary);
@@ -363,7 +363,7 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     i {
         font-size: 0.95em;
@@ -596,7 +596,7 @@
     border: 1px solid var(--color-border-light);
     border-radius: $wh40k-radius-sm;
     font-size: 0.82rem;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &--skill {
         border-left: 3px solid $wh40k-accent-skills;
@@ -774,7 +774,7 @@
     color: var(--color-text-primary);
     font-size: 0.88rem;
     font-family: inherit;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:focus {
         outline: none;
@@ -839,7 +839,7 @@
     border-radius: $wh40k-radius-sm;
     color: var(--color-text-secondary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: rgba($wh40k-color-gold, 0.15);
@@ -1108,7 +1108,7 @@
     border-radius: $wh40k-radius-sm;
     color: var(--color-text-tertiary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: var(--color-bg-tertiary);
@@ -1135,7 +1135,7 @@
     color: var(--color-text-tertiary);
     font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: rgba($wh40k-color-gold, 0.08);
@@ -1269,7 +1269,7 @@
         cursor: pointer;
         border-radius: $wh40k-radius-sm;
         font-size: 0.85rem;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         input[type='radio'] {
             display: none;
@@ -1374,7 +1374,7 @@
     border-radius: $wh40k-radius-sm;
     color: var(--color-text-tertiary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     i {
         font-size: 0.75rem;
@@ -1427,7 +1427,7 @@
 // Clickable empty states
 .wh40k-empty-state--clickable {
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: var(--talent-accent-bg);
@@ -1458,7 +1458,7 @@
     font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     i {
         font-size: 0.75rem;
@@ -1614,7 +1614,7 @@
         text-transform: uppercase;
         letter-spacing: 0.5px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         &:hover {
             background: rgba($wh40k-color-gold, 0.2);
@@ -1642,7 +1642,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     font-size: 0.75rem;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: rgba(0, 0, 0, 0.4);
@@ -1737,7 +1737,7 @@
     border: 1px solid var(--color-border-light);
     border-left: 3px solid var(--talent-accent-border);
     border-radius: $wh40k-radius-md;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: rgba(0, 0, 0, 0.3);

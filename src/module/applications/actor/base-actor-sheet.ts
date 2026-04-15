@@ -1805,11 +1805,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             // Reset dropdown
             (target as unknown as HTMLSelectElement).selectedIndex = 0;
         } else {
-            // Use the existing specialist skill dialog
             const { prepareCreateSpecialistSkillPrompt } = await import('../prompts/specialist-skill-dialog.ts');
             await prepareCreateSpecialistSkillPrompt({
                 actor: (this as any).actor,
-                skill: skill,
                 skillName: skillKey,
             });
             return;

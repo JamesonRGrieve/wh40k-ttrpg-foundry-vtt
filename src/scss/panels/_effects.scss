@@ -38,7 +38,7 @@
     border-left: 3px solid $wh40k-accent-gold;
     border-radius: 6px;
     padding: $wh40k-space-sm;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: rgba(255, 255, 255, 0.8);
@@ -124,7 +124,7 @@
     border-radius: 4px;
     color: $wh40k-text-muted;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     i {
         font-size: 0.85rem;
@@ -240,7 +240,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.2) 0%, rgba($wh40k-accent-gold, 0.1) 100%);

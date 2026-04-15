@@ -92,7 +92,7 @@
 
 [data-drop-zone] {
     position: relative;
-    transition: all 0.3s ease;
+    transition: all $wh40k-transition-medium;
 
     // Valid drop zone
     &.drop-valid {
@@ -181,7 +181,7 @@
     border: 2px dashed var(--wh40k-iron);
     border-radius: 4px;
     background: rgba(62, 62, 62, 0.2);
-    transition: all 0.3s ease;
+    transition: all $wh40k-transition-medium;
 
     &.empty {
         &::after {
@@ -291,7 +291,7 @@
         border: 2px solid var(--wh40k-bronze);
         border-radius: 4px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         img {
             width: 100%;

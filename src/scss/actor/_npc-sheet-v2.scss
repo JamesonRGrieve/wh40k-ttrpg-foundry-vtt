@@ -247,7 +247,7 @@ $bp-wide: 1200px;
         font-size: 0.8rem;
         font-weight: 500;
         cursor: pointer;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
         text-decoration: none;
         width: 100%;
         text-align: left;
@@ -324,7 +324,7 @@ $bp-wide: 1200px;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
         width: 100%;
 
         &:hover {
@@ -361,7 +361,7 @@ $bp-wide: 1200px;
         cursor: pointer;
         font-size: 0.75rem;
         font-weight: 600;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
 
         &:hover {
             border-color: $npc-accent-primary;
@@ -402,7 +402,7 @@ $bp-wide: 1200px;
         border-radius: 6px;
         color: var(--color-text-light-secondary, #888);
         cursor: pointer;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
 
         &:hover {
             background: var(--color-bg-secondary, #333);
@@ -665,7 +665,7 @@ $bp-wide: 1200px;
             border: 1px solid var(--color-border-secondary, #444);
             border-radius: 6px;
             min-width: 70px;
-            transition: all 0.2s;
+            transition: all $wh40k-transition-base;
 
             .vital-icon {
                 font-size: 1.1rem;
@@ -845,7 +845,7 @@ $bp-wide: 1200px;
                 color: var(--color-text-light-primary, #f0f0f0);
                 font-size: 0.75rem;
                 cursor: pointer;
-                transition: all 0.15s;
+                transition: all $wh40k-transition-fast;
 
                 i {
                     font-size: 0.8rem;
@@ -925,7 +925,7 @@ $bp-wide: 1200px;
                 cursor: pointer;
                 padding: 0.25rem;
                 border-radius: 3px;
-                transition: all 0.15s;
+                transition: all $wh40k-transition-fast;
 
                 &:hover {
                     color: $npc-accent-primary;
@@ -1093,7 +1093,7 @@ $bp-wide: 1200px;
         border: 1px solid var(--color-border-secondary, #444);
         border-radius: 6px;
         cursor: pointer;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
         min-height: 80px;
 
         &:hover {
@@ -1237,7 +1237,7 @@ $bp-wide: 1200px;
             border-radius: 4px;
             color: var(--color-text-light-secondary, #888);
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all $wh40k-transition-fast;
 
             &:hover {
                 border-color: $npc-accent-primary;
@@ -1299,7 +1299,7 @@ $bp-wide: 1200px;
             border-radius: 3px;
             color: var(--color-text-light-secondary, #888);
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all $wh40k-transition-fast;
             padding: 0;
 
             &:hover:not(:disabled) {
@@ -1343,7 +1343,7 @@ $bp-wide: 1200px;
         padding: 0;
         flex-shrink: 0;
         border-radius: 50%;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
 
         &:hover {
             background: rgba($npc-accent-skills, 0.15);
@@ -1393,7 +1393,7 @@ $bp-wide: 1200px;
         border-radius: 4px;
         font-size: 0.75rem;
         cursor: pointer;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
 
         &:hover {
             border-color: $npc-accent-abilities;
@@ -1434,7 +1434,7 @@ $bp-wide: 1200px;
         border-radius: 3px;
         font-size: 0.65rem;
         cursor: pointer;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
 
         &:hover {
             border-color: $npc-accent-abilities;
@@ -1696,7 +1696,7 @@ $bp-wide: 1200px;
         border-radius: 4px;
         cursor: pointer;
         font-size: 0.9rem;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
         padding: 0;
 
         &.wh40k-arrow-up {
@@ -1992,7 +1992,7 @@ $bp-wide: 1200px;
         border: 1px solid rgba(255, 255, 255, 0.08);
         cursor: pointer;
         color: var(--color-text-light-primary, #f0f0f0);
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
         min-height: 76px;
         width: 100%;
         gap: 3px;
@@ -2176,7 +2176,7 @@ $bp-wide: 1200px;
         border-radius: 4px;
         cursor: pointer;
         font-size: 0.7rem;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
         padding: 0;
         &:hover {
             background: rgba($npc-accent-combat, 0.3);
@@ -2223,7 +2223,7 @@ $bp-wide: 1200px;
         color: $npc-accent-combat;
         cursor: pointer;
         font-size: 0.7rem;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
         &:hover {
             background: rgba($npc-accent-combat, 0.2);
             border-color: $npc-accent-combat;
@@ -2333,7 +2333,7 @@ $bp-wide: 1200px;
         font-weight: 600;
         border-radius: 4px;
         cursor: pointer;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
     }
 
     .wh40k-btn-damage {
@@ -2400,7 +2400,7 @@ $bp-wide: 1200px;
         border: 1px solid var(--color-border-secondary, #444);
         border-radius: 6px;
         cursor: pointer;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
 
         &:hover {
             border-color: $npc-accent-primary;
@@ -2591,7 +2591,7 @@ $bp-wide: 1200px;
         border: 1px solid var(--color-border-secondary, #444);
         border-radius: 6px;
         padding: 0.6rem;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
 
         &:hover {
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -2647,7 +2647,7 @@ $bp-wide: 1200px;
             border-radius: 4px;
             color: $npc-accent-combat;
             cursor: pointer;
-            transition: all 0.15s;
+            transition: all $wh40k-transition-fast;
 
             &:hover {
                 background: rgba($npc-accent-combat, 0.3);
@@ -2896,7 +2896,7 @@ $bp-wide: 1200px;
         border: 1px solid var(--color-border-secondary, #444);
         border-radius: 6px;
         padding: 0.5rem;
-        transition: all 0.15s;
+        transition: all $wh40k-transition-fast;
 
         &:hover {
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
@@ -2999,7 +2999,7 @@ $bp-wide: 1200px;
     .wh40k-dropzone {
         border: 2px dashed var(--color-border-secondary, #444);
         border-radius: 6px;
-        transition: all 0.2s;
+        transition: all $wh40k-transition-base;
 
         &.drag-over {
             border-color: $npc-accent-primary;
@@ -3179,7 +3179,7 @@ $bp-wide: 1200px;
         color: #f0f0f0;
         font-size: 0.9rem;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         &:hover {
             border-color: rgba(201, 162, 39, 0.5);
@@ -3221,7 +3221,7 @@ $bp-wide: 1200px;
             font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all $wh40k-transition-base;
 
             i {
                 font-size: 0.9rem;

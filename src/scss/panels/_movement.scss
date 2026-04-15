@@ -109,7 +109,7 @@
     background: $wh40k-bg-paper-light;
     border: 1px solid $wh40k-border-light;
     border-radius: 6px;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     cursor: pointer;
 
     &:hover {
@@ -140,7 +140,7 @@
 }
 
 .wh40k-speed-value {
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--color-text-primary);
@@ -234,7 +234,7 @@
 }
 
 .wh40k-athletic-value {
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-text-primary);
@@ -264,7 +264,7 @@
 }
 
 .wh40k-carry-value {
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-text-primary);
@@ -292,7 +292,7 @@
     background: rgba(255, 255, 255, 0.8);
     color: var(--color-text-primary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         border-color: $wh40k-accent-gold;
@@ -368,7 +368,7 @@
 }
 
 .wh40k-movement-value {
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-text-primary);
@@ -393,7 +393,7 @@
 }
 
 .wh40k-move-value {
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     font-size: 1rem;
     font-weight: 700;
     color: var(--color-text-primary);
@@ -443,7 +443,7 @@
     border: 1px solid var(--color-border-light);
     border-radius: 6px;
     overflow: hidden;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: var(--color-bg-primary);
@@ -485,7 +485,7 @@
 }
 
 .wh40k-move-modern-value {
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--color-text-primary);
@@ -551,7 +551,7 @@
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-light);
     border-radius: 6px;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: var(--color-bg-primary);
@@ -576,7 +576,7 @@
 }
 
 .wh40k-stat-value {
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     font-size: 1rem;
     font-weight: 700;
     color: var(--color-text-dark-primary);
@@ -637,7 +637,7 @@
     color: #ddd;
     font-size: 0.7rem;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         background: rgba(0, 0, 0, 0.85);
@@ -658,5 +658,5 @@
 
 .wh40k-token-movement__value {
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
 }

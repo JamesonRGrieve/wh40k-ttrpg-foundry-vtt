@@ -3,9 +3,7 @@
 // ============================================
 // New dashboard design for Overview tab - all critical info visible without scrolling
 
-// Layout (flex-col, gap, padding, h-full, overflow) now in template utilities
-
-// Layout (grid, gap) now in template utilities; grid-template-columns stays (CSS vars)
+// Grid template columns use CSS vars; layout handled by Tailwind in template
 .wh40k-dashboard-row {
     &.wh40k-dashboard-row--top {
         grid-template-columns: repeat(var(--wh40k-columns, 3), 1fr);
@@ -23,14 +21,12 @@
     }
 }
 
-// Layout (flex-col, overflow) now in template utilities
 .wh40k-dashboard-zone {
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-secondary);
     border-radius: 6px;
 }
 
-// Layout (flex, items, gap, padding) now in template utilities
 .wh40k-zone-header {
     background: var(--color-bg-tertiary);
     border-bottom: 1px solid var(--color-border-secondary);
@@ -46,8 +42,6 @@
     }
 }
 
-// Layout (padding, flex-1, flex-col, gap) now in template utilities
-
 // Zone Subsection
 .wh40k-zone-subsection {
     padding: 6px 8px;
@@ -60,19 +54,18 @@
 // Zone 1: Vitals
 // ============================================
 
-.wh40k-zone-vitals {
-    border-left: 3px solid $wh40k-accent-combat;
-
-    .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba($wh40k-accent-combat, 0.12) 0%, var(--color-bg-tertiary) 100%);
-
-        i {
-            color: $wh40k-accent-combat;
-        }
+// Zone accent colors — generated from $wh40k-zones map in _mixins.scss
+@each $zone, $color in $wh40k-zones {
+    .wh40k-zone-#{$zone} {
+        @include wh40k-zone-accent($color);
     }
 }
 
-// Layout (flex, items, gap, padding) now in template utilities
+// Effects zone has an extra --wide modifier
+.wh40k-zone-effects--wide {
+    grid-column: span 2;
+}
+
 .wh40k-vital-row {
     &.wh40k-vital-row--critical {
         background: rgba(139, 0, 0, 0.1);
@@ -102,8 +95,6 @@
     min-width: 50px;
 }
 
-// Layout (flex, items, gap, ml-auto) now in template utilities
-
 .wh40k-vital-btn {
     width: 20px;
     height: 20px;
@@ -117,7 +108,7 @@
     font-size: 0.7rem;
     cursor: pointer;
     color: var(--color-text-secondary);
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         background: var(--color-bg-tertiary);
@@ -138,7 +129,7 @@
     font-size: 0.7rem;
     cursor: pointer;
     color: var(--color-text-tertiary);
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         color: $wh40k-accent-gold;
@@ -148,7 +139,7 @@
 .wh40k-vital-value {
     font-size: 1.4rem;
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     color: var(--color-text-primary);
     min-width: 45px;
     text-align: center;
@@ -171,7 +162,7 @@
 .wh40k-vital-input {
     font-size: 1.4rem;
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     color: var(--color-text-primary);
     width: 55px;
     text-align: center;
@@ -219,7 +210,7 @@
     cursor: pointer;
     color: rgba(#c08020, 0.25);
     font-size: 0.8rem;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &.wh40k-fatigue-pip--filled {
         color: #c08020;
@@ -262,7 +253,7 @@
     cursor: pointer;
     color: var(--color-text-tertiary);
     font-size: 0.8rem;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &.wh40k-fate-pip--filled {
         color: #3498db !important; // Blue instead of gold
@@ -289,7 +280,7 @@
     background: var(--color-bg-tertiary);
     border: 1px solid var(--color-border-secondary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     padding: 0;
     display: flex;
     align-items: center;
@@ -338,7 +329,7 @@
 .wh40k-mental-value {
     font-size: 0.8rem;
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     color: var(--color-text-primary);
     min-width: 25px;
     text-align: center;
@@ -355,78 +346,11 @@
     white-space: nowrap;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
-    // Corruption Degrees
-    &.wh40k-degree-pure {
-        background: rgba($wh40k-degree-pure, 0.2);
-        border: 1px solid $wh40k-degree-pure;
-        color: darken($wh40k-degree-pure, 20%);
-    }
-
-    &.wh40k-degree-tainted {
-        background: rgba($wh40k-degree-tainted, 0.2);
-        border: 1px solid $wh40k-degree-tainted;
-        color: darken($wh40k-degree-tainted, 25%);
-    }
-
-    &.wh40k-degree-soiled {
-        background: rgba($wh40k-degree-soiled, 0.2);
-        border: 1px solid $wh40k-degree-soiled;
-        color: darken($wh40k-degree-soiled, 20%);
-    }
-
-    &.wh40k-degree-debased {
-        background: rgba($wh40k-degree-debased, 0.25);
-        border: 1px solid $wh40k-degree-debased;
-        color: $wh40k-degree-debased;
-    }
-
-    &.wh40k-degree-profane {
-        background: rgba($wh40k-degree-profane, 0.3);
-        border: 1px solid $wh40k-degree-profane;
-        color: $wh40k-degree-profane;
-    }
-
-    &.wh40k-degree-damned {
-        background: rgba($wh40k-degree-damned, 0.3);
-        border: 1px solid $wh40k-degree-damned;
-        color: lighten($wh40k-degree-damned, 10%);
-    }
-
-    // Insanity Degrees
-    &.wh40k-degree-stable {
-        background: rgba($wh40k-degree-stable, 0.2);
-        border: 1px solid $wh40k-degree-stable;
-        color: darken($wh40k-degree-stable, 20%);
-    }
-
-    &.wh40k-degree-unsettled {
-        background: rgba($wh40k-degree-unsettled, 0.2);
-        border: 1px solid $wh40k-degree-unsettled;
-        color: darken($wh40k-degree-unsettled, 25%);
-    }
-
-    &.wh40k-degree-disturbed {
-        background: rgba($wh40k-degree-disturbed, 0.2);
-        border: 1px solid $wh40k-degree-disturbed;
-        color: darken($wh40k-degree-disturbed, 20%);
-    }
-
-    &.wh40k-degree-unhinged {
-        background: rgba($wh40k-degree-debased, 0.25);
-        border: 1px solid $wh40k-degree-unhinged;
-        color: $wh40k-degree-unhinged;
-    }
-
-    &.wh40k-degree-deranged {
-        background: rgba($wh40k-degree-deranged, 0.3);
-        border: 1px solid $wh40k-degree-deranged;
-        color: $wh40k-degree-deranged;
-    }
-
-    &.wh40k-degree-terminally {
-        background: rgba($wh40k-degree-terminally, 0.3);
-        border: 1px solid $wh40k-degree-terminally;
-        color: lighten($wh40k-degree-terminally, 10%);
+    // Corruption & Insanity degree badges — generated from $wh40k-degree-badges map
+    @each $degree, $params in $wh40k-degree-badges {
+        &.wh40k-degree-#{$degree} {
+            @include wh40k-degree-badge-style(nth($params, 1), nth($params, 2), nth($params, 3), 1px);
+        }
     }
 }
 
@@ -434,17 +358,7 @@
 // Zone 2: Characteristics
 // ============================================
 
-.wh40k-zone-characteristics {
-    border-left: 3px solid $wh40k-accent-gold;
-
-    .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba($wh40k-accent-gold, 0.12) 0%, var(--color-bg-tertiary) 100%);
-
-        i {
-            color: $wh40k-accent-gold;
-        }
-    }
-}
+// .wh40k-zone-characteristics removed — dead CSS (no template reference)
 
 .wh40k-char-grid-compact {
     display: grid;
@@ -484,7 +398,7 @@
 .wh40k-char-total-compact {
     font-size: 0.85rem;
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     color: var(--color-text-primary);
     min-width: 22px;
     text-align: right;
@@ -509,7 +423,7 @@
     cursor: pointer;
     color: var(--color-text-tertiary);
     margin-left: auto;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         color: $wh40k-accent-gold;
@@ -521,17 +435,7 @@
 // Zone 3: Key Skills
 // ============================================
 
-.wh40k-zone-skills {
-    border-left: 3px solid #2ecc71;
-
-    .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba(46, 204, 113, 0.12) 0%, var(--color-bg-tertiary) 100%);
-
-        i {
-            color: #2ecc71;
-        }
-    }
-}
+// .wh40k-zone-skills accent generated via @each above
 
 .wh40k-skill-list-compact {
     display: flex;
@@ -562,7 +466,7 @@
 .wh40k-skill-value-compact {
     font-size: 0.85rem;
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     color: var(--color-text-primary);
     min-width: 28px;
     text-align: right;
@@ -580,7 +484,7 @@
     font-size: 0.7rem;
     cursor: pointer;
     color: var(--color-text-tertiary);
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         color: #2ecc71;
@@ -622,17 +526,7 @@
 // Zone 3: Favorite Talents
 // ============================================
 
-.wh40k-zone-talents {
-    border-left: 3px solid $wh40k-accent-talents;
-
-    .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba($wh40k-accent-talents, 0.12) 0%, var(--color-bg-tertiary) 100%);
-
-        i {
-            color: $wh40k-accent-talents;
-        }
-    }
-}
+// .wh40k-zone-talents accent generated via @each above
 
 .wh40k-talent-list-compact {
     display: flex;
@@ -693,7 +587,7 @@
     font-size: 0.7rem;
     cursor: pointer;
     color: var(--color-text-tertiary);
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         color: $wh40k-accent-talents;
@@ -705,17 +599,7 @@
 // Zone 4: Movement & Load
 // ============================================
 
-.wh40k-zone-movement {
-    border-left: 3px solid #3498db;
-
-    .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba(52, 152, 219, 0.12) 0%, var(--color-bg-tertiary) 100%);
-
-        i {
-            color: #3498db;
-        }
-    }
-}
+// .wh40k-zone-movement accent generated via @each above
 
 .wh40k-movement-compact {
     display: flex;
@@ -746,7 +630,7 @@
 .wh40k-speed-value {
     font-size: 0.95rem;
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     color: var(--color-text-primary);
 }
 
@@ -808,17 +692,7 @@
 // Zone 5: Quick Combat
 // ============================================
 
-.wh40k-zone-combat {
-    border-left: 3px solid $wh40k-accent-combat;
-
-    .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba($wh40k-accent-combat, 0.12) 0%, var(--color-bg-tertiary) 100%);
-
-        i {
-            color: $wh40k-accent-combat;
-        }
-    }
-}
+// .wh40k-zone-combat removed — dead CSS (no template reference)
 
 .wh40k-combat-weapon {
     display: flex;
@@ -854,7 +728,7 @@
 .wh40k-weapon-damage {
     font-size: 0.7rem;
     color: var(--color-text-secondary);
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
 }
 
 .wh40k-weapon-attack-btn {
@@ -870,7 +744,7 @@
     font-size: 0.75rem;
     cursor: pointer;
     color: white;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         background: darken($wh40k-accent-combat, 10%);
@@ -908,7 +782,7 @@
 .wh40k-stat-value {
     font-size: 0.85rem;
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     color: var(--color-text-primary);
 }
 
@@ -930,7 +804,7 @@
 
 .wh40k-armour-loc {
     color: var(--color-text-primary);
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
 }
 
 .wh40k-forcefield-row {
@@ -959,7 +833,7 @@
 .wh40k-ff-rating {
     font-size: 0.8rem;
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     color: #3498db;
 }
 
@@ -976,7 +850,7 @@
     font-size: 0.7rem;
     cursor: pointer;
     color: var(--color-text-tertiary);
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &.wh40k-ff-active {
         background: rgba(46, 204, 113, 0.2);
@@ -994,17 +868,7 @@
 // Zone 6: Progression
 // ============================================
 
-.wh40k-zone-progression {
-    border-left: 3px solid $wh40k-color-gold;
-
-    .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.12) 0%, var(--color-bg-tertiary) 100%);
-
-        i {
-            color: $wh40k-color-gold;
-        }
-    }
-}
+// .wh40k-zone-progression accent generated via @each above
 
 // XP ring in progression header
 .wh40k-xp-ring-header {
@@ -1045,7 +909,7 @@
 .wh40k-xp-value {
     font-size: 0.85rem;
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     color: var(--color-text-primary);
 
     &.wh40k-xp-available {
@@ -1062,17 +926,7 @@
 // Zone 7: Dynasty
 // ============================================
 
-.wh40k-zone-dynasty {
-    border-left: 3px solid #f39c12;
-
-    .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba(243, 156, 18, 0.12) 0%, var(--color-bg-tertiary) 100%);
-
-        i {
-            color: #f39c12;
-        }
-    }
-}
+// .wh40k-zone-dynasty removed — dead CSS (no template reference)
 
 .wh40k-dynasty-row {
     display: flex;
@@ -1102,7 +956,7 @@
 .wh40k-dynasty-value {
     font-size: 0.8rem;
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     color: var(--color-text-primary);
 
     &.wh40k-pf-value {
@@ -1122,17 +976,7 @@
 // Zone 5: Equipped Weapons
 // ============================================
 
-.wh40k-zone-weapons {
-    border-left: 3px solid $wh40k-accent-combat;
-
-    .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba($wh40k-accent-combat, 0.12) 0%, var(--color-bg-tertiary) 100%);
-
-        i {
-            color: $wh40k-accent-combat;
-        }
-    }
-}
+// .wh40k-zone-weapons accent generated via @each above
 
 .wh40k-ew-list {
     display: flex;
@@ -1148,7 +992,7 @@
     background: var(--color-bg-option);
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         background: var(--color-bg-tertiary);
@@ -1194,7 +1038,7 @@
 .wh40k-ew-damage {
     font-size: 0.7rem;
     color: var(--color-text-secondary);
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     white-space: nowrap;
     flex-shrink: 0;
 }
@@ -1236,7 +1080,7 @@
     font-weight: 600;
     cursor: pointer;
     color: var(--color-text-secondary);
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         background: rgba($wh40k-color-gold, 0.15);
@@ -1249,17 +1093,7 @@
 // Zone 6: Armour (overview inline silhouette)
 // ============================================
 
-.wh40k-zone-armour {
-    border-left: 3px solid #7f8c8d;
-
-    .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba(127, 140, 141, 0.12) 0%, var(--color-bg-tertiary) 100%);
-
-        i {
-            color: #7f8c8d;
-        }
-    }
-}
+// .wh40k-zone-armour accent generated via @each above
 
 .wh40k-ov-armour-silhouette {
     display: grid;
@@ -1282,7 +1116,7 @@
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
     border-radius: 4px;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         background: var(--color-bg-tertiary);
@@ -1302,7 +1136,7 @@
 .wh40k-ov-box-ap {
     font-size: 0.9rem;
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     color: var(--color-text-primary);
     line-height: 1;
 }
@@ -1346,37 +1180,13 @@
 // Zone: Resources (DH2e)
 // ============================================
 
-.wh40k-zone-resources {
-    border-left: 3px solid $wh40k-color-gold;
-
-    .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.12) 0%, var(--color-bg-tertiary) 100%);
-
-        i {
-            color: $wh40k-color-gold;
-        }
-    }
-}
+// .wh40k-zone-resources accent generated via @each above
 
 // ============================================
 // Zone 8: Active Effects Preview
 // ============================================
 
-.wh40k-zone-effects {
-    border-left: 3px solid #9b59b6;
-
-    &.wh40k-zone-effects--wide {
-        grid-column: span 2;
-    }
-
-    .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba(155, 89, 182, 0.12) 0%, var(--color-bg-tertiary) 100%);
-
-        i {
-            color: #9b59b6;
-        }
-    }
-}
+// .wh40k-zone-effects accent generated via @each above
 
 .wh40k-effects-preview {
     display: flex;
@@ -1417,7 +1227,7 @@
     font-size: 0.6rem;
     cursor: pointer;
     color: var(--color-text-tertiary);
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         background: var(--color-bg-tertiary);
@@ -1443,7 +1253,7 @@
     font-size: 0.65rem;
     cursor: pointer;
     color: var(--color-text-tertiary);
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         background: rgba(155, 89, 182, 0.1);

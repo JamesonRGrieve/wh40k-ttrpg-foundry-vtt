@@ -116,13 +116,284 @@
 // Degree Badges
 // ============================================
 
-@mixin wh40k-degree-badge-style($color, $darken-amount: 15%) {
-    background: rgba($color, 0.15);
-    border: 2px solid $color;
-    @if $darken-amount > 0 {
+@mixin wh40k-degree-badge-style($color, $darken-amount: 15%, $bg-opacity: 0.15, $border-width: 2px) {
+    background: rgba($color, $bg-opacity);
+    border: $border-width solid $color;
+    @if $darken-amount < 0 {
+        color: lighten($color, abs($darken-amount));
+    } @else if $darken-amount > 0 {
         color: darken($color, $darken-amount);
     } @else {
         color: $color;
+    }
+}
+
+// Degree color map for @each generation
+// Format: name: (color, darken-amount, bg-opacity)
+$wh40k-degree-badges: (
+    // Corruption degrees
+    pure: ($wh40k-degree-pure, 20%, 0.2),
+    tainted: ($wh40k-degree-tainted, 25%, 0.2),
+    soiled: ($wh40k-degree-soiled, 20%, 0.2),
+    debased: ($wh40k-degree-debased, 0%, 0.25),
+    profane: ($wh40k-degree-profane, 0%, 0.3),
+    damned: ($wh40k-degree-damned, -10%, 0.3),
+    // Insanity degrees
+    stable: ($wh40k-degree-stable, 20%, 0.2),
+    unsettled: ($wh40k-degree-unsettled, 25%, 0.2),
+    disturbed: ($wh40k-degree-disturbed, 20%, 0.2),
+    unhinged: ($wh40k-degree-unhinged, 0%, 0.25),
+    deranged: ($wh40k-degree-deranged, 0%, 0.3),
+    terminally: ($wh40k-degree-terminally, -10%, 0.3)
+);
+
+// ============================================
+// Zone Accent Theming
+// ============================================
+
+@mixin wh40k-zone-accent($color) {
+    border-left: 3px solid $color;
+
+    .wh40k-zone-header {
+        background: linear-gradient(90deg, rgba($color, 0.12) 0%, var(--color-bg-tertiary) 100%);
+
+        i {
+            color: $color;
+        }
+    }
+}
+
+// Zone color map for @each generation
+$wh40k-zones: (
+    vitals: $wh40k-accent-combat,
+    skills: #2ecc71,
+    talents: $wh40k-accent-talents,
+    movement: #3498db,
+    progression: $wh40k-color-gold,
+    weapons: $wh40k-accent-combat,
+    armour: #7f8c8d,
+    resources: $wh40k-color-gold,
+    effects: #9b59b6,
+);
+
+// ============================================
+// Edit Section Pattern (shared by wounds, fatigue, fate, corruption, insanity, experience panels)
+// ============================================
+
+@mixin wh40k-edit-section {
+    padding: $wh40k-space-md;
+    background: var(--wh40k-panel-bg-translucent);
+    border: 1px solid var(--wh40k-border-color-light);
+    border-radius: 8px;
+    margin-bottom: $wh40k-space-sm;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+@mixin wh40k-edit-header {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--wh40k-text-medium);
+    margin-bottom: $wh40k-space-sm;
+    display: flex;
+    align-items: center;
+
+    i {
+        font-size: 0.9em;
+        margin-right: 4px;
+    }
+}
+
+@mixin wh40k-edit-grid($columns: 2) {
+    display: grid;
+    grid-template-columns: repeat($columns, 1fr);
+    gap: $wh40k-space-md;
+}
+
+@mixin wh40k-edit-field($gap: 4px) {
+    display: flex;
+    flex-direction: column;
+    gap: $gap;
+}
+
+@mixin wh40k-edit-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--wh40k-text-muted);
+}
+
+@mixin wh40k-edit-input(
+    $border-color: var(--wh40k-border-color-light),
+    $text-color: var(--wh40k-text-dark),
+    $focus-border: var(--wh40k-border-color-strong),
+    $focus-shadow: var(--wh40k-shadow-soft),
+    $font-size: 1.1rem
+) {
+    width: 100%;
+    height: 40px;
+    padding: 0 $wh40k-space-sm;
+    border: 2px solid $border-color;
+    border-radius: 6px;
+    background: var(--wh40k-input-bg);
+    font-size: $font-size;
+    font-weight: 700;
+    color: $text-color;
+    text-align: center;
+    font-family: $wh40k-font-alt;
+    transition: all $wh40k-transition-fast;
+
+    &:focus {
+        outline: none;
+        border-color: $focus-border;
+        background: var(--wh40k-input-bg-focus);
+        box-shadow: 0 0 0 3px $focus-shadow;
+    }
+
+    &:hover {
+        border-color: var(--wh40k-border-color);
+    }
+}
+
+// ============================================
+// Progress Bar (shared by wounds, fatigue, corruption, insanity panels)
+// ============================================
+
+@mixin wh40k-bar-container {
+    display: flex;
+    align-items: center;
+    gap: $wh40k-space-sm;
+}
+
+@mixin wh40k-bar-track($height: 12px) {
+    flex: 1;
+    height: $height;
+    background: var(--wh40k-border-accent);
+    border-radius: $height / 2;
+    overflow: visible;
+    position: relative;
+    box-shadow: inset 0 1px 3px var(--wh40k-shadow-soft);
+}
+
+@mixin wh40k-bar-fill($glow-color: rgba(182, 58, 43, 0.3)) {
+    height: 100%;
+    border-radius: inherit;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+    box-shadow: 0 0 10px $glow-color;
+}
+
+@mixin wh40k-threshold-marker {
+    position: absolute;
+    top: -2px;
+    height: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    z-index: 2;
+
+    .wh40k-threshold-line {
+        width: 2px;
+        height: 100%;
+        background: var(--wh40k-border-accent);
+        border-radius: 1px;
+    }
+
+    .wh40k-threshold-label {
+        position: absolute;
+        top: -18px;
+        font-size: 9px;
+        font-weight: 600;
+        color: var(--wh40k-text-muted);
+        background: var(--wh40k-panel-bg-solid);
+        padding: 1px 3px;
+        border-radius: 2px;
+        border: 1px solid var(--wh40k-border-color-light);
+    }
+}
+
+@mixin wh40k-bar-percent {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--wh40k-text-muted);
+    min-width: 36px;
+    text-align: right;
+    font-family: $wh40k-font-alt;
+}
+
+// ============================================
+// Alert Banner (shared by wounds, fatigue, corruption, insanity panels)
+// ============================================
+
+@mixin wh40k-alert {
+    display: flex;
+    align-items: center;
+    gap: $wh40k-space-xs;
+    padding: $wh40k-space-xs $wh40k-space-sm;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 6px;
+    letter-spacing: 0.03em;
+    margin-top: $wh40k-space-xs;
+
+    i {
+        font-size: 1em;
+    }
+}
+
+@mixin wh40k-alert-variant($bg, $color, $border-color, $animation: null) {
+    background: $bg;
+    color: $color;
+    border: 2px solid $border-color;
+    @if $animation {
+        animation: $animation 2s ease-in-out infinite;
+    }
+}
+
+// ============================================
+// Info Box (shared by fatigue, fate, corruption, insanity, experience panels)
+// ============================================
+
+@mixin wh40k-info-box($bg-var, $border-var, $icon-color-var) {
+    display: flex;
+    gap: $wh40k-space-sm;
+    padding: $wh40k-space-sm;
+    background: $bg-var;
+    border-left: 3px solid $border-var;
+    border-radius: 4px;
+
+    > i {
+        color: $icon-color-var;
+        font-size: 1.2rem;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+}
+
+@mixin wh40k-info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    strong {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--wh40k-text-medium);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    p {
+        font-size: 0.75rem;
+        color: var(--wh40k-text-muted);
+        line-height: 1.4;
+        margin: 0;
     }
 }
 
@@ -171,26 +442,7 @@
     }
 }
 
-// ============================================
-// Flex Utilities
-// ============================================
-
-@mixin flex-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-@mixin flex-between {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-@mixin flex-column {
-    display: flex;
-    flex-direction: column;
-}
+// Flex utility mixins removed — use Tailwind tw-* classes instead
 
 // ============================================
 // Panel Card Base
