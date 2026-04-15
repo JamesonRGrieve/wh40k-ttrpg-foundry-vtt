@@ -220,6 +220,33 @@
     max-width: 180px;
 }
 
+.csd-divination {
+    .csd-divination-result {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .csd-divination-text {
+        flex: 1;
+        font-style: italic;
+        color: var(--wh40k-text-light);
+        font-size: 0.95rem;
+        margin: 0;
+    }
+
+    .csd-divination-reroll {
+        flex-shrink: 0;
+        font-size: 0.8rem;
+        cursor: pointer;
+    }
+
+    .csd-divination-actions {
+        display: flex;
+        gap: 8px;
+    }
+}
+
 .wh40k-divination-input {
     width: 100%;
     border: none;
