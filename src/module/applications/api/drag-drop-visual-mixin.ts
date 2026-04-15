@@ -23,19 +23,19 @@
  */
 /** Human-readable labels for item types shown in the header drop zone. */
 const DROP_ZONE_LABELS: Record<string, string> = {
-    weapon:        'Add Weapon',
-    armour:        'Add Armour',
-    gear:          'Add Item',
-    ammunition:    'Add Ammunition',
-    cybernetic:    'Add Cybernetic',
-    talent:        'Add Talent',
-    trait:         'Add Trait',
-    psychicPower:  'Add Psychic Power',
-    forceField:    'Add Force Field',
-    criticalInjury:'Add Critical Injury',
-    condition:     'Add Condition',
-    skill:         'Add Skill',
-    specialAbility:'Add Special Ability',
+    weapon: 'Add Weapon',
+    armour: 'Add Armour',
+    gear: 'Add Item',
+    ammunition: 'Add Ammunition',
+    cybernetic: 'Add Cybernetic',
+    talent: 'Add Talent',
+    trait: 'Add Trait',
+    psychicPower: 'Add Psychic Power',
+    forceField: 'Add Force Field',
+    criticalInjury: 'Add Critical Injury',
+    condition: 'Add Condition',
+    skill: 'Add Skill',
+    specialAbility: 'Add Special Ability',
 };
 const DROP_ZONE_DEFAULT_LABEL = 'Drag and Drop from Compendium to Add';
 
@@ -48,18 +48,30 @@ function ensureGlobalDragTracking(): void {
     _globalDragListenersSetup = true;
     // Bubble phase (false) so this fires AFTER the target's dragstart handler
     // has already called setData — capture phase would read empty data.
-    document.addEventListener('dragstart', (e: DragEvent) => {
-        try {
-            const raw = e.dataTransfer?.getData('text/plain');
-            _activeDragType = raw ? (JSON.parse(raw).type ?? null) : null;
-        } catch { _activeDragType = null; }
-    }, false);
-    document.addEventListener('dragend', () => { _activeDragType = null; }, false);
+    document.addEventListener(
+        'dragstart',
+        (e: DragEvent) => {
+            try {
+                const raw = e.dataTransfer?.getData('text/plain');
+                _activeDragType = raw ? JSON.parse(raw).type ?? null : null;
+            } catch {
+                _activeDragType = null;
+            }
+        },
+        false,
+    );
+    document.addEventListener(
+        'dragend',
+        () => {
+            _activeDragType = null;
+        },
+        false,
+    );
 }
 
 export default function EnhancedDragDropMixin<T extends new (...args: any[]) => any>(Base: T) {
     return class EnhancedDragDropApplication extends Base {
-    [key: string]: any;
+        [key: string]: any;
         /* -------------------------------------------- */
         /*  Initialization                              */
         /* -------------------------------------------- */
@@ -115,6 +127,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             this.element.querySelectorAll('[data-item-id]').forEach((el) => {
                 // Skip if element is inside a talent panel row
                 if (el.closest('.wh40k-tp_row') || el.closest('.wh40k-talent-row')) return;
+                if (el.closest('[data-disable-drag="true"]') || el.closest('.wh40k-panel-backpack-split')) return;
 
                 if (!el.hasAttribute('draggable')) {
                     el.setAttribute('draggable', true);
@@ -368,7 +381,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const textEl = zone.querySelector('.wh40k-dropzone-text') as HTMLElement | null;
             if (textEl) {
                 const type = _activeDragType ?? this._draggedItem?.item?.type ?? null;
-                textEl.textContent = type ? (DROP_ZONE_LABELS[type] ?? DROP_ZONE_DEFAULT_LABEL) : DROP_ZONE_DEFAULT_LABEL;
+                textEl.textContent = type ? DROP_ZONE_LABELS[type] ?? DROP_ZONE_DEFAULT_LABEL : DROP_ZONE_DEFAULT_LABEL;
             }
         }
 
@@ -460,7 +473,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const data = TextEditor.getDragEventData(event) as any;
             if (!data?.uuid) return;
 
-            const item = await fromUuid(data.uuid) as any;
+            const item = (await fromUuid(data.uuid)) as any;
             if (!item) return;
 
             // Get zone type and slot
@@ -709,7 +722,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const data = TextEditor.getDragEventData(event) as any;
             if (!data?.uuid) return;
 
-            const item = await fromUuid(data.uuid) as any;
+            const item = (await fromUuid(data.uuid)) as any;
             if (!item || item.actor?.id !== this.document.id) return;
 
             // Add to favorites

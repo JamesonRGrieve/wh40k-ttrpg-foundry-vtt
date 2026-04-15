@@ -2149,7 +2149,8 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #swapCheckedItems(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const panel = this.element.querySelector('.wh40k-panel-backpack-split');
+        event.preventDefault();
+        const panel = target.closest('.wh40k-panel-backpack-split') || this.element.querySelector('.wh40k-panel-backpack-split');
         if (!panel) return;
 
         // Gather checked items from backpack (left) column
@@ -2184,13 +2185,24 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                 updates.push({
                     '_id': itemId,
                     'system.inShipStorage': false,
+                    'system.inBackpack': false,
+                    'system.equipped': false,
                 });
             }
         });
 
-        if (updates.length) {
-            await (this as any).actor.updateEmbeddedDocuments('Item', updates);
-        }
+        if (!updates.length) return;
+
+        await Promise.all(
+            updates.map((update) => {
+                const item = (this as any).actor.items.get(update._id);
+                if (!item) return null;
+
+                const payload = { ...update };
+                delete payload._id;
+                return item.update(payload);
+            }),
+        );
     }
 
     /* -------------------------------------------- */

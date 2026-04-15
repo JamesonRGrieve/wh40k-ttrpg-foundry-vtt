@@ -67,6 +67,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             goToLineage: OriginPathBuilder.#goToLineage,
             skipLineage: OriginPathBuilder.#skipLineage,
             goToCharacteristics: OriginPathBuilder.#goToCharacteristics,
+            rollCharacteristicsBank: OriginPathBuilder.#rollCharacteristicsBank,
             charReset: OriginPathBuilder.#charReset,
             charToggleAdvanced: OriginPathBuilder.#charToggleAdvanced,
             rollDivination: OriginPathBuilder.#rollDivination,
@@ -122,6 +123,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._divination = this.actor.system?.originPath?.divination || '';
         this._thronesRolled = this.actor.system?.throneGelt || 0;
         this._influenceRolled = this.actor.system?.influence || 0;
+        this._savedScrollTop = 0;
         this._initCharacteristicState();
 
         // Initialize from actor's existing origin paths
@@ -184,7 +186,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     get currentStep() {
         if (this.showCharacteristics) {
-            return { key: 'characteristics', step: 'characteristics', icon: 'fa-dice-d20', descKey: 'CharacteristicsDesc' };
+            return {
+                key: 'characteristics',
+                step: 'characteristics',
+                icon: 'fa-dice-d20',
+                descKey: 'CharacteristicsDesc',
+                stepIndex: this.systemConfig.coreSteps.length + (this.systemConfig.optionalStep ? 2 : 1),
+            };
         }
         if (this.showLineage) {
             return this.systemConfig.optionalStep;
@@ -369,7 +377,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         } else if (this.showLineage) {
             // Show all lineage options (they can pick any regardless of path)
             currentOrigins = this._prepareLineageOrigins();
-            selectedItem = this.lineageSelection;
+            selectedItem = this.previewedOrigin || this.lineageSelection;
         } else {
             // Use chart layout for core steps - pass direction and step keys for system support
             const stepKeys = this.systemConfig.coreSteps.map((s) => s.key || s.step);
@@ -414,7 +422,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Current step content
             currentStep: {
-                index: this.currentStepIndex,
+                index: this._getNavigationIndex(currentStep.key),
                 key: currentStep.key,
                 label: this._getLocalizedStepLabel(currentStep.key),
                 icon: currentStep.icon,
@@ -429,6 +437,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Selected origin details
             selectedOrigin: selectedOrigin,
+            showSelectionPanel: !this.showCharacteristics,
 
             // Lineage info
             hasLineageSelection: !!this.lineageSelection,
@@ -454,6 +463,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _getLocalizedStepLabel(key: string): string {
+        if (key === 'characteristics') {
+            return game.i18n.localize('WH40K.CharacteristicSetup.Title');
+        }
         const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
         return game.i18n.localize(`WH40K.OriginPath.${capitalizedKey}`);
     }
@@ -476,6 +488,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _prepareCharGenContext(): any {
         const CHARS = (this.constructor as any).GENERATION_CHARACTERISTICS;
         const DEFAULT_BASE = 25;
+        const originBonuses = this._getOriginCharacteristicBonuses();
 
         const rollsBank = this._charRolls.map((value, index) => ({
             index,
@@ -490,7 +503,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const assignedIndex = this._charAssignments[key] ?? null;
             const rollValue = assignedIndex !== null && this._charRolls[assignedIndex] ? this._charRolls[assignedIndex] : null;
             const base = this._charAdvancedMode ? this._charCustomBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
-            const total = rollValue !== null ? base + rollValue : null;
+            const originBonus = originBonuses.totals[key] || 0;
+            const total = rollValue !== null ? base + rollValue + originBonus : null;
 
             return {
                 key,
@@ -498,6 +512,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 short: charData.short || key.substring(0, 2).toUpperCase(),
                 base,
                 rollValue,
+                originBonus,
+                hasOriginBonus: originBonus !== 0,
+                originBonusTooltip: this._formatOriginBonusTooltip(originBonuses.breakdowns[key] || []),
                 assignedIndex,
                 total,
                 hasRoll: rollValue !== null,
@@ -528,11 +545,6 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             anyRolls,
             canApply: allAssigned && anyRolls,
             divination: this._divination,
-            // Starting resources
-            thronesFormula: this._getThronesFormula(),
-            thronesRolled: this._thronesRolled || 0,
-            influenceMod: this._getInfluenceMod(),
-            influenceRolled: this._influenceRolled || 0,
         };
     }
 
@@ -567,11 +579,215 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Get the breadcrumb index for a step key.
+     * @private
+     */
+    _getNavigationIndex(stepKey: string): number {
+        const coreIndex = this.orderedSteps.findIndex((step) => step.key === stepKey);
+        if (coreIndex >= 0) return coreIndex;
+        if (this.systemConfig.optionalStep?.key === stepKey) return this.orderedSteps.length;
+        if (stepKey === 'characteristics') return this.orderedSteps.length + (this.systemConfig.optionalStep ? 1 : 0);
+        return 0;
+    }
+
+    /**
+     * Clear any unconfirmed preview when changing screens.
+     * @private
+     */
+    _clearPreviewedOrigin(): void {
+        this.previewedOrigin = null;
+    }
+
+    /**
+     * Save current scroll position for restoration after re-render.
+     * @private
+     */
+    _saveScrollPosition(): void {
+        const scrollContainer = this.element?.closest('.application')?.querySelector('.window-content') || this.element?.closest('.window-content');
+        this._savedScrollTop = scrollContainer?.scrollTop || 0;
+    }
+
+    /**
+     * Restore the saved scroll position after re-render.
+     * @private
+     */
+    _restoreScrollPosition(): void {
+        if (!this._savedScrollTop) return;
+        const scrollContainer = this.element?.closest('.application')?.querySelector('.window-content') || this.element?.closest('.window-content');
+        if (scrollContainer) scrollContainer.scrollTop = this._savedScrollTop;
+        this._savedScrollTop = 0;
+    }
+
+    /**
+     * Get the current step selection or preview.
+     * @private
+     */
+    _getCurrentSelection(): any {
+        if (this.showLineage) {
+            return this.previewedOrigin || this.lineageSelection;
+        }
+
+        if (this.showCharacteristics) {
+            return null;
+        }
+
+        const currentStep = this.currentStep;
+        return this.previewedOrigin || this.selections.get(currentStep.step) || null;
+    }
+
+    /**
+     * Collect selections that should contribute to derived preview math.
+     * Includes the current preview when it would replace the active step.
+     * @private
+     */
+    _getSelectionsForDerivedCalculations(): any[] {
+        const entries: any[] = [];
+
+        for (const step of this.orderedSteps) {
+            const selection = this.selections.get(step.step);
+            if (selection) entries.push(selection);
+        }
+
+        if (this.systemConfig.optionalStep && this.lineageSelection) {
+            entries.push(this.lineageSelection);
+        }
+
+        if (!this.showCharacteristics && this.previewedOrigin) {
+            const current = this.currentStep;
+            const currentSelection = this.showLineage ? this.lineageSelection : this.selections.get(current.step);
+            const previewId = this.previewedOrigin.id || this.previewedOrigin._id;
+            const currentId = currentSelection?.id || currentSelection?._id;
+
+            if (previewId !== currentId) {
+                if (this.showLineage) {
+                    if (this.lineageSelection) entries.pop();
+                    entries.push(this.previewedOrigin);
+                } else {
+                    const replaceIndex = entries.findIndex((entry) => (entry.id || entry._id) === currentId);
+                    if (replaceIndex >= 0) entries.splice(replaceIndex, 1, this.previewedOrigin);
+                    else entries.push(this.previewedOrigin);
+                }
+            }
+        }
+
+        return entries;
+    }
+
+    /**
+     * Get cumulative characteristic bonuses from the selected origin path.
+     * @private
+     */
+    _getOriginCharacteristicBonuses(): { totals: Record<string, number>; breakdowns: Record<string, { source: string; value: number }[]> } {
+        const totals: Record<string, number> = {};
+        const breakdowns: Record<string, { source: string; value: number }[]> = {};
+
+        const addBonus = (key: string, value: number, source: string): void => {
+            if (!value) return;
+            totals[key] = (totals[key] || 0) + value;
+            if (!breakdowns[key]) breakdowns[key] = [];
+            breakdowns[key].push({ source, value });
+        };
+
+        const processSelection = (selection: any): void => {
+            if (!selection) return;
+
+            const system = this._getSelectionSystem(selection);
+            const sourceName = selection.name || system?.identifier || this._getLocalizedStepLabel(system?.step || '');
+            const modifiers = system?.modifiers?.characteristics || {};
+
+            for (const [key, value] of Object.entries(modifiers)) {
+                addBonus(key, Number(value) || 0, sourceName);
+            }
+
+            const selectedChoices = system?.selectedChoices || {};
+            const choices = system?.grants?.choices || [];
+            const labelCounts: Record<string, number> = {};
+
+            for (const choice of choices) {
+                const baseLabel = choice.label || choice.name || 'choice';
+                labelCounts[baseLabel] = (labelCounts[baseLabel] || 0) + 1;
+                const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
+                const choiceKey = `${baseLabel}${suffix}`;
+                const selectedValues = selectedChoices[choiceKey] || [];
+
+                for (const selectedValue of selectedValues) {
+                    const option = choice.options?.find((opt) => {
+                        const optionValue = opt.value || opt.name;
+                        return optionValue === selectedValue || selectedValue?.startsWith?.(`${optionValue} (`);
+                    });
+                    const choiceModifiers = option?.grants?.characteristics || {};
+
+                    for (const [key, value] of Object.entries(choiceModifiers)) {
+                        addBonus(key, Number(value) || 0, `${sourceName}: ${choiceKey}`);
+                    }
+                }
+            }
+        };
+
+        for (const selection of this._getSelectionsForDerivedCalculations()) {
+            processSelection(selection);
+        }
+
+        return { totals, breakdowns };
+    }
+
+    /**
+     * Build the tooltip text for an origin bonus breakdown.
+     * @private
+     */
+    _formatOriginBonusTooltip(entries: { source: string; value: number }[]): string {
+        if (!entries.length) return '';
+        const lines = entries.map(({ source, value }) => `${source}: ${value > 0 ? '+' : ''}${value}`);
+        return lines.join('\n');
+    }
+
+    /**
+     * Get the currently available throne gelt formula.
+     * @private
+     */
+    _getContextualThronesFormula(): string {
+        const parts: string[] = [];
+        for (const selection of this._getSelectionsForDerivedCalculations()) {
+            const sys = this._getSelectionSystem(selection);
+            const formula = sys?.homebrew?.throneGelt || sys?.homebrew?.thrones;
+            if (formula) parts.push(formula);
+        }
+        return parts.join(' + ');
+    }
+
+    /**
+     * Get the currently available influence modifier.
+     * @private
+     */
+    _getContextualInfluenceMod(): number {
+        let mod = 0;
+        for (const selection of this._getSelectionsForDerivedCalculations()) {
+            const sys = this._getSelectionSystem(selection);
+            const others = sys?.modifiers?.other || [];
+            for (const entry of others) {
+                if (entry.name === 'Influence') mod += entry.value || 0;
+            }
+        }
+        return mod;
+    }
+
+    /**
+     * Whether all characteristic rolls have been assigned.
+     * @private
+     */
+    _hasAssignedCharacteristics(): boolean {
+        return OriginPathBuilder.GENERATION_CHARACTERISTICS.every(
+            (key) => this._charAssignments[key] !== null && this._charRolls[this._charAssignments[key]] > 0,
+        );
+    }
+
+    /**
      * Prepare lineage origins (no position restrictions)
      * @returns {Array}
      * @private
      */
     _prepareLineageOrigins(): any {
+        const activeLineageId = this.previewedOrigin?.id || this.previewedOrigin?._id || this.lineageSelection?.id || this.lineageSelection?._id;
         return this.lineageOrigins.map((origin) => {
             return {
                 id: origin.id,
@@ -579,7 +795,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 name: origin.name,
                 img: origin.img,
                 shortDescription: origin.shortDescription,
-                isSelected: (this.lineageSelection?.id || this.lineageSelection?._id) === origin.id,
+                isSelected: activeLineageId === origin.id,
                 isDisabled: false,
                 isValidNext: true,
                 hasChoices: origin.hasChoices,
@@ -608,8 +824,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     /** @override */
-    _onRender(context: any, options: any): void {
-        super._onRender(context, options);
+    async _onRender(context: any, options: any): Promise<void> {
+        await super._onRender(context, options);
+        this._restoreScrollPosition();
         if (!this.showCharacteristics) return;
 
         const html = this.element;
@@ -749,8 +966,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
     _prepareStepNavigation(): any {
         const orderedSteps = this.orderedSteps;
-
-        return orderedSteps.map((step, index) => {
+        const steps = orderedSteps.map((step, index) => {
             const hasSelection = this.selections.has(step.step);
             const isAccessible = this._isStepAccessible(index);
             const selection = hasSelection ? this.selections.get(step.step) : null;
@@ -758,6 +974,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return {
                 index: index,
                 key: step.key,
+                step: step.step,
                 label: this._getLocalizedStepLabel(step.key),
                 shortLabel: this._getShortLabel(step.key),
                 icon: step.icon,
@@ -772,6 +989,41 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     : null,
             };
         });
+
+        if (this.systemConfig.optionalStep) {
+            steps.push({
+                index: steps.length,
+                key: this.systemConfig.optionalStep.key,
+                step: this.systemConfig.optionalStep.step,
+                label: this._getLocalizedStepLabel(this.systemConfig.optionalStep.key),
+                shortLabel: this._getShortLabel(this.systemConfig.optionalStep.key),
+                icon: this.systemConfig.optionalStep.icon,
+                isActive: this.showLineage,
+                isComplete: !!this.lineageSelection,
+                isDisabled: this.guidedMode && this.selections.size < this.systemConfig.coreSteps.length,
+                selection: this.lineageSelection
+                    ? {
+                          name: this.lineageSelection.name,
+                          img: this.lineageSelection.img,
+                      }
+                    : null,
+            });
+        }
+
+        steps.push({
+            index: steps.length,
+            key: 'characteristics',
+            step: 'characteristics',
+            label: this._getLocalizedStepLabel('characteristics'),
+            shortLabel: game.i18n.localize('WH40K.OriginPath.Characteristics'),
+            icon: 'fa-dice-d20',
+            isActive: this.showCharacteristics,
+            isComplete: this._hasAssignedCharacteristics(),
+            isDisabled: this.guidedMode && this.selections.size < this.systemConfig.coreSteps.length,
+            selection: null,
+        });
+
+        return steps;
     }
 
     /**
@@ -844,14 +1096,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Prepare characteristics with proper labels
         const characteristics = [];
         for (const [key, value] of Object.entries(modifiers)) {
-            if (value !== 0) {
+            const numericValue = Number(value) || 0;
+            if (numericValue !== 0) {
                 const info = getCharacteristicDisplayInfo(key);
                 characteristics.push({
                     key: key,
                     label: info.label,
                     short: info.short,
-                    value: value,
-                    positive: value > 0,
+                    value: numericValue,
+                    positive: numericValue > 0,
                 });
             }
         }
@@ -944,6 +1197,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             isConfirmed = selectionId === itemId;
         }
 
+        const showThrones = ['homeWorld', 'background'].includes(currentStep.key);
+        const showInfluence = currentStep.key === 'background';
+        const thronesFormula = this._getContextualThronesFormula();
+        const influenceMod = this._getContextualInfluenceMod();
+
         return {
             id: itemId,
             uuid: item.uuid || item._sourceUuid,
@@ -966,6 +1224,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 hasTraits: traits.length > 0,
                 equipment: grants.equipment || [],
                 hasEquipment: (grants.equipment || []).length > 0,
+            },
+            resources: {
+                showThrones,
+                thronesFormula,
+                thronesRolled: this._thronesRolled || null,
+                showInfluence,
+                influenceMod,
+                influenceRolled: this._influenceRolled || null,
             },
         };
     }
@@ -1310,8 +1576,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Add characteristic modifiers from talent
             const charMods = talentSystem?.modifiers?.characteristics || {};
             for (const [key, value] of Object.entries(charMods)) {
-                if (value !== 0) {
-                    charTotals[key] = (charTotals[key] || 0) + value;
+                const numericValue = Number(value) || 0;
+                if (numericValue !== 0) {
+                    charTotals[key] = (charTotals[key] || 0) + numericValue;
                 }
             }
 
@@ -1348,8 +1615,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _calculateStatus(): any {
-        const totalSteps = this.systemConfig.coreSteps.length;
-        const stepsCount = this.selections.size;
+        const totalSteps = this.systemConfig.coreSteps.length + (this.systemConfig.optionalStep ? 1 : 0) + 1;
+        const stepsCount = this.selections.size + (this.lineageSelection ? 1 : 0) + (this._hasAssignedCharacteristics() ? 1 : 0);
+        const coreStepsComplete = this.selections.size >= this.systemConfig.coreSteps.length;
         let pendingChoices = 0;
         let pendingRolls = 0;
 
@@ -1386,11 +1654,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         return {
             stepsCount: stepsCount,
             totalSteps: totalSteps,
-            stepsComplete: stepsCount >= totalSteps,
+            stepsComplete: coreStepsComplete,
             choicesComplete: pendingChoices === 0,
             pendingChoices: pendingChoices,
             pendingRolls: pendingRolls,
-            canCommit: stepsCount >= totalSteps && pendingChoices === 0,
+            canCommit: coreStepsComplete && pendingChoices === 0,
         };
     }
 
@@ -1562,6 +1830,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (value === 'forward' || value === 'backward') {
             const oldDirection = (this as any).direction;
             (this as any).direction = value;
+            (this as any).showLineage = false;
+            (this as any).showCharacteristics = false;
+            (this as any)._clearPreviewedOrigin();
 
             // If direction changed and we have selections, warn about reset
             if (oldDirection !== (this as any).direction && (this as any).selections.size > 0) {
@@ -1589,19 +1860,47 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Navigate to a step
      */
     static async #goToStep(event: Event, target: HTMLElement): Promise<void> {
+        const stepKey = target.dataset.stepKey;
         const stepIndex = parseInt(target.dataset.stepIndex);
+        if (!stepKey && isNaN(stepIndex)) return;
+
+        if (stepKey === 'characteristics') {
+            if ((this as any).guidedMode && (this as any).selections.size < (this as any).systemConfig.coreSteps.length) {
+                (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
+                return;
+            }
+
+            (this as any).showLineage = false;
+            (this as any).showCharacteristics = true;
+            (this as any)._clearPreviewedOrigin();
+            (this as any).render();
+            return;
+        }
+
+        if (stepKey === (this as any).systemConfig.optionalStep?.key) {
+            if ((this as any).guidedMode && (this as any).selections.size < (this as any).systemConfig.coreSteps.length) {
+                (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
+                return;
+            }
+
+            (this as any).showLineage = true;
+            (this as any).showCharacteristics = false;
+            (this as any)._clearPreviewedOrigin();
+            (this as any).render();
+            return;
+        }
+
         if (isNaN(stepIndex)) return;
 
-        // Turn off lineage mode when navigating to main steps
         (this as any).showLineage = false;
+        (this as any).showCharacteristics = false;
+        (this as any)._clearPreviewedOrigin();
 
-        // Check if accessible in guided mode
         if ((this as any).guidedMode && !(this as any)._isStepAccessible(stepIndex)) {
             (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.CompletePreviousStep'));
             return;
         }
 
-        // NOTE: No warning when navigating to steps - warning happens on confirmation instead
         (this as any).currentStepIndex = stepIndex;
         (this as any).render();
     }
@@ -1665,7 +1964,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 // Build list of steps that will be reset
                 const stepNames = stepsToReset
                     .filter((s) => (this as any).selections.has(s.step))
-                    .map((s) => game.i18n.localize(`WH40K.OriginPath.Step${s.key.charAt(0).toUpperCase() + s.key.slice(1)}`))
+                    .map((s) => (this as any)._getLocalizedStepLabel(s.key))
                     .join(', ');
 
                 const confirmed = await Dialog.confirm({
@@ -1986,6 +2285,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     static async #goToLineage(event: Event, target: HTMLElement): Promise<void> {
         (this as any).showLineage = true;
+        (this as any).showCharacteristics = false;
+        (this as any)._clearPreviewedOrigin();
         (this as any).render();
     }
 
@@ -1995,6 +2296,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static async #skipLineage(event: Event, target: HTMLElement): Promise<void> {
         (this as any).lineageSelection = null;
         (this as any).showLineage = false;
+        (this as any).showCharacteristics = true;
+        (this as any)._clearPreviewedOrigin();
         (this as any).render();
     }
 
@@ -2004,7 +2307,22 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static async #goToCharacteristics(event: Event, target: HTMLElement): Promise<void> {
         (this as any).showLineage = false;
         (this as any).showCharacteristics = true;
-        (this as any).previewedOrigin = null;
+        (this as any)._clearPreviewedOrigin();
+        (this as any).render();
+    }
+
+    /**
+     * Roll the full characteristic bank using 2d10 per slot.
+     */
+    static async #rollCharacteristicsBank(event: Event, target: HTMLElement): Promise<void> {
+        const rolls: number[] = [];
+        for (let i = 0; i < OriginPathBuilder.GENERATION_CHARACTERISTICS.length; i++) {
+            const roll = new Roll('2d10');
+            await roll.evaluate();
+            rolls.push(roll.total);
+        }
+
+        (this as any)._charRolls = rolls;
         (this as any).render();
     }
 
@@ -2073,7 +2391,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const text = await Dialog.prompt({
             title: 'Enter Divination',
             content: '<form><div class="form-group"><label>Divination:</label><input type="text" name="divination" autofocus /></div></form>',
-            callback: (html) => (html as any).find('input[name="divination"]').val(),
+            callback: (html) => {
+                const form = html[0]?.querySelector?.('form') || html.querySelector?.('form');
+                return form?.querySelector?.('[name="divination"]')?.value || '';
+            },
             rejectClose: false,
         });
         if (text) {
@@ -2087,7 +2408,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Roll starting throne gelt from combined homeworld + background formulas.
      */
     static async #rollThrones(event: Event, target: HTMLElement): Promise<void> {
-        const formula = (this as any)._getThronesFormula();
+        const formula = (this as any)._getContextualThronesFormula();
         if (!formula) {
             (ui.notifications as any).warn('No thrones formula — select a homeworld and background first.');
             return;
@@ -2103,10 +2424,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const val = await Dialog.prompt({
             title: 'Enter Starting Throne Gelt',
             content: '<form><div class="form-group"><label>Thrones:</label><input type="number" name="value" min="0" autofocus /></div></form>',
-            callback: (html) => parseInt((html as any).find('input[name="value"]').val()),
+            callback: (html) => {
+                const form = html[0]?.querySelector?.('form') || html.querySelector?.('form');
+                return parseInt(form?.querySelector?.('[name="value"]')?.value);
+            },
             rejectClose: false,
         });
-        if (val && !isNaN(val)) {
+        if (val != null && !isNaN(val)) {
             (this as any)._thronesRolled = val;
             (this as any)._saveScrollPosition?.();
             (this as any).render();
@@ -2118,7 +2442,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     static async #rollInfluence(event: Event, target: HTMLElement): Promise<void> {
         const felBonus = (this as any).actor.system.characteristics?.fellowship?.bonus || 0;
-        const mod = (this as any)._getInfluenceMod();
+        const mod = (this as any)._getContextualInfluenceMod();
         const roll = new Roll('1d5');
         await roll.evaluate();
         (this as any)._influenceRolled = Math.max(0, roll.total + felBonus + mod);
@@ -2130,7 +2454,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const val = await Dialog.prompt({
             title: 'Enter Starting Influence',
             content: '<form><div class="form-group"><label>Influence:</label><input type="number" name="value" min="0" autofocus /></div></form>',
-            callback: (html) => parseInt((html as any).find('input[name="value"]').val()),
+            callback: (html) => {
+                const form = html[0]?.querySelector?.('form') || html.querySelector?.('form');
+                return parseInt(form?.querySelector?.('[name="value"]')?.value);
+            },
             rejectClose: false,
         });
         if (val != null && !isNaN(val)) {

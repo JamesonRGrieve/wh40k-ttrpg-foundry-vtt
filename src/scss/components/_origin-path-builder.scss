@@ -329,6 +329,10 @@
     padding: var(--wh40k-space-md);
     overflow: hidden;
     min-height: 0;
+
+    &--full {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* -------------------------------------------- */
