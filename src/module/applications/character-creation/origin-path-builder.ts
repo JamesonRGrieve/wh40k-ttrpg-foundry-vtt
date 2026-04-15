@@ -69,6 +69,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             goToCharacteristics: OriginPathBuilder.#goToCharacteristics,
             charReset: OriginPathBuilder.#charReset,
             charToggleAdvanced: OriginPathBuilder.#charToggleAdvanced,
+            rollDivination: OriginPathBuilder.#rollDivination,
+            manualDivination: OriginPathBuilder.#manualDivination,
             commit: OriginPathBuilder.#commit,
             openItem: OriginPathBuilder.#openItem,
         },
@@ -113,6 +115,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._charCustomBases = {};
         this._charAdvancedMode = false;
         this._charDragData = null;
+        this._divination = this.actor.system?.originPath?.divination || '';
         this._initCharacteristicState();
 
         // Initialize from actor's existing origin paths
@@ -518,6 +521,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             allAssigned,
             anyRolls,
             canApply: allAssigned && anyRolls,
+            divination: this._divination,
         };
     }
 
@@ -1982,6 +1986,62 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         (this as any).render();
     }
 
+    /** DH2e Divination Table (Core Rulebook Table 2-9) */
+    static DIVINATION_TABLE = [
+        { min: 1, max: 5, text: 'Mutation without, corruption within.' },
+        { min: 6, max: 9, text: 'Trust in your fear.' },
+        { min: 10, max: 13, text: 'Humans must die so that humanity can endure.' },
+        { min: 14, max: 17, text: 'The pain of the bullet is ecstasy compared to damnation.' },
+        { min: 18, max: 21, text: 'Be a boon to your allies and a bane to your enemies.' },
+        { min: 22, max: 25, text: 'The wise man learns from the deaths of others.' },
+        { min: 26, max: 30, text: 'Kill the alien before it can speak its lies.' },
+        { min: 31, max: 35, text: 'Truth is subjective.' },
+        { min: 36, max: 40, text: 'Thought begets Heresy; Heresy begets Retribution.' },
+        { min: 41, max: 45, text: 'The only true fear is dying without your duty done.' },
+        { min: 46, max: 50, text: 'Only in death does duty end.' },
+        { min: 51, max: 55, text: 'A mind without purpose will wander in dark places.' },
+        { min: 56, max: 60, text: "No man died in the Emperor's service that died in vain." },
+        { min: 61, max: 65, text: 'To war is human.' },
+        { min: 66, max: 70, text: 'There are no civilians in the battle for survival.' },
+        { min: 71, max: 75, text: 'Violence solves everything.' },
+        { min: 76, max: 80, text: 'Even a man who has nothing can still offer his life.' },
+        { min: 81, max: 85, text: 'Do not ask why you serve. Only ask how.' },
+        { min: 86, max: 90, text: 'The gun is mightier than the sword.' },
+        { min: 91, max: 93, text: 'In the darkness, follow the light of Terra.' },
+        { min: 94, max: 96, text: 'There is nothing to fear but failure.' },
+        { min: 97, max: 100, text: "To stand in the presence of the Emperor's chosen is reward enough." },
+    ];
+
+    /**
+     * Roll on the divination table.
+     */
+    static async #rollDivination(event: Event, target: HTMLElement): Promise<void> {
+        const roll = new Roll('1d100');
+        await roll.evaluate();
+        const result = roll.total;
+        const entry = OriginPathBuilder.DIVINATION_TABLE.find((e) => result >= e.min && result <= e.max);
+        (this as any)._divination = entry ? entry.text : 'The Emperor protects.';
+        (this as any)._saveScrollPosition?.();
+        (this as any).render();
+    }
+
+    /**
+     * Manually enter a divination.
+     */
+    static async #manualDivination(event: Event, target: HTMLElement): Promise<void> {
+        const text = await Dialog.prompt({
+            title: 'Enter Divination',
+            content: '<form><div class="form-group"><label>Divination:</label><input type="text" name="divination" autofocus /></div></form>',
+            callback: (html) => (html as any).find('input[name="divination"]').val(),
+            rejectClose: false,
+        });
+        if (text) {
+            (this as any)._divination = text;
+            (this as any)._saveScrollPosition?.();
+            (this as any).render();
+        }
+    }
+
     /**
      * Open an item sheet (for talents, skills, etc.)
      */
@@ -2102,6 +2162,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     }
                 }
                 await (this as any).actor.update(charUpdate);
+            }
+
+            // Apply divination if set
+            if ((this as any)._divination) {
+                await (this as any).actor.update({ 'system.originPath.divination': (this as any)._divination });
             }
 
             // Success
