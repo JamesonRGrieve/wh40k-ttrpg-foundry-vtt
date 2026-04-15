@@ -39,141 +39,6 @@
             </div>
         </div>
         
-        {{!-- Origin Path Panel - Modern Sleek Design --}}
-        <div class="wh40k-panel wh40k-panel--bio wh40k-origin-panel-modern" data-panel-id="origin-path">
-            <div class="wh40k-panel-header">
-                <div class="wh40k-origin-header-left">
-                    <i class="fas fa-route"></i>
-                    <span class="wh40k-panel-title">Origin Path</span>
-                </div>
-            </div>
-            <div class="wh40k-panel-body">
-                {{!-- Visual Step Indicators (always shown) --}}
-                <div class="wh40k-origin-steps-visual">
-                    {{#each originPathSteps as |step|}}
-                    <div class="wh40k-origin-step-node {{#if step.item}}wh40k-filled{{else}}wh40k-empty{{/if}}" 
-                         data-step="{{step.key}}"
-                         {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
-                         data-tooltip="{{step.label}}{{#if step.item}}: {{step.item.name}}{{/if}}">
-                        <div class="wh40k-step-circle">
-                            {{#if step.item}}
-                                <img src="{{step.item.img}}" alt="{{step.item.name}}" class="wh40k-step-img" />
-                            {{else}}
-                                <i class="fas {{step.icon}}"></i>
-                            {{/if}}
-                        </div>
-                        <span class="wh40k-step-label">{{step.shortLabel}}</span>
-                    </div>
-                    {{#unless @last}}
-                        <div class="wh40k-step-connector {{#if step.item}}wh40k-active{{/if}}"></div>
-                    {{/unless}}
-                    {{/each}}
-                </div>
-
-                {{!-- Origin Path Builder Button - Prominent Call-to-Action --}}
-                <div class="wh40k-origin-builder-cta">
-                    <button type="button" class="wh40k-btn-origin-builder" data-action="openOriginPathBuilder" data-tooltip="Open the Origin Path Builder to construct your character's journey">
-                        <i class="fas fa-diagram-project"></i>
-                        <span class="wh40k-btn-text">Build Origin Path</span>
-                        {{#if originPathSummary.isComplete}}
-                            <span class="wh40k-builder-badge wh40k-complete">
-                                <i class="fas fa-check-circle"></i>
-                                Complete
-                            </span>
-                        {{else}}
-                            <span class="wh40k-builder-badge wh40k-incomplete">
-                                {{originPathSummary.completedSteps}}/{{originPathSummary.totalSteps}}
-                            </span>
-                        {{/if}}
-                    </button>
-                </div>
-
-                {{!-- Empty State Message (only if no steps completed) --}}
-                {{#unless originPathSummary.completedSteps}}
-                <div class="wh40k-origin-empty-state">
-                    <p class="wh40k-empty-text">No origin path selected yet. Click the button above to begin your journey.</p>
-                </div>
-                {{/unless}}
-            </div>
-
-            {{!-- Accumulated Bonuses (Collapsible - Start Collapsed) --}}
-                {{#if originPathSummary.isComplete}}
-                <div class="wh40k-origin-bonuses-modern collapsed" data-panel-id="origin-bonuses" data-collapsed="true">
-                    <button type="button" class="wh40k-bonuses-toggle" data-action="togglePanel" data-panel-id="origin-bonuses">
-                        <i class="fas fa-gift"></i>
-                        <span>Accumulated Bonuses</span>
-                        <i class="fas fa-chevron-down wh40k-toggle-icon"></i>
-                    </button>
-                    
-                    <div class="wh40k-bonuses-content">
-                        {{!-- Characteristics --}}
-                        {{#if originPathSummary.characteristics.length}}
-                        <div class="wh40k-bonus-group">
-                            <span class="wh40k-bonus-category-label">
-                                <i class="fas fa-chart-bar"></i>
-                                Characteristics
-                            </span>
-                            <div class="wh40k-bonus-chips">
-                                {{#each originPathSummary.characteristics}}
-                                <span class="wh40k-char-chip {{#if positive}}wh40k-positive{{else}}wh40k-negative{{/if}}">
-                                    <span class="wh40k-chip-stat">{{short}}</span>
-                                    <span class="wh40k-chip-value">{{#if positive}}+{{/if}}{{value}}</span>
-                                </span>
-                                {{/each}}
-                            </div>
-                        </div>
-                        {{/if}}
-                        
-                        {{!-- Skills --}}
-                        {{#if originPathSummary.skills.length}}
-                        <div class="wh40k-bonus-group">
-                            <span class="wh40k-bonus-category-label">
-                                <i class="fas fa-book"></i>
-                                Skills
-                            </span>
-                            <div class="wh40k-bonus-tags">
-                                {{#each originPathSummary.skills}}
-                                <span class="wh40k-bonus-tag wh40k-tag-skill">{{this}}</span>
-                                {{/each}}
-                            </div>
-                        </div>
-                        {{/if}}
-                        
-                        {{!-- Talents --}}
-                        {{#if originPathSummary.talents.length}}
-                        <div class="wh40k-bonus-group">
-                            <span class="wh40k-bonus-category-label">
-                                <i class="fas fa-star"></i>
-                                Talents
-                            </span>
-                            <div class="wh40k-bonus-tags">
-                                {{#each originPathSummary.talents}}
-                                <span class="wh40k-bonus-tag wh40k-tag-talent">{{this}}</span>
-                                {{/each}}
-                            </div>
-                        </div>
-                        {{/if}}
-                        
-                        {{!-- Traits --}}
-                        {{#if originPathSummary.traits.length}}
-                        <div class="wh40k-bonus-group">
-                            <span class="wh40k-bonus-category-label">
-                                <i class="fas fa-dna"></i>
-                                Traits
-                            </span>
-                            <div class="wh40k-bonus-tags">
-                                {{#each originPathSummary.traits}}
-                                <span class="wh40k-bonus-tag wh40k-tag-trait">{{this}}</span>
-                                {{/each}}
-                            </div>
-                        </div>
-                        {{/if}}
-                    </div>
-                </div>
-                {{/if}}
-            </div>
-        {{!-- End of Origin Path Panel --}}
-
         {{!-- Connections Panel --}}
             <div class="wh40k-panel">
                 <div class="wh40k-panel-header">
@@ -221,11 +86,8 @@
         </div>
     {{!-- End of Left Column --}}
         
-        {{!-- Right Column: Experience & Journal/Notes --}}
+        {{!-- Right Column: Journal/Notes --}}
         <div class="wh40k-bio-col tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
-            {{!-- Experience Panel (moved above connections) --}}
-            {{> systems/wh40k-rpg/templates/actor/panel/experience-panel-v2.hbs}}
-            
             {{!-- Character Notes / Journal --}}
             <div class="wh40k-panel wh40k-panel-journal">
                 <div class="wh40k-panel-header">

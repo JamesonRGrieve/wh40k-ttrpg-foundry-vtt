@@ -19,41 +19,19 @@
                         <span class="wh40k-header-label">{{localize "WH40K.Character.Player"}}</span>
                         <input class="wh40k-header-input wh40k-player-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" />
                     </div>
-                    <div class="wh40k-header-row">
-                        <span class="wh40k-header-label">Home World</span>
-                        <select class="wh40k-header-input" name="system.originPath.homeWorld">
-                            <option value="">— Select —</option>
-                            {{#each originOptions.homeWorld}}
-                                <option value="{{this}}" {{#if (eq this ../system.originPath.homeWorld)}}selected{{/if}}>{{this}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <div class="wh40k-header-row">
-                        <span class="wh40k-header-label">Background</span>
-                        <select class="wh40k-header-input" name="system.originPath.background">
-                            <option value="">— Select —</option>
-                            {{#each originOptions.background}}
-                                <option value="{{this}}" {{#if (eq this ../system.originPath.background)}}selected{{/if}}>{{this}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <div class="wh40k-header-row">
-                        <span class="wh40k-header-label">Role</span>
-                        <select class="wh40k-header-input" name="system.originPath.role">
-                            <option value="">— Select —</option>
-                            {{#each originOptions.role}}
-                                <option value="{{this}}" {{#if (eq this ../system.originPath.role)}}selected{{/if}}>{{this}}</option>
-                            {{/each}}
-                        </select>
-                    </div>
-                    <div class="wh40k-header-row">
-                        <span class="wh40k-header-label">Elite Advance</span>
-                        <select class="wh40k-header-input" name="system.originPath.elite">
-                            <option value="">— None —</option>
-                            {{#each originOptions.elite}}
-                                <option value="{{this}}" {{#if (eq this ../system.originPath.elite)}}selected{{/if}}>{{this}}</option>
-                            {{/each}}
-                        </select>
+                    {{!-- Origin Path Step Icons --}}
+                    <div class="wh40k-header-origin-steps">
+                        {{#each originPathSteps as |step|}}
+                        <div class="wh40k-header-step {{#if step.item}}filled{{else}}empty{{/if}}"
+                             {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
+                             data-tooltip="{{step.label}}{{#if step.item}}: {{step.item.name}}{{/if}}">
+                            {{#if step.item}}
+                                <img src="{{step.item.img}}" alt="{{step.item.name}}" class="wh40k-header-step-img" />
+                            {{else}}
+                                <i class="fas {{step.icon}} wh40k-header-step-icon"></i>
+                            {{/if}}
+                        </div>
+                        {{/each}}
                     </div>
                     <div class="wh40k-header-row">
                         <span class="wh40k-header-label">Divination</span>
