@@ -5,6 +5,7 @@
 
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
+import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import WH40K from '../../config.ts';
 import { HandlebarManager } from '../../handlebars/handlebars-manager.ts';
 import { AssignDamageData } from '../../rolls/assign-damage-data.ts';
@@ -182,11 +183,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
-        talents: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tab-talents.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
+        // talents tab removed — talents/traits moved to overview, specialist skills to skills tab
         equipment: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-equipment.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
@@ -213,7 +210,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     static TABS = [
         { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
         { tab: 'skills', label: 'WH40K.Tabs.Skills', group: 'primary', cssClass: 'tab-skills' },
-        { tab: 'talents', label: 'WH40K.Tabs.Talents', group: 'primary', cssClass: 'tab-talents' },
+        // talents tab removed — content moved to overview and skills tabs
         { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
         { tab: 'equipment', label: 'WH40K.Tabs.Equipment', group: 'primary', cssClass: 'tab-equipment' },
         // { tab: 'powers', label: 'WH40K.Tabs.Powers', group: 'primary', cssClass: 'tab-powers' },
@@ -376,7 +373,6 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             case 'status':
             case 'combat':
             case 'skills':
-            case 'talents':
             case 'equipment':
             case 'powers':
             case 'dynasty':
@@ -410,23 +406,18 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             };
         }
 
-        // Add filter state for skills tab
+        // Add filter state, specialist skills, talents, and traits for skills tab
         if (partId === 'skills') {
             context.skillsFilter = this._skillsFilter;
-        }
-
-        // Add talents context for talents tab
-        if (partId === 'talents') {
-            const talentsData = this._prepareTalentsContext();
-            Object.assign(context, talentsData);
-
-            const traitsData = this._prepareTraitsContext(context);
-            Object.assign(context, traitsData);
-
             // Add skillLists for specialist skills panel
             if (!context.skillLists) {
                 await this._prepareSkills(context);
             }
+            // Add talents and traits context
+            const talentsData = this._prepareTalentsContext();
+            Object.assign(context, talentsData);
+            const traitsData = this._prepareTraitsContext(context);
+            Object.assign(context, traitsData);
         }
 
         // Add powers context for powers tab
@@ -632,14 +623,30 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @protected
      */
     _prepareOriginPathSteps(): Record<string, unknown>[] {
-        const steps = (CONFIG as any).wh40k.originPath?.steps || [
-            { key: 'homeWorld', label: 'Home World', shortLabel: 'Home', choiceGroup: 'origin.home-world', icon: 'fa-globe' },
-            { key: 'birthright', label: 'Birthright', shortLabel: 'Birth', choiceGroup: 'origin.birthright', icon: 'fa-baby' },
-            { key: 'lureOfTheVoid', label: 'Lure of the Void', shortLabel: 'Lure', choiceGroup: 'origin.lure-of-the-void', icon: 'fa-meteor' },
-            { key: 'trialsAndTravails', label: 'Trials and Travails', shortLabel: 'Trials', choiceGroup: 'origin.trials-and-travails', icon: 'fa-skull' },
-            { key: 'motivation', label: 'Motivation', shortLabel: 'Drive', choiceGroup: 'origin.motivation', icon: 'fa-fire' },
-            { key: 'career', label: 'Career', shortLabel: 'Career', choiceGroup: 'origin.career', icon: 'fa-user-tie' },
-        ];
+        // Use system-specific step config when available
+        const gameSystem = (this as any)._gameSystemId || this.actor.system?.gameSystem || 'rt';
+        let steps;
+        try {
+            const sysConfig = SystemConfigRegistry.get(gameSystem);
+            const stepConfig = sysConfig.getOriginStepConfig();
+            const allSteps = [...(stepConfig.coreSteps || [])];
+            if (stepConfig.optionalStep) allSteps.push(stepConfig.optionalStep);
+            steps = allSteps.map((s) => ({
+                key: s.key || s.step,
+                label: s.key ? s.key.charAt(0).toUpperCase() + s.key.slice(1).replace(/([A-Z])/g, ' $1') : s.step,
+                shortLabel: (s.key || s.step).substring(0, 5),
+                icon: s.icon || 'fa-circle',
+            }));
+        } catch {
+            steps = [
+                { key: 'homeWorld', label: 'Home World', shortLabel: 'Home', icon: 'fa-globe' },
+                { key: 'birthright', label: 'Birthright', shortLabel: 'Birth', icon: 'fa-baby' },
+                { key: 'lureOfTheVoid', label: 'Lure of the Void', shortLabel: 'Lure', icon: 'fa-meteor' },
+                { key: 'trialsAndTravails', label: 'Trials and Travails', shortLabel: 'Trials', icon: 'fa-skull' },
+                { key: 'motivation', label: 'Motivation', shortLabel: 'Drive', icon: 'fa-fire' },
+                { key: 'career', label: 'Career', shortLabel: 'Career', icon: 'fa-user-tie' },
+            ];
+        }
 
         const originItems = this.actor.items.filter((item) => item.isOriginPath || item.type === 'originPath');
 
@@ -1159,6 +1166,9 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
 
         // Prepare favorite skills for dashboard
         context.favoriteSkills = this._prepareFavoriteSkills();
+
+        // Add favorite talents for display
+        context.favoriteTalents = this._prepareFavoriteTalents();
 
         return context;
     }
@@ -2746,8 +2756,8 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         // Save
         await (this as any).actor.setFlag('wh40k-rpg', 'favoriteSpecialistSkills', favorites);
 
-        // Re-render talents tab
-        await (this as any).render({ parts: ['talents'] });
+        // Re-render skills tab (specialist skills live here now)
+        await (this as any).render({ parts: ['skills'] });
     }
 
     /* -------------------------------------------- */
@@ -2842,8 +2852,8 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         // Save
         await (this as any).actor.setFlag('wh40k-rpg', 'favoriteTalents', favorites);
 
-        // Re-render talents tab and overview tab
-        await (this as any).render({ parts: ['talents', 'overview'] });
+        // Re-render overview (favourite talents) and skills (full talent panel)
+        await (this as any).render({ parts: ['overview', 'skills'] });
     }
 
     /* -------------------------------------------- */
@@ -2866,7 +2876,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         const hasLevel = form.querySelector('[name=traits-has-level]')?.checked || false;
 
         (this as any)._traitsFilter = { search, category, hasLevel };
-        await (this as any).render({ parts: ['talents'] }); // Talents tab contains trait panel
+        await (this as any).render({ parts: ['skills'] }); // Trait panel is in skills tab
     }
 
     /**
@@ -2878,7 +2888,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      */
     static async #clearTraitsFilter(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         (this as any)._traitsFilter = { search: '', category: '', hasLevel: false };
-        await (this as any).render({ parts: ['talents'] }); // Talents tab contains trait panel
+        await (this as any).render({ parts: ['skills'] }); // Trait panel is in skills tab
     }
 
     /**
