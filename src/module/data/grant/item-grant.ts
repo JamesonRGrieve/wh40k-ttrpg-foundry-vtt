@@ -154,7 +154,6 @@ export default class ItemGrantData extends (BaseGrantData as any) {
                 result.notifications.push(`Would grant: ${itemData.name}`);
             });
         }
-
     }
 
     /** @inheritDoc */
@@ -188,7 +187,10 @@ export default class ItemGrantData extends (BaseGrantData as any) {
         if (!restoreData?.items?.length) return result;
 
         const itemsToCreate = restoreData.items.map(({ uuid, data }) => ({ uuid, data }));
-        const created = await actor.createEmbeddedDocuments('Item', itemsToCreate.map((i) => i.data));
+        const created = await actor.createEmbeddedDocuments(
+            'Item',
+            itemsToCreate.map((i) => i.data),
+        );
 
         created.forEach((item, index) => {
             result.applied[itemsToCreate[index].uuid] = item.id;
@@ -313,7 +315,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
         const compositeLower = specialization ? `${name} (${specialization})`.toLowerCase() : '';
 
         // Search all Item packs — talents/traits/gear are spread across
-        // system-specific packs (dh2-core-items-talents, rt-core-items-traits, etc.)
+        // system-specific packs (dh2-core-stats-talents, rt-core-items-traits, etc.)
         for (const pack of game.packs) {
             if (pack.documentName !== 'Item') continue;
 
