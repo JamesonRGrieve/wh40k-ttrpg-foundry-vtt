@@ -1,39 +1,80 @@
 <div class="wh40k-skills-panel tw-p-2">
-    <div class="wh40k-skills-columns tw-relative">
-        {{#each skillLists.trainedStandard as |entry|}}
-        <div class="wh40k-skill-row tw-grid tw-grid-cols-[1fr_auto_40px] tw-gap-2 tw-items-center tw-py-1 tw-px-2{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
-            <div class="wh40k-skill-info tw-flex tw-items-center tw-gap-[6px]">
-                <span class="wh40k-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
-                <div class="wh40k-skill-name-wrapper tw-flex tw-items-center tw-gap-1 tw-flex-1">
-                    <button type="button" class="wh40k-skill-name"
-                            data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
-                            data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
-                            data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
-                            title="Click to view {{entry.[1].label}} skill details">
-                        <span class="wh40k-skill-label">{{entry.[1].label}} <span class="wh40k-skill-char">({{entry.[1].charShort}})</span></span>
-                    </button>
-                    <button type="button" class="wh40k-skill-roll"
-                            data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
-                            title="Roll {{entry.[1].label}} Test">
-                        <i class="fas fa-dice-d20"></i>
-                    </button>
-                    {{!-- Favorite toggle button --}}
-                    <button type="button" class="wh40k-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}"
-                            data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
-                            title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
-                        <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
-                    </button>
+    <div class="wh40k-skills-columns tw-grid tw-grid-cols-2 tw-gap-4 tw-relative">
+        <!-- Left Column -->
+        <div class="wh40k-skills-column tw-flex tw-flex-col tw-gap-[3px]">
+            {{#each skillLists.standardColumns.[0] as |entry|}}
+            <div class="wh40k-skill-row tw-grid tw-grid-cols-[1fr_auto_40px] tw-gap-2 tw-items-center tw-py-1 tw-px-2{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
+                <div class="wh40k-skill-info tw-flex tw-items-center tw-gap-1.5">
+                    <span class="wh40k-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
+                    <div class="wh40k-skill-name-wrapper tw-flex tw-items-center tw-gap-1 tw-flex-1">
+                        <button type="button" class="wh40k-skill-name"
+                                data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
+                                data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
+                                data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
+                                title="Click to view {{entry.[1].label}} skill details">
+                            <span class="wh40k-skill-label">{{entry.[1].label}} <span class="wh40k-skill-char">({{entry.[1].charShort}})</span></span>
+                        </button>
+                        <button type="button" class="wh40k-skill-roll"
+                                data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
+                                title="Roll {{entry.[1].label}} Test">
+                            <i class="fas fa-dice-d20"></i>
+                        </button>
+                        {{!-- Favorite toggle button --}}
+                        <button type="button" class="wh40k-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}"
+                                data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
+                                title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
+                            <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="wh40k-spec-training wh40k-training-display tw-flex tw-gap-0.5 tw-p-0.5">
+                    {{#each entry.[1].trainingIndicators as |ind|}}
+                    <span class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
+                    {{/each}}
+                </div>
+                <div class="wh40k-skill-total tw-min-w-[34px] tw-h-[26px] tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center" title="{{entry.[1].breakdown}}">
+                    <span>{{entry.[1].current}}</span>
                 </div>
             </div>
-            <div class="wh40k-spec-training wh40k-training-display tw-flex tw-gap-[2px] tw-p-[2px]">
-                {{#each entry.[1].trainingIndicators as |ind|}}
-                <span class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
-                {{/each}}
-            </div>
-            <div class="wh40k-skill-total tw-min-w-[34px] tw-h-[26px] tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center" title="{{entry.[1].breakdown}}">
-                <span>{{entry.[1].current}}</span>
-            </div>
+            {{/each}}
         </div>
-        {{/each}}
+        <!-- Right Column -->
+        <div class="wh40k-skills-column tw-flex tw-flex-col tw-gap-[3px]">
+            {{#each skillLists.standardColumns.[1] as |entry|}}
+            <div class="wh40k-skill-row tw-grid tw-grid-cols-[1fr_auto_40px] tw-gap-2 tw-items-center tw-py-1 tw-px-2{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
+                <div class="wh40k-skill-info tw-flex tw-items-center tw-gap-1.5">
+                    <span class="wh40k-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
+                    <div class="wh40k-skill-name-wrapper tw-flex tw-items-center tw-gap-1 tw-flex-1">
+                        <button type="button" class="wh40k-skill-name"
+                                data-action="viewSkillInfo" data-skill="{{entry.[0]}}"
+                                data-wh40k-tooltip="skill" data-wh40k-tooltip-data="{{entry.[1].tooltipData}}"
+                                data-tooltip aria-label="{{entry.[1].label}}: {{entry.[1].current}}"
+                                title="Click to view {{entry.[1].label}} skill details">
+                            <span class="wh40k-skill-label">{{entry.[1].label}} <span class="wh40k-skill-char">({{entry.[1].charShort}})</span></span>
+                        </button>
+                        <button type="button" class="wh40k-skill-roll"
+                                data-action="roll" data-roll-type="skill" data-roll-target="{{entry.[0]}}"
+                                title="Roll {{entry.[1].label}} Test">
+                            <i class="fas fa-dice-d20"></i>
+                        </button>
+                        {{!-- Favorite toggle button --}}
+                        <button type="button" class="wh40k-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}"
+                                data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
+                                title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
+                            <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="wh40k-spec-training wh40k-training-display tw-flex tw-gap-0.5 tw-p-0.5">
+                    {{#each entry.[1].trainingIndicators as |ind|}}
+                    <span class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
+                    {{/each}}
+                </div>
+                <div class="wh40k-skill-total tw-min-w-[34px] tw-h-[26px] tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center" title="{{entry.[1].breakdown}}">
+                    <span>{{entry.[1].current}}</span>
+                </div>
+            </div>
+            {{/each}}
+        </div>
     </div>
 </div>
