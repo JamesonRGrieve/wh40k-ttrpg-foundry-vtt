@@ -66,6 +66,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             manualStat: OriginPathBuilder.#manualStat,
             goToLineage: OriginPathBuilder.#goToLineage,
             skipLineage: OriginPathBuilder.#skipLineage,
+            goToCharacteristics: OriginPathBuilder.#goToCharacteristics,
+            charReset: OriginPathBuilder.#charReset,
+            charToggleAdvanced: OriginPathBuilder.#charToggleAdvanced,
             commit: OriginPathBuilder.#commit,
             openItem: OriginPathBuilder.#openItem,
         },
@@ -97,17 +100,55 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this.guidedMode = true;
         this.direction = DIRECTION.FORWARD; // Forward or backward
         this.showLineage = false; // Whether we're on the optional step
+        this.showCharacteristics = false; // Whether we're on the characteristics step
         this.selections = new Map(); // step -> Item (confirmed selections)
         this.previewedOrigin = null; // Currently previewed origin (unconfirmed)
         this.lineageSelection = null; // Separate storage for optional step
         this.allOrigins = []; // All origins from compendium (excluding optional)
         this.lineageOrigins = []; // Optional step origins
 
+        // Characteristic generation state
+        this._charRolls = Array(9).fill(0);
+        this._charAssignments = {};
+        this._charCustomBases = {};
+        this._charAdvancedMode = false;
+        this._charDragData = null;
+        this._initCharacteristicState();
+
         // Initialize from actor's existing origin paths
         this._initializeFromActor();
     }
 
     /* -------------------------------------------- */
+
+    static GENERATION_CHARACTERISTICS = [
+        'weaponSkill',
+        'ballisticSkill',
+        'strength',
+        'toughness',
+        'agility',
+        'intelligence',
+        'perception',
+        'willpower',
+        'fellowship',
+    ];
+
+    /**
+     * Initialize characteristic generation state from actor data.
+     * @private
+     */
+    _initCharacteristicState(): void {
+        const genData = this.actor?.system?.characterGeneration || {};
+        const CHARS = (this.constructor as any).GENERATION_CHARACTERISTICS;
+        this._charRolls = Array.isArray(genData.rolls) && genData.rolls.length === 9 ? [...genData.rolls] : Array(9).fill(0);
+        this._charAssignments = {};
+        this._charCustomBases = {};
+        for (const key of CHARS) {
+            this._charAssignments[key] = genData.assignments?.[key] ?? null;
+            this._charCustomBases[key] = genData.customBases?.[key] ?? 25;
+        }
+        this._charAdvancedMode = genData.customBases?.enabled ?? false;
+    }
     /*  Properties                                  */
     /* -------------------------------------------- */
 
@@ -133,6 +174,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @type {object}
      */
     get currentStep() {
+        if (this.showCharacteristics) {
+            return { key: 'characteristics', step: 'characteristics', icon: 'fa-dice-d20', descKey: 'CharacteristicsDesc' };
+        }
         if (this.showLineage) {
             return this.systemConfig.optionalStep;
         }
@@ -309,7 +353,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         let currentOrigins = [];
         let selectedItem = null;
 
-        if (this.showLineage) {
+        if (this.showCharacteristics) {
+            // No origins to show on characteristics step
+            currentOrigins = [];
+            selectedItem = null;
+        } else if (this.showLineage) {
             // Show all lineage options (they can pick any regardless of path)
             currentOrigins = this._prepareLineageOrigins();
             selectedItem = this.lineageSelection;
@@ -342,6 +390,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             isForward: this.direction === DIRECTION.FORWARD,
             isBackward: this.direction === DIRECTION.BACKWARD,
             showLineage: this.showLineage,
+            showCharacteristics: this.showCharacteristics,
 
             // System-aware content
             journeyTitle: journeyTitle !== journeyTitleKey ? journeyTitle : game.i18n.localize('WH40K.OriginPath.YourJourney'),
@@ -362,7 +411,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 description: this._getLocalizedStepDescription(currentStep.descKey),
                 origins: currentOrigins,
                 isLineage: this.showLineage,
+                isCharacteristics: this.showCharacteristics,
             },
+
+            // Characteristic generation data
+            charGen: this.showCharacteristics ? this._prepareCharGenContext() : null,
 
             // Selected origin details
             selectedOrigin: selectedOrigin,
@@ -407,6 +460,67 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Prepare characteristic generation context for rendering.
+     * @private
+     */
+    _prepareCharGenContext(): any {
+        const CHARS = (this.constructor as any).GENERATION_CHARACTERISTICS;
+        const DEFAULT_BASE = 25;
+
+        const rollsBank = this._charRolls.map((value, index) => ({
+            index,
+            displayIndex: index + 1,
+            value: value || 0,
+            isEmpty: !value || value === 0,
+            isAssigned: Object.values(this._charAssignments).includes(index),
+        }));
+
+        const characteristics = CHARS.map((key) => {
+            const charData = this.actor.system.characteristics?.[key] || {};
+            const assignedIndex = this._charAssignments[key] ?? null;
+            const rollValue = assignedIndex !== null && this._charRolls[assignedIndex] ? this._charRolls[assignedIndex] : null;
+            const base = this._charAdvancedMode ? this._charCustomBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
+            const total = rollValue !== null ? base + rollValue : null;
+
+            return {
+                key,
+                label: charData.label || key,
+                short: charData.short || key.substring(0, 2).toUpperCase(),
+                base,
+                rollValue,
+                assignedIndex,
+                total,
+                hasRoll: rollValue !== null,
+            };
+        });
+
+        const characteristicRows = [];
+        for (let i = 0; i < characteristics.length; i += 3) {
+            characteristicRows.push(characteristics.slice(i, i + 3));
+        }
+
+        const preview = characteristics.map((c) => ({
+            short: c.short,
+            total: c.total,
+            hasValue: c.total !== null,
+        }));
+
+        const allAssigned = characteristics.every((c) => c.hasRoll);
+        const anyRolls = this._charRolls.some((r) => r > 0);
+
+        return {
+            rollsBank,
+            characteristicRows,
+            characteristics,
+            preview,
+            advancedMode: this._charAdvancedMode,
+            allAssigned,
+            anyRolls,
+            canApply: allAssigned && anyRolls,
+        };
+    }
+
+    /**
      * Prepare lineage origins (no position restrictions)
      * @returns {Array}
      * @private
@@ -447,6 +561,146 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Array}
      * @private
      */
+    /** @override */
+    _onRender(context: any, options: any): void {
+        super._onRender(context, options);
+        if (!this.showCharacteristics) return;
+
+        const html = this.element;
+        if (!html) return;
+
+        // Roll chip click-to-edit and drag
+        html.querySelectorAll('.csd-roll-chip').forEach((chip) => {
+            chip.addEventListener('click', this._onCharRollChipClick.bind(this));
+            chip.addEventListener('dragstart', this._onCharDragStart.bind(this));
+            chip.addEventListener('dragend', this._onCharDragEnd.bind(this));
+        });
+
+        // Characteristic slots as drop targets
+        html.querySelectorAll('.csd-char-slot').forEach((slot) => {
+            slot.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                (e.currentTarget as any).classList.add('drop-valid', 'drop-hover');
+            });
+            slot.addEventListener('dragleave', (e) => {
+                (e.currentTarget as any).classList.remove('drop-hover');
+            });
+            slot.addEventListener('drop', this._onCharDrop.bind(this));
+            const rollChip = slot.querySelector('.csd-assigned-roll');
+            if (rollChip) {
+                rollChip.addEventListener('dragstart', this._onCharDragStart.bind(this));
+                rollChip.addEventListener('dragend', this._onCharDragEnd.bind(this));
+            }
+        });
+
+        // Rolls bank as drop target
+        const rollsBank = html.querySelector('.csd-rolls-bank');
+        if (rollsBank) {
+            rollsBank.addEventListener('dragover', (e) => {
+                if (!this._charDragData || this._charDragData.type !== 'assigned') return;
+                e.preventDefault();
+                (e.currentTarget as any).classList.add('drop-valid', 'drop-hover');
+            });
+            rollsBank.addEventListener('dragleave', (e) => {
+                (e.currentTarget as any).classList.remove('drop-hover');
+            });
+            rollsBank.addEventListener('drop', this._onCharBankDrop.bind(this));
+        }
+
+        // Base value inputs (advanced mode)
+        html.querySelectorAll('.csd-base-input').forEach((input) => {
+            input.addEventListener('change', (e) => {
+                const el = e.currentTarget as any;
+                const key = el.dataset.characteristic;
+                let value = parseInt(el.value);
+                if (isNaN(value) || value < 0) value = 0;
+                this._charCustomBases[key] = value;
+                this.render();
+            });
+        });
+    }
+
+    _onCharRollChipClick(event: Event): void {
+        const chip = event.currentTarget as any;
+        const index = parseInt(chip.dataset.rollIndex);
+        if (chip.querySelector('.csd-roll-input')) return;
+
+        const currentValue = this._charRolls[index] || '';
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.className = 'csd-roll-input';
+        (input as any).min = 2;
+        (input as any).max = 40;
+        input.value = currentValue || '';
+        input.placeholder = '2-40';
+        input.dataset.rollIndex = String(index);
+
+        input.addEventListener('blur', () => {
+            let value = parseInt(input.value);
+            if (isNaN(value) || value < 2) value = 0;
+            if (value > 40) value = 40;
+            this._charRolls[index] = value;
+            this.render();
+        });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                input.blur();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                this.render();
+            }
+        });
+
+        const valueEl = chip.querySelector('.csd-roll-value');
+        if (valueEl) valueEl.style.display = 'none';
+        chip.appendChild(input);
+        input.focus();
+        input.select();
+    }
+
+    _onCharDragStart(event: Event): void {
+        const target = event.currentTarget as any;
+        const rollIndex = parseInt(target.dataset.rollIndex);
+        const fromChar = target.dataset.characteristic || null;
+        if (this._charRolls[rollIndex] === 0) {
+            event.preventDefault();
+            return;
+        }
+        this._charDragData = { type: fromChar ? 'assigned' : 'bank', index: rollIndex, characteristic: fromChar };
+        target.classList.add('dragging');
+        (event as any).dataTransfer.effectAllowed = 'move';
+        (event as any).dataTransfer.setData('text/plain', '');
+    }
+
+    _onCharDragEnd(event: Event): void {
+        (event.currentTarget as any).classList.remove('dragging');
+        this.element?.querySelectorAll('.drop-valid, .drop-hover').forEach((el) => el.classList.remove('drop-valid', 'drop-hover'));
+        this._charDragData = null;
+    }
+
+    _onCharDrop(event: Event): void {
+        event.preventDefault();
+        if (!this._charDragData) return;
+        const slot = event.currentTarget as any;
+        const targetChar = slot.dataset.characteristic;
+        const draggedIndex = this._charDragData.index;
+        const sourceChar = this._charDragData.characteristic;
+        const currentTargetIndex = this._charAssignments[targetChar];
+        if (sourceChar) {
+            this._charAssignments[sourceChar] = currentTargetIndex;
+        }
+        this._charAssignments[targetChar] = draggedIndex;
+        this.render();
+    }
+
+    _onCharBankDrop(event: Event): void {
+        event.preventDefault();
+        if (!this._charDragData || !this._charDragData.characteristic) return;
+        this._charAssignments[this._charDragData.characteristic] = null;
+        this.render();
+    }
+
     _prepareStepNavigation(): any {
         const orderedSteps = this.orderedSteps;
 
@@ -1699,6 +1953,35 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Navigate to the characteristics step.
+     */
+    static async #goToCharacteristics(event: Event, target: HTMLElement): Promise<void> {
+        (this as any).showLineage = false;
+        (this as any).showCharacteristics = true;
+        (this as any).previewedOrigin = null;
+        (this as any).render();
+    }
+
+    /**
+     * Reset all characteristic assignments.
+     */
+    static async #charReset(event: Event, target: HTMLElement): Promise<void> {
+        const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
+        for (const key of CHARS) {
+            (this as any)._charAssignments[key] = null;
+        }
+        (this as any).render();
+    }
+
+    /**
+     * Toggle advanced mode for characteristics.
+     */
+    static async #charToggleAdvanced(event: Event, target: HTMLElement): Promise<void> {
+        (this as any)._charAdvancedMode = !(this as any)._charAdvancedMode;
+        (this as any).render();
+    }
+
+    /**
      * Open an item sheet (for talents, skills, etc.)
      */
     static async #openItem(event: Event, target: HTMLElement): Promise<void> {
@@ -1797,6 +2080,28 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 cleanOriginItems.push(itemData);
             }
             await (this as any).actor.createEmbeddedDocuments('Item', cleanOriginItems);
+
+            // Apply characteristic rolls if any are assigned
+            const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
+            const charRolls = (this as any)._charRolls;
+            const charAssignments = (this as any)._charAssignments;
+            const hasCharRolls = charRolls.some((r) => r > 0) && CHARS.some((k) => charAssignments[k] !== null);
+            if (hasCharRolls) {
+                const charUpdate: Record<string, any> = {
+                    'system.characterGeneration.rolls': charRolls,
+                    'system.characterGeneration.assignments': charAssignments,
+                    'system.characterGeneration.customBases.enabled': (this as any)._charAdvancedMode,
+                };
+                for (const key of CHARS) {
+                    charUpdate[`system.characterGeneration.customBases.${key}`] = (this as any)._charCustomBases[key];
+                    const rollIndex = charAssignments[key];
+                    if (rollIndex !== null && charRolls[rollIndex] > 0) {
+                        const base = (this as any)._charAdvancedMode ? (this as any)._charCustomBases[key] ?? 25 : 25;
+                        charUpdate[`system.characteristics.${key}.base`] = base + charRolls[rollIndex];
+                    }
+                }
+                await (this as any).actor.update(charUpdate);
+            }
 
             // Success
             (ui.notifications as any).info(game.i18n.localize('WH40K.OriginPath.CommitSuccess'));
