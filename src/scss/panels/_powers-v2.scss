@@ -14,25 +14,7 @@
     padding: $wh40k-space-md;
 }
 
-.wh40k-powers-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: $wh40k-space-lg;
-    min-height: 0;
-}
-
-.wh40k-powers-col {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-md;
-    min-width: 0;
-}
-
-@media (max-width: 900px) {
-    .wh40k-powers-layout {
-        grid-template-columns: 1fr;
-    }
-}
+// Powers grid layout now in Tailwind (tw-grid tw-grid-cols-2 tw-gap-4)
 
 // ============================================
 // Powers Panel Base Styling
@@ -232,7 +214,7 @@
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: var(--wh40k-panel-bg);
@@ -276,7 +258,7 @@
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     i {
         font-size: 0.9rem;
@@ -320,7 +302,7 @@
     font-size: 0.75rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: var(--wh40k-panel-bg);
@@ -380,7 +362,7 @@
     min-height: 60px;
 
     &[data-drop-zone] {
-        transition: all 0.3s ease;
+        transition: all $wh40k-transition-medium;
 
         &.drop-valid {
             background: linear-gradient(135deg, rgba($wh40k-accent-powers, 0.08) 0%, rgba($wh40k-accent-powers, 0.02) 100%);
@@ -401,7 +383,7 @@
     border-left: 3px solid $wh40k-accent-powers;
     border-radius: 6px;
     overflow: hidden;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     cursor: grab;
 
     &:hover {
@@ -639,7 +621,7 @@
     background: transparent;
     color: var(--wh40k-text-muted);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:hover {
         background: var(--wh40k-panel-bg-translucent);
@@ -870,7 +852,7 @@
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: var(--wh40k-btn-bg-hover);
