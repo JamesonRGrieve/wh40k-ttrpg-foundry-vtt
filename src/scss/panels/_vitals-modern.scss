@@ -70,7 +70,7 @@
 .wh40k-vital-bar-fill {
     height: 100%;
     border-radius: 4px;
-    transition: width 0.3s ease;
+    transition: width $wh40k-transition-medium;
 }
 
 // Vital-specific bar colors
@@ -422,5 +422,5 @@
 .wh40k-fatigue-bar-fill,
 .wh40k-corruption-bar-fill,
 .wh40k-insanity-bar-fill {
-    transition: width 0.3s ease;
+    transition: width $wh40k-transition-medium;
 }

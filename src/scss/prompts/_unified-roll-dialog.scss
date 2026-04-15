@@ -53,7 +53,7 @@
     }
 
     &__title {
-        font-family: 'Cinzel', serif;
+        font-family: $wh40k-font-display;
         font-size: 1.15rem;
         font-weight: 600;
         color: #c9a227;
@@ -97,7 +97,7 @@
     }
 
     &__number {
-        font-family: 'Cinzel', serif;
+        font-family: $wh40k-font-display;
         font-size: 4rem;
         font-weight: 700;
         line-height: 1;
@@ -138,7 +138,7 @@
     }
 
     &__difficulty-label {
-        font-family: 'Cinzel', serif;
+        font-family: $wh40k-font-display;
         font-size: 0.85rem;
         font-weight: 600;
         color: rgba(232, 228, 217, 0.7);
@@ -224,7 +224,7 @@
     }
 
     &__label {
-        font-family: 'Cinzel', serif;
+        font-family: $wh40k-font-display;
         font-size: 0.85rem;
         font-weight: 600;
         color: rgba(232, 228, 217, 0.85);
@@ -523,7 +523,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        transition: background 0.2s ease;
+        transition: background $wh40k-transition-base;
 
         &:hover {
             background: rgba(0, 0, 0, 0.25);
@@ -561,7 +561,7 @@
     }
 
     &__section-title {
-        font-family: 'Cinzel', serif;
+        font-family: $wh40k-font-display;
         font-size: 0.75rem;
         font-weight: 600;
         color: #c9a227;
@@ -823,7 +823,7 @@
     }
 
     &__result-label {
-        font-family: 'Cinzel', serif;
+        font-family: $wh40k-font-display;
         font-size: 1rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -863,7 +863,7 @@
         color: #6a6a6a;
         font-size: 0.8rem;
         cursor: pointer;
-        transition: color 0.15s ease;
+        transition: color $wh40k-transition-fast;
 
         &:hover {
             color: #f87171;

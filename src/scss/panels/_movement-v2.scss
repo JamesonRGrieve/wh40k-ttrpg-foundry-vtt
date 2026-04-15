@@ -532,7 +532,7 @@
     height: 2px;
     background: linear-gradient(90deg, rgba($wh40k-accent-gold, 0.3) 0%, rgba($wh40k-accent-gold, 0.6) 100%);
     width: var(--move-percent, 0%);
-    transition: width 0.3s ease;
+    transition: width $wh40k-transition-medium;
 }
 
 // Movement type specific colors

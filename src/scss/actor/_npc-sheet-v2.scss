@@ -138,7 +138,7 @@ $bp-wide: 1200px;
         padding: 0.4rem;
         cursor: pointer;
         opacity: 0;
-        transition: opacity 0.2s;
+        transition: opacity $wh40k-transition-base;
         font-size: 0.75rem;
 
         &:hover {
@@ -282,7 +282,7 @@ $bp-wide: 1200px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        transition: opacity 0.2s;
+        transition: opacity $wh40k-transition-base;
 
         // Hide on very narrow sidebars
         @media (max-width: $bp-narrow) {
@@ -375,7 +375,7 @@ $bp-wide: 1200px;
 
         .wh40k-gm-chevron {
             font-size: 0.6rem;
-            transition: transform 0.2s;
+            transition: transform $wh40k-transition-base;
         }
     }
 
@@ -456,7 +456,7 @@ $bp-wide: 1200px;
     .wh40k-magnitude-bar {
         height: 100%;
         border-radius: 3px;
-        transition: width 0.3s;
+        transition: width $wh40k-transition-medium;
 
         &--high {
             background: $npc-accent-movement;
@@ -537,7 +537,7 @@ $bp-wide: 1200px;
             padding: 0.4rem;
             cursor: pointer;
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: opacity $wh40k-transition-base;
             font-size: 0.75rem;
 
             &:hover {
@@ -793,7 +793,7 @@ $bp-wide: 1200px;
                 height: 100%;
                 background: linear-gradient(90deg, $npc-accent-combat, darken($npc-accent-combat, 15%));
                 border-radius: 3px;
-                transition: width 0.3s ease;
+                transition: width $wh40k-transition-medium;
             }
         }
 
@@ -1497,7 +1497,7 @@ $bp-wide: 1200px;
             .wh40k-edit-hint {
                 opacity: 0;
                 margin-left: auto;
-                transition: opacity 0.2s ease;
+                transition: opacity $wh40k-transition-base;
             }
 
             &:hover .wh40k-edit-hint {
@@ -1532,7 +1532,7 @@ $bp-wide: 1200px;
             opacity: 0;
             margin-left: auto;
             font-size: 0.75rem;
-            transition: opacity 0.2s ease;
+            transition: opacity $wh40k-transition-base;
         }
 
         &:hover .wh40k-panel-header .wh40k-edit-hint {
@@ -2303,7 +2303,7 @@ $bp-wide: 1200px;
         height: 100%;
         background: linear-gradient(90deg, $npc-accent-combat, darken($npc-accent-combat, 15%));
         border-radius: 4px;
-        transition: width 0.3s;
+        transition: width $wh40k-transition-medium;
     }
 
     .wh40k-wounds-actions {
@@ -2980,7 +2980,7 @@ $bp-wide: 1200px;
 
         .wh40k-btn-toggle-desc {
             i {
-                transition: transform 0.2s;
+                transition: transform $wh40k-transition-base;
                 font-size: 0.65rem;
             }
         }

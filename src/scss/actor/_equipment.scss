@@ -14,7 +14,7 @@
     }
 
     .table-row {
-        transition: background-color 0.2s ease;
+        transition: background-color $wh40k-transition-base;
         border-bottom: 1px solid rgba(47, 79, 79, 0.1);
 
         &:hover {
@@ -115,7 +115,7 @@
     }
 
     .table-row {
-        transition: background-color 0.2s ease;
+        transition: background-color $wh40k-transition-base;
 
         &:hover {
             background: rgba(74, 55, 40, 0.05);

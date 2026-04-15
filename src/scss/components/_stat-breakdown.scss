@@ -219,7 +219,7 @@
         font-size: 0.7rem;
         opacity: 0;
         color: #93c5fd;
-        transition: opacity 0.2s;
+        transition: opacity $wh40k-transition-base;
         pointer-events: none;
     }
 

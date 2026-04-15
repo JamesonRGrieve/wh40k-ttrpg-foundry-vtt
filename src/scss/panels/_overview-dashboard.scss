@@ -685,7 +685,7 @@
     height: 100%;
     background: linear-gradient(90deg, #27ae60 0%, #3498db 100%);
     border-radius: 3px;
-    transition: width 0.3s ease;
+    transition: width $wh40k-transition-medium;
 }
 
 // ============================================

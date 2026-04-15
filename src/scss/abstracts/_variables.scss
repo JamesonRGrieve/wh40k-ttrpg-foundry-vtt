@@ -25,7 +25,7 @@ $wh40k-color-crimson-light: #b22222;
 $wh40k-color-success: #2d5016;
 $wh40k-color-failure: #6b1010;
 $wh40k-color-warning: #8b6914;
-$wh40k-color-info: #1a4a6b;
+// $wh40k-color-info removed — unused
 
 // ============================================
 // Semantic Backgrounds - Using Foundry Variables
@@ -41,7 +41,7 @@ $wh40k-color-info: #1a4a6b;
 // Additional overlays with transparency
 $wh40k-bg-overlay-light: rgba(255, 255, 255, 0.05);
 $wh40k-bg-overlay-medium: rgba(0, 0, 0, 0.2);
-$wh40k-bg-overlay-heavy: rgba(0, 0, 0, 0.4);
+// $wh40k-bg-overlay-heavy removed — unused
 $wh40k-bg-input: rgba(0, 0, 0, 0.3);
 $wh40k-bg-input-focus: rgba(192, 128, 32, 0.15);
 $wh40k-bg-paper: rgba(30, 25, 20, 0.9);
@@ -54,11 +54,10 @@ $wh40k-bg-translucent: rgba(30, 25, 20, 0.7);
 // ============================================
 // Use Foundry border colors for theme adaptation
 
-$wh40k-border-gold: 1px solid $wh40k-color-gold;
-$wh40k-border-bronze: 1px solid $wh40k-color-bronze;
+// $wh40k-border-gold, $wh40k-border-bronze removed — unused
 $wh40k-border-light: rgba(120, 100, 80, 0.4);
 $wh40k-border-medium: rgba(120, 100, 80, 0.6);
-$wh40k-border-dark: rgba(40, 30, 20, 0.8);
+// $wh40k-border-dark removed — unused
 
 // Use Foundry variables for standard borders:
 // --color-border-primary (strongest contrast)
