@@ -7,8 +7,15 @@
     <div class="wh40k-header__info wh40k-header-grid tw-grid tw-grid-cols-[minmax(280px,1fr)_auto] tw-gap-3 tw-items-start tw-pt-2 tw-px-3 tw-pb-[6px]">
         <div class="wh40k-header-left tw-flex tw-flex-col tw-gap-2">
             <div class="wh40k-header-topline tw-grid tw-grid-cols-[auto_1fr] tw-gap-[10px] tw-items-center">
-                <div class="wh40k-header__logo wh40k-portrait-container">
+                <div class="wh40k-header__logo wh40k-portrait-container wh40k-portrait-full">
                     <img class="wh40k-header__logo-image wh40k-portrait" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+                    {{#if system.originPath.divination}}
+                    <p class="wh40k-divination">"{{system.originPath.divination}}"</p>
+                    {{else}}
+                    <p class="wh40k-divination wh40k-divination-edit">
+                        <input class="wh40k-divination-input" name="system.originPath.divination" type="text" value="" placeholder="Enter divination..." />
+                    </p>
+                    {{/if}}
                 </div>
                 <div class="wh40k-header-info">
                     <div class="wh40k-header-row wh40k-name-row">
@@ -32,10 +39,6 @@
                             {{/if}}
                         </div>
                         {{/each}}
-                    </div>
-                    <div class="wh40k-header-row">
-                        <span class="wh40k-header-label">Divination</span>
-                        <input class="wh40k-header-input" name="system.originPath.divination" type="text" value="{{system.originPath.divination}}" placeholder="Divination" />
                     </div>
                 </div>
             </div>
