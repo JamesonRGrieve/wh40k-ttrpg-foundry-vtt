@@ -1171,6 +1171,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             if (el.dataset.itemId) {
                 // Skip if this element or any ancestor is a talent row
                 if (el.closest('.wh40k-tp_row') || el.closest('.wh40k-talent-row')) return;
+                if (el.closest('[data-disable-drag="true"]') || el.closest('.wh40k-panel-backpack-split')) return;
 
                 el.setAttribute('draggable', true);
                 el.addEventListener('dragstart', this._onDragItem.bind(this), false);
