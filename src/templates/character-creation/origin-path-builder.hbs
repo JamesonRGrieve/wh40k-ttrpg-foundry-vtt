@@ -33,7 +33,8 @@
                     </label>
                 </div>
 
-                {{!-- Direction Toggle --}}
+                {{!-- Direction Toggle (RT only — DH2e steps are independent) --}}
+                {{#if hasDirectionToggle}}
                 <div class="direction-toggle">
                     <label class="direction-option {{#if isBackward}}active{{/if}}" data-tooltip="{{localize 'WH40K.OriginPath.DirectionBackwardHint'}}">
                         <input type="radio" name="direction" value="backward" {{#if isBackward}}checked{{/if}} data-action="setDirection">
@@ -46,6 +47,7 @@
                         <span>{{localize "WH40K.OriginPath.DirectionForward"}}</span>
                     </label>
                 </div>
+                {{/if}}
             </div>
         </div>
 
