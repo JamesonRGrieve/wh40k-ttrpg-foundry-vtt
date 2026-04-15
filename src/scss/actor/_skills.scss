@@ -347,8 +347,14 @@
 }
 
 .wh40k-header-step {
-    width: 36px;
-    height: 36px;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px;
+    max-width: 36px;
+    min-height: 36px;
+    max-height: 36px;
+    flex-shrink: 0;
+    flex-grow: 0;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -376,10 +382,10 @@
 }
 
 .wh40k-header-step-img {
-    width: 32px;
-    height: 32px;
-    max-width: 32px;
-    max-height: 32px;
+    width: 32px !important;
+    height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
     object-fit: cover;
     border-radius: 50%;
     border: 2px solid var(--wh40k-gold, #d4af37);
