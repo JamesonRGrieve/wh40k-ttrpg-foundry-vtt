@@ -3,20 +3,20 @@
  * Based on dnd5e's BaseActorSheet pattern for Foundry V13+
  */
 
+import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
-import TooltipMixin from '../api/tooltip-mixin.ts';
-import VisualFeedbackMixin from '../api/visual-feedback-mixin.ts';
-import EnhancedAnimationsMixin from '../api/enhanced-animations-mixin.ts';
 import CollapsiblePanelMixin from '../api/collapsible-panel-mixin.ts';
 import ContextMenuMixin from '../api/context-menu-mixin.ts';
 import EnhancedDragDropMixin from '../api/drag-drop-visual-mixin.ts';
-import WhatIfMixin from '../api/what-if-mixin.ts';
+import EnhancedAnimationsMixin from '../api/enhanced-animations-mixin.ts';
+import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
+import TooltipMixin from '../api/tooltip-mixin.ts';
+import VisualFeedbackMixin from '../api/visual-feedback-mixin.ts';
+import WhatIfMixin from '../api/what-if-mixin.ts';
 import { ActiveModifiersMixin, ItemPreviewMixin } from '../components/_module.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 // import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
-import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 
@@ -193,7 +193,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     _prepareCharacteristicsHUD(context: Record<string, unknown>): void {
         const characteristics = this.actor.system.characteristics || {};
 
-        for (const [key, char] of Object.entries(characteristics) as [string, any][]) {
+        for (const [key, char] of Object.entries(characteristics)) {
             // Calculate advancement progress (0-5)
             const advanceProgress = (char.advance || 0) / 5; // 0.0 to 1.0
 
@@ -441,7 +441,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         // Apply filters
         const filters = this._skillsFilter;
-        const visibleSkills = (Object.entries(skills) as [string, any][]).filter(([key, data]) => {
+        const visibleSkills = Object.entries(skills).filter(([key, data]) => {
             if (data.hidden) return false;
 
             // Search filter
@@ -539,12 +539,16 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                 // data.suggestedSpecializations = this._getSkillSuggestions(key);
 
                 // Create plain object with converted entries
-                specialist.push([key, { ...(data as any), entries: plainEntries }]);
+                specialist.push([key, { ...data, entries: plainEntries }]);
             } else {
                 // Standard skill
                 standard.push([key, data]);
             }
         }
+
+        // Split standard into trained/basic skills and untrained advanced skills
+        const trainedStandard = standard.filter(([_, data]) => !data.advanced || data.trainingLevel > 0);
+        const advancedUntrained = standard.filter(([_, data]) => data.advanced && data.trainingLevel === 0);
 
         // Split standard into columns
         const splitIndex = Math.ceil(standard.length / 2);
@@ -553,7 +557,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Check if any specialist skill has entries (for empty state display)
         const hasSpecialistEntries = specialist.some(([_, skillData]) => skillData.entries?.length > 0);
 
-        context.skillLists = { standard, specialist, standardColumns, hasSpecialistEntries };
+        context.skillLists = { standard, trainedStandard, advancedUntrained, specialist, standardColumns, hasSpecialistEntries };
     }
 
     /**
@@ -597,7 +601,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         // Training indicators for template iteration
         const config = this._getSkillTrainingConfig();
-        data.trainingIndicators = config.map(rank => ({
+        data.trainingIndicators = config.map((rank) => ({
             label: rank.label,
             tooltip: rank.tooltip,
             active: data.trainingLevel >= rank.level,
@@ -627,12 +631,12 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Array<{level: number, key: string, label: string, tooltip: string, bonus: number}>}
      * @protected
      */
-    _getSkillTrainingConfig(): Array<{level: number; key: string; label: string; tooltip: string; bonus: number}> {
+    _getSkillTrainingConfig(): Array<{ level: number; key: string; label: string; tooltip: string; bonus: number }> {
         // Default: Rogue Trader style (T / +10 / +20)
         return [
-            { level: 1, key: 'trained', label: 'T',   tooltip: 'Trained',  bonus: 0  },
-            { level: 2, key: 'plus10',  label: '+10',  tooltip: '+10',      bonus: 10 },
-            { level: 3, key: 'plus20',  label: '+20',  tooltip: '+20',      bonus: 20 },
+            { level: 1, key: 'trained', label: 'T', tooltip: 'Trained', bonus: 0 },
+            { level: 2, key: 'plus10', label: '+10', tooltip: '+10', bonus: 10 },
+            { level: 3, key: 'plus20', label: '+20', tooltip: '+20', bonus: 20 },
         ];
     }
 
@@ -858,7 +862,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Convert to sorted array
-        return (Object.values(groups) as any[]).sort((a, b) => a.tier - b.tier);
+        return Object.values(groups).sort((a, b) => a.tier - b.tier);
     }
 
     /**
@@ -1283,13 +1287,13 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Check characteristics
-        for (const [key, char] of Object.entries(current.characteristics || {}) as [string, any][]) {
+        for (const [key, char] of Object.entries(current.characteristics || {})) {
             const prevChar = previous.characteristics[key];
             if (!prevChar) continue;
 
             // Check total change
-            if ((char as any).total !== prevChar.total) {
-                this.animateCharacteristicChange?.(key, prevChar.total, (char as any).total);
+            if (char.total !== prevChar.total) {
+                this.animateCharacteristicChange?.(key, prevChar.total, char.total);
             }
         }
     }
@@ -1485,7 +1489,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemRoll(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const itemId = target.dataset.itemId || target.closest('[data-item-id]')?.dataset.itemId;
         if (itemId) await (this as any).actor.rollItem?.(itemId);
     }
 
@@ -1499,7 +1503,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static #itemEdit(this: BaseActorSheet, event: Event, target: HTMLElement): void {
         console.log('WH40K | itemEdit action triggered', { target, dataset: target.dataset });
-        const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const itemId = target.dataset.itemId || target.closest('[data-item-id]')?.dataset.itemId;
         console.log('WH40K | itemEdit itemId:', itemId);
         if (!itemId) {
             console.warn('WH40K | itemEdit: No itemId found', target);
@@ -1524,7 +1528,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static async #itemDelete(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         console.log('WH40K | itemDelete action triggered', { target, dataset: target.dataset });
-        const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const itemId = target.dataset.itemId || target.closest('[data-item-id]')?.dataset.itemId;
         console.log('WH40K | itemDelete itemId:', itemId);
         if (!itemId) {
             console.warn('WH40K | itemDelete: No itemId found', target);
@@ -1567,7 +1571,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static async #itemVocalize(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         console.log('WH40K | itemVocalize action triggered', { target, dataset: target.dataset });
-        const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const itemId = target.dataset.itemId || target.closest('[data-item-id]')?.dataset.itemId;
         console.log('WH40K | itemVocalize itemId:', itemId);
         if (!itemId) {
             console.warn('WH40K | itemVocalize: No item ID found', target);
@@ -1646,7 +1650,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #effectEdit(event: Event, target: HTMLElement): void {
-        const effectId = (target.closest('[data-effect-id]') as HTMLElement)?.dataset.effectId;
+        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
         const effect = (this as any).actor.effects.get(effectId);
         effect?.sheet.render(true);
     }
@@ -1660,7 +1664,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectDelete(event: Event, target: HTMLElement): Promise<void> {
-        const effectId = (target.closest('[data-effect-id]') as HTMLElement)?.dataset.effectId;
+        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
         const effect = (this as any).actor.effects.get(effectId);
         await effect?.delete();
     }
@@ -1674,7 +1678,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectToggle(event: Event, target: HTMLElement): Promise<void> {
-        const effectId = (target.closest('[data-effect-id]') as HTMLElement)?.dataset.effectId;
+        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
         const effect = (this as any).actor.effects.get(effectId);
         await effect?.update({ disabled: !effect.disabled });
     }
@@ -1743,7 +1747,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             const basePath = specialty != null ? `system.skills.${skillKey}.entries.${specialty}` : `system.skills.${skillKey}`;
 
             // Get current training level
-            const skill = specialty != null ? (this as any).actor.system.skills?.[skillKey]?.entries?.[specialty] : (this as any).actor.system.skills?.[skillKey];
+            const skill =
+                specialty != null ? (this as any).actor.system.skills?.[skillKey]?.entries?.[specialty] : (this as any).actor.system.skills?.[skillKey];
 
             const currentLevel = skill?.plus20 ? 3 : skill?.plus10 ? 2 : skill?.trained ? 1 : 0;
 
@@ -1887,8 +1892,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             return;
         }
 
-        // Try to find the skill item in the compendium
-        const pack = game.packs.get('wh40k-rpg.wh40k-items-skills');
+        // Try to find the skill item in the compendium (check all game-line packs)
+        const skillPackNames = ['wh40k-rpg.dh2-core-items-skills', 'wh40k-rpg.rt-core-items-skills', 'wh40k-rpg.dw-core-items-skills'];
+        const pack = skillPackNames.map((n) => game.packs.get(n)).find((p) => p);
         if (!pack) {
             (ui as any).notifications.warn('Skills compendium not found.');
             return;
@@ -1956,14 +1962,14 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         const source = items.get(item.id);
 
         // Confirm the drop target
-        const dropTarget = (event.target as HTMLElement).closest('[data-item-id]') as HTMLElement;
+        const dropTarget = (event.target as HTMLElement).closest('[data-item-id]');
         if (!dropTarget) return;
         const target = items.get(dropTarget.dataset.itemId);
         if (source.id === target.id) return;
 
         // Identify sibling items based on adjacent HTML elements
         const siblings = [];
-        for (const element of (dropTarget.parentElement as HTMLElement).children) {
+        for (const element of dropTarget.parentElement.children) {
             const siblingId = (element as HTMLElement).dataset.itemId;
             if (siblingId && siblingId !== source.id) {
                 siblings.push(items.get((element as HTMLElement).dataset.itemId));
@@ -2086,7 +2092,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @protected
      */
     static async #editCharacteristic(event: Event, target: HTMLElement): Promise<void> {
-        const charKey = (target.closest('[data-characteristic]') as HTMLElement)?.dataset.characteristic;
+        const charKey = target.closest('[data-characteristic]')?.dataset.characteristic;
         if (!charKey) return;
 
         const char = (this as any).actor.system.characteristics[charKey];

@@ -1,13 +1,48 @@
 {{!-- Acolyte Sheet Skills Tab --}}
-{{!-- This part renders the Skills tab content --}}
+{{!-- This part renders the Skills tab content with base skills, advanced untrained, and specialist skills --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
-    {{!-- Skills Panel --}}
     <div class="wh40k-panel">
         <div class="wh40k-panel-header">
             <span class="wh40k-panel-title"><i class="fas fa-book"></i> Skills</span>
         </div>
         <div class="wh40k-panel-body">
             {{> systems/wh40k-rpg/templates/actor/panel/skills-panel.hbs}}
+        </div>
+    </div>
+
+    {{!-- Advanced Untrained Skills (compressed 2-column grid) --}}
+    {{#if skillLists.advancedUntrained.length}}
+    <div class="wh40k-panel wh40k-panel--advanced-untrained">
+        <div class="wh40k-panel-header">
+            <span class="wh40k-panel-title"><i class="fas fa-lock"></i> Advanced Skills (Untrained)</span>
+        </div>
+        <div class="wh40k-panel-body">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-x-4 tw-gap-y-0 tw-p-2">
+                {{#each skillLists.advancedUntrained as |entry|}}
+                <div class="tw-flex tw-items-center tw-gap-1 tw-py-[2px] wh40k-skill-row--advanced" data-skill="{{entry.[0]}}">
+                    <button type="button" class="wh40k-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}"
+                            data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
+                            title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
+                        <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
+                    </button>
+                    <span class="tw-flex-1 tw-text-xs tw-truncate" title="{{entry.[1].label}} ({{entry.[1].charShort}})">{{entry.[1].label}}</span>
+                    <span class="wh40k-skill-total tw-text-xs tw-min-w-[28px] tw-text-center">{{entry.[1].current}}</span>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{> systems/wh40k-rpg/templates/actor/panel/skills-specialist-panel.hbs}}
+
+    {{!-- Talents & Traits side by side --}}
+    <div class="wh40k-talents-grid--2col">
+        <div class="wh40k-talents-col tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
+            {{> systems/wh40k-rpg/templates/actor/panel/talent-panel.hbs}}
+        </div>
+        <div class="wh40k-talents-col tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
+            {{> systems/wh40k-rpg/templates/actor/panel/trait-panel.hbs}}
         </div>
     </div>
 </section>
