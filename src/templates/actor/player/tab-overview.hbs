@@ -2,19 +2,19 @@
 {{!-- At-a-glance view of all critical information --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
-    <div class="wh40k-dashboard tw-grid tw-grid-cols-3 tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden" style="grid-template-rows: auto auto; align-items: start;">
+    <div class="wh40k-dashboard tw-grid tw-grid-cols-3 tw-grid-rows-[auto_auto] tw-items-start tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden">
 
         {{!-- COLUMN 1: Vitals → Progression → Resources --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Vitals --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-vitals">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
                     <i class="fas fa-heartbeat"></i>
                     <span>Vitals</span>
                 </div>
                 <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     {{!-- Wounds --}}
-                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5">
                         <span class="wh40k-vital-icon"><i class="fas fa-heart"></i></span>
                         <span class="wh40k-vital-label">Wounds</span>
                         <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
@@ -32,7 +32,7 @@
 
                     {{!-- Critical Wounds --}}
                     {{#if (or (gt system.wounds.critical 0) (eq system.wounds.value 0))}}
-                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px] wh40k-vital-critical-row">
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5 wh40k-vital-critical-row">
                         <span class="wh40k-vital-icon"><i class="fas fa-skull"></i></span>
                         <span class="wh40k-vital-label">Critical</span>
                         <div class="wh40k-critical-pips-inline">
@@ -49,7 +49,7 @@
                     {{/if}}
 
                     {{!-- Fatigue --}}
-                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5">
                         <span class="wh40k-vital-icon"><i class="fas fa-bolt"></i></span>
                         <span class="wh40k-vital-label">Fatigue</span>
                         <div class="wh40k-fatigue-bolts-inline">
@@ -68,9 +68,22 @@
                         {{/if}}
                     </div>
 
+                    {{!-- Lift --}}
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5">
+                        <span class="wh40k-vital-icon"><i class="fas fa-dumbbell"></i></span>
+                        <span class="wh40k-vital-label">Lift</span>
+                        <span class="wh40k-vital-value">{{system.lifting.lift}} kg</span>
+                    </div>
+                    {{!-- Push --}}
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5">
+                        <span class="wh40k-vital-icon"><i class="fas fa-hands-holding"></i></span>
+                        <span class="wh40k-vital-label">Push</span>
+                        <span class="wh40k-vital-value">{{system.lifting.push}} kg</span>
+                    </div>
+
                     {{!-- Fate Points --}}
                     {{#if (gt system.fate.max 0)}}
-                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5">
                         <span class="wh40k-vital-icon"><i class="fas fa-star"></i></span>
                         <span class="wh40k-vital-label">Fate</span>
                         <div class="wh40k-fate-stars-inline">
@@ -126,7 +139,7 @@
 
             {{!-- Progression --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-progression">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
                     <div class="wh40k-xp-ring-header" data-tooltip="{{#if system.experience.total}}{{floor (multiply (divide system.experience.used system.experience.total) 100)}}{{else}}0{{/if}}% XP spent ({{system.experience.used}}/{{system.experience.total}})">
                         <svg viewBox="0 0 100 100" class="wh40k-xp-ring-header-svg">
                             <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(120, 46, 34, 0.2)" stroke-width="12"/>
@@ -156,7 +169,7 @@
 
             {{!-- Resources --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-resources">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
                     <i class="fas fa-coins"></i>
                     <span>Resources</span>
                 </div>
@@ -207,7 +220,7 @@
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Favourite Skills --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-skills">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
                     <i class="fas fa-star"></i>
                     <span>Favourite Skills</span>
                 </div>
@@ -244,7 +257,7 @@
 
             {{!-- Favourite Talents --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-talents">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
                     <i class="fas fa-star-half-alt"></i>
                     <span>Favourite Talents</span>
                 </div>
@@ -285,7 +298,7 @@
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Equipped Weapons --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-weapons">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
                     <i class="fas fa-crosshairs"></i>
                     <span>Equipped Weapons</span>
                 </div>
@@ -319,31 +332,27 @@
             <div class="tw-grid tw-grid-cols-2 tw-gap-2">
                 {{!-- Movement 2x2 --}}
                 <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-movement">
-                    <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
+                    <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
                         <i class="fas fa-running"></i>
                         <span>Movement</span>
                     </div>
                     <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                         <div class="tw-grid tw-grid-cols-2 tw-gap-1">
                             <div class="wh40k-speed-item">
-                                <i class="fas fa-walking wh40k-speed-icon"></i>
                                 <span class="wh40k-speed-value">{{actor.movement.half}}</span>
-                                <span class="wh40k-speed-label">Half</span>
+                                <span class="wh40k-speed-label"><i class="fas fa-walking wh40k-speed-icon"></i> Half</span>
                             </div>
                             <div class="wh40k-speed-item">
-                                <i class="fas fa-shoe-prints wh40k-speed-icon"></i>
                                 <span class="wh40k-speed-value">{{actor.movement.full}}</span>
-                                <span class="wh40k-speed-label">Full</span>
+                                <span class="wh40k-speed-label"><i class="fas fa-shoe-prints wh40k-speed-icon"></i> Full</span>
                             </div>
                             <div class="wh40k-speed-item">
-                                <i class="fas fa-running wh40k-speed-icon"></i>
                                 <span class="wh40k-speed-value">{{actor.movement.charge}}</span>
-                                <span class="wh40k-speed-label">Charge</span>
+                                <span class="wh40k-speed-label"><i class="fas fa-running wh40k-speed-icon"></i> Charge</span>
                             </div>
                             <div class="wh40k-speed-item wh40k-speed-item--highlight">
-                                <i class="fas fa-wind wh40k-speed-icon"></i>
                                 <span class="wh40k-speed-value">{{actor.movement.run}}</span>
-                                <span class="wh40k-speed-label">Run</span>
+                                <span class="wh40k-speed-label"><i class="fas fa-wind wh40k-speed-icon"></i> Run</span>
                             </div>
                         </div>
                         <div class="wh40k-encumbrance-compact">
@@ -361,7 +370,7 @@
 
                 {{!-- Armour --}}
                 <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-armour">
-                    <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
+                    <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
                         <i class="fas fa-shield-alt"></i>
                         <span>Armour</span>
                     </div>
@@ -398,7 +407,7 @@
 
             {{!-- Active Effects --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-effects">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
                     <i class="fas fa-magic"></i>
                     <span>Active Effects</span>
                 </div>
