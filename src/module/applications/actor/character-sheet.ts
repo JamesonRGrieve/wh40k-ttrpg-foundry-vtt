@@ -84,6 +84,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             'unstowItem': CharacterSheet.#unstowItem,
             'stowToShip': CharacterSheet.#stowToShip,
             'unstowFromShip': CharacterSheet.#unstowFromShip,
+            'swapCheckedItems': CharacterSheet.#swapCheckedItems,
             'toggleActivate': CharacterSheet.#toggleActivate,
             'filterEquipment': CharacterSheet.#filterEquipment,
             'clearEquipmentSearch': CharacterSheet.#clearEquipmentSearch,
@@ -1036,6 +1037,12 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                     category: t.system.category,
                 },
             }));
+
+        // Partition attack actions into melee, ranged, and general (both)
+        const attacks = context.dh?.combatActions?.attacks || [];
+        context.meleeAttacks = attacks.filter((a) => a.subtypes?.includes('Melee'));
+        context.rangedAttacks = attacks.filter((a) => a.subtypes?.includes('Ranged'));
+        context.generalAttacks = attacks.filter((a) => a.subtypes?.includes('Melee or Ranged'));
     }
 
     /* -------------------------------------------- */
@@ -2130,6 +2137,60 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({ 'system.inShipStorage': false });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Swap all checked items between backpack and ship storage.
+     * Items checked in the backpack column move to ship; items checked in ship move to backpack.
+     * @this {CharacterSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #swapCheckedItems(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        const panel = this.element.querySelector('.wh40k-panel-backpack-split');
+        if (!panel) return;
+
+        // Gather checked items from backpack (left) column
+        const backpackChecks = panel.querySelectorAll('.wh40k-backpack-inventory .wh40k-transfer-check:checked');
+        // Gather checked items from ship (right) column
+        const shipChecks = panel.querySelectorAll('.wh40k-ship-storage .wh40k-transfer-check:checked');
+
+        if (!backpackChecks.length && !shipChecks.length) {
+            (ui.notifications as any).warn('No items selected to transfer.');
+            return;
+        }
+
+        const updates: { _id: string; [key: string]: any }[] = [];
+
+        // Backpack → Ship
+        backpackChecks.forEach((cb: Element) => {
+            const itemId = (cb as HTMLElement).dataset.itemId;
+            if (itemId) {
+                updates.push({
+                    '_id': itemId,
+                    'system.inShipStorage': true,
+                    'system.inBackpack': false,
+                    'system.equipped': false,
+                });
+            }
+        });
+
+        // Ship → Backpack
+        shipChecks.forEach((cb: Element) => {
+            const itemId = (cb as HTMLElement).dataset.itemId;
+            if (itemId) {
+                updates.push({
+                    '_id': itemId,
+                    'system.inShipStorage': false,
+                });
+            }
+        });
+
+        if (updates.length) {
+            await (this as any).actor.updateEmbeddedDocuments('Item', updates);
+        }
     }
 
     /* -------------------------------------------- */
