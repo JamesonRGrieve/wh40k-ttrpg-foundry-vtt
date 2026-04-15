@@ -3,19 +3,19 @@
  * This is the main player character sheet for WH40K RPG
  */
 
-import BaseActorSheet from './base-actor-sheet.ts';
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
-import { Hit } from '../../rolls/damage-data.ts';
-import { AssignDamageData } from '../../rolls/assign-damage-data.ts';
 import WH40K from '../../config.ts';
-import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import { HandlebarManager } from '../../handlebars/handlebars-manager.ts';
-import AcquisitionDialog from '../dialogs/acquisition-dialog.ts';
-import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
-import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.ts';
-import AdvancementDialog from '../dialogs/advancement-dialog.ts';
+import { AssignDamageData } from '../../rolls/assign-damage-data.ts';
+import { Hit } from '../../rolls/damage-data.ts';
 import { WH40KContextMenu } from '../api/context-menu-mixin.ts';
+import AcquisitionDialog from '../dialogs/acquisition-dialog.ts';
+import AdvancementDialog from '../dialogs/advancement-dialog.ts';
+import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.ts';
+import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
+import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
+import BaseActorSheet from './base-actor-sheet.ts';
 
 const TextEditor = foundry.applications.ux.TextEditor.implementation;
 
@@ -34,7 +34,6 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     declare _skillsFilter: any;
     declare _traitsFilter: any;
     declare render: any;
-
 
     /**
      * Whether the sheet is in edit mode (showing inline stat fields).
@@ -271,7 +270,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {object} options                 Notification options.
      * @private
      */
-    _notify(type: "info" | "warning" | "error", message: string, options: Record<string, any> = {}): void {
+    _notify(type: 'info' | 'warning' | 'error', message: string, options: Record<string, any> = {}): void {
         const toast = (foundry.applications?.api as any)?.Toast;
         if (toast && typeof toast[type] === 'function') {
             return toast[type](message, options);
@@ -363,7 +362,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @protected
      */
     async _preparePartContext(partId: string, context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
-        context = await super._preparePartContext(partId, context, options) as any;
+        context = await super._preparePartContext(partId, context, options);
 
         switch (partId) {
             case 'header':
@@ -481,8 +480,51 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @protected
      */
     async _prepareHeaderContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
-        // Header-specific preparation (characteristics HUD is already prepared)
+        // Build dynamic origin path select options from compendium packs
+        const gameSystem = (this as any)._gameSystemId || this.actor.system?.gameSystem || 'rt';
+        const originOptions = await this._getOriginPathOptions(gameSystem);
+        context.originOptions = originOptions;
         return context;
+    }
+
+    /**
+     * Fetch unique origin path names grouped by step from compendium packs.
+     * @param {string} gameSystem - The game system ID (e.g. 'dh2e', 'rt')
+     * @returns {Promise<Record<string, string[]>>}
+     * @private
+     */
+    async _getOriginPathOptions(gameSystem: string): Promise<Record<string, string[]>> {
+        // Use cached options if available (packs don't change at runtime)
+        const cacheKey = `_originOptions_${gameSystem}`;
+        if ((this as any)[cacheKey]) return (this as any)[cacheKey];
+
+        const stepNames: Record<string, Set<string>> = {};
+
+        for (const pack of game.packs) {
+            if (pack.documentName !== 'Item') continue;
+            // Only check packs that contain origin path items for this game system
+            const packName = pack.metadata.name || '';
+            const prefix = gameSystem === 'dh2e' ? 'dh2' : gameSystem === 'dh1e' ? 'dh1' : gameSystem;
+            if (!packName.startsWith(prefix) && !packName.startsWith('homebrew')) continue;
+
+            const index = await pack.getIndex({ fields: ['type', 'system.step'] });
+            for (const entry of index) {
+                if ((entry as any).type !== 'originPath') continue;
+                const step = (entry as any).system?.step;
+                if (!step) continue;
+                if (!stepNames[step]) stepNames[step] = new Set();
+                stepNames[step].add(entry.name);
+            }
+        }
+
+        // Convert Sets to sorted arrays
+        const result: Record<string, string[]> = {};
+        for (const [step, names] of Object.entries(stepNames)) {
+            result[step] = [...names].sort();
+        }
+
+        (this as any)[cacheKey] = result;
+        return result;
     }
 
     /* -------------------------------------------- */
@@ -555,7 +597,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         const radius = 52;
         const circumference = 2 * Math.PI * radius; // ~326.7
 
-        (Object.entries(hudCharacteristics) as [string, any][]).forEach(([key, char]) => {
+        Object.entries(hudCharacteristics).forEach(([key, char]) => {
             const total = Number(char?.total ?? 0);
             const advance = Number(char?.advance ?? 0);
 
@@ -617,7 +659,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                 const selectedChoices = system?.selectedChoices || {};
 
                 // Accumulate base characteristics
-                for (const [key, value] of Object.entries(modifiers) as [string, any][]) {
+                for (const [key, value] of Object.entries(modifiers)) {
                     if (value !== 0) {
                         charTotals[key] = (charTotals[key] || 0) + value;
                     }
@@ -714,7 +756,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         };
 
         const characteristicBonuses = [];
-        for (const [key, value] of Object.entries(charTotals) as [string, any][]) {
+        for (const [key, value] of Object.entries(charTotals)) {
             if (value !== 0) {
                 characteristicBonuses.push({
                     key: key,
@@ -1678,7 +1720,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         }
 
         // Get current value
-        const currentValue = foundry.utils.getProperty(this.actor, field) as number || 0;
+        const currentValue = (foundry.utils.getProperty(this.actor, field) as number) || 0;
 
         // Smart min/max derivation: if field ends with .value, check for .max/.min siblings
         const min = target.dataset.min !== undefined ? parseInt(target.dataset.min) : null;
@@ -1993,7 +2035,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #toggleEquip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
         const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({ 'system.equipped': !item.system.equipped });
@@ -2008,7 +2050,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #stowItem(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
         const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({
@@ -2027,7 +2069,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #unstowItem(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
         const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({ 'system.inBackpack': false });
@@ -2042,7 +2084,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #stowToShip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
         const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({
@@ -2061,7 +2103,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #unstowFromShip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
         const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({ 'system.inShipStorage': false });
@@ -2076,7 +2118,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #toggleActivate(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
         const item = (this as any).actor.items.get(itemId);
         if (!item) return;
         await item.update({ 'system.activated': !item.system.activated });
@@ -2587,7 +2629,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      */
     static async #cycleSkillTraining(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const row = target.closest('[data-skill]') as HTMLElement | null;
+        const row = target.closest('[data-skill]');
         const skillKey = row?.dataset.skill;
         if (!skillKey) return;
 
@@ -2633,7 +2675,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      */
     static async #cycleSpecialistTraining(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const row = target.closest('[data-skill]') as HTMLElement | null;
+        const row = target.closest('[data-skill]');
         const skillKey = row?.dataset.skill;
         const entryIndex = parseInt(row?.dataset.index, 10);
         if (!skillKey || isNaN(entryIndex)) return;
@@ -2721,7 +2763,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     static async #openAddSpecialistDialog(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         // Get list of specialist skills for the dropdown
         const skills = (this as any).actor.system.skills ?? {};
-        const specialistSkills = (Object.entries(skills) as [string, any][])
+        const specialistSkills = Object.entries(skills)
             .filter(([_, data]) => data.entries !== undefined)
             .map(([key, data]) => ({
                 key,
@@ -2820,9 +2862,9 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         const form = target.closest('.wh40k-traits-filters');
         if (!form) return;
 
-        const search = (form.querySelector('[name=traits-search]') as HTMLInputElement)?.value || '';
-        const category = (form.querySelector('[name=traits-category]') as HTMLSelectElement)?.value || '';
-        const hasLevel = (form.querySelector('[name=traits-has-level]') as HTMLInputElement)?.checked || false;
+        const search = form.querySelector('[name=traits-search]')?.value || '';
+        const category = form.querySelector('[name=traits-category]')?.value || '';
+        const hasLevel = form.querySelector('[name=traits-has-level]')?.checked || false;
 
         (this as any)._traitsFilter = { search, category, hasLevel };
         await (this as any).render({ parts: ['talents'] }); // Talents tab contains trait panel
