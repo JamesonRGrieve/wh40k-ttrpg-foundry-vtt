@@ -531,6 +531,8 @@
             "BackgroundDesc": "The organisation or circumstances that trained you before the Inquisition",
             "RoleDesc": "Your specialised function within the warband",
             "EliteDesc": "An optional elite advance that further defines your character",
+            "CharacteristicsDesc": "Roll or enter your characteristic values",
+            "Characteristics": "Characteristics",
             "StepHomeWorld": "Home World",
             "StepBirthright": "Birthright",
             "StepLureOfTheVoid": "Lure of the Void",
