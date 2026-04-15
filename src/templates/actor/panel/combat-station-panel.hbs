@@ -289,10 +289,10 @@
             </div>
         </div>
 
-            {{!-- CENTER COLUMN: Armour (using existing panel directly) --}}
-            <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2">
+            {{!-- CENTER COLUMN: Armour + Weapons --}}
+            <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2 wh40k-combat-armour-weapons">
                 {{> systems/wh40k-rpg/templates/actor/panel/armour-display-panel.hbs}}
-                
+
                 {{!-- Force Field Status --}}
                 {{#if hasForceField}}
                 <div class="wh40k-panel wh40k-panel-forcefield">
@@ -314,42 +314,40 @@
                     </div>
                 </div>
                 {{/if}}
-            </div>
 
-            {{!-- WEAPONS ARSENAL (spans both vitals + armour columns) --}}
-            <div class="wh40k-panel wh40k-panel-arsenal" data-drop-zone="general" data-accepts="weapon">
-                <div class="wh40k-panel-header">
-                    <span class="wh40k-panel-title"><i class="fas fa-fist-raised"></i> Weapons</span>
-                </div>
-                <div class="wh40k-panel-body">
-                    {{#if actor.items}}
-                    <div class="wh40k-table--border wh40k-weapontable--border">
-                        <div class="table-row--head">
-                            <div class="table-cell">Weapon</div>
-                            <div class="table-cell">Class</div>
-                            <div class="table-cell">Damage</div>
-                            <div class="table-cell">Range</div>
-                        </div>
-                        {{#each actor.items as |item|}}
-                        {{#if item.isWeapon}}
-                        <div class="table-row item-drag item-edit {{#if item.system.equipped}}wh40k-row-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
-                            <div class="table-cell--left">
-                                <span class="wh40k-weapon-name-cell">
+                {{!-- WEAPONS ARSENAL --}}
+                <div class="wh40k-panel wh40k-panel-arsenal" data-drop-zone="general" data-accepts="weapon">
+                    <div class="wh40k-panel-header">
+                        <span class="wh40k-panel-title"><i class="fas fa-fist-raised"></i> Weapons</span>
+                    </div>
+                    <div class="wh40k-panel-body">
+                        {{#if actor.items}}
+                        <div class="tw-flex tw-flex-col">
+                            {{!-- Header row --}}
+                            <div class="tw-grid tw-grid-cols-[1fr_auto_auto] tw-gap-x-2 tw-px-2 tw-py-1 wh40k-weapon-grid-header">
+                                <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">Weapon</span>
+                                <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-[3rem]">Dmg</span>
+                                <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-[3rem]">Range</span>
+                            </div>
+                            {{!-- Weapon rows --}}
+                            {{#each actor.items as |item|}}
+                            {{#if item.isWeapon}}
+                            <div class="tw-grid tw-grid-cols-[1fr_auto_auto] tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer item-drag item-edit wh40k-weapon-grid-row {{#if item.system.equipped}}wh40k-row-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
+                                <span class="tw-flex tw-items-center tw-gap-1 tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-text-sm">
                                     {{#if item.system.equipped}}<i class="fas fa-check-circle wh40k-equipped-icon"></i>{{/if}}
                                     {{item.name}}
                                 </span>
+                                <span class="tw-text-sm tw-text-center tw-min-w-[3rem]">{{item.system.damageLabel}}</span>
+                                <span class="tw-text-sm tw-text-center tw-min-w-[3rem]">{{item.system.rangeLabel}}</span>
                             </div>
-                            <div class="table-cell">{{item.system.class}}</div>
-                            <div class="table-cell">{{item.system.damageLabel}}</div>
-                            <div class="table-cell">{{item.system.rangeLabel}}</div>
+                            {{/if}}
+                            {{/each}}
                         </div>
                         {{/if}}
-                        {{/each}}
-                    </div>
-                    {{/if}}
-                    <div class="wh40k-dropzone" data-action="itemCreate" data-type="weapon">
-                        <i class="fas fa-fist-raised wh40k-dropzone-icon"></i>
-                        <span class="wh40k-dropzone-text">Drop weapons here or click to create</span>
+                        <div class="wh40k-dropzone" data-action="itemCreate" data-type="weapon">
+                            <i class="fas fa-fist-raised wh40k-dropzone-icon"></i>
+                            <span class="wh40k-dropzone-text">Drop weapons here or click to create</span>
+                        </div>
                     </div>
                 </div>
             </div>

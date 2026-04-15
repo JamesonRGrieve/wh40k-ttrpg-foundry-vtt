@@ -161,7 +161,121 @@
                 </div>
             </div>
             
-            {{!-- Zone 3: Favorite Talents --}}
+            {{!-- Zone 3: Equipped Weapons + Movement & Armour stacked --}}
+            <div class="tw-flex tw-flex-col tw-gap-2">
+                <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-weapons">
+                    <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
+                        <i class="fas fa-crosshairs"></i>
+                        <span>Equipped Weapons</span>
+                    </div>
+                    <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+                        {{#if equippedWeapons.length}}
+                        <div class="wh40k-ew-list">
+                            {{#each equippedWeapons as |weapon|}}
+                            <div class="wh40k-ew-row" data-action="itemEdit" data-item-id="{{weapon.id}}" title="Open {{weapon.name}}">
+                                <img class="wh40k-ew-icon" src="{{weapon.img}}" alt="{{weapon.name}}" />
+                                <div class="wh40k-ew-info">
+                                    <span class="wh40k-ew-name">{{weapon.name}}</span>
+                                    <span class="wh40k-ew-meta">
+                                        <span class="wh40k-ew-class">{{weapon.system.class}}</span>
+                                        {{#if weapon.system.rangeLabel}}<span class="wh40k-ew-range">{{weapon.system.rangeLabel}}</span>{{/if}}
+                                    </span>
+                                </div>
+                                <span class="wh40k-ew-damage">{{weapon.system.damageLabel}}</span>
+                            </div>
+                            {{/each}}
+                        </div>
+                        {{else}}
+                        <div class="wh40k-ew-empty">
+                            <i class="fas fa-crosshairs"></i>
+                            <span>No weapons equipped</span>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+
+                {{!-- Movement & Armour side by side --}}
+                <div class="tw-grid tw-grid-cols-2 tw-gap-2">
+                    {{!-- Movement 2x2 --}}
+                    <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-movement">
+                        <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
+                            <i class="fas fa-running"></i>
+                            <span>Movement</span>
+                        </div>
+                        <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+                            <div class="tw-grid tw-grid-cols-2 tw-gap-1">
+                                <div class="wh40k-speed-item">
+                                    <span class="wh40k-speed-value">{{actor.movement.half}}</span>
+                                    <span class="wh40k-speed-label">Half</span>
+                                </div>
+                                <div class="wh40k-speed-item">
+                                    <span class="wh40k-speed-value">{{actor.movement.full}}</span>
+                                    <span class="wh40k-speed-label">Full</span>
+                                </div>
+                                <div class="wh40k-speed-item">
+                                    <span class="wh40k-speed-value">{{actor.movement.charge}}</span>
+                                    <span class="wh40k-speed-label">Charge</span>
+                                </div>
+                                <div class="wh40k-speed-item wh40k-speed-item--highlight">
+                                    <span class="wh40k-speed-value">{{actor.movement.run}}</span>
+                                    <span class="wh40k-speed-label">Run</span>
+                                </div>
+                            </div>
+                            <div class="wh40k-encumbrance-compact">
+                                <div class="wh40k-enc-info">
+                                    <span class="wh40k-enc-current-compact">{{actor.encumbrance.current}}</span>
+                                    <span class="wh40k-enc-separator">/</span>
+                                    <span class="wh40k-enc-max-compact">{{actor.encumbrance.max}} kg</span>
+                                </div>
+                                <div class="wh40k-enc-bar-compact {{#if actor.encumbrance.encumbered}}wh40k-enc-over{{/if}}">
+                                    <div class="wh40k-enc-fill-compact" style="width: {{encumbrancePercent}}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{!-- Armour --}}
+                    <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-armour">
+                        <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Armour</span>
+                        </div>
+                        <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+                            <div class="wh40k-ov-armour-silhouette">
+                                <div class="wh40k-ov-armour-box wh40k-ov-box-head" title="Head: 01-10">
+                                    <span class="wh40k-ov-box-label">Head</span>
+                                    <span class="wh40k-ov-box-ap">{{system.armour.head.total}}</span>
+                                </div>
+                                <div class="wh40k-ov-armour-box wh40k-ov-box-right-arm" title="R.Arm: 11-20">
+                                    <span class="wh40k-ov-box-label">R.Arm</span>
+                                    <span class="wh40k-ov-box-ap">{{system.armour.rightArm.total}}</span>
+                                </div>
+                                <div class="wh40k-ov-armour-box wh40k-ov-box-body" title="Body: 31-70">
+                                    <span class="wh40k-ov-box-label">Body</span>
+                                    <span class="wh40k-ov-box-ap">{{system.armour.body.total}}</span>
+                                </div>
+                                <div class="wh40k-ov-armour-box wh40k-ov-box-left-arm" title="L.Arm: 21-30">
+                                    <span class="wh40k-ov-box-label">L.Arm</span>
+                                    <span class="wh40k-ov-box-ap">{{system.armour.leftArm.total}}</span>
+                                </div>
+                                <div class="wh40k-ov-armour-box wh40k-ov-box-right-leg" title="R.Leg: 71-85">
+                                    <span class="wh40k-ov-box-label">R.Leg</span>
+                                    <span class="wh40k-ov-box-ap">{{system.armour.rightLeg.total}}</span>
+                                </div>
+                                <div class="wh40k-ov-armour-box wh40k-ov-box-left-leg" title="L.Leg: 86-00">
+                                    <span class="wh40k-ov-box-label">L.Leg</span>
+                                    <span class="wh40k-ov-box-ap">{{system.armour.leftLeg.total}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{!-- Row 2: Favorite Talents --}}
+        <div class="wh40k-dashboard-row tw-grid tw-gap-2 wh40k-dashboard-row--middle">
+            {{!-- Favorite Talents --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-talents">
                 <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
                     <i class="fas fa-star-half-alt"></i>
@@ -179,7 +293,7 @@
                                     <span class="wh40k-talent-tier-badge">T{{talent.system.tier}}</span>
                                     {{/if}}
                                 </span>
-                                <button type="button" 
+                                <button type="button"
                                         class="wh40k-talent-info-btn"
                                         data-action="itemEdit"
                                         data-item-id="{{talent.id}}"
@@ -200,116 +314,6 @@
             </div>
         </div>
         
-        {{!-- Row 2: Equipped Weapons | Movement & Load | Armour --}}
-        <div class="wh40k-dashboard-row tw-grid tw-gap-2 wh40k-dashboard-row--middle">
-            
-            {{!-- Zone 4: Equipped Weapons --}}
-            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-weapons">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
-                    <i class="fas fa-crosshairs"></i>
-                    <span>Equipped Weapons</span>
-                </div>
-                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
-                    {{#if equippedWeapons.length}}
-                    <div class="wh40k-ew-list">
-                        {{#each equippedWeapons as |weapon|}}
-                        <div class="wh40k-ew-row" data-action="itemEdit" data-item-id="{{weapon.id}}" title="Open {{weapon.name}}">
-                            <img class="wh40k-ew-icon" src="{{weapon.img}}" alt="{{weapon.name}}" />
-                            <div class="wh40k-ew-info">
-                                <span class="wh40k-ew-name">{{weapon.name}}</span>
-                                <span class="wh40k-ew-meta">
-                                    <span class="wh40k-ew-class">{{weapon.system.class}}</span>
-                                    {{#if weapon.system.rangeLabel}}<span class="wh40k-ew-range">{{weapon.system.rangeLabel}}</span>{{/if}}
-                                </span>
-                            </div>
-                            <span class="wh40k-ew-damage">{{weapon.system.damageLabel}}</span>
-                        </div>
-                        {{/each}}
-                    </div>
-                    {{else}}
-                    <div class="wh40k-ew-empty">
-                        <i class="fas fa-crosshairs"></i>
-                        <span>No weapons equipped</span>
-                    </div>
-                    {{/if}}
-                </div>
-            </div>
-            
-            {{!-- Zone 5: Movement & Load --}}
-            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-movement">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
-                    <i class="fas fa-running"></i>
-                    <span>Movement & Load</span>
-                </div>
-                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1 wh40k-movement-compact">
-                    <div class="wh40k-movement-speeds">
-                        <div class="wh40k-speed-item">
-                            <span class="wh40k-speed-value">{{actor.movement.half}}</span>
-                            <span class="wh40k-speed-label">Half</span>
-                        </div>
-                        <div class="wh40k-speed-item">
-                            <span class="wh40k-speed-value">{{actor.movement.full}}</span>
-                            <span class="wh40k-speed-label">Full</span>
-                        </div>
-                        <div class="wh40k-speed-item">
-                            <span class="wh40k-speed-value">{{actor.movement.charge}}</span>
-                            <span class="wh40k-speed-label">Charge</span>
-                        </div>
-                        <div class="wh40k-speed-item wh40k-speed-item--highlight">
-                            <span class="wh40k-speed-value">{{actor.movement.run}}</span>
-                            <span class="wh40k-speed-label">Run</span>
-                        </div>
-                    </div>
-                    <div class="wh40k-encumbrance-compact">
-                        <div class="wh40k-enc-info">
-                            <span class="wh40k-enc-current-compact">{{actor.encumbrance.current}}</span>
-                            <span class="wh40k-enc-separator">/</span>
-                            <span class="wh40k-enc-max-compact">{{actor.encumbrance.max}} kg</span>
-                        </div>
-                        <div class="wh40k-enc-bar-compact {{#if actor.encumbrance.encumbered}}wh40k-enc-over{{/if}}">
-                            <div class="wh40k-enc-fill-compact" style="width: {{encumbrancePercent}}%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            {{!-- Zone 6: Armour --}}
-            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-armour">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>Armour</span>
-                </div>
-                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
-                    <div class="wh40k-ov-armour-silhouette">
-                        <div class="wh40k-ov-armour-box wh40k-ov-box-head" title="Head: 01-10">
-                            <span class="wh40k-ov-box-label">Head</span>
-                            <span class="wh40k-ov-box-ap">{{system.armour.head.total}}</span>
-                        </div>
-                        <div class="wh40k-ov-armour-box wh40k-ov-box-right-arm" title="R.Arm: 11-20">
-                            <span class="wh40k-ov-box-label">R.Arm</span>
-                            <span class="wh40k-ov-box-ap">{{system.armour.rightArm.total}}</span>
-                        </div>
-                        <div class="wh40k-ov-armour-box wh40k-ov-box-body" title="Body: 31-70">
-                            <span class="wh40k-ov-box-label">Body</span>
-                            <span class="wh40k-ov-box-ap">{{system.armour.body.total}}</span>
-                        </div>
-                        <div class="wh40k-ov-armour-box wh40k-ov-box-left-arm" title="L.Arm: 21-30">
-                            <span class="wh40k-ov-box-label">L.Arm</span>
-                            <span class="wh40k-ov-box-ap">{{system.armour.leftArm.total}}</span>
-                        </div>
-                        <div class="wh40k-ov-armour-box wh40k-ov-box-right-leg" title="R.Leg: 71-85">
-                            <span class="wh40k-ov-box-label">R.Leg</span>
-                            <span class="wh40k-ov-box-ap">{{system.armour.rightLeg.total}}</span>
-                        </div>
-                        <div class="wh40k-ov-armour-box wh40k-ov-box-left-leg" title="L.Leg: 86-00">
-                            <span class="wh40k-ov-box-label">L.Leg</span>
-                            <span class="wh40k-ov-box-ap">{{system.armour.leftLeg.total}}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
         {{!-- Row 3: Progression | Active Effects (2-wide) --}}
         <div class="wh40k-dashboard-row tw-grid tw-gap-2 wh40k-dashboard-row--bottom">
             
@@ -317,24 +321,12 @@
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-progression">
                 <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-[6px] tw-py-[6px] tw-px-[10px]">
                     <i class="fas fa-graduation-cap"></i>
-                    <span>Progression</span>
+                    <span>Progression — Rank {{system.rank}}</span>
                 </div>
                 <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     <div class="wh40k-xp-row">
-                        <span class="wh40k-xp-label">Available XP</span>
-                        <span class="wh40k-xp-value wh40k-xp-available">{{system.experience.available}}</span>
-                    </div>
-                    <div class="wh40k-xp-row">
-                        <span class="wh40k-xp-label">Spent XP</span>
-                        <span class="wh40k-xp-value">{{system.experience.used}}</span>
-                    </div>
-                    <div class="wh40k-xp-row">
-                        <span class="wh40k-xp-label">Total XP</span>
-                        <span class="wh40k-xp-value">{{system.experience.total}}</span>
-                    </div>
-                    <div class="wh40k-xp-row wh40k-rank-row">
-                        <span class="wh40k-xp-label">Rank</span>
-                        <span class="wh40k-xp-value wh40k-rank-value">{{system.rank}}</span>
+                        <span class="wh40k-xp-label">Experience</span>
+                        <span class="wh40k-xp-value"><span class="wh40k-xp-available">{{system.experience.available}}</span>/{{system.experience.total}}</span>
                     </div>
                     <div class="wh40k-xp-actions">
                         <button type="button" class="wh40k-xp-action-btn" data-action="customXP" title="Add XP">
@@ -353,44 +345,43 @@
                     <i class="fas fa-coins"></i>
                     <span>Resources</span>
                 </div>
-                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
-                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
-                        <span class="wh40k-vital-icon"><i class="fas fa-handshake"></i></span>
-                        <span class="wh40k-vital-label">Influence</span>
-                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
-                            <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.influence" data-min="0" title="-1">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <input type="number" class="wh40k-vital-input" name="system.influence" value="{{system.influence}}" min="0" />
-                            <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.influence" data-max="100" title="+1">
-                                <i class="fas fa-plus"></i>
-                            </button>
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1">
+                    <div class="tw-grid tw-grid-cols-3 tw-gap-2">
+                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                            <span class="wh40k-vital-label tw-text-xs">Influence</span>
+                            <div class="tw-flex tw-items-center tw-gap-1">
+                                <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.influence" data-min="0" title="-1">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="wh40k-vital-input" name="system.influence" value="{{system.influence}}" min="0" />
+                                <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.influence" data-max="100" title="+1">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
-                        <span class="wh40k-vital-icon"><i class="fas fa-stamp"></i></span>
-                        <span class="wh40k-vital-label">Requisition</span>
-                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
-                            <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.requisition" data-min="0" title="-1">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <input type="number" class="wh40k-vital-input" name="system.requisition" value="{{system.requisition}}" min="0" />
-                            <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.requisition" title="+1">
-                                <i class="fas fa-plus"></i>
-                            </button>
+                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                            <span class="wh40k-vital-label tw-text-xs">Requisition</span>
+                            <div class="tw-flex tw-items-center tw-gap-1">
+                                <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.requisition" data-min="0" title="-1">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="wh40k-vital-input" name="system.requisition" value="{{system.requisition}}" min="0" />
+                                <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.requisition" title="+1">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-[6px] tw-py-[2px]">
-                        <span class="wh40k-vital-icon"><i class="fas fa-coins"></i></span>
-                        <span class="wh40k-vital-label">Throne Gelt</span>
-                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
-                            <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.throneGelt" data-min="0" title="-1">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <input type="number" class="wh40k-vital-input" name="system.throneGelt" value="{{system.throneGelt}}" min="0" />
-                            <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.throneGelt" title="+1">
-                                <i class="fas fa-plus"></i>
-                            </button>
+                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                            <span class="wh40k-vital-label tw-text-xs">Throne Gelt</span>
+                            <div class="tw-flex tw-items-center tw-gap-1">
+                                <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.throneGelt" data-min="0" title="-1">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="wh40k-vital-input" name="system.throneGelt" value="{{system.throneGelt}}" min="0" />
+                                <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.throneGelt" title="+1">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
