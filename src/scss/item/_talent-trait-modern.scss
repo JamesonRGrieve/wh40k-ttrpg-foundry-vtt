@@ -73,7 +73,7 @@
     justify-content: center;
     background: rgba(0, 0, 0, 0.7);
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity $wh40k-transition-base;
 
     i {
         color: $wh40k-color-gold;
@@ -100,7 +100,7 @@
     border: none;
     border-bottom: 2px solid transparent;
     padding: 4px 0;
-    transition: border-color 0.2s ease;
+    transition: border-color $wh40k-transition-base;
 
     &:focus {
         outline: none;

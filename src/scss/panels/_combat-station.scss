@@ -116,7 +116,7 @@
     gap: $wh40k-space-xs;
     flex: 1;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color $wh40k-transition-base;
     padding: $wh40k-space-xs;
     margin: -#{$wh40k-space-xs};
     margin-right: 0;
@@ -128,7 +128,7 @@
 
     .wh40k-panel-chevron {
         margin-left: auto;
-        transition: transform 0.2s ease;
+        transition: transform $wh40k-transition-base;
         color: var(--vital-color, $wh40k-text-muted);
         font-size: 0.7rem;
 
@@ -820,7 +820,7 @@
         width: 3px;
         background: var(--action-color, $wh40k-border-medium);
         opacity: 0;
-        transition: opacity 0.2s ease;
+        transition: opacity $wh40k-transition-base;
     }
 
     i {
@@ -1060,7 +1060,7 @@
 
 .wh40k-weapon-grid-row {
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    transition: background 0.2s ease;
+    transition: background $wh40k-transition-base;
 
     &:hover {
         background: rgba($wh40k-accent-combat, 0.04);

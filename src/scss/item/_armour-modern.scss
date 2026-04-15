@@ -14,7 +14,7 @@
     height: 100%;
     background: rgba(30, 25, 20, 0.95);
     color: #e0d5c7;
-    font-family: 'Roboto', sans-serif;
+    font-family: $wh40k-font-ui;
     font-size: 0.9rem;
     overflow: hidden;
 
@@ -74,7 +74,7 @@
         justify-content: center;
         background: rgba(0, 0, 0, 0.6);
         opacity: 0;
-        transition: opacity 0.2s ease;
+        transition: opacity $wh40k-transition-base;
 
         i {
             color: white;
@@ -94,11 +94,11 @@
         background: transparent;
         border: none;
         border-bottom: 1px solid transparent;
-        font-family: 'Cinzel', serif;
+        font-family: $wh40k-font-display;
         font-size: 1.3rem;
         font-weight: 600;
         color: #e0d5c7;
-        transition: border-color 0.2s ease;
+        transition: border-color $wh40k-transition-base;
 
         &:hover {
             border-bottom-color: #c9a227;
@@ -229,7 +229,7 @@
     }
 
     &__value {
-        font-family: 'Cinzel', serif;
+        font-family: $wh40k-font-display;
         font-size: 1rem;
         font-weight: 700;
         color: #c9a227;
@@ -367,7 +367,7 @@
 
         h3 {
             margin: 0;
-            font-family: 'Cinzel', serif;
+            font-family: $wh40k-font-display;
             font-size: 0.9rem;
             font-weight: 600;
             color: #c9a227;
@@ -575,7 +575,7 @@
         justify-content: center;
         cursor: pointer;
         color: rgba(255, 255, 255, 0.5);
-        transition: color 0.2s ease;
+        transition: color $wh40k-transition-base;
 
         &:hover {
             color: #e74c3c;
@@ -841,7 +841,7 @@
         i {
             font-size: 1.25rem;
             color: rgba(255, 255, 255, 0.3);
-            transition: color 0.2s ease;
+            transition: color $wh40k-transition-base;
         }
     }
 
@@ -850,7 +850,7 @@
         font-weight: 600;
         text-transform: uppercase;
         color: rgba(255, 255, 255, 0.5);
-        transition: color 0.2s ease;
+        transition: color $wh40k-transition-base;
     }
 
     input:checked ~ &__indicator i {

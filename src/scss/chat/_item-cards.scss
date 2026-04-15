@@ -21,7 +21,7 @@
     border: 2px solid var(--wh40k-item-border);
     border-radius: 4px;
     overflow: hidden;
-    font-family: 'Roboto', sans-serif;
+    font-family: $wh40k-font-ui;
     color: var(--wh40k-item-text);
     box-shadow: 0 4px 12px var(--wh40k-shadow-medium);
 
@@ -64,7 +64,7 @@
 }
 
 .wh40k-item-card__name {
-    font-family: 'Cinzel', serif;
+    font-family: $wh40k-font-display;
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--wh40k-item-border);
@@ -212,7 +212,7 @@
 }
 
 .wh40k-item-card__section-title {
-    font-family: 'Cinzel', serif;
+    font-family: $wh40k-font-display;
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--wh40k-item-border);
@@ -613,7 +613,7 @@
     border: 2px solid var(--wh40k-movement-border);
     border-radius: 4px;
     overflow: hidden;
-    font-family: 'Roboto', sans-serif;
+    font-family: $wh40k-font-ui;
     color: var(--wh40k-movement-text);
     box-shadow: 0 4px 12px var(--wh40k-shadow-medium);
 
@@ -649,7 +649,7 @@
     }
 
     .wh40k-card-title {
-        font-family: 'Cinzel', serif;
+        font-family: $wh40k-font-display;
         font-size: 1.1rem;
         font-weight: 600;
         color: var(--wh40k-gold-dark);

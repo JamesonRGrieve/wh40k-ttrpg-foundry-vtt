@@ -2,7 +2,7 @@
     {{!-- Trained / Basic Skills (2 columns) --}}
     <div class="wh40k-skills-columns tw-grid tw-grid-cols-2 tw-gap-4 tw-relative">
         <!-- Left Column -->
-        <div class="wh40k-skills-column tw-flex tw-flex-col tw-gap-[3px]">
+        <div class="wh40k-skills-column tw-flex tw-flex-col tw-gap-0.75">
             {{#each skillLists.standardColumns.[0] as |entry|}}
             <div class="wh40k-skill-row tw-grid tw-grid-cols-skill-row tw-gap-2 tw-items-center tw-py-1 tw-px-2{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
                 <div class="wh40k-skill-info tw-flex tw-items-center tw-gap-1.5">
@@ -34,14 +34,14 @@
                     <span class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
                     {{/each}}
                 </div>
-                <div class="wh40k-skill-total tw-min-w-[34px] tw-h-[26px] tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center" title="{{entry.[1].breakdown}}">
+                <div class="wh40k-skill-total tw-min-w-8.5 tw-h-6.5 tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>
                 </div>
             </div>
             {{/each}}
         </div>
         <!-- Right Column -->
-        <div class="wh40k-skills-column tw-flex tw-flex-col tw-gap-[3px]">
+        <div class="wh40k-skills-column tw-flex tw-flex-col tw-gap-0.75">
             {{#each skillLists.standardColumns.[1] as |entry|}}
             <div class="wh40k-skill-row tw-grid tw-grid-cols-skill-row tw-gap-2 tw-items-center tw-py-1 tw-px-2{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
                 <div class="wh40k-skill-info tw-flex tw-items-center tw-gap-1.5">
@@ -73,7 +73,7 @@
                     <span class="wh40k-train-indicator {{#if ind.active}}active{{/if}}" title="{{ind.tooltip}}">{{ind.label}}</span>
                     {{/each}}
                 </div>
-                <div class="wh40k-skill-total tw-min-w-[34px] tw-h-[26px] tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center" title="{{entry.[1].breakdown}}">
+                <div class="wh40k-skill-total tw-min-w-8.5 tw-h-6.5 tw-px-2 tw-py-0 tw-inline-flex tw-items-center tw-justify-center" title="{{entry.[1].breakdown}}">
                     <span>{{entry.[1].current}}</span>
                 </div>
             </div>

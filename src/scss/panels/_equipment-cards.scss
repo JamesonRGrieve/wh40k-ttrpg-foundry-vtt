@@ -77,7 +77,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    transition: color 0.2s ease;
+    transition: color $wh40k-transition-base;
 
     &:hover {
         color: var(--wh40k-gold);
@@ -417,7 +417,7 @@
 
     &:active {
         transform: scale(0.95);
-        transition: transform 0.1s ease;
+        transition: transform $wh40k-transition-fast;
     }
 
     &.wh40k-action-equip {
@@ -576,7 +576,7 @@
 
     &:active {
         transform: scale(0.97);
-        transition: transform 0.1s ease;
+        transition: transform $wh40k-transition-fast;
     }
 
     i {

@@ -144,7 +144,7 @@
     color: var(--wh40k-text-primary, #fff);
     text-align: left;
     cursor: pointer;
-    transition: color 0.15s ease;
+    transition: color $wh40k-transition-fast;
 
     &:hover {
         color: var(--wh40k-accent, #fbbf24);

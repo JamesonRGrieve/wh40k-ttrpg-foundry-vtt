@@ -14,9 +14,12 @@ module.exports = {
         // Map to $wh40k-space-* tokens — fills gaps in Tailwind's default scale
         // 0.5 = 2px, 1 = 4px, 1.5 = 6px, 2 = 8px, 2.5 = 10px, 3 = 12px, 4 = 16px, 6 = 24px
         '0.5': '2px',
+        '0.75': '3px',
         '1.5': '6px',
         '2.5': '10px',
         '3': '12px',
+        '6.5': '26px',
+        '8.5': '34px',
       },
       fontFamily: {
         display: ['Cinzel', 'serif'],

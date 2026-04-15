@@ -22,7 +22,7 @@
         padding: 10px 16px;
 
         .window-title {
-            font-family: 'Cinzel', serif;
+            font-family: $wh40k-font-display;
             font-size: 1rem;
             font-weight: 600;
             color: #c9a227;
@@ -71,7 +71,7 @@
             padding: 12px 20px;
             border: none;
             border-radius: 4px;
-            font-family: 'Roboto', sans-serif;
+            font-family: $wh40k-font-ui;
             font-size: 0.9rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -141,7 +141,7 @@
     --wh40k-glow-gold: rgba(201, 162, 39, 0.2);
 
     position: relative;
-    font-family: 'Roboto', sans-serif;
+    font-family: $wh40k-font-ui;
     color: var(--wh40k-text-primary);
     padding: 20px;
 
@@ -222,7 +222,7 @@
 }
 
 .wh40k-prompt__title {
-    font-family: 'Cinzel', serif;
+    font-family: $wh40k-font-display;
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--wh40k-accent-gold);
@@ -260,7 +260,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: 'Cinzel', serif;
+    font-family: $wh40k-font-display;
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--wh40k-accent-gold);
@@ -858,7 +858,7 @@
     padding: 16px;
     background: linear-gradient(180deg, #1a1a24 0%, #0d0d12 100%);
     color: #e8e4d9;
-    font-family: 'Roboto', sans-serif;
+    font-family: $wh40k-font-ui;
 }
 
 .roll-config-header {
@@ -888,7 +888,7 @@
 }
 
 .roll-config-name {
-    font-family: 'Cinzel', serif;
+    font-family: $wh40k-font-display;
     font-size: 1.1rem;
     font-weight: 600;
     color: #c9a227;
@@ -1106,7 +1106,7 @@
         width: 18px;
         text-align: center;
         flex-shrink: 0;
-        transition: color 0.2s ease;
+        transition: color $wh40k-transition-base;
     }
 
     .situational-source {
@@ -1231,7 +1231,7 @@
     color: rgba(232, 228, 217, 0.9);
     text-align: left;
     cursor: pointer;
-    transition: color 0.15s ease;
+    transition: color $wh40k-transition-fast;
 
     &:hover {
         color: #c9a227;
@@ -1307,7 +1307,7 @@
 .wh40k-dialog-content {
     padding: 20px;
     background: transparent;
-    font-family: 'Roboto', sans-serif;
+    font-family: $wh40k-font-ui;
     color: #e8e4d9;
 }
 
@@ -1509,7 +1509,7 @@
     padding: 12px 20px;
     border: none;
     border-radius: 4px;
-    font-family: 'Roboto', sans-serif;
+    font-family: $wh40k-font-ui;
     font-size: 0.9rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -1595,7 +1595,7 @@
 }
 
 .wh40k-specialist-prompt__skill {
-    font-family: 'Cinzel', serif;
+    font-family: $wh40k-font-display;
     font-size: 1.2rem;
     font-weight: 600;
     color: #c9a227;

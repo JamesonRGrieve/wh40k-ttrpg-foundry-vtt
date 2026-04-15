@@ -65,7 +65,7 @@ $cyber-success: #2ecc71;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: opacity $wh40k-transition-base;
 
             i {
                 color: $cyber-primary;
@@ -337,7 +337,7 @@ $cyber-success: #2ecc71;
     i {
         font-size: 1rem;
         color: rgba(255, 255, 255, 0.4);
-        transition: color 0.2s ease;
+        transition: color $wh40k-transition-base;
     }
 
     span {
@@ -345,7 +345,7 @@ $cyber-success: #2ecc71;
         font-weight: 600;
         text-transform: uppercase;
         color: rgba(255, 255, 255, 0.5);
-        transition: color 0.2s ease;
+        transition: color $wh40k-transition-base;
     }
 
     &:hover {
@@ -428,7 +428,7 @@ $cyber-success: #2ecc71;
     textarea {
         min-height: 80px;
         resize: vertical;
-        font-family: 'Roboto', sans-serif;
+        font-family: $wh40k-font-ui;
     }
 }
 
@@ -500,7 +500,7 @@ $cyber-success: #2ecc71;
         i {
             font-size: 1.25rem;
             color: rgba(255, 255, 255, 0.3);
-            transition: color 0.2s ease;
+            transition: color $wh40k-transition-base;
         }
     }
 
@@ -509,7 +509,7 @@ $cyber-success: #2ecc71;
         font-weight: 600;
         text-transform: uppercase;
         color: rgba(255, 255, 255, 0.5);
-        transition: color 0.2s ease;
+        transition: color $wh40k-transition-base;
     }
 
     input:checked ~ &__indicator i {

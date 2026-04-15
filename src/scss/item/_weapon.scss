@@ -173,7 +173,7 @@
         .wh40k-toggle-equipped__indicator {
             font-size: 1.2rem;
             color: rgba(214, 221, 235, 0.5);
-            transition: color 0.2s ease;
+            transition: color $wh40k-transition-base;
         }
 
         input:checked ~ .wh40k-toggle-equipped__indicator {
@@ -459,7 +459,7 @@
             inset: 0;
             border-radius: inherit;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity $wh40k-transition-medium;
             pointer-events: none;
             z-index: 0;
         }
@@ -966,7 +966,7 @@
             pointer-events: none;
             opacity: 0;
             background: radial-gradient(circle at center, rgba(212, 175, 55, 0.15), transparent 70%);
-            transition: opacity 0.3s ease;
+            transition: opacity $wh40k-transition-medium;
         }
 
         &:focus-within::after {
@@ -1005,7 +1005,7 @@
 
         &__icon {
             font-size: 0.75rem;
-            transition: transform 0.3s ease;
+            transition: transform $wh40k-transition-medium;
         }
     }
 
@@ -1106,7 +1106,7 @@
         overflow: hidden;
 
         img {
-            transition: transform 0.3s ease;
+            transition: transform $wh40k-transition-medium;
         }
 
         &:hover img {
@@ -1204,7 +1204,7 @@
         &__bar-fill {
             height: 100%;
             background: var(--wh40k-green-bright);
-            transition: width 0.3s ease;
+            transition: width $wh40k-transition-medium;
         }
 
         // Color coding
@@ -1498,7 +1498,7 @@
             background: linear-gradient(135deg, rgba(62, 34, 22, 0.35), rgba(16, 20, 28, 0.15));
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: background $wh40k-transition-base;
             user-select: none;
 
             &:hover {
@@ -1530,7 +1530,7 @@
             .wh40k-section__toggle {
                 font-size: 0.7rem;
                 color: rgba(214, 221, 235, 0.5);
-                transition: transform 0.2s ease;
+                transition: transform $wh40k-transition-base;
             }
         }
 
@@ -2533,7 +2533,7 @@
     &__indicator {
         font-size: 1.1rem;
         color: rgba(214, 221, 235, 0.7);
-        transition: color 0.2s ease;
+        transition: color $wh40k-transition-base;
     }
 
     &__label {
@@ -2542,7 +2542,7 @@
         text-transform: uppercase;
         letter-spacing: 0.08em;
         color: rgba(214, 221, 235, 0.7);
-        transition: color 0.2s ease;
+        transition: color $wh40k-transition-base;
     }
 
     &:hover {
@@ -2592,7 +2592,7 @@
     }
 
     i {
-        transition: transform 0.2s ease;
+        transition: transform $wh40k-transition-base;
     }
 
     &.active i {
@@ -2684,7 +2684,7 @@
     &__bar-fill {
         height: 100%;
         background: var(--wh40k-green-bright);
-        transition: width 0.3s ease;
+        transition: width $wh40k-transition-medium;
     }
 
     // Stat variants
@@ -2787,7 +2787,7 @@
         .fa-external-link-alt {
             font-size: 0.65rem;
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: opacity $wh40k-transition-base;
         }
 
         &:hover {
@@ -3195,7 +3195,7 @@
         top: 0;
         left: 0;
         height: 100%;
-        transition: width 0.3s ease;
+        transition: width $wh40k-transition-medium;
 
         &--good {
             background: linear-gradient(90deg, var(--wh40k-green) 0%, var(--wh40k-green-bright) 100%);
@@ -3637,7 +3637,7 @@
     border: 2px solid var(--wh40k-combat-border);
     border-radius: 6px;
     overflow: hidden;
-    font-family: 'Roboto', sans-serif;
+    font-family: $wh40k-font-ui;
 
     &__header {
         display: flex;
@@ -3663,7 +3663,7 @@
 
     &__name {
         margin: 0;
-        font-family: 'Cinzel', serif;
+        font-family: $wh40k-font-display;
         font-size: 1.1rem;
         font-weight: 600;
         color: var(--wh40k-bronze);
@@ -3724,7 +3724,7 @@
         }
 
         &-value {
-            font-family: 'Cinzel', serif;
+            font-family: $wh40k-font-display;
             font-size: 0.95rem;
             font-weight: 700;
             color: var(--wh40k-text-dark);

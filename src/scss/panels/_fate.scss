@@ -249,7 +249,7 @@
         i:last-child {
             font-size: 0.8em;
             margin-left: auto;
-            transition: transform 0.2s ease;
+            transition: transform $wh40k-transition-base;
         }
 
         &:hover {

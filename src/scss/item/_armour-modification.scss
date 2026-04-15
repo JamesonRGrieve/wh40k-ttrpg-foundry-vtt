@@ -127,7 +127,7 @@
             font-weight: 600;
             font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.7);
-            transition: color 0.2s ease;
+            transition: color $wh40k-transition-base;
         }
 
         .wh40k-restriction-check {
@@ -137,7 +137,7 @@
             font-size: 0.75rem;
             color: #d4af37;
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: opacity $wh40k-transition-base;
         }
 
         &:hover {

@@ -172,7 +172,7 @@
     align-items: center;
     gap: var(--wh40k-item-spacing-xs);
     color: var(--color-accent, #3b82f6);
-    transition: opacity 0.2s;
+    transition: opacity $wh40k-transition-base;
 
     &::after {
         content: '\f05a'; // info-circle
@@ -368,7 +368,7 @@
         color: inherit;
         cursor: pointer;
         opacity: 0.6;
-        transition: opacity 0.2s;
+        transition: opacity $wh40k-transition-base;
 
         &:hover {
             opacity: 1;
