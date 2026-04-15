@@ -560,7 +560,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const sys = this._getSelectionSystem(selection);
             const others = sys?.modifiers?.other || [];
             for (const m of others) {
-                if (m.name === 'Influence') mod += (m.value || 0);
+                if (m.name === 'Influence') mod += m.value || 0;
             }
         }
         return mod;
@@ -2088,7 +2088,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     static async #rollThrones(event: Event, target: HTMLElement): Promise<void> {
         const formula = (this as any)._getThronesFormula();
-        if (!formula) { (ui.notifications as any).warn('No thrones formula — select a homeworld and background first.'); return; }
+        if (!formula) {
+            (ui.notifications as any).warn('No thrones formula — select a homeworld and background first.');
+            return;
+        }
         const roll = new Roll(formula);
         await roll.evaluate();
         (this as any)._thronesRolled = roll.total;
