@@ -167,7 +167,7 @@
 
             &.wh40k-property-value--editable {
                 cursor: pointer;
-                transition: all 0.2s ease;
+                transition: all $wh40k-transition-base;
 
                 &:hover {
                     border-color: rgba(#3498db, 0.4);

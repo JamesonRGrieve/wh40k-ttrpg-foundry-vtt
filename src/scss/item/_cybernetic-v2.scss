@@ -269,7 +269,7 @@
     font-weight: 500;
     color: var(--wh40k-text-muted);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     i {
         font-size: 0.9rem;
@@ -407,7 +407,7 @@
     background: var(--wh40k-panel-bg-translucent);
     border: 2px solid var(--wh40k-border-color-light);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     input {
         display: none;

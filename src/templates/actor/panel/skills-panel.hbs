@@ -4,7 +4,7 @@
         <!-- Left Column -->
         <div class="wh40k-skills-column tw-flex tw-flex-col tw-gap-[3px]">
             {{#each skillLists.standardColumns.[0] as |entry|}}
-            <div class="wh40k-skill-row tw-grid tw-grid-cols-[1fr_auto_40px] tw-gap-2 tw-items-center tw-py-1 tw-px-2{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
+            <div class="wh40k-skill-row tw-grid tw-grid-cols-skill-row tw-gap-2 tw-items-center tw-py-1 tw-px-2{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
                 <div class="wh40k-skill-info tw-flex tw-items-center tw-gap-1.5">
                     <span class="wh40k-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
                     <div class="wh40k-skill-name-wrapper tw-flex tw-items-center tw-gap-1 tw-flex-1">
@@ -43,7 +43,7 @@
         <!-- Right Column -->
         <div class="wh40k-skills-column tw-flex tw-flex-col tw-gap-[3px]">
             {{#each skillLists.standardColumns.[1] as |entry|}}
-            <div class="wh40k-skill-row tw-grid tw-grid-cols-[1fr_auto_40px] tw-gap-2 tw-items-center tw-py-1 tw-px-2{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
+            <div class="wh40k-skill-row tw-grid tw-grid-cols-skill-row tw-gap-2 tw-items-center tw-py-1 tw-px-2{{#if (eq entry.[1].advanced true)}} wh40k-skill-row--advanced{{/if}}{{#unless entry.[1].isGranted}} wh40k-skill-row--locked{{/unless}}" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="{{entry.[1].trainingLevel}}">
                 <div class="wh40k-skill-info tw-flex tw-items-center tw-gap-1.5">
                     <span class="wh40k-skill-icon" style="--icon-url: url('{{skillIcon entry.[0]}}');"></span>
                     <div class="wh40k-skill-name-wrapper tw-flex tw-items-center tw-gap-1 tw-flex-1">
@@ -87,7 +87,7 @@
         <h4 class="wh40k-section-divider">Advanced Skills (Untrained)</h4>
         <div class="tw-grid tw-grid-cols-4 tw-gap-0.5">
             {{#each skillLists.advancedUntrained as |entry|}}
-            <div class="wh40k-skill-row wh40k-skill-row--advanced wh40k-skill-row--compact tw-grid tw-grid-cols-[1fr_28px] tw-gap-1 tw-items-center tw-py-0.5 tw-px-1.5" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="0">
+            <div class="wh40k-skill-row wh40k-skill-row--advanced wh40k-skill-row--compact tw-grid tw-grid-cols-skill-row-compact tw-gap-1 tw-items-center tw-py-0.5 tw-px-1.5" data-skill="{{entry.[0]}}" data-skill-name="{{entry.[1].label}}" data-characteristic="{{entry.[1].characteristic}}" data-training-level="0">
                 <div class="wh40k-skill-info tw-flex tw-items-center tw-gap-1">
                     <button type="button" class="wh40k-skill-name"
                             data-action="viewSkillInfo" data-skill="{{entry.[0]}}"

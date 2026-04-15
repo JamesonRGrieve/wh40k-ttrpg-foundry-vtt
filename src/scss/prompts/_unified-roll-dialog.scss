@@ -215,7 +215,7 @@
         border: 1px solid rgba(201, 162, 39, 0.25);
         border-radius: 20px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         &:hover {
             background: rgba(201, 162, 39, 0.1);
@@ -271,7 +271,7 @@
         justify-content: space-between;
         padding: 8px 16px;
         cursor: pointer;
-        transition: all 0.15s ease;
+        transition: all $wh40k-transition-fast;
 
         &:hover {
             background: rgba(201, 162, 39, 0.12);
@@ -349,7 +349,7 @@
         cursor: pointer;
         font-size: 0.78rem;
         color: #9a9a8a;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         i {
             font-size: 0.7rem;
@@ -408,7 +408,7 @@
         color: rgba(201, 162, 39, 0.5);
         font-size: 0.78rem;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         &:hover {
             border-color: rgba(201, 162, 39, 0.4);
@@ -445,7 +445,7 @@
         color: #c9a227;
         cursor: pointer;
         font-size: 0.7rem;
-        transition: all 0.15s ease;
+        transition: all $wh40k-transition-fast;
 
         &:hover {
             background: rgba(201, 162, 39, 0.15);
@@ -494,7 +494,7 @@
         cursor: pointer;
         font-size: 0.7rem;
         border-radius: 50%;
-        transition: all 0.15s ease;
+        transition: all $wh40k-transition-fast;
 
         &:hover {
             color: #f87171;
@@ -719,7 +719,7 @@
         text-align: center;
         font-variant-numeric: tabular-nums;
         -moz-appearance: textfield;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         &::-webkit-outer-spin-button,
         &::-webkit-inner-spin-button {
@@ -783,7 +783,7 @@
         text-align: center;
         font-variant-numeric: tabular-nums;
         -moz-appearance: textfield;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         &::-webkit-outer-spin-button,
         &::-webkit-inner-spin-button {
@@ -925,7 +925,7 @@
         text-transform: uppercase;
         letter-spacing: 0.06em;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         i {
             font-size: 14px;
@@ -1004,7 +1004,7 @@
         font-size: 0.72rem;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
         text-transform: uppercase;
         letter-spacing: 0.05em;
 
@@ -1037,7 +1037,7 @@
         border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: 6px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         &:hover {
             background: rgba(201, 162, 39, 0.08);

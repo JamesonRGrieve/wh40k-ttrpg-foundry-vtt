@@ -358,7 +358,7 @@ input[type='text'].stat-value,
 
 .characteristic-bonus,
 .char-bonus {
-    transition: all 0.3s ease;
+    transition: all $wh40k-transition-medium;
 
     &.changed {
         animation: pulse-gold 0.8s ease-out;
@@ -383,7 +383,7 @@ input[type='text'].stat-value,
 
 .xp-display,
 .experience-tracker {
-    transition: all 0.3s ease;
+    transition: all $wh40k-transition-medium;
 
     &.stat-advancement {
         animation: stat-advance 1s ease-out;

@@ -1,5 +1,7 @@
 /**
- * @file SpecialistSkillDialog - V2 dialog for adding specialist skills
+ * @file SpecialistSkillDialog - Single-page dialog with cascading dropdowns
+ * for adding specialist skill specializations. Loads specialization options
+ * from indexed compendium packs.
  */
 
 import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
@@ -8,18 +10,24 @@ const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Dialog for adding specialist skill specializations.
+ * Shows a skill type dropdown and a specialization dropdown that auto-populates
+ * from compendium data when the skill selection changes.
  */
 export default class SpecialistSkillDialog extends ApplicationV2Mixin(ApplicationV2) {
     [key: string]: any;
+
     /**
-     * @param {object} simpleSkillData  The skill data.
-     * @param {object} [options={}]     Dialog options.
+     * @param {Actor} actor                The owning actor.
+     * @param {object} [options={}]        Dialog options.
+     * @param {string} [options.preSelectedSkillKey]  Skill key to pre-select.
      */
-    constructor(simpleSkillData = {}, options = {}) {
+    constructor(actor: any, options: Record<string, any> = {}) {
         // @ts-expect-error - argument count
         super(options);
-        this.simpleSkillData = simpleSkillData;
-        this.specializations = [];
+        this.actorDoc = actor;
+        this.preSelectedSkillKey = options.preSelectedSkillKey || '';
+        this._specializationMap = new Map<string, string[]>();
+        this._compendiumLoaded = false;
     }
 
     /* -------------------------------------------- */
@@ -33,10 +41,10 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
             cancel: SpecialistSkillDialog.#onCancel,
         },
         position: {
-            width: 400,
+            width: 420,
         },
         window: {
-            title: 'Create Specialist Skill',
+            title: 'Add Specialist Skill',
             minimizable: false,
         },
     };
@@ -52,20 +60,40 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     };
 
     /* -------------------------------------------- */
-    /*  Properties                                  */
+    /*  Compendium Loading                          */
     /* -------------------------------------------- */
 
     /**
-     * The skill data.
-     * @type {object}
+     * Load all specialist skill specializations from compendium packs.
+     * Scans all Item packs whose name contains "skill" for entries with (X),
+     * then extracts their specialization arrays into a lookup map.
+     * @protected
      */
-    simpleSkillData;
+    async _loadAllSpecializations(): Promise<void> {
+        this._compendiumLoaded = true;
 
-    /**
-     * Available specializations from compendium.
-     * @type {string[]}
-     */
-    specializations;
+        for (const pack of game.packs) {
+            // @ts-expect-error - metadata access
+            if (pack.metadata.type !== 'Item') continue;
+            // @ts-expect-error - metadata access
+            if (!pack.metadata.name.includes('skill')) continue;
+
+            const index = await pack.getIndex();
+            // @ts-expect-error - index filter
+            const skillEntries = index.filter((entry) => entry.name.includes('(X)'));
+
+            for (const entry of skillEntries) {
+                const doc = await pack.getDocument(entry._id);
+                // @ts-expect-error - system data access
+                const specs = doc?.system?.specializations;
+                if (specs?.length) {
+                    // @ts-expect-error - name access
+                    const baseName = entry.name.replace(/\s*\(X\)\s*$/i, '').trim();
+                    this._specializationMap.set(baseName.toLowerCase(), specs);
+                }
+            }
+        }
+    }
 
     /* -------------------------------------------- */
     /*  Rendering                                   */
@@ -73,52 +101,36 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
 
     /** @inheritDoc */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        // Load specializations from compendium on first render
-        if (this.specializations.length === 0) {
-            await this._loadSpecializations();
+        if (!this._compendiumLoaded) {
+            await this._loadAllSpecializations();
         }
 
         const context = await super._prepareContext(options);
+
+        // Get specialist skills from actor
+        const skills = this.actorDoc.system?.skills ?? {};
+        const specialistSkills = Object.entries(skills)
+            .filter(([_, data]) => (data as any).entries !== undefined)
+            .map(([key, data]) => ({
+                key,
+                label: (data as any).label || key,
+                characteristic: (data as any).charShort || (data as any).characteristic,
+            }))
+            .sort((a, b) => a.label.localeCompare(b.label));
+
+        // Get specializations for pre-selected skill
+        const selectedKey = this.preSelectedSkillKey;
+        const selectedSkill = selectedKey ? skills[selectedKey] : null;
+        const selectedLabel = selectedSkill?.label || '';
+        const specializations = this._specializationMap.get(selectedLabel.toLowerCase()) || [];
+
         return {
             ...context,
-            ...this.simpleSkillData,
-            specializations: this.specializations,
+            actor: this.actorDoc,
+            specialistSkills,
+            preSelectedSkillKey: selectedKey,
+            specializations,
         };
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Load specializations from the skills compendium.
-     * @protected
-     */
-    async _loadSpecializations(): Promise<void> {
-        const skillsCompendium = game.packs.get('wh40k-rpg.wh40k-items-skills');
-        if (!skillsCompendium) return;
-
-        // Find the skill in the compendium by matching the label
-        const index = await skillsCompendium.getIndex();
-        // @ts-expect-error - dynamic property access
-        const skillEntries = index.filter((entry) => entry.name.includes('(X)'));
-
-        const skillLabel = this.simpleSkillData.skill?.label;
-        if (!skillLabel) return;
-
-        const skillEntry = skillEntries.find((entry) => {
-            // @ts-expect-error - dynamic property access
-            const baseName = entry.name.replace(/\s*\(X\)\s*$/i, '').trim();
-            return baseName.toLowerCase() === skillLabel.toLowerCase();
-        });
-
-        if (skillEntry) {
-            const skillDoc = await skillsCompendium.getDocument(skillEntry._id);
-            // @ts-expect-error - system data access
-            if (skillDoc?.system?.specializations) {
-                // @ts-expect-error - system data access
-                this.specializations = skillDoc.system.specializations;
-                this.simpleSkillData.specializations = this.specializations;
-            }
-        }
     }
 
     /* -------------------------------------------- */
@@ -128,18 +140,54 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     /** @inheritDoc */
     async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
-
         setupNumberInputAutoSelect(this.element);
 
-        // Set up button listeners for V1-style templates
-        this.element.querySelector("[data-action='add']")?.addEventListener('click', (e) => {
+        // Cascading dropdown: skill selection drives specialization options
+        const skillSelect = this.element.querySelector('#skill-select') as HTMLSelectElement | null;
+        if (skillSelect) {
+            skillSelect.addEventListener('change', () => {
+                this._updateSpecializationDropdown(skillSelect.value);
+            });
+        }
+
+        // Button listeners for V1-style templates
+        this.element.querySelector("[data-action='add']")?.addEventListener('click', (e: Event) => {
             e.preventDefault();
             this._addSpecialization();
         });
-        this.element.querySelector("[data-action='cancel']")?.addEventListener('click', (e) => {
+        this.element.querySelector("[data-action='cancel']")?.addEventListener('click', (e: Event) => {
             e.preventDefault();
             this.close();
         });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Update the specialization dropdown when the skill selection changes.
+     * @param {string} skillKey  The selected skill key.
+     * @protected
+     */
+    _updateSpecializationDropdown(skillKey: string): void {
+        const specSelect = this.element.querySelector('#specialization-select') as HTMLSelectElement | null;
+        const specGroup = this.element.querySelector('#specialization-group') as HTMLElement | null;
+        if (!specSelect || !specGroup) return;
+
+        const skills = this.actorDoc.system?.skills ?? {};
+        const skill = skills[skillKey];
+        const label = skill?.label || '';
+        const specializations = this._specializationMap.get(label.toLowerCase()) || [];
+
+        // Clear and repopulate
+        specSelect.innerHTML = '<option value="">-- Select a specialization --</option>';
+        for (const spec of specializations) {
+            const option = document.createElement('option');
+            option.value = spec;
+            option.textContent = spec;
+            specSelect.appendChild(option);
+        }
+
+        specGroup.style.display = specializations.length ? '' : 'none';
     }
 
     /* -------------------------------------------- */
@@ -149,62 +197,44 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     /**
      * Handle add button click.
      * @this {SpecialistSkillDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
      */
     static async #onAdd(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this._addSpecialization();
     }
 
-    /* -------------------------------------------- */
-
     /**
      * Handle cancel button click.
      * @this {SpecialistSkillDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
      */
     static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
         await this.close();
     }
 
     /* -------------------------------------------- */
-    /*  Specialization Methods                      */
-    /* -------------------------------------------- */
 
     /**
-     * Add the specialization to the actor.
+     * Read the form inputs and add the specialization to the actor.
      * @protected
      */
     async _addSpecialization(): Promise<void> {
         const form = this.element.querySelector('form') ?? this.element;
 
-        let speciality = '';
-        const dropdownElement = form.querySelector('#speciality-name');
-        const customElement = form.querySelector('#custom-speciality-name');
-
-        if (dropdownElement && dropdownElement.tagName === 'SELECT') {
-            // We have a dropdown with specializations
-            const selectedValue = dropdownElement.value?.trim() ?? '';
-            const customValue = customElement?.value?.trim() ?? '';
-
-            // Prioritize custom input if provided
-            if (customValue !== '') {
-                speciality = customValue;
-            } else if (selectedValue !== '') {
-                speciality = selectedValue;
-            }
-        } else if (dropdownElement) {
-            // Just a text input
-            speciality = dropdownElement.value?.trim() ?? '';
-        }
-
-        if (!speciality) {
-            (ui.notifications as any).warn('Please enter or select a specialization name');
+        const skillKey = (form.querySelector('#skill-select') as HTMLSelectElement | null)?.value;
+        if (!skillKey) {
+            (ui.notifications as any).warn('Please select a skill type.');
             return;
         }
 
-        await this.simpleSkillData.actor.addSpecialitySkill(this.simpleSkillData.skillName, speciality);
+        const specValue = (form.querySelector('#specialization-select') as HTMLSelectElement | null)?.value?.trim() ?? '';
+        const customValue = (form.querySelector('#custom-specialization') as HTMLInputElement | null)?.value?.trim() ?? '';
+        const speciality = customValue || specValue;
+
+        if (!speciality) {
+            (ui.notifications as any).warn('Please enter or select a specialization name.');
+            return;
+        }
+
+        await this.actorDoc.addSpecialitySkill(skillKey, speciality);
         await this.close();
     }
 }
@@ -215,9 +245,11 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
 
 /**
  * Open a specialist skill dialog.
- * @param {object} simpleSkillData  The skill data.
+ * @param {object} data  Dialog data — must include `actor`, may include `skillName`.
  */
-export async function prepareCreateSpecialistSkillPrompt(simpleSkillData) {
-    const prompt = new SpecialistSkillDialog(simpleSkillData);
+export async function prepareCreateSpecialistSkillPrompt(data: { actor: any; skillName?: string; [key: string]: any }) {
+    const prompt = new SpecialistSkillDialog(data.actor, {
+        preSelectedSkillKey: data.skillName || '',
+    });
     prompt.render(true);
 }

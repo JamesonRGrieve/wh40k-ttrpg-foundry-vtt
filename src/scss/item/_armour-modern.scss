@@ -289,7 +289,7 @@
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     i {
         font-size: 0.9rem;
@@ -779,7 +779,7 @@
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     border: 1px solid;
 
     &--primary {

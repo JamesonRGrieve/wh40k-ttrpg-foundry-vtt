@@ -1,33 +1,37 @@
-{{! Rogue Trader Add Speciality Prompt - Simplified Layout }}
-<form class="wh40k-prompt wh40k-specialist-prompt" autocomplete="off">
+{{! Add Specialist Skill - Single Page with Cascading Dropdowns }}
+<form class="wh40k-specialist-prompt" autocomplete="off">
     <div class="wh40k-specialist-prompt__header">
-        <img class="wh40k-specialist-prompt__icon" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
+        <img class="wh40k-specialist-prompt__icon" alt="{{actor.name}}" src="{{actor.img}}" />
         <div class="wh40k-specialist-prompt__info">
-            <div class="wh40k-specialist-prompt__skill">{{this.skill.label}}</div>
-            <div class="wh40k-specialist-prompt__label">Add Specialization</div>
+            <div class="wh40k-specialist-prompt__label">Add Specialist Skill</div>
         </div>
     </div>
 
     <div class="wh40k-specialist-prompt__body">
-        {{#if this.specializations}}
-            <label class="wh40k-specialist-prompt__field-label">Choose from list</label>
-            <select class="wh40k-prompt__select" id="speciality-name">
+        <div class="wh40k-specialist-prompt__field-group">
+            <label class="wh40k-specialist-prompt__field-label">Skill Type</label>
+            <select class="wh40k-prompt__select" id="skill-select">
+                <option value="">-- Choose a skill --</option>
+                {{#each specialistSkills}}
+                    <option value="{{this.key}}" {{#if (eq this.key ../preSelectedSkillKey)}}selected{{/if}}>{{this.label}} ({{this.characteristic}})</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="wh40k-specialist-prompt__field-group" id="specialization-group" {{#unless specializations.length}}style="display:none"{{/unless}}>
+            <label class="wh40k-specialist-prompt__field-label">Specialization</label>
+            <select class="wh40k-prompt__select" id="specialization-select">
                 <option value="">-- Select a specialization --</option>
-                {{#each this.specializations}}
+                {{#each specializations}}
                     <option value="{{this}}">{{this}}</option>
                 {{/each}}
             </select>
+        </div>
 
-            <div class="wh40k-specialist-prompt__divider">
-                <span>or</span>
-            </div>
-
-            <label class="wh40k-specialist-prompt__field-label">Enter custom name</label>
-            <input class="wh40k-prompt__input" type="text" id="custom-speciality-name" placeholder="e.g., Navigation (Stellar), Common Lore (Imperial Navy)" />
-        {{else}}
-            <label class="wh40k-specialist-prompt__field-label">Specialization Name</label>
-            <input class="wh40k-prompt__input" type="text" id="speciality-name" placeholder="Enter specialization name..." />
-        {{/if}}
+        <div class="wh40k-specialist-prompt__field-group">
+            <label class="wh40k-specialist-prompt__field-label">Or enter custom name</label>
+            <input class="wh40k-prompt__input" type="text" id="custom-specialization" placeholder="e.g., Imperium, Stellar, Imperial Navy" />
+        </div>
     </div>
 
     <div class="dialog-buttons">

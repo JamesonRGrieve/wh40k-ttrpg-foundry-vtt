@@ -1,12 +1,12 @@
 {{!-- Dark Heresy 2e Character Sheet Header --}}
 {{!-- Two-column layout: Left (portrait + bio) | Right (characteristics HUD) --}}
 <div class="wh40k-header wh40k-grid-col-6 wh40k-panel wh40k-character-header tw-relative">
-    <i class="fa-solid fa-dice-d20 wh40k-origin-builder-btn tw-absolute tw-text-[1.5rem] tw-top-4 tw-left-4 tw-z-10 {{#unless originPathComplete}}pulse{{/unless}}"
+    <i class="fa-solid fa-dice-d20 wh40k-origin-builder-btn tw-absolute tw-text-2xl tw-top-4 tw-left-4 tw-z-10 {{#unless originPathComplete}}pulse{{/unless}}"
        data-action="openOriginPathBuilder"
        data-tooltip="{{localize 'WH40K.Utility.SetupOriginPath'}}"></i>
-    <div class="wh40k-header__info wh40k-header-grid tw-grid tw-grid-cols-[minmax(280px,1fr)_auto] tw-gap-3 tw-items-start tw-pt-2 tw-px-3 tw-pb-1.5">
+    <div class="wh40k-header__info wh40k-header-grid tw-grid tw-grid-cols-header-main tw-gap-3 tw-items-start tw-pt-2 tw-px-3 tw-pb-1.5">
         <div class="wh40k-header-left tw-flex tw-flex-col tw-gap-2">
-            <div class="wh40k-header-topline tw-grid tw-grid-cols-[auto_1fr] tw-gap-2.5 tw-items-center">
+            <div class="wh40k-header-topline tw-grid tw-grid-cols-header-topline tw-gap-2.5 tw-items-center">
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-shrink-0">
                     <div class="wh40k-header__logo wh40k-portrait-container wh40k-portrait-full">
                         <img class="wh40k-header__logo-image wh40k-portrait" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
@@ -26,11 +26,11 @@
                     </div>
                     {{!-- Origin Path Step Icons --}}
                     {{#each originPathSteps as |step|}}
-                    <div class="tw-flex tw-items-center tw-justify-center tw-w-14 tw-h-14 tw-rounded-full tw-overflow-hidden tw-border-2 tw-border-solid tw-bg-[rgba(0,0,0,0.2)] tw-justify-self-center tw-transition-all {{#if step.item}}tw-border-[#d4af37] tw-cursor-pointer hover:tw-border-[#f0d060] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)] hover:tw-scale-110{{else}}tw-border-[var(--wh40k-border-color,#4a3728)] tw-opacity-40 tw-cursor-default{{/if}}"
+                    <div class="tw-flex tw-items-center tw-justify-center tw-w-14 tw-h-14 tw-rounded-full tw-overflow-hidden tw-border-2 tw-border-solid tw-bg-[rgba(0,0,0,0.2)] tw-justify-self-center tw-transition-all {{#if step.item}}tw-border-gold tw-cursor-pointer hover:tw-border-[#f0d060] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)] hover:tw-scale-110{{else}}tw-border-[var(--wh40k-border-color,#4a3728)] tw-opacity-40 tw-cursor-default{{/if}}"
                          {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
-                         data-tooltip="{{step.label}}{{#if step.item}}: {{step.item.name}}{{/if}}">
+                         {{#if step.tooltipData}}data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{step.tooltipData}}"{{else}}data-tooltip="{{step.label}}"{{/if}}>
                         {{#if step.item}}
-                            <img src="{{step.item.img}}" alt="{{step.item.name}}" class="tw-w-12 tw-h-12 tw-max-w-12 tw-max-h-12 tw-object-cover tw-rounded-full tw-border-2 tw-border-solid tw-border-[#d4af37]" />
+                            <img src="{{step.item.img}}" alt="{{step.item.name}}" class="tw-w-12 tw-h-12 tw-max-w-12 tw-max-h-12 tw-object-cover tw-rounded-full tw-border-2 tw-border-solid tw-border-gold" />
                         {{else}}
                             <i class="fas {{step.icon}} tw-text-xl tw-text-[var(--wh40k-text-muted)]"></i>
                         {{/if}}

@@ -43,7 +43,7 @@
     border: 2px solid $wh40k-accent-dynasty;
     border-radius: 6px;
     background: rgba($wh40k-accent-dynasty, 0.08);
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     font-size: 2rem;
     font-weight: 700;
     text-align: center;
@@ -103,7 +103,7 @@
     border-color: rgba($wh40k-accent-gold, 0.3);
 
     .wh40k-xp-value {
-        font-family: 'Modesto Condensed', serif;
+        font-family: $wh40k-font-alt;
         font-size: 1.5rem;
         font-weight: 700;
         color: $wh40k-accent-gold;

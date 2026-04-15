@@ -214,7 +214,7 @@
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;
-            transition: all 0.2s;
+            transition: all $wh40k-transition-base;
 
             &:hover {
                 background: rgba(139, 0, 0, 0.2);
@@ -259,7 +259,7 @@
             border: 1px solid var(--color-border-secondary);
             border-radius: 4px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all $wh40k-transition-base;
 
             &:hover {
                 background: rgba(139, 0, 0, 0.1);
@@ -323,7 +323,7 @@
             font-size: 0.85rem;
             font-weight: 600;
             text-transform: uppercase;
-            transition: all 0.2s;
+            transition: all $wh40k-transition-base;
             margin-bottom: -2px;
 
             &:hover {
@@ -516,7 +516,7 @@
                 font-size: 0.9rem;
                 font-weight: 600;
                 cursor: pointer;
-                transition: all 0.2s;
+                transition: all $wh40k-transition-base;
                 flex-shrink: 0;
 
                 i {

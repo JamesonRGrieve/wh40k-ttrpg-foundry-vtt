@@ -29,7 +29,7 @@
         color: var(--color-text-primary);
         font-size: 0.75rem;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         &:hover {
             border-color: #3498db;
@@ -195,7 +195,7 @@
     border-left: 3px solid rgba(#27ae60, 0.4);
     border-radius: 0 4px 4px 0;
     font-size: 0.8rem;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: linear-gradient(90deg, rgba(#27ae60, 0.15) 0%, transparent 100%);
@@ -226,7 +226,7 @@
         border-radius: $wh40k-radius-sm;
         color: var(--color-text-primary);
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         i {
             font-size: 0.7rem;

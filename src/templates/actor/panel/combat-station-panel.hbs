@@ -274,20 +274,20 @@
                 <div class="wh40k-panel-body">
                     {{#if actor.items}}
                     <div class="tw-flex tw-flex-col">
-                        <div class="tw-grid tw-grid-cols-[1fr_auto_auto] tw-gap-x-2 tw-px-2 tw-py-1 wh40k-weapon-grid-header">
+                        <div class="tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-px-2 tw-py-1 wh40k-weapon-grid-header">
                             <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">Weapon</span>
-                            <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-[3rem]">Dmg</span>
-                            <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-[3rem]">Range</span>
+                            <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-12">Dmg</span>
+                            <span class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center tw-min-w-12">Range</span>
                         </div>
                         {{#each actor.items as |item|}}
                         {{#if item.isWeapon}}
-                        <div class="tw-grid tw-grid-cols-[1fr_auto_auto] tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer item-drag item-edit wh40k-weapon-grid-row {{#if item.system.equipped}}wh40k-row-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
+                        <div class="tw-grid tw-grid-cols-content-auto-auto tw-gap-x-2 tw-items-center tw-px-2 tw-py-1 tw-cursor-pointer item-drag item-edit wh40k-weapon-grid-row {{#if item.system.equipped}}wh40k-row-equipped{{/if}}" data-item-id="{{item.id}}" data-item-type="weapon">
                             <span class="tw-flex tw-items-center tw-gap-1 tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap tw-text-sm">
                                 {{#if item.system.equipped}}<i class="fas fa-check-circle wh40k-equipped-icon"></i>{{/if}}
                                 {{item.name}}
                             </span>
-                            <span class="tw-text-sm tw-text-center tw-min-w-[3rem]">{{item.system.damageLabel}}</span>
-                            <span class="tw-text-sm tw-text-center tw-min-w-[3rem]">{{item.system.rangeLabel}}</span>
+                            <span class="tw-text-sm tw-text-center tw-min-w-12">{{item.system.damageLabel}}</span>
+                            <span class="tw-text-sm tw-text-center tw-min-w-12">{{item.system.rangeLabel}}</span>
                         </div>
                         {{/if}}
                         {{/each}}

@@ -45,7 +45,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     i {
         font-size: 1.25rem;
@@ -119,7 +119,7 @@
     border: 2px solid transparent;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &.wh40k-condition-harmful {
         border-color: rgba(231, 76, 60, 0.3);
@@ -188,7 +188,7 @@
     border-radius: 4px;
     color: rgba(255, 255, 255, 0.9);
     font-size: 0.9rem;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:focus {
         outline: none;
@@ -301,7 +301,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     display: flex;
     align-items: center;
     gap: $wh40k-space-xs;

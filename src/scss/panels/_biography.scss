@@ -192,7 +192,7 @@
     cursor: pointer;
     padding: 4px 8px;
     border-radius: 4px;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
     font-size: 0.75rem;
 
     &:hover {
@@ -209,7 +209,7 @@
     cursor: pointer;
     padding: 4px 10px;
     border-radius: 4px;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
     font-size: 0.8rem;
     display: flex;
     align-items: center;
@@ -247,7 +247,7 @@
     border: 1px solid var(--wh40k-border-color-light);
     border-left: 3px solid $wh40k-accent-bio;
     border-radius: 4px;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: var(--wh40k-panel-bg);
@@ -292,7 +292,7 @@
     cursor: pointer;
     padding: 2px 6px;
     border-radius: 3px;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
     font-size: 0.75rem;
 
     &:hover {
@@ -418,7 +418,7 @@
         h4,
         h5,
         h6 {
-            font-family: 'Modesto Condensed', serif;
+            font-family: $wh40k-font-alt;
             margin: $wh40k-space-md 0 $wh40k-space-sm 0;
             color: var(--color-text-primary);
             font-weight: 700;
@@ -540,7 +540,7 @@
     h1,
     h2,
     h3 {
-        font-family: 'Modesto Condensed', serif;
+        font-family: $wh40k-font-alt;
         margin: $wh40k-space-sm 0;
     }
 
@@ -579,7 +579,7 @@
     h1,
     h2,
     h3 {
-        font-family: 'Modesto Condensed', serif;
+        font-family: $wh40k-font-alt;
         margin: $wh40k-space-sm 0;
     }
 }

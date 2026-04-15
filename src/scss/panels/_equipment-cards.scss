@@ -3,17 +3,15 @@
 // ============================================
 // Sleek, modern, single-line layout for equipment items
 
-// Layout (flex-col, gap) now in template utilities
 .wh40k-equipment-table {
     margin-bottom: $wh40k-space-sm;
 }
 
-// Layout (flex, items, gap, padding, min-h) now in template utilities
 .wh40k-equip-row {
     background: var(--wh40k-panel-bg-solid);
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     cursor: grab;
 
     &:hover {
@@ -141,7 +139,6 @@
 }
 
 // Actions Container
-// Layout (flex, gap, ml-auto, shrink-0) now in template utilities
 
 // Action Buttons (Small & Stylistic)
 .wh40k-equip-btn {
@@ -155,7 +152,7 @@
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 3px;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
     color: var(--wh40k-text-muted);
 
     i {
@@ -211,7 +208,7 @@
     border: 1px dashed var(--wh40k-border-color-light);
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     color: var(--wh40k-text-muted);
     font-size: 0.8rem;
     font-weight: 600;
@@ -264,7 +261,7 @@
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 8px;
     padding: $wh40k-space-sm;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     cursor: grab;
 
     &:hover {
@@ -619,7 +616,7 @@
     border: 2px dashed var(--wh40k-border-color-light);
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     color: var(--wh40k-text-muted);
     font-size: 0.85rem;
     font-weight: 600;

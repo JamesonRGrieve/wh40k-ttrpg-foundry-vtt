@@ -79,7 +79,7 @@
     color: var(--wh40k-text-light);
     font-size: 0.8rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: var(--wh40k-bronze);
@@ -129,7 +129,7 @@
     cursor: pointer;
     font-size: 0.85rem;
     color: var(--wh40k-text-muted);
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     input[type='radio'] {
         accent-color: var(--wh40k-gold);
@@ -168,7 +168,7 @@
     min-width: 80px;
     cursor: pointer;
     position: relative;
-    transition: all 0.3s ease;
+    transition: all $wh40k-transition-medium;
 
     .step-number {
         width: 40px;
@@ -182,7 +182,7 @@
         color: var(--wh40k-text-muted);
         font-size: 0.85rem;
         font-weight: 600;
-        transition: all 0.3s ease;
+        transition: all $wh40k-transition-medium;
         position: relative;
         overflow: hidden;
     }
@@ -200,7 +200,7 @@
         letter-spacing: 0.5px;
         color: var(--wh40k-text-muted);
         text-align: center;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
     }
 
     &:hover:not(.disabled) {
@@ -301,7 +301,7 @@
     height: 3px;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
     border-radius: 2px;
-    transition: all 0.3s ease;
+    transition: all $wh40k-transition-medium;
 
     &.active {
         background: linear-gradient(90deg, rgba(201, 162, 39, 0.6), rgba(201, 162, 39, 0.3));
@@ -400,7 +400,7 @@
     border-radius: var(--wh40k-radius-md);
     padding: var(--wh40k-space-sm);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     position: relative;
 
     &:hover:not(.disabled) {
@@ -539,7 +539,7 @@
         color: var(--wh40k-gold);
         cursor: pointer;
         opacity: 0;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
         z-index: 3;
 
         &:hover {
@@ -767,7 +767,7 @@
 
     &.clickable {
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         &:hover {
             background: rgba(var(--wh40k-gold-rgb), 0.15);
@@ -945,7 +945,7 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all $wh40k-transition-medium;
         box-shadow: 0 4px 12px rgba(var(--wh40k-gold-rgb), 0.3);
 
         i {
@@ -1032,7 +1032,7 @@
             color: #ffaa00;
             font-size: 0.8rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all $wh40k-transition-base;
 
             &:hover {
                 background: rgba(255, 170, 0, 0.25);
@@ -1112,7 +1112,7 @@
             font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all $wh40k-transition-base;
 
             &:hover {
                 transform: scale(1.05);
@@ -1131,7 +1131,7 @@
             color: var(--wh40k-text-muted);
             font-size: 0.8rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all $wh40k-transition-base;
 
             &:hover {
                 background: var(--wh40k-bronze);
@@ -1285,7 +1285,7 @@
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 }
 
 .lineage-btn {
@@ -1325,7 +1325,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover:not(:disabled) {
         transform: translateY(-2px);

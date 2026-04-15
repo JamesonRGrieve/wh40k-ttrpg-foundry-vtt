@@ -94,7 +94,7 @@
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.7);
     overflow: hidden;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         border-color: rgba(74, 55, 40, 0.35);
@@ -230,7 +230,7 @@
             border: none;
             color: inherit;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all $wh40k-transition-base;
 
             &:hover {
                 color: var(--wh40k-accent-gold, #d4af37);
@@ -251,7 +251,7 @@
     border: 1px solid rgba(74, 55, 40, 0.15);
     border-radius: 8px;
     overflow: hidden;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         border-color: rgba(74, 55, 40, 0.3);
@@ -471,7 +471,7 @@
         color: #2a1a0a;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all $wh40k-transition-base;
 
         &:hover {
             background: linear-gradient(180deg, #e0c050 0%, var(--wh40k-accent-gold, #d4af37) 100%);
@@ -532,7 +532,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     .material-icons {
         font-size: 1.1em;
@@ -569,7 +569,7 @@
     background: linear-gradient(135deg, rgba(40, 120, 60, 0.1) 0%, rgba(60, 140, 80, 0.15) 100%);
     border: 1px solid rgba(40, 120, 60, 0.25);
     border-radius: 6px;
-    transition: all 0.3s ease;
+    transition: all $wh40k-transition-medium;
 
     &.wh40k-shortage {
         background: linear-gradient(135deg, rgba(180, 40, 40, 0.15) 0%, rgba(200, 60, 60, 0.2) 100%);

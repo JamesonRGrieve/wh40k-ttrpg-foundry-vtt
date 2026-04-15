@@ -325,7 +325,7 @@ $cyber-success: #2ecc71;
     border: 2px solid rgba(255, 255, 255, 0.15);
     border-radius: 6px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     position: relative;
 
     input {
@@ -584,7 +584,7 @@ $cyber-success: #2ecc71;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 4px;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: rgba(255, 255, 255, 0.05);

@@ -58,15 +58,15 @@
         border-radius: 4px;
         border: 2px solid;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        transition: all 0.2s ease;
-        font-family: 'Modesto Condensed', serif;
+        transition: all $wh40k-transition-base;
+        font-family: $wh40k-font-alt;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
 
         .wh40k-badge-icon {
             font-size: 1rem;
-            transition: all 0.2s ease;
+            transition: all $wh40k-transition-base;
         }
 
         .wh40k-badge-label {
@@ -203,7 +203,7 @@
         border: 2px solid var(--wh40k-border-color);
         border-radius: 8px;
         cursor: pointer;
-        transition: all 0.15s ease;
+        transition: all $wh40k-transition-fast;
         color: var(--wh40k-text-medium);
 
         i {
@@ -244,7 +244,7 @@
         display: flex;
         align-items: baseline;
         gap: 4px;
-        font-family: 'Modesto Condensed', serif;
+        font-family: $wh40k-font-alt;
     }
 
     .wh40k-insanity-current {
@@ -273,7 +273,7 @@
     .wh40k-modifier-value {
         font-size: 1.1rem;
         color: #ef4444; // Brighter red instead of dark purple
-        font-family: 'Modesto Condensed', serif;
+        font-family: $wh40k-font-alt;
     }
 
     // ============================================
@@ -281,25 +281,16 @@
     // ============================================
 
     .wh40k-insanity-bar-container {
-        width: 100%;
-        position: relative;
+        @include wh40k-bar-container;
     }
 
     .wh40k-insanity-bar {
-        width: 100%;
-        height: 14px;
-        background: var(--wh40k-border-accent);
-        border-radius: 7px;
-        overflow: visible; // Allow markers to show
-        position: relative;
+        @include wh40k-bar-track(14px);
         box-shadow: inset 0 1px 3px var(--wh40k-shadow-medium);
     }
 
     .wh40k-insanity-bar-fill {
-        height: 100%;
-        border-radius: 7px;
-        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
-        box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+        @include wh40k-bar-fill(rgba(0, 0, 0, 0.3));
     }
 
     // Bar color matches current degree
@@ -331,31 +322,13 @@
 
     // Threshold Markers
     .wh40k-threshold-marker {
-        position: absolute;
-        top: 0;
+        @include wh40k-threshold-marker;
         transform: translateX(-50%);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        pointer-events: none;
-    }
 
-    .wh40k-threshold-line {
-        width: 2px;
-        height: 14px;
-        background: rgba(255, 255, 255, 0.6);
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-    }
-
-    .wh40k-threshold-label {
-        font-size: 0.65rem;
-        font-weight: 700;
-        color: var(--wh40k-text-muted);
-        margin-top: 2px;
-        background: var(--wh40k-panel-bg-solid);
-        padding: 1px 3px;
-        border-radius: 2px;
+        .wh40k-threshold-line {
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+        }
     }
 
     // ============================================
@@ -363,15 +336,9 @@
     // ============================================
 
     .wh40k-insanity-alert {
-        display: flex;
-        align-items: center;
-        gap: $wh40k-space-xs;
+        @include wh40k-alert;
         padding: $wh40k-space-sm;
         font-size: 0.8rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        border-radius: 6px;
-        letter-spacing: 0.03em;
 
         i {
             font-size: 1.2em;
@@ -449,69 +416,32 @@
     // ============================================
 
     .wh40k-insanity-edit-section {
-        padding: $wh40k-space-md;
-        background: var(--wh40k-panel-bg-translucent);
-        border: 1px solid var(--wh40k-border-color-light);
-        border-radius: 8px;
-        margin-bottom: $wh40k-space-sm;
-
-        &:last-child {
-            margin-bottom: 0;
-        }
+        @include wh40k-edit-section;
     }
 
     .wh40k-insanity-edit-header {
-        font-size: 0.8rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--wh40k-text-medium);
-        margin-bottom: $wh40k-space-sm;
-        display: flex;
-        align-items: center;
+        @include wh40k-edit-header;
         justify-content: space-between;
         gap: 6px;
-
         i {
-            font-size: 0.9em;
             color: var(--wh40k-insanity-primary);
         }
     }
 
     .wh40k-insanity-edit-field {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
+        @include wh40k-edit-field(6px);
     }
-
     .wh40k-edit-label {
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--wh40k-text-muted);
+        @include wh40k-edit-label;
     }
-
     .wh40k-edit-input {
-        width: 100%;
-        height: 40px;
-        padding: 0 $wh40k-space-sm;
-        border: 2px solid var(--wh40k-insanity-border);
-        border-radius: 6px;
-        background: var(--wh40k-input-bg);
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: var(--wh40k-insanity-primary);
-        text-align: center;
-        font-family: 'Modesto Condensed', serif;
-        transition: all 0.15s ease;
-
-        &:focus {
-            outline: none;
-            border-color: var(--wh40k-insanity-primary);
-            background: var(--wh40k-input-bg-focus);
-            box-shadow: 0 0 0 3px var(--wh40k-insanity-bg);
-        }
+        @include wh40k-edit-input(
+            $border-color: var(--wh40k-insanity-border),
+            $text-color: var(--wh40k-insanity-primary),
+            $focus-border: var(--wh40k-insanity-primary),
+            $focus-shadow: var(--wh40k-insanity-bg),
+            $font-size: 1.2rem
+        );
 
         &:hover {
             border-color: rgba(139, 0, 0, 0.5);
@@ -535,8 +465,8 @@
         font-weight: 700;
         color: var(--wh40k-text-medium);
         cursor: pointer;
-        transition: all 0.15s ease;
-        font-family: 'Modesto Condensed', serif;
+        transition: all $wh40k-transition-fast;
+        font-family: $wh40k-font-alt;
 
         &:hover {
             background: var(--wh40k-panel-bg-alt);
@@ -591,7 +521,7 @@
         background: var(--wh40k-insanity-bg);
         border: 1px solid var(--wh40k-insanity-border);
         border-radius: 6px;
-        transition: all 0.15s ease;
+        transition: all $wh40k-transition-fast;
 
         &:hover {
             background: rgba(139, 0, 0, 0.15);
@@ -635,7 +565,7 @@
         border: 1px solid var(--wh40k-wounds-border);
         border-radius: 4px;
         cursor: pointer;
-        transition: all 0.15s ease;
+        transition: all $wh40k-transition-fast;
 
         i {
             font-size: 0.7rem;
@@ -675,33 +605,16 @@
     // ============================================
 
     .wh40k-insanity-info-box {
-        display: flex;
-        gap: $wh40k-space-sm;
+        @include wh40k-info-box(var(--wh40k-insanity-bg), var(--wh40k-insanity-border), var(--wh40k-insanity-secondary));
         padding: $wh40k-space-md;
-        background: var(--wh40k-insanity-bg);
-        border-left: 3px solid var(--wh40k-insanity-border);
-        border-radius: 4px;
 
         > i {
-            color: var(--wh40k-insanity-primary);
             font-size: 1.3rem;
-            margin-top: 2px;
-            flex-shrink: 0;
         }
     }
 
     .wh40k-info-content {
-        display: flex;
-        flex-direction: column;
-        gap: $wh40k-space-xs;
-
-        strong {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--wh40k-text-medium);
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
+        @include wh40k-info-content;
 
         .wh40k-degree-list {
             font-size: 0.75rem;
@@ -732,8 +645,6 @@
         }
 
         p {
-            font-size: 0.75rem;
-            color: var(--wh40k-text-muted);
             line-height: 1.5;
             margin: 6px 0 0 0;
         }
@@ -766,7 +677,7 @@
         border: 1px solid rgba(74, 143, 92, 0.4);
         border-radius: 4px;
         cursor: pointer;
-        transition: all 0.15s ease;
+        transition: all $wh40k-transition-fast;
 
         i {
             font-size: 0.7rem;

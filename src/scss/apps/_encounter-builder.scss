@@ -110,7 +110,7 @@
             text-align: center;
             color: var(--color-text-light-6);
             margin-bottom: 0.5rem;
-            transition: all 0.2s;
+            transition: all $wh40k-transition-base;
 
             i {
                 font-size: 1.5rem;
