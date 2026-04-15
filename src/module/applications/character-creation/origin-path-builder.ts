@@ -389,6 +389,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             guidedMode: this.guidedMode,
             isForward: this.direction === DIRECTION.FORWARD,
             isBackward: this.direction === DIRECTION.BACKWARD,
+            hasDirectionToggle: this.gameSystem === 'rt',
             showLineage: this.showLineage,
             showCharacteristics: this.showCharacteristics,
 
