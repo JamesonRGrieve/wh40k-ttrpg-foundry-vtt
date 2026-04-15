@@ -550,9 +550,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         const trainedStandard = standard.filter(([_, data]) => !data.advanced || data.trainingLevel > 0);
         const advancedUntrained = standard.filter(([_, data]) => data.advanced && data.trainingLevel === 0);
 
-        // Split standard into columns
-        const splitIndex = Math.ceil(standard.length / 2);
-        const standardColumns = [standard.slice(0, splitIndex), standard.slice(splitIndex)];
+        // Split trained skills into two columns (excludes untrained advanced)
+        const splitIndex = Math.ceil(trainedStandard.length / 2);
+        const standardColumns = [trainedStandard.slice(0, splitIndex), trainedStandard.slice(splitIndex)];
 
         // Check if any specialist skill has entries (for empty state display)
         const hasSpecialistEntries = specialist.some(([_, skillData]) => skillData.entries?.length > 0);

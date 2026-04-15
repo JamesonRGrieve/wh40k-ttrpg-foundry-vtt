@@ -269,6 +269,60 @@
     }
 }
 
+// Untrained advanced skills section (compact 4-column grid)
+.wh40k-advanced-untrained-section {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border-secondary);
+}
+
+.wh40k-section-divider {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--wh40k-text-muted, #888);
+    margin: 0 0 4px 0;
+    padding: 0 4px;
+    font-weight: 600;
+}
+
+.wh40k-advanced-untrained-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+}
+
+.wh40k-skill-row--compact {
+    font-size: 0.8em;
+    opacity: 0.55;
+    border-radius: 3px;
+
+    &:hover {
+        opacity: 0.75;
+    }
+
+    .wh40k-skill-name {
+        font-style: italic;
+        color: firebrick;
+        font-size: 0.9em;
+
+        &:hover {
+            color: lighten(firebrick, 10%);
+        }
+    }
+
+    .wh40k-skill-char {
+        color: firebrick;
+        opacity: 0.7;
+    }
+
+    .wh40k-skill-total {
+        font-size: 0.85em;
+        min-width: 24px;
+        height: 20px;
+    }
+}
+
 // Trained advanced skill: blue standard text
 .wh40k-skill-row--advanced:not([data-training-level='0']) {
     .wh40k-skill-name {
