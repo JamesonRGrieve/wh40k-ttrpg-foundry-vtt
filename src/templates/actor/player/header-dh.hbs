@@ -5,6 +5,12 @@
         <div class="wh40k-header-left tw-flex tw-flex-col tw-gap-2">
             <div class="wh40k-header-topline tw-grid tw-grid-cols-[auto_1fr] tw-gap-[10px] tw-items-center">
                 <div class="wh40k-header__logo wh40k-portrait-container">
+                    <button type="button"
+                            class="wh40k-origin-builder-btn {{#unless originPathComplete}}pulse{{/unless}}"
+                            data-action="openOriginPathBuilder"
+                            data-tooltip="{{localize 'WH40K.Utility.SetupOriginPath'}}">
+                        <i class="fa-solid fa-dice-d20"></i>
+                    </button>
                     <img class="wh40k-header__logo-image wh40k-portrait" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
                 </div>
                 <div class="wh40k-header-info">
