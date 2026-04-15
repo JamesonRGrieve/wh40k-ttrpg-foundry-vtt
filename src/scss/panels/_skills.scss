@@ -15,7 +15,7 @@
 // ============================================
 
 .wh40k-skills-panel {
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
 }
 
 // Two-column skill layout
@@ -84,7 +84,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
     border-radius: 3px;
 
     &:hover {
@@ -158,7 +158,7 @@
     align-items: center;
     justify-content: center;
     line-height: 1;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
     user-select: none;
 
     &:hover {
@@ -194,7 +194,7 @@
     box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1), 0 2px 6px rgba(0, 0, 0, 0.15);
 
     span {
-        font-family: 'Modesto Condensed', serif;
+        font-family: $wh40k-font-alt;
         font-size: 1.05rem;
         font-weight: 700;
         color: var(--color-text-primary);
@@ -287,11 +287,7 @@
     text-align: center;
 }
 
-.wh40k-advanced-untrained-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-}
+// Untrained grid layout now in Tailwind (tw-grid tw-grid-cols-4 tw-gap-0.5)
 
 .wh40k-skill-row--compact {
     font-size: 0.8em;
@@ -348,7 +344,7 @@
     color: $wh40k-text-muted;
     cursor: pointer;
     font-size: 0.85rem;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         color: $wh40k-color-gold;
