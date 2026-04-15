@@ -5,6 +5,12 @@
             <i class="fas fa-fist-raised"></i>
             Combat Actions
         </span>
+        <button type="button" class="wh40k-initiative-header-btn tw-ml-auto tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded tw-cursor-pointer tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] tw-bg-[rgba(0,0,0,0.2)] hover:tw-border-gold hover:tw-bg-[rgba(212,175,55,0.15)] tw-transition-all"
+                data-action="initiative"
+                title="Roll Initiative (Current: {{system.initiative.total}})">
+            <i class="fas fa-dice-d20 tw-text-[var(--wh40k-gold)]"></i>
+            <span class="tw-text-xs tw-font-semibold">{{system.initiative.total}}</span>
+        </button>
     </div>
 
     <div class="wh40k-panel-body">
@@ -38,14 +44,15 @@
             </div>
         {{/if}}
 
-        {{! ATTACK ACTIONS }}
+        {{! GENERAL ATTACK ACTIONS (Melee or Ranged) }}
+        {{#if generalAttacks.length}}
         <div class="wh40k-combat-actions-group">
             <div class="wh40k-combat-actions-group-header">
                 <i class="fas fa-crosshairs wh40k-group-icon"></i>
                 <span class="wh40k-combat-actions-group-label">Attack Actions</span>
             </div>
             <div class="wh40k-combat-actions-grid">
-                {{#each dh.combatActions.attacks as |action|}}
+                {{#each generalAttacks as |action|}}
                     <button
                         type="button"
                         class="wh40k-combat-action-btn wh40k-combat-action-attack"
@@ -62,6 +69,61 @@
                 {{/each}}
             </div>
         </div>
+        {{/if}}
+
+        {{! MELEE ATTACK ACTIONS }}
+        {{#if meleeAttacks.length}}
+        <div class="wh40k-combat-actions-group">
+            <div class="wh40k-combat-actions-group-header">
+                <i class="fas fa-fist-raised wh40k-group-icon"></i>
+                <span class="wh40k-combat-actions-group-label">Melee Attacks</span>
+            </div>
+            <div class="wh40k-combat-actions-grid">
+                {{#each meleeAttacks as |action|}}
+                    <button
+                        type="button"
+                        class="wh40k-combat-action-btn wh40k-combat-action-attack"
+                        data-action="vocalizeCombatAction"
+                        data-action-key="{{action.key}}"
+                        data-tooltip
+                        aria-label="{{localize action.label}}: {{localize action.description}}"
+                        title="{{localize action.label}}"
+                    >
+                        <i class="fas {{action.icon}}"></i>
+                        <span class="wh40k-combat-action-name">{{localize action.label}}</span>
+                        <span class="wh40k-combat-action-type">{{action.type}}</span>
+                    </button>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
+
+        {{! RANGED ATTACK ACTIONS }}
+        {{#if rangedAttacks.length}}
+        <div class="wh40k-combat-actions-group">
+            <div class="wh40k-combat-actions-group-header">
+                <i class="fas fa-bullseye wh40k-group-icon"></i>
+                <span class="wh40k-combat-actions-group-label">Ranged Attacks</span>
+            </div>
+            <div class="wh40k-combat-actions-grid">
+                {{#each rangedAttacks as |action|}}
+                    <button
+                        type="button"
+                        class="wh40k-combat-action-btn wh40k-combat-action-attack"
+                        data-action="vocalizeCombatAction"
+                        data-action-key="{{action.key}}"
+                        data-tooltip
+                        aria-label="{{localize action.label}}: {{localize action.description}}"
+                        title="{{localize action.label}}"
+                    >
+                        <i class="fas {{action.icon}}"></i>
+                        <span class="wh40k-combat-action-name">{{localize action.label}}</span>
+                        <span class="wh40k-combat-action-type">{{action.type}}</span>
+                    </button>
+                {{/each}}
+            </div>
+        </div>
+        {{/if}}
 
         {{! MOVEMENT ACTIONS }}
         <div class="wh40k-combat-actions-group">
@@ -131,19 +193,6 @@
                 <span class="wh40k-combat-actions-group-label">Utility Actions</span>
             </div>
             <div class="wh40k-combat-actions-grid">
-                {{! Initiative }}
-                <button
-                    type="button"
-                    class="wh40k-combat-action-btn wh40k-combat-action-utility"
-                    data-action="initiative"
-                    title="Roll Initiative (Current: {{system.initiative.total}})"
-                >
-                    <i class="fas fa-dice-d20"></i>
-                    <span class="wh40k-action-name">Initiative</span>
-                    <span class="wh40k-action-value">
-                        {{system.initiative.total}}
-                    </span>
-                </button>
                 {{! Assign Damage }}
                 <button type="button" class="wh40k-combat-action-btn wh40k-combat-action-utility" data-action="assign-damage" title="Assign Damage">
                     <i class="fas fa-heart-broken"></i>

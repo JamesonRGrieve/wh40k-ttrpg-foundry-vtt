@@ -1,5 +1,5 @@
 {{!-- Backpack Split Panel - Personal & Ship Storage --}}
-{{!-- Modern split-panel design with compact table rows --}}
+{{!-- Checkbox selection with swap button --}}
 
 <div class="wh40k-panel wh40k-panel-backpack-split">
     {{!-- Panel Header with Encumbrance Bar --}}
@@ -27,12 +27,13 @@
                 <span>Backpack</span>
                 <span class="wh40k-item-badge">{{allCarriedItems.length}}</span>
             </div>
-            <div class="wh40k-column-body wh40k-dropzone-area" data-drop-zone="personal">
+            <div class="wh40k-column-body">
                 {{#if allCarriedItems.length}}
                 <div class="wh40k-inventory-table">
                     <table class="wh40k-item-table">
                         <thead>
                             <tr>
+                                <th class="wh40k-col-check"></th>
                                 <th class="wh40k-col-icon"></th>
                                 <th class="wh40k-col-name">Item</th>
                                 <th class="wh40k-col-type">Type</th>
@@ -43,9 +44,11 @@
                         <tbody>
                             {{#each allCarriedItems as |item|}}
                             <tr class="wh40k-backpack-item-row"
-                                data-item-id="{{item.id}}" 
-                                data-item-type="{{item.type}}"
-                                draggable="true">
+                                data-item-id="{{item.id}}"
+                                data-item-type="{{item.type}}">
+                                <td class="wh40k-col-check">
+                                    <input type="checkbox" class="wh40k-transfer-check" data-item-id="{{item.id}}" />
+                                </td>
                                 <td class="wh40k-col-icon">
                                     <img src="{{item.img}}" alt="{{item.name}}" class="wh40k-item-icon" />
                                 </td>
@@ -75,21 +78,21 @@
                     </table>
                 </div>
                 {{else}}
-                <div class="wh40k-empty-state item-drop">
+                <div class="wh40k-empty-state">
                     <i class="fas fa-box-open wh40k-empty-icon"></i>
                     <p class="wh40k-empty-text">No items in backpack</p>
-                    <p class="wh40k-empty-hint">Drag items here from ship storage</p>
+                    <p class="wh40k-empty-hint">Select items from ship storage and click the swap button</p>
                 </div>
                 {{/if}}
             </div>
         </div>
 
-        {{!-- DIVIDER --}}
+        {{!-- DIVIDER with Swap Button --}}
         <div class="wh40k-split-divider">
             <div class="wh40k-divider-line"></div>
-            <div class="wh40k-divider-icon">
+            <button type="button" class="wh40k-divider-icon" data-action="swapCheckedItems" title="Move selected items">
                 <i class="fas fa-exchange-alt"></i>
-            </div>
+            </button>
             <div class="wh40k-divider-line"></div>
         </div>
 
@@ -100,12 +103,13 @@
                 <span>Ship Storage</span>
                 <span class="wh40k-item-badge">{{allShipItems.length}}</span>
             </div>
-            <div class="wh40k-column-body wh40k-dropzone-area" data-drop-zone="ship">
+            <div class="wh40k-column-body">
                 {{#if allShipItems.length}}
                 <div class="wh40k-inventory-table">
                     <table class="wh40k-item-table">
                         <thead>
                             <tr>
+                                <th class="wh40k-col-check"></th>
                                 <th class="wh40k-col-icon"></th>
                                 <th class="wh40k-col-name">Item</th>
                                 <th class="wh40k-col-type">Type</th>
@@ -116,9 +120,11 @@
                         <tbody>
                             {{#each allShipItems as |item|}}
                             <tr class="wh40k-backpack-item-row wh40k-row-ship"
-                                data-item-id="{{item.id}}" 
-                                data-item-type="{{item.type}}"
-                                draggable="true">
+                                data-item-id="{{item.id}}"
+                                data-item-type="{{item.type}}">
+                                <td class="wh40k-col-check">
+                                    <input type="checkbox" class="wh40k-transfer-check" data-item-id="{{item.id}}" />
+                                </td>
                                 <td class="wh40k-col-icon">
                                     <img src="{{item.img}}" alt="{{item.name}}" class="wh40k-item-icon" />
                                 </td>
@@ -151,7 +157,7 @@
                 <div class="wh40k-empty-state">
                     <i class="fas fa-rocket wh40k-empty-icon"></i>
                     <p class="wh40k-empty-text">No items in ship storage</p>
-                    <p class="wh40k-empty-hint">Drag items here to free carry weight</p>
+                    <p class="wh40k-empty-hint">Select items from backpack and click the swap button</p>
                 </div>
                 {{/if}}
             </div>
