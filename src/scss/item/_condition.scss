@@ -134,7 +134,7 @@
             font-family: inherit;
             font-size: 13px;
             background: white;
-            transition: border-color 0.2s ease;
+            transition: border-color $wh40k-transition-base;
 
             &:focus {
                 outline: none;
@@ -152,7 +152,7 @@
             background: white;
             resize: vertical;
             min-height: 60px;
-            transition: border-color 0.2s ease;
+            transition: border-color $wh40k-transition-base;
 
             &:focus {
                 outline: none;

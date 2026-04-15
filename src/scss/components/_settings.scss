@@ -40,7 +40,7 @@
             grid-column: 1 / -1;
             text-align: center;
             text-transform: uppercase;
-            font-family: $font-family-alt;
+            font-family: $wh40k-font-body;
             border-bottom: 1px solid $border-color;
 
             :first-child {
@@ -267,7 +267,7 @@
                     background: url('../images/success.png') no-repeat center/100% 100%;
                     color: #fff;
                     font-size: 9pt;
-                    font-family: $font-family-alt;
+                    font-family: $wh40k-font-body;
                     font-weight: bold;
                     text-align: center;
                     text-transform: uppercase;
@@ -279,7 +279,7 @@
                 background: url('../images/fail.png') no-repeat center/100% 100%;
                 color: #fff;
                 font-size: 9pt;
-                font-family: $font-family-alt;
+                font-family: $wh40k-font-body;
                 font-weight: bold;
                 text-align: center;
                 text-transform: uppercase;

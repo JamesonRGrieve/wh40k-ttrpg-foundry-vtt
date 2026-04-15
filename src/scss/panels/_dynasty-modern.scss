@@ -378,7 +378,7 @@
         height: 100%;
         background: linear-gradient(90deg, $wh40k-color-gold-dark 0%, $wh40k-color-gold 100%);
         border-radius: 4px;
-        transition: width 0.3s ease;
+        transition: width $wh40k-transition-medium;
         box-shadow: 0 0 8px rgba($wh40k-color-gold, 0.4);
     }
 }
@@ -540,7 +540,7 @@
         font-family: $wh40k-font-alt;
         text-align: left;
         cursor: pointer;
-        transition: color 0.2s ease;
+        transition: color $wh40k-transition-base;
 
         i {
             color: #9573bd;

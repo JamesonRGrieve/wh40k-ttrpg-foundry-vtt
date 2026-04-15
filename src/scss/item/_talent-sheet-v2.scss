@@ -98,7 +98,7 @@
     justify-content: center;
     background: rgba(0, 0, 0, 0.7);
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity $wh40k-transition-base;
 
     i {
         color: $wh40k-color-gold;
@@ -129,7 +129,7 @@
         border: none;
         border-bottom: 2px solid transparent;
         padding: 4px 0;
-        transition: border-color 0.2s ease;
+        transition: border-color $wh40k-transition-base;
 
         &:focus {
             outline: none;
@@ -1282,12 +1282,12 @@
         i {
             font-size: 0.9rem;
             color: var(--color-text-tertiary);
-            transition: color 0.2s ease;
+            transition: color $wh40k-transition-base;
         }
 
         span {
             color: var(--color-text-secondary);
-            transition: color 0.2s ease;
+            transition: color $wh40k-transition-base;
         }
 
         &:hover {
@@ -1338,7 +1338,7 @@
         }
 
         span {
-            transition: color 0.2s ease;
+            transition: color $wh40k-transition-base;
         }
 
         &:hover span {
@@ -1628,7 +1628,7 @@
 
         i {
             font-size: 0.65rem;
-            transition: transform 0.2s ease;
+            transition: transform $wh40k-transition-base;
         }
     }
 }

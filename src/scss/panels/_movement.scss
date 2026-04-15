@@ -347,7 +347,7 @@
     padding: $wh40k-space-xs;
     background: rgba(255, 255, 255, 0.5);
     border-radius: 4px;
-    transition: background 0.15s ease;
+    transition: background $wh40k-transition-fast;
     cursor: pointer;
 
     &:hover {
@@ -508,7 +508,7 @@
     background: linear-gradient(90deg, rgba($wh40k-accent-gold, 0.08) 0%, rgba($wh40k-accent-gold, 0.02) 100%);
     border-right: 2px solid rgba($wh40k-accent-gold, 0.2);
     z-index: 1;
-    transition: width 0.3s ease;
+    transition: width $wh40k-transition-medium;
 }
 
 // Specific movement type styling

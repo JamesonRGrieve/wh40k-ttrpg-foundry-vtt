@@ -542,7 +542,7 @@
         display: flex;
         align-items: center;
         gap: 6px;
-        transition: color 0.15s ease;
+        transition: color $wh40k-transition-fast;
 
         i {
             font-size: 0.9em;

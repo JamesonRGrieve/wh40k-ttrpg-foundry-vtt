@@ -128,7 +128,7 @@
     .wh40k-vital-bar-fill {
         height: 100%;
         border-radius: 3px;
-        transition: width 0.3s ease;
+        transition: width $wh40k-transition-medium;
     }
 }
 
@@ -257,7 +257,7 @@
         height: 100%;
         background: linear-gradient(90deg, $wh40k-color-gold-dark 0%, $wh40k-color-gold 100%);
         border-radius: 3px;
-        transition: width 0.3s ease;
+        transition: width $wh40k-transition-medium;
         box-shadow: 0 0 6px rgba($wh40k-color-gold, 0.3);
     }
 }

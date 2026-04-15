@@ -121,7 +121,7 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity $wh40k-transition-medium;
         }
     }
 
@@ -315,7 +315,7 @@
             font-size: 0.6rem;
             color: white;
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: opacity $wh40k-transition-base;
             cursor: pointer;
 
             &:hover {

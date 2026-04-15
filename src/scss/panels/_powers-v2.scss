@@ -649,7 +649,7 @@
 
     &.wh40k-btn-expand {
         i {
-            transition: transform 0.2s ease;
+            transition: transform $wh40k-transition-base;
         }
 
         &.expanded i {

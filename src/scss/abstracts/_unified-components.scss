@@ -624,7 +624,7 @@
 .wh40k-panel-chevron {
     font-size: 0.75rem;
     color: var(--wh40k-text-muted);
-    transition: transform 0.2s ease;
+    transition: transform $wh40k-transition-base;
     flex-shrink: 0;
     margin-left: auto;
 }
@@ -855,7 +855,7 @@
 .wh40k-dropzone-icon {
     font-size: 2rem;
     color: var(--wh40k-text-muted);
-    transition: color 0.2s ease;
+    transition: color $wh40k-transition-base;
 
     .wh40k-dropzone:hover & {
         color: $wh40k-accent-gold;

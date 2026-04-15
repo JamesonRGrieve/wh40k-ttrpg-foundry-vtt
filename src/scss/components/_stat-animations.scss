@@ -327,7 +327,7 @@ input[type='text'].stat-value,
 
 /* Smooth threshold marker transitions */
 .wh40k-threshold-marker {
-    transition: opacity 0.3s ease;
+    transition: opacity $wh40k-transition-medium;
 
     .wh40k-wounds-bar[data-percent='0'] & {
         opacity: 0.3;

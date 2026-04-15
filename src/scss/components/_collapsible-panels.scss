@@ -67,7 +67,7 @@
 .wh40k-panel-toggle-icon {
     font-size: 1.2em;
     color: var(--wh40k-bone, #e8dcc8);
-    transition: transform 0.3s ease;
+    transition: transform $wh40k-transition-medium;
 
     .collapsed & {
         transform: rotate(-90deg);

@@ -32,7 +32,7 @@ $adv-transition-normal: 250ms ease;
     flex-direction: column;
     height: 100%;
     gap: 0;
-    font-family: 'Roboto', sans-serif;
+    font-family: $wh40k-font-ui;
 }
 
 // ============================================
@@ -145,7 +145,7 @@ $adv-transition-normal: 250ms ease;
 }
 
 .wh40k-adv__blocked-title {
-    font-family: 'Cinzel', serif;
+    font-family: $wh40k-font-display;
     font-size: 1.3rem;
     font-weight: 600;
     color: $wh40k-color-gold;
@@ -309,7 +309,7 @@ $adv-transition-normal: 250ms ease;
     font-size: 1.4rem;
     font-weight: 700;
     color: $wh40k-color-gold;
-    font-family: 'Cinzel', serif;
+    font-family: $wh40k-font-display;
 }
 
 .wh40k-adv__char-value {
