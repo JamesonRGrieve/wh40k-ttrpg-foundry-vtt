@@ -71,6 +71,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             charToggleAdvanced: OriginPathBuilder.#charToggleAdvanced,
             rollDivination: OriginPathBuilder.#rollDivination,
             manualDivination: OriginPathBuilder.#manualDivination,
+            rollThrones: OriginPathBuilder.#rollThrones,
+            manualThrones: OriginPathBuilder.#manualThrones,
+            rollInfluence: OriginPathBuilder.#rollInfluence,
+            manualInfluence: OriginPathBuilder.#manualInfluence,
             commit: OriginPathBuilder.#commit,
             openItem: OriginPathBuilder.#openItem,
         },
@@ -116,6 +120,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._charAdvancedMode = false;
         this._charDragData = null;
         this._divination = this.actor.system?.originPath?.divination || '';
+        this._thronesRolled = this.actor.system?.throneGelt || 0;
+        this._influenceRolled = this.actor.system?.influence || 0;
         this._initCharacteristicState();
 
         // Initialize from actor's existing origin paths
@@ -522,7 +528,42 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             anyRolls,
             canApply: allAssigned && anyRolls,
             divination: this._divination,
+            // Starting resources
+            thronesFormula: this._getThronesFormula(),
+            thronesRolled: this._thronesRolled || 0,
+            influenceMod: this._getInfluenceMod(),
+            influenceRolled: this._influenceRolled || 0,
         };
+    }
+
+    /**
+     * Compute combined thrones formula from selected homeworld + background.
+     * @private
+     */
+    _getThronesFormula(): string {
+        const parts: string[] = [];
+        for (const [_step, selection] of this.selections) {
+            const sys = this._getSelectionSystem(selection);
+            const formula = sys?.homebrew?.throneGelt || sys?.homebrew?.thrones;
+            if (formula) parts.push(formula);
+        }
+        return parts.join(' + ') || '';
+    }
+
+    /**
+     * Get influence modifier from selected origins.
+     * @private
+     */
+    _getInfluenceMod(): number {
+        let mod = 0;
+        for (const [_step, selection] of this.selections) {
+            const sys = this._getSelectionSystem(selection);
+            const others = sys?.modifiers?.other || [];
+            for (const m of others) {
+                if (m.name === 'Influence') mod += (m.value || 0);
+            }
+        }
+        return mod;
     }
 
     /**
@@ -2043,6 +2084,60 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Roll starting throne gelt from combined homeworld + background formulas.
+     */
+    static async #rollThrones(event: Event, target: HTMLElement): Promise<void> {
+        const formula = (this as any)._getThronesFormula();
+        if (!formula) { (ui.notifications as any).warn('No thrones formula — select a homeworld and background first.'); return; }
+        const roll = new Roll(formula);
+        await roll.evaluate();
+        (this as any)._thronesRolled = roll.total;
+        (this as any)._saveScrollPosition?.();
+        (this as any).render();
+    }
+
+    static async #manualThrones(event: Event, target: HTMLElement): Promise<void> {
+        const val = await Dialog.prompt({
+            title: 'Enter Starting Throne Gelt',
+            content: '<form><div class="form-group"><label>Thrones:</label><input type="number" name="value" min="0" autofocus /></div></form>',
+            callback: (html) => parseInt((html as any).find('input[name="value"]').val()),
+            rejectClose: false,
+        });
+        if (val && !isNaN(val)) {
+            (this as any)._thronesRolled = val;
+            (this as any)._saveScrollPosition?.();
+            (this as any).render();
+        }
+    }
+
+    /**
+     * Roll starting influence (1d5 + Fellowship Bonus + homeworld modifier).
+     */
+    static async #rollInfluence(event: Event, target: HTMLElement): Promise<void> {
+        const felBonus = (this as any).actor.system.characteristics?.fellowship?.bonus || 0;
+        const mod = (this as any)._getInfluenceMod();
+        const roll = new Roll('1d5');
+        await roll.evaluate();
+        (this as any)._influenceRolled = Math.max(0, roll.total + felBonus + mod);
+        (this as any)._saveScrollPosition?.();
+        (this as any).render();
+    }
+
+    static async #manualInfluence(event: Event, target: HTMLElement): Promise<void> {
+        const val = await Dialog.prompt({
+            title: 'Enter Starting Influence',
+            content: '<form><div class="form-group"><label>Influence:</label><input type="number" name="value" min="0" autofocus /></div></form>',
+            callback: (html) => parseInt((html as any).find('input[name="value"]').val()),
+            rejectClose: false,
+        });
+        if (val != null && !isNaN(val)) {
+            (this as any)._influenceRolled = val;
+            (this as any)._saveScrollPosition?.();
+            (this as any).render();
+        }
+    }
+
+    /**
      * Open an item sheet (for talents, skills, etc.)
      */
     static async #openItem(event: Event, target: HTMLElement): Promise<void> {
@@ -2164,9 +2259,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 await (this as any).actor.update(charUpdate);
             }
 
-            // Apply divination if set
-            if ((this as any)._divination) {
-                await (this as any).actor.update({ 'system.originPath.divination': (this as any)._divination });
+            // Apply divination, thrones, and influence
+            const resourceUpdate: Record<string, any> = {};
+            if ((this as any)._divination) resourceUpdate['system.originPath.divination'] = (this as any)._divination;
+            if ((this as any)._thronesRolled) resourceUpdate['system.throneGelt'] = (this as any)._thronesRolled;
+            if ((this as any)._influenceRolled) resourceUpdate['system.influence'] = (this as any)._influenceRolled;
+            if (Object.keys(resourceUpdate).length > 0) {
+                await (this as any).actor.update(resourceUpdate);
             }
 
             // Success

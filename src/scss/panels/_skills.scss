@@ -19,11 +19,13 @@
     font-family: 'Modesto Condensed', serif;
 }
 
-// Layout (grid, gap, position) now in template utilities
+// Auto-flow grid: 2 columns default, 3+ on wide screens, 1 on narrow
+.wh40k-skills-columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 4px;
+}
 
-// Layout (flex-col, gap) now in template utilities
-
-// Layout (grid, gap, items, padding) now in template utilities
 .wh40k-skill-row {
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
@@ -239,28 +241,38 @@
 // Advanced Skills Visual Distinction
 // ============================================
 
-.wh40k-skill-row--advanced {
-    background: linear-gradient(90deg, rgba($wh40k-accent-skills, 0.08) 0%, rgba($wh40k-accent-skills, 0.03) 100%);
-    border-left: 2px solid rgba($wh40k-accent-skills, 0.5);
+// Untrained advanced skill: greyed-out italic firebrick
+.wh40k-skill-row--advanced[data-training-level='0'] {
+    opacity: 0.55;
 
     .wh40k-skill-name {
         font-style: italic;
+        color: firebrick;
 
-        &::before {
-            content: 'ADV';
-            display: inline-block;
-            font-size: 0.6rem;
-            font-style: normal;
-            font-weight: 700;
-            padding: 1px 4px;
-            margin-right: 4px;
-            background: rgba($wh40k-accent-skills, 0.15);
-            border: 1px solid rgba($wh40k-accent-skills, 0.4);
-            border-radius: 3px;
-            color: $wh40k-accent-skills;
-            vertical-align: middle;
-            line-height: 1;
+        &:hover {
+            color: lighten(firebrick, 10%);
         }
+    }
+
+    .wh40k-skill-char {
+        color: firebrick;
+        opacity: 0.7;
+    }
+}
+
+// Trained advanced skill: blue standard text
+.wh40k-skill-row--advanced:not([data-training-level='0']) {
+    .wh40k-skill-name {
+        color: #3a6fbf;
+
+        &:hover {
+            color: lighten(#3a6fbf, 12%);
+        }
+    }
+
+    .wh40k-skill-char {
+        color: #3a6fbf;
+        opacity: 0.7;
     }
 }
 

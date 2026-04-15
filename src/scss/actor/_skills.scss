@@ -220,6 +220,46 @@
     max-width: 180px;
 }
 
+.csd-resource-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.csd-resource-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 12px;
+    background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.2));
+    border-radius: var(--wh40k-radius-md, 6px);
+    border: 1px solid var(--wh40k-border-color, #4a3728);
+}
+
+.csd-resource-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--wh40k-text-light);
+}
+
+.csd-resource-formula {
+    font-size: 0.8rem;
+    color: var(--wh40k-text-muted);
+    font-family: var(--wh40k-font-mono, monospace);
+}
+
+.csd-resource-value-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.csd-resource-value {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--wh40k-gold, #d4af37);
+}
+
 .csd-divination {
     .csd-divination-result {
         display: flex;

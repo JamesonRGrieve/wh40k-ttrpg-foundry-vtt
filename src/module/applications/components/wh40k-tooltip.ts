@@ -70,12 +70,8 @@ export class TooltipsWH40K {
      */
     async _loadSkillDescriptions(): Promise<void> {
         try {
-            const skillPackNames = [
-                'wh40k-rpg.dh2-core-items-skills',
-                'wh40k-rpg.rt-core-items-skills',
-                'wh40k-rpg.dw-core-items-skills',
-            ];
-            const pack = skillPackNames.map(n => game.packs.get(n)).find(p => p);
+            const skillPackNames = ['wh40k-rpg.dh2-core-items-skills', 'wh40k-rpg.rt-core-items-skills', 'wh40k-rpg.dw-core-items-skills'];
+            const pack = skillPackNames.map((n) => game.packs.get(n)).find((p) => p);
             if (!pack) {
                 console.warn('WH40K Tooltips | Could not find skills compendium');
                 return;
@@ -172,8 +168,8 @@ export class TooltipsWH40K {
         }
 
         // Check for WH40K rich tooltip data
-        const tooltipType = element.dataset.rtTooltip;
-        const tooltipDataAttr = element.dataset.rtTooltipData;
+        const tooltipType = element.dataset.wh40kTooltip;
+        const tooltipDataAttr = element.dataset.wh40kTooltipData;
 
         // console.log('WH40K Tooltips | Tooltip activated', { tooltipType, hasData: !!tooltipDataAttr, element });
 
@@ -338,21 +334,8 @@ export class TooltipsWH40K {
      * @protected
      */
     async _buildSkillTooltip(data: any): Promise<string> {
-        let {
-            name,
-            label,
-            characteristic,
-            charValue = 0,
-            baseValue,
-            trained = false,
-            plus10 = false,
-            plus20 = false,
-            current = 0,
-            basic = false,
-            trainingBonus: dataTB,
-            bonus: dataBonus,
-            actorUuid,
-        } = data;
+        const { name, label, baseValue, basic = false, trainingBonus: dataTB, actorUuid } = data;
+        let { characteristic, charValue = 0, trained = false, plus10 = false, plus20 = false, current = 0, bonus: dataBonus } = data;
 
         // If actorUuid is provided, fetch live data from actor
         if (actorUuid) {

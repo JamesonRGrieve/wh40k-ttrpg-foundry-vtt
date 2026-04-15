@@ -28,7 +28,7 @@
   "private": true,
   "lint-staged": {
     "src/module/**/*.ts": [
-      "eslint --fix",
+      "eslint --fix --quiet",
       "prettier --write"
     ],
     "src/scss/**/*.scss": [

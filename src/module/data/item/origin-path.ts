@@ -204,6 +204,11 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 { required: true, initial: [] },
             ),
 
+            // Homebrew extensions (campaign-specific fields not in RAW)
+            homebrew: new fields.SchemaField({
+                thrones: new fields.StringField({ required: false, blank: true, initial: '' }),
+            }),
+
             // Roll results storage for interactive rolling
             rollResults: new fields.SchemaField({
                 wounds: new fields.SchemaField({

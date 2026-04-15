@@ -110,6 +110,31 @@
                     </div>
                 </div>
 
+                {{!-- Critical Injuries (immediately under wounds) --}}
+                <div class="wh40k-panel wh40k-panel-injuries">
+                    <div class="wh40k-panel-header">
+                        <span class="wh40k-panel-title"><i class="fas fa-band-aid"></i> Critical Injuries</span>
+                    </div>
+                    <div class="wh40k-panel-body">
+                        {{#if criticalInjuries.length}}
+                        <div class="wh40k-injuries-list tw-flex tw-flex-col tw-gap-1">
+                            {{#each criticalInjuries as |injury|}}
+                            <div class="wh40k-injury-row" data-item-id="{{injury.id}}">
+                                <span class="wh40k-injury-name item-edit" data-item-id="{{injury.id}}">{{injury.name}}</span>
+                                <button type="button" class="wh40k-injury-delete item-delete" data-item-id="{{injury.id}}" title="Remove">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            {{/each}}
+                        </div>
+                        {{/if}}
+                        <div class="wh40k-dropzone" data-action="itemCreate" data-type="criticalInjury">
+                            <i class="fas fa-band-aid wh40k-dropzone-icon"></i>
+                            <span class="wh40k-dropzone-text">Drop injuries here or click to create</span>
+                        </div>
+                    </div>
+                </div>
+
                 {{!-- Fatigue Status --}}
                 <div class="wh40k-vital-stat wh40k-vital-fatigue {{#if (gt system.fatigue.value system.fatigue.max)}}wh40k-vital-critical{{else if (gt system.fatigue.value 0)}}wh40k-vital-warning{{/if}}">
                     <div class="wh40k-vital-stat-header">
@@ -358,30 +383,6 @@
             {{!-- Combat Actions Panel --}}
             {{> systems/wh40k-rpg/templates/actor/panel/combat-actions-panel.hbs}}
 
-            {{!-- Critical Injuries Panel --}}
-            <div class="wh40k-panel wh40k-panel-injuries">
-                <div class="wh40k-panel-header">
-                    <span class="wh40k-panel-title"><i class="fas fa-band-aid"></i> Critical Injuries</span>
-                </div>
-                <div class="wh40k-panel-body">
-                    {{#if criticalInjuries.length}}
-                    <div class="wh40k-injuries-list tw-flex tw-flex-col tw-gap-1">
-                        {{#each criticalInjuries as |injury|}}
-                        <div class="wh40k-injury-row" data-item-id="{{injury.id}}">
-                            <span class="wh40k-injury-name item-edit" data-item-id="{{injury.id}}">{{injury.name}}</span>
-                            <button type="button" class="wh40k-injury-delete item-delete" data-item-id="{{injury.id}}" title="Remove">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        {{/each}}
-                    </div>
-                    {{/if}}
-                    <div class="wh40k-dropzone" data-action="itemCreate" data-type="criticalInjury">
-                        <i class="fas fa-band-aid wh40k-dropzone-icon"></i>
-                        <span class="wh40k-dropzone-text">Drop injuries here or click to create</span>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
