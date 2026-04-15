@@ -20,11 +20,13 @@
                                 title="Roll {{entry.[1].label}} Test">
                             <i class="fas fa-dice-d20"></i>
                         </button>
+                        {{#if entry.[1].showFavorite}}
                         <button type="button" class="wh40k-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}"
                                 data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
                                 title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
                             <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
                         </button>
+                        {{/if}}
                     </div>
                 </div>
                 <div class="wh40k-spec-training wh40k-training-display tw-flex tw-gap-0.5 tw-p-0.5">
@@ -57,11 +59,13 @@
                                 title="Roll {{entry.[1].label}} Test">
                             <i class="fas fa-dice-d20"></i>
                         </button>
+                        {{#if entry.[1].showFavorite}}
                         <button type="button" class="wh40k-skill-favorite {{#if entry.[1].isFavorite}}active{{/if}}"
                                 data-action="toggleFavoriteSkill" data-skill="{{entry.[0]}}"
                                 title="{{#if entry.[1].isFavorite}}Remove from favorites{{else}}Add to favorites{{/if}}">
                             <i class="{{#if entry.[1].isFavorite}}fas{{else}}far{{/if}} fa-star"></i>
                         </button>
+                        {{/if}}
                     </div>
                 </div>
                 <div class="wh40k-spec-training wh40k-training-display tw-flex tw-gap-0.5 tw-p-0.5">
