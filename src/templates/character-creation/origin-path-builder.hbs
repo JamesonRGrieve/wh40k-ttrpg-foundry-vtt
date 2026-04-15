@@ -223,6 +223,31 @@
                         {{/each}}
                     </div>
                 </section>
+
+                {{!-- Divination --}}
+                <section class="csd-section csd-divination">
+                    <h3 class="csd-section-header">
+                        <i class="fa-solid fa-eye"></i>
+                        Divination
+                    </h3>
+                    {{#if charGen.divination}}
+                    <div class="csd-divination-result">
+                        <p class="csd-divination-text">"{{charGen.divination}}"</p>
+                        <button type="button" class="csd-divination-reroll" data-action="rollDivination">
+                            <i class="fa-solid fa-rotate-right"></i> Reroll
+                        </button>
+                    </div>
+                    {{else}}
+                    <div class="csd-divination-actions">
+                        <button type="button" class="csd-btn csd-btn-primary" data-action="rollDivination">
+                            <i class="fa-solid fa-dice"></i> Roll on Table
+                        </button>
+                        <button type="button" class="csd-btn csd-btn-secondary" data-action="manualDivination">
+                            <i class="fa-solid fa-keyboard"></i> Enter Manually
+                        </button>
+                    </div>
+                    {{/if}}
+                </section>
             </div>
             {{else}}
             {{!-- Origin Cards --}}
