@@ -679,7 +679,7 @@ export class GrantsProcessor {
         // Try UUID first
         if (equipGrant.uuid) {
             try {
-                doc = await fromUuid(equipGrant.uuid) as any;
+                doc = (await fromUuid(equipGrant.uuid)) as any;
                 if (!doc) {
                     console.warn(`Could not find equipment with UUID: ${equipGrant.uuid}`);
                 }
@@ -847,7 +847,7 @@ export class GrantsProcessor {
     /**
      * Find an item by name across all Item compendium packs.
      * Talents/traits/gear are spread across system-specific packs
-     * (dh2-core-items-talents, rt-core-items-traits, etc.).
+     * (dh2-core-stats-talents, rt-core-items-traits, etc.).
      * @private
      */
     static async _findInAllPacks(itemName) {
