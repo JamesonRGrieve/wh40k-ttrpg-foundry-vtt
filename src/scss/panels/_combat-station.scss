@@ -29,16 +29,33 @@
     }
 }
 
-// Left side contains vitals and armour+weapons in a nested grid
+// Left side: top grid (4 cols) + weapons below
 .wh40k-combat-left-side {
-    display: grid;
-    grid-template-columns: minmax(200px, 240px) 1fr;
+    display: flex;
+    flex-direction: column;
     gap: $wh40k-space-md;
-    grid-auto-rows: min-content;
 }
 
-@container (max-width: 550px) {
-    .wh40k-combat-left-side {
+// Top grid: col1 (vitals) | col2 (fatigue/fate/mobility) | col3-4 (armour)
+.wh40k-combat-top-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    gap: $wh40k-space-md;
+    align-items: start;
+}
+
+@container (max-width: 700px) {
+    .wh40k-combat-top-grid {
+        grid-template-columns: 1fr 1fr;
+
+        .wh40k-combat-armour-wide {
+            grid-column: 1 / -1;
+        }
+    }
+}
+
+@container (max-width: 500px) {
+    .wh40k-combat-top-grid {
         grid-template-columns: 1fr;
     }
 }
