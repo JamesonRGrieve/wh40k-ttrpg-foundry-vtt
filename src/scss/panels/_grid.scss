@@ -4,15 +4,14 @@
 // Grid layouts are now in Tailwind utility classes in templates.
 // This file retains only panel margin rules used by *-col classes.
 
-// Column children get panel margin
+// Column children get panel margin (not talents — grid gap handles it)
 .wh40k-overview-col,
 .wh40k-status-col,
 .wh40k-combat-col,
 .wh40k-powers-col,
 .wh40k-equipment-col,
 .wh40k-dynasty-col,
-.wh40k-bio-col,
-.wh40k-talents-col {
+.wh40k-bio-col {
     .wh40k-panel {
         margin-bottom: $wh40k-space-md;
         overflow: visible;
