@@ -484,6 +484,11 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         const gameSystem = (this as any)._gameSystemId || this.actor.system?.gameSystem || 'rt';
         const originOptions = await this._getOriginPathOptions(gameSystem);
         context.originOptions = originOptions;
+
+        // Check if origin path is complete (has at least homeWorld + background + role)
+        const op = this.actor.system?.originPath || {};
+        context.originPathComplete = !!(op.homeWorld && op.background && op.role);
+
         return context;
     }
 
