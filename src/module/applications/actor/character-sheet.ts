@@ -2433,14 +2433,8 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         return [
             {
                 name: game.i18n.localize('WH40K.Utility.SetupCharacteristics'),
-                icon: '<i class="fa-solid fa-dice-d20"></i>',
+                icon: '<i class="fa-solid fa-sliders"></i>',
                 callback: () => CharacteristicSetupDialog.open(this.actor),
-            },
-            {
-                name: game.i18n.localize('WH40K.Utility.SetupOriginPath'),
-                icon: '<i class="fa-solid fa-route"></i>',
-                callback: () => this._openOriginPathBuilder(),
-                condition: () => !!game.wh40k?.openOriginPathBuilder,
             },
         ];
     }
