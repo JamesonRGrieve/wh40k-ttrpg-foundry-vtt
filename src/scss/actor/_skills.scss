@@ -197,31 +197,23 @@
 
 .wh40k-origin-builder-btn {
     position: absolute;
-    top: -6px;
-    left: -6px;
+    top: 6px;
+    left: 6px;
     z-index: 10;
-    width: 28px;
-    height: 28px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--wh40k-gold, #d4af37);
-    border-radius: 50%;
-    background: var(--wh40k-bg-dark, #1a1a2e);
     color: var(--wh40k-gold, #d4af37);
-    font-size: 0.85rem;
+    font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.2s ease;
+    opacity: 0.7;
 
     &:hover {
-        background: var(--wh40k-gold, #d4af37);
-        color: var(--wh40k-bg-dark, #1a1a2e);
-        transform: scale(1.15);
-        box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+        opacity: 1;
+        transform: scale(1.2);
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
     }
 
     &.pulse {
+        opacity: 1;
         animation: origin-pulse 2s ease-in-out infinite;
     }
 }
@@ -229,11 +221,11 @@
 @keyframes origin-pulse {
     0%,
     100% {
-        box-shadow: 0 0 4px rgba(212, 175, 55, 0.3);
+        text-shadow: 0 0 4px rgba(212, 175, 55, 0.3);
     }
     50% {
-        box-shadow: 0 0 16px rgba(212, 175, 55, 0.8);
-        border-color: #f0d060;
+        text-shadow: 0 0 12px rgba(212, 175, 55, 0.9);
+        color: #f0d060;
     }
 }
 
