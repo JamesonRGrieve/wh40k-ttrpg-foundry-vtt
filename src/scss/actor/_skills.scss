@@ -376,9 +376,12 @@
 }
 
 .wh40k-header-step-img {
-    width: 100%;
-    height: 100%;
+    width: 32px;
+    height: 32px;
+    max-width: 32px;
+    max-height: 32px;
     object-fit: cover;
+    border-radius: 50%;
 }
 
 .wh40k-header-step-icon {
@@ -408,6 +411,13 @@
     border: 2px solid var(--wh40k-border-color, #4a3728);
     border-radius: 6px;
     transition: all 0.3s ease;
+
+    .wh40k-portrait-full & {
+        width: 180px;
+        height: auto;
+        max-height: 240px;
+        object-fit: contain;
+    }
 }
 
 .wh40k-header-row {
