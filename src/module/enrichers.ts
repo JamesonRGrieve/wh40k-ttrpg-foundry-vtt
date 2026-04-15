@@ -61,7 +61,7 @@ export function registerCustomEnrichers() {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 async function enrichCharacteristic(match, options) {
-    let { config, label } = match.groups;
+    const { config, label } = match.groups;
     config = config.trim().toLowerCase();
 
     // Map short codes to full names
@@ -127,7 +127,7 @@ async function enrichCharacteristic(match, options) {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 async function enrichSkill(match, options) {
-    let { config, label } = match.groups;
+    const { config, label } = match.groups;
     config = config.trim().toLowerCase();
 
     // Parse skill and specialization
@@ -227,7 +227,7 @@ async function enrichModifier(match, options) {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 async function enrichArmor(match, options) {
-    let { config, label } = match.groups;
+    const { config, label } = match.groups;
     config = config.trim().toLowerCase();
 
     // Get actor from relativeTo
@@ -392,7 +392,7 @@ async function handleEnricherClick(event) {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 async function enrichQuality(match, options) {
-    let { config, label } = match.groups;
+    const { config, label } = match.groups;
     config = config.trim().toLowerCase();
 
     // Try to find the quality in compendiums
@@ -434,7 +434,7 @@ async function enrichQuality(match, options) {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 async function enrichProperty(match, options) {
-    let { config, label } = match.groups;
+    const { config, label } = match.groups;
     config = config.trim().toLowerCase();
 
     // Try to find the property in compendiums
@@ -476,11 +476,11 @@ async function enrichProperty(match, options) {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 async function enrichCondition(match, options) {
-    let { config, label } = match.groups;
+    const { config, label } = match.groups;
     config = config.trim().toLowerCase();
 
     // Try to find the condition in compendiums
-    const conditionPack = game.packs.get('wh40k-rpg.wh40k-items-conditions');
+    const conditionPack = game.packs.get('wh40k-rpg.dh2-core-stats-conditions');
     let condition = null;
 
     if (conditionPack) {

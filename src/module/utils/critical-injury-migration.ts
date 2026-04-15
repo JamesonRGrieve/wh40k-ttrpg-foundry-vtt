@@ -11,7 +11,7 @@
 
 export default class CriticalInjuryMigration {
     [key: string]: any;
-    static PACK_NAME = 'wh40k-rpg.wh40k-items-critical-injuries';
+    static PACK_NAME = 'wh40k-rpg.dh2-core-stats-critical-injuries';
     static DAMAGE_TYPES = ['impact', 'rending', 'explosive', 'energy'];
     static BODY_PARTS = ['head', 'arm', 'body', 'leg'];
 

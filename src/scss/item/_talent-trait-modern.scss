@@ -44,7 +44,7 @@
     overflow: hidden;
     cursor: pointer;
     border: 2px solid var(--color-border-secondary);
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     flex-shrink: 0;
 
     &:hover {
@@ -238,7 +238,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -396,7 +396,7 @@
     border-radius: $wh40k-radius-sm;
     color: var(--color-text-primary);
     font-size: 0.9rem;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:focus {
         outline: none;

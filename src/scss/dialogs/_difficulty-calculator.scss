@@ -93,7 +93,7 @@
                 border: 2px solid var(--color-border-secondary);
                 border-radius: 4px;
                 color: var(--color-text-light-primary);
-                transition: all 0.2s;
+                transition: all $wh40k-transition-base;
 
                 &:focus {
                     border-color: $wh40k-accent-gold;

@@ -568,78 +568,7 @@ body.theme-dark {
     background: var(--color-bg-tertiary);
 }
 
-// Spacing Utilities
-.wh40k-m-sm {
-    margin: var(--wh40k-space-sm);
-}
-.wh40k-m-md {
-    margin: var(--wh40k-space-md);
-}
-.wh40k-m-lg {
-    margin: var(--wh40k-space-lg);
-}
-
-.wh40k-p-sm {
-    padding: var(--wh40k-space-sm);
-}
-.wh40k-p-md {
-    padding: var(--wh40k-space-md);
-}
-.wh40k-p-lg {
-    padding: var(--wh40k-space-lg);
-}
-
-.wh40k-mt-sm {
-    margin-top: var(--wh40k-space-sm);
-}
-.wh40k-mt-md {
-    margin-top: var(--wh40k-space-md);
-}
-.wh40k-mt-lg {
-    margin-top: var(--wh40k-space-lg);
-}
-
-.wh40k-mb-sm {
-    margin-bottom: var(--wh40k-space-sm);
-}
-.wh40k-mb-md {
-    margin-bottom: var(--wh40k-space-md);
-}
-.wh40k-mb-lg {
-    margin-bottom: var(--wh40k-space-lg);
-}
-
-// Flex Utilities
-.wh40k-flex {
-    display: flex;
-}
-
-.wh40k-flex-col {
-    display: flex;
-    flex-direction: column;
-}
-
-.wh40k-flex-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.wh40k-flex-between {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.wh40k-gap-sm {
-    gap: var(--wh40k-space-sm);
-}
-.wh40k-gap-md {
-    gap: var(--wh40k-space-md);
-}
-.wh40k-gap-lg {
-    gap: var(--wh40k-space-lg);
-}
+// Spacing, flex, and gap utilities removed — use Tailwind tw-* classes instead
 
 /* ========================================
    STAT CHANGE ANIMATIONS

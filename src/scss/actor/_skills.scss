@@ -6,9 +6,6 @@
     padding: 14px 10px 10px;
 }
 
-// Layout (grid, gap) now in template utilities via Phase 3
-
-// Layout (flex-col, gap) now in template utilities via Phase 3
 .wh40k-skills-column {
     background: var(--wh40k-panel-bg-solid);
     border-radius: 10px;
@@ -339,63 +336,6 @@
     }
 }
 
-.wh40k-header-origin-steps {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    padding: 4px 0;
-}
-
-.wh40k-header-step {
-    width: 36px !important;
-    height: 36px !important;
-    min-width: 36px;
-    max-width: 36px;
-    min-height: 36px;
-    max-height: 36px;
-    flex-shrink: 0;
-    flex-grow: 0;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border: 2px solid var(--wh40k-border-color, #4a3728);
-    background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.2));
-    cursor: default;
-    transition: all 0.2s ease;
-
-    &.filled {
-        border-color: var(--wh40k-gold, #d4af37);
-        cursor: pointer;
-
-        &:hover {
-            border-color: #f0d060;
-            box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
-            transform: scale(1.1);
-        }
-    }
-
-    &.empty {
-        opacity: 0.4;
-    }
-}
-
-.wh40k-header-step-img {
-    width: 32px !important;
-    height: 32px !important;
-    max-width: 32px !important;
-    max-height: 32px !important;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid var(--wh40k-gold, #d4af37);
-}
-
-.wh40k-header-step-icon {
-    font-size: 0.9rem;
-    color: var(--wh40k-text-muted);
-}
-
 .wh40k-header-info {
     display: flex;
     flex-direction: column;
@@ -417,7 +357,7 @@
     object-fit: cover;
     border: 2px solid var(--wh40k-border-color, #4a3728);
     border-radius: 6px;
-    transition: all 0.3s ease;
+    transition: all $wh40k-transition-medium;
 
     .wh40k-portrait-full & {
         width: 180px;

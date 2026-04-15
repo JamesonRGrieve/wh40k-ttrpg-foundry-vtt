@@ -14,7 +14,7 @@
 }
 
 .wh40k-sheet {
-    font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
+    font-family: $wh40k-font-alt;
     background: var(--wh40k-sheet-bg) !important;
     position: relative;
     display: flex;
@@ -44,7 +44,7 @@
 
     .wh40k-panel-title {
         flex: 1;
-        font-family: 'Modesto Condensed', serif;
+        font-family: $wh40k-font-alt;
         font-size: 1rem;
         font-weight: 600;
         color: var(--wh40k-text-medium);
@@ -297,12 +297,6 @@
     object-fit: cover;
 }
 
-// Layout (grid, cols, gap, items, padding) now in template utilities
-
-// Layout (flex-col, gap) now in template utilities
-
-// Layout (grid, cols, gap, items) now in template utilities
-
 .wh40k-header-bio {
     display: flex;
     flex-direction: column;
@@ -315,7 +309,7 @@
     padding: 6px 8px;
     background: var(--wh40k-input-bg);
     resize: vertical;
-    font-family: 'Modesto Condensed', 'Palatino Linotype', serif;
+    font-family: $wh40k-font-alt;
     font-size: 0.9em;
     color: var(--wh40k-text-dark);
 
@@ -326,7 +320,6 @@
     }
 }
 
-// Layout (flex-col, items-end, gap, justify-self, justify-start, max-w) now in template utilities
 .wh40k-header-right {
     padding: 4px 12px 4px 0;
 }
@@ -353,7 +346,7 @@
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(218, 165, 32, 0.1) 100%);
     border: 2px solid var(--wh40k-fate-primary, #d4af37);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
+    transition: all $wh40k-transition-medium;
     cursor: help;
 
     i {
@@ -361,7 +354,7 @@
         font-size: 2.5rem;
         color: var(--wh40k-fate-primary, #d4af37);
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-        transition: all 0.3s ease;
+        transition: all $wh40k-transition-medium;
         opacity: 0.9;
     }
 
@@ -451,9 +444,6 @@
         opacity: 0.7;
     }
 }
-
-// wh40k-hud-stack: layout now in template utilities
-
 
 // Generic drag-over highlight for any panel drop zone
 [data-drop-zone].wh40k-drag-over {
@@ -715,8 +705,12 @@
         box-shadow: 0 0 10px rgba($wh40k-accent-gold, 0.35);
         color: var(--wh40k-text-light);
 
-        .wh40k-dropzone-icon { color: $wh40k-accent-gold; }
-        .wh40k-dropzone-text { color: $wh40k-accent-gold; }
+        .wh40k-dropzone-icon {
+            color: $wh40k-accent-gold;
+        }
+        .wh40k-dropzone-text {
+            color: $wh40k-accent-gold;
+        }
     }
 }
 

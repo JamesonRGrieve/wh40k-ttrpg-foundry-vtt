@@ -30,7 +30,7 @@
     // Dropzone styling when empty or dragging
     &[data-drop-zone] {
         position: relative;
-        transition: all 0.3s ease;
+        transition: all $wh40k-transition-medium;
 
         &.drop-valid {
             background: linear-gradient(135deg, rgba($wh40k-accent-talents, 0.08) 0%, rgba($wh40k-accent-talents, 0.02) 100%);
@@ -206,7 +206,7 @@
     border-left: 3px solid $wh40k-accent-equipment;
     border-radius: 4px;
     overflow: hidden;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     min-height: 40px;
     cursor: grab;
 
@@ -315,7 +315,7 @@
     cursor: pointer;
     padding: 4px 6px;
     border-radius: 3px;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     font-size: 0.85rem;
 
     &:hover {
@@ -352,7 +352,7 @@
     cursor: pointer;
     padding: 2px 4px;
     border-radius: 2px;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
     font-size: 0.7rem;
 
     &:hover {

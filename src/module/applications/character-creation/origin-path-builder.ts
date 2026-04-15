@@ -1273,7 +1273,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     async _findSkillUuid(skillName: string, specialization: any = null): Promise<any> {
         try {
-            const skillPack = game.packs.find((p) => p.metadata.name === 'wh40k-items-skills');
+            const skillPack = game.packs.find((p) => p.metadata.name === 'dh2-core-stats-skills');
             if (!skillPack) return null;
 
             const index = skillPack.index;

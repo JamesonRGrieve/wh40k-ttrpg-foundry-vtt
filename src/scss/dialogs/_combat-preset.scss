@@ -89,7 +89,7 @@
                     border-radius: 4px;
                     color: var(--color-text-light-primary);
                     font-family: inherit;
-                    transition: all 0.2s;
+                    transition: all $wh40k-transition-base;
 
                     &:focus {
                         border-color: $wh40k-accent-gold;
@@ -157,7 +157,7 @@
                 border: 2px solid var(--color-border-secondary);
                 border-radius: 8px;
                 cursor: pointer;
-                transition: all 0.2s;
+                transition: all $wh40k-transition-base;
 
                 &:hover {
                     background: var(--color-bg-tertiary);
@@ -252,7 +252,7 @@
                 background: var(--color-bg-secondary);
                 border: 2px solid var(--color-border-secondary);
                 border-radius: 8px;
-                transition: all 0.2s;
+                transition: all $wh40k-transition-base;
 
                 &:hover {
                     background: var(--color-bg-tertiary);
@@ -343,7 +343,7 @@
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all $wh40k-transition-base;
             border: 2px solid;
 
             i {

@@ -35,17 +35,17 @@ export function clearSkillUuidCache() {
  * @example
  * // Standard skill
  * const awarenessUuid = await findSkillUuid("Awareness");
- * // Returns: "Compendium.wh40k-rpg.wh40k-items-skills.xxx"
+ * // Returns: "Compendium.wh40k-rpg.dh2-core-stats-skills.xxx"
  *
  * @example
  * // Specialist skill with inline specialization
  * const loreUuid = await findSkillUuid("Common Lore (Imperium)");
- * // Returns: "Compendium.wh40k-rpg.wh40k-items-skills.yyy"
+ * // Returns: "Compendium.wh40k-rpg.dh2-core-stats-skills.yyy"
  *
  * @example
  * // Specialist skill with separate specialization parameter
  * const loreUuid = await findSkillUuid("Common Lore", "Imperium");
- * // Returns: "Compendium.wh40k-rpg.wh40k-items-skills.yyy"
+ * // Returns: "Compendium.wh40k-rpg.dh2-core-stats-skills.yyy"
  */
 export async function findSkillUuid(skillName, specialization = null) {
     if (!skillName) return null;
@@ -70,10 +70,10 @@ export async function findSkillUuid(skillName, specialization = null) {
 
     try {
         // Find the skills compendium pack
-        const skillPack = game.packs.find((p) => p.metadata.name === 'wh40k-items-skills' && p.documentName === 'Item');
+        const skillPack = game.packs.find((p) => p.metadata.name === 'dh2-core-stats-skills' && p.documentName === 'Item');
 
         if (!skillPack) {
-            console.warn("Skill compendium pack 'wh40k-items-skills' not found");
+            console.warn("Skill compendium pack 'dh2-core-stats-skills' not found");
             _skillUuidCache.set(cacheKey, null);
             return null;
         }

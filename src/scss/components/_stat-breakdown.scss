@@ -45,7 +45,7 @@
 
     h4 {
         margin: 0;
-        font-family: 'Modesto Condensed', serif;
+        font-family: $wh40k-font-alt;
         font-size: 1.1rem;
         font-weight: 600;
         color: var(--color-text-primary, #e2e8f0);
@@ -64,7 +64,7 @@
     border-radius: 4px;
     color: var(--color-text-secondary, #94a3b8);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all $wh40k-transition-base;
 
     i {
         font-size: 0.9rem;
@@ -132,7 +132,7 @@
 }
 
 .wh40k-stat-breakdown-value {
-    font-family: 'Modesto Condensed', monospace;
+    font-family: $wh40k-font-alt;
     font-size: 1rem;
     font-weight: 600;
     min-width: 40px;
@@ -169,7 +169,7 @@
     border-radius: 3px;
     color: var(--color-text-secondary, #94a3b8);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all $wh40k-transition-base;
     opacity: 0.6;
 
     i {
@@ -231,7 +231,7 @@
 // Make stat values clickable
 .wh40k-stat-clickable {
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all $wh40k-transition-base;
     border-radius: 4px;
     padding: 2px 4px;
     margin: -2px -4px;

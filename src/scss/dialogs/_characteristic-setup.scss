@@ -111,7 +111,7 @@ $csd-danger: #dc143c;
     border: 2px solid rgba($csd-primary, 0.4);
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
     position: relative;
 
     &:hover:not(.assigned):not(.empty) {
@@ -226,7 +226,7 @@ $csd-danger: #dc143c;
     border: 2px solid rgba($csd-primary, 0.35);
     border-radius: 8px;
     padding: 0.75rem;
-    transition: all 0.3s ease;
+    transition: all $wh40k-transition-medium;
 
     &:hover {
         border-color: rgba($csd-primary, 0.6);
@@ -396,7 +396,7 @@ $csd-danger: #dc143c;
     font-weight: bold;
     color: $csd-bone;
     cursor: grab;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         transform: scale(1.1);
@@ -422,7 +422,7 @@ $csd-danger: #dc143c;
     font-size: 1.3rem;
     font-weight: bold;
     color: $csd-bone;
-    transition: all 0.3s ease;
+    transition: all $wh40k-transition-medium;
 
     &.has-value {
         background: rgba($csd-gold, 0.15);
@@ -468,7 +468,7 @@ $csd-danger: #dc143c;
     color: $csd-bone;
     font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:hover {
         background: rgba($csd-gold, 0.2);
@@ -504,7 +504,7 @@ $csd-danger: #dc143c;
     background: rgba($csd-primary, 0.15);
     border-radius: 4px;
     min-width: 50px;
-    transition: all 0.3s ease;
+    transition: all $wh40k-transition-medium;
 
     &.empty {
         opacity: 0.4;
@@ -551,7 +551,7 @@ $csd-danger: #dc143c;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all $wh40k-transition-base;
 
     &:disabled {
         opacity: 0.4;

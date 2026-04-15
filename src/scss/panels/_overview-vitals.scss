@@ -204,9 +204,9 @@
     color: var(--color-text-primary);
     font-size: 1rem;
     font-weight: 600;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     text-align: center;
-    transition: all 0.15s ease;
+    transition: all $wh40k-transition-fast;
 
     &:focus {
         outline: none;
@@ -242,7 +242,7 @@
 .wh40k-xp-available-value {
     font-size: 1.5rem;
     font-weight: 700;
-    font-family: 'Modesto Condensed', serif;
+    font-family: $wh40k-font-alt;
     color: $wh40k-color-gold;
     text-shadow: 0 0 8px rgba($wh40k-color-gold, 0.3);
 }
