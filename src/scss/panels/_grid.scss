@@ -16,10 +16,8 @@
 // ============================================
 // These replace the duplicate *-grid and *-col classes
 
-.wh40k-overview-grid,
-.wh40k-status-grid,
-.wh40k-combat-grid,
-.wh40k-talents-grid {
+// Layout for overview and equipment grids (not yet migrated to Tailwind)
+.wh40k-overview-grid {
     display: grid;
     // Use CSS variable with fallback to 2 columns
     grid-template-columns: repeat(var(--wh40k-columns, 2), 1fr);
@@ -27,7 +25,6 @@
     width: 100%;
 }
 
-// These grids should always be 2 columns
 .wh40k-equipment-grid {
     display: grid;
     grid-template-columns: 40% 60%;
@@ -35,32 +32,13 @@
     width: 100%;
 }
 
-.wh40k-powers-grid,
-.wh40k-dynasty-grid,
-.wh40k-bio-grid {
+.wh40k-powers-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: $wh40k-space-md;
     width: 100%;
 }
 
-// Talents tab 2-column variant: Specialist Skills (left 60%) / Talents+Traits (right 40%)
-.wh40k-talents-grid--2col {
-    display: grid;
-    grid-template-columns: 60% 40%;
-    gap: $wh40k-space-md;
-    width: 100%;
-}
-
-.wh40k-talents-traits-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: $wh40k-space-md;
-    width: 100%;
-    align-items: start;
-}
-
-// Layout (flex-col, gap-0, overflow-visible, min-w-0) now in template utilities
 .wh40k-overview-col,
 .wh40k-status-col,
 .wh40k-combat-col,
@@ -80,7 +58,6 @@
 // ============================================
 
 // wh40k-header-right: layout defined in _sheet-base.scss, utilities added in Phase 8
-// wh40k-hud-stack: layout now in template utilities
 
 // ============================================
 
@@ -91,37 +68,21 @@
 
 @media (max-width: 700px) {
     .wh40k-overview-grid,
-    .wh40k-status-grid,
-    .wh40k-combat-grid,
     .wh40k-powers-grid,
-    .wh40k-equipment-grid,
-    .wh40k-dynasty-grid,
-    .wh40k-bio-grid,
-    .wh40k-talents-grid,
-    .wh40k-talents-grid--2col {
+    .wh40k-equipment-grid {
         grid-template-columns: 1fr;
     }
 }
 
 @media (min-width: 701px) and (max-width: 900px) {
-    .wh40k-overview-grid,
-    .wh40k-status-grid,
-    .wh40k-combat-grid {
+    .wh40k-overview-grid {
         grid-template-columns: repeat(2, 1fr);
-    }
-
-    // Talents keeps 60/40 split on medium screens
-    .wh40k-talents-grid,
-    .wh40k-talents-grid--2col {
-        grid-template-columns: 60% 40%;
     }
 }
 
-// Powers, Dynasty, and Bio grids are always 2 columns on desktop
+// Powers grid is always 2 columns on desktop
 @media (min-width: 701px) {
-    .wh40k-powers-grid,
-    .wh40k-dynasty-grid,
-    .wh40k-bio-grid {
+    .wh40k-powers-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }

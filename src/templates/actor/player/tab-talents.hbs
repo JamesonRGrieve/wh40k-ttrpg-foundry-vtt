@@ -3,7 +3,7 @@
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
     {{!-- Two Column Layout: Specialist Skills (left) / Talents + Traits (right) --}}
-    <div class="wh40k-talents-grid wh40k-talents-grid--2col">
+    <div class="tw-grid tw-grid-cols-[60%_40%] tw-gap-3 tw-w-full">
         {{!-- Left Column - Specialist Skills --}}
         <div class="wh40k-talents-col wh40k-talents-col-left tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
             {{> systems/wh40k-rpg/templates/actor/panel/skills-specialist-panel.hbs}}

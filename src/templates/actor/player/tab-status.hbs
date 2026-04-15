@@ -3,7 +3,7 @@
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     
     {{!-- Two Column Layout --}}
-    <div class="wh40k-status-grid">
+    <div class="tw-grid tw-grid-cols-[repeat(var(--wh40k-columns,2),1fr)] tw-gap-3 tw-w-full">
         {{!-- Left Column --}}
         <div class="wh40k-status-col tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
             {{!-- Wounds Panel V2 --}}
