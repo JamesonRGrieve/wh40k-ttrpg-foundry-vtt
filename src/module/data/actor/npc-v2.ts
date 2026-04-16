@@ -15,8 +15,142 @@ const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectF
  *
  * @extends {ActorDataModel}
  */
+/** Shape of a single characteristic in NPCDataV2 (no advance field). */
+interface NPCV2CharacteristicData {
+    label: string;
+    short: string;
+    base: number;
+    modifier: number;
+    unnatural: number;
+    total: number;
+    bonus: number;
+}
+
+/** Shape of a simple weapon entry for NPC V2. */
+interface NPCV2SimpleWeapon {
+    name: string;
+    damage: string;
+    pen: number;
+    range: string;
+    rof: string;
+    clip: number;
+    reload: string;
+    special: string;
+    class: 'melee' | 'pistol' | 'basic' | 'heavy' | 'thrown' | 'launcher';
+}
+
+/** Shape of a trained skill entry in the sparse trainedSkills object. */
+interface NPCV2TrainedSkill {
+    name: string;
+    characteristic: string;
+    trained: boolean;
+    plus10: boolean;
+    plus20: boolean;
+    bonus: number;
+}
+
 export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare faction: string;
+    declare subfaction: string;
+    declare allegiance: string;
+    declare primaryUse: 'npc' | 'vehicle' | 'ship';
+    declare role: 'bruiser' | 'sniper' | 'caster' | 'support' | 'commander' | 'specialist';
+    declare type: 'troop' | 'elite' | 'master' | 'horde' | 'swarm' | 'creature' | 'daemon' | 'xenos';
+    declare threatLevel: number;
+    declare characteristics: {
+        weaponSkill: NPCV2CharacteristicData;
+        ballisticSkill: NPCV2CharacteristicData;
+        strength: NPCV2CharacteristicData;
+        toughness: NPCV2CharacteristicData;
+        agility: NPCV2CharacteristicData;
+        intelligence: NPCV2CharacteristicData;
+        perception: NPCV2CharacteristicData;
+        willpower: NPCV2CharacteristicData;
+        fellowship: NPCV2CharacteristicData;
+        influence: NPCV2CharacteristicData;
+        [key: string]: NPCV2CharacteristicData;
+    };
+    declare wounds: {
+        max: number;
+        value: number;
+        critical: number;
+    };
+    declare movement: {
+        half: number;
+        full: number;
+        charge: number;
+        run: number;
+    };
+    declare size: number;
+    declare initiative: {
+        characteristic: string;
+        base: string;
+        bonus: number;
+    };
+    declare trainedSkills: Record<string, NPCV2TrainedSkill>;
+    declare weapons: {
+        mode: 'simple' | 'embedded';
+        simple: NPCV2SimpleWeapon[];
+    };
+    declare armour: {
+        mode: 'simple' | 'locations';
+        total: number;
+        locations: {
+            head: number;
+            body: number;
+            leftArm: number;
+            rightArm: number;
+            leftLeg: number;
+            rightLeg: number;
+        };
+    };
+    declare specialAbilities: string;
+    declare customStats: {
+        enabled: boolean;
+        characteristics: Record<string, number>;
+        skills: Record<string, number>;
+        combat: {
+            initiative: number | null;
+            dodge: number | null;
+            parry: number | null;
+        };
+        wounds: number | null;
+        movement: number | null;
+    };
+    declare pinnedAbilities: string[];
+    declare template: string;
+    declare quickNotes: string;
+    declare tags: string[];
+    declare personality: {
+        demeanor: string;
+        goals: string;
+        fears: string;
+        quirks: string;
+    };
+    declare description: string;
+    declare tactics: string;
+    declare source: string;
+
+    // From HordeTemplate mixin
+    declare horde: {
+        enabled: boolean;
+        magnitude: {
+            max: number;
+            current: number;
+        };
+        magnitudeLog: Array<{
+            amount: number;
+            source: string;
+            timestamp: number;
+        }>;
+        traits: string[];
+        damageMultiplier: number;
+        sizeModifier: number;
+    };
+
     /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */
@@ -28,7 +162,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @returns {SchemaField}
      * @private
      */
-    static _CharacteristicField(label, short) {
+    static _CharacteristicField(label: string, short: string): any {
         return new SchemaField({
             label: new StringField({ required: true, initial: label }),
             short: new StringField({ required: true, initial: short }),
@@ -42,7 +176,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
     }
 
     /** @inheritDoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return {
             ...super.defineSchema(),
 
@@ -222,7 +356,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Get the NPC type label.
      * @type {string}
      */
-    get typeLabel() {
+    get typeLabel(): string {
         const key = `WH40K.NPCType.${this.type.charAt(0).toUpperCase()}${this.type.slice(1)}`;
         return game.i18n.localize(key);
     }
@@ -231,7 +365,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Get threat level description.
      * @type {string}
      */
-    get threatDescription() {
+    get threatDescription(): string {
         if (this.threatLevel <= 5) return game.i18n.localize('WH40K.Threat.Low');
         if (this.threatLevel <= 10) return game.i18n.localize('WH40K.Threat.Moderate');
         if (this.threatLevel <= 15) return game.i18n.localize('WH40K.Threat.Dangerous');
@@ -243,7 +377,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Get a threat summary string.
      * @type {string}
      */
-    get threatSummary() {
+    get threatSummary(): string {
         return `${this.typeLabel} (Threat ${this.threatLevel})`;
     }
 
@@ -251,7 +385,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Is this a horde-type NPC?
      * @type {boolean}
      */
-    get isHorde() {
+    get isHorde(): boolean {
         return this.type === 'horde' || this.type === 'swarm';
     }
 
@@ -259,7 +393,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Is this a significant threat (elite or above)?
      * @type {boolean}
      */
-    get isElite() {
+    get isElite(): boolean {
         return this.type === 'elite' || this.type === 'master';
     }
 
@@ -267,7 +401,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Get role label.
      * @type {string}
      */
-    get roleLabel() {
+    get roleLabel(): string {
         const key = `WH40K.NPCRole.${this.role.charAt(0).toUpperCase()}${this.role.slice(1)}`;
         return game.i18n.localize(key);
     }
@@ -276,7 +410,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Get toughness bonus.
      * @type {number}
      */
-    get toughnessBonus() {
+    get toughnessBonus(): number {
         return this.characteristics.toughness?.bonus ?? 0;
     }
 
@@ -284,7 +418,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Get threat tier info with color and label.
      * @type {Object}
      */
-    get threatTier() {
+    get threatTier(): { key: string; label: string; color: string } {
         const t = this.threatLevel;
         if (t <= 5) return { key: 'minor', label: 'Hereticus Minoris', color: '#4caf50' };
         if (t <= 10) return { key: 'standard', label: 'Hereticus Medius', color: '#2196f3' };
@@ -297,7 +431,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Get effective stats with custom overrides applied.
      * @type {Object}
      */
-    get effectiveStats() {
+    get effectiveStats(): Record<string, any> {
         const stats = {
             characteristics: {},
             skills: {},
@@ -311,7 +445,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
         };
 
         // Copy characteristics
-        for (const [key, char] of Object.entries(this.characteristics) as [string, any][]) {
+        for (const [key, char] of Object.entries(this.characteristics)) {
             stats.characteristics[key] = char.total;
         }
 
@@ -361,9 +495,9 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Get the list of trained skills as an array for display.
      * @type {Array<Object>}
      */
-    get trainedSkillsList() {
+    get trainedSkillsList(): Array<Record<string, any>> {
         const list = [];
-        for (const [key, skill] of Object.entries(this.trainedSkills) as [string, any][]) {
+        for (const [key, skill] of Object.entries(this.trainedSkills)) {
             list.push({
                 key,
                 name: skill.name || key,
@@ -404,7 +538,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} key - Short name (e.g., "Ag") or full key (e.g., "agility")
      * @returns {object|null}
      */
-    getCharacteristic(key) {
+    getCharacteristic(key: string): NPCV2CharacteristicData | null {
         if (this.characteristics[key]) {
             return this.characteristics[key];
         }
@@ -460,7 +594,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} skillName - The skill key (e.g., "awareness", "dodge")
      * @returns {number} The target number for the skill test.
      */
-    getSkillTarget(skillName) {
+    getSkillTarget(skillName: string): number {
         const skill = this.trainedSkills[skillName];
         const charKey = skill?.characteristic || NPCDataV2.SKILL_CHARACTERISTIC_MAP[skillName] || 'perception';
         const char = this.getCharacteristic(charKey);
@@ -495,7 +629,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {number} bonus - Additional bonus
      * @returns {Promise<Actor>}
      */
-    addTrainedSkill(name, characteristic = null, level = 'trained', bonus = 0) {
+    addTrainedSkill(name: string, characteristic: string | null = null, level = 'trained', bonus = 0): any {
         const skills = foundry.utils.deepClone(this.trainedSkills);
 
         const charKey = characteristic || NPCDataV2.SKILL_CHARACTERISTIC_MAP[name] || 'perception';
@@ -517,7 +651,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} name - The skill key
      * @returns {Promise<Actor>}
      */
-    removeSkill(name) {
+    removeSkill(name: string): any {
         const skills = foundry.utils.deepClone(this.trainedSkills);
         delete skills[name];
         return this.parent.update({ 'system.trainedSkills': skills });
@@ -529,7 +663,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {Object} updates - Properties to update
      * @returns {Promise<Actor>}
      */
-    updateSkill(name, updates) {
+    updateSkill(name: string, updates: Record<string, any>): any {
         const skills = foundry.utils.deepClone(this.trainedSkills);
         if (!skills[name]) return this.parent;
 
@@ -546,7 +680,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} mode - The mode to switch to: "simple" or "embedded"
      * @returns {Promise<Actor>}
      */
-    switchWeaponMode(mode) {
+    switchWeaponMode(mode: string): any {
         if (!['simple', 'embedded'].includes(mode)) return this.parent;
         return this.parent.update({ 'system.weapons.mode': mode });
     }
@@ -556,7 +690,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {Object} data - Weapon data
      * @returns {Promise<Actor>}
      */
-    addSimpleWeapon(data: Record<string, any> = {}) {
+    addSimpleWeapon(data: Record<string, any> = {}): any {
         const weapons = foundry.utils.deepClone(this.weapons.simple || []);
         weapons.push({
             name: data.name || 'New Weapon',
@@ -577,7 +711,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {number} index - The weapon index
      * @returns {Promise<Actor>}
      */
-    removeSimpleWeapon(index) {
+    removeSimpleWeapon(index: number): any {
         const weapons = foundry.utils.deepClone(this.weapons.simple || []);
         if (index < 0 || index >= weapons.length) return this.parent;
         weapons.splice(index, 1);
@@ -589,7 +723,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {number} index - The simple weapon index to promote
      * @returns {Promise<Item|null>} The created weapon item, or null on failure
      */
-    async promoteSimpleWeapon(index) {
+    async promoteSimpleWeapon(index: number): Promise<any> {
         const weapons = this.weapons.simple || [];
         const weapon = weapons[index];
         if (!weapon) return null;
@@ -629,7 +763,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} mode - The mode to switch to: "simple" or "locations"
      * @returns {Promise<Actor>}
      */
-    switchArmourMode(mode) {
+    switchArmourMode(mode: string): any {
         if (!['simple', 'locations'].includes(mode)) return this.parent;
         return this.parent.update({ 'system.armour.mode': mode });
     }
@@ -639,7 +773,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} location - The location key (head, body, leftArm, etc.)
      * @returns {number} The armour value
      */
-    getArmourForLocation(location) {
+    getArmourForLocation(location: string): number {
         if (this.armour.mode === 'simple') {
             return this.armour.total;
         }
@@ -655,7 +789,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} skillKey - The skill key to toggle
      * @returns {Promise<Actor>}
      */
-    toggleFavoriteSkill(skillKey) {
+    toggleFavoriteSkill(skillKey: string): any {
         const favorites = [...(this.parent.getFlag('wh40k-rpg', 'favoriteSkills') || [])];
         const index = favorites.indexOf(skillKey);
         if (index >= 0) favorites.splice(index, 1);
@@ -668,7 +802,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} itemId - The talent item ID to toggle
      * @returns {Promise<Actor>}
      */
-    toggleFavoriteTalent(itemId) {
+    toggleFavoriteTalent(itemId: string): any {
         const favorites = [...(this.parent.getFlag('wh40k-rpg', 'favoriteTalents') || [])];
         const index = favorites.indexOf(itemId);
         if (index >= 0) favorites.splice(index, 1);
@@ -680,7 +814,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Get list of favorite skill keys.
      * @type {Array<string>}
      */
-    get favoriteSkills() {
+    get favoriteSkills(): string[] {
         return this.parent.getFlag('wh40k-rpg', 'favoriteSkills') || [];
     }
 
@@ -688,7 +822,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Get list of favorite talent IDs.
      * @type {Array<string>}
      */
-    get favoriteTalents() {
+    get favoriteTalents(): string[] {
         return this.parent.getFlag('wh40k-rpg', 'favoriteTalents') || [];
     }
 
@@ -701,7 +835,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} itemId - The item ID to pin
      * @returns {Promise<Actor>}
      */
-    pinAbility(itemId) {
+    pinAbility(itemId: string): any {
         const pinned = foundry.utils.deepClone(this.pinnedAbilities || []);
         if (!pinned.includes(itemId)) {
             pinned.push(itemId);
@@ -715,7 +849,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} itemId - The item ID to unpin
      * @returns {Promise<Actor>}
      */
-    unpinAbility(itemId) {
+    unpinAbility(itemId: string): any {
         const pinned = foundry.utils.deepClone(this.pinnedAbilities || []);
         const idx = pinned.indexOf(itemId);
         if (idx >= 0) {
@@ -730,7 +864,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} itemId - The item ID to toggle
      * @returns {Promise<Actor>}
      */
-    togglePinAbility(itemId) {
+    togglePinAbility(itemId: string): any {
         const pinned = this.pinnedAbilities || [];
         if (pinned.includes(itemId)) {
             return this.unpinAbility(itemId);
@@ -743,12 +877,12 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    prepareBaseData() {
+    prepareBaseData(): void {
         super.prepareBaseData();
     }
 
     /** @inheritDoc */
-    prepareDerivedData() {
+    prepareDerivedData(): void {
         super.prepareDerivedData();
         this._prepareCharacteristics();
         this._prepareMovement();
@@ -764,8 +898,8 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Prepare characteristic totals and bonuses.
      * @protected
      */
-    _prepareCharacteristics() {
-        for (const [, char] of Object.entries(this.characteristics) as [string, any][]) {
+    _prepareCharacteristics(): void {
+        for (const [, char] of Object.entries(this.characteristics)) {
             // Total = base + modifier
             char.total = char.base + char.modifier;
 
@@ -782,7 +916,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Prepare movement values based on agility bonus and size.
      * @protected
      */
-    _prepareMovement() {
+    _prepareMovement(): void {
         const agility = this.characteristics?.agility;
         if (!agility) return;
 
@@ -799,7 +933,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Prepare initiative bonus.
      * @protected
      */
-    _prepareInitiative() {
+    _prepareInitiative(): void {
         const initChar = this.characteristics[this.initiative.characteristic];
         if (initChar) {
             this.initiative.bonus = initChar.bonus;
@@ -811,11 +945,11 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
     /* -------------------------------------------- */
 
     /** @override */
-    getRollData() {
+    getRollData(): Record<string, unknown> {
         const data = super.getRollData ? super.getRollData() : {};
 
         // Add characteristic values and bonuses for formulas
-        for (const [key, char] of Object.entries(this.characteristics) as [string, any][]) {
+        for (const [key, char] of Object.entries(this.characteristics)) {
             data[char.short] = char.total;
             data[`${char.short}B`] = char.bonus;
             data[key] = char.total;
@@ -847,7 +981,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @returns {number}
      * @private
      */
-    static _toInt(value, fallback = 0) {
+    static _toInt(value: any, fallback = 0): number {
         if (value === null || value === undefined || value === '') return fallback;
         const num = Number(value);
         if (Number.isNaN(num)) return fallback;
@@ -855,7 +989,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
     }
 
     /** @inheritDoc */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         NPCDataV2.#migrateSize(source);
         NPCDataV2.#migrateWounds(source);
@@ -866,7 +1000,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Migrate size to integer.
      * @param {object} source - The source data
      */
-    static #migrateSize(source) {
+    static #migrateSize(source: Record<string, any>): void {
         if (source.size !== undefined) {
             source.size = this._toInt(source.size, 4);
             if (source.size < 1) source.size = 1;
@@ -878,7 +1012,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Migrate wounds values to integers.
      * @param {object} source - The source data
      */
-    static #migrateWounds(source) {
+    static #migrateWounds(source: Record<string, any>): void {
         if (source.wounds) {
             if (source.wounds.max !== undefined) {
                 source.wounds.max = this._toInt(source.wounds.max, 10);
@@ -896,7 +1030,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Migrate threat level to integer.
      * @param {object} source - The source data
      */
-    static #migrateThreatLevel(source) {
+    static #migrateThreatLevel(source: Record<string, any>): void {
         if (source.threatLevel !== undefined) {
             source.threatLevel = this._toInt(source.threatLevel, 5);
         }

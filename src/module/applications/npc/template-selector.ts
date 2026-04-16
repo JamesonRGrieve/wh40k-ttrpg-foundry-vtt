@@ -97,7 +97,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * Promise resolver.
      * @type {Function|null}
      */
-    #resolve: Function | null = null;
+    #resolve: ((value: any) => void) | null = null;
 
     /**
      * Whether submitted.
@@ -198,21 +198,21 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
         if (categorySelect) {
             categorySelect.addEventListener('change', () => {
-                this.#filters.category = categorySelect.value;
+                this.#filters.category = (categorySelect as HTMLSelectElement).value;
                 void this.render({ parts: ['content'] });
             });
         }
 
         if (factionSelect) {
             factionSelect.addEventListener('change', () => {
-                this.#filters.faction = factionSelect.value;
+                this.#filters.faction = (factionSelect as HTMLSelectElement).value;
                 void this.render({ parts: ['content'] });
             });
         }
 
         if (searchInput) {
             searchInput.addEventListener('input', () => {
-                this.#filters.search = searchInput.value;
+                this.#filters.search = (searchInput as HTMLInputElement).value;
                 this._debounceRender();
             });
         }
@@ -222,7 +222,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         const threatValue = this.element.querySelector('.threat-value');
         if (threatSlider) {
             threatSlider.addEventListener('input', () => {
-                this.#threatLevel = parseInt(threatSlider.value, 10);
+                this.#threatLevel = parseInt((threatSlider as HTMLInputElement).value, 10);
                 if (threatValue) (threatValue as HTMLElement).textContent = String(this.#threatLevel);
                 this._debounceRender();
             });
@@ -232,7 +232,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         const hordeCheckbox = this.element.querySelector('[name="isHorde"]');
         if (hordeCheckbox) {
             hordeCheckbox.addEventListener('change', () => {
-                this.#isHorde = hordeCheckbox.checked;
+                this.#isHorde = (hordeCheckbox as HTMLInputElement).checked;
             });
         }
     }

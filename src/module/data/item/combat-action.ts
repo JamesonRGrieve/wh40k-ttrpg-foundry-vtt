@@ -7,8 +7,18 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes DescriptionTemplate
  */
 export default class CombatActionData extends ItemDataModel.mixin(DescriptionTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare actionType: string;
+    declare subtypes: Set<string>;
+    declare attackModifier: number;
+    declare isAttack: boolean;
+    declare isMovement: boolean;
+    declare isConcentration: boolean;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -56,7 +66,7 @@ export default class CombatActionData extends ItemDataModel.mixin(DescriptionTem
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         // Ensure subtypes is an array for SetField compatibility
         if (!Array.isArray(source.subtypes)) {
@@ -65,7 +75,7 @@ export default class CombatActionData extends ItemDataModel.mixin(DescriptionTem
     }
 
     /** @inheritdoc */
-    prepareDerivedData() {
+    prepareDerivedData(): void {
         super.prepareDerivedData();
 
         // Auto-set flags based on subtypes
@@ -97,7 +107,7 @@ export default class CombatActionData extends ItemDataModel.mixin(DescriptionTem
      * Get formatted attack modifier display.
      * @type {string}
      */
-    get attackModifierLabel() {
+    get attackModifierLabel(): string {
         if (this.attackModifier === 0) return '';
         return this.attackModifier > 0 ? `+${this.attackModifier}` : this.attackModifier.toString();
     }
@@ -114,7 +124,7 @@ export default class CombatActionData extends ItemDataModel.mixin(DescriptionTem
      * Properties for chat display.
      * @type {string[]}
      */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
 
         props.push(this.actionTypeLabel);

@@ -17,7 +17,6 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  *
  * @extends {HandlebarsApplicationMixin(ApplicationV2)}
  */
-// @ts-ignore - TS2417 static side inheritance
 export default class DifficultyCalculatorDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     [key: string]: any;
 
@@ -216,7 +215,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
      */
     static #updateQuantity(this: any, event: Event, target: HTMLElement): void {
         event.preventDefault();
-        const input = target.closest('form').querySelector('[name="quantity"]');
+        const input = target.closest('form').querySelector('[name="quantity"]') as HTMLInputElement;
         const quantity = parseInt(input.value, 10) || 1;
         this.#state.quantity = Math.max(1, quantity);
         this.render();

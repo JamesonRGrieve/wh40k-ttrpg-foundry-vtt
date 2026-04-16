@@ -4,6 +4,7 @@
  * Phase 6 implementation for npcV2 actors with primaryUse="vehicle" or "ship"
  */
 
+import type { WH40KVehicle } from '../../documents/vehicle.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 
 /**
@@ -16,8 +17,8 @@ import BaseActorSheet from './base-actor-sheet.ts';
 export default class VehicleSheet extends BaseActorSheet {
     [key: string]: any;
 
-    declare actor: any;
-    declare document: any;
+    declare actor: WH40KVehicle;
+    declare document: WH40KVehicle;
 
     /* -------------------------------------------- */
     /*  Static Configuration                        */

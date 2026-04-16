@@ -39,7 +39,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             // Unique identifier for this grant within its parent
@@ -114,7 +114,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @param {boolean} [options.dryRun=false]
      * @returns {Promise<GrantApplicationResult>}
      */
-    async apply(actor, data: any = {}, options: any = {}) {
+    async apply(actor, data: any = {}, options: any = {}): Promise<any> {
         const result = this._initResult();
         if (!actor) {
             result.success = false;
@@ -148,7 +148,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @abstract
      */
     // eslint-disable-next-line @typescript-eslint/require-await
-    async reverse(actor, appliedState) {
+    async reverse(actor, appliedState): Promise<any> {
         throw new Error(`${this.constructor.name} must implement reverse()`);
     }
 
@@ -158,7 +158,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @param {object} restoreData - Data returned from reverse()
      * @returns {Promise<GrantApplicationResult>}
      */
-    async restore(actor, restoreData) {
+    async restore(actor, restoreData): Promise<any> {
         return this.apply(actor, restoreData, { restore: true });
     }
 
@@ -179,7 +179,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * Check if this grant can be automatically applied without user interaction.
      * @returns {object|false} Data to auto-apply, or false if user input needed
      */
-    getAutomaticValue() {
+    getAutomaticValue(): Record<string, any> | false {
         if (this.optional) return false;
         return {};
     }
@@ -189,7 +189,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @returns {Promise<GrantSummary>}
      */
     // eslint-disable-next-line @typescript-eslint/require-await
-    async getSummary() {
+    async getSummary(): Promise<any> {
         return {
             type: (this.constructor as any).TYPE,
             label: this.displayLabel,
@@ -207,7 +207,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * Note: Named validateGrant to avoid collision with Foundry's DataModel.validate()
      * @returns {string[]} Array of validation error messages
      */
-    validateGrant() {
+    validateGrant(): any {
         return [];
     }
 
@@ -221,7 +221,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @returns {object}
      * @protected
      */
-    _createGrantFlags(sourceUuid) {
+    _createGrantFlags(sourceUuid): any {
         return {
             'wh40k-rpg': {
                 sourceId: sourceUuid,
@@ -240,7 +240,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @returns {Promise<Item|null>}
      * @protected
      */
-    async _fetchItem(uuid) {
+    async _fetchItem(uuid): Promise<any> {
         if (!uuid) return null;
         try {
             return await fromUuid(uuid);

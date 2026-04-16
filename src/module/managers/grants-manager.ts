@@ -561,7 +561,7 @@ export class GrantsManager {
             case 'choice':
                 // Choice grants contain nested grants, reverse them
                 if (applied.grantResults) {
-                    for (const [key, nestedState] of Object.entries(applied.grantResults)) {
+                    for (const [key, nestedState] of Object.entries(applied.grantResults) as [string, any][]) {
                         await this._reverseGrant(actor, key, { type: nestedState.type || 'unknown', applied: nestedState });
                     }
                 }
@@ -578,10 +578,10 @@ export class GrantsManager {
      * Reverse characteristic grant.
      * @private
      */
-    static async _reverseCharacteristicGrant(actor, applied, result) {
+    static async _reverseCharacteristicGrant(actor: any, applied: any, result: any) {
         const updates = {};
 
-        for (const [key, state] of Object.entries(applied || {})) {
+        for (const [key, state] of Object.entries(applied || {}) as [string, any][]) {
             if (state.previousValue !== undefined) {
                 updates[`system.characteristics.${key}.advance`] = state.previousValue;
                 result.notifications.push(`Reversed ${key}: ${state.newValue} → ${state.previousValue}`);
@@ -597,11 +597,11 @@ export class GrantsManager {
      * Reverse skill grant.
      * @private
      */
-    static async _reverseSkillGrant(actor, applied, result) {
+    static async _reverseSkillGrant(actor: any, applied: any, result: any) {
         const idsToDelete = [];
         const itemsToUpdate = [];
 
-        for (const [key, state] of Object.entries(applied || {})) {
+        for (const [key, state] of Object.entries(applied || {}) as [string, any][]) {
             if (state.created && state.itemId) {
                 // Delete created skill
                 idsToDelete.push(state.itemId);
@@ -627,10 +627,10 @@ export class GrantsManager {
      * Reverse item grant.
      * @private
      */
-    static async _reverseItemGrant(actor, applied, result) {
+    static async _reverseItemGrant(actor: any, applied: any, result: any) {
         const idsToDelete = [];
 
-        for (const [, itemId] of Object.entries(applied || {})) {
+        for (const [, itemId] of Object.entries(applied || {}) as [string, any][]) {
             if (itemId && actor.items.has(itemId)) {
                 const item = actor.items.get(itemId);
                 idsToDelete.push(itemId);
@@ -647,17 +647,17 @@ export class GrantsManager {
      * Reverse resource grant.
      * @private
      */
-    static async _reverseResourceGrant(actor, applied, result) {
+    static async _reverseResourceGrant(actor: any, applied: any, result: any) {
         const updates = {};
 
-        const resourcePaths = {
+        const resourcePaths: Record<string, any> = {
             wounds: { value: 'system.wounds.value', max: 'system.wounds.max' },
             fate: { value: 'system.fatePoints.value', max: 'system.fatePoints.max' },
             corruption: { value: 'system.corruption.value' },
             insanity: { value: 'system.insanity.value' },
         };
 
-        for (const [resourceType, state] of Object.entries(applied || {})) {
+        for (const [resourceType, state] of Object.entries(applied || {}) as [string, any][]) {
             const paths = resourcePaths[resourceType];
             if (!paths) continue;
 

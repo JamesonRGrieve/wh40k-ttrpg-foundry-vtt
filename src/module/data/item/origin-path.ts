@@ -9,11 +9,46 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class OriginPathData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare step: string;
+    declare stepIndex: number;
+    declare positions: number[];
+    declare gameSystem: string;
+    declare xpCost: number;
+    declare source: { book: string; page: string; custom: string };
+    declare isAdvancedOrigin: boolean;
+    declare replacesOrigins: string[];
+    declare requirements: { text: string; previousSteps: string[]; excludedSteps: string[] };
+    declare grants: {
+        woundsFormula: string;
+        wounds: number;
+        fateFormula: string;
+        fateThreshold: number;
+        blessedByEmperor: boolean;
+        skills: Array<{ name: string; specialization: string; level: string }>;
+        talents: Array<{ name: string; specialization: string; uuid: string }>;
+        traits: Array<{ name: string; level: number; uuid: string }>;
+        aptitudes: string[];
+        equipment: Array<{ name: string; quantity: number; uuid: string }>;
+        specialAbilities: Array<{ name: string; description: string }>;
+        choices: Array<{ type: string; label: string; name?: string; options: Record<string, any>[]; count: number; xpCost: number }>;
+    };
+    declare effectText: string;
+    declare notes: string;
+    declare selectedChoices: Record<string, any>;
+    declare activeModifiers: Array<{ source: string; type: string; key: string; value: number; itemUuid: string }>;
+    declare homebrew: { throneGelt: string; thrones: string };
+    declare rollResults: {
+        wounds: { formula: string; rolled: number; breakdown: string; timestamp: number };
+        fate: { formula: string; rolled: number; breakdown: string; timestamp: number };
+    };
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -280,7 +315,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Is this an advanced origin from Into The Storm?
      * @type {boolean}
      */
-    get isAdvanced() {
+    get isAdvanced(): boolean {
         return this.isAdvancedOrigin || this.xpCost > 0;
     }
 
@@ -288,7 +323,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Get display string for XP cost.
      * @type {string}
      */
-    get xpCostLabel() {
+    get xpCostLabel(): string {
         return this.xpCost > 0 ? `${this.xpCost} XP` : '—';
     }
 
@@ -385,7 +420,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    prepareDerivedData() {
+    prepareDerivedData(): void {
         super.prepareDerivedData?.();
         this._calculateActiveModifiers();
     }
@@ -395,7 +430,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * This populates the activeModifiers array based on what the player has chosen.
      * @private
      */
-    _calculateActiveModifiers() {
+    _calculateActiveModifiers(): void {
         const activeModifiers = [];
 
         for (const choice of this.grants.choices) {
@@ -495,7 +530,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         OriginPathData.#migratePositions(source);
         OriginPathData.#migrateNavigation(source);
@@ -507,7 +542,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Convert old position + positions to single positions array.
      * @param {object} source  The source data
      */
-    static #migratePositions(source) {
+    static #migratePositions(source: Record<string, any>): void {
         if (source.position !== undefined && source.positions !== undefined) {
             const oldPosition = source.position;
             const oldPositions = source.positions || [];
@@ -524,7 +559,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Remove old navigation field.
      * @param {object} source  The source data
      */
-    static #migrateNavigation(source) {
+    static #migrateNavigation(source: Record<string, any>): void {
         delete source.navigation;
     }
 
@@ -532,7 +567,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Warn about legacy wounds/fate fields if formulas are missing.
      * @param {object} source  The source data
      */
-    static #migrateWoundsAndFate(source) {
+    static #migrateWoundsAndFate(source: Record<string, any>): void {
         const grants = source.grants || {};
         if (grants.wounds && !grants.woundsFormula) {
             console.debug(`Origin Path "${source.identifier || '?'}" uses legacy grants.wounds field. Consider adding a woundsFormula instead.`);
@@ -546,7 +581,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Migrate effectText to description.
      * @param {object} source  The source data
      */
-    static #migrateEffectText(source) {
+    static #migrateEffectText(source: Record<string, any>): void {
         if (source.effectText && !source.description?.value) {
             source.description = source.description || {};
             source.description.value = `<p>${source.effectText.replace(/\n/g, '<br>')}</p>`;
@@ -563,10 +598,10 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, any> | undefined, options): void {
         super._cleanData?.(source, options);
         // Ensure numeric fields are properly typed
-        if (source.grants) {
+        if (source?.grants) {
             if (typeof source.grants.wounds === 'string') {
                 source.grants.wounds = parseInt(source.grants.wounds) || 0;
             }
@@ -581,7 +616,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         return [this.stepLabel, ...this.grantsSummary];
     }
 
@@ -590,7 +625,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             step: this.stepLabel,
             stepIndex: this.stepIndex + 1,

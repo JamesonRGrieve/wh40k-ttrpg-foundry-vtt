@@ -13,8 +13,69 @@ const { NumberField, SchemaField, StringField, ArrayField, HTMLField } = (foundr
  *
  * @extends {CreatureTemplate}
  */
+/** Shape of a simple weapon entry for NPCs. */
+interface NPCSimpleWeapon {
+    name: string;
+    damage: string;
+    pen: number;
+    range: string;
+    rof: string;
+    clip: number;
+    reload: string;
+    special: string;
+    class: 'melee' | 'pistol' | 'basic' | 'heavy' | 'thrown' | 'launcher';
+}
+
 export default class NPCData extends HordeTemplate(CreatureTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare faction: string;
+    declare subfaction: string;
+    declare allegiance: string;
+    declare role: 'bruiser' | 'sniper' | 'caster' | 'support' | 'commander' | 'specialist';
+    declare type: 'troop' | 'elite' | 'master' | 'horde' | 'swarm' | 'creature' | 'daemon' | 'xenos';
+    declare threatLevel: number;
+    declare weapons: {
+        mode: 'simple' | 'embedded';
+        simple: NPCSimpleWeapon[];
+    };
+    declare simpleArmour: {
+        mode: 'simple' | 'embedded';
+        total: number;
+    };
+    declare specialAbilities: string;
+    declare pinnedAbilities: string[];
+    declare template: string;
+    declare quickNotes: string;
+    declare tags: string[];
+    declare personality: {
+        demeanor: string;
+        goals: string;
+        fears: string;
+        quirks: string;
+    };
+    declare description: string;
+    declare tactics: string;
+    declare source: string;
+
+    // From HordeTemplate mixin
+    declare horde: {
+        enabled: boolean;
+        magnitude: {
+            max: number;
+            current: number;
+        };
+        magnitudeLog: Array<{
+            amount: number;
+            source: string;
+            timestamp: number;
+        }>;
+        traits: string[];
+        damageMultiplier: number;
+        sizeModifier: number;
+    };
+
     /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */
@@ -23,7 +84,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
     static _systemType = 'npc';
 
     /** @inheritDoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return {
             ...super.defineSchema(),
 
@@ -120,7 +181,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         NPCData.#migrateFromV2(source);
         NPCData.#migrateSimpleArmour(source);
@@ -131,7 +192,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * Migrate from NPCDataV2 format if trainedSkills exist.
      * @param {object} source - The source data
      */
-    static #migrateFromV2(source) {
+    static #migrateFromV2(source: Record<string, any>): void {
         // Migrate trainedSkills to full skills format
         if (source.trainedSkills && source.skills) {
             for (const [skillName, skillData] of Object.entries(source.trainedSkills)) {
@@ -164,7 +225,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * Migrate simple armour field.
      * @param {object} source - The source data
      */
-    static #migrateSimpleArmour(source) {
+    static #migrateSimpleArmour(source: Record<string, any>): void {
         source.simpleArmour ??= { mode: 'embedded', total: 0 };
         if (source.simpleArmour.total !== undefined) {
             source.simpleArmour.total = parseInt(source.simpleArmour.total) || 0;
@@ -175,7 +236,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * Migrate threat level to ensure valid range.
      * @param {object} source - The source data
      */
-    static #migrateThreatLevel(source) {
+    static #migrateThreatLevel(source: Record<string, any>): void {
         if (source.threatLevel !== undefined) {
             source.threatLevel = parseInt(source.threatLevel) || 5;
             if (source.threatLevel < 1) source.threatLevel = 1;
@@ -191,7 +252,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * Get the NPC type label.
      * @type {string}
      */
-    get typeLabel() {
+    get typeLabel(): string {
         const key = `WH40K.NPCType.${this.type.charAt(0).toUpperCase()}${this.type.slice(1)}`;
         return game.i18n.localize(key);
     }
@@ -200,7 +261,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * Get threat level description.
      * @type {string}
      */
-    get threatDescription() {
+    get threatDescription(): string {
         if (this.threatLevel <= 5) return game.i18n.localize('WH40K.Threat.Low');
         if (this.threatLevel <= 10) return game.i18n.localize('WH40K.Threat.Moderate');
         if (this.threatLevel <= 15) return game.i18n.localize('WH40K.Threat.Dangerous');
@@ -212,7 +273,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * Get a threat summary string.
      * @type {string}
      */
-    get threatSummary() {
+    get threatSummary(): string {
         return `${this.typeLabel} (Threat ${this.threatLevel})`;
     }
 
@@ -220,7 +281,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * Is this a horde-type NPC?
      * @type {boolean}
      */
-    get isHorde() {
+    get isHorde(): boolean {
         return this.type === 'horde' || this.type === 'swarm';
     }
 
@@ -228,7 +289,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * Is this a significant threat (elite or above)?
      * @type {boolean}
      */
-    get isElite() {
+    get isElite(): boolean {
         return this.type === 'elite' || this.type === 'master';
     }
 
@@ -236,7 +297,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * Get role label.
      * @type {string}
      */
-    get roleLabel() {
+    get roleLabel(): string {
         const key = `WH40K.NPCRole.${this.role.charAt(0).toUpperCase()}${this.role.slice(1)}`;
         return game.i18n.localize(key);
     }
@@ -245,7 +306,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * Get threat tier info with color and label.
      * @type {Object}
      */
-    get threatTier() {
+    get threatTier(): { key: string; label: string; color: string } {
         const t = this.threatLevel;
         if (t <= 5) return { key: 'minor', label: 'Hereticus Minoris', color: '#4caf50' };
         if (t <= 10) return { key: 'standard', label: 'Hereticus Medius', color: '#2196f3' };
@@ -263,7 +324,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {string} mode - The mode to switch to
      * @returns {Promise<Actor>}
      */
-    switchWeaponMode(mode) {
+    switchWeaponMode(mode: string): any {
         if (!['simple', 'embedded'].includes(mode)) return this.parent;
         return this.parent.update({ 'system.weapons.mode': mode });
     }
@@ -273,26 +334,17 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {Object} data - Weapon data
      * @returns {Promise<Actor>}
      */
-    addSimpleWeapon(data = {}) {
+    addSimpleWeapon(data: Record<string, any> = {}): any {
         const weapons = foundry.utils.deepClone(this.weapons.simple || []);
         weapons.push({
-            // @ts-expect-error - dynamic property
             name: data.name || 'New Weapon',
-            // @ts-expect-error - dynamic property
             damage: data.damage || '1d10',
-            // @ts-expect-error - dynamic property
             pen: data.pen || 0,
-            // @ts-expect-error - dynamic property
             range: data.range || 'Melee',
-            // @ts-expect-error - dynamic property
             rof: data.rof || 'S/-/-',
-            // @ts-expect-error - dynamic property
             clip: data.clip || 0,
-            // @ts-expect-error - dynamic property
             reload: data.reload || '-',
-            // @ts-expect-error - dynamic property
             special: data.special || '',
-            // @ts-expect-error - dynamic property
             class: data.class || 'melee',
         });
         return this.parent.update({ 'system.weapons.simple': weapons });
@@ -303,7 +355,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {number} index - The weapon index
      * @returns {Promise<Actor>}
      */
-    removeSimpleWeapon(index) {
+    removeSimpleWeapon(index: number): any {
         const weapons = foundry.utils.deepClone(this.weapons.simple || []);
         if (index < 0 || index >= weapons.length) return this.parent;
         weapons.splice(index, 1);
@@ -319,7 +371,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {string} mode - The mode to switch to
      * @returns {Promise<Actor>}
      */
-    switchArmourMode(mode) {
+    switchArmourMode(mode: string): any {
         if (!['simple', 'embedded'].includes(mode)) return this.parent;
         return this.parent.update({ 'system.simpleArmour.mode': mode });
     }
@@ -330,7 +382,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {string} location - The location key
      * @returns {number}
      */
-    getArmourForLocation(location) {
+    getArmourForLocation(location: string): number {
         if (this.simpleArmour.mode === 'simple') {
             return this.simpleArmour.total;
         }
@@ -346,7 +398,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {string} itemId - The item ID to pin
      * @returns {Promise<Actor>}
      */
-    pinAbility(itemId) {
+    pinAbility(itemId: string): any {
         const pinned = foundry.utils.deepClone(this.pinnedAbilities || []);
         if (!pinned.includes(itemId)) {
             pinned.push(itemId);
@@ -360,7 +412,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {string} itemId - The item ID to unpin
      * @returns {Promise<Actor>}
      */
-    unpinAbility(itemId) {
+    unpinAbility(itemId: string): any {
         const pinned = foundry.utils.deepClone(this.pinnedAbilities || []);
         const idx = pinned.indexOf(itemId);
         if (idx >= 0) {
@@ -375,7 +427,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {string} itemId - The item ID to toggle
      * @returns {Promise<Actor>}
      */
-    togglePinAbility(itemId) {
+    togglePinAbility(itemId: string): any {
         const pinned = this.pinnedAbilities || [];
         return pinned.includes(itemId) ? this.unpinAbility(itemId) : this.pinAbility(itemId);
     }
@@ -385,7 +437,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    prepareDerivedData() {
+    prepareDerivedData(): void {
         super.prepareDerivedData();
 
         // Auto-enable horde mode if NPC type is horde or swarm
@@ -399,7 +451,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
     /* -------------------------------------------- */
 
     /** @override */
-    getRollData() {
+    getRollData(): Record<string, unknown> {
         const data = super.getRollData?.() ?? {};
 
         // Add NPC-specific roll data

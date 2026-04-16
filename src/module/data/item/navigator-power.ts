@@ -9,11 +9,23 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes DescriptionTemplate
  * @mixes ActivationTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionTemplate, ActivationTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare test: { characteristic: string; modifier: number; opposed: boolean; opposedCharacteristic: string };
+    declare levels: {
+        novice: { effect: string; prerequisite: string };
+        adept: { effect: string; prerequisite: string };
+        master: { effect: string; prerequisite: string };
+    };
+    declare sustain: string;
+    declare sideEffects: string;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -65,7 +77,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
     /* -------------------------------------------- */
 
     /** @override */
-    get isRollable() {
+    get isRollable(): boolean {
         return true;
     }
 
@@ -73,7 +85,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
      * Get the test characteristic label.
      * @type {string}
      */
-    get testCharacteristicLabel() {
+    get testCharacteristicLabel(): string {
         return game.i18n.localize(`WH40K.Characteristic.${this.test.characteristic.capitalize()}`);
     }
 
@@ -94,7 +106,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         // @ts-expect-error - TS2339
         const props = [`Test: ${this.testLabel}`, ...ActivationTemplate.prototype.chatProperties.call(this)];
 
@@ -106,7 +118,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             test: this.testLabel,
             action: this.activationLabel,

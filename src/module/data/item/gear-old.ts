@@ -11,11 +11,20 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes PhysicalItemTemplate
  * @mixes EquippableTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare category: string;
+    declare consumable: boolean;
+    declare uses: { value: number; max: number };
+    declare effect: string;
+    declare duration: string;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -72,7 +81,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Get the category label.
      * @type {string}
      */
-    get categoryLabel() {
+    get categoryLabel(): string {
         return game.i18n.localize(`WH40K.GearCategory.${this.category.capitalize()}`);
     }
 
@@ -97,7 +106,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.categoryLabel];
 
@@ -117,7 +126,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             category: this.categoryLabel,
         };
@@ -131,7 +140,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Consume one use.
      * @returns {Promise<Item>}
      */
-    consume() {
+    consume(): any {
         if (!this.hasLimitedUses) return this.parent;
         const newValue = Math.max(0, (this.uses.value ?? 0) - 1);
         return this.parent?.update({ 'system.uses.value': newValue });

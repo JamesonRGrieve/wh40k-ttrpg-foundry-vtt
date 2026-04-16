@@ -11,11 +11,22 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes PhysicalItemTemplate
  * @mixes DamageTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, DamageTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare weaponTypes: Set<string>;
+    declare modifiers: { damage: number; penetration: number; range: number; rateOfFire: { single: number; semi: number; full: number } };
+    declare addedQualities: Set<string>;
+    declare removedQualities: Set<string>;
+    declare clipModifier: number;
+    declare effect: string;
+    declare notes: string;
+    declare source: { book: string; page: string; custom: string };
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -65,7 +76,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         // Legacy field cleanup
         delete source.usedWith;
@@ -84,7 +95,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
      * Get the weapon types label.
      * @type {string}
      */
-    get weaponTypesLabel() {
+    get weaponTypesLabel(): string {
         if (!this.weaponTypes || !this.weaponTypes.size) return game.i18n.localize('WH40K.Ammunition.AllWeapons');
         return Array.from(this.weaponTypes as Set<string>)
             .map((t) => {
@@ -98,7 +109,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
      * Does this ammo modify weapon stats?
      * @type {boolean}
      */
-    get hasModifiers() {
+    get hasModifiers(): boolean {
         const mods = this.modifiers;
         if (mods.damage !== 0) return true;
         if (mods.penetration !== 0) return true;
@@ -112,7 +123,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), `For: ${this.weaponTypesLabel}`];
 
@@ -136,7 +147,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             weaponTypes: this.weaponTypesLabel,
         };

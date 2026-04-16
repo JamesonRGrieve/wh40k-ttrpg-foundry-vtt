@@ -9,11 +9,30 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes DescriptionTemplate
  * @mixes PhysicalItemTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class WeaponModificationData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare category: string;
+    declare restrictions: { weaponClasses: Set<string>; weaponTypes: Set<string> };
+    declare modifiers: {
+        damage: number;
+        penetration: number;
+        range: number;
+        rangeMultiplier: number;
+        clip: number;
+        toHit: number;
+        weight: number;
+        rateOfFire: { single: number; semi: number; full: number };
+    };
+    declare addedQualities: Set<string>;
+    declare removedQualities: Set<string>;
+    declare effect: string;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -103,7 +122,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
      * Get category label.
      * @type {string}
      */
-    get categoryLabel() {
+    get categoryLabel(): string {
         return game.i18n.localize(`WH40K.Modification.Category.${this.category.capitalize()}`);
     }
 
@@ -111,7 +130,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
      * Has any non-zero modifiers?
      * @type {boolean}
      */
-    get hasModifiers() {
+    get hasModifiers(): boolean {
         const mods = this.modifiers;
         if (mods.damage !== 0) return true;
         if (mods.penetration !== 0) return true;
@@ -129,7 +148,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.restrictionsLabel];
 
@@ -154,7 +173,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             restrictions: this.restrictionsLabel,
         };

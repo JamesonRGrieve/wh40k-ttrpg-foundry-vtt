@@ -223,6 +223,7 @@ export function getFuzzy(obj, term) {
             return entry;
         }
     }
+    return undefined;
 }
 
 export function getCriticalDamage(type, location, amount) {

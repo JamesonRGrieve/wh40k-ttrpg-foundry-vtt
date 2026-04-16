@@ -7,7 +7,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
  */
 export default class StorageLocationData extends ItemDataModel.mixin(DescriptionTemplate) {
     /** @override */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -17,7 +17,7 @@ export default class StorageLocationData extends ItemDataModel.mixin(Description
     }
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
         if (this.location) {
             props.push(this.location);
@@ -26,7 +26,7 @@ export default class StorageLocationData extends ItemDataModel.mixin(Description
     }
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return [{ label: this.location || 'Storage', icon: 'fa-solid fa-warehouse' }];
     }
 

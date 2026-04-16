@@ -9,10 +9,21 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare damageType: string;
+    declare bodyPart: string;
+    declare severity: number;
+    declare effect: string;
+    declare effects: Record<string, { text?: string; permanent?: boolean; [key: string]: any }>;
+    declare permanent: boolean;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -113,7 +124,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Get the damage type label.
      * @type {string}
      */
-    get damageTypeLabel() {
+    get damageTypeLabel(): string {
         const key = `WH40K.DamageType.${this.damageType.capitalize()}`;
         return game.i18n.has(key) ? game.i18n.localize(key) : this.damageType.capitalize();
     }
@@ -122,7 +133,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Get the body part label.
      * @type {string}
      */
-    get bodyPartLabel() {
+    get bodyPartLabel(): string {
         const key = `WH40K.BodyPart.${this.bodyPart.capitalize()}`;
         return game.i18n.has(key) ? game.i18n.localize(key) : this.bodyPart.capitalize();
     }
@@ -131,7 +142,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Get the severity label.
      * @type {string}
      */
-    get severityLabel() {
+    get severityLabel(): string {
         const key = 'WH40K.CriticalInjury.Severity';
         const label = game.i18n.has(key) ? game.i18n.localize(key) : 'Severity';
         return `${label}: ${this.severity}`;
@@ -169,7 +180,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Get CSS class for severity level.
      * @type {string}
      */
-    get severityClass() {
+    get severityClass(): string {
         if (this.severity <= 3) return 'severity-minor';
         if (this.severity <= 6) return 'severity-moderate';
         if (this.severity <= 9) return 'severity-severe';
@@ -194,7 +205,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [this.damageTypeLabel, this.bodyPartLabel, this.severityLabel];
 
         if (this.isPermanent) {
@@ -210,7 +221,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             type: this.damageTypeLabel,
             location: this.bodyPartLabel,

@@ -89,7 +89,7 @@ export class WH40KItem extends WH40KItemContainer {
         return this.type as string;
     }
 
-    get totalWeight() {
+    get totalWeight(): boolean {
         let weight = this.system.weight || 0;
         if (this.items && this.items.size > 0) {
             this.items.forEach((item: any) => (weight += item.totalWeight));
@@ -97,205 +97,205 @@ export class WH40KItem extends WH40KItemContainer {
         return weight;
     }
 
-    get equipped() {
+    get equipped(): boolean {
         return !!this.system.equipped;
     }
 
-    get isMentalDisorder() {
+    get isMentalDisorder(): boolean {
         return this._type === 'mentalDisorder';
     }
 
-    get isMalignancy() {
+    get isMalignancy(): boolean {
         return this._type === 'malignancy';
     }
 
-    get isMutation() {
+    get isMutation(): boolean {
         return this._type === 'mutation';
     }
 
-    get isTalent() {
+    get isTalent(): boolean {
         return this._type === 'talent';
     }
 
-    get isTrait() {
+    get isTrait(): boolean {
         return this._type === 'trait';
     }
 
-    get isAptitude() {
+    get isAptitude(): boolean {
         return this._type === 'aptitude';
     }
 
-    get isSpecialAbility() {
+    get isSpecialAbility(): boolean {
         return this._type === 'specialAbility';
     }
 
-    get isPsychicPower() {
+    get isPsychicPower(): boolean {
         return this._type === 'psychicPower';
     }
 
-    get isNavigatorPower() {
+    get isNavigatorPower(): boolean {
         return this._type === 'navigatorPower';
     }
 
-    get isPsychicBarrage() {
+    get isPsychicBarrage(): boolean {
         return this._type === 'psychicPower' && this.system.attackType === 'Psychic Barrage';
     }
 
-    get isPsychicStorm() {
+    get isPsychicStorm(): boolean {
         return this._type === 'psychicPower' && this.system.attackType === 'Psychic Storm';
     }
 
-    get isCriticalInjury() {
+    get isCriticalInjury(): boolean {
         return this._type === 'criticalInjury';
     }
 
-    get isOriginPath() {
+    get isOriginPath(): boolean {
         return this._type === 'originPath' || (this._type === 'trait' && (this.flags as any)?.rt?.kind === 'origin');
     }
 
-    get isSkill() {
+    get isSkill(): boolean {
         return this._type === 'skill';
     }
 
-    get isOrder() {
+    get isOrder(): boolean {
         return this._type === 'order';
     }
 
-    get isRitual() {
+    get isRitual(): boolean {
         return this._type === 'ritual';
     }
 
-    get isShipComponent() {
+    get isShipComponent(): boolean {
         return this._type === 'shipComponent';
     }
 
-    get isShipRole() {
+    get isShipRole(): boolean {
         return this._type === 'shipRole';
     }
 
-    get isShipUpgrade() {
+    get isShipUpgrade(): boolean {
         return this._type === 'shipUpgrade';
     }
 
-    get isShipWeapon() {
+    get isShipWeapon(): boolean {
         return this._type === 'shipWeapon';
     }
 
-    get isVehicleTrait() {
+    get isVehicleTrait(): boolean {
         return this._type === 'vehicleTrait';
     }
 
-    get isVehicleUpgrade() {
+    get isVehicleUpgrade(): boolean {
         return this._type === 'vehicleUpgrade';
     }
 
-    get isWeaponQuality() {
+    get isWeaponQuality(): boolean {
         return this._type === 'weaponQuality';
     }
 
-    get isCondition() {
+    get isCondition(): boolean {
         return this._type === 'trait' && (this.flags as any)?.rt?.kind === 'condition';
     }
 
-    get originPathStep() {
+    get originPathStep(): boolean {
         return (this.flags as any)?.rt?.step || this.system?.step || '';
     }
 
-    get isWeapon() {
+    get isWeapon(): boolean {
         return this._type === 'weapon';
     }
 
-    get isRanged() {
+    get isRanged(): boolean {
         return this._type === 'weapon' && this.system.class.toLowerCase() !== 'melee';
     }
 
-    get isThrown() {
+    get isThrown(): boolean {
         return this._type === 'weapon' && this.system.class.toLowerCase() === 'thrown';
     }
 
-    get usesAmmo() {
+    get usesAmmo(): boolean {
         return this.isRanged && this.system.reload && this.system.reload !== 'N/A';
     }
 
-    get isMelee() {
+    get isMelee(): boolean {
         return this._type === 'weapon' && this.system.class.toLowerCase() === 'melee';
     }
 
-    get isArmour() {
+    get isArmour(): boolean {
         return this._type === 'armour';
     }
 
-    get isArmourModification() {
+    get isArmourModification(): boolean {
         return this._type === 'armourModification';
     }
 
-    get isGear() {
+    get isGear(): boolean {
         return this._type === 'gear' || this.isConsumable || this.isDrug || this.isAmmunition || this.isTool;
     }
 
-    get isDrug() {
+    get isDrug(): boolean {
         return this._type === 'drug';
     }
 
-    get isConsumable() {
+    get isConsumable(): boolean {
         return this._type === 'consumable';
     }
 
-    get isTool() {
+    get isTool(): boolean {
         return this._type === 'tool';
     }
 
-    get isCybernetic() {
+    get isCybernetic(): boolean {
         return this._type === 'cybernetic';
     }
 
-    get isWeaponModification() {
+    get isWeaponModification(): boolean {
         return this._type === 'weaponModification';
     }
 
-    get isAmmunition() {
+    get isAmmunition(): boolean {
         return this._type === 'ammunition';
     }
 
-    get isForceField() {
+    get isForceField(): boolean {
         return this._type === 'forceField';
     }
 
-    get isAttackSpecial() {
+    get isAttackSpecial(): boolean {
         return this._type === 'attackSpecial';
     }
 
-    get isStorageLocation() {
+    get isStorageLocation(): boolean {
         return this._type === 'storageLocation';
     }
 
-    get isBackpack() {
+    get isBackpack(): boolean {
         return this._type === 'backpack';
     }
 
-    get isInBackpack() {
+    get isInBackpack(): boolean {
         return this.system.backpack?.inBackpack || false;
     }
 
-    get isJournalEntry() {
+    get isJournalEntry(): boolean {
         return this._type === 'journalEntry';
     }
 
-    get isEnemy() {
+    get isEnemy(): boolean {
         return this._type === 'enemy';
     }
 
-    get isPeer() {
+    get isPeer(): boolean {
         return this._type === 'peer';
     }
 
-    _onCreate(data, options, user) {
+    _onCreate(data, options, user): any {
         game.wh40k.log('Determining nested items for', this);
         void this._determineNestedItems();
         return super._onCreate(data, options, user);
     }
 
-    prepareData() {
+    prepareData(): void {
         super.prepareData();
         game.wh40k.log('Item prepare data', this);
 
@@ -323,7 +323,7 @@ export class WH40KItem extends WH40KItemContainer {
      * This unlocks and loads nested items dynamically from the adjacent compendium.
      * I tried to find another way to do this but couldn't find anything online - I made my own hack.
      */
-    async _determineNestedItems() {
+    async _determineNestedItems(): Promise<any> {
         // Already has items just skip
         if ((this.items && this.items.size > 0) || this.hasNested()) return;
 
@@ -339,7 +339,7 @@ export class WH40KItem extends WH40KItemContainer {
         }
     }
 
-    async _updateSpecialsFromPack(pack, data) {
+    async _updateSpecialsFromPack(pack, data): Promise<any> {
         const compendium = game.packs.find((p) => p.collection === pack);
         if (!compendium) return;
         await compendium.configure({ locked: false });
@@ -350,9 +350,9 @@ export class WH40KItem extends WH40KItemContainer {
         await compendium.configure({ locked: true });
     }
 
-    async _getAttackSpecials(specialData) {
+    async _getAttackSpecials(specialData): Promise<any> {
         const attackSpecialPack = game.packs.find((p) => p.collection === 'wh40k-rpg.attack-specials');
-        if (!attackSpecialPack) return;
+        if (!attackSpecialPack) return [];
         const index = await attackSpecialPack.getIndex({ fields: ['name', 'img', 'type', 'system'] });
         const specials = [];
         for (const special of Object.keys(specialData)) {
@@ -402,7 +402,7 @@ export class WH40KItem extends WH40KItemContainer {
      * Check if this item has actions available
      * @returns {boolean}
      */
-    get hasActions() {
+    get hasActions(): boolean {
         return this.isWeapon || this.isPsychicPower || this.isNavigatorPower || (this.isTalent && this.system?.isRollable);
     }
 
@@ -410,7 +410,7 @@ export class WH40KItem extends WH40KItemContainer {
      * Check if this item can be rolled
      * @returns {boolean}
      */
-    get isRollable() {
+    get isRollable(): any {
         return (this.isTalent && this.system?.isRollable) || (this.isSkill && this.system?.rollConfig);
     }
 
@@ -418,7 +418,7 @@ export class WH40KItem extends WH40KItemContainer {
      * Send this item's details to chat as a card
      * @param {Object} options - Options for the chat card
      */
-    async sendToChat(options = {}) {
+    async sendToChat(options = {}): Promise<void> {
         const cardData = {
             item: this,
             itemTypeLabel: this.itemTypeLabel,
@@ -479,7 +479,7 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Perform the default action for this item
      */
-    async performAction() {
+    async performAction(): Promise<any> {
         if (this.isWeapon) {
             // Weapon attack - handled by the actor sheet
             return (this.actor as any)?.rollWeaponAction?.(this) || this.sendToChat();
@@ -507,7 +507,7 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Roll a talent that has a rollable action
      */
-    async rollTalent() {
+    async rollTalent(): Promise<any> {
         if (!this.actor) {
             return this.sendToChat();
         }
@@ -559,7 +559,7 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Roll a navigator power
      */
-    async rollNavigatorPower() {
+    async rollNavigatorPower(): Promise<any> {
         if (!this.actor) {
             return this.sendToChat();
         }
@@ -602,7 +602,7 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Roll a ship order
      */
-    async rollOrder() {
+    async rollOrder(): Promise<any> {
         if (!this.actor) {
             return this.sendToChat();
         }
@@ -640,7 +640,7 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Roll a ritual
      */
-    async rollRitual() {
+    async rollRitual(): Promise<any> {
         if (!this.actor) {
             return this.sendToChat();
         }
@@ -679,7 +679,7 @@ export class WH40KItem extends WH40KItemContainer {
      * Apply origin path modifiers to an actor
      * Automatically applies characteristic bonuses, skills, and talents from origin paths
      */
-    async applyOriginToActor(actor) {
+    async applyOriginToActor(actor): Promise<void> {
         if (!this.isOriginPath) {
             (ui.notifications as any).warn('This item is not an origin path and cannot be auto-applied.');
             return;
@@ -762,7 +762,7 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Get a preview of what this origin path will grant
      */
-    getOriginPreview() {
+    getOriginPreview(): any {
         if (!this.isOriginPath) return null;
 
         const modifiers = this.system.modifiers || {};

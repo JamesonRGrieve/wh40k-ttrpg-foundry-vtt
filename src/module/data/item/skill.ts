@@ -7,10 +7,28 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare characteristic: string;
+    declare skillType: string;
+    declare isBasic: boolean;
+    declare aptitudes: string[];
+    declare specializations: string[];
+    declare descriptor: string;
+    declare uses: string;
+    declare type: string;
+    declare requirements: string;
+    declare source: { book: string; page: string; custom: string };
+    declare specialRules: string;
+    declare exampleDifficulties: Array<{ difficulty: string; modifier: number; example: string }>;
+    declare useTime: string;
+    declare rollConfig: { defaultModifier: number; canBeUsedUntrained: boolean; untrainedPenalty: number };
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -85,7 +103,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      * Get the characteristic label.
      * @type {string}
      */
-    get characteristicLabel() {
+    get characteristicLabel(): string {
         if (!this.characteristic) return '';
         const key = `WH40K.Characteristic.${this.characteristic.capitalize()}`;
         const localized = game.i18n.localize(key);
@@ -115,7 +133,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      * Get the skill type label.
      * @type {string}
      */
-    get skillTypeLabel() {
+    get skillTypeLabel(): string {
         return game.i18n.localize(`WH40K.SkillType.${this.skillType.capitalize()}`);
     }
 
@@ -123,7 +141,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      * Is this a specialist skill with predefined specializations?
      * @type {boolean}
      */
-    get hasSpecializations() {
+    get hasSpecializations(): boolean {
         return this.skillType === 'specialist' && this.specializations.length > 0;
     }
 
@@ -132,7 +150,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [`${this.characteristicLabel} (${this.characteristicAbbr})`, this.skillTypeLabel];
 
         if (this.isBasic) {
@@ -155,7 +173,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             characteristic: this.characteristicAbbr,
             type: this.skillTypeLabel,
@@ -170,7 +188,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      * Post this skill to chat.
      * @returns {Promise<ChatMessage|null>}
      */
-    async toChat() {
+    async toChat(): Promise<any> {
         const messageData = {
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             speaker: (ChatMessage as any).getSpeaker(),

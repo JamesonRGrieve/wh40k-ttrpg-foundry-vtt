@@ -17,7 +17,7 @@
  * @returns {*} Extended class with stat breakdown support
  */
 export default function StatBreakdownMixin<T extends new (...args: any[]) => any>(Base: T) {
-    // eslint-disable-next-line no-shadow -- class must match function name for private field access
+    // eslint-disable-next-line @typescript-eslint/no-shadow -- class must match function name for private field access
     return class StatBreakdownMixin extends Base {
         [key: string]: any;
         /**

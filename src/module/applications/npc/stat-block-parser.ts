@@ -554,14 +554,14 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     static _applyCharacteristics(systemData: any, characteristicResult: any): void {
-        for (const [key, value] of Object.entries(characteristicResult.values)) {
+        for (const [key, value] of Object.entries(characteristicResult.values) as [string, number][]) {
             if (!systemData.characteristics[key]) continue;
             systemData.characteristics[key].base = value;
             systemData.characteristics[key].total = value;
             systemData.characteristics[key].bonus = Math.floor(value / 10);
         }
 
-        for (const [key, bonusValue] of Object.entries(characteristicResult.unnaturalValues)) {
+        for (const [key, bonusValue] of Object.entries(characteristicResult.unnaturalValues) as [string, number][]) {
             const base = systemData.characteristics[key]?.base ?? 0;
             const baseBonus = Math.floor(base / 10) || 1;
             const multiplier = Math.max(2, Math.round(bonusValue / baseBonus));
@@ -1165,7 +1165,6 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     /** @override */
-    // @ts-ignore - Foundry override
     async close(options: any = {}): Promise<any> {
         if (!this.#submitted && this.#resolve) {
             this.#resolve(null);

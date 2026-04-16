@@ -149,7 +149,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+        _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void | Promise<void> {
             super._onRender(context, options);
 
             // Add special styling for multi-select tags

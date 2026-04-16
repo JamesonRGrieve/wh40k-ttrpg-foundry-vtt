@@ -107,7 +107,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
         /* -------------------------------------------- */
 
         /** @override */
-        _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+        _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void | Promise<void> {
             super._onRender(context, options);
 
             // Apply saved panel states to DOM
@@ -253,7 +253,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @returns {Promise<void>}
          */
         async expandAllPanels(): Promise<void> {
-            const panels = this.element.querySelectorAll<HTMLElement>('[data-panel-id]');
+            const panels = (this.element as HTMLElement).querySelectorAll<HTMLElement>('[data-panel-id]');
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
@@ -268,7 +268,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @returns {Promise<void>}
          */
         async collapseAllPanels(): Promise<void> {
-            const panels = this.element.querySelectorAll<HTMLElement>('[data-panel-id]');
+            const panels = (this.element as HTMLElement).querySelectorAll<HTMLElement>('[data-panel-id]');
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
@@ -298,7 +298,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             }
 
             // Apply preset states
-            const panels = this.element.querySelectorAll<HTMLElement>('[data-panel-id]');
+            const panels = (this.element as HTMLElement).querySelectorAll<HTMLElement>('[data-panel-id]');
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
@@ -318,7 +318,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @returns {Promise<void>}
          */
         async collapseAllExcept(exceptPanelId: string): Promise<void> {
-            const panels = this.element.querySelectorAll<HTMLElement>('[data-panel-id]');
+            const panels = (this.element as HTMLElement).querySelectorAll<HTMLElement>('[data-panel-id]');
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
@@ -420,15 +420,15 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
                 event.stopPropagation();
 
                 // Get the Nth panel
-                const panels = Array.from(this.element.querySelectorAll<HTMLElement>('[data-panel-id]'));
-                const panel = panels[num - 1];
+                const panels = Array.from((this.element as HTMLElement).querySelectorAll<HTMLElement>('[data-panel-id]'));
+                const panelEl = panels[num - 1];
 
-                if (panel) {
-                    const panelId = panel.dataset.panelId;
+                if (panelEl) {
+                    const panelId = panelEl.dataset.panelId;
                     void this.togglePanel(panelId);
 
                     // Scroll into view
-                    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    panelEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             });
         }

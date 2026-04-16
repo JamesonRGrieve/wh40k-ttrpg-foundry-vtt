@@ -7,10 +7,18 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare hasLevel: boolean;
+    declare level: number | null;
+    declare effect: string;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -39,7 +47,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         WeaponQualityData.#migrateRating(source);
         WeaponQualityData.#migrateModifiersAndEffect(source);
@@ -47,7 +55,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
         WeaponQualityData.#migrateIdentifier(source);
     }
 
-    static #migrateRating(source) {
+    static #migrateRating(source: Record<string, any>): void {
         if ('rating' in source) {
             source.hasLevel = source.rating > 0;
             source.level = source.rating > 0 ? source.rating : null;
@@ -55,7 +63,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
         }
     }
 
-    static #migrateModifiersAndEffect(source) {
+    static #migrateModifiersAndEffect(source: Record<string, any>): void {
         if ('modifiers' in source || 'specialEffect' in source) {
             const notesParts = [];
             if (source.modifiers) {
@@ -77,13 +85,13 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
         }
     }
 
-    static #migrateEffect(source) {
+    static #migrateEffect(source: Record<string, any>): void {
         if (typeof source.effect === 'number') {
             source.effect = `<p>Effect ${source.effect}</p>`;
         }
     }
 
-    static #migrateIdentifier(source) {
+    static #migrateIdentifier(source: Record<string, any>): void {
         if (!source.identifier && source.name) {
             source.identifier = source.name
                 .toLowerCase()
@@ -113,7 +121,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
         if (this.hasLevel && this.level !== null) {
             props.push(`Level: ${this.level}`);
@@ -126,7 +134,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             level: this.hasLevel ? this.level : '-',
         };

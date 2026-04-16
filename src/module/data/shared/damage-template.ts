@@ -7,8 +7,13 @@ import FormulaField from '../fields/formula-field.ts';
  */
 export default class DamageTemplate extends SystemDataModel {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare damage: { formula: string; type: string; bonus: number; penetration: number };
+    declare special: Set<string>;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             damage: new fields.SchemaField({
@@ -35,7 +40,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         DamageTemplate.#migrateSpecial(source);
     }
@@ -44,7 +49,7 @@ export default class DamageTemplate extends SystemDataModel {
      * Migrate special from Array to Set.
      * @param {object} source  The source data
      */
-    static #migrateSpecial(source) {
+    static #migrateSpecial(source: Record<string, any>): void {
         if (source.special && Array.isArray(source.special)) {
             source.special = new Set(source.special);
         }
@@ -60,7 +65,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
     }
 
@@ -70,7 +75,7 @@ export default class DamageTemplate extends SystemDataModel {
      * Get a formatted damage string.
      * @type {string}
      */
-    get damageLabel() {
+    get damageLabel(): string {
         const dmg = this.damage;
         if (!dmg.formula) return '-';
 
@@ -107,7 +112,7 @@ export default class DamageTemplate extends SystemDataModel {
      * Get localized damage type label.
      * @type {string}
      */
-    get damageTypeLabel() {
+    get damageTypeLabel(): string {
         return game.i18n.localize(`WH40K.DamageType.${this.damage.type.capitalize()}`);
     }
 
@@ -117,7 +122,7 @@ export default class DamageTemplate extends SystemDataModel {
      * Properties for chat display.
      * @type {string[]}
      */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
         if (this.damage.formula) {
             props.push(`Damage: ${this.damageLabel}`);
@@ -136,7 +141,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @param {string} quality   The quality to check.
      * @returns {boolean}
      */
-    hasSpecial(quality) {
+    hasSpecial(quality): any {
         return this.special?.has(quality.toLowerCase()) ?? false;
     }
 }

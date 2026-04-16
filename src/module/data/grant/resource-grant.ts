@@ -52,7 +52,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -133,7 +133,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState) {
+    async reverse(actor, appliedState): Promise<any> {
         const restoreData = { resources: {} };
         const updates = {};
 
@@ -160,7 +160,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async restore(actor, restoreData) {
+    async restore(actor, restoreData): Promise<any> {
         const result = this._initResult();
         const updates = {};
 
@@ -184,7 +184,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    getAutomaticValue() {
+    getAutomaticValue(): Record<string, any> | false {
         // Resources with formulas typically need user confirmation
         // Only auto-apply if all are flat values
         if (this.optional) return false;
@@ -199,7 +199,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async getSummary() {
+    async getSummary(): Promise<any> {
         const summary = await super.getSummary();
         summary.icon = (this.constructor as any).ICON;
 
@@ -228,7 +228,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
      * @returns {Promise<number>}
      * @private
      */
-    async _evaluateFormula(formula, actor) {
+    async _evaluateFormula(formula, actor): Promise<any> {
         if (!formula) return 0;
 
         // Trim and normalize
@@ -290,7 +290,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
      * @returns {Promise<number>}
      * @private
      */
-    async _evaluateLookupTable(formula) {
+    async _evaluateLookupTable(formula): Promise<any> {
         // Parse entries: "(1-4|=2),(5-7|=3),(8-10|=4)"
         const entries = [];
         const entryPattern = /\((\d+)-(\d+)\|=(\d+)\)/g;

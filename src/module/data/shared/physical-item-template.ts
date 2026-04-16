@@ -6,8 +6,16 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  */
 export default class PhysicalItemTemplate extends SystemDataModel {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare weight: number;
+    declare availability: string;
+    declare craftsmanship: string;
+    declare quantity: number;
+    declare cost: { value: number; currency: string };
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             weight: new fields.NumberField({
@@ -65,7 +73,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         PhysicalItemTemplate.#migrateWeight(source);
         PhysicalItemTemplate.#migrateCost(source);
@@ -75,7 +83,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * Migrate legacy weight formats.
      * @param {object} source  The source data
      */
-    static #migrateWeight(source) {
+    static #migrateWeight(source: Record<string, any>): void {
         // Convert string weight to number
         if (typeof source.weight === 'string') {
             const num = Number(source.weight);
@@ -87,7 +95,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * Migrate legacy cost formats.
      * @param {object} source  The source data
      */
-    static #migrateCost(source) {
+    static #migrateCost(source: Record<string, any>): void {
         // Convert number cost to object
         if (typeof source.cost === 'number') {
             source.cost = { value: source.cost, currency: 'throne' };
@@ -104,7 +112,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
     }
 
@@ -124,7 +132,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * Get localized availability label.
      * @type {string}
      */
-    get availabilityLabel() {
+    get availabilityLabel(): string {
         return game.i18n.localize(`WH40K.Availability.${this.availability.capitalize()}`);
     }
 
@@ -134,7 +142,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * Get localized craftsmanship label.
      * @type {string}
      */
-    get craftsmanshipLabel() {
+    get craftsmanshipLabel(): string {
         return game.i18n.localize(`WH40K.Craftsmanship.${this.craftsmanship.capitalize()}`);
     }
 
@@ -144,7 +152,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * Properties for chat display.
      * @type {string[]}
      */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
         if (this.weight) props.push(`${this.weight} kg`);
         if (this.availability) props.push(this.availabilityLabel);

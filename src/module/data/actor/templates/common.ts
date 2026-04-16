@@ -26,7 +26,7 @@ export default class CommonTemplate extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return (this as any).mergeSchema(super.defineSchema(), {
             // Truly shared schema elements go here
             // Currently empty - creature-specific data stays in CreatureTemplate
@@ -38,7 +38,7 @@ export default class CommonTemplate extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         // Add shared migrations here that apply to ALL actor types
     }
@@ -46,7 +46,7 @@ export default class CommonTemplate extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static _cleanData(source, options = {}) {
+    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown> = {}): void {
         super._cleanData?.(source, options);
         // Add shared cleaning here that applies to ALL actor types
     }
@@ -56,7 +56,7 @@ export default class CommonTemplate extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    prepareBaseData() {
+    prepareBaseData(): void {
         super.prepareBaseData();
         // Add shared base data prep that applies to ALL actor types
     }
@@ -64,7 +64,7 @@ export default class CommonTemplate extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    prepareDerivedData() {
+    prepareDerivedData(): void {
         super.prepareDerivedData();
         // Add shared derived data prep that applies to ALL actor types
     }

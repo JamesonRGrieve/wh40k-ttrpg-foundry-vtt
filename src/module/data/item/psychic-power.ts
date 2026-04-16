@@ -11,11 +11,24 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes ActivationTemplate
  * @mixes DamageTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTemplate, ActivationTemplate, DamageTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare discipline: string;
+    declare prCost: number;
+    declare focusPower: { characteristic: string; modifier: number; threshold: number; opposed: boolean; opposedCharacteristic: string };
+    declare effect: string;
+    declare overbleed: string;
+    declare isAttack: boolean;
+    declare phenomenaModifier: number;
+    declare sustained: boolean;
+    declare rangePerPR: number;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -73,7 +86,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     /* -------------------------------------------- */
 
     /** @override */
-    get isRollable() {
+    get isRollable(): boolean {
         return true;
     }
 
@@ -81,7 +94,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
      * Get the discipline label.
      * @type {string}
      */
-    get disciplineLabel() {
+    get disciplineLabel(): string {
         return game.i18n.localize(`WH40K.PsychicDiscipline.${this.discipline.capitalize()}`);
     }
 
@@ -89,7 +102,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
      * Get the focus power characteristic label.
      * @type {string}
      */
-    get focusCharacteristicLabel() {
+    get focusCharacteristicLabel(): string {
         return game.i18n.localize(`WH40K.Characteristic.${this.focusPower.characteristic.capitalize()}`);
     }
 
@@ -113,7 +126,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
      * Is this power dangerous (causes phenomena)?
      * @type {boolean}
      */
-    get causesPhenomena() {
+    get causesPhenomena(): boolean {
         return true; // All psychic powers can cause phenomena
     }
 
@@ -122,7 +135,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [
             this.disciplineLabel,
             `PR Cost: ${this.prCost}`,
@@ -148,7 +161,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             discipline: this.disciplineLabel,
             prCost: this.prCost,

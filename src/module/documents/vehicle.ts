@@ -3,7 +3,7 @@ import { WH40KBaseActor } from './base-actor.ts';
 
 export class WH40KVehicle extends WH40KBaseActor {
     [key: string]: any;
-    async _preCreate(data, options, user) {
+    async _preCreate(data, options, user): Promise<any> {
         await super._preCreate(data, options, user);
         const initData = {
             'token.bar1': { attribute: 'integrity' },
@@ -16,60 +16,60 @@ export class WH40KVehicle extends WH40KBaseActor {
         this.updateSource(initData);
     }
 
-    async prepareData() {
-        await super.prepareData();
+    prepareData(): void {
+        super.prepareData();
     }
 
-    get faction() {
+    get faction(): string {
         return this.system.faction;
     }
-    get subfaction() {
+    get subfaction(): string {
         return this.system.subfaction;
     }
-    get subtype() {
+    get subtype(): string {
         return this.system.type;
     }
-    get threatLevel() {
+    get threatLevel(): string {
         return this.system.threatLevel;
     }
-    get armour() {
+    get armour(): Record<string, { value: number; total: number }> {
         return this.system.armour;
     }
-    get front() {
+    get front(): number {
         return this.system.armour.front.value;
     }
-    get side() {
+    get side(): number {
         return this.system.armour.side.value;
     }
-    get rear() {
+    get rear(): number {
         return this.system.armour.rear.value;
     }
-    get availability() {
+    get availability(): string {
         return this.system.availability;
     }
-    get manoeuverability() {
+    get manoeuverability(): number {
         return this.system.manoeuverability;
     }
-    get carryingCapacity() {
+    get carryingCapacity(): number {
         return this.system.carryingCapacity;
     }
-    get integrity() {
+    get integrity(): { value: number; max: number } {
         return this.system.integrity;
     }
-    get speed() {
+    get speed(): number {
         return this.system.speed;
     }
-    get crew() {
+    get crew(): Record<string, unknown> {
         return this.system.crew;
     }
-    get vehicleClass() {
+    get vehicleClass(): string {
         return this.system.vehicleClass;
     }
-    get size() {
+    get size(): number {
         return this.system.size;
     }
 
-    async rollItem(itemId) {
+    async rollItem(itemId): Promise<void> {
         const item = this.items.get(itemId);
         const character = game.user.character;
         if (!character) {
@@ -84,7 +84,8 @@ export class WH40KVehicle extends WH40KBaseActor {
                 await DHTargetedActionManager.performWeaponAttack(character, null, item);
                 return;
             default:
-                return (ui.notifications as any).warn(`No actions implemented for item type: ${item.type}`);
+                (ui.notifications as any).warn(`No actions implemented for item type: ${item.type}`);
+                return;
         }
     }
 }

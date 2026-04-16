@@ -854,7 +854,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 this.lineageSelection?.system?.identifier,
             ].filter(Boolean),
         );
-        return this.lineageOrigins.map((origin) => {
+        return this._dedupeOriginsByIdentity(this.lineageOrigins).map((origin) => {
             return {
                 id: origin.id,
                 uuid: origin.uuid,
@@ -949,7 +949,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             });
         });
 
-        const divinationInput = html.querySelector('.csd-divination-input') as HTMLInputElement | null;
+        const divinationInput = html.querySelector('.csd-divination-input');
         if (divinationInput) {
             divinationInput.addEventListener('change', (e) => {
                 this._divination = (e.currentTarget as HTMLInputElement).value || '';
@@ -1141,24 +1141,46 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _prepareOriginsForStep(stepLayout: any): any {
         if (!stepLayout?.cards) return [];
 
-        return stepLayout.cards.map((card) => {
-            const origin = card.origin;
+        return this._dedupeOriginsByIdentity(stepLayout.cards.map((card) => card.origin))
+            .map((origin) => {
+                const card = stepLayout.cards.find((entry) => {
+                    const candidate = entry.origin;
+                    return candidate?.id === origin.id || candidate?.uuid === origin.uuid || candidate?.system?.identifier === origin.system?.identifier;
+                });
+                if (!card) return null;
 
-            return {
-                id: origin.id,
-                uuid: origin.uuid,
-                name: origin.name,
-                img: origin.img,
-                shortDescription: origin.shortDescription || '',
-                fullDescription: this._stripHtml(origin.description || ''),
-                isSelected: card.isSelected,
-                isDisabled: card.isDisabled,
-                isValidNext: card.isValidNext && !card.isSelected,
-                hasChoices: origin.hasChoices || card.hasChoices,
-                isAdvanced: card.isAdvanced,
-                xpCost: card.xpCost,
-                badges: card.hasChoices || origin.hasChoices || card.isAdvanced || card.xpCost > 0,
-            };
+                return {
+                    id: origin.id,
+                    uuid: origin.uuid,
+                    name: origin.name,
+                    img: origin.img,
+                    shortDescription: origin.shortDescription || '',
+                    fullDescription: this._stripHtml(origin.description || ''),
+                    isSelected: card.isSelected,
+                    isDisabled: card.isDisabled,
+                    isValidNext: card.isValidNext && !card.isSelected,
+                    hasChoices: origin.hasChoices || card.hasChoices,
+                    isAdvanced: card.isAdvanced,
+                    xpCost: card.xpCost,
+                    badges: card.hasChoices || origin.hasChoices || card.isAdvanced || card.xpCost > 0,
+                };
+            })
+            .filter(Boolean);
+    }
+
+    _dedupeOriginsByIdentity(origins: any[]): any[] {
+        const seen = new Set<string>();
+        return origins.filter((origin) => {
+            const key = [
+                origin?.uuid,
+                origin?._sourceUuid,
+                origin?.id,
+                origin?.system?.step && origin?.system?.identifier ? `${origin.system.step}:${origin.system.identifier}` : null,
+            ].find(Boolean);
+            if (!key) return true;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
         });
     }
 
@@ -1248,13 +1270,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const skills = [];
         for (const skill of grants.skills || []) {
             const displayName = skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name;
+            const uuid = await this._findSkillUuid(skill.name, skill.specialization);
             skills.push({
                 name: skill.name,
                 specialization: skill.specialization || null,
                 displayName: displayName,
                 level: skill.level || 'trained',
                 levelLabel: this._getTrainingLabel(skill.level),
-                uuid: await this._findSkillUuid(skill.name, skill.specialization),
+                uuid,
+                tooltipData: await this._prepareGrantTooltipData(displayName, uuid, skill.level ? `Level: ${this._getTrainingLabel(skill.level)}` : ''),
             });
         }
 
@@ -1361,6 +1385,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 specialization: talent.specialization || null,
                 uuid: talent.uuid || null,
                 tooltip: tooltipText,
+                tooltipData: await this._prepareGrantTooltipData(talent.name, talent.uuid || null, tooltipText === talent.name ? '' : tooltipText),
                 hasItem: hasItem,
             });
         }
@@ -1400,10 +1425,34 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 level: trait.level || null,
                 uuid: trait.uuid || null,
                 tooltip: tooltipText,
+                tooltipData: await this._prepareGrantTooltipData(
+                    trait.level ? `${trait.name} (${trait.level})` : trait.name,
+                    trait.uuid || null,
+                    tooltipText === trait.name ? '' : tooltipText,
+                ),
                 hasItem: hasItem,
             });
         }
         return prepared;
+    }
+
+    async _prepareGrantTooltipData(title: string, uuid: string | null, fallbackDescription = ''): Promise<string> {
+        let description = fallbackDescription;
+
+        if (uuid) {
+            try {
+                const item = (await fromUuid(uuid)) as any;
+                const itemDescription = item?.system?.description?.value;
+                if (itemDescription) description = itemDescription;
+            } catch {
+                // Fall back to provided text.
+            }
+        }
+
+        return JSON.stringify({
+            title,
+            content: description ? `<div class="wh40k-tooltip__description">${description}</div>` : '',
+        });
     }
 
     /**
@@ -1614,8 +1663,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         // Convert maps to arrays (preserving UUIDs)
-        preview.skills = Array.from(skillMap.values());
-        preview.talents = Array.from(talentMap.values());
+        preview.skills = await Promise.all(
+            Array.from(skillMap.values()).map(async (skill: Record<string, any>) => ({
+                ...skill,
+                tooltipData: await this._prepareGrantTooltipData(skill.name, skill.uuid || null),
+            })),
+        );
+        preview.talents = await Promise.all(
+            Array.from(talentMap.values()).map(async (talent: Record<string, any>) => ({
+                ...talent,
+                tooltipData: await this._prepareGrantTooltipData(talent.name, talent.uuid || null),
+            })),
+        );
         preview.traits = Array.from(traitMap.values());
         preview.equipment = equipmentList.map((name) => ({ name }));
 
@@ -1866,40 +1925,42 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         input.type = 'file';
         input.accept = '.json';
 
-        input.addEventListener('change', async (e) => {
-            const file = (e.target as HTMLInputElement).files[0];
-            if (!file) return;
+        input.addEventListener('change', (e) => {
+            void (async () => {
+                const file = (e.target as HTMLInputElement).files[0];
+                if (!file) return;
 
-            try {
-                const text = await file.text();
-                const data = JSON.parse(text);
+                try {
+                    const text = await file.text();
+                    const data = JSON.parse(text);
 
-                if (data.version !== 1) {
-                    throw new Error('Unsupported version');
-                }
-
-                (this as any).selections.clear();
-
-                for (const [step, selData] of Object.entries(data.selections)) {
-                    const origin = (await fromUuid((selData as any).uuid)) as any;
-                    if (origin) {
-                        // Store as plain data object (not Item instance)
-                        const originData = (this as any)._itemToSelectionData(origin);
-                        originData.system.selectedChoices = (selData as any).selectedChoices;
-                        originData.system.rollResults = (selData as any).rollResults;
-                        (this as any).selections.set(step, originData);
+                    if (data.version !== 1) {
+                        throw new Error('Unsupported version');
                     }
+
+                    (this as any).selections.clear();
+
+                    for (const [step, selData] of Object.entries(data.selections)) {
+                        const origin = (await fromUuid((selData as any).uuid)) as any;
+                        if (origin) {
+                            // Store as plain data object (not Item instance)
+                            const originData = (this as any)._itemToSelectionData(origin);
+                            originData.system.selectedChoices = (selData as any).selectedChoices;
+                            originData.system.rollResults = (selData as any).rollResults;
+                            (this as any).selections.set(step, originData);
+                        }
+                    }
+
+                    (this as any)._refreshPathPositions();
+
+                    (this as any).currentStepIndex = 0;
+                    (this as any).render();
+                    (ui.notifications as any).info(game.i18n.localize('WH40K.OriginPath.ImportSuccess'));
+                } catch (err) {
+                    console.error('Import failed:', err);
+                    (ui.notifications as any).error(game.i18n.localize('WH40K.OriginPath.ImportFailed'));
                 }
-
-                (this as any)._refreshPathPositions();
-
-                (this as any).currentStepIndex = 0;
-                (this as any).render();
-                (ui.notifications as any).info(game.i18n.localize('WH40K.OriginPath.ImportSuccess'));
-            } catch (err) {
-                console.error('Import failed:', err);
-                (ui.notifications as any).error(game.i18n.localize('WH40K.OriginPath.ImportFailed'));
-            }
+            })();
         });
 
         input.click();

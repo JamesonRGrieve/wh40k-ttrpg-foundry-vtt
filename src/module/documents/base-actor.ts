@@ -55,7 +55,7 @@ export class WH40KBaseActor extends Actor {
                 for (const item of documents) {
                     if (item.type === 'talent' && item.system?.hasGrants) {
                         // Use setTimeout to ensure the item is fully created before processing grants
-                        setTimeout(() => processTalentGrants(item, this), 100);
+                        setTimeout(() => void processTalentGrants(item, this), 100);
                     }
                 }
             }
@@ -86,7 +86,7 @@ export class WH40KBaseActor extends Actor {
             for (const item of documents) {
                 if (item.type === 'talent' && item.system?.hasGrants) {
                     // Use setTimeout to show dialog after the item is deleted
-                    setTimeout(() => handleTalentRemoval(item, this), 100);
+                    setTimeout(() => void handleTalentRemoval(item, this), 100);
                 }
             }
         }
@@ -139,15 +139,15 @@ export class WH40KBaseActor extends Actor {
         (this as any).updateSource(initData);
     }
 
-    get characteristics(): any {
+    get characteristics(): Record<string, WH40KCharacteristic> {
         return this.system.characteristics;
     }
 
-    get initiative(): any {
+    get initiative(): { base: number; bonus: number; characteristic?: string } {
         return this.system.initiative;
     }
 
-    get wounds(): any {
+    get wounds(): { value: number; max: number; critical: number } {
         return this.system.wounds;
     }
 
@@ -155,7 +155,7 @@ export class WH40KBaseActor extends Actor {
         return Number.parseInt(this.system.size);
     }
 
-    get movement(): any {
+    get movement(): { half: number; full: number; charge: number; run: number } {
         return this.system.movement;
     }
 
@@ -186,11 +186,12 @@ export class WH40KBaseActor extends Actor {
 
     getCharacteristicFuzzy(char: string): WH40KCharacteristic | undefined {
         // This tries to account for case sensitivity and abbreviations
-        for (const [name, characteristic] of Object.entries(this.characteristics) as [string, any][]) {
+        for (const [name, characteristic] of Object.entries(this.characteristics)) {
             if (char.toUpperCase() === name.toUpperCase() || char.toLocaleString() === characteristic.short.toUpperCase()) {
                 return characteristic;
             }
         }
+        return undefined;
     }
 
     /**
@@ -201,7 +202,7 @@ export class WH40KBaseActor extends Actor {
     _computeCharacteristics(): void {
         if (!this.characteristics) return;
 
-        for (const [, characteristic] of Object.entries(this.characteristics) as [string, any][]) {
+        for (const [, characteristic] of Object.entries(this.characteristics)) {
             const base = Number(characteristic.base ?? characteristic.starting ?? 0);
             const advance = Number(characteristic.advance ?? characteristic.advances ?? 0);
             const modifier = Number(characteristic.modifier ?? 0);
@@ -234,7 +235,7 @@ export class WH40KBaseActor extends Actor {
     }
 
     _findCharacteristic(short: string): any {
-        for (const characteristic of Object.values(this.characteristics) as any[]) {
+        for (const characteristic of Object.values(this.characteristics)) {
             if (characteristic.short === short) {
                 return characteristic;
             }

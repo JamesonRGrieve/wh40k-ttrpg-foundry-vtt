@@ -9,11 +9,20 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes DescriptionTemplate
  * @mixes PhysicalItemTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class ArmourModificationData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare restrictions: { armourTypes: Set<string> };
+    declare modifiers: { armourPoints: number; maxAgility: number; weight: number };
+    declare addedProperties: Set<string>;
+    declare removedProperties: Set<string>;
+    declare effect: string;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -56,7 +65,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         ArmourModificationData.#migrateArmourTypes(source);
         ArmourModificationData.#migrateArmourModifier(source);
@@ -68,7 +77,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         ArmourModificationData.#initializeDefaults(source);
     }
 
-    static #migrateArmourTypes(source) {
+    static #migrateArmourTypes(source: Record<string, any>): void {
         if (typeof source.armourTypes === 'string') {
             source.restrictions ??= {};
             source.restrictions.armourTypes = ArmourModificationData.#parseArmourTypes(source.armourTypes);
@@ -76,7 +85,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #migrateArmourModifier(source) {
+    static #migrateArmourModifier(source: Record<string, any>): void {
         if (typeof source.armourModifier === 'number') {
             source.modifiers ??= {};
             source.modifiers.armourPoints = source.armourModifier;
@@ -84,7 +93,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #extractAPFromEffect(source) {
+    static #extractAPFromEffect(source: Record<string, any>): void {
         if ((!source.modifiers?.armourPoints || source.modifiers.armourPoints === 0) && source.effect) {
             const extracted = ArmourModificationData.#extractAPModifier(source.effect);
             if (extracted > 0) {
@@ -94,7 +103,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #migrateMaxDexBonus(source) {
+    static #migrateMaxDexBonus(source: Record<string, any>): void {
         if (typeof source.maxDexBonus === 'number') {
             source.modifiers ??= {};
             source.modifiers.maxAgility = source.maxDexBonus;
@@ -102,7 +111,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #extractAgilityFromEffect(source) {
+    static #extractAgilityFromEffect(source: Record<string, any>): void {
         if ((!source.modifiers?.maxAgility || source.modifiers.maxAgility === 0) && source.effect) {
             const extracted = ArmourModificationData.#extractAgilityModifier(source.effect);
             if (extracted !== 0) {
@@ -112,7 +121,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #migrateWeight(source) {
+    static #migrateWeight(source: Record<string, any>): void {
         if (typeof source.weight === 'string') {
             source.modifiers ??= {};
             source.modifiers.weight = ArmourModificationData.#parseWeight(source.weight);
@@ -120,7 +129,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #cleanupModifiers(source) {
+    static #cleanupModifiers(source: Record<string, any>): void {
         if (source.modifiers?.characteristics) {
             delete source.modifiers.characteristics;
         }
@@ -129,7 +138,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #initializeDefaults(source) {
+    static #initializeDefaults(source: Record<string, any>): void {
         source.addedProperties ??= [];
         source.removedProperties ??= [];
         source.restrictions ??= { armourTypes: ['any'] };
@@ -145,11 +154,11 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
         // Convert SetFields to Arrays for storage
-        if (source.restrictions?.armourTypes instanceof Set) {
-            source.restrictions.armourTypes = Array.from(source.restrictions.armourTypes);
+        if ((source.restrictions as any)?.armourTypes instanceof Set) {
+            (source.restrictions as any).armourTypes = Array.from((source.restrictions as any).armourTypes);
         }
         if (source.addedProperties instanceof Set) {
             source.addedProperties = Array.from(source.addedProperties);
@@ -258,7 +267,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * Get restrictions label.
      * @type {string}
      */
-    get restrictionsLabel() {
+    get restrictionsLabel(): string {
         if (this.restrictions.armourTypes.size) {
             return `Types: ${Array.from(this.restrictions.armourTypes as Set<string>).join(', ')}`;
         }
@@ -269,7 +278,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * Get formatted restrictions label with localized type names.
      * @type {string}
      */
-    get restrictionsLabelEnhanced() {
+    get restrictionsLabelEnhanced(): string {
         const types = Array.from(this.restrictions.armourTypes as Set<string>);
         if (!types.length) return game.i18n.localize('WH40K.Modification.NoRestrictions');
         if (types.includes('any')) return game.i18n.localize('WH40K.Modification.AnyArmour');
@@ -335,7 +344,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * Get icon for modification type based on what it does.
      * @type {string}
      */
-    get icon() {
+    get icon(): string {
         // Determine icon based on what this mod does
         if (this.modifiers.armourPoints > 0) return 'fa-shield-halved';
         if (this.restrictions.armourTypes.has('power')) return 'fa-bolt';
@@ -349,7 +358,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this)];
 
@@ -374,7 +383,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             restrictions: this.restrictionsLabelEnhanced,
             modifiers: this.modifierSummary,

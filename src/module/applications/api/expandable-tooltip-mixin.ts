@@ -19,7 +19,7 @@
  * @returns {*} Extended class with expandable tooltip support
  */
 export default function ExpandableTooltipMixin<T extends new (...args: any[]) => any>(Base: T) {
-    // eslint-disable-next-line no-shadow -- class must match function name for private field access
+    // eslint-disable-next-line @typescript-eslint/no-shadow -- class must match function name for private field access
     return class ExpandableTooltipMixin extends Base {
         [key: string]: any;
         /**

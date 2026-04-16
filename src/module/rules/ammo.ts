@@ -76,6 +76,7 @@ export function ammoText(item) {
         game.wh40k.log('ammoName', name);
         return `${name} (${item.system.clip.value}/${item.system.clip.max})`;
     }
+    return undefined;
 }
 
 export async function useAmmo(actionData) {

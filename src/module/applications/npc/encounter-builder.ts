@@ -245,19 +245,21 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             dropZone.classList.remove('drag-over');
         });
 
-        dropZone.addEventListener('drop', async (e: any) => {
+        dropZone.addEventListener('drop', (e: any) => {
             e.preventDefault();
             dropZone.classList.remove('drag-over');
 
-            try {
-                const data = JSON.parse((e as DragEvent).dataTransfer.getData('text/plain'));
+            void (async () => {
+                try {
+                    const data = JSON.parse((e as DragEvent).dataTransfer.getData('text/plain'));
 
-                if (data.type === 'Actor') {
-                    await this._handleActorDrop(data);
+                    if (data.type === 'Actor') {
+                        await this._handleActorDrop(data);
+                    }
+                } catch (err) {
+                    console.error('Failed to handle drop:', err);
                 }
-            } catch (err) {
-                console.error('Failed to handle drop:', err);
-            }
+            })();
         });
     }
 

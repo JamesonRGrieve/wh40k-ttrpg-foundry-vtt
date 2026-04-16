@@ -7,11 +7,27 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare weaponType: string;
+    declare location: string;
+    declare hullType: Set<string>;
+    declare power: number;
+    declare space: number;
+    declare shipPoints: number;
+    declare strength: number;
+    declare damage: string;
+    declare crit: number;
+    declare range: number;
+    declare special: Set<string>;
+    declare availability: string;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -70,7 +86,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         ShipWeaponData.#migratePowerUsage(source);
         ShipWeaponData.#migrateSpaceUsage(source);
@@ -82,35 +98,35 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         ShipWeaponData.#initializeSpecial(source);
     }
 
-    static #migratePowerUsage(source) {
+    static #migratePowerUsage(source: Record<string, any>): void {
         if ('powerUsage' in source && source.power === undefined) {
             source.power = source.powerUsage;
             delete source.powerUsage;
         }
     }
 
-    static #migrateSpaceUsage(source) {
+    static #migrateSpaceUsage(source: Record<string, any>): void {
         if ('spaceUsage' in source && source.space === undefined) {
             source.space = source.spaceUsage;
             delete source.spaceUsage;
         }
     }
 
-    static #migrateSpCost(source) {
+    static #migrateSpCost(source: Record<string, any>): void {
         if ('spCost' in source && source.shipPoints === undefined) {
             source.shipPoints = source.spCost;
             delete source.spCost;
         }
     }
 
-    static #migrateCritRating(source) {
+    static #migrateCritRating(source: Record<string, any>): void {
         if ('critRating' in source && source.crit === undefined) {
             source.crit = source.critRating;
             delete source.critRating;
         }
     }
 
-    static #migrateType(source) {
+    static #migrateType(source: Record<string, any>): void {
         if ('type' in source) {
             if (!source.weaponType) {
                 const typeMap = {
@@ -131,7 +147,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         }
     }
 
-    static #migrateNumericFields(source) {
+    static #migrateNumericFields(source: Record<string, any>): void {
         const numericFields = ['power', 'space', 'shipPoints', 'crit', 'strength'];
         for (const field of numericFields) {
             if (source[field] === '-' || source[field] === null || source[field] === undefined) {
@@ -143,7 +159,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         }
     }
 
-    static #migrateHullType(source) {
+    static #migrateHullType(source: Record<string, any>): void {
         if (typeof source.hullType === 'string') {
             const types = source.hullType
                 .toLowerCase()
@@ -155,7 +171,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         }
     }
 
-    static #initializeSpecial(source) {
+    static #initializeSpecial(source: Record<string, any>): void {
         if (!source.special) {
             source.special = [];
         }
@@ -171,7 +187,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
         // Ensure hullType is array
         if (source.hullType && !Array.isArray(source.hullType)) {
@@ -196,7 +212,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get isRollable() {
+    get isRollable(): boolean {
         return true;
     }
 
@@ -204,7 +220,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * Get the weapon type label.
      * @type {string}
      */
-    get weaponTypeLabel() {
+    get weaponTypeLabel(): string {
         return game.i18n.localize(
             `WH40K.ShipWeapon.${this.weaponType
                 .split('-')
@@ -217,7 +233,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * Get the location label.
      * @type {string}
      */
-    get locationLabel() {
+    get locationLabel(): string {
         return game.i18n.localize(`WH40K.ShipLocation.${this.location.capitalize()}`);
     }
 
@@ -225,7 +241,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * Get the damage string.
      * @type {string}
      */
-    get damageLabel() {
+    get damageLabel(): string {
         return `${this.damage}${this.crit > 0 ? ` (Crit ${this.crit}+)` : ''}`;
     }
 
@@ -234,7 +250,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [
             this.weaponTypeLabel,
             `Location: ${this.locationLabel}`,
@@ -258,7 +274,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             type: this.weaponTypeLabel,
             location: this.locationLabel,
