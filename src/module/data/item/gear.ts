@@ -11,11 +11,20 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes PhysicalItemTemplate
  * @mixes EquippableTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare category: string;
+    declare consumable: boolean;
+    declare uses: { value: number; max: number };
+    declare effect: string;
+    declare duration: string;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -126,7 +135,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         GearData.#migrateCategory(source);
         GearData.#migrateAvailability(source);
@@ -140,7 +149,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Migrate old pack format: type → category.
      * @param {object} source  The source data
      */
-    static #migrateCategory(source) {
+    static #migrateCategory(source: Record<string, any>): void {
         if (source.type && !source.category) {
             source.category = GearData.#TYPE_TO_CATEGORY[source.type] || 'general';
             delete source.type;
@@ -151,7 +160,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Migrate old pack format: effects (availability enum) → availability.
      * @param {object} source  The source data
      */
-    static #migrateAvailability(source) {
+    static #migrateAvailability(source: Record<string, any>): void {
         if (source.effects && !source.availability) {
             source.availability = GearData.#NORMALIZE_AVAILABILITY[source.effects] || 'average';
         }
@@ -161,7 +170,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Migrate old pack format: charges → uses.
      * @param {object} source  The source data
      */
-    static #migrateCharges(source) {
+    static #migrateCharges(source: Record<string, any>): void {
         if (source.charges && !source.uses) {
             source.uses = {
                 value: parseInt(source.charges.value) || 0,
@@ -175,7 +184,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Migrate weight string → number.
      * @param {object} source  The source data
      */
-    static #migrateWeight(source) {
+    static #migrateWeight(source: Record<string, any>): void {
         if (typeof source.weight === 'string') {
             source.weight = GearData.#parseWeight(source.weight);
         }
@@ -185,7 +194,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Migrate old pack format: build description from scattered fields.
      * @param {object} source  The source data
      */
-    static #migrateDescription(source) {
+    static #migrateDescription(source: Record<string, any>): void {
         if (source.availability && String(source.availability).length > 50) {
             const parts = [];
             parts.push(`<p>${source.availability}</p>`);
@@ -205,7 +214,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Migrate old pack format: parse cost from notes.
      * @param {object} source  The source data
      */
-    static #migrateCost(source) {
+    static #migrateCost(source: Record<string, any>): void {
         if (source.notes && !source.cost?.value) {
             const costMatch = String(source.notes).match(/(\d+(?:,\d+)?)\s*T(?:hrone)?/i);
             if (costMatch) {
@@ -241,10 +250,10 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, any> | undefined, options): void {
         super._cleanData?.(source, options);
         // Ensure uses values are integers
-        if (source.uses) {
+        if (source?.uses) {
             if (source.uses.value !== undefined) {
                 source.uses.value = parseInt(source.uses.value) || 0;
             }
@@ -262,7 +271,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Get the category label.
      * @type {string}
      */
-    get categoryLabel() {
+    get categoryLabel(): string {
         const config = CONFIG.WH40K?.gearCategories?.[this.category];
         if (config?.label) return game.i18n.localize(config.label);
         return game.i18n.localize(`WH40K.GearCategory.${this.category.capitalize()}`);
@@ -289,7 +298,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Are uses exhausted?
      * @type {boolean}
      */
-    get usesExhausted() {
+    get usesExhausted(): boolean {
         return this.hasLimitedUses && this.uses.value <= 0;
     }
 
@@ -297,7 +306,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Get uses display string (e.g., "5/10")
      * @type {string}
      */
-    get usesDisplay() {
+    get usesDisplay(): string {
         if (!this.hasLimitedUses) return '';
         return `${this.uses.value}/${this.uses.max}`;
     }
@@ -306,7 +315,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Get formatted weight label.
      * @type {string}
      */
-    get weightLabel() {
+    get weightLabel(): string {
         return `${this.weight ?? 0} kg`;
     }
 
@@ -351,7 +360,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Get effective weight including craftsmanship modifier.
      * @type {number}
      */
-    get effectiveWeight() {
+    get effectiveWeight(): number {
         const craftMods = this.craftsmanshipModifiers;
         return Math.round(this.weight * craftMods.weight * 10) / 10; // Round to 1 decimal
     }
@@ -378,7 +387,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.categoryLabel];
 
@@ -398,7 +407,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         const labels = [];
 
         // Category badge
@@ -429,7 +438,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Consume one use.
      * @returns {Promise<Item>}
      */
-    async consume() {
+    async consume(): Promise<any> {
         if (!this.hasLimitedUses) {
             (ui.notifications as any).warn(game.i18n.localize('WH40K.Gear.NoConsumableUses'));
             return this.parent;
@@ -458,7 +467,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Reset uses to maximum.
      * @returns {Promise<Item>}
      */
-    async resetUses() {
+    async resetUses(): Promise<any> {
         if (!this.hasLimitedUses) return this.parent;
 
         await this.parent?.update({ 'system.uses.value': this.uses.max });
@@ -466,7 +475,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         (ui.notifications as any).info(
             game.i18n.format('WH40K.Gear.UsesReset', {
                 name: this.parent.name,
-                max: this.uses.max,
+                max: String(this.uses.max),
             }),
         );
 

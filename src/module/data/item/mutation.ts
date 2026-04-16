@@ -9,10 +9,19 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class MutationData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare category: string;
+    declare effect: string;
+    declare drawback: string;
+    declare visible: boolean;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -49,7 +58,7 @@ export default class MutationData extends ItemDataModel.mixin(DescriptionTemplat
      * Get the category label.
      * @type {string}
      */
-    get categoryLabel() {
+    get categoryLabel(): string {
         return game.i18n.localize(`WH40K.MutationCategory.${this.category.capitalize()}`);
     }
 
@@ -58,7 +67,7 @@ export default class MutationData extends ItemDataModel.mixin(DescriptionTemplat
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [this.categoryLabel];
         if (this.visible) props.push(game.i18n.localize('WH40K.Mutation.Visible'));
         return props;
@@ -69,7 +78,7 @@ export default class MutationData extends ItemDataModel.mixin(DescriptionTemplat
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             category: this.categoryLabel,
         };

@@ -785,8 +785,8 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @param {HTMLElement} target - The action target
      */
     static async #postToChat(event: Event, target: HTMLElement): Promise<void> {
-        // @ts-expect-error - TS2339
-        (await this.item.system.toChat?.()) ?? this._postTalentToChat();
+        const chatResult = await (this as any).item.system.toChat?.();
+        if (chatResult == null) (this as any)._postTalentToChat();
     }
 
     /* -------------------------------------------- */

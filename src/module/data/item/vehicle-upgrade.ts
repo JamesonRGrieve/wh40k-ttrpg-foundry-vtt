@@ -7,10 +7,23 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare upgradeType: string;
+    declare allowedVehicles: string;
+    declare difficulty: number;
+    declare descriptionText: string;
+    declare availability: string;
+    declare source: string;
+    declare installCost: number;
+    declare modifiers: { speed: number; manoeuvrability: number; armour: number; integrity: number };
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -113,7 +126,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
      * Get upgrade type label from config.
      * @type {string}
      */
-    get upgradeTypeLabel() {
+    get upgradeTypeLabel(): string {
         const types = CONFIG.wh40k?.vehicleUpgradeTypes || {};
         const typeData = types[this.upgradeType];
         if (typeData) {
@@ -126,7 +139,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
      * Get difficulty formatted with sign.
      * @type {string}
      */
-    get difficultyFormatted() {
+    get difficultyFormatted(): string {
         if (this.difficulty === 0) return '+0';
         return `${this.difficulty > 0 ? '+' : ''}${this.difficulty}`;
     }
@@ -136,7 +149,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [
             game.i18n.localize(`WH40K.Availability.${this.availability.charAt(0).toUpperCase()}${this.availability.slice(1)}`),
             `Type: ${this.upgradeTypeLabel}`,
@@ -159,7 +172,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             availability: this.availability,
             type: this.upgradeTypeLabel,

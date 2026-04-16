@@ -15,11 +15,39 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes AttackTemplate
  * @mixes DamageTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, AttackTemplate, DamageTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare class: string;
+    declare type: string;
+    declare twoHanded: boolean;
+    declare melee: boolean;
+    declare clip: { max: number; value: number; type: string };
+    // Note: 'reload' schema field accessed via [key: string]: any; to avoid conflict with reload() method
+    declare loadedAmmo: {
+        uuid: string;
+        name: string;
+        modifiers: { damage: number; penetration: number; range: number };
+        addedQualities: Set<string>;
+        removedQualities: Set<string>;
+    };
+    declare modifications: Array<{
+        uuid: string;
+        name: string;
+        active: boolean;
+        category: string;
+        cachedModifiers: { damage: number; penetration: number; toHit: number; range: number; weight: number };
+    }>;
+    declare requiredTraining: string;
+    declare notes: string;
+
+    // Derived in prepareDerivedData()
+    declare _modificationModifiers: { damage: number; penetration: number; toHit: number; range: number; weight: number };
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -132,7 +160,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         WeaponData.#migrateSpecial(source);
         WeaponData.#migrateClass(source);
@@ -143,7 +171,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Ensure special is an array for SetField compatibility.
      * @param {object} source  The source data
      */
-    static #migrateSpecial(source) {
+    static #migrateSpecial(source: Record<string, any>): void {
         if (!Array.isArray(source.special)) {
             source.special = source.special ? Array.from(source.special) : [];
         }
@@ -153,7 +181,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate old class values (chain, power, shock, force) to type field.
      * @param {object} source  The source data
      */
-    static #migrateClass(source) {
+    static #migrateClass(source: Record<string, any>): void {
         const techTypeValues = ['chain', 'power', 'shock', 'force'];
         if (source.class && techTypeValues.includes(source.class)) {
             source.type = source.class;
@@ -165,7 +193,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate proficiency -> requiredTraining.
      * @param {object} source  The source data
      */
-    static #migrateProficiency(source) {
+    static #migrateProficiency(source: Record<string, any>): void {
         if (source.proficiency !== undefined) {
             source.requiredTraining = source.proficiency;
             delete source.proficiency;
@@ -177,7 +205,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    prepareDerivedData() {
+    prepareDerivedData(): void {
         super.prepareDerivedData();
 
         // Weapons are always equipped unless stowed in ship storage
@@ -198,7 +226,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Aggregate cached modifiers from active modifications.
      * @private
      */
-    _aggregateModificationModifiers() {
+    _aggregateModificationModifiers(): void {
         // Initialize aggregated modifiers
         this._modificationModifiers = {
             damage: 0,
@@ -232,7 +260,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
-    get isRollable() {
+    get isRollable(): boolean {
         return true;
     }
 
@@ -240,7 +268,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Is this a ranged weapon?
      * @type {boolean}
      */
-    get isRangedWeapon() {
+    get isRangedWeapon(): boolean {
         return ['pistol', 'basic', 'heavy', 'launcher'].includes(this.class);
     }
 
@@ -248,7 +276,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Is this a melee weapon?
      * @type {boolean}
      */
-    get isMeleeWeapon() {
+    get isMeleeWeapon(): boolean {
         return this.class === 'melee' || this.melee;
     }
 
@@ -256,7 +284,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Is this a primitive weapon?
      * @type {boolean}
      */
-    get isPrimitive() {
+    get isPrimitive(): boolean {
         return this.type === 'primitive';
     }
 
@@ -422,7 +450,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Only ranged weapons with non-common craftsmanship.
      * @type {boolean}
      */
-    get hasCraftsmanshipQualities() {
+    get hasCraftsmanshipQualities(): boolean {
         if (this.melee || this.isMeleeWeapon) return false;
         return ['poor', 'good', 'best', 'exceptional', 'master'].includes(this.craftsmanship);
     }
@@ -433,7 +461,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Strength Bonus is applied in the actor's rollWeaponDamage() method.
      * @type {string}
      */
-    get effectiveDamageFormula() {
+    get effectiveDamageFormula(): string {
         const baseDamage = this.damage.formula || '1d10';
         const baseBonus = this.damage.bonus || 0;
         const craftBonus = this.craftsmanshipModifiers.damage;
@@ -450,7 +478,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * This is intended for UI display to show users what the complete damage formula will be.
      * @type {string}
      */
-    get fullDamageFormula() {
+    get fullDamageFormula(): string {
         const baseFormula = this.effectiveDamageFormula;
 
         // Melee weapons add Strength Bonus to damage
@@ -486,7 +514,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * For ranged weapons only.
      * @type {object}
      */
-    get effectiveRange() {
+    get effectiveRange(): Record<string, any> {
         if (!this.attack?.range) return null;
 
         const baseRange = this.attack.range.value || 0;
@@ -514,7 +542,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {Actor} actor - The actor to check
      * @returns {boolean} - True if actor has required training (or no training required)
      */
-    hasRequiredTraining(actor) {
+    hasRequiredTraining(actor): boolean {
         // If no training requirement, always return true
         if (!this.requiredTraining) return true;
 
@@ -531,7 +559,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Returns an array of {mode, label, rof, modifier, description} objects.
      * @type {Array<{mode: string, label: string, rof: number, modifier: number, description: string, actionType: string}>}
      */
-    get availableFireModes() {
+    get availableFireModes(): string[] {
         if (!this.isRangedWeapon) return [];
 
         const modes = [];
@@ -584,7 +612,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {string} mode - Fire mode: 'single', 'semi', or 'full'
      * @returns {number} - Effective rate of fire
      */
-    getEffectiveRoF(mode) {
+    getEffectiveRoF(mode): number {
         const rof = this.attack.rateOfFire;
         const hasStorm = this.effectiveSpecial.has('storm');
 
@@ -613,8 +641,10 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             '2-full': game.i18n.localize('WH40K.Reload.2Full'),
             '3-full': game.i18n.localize('WH40K.Reload.3Full'),
         };
-        // @ts-expect-error - index type
-        return labels[this.reload] ?? this.reload;
+        // Access schema field via index — at runtime, the instance property (schema field)
+        // shadows the prototype method, but TS sees the method. Cast through unknown.
+        const reloadTime = (this as Record<string, any>)['reload'] as string;
+        return labels[reloadTime] ?? reloadTime;
     }
 
     /**
@@ -623,7 +653,8 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get effectiveReloadTime() {
-        const baseReload = this.reload;
+        // Access schema field via index — see reloadLabel comment
+        const baseReload = (this as Record<string, any>)['reload'] as string;
 
         // Check for Customised quality
         if (!this.effectiveSpecial?.has('customised')) {
@@ -640,7 +671,6 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             '-': '-',
         };
 
-        // @ts-expect-error - index type
         return reloadMap[baseReload] || baseReload;
     }
 
@@ -664,7 +694,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the weapon class label.
      * @type {string}
      */
-    get classLabel() {
+    get classLabel(): string {
         return game.i18n.localize(`WH40K.WeaponClass.${this.class.capitalize()}`);
     }
 
@@ -672,7 +702,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the weapon type label.
      * @type {string}
      */
-    get typeLabel() {
+    get typeLabel(): string {
         return game.i18n.localize(
             `WH40K.WeaponType.${this.type
                 .split('-')
@@ -686,7 +716,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [
             // @ts-expect-error - TS2339
             ...PhysicalItemTemplate.prototype.chatProperties.call(this),
@@ -725,7 +755,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             class: this.classLabel,
             type: this.typeLabel,
@@ -785,7 +815,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get ammunition percentage for visual display.
      * @type {number}
      */
-    get ammoPercentage() {
+    get ammoPercentage(): number {
         if (!this.usesAmmo || this.clip.max === 0) return 100;
         return Math.round((this.clip.value / this.clip.max) * 100);
     }
@@ -794,7 +824,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get ammunition status class for styling.
      * @type {string}
      */
-    get ammoStatus() {
+    get ammoStatus(): string {
         const pct = this.ammoPercentage;
         if (pct === 0) return 'empty';
         if (pct <= 25) return 'critical';
@@ -806,7 +836,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get jam threshold for ranged weapons.
      * @type {number|null}
      */
-    get jamThreshold() {
+    get jamThreshold(): number {
         if (this.isMeleeWeapon) return null;
 
         const qualities = this.effectiveSpecial;
@@ -899,7 +929,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Check if weapon has loaded ammunition.
      * @type {boolean}
      */
-    get hasLoadedAmmo() {
+    get hasLoadedAmmo(): boolean {
         return !!this.loadedAmmo?.uuid;
     }
 
@@ -907,7 +937,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get loaded ammunition display name.
      * @type {string}
      */
-    get loadedAmmoLabel() {
+    get loadedAmmoLabel(): string {
         if (!this.hasLoadedAmmo) return 'Standard';
         return this.loadedAmmo.name || 'Unknown';
     }
@@ -921,7 +951,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {number} [shots=1]   Number of shots to fire.
      * @returns {Promise<Item>}
      */
-    fire(shots = 1) {
+    fire(shots = 1): any {
         if (!this.usesAmmo) return this.parent;
         const newValue = Math.max(0, this.clip.value - shots);
         return this.parent?.update({ 'system.clip.value': newValue });
@@ -935,7 +965,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {boolean} options.force - Force reload even if already full
      * @returns {Promise<{success: boolean, message: string, actionsSpent: object}>}
      */
-    async reload(options = {}) {
+    async reload(options = {}): Promise<any> {
         // Dynamic import to avoid circular dependency
         const { ReloadActionManager } = await import('../../actions/reload-action-manager.ts');
         return ReloadActionManager.reloadWeapon(this.parent, options);
@@ -948,7 +978,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @returns {Promise<Item>}
      * @deprecated Use reload() instead for full action economy support
      */
-    reloadSimple(amount = null) {
+    reloadSimple(amount = null): any {
         if (!this.usesAmmo) return this.parent;
         const newValue = amount ?? this.clip.max;
         return this.parent?.update({ 'system.clip.value': Math.min(newValue, this.clip.max) });
@@ -959,7 +989,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {Item} ammoItem - The ammunition item to load
      * @returns {Promise<Item>} - The updated weapon
      */
-    async loadAmmo(ammoItem) {
+    async loadAmmo(ammoItem): Promise<any> {
         if (!ammoItem || ammoItem.type !== 'ammunition') {
             (ui.notifications as any).warn('Invalid ammunition item');
             return this.parent;
@@ -991,7 +1021,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Eject loaded ammunition from the weapon.
      * @returns {Promise<Item>} - The updated weapon
      */
-    async ejectAmmo() {
+    async ejectAmmo(): Promise<any> {
         if (!this.hasLoadedAmmo) {
             (ui.notifications as any).warn('No ammunition loaded');
             return this.parent;

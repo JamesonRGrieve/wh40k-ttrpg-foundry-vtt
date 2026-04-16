@@ -4,10 +4,53 @@ import ActorDataModel from '../abstract/actor-data-model.ts';
  * Data model for Vehicle actors.
  * Enhanced V13 schema with proper structure for all vehicle data.
  */
+/** Shape of an armour facing (front/side/rear). */
+interface VehicleArmourFacing {
+    value: number;
+    descriptor: string;
+}
+
 export default class VehicleData extends ActorDataModel {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare vehicleClass: 'ground' | 'air' | 'water' | 'space' | 'walker';
+    declare size: number;
+    declare sizeDescriptor: string;
+    declare faction: string;
+    declare subfaction: string;
+    declare type: 'vehicle' | 'walker' | 'flyer' | 'skimmer' | 'bike' | 'tank';
+    declare threatLevel: number;
+    declare armour: {
+        front: VehicleArmourFacing;
+        side: VehicleArmourFacing;
+        rear: VehicleArmourFacing;
+    };
+    declare speed: {
+        cruising: number;
+        tactical: number;
+        notes: string;
+    };
+    declare crew: {
+        required: number;
+        notes: string;
+    };
+    declare passengers: number;
+    declare manoeuverability: number;
+    declare carryingCapacity: number;
+    declare integrity: {
+        max: number;
+        value: number;
+        critical: number;
+    };
+    declare weapons: string;
+    declare specialRules: string;
+    declare traitsText: string;
+    declare availability: string;
+    declare source: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -112,7 +155,7 @@ export default class VehicleData extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @override */
-    prepareBaseData() {
+    prepareBaseData(): void {
         super.prepareBaseData();
 
         // Ensure integrity.value doesn't exceed max
@@ -122,7 +165,7 @@ export default class VehicleData extends ActorDataModel {
     }
 
     /** @override */
-    prepareDerivedData() {
+    prepareDerivedData(): void {
         super.prepareDerivedData();
 
         // No derived calculations needed yet
@@ -137,7 +180,7 @@ export default class VehicleData extends ActorDataModel {
      * Is the vehicle damaged?
      * @type {boolean}
      */
-    get isDamaged() {
+    get isDamaged(): boolean {
         return this.integrity.value < this.integrity.max;
     }
 
@@ -145,7 +188,7 @@ export default class VehicleData extends ActorDataModel {
      * Is the vehicle critically damaged?
      * @type {boolean}
      */
-    get isCritical() {
+    get isCritical(): boolean {
         return this.integrity.critical > 0;
     }
 
@@ -153,7 +196,7 @@ export default class VehicleData extends ActorDataModel {
      * Is the vehicle destroyed?
      * @type {boolean}
      */
-    get isDestroyed() {
+    get isDestroyed(): boolean {
         return this.integrity.value <= 0 && this.integrity.max > 0;
     }
 
@@ -161,7 +204,7 @@ export default class VehicleData extends ActorDataModel {
      * Get armour summary for display.
      * @type {string}
      */
-    get armourSummary() {
+    get armourSummary(): string {
         const f = this.armour.front.value;
         const s = this.armour.side.value;
         const r = this.armour.rear.value;
@@ -172,7 +215,7 @@ export default class VehicleData extends ActorDataModel {
      * Get speed summary for display.
      * @type {string}
      */
-    get speedSummary() {
+    get speedSummary(): string {
         return `Cruising: ${this.speed.cruising} kph / Tactical: ${this.speed.tactical}m`;
     }
 
@@ -180,7 +223,7 @@ export default class VehicleData extends ActorDataModel {
      * Get size label from config.
      * @type {string}
      */
-    get sizeLabel() {
+    get sizeLabel(): string {
         const sizeConfig = CONFIG.wh40k?.vehicleSizes || CONFIG.wh40k?.sizes || {};
         const sizeData = sizeConfig[this.size];
         if (sizeData) {
@@ -193,7 +236,7 @@ export default class VehicleData extends ActorDataModel {
      * Get vehicle class label from config.
      * @type {string}
      */
-    get vehicleClassLabel() {
+    get vehicleClassLabel(): string {
         const classes = CONFIG.wh40k?.vehicleClasses || {};
         const classData = classes[this.vehicleClass];
         if (classData) {
@@ -206,7 +249,7 @@ export default class VehicleData extends ActorDataModel {
      * Get vehicle type label from config.
      * @type {string}
      */
-    get vehicleTypeLabel() {
+    get vehicleTypeLabel(): string {
         const types = CONFIG.wh40k?.vehicleTypes || {};
         const typeData = types[this.type];
         if (typeData) {
@@ -219,7 +262,7 @@ export default class VehicleData extends ActorDataModel {
      * Get integrity percentage.
      * @type {number}
      */
-    get integrityPercentage() {
+    get integrityPercentage(): number {
         if (this.integrity.max === 0) return 0;
         return Math.round((this.integrity.value / this.integrity.max) * 100);
     }
@@ -229,7 +272,7 @@ export default class VehicleData extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @override */
-    getRollData() {
+    getRollData(): Record<string, unknown> {
         const data = super.getRollData();
 
         data.man = this.manoeuverability;

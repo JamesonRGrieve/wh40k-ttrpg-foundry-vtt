@@ -8,8 +8,14 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * These are storage containers that can hold other items.
  */
 export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare capacity: number;
+    declare isCombatVest: boolean;
+
     /** @override */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -19,7 +25,7 @@ export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplat
     }
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
         props.push(`Capacity: ${this.capacity} kg`);
         if (this.isCombatVest) {
@@ -32,7 +38,7 @@ export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplat
     }
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return [{ label: `${this.capacity} kg`, icon: 'fa-solid fa-weight-hanging' }];
     }
 }

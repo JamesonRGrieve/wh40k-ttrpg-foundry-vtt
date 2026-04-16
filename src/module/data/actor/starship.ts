@@ -6,8 +6,67 @@ import ActorDataModel from '../abstract/actor-data-model.ts';
  */
 export default class StarshipData extends ActorDataModel {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare hullType: string;
+    declare hullClass: string;
+    declare dimensions: string;
+    declare crew: {
+        population: number;
+        crewRating: number;
+        morale: {
+            max: number;
+            value: number;
+        };
+    };
+    declare speed: number;
+    declare manoeuvrability: number;
+    declare detection: number;
+    declare armour: number;
+    declare voidShields: number;
+    declare turretRating: number;
+    declare hullIntegrity: {
+        max: number;
+        value: number;
+    };
+    declare space: {
+        total: number;
+        used: number;
+        /** Computed in _prepareResources / prepareEmbeddedData */
+        available?: number;
+        consumed?: number;
+    };
+    declare power: {
+        total: number;
+        used: number;
+        /** Computed in _prepareResources / prepareEmbeddedData */
+        available?: number;
+        generated?: number;
+        consumed?: number;
+    };
+    declare shipPoints: number;
+    declare machineSpiritOddities: string;
+    declare pastHistory: string;
+    declare complications: string;
+    declare weaponCapacity: {
+        dorsal: number;
+        prow: number;
+        port: number;
+        starboard: number;
+        keel: number;
+    };
+    declare notes: string;
+
+    /** Computed during _prepareCombatStats */
+    declare detectionBonus: number;
+    declare hullPercentage: number;
+    declare moralePercentage: number;
+
+    /** Computed during prepareEmbeddedData */
+    declare componentModifiers: Record<string, number>;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -78,7 +137,7 @@ export default class StarshipData extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @override */
-    prepareDerivedData() {
+    prepareDerivedData(): void {
         super.prepareDerivedData();
         this._prepareResources();
         this._prepareCombatStats();
@@ -88,7 +147,7 @@ export default class StarshipData extends ActorDataModel {
      * Calculate resource availability.
      * @protected
      */
-    _prepareResources() {
+    _prepareResources(): void {
         // Add computed available fields
         this.space.available = this.space.total - this.space.used;
         this.power.available = this.power.total - this.power.used;
@@ -98,7 +157,7 @@ export default class StarshipData extends ActorDataModel {
      * Calculate combat-derived stats.
      * @protected
      */
-    _prepareCombatStats() {
+    _prepareCombatStats(): void {
         // Detection Bonus (tens digit) for initiative
         this.detectionBonus = Math.floor(this.detection / 10);
 
@@ -121,7 +180,7 @@ export default class StarshipData extends ActorDataModel {
      * Calculate stats from equipped components.
      * Called by the Document after items are ready.
      */
-    prepareEmbeddedData() {
+    prepareEmbeddedData(): void {
         const actor = this.parent;
         if (!actor?.items) return;
 
@@ -201,7 +260,7 @@ export default class StarshipData extends ActorDataModel {
      * Get the hull type label.
      * @type {string}
      */
-    get hullTypeLabel() {
+    get hullTypeLabel(): string {
         if (!this.hullType) return '';
         return game.i18n.localize(
             `WH40K.HullType.${this.hullType
@@ -215,7 +274,7 @@ export default class StarshipData extends ActorDataModel {
      * Is the ship damaged?
      * @type {boolean}
      */
-    get isDamaged() {
+    get isDamaged(): boolean {
         return this.hullIntegrity.value < this.hullIntegrity.max;
     }
 
@@ -223,7 +282,7 @@ export default class StarshipData extends ActorDataModel {
      * Is the ship crippled (below half hull)?
      * @type {boolean}
      */
-    get isCrippled() {
+    get isCrippled(): boolean {
         return this.hullIntegrity.value <= Math.floor(this.hullIntegrity.max / 2);
     }
 
@@ -231,7 +290,7 @@ export default class StarshipData extends ActorDataModel {
      * Has power shortage?
      * @type {boolean}
      */
-    get hasPowerShortage() {
+    get hasPowerShortage(): boolean {
         return this.power.available < 0;
     }
 
@@ -239,7 +298,7 @@ export default class StarshipData extends ActorDataModel {
      * Has space shortage?
      * @type {boolean}
      */
-    get hasSpaceShortage() {
+    get hasSpaceShortage(): boolean {
         return this.space.available < 0;
     }
 
@@ -248,7 +307,7 @@ export default class StarshipData extends ActorDataModel {
     /* -------------------------------------------- */
 
     /** @override */
-    getRollData() {
+    getRollData(): Record<string, unknown> {
         const data = super.getRollData();
 
         data.speed = this.speed;

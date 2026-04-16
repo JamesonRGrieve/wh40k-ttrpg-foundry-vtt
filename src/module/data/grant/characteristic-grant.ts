@@ -36,7 +36,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -96,7 +96,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState) {
+    async reverse(actor, appliedState): Promise<any> {
         const restoreData = { characteristics: {} };
         const updates = {};
 
@@ -115,7 +115,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async restore(actor, restoreData) {
+    async restore(actor, restoreData): Promise<any> {
         const result = this._initResult();
         const updates = {};
 
@@ -131,14 +131,14 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    getAutomaticValue() {
+    getAutomaticValue(): Record<string, any> | false {
         if (this.optional) return false;
         if (this.characteristics.some((c) => c.optional)) return false;
         return { selected: this.characteristics.map((c) => c.key) };
     }
 
     /** @inheritDoc */
-    async getSummary() {
+    async getSummary(): Promise<any> {
         const summary = await super.getSummary();
         summary.icon = (this.constructor as any).ICON;
 
@@ -157,7 +157,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    validateGrant() {
+    validateGrant(): any {
         const errors = super.validateGrant();
 
         const characteristics = this.characteristics ?? [];

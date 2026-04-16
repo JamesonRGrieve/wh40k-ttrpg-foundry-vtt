@@ -7,11 +7,35 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare componentType: string;
+    declare hullType: Set<string>;
+    declare power: { used: number; generated: number };
+    declare space: number;
+    declare shipPoints: number;
+    declare availability: string;
+    declare modifiers: {
+        speed: number;
+        manoeuvrability: number;
+        detection: number;
+        armour: number;
+        hullIntegrity: number;
+        turretRating: number;
+        voidShields: number;
+        morale: number;
+        crewRating: number;
+    };
+    declare effect: string;
+    declare essential: boolean;
+    declare condition: string;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -113,7 +137,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         ShipComponentData.#migratePowerUsage(source);
         ShipComponentData.#migrateSpaceUsage(source);
@@ -126,7 +150,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Handle legacy powerUsage field.
      * @param {object} source  The source data
      */
-    static #migratePowerUsage(source) {
+    static #migratePowerUsage(source: Record<string, any>): void {
         if ('powerUsage' in source && !source.power) {
             const usage = source.powerUsage;
             source.power = {
@@ -141,7 +165,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Handle legacy spaceUsage field.
      * @param {object} source  The source data
      */
-    static #migrateSpaceUsage(source) {
+    static #migrateSpaceUsage(source: Record<string, any>): void {
         if ('spaceUsage' in source && source.space === undefined) {
             source.space = source.spaceUsage;
             delete source.spaceUsage;
@@ -152,7 +176,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Handle legacy spCost field.
      * @param {object} source  The source data
      */
-    static #migrateSpCost(source) {
+    static #migrateSpCost(source: Record<string, any>): void {
         if ('spCost' in source && source.shipPoints === undefined) {
             source.shipPoints = source.spCost;
             delete source.spCost;
@@ -163,7 +187,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Handle legacy type field.
      * @param {object} source  The source data
      */
-    static #migrateType(source) {
+    static #migrateType(source: Record<string, any>): void {
         if ('type' in source && !source.componentType) {
             let type = source.type.replace(/^\(es\.\)\s*/, '').toLowerCase();
             type = type.replace(/\s+/g, '-');
@@ -180,7 +204,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Parse hullType string to array.
      * @param {object} source  The source data
      */
-    static #migrateHullType(source) {
+    static #migrateHullType(source: Record<string, any>): void {
         if (typeof source.hullType === 'string') {
             const types = source.hullType
                 .toLowerCase()
@@ -202,7 +226,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
         // Ensure hullType is array for Set field
         if (source.hullType && !Array.isArray(source.hullType)) {
@@ -222,7 +246,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Get the component type label.
      * @type {string}
      */
-    get componentTypeLabel() {
+    get componentTypeLabel(): string {
         return game.i18n.localize(`WH40K.ShipComponent.${this.componentType.capitalize()}`);
     }
 
@@ -230,13 +254,12 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Get the hull type label.
      * @type {string}
      */
-    get hullTypeLabel() {
+    get hullTypeLabel(): string {
         if (this.hullType.has('all')) return game.i18n.localize('WH40K.HullType.All');
         return Array.from(this.hullType)
             .map((h) =>
                 game.i18n.localize(
                     `WH40K.HullType.${h
-                        // @ts-expect-error - dynamic property access
                         .split('-')
                         .map((s) => s.capitalize())
                         .join('')}`,
@@ -249,7 +272,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Net power usage (positive = consumes, negative = generates).
      * @type {number}
      */
-    get netPower() {
+    get netPower(): number {
         return this.power.used - this.power.generated;
     }
 
@@ -257,7 +280,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Get power display string.
      * @type {string}
      */
-    get powerLabel() {
+    get powerLabel(): string {
         if (this.power.generated > 0) return `+${this.power.generated}`;
         if (this.power.used > 0) return `−${this.power.used}`;
         return '0';
@@ -267,7 +290,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Power display for templates (alias for powerLabel).
      * @type {string}
      */
-    get powerDisplay() {
+    get powerDisplay(): string {
         return this.powerLabel;
     }
 
@@ -275,7 +298,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Is this component operational?
      * @type {boolean}
      */
-    get isOperational() {
+    get isOperational(): boolean {
         return this.condition === 'functional';
     }
 
@@ -310,7 +333,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [this.componentTypeLabel, `Hull: ${this.hullTypeLabel}`, `Power: ${this.powerLabel}`, `Space: ${this.space}`, `SP: ${this.shipPoints}`];
 
         for (const mod of this.modifiersList) {
@@ -325,7 +348,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             type: this.componentTypeLabel,
             power: this.powerLabel,

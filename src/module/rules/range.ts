@@ -56,19 +56,20 @@ function calculateWeaponMaxRange(rollData) {
  * @param rollData {PsychicRollData}
  */
 async function calculatePsychicAbilityMaxRange(rollData) {
-    if (!rollData.power) {
-        rollData.maxRange = 0;
+    const data = rollData;
+    if (!data.power) {
+        data.maxRange = 0;
         return;
     }
 
     let range;
-    if (Number.isInteger(rollData.power.system.range)) {
-        range = rollData.power.system.range;
-    } else if (rollData.power.system.range === '') {
+    if (Number.isInteger(data.power.system.range)) {
+        range = data.power.system.range;
+    } else if (data.power.system.range === '') {
         range = 0;
     } else {
         try {
-            const rangeCalculation = new Roll(rollData.power.system.range, rollData);
+            const rangeCalculation = new Roll(data.power.system.range, data);
             await rangeCalculation.evaluate();
             range = rangeCalculation.total ?? 0;
         } catch {
@@ -77,7 +78,7 @@ async function calculatePsychicAbilityMaxRange(rollData) {
         }
     }
 
-    rollData.maxRange = range;
+    data.maxRange = range;
 }
 
 /**

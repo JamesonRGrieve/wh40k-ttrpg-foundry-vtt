@@ -7,7 +7,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
  */
 export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTemplate) {
     /** @override */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -18,7 +18,7 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
     }
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
         if (this.hasLevel && this.level > 0) {
             props.push(`Level ${this.level}`);
@@ -30,7 +30,7 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
     }
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         const labels = [];
         if (this.hasLevel && this.level > 0) {
             labels.push({ label: this.level.toString(), icon: 'fa-solid fa-layer-group' });
@@ -42,7 +42,7 @@ export default class AttackSpecialData extends ItemDataModel.mixin(DescriptionTe
      * Get the display name including level if applicable.
      * @returns {string}
      */
-    get displayName() {
+    get displayName(): string {
         if (this.hasLevel && this.level > 0) {
             return `${this.parent.name} (${this.level})`;
         }

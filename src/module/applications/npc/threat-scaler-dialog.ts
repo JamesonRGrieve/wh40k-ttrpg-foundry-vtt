@@ -408,7 +408,6 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
-    // @ts-ignore - Foundry override
     async close(options: any = {}): Promise<any> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);

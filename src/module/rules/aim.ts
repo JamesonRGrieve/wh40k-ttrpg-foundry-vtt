@@ -2,7 +2,8 @@
  * @param rollData {RollData}
  */
 export function calculateAimBonus(rollData) {
-    rollData.weapon ?? rollData.power;
+    const _item = rollData.weapon ?? rollData.power;
+    void _item;
 }
 
 export function aimModifiers() {

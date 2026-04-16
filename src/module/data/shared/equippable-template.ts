@@ -6,8 +6,15 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  */
 export default class EquippableTemplate extends SystemDataModel {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare equipped: boolean;
+    declare inBackpack: boolean;
+    declare inShipStorage: boolean;
+    declare container: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             equipped: new fields.BooleanField({ required: true, initial: false }),
@@ -26,7 +33,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         // Ensure boolean fields are proper booleans
         if (source.equipped !== undefined && typeof source.equipped !== 'boolean') {
@@ -50,7 +57,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
     }
 
@@ -60,7 +67,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Is this item currently carried (not in storage)?
      * @type {boolean}
      */
-    get isCarried() {
+    get isCarried(): boolean {
         return !this.container && !this.inBackpack && !this.inShipStorage;
     }
 
@@ -70,7 +77,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Is this item in ship storage?
      * @type {boolean}
      */
-    get isInShipStorage() {
+    get isInShipStorage(): boolean {
         return this.inShipStorage === true;
     }
 
@@ -80,7 +87,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Toggle the equipped state.
      * @returns {Promise<Item>}
      */
-    toggleEquipped() {
+    toggleEquipped(): any {
         return this.parent?.update({ 'system.equipped': !this.equipped });
     }
 
@@ -90,7 +97,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Move to backpack.
      * @returns {Promise<Item>}
      */
-    stowInBackpack() {
+    stowInBackpack(): any {
         return this.parent?.update({
             'system.equipped': false,
             'system.inBackpack': true,
@@ -103,7 +110,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Remove from backpack.
      * @returns {Promise<Item>}
      */
-    removeFromBackpack() {
+    removeFromBackpack(): any {
         return this.parent?.update({ 'system.inBackpack': false });
     }
 
@@ -113,7 +120,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Move to ship storage.
      * @returns {Promise<Item>}
      */
-    stowInShipStorage() {
+    stowInShipStorage(): any {
         return this.parent?.update({
             'system.equipped': false,
             'system.inBackpack': false,
@@ -127,7 +134,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Remove from ship storage.
      * @returns {Promise<Item>}
      */
-    removeFromShipStorage() {
+    removeFromShipStorage(): any {
         return this.parent?.update({ 'system.inShipStorage': false });
     }
 }

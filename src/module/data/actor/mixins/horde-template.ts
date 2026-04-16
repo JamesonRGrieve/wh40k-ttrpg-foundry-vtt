@@ -7,14 +7,14 @@ const { SchemaField, NumberField, BooleanField, ArrayField, StringField } = (fou
  * @param {typeof foundry.abstract.TypeDataModel} Base - The base class to extend.
  * @returns {typeof foundry.abstract.TypeDataModel} The extended class with horde capabilities.
  */
-export default function HordeTemplate(Base) {
+export default function HordeTemplate(Base: any): any {
     return class HordeTemplateMixin extends Base {
         /* -------------------------------------------- */
         /*  Model Configuration                         */
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        static defineSchema() {
+        static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
             return {
                 ...super.defineSchema(),
                 horde: new SchemaField({
@@ -52,7 +52,7 @@ export default function HordeTemplate(Base) {
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        static _migrateData(source) {
+        static _migrateData(source: Record<string, any>): void {
             super._migrateData?.(source);
             // Ensure horde object exists
             source.horde ??= {
@@ -79,7 +79,7 @@ export default function HordeTemplate(Base) {
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        prepareDerivedData() {
+        prepareDerivedData(): void {
             super.prepareDerivedData();
             this._prepareHordeData();
         }
@@ -88,7 +88,7 @@ export default function HordeTemplate(Base) {
          * Calculate horde-derived values based on current magnitude.
          * @protected
          */
-        _prepareHordeData() {
+        _prepareHordeData(): void {
             if (!this.horde.enabled) return;
 
             const magnitude = this.horde.magnitude;
@@ -113,7 +113,7 @@ export default function HordeTemplate(Base) {
          * @param {string} [source] - Source of the damage (for logging).
          * @returns {Promise<Actor>} The updated actor.
          */
-        applyMagnitudeDamage(amount, source = '') {
+        applyMagnitudeDamage(amount: number, source = ''): any {
             if (!this.horde.enabled) return this.parent;
 
             const newMagnitude = Math.max(0, this.horde.magnitude.current - amount);
@@ -135,7 +135,7 @@ export default function HordeTemplate(Base) {
          * @param {string} [source] - Source of the restoration.
          * @returns {Promise<Actor>} The updated actor.
          */
-        restoreMagnitude(amount, source = '') {
+        restoreMagnitude(amount: number, source = ''): any {
             if (!this.horde.enabled) return this.parent;
 
             const newMagnitude = Math.min(this.horde.magnitude.max, this.horde.magnitude.current + amount);
@@ -155,7 +155,7 @@ export default function HordeTemplate(Base) {
          * Toggle horde mode on/off.
          * @returns {Promise<Actor>} The updated actor.
          */
-        toggleHordeMode() {
+        toggleHordeMode(): any {
             return this.parent.update({
                 'system.horde.enabled': !this.horde.enabled,
             });
@@ -165,7 +165,7 @@ export default function HordeTemplate(Base) {
          * Get the effective damage output multiplier for this horde.
          * @returns {number} The damage multiplier.
          */
-        get hordeDamageMultiplier() {
+        get hordeDamageMultiplier(): number {
             return this.horde.enabled ? this.horde.damageMultiplier : 1;
         }
 
@@ -173,7 +173,7 @@ export default function HordeTemplate(Base) {
          * Check if the horde is destroyed (magnitude 0).
          * @returns {boolean}
          */
-        get hordeDestroyed() {
+        get hordeDestroyed(): boolean {
             return this.horde.enabled && this.horde.magnitude.current <= 0;
         }
 
@@ -181,7 +181,7 @@ export default function HordeTemplate(Base) {
          * Get magnitude as a percentage.
          * @returns {number} Percentage 0-100.
          */
-        get magnitudePercent() {
+        get magnitudePercent(): number {
             if (!this.horde.enabled || this.horde.magnitude.max <= 0) return 0;
             return Math.round((this.horde.magnitude.current / this.horde.magnitude.max) * 100);
         }

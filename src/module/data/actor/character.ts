@@ -23,14 +23,144 @@ const GENERATION_CHARACTERISTICS = [
  * Extends CreatureTemplate with character-specific fields like bio, experience, origin path.
  * @extends {CreatureTemplate}
  */
+/** Shape of a single acquisition entry in rogueTrader.acquisitions. */
+interface AcquisitionEntry {
+    name: string;
+    availability: string;
+    modifier: number;
+    notes: string;
+    acquired: boolean;
+}
+
+/** Shape of a background ability entry. */
+interface BackgroundAbility {
+    source: string;
+    name: string;
+    benefit: string;
+}
+
+/** Shape of a character generation assignments object. */
+interface CharacterGenerationAssignments {
+    weaponSkill: number | null;
+    ballisticSkill: number | null;
+    strength: number | null;
+    toughness: number | null;
+    agility: number | null;
+    intelligence: number | null;
+    perception: number | null;
+    willpower: number | null;
+    fellowship: number | null;
+    [key: string]: number | null;
+}
+
+/** Shape of custom base values for non-human races. */
+interface CharacterGenerationCustomBases {
+    enabled: boolean;
+    weaponSkill: number;
+    ballisticSkill: number;
+    strength: number;
+    toughness: number;
+    agility: number;
+    intelligence: number;
+    perception: number;
+    willpower: number;
+    fellowship: number;
+    [key: string]: number | boolean;
+}
+
 export default class CharacterData extends CreatureTemplate {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare rank: number;
+    declare mutations: string;
+    declare gameSystem: 'rt' | 'dh1e' | 'dh2e' | 'bc' | 'ow' | 'dw';
+    declare bio: {
+        playerName: string;
+        gender: string;
+        age: string;
+        build: string;
+        complexion: string;
+        hair: string;
+        eyes: string;
+        quirks: string;
+        superstition: string;
+        mementos: string;
+        notes: string;
+    };
+    declare originPath: {
+        homeWorld: string;
+        birthright: string;
+        lureOfTheVoid: string;
+        trialsAndTravails: string;
+        motivation: string;
+        career: string;
+        background: string;
+        role: string;
+        elite: string;
+        divination: string;
+        race: string;
+        archetype: string;
+        pride: string;
+        disgrace: string;
+        regiment: string;
+        speciality: string;
+        chapter: string;
+    };
+    declare experience: {
+        used: number;
+        total: number;
+        available: number;
+        /** Set during _computeExperienceSpent */
+        spentCharacteristics?: number;
+        spentSkills?: number;
+        spentTalents?: number;
+        spentPsychicPowers?: number;
+        calculatedTotal?: number;
+    };
+    declare rogueTrader: {
+        profitFactor: {
+            current: number;
+            starting: number;
+            modifier: number;
+            misfortunes: string;
+        };
+        endeavour: {
+            name: string;
+            achievementCurrent: number;
+            achievementRequired: number;
+            reward: number;
+            notes: string;
+        };
+        acquisitions: AcquisitionEntry[];
+    };
+    declare influence: number;
+    declare requisition: number;
+    declare throneGelt: number;
+    declare insanity: number;
+    declare corruption: number;
+    declare aptitudes: string[];
+    declare chaosAlignment: 'unaligned' | 'khorne' | 'nurgle' | 'slaanesh' | 'tzeentch';
+    declare backgroundEffects: {
+        abilities: BackgroundAbility[];
+        originPath: Record<string, unknown>;
+    };
+    declare characterGeneration: {
+        rolls: number[];
+        assignments: CharacterGenerationAssignments;
+        customBases: CharacterGenerationCustomBases;
+    };
+
+    /** Computed during _updateWoundsFateModifiers */
+    declare totalWoundsModifier: number;
+    declare totalFateModifier: number;
+
     /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return {
             ...super.defineSchema(),
 
@@ -182,13 +312,13 @@ export default class CharacterData extends CreatureTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         // Handle old characteristic field names or other character-specific migrations
     }
 
     /** @inheritDoc */
-    static _cleanData(source, options = {}) {
+    static _cleanData(source: Record<string, any> | undefined, options: Record<string, unknown> = {}): void {
         super._cleanData?.(source, options);
         CharacterData.#cleanExperience(source);
         CharacterData.#cleanMentalState(source);
@@ -199,7 +329,7 @@ export default class CharacterData extends CreatureTemplate {
      * Clean experience fields.
      * @param {object} source - The source data
      */
-    static #cleanExperience(source) {
+    static #cleanExperience(source: Record<string, any> | undefined): void {
         if (source?.experience) {
             if (source.experience.used !== undefined) {
                 source.experience.used = this._toInt(source.experience.used);
@@ -232,7 +362,7 @@ export default class CharacterData extends CreatureTemplate {
      * Clean mental state fields.
      * @param {object} source - The source data
      */
-    static #cleanMentalState(source) {
+    static #cleanMentalState(source: Record<string, any> | undefined): void {
         if (source?.insanity !== undefined) {
             source.insanity = this._toInt(source.insanity);
         }
@@ -251,7 +381,7 @@ export default class CharacterData extends CreatureTemplate {
      * Clean Rogue Trader / WH40K fields.
      * @param {object} source - The source data
      */
-    static #cleanRogueTrader(source) {
+    static #cleanRogueTrader(source: Record<string, any> | undefined): void {
         const rt = source?.rogueTrader;
         if (!rt) return;
 
@@ -281,13 +411,13 @@ export default class CharacterData extends CreatureTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    prepareDerivedData() {
+    prepareDerivedData(): void {
         super.prepareDerivedData();
         this._prepareExperience();
     }
 
     /** @inheritDoc */
-    prepareEmbeddedData() {
+    prepareEmbeddedData(): void {
         this._computeOriginPathEffects(); // Must run before super to set gameSystem before _prepareSkills
         super.prepareEmbeddedData();
         this._computeExperienceSpent();
@@ -299,7 +429,7 @@ export default class CharacterData extends CreatureTemplate {
      * Prepare experience calculations.
      * @protected
      */
-    _prepareExperience() {
+    _prepareExperience(): void {
         this.experience.available = this.experience.total - this.experience.used;
     }
 
@@ -316,7 +446,7 @@ export default class CharacterData extends CreatureTemplate {
      * Compute origin path effects from items.
      * @protected
      */
-    _computeOriginPathEffects() {
+    _computeOriginPathEffects(): void {
         const actor = this.parent;
         if (!actor?.items) return;
 
@@ -422,7 +552,7 @@ export default class CharacterData extends CreatureTemplate {
      * @returns {string} Human-readable label
      * @private
      */
-    _getStepLabel(step) {
+    _getStepLabel(step: string): string {
         const labels = {
             // RT
             homeWorld: 'Home World',
@@ -454,7 +584,7 @@ export default class CharacterData extends CreatureTemplate {
      * Compute experience spent from items and stats.
      * @protected
      */
-    _computeExperienceSpent() {
+    _computeExperienceSpent(): void {
         const actor = this.parent;
         if (!actor?.items || !this.experience) return;
 
@@ -463,17 +593,17 @@ export default class CharacterData extends CreatureTemplate {
         this.experience.spentTalents = 0;
         this.experience.spentPsychicPowers = this.psy.cost;
 
-        for (const characteristic of Object.values(this.characteristics) as any[]) {
-            this.experience.spentCharacteristics += parseInt(characteristic.cost, 10);
+        for (const characteristic of Object.values(this.characteristics)) {
+            this.experience.spentCharacteristics += parseInt(String(characteristic.cost), 10);
         }
 
-        for (const skill of Object.values(this.skills) as any[]) {
+        for (const skill of Object.values(this.skills)) {
             if (Array.isArray(skill.entries)) {
                 for (const speciality of skill.entries) {
-                    this.experience.spentSkills += parseInt(speciality.cost ?? 0, 10);
+                    this.experience.spentSkills += parseInt(String(speciality.cost ?? 0), 10);
                 }
             } else {
-                this.experience.spentSkills += parseInt(skill.cost ?? 0, 10);
+                this.experience.spentSkills += parseInt(String(skill.cost ?? 0), 10);
             }
         }
 
@@ -493,7 +623,7 @@ export default class CharacterData extends CreatureTemplate {
      * Update wounds and fate modifier totals for display.
      * @protected
      */
-    _updateWoundsFateModifiers() {
+    _updateWoundsFateModifiers(): void {
         const itemWounds = this.modifierSources?.wounds?.reduce((total, src) => total + (src.value || 0), 0) || 0;
         const itemFate = this.modifierSources?.fate?.reduce((total, src) => total + (src.value || 0), 0) || 0;
 
@@ -508,7 +638,7 @@ export default class CharacterData extends CreatureTemplate {
      * The die roll component uses the stored roll result from character creation.
      * @protected
      */
-    _computeWoundsMax() {
+    _computeWoundsMax(): void {
         const actor = this.parent;
         if (!actor?.items) return;
 
@@ -541,7 +671,12 @@ export default class CharacterData extends CreatureTemplate {
                 let flatBonus = 0;
                 try {
                     // Evaluate the remaining flat terms (e.g., "0+0+1" → 1)
-                    flatBonus = Function(`"use strict"; return (${withoutDice})`)();
+                    // Parse simple arithmetic (+/-) without eval
+                    flatBonus = withoutDice
+                        .split(/(?=[+-])/)
+                        .map((t: string) => t.trim())
+                        .filter((t: string) => t.length > 0)
+                        .reduce((sum: number, t: string) => sum + (parseInt(t, 10) || 0), 0);
                 } catch {
                     flatBonus = 0;
                 }
@@ -596,7 +731,7 @@ export default class CharacterData extends CreatureTemplate {
      * Get corruption level.
      * @type {string}
      */
-    get corruptionLevel() {
+    get corruptionLevel(): string {
         const cp = this.corruption;
         if (cp < 30) return 'none';
         if (cp < 60) return 'tainted';
@@ -608,7 +743,7 @@ export default class CharacterData extends CreatureTemplate {
      * Get insanity degrees.
      * @type {number}
      */
-    get insanityDegrees() {
+    get insanityDegrees(): number {
         return Math.floor(this.insanity / 10);
     }
 
@@ -617,7 +752,7 @@ export default class CharacterData extends CreatureTemplate {
     /* -------------------------------------------- */
 
     /** @override */
-    getRollData() {
+    getRollData(): Record<string, unknown> {
         return super.getRollData();
     }
 }

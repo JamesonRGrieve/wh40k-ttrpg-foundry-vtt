@@ -26,7 +26,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -157,7 +157,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState) {
+    async reverse(actor, appliedState): Promise<any> {
         const restoreData = { items: [] };
         const idsToDelete = [];
 
@@ -182,7 +182,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async restore(actor, restoreData) {
+    async restore(actor, restoreData): Promise<any> {
         const result = this._initResult();
         if (!restoreData?.items?.length) return result;
 
@@ -201,14 +201,14 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    getAutomaticValue() {
+    getAutomaticValue(): Record<string, any> | false {
         if (this.optional) return false;
         if (this.items.some((i) => i.optional)) return false;
         return { selected: this.items.map((i) => i.uuid) };
     }
 
     /** @inheritDoc */
-    async getSummary() {
+    async getSummary(): Promise<void> {
         const summary = await super.getSummary();
         summary.icon = (this.constructor as any).ICON;
 
@@ -235,7 +235,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    validateGrant() {
+    validateGrant(): any {
         const errors = super.validateGrant();
 
         // items may be undefined if grant was created with invalid data
@@ -265,7 +265,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
      * @returns {boolean}
      * @private
      */
-    _isDuplicate(actor, sourceItem) {
+    _isDuplicate(actor, sourceItem): any {
         return actor.items.some(
             (i) =>
                 i.type === sourceItem.type &&
@@ -283,7 +283,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
      * @returns {Promise<object>}
      * @private
      */
-    _createItemData(sourceItem, uuid, overrides = {}) {
+    _createItemData(sourceItem, uuid, overrides = {}): any {
         const itemData = sourceItem.toObject();
 
         // Apply overrides
@@ -308,7 +308,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
      * @returns {Promise<Item|null>}
      * @private
      */
-    async _findItemByName(name, specialization = '') {
+    async _findItemByName(name, specialization = ''): Promise<any> {
         if (!name) return null;
 
         const nameLower = name.toLowerCase();

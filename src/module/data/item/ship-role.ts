@@ -7,10 +7,25 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare rank: number;
+    declare purpose: string;
+    declare careerPreferences: string[];
+    declare careerNote: string;
+    declare subordinates: string[];
+    declare importantSkills: Array<{ name: string; specialization: string }>;
+    declare abilities: Array<{ name: string; description: string; bonus: number; action: string; actionType: string; skill: string }>;
+    declare effect: string;
+    declare shipBonuses: { manoeuvrability: number; detection: number; ballisticSkill: number; crewRating: number };
+    declare skillBonuses: Record<string, unknown>;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -89,7 +104,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * Get formatted career preferences.
      * @type {string}
      */
-    get careerPreferencesLabel() {
+    get careerPreferencesLabel(): string {
         // Handle both array and string (legacy)
         if (Array.isArray(this.careerPreferences)) {
             if (!this.careerPreferences.length) return '-';
@@ -105,7 +120,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * Get formatted subordinates.
      * @type {string}
      */
-    get subordinatesLabel() {
+    get subordinatesLabel(): string {
         // Handle both array and string (legacy)
         if (Array.isArray(this.subordinates)) {
             if (!this.subordinates.length) return '-';
@@ -119,7 +134,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * Get formatted important skills.
      * @type {string}
      */
-    get importantSkillsLabel() {
+    get importantSkillsLabel(): string {
         // Handle both array of objects and array of strings (legacy)
         if (Array.isArray(this.importantSkills)) {
             if (!this.importantSkills.length) return '-';
@@ -186,7 +201,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [`Rank: ${this.rank}`, `Careers: ${this.careerPreferencesLabel}`, `Skills: ${this.importantSkillsLabel}`];
 
         return props;
@@ -197,7 +212,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             rank: this.rank,
         };

@@ -17,6 +17,7 @@ export class WH40KItemContainer extends Item {
         if (this.isNestedItem()) {
             // @ts-expect-error - property access
             await this.parent.updateNestedDocuments(data);
+            return undefined;
         } else {
             return super.update(data, options);
         }
@@ -101,7 +102,7 @@ export class WH40KItemContainer extends Item {
 
     getItemByName(item: string, type: string): Item | undefined {
         game.wh40k.log('Check for item by name', item);
-        if (!this.system.container) return;
+        if (!this.system.container) return undefined;
         return this.items.find((i) => i.name === item && i.type === type);
     }
 

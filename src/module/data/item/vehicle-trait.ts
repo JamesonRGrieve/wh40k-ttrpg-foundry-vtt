@@ -7,10 +7,19 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare descriptionText: string;
+    declare modifiers: { speed: number; manoeuvrability: number; armour: number; integrity: number };
+    declare hasLevel: boolean;
+    declare level: number | null;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -87,7 +96,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
         if (this.hasLevel && this.level !== null) {
             props.push(`Level: ${this.level}`);
@@ -105,7 +114,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             level: this.hasLevel ? this.level : '-',
         };

@@ -47,7 +47,7 @@ export function registerCustomEnrichers() {
     );
 
     // Register click handlers for interactive elements
-    document.body.addEventListener('click', handleEnricherClick);
+    document.body.addEventListener('click', (event) => void handleEnricherClick(event));
 }
 
 /* -------------------------------------------- */

@@ -25,7 +25,7 @@ const { ItemSheetV2 } = foundry.applications.sheets;
 export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any)))) {
     [key: string]: any;
     constructor(options: any = {}) {
-        // @ts-ignore - Foundry V2 constructor accepts options
+        // @ts-expect-error Foundry V2 constructor accepts options
         super(options);
     }
 
@@ -431,7 +431,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #effectEdit(this: any, event: Event, target: HTMLElement): void {
-        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
+        const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         effect?.sheet.render(true);
     }
@@ -445,7 +445,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectDelete(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
+        const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         await effect?.delete();
     }
@@ -459,7 +459,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectToggle(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
+        const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         await effect?.update({ disabled: !effect.disabled });
     }

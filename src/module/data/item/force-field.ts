@@ -11,9 +11,20 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes PhysicalItemTemplate
  * @mixes EquippableTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare protectionRating: number;
+    declare activated: boolean;
+    declare overloaded: boolean;
+    declare overloadMin: number;
+    declare overloadMax: number;
+    declare overloadDuration: string;
+    declare effect: string;
+    declare notes: string;
+
     /* -------------------------------------------- */
     /*  Data Migration                              */
     /* -------------------------------------------- */
@@ -23,7 +34,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         // Migrate old overloadThreshold field to overloadMin/overloadMax
         if (source.overloadThreshold !== undefined && source.overloadMin === undefined) {
@@ -33,7 +44,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     }
 
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -91,7 +102,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get isRollable() {
+    get isRollable(): boolean {
         return true;
     }
 
@@ -99,7 +110,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Get the status label.
      * @type {string}
      */
-    get statusLabel() {
+    get statusLabel(): string {
         if (this.overloaded) return game.i18n.localize('WH40K.ForceField.Overloaded');
         if (this.activated) return game.i18n.localize('WH40K.ForceField.Active');
         return game.i18n.localize('WH40K.ForceField.Inactive');
@@ -153,7 +164,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Get effective overload range (including craftsmanship).
      * @type {object}
      */
-    get effectiveOverloadRange() {
+    get effectiveOverloadRange(): Record<string, any> {
         const craftMods = this.craftsmanshipModifiers;
 
         // If item has explicit overload values, use those
@@ -176,7 +187,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {number} roll - The d100 protection roll
      * @returns {boolean}
      */
-    checksOverload(roll) {
+    checksOverload(roll): any {
         const range = this.effectiveOverloadRange;
         return roll >= range.min && roll <= range.max;
     }
@@ -185,7 +196,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Get overload range label for display.
      * @type {string}
      */
-    get overloadRangeLabel() {
+    get overloadRangeLabel(): string {
         const range = this.effectiveOverloadRange;
         if (range.min === range.max) {
             return `${String(range.min).padStart(2, '0')}`;
@@ -198,7 +209,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [
             // @ts-expect-error - TS2339
             ...PhysicalItemTemplate.prototype.chatProperties.call(this),
@@ -215,7 +226,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             protection: `${this.protectionRating}%`,
             overload: `${this.overloadThreshold}+`,
@@ -231,7 +242,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Toggle activation state.
      * @returns {Promise<Item>}
      */
-    toggleActivated() {
+    toggleActivated(): any {
         return this.parent?.update({ 'system.activated': !this.activated });
     }
 
@@ -240,7 +251,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {boolean} overloaded
      * @returns {Promise<Item>}
      */
-    setOverloaded(overloaded) {
+    setOverloaded(overloaded): any {
         return this.parent?.update({ 'system.overloaded': overloaded });
     }
 
@@ -248,7 +259,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Recover from overload.
      * @returns {Promise<Item>}
      */
-    recover() {
+    recover(): any {
         return this.parent?.update({ 'system.overloaded': false });
     }
 
@@ -257,7 +268,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} [options] - Roll options
      * @returns {Promise<object>} - Result object with { isProtected: boolean, overloaded: boolean, roll: Roll }
      */
-    async rollProtection(options = {}) {
+    async rollProtection(options = {}): Promise<any> {
         if (!this.isProtecting) {
             return { isProtected: false, overloaded: false, roll: null, inactive: true };
         }

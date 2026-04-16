@@ -9,10 +9,19 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class MentalDisorderData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare severity: string;
+    declare trigger: string;
+    declare effect: string;
+    declare treatment: string;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -49,7 +58,7 @@ export default class MentalDisorderData extends ItemDataModel.mixin(DescriptionT
      * Get the severity label.
      * @type {string}
      */
-    get severityLabel() {
+    get severityLabel(): string {
         return game.i18n.localize(`WH40K.MentalDisorder.${this.severity.capitalize()}`);
     }
 
@@ -58,7 +67,7 @@ export default class MentalDisorderData extends ItemDataModel.mixin(DescriptionT
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         return [this.severityLabel];
     }
 
@@ -67,7 +76,7 @@ export default class MentalDisorderData extends ItemDataModel.mixin(DescriptionT
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             severity: this.severityLabel,
         };

@@ -670,7 +670,6 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    // @ts-ignore - Foundry override
     async close(options: any = {}): Promise<any> {
         if (!this.#applied && this.#resolve) {
             this.#resolve(false);
