@@ -9,10 +9,7 @@
 }
 
 .wh40k-affliction-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: $wh40k-space-xs;
+    @apply tw-flex tw-items-center tw-justify-between tw-mb-1;
 
     span {
         font-size: 0.75rem;
@@ -27,16 +24,13 @@
 }
 
 .wh40k-affliction-list {
-    display: flex;
-    flex-direction: column;
+    @apply tw-flex tw-flex-col;
     gap: 2px;
     min-height: 24px;
 }
 
 .wh40k-affliction-row {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-sm;
+    @apply tw-flex tw-items-center tw-gap-2;
     padding: 4px 8px;
     background: $wh40k-bg-paper-light;
     border: 1px solid $wh40k-border-light;
@@ -49,10 +43,9 @@
 }
 
 .wh40k-affliction-name {
-    flex: 1;
+    @apply tw-flex-1 tw-cursor-pointer;
     font-size: 0.85rem;
     color: var(--color-text-primary);
-    cursor: pointer;
 
     &:hover {
         color: $wh40k-accent-gold;
@@ -94,23 +87,16 @@
 }
 
 .wh40k-mobility-speeds {
-    display: grid;
+    @apply tw-grid tw-gap-2 tw-mb-3;
     grid-template-columns: repeat(4, 1fr);
-    gap: $wh40k-space-sm;
-    margin-bottom: $wh40k-space-md;
 }
 
 .wh40k-speed-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-sm;
+    @apply tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-cursor-pointer;
     background: $wh40k-bg-paper-light;
     border: 1px solid $wh40k-border-light;
     border-radius: 6px;
     transition: all $wh40k-transition-base;
-    cursor: pointer;
 
     &:hover {
         background: rgba(255, 255, 255, 0.8);
@@ -134,8 +120,7 @@
 }
 
 .wh40k-speed-data {
-    display: flex;
-    align-items: baseline;
+    @apply tw-flex tw-items-baseline;
     gap: 2px;
 }
 
@@ -211,17 +196,12 @@
 }
 
 .wh40k-athletics-grid {
-    display: grid;
+    @apply tw-grid tw-gap-2;
     grid-template-columns: repeat(3, 1fr);
-    gap: $wh40k-space-sm;
 }
 
 .wh40k-athletic-stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: $wh40k-space-xs;
+    @apply tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1;
     background: rgba(255, 255, 255, 0.5);
     border-radius: 4px;
 }
@@ -241,17 +221,12 @@
 }
 
 .wh40k-carrying-grid {
-    display: grid;
+    @apply tw-grid tw-gap-2;
     grid-template-columns: repeat(3, 1fr);
-    gap: $wh40k-space-sm;
 }
 
 .wh40k-carry-stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: $wh40k-space-xs;
+    @apply tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1;
     background: rgba(255, 255, 255, 0.5);
     border-radius: 4px;
 }
@@ -306,10 +281,7 @@
 }
 
 .wh40k-movement-grid {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-sm;
+    @apply tw-flex tw-flex-col tw-gap-3 tw-p-2;
 }
 
 .wh40k-movement-size {
@@ -335,20 +307,15 @@
 }
 
 .wh40k-movement-rates {
-    display: grid;
+    @apply tw-grid tw-gap-1;
     grid-template-columns: repeat(4, 1fr);
-    gap: $wh40k-space-xs;
 }
 
 .wh40k-movement-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: $wh40k-space-xs;
+    @apply tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer;
     background: rgba(255, 255, 255, 0.5);
     border-radius: 4px;
     transition: background $wh40k-transition-fast;
-    cursor: pointer;
 
     &:hover {
         background: rgba(255, 255, 255, 0.8);
@@ -376,10 +343,7 @@
 
 // Legacy movement grid (fallback)
 .wh40k-move-cell {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: $wh40k-space-xs;
+    @apply tw-flex tw-flex-col tw-items-center tw-p-1;
     background: $wh40k-bg-paper-light;
     border: 1px solid $wh40k-border-light;
     border-radius: 4px;
@@ -400,16 +364,12 @@
 }
 
 .wh40k-capacity-row {
-    display: flex;
-    gap: $wh40k-space-md;
-    padding-top: $wh40k-space-xs;
+    @apply tw-flex tw-gap-3 tw-pt-1;
     border-top: 1px solid $wh40k-border-light;
 }
 
 .wh40k-capacity-item {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
+    @apply tw-flex tw-items-center tw-gap-1;
 }
 
 .wh40k-capacity-label {

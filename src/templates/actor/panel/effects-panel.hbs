@@ -11,9 +11,9 @@
     </div>
     <div class="wh40k-panel-body">
         {{#if effects.length}}
-            <div class="wh40k-effects-list">
+            <div class="wh40k-effects-list tw-flex tw-flex-col tw-gap-2 tw-mb-3">
                 {{#each effects as |effect|}}
-                    <div class="wh40k-effect-card {{effect.document.natureClass}} {{#if effect.document.disabled}}disabled{{/if}}" data-effect-id="{{effect.id}}">
+                    <div class="wh40k-effect-card tw-p-2 {{effect.document.natureClass}} {{#if effect.document.disabled}}disabled{{/if}}" data-effect-id="{{effect.id}}">
                         <div class="wh40k-card-header">
                             <img src="{{effect.icon}}" alt="{{effect.name}}" class="wh40k-card-icon">
                             <div class="wh40k-card-info">

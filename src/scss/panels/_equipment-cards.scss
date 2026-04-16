@@ -54,29 +54,20 @@
 
 // Icon (Small)
 .wh40k-equip-icon {
-    width: 28px;
-    height: 28px;
+    @apply tw-w-7 tw-h-7 tw-shrink-0;
     border-radius: 4px;
     object-fit: cover;
     border: 1px solid var(--wh40k-border-color-light);
-    flex-shrink: 0;
 }
 
 // Name Button
 .wh40k-equip-name {
-    flex: 1;
-    min-width: 0;
-    text-align: left;
+    @apply tw-flex-1 tw-min-w-0 tw-text-left tw-cursor-pointer tw-truncate tw-font-semibold;
     font-size: 0.85rem;
-    font-weight: 600;
     color: var(--wh40k-text-dark);
     background: none;
     border: none;
     padding: 0;
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     transition: color $wh40k-transition-base;
 
     &:hover {
@@ -249,10 +240,7 @@
 
 // Equipment List Container
 .wh40k-equipment-list {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-sm;
-    margin-bottom: $wh40k-space-sm;
+    @apply tw-flex tw-flex-col tw-gap-2 tw-mb-2;
 }
 
 // Equipment Card
@@ -323,10 +311,7 @@
 
 // Card Header (Icon, Name, Action Button)
 .wh40k-card-header {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-sm;
-    margin-bottom: $wh40k-space-xs;
+    @apply tw-flex tw-items-center tw-gap-2 tw-mb-1;
 }
 
 .wh40k-card-icon {
@@ -339,21 +324,14 @@
 }
 
 .wh40k-card-info {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
+    @apply tw-flex-1 tw-min-w-0 tw-flex tw-flex-col;
     gap: 2px;
 }
 
 .wh40k-card-name {
+    @apply tw-cursor-pointer tw-truncate tw-font-semibold;
     font-size: 0.9rem;
-    font-weight: 600;
     color: var(--wh40k-text-dark);
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 
     &:hover {
         color: var(--wh40k-gold);
@@ -361,11 +339,9 @@
 }
 
 .wh40k-card-meta {
+    @apply tw-flex tw-items-center tw-gap-1;
     font-size: 0.7rem;
     color: var(--wh40k-text-muted);
-    display: flex;
-    align-items: center;
-    gap: 4px;
 
     i {
         font-size: 0.85em;
@@ -482,10 +458,8 @@
 
 // Card Stats (Badges for AP, Weight, etc.)
 .wh40k-card-stats {
-    display: flex;
-    flex-wrap: wrap;
+    @apply tw-flex tw-flex-wrap tw-mb-1;
     gap: 6px;
-    margin-bottom: $wh40k-space-xs;
 }
 
 .wh40k-stat-badge {
@@ -532,9 +506,7 @@
 
 // Card Actions Row
 .wh40k-card-actions {
-    display: flex;
-    gap: 4px;
-    padding-top: $wh40k-space-xs;
+    @apply tw-flex tw-gap-1 tw-pt-1;
     border-top: 1px solid var(--wh40k-border-color-light);
 }
 
