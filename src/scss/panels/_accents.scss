@@ -38,7 +38,7 @@
     }
 
     .wh40k-panel-title i {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 }
 
@@ -47,14 +47,14 @@
     &.active {
         display: block !important;
     }
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 
     .wh40k-panel-header {
         background: linear-gradient(180deg, rgba($wh40k-accent-skills, 0.12) 0%, transparent 100%);
     }
 
     .wh40k-panel-title i {
-        color: $wh40k-accent-skills;
+        color: var(--wh40k-accent-skills);
     }
 }
 
@@ -63,12 +63,12 @@
     &.active {
         display: block !important;
     }
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 }
 
 // Characteristics Panel in Skills Tab
 .wh40k-chars-panel {
-    margin-bottom: $wh40k-space-md;
+    margin-bottom: var(--wh40k-space-md);
 }
 
 .wh40k-tab[data-tab='specialties'] {
@@ -139,7 +139,7 @@
 .wh40k-specialties-layout {
     // This class already overridden in _actor.scss with specific grid
     // Just add padding and flex for children
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 
     .wh40k-specialties-left,
     .wh40k-specialties-right {
@@ -149,12 +149,12 @@
 }
 
 .wh40k-abilities-layout {
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 
     .wh40k-abilities-right-col {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
     }
 }
 

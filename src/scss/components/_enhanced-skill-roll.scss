@@ -78,7 +78,7 @@
         border-radius: 4px;
         color: var(--wh40k-bone, #e8dcc8);
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
         min-height: 70px;
 
         i {
@@ -142,7 +142,7 @@
         border: 1px solid rgba(205, 127, 50, 0.3);
         border-radius: 4px;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         input[type='checkbox'] {
             margin-top: 0.25rem;
@@ -205,7 +205,7 @@
             font-size: 1.1rem;
             font-weight: bold;
             text-align: center;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
 
             &:focus {
                 outline: none;
@@ -273,7 +273,7 @@
             font-weight: bold;
             color: white;
             text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
-            transition: all $wh40k-transition-medium;
+            transition: all var(--wh40k-transition-medium);
 
             &.increased {
                 color: #4ade80;
@@ -310,7 +310,7 @@
         border-radius: 4px;
         color: var(--wh40k-bone, #e8dcc8);
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         .recent-name {
             font-size: 0.85rem;
@@ -345,7 +345,7 @@
             letter-spacing: 1px;
             border-radius: 4px;
             cursor: pointer;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
             position: relative;
             overflow: hidden;
 

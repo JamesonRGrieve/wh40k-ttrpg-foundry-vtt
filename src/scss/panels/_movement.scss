@@ -3,9 +3,9 @@
 // ============================================
 
 .wh40k-affliction-section {
-    margin-top: $wh40k-space-sm;
-    padding-top: $wh40k-space-sm;
-    border-top: 1px solid $wh40k-border-light;
+    margin-top: var(--wh40k-space-sm);
+    padding-top: var(--wh40k-space-sm);
+    border-top: 1px solid var(--wh40k-border-light);
 }
 
 .wh40k-affliction-header {
@@ -20,7 +20,7 @@
 }
 
 .wh40k-add-btn {
-    @include wh40k-icon-button(20px, $wh40k-accent-gold, 0.65rem);
+    @include wh40k-icon-button(20px, var(--wh40k-accent-gold), 0.65rem);
 }
 
 .wh40k-affliction-list {
@@ -32,13 +32,13 @@
 .wh40k-affliction-row {
     @apply tw-flex tw-items-center tw-gap-2;
     padding: 4px 8px;
-    background: $wh40k-bg-paper-light;
-    border: 1px solid $wh40k-border-light;
+    background: var(--wh40k-bg-paper-light);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 4px;
 
     &:hover {
-        background: $wh40k-bg-paper;
-        border-color: $wh40k-border-medium;
+        background: var(--wh40k-bg-paper);
+        border-color: var(--wh40k-border-medium);
     }
 }
 
@@ -48,19 +48,19 @@
     color: var(--color-text-primary);
 
     &:hover {
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
     }
 }
 
 .wh40k-affliction-del {
     background: transparent;
     border: none;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     padding: 2px;
 
     &:hover {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 }
 
@@ -82,7 +82,7 @@
 
 .wh40k-panel-mobility {
     .wh40k-panel-body {
-        padding: $wh40k-space-md;
+        padding: var(--wh40k-space-md);
     }
 }
 
@@ -93,28 +93,28 @@
 
 .wh40k-speed-box {
     @apply tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-cursor-pointer;
-    background: $wh40k-bg-paper-light;
-    border: 1px solid $wh40k-border-light;
+    background: var(--wh40k-bg-paper-light);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 6px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: rgba(255, 255, 255, 0.8);
-        border-color: $wh40k-border-medium;
+        border-color: var(--wh40k-border-medium);
         transform: translateY(-2px);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     &.active,
     &[data-action='setMovementMode']:active {
-        border-color: $wh40k-accent-gold;
+        border-color: var(--wh40k-accent-gold);
         box-shadow: 0 0 6px rgba($wh40k-accent-gold, 0.4);
         background: rgba($wh40k-accent-gold, 0.08);
     }
 
     i {
         font-size: 1.2rem;
-        color: $wh40k-text-muted;
+        color: var(--wh40k-text-muted);
         opacity: 0.7;
     }
 }
@@ -125,7 +125,7 @@
 }
 
 .wh40k-speed-value {
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--color-text-primary);
@@ -135,7 +135,7 @@
 .wh40k-speed-unit {
     font-size: 0.75rem;
     font-weight: 500;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-speed-label {
@@ -143,7 +143,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
 }
 
 // Speed-specific colors
@@ -162,10 +162,10 @@
 
 // Expanded details sections
 .wh40k-mobility-section {
-    margin-bottom: $wh40k-space-md;
-    padding: $wh40k-space-sm;
-    background: $wh40k-bg-paper-light;
-    border: 1px solid $wh40k-border-light;
+    margin-bottom: var(--wh40k-space-md);
+    padding: var(--wh40k-space-sm);
+    background: var(--wh40k-bg-paper-light);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 6px;
 
     &:last-child {
@@ -176,14 +176,14 @@
 .wh40k-section-header {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-xs;
-    margin-bottom: $wh40k-space-sm;
-    padding-bottom: $wh40k-space-xs;
-    border-bottom: 1px solid $wh40k-border-light;
+    gap: var(--wh40k-space-xs);
+    margin-bottom: var(--wh40k-space-sm);
+    padding-bottom: var(--wh40k-space-xs);
+    border-bottom: 1px solid var(--wh40k-border-light);
 
     i {
         font-size: 0.85rem;
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
     }
 
     span {
@@ -191,7 +191,7 @@
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: $wh40k-text-muted;
+        color: var(--wh40k-text-muted);
     }
 }
 
@@ -209,12 +209,12 @@
 .wh40k-athletic-label {
     font-size: 0.65rem;
     font-weight: 500;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     text-align: center;
 }
 
 .wh40k-athletic-value {
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-text-primary);
@@ -234,12 +234,12 @@
 .wh40k-carry-label {
     font-size: 0.65rem;
     font-weight: 500;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     text-align: center;
 }
 
 .wh40k-carry-value {
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-text-primary);
@@ -248,34 +248,34 @@
 .wh40k-carry-unit {
     font-size: 0.7rem;
     font-weight: 400;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     margin-left: 2px;
 }
 
 .wh40k-size-section {
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 }
 
 .wh40k-size-select {
     width: 100%;
-    padding: $wh40k-space-xs $wh40k-space-sm;
+    padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
     font-size: 0.85rem;
     font-weight: 600;
     text-align: center;
-    border: 1px solid $wh40k-border-medium;
+    border: 1px solid var(--wh40k-border-medium);
     border-radius: 4px;
     background: rgba(255, 255, 255, 0.8);
     color: var(--color-text-primary);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
-        border-color: $wh40k-accent-gold;
+        border-color: var(--wh40k-accent-gold);
     }
 
     &:focus {
         outline: none;
-        border-color: $wh40k-accent-gold;
+        border-color: var(--wh40k-accent-gold);
         box-shadow: 0 0 0 3px rgba($wh40k-accent-gold, 0.15);
     }
 }
@@ -285,14 +285,14 @@
 }
 
 .wh40k-movement-size {
-    margin-bottom: $wh40k-space-sm;
+    margin-bottom: var(--wh40k-space-sm);
 }
 
 .wh40k-movement-section {
-    background: $wh40k-bg-paper-light;
-    border: 1px solid $wh40k-border-light;
+    background: var(--wh40k-bg-paper-light);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 6px;
-    padding: $wh40k-space-sm;
+    padding: var(--wh40k-space-sm);
 }
 
 .wh40k-movement-header {
@@ -300,10 +300,10 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: $wh40k-text-muted;
-    margin-bottom: $wh40k-space-xs;
-    border-bottom: 1px solid $wh40k-border-light;
-    padding-bottom: $wh40k-space-xs;
+    color: var(--wh40k-text-muted);
+    margin-bottom: var(--wh40k-space-xs);
+    border-bottom: 1px solid var(--wh40k-border-light);
+    padding-bottom: var(--wh40k-space-xs);
 }
 
 .wh40k-movement-rates {
@@ -315,7 +315,7 @@
     @apply tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer;
     background: rgba(255, 255, 255, 0.5);
     border-radius: 4px;
-    transition: background $wh40k-transition-fast;
+    transition: background var(--wh40k-transition-fast);
 
     &:hover {
         background: rgba(255, 255, 255, 0.8);
@@ -330,12 +330,12 @@
     font-size: 0.6rem;
     font-weight: 600;
     text-transform: uppercase;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     letter-spacing: 0.05em;
 }
 
 .wh40k-movement-value {
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-text-primary);
@@ -344,8 +344,8 @@
 // Legacy movement grid (fallback)
 .wh40k-move-cell {
     @apply tw-flex tw-flex-col tw-items-center tw-p-1;
-    background: $wh40k-bg-paper-light;
-    border: 1px solid $wh40k-border-light;
+    background: var(--wh40k-bg-paper-light);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 4px;
 }
 
@@ -353,11 +353,11 @@
     font-size: 0.6rem;
     font-weight: 600;
     text-transform: uppercase;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-move-value {
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-size: 1rem;
     font-weight: 700;
     color: var(--color-text-primary);
@@ -365,7 +365,7 @@
 
 .wh40k-capacity-row {
     @apply tw-flex tw-gap-3 tw-pt-1;
-    border-top: 1px solid $wh40k-border-light;
+    border-top: 1px solid var(--wh40k-border-light);
 }
 
 .wh40k-capacity-item {
@@ -374,7 +374,7 @@
 
 .wh40k-capacity-label {
     font-size: 0.7rem;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-capacity-value {
@@ -403,7 +403,7 @@
     border: 1px solid var(--color-border-light);
     border-radius: 6px;
     overflow: hidden;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: var(--color-bg-primary);
@@ -421,7 +421,7 @@
     height: 32px;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.15) 0%, rgba($wh40k-accent-gold, 0.05) 100%);
-    color: $wh40k-accent-gold;
+    color: var(--wh40k-accent-gold);
     font-size: 0.9rem;
     flex-shrink: 0;
     z-index: 2;
@@ -440,12 +440,12 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     min-width: 50px;
 }
 
 .wh40k-move-modern-value {
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--color-text-primary);
@@ -455,7 +455,7 @@
 .wh40k-move-unit {
     font-size: 0.8rem;
     font-weight: 400;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     margin-left: 2px;
 }
 
@@ -468,7 +468,7 @@
     background: linear-gradient(90deg, rgba($wh40k-accent-gold, 0.08) 0%, rgba($wh40k-accent-gold, 0.02) 100%);
     border-right: 2px solid rgba($wh40k-accent-gold, 0.2);
     z-index: 1;
-    transition: width $wh40k-transition-medium;
+    transition: width var(--wh40k-transition-medium);
 }
 
 // Specific movement type styling
@@ -507,11 +507,11 @@
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    padding: $wh40k-space-sm;
+    padding: var(--wh40k-space-sm);
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-light);
     border-radius: 6px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: var(--color-bg-primary);
@@ -536,7 +536,7 @@
 }
 
 .wh40k-stat-value {
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-size: 1rem;
     font-weight: 700;
     color: var(--color-text-dark-primary);
@@ -597,7 +597,7 @@
     color: #ddd;
     font-size: 0.7rem;
     cursor: pointer;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: rgba(0, 0, 0, 0.85);
@@ -618,5 +618,5 @@
 
 .wh40k-token-movement__value {
     font-weight: 700;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
 }

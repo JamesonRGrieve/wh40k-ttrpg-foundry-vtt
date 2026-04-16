@@ -93,7 +93,7 @@
     }
 
     > span[name*='attr'] {
-        font-family: $wh40k-font-body;
+        font-family: var(--wh40k-font-body);
         font-size: 1.25rem;
     }
 

@@ -118,7 +118,7 @@
 .wh40k-talenttable--border,
 .wh40k-traittable--border {
     .table-row {
-        transition: background-color $wh40k-transition-base;
+        transition: background-color var(--wh40k-transition-base);
         border-bottom: 1px solid rgba(74, 55, 40, 0.1);
 
         &:hover {
@@ -162,7 +162,7 @@
     }
 
     .table-row {
-        transition: background-color $wh40k-transition-base;
+        transition: background-color var(--wh40k-transition-base);
 
         &:hover {
             background: rgba(75, 0, 130, 0.05);

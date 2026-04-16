@@ -40,21 +40,88 @@ module.exports = {
         alt: ["'Modesto Condensed'", "'Palatino Linotype'", 'serif'],
       },
       colors: {
+        // Imperial Gold palette
         gold: {
           DEFAULT: '#d4af37',
           dark: '#8b7015',
           light: '#e6c84a',
           accent: '#d4a520',
+          // Pre-computed darken/lighten of #c9a227 (SCSS $wh40k-color-gold)
+          'raw': '#c9a227',
+          'raw-d8': '#a78620',
+          'raw-d10': '#9e801f',
+          'raw-d15': '#896e1b',
+          'raw-l5': '#d7b032',
+          'raw-l10': '#dbb848',
         },
         bronze: { DEFAULT: '#cd7f32' },
+        brass: {
+          DEFAULT: '#b5a642',
+          'd15': '#7d732e',
+          'l20': '#d4ca89',
+        },
         crimson: {
           DEFAULT: '#8b0000',
           light: '#b22222',
           dark: '#5c0000',
+          'l20': '#f10000',
+          'l25': '#ff0b0b',
+          'l30': '#ff2525',
         },
-        success: '#2d5016',
-        failure: '#6b1010',
+        // Status colors
+        success: {
+          DEFAULT: '#2d5016',
+          'd10': '#17280b',
+          'l10': '#447821',
+          'l20': '#5aa02c',
+        },
+        failure: {
+          DEFAULT: '#6b1010',
+          'l10': '#971717',
+        },
         warning: '#8b6914',
+        // Panel accent palettes (pre-computed darken/lighten variants)
+        'accent-gold': {
+          DEFAULT: '#d4a520',
+          'd10': '#a88319',
+          'l10': '#e3b944',
+        },
+        'accent-combat': {
+          DEFAULT: '#a82020',
+          'd5': '#931c1c',
+          'd10': '#7d1818',
+          'd15': '#681414',
+          'l5': '#bd2424',
+          'l10': '#d32828',
+          'l15': '#da3b3b',
+          'l20': '#de5050',
+        },
+        'accent-skills': {
+          DEFAULT: '#2a7a9a',
+          'd10': '#1f5a72',
+          'l5': '#2f8aae',
+          'l10': '#359ac2',
+        },
+        'accent-talents': {
+          DEFAULT: '#a07818',
+          'd5': '#8a6715',
+          'd10': '#745711',
+          'l10': '#cc991f',
+          'l15': '#dea826',
+          'l20': '#e2b13c',
+        },
+        'accent-equipment': {
+          DEFAULT: '#3a5f5f',
+          'l15': '#578f8f',
+        },
+        'accent-bio': {
+          DEFAULT: '#6a5a4a',
+          'l10': '#88745f',
+        },
+        'accent-powers': {
+          DEFAULT: '#6a2090',
+        },
+        'accent-dynasty': '#d4a520',
       },
       boxShadow: {
         sm: '0 1px 3px rgba(0, 0, 0, 0.3)',

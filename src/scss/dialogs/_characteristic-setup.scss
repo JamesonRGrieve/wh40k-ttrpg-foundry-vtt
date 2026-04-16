@@ -93,9 +93,16 @@ $csd-danger: #dc143c;
 .csd-section-header-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 0.75rem;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+}
+
+.csd-section-header-row .csd-section-header {
+    margin: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+    flex: 0 0 auto;
 }
 
 .csd-workspace {
@@ -150,7 +157,7 @@ $csd-danger: #dc143c;
     border: 2px solid rgba($csd-primary, 0.4);
     border-radius: 8px;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     position: relative;
 
     .csd-rolls-container--vertical & {
@@ -280,7 +287,7 @@ $csd-danger: #dc143c;
     border-radius: 6px;
     color: $csd-bone;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: rgba($csd-gold, 0.18);
@@ -315,7 +322,7 @@ $csd-danger: #dc143c;
     border: 2px solid rgba($csd-primary, 0.35);
     border-radius: 8px;
     padding: 0.75rem;
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 
     &:hover {
         border-color: rgba($csd-primary, 0.6);
@@ -518,7 +525,7 @@ $csd-danger: #dc143c;
     font-weight: bold;
     color: $csd-bone;
     cursor: grab;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         transform: scale(1.1);
@@ -544,7 +551,7 @@ $csd-danger: #dc143c;
     font-size: 1.3rem;
     font-weight: bold;
     color: $csd-bone;
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 
     &.has-value {
         background: rgba($csd-gold, 0.15);
@@ -588,7 +595,7 @@ $csd-danger: #dc143c;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:disabled {
         opacity: 0.4;

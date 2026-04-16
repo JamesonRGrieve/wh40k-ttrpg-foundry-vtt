@@ -14,7 +14,7 @@
     height: 100%;
     background: linear-gradient(150deg, rgba(10, 12, 18, 0.97) 0%, rgba(36, 26, 20, 0.92) 100%);
     color: var(--wh40k-text-dark);
-    font-family: $wh40k-font-body;
+    font-family: var(--wh40k-font-body);
     font-size: 0.875rem;
     overflow: hidden;
 
@@ -59,7 +59,7 @@
         border: 2px solid rgba(212, 175, 55, 0.5);
         overflow: hidden;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             border-color: rgba(212, 175, 55, 0.8);
@@ -74,7 +74,7 @@
     }
 
     .wh40k-item-title__name {
-        font-family: $wh40k-font-heading;
+        font-family: var(--wh40k-font-heading);
         font-size: 1.1rem;
         font-weight: 600;
         color: rgba(240, 232, 220, 0.95);
@@ -173,7 +173,7 @@
         .wh40k-toggle-equipped__indicator {
             font-size: 1.2rem;
             color: rgba(214, 221, 235, 0.5);
-            transition: color $wh40k-transition-base;
+            transition: color var(--wh40k-transition-base);
         }
 
         input:checked ~ .wh40k-toggle-equipped__indicator {
@@ -192,7 +192,7 @@
         border: 1px solid rgba(212, 175, 55, 0.2);
         color: rgba(214, 221, 235, 0.6);
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: rgba(20, 24, 34, 0.7);
@@ -423,7 +423,7 @@
         }
 
         &__value {
-            font-family: $wh40k-font-display;
+            font-family: var(--wh40k-font-display);
             font-size: 1rem;
             font-weight: 700;
             color: rgba(240, 232, 220, 0.95);
@@ -459,7 +459,7 @@
             inset: 0;
             border-radius: inherit;
             opacity: 0;
-            transition: opacity $wh40k-transition-medium;
+            transition: opacity var(--wh40k-transition-medium);
             pointer-events: none;
             z-index: 0;
         }
@@ -776,7 +776,7 @@
         font-weight: 600;
         color: rgba(178, 208, 234, 0.95);
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: rgba(58, 93, 132, 0.35);
@@ -906,7 +906,7 @@
 
     // Section header hover effect
     .wh40k-section__header {
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: linear-gradient(135deg, rgba(62, 34, 22, 0.5), rgba(16, 20, 28, 0.25));
@@ -966,7 +966,7 @@
             pointer-events: none;
             opacity: 0;
             background: radial-gradient(circle at center, rgba(212, 175, 55, 0.15), transparent 70%);
-            transition: opacity $wh40k-transition-medium;
+            transition: opacity var(--wh40k-transition-medium);
         }
 
         &:focus-within::after {
@@ -995,7 +995,7 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: linear-gradient(135deg, rgba(62, 34, 22, 0.55), rgba(16, 20, 28, 0.4));
@@ -1005,7 +1005,7 @@
 
         &__icon {
             font-size: 0.75rem;
-            transition: transform $wh40k-transition-medium;
+            transition: transform var(--wh40k-transition-medium);
         }
     }
 
@@ -1039,7 +1039,7 @@
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 11px;
-            transition: all $wh40k-transition-medium;
+            transition: all var(--wh40k-transition-medium);
 
             &::after {
                 content: '';
@@ -1106,7 +1106,7 @@
         overflow: hidden;
 
         img {
-            transition: transform $wh40k-transition-medium;
+            transition: transform var(--wh40k-transition-medium);
         }
 
         &:hover img {
@@ -1149,7 +1149,7 @@
         border-radius: 8px;
         border: 1px solid rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(8px);
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: rgba(12, 16, 24, 0.75);
@@ -1164,7 +1164,7 @@
         }
 
         &__value {
-            font-family: $wh40k-font-display;
+            font-family: var(--wh40k-font-display);
             font-size: 1rem;
             font-weight: 700;
             color: rgba(240, 232, 220, 0.95);
@@ -1204,7 +1204,7 @@
         &__bar-fill {
             height: 100%;
             background: var(--wh40k-green-bright);
-            transition: width $wh40k-transition-medium;
+            transition: width var(--wh40k-transition-medium);
         }
 
         // Color coding
@@ -1295,7 +1295,7 @@
         overflow-y: auto;
         overflow-x: hidden;
         padding: 10px 12px 60px; // Extra bottom padding for FAB
-        transition: all $wh40k-transition-medium;
+        transition: all var(--wh40k-transition-medium);
 
         &.collapsed {
             display: none;
@@ -1365,7 +1365,7 @@
         font-weight: 600;
         color: rgba(178, 208, 234, 0.95);
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: rgba(58, 93, 132, 0.35);
@@ -1452,7 +1452,7 @@
         font-size: 0.75rem;
         font-weight: 500;
         color: rgba(246, 208, 163, 0.95);
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         i {
             font-size: 0.7rem;
@@ -1498,7 +1498,7 @@
             background: linear-gradient(135deg, rgba(62, 34, 22, 0.35), rgba(16, 20, 28, 0.15));
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             cursor: pointer;
-            transition: background $wh40k-transition-base;
+            transition: background var(--wh40k-transition-base);
             user-select: none;
 
             &:hover {
@@ -1512,7 +1512,7 @@
 
             > span {
                 flex: 1;
-                font-family: $wh40k-font-heading;
+                font-family: var(--wh40k-font-heading);
                 font-size: 0.85rem;
                 font-weight: 600;
                 color: rgba(240, 232, 220, 0.9);
@@ -1530,13 +1530,13 @@
             .wh40k-section__toggle {
                 font-size: 0.7rem;
                 color: rgba(214, 221, 235, 0.5);
-                transition: transform $wh40k-transition-base;
+                transition: transform var(--wh40k-transition-base);
             }
         }
 
         &__body {
             padding: 10px 12px;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
 
             &.collapsed {
                 display: none;
@@ -1558,7 +1558,7 @@
 
                     &--editable {
                         cursor: pointer;
-                        transition: all $wh40k-transition-base;
+                        transition: all var(--wh40k-transition-base);
                         border: 1px solid transparent;
                         border-radius: 4px;
                         margin: 8px;
@@ -1619,7 +1619,7 @@
                             border-radius: 3px;
                             padding: 4px 6px;
                             margin: 0 1px;
-                            transition: all $wh40k-transition-fast;
+                            transition: all var(--wh40k-transition-fast);
 
                             &:hover {
                                 background: rgba(212, 175, 55, 0.15);
@@ -1692,7 +1692,7 @@
             border-radius: 4px;
             font-size: 0.85rem;
             color: var(--wh40k-text-dark);
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
 
             &:focus {
                 outline: none;
@@ -1969,7 +1969,7 @@
         border: 2px dashed rgba(255, 255, 255, 0.1);
         border-radius: 6px;
         text-align: center;
-        transition: all $wh40k-transition-medium;
+        transition: all var(--wh40k-transition-medium);
 
         i {
             font-size: 1.5rem;
@@ -2015,7 +2015,7 @@
         background: rgba(0, 0, 0, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 6px;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             border-color: rgba(212, 175, 55, 0.25);
@@ -2137,7 +2137,7 @@
         border: none;
         border-radius: 50%;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 
         &--main {
@@ -2229,7 +2229,7 @@
         font-size: 0.8rem;
         color: var(--wh40k-text-dark);
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: rgba(20, 24, 34, 0.7);
@@ -2396,7 +2396,7 @@
     height: 100%;
     background: linear-gradient(150deg, rgba(10, 12, 18, 0.96) 0%, rgba(36, 26, 20, 0.9) 100%);
     color: var(--wh40k-text-dark);
-    font-family: $wh40k-font-body;
+    font-family: var(--wh40k-font-body);
     font-size: 0.9rem;
     overflow: hidden;
 
@@ -2524,7 +2524,7 @@
     border: 1px solid rgba(212, 175, 55, 0.25);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     input {
         display: none;
@@ -2533,7 +2533,7 @@
     &__indicator {
         font-size: 1.1rem;
         color: rgba(214, 221, 235, 0.7);
-        transition: color $wh40k-transition-base;
+        transition: color var(--wh40k-transition-base);
     }
 
     &__label {
@@ -2542,7 +2542,7 @@
         text-transform: uppercase;
         letter-spacing: 0.08em;
         color: rgba(214, 221, 235, 0.7);
-        transition: color $wh40k-transition-base;
+        transition: color var(--wh40k-transition-base);
     }
 
     &:hover {
@@ -2575,7 +2575,7 @@
     border: 1px solid rgba(212, 175, 55, 0.25);
     color: rgba(214, 221, 235, 0.7);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     font-size: 1rem;
 
     &:hover {
@@ -2592,7 +2592,7 @@
     }
 
     i {
-        transition: transform $wh40k-transition-base;
+        transition: transform var(--wh40k-transition-base);
     }
 
     &.active i {
@@ -2657,7 +2657,7 @@
     }
 
     &__value {
-        font-family: $wh40k-font-display;
+        font-family: var(--wh40k-font-display);
         font-size: 1.05rem;
         font-weight: 700;
         color: rgba(240, 232, 220, 0.95);
@@ -2684,7 +2684,7 @@
     &__bar-fill {
         height: 100%;
         background: var(--wh40k-green-bright);
-        transition: width $wh40k-transition-medium;
+        transition: width var(--wh40k-transition-medium);
     }
 
     // Stat variants
@@ -2773,7 +2773,7 @@
     border: 1px solid rgba(98, 142, 185, 0.4);
     color: rgba(178, 208, 234, 0.95);
     cursor: help;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: rgba(58, 93, 132, 0.35);
@@ -2787,7 +2787,7 @@
         .fa-external-link-alt {
             font-size: 0.65rem;
             opacity: 0;
-            transition: opacity $wh40k-transition-base;
+            transition: opacity var(--wh40k-transition-base);
         }
 
         &:hover {
@@ -2838,7 +2838,7 @@
     font-weight: 500;
     color: rgba(210, 216, 228, 0.7);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.9rem;
@@ -3001,7 +3001,7 @@
         h3 {
             flex: 1;
             margin: 0;
-            font-family: $wh40k-font-heading;
+            font-family: var(--wh40k-font-heading);
             font-size: 0.95rem;
             font-weight: 600;
             color: rgba(240, 232, 220, 0.95);
@@ -3195,7 +3195,7 @@
         top: 0;
         left: 0;
         height: 100%;
-        transition: width $wh40k-transition-medium;
+        transition: width var(--wh40k-transition-medium);
 
         &--good {
             background: linear-gradient(90deg, var(--wh40k-green) 0%, var(--wh40k-green-bright) 100%);
@@ -3356,7 +3356,7 @@
     border-radius: 8px;
     padding: 10px 12px;
     margin-bottom: 8px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:last-child {
         margin-bottom: 0;
@@ -3590,7 +3590,7 @@
     font-weight: 500;
     color: var(--wh40k-text-dark);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: var(--wh40k-btn-bg-hover);
@@ -3637,7 +3637,7 @@
     border: 2px solid var(--wh40k-combat-border);
     border-radius: 6px;
     overflow: hidden;
-    font-family: $wh40k-font-ui;
+    font-family: var(--wh40k-font-ui);
 
     &__header {
         display: flex;
@@ -3663,7 +3663,7 @@
 
     &__name {
         margin: 0;
-        font-family: $wh40k-font-display;
+        font-family: var(--wh40k-font-display);
         font-size: 1.1rem;
         font-weight: 600;
         color: var(--wh40k-bronze);
@@ -3724,7 +3724,7 @@
         }
 
         &-value {
-            font-family: $wh40k-font-display;
+            font-family: var(--wh40k-font-display);
             font-size: 0.95rem;
             font-weight: 700;
             color: var(--wh40k-text-dark);
@@ -3815,7 +3815,7 @@
         text-transform: uppercase;
         letter-spacing: 0.03em;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &--attack {
             background: linear-gradient(135deg, var(--wh40k-red) 0%, var(--wh40k-red-dark) 100%);
@@ -3872,7 +3872,7 @@
 
 .wh40k-mod-dropzone {
     position: relative;
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 
     &::before {
         content: '';
@@ -3880,7 +3880,7 @@
         inset: 0;
         border: 2px dashed transparent;
         border-radius: 4px;
-        transition: all $wh40k-transition-medium;
+        transition: all var(--wh40k-transition-medium);
         pointer-events: none;
     }
 
@@ -4006,7 +4006,7 @@
     border-radius: 3px;
     font-size: 0.75rem;
     color: rgba(178, 208, 234, 0.9);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     cursor: help;
 
     i {
@@ -4038,7 +4038,7 @@
     border-radius: 3px;
     font-size: 0.75rem;
     color: rgba(178, 208, 234, 0.9);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.8rem;
@@ -4073,7 +4073,7 @@
 // Active modification list dropzone highlighting
 .wh40k-mods-list[data-drop-zone='modifications'] {
     position: relative;
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 
     &::after {
         content: 'Drop modification here';
@@ -4093,7 +4093,7 @@
         text-align: center;
         opacity: 0;
         pointer-events: none;
-        transition: all $wh40k-transition-medium;
+        transition: all var(--wh40k-transition-medium);
         z-index: 10;
     }
 

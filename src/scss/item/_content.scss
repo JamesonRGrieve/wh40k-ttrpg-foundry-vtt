@@ -5,11 +5,11 @@
 .wh40k-damage-display {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md);
     background: linear-gradient(135deg, rgba(139, 0, 0, 0.1) 0%, transparent 100%);
     border: 1px solid var(--wh40k-red-dark);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
 
     &__dice {
         display: flex;
@@ -18,9 +18,9 @@
         width: 48px;
         height: 48px;
         background: var(--wh40k-red-dark);
-        border-radius: $wh40k-radius-md;
-        font-family: $wh40k-font-display;
-        font-size: $wh40k-font-size-lg;
+        border-radius: var(--wh40k-radius-md);
+        font-family: var(--wh40k-font-display);
+        font-size: var(--wh40k-font-size-lg);
         color: #fff;
         box-shadow: $wh40k-shadow-md;
     }
@@ -30,22 +30,22 @@
     }
 
     &__formula {
-        font-family: $wh40k-font-display;
-        font-size: $wh40k-font-size-xl;
+        font-family: var(--wh40k-font-display);
+        font-size: var(--wh40k-font-size-xl);
         color: var(--wh40k-red-bright);
     }
 
     &__type {
-        font-size: $wh40k-font-size-sm;
+        font-size: var(--wh40k-font-size-sm);
         color: var(--wh40k-text-muted);
         text-transform: uppercase;
     }
 
     &__pen {
-        padding: $wh40k-space-xs $wh40k-space-sm;
+        padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
         background: var(--wh40k-panel-bg);
-        border-radius: $wh40k-radius-sm;
-        font-size: $wh40k-font-size-sm;
+        border-radius: var(--wh40k-radius-sm);
+        font-size: var(--wh40k-font-size-sm);
 
         span {
             color: var(--wh40k-gold);
@@ -61,22 +61,22 @@
 .wh40k-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-tag {
     display: inline-flex;
     align-items: center;
-    gap: $wh40k-space-xs;
-    padding: 2px $wh40k-space-sm;
+    gap: var(--wh40k-space-xs);
+    padding: 2px var(--wh40k-space-sm);
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 12px;
-    font-size: $wh40k-font-size-xs;
+    font-size: var(--wh40k-font-size-xs);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--wh40k-text-muted);
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
     cursor: default;
 
     &:hover {

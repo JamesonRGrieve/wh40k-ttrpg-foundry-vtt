@@ -110,7 +110,7 @@
         border: 2px solid rgba(212, 197, 166, 0.2);
         border-radius: 8px;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
         user-select: none;
 
         input[type='checkbox'] {
@@ -127,7 +127,7 @@
             font-weight: 600;
             font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.7);
-            transition: color $wh40k-transition-base;
+            transition: color var(--wh40k-transition-base);
         }
 
         .wh40k-restriction-check {
@@ -137,7 +137,7 @@
             font-size: 0.75rem;
             color: #d4af37;
             opacity: 0;
-            transition: opacity $wh40k-transition-base;
+            transition: opacity var(--wh40k-transition-base);
         }
 
         &:hover {
@@ -200,7 +200,7 @@
         border: 1px solid rgba(212, 197, 166, 0.15);
         border-radius: 8px;
         margin-bottom: 1rem;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: rgba(255, 255, 255, 0.04);
@@ -259,7 +259,7 @@
             border-radius: 6px;
             color: #d4af37;
             cursor: pointer;
-            transition: all $wh40k-transition-fast;
+            transition: all var(--wh40k-transition-fast);
 
             &:hover:not(:disabled) {
                 background: #d4af37;
@@ -393,7 +393,7 @@
         border: 1px solid rgba(212, 197, 166, 0.2);
         border-radius: 6px;
         margin-bottom: 0.75rem;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: rgba(255, 255, 255, 0.06);
@@ -444,7 +444,7 @@
             color: #e74c3c;
             cursor: pointer;
             opacity: 0.6;
-            transition: all $wh40k-transition-fast;
+            transition: all var(--wh40k-transition-fast);
 
             &:hover:not(:disabled) {
                 background: #e74c3c;
@@ -502,7 +502,7 @@
             font-weight: 600;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
             display: flex;
             align-items: center;
             justify-content: center;

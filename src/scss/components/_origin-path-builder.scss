@@ -79,7 +79,7 @@
     color: var(--wh40k-text-light);
     font-size: 0.8rem;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: var(--wh40k-bronze);
@@ -129,7 +129,7 @@
     cursor: pointer;
     font-size: 0.85rem;
     color: var(--wh40k-text-muted);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     input[type='radio'] {
         accent-color: var(--wh40k-gold);
@@ -168,7 +168,7 @@
     min-width: 80px;
     cursor: pointer;
     position: relative;
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 
     .step-number {
         width: 40px;
@@ -182,7 +182,7 @@
         color: var(--wh40k-text-muted);
         font-size: 0.85rem;
         font-weight: 600;
-        transition: all $wh40k-transition-medium;
+        transition: all var(--wh40k-transition-medium);
         position: relative;
         overflow: hidden;
     }
@@ -200,7 +200,7 @@
         letter-spacing: 0.5px;
         color: var(--wh40k-text-muted);
         text-align: center;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
     }
 
     &:hover:not(.disabled) {
@@ -301,7 +301,7 @@
     height: 3px;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
     border-radius: 2px;
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 
     &.active {
         background: linear-gradient(90deg, rgba(201, 162, 39, 0.6), rgba(201, 162, 39, 0.3));
@@ -392,8 +392,8 @@
 
 .origin-cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: var(--wh40k-space-md);
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+    gap: var(--wh40k-space-sm);
 }
 
 .origin-card {
@@ -402,9 +402,9 @@
     background: var(--wh40k-panel-bg-solid);
     border: 2px solid var(--wh40k-bronze);
     border-radius: var(--wh40k-radius-md);
-    padding: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-xs);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     position: relative;
 
     &:hover:not(.disabled) {
@@ -478,7 +478,7 @@
 
     .card-img {
         width: 100%;
-        aspect-ratio: 1;
+        aspect-ratio: 4 / 3;
         object-fit: cover;
         border-radius: var(--wh40k-radius-sm);
         border: 1px solid var(--wh40k-bronze);
@@ -488,7 +488,7 @@
     .card-name {
         margin: 0;
         font-family: var(--wh40k-font-header);
-        font-size: 0.85rem;
+        font-size: 0.78rem;
         color: var(--wh40k-text-light);
         text-align: center;
         line-height: 1.2;
@@ -503,9 +503,9 @@
     }
 
     .card-badge {
-        padding: 2px 6px;
+        padding: 2px 5px;
         border-radius: var(--wh40k-radius-sm);
-        font-size: 0.65rem;
+        font-size: 0.6rem;
         font-weight: 600;
         text-transform: uppercase;
 
@@ -543,7 +543,7 @@
         color: var(--wh40k-gold);
         cursor: pointer;
         opacity: 0;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
         z-index: 3;
 
         &:hover {
@@ -575,6 +575,11 @@
             font-size: 1.2rem;
             color: var(--wh40k-bg-dark);
         }
+    }
+
+    .card-preview-btn {
+        width: 24px;
+        height: 24px;
     }
 }
 
@@ -783,7 +788,7 @@
 
     &.clickable {
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: rgba(var(--wh40k-gold-rgb), 0.15);
@@ -881,7 +886,7 @@
             .collapse-icon {
                 margin-left: auto;
                 font-size: 0.7rem;
-                transition: transform $wh40k-transition-base;
+                transition: transform var(--wh40k-transition-base);
             }
 
             &:hover {
@@ -961,7 +966,7 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         cursor: pointer;
-        transition: all $wh40k-transition-medium;
+        transition: all var(--wh40k-transition-medium);
         box-shadow: 0 4px 12px rgba(var(--wh40k-gold-rgb), 0.3);
 
         i {
@@ -1048,7 +1053,7 @@
             color: #ffaa00;
             font-size: 0.8rem;
             cursor: pointer;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
 
             &:hover {
                 background: rgba(255, 170, 0, 0.25);
@@ -1128,7 +1133,7 @@
             font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
 
             &:hover {
                 transform: scale(1.05);
@@ -1287,7 +1292,7 @@
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 }
 
 .lineage-btn {
@@ -1327,7 +1332,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover:not(:disabled) {
         transform: translateY(-2px);

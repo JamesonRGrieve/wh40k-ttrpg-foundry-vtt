@@ -22,7 +22,7 @@
     border: 2px solid var(--wh40k-border-color-light);
     border-radius: 6px;
     overflow: hidden;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         border-color: var(--wh40k-border-color);
@@ -120,7 +120,7 @@
     border: 2px dashed var(--wh40k-border-color);
     border-radius: 4px;
     color: var(--wh40k-text-muted);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         border-color: var(--wh40k-border-color-strong);

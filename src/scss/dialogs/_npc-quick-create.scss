@@ -350,7 +350,7 @@
             color: var(--color-text-light, #fff);
             font-size: 0.9rem;
             cursor: pointer;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
 
             &:hover {
                 background: var(--color-bg-btn-hover, #444);

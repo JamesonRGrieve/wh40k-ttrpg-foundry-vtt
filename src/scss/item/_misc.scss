@@ -5,9 +5,9 @@
 .wh40k-compendium-browser-btn {
     background: linear-gradient(135deg, var(--wh40k-gold-dark) 0%, var(--wh40k-gold) 100%);
     border: 1px solid var(--wh40k-gold);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--wh40k-sheet-bg);
-    font-size: $wh40k-font-size-xs;
+    font-size: var(--wh40k-font-size-xs);
     font-weight: 600;
     padding: 4px 8px;
     cursor: pointer;
@@ -29,26 +29,26 @@
     height: 100%;
     background: var(--wh40k-sheet-bg);
     color: var(--wh40k-text-dark);
-    font-family: $wh40k-font-ui;
+    font-family: var(--wh40k-font-ui);
 
     .browser-header {
-        padding: $wh40k-space-md $wh40k-space-lg;
+        padding: var(--wh40k-space-md) var(--wh40k-space-lg);
         background: linear-gradient(180deg, rgba(139, 109, 43, 0.2) 0%, transparent 100%);
         border-bottom: 2px solid var(--wh40k-gold-dark);
 
         h1 {
-            font-family: $wh40k-font-display;
-            font-size: $wh40k-font-size-lg;
+            font-family: var(--wh40k-font-display);
+            font-size: var(--wh40k-font-size-lg);
             color: var(--wh40k-gold);
-            margin: 0 0 $wh40k-space-xs;
+            margin: 0 0 var(--wh40k-space-xs);
 
             i {
-                margin-right: $wh40k-space-sm;
+                margin-right: var(--wh40k-space-sm);
             }
         }
 
         p {
-            font-size: $wh40k-font-size-sm;
+            font-size: var(--wh40k-font-size-sm);
             color: var(--wh40k-text-muted);
             margin: 0;
         }
@@ -64,28 +64,28 @@
         width: 220px;
         background: var(--wh40k-panel-bg);
         border-right: 1px solid var(--wh40k-border-color-light);
-        padding: $wh40k-space-md;
+        padding: var(--wh40k-space-md);
         overflow-y: auto;
 
         h3 {
-            font-family: $wh40k-font-display;
-            font-size: $wh40k-font-size-sm;
+            font-family: var(--wh40k-font-display);
+            font-size: var(--wh40k-font-size-sm);
             color: var(--wh40k-gold);
-            margin: 0 0 $wh40k-space-sm;
+            margin: 0 0 var(--wh40k-space-sm);
             text-transform: uppercase;
             letter-spacing: 0.1em;
 
             i {
-                margin-right: $wh40k-space-xs;
+                margin-right: var(--wh40k-space-xs);
             }
         }
 
         .filter-group {
-            margin-bottom: $wh40k-space-md;
+            margin-bottom: var(--wh40k-space-md);
 
             label {
                 display: block;
-                font-size: $wh40k-font-size-xs;
+                font-size: var(--wh40k-font-size-xs);
                 color: var(--wh40k-text-muted);
                 text-transform: uppercase;
                 margin-bottom: 4px;
@@ -96,10 +96,10 @@
                 width: 100%;
                 background: var(--wh40k-input-bg);
                 border: 1px solid var(--wh40k-border-color-light);
-                border-radius: $wh40k-radius-sm;
+                border-radius: var(--wh40k-radius-sm);
                 color: var(--wh40k-text-dark);
-                font-size: $wh40k-font-size-sm;
-                padding: $wh40k-space-xs $wh40k-space-sm;
+                font-size: var(--wh40k-font-size-sm);
+                padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
 
                 &:focus {
                     outline: none;
@@ -111,11 +111,11 @@
         .clear-filters {
             width: 100%;
             background: rgba($wh40k-color-crimson-dark, 0.2);
-            border: 1px solid $wh40k-color-crimson-dark;
-            border-radius: $wh40k-radius-sm;
+            border: 1px solid var(--wh40k-color-crimson-dark);
+            border-radius: var(--wh40k-radius-sm);
             color: var(--wh40k-text-dark);
-            font-size: $wh40k-font-size-xs;
-            padding: $wh40k-space-xs $wh40k-space-sm;
+            font-size: var(--wh40k-font-size-xs);
+            padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
             cursor: pointer;
 
             &:hover {
@@ -131,13 +131,13 @@
         overflow: hidden;
 
         .results-header {
-            padding: $wh40k-space-sm $wh40k-space-md;
+            padding: var(--wh40k-space-sm) var(--wh40k-space-md);
             background: var(--wh40k-panel-bg);
             border-bottom: 1px solid var(--wh40k-border-color-light);
 
             h3 {
                 margin: 0;
-                font-size: $wh40k-font-size-sm;
+                font-size: var(--wh40k-font-size-sm);
                 color: var(--wh40k-text-dark);
             }
         }
@@ -145,34 +145,34 @@
         .results-list {
             flex: 1;
             overflow-y: auto;
-            padding: $wh40k-space-sm;
+            padding: var(--wh40k-space-sm);
         }
 
         .results-group {
-            margin-bottom: $wh40k-space-md;
+            margin-bottom: var(--wh40k-space-md);
 
             .results-group-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding: $wh40k-space-xs $wh40k-space-sm;
+                padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
                 background: rgba(139, 109, 43, 0.15);
                 border: 1px solid var(--wh40k-gold-dark);
-                border-radius: $wh40k-radius-sm;
-                margin-bottom: $wh40k-space-xs;
+                border-radius: var(--wh40k-radius-sm);
+                margin-bottom: var(--wh40k-space-xs);
 
                 .results-group-title {
-                    font-family: $wh40k-font-display;
-                    font-size: $wh40k-font-size-sm;
+                    font-family: var(--wh40k-font-display);
+                    font-size: var(--wh40k-font-size-sm);
                     color: var(--wh40k-gold);
                 }
 
                 .results-group-count {
-                    font-size: $wh40k-font-size-xs;
+                    font-size: var(--wh40k-font-size-xs);
                     color: var(--wh40k-text-muted);
                     background: var(--wh40k-sheet-bg);
                     padding: 2px 6px;
-                    border-radius: $wh40k-radius-sm;
+                    border-radius: var(--wh40k-radius-sm);
                 }
             }
         }
@@ -180,11 +180,11 @@
         .compendium-item {
             display: flex;
             align-items: center;
-            gap: $wh40k-space-sm;
-            padding: $wh40k-space-xs $wh40k-space-sm;
+            gap: var(--wh40k-space-sm);
+            padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
             background: var(--wh40k-panel-bg);
             border: 1px solid transparent;
-            border-radius: $wh40k-radius-sm;
+            border-radius: var(--wh40k-radius-sm);
             margin-bottom: 2px;
             cursor: pointer;
 
@@ -196,7 +196,7 @@
             .item-image {
                 width: 28px;
                 height: 28px;
-                border-radius: $wh40k-radius-sm;
+                border-radius: var(--wh40k-radius-sm);
                 object-fit: cover;
             }
 
@@ -205,7 +205,7 @@
                 min-width: 0;
 
                 .item-name {
-                    font-size: $wh40k-font-size-sm;
+                    font-size: var(--wh40k-font-size-sm);
                     color: var(--wh40k-text-dark);
                     margin: 0;
                     white-space: nowrap;
@@ -215,8 +215,8 @@
 
                 .item-meta {
                     display: flex;
-                    gap: $wh40k-space-sm;
-                    font-size: $wh40k-font-size-xs;
+                    gap: var(--wh40k-space-sm);
+                    font-size: var(--wh40k-font-size-xs);
                     color: var(--wh40k-text-muted);
 
                     span {
@@ -233,18 +233,18 @@
 
         .no-results {
             text-align: center;
-            padding: $wh40k-space-xl;
+            padding: var(--wh40k-space-xl);
             color: var(--wh40k-text-muted);
 
             i {
                 font-size: 48px;
-                margin-bottom: $wh40k-space-md;
+                margin-bottom: var(--wh40k-space-md);
                 opacity: 0.3;
             }
 
             p {
                 margin: 0;
-                font-size: $wh40k-font-size-sm;
+                font-size: var(--wh40k-font-size-sm);
             }
         }
     }

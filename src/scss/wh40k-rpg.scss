@@ -294,7 +294,7 @@
         border: 1px solid var(--color-border-dark);
         border-radius: 4px;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: rgba(0, 0, 0, 0.4);
@@ -859,6 +859,30 @@
         min-width: 0 !important;
         flex: 1 !important;
         align-items: stretch !important;
+    }
+
+    .wh40k-header-info--dh {
+        justify-content: flex-start !important;
+        align-items: stretch !important;
+    }
+
+    .wh40k-origin-step-strip {
+        align-content: center !important;
+        justify-items: center !important;
+        margin-top: auto !important;
+        margin-bottom: auto !important;
+    }
+
+    .wh40k-origin-step-chip {
+        width: 4.2rem !important;
+        height: 4.2rem !important;
+    }
+
+    .wh40k-origin-step-chip__img {
+        width: 3.6rem !important;
+        height: 3.6rem !important;
+        max-width: 3.6rem !important;
+        max-height: 3.6rem !important;
     }
 
     .wh40k-header-row {
