@@ -38,7 +38,7 @@
     border-radius: var(--wh40k-item-radius-sm);
     border: 1px solid transparent;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     white-space: nowrap;
     user-select: none;
 

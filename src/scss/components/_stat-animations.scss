@@ -327,7 +327,7 @@ input[type='text'].stat-value,
 
 /* Smooth threshold marker transitions */
 .wh40k-threshold-marker {
-    transition: opacity $wh40k-transition-medium;
+    transition: opacity var(--wh40k-transition-medium);
 
     .wh40k-wounds-bar[data-percent='0'] & {
         opacity: 0.3;
@@ -358,7 +358,7 @@ input[type='text'].stat-value,
 
 .characteristic-bonus,
 .char-bonus {
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 
     &.changed {
         animation: pulse-gold 0.8s ease-out;
@@ -383,7 +383,7 @@ input[type='text'].stat-value,
 
 .xp-display,
 .experience-tracker {
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 
     &.stat-advancement {
         animation: stat-advance 1s ease-out;

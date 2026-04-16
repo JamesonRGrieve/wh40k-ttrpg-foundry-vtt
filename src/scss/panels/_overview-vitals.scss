@@ -5,25 +5,25 @@
 
 // Panel Theme Colors
 .wh40k-wounds-panel-v2 {
-    border-left: 3px solid $wh40k-accent-combat;
+    border-left: 3px solid var(--wh40k-accent-combat);
 
     .wh40k-panel-header {
         background: linear-gradient(90deg, rgba($wh40k-accent-combat, 0.12) 0%, transparent 100%);
 
         .wh40k-panel-title i {
-            color: $wh40k-accent-combat;
+            color: var(--wh40k-accent-combat);
         }
     }
 }
 
 .wh40k-fatigue-panel-v2 {
-    border-left: 3px solid $wh40k-color-gold;
+    border-left: 3px solid var(--wh40k-color-gold);
 
     .wh40k-panel-header {
         background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.12) 0%, transparent 100%);
 
         .wh40k-panel-title i {
-            color: $wh40k-color-gold;
+            color: var(--wh40k-color-gold);
         }
     }
 }
@@ -65,13 +65,13 @@
 }
 
 .wh40k-experience-panel {
-    border-left: 3px solid $wh40k-color-gold;
+    border-left: 3px solid var(--wh40k-color-gold);
 
     .wh40k-panel-header {
         background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.12) 0%, transparent 100%);
 
         .wh40k-panel-title i {
-            color: $wh40k-color-gold;
+            color: var(--wh40k-color-gold);
         }
     }
 }
@@ -81,8 +81,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm 0;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-sm) 0;
 }
 
 // NOTE: .wh40k-vital-btn-compact is now aliased from .wh40k-btn-control--compact in _unified-components.scss
@@ -123,12 +123,12 @@
     background: var(--color-bg-tertiary);
     border-radius: 3px;
     overflow: hidden;
-    margin-top: $wh40k-space-xs;
+    margin-top: var(--wh40k-space-xs);
 
     .wh40k-vital-bar-fill {
         height: 100%;
         border-radius: 3px;
-        transition: width $wh40k-transition-medium;
+        transition: width var(--wh40k-transition-medium);
     }
 }
 
@@ -143,10 +143,10 @@
     border-radius: 3px;
     font-size: var(--wh40k-text-micro, 0.65rem);
     color: var(--color-text-tertiary);
-    margin-top: $wh40k-space-xs;
+    margin-top: var(--wh40k-space-xs);
 
     i {
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
         font-size: 0.7rem;
     }
 }
@@ -156,7 +156,7 @@
 .wh40k-quick-action-btn {
     @extend .wh40k-btn-quick;
     width: 100%;
-    margin-top: $wh40k-space-xs;
+    margin-top: var(--wh40k-space-xs);
 }
 
 // ============================================
@@ -165,20 +165,20 @@
 
 .wh40k-experience-panel {
     .wh40k-panel-body {
-        padding: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm);
     }
 }
 
 .wh40k-xp-display {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-xp-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-xp-field {
@@ -204,14 +204,14 @@
     color: var(--color-text-primary);
     font-size: 1rem;
     font-weight: 600;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     text-align: center;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:focus {
         outline: none;
         background: var(--color-bg-tertiary);
-        border-color: $wh40k-accent-gold;
+        border-color: var(--wh40k-accent-gold);
         box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
     }
 
@@ -225,7 +225,7 @@
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    padding: $wh40k-space-sm;
+    padding: var(--wh40k-space-sm);
     background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15) 0%, rgba($wh40k-color-gold, 0.05) 100%);
     border: 2px solid rgba($wh40k-color-gold, 0.3);
     border-radius: 6px;
@@ -242,8 +242,8 @@
 .wh40k-xp-available-value {
     font-size: 1.5rem;
     font-weight: 700;
-    font-family: $wh40k-font-alt;
-    color: $wh40k-color-gold;
+    font-family: var(--wh40k-font-alt);
+    color: var(--wh40k-color-gold);
     text-shadow: 0 0 8px rgba($wh40k-color-gold, 0.3);
 }
 
@@ -255,9 +255,9 @@
 
     .wh40k-xp-bar-fill {
         height: 100%;
-        background: linear-gradient(90deg, $wh40k-color-gold-dark 0%, $wh40k-color-gold 100%);
+        background: linear-gradient(90deg, var(--wh40k-color-gold-dark) 0%, var(--wh40k-color-gold) 100%);
         border-radius: 3px;
-        transition: width $wh40k-transition-medium;
+        transition: width var(--wh40k-transition-medium);
         box-shadow: 0 0 6px rgba($wh40k-color-gold, 0.3);
     }
 }
@@ -269,9 +269,9 @@
 .wh40k-fate-display-compact {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
     align-items: center;
-    padding: $wh40k-space-xs 0;
+    padding: var(--wh40k-space-xs) 0;
 }
 
 .wh40k-fate-pips-compact {
@@ -292,8 +292,8 @@
 .wh40k-overview-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md);
     height: 100%;
     overflow-y: auto; // Only the grid scrolls
     overflow-x: hidden;
@@ -320,6 +320,6 @@
 .wh40k-overview-col {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
     // No overflow - columns don't scroll individually
 }

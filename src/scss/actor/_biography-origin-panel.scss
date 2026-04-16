@@ -12,8 +12,8 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: $wh40k-space-md;
-        padding: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
+        padding: var(--wh40k-space-md);
         background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.08), rgba($wh40k-color-gold, 0.03));
         border-bottom: 2px solid rgba($wh40k-color-gold, 0.2);
     }
@@ -21,17 +21,17 @@
     .wh40k-origin-header-left {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
         flex: 1;
     }
 
     .wh40k-panel-title {
         font-family: var(--wh40k-font-heading, 'Modesto Condensed', serif);
-        font-size: $wh40k-font-size-lg;
+        font-size: var(--wh40k-font-size-lg);
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
     }
 
     .wh40k-origin-progress-badge {
@@ -41,10 +41,10 @@
         padding: 4px 10px;
         background: rgba($wh40k-color-gold, 0.1);
         border: 1px solid rgba($wh40k-color-gold, 0.3);
-        border-radius: $wh40k-radius-lg;
-        font-size: $wh40k-font-size-xs;
+        border-radius: var(--wh40k-radius-lg);
+        font-size: var(--wh40k-font-size-xs);
         font-weight: 700;
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
 
         &.wh40k-complete {
             background: rgba($wh40k-color-success, 0.15);
@@ -52,7 +52,7 @@
             color: darken($wh40k-color-success, 10%);
 
             i {
-                color: $wh40k-color-success;
+                color: var(--wh40k-color-success);
             }
         }
 
@@ -74,9 +74,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 0;
-    padding: $wh40k-space-lg $wh40k-space-sm;
+    padding: var(--wh40k-space-lg) var(--wh40k-space-sm);
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), transparent);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
 }
 
 .wh40k-origin-step-node {
@@ -85,11 +85,11 @@
     align-items: center;
     gap: 6px;
     cursor: pointer;
-    transition: transform $wh40k-transition-fast;
+    transition: transform var(--wh40k-transition-fast);
 
     &.wh40k-filled {
         .wh40k-step-circle {
-            background: linear-gradient(135deg, $wh40k-color-gold, darken($wh40k-color-gold, 10%));
+            background: linear-gradient(135deg, var(--wh40k-color-gold), darken($wh40k-color-gold, 10%));
             border-color: darken($wh40k-color-gold, 15%);
             box-shadow: 0 2px 8px rgba($wh40k-color-gold, 0.3);
 
@@ -125,7 +125,7 @@
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.5);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     overflow: hidden;
 
     .wh40k-step-img {
@@ -137,12 +137,12 @@
 
     i {
         font-size: 1.5rem;
-        transition: color $wh40k-transition-fast;
+        transition: color var(--wh40k-transition-fast);
     }
 }
 
 .wh40k-step-label {
-    font-size: $wh40k-font-size-xs;
+    font-size: var(--wh40k-font-size-xs);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -170,29 +170,29 @@
 // ORIGIN PATH BUILDER BUTTON (PROMINENT CTA)
 // ----------------------------------------
 .wh40k-origin-builder-cta {
-    margin-top: $wh40k-space-md;
-    padding: 0 $wh40k-space-sm;
+    margin-top: var(--wh40k-space-md);
+    padding: 0 var(--wh40k-space-sm);
 }
 
 .wh40k-btn-origin-builder {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
     width: 100%;
-    padding: $wh40k-space-md $wh40k-space-lg;
-    background: linear-gradient(135deg, $wh40k-color-gold, darken($wh40k-color-gold, 8%));
+    padding: var(--wh40k-space-md) var(--wh40k-space-lg);
+    background: linear-gradient(135deg, var(--wh40k-color-gold), darken($wh40k-color-gold, 8%));
     border: 2px solid darken($wh40k-color-gold, 15%);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
     color: rgba(0, 0, 0, 0.9);
     font-family: var(--wh40k-font-heading, 'Modesto Condensed', serif);
-    font-size: $wh40k-font-size-lg;
+    font-size: var(--wh40k-font-size-lg);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba($wh40k-color-gold, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     position: relative;
     overflow: hidden;
 
@@ -208,7 +208,7 @@
     }
 
     &:hover {
-        background: linear-gradient(135deg, lighten($wh40k-color-gold, 5%), $wh40k-color-gold);
+        background: linear-gradient(135deg, lighten($wh40k-color-gold, 5%), var(--wh40k-color-gold));
         border-color: darken($wh40k-color-gold, 10%);
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba($wh40k-color-gold, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
@@ -238,8 +238,8 @@
         align-items: center;
         gap: 4px;
         padding: 4px 10px;
-        border-radius: $wh40k-radius-md;
-        font-size: $wh40k-font-size-xs;
+        border-radius: var(--wh40k-radius-md);
+        font-size: var(--wh40k-font-size-xs);
         font-weight: 700;
         font-family: var(--wh40k-font-numeric, 'Roboto Mono', monospace);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -266,7 +266,7 @@
 // EMPTY STATE MESSAGE
 // ----------------------------------------
 .wh40k-origin-empty-state {
-    padding: $wh40k-space-xl;
+    padding: var(--wh40k-space-xl);
     text-align: center;
 
     .wh40k-empty-text {
@@ -275,7 +275,7 @@
         margin: 0;
 
         i {
-            color: $wh40k-color-gold;
+            color: var(--wh40k-color-gold);
         }
     }
 }
@@ -285,8 +285,8 @@
 // ----------------------------------------
 .wh40k-origin-bonuses-modern {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
-    padding-top: $wh40k-space-md;
-    margin-top: $wh40k-space-md;
+    padding-top: var(--wh40k-space-md);
+    margin-top: var(--wh40k-space-md);
 
     &.collapsed {
         .wh40k-bonuses-content {
@@ -304,19 +304,19 @@
 .wh40k-bonuses-toggle {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
     width: 100%;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.08), rgba($wh40k-color-gold, 0.03));
     border: 1px solid rgba($wh40k-color-gold, 0.2);
-    border-radius: $wh40k-radius-md;
-    font-size: $wh40k-font-size-sm;
+    border-radius: var(--wh40k-radius-md);
+    font-size: var(--wh40k-font-size-sm);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
     cursor: pointer;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.12), rgba($wh40k-color-gold, 0.06));
@@ -333,39 +333,39 @@
 
     .wh40k-toggle-icon {
         font-size: 0.8em;
-        transition: transform $wh40k-transition-fast;
+        transition: transform var(--wh40k-transition-fast);
     }
 }
 
 .wh40k-bonuses-content {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
-    margin-top: $wh40k-space-sm;
-    border-radius: $wh40k-radius-md;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md);
+    margin-top: var(--wh40k-space-sm);
+    border-radius: var(--wh40k-radius-md);
     max-height: 800px;
     opacity: 1;
     overflow: hidden;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 }
 
 // Bonus group styling
 .wh40k-bonus-group {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-bonus-category-label {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: $wh40k-font-size-xs;
+    font-size: var(--wh40k-font-size-xs);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--wh40k-gold, $wh40k-color-gold);
+    color: var(--wh40k-gold, var(--wh40k-color-gold));
 
     i {
         font-size: 0.9em;
@@ -388,8 +388,8 @@
     align-items: center;
     gap: 4px;
     padding: 4px 10px;
-    border-radius: $wh40k-radius-lg;
-    font-size: $wh40k-font-size-xs;
+    border-radius: var(--wh40k-radius-lg);
+    font-size: var(--wh40k-font-size-xs);
     font-weight: 700;
     font-family: var(--wh40k-font-numeric, 'Roboto Mono', monospace);
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -429,18 +429,18 @@
     display: inline-flex;
     align-items: center;
     padding: 4px 10px;
-    border-radius: $wh40k-radius-md;
-    font-size: $wh40k-font-size-xs;
+    border-radius: var(--wh40k-radius-md);
+    font-size: var(--wh40k-font-size-xs);
     font-weight: 600;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(0, 0, 0, 0.3);
     color: var(--wh40k-text-light, rgba(255, 255, 255, 0.9));
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: rgba(0, 0, 0, 0.3);
-        border-color: var(--wh40k-gold, $wh40k-color-gold);
+        border-color: var(--wh40k-gold, var(--wh40k-color-gold));
         transform: translateY(-1px);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
@@ -463,7 +463,7 @@
 // ----------------------------------------
 @media (max-width: 900px) {
     .wh40k-origin-steps-visual {
-        padding: $wh40k-space-md $wh40k-space-xs;
+        padding: var(--wh40k-space-md) var(--wh40k-space-xs);
     }
 
     .wh40k-origin-step-node {

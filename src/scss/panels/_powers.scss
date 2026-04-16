@@ -6,7 +6,7 @@
     &.active {
         display: block !important;
     }
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 }
 
 // ============================================
@@ -18,19 +18,19 @@
     &.active {
         display: block !important;
     }
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 }
 
 .wh40k-equipment-layout {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
 }
 
 .wh40k-equipment-hero {
     display: grid;
     grid-template-columns: minmax(280px, 1fr) minmax(320px, 1fr);
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
     align-items: start;
 }
 
@@ -38,7 +38,7 @@
 .wh40k-equipment-hero-right {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
 }
 
 .wh40k-equipment-hero-right {
@@ -71,7 +71,7 @@
 .wh40k-equipment-legend {
     display: grid;
     gap: 4px;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: linear-gradient(135deg, rgba($wh40k-accent-equipment, 0.12), rgba(255, 255, 255, 0.6));
     border: 1px solid rgba($wh40k-accent-equipment, 0.25);
     border-radius: 8px;
@@ -88,13 +88,13 @@
 
 .wh40k-equipment-legend-sub {
     font-size: 0.75rem;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
 }
 
 .wh40k-equipment-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
     position: relative;
 }
 

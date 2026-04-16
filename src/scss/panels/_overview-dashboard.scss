@@ -67,6 +67,10 @@
 }
 
 .wh40k-vital-row {
+    &.wh40k-vital-row--paired {
+        justify-content: flex-start;
+    }
+
     &.wh40k-vital-row--critical {
         background: rgba(139, 0, 0, 0.1);
         margin: 0 -8px;
@@ -78,6 +82,19 @@
         padding: 4px 0;
         margin-top: 2px;
         border-top: 1px solid rgba($wh40k-accent-combat, 0.15);
+    }
+}
+
+.wh40k-vital-pair {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+
+    &.wh40k-vital-pair--push {
+        margin-left: auto;
+        justify-content: flex-end;
+        text-align: right;
     }
 }
 
@@ -108,7 +125,7 @@
     font-size: 0.7rem;
     cursor: pointer;
     color: var(--color-text-secondary);
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: var(--color-bg-tertiary);
@@ -129,23 +146,23 @@
     font-size: 0.7rem;
     cursor: pointer;
     color: var(--color-text-tertiary);
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
     }
 }
 
 .wh40k-vital-value {
     font-size: 1.4rem;
     font-weight: 700;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     color: var(--color-text-primary);
     min-width: 45px;
     text-align: center;
 
     &.wh40k-critical {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 
     &.wh40k-warning {
@@ -162,7 +179,7 @@
 .wh40k-vital-input {
     font-size: 1.4rem;
     font-weight: 700;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     color: var(--color-text-primary);
     width: 55px;
     text-align: center;
@@ -176,7 +193,7 @@
     }
 
     &:focus {
-        border-color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
         outline: none;
         background: var(--color-bg-option);
     }
@@ -185,7 +202,7 @@
 .wh40k-vital-penalty {
     font-size: 0.7rem;
     font-weight: 700;
-    color: $wh40k-accent-combat;
+    color: var(--wh40k-accent-combat);
     background: rgba($wh40k-accent-combat, 0.1);
     padding: 1px 4px;
     border-radius: 3px;
@@ -210,7 +227,7 @@
     cursor: pointer;
     color: rgba(#c08020, 0.25);
     font-size: 0.8rem;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &.wh40k-fatigue-pip--filled {
         color: #c08020;
@@ -253,7 +270,7 @@
     cursor: pointer;
     color: var(--color-text-tertiary);
     font-size: 0.8rem;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &.wh40k-fate-pip--filled {
         color: #3498db !important; // Blue instead of gold
@@ -280,7 +297,7 @@
     background: var(--color-bg-tertiary);
     border: 1px solid var(--color-border-secondary);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     padding: 0;
     display: flex;
     align-items: center;
@@ -288,12 +305,12 @@
 
     &:hover {
         transform: scale(1.2);
-        border-color: $wh40k-accent-combat;
+        border-color: var(--wh40k-accent-combat);
         box-shadow: 0 0 4px rgba($wh40k-accent-combat, 0.4);
     }
 
     &.wh40k-crit-pip-mini--filled {
-        background: $wh40k-accent-combat;
+        background: var(--wh40k-accent-combat);
         border-color: darken($wh40k-accent-combat, 10%);
     }
 }
@@ -304,6 +321,14 @@
     align-items: center;
     gap: 6px;
     padding: 2px 0;
+    justify-content: flex-start;
+
+    .wh40k-mental-main {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 88px;
+    }
 
     .wh40k-vital-controls {
         margin-left: 0;
@@ -320,7 +345,7 @@
 }
 
 .wh40k-mental-label {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--color-text-secondary);
     min-width: 60px;
@@ -329,7 +354,7 @@
 .wh40k-mental-value {
     font-size: 0.8rem;
     font-weight: 700;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     color: var(--color-text-primary);
     min-width: 25px;
     text-align: center;
@@ -342,7 +367,8 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-left: auto;
+    margin-left: 0;
+    margin-right: auto;
     white-space: nowrap;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
@@ -391,14 +417,14 @@
     text-align: left;
 
     &:hover {
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
     }
 }
 
 .wh40k-char-total-compact {
     font-size: 0.85rem;
     font-weight: 700;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     color: var(--color-text-primary);
     min-width: 22px;
     text-align: right;
@@ -423,10 +449,10 @@
     cursor: pointer;
     color: var(--color-text-tertiary);
     margin-left: auto;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
         transform: scale(1.15);
     }
 }
@@ -466,7 +492,7 @@
 .wh40k-skill-value-compact {
     font-size: 0.85rem;
     font-weight: 700;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     color: var(--color-text-primary);
     min-width: 28px;
     text-align: right;
@@ -484,7 +510,7 @@
     font-size: 0.7rem;
     cursor: pointer;
     color: var(--color-text-tertiary);
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         color: #2ecc71;
@@ -497,8 +523,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: $wh40k-space-lg $wh40k-space-md;
-    gap: $wh40k-space-xs;
+    padding: var(--wh40k-space-lg) var(--wh40k-space-md);
+    gap: var(--wh40k-space-xs);
     color: var(--color-text-tertiary);
     text-align: center;
     min-height: 120px;
@@ -506,7 +532,7 @@
     i {
         font-size: 2rem;
         opacity: 0.4;
-        margin-bottom: $wh40k-space-xs;
+        margin-bottom: var(--wh40k-space-xs);
     }
 
     p {
@@ -572,7 +598,7 @@
     background: rgba($wh40k-accent-talents, 0.15);
     border: 1px solid rgba($wh40k-accent-talents, 0.4);
     border-radius: 3px;
-    color: $wh40k-accent-talents;
+    color: var(--wh40k-accent-talents);
 }
 
 .wh40k-talent-info-btn {
@@ -587,10 +613,10 @@
     font-size: 0.7rem;
     cursor: pointer;
     color: var(--color-text-tertiary);
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
-        color: $wh40k-accent-talents;
+        color: var(--wh40k-accent-talents);
         transform: scale(1.15);
     }
 }
@@ -630,7 +656,7 @@
 .wh40k-speed-value {
     font-size: 0.95rem;
     font-weight: 700;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     color: var(--color-text-primary);
 }
 
@@ -676,7 +702,7 @@
 
     &.wh40k-enc-over {
         .wh40k-enc-fill-compact {
-            background: $wh40k-accent-combat;
+            background: var(--wh40k-accent-combat);
         }
     }
 }
@@ -685,7 +711,7 @@
     height: 100%;
     background: linear-gradient(90deg, #27ae60 0%, #3498db 100%);
     border-radius: 3px;
-    transition: width $wh40k-transition-medium;
+    transition: width var(--wh40k-transition-medium);
 }
 
 // ============================================
@@ -711,7 +737,7 @@
 }
 
 .wh40k-weapon-icon {
-    color: $wh40k-accent-combat;
+    color: var(--wh40k-accent-combat);
     font-size: 0.85rem;
 }
 
@@ -728,7 +754,7 @@
 .wh40k-weapon-damage {
     font-size: 0.7rem;
     color: var(--color-text-secondary);
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
 }
 
 .wh40k-weapon-attack-btn {
@@ -738,13 +764,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: $wh40k-accent-combat;
+    background: var(--wh40k-accent-combat);
     border: none;
     border-radius: 4px;
     font-size: 0.75rem;
     cursor: pointer;
     color: white;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: darken($wh40k-accent-combat, 10%);
@@ -782,7 +808,7 @@
 .wh40k-stat-value {
     font-size: 0.85rem;
     font-weight: 700;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     color: var(--color-text-primary);
 }
 
@@ -804,7 +830,7 @@
 
 .wh40k-armour-loc {
     color: var(--color-text-primary);
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
 }
 
 .wh40k-forcefield-row {
@@ -833,7 +859,7 @@
 .wh40k-ff-rating {
     font-size: 0.8rem;
     font-weight: 700;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     color: #3498db;
 }
 
@@ -850,7 +876,7 @@
     font-size: 0.7rem;
     cursor: pointer;
     color: var(--color-text-tertiary);
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &.wh40k-ff-active {
         background: rgba(46, 204, 113, 0.2);
@@ -909,17 +935,17 @@
 .wh40k-xp-value {
     font-size: 0.85rem;
     font-weight: 700;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     color: var(--color-text-primary);
 
     &.wh40k-xp-available {
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         font-size: 1rem;
     }
 }
 
 .wh40k-rank-value {
-    color: $wh40k-accent-gold;
+    color: var(--wh40k-accent-gold);
 }
 
 // ============================================
@@ -956,7 +982,7 @@
 .wh40k-dynasty-value {
     font-size: 0.8rem;
     font-weight: 700;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     color: var(--color-text-primary);
 
     &.wh40k-pf-value {
@@ -992,7 +1018,7 @@
     background: var(--color-bg-option);
     border-radius: 4px;
     cursor: pointer;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: var(--color-bg-tertiary);
@@ -1038,7 +1064,7 @@
 .wh40k-ew-damage {
     font-size: 0.7rem;
     color: var(--color-text-secondary);
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     white-space: nowrap;
     flex-shrink: 0;
 }
@@ -1080,12 +1106,12 @@
     font-weight: 600;
     cursor: pointer;
     color: var(--color-text-secondary);
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: rgba($wh40k-color-gold, 0.15);
-        border-color: $wh40k-color-gold;
-        color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
+        color: var(--wh40k-color-gold);
     }
 }
 
@@ -1116,7 +1142,7 @@
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
     border-radius: 4px;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: var(--color-bg-tertiary);
@@ -1136,7 +1162,7 @@
 .wh40k-ov-box-ap {
     font-size: 0.9rem;
     font-weight: 700;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     color: var(--color-text-primary);
     line-height: 1;
 }
@@ -1227,7 +1253,7 @@
     font-size: 0.6rem;
     cursor: pointer;
     color: var(--color-text-tertiary);
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: var(--color-bg-tertiary);
@@ -1253,7 +1279,7 @@
     font-size: 0.65rem;
     cursor: pointer;
     color: var(--color-text-tertiary);
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: rgba(155, 89, 182, 0.1);
@@ -1293,8 +1319,8 @@
 .wh40k-status-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md);
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
@@ -1321,7 +1347,7 @@
 .wh40k-status-col {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
 }
 
 // ============================================

@@ -65,7 +65,7 @@ $cyber-success: #2ecc71;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: opacity $wh40k-transition-base;
+            transition: opacity var(--wh40k-transition-base);
 
             i {
                 color: $cyber-primary;
@@ -165,7 +165,7 @@ $cyber-success: #2ecc71;
         background: rgba($cyber-success, 0.15);
     }
     &--best {
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         border-color: rgba($wh40k-color-gold, 0.4);
         background: rgba($wh40k-color-gold, 0.15);
     }
@@ -241,7 +241,7 @@ $cyber-success: #2ecc71;
     }
 
     &.wh40k-panel--description {
-        border-left: 3px solid $wh40k-color-gold;
+        border-left: 3px solid var(--wh40k-color-gold);
     }
 
     &.wh40k-panel--notes {
@@ -325,7 +325,7 @@ $cyber-success: #2ecc71;
     border: 2px solid rgba(255, 255, 255, 0.15);
     border-radius: 6px;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     position: relative;
 
     input {
@@ -337,7 +337,7 @@ $cyber-success: #2ecc71;
     i {
         font-size: 1rem;
         color: rgba(255, 255, 255, 0.4);
-        transition: color $wh40k-transition-base;
+        transition: color var(--wh40k-transition-base);
     }
 
     span {
@@ -345,7 +345,7 @@ $cyber-success: #2ecc71;
         font-weight: 600;
         text-transform: uppercase;
         color: rgba(255, 255, 255, 0.5);
-        transition: color $wh40k-transition-base;
+        transition: color var(--wh40k-transition-base);
     }
 
     &:hover {
@@ -428,7 +428,7 @@ $cyber-success: #2ecc71;
     textarea {
         min-height: 80px;
         resize: vertical;
-        font-family: $wh40k-font-ui;
+        font-family: var(--wh40k-font-ui);
     }
 }
 
@@ -500,7 +500,7 @@ $cyber-success: #2ecc71;
         i {
             font-size: 1.25rem;
             color: rgba(255, 255, 255, 0.3);
-            transition: color $wh40k-transition-base;
+            transition: color var(--wh40k-transition-base);
         }
     }
 
@@ -509,7 +509,7 @@ $cyber-success: #2ecc71;
         font-weight: 600;
         text-transform: uppercase;
         color: rgba(255, 255, 255, 0.5);
-        transition: color $wh40k-transition-base;
+        transition: color var(--wh40k-transition-base);
     }
 
     input:checked ~ &__indicator i {
@@ -584,7 +584,7 @@ $cyber-success: #2ecc71;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 4px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: rgba(255, 255, 255, 0.05);

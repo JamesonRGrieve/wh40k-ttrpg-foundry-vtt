@@ -4,14 +4,14 @@
 // Sleek, modern, single-line layout for equipment items
 
 .wh40k-equipment-table {
-    margin-bottom: $wh40k-space-sm;
+    margin-bottom: var(--wh40k-space-sm);
 }
 
 .wh40k-equip-row {
     background: var(--wh40k-panel-bg-solid);
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     cursor: grab;
 
     &:hover {
@@ -68,7 +68,7 @@
     background: none;
     border: none;
     padding: 0;
-    transition: color $wh40k-transition-base;
+    transition: color var(--wh40k-transition-base);
 
     &:hover {
         color: var(--wh40k-gold);
@@ -143,7 +143,7 @@
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 3px;
     cursor: pointer;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
     color: var(--wh40k-text-muted);
 
     i {
@@ -190,16 +190,16 @@
 // Add Item Button (Compact)
 .wh40k-add-item-btn {
     width: 100%;
-    padding: $wh40k-space-sm;
+    padding: var(--wh40k-space-sm);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
     background: var(--wh40k-panel-bg-translucent);
     border: 1px dashed var(--wh40k-border-color-light);
     border-radius: 4px;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     color: var(--wh40k-text-muted);
     font-size: 0.8rem;
     font-weight: 600;
@@ -248,8 +248,8 @@
     background: var(--wh40k-panel-bg-solid);
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 8px;
-    padding: $wh40k-space-sm;
-    transition: all $wh40k-transition-base;
+    padding: var(--wh40k-space-sm);
+    transition: all var(--wh40k-transition-base);
     cursor: grab;
 
     &:hover {
@@ -393,7 +393,7 @@
 
     &:active {
         transform: scale(0.95);
-        transition: transform $wh40k-transition-fast;
+        transition: transform var(--wh40k-transition-fast);
     }
 
     &.wh40k-action-equip {
@@ -449,8 +449,8 @@
     font-size: 0.75rem;
     color: var(--wh40k-text-medium);
     line-height: 1.4;
-    margin-bottom: $wh40k-space-xs;
-    padding: $wh40k-space-xs;
+    margin-bottom: var(--wh40k-space-xs);
+    padding: var(--wh40k-space-xs);
     background: var(--wh40k-panel-bg-translucent);
     border-radius: 4px;
     font-style: italic;
@@ -513,7 +513,7 @@
 .wh40k-card-btn {
     flex: 1;
     height: 28px;
-    padding: 0 $wh40k-space-xs;
+    padding: 0 var(--wh40k-space-xs);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -548,7 +548,7 @@
 
     &:active {
         transform: scale(0.97);
-        transition: transform $wh40k-transition-fast;
+        transition: transform var(--wh40k-transition-fast);
     }
 
     i {
@@ -579,16 +579,16 @@
 // Add Item Button
 .wh40k-add-item-btn {
     width: 100%;
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
     background: var(--wh40k-panel-bg-translucent);
     border: 2px dashed var(--wh40k-border-color-light);
     border-radius: 8px;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     color: var(--wh40k-text-muted);
     font-size: 0.85rem;
     font-weight: 600;
