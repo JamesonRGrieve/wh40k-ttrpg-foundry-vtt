@@ -25,7 +25,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-weight: 600;
 }
 
@@ -310,7 +310,7 @@
     font-size: 14px;
     font-weight: bold;
     color: var(--wh40k-text-medium);
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: var(--wh40k-btn-bg-hover);
@@ -379,7 +379,7 @@
     background: var(--wh40k-shadow-soft);
     border: 1px solid rgba(139, 0, 0, 0.3);
     border-radius: 2px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     cursor: pointer;
 
     &:hover {

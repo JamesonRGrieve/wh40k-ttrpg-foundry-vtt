@@ -20,8 +20,8 @@
 
     .wh40k-condition-badges {
         display: flex;
-        gap: $wh40k-space-sm;
-        margin-top: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
+        margin-top: var(--wh40k-space-sm);
         flex-wrap: wrap;
     }
 
@@ -99,7 +99,7 @@
     .wh40k-condition-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
 
         .wh40k-field--checkbox {
             grid-column: 1 / -1;
@@ -109,12 +109,12 @@
     .wh40k-field {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-xs;
+        gap: var(--wh40k-space-xs);
 
         &__label {
             display: flex;
             align-items: center;
-            gap: $wh40k-space-xs;
+            gap: var(--wh40k-space-xs);
             font-size: 12px;
             font-weight: 600;
             color: #5a5a5a;
@@ -134,11 +134,11 @@
             font-family: inherit;
             font-size: 13px;
             background: white;
-            transition: border-color $wh40k-transition-base;
+            transition: border-color var(--wh40k-transition-base);
 
             &:focus {
                 outline: none;
-                border-color: $wh40k-accent-gold;
+                border-color: var(--wh40k-accent-gold);
                 box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.1);
             }
         }
@@ -152,11 +152,11 @@
             background: white;
             resize: vertical;
             min-height: 60px;
-            transition: border-color $wh40k-transition-base;
+            transition: border-color var(--wh40k-transition-base);
 
             &:focus {
                 outline: none;
-                border-color: $wh40k-accent-gold;
+                border-color: var(--wh40k-accent-gold);
                 box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.1);
             }
         }
@@ -168,7 +168,7 @@
 // ============================================================================
 
 .wh40k-condition-card {
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -199,8 +199,8 @@
     .wh40k-card-header {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-md;
-        padding: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
+        padding: var(--wh40k-space-md);
         border-bottom: 2px solid rgba(0, 0, 0, 0.1);
     }
 
@@ -234,8 +234,8 @@
 
     .wh40k-card-badges {
         display: flex;
-        gap: $wh40k-space-xs;
-        margin-top: $wh40k-space-xs;
+        gap: var(--wh40k-space-xs);
+        margin-top: var(--wh40k-space-xs);
         flex-wrap: wrap;
 
         .wh40k-badge {
@@ -248,28 +248,28 @@
     }
 
     .wh40k-card-body {
-        padding: $wh40k-space-md;
+        padding: var(--wh40k-space-md);
         background: #f4f1e8;
     }
 
     .wh40k-condition-meta {
         display: flex;
-        gap: $wh40k-space-md;
-        margin-bottom: $wh40k-space-md;
-        padding-bottom: $wh40k-space-sm;
+        gap: var(--wh40k-space-md);
+        margin-bottom: var(--wh40k-space-md);
+        padding-bottom: var(--wh40k-space-sm);
         border-bottom: 1px solid #d4c5a6;
     }
 
     .wh40k-meta-item {
         display: inline-flex;
         align-items: center;
-        gap: $wh40k-space-xs;
+        gap: var(--wh40k-space-xs);
         font-size: 12px;
         font-weight: 600;
         color: #5a5a5a;
 
         i {
-            color: $wh40k-accent-gold;
+            color: var(--wh40k-accent-gold);
         }
 
         &--applies {
@@ -291,10 +291,10 @@
 
     .wh40k-condition-effect,
     .wh40k-condition-removal {
-        margin-bottom: $wh40k-space-md;
+        margin-bottom: var(--wh40k-space-md);
 
         h4 {
-            margin: 0 0 $wh40k-space-xs 0;
+            margin: 0 0 var(--wh40k-space-xs) 0;
             font-size: 13px;
             font-weight: 700;
             color: #2c2417;
@@ -312,21 +312,21 @@
 
     .wh40k-condition-effect {
         background: rgba($wh40k-accent-gold, 0.08);
-        padding: $wh40k-space-sm $wh40k-space-md;
-        border-left: 3px solid $wh40k-accent-gold;
+        padding: var(--wh40k-space-sm) var(--wh40k-space-md);
+        border-left: 3px solid var(--wh40k-accent-gold);
         border-radius: 4px;
     }
 
     .wh40k-condition-removal {
         background: rgba(#3498db, 0.05);
-        padding: $wh40k-space-sm $wh40k-space-md;
+        padding: var(--wh40k-space-sm) var(--wh40k-space-md);
         border-left: 3px solid #3498db;
         border-radius: 4px;
     }
 
     .wh40k-condition-notes {
-        margin-top: $wh40k-space-md;
-        padding: $wh40k-space-sm $wh40k-space-md;
+        margin-top: var(--wh40k-space-md);
+        padding: var(--wh40k-space-sm) var(--wh40k-space-md);
         background: rgba(#95a5a6, 0.1);
         border-radius: 4px;
         font-size: 12px;
@@ -335,7 +335,7 @@
     }
 
     .wh40k-card-footer {
-        padding: $wh40k-space-sm $wh40k-space-md;
+        padding: var(--wh40k-space-sm) var(--wh40k-space-md);
         background: rgba(#2c2417, 0.05);
         border-top: 1px solid #d4c5a6;
     }
@@ -343,12 +343,12 @@
     .wh40k-source-ref {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-xs;
+        gap: var(--wh40k-space-xs);
         font-size: 11px;
         color: #7a7a7a;
 
         i {
-            color: $wh40k-accent-gold;
+            color: var(--wh40k-accent-gold);
         }
     }
 }

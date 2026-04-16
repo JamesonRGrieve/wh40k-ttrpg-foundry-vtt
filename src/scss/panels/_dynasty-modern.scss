@@ -48,7 +48,7 @@
         padding: 8px 12px;
         color: var(--color-text-primary);
         font-size: 0.9rem;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:focus {
             outline: none;
@@ -72,7 +72,7 @@
         line-height: 1.5;
         resize: vertical;
         min-height: 100px;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:focus {
             outline: none;
@@ -102,7 +102,7 @@
     border: 1px solid var(--color-border-secondary);
     border-radius: 8px;
     padding: 16px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: var(--color-bg-tertiary);
@@ -134,8 +134,8 @@
     color: var(--color-text-primary);
     font-size: 0.95rem;
     font-weight: 600;
-    font-family: $wh40k-font-alt;
-    transition: all $wh40k-transition-base;
+    font-family: var(--wh40k-font-alt);
+    transition: all var(--wh40k-transition-base);
 
     &:focus {
         outline: none;
@@ -157,7 +157,7 @@
     border: 1px solid var(--color-border-secondary);
     border-radius: 4px;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     input[type='checkbox'] {
         width: 16px;
@@ -179,7 +179,7 @@
     }
 
     input[type='checkbox']:checked ~ .wh40k-check-label {
-        color: $wh40k-color-success;
+        color: var(--wh40k-color-success);
     }
 }
 
@@ -210,7 +210,7 @@
         padding: 6px 10px;
         color: var(--color-text-primary);
         font-size: 0.9rem;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:focus {
             outline: none;
@@ -224,7 +224,7 @@
 
         &.wh40k-stat-number {
             text-align: center;
-            font-family: $wh40k-font-alt;
+            font-family: var(--wh40k-font-alt);
             font-weight: 600;
         }
     }
@@ -240,7 +240,7 @@
         color: var(--color-text-secondary);
         font-size: 0.85rem;
         font-style: italic;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:focus {
             outline: none;
@@ -267,10 +267,10 @@
     background: rgba($wh40k-accent-combat, 0.2);
     border: 1px solid rgba($wh40k-accent-combat, 0.3);
     border-radius: 4px;
-    color: $wh40k-accent-combat;
+    color: var(--wh40k-accent-combat);
     cursor: pointer;
     opacity: 0;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.85rem;
@@ -324,9 +324,9 @@
         color: var(--color-text-primary);
         font-size: 1.1rem;
         font-weight: 600;
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
         text-align: center;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:focus {
             outline: none;
@@ -335,7 +335,7 @@
         }
 
         &.wh40k-xp-spent {
-            color: $wh40k-color-gold;
+            color: var(--wh40k-color-gold);
         }
     }
 }
@@ -360,9 +360,9 @@
     .wh40k-xp-available-value {
         font-size: 1.8rem;
         font-weight: 700;
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
         text-align: center;
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         text-shadow: 0 0 8px rgba($wh40k-color-gold, 0.4);
     }
 }
@@ -376,9 +376,9 @@
 
     .wh40k-xp-bar-fill {
         height: 100%;
-        background: linear-gradient(90deg, $wh40k-color-gold-dark 0%, $wh40k-color-gold 100%);
+        background: linear-gradient(90deg, var(--wh40k-color-gold-dark) 0%, var(--wh40k-color-gold) 100%);
         border-radius: 4px;
-        transition: width $wh40k-transition-medium;
+        transition: width var(--wh40k-transition-medium);
         box-shadow: 0 0 8px rgba($wh40k-color-gold, 0.4);
     }
 }
@@ -425,9 +425,9 @@
         color: var(--color-text-primary);
         font-size: 1.2rem;
         font-weight: 700;
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
         text-align: center;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:focus {
             outline: none;
@@ -473,7 +473,7 @@
         font-size: 0.85rem;
         font-family: inherit;
         resize: vertical;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:focus {
             outline: none;
@@ -509,7 +509,7 @@
     border: 1px solid rgba(123, 90, 166, 0.2);
     border-radius: 8px;
     padding: 12px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     cursor: move;
 
     &:hover {
@@ -537,10 +537,10 @@
         color: var(--color-text-primary);
         font-size: 1rem;
         font-weight: 600;
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
         text-align: left;
         cursor: pointer;
-        transition: color $wh40k-transition-base;
+        transition: color var(--wh40k-transition-base);
 
         i {
             color: #9573bd;
@@ -595,7 +595,7 @@
         border-radius: 4px;
         color: var(--color-text-secondary);
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -620,7 +620,7 @@
         &.wh40k-power-damage {
             &:hover {
                 border-color: rgba($wh40k-color-gold, 0.5);
-                color: $wh40k-color-gold;
+                color: var(--wh40k-color-gold);
             }
         }
 
@@ -628,7 +628,7 @@
             &:hover {
                 background: rgba($wh40k-accent-combat, 0.2);
                 border-color: rgba($wh40k-accent-combat, 0.4);
-                color: $wh40k-accent-combat;
+                color: var(--wh40k-accent-combat);
             }
         }
     }
@@ -668,7 +668,7 @@
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     white-space: nowrap;
 
     i {
@@ -711,9 +711,9 @@ $pf-tier-legendary: #ff1493;
             border: 1px solid rgba($wh40k-accent-dynasty, 0.3);
             border-radius: 6px;
             padding: 6px 12px;
-            color: $wh40k-accent-dynasty;
+            color: var(--wh40k-accent-dynasty);
             cursor: pointer;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
 
             &:hover {
                 background: rgba($wh40k-accent-dynasty, 0.2);
@@ -738,16 +738,16 @@ $pf-tier-legendary: #ff1493;
     .wh40k-pf-value-input {
         width: 100px;
         padding: 12px 16px;
-        border: 3px solid $wh40k-accent-dynasty;
+        border: 3px solid var(--wh40k-accent-dynasty);
         border-radius: 8px;
         background: rgba($wh40k-accent-dynasty, 0.1);
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
         font-size: 2.5rem;
         font-weight: 700;
         text-align: center;
-        color: $wh40k-accent-dynasty;
+        color: var(--wh40k-accent-dynasty);
         box-shadow: 0 0 20px rgba($wh40k-accent-dynasty, 0.2);
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:focus {
             outline: none;
@@ -907,13 +907,13 @@ $pf-tier-legendary: #ff1493;
 
         .wh40k-pf-breakdown-label {
             font-weight: 700;
-            color: $wh40k-accent-dynasty;
+            color: var(--wh40k-accent-dynasty);
         }
 
         .wh40k-pf-breakdown-value {
             font-size: 1.2rem;
             font-weight: 700;
-            color: $wh40k-accent-dynasty;
+            color: var(--wh40k-accent-dynasty);
         }
     }
 }
@@ -941,7 +941,7 @@ $pf-tier-legendary: #ff1493;
 }
 
 .wh40k-pf-breakdown-value {
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-weight: 600;
 }
 
@@ -956,7 +956,7 @@ $pf-tier-legendary: #ff1493;
         margin-bottom: 6px;
 
         i {
-            color: $wh40k-accent-combat;
+            color: var(--wh40k-accent-combat);
         }
     }
 
@@ -989,7 +989,7 @@ $pf-tier-legendary: #ff1493;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: $wh40k-accent-dynasty;
+    color: var(--wh40k-accent-dynasty);
     margin-bottom: 8px;
 
     i {
@@ -1009,12 +1009,12 @@ $pf-tier-legendary: #ff1493;
     border-radius: 3px;
 
     &.wh40k-pf-ref--positive {
-        color: $wh40k-color-success;
+        color: var(--wh40k-color-success);
         background: rgba($wh40k-color-success, 0.1);
     }
 
     &.wh40k-pf-ref--negative {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
         background: rgba($wh40k-accent-combat, 0.1);
     }
 }

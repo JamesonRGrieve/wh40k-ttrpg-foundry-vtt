@@ -26,8 +26,8 @@
         align-items: center;
         gap: 4px;
         padding: 4px 10px;
-        border-radius: $wh40k-radius-sm;
-        font-size: $wh40k-font-size-xs;
+        border-radius: var(--wh40k-radius-sm);
+        font-size: var(--wh40k-font-size-xs);
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -70,16 +70,16 @@
         align-items: center;
         gap: 4px;
         padding: 4px 10px;
-        border-radius: $wh40k-radius-sm;
-        font-size: $wh40k-font-size-xs;
+        border-radius: var(--wh40k-radius-sm);
+        font-size: var(--wh40k-font-size-xs);
         font-weight: 600;
         text-transform: uppercase;
         background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15), rgba($wh40k-color-gold, 0.08));
         border: 1px solid rgba($wh40k-color-gold, 0.4);
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
 
         i {
-            color: $wh40k-color-gold;
+            color: var(--wh40k-color-gold);
         }
     }
 
@@ -89,8 +89,8 @@
         align-items: center;
         gap: 4px;
         padding: 3px 8px;
-        border-radius: $wh40k-radius-sm;
-        font-size: $wh40k-font-size-2xs;
+        border-radius: var(--wh40k-radius-sm);
+        font-size: var(--wh40k-font-size-2xs);
         font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.3px;
@@ -103,8 +103,8 @@
     .wh40k-skill-badges {
         display: flex;
         flex-wrap: wrap;
-        gap: $wh40k-space-xs;
-        margin-top: $wh40k-space-xs;
+        gap: var(--wh40k-space-xs);
+        margin-top: var(--wh40k-space-xs);
     }
 }
 
@@ -112,18 +112,18 @@
 .wh40k-skill-properties {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: $wh40k-radius-md;
-    padding: $wh40k-space-md;
+    border-radius: var(--wh40k-radius-md);
+    padding: var(--wh40k-space-md);
 
     .wh40k-section-title {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
-        padding-bottom: $wh40k-space-sm;
-        margin-bottom: $wh40k-space-md;
+        gap: var(--wh40k-space-sm);
+        padding-bottom: var(--wh40k-space-sm);
+        margin-bottom: var(--wh40k-space-md);
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        font-family: $wh40k-font-heading;
-        font-size: $wh40k-font-size-md;
+        font-family: var(--wh40k-font-heading);
+        font-size: var(--wh40k-font-size-md);
         color: var(--wh40k-text-light);
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -136,7 +136,7 @@
     .wh40k-properties-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
 
         @media (max-width: 600px) {
             grid-template-columns: 1fr;
@@ -149,7 +149,7 @@
         gap: 4px;
 
         label {
-            font-size: $wh40k-font-size-xs;
+            font-size: var(--wh40k-font-size-xs);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -157,17 +157,17 @@
         }
 
         .wh40k-property-value {
-            font-size: $wh40k-font-size-sm;
+            font-size: var(--wh40k-font-size-sm);
             color: var(--wh40k-text-light);
             padding: 6px 10px;
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: $wh40k-radius-sm;
-            font-family: $wh40k-font-ui;
+            border-radius: var(--wh40k-radius-sm);
+            font-family: var(--wh40k-font-ui);
 
             &.wh40k-property-value--editable {
                 cursor: pointer;
-                transition: all $wh40k-transition-base;
+                transition: all var(--wh40k-transition-base);
 
                 &:hover {
                     border-color: rgba(#3498db, 0.4);
@@ -178,13 +178,13 @@
 
         input,
         select {
-            font-size: $wh40k-font-size-sm;
+            font-size: var(--wh40k-font-size-sm);
             padding: 6px 10px;
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: $wh40k-radius-sm;
+            border-radius: var(--wh40k-radius-sm);
             color: var(--wh40k-text-light);
-            font-family: $wh40k-font-ui;
+            font-family: var(--wh40k-font-ui);
 
             &:focus {
                 outline: none;
@@ -206,8 +206,8 @@
             padding: 4px 10px;
             background: linear-gradient(135deg, rgba(#16a085, 0.15), rgba(#16a085, 0.08));
             border: 1px solid rgba(#16a085, 0.3);
-            border-radius: $wh40k-radius-sm;
-            font-size: $wh40k-font-size-2xs;
+            border-radius: var(--wh40k-radius-sm);
+            font-size: var(--wh40k-font-size-2xs);
             font-weight: 600;
             color: #16a085;
             text-transform: uppercase;
@@ -221,16 +221,16 @@
     background: linear-gradient(135deg, rgba(#3498db, 0.08) 0%, rgba(#2980b9, 0.05) 100%);
     border: 1px solid rgba(#3498db, 0.2);
     border-left: 3px solid #3498db;
-    border-radius: 0 $wh40k-radius-md $wh40k-radius-md 0;
-    padding: $wh40k-space-md;
+    border-radius: 0 var(--wh40k-radius-md) var(--wh40k-radius-md) 0;
+    padding: var(--wh40k-space-md);
 
     .wh40k-section-title {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
-        margin-bottom: $wh40k-space-sm;
-        font-family: $wh40k-font-heading;
-        font-size: $wh40k-font-size-sm;
+        gap: var(--wh40k-space-sm);
+        margin-bottom: var(--wh40k-space-sm);
+        font-family: var(--wh40k-font-heading);
+        font-size: var(--wh40k-font-size-sm);
         font-weight: 600;
         color: #3498db;
         text-transform: uppercase;
@@ -242,10 +242,10 @@
     }
 
     .wh40k-descriptor-text {
-        font-size: $wh40k-font-size-sm;
+        font-size: var(--wh40k-font-size-sm);
         line-height: 1.5;
         color: var(--wh40k-text-light);
-        font-family: $wh40k-font-body;
+        font-family: var(--wh40k-font-body);
         font-style: italic;
     }
 }
@@ -254,18 +254,18 @@
 .wh40k-skill-uses {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: $wh40k-radius-md;
-    padding: $wh40k-space-md;
+    border-radius: var(--wh40k-radius-md);
+    padding: var(--wh40k-space-md);
 
     .wh40k-section-title {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
-        padding-bottom: $wh40k-space-sm;
-        margin-bottom: $wh40k-space-md;
+        gap: var(--wh40k-space-sm);
+        padding-bottom: var(--wh40k-space-sm);
+        margin-bottom: var(--wh40k-space-md);
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        font-family: $wh40k-font-heading;
-        font-size: $wh40k-font-size-md;
+        font-family: var(--wh40k-font-heading);
+        font-size: var(--wh40k-font-size-md);
         color: var(--wh40k-text-light);
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -276,17 +276,17 @@
     }
 
     .wh40k-uses-content {
-        font-size: $wh40k-font-size-sm;
+        font-size: var(--wh40k-font-size-sm);
         line-height: 1.6;
         color: var(--wh40k-text-light);
 
         // ProseMirror editor styling
         .ProseMirror {
             min-height: 150px;
-            padding: $wh40k-space-sm;
+            padding: var(--wh40k-space-sm);
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: $wh40k-radius-sm;
+            border-radius: var(--wh40k-radius-sm);
 
             &:focus {
                 outline: none;
@@ -294,7 +294,7 @@
             }
 
             p {
-                margin-bottom: $wh40k-space-sm;
+                margin-bottom: var(--wh40k-space-sm);
 
                 &:last-child {
                     margin-bottom: 0;
@@ -303,12 +303,12 @@
 
             ul,
             ol {
-                margin-left: $wh40k-space-lg;
-                margin-bottom: $wh40k-space-sm;
+                margin-left: var(--wh40k-space-lg);
+                margin-bottom: var(--wh40k-space-sm);
             }
 
             strong {
-                color: $wh40k-color-gold;
+                color: var(--wh40k-color-gold);
                 font-weight: 700;
             }
 
@@ -323,18 +323,18 @@
 .wh40k-skill-difficulties {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: $wh40k-radius-md;
-    padding: $wh40k-space-md;
+    border-radius: var(--wh40k-radius-md);
+    padding: var(--wh40k-space-md);
 
     .wh40k-section-title {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
-        padding-bottom: $wh40k-space-sm;
-        margin-bottom: $wh40k-space-md;
+        gap: var(--wh40k-space-sm);
+        padding-bottom: var(--wh40k-space-sm);
+        margin-bottom: var(--wh40k-space-md);
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        font-family: $wh40k-font-heading;
-        font-size: $wh40k-font-size-md;
+        font-family: var(--wh40k-font-heading);
+        font-size: var(--wh40k-font-size-md);
         color: var(--wh40k-text-light);
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -353,9 +353,9 @@
             background: rgba(0, 0, 0, 0.4);
 
             th {
-                padding: $wh40k-space-sm;
+                padding: var(--wh40k-space-sm);
                 text-align: left;
-                font-size: $wh40k-font-size-xs;
+                font-size: var(--wh40k-font-size-xs);
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
@@ -363,18 +363,18 @@
                 border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
                 &:first-child {
-                    border-radius: $wh40k-radius-sm 0 0 0;
+                    border-radius: var(--wh40k-radius-sm) 0 0 0;
                 }
 
                 &:last-child {
-                    border-radius: 0 $wh40k-radius-sm 0 0;
+                    border-radius: 0 var(--wh40k-radius-sm) 0 0;
                 }
             }
         }
 
         tbody {
             tr {
-                transition: background-color $wh40k-transition-base;
+                transition: background-color var(--wh40k-transition-base);
 
                 &:hover {
                     background: rgba(255, 255, 255, 0.03);
@@ -384,18 +384,18 @@
                     border-bottom: none;
 
                     &:first-child {
-                        border-radius: 0 0 0 $wh40k-radius-sm;
+                        border-radius: 0 0 0 var(--wh40k-radius-sm);
                     }
 
                     &:last-child {
-                        border-radius: 0 0 $wh40k-radius-sm 0;
+                        border-radius: 0 0 var(--wh40k-radius-sm) 0;
                     }
                 }
             }
 
             td {
-                padding: $wh40k-space-sm;
-                font-size: $wh40k-font-size-sm;
+                padding: var(--wh40k-space-sm);
+                font-size: var(--wh40k-font-size-sm);
                 color: var(--wh40k-text-light);
                 border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 
@@ -407,7 +407,7 @@
                 &.wh40k-difficulty-modifier {
                     text-align: center;
                     font-weight: 700;
-                    font-family: $wh40k-font-ui;
+                    font-family: var(--wh40k-font-ui);
 
                     &.positive {
                         color: #27ae60;
@@ -427,10 +427,10 @@
 
     // Empty state
     .wh40k-difficulties-empty {
-        padding: $wh40k-space-lg;
+        padding: var(--wh40k-space-lg);
         text-align: center;
         color: var(--wh40k-text-muted);
-        font-size: $wh40k-font-size-sm;
+        font-size: var(--wh40k-font-size-sm);
         font-style: italic;
     }
 }
@@ -440,16 +440,16 @@
     background: linear-gradient(135deg, rgba(#9b59b6, 0.08) 0%, rgba(#8e44ad, 0.05) 100%);
     border: 1px solid rgba(#9b59b6, 0.2);
     border-left: 3px solid #9b59b6;
-    border-radius: 0 $wh40k-radius-md $wh40k-radius-md 0;
-    padding: $wh40k-space-md;
+    border-radius: 0 var(--wh40k-radius-md) var(--wh40k-radius-md) 0;
+    padding: var(--wh40k-space-md);
 
     .wh40k-section-title {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
-        margin-bottom: $wh40k-space-sm;
-        font-family: $wh40k-font-heading;
-        font-size: $wh40k-font-size-sm;
+        gap: var(--wh40k-space-sm);
+        margin-bottom: var(--wh40k-space-sm);
+        font-family: var(--wh40k-font-heading);
+        font-size: var(--wh40k-font-size-sm);
         font-weight: 600;
         color: #9b59b6;
         text-transform: uppercase;
@@ -461,16 +461,16 @@
     }
 
     .wh40k-special-rules-content {
-        font-size: $wh40k-font-size-sm;
+        font-size: var(--wh40k-font-size-sm);
         line-height: 1.6;
         color: var(--wh40k-text-light);
 
         .ProseMirror {
             min-height: 80px;
-            padding: $wh40k-space-sm;
+            padding: var(--wh40k-space-sm);
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: $wh40k-radius-sm;
+            border-radius: var(--wh40k-radius-sm);
 
             &:focus {
                 outline: none;
@@ -484,18 +484,18 @@
 .wh40k-skill-specializations {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: $wh40k-radius-md;
-    padding: $wh40k-space-md;
+    border-radius: var(--wh40k-radius-md);
+    padding: var(--wh40k-space-md);
 
     .wh40k-section-title {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
-        padding-bottom: $wh40k-space-sm;
-        margin-bottom: $wh40k-space-md;
+        gap: var(--wh40k-space-sm);
+        padding-bottom: var(--wh40k-space-sm);
+        margin-bottom: var(--wh40k-space-md);
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        font-family: $wh40k-font-heading;
-        font-size: $wh40k-font-size-md;
+        font-family: var(--wh40k-font-heading);
+        font-size: var(--wh40k-font-size-md);
         color: var(--wh40k-text-light);
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -508,7 +508,7 @@
     .wh40k-specializations-list {
         display: flex;
         flex-wrap: wrap;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
 
         .wh40k-specialization-tag {
             display: inline-flex;
@@ -517,26 +517,26 @@
             padding: 6px 12px;
             background: linear-gradient(135deg, rgba(#9b59b6, 0.15), rgba(#9b59b6, 0.08));
             border: 1px solid rgba(#9b59b6, 0.3);
-            border-radius: $wh40k-radius-sm;
-            font-size: $wh40k-font-size-sm;
+            border-radius: var(--wh40k-radius-sm);
+            font-size: var(--wh40k-font-size-sm);
             font-weight: 500;
             color: #9b59b6;
 
             i {
-                font-size: $wh40k-font-size-xs;
+                font-size: var(--wh40k-font-size-xs);
             }
         }
     }
 
     .wh40k-specializations-input {
         width: 100%;
-        padding: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm);
         background: rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: $wh40k-radius-sm;
+        border-radius: var(--wh40k-radius-sm);
         color: var(--wh40k-text-light);
-        font-size: $wh40k-font-size-sm;
-        font-family: $wh40k-font-ui;
+        font-size: var(--wh40k-font-size-sm);
+        font-family: var(--wh40k-font-ui);
 
         &:focus {
             outline: none;
@@ -555,18 +555,18 @@
 .wh40k-skill-roll-config {
     background: rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: $wh40k-radius-md;
-    padding: $wh40k-space-md;
+    border-radius: var(--wh40k-radius-md);
+    padding: var(--wh40k-space-md);
 
     .wh40k-section-title {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
-        padding-bottom: $wh40k-space-sm;
-        margin-bottom: $wh40k-space-md;
+        gap: var(--wh40k-space-sm);
+        padding-bottom: var(--wh40k-space-sm);
+        margin-bottom: var(--wh40k-space-md);
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        font-family: $wh40k-font-heading;
-        font-size: $wh40k-font-size-sm;
+        font-family: var(--wh40k-font-heading);
+        font-size: var(--wh40k-font-size-sm);
         color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.8px;
@@ -579,7 +579,7 @@
     .wh40k-config-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
 
         @media (max-width: 600px) {
             grid-template-columns: 1fr;
@@ -592,7 +592,7 @@
         gap: 4px;
 
         label {
-            font-size: $wh40k-font-size-2xs;
+            font-size: var(--wh40k-font-size-2xs);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -603,10 +603,10 @@
             padding: 6px 10px;
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: $wh40k-radius-sm;
+            border-radius: var(--wh40k-radius-sm);
             color: var(--wh40k-text-light);
-            font-size: $wh40k-font-size-sm;
-            font-family: $wh40k-font-ui;
+            font-size: var(--wh40k-font-size-sm);
+            font-family: var(--wh40k-font-ui);
             text-align: center;
 
             &:focus {
@@ -628,7 +628,7 @@
 .wh40k-skill-sheet .wh40k-item-body {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md);
     overflow-y: auto;
 }

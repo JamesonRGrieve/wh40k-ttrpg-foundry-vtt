@@ -360,7 +360,7 @@
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     font-family: var(--wh40k-font-ui);
 
     i {

@@ -10,12 +10,12 @@
     .wh40k-xp-compact-display {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-md;
-        padding: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
+        padding: var(--wh40k-space-md);
         background: var(--color-bg-option);
         border: 1px solid var(--color-border-light);
         border-radius: 6px;
-        margin-bottom: $wh40k-space-md;
+        margin-bottom: var(--wh40k-space-md);
     }
 
     .wh40k-xp-ring-inline {
@@ -41,7 +41,7 @@
         transform: translate(-50%, -50%);
         font-size: 0.75rem;
         font-weight: 700;
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
         color: #c08020;
         line-height: 1;
     }
@@ -62,7 +62,7 @@
     .wh40k-xp-available-value {
         font-size: 1.4rem;
         font-weight: 700;
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
         color: #d09838;
         line-height: 1;
     }
@@ -94,7 +94,7 @@
     .wh40k-xp-inline-value {
         font-size: 1.1rem;
         font-weight: 700;
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
         color: var(--color-text-dark-primary);
         line-height: 1;
     }
@@ -117,7 +117,7 @@
         border-radius: 50%;
         color: #4a8f5c;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
         flex-shrink: 0;
         margin-left: auto;
 
@@ -149,7 +149,7 @@
         border-radius: 50%;
         color: #c9a227;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
         flex-shrink: 0;
         margin-left: 0;
 
@@ -198,7 +198,7 @@
     // ============================================
 
     .wh40k-xp-info-section {
-        margin-top: $wh40k-space-sm;
+        margin-top: var(--wh40k-space-sm);
     }
 
     .wh40k-xp-info-box {

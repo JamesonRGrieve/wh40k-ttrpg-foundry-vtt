@@ -13,21 +13,21 @@
     .wh40k-threat-scaler-form {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-lg;
-        padding: $wh40k-space-md;
+        gap: var(--wh40k-space-lg);
+        padding: var(--wh40k-space-md);
         max-height: 85vh;
         overflow-y: auto;
 
         // Header
         .wh40k-scaler-header {
             border-bottom: 2px solid var(--color-border-secondary);
-            padding-bottom: $wh40k-space-md;
+            padding-bottom: var(--wh40k-space-md);
         }
 
         .wh40k-scaler-npc-info {
             display: flex;
             align-items: center;
-            gap: $wh40k-space-md;
+            gap: var(--wh40k-space-md);
         }
 
         .wh40k-scaler-npc-portrait {
@@ -116,7 +116,7 @@
                 height: 24px;
                 border-radius: 50%;
                 background: white;
-                border: 3px solid $wh40k-accent-gold;
+                border: 3px solid var(--wh40k-accent-gold);
                 cursor: pointer;
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 
@@ -130,7 +130,7 @@
                 height: 24px;
                 border-radius: 50%;
                 background: white;
-                border: 3px solid $wh40k-accent-gold;
+                border: 3px solid var(--wh40k-accent-gold);
                 cursor: pointer;
                 box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 
@@ -178,8 +178,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: $wh40k-space-md;
-            margin-top: $wh40k-space-lg;
+            gap: var(--wh40k-space-md);
+            margin-top: var(--wh40k-space-lg);
         }
 
         .wh40k-new-threat-value {
@@ -202,7 +202,7 @@
             display: flex;
             gap: 8px;
             justify-content: center;
-            margin-top: $wh40k-space-md;
+            margin-top: var(--wh40k-space-md);
         }
 
         .wh40k-preset-btn {
@@ -214,11 +214,11 @@
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
 
             &:hover {
                 background: rgba(139, 0, 0, 0.2);
-                border-color: $wh40k-accent-gold;
+                border-color: var(--wh40k-accent-gold);
                 box-shadow: 0 1px 3px $wh40k-shadow-sm;
             }
 
@@ -228,15 +228,15 @@
 
             &.wh40k-preset-reset {
                 background: rgba(139, 0, 0, 0.1);
-                border-color: $wh40k-accent-gold;
-                color: $wh40k-accent-gold;
+                border-color: var(--wh40k-accent-gold);
+                color: var(--wh40k-accent-gold);
             }
         }
 
         // Scaling Options
         .wh40k-scaler-options {
             h4 {
-                margin: 0 0 $wh40k-space-sm 0;
+                margin: 0 0 var(--wh40k-space-sm) 0;
                 font-size: 0.9rem;
                 text-transform: uppercase;
                 color: var(--color-text-light-secondary);
@@ -247,7 +247,7 @@
         .wh40k-options-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: $wh40k-space-sm;
+            gap: var(--wh40k-space-sm);
         }
 
         .wh40k-checkbox-label {
@@ -259,11 +259,11 @@
             border: 1px solid var(--color-border-secondary);
             border-radius: 4px;
             cursor: pointer;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
 
             &:hover {
                 background: rgba(139, 0, 0, 0.1);
-                border-color: $wh40k-accent-gold;
+                border-color: var(--wh40k-accent-gold);
             }
 
             input[type='checkbox'] {
@@ -281,7 +281,7 @@
         // Preview Section
         .wh40k-scaler-preview {
             h4 {
-                margin: 0 0 $wh40k-space-md 0;
+                margin: 0 0 var(--wh40k-space-md) 0;
                 font-size: 0.9rem;
                 text-transform: uppercase;
                 color: var(--color-text-light-secondary);
@@ -292,14 +292,14 @@
         .wh40k-warning-banner {
             display: flex;
             align-items: center;
-            gap: $wh40k-space-sm;
-            padding: $wh40k-space-sm $wh40k-space-md;
+            gap: var(--wh40k-space-sm);
+            padding: var(--wh40k-space-sm) var(--wh40k-space-md);
             background: rgba(255, 152, 0, 0.2);
             border: 1px solid #ff9800;
             border-radius: 4px;
             color: #ff9800;
             font-weight: 600;
-            margin-bottom: $wh40k-space-md;
+            margin-bottom: var(--wh40k-space-md);
 
             i {
                 font-size: 1.2rem;
@@ -310,7 +310,7 @@
             display: flex;
             gap: 4px;
             border-bottom: 2px solid var(--color-border-secondary);
-            margin-bottom: $wh40k-space-md;
+            margin-bottom: var(--wh40k-space-md);
         }
 
         .wh40k-preview-tab {
@@ -323,7 +323,7 @@
             font-size: 0.85rem;
             font-weight: 600;
             text-transform: uppercase;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
             margin-bottom: -2px;
 
             &:hover {
@@ -331,8 +331,8 @@
             }
 
             &.active {
-                color: $wh40k-accent-gold;
-                border-bottom-color: $wh40k-accent-gold;
+                color: var(--wh40k-accent-gold);
+                border-bottom-color: var(--wh40k-accent-gold);
             }
         }
 
@@ -392,7 +392,7 @@
 
             .wh40k-stat-name {
                 font-weight: 700;
-                color: $wh40k-accent-gold;
+                color: var(--wh40k-accent-gold);
             }
 
             .wh40k-stat-current {
@@ -443,14 +443,14 @@
         .wh40k-combat-changes {
             display: flex;
             flex-direction: column;
-            gap: $wh40k-space-md;
+            gap: var(--wh40k-space-md);
         }
 
         .wh40k-change-row {
             display: flex;
             align-items: center;
-            gap: $wh40k-space-md;
-            padding: $wh40k-space-sm;
+            gap: var(--wh40k-space-md);
+            padding: var(--wh40k-space-sm);
             background: var(--color-bg-tertiary);
             border-radius: 4px;
 
@@ -489,7 +489,7 @@
         }
 
         .wh40k-preview-note {
-            padding: $wh40k-space-md;
+            padding: var(--wh40k-space-md);
             background: var(--color-bg-tertiary);
             border-radius: 4px;
             color: var(--color-text-light-secondary);
@@ -501,8 +501,8 @@
         .wh40k-scaler-footer {
             display: flex;
             justify-content: flex-end;
-            gap: $wh40k-space-sm;
-            padding-top: $wh40k-space-md;
+            gap: var(--wh40k-space-sm);
+            padding-top: var(--wh40k-space-md);
             border-top: 2px solid var(--color-border-secondary);
             flex-wrap: wrap;
 
@@ -516,7 +516,7 @@
                 font-size: 0.9rem;
                 font-weight: 600;
                 cursor: pointer;
-                transition: all $wh40k-transition-base;
+                transition: all var(--wh40k-transition-base);
                 flex-shrink: 0;
 
                 i {
@@ -536,13 +536,13 @@
             }
 
             .wh40k-btn-primary {
-                background: $wh40k-accent-gold;
-                border: 1px solid $wh40k-accent-gold;
+                background: var(--wh40k-accent-gold);
+                border: 1px solid var(--wh40k-accent-gold);
                 color: #000;
 
                 &:hover {
-                    background: $wh40k-color-gold-light;
-                    border-color: $wh40k-color-gold-light;
+                    background: var(--wh40k-color-gold-light);
+                    border-color: var(--wh40k-color-gold-light);
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
                 }
             }

@@ -10,9 +10,9 @@
 }
 
 .wh40k-item-sheet .wh40k-tab {
-    padding: $wh40k-space-sm $wh40k-space-lg;
-    font-family: $wh40k-font-display;
-    font-size: $wh40k-font-size-sm;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-lg);
+    font-family: var(--wh40k-font-display);
+    font-size: var(--wh40k-font-size-sm);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--wh40k-text-muted);
@@ -21,11 +21,11 @@
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     text-decoration: none;
 
     i {
-        margin-right: $wh40k-space-xs;
+        margin-right: var(--wh40k-space-xs);
     }
 
     &:hover {
@@ -49,7 +49,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     min-height: 0;
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 
     // Tab panels - only show active
     .tab {
@@ -68,8 +68,8 @@
 .wh40k-item-sheet .wh40k-panel {
     background: var(--wh40k-panel-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-lg;
-    margin-bottom: $wh40k-space-md;
+    border-radius: var(--wh40k-radius-lg);
+    margin-bottom: var(--wh40k-space-md);
     overflow: hidden;
 }
 
@@ -77,30 +77,30 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: linear-gradient(90deg, rgba(212, 175, 55, 0.15) 0%, transparent 100%);
     border-bottom: 1px solid var(--wh40k-border-color-light);
 
     h3 {
-        font-family: $wh40k-font-display;
-        font-size: $wh40k-font-size-md;
+        font-family: var(--wh40k-font-display);
+        font-size: var(--wh40k-font-size-md);
         color: var(--wh40k-gold);
         margin: 0;
         text-transform: uppercase;
         letter-spacing: 0.05em;
 
         i {
-            margin-right: $wh40k-space-sm;
+            margin-right: var(--wh40k-space-sm);
             opacity: 0.8;
         }
     }
 }
 
 .wh40k-item-sheet .wh40k-panel__content {
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 }
 
 .wh40k-item-sheet .wh40k-panel__actions {
     display: flex;
-    gap: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
 }

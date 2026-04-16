@@ -13,8 +13,8 @@
     .wh40k-difficulty-calculator {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-lg;
-        padding: $wh40k-space-md;
+        gap: var(--wh40k-space-lg);
+        padding: var(--wh40k-space-md);
         max-height: 80vh;
         overflow-y: auto;
 
@@ -23,8 +23,8 @@
             .wh40k-panel-header {
                 display: flex;
                 align-items: center;
-                gap: $wh40k-space-md;
-                padding: $wh40k-space-md;
+                gap: var(--wh40k-space-md);
+                padding: var(--wh40k-space-md);
                 background: var(--color-bg-secondary);
                 border-radius: 8px;
             }
@@ -51,7 +51,7 @@
                     color: var(--color-text-light-secondary);
                     display: flex;
                     align-items: center;
-                    gap: $wh40k-space-sm;
+                    gap: var(--wh40k-space-sm);
                 }
             }
 
@@ -68,12 +68,12 @@
 
         // Quantity Panel
         .wh40k-panel--quantity {
-            padding: $wh40k-space-md;
+            padding: var(--wh40k-space-md);
 
             .wh40k-form-group {
                 display: flex;
                 flex-direction: column;
-                gap: $wh40k-space-sm;
+                gap: var(--wh40k-space-sm);
             }
 
             .wh40k-label {
@@ -93,10 +93,10 @@
                 border: 2px solid var(--color-border-secondary);
                 border-radius: 4px;
                 color: var(--color-text-light-primary);
-                transition: all $wh40k-transition-base;
+                transition: all var(--wh40k-transition-base);
 
                 &:focus {
-                    border-color: $wh40k-accent-gold;
+                    border-color: var(--wh40k-accent-gold);
                     outline: none;
                 }
             }
@@ -107,8 +107,8 @@
             .wh40k-panel-header {
                 display: flex;
                 align-items: center;
-                gap: $wh40k-space-sm;
-                padding: $wh40k-space-md $wh40k-space-md $wh40k-space-sm;
+                gap: var(--wh40k-space-sm);
+                padding: var(--wh40k-space-md) var(--wh40k-space-md) var(--wh40k-space-sm);
                 border-bottom: 2px solid var(--color-border-secondary);
 
                 h4 {
@@ -118,21 +118,21 @@
                 }
 
                 i {
-                    color: $wh40k-accent-gold;
+                    color: var(--wh40k-accent-gold);
                 }
             }
 
             .wh40k-panel-body {
-                padding: $wh40k-space-md;
+                padding: var(--wh40k-space-md);
             }
 
             .wh40k-party-list {
                 list-style: none;
-                margin: 0 0 $wh40k-space-md 0;
+                margin: 0 0 var(--wh40k-space-md) 0;
                 padding: 0;
                 display: flex;
                 flex-direction: column;
-                gap: $wh40k-space-sm;
+                gap: var(--wh40k-space-sm);
                 max-height: 300px;
                 overflow-y: auto;
             }
@@ -140,8 +140,8 @@
             .wh40k-party-member {
                 display: flex;
                 align-items: center;
-                gap: $wh40k-space-sm;
-                padding: $wh40k-space-sm;
+                gap: var(--wh40k-space-sm);
+                padding: var(--wh40k-space-sm);
                 background: var(--color-bg-secondary);
                 border-radius: 4px;
 
@@ -169,15 +169,15 @@
             .wh40k-stats-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: $wh40k-space-md;
-                margin-top: $wh40k-space-md;
+                gap: var(--wh40k-space-md);
+                margin-top: var(--wh40k-space-md);
             }
 
             .wh40k-stat-box {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                padding: $wh40k-space-md;
+                padding: var(--wh40k-space-md);
                 background: var(--color-bg-secondary);
                 border-radius: 8px;
                 border: 2px solid var(--color-border-secondary);
@@ -193,13 +193,13 @@
                 .wh40k-stat-value {
                     font-size: 2rem;
                     font-weight: 700;
-                    color: $wh40k-accent-gold;
+                    color: var(--wh40k-accent-gold);
                 }
             }
 
             .wh40k-empty-message {
                 text-align: center;
-                padding: $wh40k-space-lg;
+                padding: var(--wh40k-space-lg);
                 color: var(--color-text-light-secondary);
                 font-style: italic;
             }
@@ -210,8 +210,8 @@
             .wh40k-panel-header {
                 display: flex;
                 align-items: center;
-                gap: $wh40k-space-sm;
-                padding: $wh40k-space-md $wh40k-space-md $wh40k-space-sm;
+                gap: var(--wh40k-space-sm);
+                padding: var(--wh40k-space-md) var(--wh40k-space-md) var(--wh40k-space-sm);
                 border-bottom: 2px solid var(--color-border-secondary);
 
                 h4 {
@@ -221,26 +221,26 @@
                 }
 
                 i {
-                    color: $wh40k-accent-gold;
+                    color: var(--wh40k-accent-gold);
                 }
             }
 
             .wh40k-panel-body {
-                padding: $wh40k-space-md;
+                padding: var(--wh40k-space-md);
             }
 
             .wh40k-threat-comparison {
-                margin-bottom: $wh40k-space-lg;
+                margin-bottom: var(--wh40k-space-lg);
             }
 
             .wh40k-threat-bar {
-                margin-bottom: $wh40k-space-md;
+                margin-bottom: var(--wh40k-space-md);
 
                 .wh40k-threat-bar-label {
                     font-size: 0.85rem;
                     font-weight: 600;
                     color: var(--color-text-light-secondary);
-                    margin-bottom: $wh40k-space-sm;
+                    margin-bottom: var(--wh40k-space-sm);
                     text-transform: uppercase;
                 }
 
@@ -256,7 +256,7 @@
 
                 .wh40k-threat-bar-fill {
                     height: 100%;
-                    transition: width $wh40k-transition-medium;
+                    transition: width var(--wh40k-transition-medium);
                 }
 
                 .wh40k-threat-bar-value {
@@ -264,7 +264,7 @@
                     font-size: 1.2rem;
                     font-weight: 700;
                     color: var(--color-text-light-primary);
-                    margin-top: $wh40k-space-sm;
+                    margin-top: var(--wh40k-space-sm);
                 }
             }
 
@@ -272,10 +272,10 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                padding: $wh40k-space-lg;
+                padding: var(--wh40k-space-lg);
                 background: var(--color-bg-secondary);
                 border-radius: 8px;
-                margin-bottom: $wh40k-space-lg;
+                margin-bottom: var(--wh40k-space-lg);
 
                 .wh40k-ratio-value {
                     font-size: 3rem;
@@ -291,21 +291,21 @@
             }
 
             .wh40k-difficulty-result {
-                padding: $wh40k-space-lg;
+                padding: var(--wh40k-space-lg);
                 border-radius: 8px;
                 border: 3px solid;
-                margin-bottom: $wh40k-space-lg;
+                margin-bottom: var(--wh40k-space-lg);
                 text-align: center;
 
                 .wh40k-difficulty-badge {
                     display: inline-block;
-                    padding: $wh40k-space-sm $wh40k-space-lg;
+                    padding: var(--wh40k-space-sm) var(--wh40k-space-lg);
                     border-radius: 8px;
                     font-size: 1.4rem;
                     font-weight: 700;
                     text-transform: uppercase;
                     color: white;
-                    margin-bottom: $wh40k-space-md;
+                    margin-bottom: var(--wh40k-space-md);
                 }
 
                 .wh40k-difficulty-description {
@@ -318,7 +318,7 @@
 
             .wh40k-difficulty-scale {
                 h5 {
-                    margin: 0 0 $wh40k-space-md 0;
+                    margin: 0 0 var(--wh40k-space-md) 0;
                     font-size: 0.9rem;
                     text-transform: uppercase;
                     color: var(--color-text-light-secondary);
@@ -331,7 +331,7 @@
                     padding: 0;
                     display: flex;
                     flex-direction: column;
-                    gap: $wh40k-space-sm;
+                    gap: var(--wh40k-space-sm);
                     max-height: 240px;
                     overflow-y: auto;
                 }
@@ -339,8 +339,8 @@
                 .wh40k-scale-item {
                     display: flex;
                     align-items: center;
-                    gap: $wh40k-space-sm;
-                    padding: $wh40k-space-sm;
+                    gap: var(--wh40k-space-sm);
+                    padding: var(--wh40k-space-sm);
                     background: var(--color-bg-secondary);
                     border-radius: 4px;
                     flex-wrap: wrap;

@@ -21,11 +21,7 @@
     }
 
     .wh40k-combat-top-grid {
-        grid-template-columns: 1fr 1fr;
-
-        .wh40k-combat-armour-wide {
-            grid-column: 1 / -1;
-        }
+        grid-template-columns: 1fr;
     }
 }
 
@@ -49,8 +45,17 @@
     min-height: 100%;
 }
 
-.wh40k-combat-armour-wide {
-    min-width: 0;
+.wh40k-combat-vitals-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 0.75rem;
+}
+
+@container (max-width: 500px) {
+    .wh40k-combat-vitals-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 // ============================================
@@ -62,11 +67,11 @@
     @extend .wh40k-btn-icon;
     background: rgba($wh40k-accent-gold, 0.2);
     border: 1px solid rgba($wh40k-accent-gold, 0.4);
-    color: $wh40k-accent-gold;
+    color: var(--wh40k-accent-gold);
 
     &:hover {
         background: rgba($wh40k-accent-gold, 0.3);
-        border-color: $wh40k-accent-gold;
+        border-color: var(--wh40k-accent-gold);
         transform: scale(1.1);
     }
 
@@ -91,13 +96,13 @@
 
 .wh40k-vitals-hud-header {
     background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.1) 0%, rgba($wh40k-accent-gold, 0.05) 100%);
-    border-left: 3px solid $wh40k-accent-gold;
+    border-left: 3px solid var(--wh40k-accent-gold);
     border-radius: 4px;
     font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: $wh40k-accent-gold;
+    color: var(--wh40k-accent-gold);
 
     i {
         font-size: 0.85rem;
@@ -125,11 +130,11 @@
 .wh40k-vital-header-clickable {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
     flex: 1;
     cursor: pointer;
-    transition: background-color $wh40k-transition-base;
-    padding: $wh40k-space-xs;
+    transition: background-color var(--wh40k-transition-base);
+    padding: var(--wh40k-space-xs);
     margin: -#{$wh40k-space-xs};
     margin-right: 0;
     border-radius: 4px;
@@ -140,8 +145,8 @@
 
     .wh40k-panel-chevron {
         margin-left: auto;
-        transition: transform $wh40k-transition-base;
-        color: var(--vital-color, $wh40k-text-muted);
+        transition: transform var(--wh40k-transition-base);
+        color: var(--vital-color, var(--wh40k-text-muted));
         font-size: 0.7rem;
 
         &.wh40k-panel-chevron--open {
@@ -164,11 +169,11 @@
     font-size: 0.7rem;
     background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.08);
     border: 1px solid rgba(var(--vital-color-rgb, 0, 0, 0), 0.2);
-    color: var(--vital-color, $wh40k-text-primary);
+    color: var(--vital-color, var(--wh40k-text-primary));
 
     &:hover:not(:disabled) {
         background: rgba(var(--vital-color-rgb, 0, 0, 0), 0.15);
-        border-color: var(--vital-color, $wh40k-border-medium);
+        border-color: var(--vital-color, var(--wh40k-border-medium));
     }
 
     i {
@@ -183,7 +188,7 @@
 .wh40k-vital-bar-wrapper {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
     width: 100%;
 }
 
@@ -227,7 +232,7 @@
 }
 
 .wh40k-wounds-progress {
-    background: linear-gradient(90deg, darken($wh40k-accent-combat, 10%) 0%, $wh40k-accent-combat 50%, lighten($wh40k-accent-combat, 10%) 100%);
+    background: linear-gradient(90deg, darken($wh40k-accent-combat, 10%) 0%, var(--wh40k-accent-combat) 50%, lighten($wh40k-accent-combat, 10%) 100%);
 }
 
 .wh40k-fatigue-progress {
@@ -237,7 +242,7 @@
 .wh40k-vital-percent {
     font-size: 0.65rem;
     font-weight: 700;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     min-width: 32px;
     text-align: right;
     font-variant-numeric: tabular-nums;
@@ -259,7 +264,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--vital-color, $wh40k-text-primary);
+    color: var(--vital-color, var(--wh40k-text-primary));
 
     i {
         font-size: 0.75rem;
@@ -291,7 +296,7 @@
 .wh40k-fatigue-pip {
     font-size: 1.2rem;
     color: rgba(#c08020, 0.25); // Unfilled: faded amber
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     cursor: pointer;
     background: none;
     border: none;
@@ -330,7 +335,7 @@
 .wh40k-fate-pip {
     font-size: 1.2rem;
     color: rgba(#3498db, 0.25); // Unfilled: faded blue
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     cursor: pointer;
     background: none;
     border: none;
@@ -392,7 +397,7 @@
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
     border-radius: 3px;
     border: 1px solid transparent;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     cursor: pointer;
     width: 100%;
 
@@ -415,7 +420,7 @@
     }
 
     .wh40k-speed-value {
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
         font-size: 0.95rem;
         font-weight: 700;
         line-height: 1;
@@ -428,7 +433,7 @@
         font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.03em;
-        color: $wh40k-text-muted;
+        color: var(--wh40k-text-muted);
         margin-left: auto;
     }
 }
@@ -456,15 +461,15 @@
         margin-left: 4px;
         font-size: 0.65rem;
         font-weight: 600;
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
     }
 }
 
 .wh40k-combat-vital-value {
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-size: 1.8rem;
     font-weight: 700;
-    color: var(--vital-color, $wh40k-text-primary);
+    color: var(--vital-color, var(--wh40k-text-primary));
     line-height: 1;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
@@ -472,7 +477,7 @@
 .wh40k-combat-vital-max-label {
     font-size: 0.9rem;
     font-weight: 600;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     line-height: 1;
 }
 
@@ -488,9 +493,9 @@
     gap: 6px;
     padding: 4px 6px;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
-    border-left: 2px solid $wh40k-accent-gold;
+    border-left: 2px solid var(--wh40k-accent-gold);
     border-radius: 3px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
@@ -499,7 +504,7 @@
 
     &--disabled {
         opacity: 0.5;
-        border-left-color: $wh40k-text-muted;
+        border-left-color: var(--wh40k-text-muted);
 
         .wh40k-effect-compact-icon {
             filter: grayscale(100%);
@@ -507,7 +512,7 @@
 
         .wh40k-effect-compact-name {
             text-decoration: line-through;
-            color: $wh40k-text-muted;
+            color: var(--wh40k-text-muted);
         }
     }
 }
@@ -547,10 +552,10 @@
     justify-content: center;
     background: transparent;
     border: none;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     border-radius: 2px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.7rem;
@@ -558,11 +563,11 @@
 
     &:hover {
         background: rgba(255, 255, 255, 0.1);
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
     }
 
     &--danger:hover {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 }
 
@@ -571,8 +576,8 @@
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    padding: $wh40k-space-md 0;
-    color: $wh40k-text-muted;
+    padding: var(--wh40k-space-md) 0;
+    color: var(--wh40k-text-muted);
 
     i {
         font-size: 1.2rem;
@@ -592,9 +597,9 @@
 .wh40k-vital-edit-section {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm;
-    margin-top: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-sm);
+    margin-top: var(--wh40k-space-sm);
     background: rgba(0, 0, 0, 0.02);
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 4px;
@@ -611,7 +616,7 @@
     padding: 6px 8px;
     margin-top: 4px;
     background: rgba($wh40k-accent-combat, 0.08);
-    border-left: 2px solid $wh40k-accent-combat;
+    border-left: 2px solid var(--wh40k-accent-combat);
     border-radius: 0 4px 4px 0;
 }
 
@@ -623,7 +628,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: $wh40k-accent-combat;
+    color: var(--wh40k-accent-combat);
     white-space: nowrap;
 
     i {
@@ -645,17 +650,17 @@
     border: 1px solid rgba($wh40k-accent-combat, 0.3);
     border-radius: 2px;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     flex-shrink: 0;
 
     &:hover {
         background: rgba($wh40k-accent-combat, 0.3);
-        border-color: $wh40k-accent-combat;
+        border-color: var(--wh40k-accent-combat);
         transform: scale(1.15);
     }
 
     &.wh40k-crit-pip-mini--filled {
-        background: linear-gradient(135deg, $wh40k-accent-combat 0%, darken($wh40k-accent-combat, 10%) 100%);
+        background: linear-gradient(135deg, var(--wh40k-accent-combat) 0%, darken($wh40k-accent-combat, 10%) 100%);
         border-color: darken($wh40k-accent-combat, 5%);
         box-shadow: 0 0 4px rgba($wh40k-accent-combat, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 
@@ -681,30 +686,30 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: $wh40k-text-secondary;
+    color: var(--wh40k-text-secondary);
 }
 
 .wh40k-vital-edit-input {
     width: 100%;
     padding: 6px 8px;
-    background: $wh40k-bg-paper;
-    border: 1px solid $wh40k-border-light;
+    background: var(--wh40k-bg-paper);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 4px;
     font-size: 0.85rem;
     font-weight: 600;
-    color: $wh40k-text-primary;
-    transition: all $wh40k-transition-base;
+    color: var(--wh40k-text-primary);
+    transition: all var(--wh40k-transition-base);
 
     &:focus {
         outline: none;
-        border-color: var(--vital-color, $wh40k-accent-gold);
+        border-color: var(--vital-color, var(--wh40k-accent-gold));
         box-shadow: 0 0 0 2px rgba(var(--vital-color-rgb, 212, 175, 55), 0.15);
     }
 
     &:disabled,
     &[readonly] {
         background: rgba(0, 0, 0, 0.03);
-        color: $wh40k-text-muted;
+        color: var(--wh40k-text-muted);
         cursor: not-allowed;
     }
 }
@@ -715,15 +720,15 @@
     gap: 6px;
     padding: 6px 8px;
     background: rgba($wh40k-accent-gold, 0.08);
-    border-left: 2px solid $wh40k-accent-gold;
+    border-left: 2px solid var(--wh40k-accent-gold);
     border-radius: 0 4px 4px 0;
     font-size: 0.65rem;
-    color: $wh40k-text-secondary;
+    color: var(--wh40k-text-secondary);
     line-height: 1.3;
 
     i {
         font-size: 0.75rem;
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
         flex-shrink: 0;
     }
 
@@ -737,25 +742,25 @@
 // ============================================
 
 .wh40k-panel-reactions .wh40k-panel-header i {
-    color: $wh40k-accent-skills;
+    color: var(--wh40k-accent-skills);
 }
 .wh40k-panel-initiative .wh40k-panel-header i {
-    color: $wh40k-accent-gold;
+    color: var(--wh40k-accent-gold);
 }
 .wh40k-panel-injuries .wh40k-panel-header i {
-    color: $wh40k-accent-combat;
+    color: var(--wh40k-accent-combat);
 }
 .wh40k-panel-movement .wh40k-panel-header i {
-    color: $wh40k-accent-equipment;
+    color: var(--wh40k-accent-equipment);
 }
 .wh40k-panel-quick-actions .wh40k-panel-header i {
-    color: $wh40k-accent-combat;
+    color: var(--wh40k-accent-combat);
 }
 .wh40k-panel-arsenal .wh40k-panel-header i {
-    color: $wh40k-accent-talents;
+    color: var(--wh40k-accent-talents);
 }
 .wh40k-panel-forcefield .wh40k-panel-header i {
-    color: $wh40k-accent-powers;
+    color: var(--wh40k-accent-powers);
 }
 
 // ============================================
@@ -766,8 +771,8 @@
 .wh40k-combat-actions-group {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
-    margin-bottom: $wh40k-space-md;
+    gap: var(--wh40k-space-sm);
+    margin-bottom: var(--wh40k-space-md);
 
     &:last-child {
         margin-bottom: 0;
@@ -777,16 +782,16 @@
 .wh40k-combat-actions-group-header {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-xs;
-    padding: 6px $wh40k-space-sm;
+    gap: var(--wh40k-space-xs);
+    padding: 6px var(--wh40k-space-sm);
     background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.08) 0%, rgba($wh40k-accent-gold, 0.03) 100%);
-    border-left: 3px solid $wh40k-accent-gold;
+    border-left: 3px solid var(--wh40k-accent-gold);
     border-radius: 0 4px 4px 0;
 }
 
 .wh40k-combat-group-icon {
     font-size: 0.85rem;
-    color: $wh40k-accent-gold;
+    color: var(--wh40k-accent-gold);
 }
 
 .wh40k-combat-actions-group-label {
@@ -794,7 +799,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: $wh40k-text-secondary;
+    color: var(--wh40k-text-secondary);
 }
 
 // Action button grid
@@ -812,12 +817,12 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    padding: $wh40k-space-sm;
-    background: $wh40k-bg-paper;
-    border: 1px solid $wh40k-border-light;
-    border-radius: $wh40k-radius-md;
+    padding: var(--wh40k-space-sm);
+    background: var(--wh40k-bg-paper);
+    border: 1px solid var(--wh40k-border-light);
+    border-radius: var(--wh40k-radius-md);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     min-height: 80px;
     position: relative;
     overflow: hidden;
@@ -830,19 +835,19 @@
         top: 0;
         bottom: 0;
         width: 3px;
-        background: var(--action-color, $wh40k-border-medium);
+        background: var(--action-color, var(--wh40k-border-medium));
         opacity: 0;
-        transition: opacity $wh40k-transition-base;
+        transition: opacity var(--wh40k-transition-base);
     }
 
     i {
         font-size: 1.1rem;
-        color: var(--action-color, $wh40k-text-secondary);
-        transition: all $wh40k-transition-base;
+        color: var(--action-color, var(--wh40k-text-secondary));
+        transition: all var(--wh40k-transition-base);
     }
 
     &:hover {
-        border-color: var(--action-color, $wh40k-border-medium);
+        border-color: var(--action-color, var(--wh40k-border-medium));
         background: rgba(var(--action-color-rgb, 0, 0, 0), 0.04);
         transform: translateY(-2px);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
@@ -853,7 +858,7 @@
 
         i {
             transform: scale(1.15);
-            color: var(--action-color, $wh40k-text-primary);
+            color: var(--action-color, var(--wh40k-text-primary));
         }
     }
 
@@ -867,7 +872,7 @@
     font-weight: 600;
     text-align: center;
     line-height: 1.2;
-    color: $wh40k-text-primary;
+    color: var(--wh40k-text-primary);
 }
 
 .wh40k-combat-action-type {
@@ -875,15 +880,15 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--action-color, $wh40k-text-muted);
+    color: var(--action-color, var(--wh40k-text-muted));
     opacity: 0.8;
 }
 
 .wh40k-combat-action-value {
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--action-color, $wh40k-accent-gold);
+    color: var(--action-color, var(--wh40k-accent-gold));
     padding: 2px 8px;
     background: rgba(var(--action-color-rgb, 201, 162, 39), 0.1);
     border-radius: 3px;
@@ -892,22 +897,22 @@
 
 // Action type colors
 .wh40k-combat-action-attack {
-    --action-color: #{$wh40k-accent-combat};
+    --action-color: var(--wh40k-accent-combat);
     --action-color-rgb: 168, 32, 32;
 }
 
 .wh40k-combat-action-movement {
-    --action-color: #{$wh40k-accent-equipment};
+    --action-color: var(--wh40k-accent-equipment);
     --action-color-rgb: 58, 95, 95;
 }
 
 .wh40k-combat-action-reaction {
-    --action-color: #{$wh40k-accent-skills};
+    --action-color: var(--wh40k-accent-skills);
     --action-color-rgb: 42, 122, 154;
 }
 
 .wh40k-combat-action-utility {
-    --action-color: #{$wh40k-accent-talents};
+    --action-color: var(--wh40k-accent-talents);
     --action-color-rgb: 160, 120, 24;
 }
 
@@ -915,25 +920,25 @@
 .wh40k-combat-actions-info {
     display: flex;
     align-items: flex-start;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-sm;
-    margin-top: $wh40k-space-md;
+    gap: var(--wh40k-space-xs);
+    padding: var(--wh40k-space-sm);
+    margin-top: var(--wh40k-space-md);
     background: rgba($wh40k-accent-gold, 0.06);
     border: 1px solid rgba($wh40k-accent-gold, 0.15);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.65rem;
     line-height: 1.4;
-    color: $wh40k-text-secondary;
+    color: var(--wh40k-text-secondary);
 
     i {
         font-size: 0.75rem;
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
         flex-shrink: 0;
         margin-top: 2px;
     }
 
     strong {
-        color: $wh40k-text-primary;
+        color: var(--wh40k-text-primary);
         font-weight: 700;
     }
 }
@@ -959,16 +964,16 @@
 .wh40k-injury-row {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
-    padding: 4px $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
+    padding: 4px var(--wh40k-space-sm);
     background: rgba($wh40k-accent-combat, 0.08);
-    border-left: 2px solid $wh40k-accent-combat;
-    border-radius: 0 $wh40k-radius-sm $wh40k-radius-sm 0;
+    border-left: 2px solid var(--wh40k-accent-combat);
+    border-radius: 0 var(--wh40k-radius-sm) var(--wh40k-radius-sm) 0;
 }
 
 .wh40k-injury-name {
     flex: 1;
-    font-size: $wh40k-font-size-sm;
+    font-size: var(--wh40k-font-size-sm);
     cursor: pointer;
 
     &:hover {
@@ -985,12 +990,12 @@
     padding: 0;
     background: transparent;
     border: none;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     flex-shrink: 0;
 
     &:hover {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 
     i {
@@ -999,10 +1004,10 @@
 }
 
 .wh40k-injuries-empty {
-    padding: $wh40k-space-sm;
-    font-size: $wh40k-font-size-sm;
+    padding: var(--wh40k-space-sm);
+    font-size: var(--wh40k-font-size-sm);
     font-style: italic;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     text-align: center;
 }
 
@@ -1011,19 +1016,19 @@
 // ============================================
 
 .wh40k-panel-forcefield {
-    margin-top: $wh40k-space-xs;
+    margin-top: var(--wh40k-space-xs);
 }
 
 .wh40k-forcefield-bar {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 
     &.wh40k-ff-active .wh40k-ff-status {
-        color: $wh40k-color-success;
+        color: var(--wh40k-color-success);
     }
     &.wh40k-ff-overloaded .wh40k-ff-status {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 }
 
@@ -1033,15 +1038,15 @@
 
 .wh40k-ff-rating {
     color: var(--color-text-secondary);
-    font-size: $wh40k-font-size-sm;
+    font-size: var(--wh40k-font-size-sm);
 }
 
 .wh40k-ff-status {
     margin-left: auto;
-    font-size: $wh40k-font-size-xs;
+    font-size: var(--wh40k-font-size-xs);
     font-weight: 700;
     text-transform: uppercase;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
 }
 
 // ============================================
@@ -1070,12 +1075,12 @@
 .wh40k-weapon-grid-header {
     background: rgba($wh40k-accent-combat, 0.08);
     border-bottom: 2px solid rgba($wh40k-accent-combat, 0.2);
-    color: $wh40k-text-secondary;
+    color: var(--wh40k-text-secondary);
 }
 
 .wh40k-weapon-grid-row {
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    transition: background $wh40k-transition-base;
+    transition: background var(--wh40k-transition-base);
 
     &:hover {
         background: rgba($wh40k-accent-combat, 0.04);
@@ -1087,8 +1092,8 @@
 }
 
 .wh40k-equipped-icon {
-    color: $wh40k-color-success;
-    margin-right: $wh40k-space-xs;
+    color: var(--wh40k-color-success);
+    margin-right: var(--wh40k-space-xs);
     font-size: 0.8em;
 }
 
@@ -1111,7 +1116,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    padding: $wh40k-space-xs;
+    padding: var(--wh40k-space-xs);
 }
 
 .wh40k-action-chip {
@@ -1121,21 +1126,21 @@
     padding: 6px 12px;
     background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.1), rgba($wh40k-accent-gold, 0.05));
     border: 1px solid rgba($wh40k-accent-gold, 0.3);
-    border-radius: $wh40k-radius-md;
-    color: $wh40k-text-primary;
+    border-radius: var(--wh40k-radius-md);
+    color: var(--wh40k-text-primary);
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.85rem;
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
     }
 
     &:hover {
         background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.2), rgba($wh40k-accent-gold, 0.1));
-        border-color: $wh40k-accent-gold;
+        border-color: var(--wh40k-accent-gold);
         transform: translateY(-1px);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
@@ -1159,25 +1164,25 @@
     height: 100%;
     padding: 0;
     background: rgba(0, 0, 0, 0.05);
-    border: 1px solid $wh40k-border-light;
-    border-radius: $wh40k-radius-md;
-    color: $wh40k-text-muted;
+    border: 1px solid var(--wh40k-border-light);
+    border-radius: var(--wh40k-radius-md);
+    color: var(--wh40k-text-muted);
     font-size: 0.85rem;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     flex-shrink: 0;
 
     &:hover {
         background: rgba($wh40k-accent-gold, 0.1);
-        border-color: $wh40k-accent-gold;
-        color: $wh40k-accent-gold;
+        border-color: var(--wh40k-accent-gold);
+        color: var(--wh40k-accent-gold);
         transform: scale(1.1);
     }
 
     &.wh40k-action-fav--active {
         background: rgba($wh40k-accent-gold, 0.15);
-        border-color: $wh40k-accent-gold;
-        color: $wh40k-accent-gold;
+        border-color: var(--wh40k-accent-gold);
+        color: var(--wh40k-accent-gold);
 
         i {
             animation: star-pulse 1.5s ease-in-out infinite;

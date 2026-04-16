@@ -5,8 +5,8 @@
 .wh40k-quick-stats {
     display: flex;
     flex-wrap: wrap;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: var(--wh40k-panel-bg-translucent);
     border-bottom: 1px solid var(--wh40k-border-color-light);
     flex-shrink: 0;
@@ -15,13 +15,13 @@
 .wh40k-stat-badge {
     display: inline-flex;
     align-items: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-xs $wh40k-space-sm;
+    gap: var(--wh40k-space-xs);
+    padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
     background: var(--wh40k-panel-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-md;
-    font-size: $wh40k-font-size-sm;
-    transition: all $wh40k-transition-fast;
+    border-radius: var(--wh40k-radius-md);
+    font-size: var(--wh40k-font-size-sm);
+    transition: all var(--wh40k-transition-fast);
 
     &__icon {
         width: 16px;
@@ -40,7 +40,7 @@
     &__label {
         color: var(--wh40k-text-muted);
         text-transform: uppercase;
-        font-size: $wh40k-font-size-xs;
+        font-size: var(--wh40k-font-size-xs);
         letter-spacing: 0.05em;
     }
 

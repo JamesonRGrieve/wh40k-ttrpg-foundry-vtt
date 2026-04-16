@@ -33,7 +33,7 @@
         font-size: 0.95em;
         text-align: left;
         cursor: pointer;
-        transition: all $wh40k-transition-fast;
+        transition: all var(--wh40k-transition-fast);
         position: relative;
 
         i {

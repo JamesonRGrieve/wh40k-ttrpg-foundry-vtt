@@ -18,7 +18,7 @@
     border: 1px solid var(--wh40k-item-panel-border);
     border-radius: var(--wh40k-item-radius-md);
     font-size: var(--wh40k-item-font-size-sm);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &__icon {
         color: var(--wh40k-stat-neutral);
@@ -172,7 +172,7 @@
     align-items: center;
     gap: var(--wh40k-item-spacing-xs);
     color: var(--color-accent, #3b82f6);
-    transition: opacity $wh40k-transition-base;
+    transition: opacity var(--wh40k-transition-base);
 
     &::after {
         content: '\f05a'; // info-circle
@@ -236,7 +236,7 @@
     background: rgba(100, 100, 120, 0.3);
     color: var(--color-text-primary);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 1em;
@@ -368,7 +368,7 @@
         color: inherit;
         cursor: pointer;
         opacity: 0.6;
-        transition: opacity $wh40k-transition-base;
+        transition: opacity var(--wh40k-transition-base);
 
         &:hover {
             opacity: 1;
@@ -419,7 +419,7 @@
         color: inherit;
         cursor: pointer;
         opacity: 0.6;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             opacity: 1;
@@ -544,7 +544,7 @@
     border-radius: var(--wh40k-item-radius-pill);
     font-size: var(--wh40k-item-font-size-sm);
     color: var(--color-text-secondary);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &__label {
         font-weight: 500;
@@ -563,7 +563,7 @@
         color: inherit;
         cursor: pointer;
         opacity: 0.6;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             opacity: 1;

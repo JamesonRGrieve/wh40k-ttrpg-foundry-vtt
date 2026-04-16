@@ -4,9 +4,9 @@
 
 .wh40k-item-sheet--compact {
     .wh40k-item-header--compact {
-        padding: $wh40k-space-md;
+        padding: var(--wh40k-space-md);
         grid-template-columns: 60px 1fr;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
     }
 
     .wh40k-item-image--small {
@@ -15,34 +15,34 @@
     }
 
     .wh40k-item-title__name {
-        font-size: $wh40k-font-size-md;
+        font-size: var(--wh40k-font-size-md);
     }
 
     .wh40k-item-title__type {
-        font-size: $wh40k-font-size-sm;
+        font-size: var(--wh40k-font-size-sm);
     }
 }
 
 .wh40k-compact-content {
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
     max-height: 380px;
     overflow-y: auto;
 }
 
 .wh40k-origin-benefits {
-    margin-bottom: $wh40k-space-md;
+    margin-bottom: var(--wh40k-space-md);
 }
 
 .wh40k-origin-step {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: linear-gradient(135deg, var(--wh40k-gold-dark) 0%, rgba(212, 175, 55, 0.3) 100%);
-    border-radius: $wh40k-radius-md;
-    margin-bottom: $wh40k-space-md;
+    border-radius: var(--wh40k-radius-md);
+    margin-bottom: var(--wh40k-space-md);
     color: var(--wh40k-text-dark);
-    font-family: $wh40k-font-heading;
+    font-family: var(--wh40k-font-heading);
 
     i {
         color: var(--wh40k-gold-light);
@@ -50,18 +50,18 @@
 }
 
 .wh40k-benefit-group {
-    margin-bottom: $wh40k-space-md;
+    margin-bottom: var(--wh40k-space-md);
 
     .wh40k-benefit-label {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-xs;
-        font-size: $wh40k-font-size-sm;
+        gap: var(--wh40k-space-xs);
+        font-size: var(--wh40k-font-size-sm);
         font-weight: 600;
         color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        margin-bottom: $wh40k-space-xs;
+        margin-bottom: var(--wh40k-space-xs);
 
         i {
             color: var(--wh40k-gold);
@@ -72,25 +72,25 @@
 .wh40k-benefit-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-benefit-tag {
     display: inline-flex;
     align-items: center;
-    gap: $wh40k-space-xs;
-    padding: 2px $wh40k-space-sm;
+    gap: var(--wh40k-space-xs);
+    padding: 2px var(--wh40k-space-sm);
     background: var(--wh40k-input-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-sm;
-    font-size: $wh40k-font-size-xs;
+    border-radius: var(--wh40k-radius-sm);
+    font-size: var(--wh40k-font-size-xs);
     font-weight: 600;
     color: var(--wh40k-text-dark);
 
     &--wounds {
         background: rgba($wh40k-color-crimson, 0.2);
-        border-color: $wh40k-color-crimson-dark;
-        color: $wh40k-color-crimson;
+        border-color: var(--wh40k-color-crimson-dark);
+        color: var(--wh40k-color-crimson);
 
         .theme-dark & {
             color: lighten($wh40k-color-crimson, 30%);
@@ -106,7 +106,7 @@
     &--profit {
         background: rgba($wh40k-color-brass, 0.2);
         border-color: darken($wh40k-color-brass, 15%);
-        color: $wh40k-color-brass;
+        color: var(--wh40k-color-brass);
 
         .theme-dark & {
             color: lighten($wh40k-color-brass, 20%);
@@ -133,33 +133,33 @@
 .wh40k-compact-description {
     background: var(--wh40k-panel-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-md;
-    padding: $wh40k-space-md;
+    border-radius: var(--wh40k-radius-md);
+    padding: var(--wh40k-space-md);
 }
 
 .wh40k-requirements {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-sm);
     background: rgba($wh40k-color-warning, 0.15);
-    border-left: 3px solid $wh40k-color-warning;
-    border-radius: $wh40k-radius-sm;
-    margin-bottom: $wh40k-space-md;
-    font-size: $wh40k-font-size-sm;
+    border-left: 3px solid var(--wh40k-color-warning);
+    border-radius: var(--wh40k-radius-sm);
+    margin-bottom: var(--wh40k-space-md);
+    font-size: var(--wh40k-font-size-sm);
 
     i {
-        color: $wh40k-color-warning;
+        color: var(--wh40k-color-warning);
     }
 }
 
 .wh40k-description-content {
     color: var(--wh40k-text-dark);
     line-height: 1.5;
-    font-size: $wh40k-font-size-sm;
+    font-size: var(--wh40k-font-size-sm);
 
     p {
-        margin-bottom: $wh40k-space-sm;
+        margin-bottom: var(--wh40k-space-sm);
     }
 
     strong {

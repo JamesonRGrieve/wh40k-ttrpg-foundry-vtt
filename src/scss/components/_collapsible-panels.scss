@@ -13,7 +13,7 @@
     margin-bottom: 12px;
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.2) 100%);
     overflow: hidden;
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 
     &:hover {
         border-color: var(--wh40k-bronze, #cd7f32);
@@ -34,7 +34,7 @@
     border-bottom: 2px solid var(--wh40k-gold, #d4af37);
     cursor: pointer;
     user-select: none;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: linear-gradient(90deg, var(--wh40k-bronze, #cd7f32) 0%, var(--wh40k-gold, #d4af37) 100%);
@@ -67,7 +67,7 @@
 .wh40k-panel-toggle-icon {
     font-size: 1.2em;
     color: var(--wh40k-bone, #e8dcc8);
-    transition: transform $wh40k-transition-medium;
+    transition: transform var(--wh40k-transition-medium);
 
     .collapsed & {
         transform: rotate(-90deg);
@@ -133,7 +133,7 @@
     font-size: 0.85em;
     font-weight: 500;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.9em;

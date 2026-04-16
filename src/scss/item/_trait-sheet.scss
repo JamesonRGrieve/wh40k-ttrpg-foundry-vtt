@@ -17,7 +17,7 @@
     height: 100%;
     background: var(--wh40k-sheet-bg);
     color: var(--wh40k-text-dark);
-    font-family: $wh40k-font-ui;
+    font-family: var(--wh40k-font-ui);
     font-size: 0.9rem;
     overflow: hidden;
 
@@ -78,7 +78,7 @@
         justify-content: center;
         background: rgba(0, 0, 0, 0.6);
         opacity: 0;
-        transition: opacity $wh40k-transition-base;
+        transition: opacity var(--wh40k-transition-base);
 
         i {
             color: white;
@@ -98,11 +98,11 @@
         background: transparent;
         border: none;
         border-bottom: 1px solid transparent;
-        font-family: $wh40k-font-display;
+        font-family: var(--wh40k-font-display);
         font-size: 1.3rem;
         font-weight: 600;
         color: var(--wh40k-text-dark);
-        transition: border-color $wh40k-transition-base;
+        transition: border-color var(--wh40k-transition-base);
 
         &:hover,
         &:focus {
@@ -167,7 +167,7 @@
     }
 
     &__value {
-        font-family: $wh40k-font-display;
+        font-family: var(--wh40k-font-display);
         font-size: 1rem;
         font-weight: 700;
         color: var(--wh40k-text-dark);
@@ -270,7 +270,7 @@
         h3 {
             flex: 1;
             margin: 0;
-            font-family: $wh40k-font-display;
+            font-family: var(--wh40k-font-display);
             font-size: 0.95rem;
             font-weight: 600;
             color: var(--wh40k-text-dark);
@@ -291,7 +291,7 @@
     padding: 8px 12px;
     background: linear-gradient(90deg, var(--trait-bg) 0%, transparent 100%);
     border-left: 3px solid var(--trait-color);
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     font-size: 0.95rem;
     font-weight: 600;
     color: var(--wh40k-text-dark);
@@ -348,10 +348,10 @@
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
-    font-family: $wh40k-font-ui;
+    font-family: var(--wh40k-font-ui);
     font-size: 0.85rem;
     color: var(--wh40k-text-dark);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         border-color: var(--wh40k-border-color);
@@ -373,7 +373,7 @@
 .wh40k-property-textarea {
     resize: vertical;
     min-height: 60px;
-    font-family: $wh40k-font-ui;
+    font-family: var(--wh40k-font-ui);
 }
 
 // ============================================
@@ -422,7 +422,7 @@
 
 .wh40k-modifier-group-title {
     margin: 0 0 8px 0;
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -452,7 +452,7 @@
 }
 
 .wh40k-modifier-value {
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     font-size: 0.85rem;
     font-weight: 700;
 

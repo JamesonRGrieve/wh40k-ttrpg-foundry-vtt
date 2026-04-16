@@ -5,14 +5,14 @@
 .wh40k-actor-sheet-modern {
     background: linear-gradient(135deg, var(--wh40k-sheet-bg) 0%, var(--wh40k-panel-bg) 100%);
     color: var(--wh40k-text-dark);
-    font-family: $wh40k-font-body;
+    font-family: var(--wh40k-font-body);
 }
 
 .wh40k-actor-header {
     display: grid;
     grid-template-columns: 120px 1fr auto;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-lg;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-lg);
     background: linear-gradient(180deg, rgba(139, 109, 43, 0.2) 0%, transparent 100%);
     border-bottom: 2px solid var(--wh40k-gold-dark);
 }
@@ -21,7 +21,7 @@
     width: 120px;
     height: 120px;
     border: 3px solid var(--wh40k-gold);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
     cursor: pointer;
 
@@ -39,38 +39,38 @@
 }
 
 .wh40k-actor-name {
-    font-family: $wh40k-font-display;
-    font-size: $wh40k-font-size-xxl;
+    font-family: var(--wh40k-font-display);
+    font-size: var(--wh40k-font-size-xxl);
     color: var(--wh40k-gold);
     background: transparent;
     border: none;
-    padding: $wh40k-space-xs;
-    margin-bottom: $wh40k-space-sm;
+    padding: var(--wh40k-space-xs);
+    margin-bottom: var(--wh40k-space-sm);
 
     &:focus {
         outline: none;
         background: var(--wh40k-input-bg-focus);
-        border-radius: $wh40k-radius-sm;
+        border-radius: var(--wh40k-radius-sm);
     }
 }
 
 .wh40k-actor-quickstats {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-quickstat {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: $wh40k-space-xs $wh40k-space-sm;
+    padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
     background: var(--wh40k-panel-bg);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     min-width: 140px;
 
     &__label {
-        font-size: $wh40k-font-size-xs;
+        font-size: var(--wh40k-font-size-xs);
         color: var(--wh40k-text-muted);
         text-transform: uppercase;
     }
@@ -81,7 +81,7 @@
     }
 
     &--wounds {
-        border-left: 3px solid $wh40k-color-crimson;
+        border-left: 3px solid var(--wh40k-color-crimson);
     }
 
     &--fate {
@@ -92,14 +92,14 @@
 .wh40k-panel-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md);
 }
 
 .wh40k-char-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-char-item {
@@ -111,12 +111,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: $wh40k-space-sm;
+    padding: var(--wh40k-space-sm);
     background: linear-gradient(135deg, var(--wh40k-panel-bg) 0%, var(--wh40k-input-bg) 100%);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
     cursor: pointer;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: linear-gradient(135deg, var(--wh40k-input-bg) 0%, var(--wh40k-sheet-bg) 100%);
@@ -127,21 +127,21 @@
 }
 
 .wh40k-char-abbr {
-    font-family: $wh40k-font-display;
-    font-size: $wh40k-font-size-lg;
+    font-family: var(--wh40k-font-display);
+    font-size: var(--wh40k-font-size-lg);
     color: var(--wh40k-gold);
     font-weight: 700;
 }
 
 .wh40k-char-value {
-    font-size: $wh40k-font-size-xxl;
+    font-size: var(--wh40k-font-size-xxl);
     color: var(--wh40k-text-dark);
     font-weight: 700;
-    margin: $wh40k-space-xs 0;
+    margin: var(--wh40k-space-xs) 0;
 }
 
 .wh40k-char-label {
-    font-size: $wh40k-font-size-xs;
+    font-size: var(--wh40k-font-size-xs);
     color: var(--wh40k-text-muted);
     text-transform: uppercase;
 }
@@ -154,8 +154,8 @@
 .wh40k-item-row {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-xs;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-xs);
     border-bottom: 1px solid var(--wh40k-border-color-light);
 
     &:hover {
@@ -170,7 +170,7 @@
 .wh40k-item-icon {
     width: 32px;
     height: 32px;
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     border: 1px solid var(--wh40k-border-color-light);
 }
 
@@ -180,17 +180,17 @@
 }
 
 .wh40k-item-weight {
-    font-size: $wh40k-font-size-xs;
+    font-size: var(--wh40k-font-size-xs);
     color: var(--wh40k-text-muted);
 }
 
 .wh40k-weapon-row {
     display: flex;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-sm);
     background: var(--wh40k-panel-bg);
-    border-radius: $wh40k-radius-md;
-    margin-bottom: $wh40k-space-sm;
+    border-radius: var(--wh40k-radius-md);
+    margin-bottom: var(--wh40k-space-sm);
 }
 
 .wh40k-weapon-info {
@@ -200,30 +200,30 @@
 .wh40k-weapon-name {
     font-weight: 600;
     color: var(--wh40k-text-dark);
-    margin-bottom: $wh40k-space-xs;
+    margin-bottom: var(--wh40k-space-xs);
 }
 
 .wh40k-weapon-stats {
-    font-size: $wh40k-font-size-sm;
+    font-size: var(--wh40k-font-size-sm);
     color: var(--wh40k-text-muted);
 }
 
 .wh40k-armour-display {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-armour-item {
-    padding: $wh40k-space-sm;
+    padding: var(--wh40k-space-sm);
     background: var(--wh40k-panel-bg);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
 }
 
 .wh40k-armour-points {
     display: flex;
-    gap: $wh40k-space-md;
-    margin-top: $wh40k-space-xs;
-    font-size: $wh40k-font-size-sm;
+    gap: var(--wh40k-space-md);
+    margin-top: var(--wh40k-space-xs);
+    font-size: var(--wh40k-font-size-sm);
     color: var(--wh40k-text-muted);
 }

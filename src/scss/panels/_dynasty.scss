@@ -6,7 +6,7 @@
     &.active {
         display: block !important;
     }
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 }
 
 // Profit Factor Panel
@@ -18,9 +18,9 @@
 
 .wh40k-profit-main-display {
     display: flex;
-    gap: $wh40k-space-lg;
+    gap: var(--wh40k-space-lg);
     align-items: flex-end;
-    margin-bottom: $wh40k-space-md;
+    margin-bottom: var(--wh40k-space-md);
 }
 
 .wh40k-profit-current {
@@ -33,21 +33,21 @@
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
-    color: $wh40k-text-muted;
-    margin-bottom: $wh40k-space-xs;
+    color: var(--wh40k-text-muted);
+    margin-bottom: var(--wh40k-space-xs);
 }
 
 .wh40k-profit-value-input {
     width: 80px;
-    padding: $wh40k-space-sm;
-    border: 2px solid $wh40k-accent-dynasty;
+    padding: var(--wh40k-space-sm);
+    border: 2px solid var(--wh40k-accent-dynasty);
     border-radius: 6px;
     background: rgba($wh40k-accent-dynasty, 0.08);
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-size: 2rem;
     font-weight: 700;
     text-align: center;
-    color: $wh40k-accent-dynasty;
+    color: var(--wh40k-accent-dynasty);
 
     &:focus {
         outline: none;
@@ -66,13 +66,13 @@
 }
 
 .wh40k-misfortunes {
-    margin-top: $wh40k-space-sm;
+    margin-top: var(--wh40k-space-sm);
 }
 
 // XP Display
 .wh40k-xp-display {
     display: flex;
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
 }
 
 .wh40k-xp-item {
@@ -80,9 +80,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: $wh40k-space-sm;
-    background: $wh40k-bg-paper-light;
-    border: 1px solid $wh40k-border-light;
+    padding: var(--wh40k-space-sm);
+    background: var(--wh40k-bg-paper-light);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 6px;
 
     .wh40k-vital-input {
@@ -94,8 +94,8 @@
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
-    color: $wh40k-text-muted;
-    margin-bottom: $wh40k-space-xs;
+    color: var(--wh40k-text-muted);
+    margin-bottom: var(--wh40k-space-xs);
 }
 
 .wh40k-xp-available {
@@ -103,10 +103,10 @@
     border-color: rgba($wh40k-accent-gold, 0.3);
 
     .wh40k-xp-value {
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
         font-size: 1.5rem;
         font-weight: 700;
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
     }
 }
 
@@ -114,20 +114,20 @@
 .wh40k-endeavour-fields {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-ap-tracker {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
 
     .wh40k-vital-input {
         width: 50px;
     }
 
     span {
-        color: $wh40k-text-muted;
+        color: var(--wh40k-text-muted);
     }
 }
 

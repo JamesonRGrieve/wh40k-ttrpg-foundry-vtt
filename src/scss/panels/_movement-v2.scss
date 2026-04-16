@@ -16,10 +16,10 @@
     }
 
     .wh40k-panel-body {
-        padding: $wh40k-space-md;
+        padding: var(--wh40k-space-md);
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-lg;
+        gap: var(--wh40k-space-lg);
         background: linear-gradient(180deg, rgba(#1a1a2e, 0.3) 0%, transparent 100%);
     }
 }
@@ -30,8 +30,8 @@
 .wh40k-speed-hero {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-xl;
-    padding: $wh40k-space-md;
+    gap: var(--wh40k-space-xl);
+    padding: var(--wh40k-space-md);
     background: linear-gradient(135deg, rgba(#0a0a15, 0.6) 0%, rgba(#1a1a2e, 0.4) 100%);
     border-radius: 12px;
     border: 1px solid rgba(#3498db, 0.2);
@@ -86,7 +86,7 @@
     font-size: 1.8rem;
     font-weight: 800;
     color: #fff;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     line-height: 1;
     text-shadow: 0 0 20px rgba(#3498db, 0.8);
 }
@@ -117,7 +117,7 @@
     display: grid;
     grid-template-columns: 1fr 50px 50px;
     align-items: center;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-tier-bar {
@@ -163,7 +163,7 @@
     font-size: 0.9rem;
     font-weight: 700;
     color: #fff;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     text-align: right;
 }
 
@@ -185,9 +185,9 @@
 .wh40k-physical-column {
     background: rgba(#0a0a15, 0.4);
     border-radius: 10px;
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
     border: 1px solid rgba(#fff, 0.08);
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 
     &:hover {
         border-color: rgba(#fff, 0.15);
@@ -236,7 +236,7 @@
     background: rgba(#9b59b6, 0.1);
     border-radius: 6px;
     border: 1px solid rgba(#9b59b6, 0.2);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: rgba(#9b59b6, 0.2);
@@ -258,7 +258,7 @@
     font-size: 1rem;
     font-weight: 700;
     color: #fff;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     line-height: 1;
 }
 
@@ -276,11 +276,11 @@
 
 .wh40k-carry-item {
     @apply tw-flex-1 tw-flex tw-flex-col tw-items-center;
-    padding: $wh40k-space-sm $wh40k-space-xs;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-xs);
     background: linear-gradient(180deg, rgba(#27ae60, 0.15) 0%, rgba(#27ae60, 0.05) 100%);
     border-radius: 6px;
     border: 1px solid rgba(#27ae60, 0.2);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: linear-gradient(180deg, rgba(#27ae60, 0.25) 0%, rgba(#27ae60, 0.1) 100%);
@@ -292,7 +292,7 @@
     font-size: 1.1rem;
     font-weight: 800;
     color: #fff;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     line-height: 1;
 }
 
@@ -312,7 +312,7 @@
 
 // Encumbrance Display
 .wh40k-encumbrance-display {
-    padding: $wh40k-space-sm;
+    padding: var(--wh40k-space-sm);
     background: rgba(#000, 0.3);
     border-radius: 6px;
 }
@@ -327,7 +327,7 @@
     font-size: 1.1rem;
     font-weight: 800;
     color: #2ecc71;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
 
     .wh40k-over & {
         color: #e74c3c;
@@ -426,7 +426,7 @@
 // ============================================
 .wh40k-panel-movement-compact {
     .wh40k-panel-body {
-        padding: $wh40k-space-xs; // Reduced for compactness
+        padding: var(--wh40k-space-xs); // Reduced for compactness
     }
 }
 
@@ -447,8 +447,8 @@
     min-height: 40px; // Reduced from auto for consistent height
     background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.04) 0%, rgba($wh40k-accent-gold, 0.01) 100%);
     border: 1px solid rgba($wh40k-border-light, 0.5);
-    border-radius: $wh40k-radius-sm;
-    transition: all $wh40k-transition-base;
+    border-radius: var(--wh40k-radius-sm);
+    transition: all var(--wh40k-transition-base);
     overflow: hidden;
 
     &:hover {
@@ -480,7 +480,7 @@
 .wh40k-move-modern-label {
     font-size: 0.5rem; // Smaller label
     font-weight: 600;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.3px;
     line-height: 1;
@@ -489,13 +489,13 @@
 .wh40k-move-modern-value {
     font-size: 1.1rem; // Slightly larger value for readability
     font-weight: 700;
-    color: $wh40k-text-primary;
-    font-family: $wh40k-font-alt;
+    color: var(--wh40k-text-primary);
+    font-family: var(--wh40k-font-alt);
     line-height: 1;
 
     .wh40k-move-unit {
         font-size: 0.65rem;
-        color: $wh40k-text-muted;
+        color: var(--wh40k-text-muted);
         margin-left: 1px;
     }
 }
@@ -509,7 +509,7 @@
     height: 2px;
     background: linear-gradient(90deg, rgba($wh40k-accent-gold, 0.3) 0%, rgba($wh40k-accent-gold, 0.6) 100%);
     width: var(--move-percent, 0%);
-    transition: width $wh40k-transition-medium;
+    transition: width var(--wh40k-transition-medium);
 }
 
 // Movement type specific colors
@@ -533,11 +533,11 @@
 
 .wh40k-move-cell-compact {
     @apply tw-flex tw-items-center tw-gap-1;
-    padding: $wh40k-space-xs $wh40k-space-sm;
+    padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
     background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.04) 0%, rgba($wh40k-accent-gold, 0.01) 100%);
     border: 1px solid rgba($wh40k-border-light, 0.5);
-    border-radius: $wh40k-radius-sm;
-    transition: all $wh40k-transition-base;
+    border-radius: var(--wh40k-radius-sm);
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.08) 0%, rgba($wh40k-accent-gold, 0.03) 100%);
@@ -559,7 +559,7 @@
 .wh40k-move-label-sm {
     font-size: 0.65rem;
     font-weight: 600;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.3px;
     line-height: 1;
@@ -568,7 +568,7 @@
 .wh40k-move-value-sm {
     font-size: 0.9rem;
     font-weight: 700;
-    color: $wh40k-text-primary;
-    font-family: $wh40k-font-alt;
+    color: var(--wh40k-text-primary);
+    font-family: var(--wh40k-font-alt);
     line-height: 1.2;
 }

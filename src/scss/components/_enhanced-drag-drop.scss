@@ -92,7 +92,7 @@
 
 [data-drop-zone] {
     position: relative;
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 
     // Valid drop zone
     &.drop-valid {
@@ -121,7 +121,7 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
             pointer-events: none;
             opacity: 0;
-            transition: opacity $wh40k-transition-medium;
+            transition: opacity var(--wh40k-transition-medium);
         }
     }
 
@@ -181,7 +181,7 @@
     border: 2px dashed var(--wh40k-iron);
     border-radius: 4px;
     background: rgba(62, 62, 62, 0.2);
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 
     &.empty {
         &::after {
@@ -291,7 +291,7 @@
         border: 2px solid var(--wh40k-bronze);
         border-radius: 4px;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         img {
             width: 100%;
@@ -315,7 +315,7 @@
             font-size: 0.6rem;
             color: white;
             opacity: 0;
-            transition: opacity $wh40k-transition-base;
+            transition: opacity var(--wh40k-transition-base);
             cursor: pointer;
 
             &:hover {

@@ -29,8 +29,8 @@
 .wh40k-trait-header {
     display: flex;
     align-items: flex-start;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md);
     background: linear-gradient(180deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
     border-bottom: 2px solid var(--color-border-secondary);
 }
@@ -40,15 +40,15 @@
     position: relative;
     width: 80px;
     height: 80px;
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
     cursor: pointer;
     border: 2px solid var(--color-border-secondary);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     flex-shrink: 0;
 
     &:hover {
-        border-color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
         box-shadow: 0 0 12px rgba($wh40k-color-gold, 0.3);
 
         .wh40k-talent-header__image-overlay,
@@ -73,10 +73,10 @@
     justify-content: center;
     background: rgba(0, 0, 0, 0.7);
     opacity: 0;
-    transition: opacity $wh40k-transition-base;
+    transition: opacity var(--wh40k-transition-base);
 
     i {
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         font-size: 1.5rem;
     }
 }
@@ -86,7 +86,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
     min-width: 0;
 }
 
@@ -94,17 +94,17 @@
 .wh40k-trait-header__name {
     font-size: 1.5rem;
     font-weight: 700;
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     color: var(--color-text-primary);
     background: transparent;
     border: none;
     border-bottom: 2px solid transparent;
     padding: 4px 0;
-    transition: border-color $wh40k-transition-base;
+    transition: border-color var(--wh40k-transition-base);
 
     &:focus {
         outline: none;
-        border-bottom-color: $wh40k-color-gold;
+        border-bottom-color: var(--wh40k-color-gold);
     }
 
     &::placeholder {
@@ -130,7 +130,7 @@
     align-items: center;
     gap: 4px;
     padding: 4px 10px;
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -148,7 +148,7 @@
 .wh40k-talent-badge--tier {
     background: linear-gradient(135deg, rgba($wh40k-accent-talents, 0.15), rgba($wh40k-accent-talents, 0.05));
     border-color: rgba($wh40k-accent-talents, 0.3);
-    color: $wh40k-accent-talents;
+    color: var(--wh40k-accent-talents);
 }
 
 .wh40k-talent-badge--tier1 {
@@ -172,7 +172,7 @@
 .wh40k-talent-badge--category {
     background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15), rgba($wh40k-color-gold, 0.05));
     border-color: rgba($wh40k-color-gold, 0.3);
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
 }
 
 .wh40k-talent-badge--cost {
@@ -203,7 +203,7 @@
 .wh40k-trait-badge--level {
     background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15), rgba($wh40k-color-gold, 0.05));
     border-color: rgba($wh40k-color-gold, 0.3);
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
 }
 
 .wh40k-trait-badge--variable {
@@ -222,13 +222,13 @@
     gap: 0;
     background: var(--color-bg-secondary);
     border-bottom: 2px solid var(--color-border-secondary);
-    padding: 0 $wh40k-space-md;
+    padding: 0 var(--wh40k-space-md);
 }
 
 .wh40k-talent-tab,
 .wh40k-trait-tab {
     flex: 1;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: transparent;
     border: none;
     border-bottom: 3px solid transparent;
@@ -238,7 +238,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -254,8 +254,8 @@
     }
 
     &.active {
-        color: $wh40k-color-gold;
-        border-bottom-color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
+        border-bottom-color: var(--wh40k-color-gold);
         background: rgba($wh40k-color-gold, 0.08);
     }
 }
@@ -282,7 +282,7 @@
 
     &::-webkit-scrollbar-thumb {
         background: var(--color-border-secondary);
-        border-radius: $wh40k-radius-sm;
+        border-radius: var(--wh40k-radius-sm);
 
         &:hover {
             background: var(--color-border-highlight);
@@ -293,7 +293,7 @@
 .wh40k-talent-panel,
 .wh40k-trait-panel {
     display: none;
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 
     &.active {
         display: block;
@@ -306,7 +306,7 @@
 
 .wh40k-talent-section,
 .wh40k-trait-section {
-    margin-bottom: $wh40k-space-lg;
+    margin-bottom: var(--wh40k-space-lg);
 
     &:last-child {
         margin-bottom: 0;
@@ -319,16 +319,16 @@
     gap: 8px;
     font-size: 1rem;
     font-weight: 700;
-    font-family: $wh40k-font-heading;
+    font-family: var(--wh40k-font-heading);
     color: var(--color-text-primary);
-    margin-bottom: $wh40k-space-md;
-    padding-bottom: $wh40k-space-xs;
+    margin-bottom: var(--wh40k-space-md);
+    padding-bottom: var(--wh40k-space-xs);
     border-bottom: 2px solid var(--color-border-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 
     i {
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         font-size: 0.9em;
     }
 }
@@ -340,7 +340,7 @@
 .wh40k-properties-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
 
     @media (max-width: 500px) {
         grid-template-columns: 1fr;
@@ -393,14 +393,14 @@
     padding: 8px 12px;
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--color-text-primary);
     font-size: 0.9rem;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:focus {
         outline: none;
-        border-color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
         box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.15);
     }
 
@@ -438,10 +438,10 @@
     padding: 4px 10px;
     background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15), rgba($wh40k-color-gold, 0.05));
     border: 1px solid rgba($wh40k-color-gold, 0.3);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     font-size: 0.75rem;
     font-weight: 600;
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
 }
 
 // ============================================
@@ -449,10 +449,10 @@
 // ============================================
 
 .wh40k-requirements-display {
-    padding: $wh40k-space-sm;
+    padding: var(--wh40k-space-sm);
     background: rgba($wh40k-accent-combat, 0.05);
     border: 1px solid rgba($wh40k-accent-combat, 0.2);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
 }
 
 .wh40k-requirement-tag {
@@ -464,7 +464,7 @@
     font-weight: 600;
 
     i {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 }
 
@@ -473,10 +473,10 @@
 // ============================================
 
 .wh40k-prerequisites-display {
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
 }
 
 .wh40k-prereq-label {
@@ -493,17 +493,17 @@
 .wh40k-modifiers-display {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md);
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
 }
 
 .wh40k-modifier-group {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-modifier-group-title {
@@ -511,7 +511,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
     margin: 0;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--color-border-light);
@@ -529,7 +529,7 @@
     align-items: center;
     padding: 6px 10px;
     background: var(--color-bg-secondary);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     font-size: 0.85rem;
 }
 
@@ -539,7 +539,7 @@
 }
 
 .wh40k-modifier-value {
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     font-weight: 700;
     font-size: 0.95rem;
 
@@ -548,7 +548,7 @@
     }
 
     &.negative {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 }
 
@@ -559,8 +559,8 @@
 .wh40k-editor-container {
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
-    border-radius: $wh40k-radius-md;
-    padding: $wh40k-space-sm;
+    border-radius: var(--wh40k-radius-md);
+    padding: var(--wh40k-space-sm);
 
     .editor {
         min-height: 150px;
@@ -576,13 +576,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: $wh40k-space-xl;
+    padding: var(--wh40k-space-xl);
     text-align: center;
 
     i {
         font-size: 3rem;
         color: var(--color-text-tertiary);
-        margin-bottom: $wh40k-space-md;
+        margin-bottom: var(--wh40k-space-md);
         opacity: 0.5;
     }
 
