@@ -117,7 +117,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * Promise resolver for async result
      * @type {Function|null}
      */
-    #resolve: Function | null = null;
+    #resolve: ((value: any) => void) | null = null;
 
     /* -------------------------------------------- */
     /*  Constructor                                 */

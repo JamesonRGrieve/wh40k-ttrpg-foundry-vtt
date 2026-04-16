@@ -6,21 +6,9 @@
 
 // Import V2 Item Sheets (ApplicationV2-based)
 
-import { RTCompendiumBrowser } from './applications/compendium-browser.ts';
-import {
-    createCharacteristicMacro,
-    createItemMacro,
-    createSkillMacro,
-    rollCharacteristicMacro,
-    rollItemMacro,
-    rollSkillMacro,
-} from './macros/macro-manager.ts';
-import { HandlebarManager } from './handlebars/handlebars-manager.ts';
-import { WH40KActorProxy } from './documents/actor-proxy.ts';
-import { WH40KSettings } from './wh40k-rpg-settings.ts';
-import { DHTargetedActionManager } from './actions/targeted-action-manager.ts';
 import { DHBasicActionManager } from './actions/basic-action-manager.ts';
 import { DHCombatActionManager } from './actions/combat-action-manager.ts';
+import { DHTargetedActionManager } from './actions/targeted-action-manager.ts';
 import CharacterSheetSidebar from './applications/actor/character-sheet-sidebar.ts';
 import {
     DarkHeresy1Sheet,
@@ -34,6 +22,7 @@ import NPCSheetV2 from './applications/actor/npc-sheet-v2.ts';
 import StarshipSheet from './applications/actor/starship-sheet.ts';
 import VehicleSheet from './applications/actor/vehicle-sheet.ts';
 import * as characterCreation from './applications/character-creation/_module.ts';
+import { RTCompendiumBrowser } from './applications/compendium-browser.ts';
 import { TooltipsWH40K } from './applications/components/_module.ts';
 import {
     BaseItemSheet,
@@ -69,11 +58,22 @@ import { SYSTEM_ID } from './constants.ts';
 import * as dataModels from './data/_module.ts';
 import * as dice from './dice/_module.ts';
 import * as documents from './documents/_module.ts';
+import { WH40KActorProxy } from './documents/actor-proxy.ts';
 import { WH40KItem } from './documents/item.ts';
+import { HandlebarManager } from './handlebars/handlebars-manager.ts';
+import {
+    createCharacteristicMacro,
+    createItemMacro,
+    createSkillMacro,
+    rollCharacteristicMacro,
+    rollItemMacro,
+    rollSkillMacro,
+} from './macros/macro-manager.ts';
 import { WH40K } from './rules/config.ts';
 import { DHTourMain } from './tours/main-tour.ts';
 import { RollTableUtils } from './utils/roll-table-utils.ts';
 import { checkAndMigrateWorld } from './wh40k-rpg-migrations.ts';
+import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
 export { SYSTEM_ID };
 

@@ -3,6 +3,7 @@
  * Phases 0-4: Complete NPC sheet with quick create and threat scaling
  */
 
+import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
 import StatBlockParser from '../npc/stat-block-parser.ts';
@@ -17,13 +18,13 @@ import BaseActorSheet from './base-actor-sheet.ts';
  */
 export default class NPCSheetV2 extends (BaseActorSheet as any) {
     [key: string]: any;
-    declare actor: any;
-    declare document: any;
-    declare element: any;
-    declare position: any;
-    declare isEditable: any;
-    declare _notify: any;
-    declare render: any;
+    declare actor: WH40KNPCV2;
+    declare document: WH40KNPCV2;
+    declare element: HTMLElement;
+    declare position: { top: number; left: number; width: number; height: number };
+    declare isEditable: boolean;
+    declare _notify: (message: string, type?: string) => void;
+    declare render: (options?: Record<string, unknown> | boolean) => any;
 
     /** NPC sheets default to EDIT mode for GM convenience. */
     _mode = 2;
@@ -311,9 +312,9 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
         context.pinnedAbilities = context.items.filter((i) => pinnedIds.includes(i.id) && (i.type === 'talent' || i.type === 'trait'));
 
         // Favorite Skills
-        const favoriteSkillKeys = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
+        const favoriteSkillKeys = ((this.actor as any).getFlag('wh40k-rpg', 'favoriteSkills') as string[]) || [];
         context.favoriteSkills = favoriteSkillKeys
-            .map((key) => {
+            .map((key: string) => {
                 const skillData = context.system.trainedSkills[key];
                 if (!skillData) return null;
 
@@ -356,7 +357,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
             .filter((s) => s !== null);
 
         // Favorite Talents
-        const favoriteTalentIds = this.actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
+        const favoriteTalentIds = ((this.actor as any).getFlag('wh40k-rpg', 'favoriteTalents') as string[]) || [];
         context.favoriteTalents = context.items.filter((i) => favoriteTalentIds.includes(i.id) && i.type === 'talent');
 
         // Armour data
@@ -469,7 +470,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
         context.trainedSkillsList = context.system.trainedSkillsList || [];
 
         // Get favorite skills
-        const favoriteSkillKeys = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
+        const favoriteSkillKeys = ((this.actor as any).getFlag('wh40k-rpg', 'favoriteSkills') as string[]) || [];
 
         // Define all basic skills with their characteristics
         const allBasicSkills = [
@@ -675,7 +676,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      */
     static async #reloadWeapon(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const itemId = target.closest('[data-item-id]')?.dataset.itemId ?? target.dataset.itemId;
+        const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId ?? target.dataset.itemId;
         if (!itemId) return;
         const weapon = (this as any).actor.items.get(itemId);
         if (!weapon) return;
@@ -835,8 +836,8 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
                         default: true,
                         callback: async (event, button, _dialog) => {
                             const form = button.form;
-                            const skill = form.querySelector('[name="skill"]').value;
-                            const level = form.querySelector('[name="level"]').value;
+                            const skill = (form.querySelector('[name="skill"]') as HTMLSelectElement).value;
+                            const level = (form.querySelector('[name="level"]') as HTMLSelectElement).value;
                             await (this as any).actor.system.addTrainedSkill(skill, null, level);
                         },
                     },
@@ -1307,7 +1308,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
                     default: true,
                     callback: async (event, button, _dialog) => {
                         const form = button.form;
-                        const tag = form.querySelector('[name="tag"]').value.trim();
+                        const tag = (form.querySelector('[name="tag"]') as HTMLInputElement).value.trim();
                         if (tag) {
                             const tags = [...((this as any).actor.system.tags || []), tag];
                             await (this as any).actor.update({ 'system.tags': tags });
@@ -1390,7 +1391,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
         event.preventDefault();
         const wrapper = target.closest('.wh40k-gm-tools-wrapper');
         if (!wrapper) return;
-        const tools = wrapper.querySelector('.wh40k-gm-tools');
+        const tools = wrapper.querySelector('.wh40k-gm-tools') as HTMLElement | null;
         if (!tools) return;
         tools.hidden = !tools.hidden;
         wrapper.classList.toggle('open', !tools.hidden);
@@ -1407,7 +1408,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
         event.preventDefault();
         const card = target.closest('.wh40k-ability-card');
         if (!card) return;
-        const desc = card.querySelector('.wh40k-ability-desc');
+        const desc = card.querySelector('.wh40k-ability-desc') as HTMLElement | null;
         if (!desc) return;
         desc.hidden = !desc.hidden;
         // Rotate chevron
@@ -1565,7 +1566,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      */
     static async #removeItem(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
+        const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
         if (!itemId) return;
         const item = (this as any).actor.items.get(itemId);
         if (item) await item.delete();

@@ -125,7 +125,7 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
         content,
         label = 'OK',
         callback,
-    }: { title?: string; content?: string; label?: string; callback?: Function } = {}): Promise<any> {
+    }: { title?: string; content?: string; label?: string; callback?: (...args: any[]) => any } = {}): Promise<any> {
         // @ts-expect-error - DialogV2 argument type
         return foundry.applications.api.DialogV2.prompt({
             window: { title },

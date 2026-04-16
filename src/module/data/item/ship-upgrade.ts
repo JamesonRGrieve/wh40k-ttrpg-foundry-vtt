@@ -7,10 +7,31 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare power: number;
+    declare space: number;
+    declare shipPoints: number;
+    declare modifiers: {
+        speed: number;
+        manoeuvrability: number;
+        detection: number;
+        armour: number;
+        hullIntegrity: number;
+        turretRating: number;
+        voidShields: number;
+        morale: number;
+        crewRating: number;
+    };
+    declare effect: string;
+    declare availability: string;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -58,7 +79,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Migrate legacy pack data to V13 schema.
      * @param {object} source  Candidate source data
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         ShipUpgradeData.#migrateSpCost(source);
         ShipUpgradeData.#migrateEffects(source);
@@ -71,7 +92,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Rename spCost → shipPoints.
      * @param {object} source  The source data
      */
-    static #migrateSpCost(source) {
+    static #migrateSpCost(source: Record<string, any>): void {
         if ('spCost' in source && source.shipPoints === undefined) {
             source.shipPoints = source.spCost;
             delete source.spCost;
@@ -82,7 +103,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Rename effects → effect.
      * @param {object} source  The source data
      */
-    static #migrateEffects(source) {
+    static #migrateEffects(source: Record<string, any>): void {
         if ('effects' in source && !source.effect) {
             source.effect = source.effects;
             delete source.effects;
@@ -93,7 +114,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Parse shipAvailability → notes.
      * @param {object} source  The source data
      */
-    static #migrateShipAvailability(source) {
+    static #migrateShipAvailability(source: Record<string, any>): void {
         if ('shipAvailability' in source) {
             if (!source.notes) {
                 source.notes = `Ship Availability: ${source.shipAvailability}`;
@@ -106,7 +127,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Add missing modifiers fields.
      * @param {object} source  The source data
      */
-    static #migrateModifiers(source) {
+    static #migrateModifiers(source: Record<string, any>): void {
         if (source.modifiers && typeof source.modifiers === 'object') {
             const defaults = {
                 speed: 0,
@@ -127,7 +148,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Initialize missing fields with defaults.
      * @param {object} source  The source data
      */
-    static #initializeDefaults(source) {
+    static #initializeDefaults(source: Record<string, any>): void {
         source.power ??= 0;
         source.space ??= 0;
         source.availability ??= 'common';
@@ -144,7 +165,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
         // Ensure power and space are numbers
         if (typeof source.power === 'string') {
@@ -163,7 +184,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Net power usage.
      * @type {string}
      */
-    get powerLabel() {
+    get powerLabel(): string {
         if (this.power > 0) return `-${this.power}`;
         if (this.power < 0) return `+${Math.abs(this.power)}`;
         return '0';
@@ -200,7 +221,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [`Power: ${this.powerLabel}`, `Space: ${this.space}`, `SP: ${this.shipPoints}`];
 
         for (const mod of this.modifiersList) {
@@ -215,7 +236,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             power: this.powerLabel,
             space: this.space,

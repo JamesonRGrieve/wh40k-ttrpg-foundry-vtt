@@ -6,8 +6,18 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  */
 export default class AttackTemplate extends SystemDataModel {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare attack: {
+        type: string;
+        characteristic: string;
+        modifier: number;
+        range: { value: number; units: string; special: string };
+        rateOfFire: { single: boolean; semi: number; full: number };
+    };
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             attack: new fields.SchemaField({
@@ -45,7 +55,7 @@ export default class AttackTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         AttackTemplate.#migrateRateOfFire(source);
     }
@@ -54,7 +64,7 @@ export default class AttackTemplate extends SystemDataModel {
      * Migrate legacy rate of fire formats.
      * @param {object} source  The source data
      */
-    static #migrateRateOfFire(source) {
+    static #migrateRateOfFire(source: Record<string, any>): void {
         if (!source.attack?.rateOfFire) return;
         const rof = source.attack.rateOfFire;
         // Convert string values to numbers
@@ -72,7 +82,7 @@ export default class AttackTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
     }
 
@@ -82,7 +92,7 @@ export default class AttackTemplate extends SystemDataModel {
      * Is this a melee attack?
      * @type {boolean}
      */
-    get isMelee() {
+    get isMelee(): any {
         return this.attack.type === 'melee';
     }
 
@@ -90,7 +100,7 @@ export default class AttackTemplate extends SystemDataModel {
      * Is this a ranged attack?
      * @type {boolean}
      */
-    get isRanged() {
+    get isRanged(): any {
         return this.attack.type === 'ranged' || this.attack.type === 'thrown';
     }
 
@@ -98,7 +108,7 @@ export default class AttackTemplate extends SystemDataModel {
      * Is this a psychic attack?
      * @type {boolean}
      */
-    get isPsychic() {
+    get isPsychic(): any {
         return this.attack.type === 'psychic';
     }
 
@@ -123,7 +133,7 @@ export default class AttackTemplate extends SystemDataModel {
      * Get a formatted range string.
      * @type {string}
      */
-    get rangeLabel() {
+    get rangeLabel(): string {
         const range = this.attack.range;
         if (range.special) return range.special;
         if (range.value) return `${range.value}${range.units}`;
@@ -136,7 +146,7 @@ export default class AttackTemplate extends SystemDataModel {
      * Properties for chat display.
      * @type {string[]}
      */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
         if (this.isRanged) {
             props.push(`Range: ${this.rangeLabel}`);

@@ -7,10 +7,21 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @extends ItemDataModel
  * @mixes DescriptionTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare category: string;
+    declare actionType: string;
+    declare test: { skill: string; characteristic: string; modifier: number };
+    declare requirements: string;
+    declare effect: string;
+    declare failure: string;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -58,7 +69,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
     /* -------------------------------------------- */
 
     /** @override */
-    get isRollable() {
+    get isRollable(): boolean {
         return true;
     }
 
@@ -66,7 +77,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
      * Get the category label.
      * @type {string}
      */
-    get categoryLabel() {
+    get categoryLabel(): string {
         return game.i18n.localize(`WH40K.OrderCategory.${this.category.capitalize()}`);
     }
 
@@ -74,7 +85,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
      * Get the action type label.
      * @type {string}
      */
-    get actionTypeLabel() {
+    get actionTypeLabel(): string {
         return game.i18n.localize(
             `WH40K.ActionType.${this.actionType
                 .split('-')
@@ -100,7 +111,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [this.categoryLabel, this.actionTypeLabel, `Test: ${this.testLabel}`];
 
         return props;
@@ -111,7 +122,7 @@ export default class OrderData extends ItemDataModel.mixin(DescriptionTemplate) 
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             category: this.categoryLabel,
             action: this.actionTypeLabel,

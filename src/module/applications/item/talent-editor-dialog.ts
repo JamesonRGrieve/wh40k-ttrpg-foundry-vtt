@@ -572,7 +572,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Convert characteristics array back to object
             const charReqs: any = {};
             if (data.prerequisites.characteristics) {
-                for (const entry of Object.values(data.prerequisites.characteristics) as { key: string; value: string }[]) {
+                for (const entry of Object.values(data.prerequisites.characteristics) as any[]) {
                     if (entry.key && entry.value) {
                         charReqs[entry.key] = parseInt(entry.value) || 0;
                     }
@@ -583,7 +583,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Process skills array
             const skillReqs = [];
             if (data.prerequisites.skills) {
-                for (const entry of Object.values(data.prerequisites.skills) as { name: string }[]) {
+                for (const entry of Object.values(data.prerequisites.skills) as any[]) {
                     if (entry.name) skillReqs.push(entry.name);
                 }
             }
@@ -592,7 +592,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Process talents array
             const talentReqs = [];
             if (data.prerequisites.talents) {
-                for (const entry of Object.values(data.prerequisites.talents) as { name: string }[]) {
+                for (const entry of Object.values(data.prerequisites.talents) as any[]) {
                     if (entry.name) talentReqs.push(entry.name);
                 }
             }
@@ -604,7 +604,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Characteristics
             const charMods: any = {};
             if (data.modifiers.characteristics) {
-                for (const entry of Object.values(data.modifiers.characteristics) as { key: string; value: string }[]) {
+                for (const entry of Object.values(data.modifiers.characteristics) as any[]) {
                     if (entry.key) {
                         charMods[entry.key] = parseInt(entry.value) || 0;
                     }
@@ -615,7 +615,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Skills
             const skillMods: any = {};
             if (data.modifiers.skills) {
-                for (const entry of Object.values(data.modifiers.skills) as { key: string; value: string }[]) {
+                for (const entry of Object.values(data.modifiers.skills) as any[]) {
                     if (entry.key) {
                         skillMods[entry.key] = parseInt(entry.value) || 0;
                     }
@@ -625,7 +625,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
             // Combat
             if (data.modifiers.combat) {
-                for (const entry of Object.values(data.modifiers.combat) as { key: string; value: string }[]) {
+                for (const entry of Object.values(data.modifiers.combat) as any[]) {
                     if (entry.key) {
                         updateData[`system.modifiers.combat.${entry.key}`] = parseInt(entry.value) || 0;
                     }
@@ -634,7 +634,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
             // Resources
             if (data.modifiers.resources) {
-                for (const entry of Object.values(data.modifiers.resources) as { key: string; value: string }[]) {
+                for (const entry of Object.values(data.modifiers.resources) as any[]) {
                     if (entry.key) {
                         updateData[`system.modifiers.resources.${entry.key}`] = parseInt(entry.value) || 0;
                     }
@@ -644,7 +644,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Other modifiers
             const otherMods = [];
             if (data.modifiers.other) {
-                for (const entry of Object.values(data.modifiers.other) as { key: string; label: string; value: string; mode: string }[]) {
+                for (const entry of Object.values(data.modifiers.other) as any[]) {
                     if (entry.key) {
                         otherMods.push({
                             key: entry.key,
@@ -663,7 +663,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Characteristics - icon is derived, don't save it
             const sitCharMods = [];
             if (data.situational.characteristics) {
-                for (const entry of Object.values(data.situational.characteristics) as { key: string; value: string; condition: string }[]) {
+                for (const entry of Object.values(data.situational.characteristics) as any[]) {
                     if (entry.key && entry.condition) {
                         sitCharMods.push({
                             key: entry.key,
@@ -678,7 +678,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Skills - icon is derived, don't save it
             const sitSkillMods = [];
             if (data.situational.skills) {
-                for (const entry of Object.values(data.situational.skills) as { key: string; value: string; condition: string }[]) {
+                for (const entry of Object.values(data.situational.skills) as any[]) {
                     if (entry.key && entry.condition) {
                         sitSkillMods.push({
                             key: entry.key,
@@ -693,7 +693,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Combat - icon is derived, don't save it
             const sitCombatMods = [];
             if (data.situational.combat) {
-                for (const entry of Object.values(data.situational.combat) as { key: string; value: string; condition: string }[]) {
+                for (const entry of Object.values(data.situational.combat) as any[]) {
                     if (entry.key && entry.condition) {
                         sitCombatMods.push({
                             key: entry.key,
@@ -711,7 +711,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Skills
             const grantedSkills = [];
             if (data.grants.skills) {
-                for (const entry of Object.values(data.grants.skills) as { name: string; specialization: string; level: string }[]) {
+                for (const entry of Object.values(data.grants.skills) as any[]) {
                     if (entry.name) {
                         grantedSkills.push({
                             name: entry.name,
@@ -726,7 +726,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Talents
             const grantedTalents = [];
             if (data.grants.talents) {
-                for (const entry of Object.values(data.grants.talents) as { name: string; specialization: string; uuid: string }[]) {
+                for (const entry of Object.values(data.grants.talents) as any[]) {
                     if (entry.name) {
                         grantedTalents.push({
                             name: entry.name,
@@ -741,7 +741,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Traits
             const grantedTraits = [];
             if (data.grants.traits) {
-                for (const entry of Object.values(data.grants.traits) as { name: string; level: string; uuid: string }[]) {
+                for (const entry of Object.values(data.grants.traits) as any[]) {
                     if (entry.name) {
                         grantedTraits.push({
                             name: entry.name,
@@ -756,7 +756,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Special Abilities
             const grantedAbilities = [];
             if (data.grants.specialAbilities) {
-                for (const entry of Object.values(data.grants.specialAbilities) as { name: string; description: string }[]) {
+                for (const entry of Object.values(data.grants.specialAbilities) as any[]) {
                     if (entry.name) {
                         grantedAbilities.push({
                             name: entry.name,

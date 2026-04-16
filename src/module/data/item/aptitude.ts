@@ -7,7 +7,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
  */
 export default class AptitudeData extends ItemDataModel.mixin(DescriptionTemplate) {
     /** @override */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return {
             ...super.defineSchema(),
             // No additional fields - aptitudes are just named references
@@ -15,12 +15,12 @@ export default class AptitudeData extends ItemDataModel.mixin(DescriptionTemplat
     }
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         return [];
     }
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return [];
     }
 }

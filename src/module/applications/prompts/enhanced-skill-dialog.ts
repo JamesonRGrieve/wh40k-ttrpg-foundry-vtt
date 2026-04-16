@@ -16,7 +16,7 @@ const { ApplicationV2 } = foundry.applications.api;
 /**
  * Enhanced dialog for configuring skill or characteristic rolls.
  */
-// @ts-ignore - Foundry V2 mixin pattern
+// @ts-expect-error Foundry V2 mixin pattern
 export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV2 as any) {
     [key: string]: any;
     /**
@@ -24,7 +24,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @param {object} [options={}]     Dialog options.
      */
     constructor(simpleSkillData: any = {}, options: any = {}) {
-        // @ts-ignore - Foundry V2 constructor accepts options
+        // @ts-expect-error Foundry V2 constructor accepts options
         super(options);
         this.simpleSkillData = simpleSkillData;
         this._selectedDifficulty = 0; // Challenging (baseline)

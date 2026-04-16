@@ -81,9 +81,10 @@ export default function DragDropMixin<T extends new (...args: any[]) => any>(Bas
 
         /** @inheritDoc */
         async _onDragStart(event: DragEvent): Promise<void> {
+            const dataTransfer = event.dataTransfer;
             await super._onDragStart(event);
             if (!this.document.isOwner || this.document.collection?.locked) {
-                event.dataTransfer.effectAllowed = 'copyLink';
+                dataTransfer.effectAllowed = 'copyLink';
             }
         }
     };

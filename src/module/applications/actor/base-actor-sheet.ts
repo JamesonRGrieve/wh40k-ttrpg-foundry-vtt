@@ -4,12 +4,14 @@
  */
 
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import CollapsiblePanelMixin from '../api/collapsible-panel-mixin.ts';
 import ContextMenuMixin from '../api/context-menu-mixin.ts';
 import EnhancedDragDropMixin from '../api/drag-drop-visual-mixin.ts';
 import EnhancedAnimationsMixin from '../api/enhanced-animations-mixin.ts';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
+import type { BaseActorSheetMixins } from '../api/sheet-mixin-types.ts';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
 import TooltipMixin from '../api/tooltip-mixin.ts';
 import VisualFeedbackMixin from '../api/visual-feedback-mixin.ts';
@@ -37,27 +39,96 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         ),
     ),
 ) {
-    // Declare properties from mixins and base class so TypeScript knows about them
-    declare actor: any;
-    declare document: any;
-    declare element: any;
-    declare position: any;
+    // ---- Typed declarations from mixin chain (see sheet-mixin-types.ts) ----
+    // Foundry base properties
+    declare actor: WH40KBaseActor;
+    declare document: WH40KBaseActor;
+    declare element: HTMLElement;
+    declare position: { top: number; left: number; width: number; height: number };
     declare isEditable: boolean;
-    declare _previousState: any;
-    declare _updateListener: any;
-    declare _clickOutsideHandler: any;
-    declare _resizeObserver: any;
-    declare _traitsFilter: any;
-    declare visualizeChanges: any;
-    declare animateWoundsChange: any;
-    declare animateXPGain: any;
-    declare animateCharacteristicChange: any;
-    declare animateCharacteristicBonus: any;
-    declare prepareCharacteristicTooltip: any;
-    declare prepareSkillTooltip: any;
+    declare hasFrame: boolean;
+    declare id: string;
+    declare tabGroups: Record<string, string>;
+    declare options: Record<string, any>;
 
-    static _onTogglePanel: any;
-    static _onApplyPreset: any;
+    // EnhancedAnimationsMixin
+    declare _previousState: any;
+    declare _mutationObserver: MutationObserver | null;
+    declare _runningAnimations: Map<string, number>;
+    declare _animationConfig: BaseActorSheetMixins['_animationConfig'];
+
+    // VisualFeedbackMixin
+    declare _previousValues: Map<string, any>;
+    declare _lastSubmitTime: number;
+    declare visualizeChanges: (changes: Record<string, unknown>) => void;
+
+    // EnhancedAnimationsMixin public methods
+    declare animateWoundsChange: (oldValue: number, newValue: number) => void;
+    declare animateXPGain: (oldXP: number, newXP: number) => void;
+    declare animateCharacteristicChange: (charKey: string, oldValue: number, newValue: number) => void;
+    declare animateCharacteristicBonus: (charKey: string, oldBonus: number, newBonus: number) => void;
+    declare animateCounter: (element: HTMLElement, fromValue: number, toValue: number, options?: Record<string, any>) => void;
+
+    // TooltipMixin
+    declare prepareCharacteristicTooltip: (key: string, characteristic: Record<string, unknown>, modifierSources?: Record<string, unknown>) => string;
+    declare prepareSkillTooltip: (key: string, skill: Record<string, unknown>, characteristics: Record<string, unknown>) => string;
+    declare prepareArmorTooltip: (location: string, armorData: Record<string, unknown>, equipped?: any[]) => string;
+    declare prepareWeaponTooltip: (weapon: Record<string, unknown>) => string;
+    declare prepareModifierTooltip: (title: string, sources: any[]) => string;
+    declare prepareQualityTooltip: (identifier: string, level?: number | null) => string;
+
+    // PrimarySheetMixin
+    declare _filters: Record<string, Record<string, unknown>>;
+    declare _mode: number | null;
+    declare animateStatChange: (element: HTMLElement, type?: string) => void;
+    declare animateValueChange: (element: HTMLElement, oldValue: number, newValue: number) => void;
+
+    // CollapsiblePanelMixin
+    declare expandedSections: Map<string, boolean>;
+    declare togglePanel: (panelId: string, forceState?: boolean) => Promise<void>;
+    declare expandAllPanels: () => Promise<void>;
+    declare collapseAllPanels: () => Promise<void>;
+    declare applyPanelPreset: (presetName: string) => Promise<void>;
+    declare collapseAllExcept: (exceptPanelId: string) => Promise<void>;
+
+    // WhatIfMixin
+    declare _whatIfActive: boolean;
+    declare _whatIfChanges: Record<string, unknown>;
+    declare _whatIfPreview: any;
+    declare _whatIfImpacts: any[] | Record<string, unknown>;
+    declare enterWhatIfMode: () => Promise<void>;
+    declare commitWhatIfChanges: () => Promise<void>;
+    declare cancelWhatIfChanges: () => Promise<void>;
+    declare exitWhatIfMode: () => Promise<void>;
+    declare previewChange: (path: string, value: any) => Promise<void>;
+    declare isWhatIfActive: () => boolean;
+    declare getWhatIfState: () => { active: boolean; changes: Record<string, unknown>; impacts: any; changeCount: number };
+
+    // EnhancedDragDropMixin
+    declare _draggedItem: Record<string, any> | null;
+    declare _dragStartPos: { x: number; y: number } | null;
+    declare _splitResult: { quantity: number } | null;
+    declare removeFromFavorites: (itemId: string) => Promise<void>;
+    declare clearFavorites: () => Promise<void>;
+    declare getFavoriteItems: () => any[];
+
+    // ActiveModifiersMixin
+    declare prepareActiveModifiers: () => any;
+
+    // Instance properties used by BaseActorSheet itself
+    declare _updateListener: ((document: any, changes: any, options: any, userId: string) => void) | null;
+    declare _clickOutsideHandler: ((event: Event) => void) | null;
+    declare _resizeObserver: ResizeObserver | null;
+    declare _traitsFilter: Record<string, any>;
+
+    // Foundry base methods
+    declare render: (options?: Record<string, unknown> | boolean) => any;
+    declare submit: () => Promise<void>;
+    declare setPosition: (pos: Partial<{ top: number; left: number; width: number; height: number }>) => void;
+
+    // CollapsiblePanelMixin static action handlers
+    static _onTogglePanel: (event: Event, target: HTMLElement) => Promise<void>;
+    static _onApplyPreset: (event: Event, target: HTMLElement) => Promise<void>;
     [key: string]: any;
 
     constructor(...args: any[]) {
@@ -193,7 +264,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     _prepareCharacteristicsHUD(context: Record<string, unknown>): void {
         const characteristics = this.actor.system.characteristics || {};
 
-        for (const [key, char] of Object.entries(characteristics) as [string, WH40KCharacteristic & Record<string, any>][]) {
+        for (const [key, char] of Object.entries(characteristics) as [string, any][]) {
             // Calculate advancement progress (0-5)
             const advanceProgress = (char.advance || 0) / 5; // 0.0 to 1.0
 
@@ -283,7 +354,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         };
 
         // Use setFlag - this is async but we don't await it on close
-        this.actor.setFlag('wh40k-rpg', 'sheetState', state);
+        (this.actor as any).setFlag('wh40k-rpg', 'sheetState', state);
     }
 
     /**
@@ -296,7 +367,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         if (this._stateRestored) return;
         this._stateRestored = true;
 
-        const state = this.actor.getFlag('wh40k-rpg', 'sheetState');
+        const state = (this.actor as any).getFlag('wh40k-rpg', 'sheetState') as any;
         if (!state) return;
 
         // Restore scroll positions
@@ -326,9 +397,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     _applyRestoredState(): void {
         // Apply equipment filters
         if (this._equipmentFilter) {
-            const searchInput = this.element?.querySelector('.wh40k-equipment-search');
-            const typeFilter = this.element?.querySelector('.wh40k-equipment-type-filter');
-            const statusFilter = this.element?.querySelector('.wh40k-equipment-status-filter');
+            const searchInput = this.element?.querySelector('.wh40k-equipment-search') as HTMLInputElement | null;
+            const typeFilter = this.element?.querySelector('.wh40k-equipment-type-filter') as HTMLSelectElement | null;
+            const statusFilter = this.element?.querySelector('.wh40k-equipment-status-filter') as HTMLSelectElement | null;
 
             if (searchInput && this._equipmentFilter.search) {
                 searchInput.value = this._equipmentFilter.search;
@@ -348,9 +419,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         // Apply skills filters
         if (this._skillsFilter) {
-            const searchInput = this.element?.querySelector('.wh40k-skills-search');
-            const charFilter = this.element?.querySelector('.wh40k-skills-char-filter');
-            const trainingFilter = this.element?.querySelector('.wh40k-skills-training-filter');
+            const searchInput = this.element?.querySelector('.wh40k-skills-search') as HTMLInputElement | null;
+            const charFilter = this.element?.querySelector('.wh40k-skills-char-filter') as HTMLSelectElement | null;
+            const trainingFilter = this.element?.querySelector('.wh40k-skills-training-filter') as HTMLSelectElement | null;
 
             if (searchInput && this._skillsFilter.search) {
                 searchInput.value = this._skillsFilter.search;
@@ -441,7 +512,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         // Apply filters
         const filters = this._skillsFilter;
-        const visibleSkills = (Object.entries(skills) as [string, WH40KSkill & Record<string, any>][]).filter(([key, data]) => {
+        const visibleSkills = (Object.entries(skills) as [string, any][]).filter(([key, data]) => {
             if (data.hidden) return false;
 
             // Search filter
@@ -477,14 +548,14 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         const standard = [];
         const specialist = [];
 
-        for (const [key, data] of visibleSkills) {
+        for (const [key, data] of visibleSkills as [string, any][]) {
             // Augment with computed properties
             this._augmentSkillData(key, data, characteristics);
 
             if (data.entries !== undefined) {
                 // Specialist skill - process entries
                 const entryList = Array.isArray(data.entries) ? data.entries : data.entries ? Object.values(data.entries) : [];
-                const plainEntries = entryList.map((entry, entryIndex) => {
+                const plainEntries = entryList.map((entry: any, entryIndex: number) => {
                     if (typeof entry === 'string') {
                         return {
                             name: entry,
@@ -526,9 +597,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                 });
 
                 // Check favorite status for specialist skills
-                const specialistFavorites = this.actor.getFlag('wh40k-rpg', 'favoriteSpecialistSkills') || [];
+                const specialistFavorites = ((this.actor as any).getFlag('wh40k-rpg', 'favoriteSpecialistSkills') as string[]) || [];
 
-                plainEntries.forEach((entry) => {
+                plainEntries.forEach((entry: any) => {
                     this._augmentSkillData(key, entry, characteristics, data);
                     // Check if this specialist entry is a favorite
                     const favoriteKey = `${entry.skillKey}:${entry.entryIndex}`;
@@ -617,12 +688,12 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
 
         // Check if skill is favorite (auto-remove if untrained advanced)
-        const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
+        const favorites = ((this.actor as any).getFlag('wh40k-rpg', 'favoriteSkills') as string[]) || [];
         const isUntrainedAdvanced = data.advanced && (data.trainingLevel || 0) === 0;
         if (isUntrainedAdvanced && favorites.includes(key)) {
             // Auto-unfavourite untrained advanced skills
-            const updated = favorites.filter((f) => f !== key);
-            this.actor.setFlag('wh40k-rpg', 'favoriteSkills', updated);
+            const updated = favorites.filter((f: string) => f !== key);
+            (this.actor as any).setFlag('wh40k-rpg', 'favoriteSkills', updated);
             data.isFavorite = false;
         } else {
             data.isFavorite = favorites.includes(key);
@@ -729,9 +800,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // all talents, traits, and origin paths for skill grants
         const items = this.actor.items;
         for (const item of items) {
-            if (!item.system?.grants?.skills) continue;
+            if (!(item.system as any)?.grants?.skills) continue;
 
-            const skillGrants = item.system.grants.skills || [];
+            const skillGrants = (item.system as any).grants.skills || [];
             for (const grant of skillGrants) {
                 const grantName = grant.name || grant;
                 if (grantName.toLowerCase() === skillData.label?.toLowerCase()) {
@@ -753,8 +824,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @protected
      */
     _prepareTalentsContext(): Record<string, unknown> {
-        const talents = this.actor.items.filter((i) => i.type === 'talent');
-        const traits = this.actor.items.filter((i) => i.type === 'trait');
+        const talents = this.actor.items.filter((i) => (i.type as string) === 'talent');
+        const traits = this.actor.items.filter((i) => (i.type as string) === 'trait');
 
         // Augment with display properties
         const augmentedTalents = talents.map((t) => this._augmentTalentData(t));
@@ -785,7 +856,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     _augmentTalentData(talent: any): Record<string, unknown> {
         // Check if this talent is favorited
-        const favorites = this.actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
+        const favorites = ((this.actor as any).getFlag('wh40k-rpg', 'favoriteTalents') as string[]) || [];
         const isFavorite = favorites.includes(talent.id);
 
         // Build tooltip text from description/benefit
@@ -1128,12 +1199,13 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         // Attach direct-update listeners for characteristic fields (bypasses form submission)
         this.element.querySelectorAll('.wh40k-char-direct-input').forEach((el) => {
-            el.addEventListener('change', async (event) => {
-                const { characteristic, field, dtype } = event.target.dataset;
+            el.addEventListener('change', (event) => {
+                const target = event.target as HTMLInputElement;
+                const { characteristic, field, dtype } = target.dataset;
                 if (!characteristic || !field) return;
-                let value = event.target.value;
+                let value: string | number = target.value;
                 if (dtype === 'Number') value = Number(value) || 0;
-                await this.actor.update({ [`system.characteristics.${characteristic}.${field}`]: value });
+                void this.actor.update({ [`system.characteristics.${characteristic}.${field}`]: value });
             });
         });
 
@@ -1161,19 +1233,19 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Auto-select number input values on focus for easy editing
         this.element.querySelectorAll('input[type="number"], input[data-dtype="Number"]').forEach((input) => {
             input.addEventListener('focus', (event) => {
-                event.target.select();
+                (event.target as HTMLInputElement).select();
             });
         });
 
         // Set up drag handlers for items
         // Note: Talent panel rows (wh40k-tp_row) are excluded by EnhancedDragDropMixin
-        this.element.querySelectorAll('[data-item-id]').forEach((el) => {
-            if (el.dataset.itemId) {
+        this.element.querySelectorAll('[data-item-id]').forEach((el: Element) => {
+            if ((el as HTMLElement).dataset.itemId) {
                 // Skip if this element or any ancestor is a talent row
                 if (el.closest('.wh40k-tp_row') || el.closest('.wh40k-talent-row')) return;
                 if (el.closest('[data-disable-drag="true"]') || el.closest('.wh40k-panel-backpack-split')) return;
 
-                el.setAttribute('draggable', true);
+                el.setAttribute('draggable', 'true');
                 el.addEventListener('dragstart', this._onDragItem.bind(this), false);
             }
         });
@@ -1201,34 +1273,6 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                 const ct = event.currentTarget as HTMLElement;
                 const itemId = ct.dataset.itemId || ct.closest('[data-item-id]')?.getAttribute('data-item-id');
                 if (itemId) BaseActorSheet.#itemVocalize.call(this, event, ct);
-            });
-        });
-
-        // Direct click listener for backpack swap button (bypasses action system)
-        this.element.querySelectorAll('.wh40k-divider-icon[data-action="swapCheckedItems"]').forEach((el) => {
-            el.addEventListener('click', (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                const panel = this.element.querySelector('.wh40k-panel-backpack-split');
-                if (!panel) return;
-                const backpackChecks = panel.querySelectorAll('.wh40k-backpack-inventory .wh40k-transfer-check:checked');
-                const shipChecks = panel.querySelectorAll('.wh40k-ship-storage .wh40k-transfer-check:checked');
-                if (!backpackChecks.length && !shipChecks.length) {
-                    (ui.notifications as any).warn('No items selected to transfer.');
-                    return;
-                }
-                const updates: { _id: string; [key: string]: any }[] = [];
-                backpackChecks.forEach((cb: Element) => {
-                    const itemId = (cb as HTMLElement).dataset.itemId;
-                    if (itemId) updates.push({ '_id': itemId, 'system.inShipStorage': true, 'system.inBackpack': false, 'system.equipped': false });
-                });
-                shipChecks.forEach((cb: Element) => {
-                    const itemId = (cb as HTMLElement).dataset.itemId;
-                    if (itemId) updates.push({ '_id': itemId, 'system.inShipStorage': false });
-                });
-                if (updates.length) {
-                    (this as any).actor.updateEmbeddedDocuments('Item', updates);
-                }
             });
         });
 
@@ -1261,7 +1305,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                 const width = entry.contentRect.width;
                 const columns = width < 700 ? 1 : width < 900 ? 2 : 3;
                 if (this.element) {
-                    this.element.style.setProperty('--wh40k-columns', columns);
+                    this.element.style.setProperty('--wh40k-columns', String(columns));
                 }
             }
         });
@@ -1325,7 +1369,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Check characteristics
-        for (const [key, char] of Object.entries(current.characteristics || {}) as [string, WH40KCharacteristic][]) {
+        for (const [key, char] of Object.entries(current.characteristics || {}) as [string, any][]) {
             const prevChar = previous.characteristics[key];
             if (!prevChar) continue;
 
@@ -1350,14 +1394,14 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         if (!target) return;
 
         // Get current expanded state from actor flags
-        const expanded = this.actor.getFlag('wh40k-rpg', 'ui.expanded') || [];
+        const expanded = ((this.actor as any).getFlag('wh40k-rpg', 'ui.expanded') as string[]) || [];
         const isCurrentlyExpanded = expanded.includes(target);
 
         // Toggle the state
-        const newExpanded = isCurrentlyExpanded ? expanded.filter((name) => name !== target) : [...expanded, target];
+        const newExpanded = isCurrentlyExpanded ? expanded.filter((name: string) => name !== target) : [...expanded, target];
 
         // Update actor flags - this will trigger a re-render
-        await this.actor.setFlag('wh40k-rpg', 'ui.expanded', newExpanded);
+        await (this.actor as any).setFlag('wh40k-rpg', 'ui.expanded', newExpanded);
     }
 
     /* -------------------------------------------- */
@@ -1434,15 +1478,16 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         if (!this.isEditable || !this.element) return;
 
         const selector = 'input[name], select[name], textarea[name]';
-        this.element.querySelectorAll(selector).forEach((field) => {
+        this.element.querySelectorAll(selector).forEach((field: Element) => {
+            const formField = field as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
             // Skip action buttons and non-data controls.
-            if (!field.name || field.disabled) return;
+            if (!formField.name || formField.disabled) return;
 
-            field.addEventListener('change', async (event) => {
-                const input = event.currentTarget;
+            formField.addEventListener('change', (event) => {
+                const input = event.currentTarget as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
                 const update = this._getFieldUpdate(input);
                 if (!update) return;
-                await this.document.update(update);
+                void this.document.update(update);
             });
         });
     }
@@ -1512,9 +1557,11 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         switch (rollType) {
             case 'characteristic':
-                return (this as any).actor.rollCharacteristic?.(rollTarget);
+                (this as any).actor.rollCharacteristic?.(rollTarget);
+                return;
             case 'skill':
-                return (this as any).actor.rollSkill?.(rollTarget, specialty);
+                (this as any).actor.rollSkill?.(rollTarget, specialty);
+                return;
         }
     }
 
@@ -1962,7 +2009,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
     /** @override */
     async _onDropItem(event: DragEvent, item: any): Promise<any> {
-        if (!this.actor.isOwner) return;
+        if (!this.actor.isOwner) return undefined;
 
         // Check if this item type is supported
         if ((this.constructor as any).unsupportedItemTypes.has(item.type)) {
@@ -1993,15 +2040,15 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Promise}
      * @protected
      */
-    _onSortItem(event: DragEvent, item: any): Promise<any> | void {
+    _onSortItem(event: DragEvent, item: any): Promise<any> | undefined {
         const items = this.actor.items;
         const source = items.get(item.id);
 
         // Confirm the drop target
         const dropTarget = (event.target as HTMLElement).closest('[data-item-id]') as HTMLElement | null;
-        if (!dropTarget) return;
+        if (!dropTarget) return undefined;
         const target = items.get(dropTarget.dataset.itemId);
-        if (source.id === target.id) return;
+        if (source.id === target.id) return undefined;
 
         // Identify sibling items based on adjacent HTML elements
         const siblings = [];
@@ -2031,7 +2078,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  The button element clicked
      * @protected
      */
-    static async #spendXPAdvance(event: Event, target: HTMLElement): Promise<void> {
+    static async #spendXPAdvance(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const charKey = target.dataset.characteristic;
         const char = (this as any).actor.system.characteristics[charKey];
 
@@ -2127,7 +2174,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  Button clicked
      * @protected
      */
-    static async #editCharacteristic(event: Event, target: HTMLElement): Promise<void> {
+    static async #editCharacteristic(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const charKey = (target.closest('[data-characteristic]') as HTMLElement | null)?.dataset.characteristic;
         if (!charKey) return;
 

@@ -6,8 +6,15 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  */
 export default class ActivationTemplate extends SystemDataModel {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare activation: { type: string; cost: number; condition: string };
+    declare target: { type: string; value: number; units: string; width: number; length: number };
+    declare duration: { value: number; units: string; sustained: boolean };
+    declare uses: { value: number; max: number; per: string; recovery: string };
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             activation: new fields.SchemaField({
@@ -61,7 +68,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         ActivationTemplate.#migrateUses(source);
     }
@@ -70,7 +77,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * Migrate legacy uses formats.
      * @param {object} source  The source data
      */
-    static #migrateUses(source) {
+    static #migrateUses(source: Record<string, any>): void {
         if (!source.uses) return;
         // Convert string values to numbers
         if (typeof source.uses.value === 'string') {
@@ -93,7 +100,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
     }
 
@@ -103,7 +110,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * Get a localized activation type label.
      * @type {string}
      */
-    get activationLabel() {
+    get activationLabel(): string {
         return game.i18n.localize(`WH40K.Activation.${this.activation.type.capitalize()}`);
     }
 
@@ -113,7 +120,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * Get a formatted target string.
      * @type {string}
      */
-    get targetLabel() {
+    get targetLabel(): string {
         const target = this.target;
         if (target.type === 'self') return game.i18n.localize('WH40K.Target.Self');
         if (target.value) {
@@ -128,7 +135,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * Get a formatted duration string.
      * @type {string}
      */
-    get durationLabel() {
+    get durationLabel(): string {
         const duration = this.duration;
         if (duration.units === 'instant') return game.i18n.localize('WH40K.Duration.Instant');
         if (duration.sustained) return game.i18n.localize('WH40K.Duration.Sustained');
@@ -164,7 +171,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * Consume a use.
      * @returns {Promise<Item>}
      */
-    consumeUse() {
+    consumeUse(): any {
         if (!this.hasLimitedUses) return this.parent;
         const newValue = Math.max(0, (this.uses.value ?? 0) - 1);
         return this.parent?.update({ 'system.uses.value': newValue });
@@ -177,7 +184,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * @param {number} [amount=1]   Number of uses to recover.
      * @returns {Promise<Item>}
      */
-    recoverUses(amount = 1) {
+    recoverUses(amount = 1): any {
         if (!this.hasLimitedUses) return this.parent;
         const max = this.uses.max ?? 0;
         const newValue = Math.min(max, (this.uses.value ?? 0) + amount);
@@ -190,7 +197,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * Properties for chat display.
      * @type {string[]}
      */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
         props.push(this.activationLabel);
         if (this.target.type !== 'self') props.push(this.targetLabel);

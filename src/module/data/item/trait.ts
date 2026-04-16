@@ -9,11 +9,19 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare category: string;
+    declare requirements: string;
+    declare benefit: string;
+    declare level: number;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -58,7 +66,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * Does this trait have a level/rating?
      * @type {boolean}
      */
-    get hasLevel() {
+    get hasLevel(): boolean {
         return this.level > 0;
     }
 
@@ -79,7 +87,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
 
         if (this.hasLevel) {
@@ -94,7 +102,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             level: this.hasLevel ? this.level : '-',
         };
@@ -104,7 +112,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * Get category label.
      * @type {string}
      */
-    get categoryLabel() {
+    get categoryLabel(): string {
         if (!this.category) return game.i18n.localize('WH40K.TraitCategory.General');
         const key = `WH40K.TraitCategory.${this.category.capitalize()}`;
         const localized = game.i18n.localize(key);
@@ -129,7 +137,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * @param {object} [options]  Additional options
      * @returns {Promise<ChatMessage>}
      */
-    async toChat(options = {}) {
+    async toChat(options = {}): Promise<void> {
         // Prepare template data
         const templateData = {
             trait: this.parent,

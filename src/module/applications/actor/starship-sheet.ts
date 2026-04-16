@@ -3,6 +3,7 @@
  */
 
 import WH40K from '../../config.ts';
+import type { WH40KStarship } from '../../documents/starship.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 
 /**
@@ -13,8 +14,8 @@ import BaseActorSheet from './base-actor-sheet.ts';
 export default class StarshipSheet extends BaseActorSheet {
     [key: string]: any;
 
-    declare actor: any;
-    declare document: any;
+    declare actor: WH40KStarship;
+    declare document: WH40KStarship;
 
     /** @override */
     static DEFAULT_OPTIONS = {
@@ -178,7 +179,7 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #fireShipWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
+        const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
         const weapon = this.actor.items.get(itemId);
         if (!weapon) return;
 

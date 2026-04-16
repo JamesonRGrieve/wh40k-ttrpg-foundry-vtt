@@ -296,8 +296,8 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         event.preventDefault();
 
         const form = target.closest('form');
-        const name = form.querySelector('[name="presetName"]')?.value.trim();
-        const description = form.querySelector('[name="presetDescription"]')?.value.trim();
+        const name = (form.querySelector('[name="presetName"]') as HTMLInputElement | null)?.value.trim();
+        const description = (form.querySelector('[name="presetDescription"]') as HTMLTextAreaElement | null)?.value.trim();
 
         if (!name) {
             (ui.notifications as any).warn('Please enter a preset name.');
@@ -401,25 +401,27 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         input.type = 'file';
         input.accept = '.json';
 
-        input.addEventListener('change', async (e) => {
-            const file = (e.target as HTMLInputElement).files?.[0];
-            if (!file) return;
+        input.addEventListener('change', (e) => {
+            void (async () => {
+                const file = (e.target as HTMLInputElement).files?.[0];
+                if (!file) return;
 
-            try {
-                const text = await file.text();
-                const preset = JSON.parse(text);
+                try {
+                    const text = await file.text();
+                    const preset = JSON.parse(text);
 
-                // Basic validation
-                if (!preset.name || !preset.characteristics) {
-                    throw new Error('Invalid preset format');
+                    // Basic validation
+                    if (!preset.name || !preset.characteristics) {
+                        throw new Error('Invalid preset format');
+                    }
+
+                    await this.constructor.addPreset(preset);
+                    (ui.notifications as any).info(`Imported preset "${preset.name}"`);
+                    this.render();
+                } catch (error: any) {
+                    (ui.notifications as any).error(`Failed to import preset: ${error.message}`);
                 }
-
-                await this.constructor.addPreset(preset);
-                (ui.notifications as any).info(`Imported preset "${preset.name}"`);
-                this.render();
-            } catch (error: any) {
-                (ui.notifications as any).error(`Failed to import preset: ${error.message}`);
-            }
+            })();
         });
 
         input.click();

@@ -355,7 +355,6 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    // @ts-ignore - Foundry override
     async close(options: any = {}): Promise<any> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
@@ -435,7 +434,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
             if (randomize) {
                 const variance = (randomizeAmount as number) / 100;
-                for (const char of Object.values(systemData.characteristics)) {
+                for (const char of Object.values(systemData.characteristics) as any[]) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
                     char.total = char.base + char.modifier;

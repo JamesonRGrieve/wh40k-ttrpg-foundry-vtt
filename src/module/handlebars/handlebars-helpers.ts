@@ -137,7 +137,7 @@ export function registerHandlebarsHelpers() {
         }
     });
 
-    Handlebars.registerHelper('concat', function (...args: unknown[]) {
+    Handlebars.registerHelper('concat', (...args: unknown[]) => {
         let outStr = '';
         for (const arg of args) {
             if (typeof arg != 'object') {
@@ -151,12 +151,14 @@ export function registerHandlebarsHelpers() {
         if (check) {
             return new Handlebars.SafeString('style="display:none;"');
         }
+        return '';
     });
 
     Handlebars.registerHelper('hideIfNot', (check) => {
         if (!check) {
             return new Handlebars.SafeString('style="display:none;"');
         }
+        return '';
     });
 
     /**
@@ -392,6 +394,7 @@ export function registerHandlebarsHelpers() {
         } else if (negative) {
             return 'error';
         }
+        return '';
     });
 
     // Comparison helpers

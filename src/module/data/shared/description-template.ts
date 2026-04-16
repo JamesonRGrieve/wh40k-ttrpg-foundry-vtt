@@ -6,8 +6,13 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  */
 export default class DescriptionTemplate extends SystemDataModel {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare description: { value: string; chat: string; summary: string };
+    declare source: { book: string; page: string; custom: string };
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             description: new fields.SchemaField({
@@ -32,7 +37,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         DescriptionTemplate.#migrateDescription(source);
         DescriptionTemplate.#migrateSource(source);
@@ -42,7 +47,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * Migrate flat description string to object structure.
      * @param {object} source  The source data
      */
-    static #migrateDescription(source) {
+    static #migrateDescription(source: Record<string, any>): void {
         if (typeof source.description === 'string') {
             source.description = {
                 value: source.description,
@@ -61,7 +66,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * Migrate flat source string to object structure.
      * @param {object} source  The source data
      */
-    static #migrateSource(source) {
+    static #migrateSource(source: Record<string, any>): void {
         if (typeof source.source === 'string') {
             source.source = {
                 book: '',
@@ -86,7 +91,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
     }
 
@@ -96,7 +101,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * Get a formatted source reference string.
      * @type {string}
      */
-    get sourceReference() {
+    get sourceReference(): string {
         const { book, page, custom } = this.source;
         if (custom) return custom;
         if (book && page) return `${book}, p.${page}`;
@@ -110,7 +115,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * Get the enriched description for display.
      * @returns {Promise<string>}
      */
-    async getEnrichedDescription() {
+    async getEnrichedDescription(): Promise<any> {
         return TextEditor.enrichHTML(this.description.value, {
             secrets: this.parent?.isOwner,
             rollData: this.parent?.getRollData() ?? {},

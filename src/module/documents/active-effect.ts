@@ -22,9 +22,9 @@ export class WH40KActiveEffect extends ActiveEffect {
      * Get the source actor or item for this effect.
      * @type {Actor|Item|null}
      */
-    get source(): any {
+    get source(): Actor | Item | null {
         if (!this.origin) return null;
-        return fromUuidSync(this.origin);
+        return fromUuidSync(this.origin) as Actor | Item | null;
     }
 
     /**

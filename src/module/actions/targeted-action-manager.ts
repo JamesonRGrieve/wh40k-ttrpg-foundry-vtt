@@ -44,18 +44,18 @@ export class TargetedActionManager {
             const controlledObjects = game.canvas.tokens.controlledObjects;
             if (!controlledObjects || controlledObjects.size === 0) {
                 (ui.notifications as any).warn('You need to control a token!');
-                return;
+                return undefined;
             }
             if (controlledObjects.size > 1) {
                 (ui.notifications as any).warn('You need to control a single token! Multi-token support is not yet added.');
-                return;
+                return undefined;
             }
             sourceToken = [...controlledObjects.values()][0];
         }
 
         if (sourceToken && !sourceToken.actor) {
             (ui.notifications as any).warn('Token must be associated with an actor!');
-            return;
+            return undefined;
         }
 
         return sourceToken;
@@ -68,17 +68,17 @@ export class TargetedActionManager {
             targetToken = target.token ?? target.getActiveTokens()[0];
         } else {
             const targetedObjects = game.user.targets;
-            if (!targetedObjects || targetedObjects.size === 0) return;
+            if (!targetedObjects || targetedObjects.size === 0) return undefined;
             if (targetedObjects.size > 1) {
                 (ui.notifications as any).warn('You need to target a single token! Multi-token targeting is not yet added.');
-                return;
+                return undefined;
             }
             targetToken = [...targetedObjects.values()][0];
         }
 
         if (targetToken && !targetToken.actor) {
             (ui.notifications as any).warn('Target token must be associated with an actor!');
-            return;
+            return undefined;
         }
 
         return targetToken;
@@ -90,7 +90,7 @@ export class TargetedActionManager {
         // Source
         const sourceToken = this.getSourceToken(source);
         const sourceActorData = sourceToken ? sourceToken.actor : source;
-        if (!sourceActorData) return;
+        if (!sourceActorData) return undefined;
 
         // Target
         const targetToken = this.getTargetToken(target);

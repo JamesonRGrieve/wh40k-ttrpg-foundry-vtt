@@ -9,11 +9,33 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare category: string;
+    declare tier: number;
+    declare prerequisites: { text: string; characteristics: Record<string, unknown>; skills: string[]; talents: string[] };
+    declare aptitudes: string[];
+    declare cost: number;
+    declare benefit: string;
+    declare isPassive: boolean;
+    declare rollConfig: { characteristic: string; skill: string; modifier: number; description: string };
+    declare stackable: boolean;
+    declare rank: number;
+    declare hasSpecialization: boolean;
+    declare specialization: string;
+    declare notes: string;
+    declare grants: {
+        skills: Array<{ name: string; specialization: string; level: string }>;
+        talents: Array<{ name: string; specialization: string; uuid: string }>;
+        traits: Array<{ name: string; level: number; uuid: string }>;
+        specialAbilities: Array<{ name: string; description: string }>;
+    };
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -131,7 +153,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         TalentData.#migratePrerequisites(source);
         TalentData.#migrateAptitudes(source);
@@ -142,7 +164,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate flat prerequisites string to structured object.
      * @param {object} source  The source data
      */
-    static #migratePrerequisites(source) {
+    static #migratePrerequisites(source: Record<string, any>): void {
         if (typeof source.prerequisites === 'string') {
             source.prerequisites = {
                 text: source.prerequisites,
@@ -157,7 +179,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate flat aptitudes string to array.
      * @param {object} source  The source data
      */
-    static #migrateAptitudes(source) {
+    static #migrateAptitudes(source: Record<string, any>): void {
         if (typeof source.aptitudes === 'string' && source.aptitudes) {
             source.aptitudes = source.aptitudes
                 .split(',')
@@ -170,7 +192,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Infer hasSpecialization from existing specialization value.
      * @param {object} source  The source data
      */
-    static #migrateSpecialization(source) {
+    static #migrateSpecialization(source: Record<string, any>): void {
         if (source.hasSpecialization === undefined && source.specialization) {
             source.hasSpecialization = !!source.specialization.trim();
         }
@@ -184,7 +206,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Auto-detect hasSpecialization from talent name containing (X).
      * @override
      */
-    prepareDerivedData() {
+    prepareDerivedData(): void {
         super.prepareDerivedData?.();
 
         // Auto-infer hasSpecialization from name containing (X)
@@ -206,7 +228,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {boolean}
      * @override
      */
-    get isRollable() {
+    get isRollable(): boolean {
         return !this.isPassive && (!!this.rollConfig?.characteristic || !!this.rollConfig?.skill);
     }
 
@@ -214,7 +236,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the tier label.
      * @type {string}
      */
-    get tierLabel() {
+    get tierLabel(): string {
         return game.i18n.localize(`WH40K.Talent.Tier${this.tier}`);
     }
 
@@ -222,7 +244,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the category label.
      * @type {string}
      */
-    get categoryLabel() {
+    get categoryLabel(): string {
         if (!this.category) return game.i18n.localize('WH40K.TalentCategory.General');
         const key = `WH40K.TalentCategory.${this.category.capitalize()}`;
         const localized = game.i18n.localize(key);
@@ -244,7 +266,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Does this talent have prerequisites?
      * @type {boolean}
      */
-    get hasPrerequisites() {
+    get hasPrerequisites(): boolean {
         const prereqs = this.prerequisites;
         if (prereqs.text) return true;
         if (Object.keys(prereqs.characteristics).length) return true;
@@ -284,7 +306,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Does this talent grant anything?
      * @type {boolean}
      */
-    get hasGrants() {
+    get hasGrants(): boolean {
         const grants = this.grants;
         if (grants.skills.length) return true;
         if (grants.talents.length) return true;
@@ -325,7 +347,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [this.categoryLabel, this.tierLabel];
 
         if (this.aptitudes.length) {
@@ -353,7 +375,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             category: this.categoryLabel,
             tier: this.tierLabel,
@@ -369,7 +391,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Post this talent to chat with rich formatting.
      * @returns {Promise<ChatMessage>}
      */
-    async toChat() {
+    async toChat(): Promise<void> {
         const templateData = {
             talent: {
                 id: this.parent.id,

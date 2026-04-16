@@ -165,8 +165,23 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  */
 export default class ModifiersTemplate extends SystemDataModel {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare modifiers: {
+        characteristics: Record<string, unknown>;
+        skills: Record<string, unknown>;
+        combat: { attack: number; damage: number; penetration: number; defense: number; initiative: number; speed: number };
+        resources: { wounds: number; fate: number; insanity: number; corruption: number };
+        other: Array<{ key: string; label: string; value: number; mode: string }>;
+        situational: {
+            characteristics: Array<{ key: string; value: number; condition: string; icon: string }>;
+            skills: Array<{ key: string; value: number; condition: string; icon: string }>;
+            combat: Array<{ key: string; value: number; condition: string; icon: string }>;
+        };
+    };
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             modifiers: new fields.SchemaField({
@@ -241,7 +256,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         ModifiersTemplate.#migrateModifiers(source);
     }
@@ -250,7 +265,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * Migrate legacy modifier formats.
      * @param {object} source  The source data
      */
-    static #migrateModifiers(source) {
+    static #migrateModifiers(source: Record<string, any>): void {
         if (!source.modifiers) return;
 
         // Ensure nested objects exist
@@ -278,7 +293,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
     }
 
@@ -288,7 +303,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * Check if this item provides any modifiers.
      * @type {boolean}
      */
-    get hasModifiers() {
+    get hasModifiers(): boolean {
         const mods = this.modifiers;
         if (Object.keys(mods.characteristics).length) return true;
         if (Object.keys(mods.skills).length) return true;
@@ -308,7 +323,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {string} char   The characteristic key.
      * @returns {number}
      */
-    getCharacteristicModifier(char) {
+    getCharacteristicModifier(char): any {
         return this.modifiers.characteristics[char] ?? 0;
     }
 
@@ -319,7 +334,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {string} skill   The skill key.
      * @returns {number}
      */
-    getSkillModifier(skill) {
+    getSkillModifier(skill): any {
         return this.modifiers.skills[skill] ?? 0;
     }
 
@@ -398,8 +413,8 @@ export default class ModifiersTemplate extends SystemDataModel {
      * Get situational modifiers as a structured list.
      * @type {object}
      */
-    get situationalModifiers() {
-        const situational = this.modifiers.situational || {};
+    get situationalModifiers(): Record<string, any> {
+        const situational = (this.modifiers as any).situational || {};
         return {
             characteristics: situational.characteristics || [],
             skills: situational.skills || [],

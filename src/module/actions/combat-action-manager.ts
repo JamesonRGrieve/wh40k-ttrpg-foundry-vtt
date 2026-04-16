@@ -67,6 +67,7 @@ export class CombatActionManager {
         for (const user of game.users.contents) {
             if (user.active && user.isGM) return user.id;
         }
+        return undefined;
     }
 }
 

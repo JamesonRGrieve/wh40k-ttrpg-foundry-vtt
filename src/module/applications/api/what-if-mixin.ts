@@ -346,7 +346,8 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
         async previewChange(path: string, value: any): Promise<void> {
             if (!this._whatIfActive) {
                 // If not in What-If mode, just apply directly
-                return this._applyChange(path, value);
+                await this._applyChange(path, value);
+                return;
             }
 
             // Store the change

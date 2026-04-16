@@ -11,7 +11,7 @@ import ContainerItemSheet from './container-item-sheet.ts';
  * Sheet for weapon items with support for weapon modifications and ammunition.
  * Redesigned as a single-page layout with FAB action buttons.
  */
-// @ts-ignore - Foundry ApplicationV2 static override pattern
+// @ts-expect-error Foundry ApplicationV2 static override pattern
 export default class WeaponSheet extends ContainerItemSheet {
     [key: string]: any;
     /** @override */

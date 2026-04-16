@@ -14,11 +14,22 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes EquippableTemplate
  * @mixes ModifiersTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class CyberneticData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, ModifiersTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare type: string;
+    declare locations: Set<string>;
+    declare hasArmourPoints: boolean;
+    declare armourPoints: { head: number; leftArm: number; rightArm: number; body: number; leftLeg: number; rightLeg: number };
+    declare effect: string;
+    declare drawbacks: string;
+    declare installation: { surgery: string; difficulty: string; recoveryTime: string };
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -72,7 +83,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
      * Get the cybernetic type label.
      * @type {string}
      */
-    get typeLabel() {
+    get typeLabel(): string {
         return game.i18n.localize(
             `WH40K.CyberneticType.${this.type
                 .split('-')
@@ -85,14 +96,11 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
      * Get the locations label.
      * @type {string}
      */
-    get locationsLabel() {
+    get locationsLabel(): string {
         if (!this.locations.size) return '-';
-        return (
-            Array.from(this.locations)
-                // @ts-expect-error - dynamic property access
-                .map((l) => game.i18n.localize(`WH40K.BodyLocation.${l.capitalize()}`))
-                .join(', ')
-        );
+        return Array.from(this.locations)
+            .map((l) => game.i18n.localize(`WH40K.BodyLocation.${l.capitalize()}`))
+            .join(', ');
     }
 
     /* -------------------------------------------- */
@@ -100,7 +108,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.typeLabel, `Location: ${this.locationsLabel}`];
 
@@ -121,7 +129,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             type: this.typeLabel,
             location: this.locationsLabel,

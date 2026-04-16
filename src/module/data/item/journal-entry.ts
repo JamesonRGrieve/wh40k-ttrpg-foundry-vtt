@@ -7,7 +7,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
  */
 export default class JournalEntryItemData extends ItemDataModel.mixin(DescriptionTemplate) {
     /** @override */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -17,7 +17,7 @@ export default class JournalEntryItemData extends ItemDataModel.mixin(Descriptio
     }
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
         if (this.time) {
             props.push(this.time);
@@ -29,7 +29,7 @@ export default class JournalEntryItemData extends ItemDataModel.mixin(Descriptio
     }
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         const labels = [];
         if (this.time) {
             labels.push({ label: this.time, icon: 'fa-solid fa-clock' });

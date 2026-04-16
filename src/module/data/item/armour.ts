@@ -12,9 +12,26 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes PhysicalItemTemplate
  * @mixes EquippableTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare type: string;
+    declare armourPoints: { head: number; leftArm: number; rightArm: number; body: number; leftLeg: number; rightLeg: number };
+    declare coverage: Set<string>;
+    declare maxAgility: number | null;
+    declare properties: Set<string>;
+    declare primitive: boolean;
+    declare notes: string;
+    declare modifications: Array<{
+        uuid: string;
+        name: string;
+        active: boolean;
+        cachedModifiers: { armourPoints: number; maxAgility: number };
+    }>;
+    declare modificationSlots: number;
+
     /* -------------------------------------------- */
     /*  Data Migration                              */
     /* -------------------------------------------- */
@@ -24,7 +41,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source) {
+    static _migrateData(source: Record<string, any>): void {
         super._migrateData?.(source);
         ArmourData.#migrateArmourPoints(source);
         ArmourData.#migrateCoverage(source);
@@ -38,7 +55,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate `ap` → `armourPoints`.
      * @param {object} source  The source data
      */
-    static #migrateArmourPoints(source) {
+    static #migrateArmourPoints(source: Record<string, any>): void {
         if (source.ap !== undefined && !ArmourData.#hasCustomArmourPoints(source)) {
             const parsed = ArmourData.#parseLegacyAP(source);
             if (parsed?.pointsByLocation) {
@@ -72,7 +89,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate `locations` → `coverage`.
      * @param {object} source  The source data
      */
-    static #migrateCoverage(source) {
+    static #migrateCoverage(source: Record<string, any>): void {
         if (typeof source.locations === 'string' && !source.coverage) {
             const parsed = ArmourData.#parseLegacyLocations(source);
             if (parsed?.size) {
@@ -85,7 +102,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate `maxAg` string → `maxAgility` number.
      * @param {object} source  The source data
      */
-    static #migrateMaxAgility(source) {
+    static #migrateMaxAgility(source: Record<string, any>): void {
         if (source.maxAg !== undefined && source.maxAgility === undefined) {
             if (source.maxAg === '-' || source.maxAg === '' || source.maxAg === null) {
                 source.maxAgility = null;
@@ -100,7 +117,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Clean weight (remove "kg" suffix).
      * @param {object} source  The source data
      */
-    static #migrateWeight(source) {
+    static #migrateWeight(source: Record<string, any>): void {
         if (typeof source.weight === 'string') {
             const cleaned = parseFloat(source.weight.replace(/[^\d.]/g, ''));
             if (!isNaN(cleaned)) source.weight = cleaned;
@@ -111,7 +128,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Ensure properties exists.
      * @param {object} source  The source data
      */
-    static #migrateProperties(source) {
+    static #migrateProperties(source: Record<string, any>): void {
         if (!source.properties) {
             source.properties = [];
         }
@@ -121,7 +138,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Convert arrays to Sets for V13.
      * @param {object} source  The source data
      */
-    static #migrateCollections(source) {
+    static #migrateCollections(source: Record<string, any>): void {
         if (Array.isArray(source.coverage)) {
             source.coverage = new Set(source.coverage);
         }
@@ -140,7 +157,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source, options) {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
         // Note: Set to Array conversion is handled by Foundry's SetField
     }
@@ -154,7 +171,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} data  The data to validate
      * @protected
      */
-    static _validateJoint(data) {
+    static _validateJoint(data: Record<string, any>): void {
         super._validateJoint?.(data);
 
         // Validate AP values (0-20 reasonable range)
@@ -185,7 +202,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
 
         return {
@@ -265,7 +282,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the armour type label.
      * @type {string}
      */
-    get typeLabel() {
+    get typeLabel(): string {
         return game.i18n.localize(
             `WH40K.ArmourType.${this.type
                 .split('-')
@@ -286,7 +303,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get human-readable coverage description.
      * @type {string}
      */
-    get coverageLabel() {
+    get coverageLabel(): string {
         const coverage = this._getEffectiveCoverage();
         if (coverage.has('all')) return game.i18n.localize('WH40K.Coverage.All');
 
@@ -321,7 +338,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get coverage as icon string for compact display.
      * @type {string}
      */
-    get coverageIcons() {
+    get coverageIcons(): string {
         const coverage = this._getEffectiveCoverage();
         if (coverage.has('all')) return '●●●●●●';
 
@@ -354,7 +371,6 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         return Array.from(this.properties).map((prop) =>
             game.i18n.localize(
                 `WH40K.ArmourProperty.${prop
-                    // @ts-expect-error - dynamic property access
                     .split('-')
                     .map((s) => s.capitalize())
                     .join('')}`,
@@ -362,7 +378,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         );
     }
 
-    _getLegacyField(field) {
+    _getLegacyField(field): any {
         return this.parent?._source?.system?.[field];
     }
 
@@ -371,11 +387,11 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source Source data to check
      * @returns {boolean}
      */
-    static #hasCustomArmourPoints(source) {
+    static #hasCustomArmourPoints(source: Record<string, any>): boolean {
         return Object.values(source.armourPoints ?? {}).some((value) => Number(value) > 0);
     }
 
-    _hasCustomArmourPoints() {
+    _hasCustomArmourPoints(): any {
         return Object.values(this.armourPoints ?? {}).some((value) => Number(value) > 0);
     }
 
@@ -384,7 +400,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source Source data
      * @returns {Set|null}
      */
-    static #parseLegacyLocations(source) {
+    static #parseLegacyLocations(source: Record<string, any>): Set<string> | null {
         const rawLocations = source.locations;
         if (!rawLocations || typeof rawLocations !== 'string') return null;
 
@@ -393,7 +409,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             return new Set(['all']);
         }
 
-        const coverage = new Set();
+        const coverage = new Set<string>();
         const tokens = normalized
             .split(',')
             .map((token) => token.trim())
@@ -418,7 +434,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         return coverage.size ? coverage : null;
     }
 
-    _parseLegacyLocations() {
+    _parseLegacyLocations(): any {
         const rawLocations = this._getLegacyField('locations');
         if (!rawLocations || typeof rawLocations !== 'string') return null;
 
@@ -457,7 +473,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source Source data
      * @returns {object|null}
      */
-    static #parseLegacyAP(source) {
+    static #parseLegacyAP(source: Record<string, any>): any {
         const rawAp = source.ap;
         if (rawAp === null || rawAp === undefined) return null;
 
@@ -512,7 +528,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         return null;
     }
 
-    _parseLegacyAP() {
+    _parseLegacyAP(): any {
         const rawAp = this._getLegacyField('ap');
         if (rawAp === null || rawAp === undefined) return null;
 
@@ -548,7 +564,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         return null;
     }
 
-    _getLegacyArmourProfile() {
+    _getLegacyArmourProfile(): any {
         const ap = this._parseLegacyAP();
         if (!ap) return null;
 
@@ -558,7 +574,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         };
     }
 
-    _getEffectiveCoverage() {
+    _getEffectiveCoverage(): any {
         if (!this._hasCustomArmourPoints()) {
             const legacyCoverage = this._parseLegacyLocations();
             if (legacyCoverage?.size) return legacyCoverage;
@@ -581,7 +597,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {string} location   The body location.
      * @returns {number}
      */
-    getAPForLocation(location) {
+    getAPForLocation(location): number {
         if (!this._hasCustomArmourPoints()) {
             const legacy = this._getLegacyArmourProfile();
             if (legacy) {
@@ -605,7 +621,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get a summary of AP by location.
      * @type {string}
      */
-    get apSummary() {
+    get apSummary(): string {
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         const abbrs = { head: 'H', body: 'B', leftArm: 'LA', rightArm: 'RA', leftLeg: 'LL', rightLeg: 'RL' };
         const coverage = this._getEffectiveCoverage();
@@ -658,7 +674,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get protection level category for styling.
      * @type {string}
      */
-    get protectionLevel() {
+    get protectionLevel(): string {
         const avgAP = this.averageAP;
         if (avgAP === 0) return 'none';
         if (avgAP <= 2) return 'light';
@@ -671,7 +687,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get average armour points across all covered locations.
      * @type {number}
      */
-    get averageAP() {
+    get averageAP(): number {
         const coverage = this._getEffectiveCoverage();
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         const coveredLocs = coverage.has('all') ? locations : locations.filter((loc) => coverage.has(loc));
@@ -686,7 +702,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get max armour points across all locations.
      * @type {number}
      */
-    get maxAP() {
+    get maxAP(): number {
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         return Math.max(...locations.map((loc) => this.getEffectiveAPForLocation(loc)));
     }
@@ -695,7 +711,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get max base armour points across all locations (before modifications).
      * @type {number}
      */
-    get maxBaseAP() {
+    get maxBaseAP(): number {
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         return Math.max(...locations.map((loc) => this.getAPForLocation(loc)));
     }
@@ -792,7 +808,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get craftsmanship label.
      * @type {string}
      */
-    get craftsmanshipLabel() {
+    get craftsmanshipLabel(): string {
         const craft = this.craftsmanship ?? 'common';
         return game.i18n.localize(`WH40K.Craftsmanship.${craft.charAt(0).toUpperCase() + craft.slice(1)}`);
     }
@@ -837,7 +853,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {string} location - The body location
      * @returns {number} - Effective AP value
      */
-    getEffectiveAPForLocation(location) {
+    getEffectiveAPForLocation(location): any {
         const baseAP = this.getAPForLocation(location);
         const craftMods = this.craftsmanshipModifiers;
 
@@ -852,7 +868,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} [weapon] - Optional weapon data model
      * @returns {number} - Effective AP value
      */
-    getEffectiveAPAgainstWeapon(location, weapon = null) {
+    getEffectiveAPAgainstWeapon(location, weapon = null): any {
         let ap = this.getEffectiveAPForLocation(location);
 
         // Primitive armour vs non-primitive weapon: halve AP (round up)
@@ -867,7 +883,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get effective weight including craftsmanship modifier.
      * @type {number}
      */
-    get effectiveWeight() {
+    get effectiveWeight(): number {
         const craftMods = this.craftsmanshipModifiers;
         return Math.round(this.weight * craftMods.weight * 10) / 10; // Round to 1 decimal
     }
@@ -903,7 +919,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Check if this armour has any special properties.
      * @type {boolean}
      */
-    get hasProperties() {
+    get hasProperties(): boolean {
         return this.properties.size > 0;
     }
 
@@ -911,7 +927,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Check if armour is currently equipped.
      * @type {boolean}
      */
-    get isWorn() {
+    get isWorn(): boolean {
         return this.equipped === true;
     }
 
@@ -928,7 +944,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this)];
 
@@ -952,7 +968,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             type: this.typeLabel,
             ap: this.apSummary,

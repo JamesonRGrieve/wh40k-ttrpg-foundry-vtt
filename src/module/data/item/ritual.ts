@@ -9,11 +9,21 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes DescriptionTemplate
  * @mixes ActivationTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate, ActivationTemplate) {
     [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare type: string;
+    declare test: { characteristic: string; skill: string; modifier: number; threshold: number };
+    declare requirements: string;
+    declare effect: string;
+    declare failure: string;
+    declare costs: string;
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -61,7 +71,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
-    get isRollable() {
+    get isRollable(): boolean {
         return true;
     }
 
@@ -69,7 +79,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the ritual type label.
      * @type {string}
      */
-    get typeLabel() {
+    get typeLabel(): string {
         return game.i18n.localize(
             `WH40K.RitualType.${this.type
                 .split('-')
@@ -96,7 +106,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         // @ts-expect-error - TS2339
         const props = [this.typeLabel, `Test: ${this.testLabel}`, ...ActivationTemplate.prototype.chatProperties.call(this)];
 
@@ -108,7 +118,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             type: this.typeLabel,
             test: this.testLabel,

@@ -25,46 +25,49 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /*  Getters                                     */
     /* -------------------------------------------- */
 
-    get backpack(): any {
+    get backpack(): Record<string, unknown> {
         return this.system.backpack;
     }
-    get skills(): Record<string, any> {
+    get skills(): Record<
+        string,
+        { label?: string; characteristic: string; trained: boolean; plus10: boolean; plus20: boolean; bonus: number; current: number; entries?: unknown[] }
+    > {
         return this.system.skills;
     }
-    get fatigue(): any {
+    get fatigue(): { value: number; max: number } {
         return this.system.fatigue;
     }
-    get fate(): any {
+    get fate(): { value: number; max: number; total?: number; rolled?: boolean } {
         return this.system.fate;
     }
-    get psy(): any {
+    get psy(): Record<string, unknown> {
         return this.system.psy;
     }
-    get bio(): any {
+    get bio(): Record<string, string> {
         return this.system.bio;
     }
-    get experience(): any {
+    get experience(): { used: number; total: number; available: number } {
         return this.system.experience;
     }
-    get insanity(): any {
+    get insanity(): { value: number } {
         return this.system.insanity;
     }
-    get corruption(): any {
+    get corruption(): { value: number } {
         return this.system.corruption;
     }
-    get aptitudes(): any {
+    get aptitudes(): Set<string> {
         return this.system.aptitudes;
     }
-    get armour(): any {
+    get armour(): Record<string, { value: number; total: number; toughnessBonus: number; traitBonus: number }> {
         return this.system.armour;
     }
-    get encumbrance(): any {
+    get encumbrance(): { value: number; max: number; over: boolean } {
         return this.system.encumbrance;
     }
-    get backgroundEffects(): any {
+    get backgroundEffects(): unknown[] {
         return this.system.backgroundEffects;
     }
-    get originPath(): any {
+    get originPath(): Record<string, unknown> {
         return this.system.originPath;
     }
     get originPathItems(): Item[] {
@@ -255,7 +258,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const char = this.system.characteristics?.[charKey];
         if (!char) {
             (ui.notifications as any).warn(`Characteristic "${charKey}" not found`);
-            return null;
+            return;
         }
 
         const flavor = flavorOverride || `${char.label} Test`;
@@ -290,7 +293,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const skill = this.skills[resolvedSkillName];
         if (!skill) {
             (ui.notifications as any).warn(`Unable to find skill ${skillName}`);
-            return null;
+            return;
         }
         let label = skill.label;
         let targetValue = skill.current;
@@ -360,6 +363,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
                     const target = targetedObjects.values().next().value;
                     return target.actor;
                 }
+                return undefined;
             },
         });
     }
@@ -446,7 +450,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 await this.rollPsychicPowerDamage(item);
                 return;
             default:
-                return (ui.notifications as any).warn(`No actions implemented for item type: ${item.type}`);
+                (ui.notifications as any).warn(`No actions implemented for item type: ${item.type}`);
+                return;
         }
     }
 
@@ -548,10 +553,11 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 return foundSkill;
             }
         }
+        return undefined;
     }
 
     _findSpecialistSkill(skill: any, specialityName: string | number): any {
-        if (!Array.isArray(skill?.entries)) return;
+        if (!Array.isArray(skill?.entries)) return undefined;
         if (Number.isInteger(specialityName)) return skill.entries[specialityName];
 
         const index = Number.parseInt(String(specialityName), 10);

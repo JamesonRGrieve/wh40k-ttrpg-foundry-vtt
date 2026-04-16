@@ -35,7 +35,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -70,7 +70,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    _initResult() {
+    _initResult(): any {
         return { success: true, applied: { selectedOptions: [], grantResults: {} }, notifications: [], errors: [] };
     }
 
@@ -131,8 +131,9 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
                     }
                 }
 
+                const grantResults = result.applied.grantResults;
                 const grantResult = await this._applySubGrant(actor, grantConfig, data, options);
-                result.applied.grantResults[`${optionLabel}:${i}`] = grantResult.applied;
+                grantResults[`${optionLabel}:${i}`] = grantResult.applied;
                 result.notifications.push(...grantResult.notifications);
                 result.errors.push(...grantResult.errors);
             }
@@ -140,7 +141,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState) {
+    async reverse(actor, appliedState): Promise<any> {
         const restoreData = {
             selectedOptions: appliedState.selectedOptions ?? [],
             grantResults: {},
@@ -167,13 +168,13 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    getAutomaticValue() {
+    getAutomaticValue(): boolean {
         // Choices always require user interaction
         return false;
     }
 
     /** @inheritDoc */
-    async getSummary() {
+    async getSummary(): Promise<void> {
         const summary = await super.getSummary();
         summary.icon = (this.constructor as any).ICON;
         summary.choiceCount = this.count;
@@ -202,7 +203,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    validateGrant() {
+    validateGrant(): void {
         const errors = super.validateGrant();
 
         // Handle missing/undefined options gracefully
@@ -243,7 +244,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
      * @returns {Promise<GrantApplicationResult>}
      * @private
      */
-    _applySubGrant(actor, grantConfig, data, options) {
+    _applySubGrant(actor, grantConfig, data, options): any {
         const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
         if (!GrantClass) {
             return {

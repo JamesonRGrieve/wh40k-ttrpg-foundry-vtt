@@ -264,7 +264,8 @@ export class GrantsProcessor {
 
         // Wounds - prefer formula over legacy field
         if (grants.woundsFormula) {
-            context.result.woundsBonus += await this._evaluateWounds(grants.woundsFormula, context.actor, originItem);
+            const woundsValue = await this._evaluateWounds(grants.woundsFormula, context.actor, originItem);
+            context.result.woundsBonus += woundsValue;
         } else if (grants.wounds && grants.wounds !== 0) {
             context.result.woundsBonus += grants.wounds;
             console.debug(`Origin "${originItem.name}" uses legacy grants.wounds field. Consider migrating to woundsFormula.`);
@@ -272,7 +273,8 @@ export class GrantsProcessor {
 
         // Fate - prefer formula over legacy field
         if (grants.fateFormula) {
-            context.result.fateBonus += await this._evaluateFate(grants.fateFormula, originItem);
+            const fateValue = await this._evaluateFate(grants.fateFormula, originItem);
+            context.result.fateBonus += fateValue;
         } else if (grants.fateThreshold && grants.fateThreshold !== 0) {
             context.result.fateBonus += grants.fateThreshold;
             console.debug(`Origin "${originItem.name}" uses legacy grants.fateThreshold field. Consider migrating to fateFormula.`);

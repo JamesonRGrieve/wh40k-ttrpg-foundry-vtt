@@ -67,12 +67,15 @@ export async function createItemMacro(data, slot) {
 
 export function rollItemMacro(actorId, itemId) {
     game.wh40k.log('RollItemMacro');
-    if (!checkCanRollMacro(itemId)) return;
+    if (!checkCanRollMacro(itemId)) return undefined;
     const actor = getTokenActor(actorId);
-    if (!actor) return;
+    if (!actor) return undefined;
 
     const item = actor ? actor.items.find((i) => i._id === itemId) : null;
-    if (!item) return (ui.notifications as any).warn(`Actor does not have an item id: ${itemId}`);
+    if (!item) {
+        (ui.notifications as any).warn(`Actor does not have an item id: ${itemId}`);
+        return undefined;
+    }
     return actor.rollItem(item._id);
 }
 
@@ -109,7 +112,10 @@ export async function rollSkillMacro(actorId, skillName, speciality) {
     if (!actor) return;
 
     const skill = actor?.getSkillFuzzy ? actor.getSkillFuzzy(skillName) : actor?.skills?.[skillName];
-    if (!skill) return (ui.notifications as any).warn(`Your controlled Actor does not have a skill named ${skillName}`);
+    if (!skill) {
+        (ui.notifications as any).warn(`Your controlled Actor does not have a skill named ${skillName}`);
+        return;
+    }
     await actor.rollSkill(skillName, speciality);
 }
 
@@ -142,6 +148,9 @@ export async function rollCharacteristicMacro(actorId, characteristic) {
     if (!actor) return;
 
     const charCheck = actor ? actor.characteristics[characteristic] : null;
-    if (!charCheck) return (ui.notifications as any).warn(`Your controlled Actor does not have a characteristic named ${characteristic}`);
+    if (!charCheck) {
+        (ui.notifications as any).warn(`Your controlled Actor does not have a characteristic named ${characteristic}`);
+        return;
+    }
     await actor.rollCharacteristic(characteristic);
 }

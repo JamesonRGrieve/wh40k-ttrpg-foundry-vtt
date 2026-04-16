@@ -263,7 +263,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #nestedItemEdit(this: any, event: Event, target: HTMLElement): void {
-        const itemId = target.closest('[data-nested-item-id]')?.dataset.nestedItemId;
+        const itemId = (target.closest('[data-nested-item-id]') as HTMLElement | null)?.dataset.nestedItemId;
         const nestedItem = this.item.items?.get(itemId);
         nestedItem?.sheet.render(true);
     }
@@ -277,7 +277,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #nestedItemDelete(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.closest('[data-nested-item-id]')?.dataset.nestedItemId;
+        const itemId = (target.closest('[data-nested-item-id]') as HTMLElement | null)?.dataset.nestedItemId;
         if (!itemId) return;
 
         const confirmed = await ConfirmationDialog.confirm({

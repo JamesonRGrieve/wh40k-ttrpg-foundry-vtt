@@ -9,10 +9,22 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes DescriptionTemplate
  * @mixes ModifiersTemplate
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class ConditionData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
+    [key: string]: any;
+
+    // Typed property declarations matching defineSchema()
+    declare identifier: string;
+    declare nature: string;
+    declare effect: string;
+    declare removal: string;
+    declare stackable: boolean;
+    declare stacks: number;
+    declare appliesTo: string;
+    declare duration: { value: number; units: string };
+    declare notes: string;
+
     /** @inheritdoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -67,7 +79,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * Get the nature label with safe fallback.
      * @type {string}
      */
-    get natureLabel() {
+    get natureLabel(): string {
         const key = `WH40K.Condition.Nature.${this.nature.capitalize()}`;
         return game.i18n.has(key) ? game.i18n.localize(key) : this.nature.capitalize();
     }
@@ -89,7 +101,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * Get the nature CSS class.
      * @type {string}
      */
-    get natureClass() {
+    get natureClass(): string {
         return `nature-${this.nature}`;
     }
 
@@ -97,7 +109,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * Get the appliesTo label with safe fallback.
      * @type {string}
      */
-    get appliesToLabel() {
+    get appliesToLabel(): string {
         const key = `WH40K.Condition.AppliesTo.${this.appliesTo.capitalize()}`;
         return game.i18n.has(key) ? game.i18n.localize(key) : this.appliesTo.capitalize();
     }
@@ -132,7 +144,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * Get the duration display string.
      * @type {string}
      */
-    get durationDisplay() {
+    get durationDisplay(): string {
         if (this.duration.units === 'permanent') {
             const key = 'WH40K.Condition.Duration.Permanent';
             return game.i18n.has(key) ? game.i18n.localize(key) : 'Permanent';
@@ -155,7 +167,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
     /* -------------------------------------------- */
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [this.natureLabel, this.appliesToLabel];
 
         if (this.stackable) {
@@ -178,7 +190,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
     /* -------------------------------------------- */
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         return {
             nature: this.natureLabel,
             stacks: this.stackable ? this.stacks : '-',

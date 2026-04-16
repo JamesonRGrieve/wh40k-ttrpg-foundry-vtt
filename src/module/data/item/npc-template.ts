@@ -23,7 +23,7 @@ export default class NPCTemplateData extends ItemDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return {
             ...super.defineSchema(),
 
@@ -192,7 +192,7 @@ export default class NPCTemplateData extends ItemDataModel {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    prepareDerivedData() {
+    prepareDerivedData(): void {
         super.prepareDerivedData();
 
         // Calculate skill count
@@ -216,7 +216,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * Get the category label.
      * @type {string}
      */
-    get categoryLabel() {
+    get categoryLabel(): string {
         return game.i18n.localize(`WH40K.NPC.Template.Category.${this.category.titleCase()}`);
     }
 
@@ -224,7 +224,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * Get the role label.
      * @type {string}
      */
-    get roleLabel() {
+    get roleLabel(): string {
         return game.i18n.localize(`WH40K.NPCRole.${this.role.titleCase()}`);
     }
 
@@ -232,7 +232,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * Get the type label.
      * @type {string}
      */
-    get typeLabel() {
+    get typeLabel(): string {
         return game.i18n.localize(`WH40K.NPCType.${this.type.titleCase()}`);
     }
 
@@ -240,7 +240,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * Get a summary string for the template.
      * @type {string}
      */
-    get summary() {
+    get summary(): string {
         return `${this.typeLabel} ${this.roleLabel} (Threat ${this.baseThreatLevel})`;
     }
 
@@ -256,7 +256,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * @param {string} [options.variant] - Variant name to apply.
      * @returns {Object} NPC system data ready for Actor.create().
      */
-    generateAtThreat(targetThreat, options = {}) {
+    generateAtThreat(targetThreat, options = {}): any {
         // @ts-expect-error - dynamic property
         const { isHorde = false, variant = null } = options;
 
@@ -430,7 +430,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * @param {number} targetThreat - The target threat level.
      * @returns {Object} Preview data.
      */
-    previewAtThreat(targetThreat) {
+    previewAtThreat(targetThreat): any {
         const data = this.generateAtThreat(targetThreat);
 
         return {

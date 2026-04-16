@@ -13,7 +13,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * Get the actor associated with this message's speaker
      * @type {Actor|null}
      */
-    get speakerActor() {
+    get speakerActor(): any {
         return ChatMessage.getSpeakerActor(this.speaker);
     }
 
@@ -21,7 +21,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * Check if this message is an item card
      * @type {boolean}
      */
-    get isItemCard() {
+    get isItemCard(): boolean {
         // @ts-expect-error - argument type
         return !!this.getFlag('wh40k-rpg', 'itemCard');
     }
@@ -30,7 +30,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * Check if this message is a roll with a target
      * @type {boolean}
      */
-    get isTargetedRoll() {
+    get isTargetedRoll(): boolean {
         // @ts-expect-error - argument type
         return this.isRoll && this.getFlag('wh40k-rpg', 'target') !== undefined;
     }
@@ -39,7 +39,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * Get the item UUID if this is an item card
      * @type {string|null}
      */
-    get itemUuid() {
+    get itemUuid(): any {
         // @ts-expect-error - argument type
         return this.getFlag('wh40k-rpg', 'item.uuid') ?? null;
     }
@@ -52,7 +52,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * Calculate degrees of success or failure for a d100 roll
      * @returns {{success: boolean, degrees: number}|null}
      */
-    calculateDegrees() {
+    calculateDegrees(): any {
         if (!this.isRoll || !this.rolls?.length) return null;
 
         const roll = this.rolls[0];
@@ -77,7 +77,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * Roll damage from an item card
      * @returns {Promise<void>}
      */
-    async rollDamage() {
+    async rollDamage(): Promise<void> {
         const itemUuid = this.itemUuid;
         if (!itemUuid) {
             (ui.notifications as any).warn('WH40K.Chat.NoItemFound', { localize: true });
@@ -115,7 +115,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * @param {string} [options.location] - Hit location
      * @returns {Promise<void>}
      */
-    async applyDamage(damage, options = {}) {
+    async applyDamage(damage, options = {}): Promise<void> {
         const targets = game.user.targets;
 
         if (targets.size === 0) {
@@ -146,7 +146,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * Use an item from its card
      * @returns {Promise<void>}
      */
-    async useItem() {
+    async useItem(): Promise<void> {
         const itemUuid = this.itemUuid;
         if (!itemUuid) {
             (ui.notifications as any).warn('WH40K.Chat.NoItemFound', { localize: true });
@@ -203,7 +203,8 @@ export class ChatMessageWH40K extends ChatMessage {
         switch (action) {
             case 'rollDamage':
             case 'damage':
-                return message.rollDamage();
+                await message.rollDamage();
+                return;
 
             case 'applyDamage': {
                 const damage = parseInt(button.dataset.damage) || 0;
@@ -212,12 +213,14 @@ export class ChatMessageWH40K extends ChatMessage {
                     penetration: parseInt(button.dataset.penetration) || 0,
                     location: button.dataset.location,
                 };
-                return message.applyDamage(damage, options);
+                await message.applyDamage(damage, options);
+                return;
             }
 
             case 'useItem':
             case 'use':
-                return message.useItem();
+                await message.useItem();
+                return;
 
             case 'attack': {
                 const itemUuid = button.dataset.itemUuid || message.itemUuid;

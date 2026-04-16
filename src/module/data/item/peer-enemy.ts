@@ -7,7 +7,7 @@ import DescriptionTemplate from '../shared/description-template.ts';
  */
 export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTemplate) {
     /** @override */
-    static defineSchema() {
+    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = (foundry.data as any).fields;
         return {
             ...super.defineSchema(),
@@ -17,7 +17,7 @@ export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTempla
     }
 
     /** @override */
-    get chatProperties() {
+    get chatProperties(): string[] {
         const props = [];
         if (this.group) {
             props.push(this.group);
@@ -30,7 +30,7 @@ export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTempla
     }
 
     /** @override */
-    get headerLabels() {
+    get headerLabels(): Record<string, unknown> | Array<Record<string, unknown>> {
         const labels = [];
         if (this.modifier !== 0) {
             const sign = this.modifier > 0 ? '+' : '';
@@ -43,7 +43,7 @@ export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTempla
      * Check if this is a positive relationship (Peer).
      * @returns {boolean}
      */
-    get isPeer() {
+    get isPeer(): boolean {
         return this.modifier >= 0;
     }
 
@@ -51,7 +51,7 @@ export default class PeerEnemyData extends ItemDataModel.mixin(DescriptionTempla
      * Check if this is a negative relationship (Enemy).
      * @returns {boolean}
      */
-    get isEnemy() {
+    get isEnemy(): boolean {
         return this.modifier < 0;
     }
 }

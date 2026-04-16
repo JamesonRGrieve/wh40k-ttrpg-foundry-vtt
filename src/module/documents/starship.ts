@@ -2,7 +2,7 @@ import { WH40KBaseActor } from './base-actor.ts';
 
 export class WH40KStarship extends WH40KBaseActor {
     [key: string]: any;
-    async _preCreate(data, options, user) {
+    async _preCreate(data, options, user): Promise<any> {
         await super._preCreate(data, options, user);
         const initData = {
             'token.bar1': { attribute: 'hullIntegrity' },
@@ -17,7 +17,7 @@ export class WH40KStarship extends WH40KBaseActor {
     }
 
     /** @override */
-    prepareData() {
+    prepareData(): void {
         super.prepareData();
         // Call DataModel's embedded data preparation for component calculations
         if (typeof this.system.prepareEmbeddedData === 'function') {
@@ -25,59 +25,59 @@ export class WH40KStarship extends WH40KBaseActor {
         }
     }
 
-    get hullType() {
+    get hullType(): string {
         return this.system.hullType;
     }
 
-    get hullClass() {
+    get hullClass(): string {
         return this.system.hullClass;
     }
 
-    get hullIntegrity() {
+    get hullIntegrity(): { value: number; max: number } {
         return this.system.hullIntegrity;
     }
 
-    get speed() {
+    get speed(): number {
         return this.system.speed;
     }
 
-    get manoeuvrability() {
+    get manoeuvrability(): number {
         return this.system.manoeuvrability;
     }
 
-    get detection() {
+    get detection(): number {
         return this.system.detection;
     }
 
-    get detectionBonus() {
+    get detectionBonus(): number {
         return this.system.detectionBonus || Math.floor(this.detection / 10);
     }
 
-    get armour() {
+    get armour(): number {
         return this.system.armour;
     }
 
-    get voidShields() {
+    get voidShields(): number {
         return this.system.voidShields;
     }
 
-    get turretRating() {
+    get turretRating(): number {
         return this.system.turretRating;
     }
 
-    get crew() {
+    get crew(): Record<string, unknown> {
         return this.system.crew;
     }
 
-    get power() {
+    get power(): { used: number; total: number } {
         return this.system.power;
     }
 
-    get space() {
+    get space(): { used: number; total: number } {
         return this.system.space;
     }
 
-    get weaponCapacity() {
+    get weaponCapacity(): Record<string, unknown> {
         return this.system.weaponCapacity;
     }
 
@@ -85,7 +85,7 @@ export class WH40KStarship extends WH40KBaseActor {
      * Is the ship crippled (below half hull)?
      * @type {boolean}
      */
-    get isCrippled() {
+    get isCrippled(): any {
         return this.hullIntegrity.value <= Math.floor(this.hullIntegrity.max / 2);
     }
 
@@ -93,32 +93,29 @@ export class WH40KStarship extends WH40KBaseActor {
      * Is the ship destroyed?
      * @type {boolean}
      */
-    get isDestroyed() {
+    get isDestroyed(): boolean {
         return this.hullIntegrity.value <= 0;
     }
 
     /**
      * Get all ship components
      */
-    get shipComponents() {
-        // @ts-expect-error - comparison type
-        return this.items.filter((i) => i.type === 'shipComponent');
+    get shipComponents(): any[] {
+        return this.items.filter((i) => (i.type as string) === 'shipComponent');
     }
 
     /**
      * Get all ship weapons
      */
-    get shipWeapons() {
-        // @ts-expect-error - comparison type
-        return this.items.filter((i) => i.type === 'shipWeapon');
+    get shipWeapons(): any[] {
+        return this.items.filter((i) => (i.type as string) === 'shipWeapon');
     }
 
     /**
      * Get all ship upgrades
      */
-    get shipUpgrades() {
-        // @ts-expect-error - comparison type
-        return this.items.filter((i) => i.type === 'shipUpgrade');
+    get shipUpgrades(): any[] {
+        return this.items.filter((i) => (i.type as string) === 'shipUpgrade');
     }
 
     /**
@@ -133,7 +130,6 @@ export class WH40KStarship extends WH40KBaseActor {
             keel: [],
         };
         for (const weapon of this.shipWeapons) {
-            // @ts-expect-error - dynamic property access
             const loc = weapon.system.location || 'dorsal';
             if (grouped[loc]) grouped[loc].push(weapon);
         }
@@ -144,10 +140,9 @@ export class WH40KStarship extends WH40KBaseActor {
      * Fire a ship weapon
      * @param {string} weaponId - The ID of the weapon to fire
      */
-    async fireWeapon(weaponId) {
+    async fireWeapon(weaponId): Promise<void> {
         const weapon = this.items.get(weaponId);
-        // @ts-expect-error - comparison type
-        if (!weapon || weapon.type !== 'shipWeapon') {
+        if (!weapon || (weapon.type as string) !== 'shipWeapon') {
             (ui.notifications as any).warn('Invalid ship weapon');
             return;
         }
@@ -172,8 +167,7 @@ export class WH40KStarship extends WH40KBaseActor {
     /**
      * Roll ship initiative (1d10 + Detection Bonus)
      */
-    // @ts-expect-error - override type
-    async rollInitiative() {
+    async rollInitiative(): Promise<any> {
         const roll = await new Roll(`1d10 + ${this.detectionBonus}`).evaluate();
 
         const content = `
