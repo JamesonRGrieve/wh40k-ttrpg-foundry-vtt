@@ -195,7 +195,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event   The triggering event
      * @param {HTMLElement} target The target element
      */
-    static async #addModification(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #addModification(this: any, event: Event, target: HTMLElement): void {
         // Check if slots available
         if (this.item.system.availableModSlots <= 0) {
             (ui.notifications as any).warn(game.i18n.localize('WH40K.Armour.NoSlotsAvailable'));
@@ -217,7 +217,7 @@ export default class ArmourSheet extends ContainerItemSheet {
         if (!mod?.uuid) return;
 
         try {
-            const item = await fromUuid(mod.uuid) as any;
+            const item = (await fromUuid(mod.uuid)) as any;
             if (item) item.sheet.render(true);
         } catch (err) {
             console.error('Failed to open modification:', err);

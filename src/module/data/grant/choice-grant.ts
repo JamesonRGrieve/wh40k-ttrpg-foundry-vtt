@@ -1,8 +1,8 @@
 import BaseGrantData from './base-grant.ts';
-import ItemGrantData from './item-grant.ts';
-import SkillGrantData from './skill-grant.ts';
 import CharacteristicGrantData from './characteristic-grant.ts';
+import ItemGrantData from './item-grant.ts';
 import ResourceGrantData from './resource-grant.ts';
+import SkillGrantData from './skill-grant.ts';
 
 /**
  * Grant that presents choices to the player.
@@ -110,7 +110,10 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
                     option = choiceOptions.find((o) => o.label === baseName);
                 }
             }
-            if (!option) { result.errors.push(`Unknown option: ${optionLabel}`); continue; }
+            if (!option) {
+                result.errors.push(`Unknown option: ${optionLabel}`);
+                continue;
+            }
 
             result.applied.selectedOptions.push(optionLabel);
             result.notifications.push(`Selected: ${optionLabel}`);
@@ -240,7 +243,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
      * @returns {Promise<GrantApplicationResult>}
      * @private
      */
-    async _applySubGrant(actor, grantConfig, data, options) {
+    _applySubGrant(actor, grantConfig, data, options) {
         const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
         if (!GrantClass) {
             return {

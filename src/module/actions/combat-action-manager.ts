@@ -17,15 +17,15 @@ export class CombatActionManager {
         Hooks.off('combatRound', this.combatRoundHook);
     }
 
-    async updateCombat(combat, data) {
+    updateCombat(combat, data) {
         // Only Run on the first GM -- so it will only run once
         if (game.userId === this.getFirstGM()) {
             game.wh40k.log('updateCombat - this should only be running on first GM');
-            this.processCombatActiveEffects(combat, data);
+            void this.processCombatActiveEffects(combat, data);
 
             // Reset first attack flags for all combatants at start of new round
             if (data.round !== data.previous?.round) {
-                this.resetFirstAttackFlags(combat);
+                void this.resetFirstAttackFlags(combat);
             }
         }
     }

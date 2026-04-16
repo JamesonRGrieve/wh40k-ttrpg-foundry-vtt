@@ -1,8 +1,8 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
-import { PsychicActionData, WeaponActionData } from '../rolls/action-data.ts';
-import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import { PsychicActionData, WeaponActionData } from '../rolls/action-data.ts';
 import { calculateTokenDistance } from '../utils/range-calculator.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
 export class TargetedActionManager {
     initializeHooks() {

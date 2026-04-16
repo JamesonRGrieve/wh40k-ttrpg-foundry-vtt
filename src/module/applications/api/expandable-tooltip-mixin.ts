@@ -21,7 +21,7 @@
 export default function ExpandableTooltipMixin<T extends new (...args: any[]) => any>(Base: T) {
     // eslint-disable-next-line no-shadow -- class must match function name for private field access
     return class ExpandableTooltipMixin extends Base {
-    [key: string]: any;
+        [key: string]: any;
         /**
          * Storage for currently open expandable panels
          * @type {Set<string>}
@@ -54,7 +54,7 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
          * @param {HTMLElement} target - Action target
          * @private
          */
-        static async #toggleExpandable(event: Event, target: HTMLElement): Promise<void> {
+        static #toggleExpandable(event: Event, target: HTMLElement): void {
             event.preventDefault();
             event.stopPropagation();
 
@@ -97,7 +97,7 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
                 this.#openPanels.add(panelId);
 
                 // Enrich content if needed
-                this.#enrichPanelContent(panel);
+                void this.#enrichPanelContent(panel);
             }
         }
 

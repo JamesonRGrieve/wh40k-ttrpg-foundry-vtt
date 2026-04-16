@@ -19,7 +19,7 @@
 export default function StatBreakdownMixin<T extends new (...args: any[]) => any>(Base: T) {
     // eslint-disable-next-line no-shadow -- class must match function name for private field access
     return class StatBreakdownMixin extends Base {
-    [key: string]: any;
+        [key: string]: any;
         /**
          * Currently open breakdown popover
          * @type {HTMLElement|null}
@@ -53,7 +53,7 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
          * @param {HTMLElement} target - Action target
          * @private
          */
-        static async #showStatBreakdown(event: Event, target: HTMLElement): Promise<void> {
+        static #showStatBreakdown(event: Event, target: HTMLElement): void {
             event.preventDefault();
             event.stopPropagation();
 
@@ -106,7 +106,7 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
             if (!uuid) return;
 
             // Fetch and render the item
-            const item = await fromUuid(uuid) as any;
+            const item = (await fromUuid(uuid)) as any;
             if (item) {
                 item.sheet.render(true);
             }
@@ -160,7 +160,12 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
          * @returns {string} HTML string
          * @private
          */
-        #buildPopoverHTML(breakdown: { label: string; base: number; modifiers: Array<{ value: number; uuid?: string; icon?: string; source: string }>; total: number }): string {
+        #buildPopoverHTML(breakdown: {
+            label: string;
+            base: number;
+            modifiers: Array<{ value: number; uuid?: string; icon?: string; source: string }>;
+            total: number;
+        }): string {
             const { label, base, modifiers, total } = breakdown;
 
             let html = `
@@ -301,7 +306,7 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
         /**
          * @override
          */
-        async close(options: Record<string, unknown> = {}): Promise<void> {
+        close(options: Record<string, unknown> = {}): Promise<void> {
             this.#closePopover();
             return super.close(options);
         }

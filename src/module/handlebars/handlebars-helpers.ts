@@ -137,11 +137,11 @@ export function registerHandlebarsHelpers() {
         }
     });
 
-    Handlebars.registerHelper('concat', function () {
+    Handlebars.registerHelper('concat', function (...args: unknown[]) {
         let outStr = '';
-        for (const arg in arguments) {
-            if (typeof arguments[arg] != 'object') {
-                outStr += arguments[arg];
+        for (const arg of args) {
+            if (typeof arg != 'object') {
+                outStr += arg as string;
             }
         }
         return outStr;
@@ -180,9 +180,9 @@ export function registerHandlebarsHelpers() {
 
     Handlebars.registerHelper('removeMarkup', (text) => {
         if (text == null) return '';
-        if (typeof text !== 'string') text = String(text);
+        const textStr = typeof text !== 'string' ? String(text) : text;
         const markup = /<(.*?)>/gi;
-        return text.replace(markup, '');
+        return textStr.replace(markup, '');
     });
 
     Handlebars.registerHelper('cleanFieldName', (text) => {
@@ -470,7 +470,7 @@ export function registerHandlebarsHelpers() {
         }
         if (typeof special === 'object') {
             return Object.entries(special)
-                .map(([key, value]) => (value ? `${key} ${value}`.trim() : key))
+                .map(([key, value]) => (value ? `${key} ${value as string}`.trim() : key))
                 .join(', ');
         }
         return special;
@@ -479,7 +479,7 @@ export function registerHandlebarsHelpers() {
     Handlebars.registerHelper('json', (value) => {
         try {
             return JSON.stringify(value ?? {}, null, 2);
-        } catch (error) {
+        } catch {
             return '';
         }
     });
@@ -533,8 +533,8 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('damageTypeLong', (damageType) => {
-        damageType = (damageType || 'i').toLowerCase();
-        switch (damageType) {
+        const normalizedType = (damageType || 'i').toLowerCase();
+        switch (normalizedType) {
             case 'e':
                 return game.i18n.localize('DAMAGE_TYPE.ENERGY');
             case 'i':
@@ -708,7 +708,7 @@ export function registerHandlebarsHelpers() {
 
         // Characteristics
         for (const [char, value] of Object.entries(prereqs.characteristics || {})) {
-            parts.push(`${char.toUpperCase()} ${value}+`);
+            parts.push(`${char.toUpperCase()} ${value as number}+`);
         }
 
         // Skills

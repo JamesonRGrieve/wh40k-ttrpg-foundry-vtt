@@ -127,7 +127,9 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
         _replaceHTML(result: Record<string, HTMLElement>, content: HTMLElement, options: Record<string, unknown>): void {
             for (const part of Object.values(result)) {
                 for (const element of part.querySelectorAll('[data-expand-id]')) {
-                    element.querySelector('.collapsible')?.classList.toggle('collapsed', !this.#expandedSections.get((element as HTMLElement).dataset.expandId));
+                    element
+                        .querySelector('.collapsible')
+                        ?.classList.toggle('collapsed', !this.#expandedSections.get((element as HTMLElement).dataset.expandId));
                 }
             }
             super._replaceHTML(result, content, options);
@@ -187,7 +189,10 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
             const collapsible = target.closest('.collapsible');
             if (!collapsible || (event.target as HTMLElement).closest('.collapsible-content')) return;
             collapsible.classList.toggle('collapsed');
-            this.#expandedSections.set((target.closest('[data-expand-id]') as HTMLElement)?.dataset.expandId, !collapsible.classList.contains('collapsed'));
+            this.#expandedSections.set(
+                (target.closest('[data-expand-id]') as HTMLElement | null)?.dataset.expandId,
+                !collapsible.classList.contains('collapsed'),
+            );
         }
     }
     return BaseApplicationWH40K;

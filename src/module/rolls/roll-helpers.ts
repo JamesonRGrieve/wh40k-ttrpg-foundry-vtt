@@ -1,9 +1,9 @@
 export function uuid() {
     const chars = '0123456789abcdef'.split('');
 
-    let uuidStr = [],
-        rnd = Math.random,
-        r;
+    const uuidStr = [],
+        rnd = Math.random;
+    let r;
     uuidStr[8] = uuidStr[13] = uuidStr[18] = uuidStr[23] = '-';
     uuidStr[14] = '4'; // version 4
 

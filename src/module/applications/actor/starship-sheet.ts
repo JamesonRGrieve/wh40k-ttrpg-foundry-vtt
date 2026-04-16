@@ -2,9 +2,8 @@
  * @file StarshipSheet - Starship actor sheet using ApplicationV2 with PARTS system
  */
 
-import BaseActorSheet from './base-actor-sheet.ts';
-import { HandlebarManager } from '../../handlebars/handlebars-manager.ts';
 import WH40K from '../../config.ts';
+import BaseActorSheet from './base-actor-sheet.ts';
 
 /**
  * Actor sheet for Starship type actors.
@@ -152,12 +151,12 @@ export default class StarshipSheet extends BaseActorSheet {
      * @inheritDoc
      */
     async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        context = await super._preparePartContext(partId, context, options);
+        const partContext = await super._preparePartContext(partId, context, options);
 
         // Add tab metadata for tab parts
         if (['stats', 'components', 'weapons', 'crew', 'history'].includes(partId)) {
             const tabConfig = (this.constructor as any).TABS.find((t: any) => t.tab === partId);
-            context.tab = {
+            partContext.tab = {
                 id: partId,
                 group: tabConfig?.group || 'primary',
                 active: this.tabGroups.primary === partId,
@@ -165,7 +164,7 @@ export default class StarshipSheet extends BaseActorSheet {
             };
         }
 
-        return context;
+        return partContext;
     }
 
     /* -------------------------------------------- */
@@ -179,7 +178,7 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #fireShipWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
         const weapon = this.actor.items.get(itemId);
         if (!weapon) return;
 

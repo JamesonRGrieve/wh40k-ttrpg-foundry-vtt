@@ -1,6 +1,6 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
-import { SimpleSkillData } from '../rolls/action-data.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
+import { SimpleSkillData } from '../rolls/action-data.ts';
 import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants.ts';
 
 interface WH40KCharacteristic {
@@ -201,7 +201,7 @@ export class WH40KBaseActor extends Actor {
     _computeCharacteristics(): void {
         if (!this.characteristics) return;
 
-        for (const [name, characteristic] of Object.entries(this.characteristics) as [string, any][]) {
+        for (const [, characteristic] of Object.entries(this.characteristics) as [string, any][]) {
             const base = Number(characteristic.base ?? characteristic.starting ?? 0);
             const advance = Number(characteristic.advance ?? characteristic.advances ?? 0);
             const modifier = Number(characteristic.modifier ?? 0);

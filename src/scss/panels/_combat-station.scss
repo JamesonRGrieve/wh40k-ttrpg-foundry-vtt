@@ -14,14 +14,11 @@
 // Container queries remain here since Tailwind can't express @container.
 
 @container (max-width: 700px) {
-    // Combat grid stacks to single column on narrow containers
-    // (Tailwind sets the base 2-col grid on the element)
-    .tw-grid-cols-\[1fr_minmax\(280px\2c 380px\)\] {
+    .wh40k-combat-layout {
         grid-template-columns: 1fr;
     }
 
-    // Top grid collapses armour to span full width
-    .tw-grid-cols-\[1fr_1fr_2fr\] {
+    .wh40k-combat-top-grid {
         grid-template-columns: 1fr 1fr;
 
         .wh40k-combat-armour-wide {
@@ -31,14 +28,27 @@
 }
 
 @container (max-width: 500px) {
-    .tw-grid-cols-\[1fr_1fr_2fr\] {
+    .wh40k-combat-top-grid {
         grid-template-columns: 1fr;
     }
 }
 
 // Actions column on the right
+.wh40k-combat-layout > * {
+    min-width: 0;
+}
+
+.wh40k-combat-top-grid > * {
+    min-width: 0;
+}
+
 .wh40k-combat-actions {
+    min-width: 0;
     min-height: 100%;
+}
+
+.wh40k-combat-armour-wide {
+    min-width: 0;
 }
 
 // ============================================

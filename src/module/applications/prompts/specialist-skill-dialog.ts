@@ -73,10 +73,8 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         this._compendiumLoaded = true;
 
         for (const pack of game.packs) {
-            // @ts-expect-error - metadata access
-            if (pack.metadata.type !== 'Item') continue;
-            // @ts-expect-error - metadata access
-            if (!pack.metadata.name.includes('skill')) continue;
+            if ((pack as any).metadata.type !== 'Item') continue;
+            if (!(pack as any).metadata.name.includes('skill')) continue;
 
             const index = await pack.getIndex();
             // @ts-expect-error - index filter
@@ -153,11 +151,11 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         // Button listeners for V1-style templates
         this.element.querySelector("[data-action='add']")?.addEventListener('click', (e: Event) => {
             e.preventDefault();
-            this._addSpecialization();
+            void this._addSpecialization();
         });
         this.element.querySelector("[data-action='cancel']")?.addEventListener('click', (e: Event) => {
             e.preventDefault();
-            this.close();
+            void this.close();
         });
     }
 
@@ -247,7 +245,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
  * Open a specialist skill dialog.
  * @param {object} data  Dialog data — must include `actor`, may include `skillName`.
  */
-export async function prepareCreateSpecialistSkillPrompt(data: { actor: any; skillName?: string; [key: string]: any }) {
+export function prepareCreateSpecialistSkillPrompt(data: { actor: any; skillName?: string; [key: string]: any }) {
     const prompt = new SpecialistSkillDialog(data.actor, {
         preSelectedSkillKey: data.skillName || '',
     });

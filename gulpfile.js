@@ -170,12 +170,6 @@ function compileTypeScript(done) {
 /*  Compile Sass
 /* ----------------------------------------- */
 
-// Small error handler helper function.
-function handleError(err) {
-  console.log(err.toString());
-  this.emit('end');
-}
-
 function compileScss() {
   // Configure options for sass output. For example, 'expanded' or 'nested'
   let options = {
@@ -184,7 +178,24 @@ function compileScss() {
   return gulp.src(SYSTEM_SCSS)
     .pipe(
       sass(options)
-        .on('error', handleError)
+        // No error handler — sass errors crash the build with non-zero exit
+    )
+    .pipe(postcss([
+      tailwindcss,
+      autoprefixer({ cascade: false }),
+    ]))
+    .pipe(gulp.dest(BUILD_DIR + "/css"))
+}
+
+// Watch-safe variant that logs errors without crashing
+function compileScssWatch() {
+  let options = {
+    outputStyle: 'expanded'
+  };
+  return gulp.src(SYSTEM_SCSS)
+    .pipe(
+      sass(options)
+        .on('error', sass.logError)
     )
     .pipe(postcss([
       tailwindcss,
@@ -212,7 +223,8 @@ function cleanBuild() {
 
 function watchUpdates() {
   gulp.watch('src/module/**/*.ts', gulp.series(compileTypeScript));
-  return gulp.watch(STATIC_FILES, gulp.series(cleanBuild, compileScss, compilePacks, copyFiles));
+  gulp.watch(SYSTEM_SCSS, gulp.series(compileScssWatch));
+  return gulp.watch(STATIC_FILES, gulp.series(cleanBuild, compileScssWatch, compilePacks, copyFiles));
 }
 
 function watchCopy() {

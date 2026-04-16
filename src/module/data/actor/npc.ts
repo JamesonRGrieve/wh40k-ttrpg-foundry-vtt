@@ -1,7 +1,7 @@
 import HordeTemplate from './mixins/horde-template.ts';
 import CreatureTemplate from './templates/creature.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, HTMLField } = (foundry.data as any).fields;
+const { NumberField, SchemaField, StringField, ArrayField, HTMLField } = (foundry.data as any).fields;
 
 /**
  * Data model for NPC actors.
@@ -263,7 +263,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {string} mode - The mode to switch to
      * @returns {Promise<Actor>}
      */
-    async switchWeaponMode(mode) {
+    switchWeaponMode(mode) {
         if (!['simple', 'embedded'].includes(mode)) return this.parent;
         return this.parent.update({ 'system.weapons.mode': mode });
     }
@@ -273,7 +273,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {Object} data - Weapon data
      * @returns {Promise<Actor>}
      */
-    async addSimpleWeapon(data = {}) {
+    addSimpleWeapon(data = {}) {
         const weapons = foundry.utils.deepClone(this.weapons.simple || []);
         weapons.push({
             // @ts-expect-error - dynamic property
@@ -303,7 +303,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {number} index - The weapon index
      * @returns {Promise<Actor>}
      */
-    async removeSimpleWeapon(index) {
+    removeSimpleWeapon(index) {
         const weapons = foundry.utils.deepClone(this.weapons.simple || []);
         if (index < 0 || index >= weapons.length) return this.parent;
         weapons.splice(index, 1);
@@ -319,7 +319,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {string} mode - The mode to switch to
      * @returns {Promise<Actor>}
      */
-    async switchArmourMode(mode) {
+    switchArmourMode(mode) {
         if (!['simple', 'embedded'].includes(mode)) return this.parent;
         return this.parent.update({ 'system.simpleArmour.mode': mode });
     }
@@ -346,7 +346,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {string} itemId - The item ID to pin
      * @returns {Promise<Actor>}
      */
-    async pinAbility(itemId) {
+    pinAbility(itemId) {
         const pinned = foundry.utils.deepClone(this.pinnedAbilities || []);
         if (!pinned.includes(itemId)) {
             pinned.push(itemId);
@@ -360,7 +360,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {string} itemId - The item ID to unpin
      * @returns {Promise<Actor>}
      */
-    async unpinAbility(itemId) {
+    unpinAbility(itemId) {
         const pinned = foundry.utils.deepClone(this.pinnedAbilities || []);
         const idx = pinned.indexOf(itemId);
         if (idx >= 0) {
@@ -375,7 +375,7 @@ export default class NPCData extends HordeTemplate(CreatureTemplate) {
      * @param {string} itemId - The item ID to toggle
      * @returns {Promise<Actor>}
      */
-    async togglePinAbility(itemId) {
+    togglePinAbility(itemId) {
         const pinned = this.pinnedAbilities || [];
         return pinned.includes(itemId) ? this.unpinAbility(itemId) : this.pinAbility(itemId);
     }

@@ -17,7 +17,7 @@ export class TokenDocumentWH40K extends TokenDocument {
      * their cost functions and animation options.
      * Called during system init after CONFIG.wh40k is set.
      */
-    static registerMovementActions(this: any, ) {
+    static registerMovementActions(this: any) {
         for (const [type, config] of Object.entries(CONFIG.wh40k.movementTypes)) {
             // Create the action entry if it doesn't already exist (WH40K-specific actions)
             (CONFIG as any).Token.movement.actions[type] ??= {

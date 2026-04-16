@@ -145,7 +145,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
  * Open a psychic power dialog.
  * @param {PsychicActionData} psychicAttackData  The psychic action data.
  */
-export async function preparePsychicPowerRoll(psychicAttackData) {
+export function preparePsychicPowerRoll(psychicAttackData) {
     const prompt = new PsychicPowerDialog(psychicAttackData);
     prompt.render(true);
 }

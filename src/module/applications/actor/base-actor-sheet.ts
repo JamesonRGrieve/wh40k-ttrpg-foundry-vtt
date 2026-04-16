@@ -179,8 +179,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
     /** @inheritDoc */
     async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        context = await super._preparePartContext(partId, context, options);
-        return context;
+        const partContext = await super._preparePartContext(partId, context, options);
+        return partContext;
     }
 
     /* -------------------------------------------- */
@@ -193,7 +193,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     _prepareCharacteristicsHUD(context: Record<string, unknown>): void {
         const characteristics = this.actor.system.characteristics || {};
 
-        for (const [key, char] of Object.entries(characteristics)) {
+        for (const [key, char] of Object.entries(characteristics) as [string, WH40KCharacteristic & Record<string, any>][]) {
             // Calculate advancement progress (0-5)
             const advanceProgress = (char.advance || 0) / 5; // 0.0 to 1.0
 
@@ -292,7 +292,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Promise<void>}
      * @protected
      */
-    async _restoreSheetState(): Promise<void> {
+    _restoreSheetState(): void {
         if (this._stateRestored) return;
         this._stateRestored = true;
 
@@ -435,13 +435,13 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {object} context  Context being prepared.
      * @protected
      */
-    async _prepareSkills(context: Record<string, unknown>): Promise<void> {
+    _prepareSkills(context: Record<string, unknown>): void {
         const skills = this.actor.system.skills ?? {};
         const characteristics = this.actor.system.characteristics ?? {};
 
         // Apply filters
         const filters = this._skillsFilter;
-        const visibleSkills = Object.entries(skills).filter(([key, data]) => {
+        const visibleSkills = (Object.entries(skills) as [string, WH40KSkill & Record<string, any>][]).filter(([key, data]) => {
             if (data.hidden) return false;
 
             // Search filter
@@ -871,7 +871,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Convert to sorted array
-        return Object.values(groups).sort((a, b) => a.tier - b.tier);
+        return (Object.values(groups) as Record<string, any>[]).sort((a, b) => a.tier - b.tier);
     }
 
     /**
@@ -1060,7 +1060,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {object} context  Context being prepared.
      * @protected
      */
-    async _prepareItems(context: Record<string, any>): Promise<void> {
+    _prepareItems(context: Record<string, any>): void {
         const itemsByType: Record<string, any[]> = {};
 
         for (const item of this.actor.items) {
@@ -1204,6 +1204,34 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             });
         });
 
+        // Direct click listener for backpack swap button (bypasses action system)
+        this.element.querySelectorAll('.wh40k-divider-icon[data-action="swapCheckedItems"]').forEach((el) => {
+            el.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const panel = this.element.querySelector('.wh40k-panel-backpack-split');
+                if (!panel) return;
+                const backpackChecks = panel.querySelectorAll('.wh40k-backpack-inventory .wh40k-transfer-check:checked');
+                const shipChecks = panel.querySelectorAll('.wh40k-ship-storage .wh40k-transfer-check:checked');
+                if (!backpackChecks.length && !shipChecks.length) {
+                    (ui.notifications as any).warn('No items selected to transfer.');
+                    return;
+                }
+                const updates: { _id: string; [key: string]: any }[] = [];
+                backpackChecks.forEach((cb: Element) => {
+                    const itemId = (cb as HTMLElement).dataset.itemId;
+                    if (itemId) updates.push({ '_id': itemId, 'system.inShipStorage': true, 'system.inBackpack': false, 'system.equipped': false });
+                });
+                shipChecks.forEach((cb: Element) => {
+                    const itemId = (cb as HTMLElement).dataset.itemId;
+                    if (itemId) updates.push({ '_id': itemId, 'system.inShipStorage': false });
+                });
+                if (updates.length) {
+                    (this as any).actor.updateEmbeddedDocuments('Item', updates);
+                }
+            });
+        });
+
         // Legacy panel toggle handlers for V1 templates
         // These use .sheet-control__hide-control class with data-toggle attribute
         this.element.querySelectorAll('.sheet-control__hide-control').forEach((el) => {
@@ -1297,7 +1325,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Check characteristics
-        for (const [key, char] of Object.entries(current.characteristics || {})) {
+        for (const [key, char] of Object.entries(current.characteristics || {}) as [string, WH40KCharacteristic][]) {
             const prevChar = previous.characteristics[key];
             if (!prevChar) continue;
 
@@ -1465,7 +1493,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #roll(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
+    static #roll(this: BaseActorSheet, event: Event, target: HTMLElement): void {
         const rollType = target.dataset.rollType;
         const rollTarget = target.dataset.rollTarget;
         const specialty = target.dataset.specialty;
@@ -1499,7 +1527,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #itemRoll(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = target.dataset.itemId || target.closest('[data-item-id]')?.dataset.itemId;
+        const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
         if (itemId) await (this as any).actor.rollItem?.(itemId);
     }
 
@@ -1513,7 +1541,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static #itemEdit(this: BaseActorSheet, event: Event, target: HTMLElement): void {
         console.log('WH40K | itemEdit action triggered', { target, dataset: target.dataset });
-        const itemId = target.dataset.itemId || target.closest('[data-item-id]')?.dataset.itemId;
+        const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
         console.log('WH40K | itemEdit itemId:', itemId);
         if (!itemId) {
             console.warn('WH40K | itemEdit: No itemId found', target);
@@ -1538,7 +1566,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static async #itemDelete(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         console.log('WH40K | itemDelete action triggered', { target, dataset: target.dataset });
-        const itemId = target.dataset.itemId || target.closest('[data-item-id]')?.dataset.itemId;
+        const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
         console.log('WH40K | itemDelete itemId:', itemId);
         if (!itemId) {
             console.warn('WH40K | itemDelete: No itemId found', target);
@@ -1581,7 +1609,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static async #itemVocalize(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         console.log('WH40K | itemVocalize action triggered', { target, dataset: target.dataset });
-        const itemId = target.dataset.itemId || target.closest('[data-item-id]')?.dataset.itemId;
+        const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
         console.log('WH40K | itemVocalize itemId:', itemId);
         if (!itemId) {
             console.warn('WH40K | itemVocalize: No item ID found', target);
@@ -1660,7 +1688,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #effectEdit(event: Event, target: HTMLElement): void {
-        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
+        const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
         const effect = (this as any).actor.effects.get(effectId);
         effect?.sheet.render(true);
     }
@@ -1674,7 +1702,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectDelete(event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
+        const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
         const effect = (this as any).actor.effects.get(effectId);
         await effect?.delete();
     }
@@ -1688,7 +1716,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectToggle(event: Event, target: HTMLElement): Promise<void> {
-        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
+        const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
         const effect = (this as any).actor.effects.get(effectId);
         await effect?.update({ disabled: !effect.disabled });
     }
@@ -1702,7 +1730,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleSection(event: Event, target: HTMLElement): Promise<void> {
+    static #toggleSection(event: Event, target: HTMLElement): void {
         event.stopPropagation();
         const sectionName = target.dataset.toggle;
         if (!sectionName) return;
@@ -1924,7 +1952,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Load and render the skill item sheet
         const skillItem = await pack.getDocument(entry._id);
         if (skillItem) {
-            skillItem.sheet.render(true, { editable: false });
+            void skillItem.sheet.render(true, { editable: false });
         }
     }
 
@@ -1965,12 +1993,12 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Promise}
      * @protected
      */
-    async _onSortItem(event: DragEvent, item: any): Promise<any> {
+    _onSortItem(event: DragEvent, item: any): Promise<any> | void {
         const items = this.actor.items;
         const source = items.get(item.id);
 
         // Confirm the drop target
-        const dropTarget = (event.target as HTMLElement).closest('[data-item-id]');
+        const dropTarget = (event.target as HTMLElement).closest('[data-item-id]') as HTMLElement | null;
         if (!dropTarget) return;
         const target = items.get(dropTarget.dataset.itemId);
         if (source.id === target.id) return;
@@ -2100,7 +2128,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @protected
      */
     static async #editCharacteristic(event: Event, target: HTMLElement): Promise<void> {
-        const charKey = target.closest('[data-characteristic]')?.dataset.characteristic;
+        const charKey = (target.closest('[data-characteristic]') as HTMLElement | null)?.dataset.characteristic;
         if (!charKey) return;
 
         const char = (this as any).actor.system.characteristics[charKey];

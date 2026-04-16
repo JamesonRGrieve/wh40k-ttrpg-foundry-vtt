@@ -3,8 +3,8 @@
  * Extends BaseItemSheet for proper V13 ApplicationV2 integration
  */
 
-import BaseItemSheet from './base-item-sheet.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
+import BaseItemSheet from './base-item-sheet.ts';
 
 /**
  * Sheet for origin path items
@@ -186,5 +186,4 @@ export default class OriginPathSheet extends BaseItemSheet {
         const localizationKey = `WH40K.OriginPath.${key}`;
         return game.i18n.has?.(localizationKey) ? game.i18n.localize(localizationKey) : labels[step] || step;
     }
-
 }

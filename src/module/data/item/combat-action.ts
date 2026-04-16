@@ -107,7 +107,7 @@ export default class CombatActionData extends ItemDataModel.mixin(DescriptionTem
      * @type {string[]}
      */
     get subtypesList() {
-        return Array.from(this.subtypes || []);
+        return Array.from((this.subtypes || []) as Iterable<string>);
     }
 
     /**

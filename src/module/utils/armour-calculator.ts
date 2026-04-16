@@ -3,12 +3,6 @@
  * Extracts complex armour computation logic from the main actor document.
  */
 
-interface ArmourPoints {
-    [location: string]: number;
-    // @ts-expect-error - TS2411
-    armourPoints?: Record<string, number>;
-}
-
 interface LegacyAPResult {
     defaultValue?: number;
     pointsByLocation?: Record<string, number>;
@@ -34,8 +28,8 @@ function getArmourPointsObject(itemSystem: Record<string, unknown>): Record<stri
     const raw = (itemSystem as any)?.armourPoints;
     if (!raw || typeof raw !== 'object') return null;
     // Handle nested structure
-    if ((raw as any).armourPoints && typeof (raw as any).armourPoints === 'object') {
-        return (raw as any).armourPoints;
+    if (raw.armourPoints && typeof raw.armourPoints === 'object') {
+        return raw.armourPoints;
     }
     return raw;
 }
@@ -215,7 +209,10 @@ export function computeArmour(actor: any): Record<string, ArmourLocationData> {
         });
 
     // Find maximum armour value per location from equipped armour items
-    const maxArmour: Record<string, number> = BODY_LOCATIONS.reduce((acc: Record<string, number>, location: string) => Object.assign(acc, { [location]: 0 }), {});
+    const maxArmour: Record<string, number> = BODY_LOCATIONS.reduce(
+        (acc: Record<string, number>, location: string) => Object.assign(acc, { [location]: 0 }),
+        {},
+    );
     let hasGoodArmour = false;
 
     actor.items

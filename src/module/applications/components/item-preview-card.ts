@@ -39,7 +39,7 @@ export function ItemPreviewMixin(Base) {
          * @param {PointerEvent} event - Triggering event
          * @param {HTMLElement} target - Action target
          */
-        static async #toggleItemPreview(this: any, event: Event, target: HTMLElement): Promise<void> {
+        static #toggleItemPreview(this: any, event: Event, target: HTMLElement): void {
             const itemId = target.dataset.itemId;
             if (!itemId) return;
 
@@ -122,7 +122,6 @@ export function ItemPreviewMixin(Base) {
          */
         #generatePreviewHTML(item: any): string {
             const type = item.type;
-            const system = item.system;
 
             // Get type-specific content
             let content = '';
@@ -469,8 +468,8 @@ export function ItemPreviewMixin(Base) {
             if (modifiers.characteristics) {
                 for (const [char, value] of Object.entries(modifiers.characteristics)) {
                     if (value) {
-                        // @ts-expect-error - operator type
-                        content += `<li>${char.toUpperCase()}: ${value > 0 ? '+' : ''}${value}</li>`;
+                        const numVal = Number(value);
+                        content += `<li>${char.toUpperCase()}: ${numVal > 0 ? '+' : ''}${numVal}</li>`;
                     }
                 }
             }
@@ -478,8 +477,8 @@ export function ItemPreviewMixin(Base) {
             if (modifiers.skills) {
                 for (const [skill, value] of Object.entries(modifiers.skills)) {
                     if (value) {
-                        // @ts-expect-error - operator type
-                        content += `<li>${skill}: ${value > 0 ? '+' : ''}${value}</li>`;
+                        const numVal = Number(value);
+                        content += `<li>${skill}: ${numVal > 0 ? '+' : ''}${numVal}</li>`;
                     }
                 }
             }
@@ -487,8 +486,8 @@ export function ItemPreviewMixin(Base) {
             if (modifiers.combat) {
                 for (const [type, value] of Object.entries(modifiers.combat)) {
                     if (value) {
-                        // @ts-expect-error - operator type
-                        content += `<li>${type}: ${value > 0 ? '+' : ''}${value}</li>`;
+                        const numVal = Number(value);
+                        content += `<li>${type}: ${numVal > 0 ? '+' : ''}${numVal}</li>`;
                     }
                 }
             }

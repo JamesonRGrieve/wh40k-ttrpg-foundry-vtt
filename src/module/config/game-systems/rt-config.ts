@@ -3,19 +3,18 @@
  * Career-based advancement with 3 skill ranks.
  */
 
-import { CareerBasedSystemConfig } from './career-based-system-config.ts';
-import type { OriginStepConfig } from './types.ts';
-
 // Import existing RT career registry
-import * as WH40K from '../advancements/wh40k-rpg.ts';
 import * as ArchMilitant from '../advancements/arch-militant.ts';
 import * as Astropath from '../advancements/astropath.ts';
 import * as Explorator from '../advancements/explorator.ts';
+import { getCareerKeyFromName } from '../advancements/index.ts';
 import * as Missionary from '../advancements/missionary.ts';
 import * as Navigator from '../advancements/navigator.ts';
 import * as Seneschal from '../advancements/seneschal.ts';
 import * as VoidMaster from '../advancements/void-master.ts';
-import { getCareerKeyFromName } from '../advancements/index.ts';
+import * as WH40K from '../advancements/wh40k-rpg.ts';
+import { CareerBasedSystemConfig } from './career-based-system-config.ts';
+import type { OriginStepConfig } from './types.ts';
 
 const RT_CAREER_REGISTRY: Record<string, any> = {
     rogueTrader: WH40K,

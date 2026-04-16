@@ -158,7 +158,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
  * Open a weapon attack dialog.
  * @param {WeaponActionData} weaponAttackData  The weapon action data.
  */
-export async function prepareWeaponRoll(weaponAttackData) {
+export function prepareWeaponRoll(weaponAttackData) {
     const prompt = new WeaponAttackDialog(weaponAttackData);
     prompt.render(true);
 }

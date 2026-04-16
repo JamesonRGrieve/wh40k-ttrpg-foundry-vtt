@@ -21,12 +21,12 @@ export default class SkillGrantData extends (BaseGrantData as any) {
      */
     static TRAINING_LEVELS = {
         known: { order: 1, label: 'WH40K.Skill.Level.Known', bonus: 0 },
-        trained: { order: 1, label: 'WH40K.Skill.Level.Trained', bonus: 0 },        // RT/DH1e/DW rank 1 alias
-        plus10: { order: 2, label: 'WH40K.Skill.Level.Plus10', bonus: 10 },          // RT/DH1e/DW rank 2 alias
+        trained: { order: 1, label: 'WH40K.Skill.Level.Trained', bonus: 0 }, // RT/DH1e/DW rank 1 alias
+        plus10: { order: 2, label: 'WH40K.Skill.Level.Plus10', bonus: 10 }, // RT/DH1e/DW rank 2 alias
         experienced: { order: 3, label: 'WH40K.Skill.Level.Experienced', bonus: 20 },
-        plus20: { order: 3, label: 'WH40K.Skill.Level.Plus20', bonus: 20 },          // RT/DH1e/DW rank 3 alias
+        plus20: { order: 3, label: 'WH40K.Skill.Level.Plus20', bonus: 20 }, // RT/DH1e/DW rank 3 alias
         veteran: { order: 4, label: 'WH40K.Skill.Level.Veteran', bonus: 30 },
-        plus30: { order: 4, label: 'WH40K.Skill.Level.Plus30', bonus: 30 },          // DH2e/BC/OW rank 4 alias
+        plus30: { order: 4, label: 'WH40K.Skill.Level.Plus30', bonus: 30 }, // DH2e/BC/OW rank 4 alias
     };
 
     /* -------------------------------------------- */
@@ -84,14 +84,21 @@ export default class SkillGrantData extends (BaseGrantData as any) {
             const schemaKey = this._getSchemaSkillKey(skillConfig.key);
             const specialization = skillConfig.specialization;
 
-            if (!schemaKey) { result.errors.push(`Unknown skill: ${skillConfig.key}`); continue; }
+            if (!schemaKey) {
+                result.errors.push(`Unknown skill: ${skillConfig.key}`);
+                continue;
+            }
 
             const currentSkill = actor.system.skills[schemaKey];
-            if (!currentSkill) { result.errors.push(`Skill not found on actor: ${schemaKey}`); continue; }
+            if (!currentSkill) {
+                result.errors.push(`Skill not found on actor: ${schemaKey}`);
+                continue;
+            }
 
-            const upgradeResult = specialization && Array.isArray(currentSkill.entries)
-                ? this._applySpecialistSkillUpgrade(actor, schemaKey, specialization, skillConfig.level, updates, result)
-                : this._applyStandardSkillUpgrade(actor, schemaKey, skillConfig.level, updates, result);
+            const upgradeResult =
+                specialization && Array.isArray(currentSkill.entries)
+                    ? this._applySpecialistSkillUpgrade(actor, schemaKey, specialization, skillConfig.level, updates, result)
+                    : this._applyStandardSkillUpgrade(actor, schemaKey, skillConfig.level, updates, result);
 
             if (upgradeResult) result.applied[skillKey] = upgradeResult;
         }

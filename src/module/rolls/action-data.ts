@@ -1,11 +1,9 @@
-import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
-import { Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
-import { getDegree, getOpposedDegrees, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
-import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
-import { SYSTEM_ID } from '../constants.ts';
-import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { refundAmmo, useAmmo } from '../rules/ammo.ts';
 import { getHitLocationForRoll } from '../rules/hit-locations.ts';
+import { Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
+import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
+import { getDegree, getOpposedDegrees, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
 
 export class ActionData {
     id = uuid();
@@ -27,7 +25,7 @@ export class ActionData {
         // No-op default — subclasses (e.g. PsychicActionData) can override
     }
 
-    async checkForPerils() {
+    checkForPerils() {
         if (this.rollData.power) {
             if (this.rollData.sourceActor.psy.rating < this.rollData.pr) {
                 if (!/^(.)\1+$/.test(this.rollData.roll.total)) {
@@ -294,7 +292,7 @@ export class ActionData {
         });
     }
 
-    async createEffectData() {
+    createEffectData() {
         for (const effect of this.effects) {
             switch (effect) {
                 case 'auto-failure':

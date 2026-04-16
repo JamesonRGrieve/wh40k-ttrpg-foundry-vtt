@@ -199,8 +199,8 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             let item = null;
             if (talent.uuid) {
                 try {
-                    item = await fromUuid(talent.uuid) as any;
-                } catch (e) {
+                    item = (await fromUuid(talent.uuid)) as any;
+                } catch {
                     // Item not found
                 }
             }
@@ -227,8 +227,8 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             let item = null;
             if (trait.uuid) {
                 try {
-                    item = await fromUuid(trait.uuid) as any;
-                } catch (e) {
+                    item = (await fromUuid(trait.uuid)) as any;
+                } catch {
                     // Item not found
                 }
             }
@@ -259,7 +259,6 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         return game.i18n.localize(`WH40K.OriginPath.${key}`);
     }
 
-
     /* -------------------------------------------- */
     /*  Action Handlers                             */
     /* -------------------------------------------- */
@@ -270,7 +269,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #confirm(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #confirm(this: any, event: Event, target: HTMLElement): void {
         if (this._resolvePromise) {
             this._resolvePromise({ selected: true, origin: this.origin });
         }
@@ -283,7 +282,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #cancel(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #cancel(this: any, event: Event, target: HTMLElement): void {
         if (this._resolvePromise) {
             this._resolvePromise({ selected: false, origin: null });
         }
@@ -301,11 +300,11 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         if (!uuid) return;
 
         try {
-            const item = await fromUuid(uuid) as any;
+            const item = (await fromUuid(uuid)) as any;
             if (item?.sheet) {
                 item.sheet.render(true);
             }
-        } catch (e) {
+        } catch {
             (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.ItemNotFound'));
         }
     }

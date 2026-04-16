@@ -19,10 +19,10 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
 
     getSkillRanks(): SkillRankDef[] {
         return [
-            { level: 1, key: 'trained', label: 'Kn', tooltip: 'Known',       bonus: 0  },
-            { level: 2, key: 'plus10',  label: 'Tr', tooltip: 'Trained',     bonus: 10 },
-            { level: 3, key: 'plus20',  label: 'Ex', tooltip: 'Experienced', bonus: 20 },
-            { level: 4, key: 'plus30',  label: 'Ve', tooltip: 'Veteran',     bonus: 30 },
+            { level: 1, key: 'trained', label: 'Kn', tooltip: 'Known', bonus: 0 },
+            { level: 2, key: 'plus10', label: 'Tr', tooltip: 'Trained', bonus: 10 },
+            { level: 3, key: 'plus20', label: 'Ex', tooltip: 'Experienced', bonus: 20 },
+            { level: 4, key: 'plus30', label: 'Ve', tooltip: 'Veteran', bonus: 30 },
         ];
     }
 
@@ -30,11 +30,11 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
 
     getCharacteristicTiers(): CharacteristicTierDef[] {
         return [
-            { key: 'simple',       label: 'WH40K.Advancement.Tier.Simple' },
+            { key: 'simple', label: 'WH40K.Advancement.Tier.Simple' },
             { key: 'intermediate', label: 'WH40K.Advancement.Tier.Intermediate' },
-            { key: 'trained',      label: 'WH40K.Advancement.Tier.Trained' },
-            { key: 'proficient',   label: 'WH40K.Advancement.Tier.Proficient' },
-            { key: 'expert',       label: 'WH40K.Advancement.Tier.Expert' },
+            { key: 'trained', label: 'WH40K.Advancement.Tier.Trained' },
+            { key: 'proficient', label: 'WH40K.Advancement.Tier.Proficient' },
+            { key: 'expert', label: 'WH40K.Advancement.Tier.Expert' },
         ];
     }
 
@@ -70,9 +70,9 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
      */
     getTalentCostTable(): Record<number, Record<number, number>> {
         return {
-            1: { 2: 200,  1: 300,  0: 600  },
-            2: { 2: 300,  1: 450,  0: 900  },
-            3: { 2: 400,  1: 600,  0: 1200 },
+            1: { 2: 200, 1: 300, 0: 600 },
+            2: { 2: 300, 1: 450, 0: 900 },
+            3: { 2: 400, 1: 600, 0: 1200 },
         };
     }
 
@@ -111,17 +111,13 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
      * Count how many of the advance's aptitudes the character shares (0, 1, or 2).
      */
     countMatchingAptitudes(characterAptitudes: string[], advanceAptitudes: string[]): number {
-        const charSet = new Set(characterAptitudes.map(a => a.toLowerCase()));
-        return advanceAptitudes.filter(a => charSet.has(a.toLowerCase())).length;
+        const charSet = new Set(characterAptitudes.map((a) => a.toLowerCase()));
+        return advanceAptitudes.filter((a) => charSet.has(a.toLowerCase())).length;
     }
 
     // ── Cost Implementations ─────────────────────────────────────
 
-    getCharacteristicAdvanceCost(
-        actor: any,
-        charKey: string,
-        currentTier: number,
-    ): AdvanceCostResult | null {
+    getCharacteristicAdvanceCost(actor: any, charKey: string, currentTier: number): AdvanceCostResult | null {
         const tiers = this.characteristicTierOrder;
         if (currentTier >= tiers.length) return null;
 
@@ -135,12 +131,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         return { cost, tier: tiers[currentTier] };
     }
 
-    getSkillAdvanceCost(
-        actor: any,
-        skillKey: string,
-        currentRank: number,
-        context?: Record<string, unknown>,
-    ): number | null {
+    getSkillAdvanceCost(actor: any, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
         if (currentRank >= this.skillRankCount) return null;
 
         const charAptitudes = this.getCharacterAptitudes(actor);
@@ -150,11 +141,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         return this.getSkillCostTable()[matches]?.[currentRank] ?? null;
     }
 
-    getTalentAdvanceCost(
-        actor: any,
-        talent: any,
-        context?: Record<string, unknown>,
-    ): number | null {
+    getTalentAdvanceCost(actor: any, talent: any, context?: Record<string, unknown>): number | null {
         const charAptitudes = this.getCharacterAptitudes(actor);
         const advAptitudes = (context?.advanceAptitudes as string[]) ?? talent.system?.aptitudes ?? [];
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);
@@ -175,13 +162,35 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
     getVisibleSkills(): Set<string> {
         return new Set([
             // Standard skills
-            'acrobatics', 'athletics', 'awareness', 'charm', 'command', 'commerce',
-            'deceive', 'dodge', 'inquiry', 'interrogation', 'intimidate', 'logic',
-            'medicae', 'parry', 'psyniscience', 'scrutiny', 'security',
-            'sleightOfHand', 'stealth', 'survival', 'techUse',
+            'acrobatics',
+            'athletics',
+            'awareness',
+            'charm',
+            'command',
+            'commerce',
+            'deceive',
+            'dodge',
+            'inquiry',
+            'interrogation',
+            'intimidate',
+            'logic',
+            'medicae',
+            'parry',
+            'psyniscience',
+            'scrutiny',
+            'security',
+            'sleightOfHand',
+            'stealth',
+            'survival',
+            'techUse',
             // Specialist groups
-            'commonLore', 'forbiddenLore', 'linguistics', 'navigate', 'operate',
-            'scholasticLore', 'trade',
+            'commonLore',
+            'forbiddenLore',
+            'linguistics',
+            'navigate',
+            'operate',
+            'scholasticLore',
+            'trade',
         ]);
     }
 }

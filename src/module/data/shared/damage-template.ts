@@ -124,7 +124,7 @@ export default class DamageTemplate extends SystemDataModel {
             props.push(`Pen: ${this.damage.penetration}`);
         }
         if (this.special?.size) {
-            props.push(`Special: ${Array.from(this.special).join(', ')}`);
+            props.push(`Special: ${Array.from(this.special as Set<string>).join(', ')}`);
         }
         return props;
     }

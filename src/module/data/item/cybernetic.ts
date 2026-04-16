@@ -1,10 +1,10 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import DescriptionTemplate from '../shared/description-template.ts';
-import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import EquippableTemplate from '../shared/equippable-template.ts';
-import ModifiersTemplate from '../shared/modifiers-template.ts';
 import IdentifierField from '../fields/identifier-field.ts';
 import { bodyLocationsSchema } from '../shared/body-locations.ts';
+import DescriptionTemplate from '../shared/description-template.ts';
+import EquippableTemplate from '../shared/equippable-template.ts';
+import ModifiersTemplate from '../shared/modifiers-template.ts';
+import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
 /**
  * Data model for Cybernetic items.
@@ -87,10 +87,12 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
      */
     get locationsLabel() {
         if (!this.locations.size) return '-';
-        return Array.from(this.locations)
-            // @ts-expect-error - dynamic property access
-            .map((l) => game.i18n.localize(`WH40K.BodyLocation.${l.capitalize()}`))
-            .join(', ');
+        return (
+            Array.from(this.locations)
+                // @ts-expect-error - dynamic property access
+                .map((l) => game.i18n.localize(`WH40K.BodyLocation.${l.capitalize()}`))
+                .join(', ')
+        );
     }
 
     /* -------------------------------------------- */
@@ -104,9 +106,8 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
 
         if (this.hasArmourPoints) {
             const apValues = Object.entries(this.armourPoints)
-                // @ts-expect-error - operator type
-                .filter(([_, v]) => v > 0)
-                .map(([k, v]) => `${k}: ${v}`);
+                .filter(([_, v]) => (v as number) > 0)
+                .map(([k, v]) => `${k}: ${v as number}`);
             if (apValues.length) {
                 props.push(`AP: ${apValues.join(', ')}`);
             }

@@ -275,7 +275,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     /** @override */
     _onRender(context: any, options: any): any {
-        super._onRender(context, options);
+        void super._onRender(context, options);
         this.#activateListeners();
     }
 
@@ -409,7 +409,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         if (value > 40) value = 40;
 
         this.#rolls[index] = value;
-        this.render();
+        void this.render();
     }
 
     /* -------------------------------------------- */
@@ -420,7 +420,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #cancelRollInput(input: any): void {
-        this.render();
+        void this.render();
     }
 
     /* -------------------------------------------- */
@@ -535,7 +535,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         slot.classList.add('snap-to-slot');
         setTimeout(() => slot.classList.remove('snap-to-slot'), 600);
 
-        this.render();
+        void this.render();
     }
 
     /* -------------------------------------------- */
@@ -565,7 +565,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
         // Unassign the roll from its characteristic
         this.#assignments[this.#dragData.characteristic] = null;
-        this.render();
+        void this.render();
     }
 
     /* -------------------------------------------- */
@@ -584,7 +584,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
         if (isNaN(value) || value < 0) value = 0;
         this.#customBases[key] = value;
-        this.render();
+        void this.render();
     }
 
     /* -------------------------------------------- */
@@ -644,7 +644,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onReset(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #onReset(this: any, event: Event, target: HTMLElement): void {
         // Clear all assignments
         for (const key of GENERATION_CHARACTERISTICS) {
             this.#assignments[key] = null;
@@ -660,7 +660,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onToggleAdvanced(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #onToggleAdvanced(this: any, event: Event, target: HTMLElement): void {
         this.#advancedMode = !this.#advancedMode;
         this.render();
     }
@@ -689,7 +689,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     async wait(): Promise<any> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
-            this.render(true);
+            void this.render(true);
         });
     }
 

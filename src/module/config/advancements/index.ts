@@ -5,7 +5,6 @@
  * Provides helper functions to access career-specific data.
  */
 
-import * as WH40K from './wh40k-rpg.ts';
 import * as ArchMilitant from './arch-militant.ts';
 import * as Astropath from './astropath.ts';
 import * as Explorator from './explorator.ts';
@@ -13,6 +12,7 @@ import * as Missionary from './missionary.ts';
 import * as Navigator from './navigator.ts';
 import * as Seneschal from './seneschal.ts';
 import * as VoidMaster from './void-master.ts';
+import * as WH40K from './wh40k-rpg.ts';
 
 /**
  * Registry of all career advancement configurations

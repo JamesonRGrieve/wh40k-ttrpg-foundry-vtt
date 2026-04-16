@@ -1,8 +1,8 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
+import IdentifierField from '../fields/identifier-field.ts';
+import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import DamageTemplate from '../shared/damage-template.ts';
-import IdentifierField from '../fields/identifier-field.ts';
 
 /**
  * Data model for Ammunition items.
@@ -86,9 +86,8 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
      */
     get weaponTypesLabel() {
         if (!this.weaponTypes || !this.weaponTypes.size) return game.i18n.localize('WH40K.Ammunition.AllWeapons');
-        return Array.from(this.weaponTypes)
+        return Array.from(this.weaponTypes as Set<string>)
             .map((t) => {
-                // @ts-expect-error - index type
                 const label = CONFIG.WH40K?.weaponTypes?.[t]?.label;
                 return label ? game.i18n.localize(label) : t;
             })
@@ -126,7 +125,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         }
 
         if (this.addedQualities.size) {
-            props.push(`Adds: ${Array.from(this.addedQualities).join(', ')}`);
+            props.push(`Adds: ${Array.from(this.addedQualities as Set<string>).join(', ')}`);
         }
 
         return props;

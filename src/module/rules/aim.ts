@@ -1,10 +1,8 @@
-import { RollData } from '../rolls/roll-data.ts';
-
 /**
  * @param rollData {RollData}
  */
 export function calculateAimBonus(rollData) {
-    const actionItem = rollData.weapon ?? rollData.power;
+    rollData.weapon ?? rollData.power;
 }
 
 export function aimModifiers() {

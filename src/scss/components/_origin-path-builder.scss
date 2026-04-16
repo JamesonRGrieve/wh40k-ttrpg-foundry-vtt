@@ -653,8 +653,20 @@
             font-size: 0.8rem;
             color: var(--wh40k-text-muted);
             line-height: 1.4;
-            max-height: 60px;
-            overflow: hidden;
+
+            p,
+            ul,
+            ol,
+            blockquote {
+                margin: 0 0 var(--wh40k-space-xs);
+            }
+
+            p:last-child,
+            ul:last-child,
+            ol:last-child,
+            blockquote:last-child {
+                margin-bottom: 0;
+            }
         }
     }
 
@@ -1125,22 +1137,8 @@
         }
 
         .manual-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: var(--wh40k-space-xs);
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--wh40k-bronze);
-            border-radius: var(--wh40k-radius-sm);
-            color: var(--wh40k-text-muted);
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all $wh40k-transition-base;
-
-            &:hover {
-                background: var(--wh40k-bronze);
-                color: var(--wh40k-text-light);
-            }
+            @extend .roll-btn;
+            padding-inline: var(--wh40k-space-sm);
         }
     }
 }

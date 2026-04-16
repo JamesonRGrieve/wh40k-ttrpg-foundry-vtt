@@ -8,8 +8,8 @@
  * - Animated feedback
  */
 
-import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 import { sendActionDataToChat } from '../../rolls/roll-helpers.ts';
+import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -279,7 +279,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         this.element.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                this._performRoll();
+                void this._performRoll();
             }
         });
     }
@@ -463,7 +463,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
  * Open an enhanced skill roll dialog.
  * @param {object} simpleSkillData  The skill data.
  */
-export async function prepareEnhancedSkillRoll(simpleSkillData) {
+export function prepareEnhancedSkillRoll(simpleSkillData) {
     const prompt = new EnhancedSkillDialog(simpleSkillData);
     prompt.render(true);
 }

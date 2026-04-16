@@ -1,6 +1,6 @@
-import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { calculateAmmoDamageBonuses, calculateAmmoPenetrationBonuses, calculateAmmoSpecials } from '../rules/ammo.ts';
 import { getCriticalDamage } from '../rules/critical-damage.ts';
+import { additionalHitLocations, getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { calculateWeaponModifiersDamageBonuses, calculateWeaponModifiersPenetrationBonuses } from '../rules/weapon-modifiers.ts';
 import { calculateQualityPenetrationModifiers, calculateExoticQualityDamageModifiers, getRighteousFuryThreshold } from '../rules/weapon-quality-effects.ts';
 
@@ -71,13 +71,11 @@ export class Hit {
     }
 
     _totalDamage() {
-        // @ts-expect-error - operator type
-        this.totalDamage = this.damage + Object.values(this.modifiers).reduce((a, b) => a + b, 0);
+        this.totalDamage = this.damage + (Object.values(this.modifiers) as number[]).reduce((a, b) => a + b, 0);
     }
 
     _totalPenetration() {
-        // @ts-expect-error - operator type
-        this.totalPenetration = this.penetration + Object.values(this.penetrationModifiers).reduce((a, b) => a + b, 0);
+        this.totalPenetration = this.penetration + (Object.values(this.penetrationModifiers) as number[]).reduce((a, b) => a + b, 0);
     }
 
     /**
@@ -277,7 +275,7 @@ export class Hit {
                 this.penetrationRoll = new Roll(rollFormula, attackData.rollData);
                 await this.penetrationRoll.evaluate();
                 this.penetration = this.penetrationRoll.total;
-            } catch (error) {
+            } catch {
                 (ui.notifications as any).warn('Penetration formula failed - setting to 0');
                 this.penetration = 0;
             }

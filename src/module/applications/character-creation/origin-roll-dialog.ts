@@ -11,8 +11,6 @@
  * - Result storage
  */
 
-import { evaluateWoundsFormula, evaluateFateFormula } from '../../utils/formula-evaluator.ts';
-
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginRollDialog extends HandlebarsApplicationMixin(ApplicationV2) {
@@ -218,7 +216,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #accept(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #accept(this: any, event: Event, target: HTMLElement): void {
         event.preventDefault();
 
         if (!this.rollResult) {
@@ -263,7 +261,6 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     static async #manual(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const formula = this.formula;
         const rollType = this.rollType;
 
         if (rollType === 'wounds') {
@@ -492,7 +489,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #cancel(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #cancel(this: any, event: Event, target: HTMLElement): void {
         event.preventDefault();
 
         if (this._resolvePromise) {
@@ -509,7 +506,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {FormDataExtended} formData - The form data
      * @private
      */
-    static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): void {
         // Same as accept
         return this.#accept.call(this, event, form);
     }

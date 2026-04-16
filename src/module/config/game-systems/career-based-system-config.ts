@@ -19,9 +19,9 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
 
     getSkillRanks(): SkillRankDef[] {
         return [
-            { level: 1, key: 'trained', label: 'T',   tooltip: 'Trained', bonus: 0  },
-            { level: 2, key: 'plus10',  label: '+10',  tooltip: '+10',     bonus: 10 },
-            { level: 3, key: 'plus20',  label: '+20',  tooltip: '+20',     bonus: 20 },
+            { level: 1, key: 'trained', label: 'T', tooltip: 'Trained', bonus: 0 },
+            { level: 2, key: 'plus10', label: '+10', tooltip: '+10', bonus: 10 },
+            { level: 3, key: 'plus20', label: '+20', tooltip: '+20', bonus: 20 },
         ];
     }
 
@@ -29,10 +29,10 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
 
     getCharacteristicTiers(): CharacteristicTierDef[] {
         return [
-            { key: 'simple',       label: 'WH40K.Advancement.Tier.Simple' },
+            { key: 'simple', label: 'WH40K.Advancement.Tier.Simple' },
             { key: 'intermediate', label: 'WH40K.Advancement.Tier.Intermediate' },
-            { key: 'trained',      label: 'WH40K.Advancement.Tier.Trained' },
-            { key: 'expert',       label: 'WH40K.Advancement.Tier.Expert' },
+            { key: 'trained', label: 'WH40K.Advancement.Tier.Trained' },
+            { key: 'expert', label: 'WH40K.Advancement.Tier.Expert' },
         ];
     }
 
@@ -46,11 +46,7 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
 
     // ── Cost Implementations ─────────────────────────────────────
 
-    getCharacteristicAdvanceCost(
-        actor: any,
-        charKey: string,
-        currentTier: number,
-    ): AdvanceCostResult | null {
+    getCharacteristicAdvanceCost(actor: any, charKey: string, currentTier: number): AdvanceCostResult | null {
         const tiers = this.characteristicTierOrder;
         if (currentTier >= tiers.length) return null;
 
@@ -65,20 +61,13 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         return { cost, tier: tierKey };
     }
 
-    getSkillAdvanceCost(
-        _actor: any,
-        _skillKey: string,
-        _currentRank: number,
-    ): number | null {
+    getSkillAdvanceCost(_actor: any, _skillKey: string, _currentRank: number): number | null {
         // Career-based: cost is embedded in the AdvanceOption from the career table.
         // The advancement dialog reads cost from the advance entry directly.
         return null;
     }
 
-    getTalentAdvanceCost(
-        _actor: any,
-        _talent: any,
-    ): number | null {
+    getTalentAdvanceCost(_actor: any, _talent: any): number | null {
         // Same: cost is in the career advance entry.
         return null;
     }
@@ -97,17 +86,55 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
     getVisibleSkills(): Set<string> {
         return new Set([
             // Standard skills
-            'acrobatics', 'awareness', 'barter', 'blather', 'carouse', 'charm',
-            'chemUse', 'climb', 'command', 'commerce', 'concealment', 'contortionist',
-            'deceive', 'demolition', 'disguise', 'dodge', 'evaluate', 'gamble',
-            'inquiry', 'interrogation', 'intimidate', 'invocation', 'literacy',
-            'logic', 'medicae', 'psyniscience', 'scrutiny', 'search', 'security',
-            'shadowing', 'silentMove', 'sleightOfHand', 'survival', 'swim',
-            'tracking', 'wrangling',
+            'acrobatics',
+            'awareness',
+            'barter',
+            'blather',
+            'carouse',
+            'charm',
+            'chemUse',
+            'climb',
+            'command',
+            'commerce',
+            'concealment',
+            'contortionist',
+            'deceive',
+            'demolition',
+            'disguise',
+            'dodge',
+            'evaluate',
+            'gamble',
+            'inquiry',
+            'interrogation',
+            'intimidate',
+            'invocation',
+            'literacy',
+            'logic',
+            'medicae',
+            'psyniscience',
+            'scrutiny',
+            'search',
+            'security',
+            'shadowing',
+            'silentMove',
+            'sleightOfHand',
+            'survival',
+            'swim',
+            'tracking',
+            'wrangling',
             // Specialist groups
-            'ciphers', 'commonLore', 'drive', 'forbiddenLore', 'navigation',
-            'performer', 'pilot', 'scholasticLore', 'secretTongue', 'speakLanguage',
-            'techUse', 'trade',
+            'ciphers',
+            'commonLore',
+            'drive',
+            'forbiddenLore',
+            'navigation',
+            'performer',
+            'pilot',
+            'scholasticLore',
+            'secretTongue',
+            'speakLanguage',
+            'techUse',
+            'trade',
         ]);
     }
 }

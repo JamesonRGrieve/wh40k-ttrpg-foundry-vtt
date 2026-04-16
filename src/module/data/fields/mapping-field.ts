@@ -50,7 +50,7 @@ export default class MappingField extends foundry.data.fields.ObjectField {
             // @ts-expect-error - TS2339
             if (this.model instanceof foundry.data.fields.SchemaField) {
                 initialized[key] = (this.model as any).initialize(v, model, options);
-            // @ts-expect-error - TS2339
+                // @ts-expect-error - TS2339
             } else if (this.model instanceof foundry.data.fields.DataField) {
                 initialized[key] = (this.model as any).initialize(v, model, options);
             } else {

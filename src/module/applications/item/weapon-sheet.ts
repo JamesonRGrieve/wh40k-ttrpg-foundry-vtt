@@ -2,10 +2,10 @@
  * @file WeaponSheet - ApplicationV2 sheet for weapon items
  */
 
-import ContainerItemSheet from './container-item-sheet.ts';
-import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
 import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
+import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
+import ContainerItemSheet from './container-item-sheet.ts';
 
 /**
  * Sheet for weapon items with support for weapon modifications and ammunition.
@@ -271,7 +271,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             // For dragenter, we can't access the data due to browser security
             // We'll have to make assumptions based on the drag source
             return { type: 'unknown' };
-        } catch (err) {
+        } catch {
             return null;
         }
     }
@@ -284,7 +284,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @returns {Promise<boolean>}
      * @private
      */
-    async _isValidModificationDrop(dragData: any): Promise<boolean> {
+    _isValidModificationDrop(dragData: any): boolean {
         // Since we can't access the full data in dragenter due to browser security,
         // we'll optimistically assume it's valid and do full validation on drop
         // This is a UX limitation we have to accept
@@ -496,7 +496,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         if (qualityEntry) {
             // Open the quality sheet
             const quality = await pack.getDocument(qualityEntry._id);
-            quality?.sheet.render(true);
+            void quality?.sheet.render(true);
         } else {
             // Fallback: show tooltip from CONFIG
             const def = (CONFIG as any).wh40k?.getQualityDefinition?.(identifier);
@@ -518,7 +518,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #nestedItemEdit(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #nestedItemEdit(this: any, event: Event, target: HTMLElement): void {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
@@ -594,7 +594,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onAddModification(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #onAddModification(this: any, event: Event, target: HTMLElement): void {
         // Open a dialog or compendium browser to add modifications
         // For now, show a notification
         (ui.notifications as any).info('Drag a weapon modification from a compendium to add it.');
@@ -919,7 +919,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         let data;
         try {
             data = JSON.parse((event as any).dataTransfer.getData('text/plain'));
-        } catch (err) {
+        } catch {
             return false;
         }
 

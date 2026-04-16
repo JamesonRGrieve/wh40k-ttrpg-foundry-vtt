@@ -1,5 +1,3 @@
-import { WeaponRollData } from '../rolls/roll-data.ts';
-
 /* -------------------------------------------- */
 /*  Ammo Effects Table                          */
 /* -------------------------------------------- */
@@ -45,17 +43,11 @@ const AMMO_EFFECTS: Record<string, AmmoEffects> = {
     },
     'Explosive Arrows/Quarrels': {
         attackBonuses: { 'explosive arrows': -10 },
-        attackSpecials: [
-            { remove: 'Primitive' },
-            { add: { name: 'Blast', level: 1 } },
-        ],
+        attackSpecials: [{ remove: 'Primitive' }, { add: { name: 'Blast', level: 1 } }],
         hitDamageType: 'Explosive',
     },
     'Hot-Shot Charge Packs': {
-        attackSpecials: [
-            { remove: 'Reliable' },
-            { add: { name: 'Tearing', level: true } },
-        ],
+        attackSpecials: [{ remove: 'Reliable' }, { add: { name: 'Tearing', level: true } }],
         damageModifiers: { 'hot-shot charge pack': 1 },
         penetrationModifiers: { 'hot-shot charge pack': 4 },
         fireRate: 1,
@@ -122,7 +114,7 @@ export async function refundAmmo(actionData) {
 /**
  * @param rollData {WeaponRollData}
  */
-export async function calculateAmmoAttackBonuses(rollData) {
+export function calculateAmmoAttackBonuses(rollData) {
     const ammo = rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
     const effects = AMMO_EFFECTS[ammo.name];
@@ -132,7 +124,7 @@ export async function calculateAmmoAttackBonuses(rollData) {
     }
 }
 
-export async function calculateAmmoAttackSpecials(rollData) {
+export function calculateAmmoAttackSpecials(rollData) {
     const ammo = rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
     game.wh40k.log('calculateAmmoAttackSpecials', ammo.name);
@@ -148,7 +140,7 @@ export async function calculateAmmoAttackSpecials(rollData) {
 /*  Hit Phase                                   */
 /* -------------------------------------------- */
 
-export async function calculateAmmoSpecials(actionData, hit) {
+export function calculateAmmoSpecials(actionData, hit) {
     const ammo = actionData.rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
     const effects = AMMO_EFFECTS[ammo.name];
@@ -163,7 +155,7 @@ export async function calculateAmmoSpecials(actionData, hit) {
  * @param actionData {WeaponAttackData}
  * @param hit {Hit}
  */
-export async function calculateAmmoDamageBonuses(actionData, hit) {
+export function calculateAmmoDamageBonuses(actionData, hit) {
     const ammo = actionData.rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
     const effects = AMMO_EFFECTS[ammo.name];
@@ -177,7 +169,7 @@ export async function calculateAmmoDamageBonuses(actionData, hit) {
  * @param actionData {actionData}
  * @param hit {Hit}
  */
-export async function calculateAmmoPenetrationBonuses(actionData, hit) {
+export function calculateAmmoPenetrationBonuses(actionData, hit) {
     const ammo = actionData.rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
     const effects = AMMO_EFFECTS[ammo.name];

@@ -95,7 +95,7 @@ export default class AssignDamageDialog extends BaseRollDialog {
  * Open an assign damage dialog.
  * @param {object} assignDamageData  The damage assignment data.
  */
-export async function prepareAssignDamageRoll(assignDamageData) {
+export function prepareAssignDamageRoll(assignDamageData) {
     const prompt = new AssignDamageDialog(assignDamageData);
     prompt.render(true);
 }

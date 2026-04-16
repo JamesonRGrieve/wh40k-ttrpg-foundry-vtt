@@ -177,7 +177,7 @@ export class RollTableUtils {
      * Create a quick roll dialog for common tables.
      * Opens a dialog allowing the user to select which table to roll on.
      */
-    static async showRollTableDialog() {
+    static showRollTableDialog() {
         const tables = [
             { name: 'Psychic Phenomena', category: 'Psychic' },
             { name: 'Perils of the Warp', category: 'Psychic' },
@@ -204,7 +204,7 @@ export class RollTableUtils {
         `;
 
         // @ts-expect-error - DialogV2 argument type
-        foundry.applications.api.DialogV2.prompt({
+        void foundry.applications.api.DialogV2.prompt({
             window: { title: 'Roll Table' },
             content,
             ok: {

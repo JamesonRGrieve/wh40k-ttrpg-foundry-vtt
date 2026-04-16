@@ -153,7 +153,7 @@ export class TooltipsWH40K {
             }
         }
 
-        if (isActive) this._onTooltipActivate();
+        if (isActive) void this._onTooltipActivate();
     }
 
     /**
@@ -928,9 +928,10 @@ export function prepareQualityTooltipData(identifier, level = null) {
     if (!def) return '{}';
 
     // Parse level from identifier if not provided
-    if (level === null) {
+    let resolvedLevel = level;
+    if (resolvedLevel === null) {
         const match = identifier.match(/-(\d+)$/);
-        if (match) level = parseInt(match[1]);
+        if (match) resolvedLevel = parseInt(match[1]);
     }
 
     // Get localized strings
@@ -942,7 +943,7 @@ export function prepareQualityTooltipData(identifier, level = null) {
         identifier,
         label,
         description,
-        level,
+        level: resolvedLevel,
         hasLevel: def.hasLevel ?? false,
         category: def.category || 'other',
         mechanicalEffect: def.mechanicalEffect ?? false,

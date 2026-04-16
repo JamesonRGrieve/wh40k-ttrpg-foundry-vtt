@@ -465,7 +465,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #updatePreview(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #updatePreview(this: any, event: Event, target: HTMLElement): void {
         this.render({ parts: ['preview'] });
     }
 
@@ -496,7 +496,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
 
                 for (const trait of this.item.system.traits || []) {
                     if (trait.uuid) {
-                        const item = await fromUuid(trait.uuid) as any;
+                        const item = (await fromUuid(trait.uuid)) as any;
                         if (item) {
                             itemsToCreate.push({
                                 name: item.name,
@@ -510,7 +510,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
 
                 for (const talent of this.item.system.talents || []) {
                     if (talent.uuid) {
-                        const item = await fromUuid(talent.uuid) as any;
+                        const item = (await fromUuid(talent.uuid)) as any;
                         if (item) {
                             itemsToCreate.push({
                                 name: item.name,

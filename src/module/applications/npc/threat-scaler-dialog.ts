@@ -215,7 +215,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
 
     /** @override */
     _onRender(context: any, options: any): any {
-        super._onRender(context, options);
+        void super._onRender(context, options);
 
         const form = this.element;
 
@@ -272,7 +272,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     _debounceRender(): void {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
         this._renderTimeout = setTimeout(() => {
-            this.render({ parts: ['form'] });
+            void this.render({ parts: ['form'] });
         }, 100);
     }
 
@@ -293,7 +293,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         this.#state.newThreatLevel = newValue;
 
         // Update slider
-        const slider = this.element.querySelector('[name="newThreatLevel"]') as any;
+        const slider = this.element.querySelector('[name="newThreatLevel"]');
         if (slider) slider.value = newValue;
 
         this.render({ parts: ['form'] });
@@ -308,7 +308,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         this.#state.newThreatLevel = this.#originalThreat;
 
         // Update slider
-        const slider = this.element.querySelector('[name="newThreatLevel"]') as any;
+        const slider = this.element.querySelector('[name="newThreatLevel"]');
         if (slider) slider.value = this.#originalThreat;
 
         this.render({ parts: ['form'] });
@@ -325,7 +325,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         // Debounce render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
         this._renderTimeout = setTimeout(() => {
-            this.render({ parts: ['form'] });
+            void this.render({ parts: ['form'] });
         }, 100);
     }
 
@@ -375,7 +375,6 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         try {
             await this.#actor.update(actorUpdates);
 
-            const direction = newThreat > currentThreat ? 'up' : 'down';
             (ui.notifications as any).info(
                 game.i18n.format('WH40K.NPC.ScaledThreat', {
                     name: this.#actor.name,
@@ -433,7 +432,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     async wait(): Promise<void> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
-            this.render(true);
+            void this.render(true);
         });
     }
 

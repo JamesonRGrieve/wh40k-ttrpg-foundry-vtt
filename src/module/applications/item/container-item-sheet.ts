@@ -3,8 +3,8 @@
  * Handles weapons with mods, armour with upgrades, etc.
  */
 
-import BaseItemSheet from './base-item-sheet.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
+import BaseItemSheet from './base-item-sheet.ts';
 
 /**
  * Item sheet for container-type items (weapons, armour, gear, etc.)
@@ -263,7 +263,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #nestedItemEdit(this: any, event: Event, target: HTMLElement): void {
-        const itemId = (target.closest('[data-nested-item-id]') as HTMLElement)?.dataset.nestedItemId;
+        const itemId = target.closest('[data-nested-item-id]')?.dataset.nestedItemId;
         const nestedItem = this.item.items?.get(itemId);
         nestedItem?.sheet.render(true);
     }
@@ -277,7 +277,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #nestedItemDelete(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const itemId = (target.closest('[data-nested-item-id]') as HTMLElement)?.dataset.nestedItemId;
+        const itemId = target.closest('[data-nested-item-id]')?.dataset.nestedItemId;
         if (!itemId) return;
 
         const confirmed = await ConfirmationDialog.confirm({
@@ -300,7 +300,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #nestedItemRoll(event: Event, target: HTMLElement): Promise<void> {
+    static #nestedItemRoll(event: Event, target: HTMLElement): void {
         // Placeholder for nested item rolls
         event.preventDefault();
     }

@@ -248,7 +248,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
     /** @override */
     _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
-        super._onRender(context, options);
+        void super._onRender(context, options);
 
         // Add live update for custom modifier
         const customInput = this.element.querySelector('input[name="customModifier"]');
@@ -273,7 +273,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      */
     #onCustomModifierChange(event: Event): void {
         this.customModifier = parseInt((event.currentTarget as HTMLInputElement).value) || 0;
-        this.render({ parts: ['form'] });
+        void this.render({ parts: ['form'] });
     }
 
     /**
@@ -282,7 +282,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      */
     #onDifficultyChange(event: Event): void {
         this.selectedDifficulty = (event.currentTarget as HTMLSelectElement).value;
-        this.render({ parts: ['form'] });
+        void this.render({ parts: ['form'] });
     }
 
     /**
@@ -338,7 +338,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<any> {
+    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): any {
         const data = foundry.utils.expandObject(formData.object);
 
         // Get final values
@@ -388,7 +388,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     async wait(): Promise<any> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
-            this.render(true);
+            void this.render(true);
         });
     }
 
