@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars -- ambient type declarations for consumer use */
 /**
  * Global type declarations for the WH40K RPG Foundry VTT System.
  * Augments Foundry VTT types with system-specific extensions.
@@ -206,7 +207,6 @@ declare global {
         let WH40K: Record<string, unknown>;
     }
 }
-
 
 /** Extended render context for WH40K application sheets */
 interface WH40KRenderContext extends Record<string, any> {

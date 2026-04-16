@@ -71,7 +71,7 @@ export default class CriticalInjuryMigration {
         for (const itemData of consolidatedItems) {
             const doc = await pack.documentClass.create(itemData, { pack: pack.collection });
             created.push(doc);
-            console.log(`  Created: ${doc.name} (${doc.id})`);
+            console.log(`  Created: ${String(doc.name)} (${String(doc.id)})`);
         }
 
         // Step 6: Delete old items
@@ -80,7 +80,7 @@ export default class CriticalInjuryMigration {
         for (const item of existingItems) {
             await item.delete();
             deleted.push(item.id);
-            console.log(`  Deleted: ${item.name} (${item.id})`);
+            console.log(`  Deleted: ${String(item.name)} (${String(item.id)})`);
         }
 
         (ui.notifications as any).info(`Migration complete! Created ${created.length} consolidated items, removed ${deleted.length} old items.`);
@@ -111,7 +111,7 @@ export default class CriticalInjuryMigration {
         const backupData = items.map((item) => item.toObject());
 
         // Save to world data folder
-        const backupPath = `worlds/${game.world.id}/critical-injury-backup-${timestamp}.json`;
+        const backupPath = `worlds/${String(game.world.id)}/critical-injury-backup-${timestamp}.json`;
         console.log(`[Critical Injury Migration] Backup data prepared (${backupData.length} items)`);
         console.log(`[Critical Injury Migration] Manual step: Save backup to ${backupPath}`);
 
@@ -163,7 +163,7 @@ export default class CriticalInjuryMigration {
     static _createConsolidatedItems(grouped) {
         const consolidated = [];
 
-        for (const [key, data] of Object.entries(grouped)) {
+        for (const [, data] of Object.entries(grouped)) {
             // @ts-expect-error - dynamic property
             const { damageType, bodyPart, effects, source, description } = data;
 

@@ -314,7 +314,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /** @override */
     _onRender(context: any, options: any): any {
-        super._onRender(context, options);
+        void super._onRender(context, options);
 
         // Apply saved position
         this._restorePosition();
@@ -335,7 +335,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     _restorePosition(): void {
         const savedPos = (game.user as any).getFlag('wh40k-rpg', `combatPanel.${this.actor.id}.position`);
         if (savedPos) {
-            this.setPosition(savedPos as any);
+            this.setPosition(savedPos);
         }
     }
 
@@ -392,7 +392,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     _onActorUpdate(actor: any): void {
         if (actor.id === this.actor.id) {
-            this.render(false);
+            void this.render(false);
         }
     }
 
@@ -405,7 +405,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     _onItemUpdate(item: any): void {
         if (item.actor?.id === this.actor.id) {
-            this.render(false);
+            void this.render(false);
         }
     }
 
@@ -420,7 +420,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
             dodge: false,
             parry: false,
         };
-        this.render(false);
+        void this.render(false);
     }
 
     /* -------------------------------------------- */
@@ -430,7 +430,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @private
      */
     _onCombatEnd(): void {
-        this.close();
+        void this.close();
     }
 
     /* -------------------------------------------- */
@@ -703,7 +703,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #toggleOpacity(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #toggleOpacity(this: any, event: Event, target: HTMLElement): void {
         this.opacityLevel = (this.opacityLevel + 1) % 4;
 
         // Apply opacity class
@@ -751,7 +751,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
         // Create new panel
         const panel = new CombatQuickPanel(actor);
-        panel.render(true);
+        void panel.render(true);
         return panel as any;
     }
 
@@ -765,7 +765,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     static close(actor: any): void {
         const panel = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
 
-        if (panel) panel.close();
+        if (panel) void panel.close();
     }
 
     /* -------------------------------------------- */
@@ -779,9 +779,9 @@ export default class CombatQuickPanel extends ApplicationV2 {
         const panel = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
 
         if (panel) {
-            panel.close();
+            void panel.close();
         } else {
-            CombatQuickPanel.show(actor);
+            void CombatQuickPanel.show(actor);
         }
     }
 }

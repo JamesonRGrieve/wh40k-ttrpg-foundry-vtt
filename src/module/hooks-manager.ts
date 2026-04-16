@@ -1,20 +1,40 @@
-import { WH40KItem } from './documents/item.ts';
-import { WH40K } from './rules/config.ts';
-
 // Import data models
-import * as dataModels from './data/_module.ts';
 
 // Import dice/roll classes
-import * as dice from './dice/_module.ts';
 
 // Import V2 Actor Sheets (ApplicationV2-based)
-import CharacterSheetSidebar from './applications/actor/character-sheet-sidebar.ts';
-import { DarkHeresy1Sheet, DarkHeresy2Sheet, RogueTraderSheet, BlackCrusadeSheet, OnlyWarSheet, DeathwatchSheet } from './applications/actor/game-system-sheets.ts';
-import NPCSheetV2 from './applications/actor/npc-sheet-v2.ts';
-import VehicleSheet from './applications/actor/vehicle-sheet.ts';
-import StarshipSheet from './applications/actor/starship-sheet.ts';
 
 // Import V2 Item Sheets (ApplicationV2-based)
+
+import { RTCompendiumBrowser } from './applications/compendium-browser.ts';
+import {
+    createCharacteristicMacro,
+    createItemMacro,
+    createSkillMacro,
+    rollCharacteristicMacro,
+    rollItemMacro,
+    rollSkillMacro,
+} from './macros/macro-manager.ts';
+import { HandlebarManager } from './handlebars/handlebars-manager.ts';
+import { WH40KActorProxy } from './documents/actor-proxy.ts';
+import { WH40KSettings } from './wh40k-rpg-settings.ts';
+import { DHTargetedActionManager } from './actions/targeted-action-manager.ts';
+import { DHBasicActionManager } from './actions/basic-action-manager.ts';
+import { DHCombatActionManager } from './actions/combat-action-manager.ts';
+import CharacterSheetSidebar from './applications/actor/character-sheet-sidebar.ts';
+import {
+    DarkHeresy1Sheet,
+    DarkHeresy2Sheet,
+    RogueTraderSheet,
+    BlackCrusadeSheet,
+    OnlyWarSheet,
+    DeathwatchSheet,
+} from './applications/actor/game-system-sheets.ts';
+import NPCSheetV2 from './applications/actor/npc-sheet-v2.ts';
+import StarshipSheet from './applications/actor/starship-sheet.ts';
+import VehicleSheet from './applications/actor/vehicle-sheet.ts';
+import * as characterCreation from './applications/character-creation/_module.ts';
+import { TooltipsWH40K } from './applications/components/_module.ts';
 import {
     BaseItemSheet,
     WeaponSheet,
@@ -43,32 +63,17 @@ import {
     ShipUpgradeSheet,
     NPCTemplateSheet,
 } from './applications/item/_module.ts';
-
-import { RTCompendiumBrowser } from './applications/compendium-browser.ts';
-import {
-    createCharacteristicMacro,
-    createItemMacro,
-    createSkillMacro,
-    rollCharacteristicMacro,
-    rollItemMacro,
-    rollSkillMacro,
-} from './macros/macro-manager.ts';
-import { HandlebarManager } from './handlebars/handlebars-manager.ts';
-import { WH40KActorProxy } from './documents/actor-proxy.ts';
-import { WH40KSettings } from './wh40k-rpg-settings.ts';
-import { DHTargetedActionManager } from './actions/targeted-action-manager.ts';
-import { DHBasicActionManager } from './actions/basic-action-manager.ts';
-import { DHCombatActionManager } from './actions/combat-action-manager.ts';
-import { checkAndMigrateWorld } from './wh40k-rpg-migrations.ts';
-import { DHTourMain } from './tours/main-tour.ts';
-import { RollTableUtils } from './utils/roll-table-utils.ts';
-import { TooltipsWH40K } from './applications/components/_module.ts';
-import * as characterCreation from './applications/character-creation/_module.ts';
 import * as npcApplications from './applications/npc/_module.ts';
-
-import * as documents from './documents/_module.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { SYSTEM_ID } from './constants.ts';
+import * as dataModels from './data/_module.ts';
+import * as dice from './dice/_module.ts';
+import * as documents from './documents/_module.ts';
+import { WH40KItem } from './documents/item.ts';
+import { WH40K } from './rules/config.ts';
+import { DHTourMain } from './tours/main-tour.ts';
+import { RollTableUtils } from './utils/roll-table-utils.ts';
+import { checkAndMigrateWorld } from './wh40k-rpg-migrations.ts';
 
 export { SYSTEM_ID };
 
@@ -466,7 +471,7 @@ export class HooksManager {
         });
 
         WH40KSettings.registerSettings();
-        HandlebarManager.loadTemplates();
+        void HandlebarManager.loadTemplates();
 
         // Register movement actions and Token HUD hooks (after settings are available)
         documents.TokenDocumentWH40K.registerMovementActions();
@@ -495,14 +500,14 @@ export class HooksManager {
         (game as any).wh40k.log('Hotbar Drop:', data);
         switch (data.type) {
             case 'characteristic':
-                createCharacteristicMacro(data, slot);
+                void createCharacteristicMacro(data, slot);
                 return false;
             case 'item':
             case 'Item':
-                createItemMacro(data, slot);
+                void createItemMacro(data, slot);
                 return false;
             case 'skill':
-                createSkillMacro(data, slot);
+                void createSkillMacro(data, slot);
                 return false;
             default:
                 return true;

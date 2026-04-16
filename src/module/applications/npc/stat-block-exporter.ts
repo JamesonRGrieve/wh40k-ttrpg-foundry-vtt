@@ -330,14 +330,14 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     _onRender(context: any, options: any): any {
-        super._onRender(context, options);
+        void super._onRender(context, options);
 
         // Handle format toggle
         const formatTabs = this.element.querySelectorAll('[data-format]');
         for (const tab of formatTabs) {
             tab.addEventListener('click', (e: any) => {
                 this.#format = (e.currentTarget as HTMLElement).dataset.format;
-                this.render({ parts: ['content'] });
+                void this.render({ parts: ['content'] });
             });
         }
     }
@@ -368,7 +368,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onExportJson(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #onExportJson(this: any, event: Event, target: HTMLElement): void {
         const content = StatBlockExporter.toJSON(this.#actor);
         const filename = `${this.#actor.name.slugify()}.json`;
 
@@ -381,7 +381,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onExportText(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #onExportText(this: any, event: Event, target: HTMLElement): void {
         const content = StatBlockExporter.toText(this.#actor);
         const filename = `${this.#actor.name.slugify()}.txt`;
 
@@ -433,7 +433,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      */
     static show(actor: any): any {
         const exporter = new this(actor);
-        exporter.render(true);
+        void exporter.render(true);
         return exporter;
     }
 

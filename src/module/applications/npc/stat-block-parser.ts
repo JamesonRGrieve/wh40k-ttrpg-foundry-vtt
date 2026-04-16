@@ -10,10 +10,10 @@
  * - Comprehensive validation with detailed feedback
  */
 
-import ThreatCalculator from './threat-calculator.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import StatBlockValidator from '../../utils/stat-block-validator.ts';
 import TextPatternExtractor from '../../utils/text-pattern-extractor.ts';
+import ThreatCalculator from './threat-calculator.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -251,7 +251,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
     /** @override */
     _onRender(context: any, options: any): any {
-        super._onRender(context, options);
+        void super._onRender(context, options);
 
         // Track input changes
         const textarea = this.element.querySelector('[name="rawInput"]');
@@ -554,14 +554,14 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     static _applyCharacteristics(systemData: any, characteristicResult: any): void {
-        for (const [key, value] of Object.entries(characteristicResult.values) as [string, any][]) {
+        for (const [key, value] of Object.entries(characteristicResult.values)) {
             if (!systemData.characteristics[key]) continue;
             systemData.characteristics[key].base = value;
             systemData.characteristics[key].total = value;
             systemData.characteristics[key].bonus = Math.floor(value / 10);
         }
 
-        for (const [key, bonusValue] of Object.entries(characteristicResult.unnaturalValues) as [string, any][]) {
+        for (const [key, bonusValue] of Object.entries(characteristicResult.unnaturalValues)) {
             const base = systemData.characteristics[key]?.base ?? 0;
             const baseBonus = Math.floor(base / 10) || 1;
             const multiplier = Math.max(2, Math.round(bonusValue / baseBonus));
@@ -1063,7 +1063,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async _onParse(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static _onParse(this: any, event: Event, target: HTMLElement): void {
         const result = StatBlockParser.parse(this.#rawInput);
 
         this.#parsedData = result.data;
@@ -1124,7 +1124,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             }
 
             (ui.notifications as any).info(game.i18n.format('WH40K.NPC.Import.Success', { name: actor.name }));
-            actor.sheet.render(true);
+            void actor.sheet.render(true);
 
             this.#submitted = true;
             if (this.#resolve) this.#resolve(actor);
@@ -1151,7 +1151,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async _onClearInput(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static _onClearInput(this: any, event: Event, target: HTMLElement): void {
         this.#rawInput = '';
         this.#parsedData = null;
         this.#errors = [];
@@ -1184,7 +1184,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     async wait(): Promise<any> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
-            this.render(true);
+            void this.render(true);
         });
     }
 

@@ -227,7 +227,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
     /** @override */
     _onRender(context: any, options: any): any {
-        super._onRender(context, options);
+        void super._onRender(context, options);
 
         // Add live update listeners
         const form = this.element;
@@ -307,7 +307,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     _debounceRender(): void {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
         this._renderTimeout = setTimeout(() => {
-            this.render({ parts: ['form'] });
+            void this.render({ parts: ['form'] });
         }, 150);
     }
 
@@ -348,10 +348,10 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             const actor = await Actor.create(actorData as any);
 
             if (actor) {
-                (ui.notifications as any).info(`Created NPC: ${actor.name}`);
+                (ui.notifications as any).info(`Created NPC: ${String(actor.name)}`);
 
                 // Open the sheet
-                actor.sheet.render(true);
+                void actor.sheet.render(true);
 
                 this.#submitted = true;
                 if (this.#resolve) this.#resolve(actor);
@@ -379,7 +379,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {PointerEvent} event - The click event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #onUpdatePreview(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #onUpdatePreview(this: any, event: Event, target: HTMLElement): void {
         // Re-render to update preview
         this.render({ parts: ['form'] });
     }
@@ -413,7 +413,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     async wait(): Promise<any> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
-            this.render(true);
+            void this.render(true);
         });
     }
 
@@ -454,7 +454,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
             if (randomize) {
                 // Randomize characteristics slightly (±5)
-                for (const char of Object.values(systemData.characteristics) as any[]) {
+                for (const char of Object.values(systemData.characteristics)) {
                     const variance = Math.floor(Math.random() * 11) - 5;
                     char.base = Math.max(10, Math.min(99, char.base + variance));
                     char.total = char.base + char.modifier;

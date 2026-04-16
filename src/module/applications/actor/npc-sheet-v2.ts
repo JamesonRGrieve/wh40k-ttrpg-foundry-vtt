@@ -3,12 +3,11 @@
  * Phases 0-4: Complete NPC sheet with quick create and threat scaling
  */
 
-import BaseActorSheet from './base-actor-sheet.ts';
-import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.ts';
+import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
 import StatBlockParser from '../npc/stat-block-parser.ts';
-import DifficultyCalculatorDialog from '../npc/difficulty-calculator-dialog.ts';
-import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
+import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.ts';
+import BaseActorSheet from './base-actor-sheet.ts';
 
 /**
  * Actor sheet for npcV2 type actors.
@@ -271,27 +270,27 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
 
     /** @inheritDoc */
     async _preparePartContext(partId: string, context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
-        context = await super._preparePartContext(partId, context, options);
+        const partContext = await super._preparePartContext(partId, context, options);
 
         // Prepare tab-specific context
         switch (partId) {
             case 'navigation':
                 break;
             case 'overview':
-                this._prepareOverviewContext(context);
-                this._prepareSkillsContext(context);
-                this._prepareAbilitiesContext(context);
-                this._prepareNotesContext(context);
+                this._prepareOverviewContext(partContext);
+                this._prepareSkillsContext(partContext);
+                this._prepareAbilitiesContext(partContext);
+                this._prepareNotesContext(partContext);
                 break;
             case 'combat':
-                this._prepareCombatContext(context);
+                this._prepareCombatContext(partContext);
                 break;
             case 'abilities':
-                this._prepareAbilitiesContext(context);
+                this._prepareAbilitiesContext(partContext);
                 break;
         }
 
-        return context;
+        return partContext;
     }
 
     /* -------------------------------------------- */
@@ -676,7 +675,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      */
     static async #reloadWeapon(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId ?? target.dataset.itemId;
+        const itemId = target.closest('[data-item-id]')?.dataset.itemId ?? target.dataset.itemId;
         if (!itemId) return;
         const weapon = (this as any).actor.items.get(itemId);
         if (!weapon) return;
@@ -836,8 +835,8 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
                         default: true,
                         callback: async (event, button, _dialog) => {
                             const form = button.form;
-                            const skill = (form.querySelector('[name="skill"]') as HTMLSelectElement).value;
-                            const level = (form.querySelector('[name="level"]') as HTMLSelectElement).value;
+                            const skill = form.querySelector('[name="skill"]').value;
+                            const level = form.querySelector('[name="level"]').value;
                             await (this as any).actor.system.addTrainedSkill(skill, null, level);
                         },
                     },
@@ -848,7 +847,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
                     },
                 ],
             });
-            dialog.render(true);
+            void dialog.render(true);
             return;
         }
         await (this as any).actor.system.addTrainedSkill(skillKey);
@@ -1078,7 +1077,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #editImage(event: Event, target: HTMLElement): Promise<void> {
+    static #editImage(event: Event, target: HTMLElement): void {
         event.preventDefault();
         const fp = new FilePicker({
             type: 'image',
@@ -1087,7 +1086,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
                 (this as any).actor.update({ img: path });
             },
         });
-        fp.render(true);
+        void fp.render(true);
     }
 
     /* -------------------------------------------- */
@@ -1233,7 +1232,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #exportStatBlock(event: Event, target: HTMLElement): Promise<void> {
+    static #exportStatBlock(event: Event, target: HTMLElement): void {
         event.preventDefault();
 
         // Open the full exporter dialog
@@ -1287,7 +1286,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #addTag(event: Event, target: HTMLElement): Promise<void> {
+    static #addTag(event: Event, target: HTMLElement): void {
         event.preventDefault();
         const content = `
       <form>
@@ -1308,7 +1307,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
                     default: true,
                     callback: async (event, button, _dialog) => {
                         const form = button.form;
-                        const tag = (form.querySelector('[name="tag"]') as HTMLInputElement).value.trim();
+                        const tag = form.querySelector('[name="tag"]').value.trim();
                         if (tag) {
                             const tags = [...((this as any).actor.system.tags || []), tag];
                             await (this as any).actor.update({ 'system.tags': tags });
@@ -1321,7 +1320,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
                 },
             ],
         });
-        dialog.render(true);
+        void dialog.render(true);
     }
 
     /* -------------------------------------------- */
@@ -1391,7 +1390,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
         event.preventDefault();
         const wrapper = target.closest('.wh40k-gm-tools-wrapper');
         if (!wrapper) return;
-        const tools = wrapper.querySelector('.wh40k-gm-tools') as HTMLElement;
+        const tools = wrapper.querySelector('.wh40k-gm-tools');
         if (!tools) return;
         tools.hidden = !tools.hidden;
         wrapper.classList.toggle('open', !tools.hidden);
@@ -1408,7 +1407,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
         event.preventDefault();
         const card = target.closest('.wh40k-ability-card');
         if (!card) return;
-        const desc = card.querySelector('.wh40k-ability-desc') as HTMLElement;
+        const desc = card.querySelector('.wh40k-ability-desc');
         if (!desc) return;
         desc.hidden = !desc.hidden;
         // Rotate chevron
@@ -1566,7 +1565,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      */
     static async #removeItem(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const itemId = (target.closest('[data-item-id]') as HTMLElement)?.dataset.itemId;
+        const itemId = target.closest('[data-item-id]')?.dataset.itemId;
         if (!itemId) return;
         const item = (this as any).actor.items.get(itemId);
         if (item) await item.delete();
@@ -1589,7 +1588,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {object} context - The render context.
      * @protected
      */
-    async _prepareSkills(context: Record<string, any>): Promise<void> {
+    _prepareSkills(context: Record<string, any>): void {
         // NPCSheetV2 uses sparse skill system
         // Will implement in later phases
         context.skills = {};
@@ -1601,7 +1600,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {object} context - The render context.
      * @protected
      */
-    async _prepareItems(context: Record<string, any>): Promise<void> {
+    _prepareItems(context: Record<string, any>): void {
         // NPCSheetV2 uses simplified item system
         context.talents = context.items.filter((i) => i.type === 'talent');
         context.traits = context.items.filter((i) => i.type === 'trait');

@@ -50,15 +50,15 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     /** BC characteristic aptitude pairs */
     getCharacteristicAptitudes(charKey: string): [string, string] {
         const map: Record<string, [string, string]> = {
-            weaponSkill:    ['Weapon Skill', 'Offence'],
+            weaponSkill: ['Weapon Skill', 'Offence'],
             ballisticSkill: ['Ballistic Skill', 'Finesse'],
-            strength:       ['Strength', 'Offence'],
-            toughness:      ['Toughness', 'Defence'],
-            agility:        ['Agility', 'Finesse'],
-            intelligence:   ['Intelligence', 'Knowledge'],
-            perception:     ['Perception', 'Fieldcraft'],
-            willpower:      ['Willpower', 'Psyker'],
-            fellowship:     ['Fellowship', 'Social'],
+            strength: ['Strength', 'Offence'],
+            toughness: ['Toughness', 'Defence'],
+            agility: ['Agility', 'Finesse'],
+            intelligence: ['Intelligence', 'Knowledge'],
+            perception: ['Perception', 'Fieldcraft'],
+            willpower: ['Willpower', 'Psyker'],
+            fellowship: ['Fellowship', 'Social'],
         };
         return map[charKey] ?? ['General', 'General'];
     }
@@ -66,34 +66,34 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     /** BC skill aptitude pairs — same base table as DH2e */
     getSkillAptitudeTable(): Record<string, [string, string]> {
         return {
-            acrobatics:     ['Agility', 'General'],
-            athletics:      ['Strength', 'General'],
-            awareness:      ['Perception', 'Fieldcraft'],
-            charm:          ['Fellowship', 'Social'],
-            command:        ['Fellowship', 'Leadership'],
-            commerce:       ['Intelligence', 'Knowledge'],
-            commonLore:     ['Intelligence', 'General'],
-            deceive:        ['Fellowship', 'Social'],
-            dodge:          ['Agility', 'Defence'],
-            forbiddenLore:  ['Intelligence', 'Knowledge'],
-            inquiry:        ['Fellowship', 'Social'],
-            interrogation:  ['Willpower', 'Social'],
-            intimidate:     ['Strength', 'General'],
-            linguistics:    ['Intelligence', 'General'],
-            logic:          ['Intelligence', 'Knowledge'],
-            medicae:        ['Intelligence', 'Fieldcraft'],
-            navigate:       ['Intelligence', 'Fieldcraft'],
-            operate:        ['Agility', 'Fieldcraft'],
-            parry:          ['Weapon Skill', 'Defence'],
-            psyniscience:   ['Perception', 'Psyker'],
+            acrobatics: ['Agility', 'General'],
+            athletics: ['Strength', 'General'],
+            awareness: ['Perception', 'Fieldcraft'],
+            charm: ['Fellowship', 'Social'],
+            command: ['Fellowship', 'Leadership'],
+            commerce: ['Intelligence', 'Knowledge'],
+            commonLore: ['Intelligence', 'General'],
+            deceive: ['Fellowship', 'Social'],
+            dodge: ['Agility', 'Defence'],
+            forbiddenLore: ['Intelligence', 'Knowledge'],
+            inquiry: ['Fellowship', 'Social'],
+            interrogation: ['Willpower', 'Social'],
+            intimidate: ['Strength', 'General'],
+            linguistics: ['Intelligence', 'General'],
+            logic: ['Intelligence', 'Knowledge'],
+            medicae: ['Intelligence', 'Fieldcraft'],
+            navigate: ['Intelligence', 'Fieldcraft'],
+            operate: ['Agility', 'Fieldcraft'],
+            parry: ['Weapon Skill', 'Defence'],
+            psyniscience: ['Perception', 'Psyker'],
             scholasticLore: ['Intelligence', 'Knowledge'],
-            scrutiny:       ['Perception', 'General'],
-            security:       ['Intelligence', 'Tech'],
-            sleightOfHand:  ['Agility', 'Knowledge'],
-            stealth:        ['Agility', 'Fieldcraft'],
-            survival:       ['Perception', 'Fieldcraft'],
-            techUse:        ['Intelligence', 'Tech'],
-            trade:          ['Intelligence', 'General'],
+            scrutiny: ['Perception', 'General'],
+            security: ['Intelligence', 'Tech'],
+            sleightOfHand: ['Agility', 'Knowledge'],
+            stealth: ['Agility', 'Fieldcraft'],
+            survival: ['Perception', 'Fieldcraft'],
+            techUse: ['Intelligence', 'Tech'],
+            trade: ['Intelligence', 'General'],
         };
     }
 
@@ -116,10 +116,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
      * - Advance alignment opposes character alignment: +100% surcharge (doubled)
      * - Advance alignment is non-opposing but different: +50% surcharge
      */
-    getAlignmentCostModifier(
-        characterAlignment: ChaosAlignment,
-        advanceAlignment: ChaosAlignment,
-    ): number {
+    getAlignmentCostModifier(characterAlignment: ChaosAlignment, advanceAlignment: ChaosAlignment): number {
         // Unaligned advances always cost the standard amount
         if (advanceAlignment === 'unaligned') return 1.0;
 
@@ -138,12 +135,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     // ── Cost Overrides ───────────────────────────────────────────
 
-    override getSkillAdvanceCost(
-        actor: any,
-        skillKey: string,
-        currentRank: number,
-        context?: Record<string, unknown>,
-    ): number | null {
+    override getSkillAdvanceCost(actor: any, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
         const baseCost = super.getSkillAdvanceCost(actor, skillKey, currentRank, context);
         if (baseCost == null) return null;
 
@@ -154,17 +146,11 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         return Math.ceil(baseCost * modifier);
     }
 
-    override getTalentAdvanceCost(
-        actor: any,
-        talent: any,
-        context?: Record<string, unknown>,
-    ): number | null {
+    override getTalentAdvanceCost(actor: any, talent: any, context?: Record<string, unknown>): number | null {
         const baseCost = super.getTalentAdvanceCost(actor, talent, context);
         if (baseCost == null) return null;
 
-        const advAlignment = (context?.advanceAlignment as ChaosAlignment)
-            ?? talent.system?.chaosAlignment
-            ?? 'unaligned';
+        const advAlignment = (context?.advanceAlignment as ChaosAlignment) ?? talent.system?.chaosAlignment ?? 'unaligned';
         const charAlignment = this.getCharacterAlignment(actor);
         const modifier = this.getAlignmentCostModifier(charAlignment, advAlignment);
 

@@ -47,21 +47,23 @@ export function clearSkillUuidCache() {
  * const loreUuid = await findSkillUuid("Common Lore", "Imperium");
  * // Returns: "Compendium.wh40k-rpg.dh2-core-stats-skills.yyy"
  */
-export async function findSkillUuid(skillName, specialization = null) {
+export function findSkillUuid(skillName, specialization = null) {
     if (!skillName) return null;
 
     // Check if specialization is embedded in the name
     // Pattern: "Skill Name (Specialization)"
-    if (!specialization && skillName.includes('(') && skillName.includes(')')) {
-        const match = skillName.match(/^(.+?)\s*\((.+?)\)\s*$/);
+    let resolvedSkillName = skillName;
+    let resolvedSpecialization = specialization;
+    if (!resolvedSpecialization && resolvedSkillName.includes('(') && resolvedSkillName.includes(')')) {
+        const match = resolvedSkillName.match(/^(.+?)\s*\((.+?)\)\s*$/);
         if (match) {
-            skillName = match[1].trim();
-            specialization = match[2].trim();
+            resolvedSkillName = match[1].trim();
+            resolvedSpecialization = match[2].trim();
         }
     }
 
     // Build cache key
-    const cacheKey = specialization ? `${skillName}::${specialization}` : skillName;
+    const cacheKey = resolvedSpecialization ? `${resolvedSkillName}::${resolvedSpecialization}` : resolvedSkillName;
 
     // Check cache first
     if (_skillUuidCache.has(cacheKey)) {
@@ -83,15 +85,15 @@ export async function findSkillUuid(skillName, specialization = null) {
 
         // Build search variants
         const searchVariants = [];
-        if (specialization) {
+        if (resolvedSpecialization) {
             // Try with parentheses
-            searchVariants.push(`${skillName} (${specialization})`);
+            searchVariants.push(`${resolvedSkillName} (${resolvedSpecialization})`);
             // Try without parentheses
-            searchVariants.push(`${skillName} ${specialization}`);
+            searchVariants.push(`${resolvedSkillName} ${resolvedSpecialization}`);
             // Try specialization first (some packs might use this format)
-            searchVariants.push(`${specialization} ${skillName}`);
+            searchVariants.push(`${resolvedSpecialization} ${resolvedSkillName}`);
         } else {
-            searchVariants.push(skillName);
+            searchVariants.push(resolvedSkillName);
         }
 
         // Try exact matches first
@@ -106,8 +108,8 @@ export async function findSkillUuid(skillName, specialization = null) {
         }
 
         // Try case-insensitive partial matches
-        const skillNameLower = skillName.toLowerCase();
-        const specializationLower = specialization?.toLowerCase();
+        const skillNameLower = resolvedSkillName.toLowerCase();
+        const specializationLower = resolvedSpecialization?.toLowerCase();
 
         for (const [id, entry] of index.entries()) {
             // @ts-expect-error - dynamic property access

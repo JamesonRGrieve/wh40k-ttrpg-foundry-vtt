@@ -1,8 +1,8 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import DescriptionTemplate from '../shared/description-template.ts';
-import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import EquippableTemplate from '../shared/equippable-template.ts';
 import IdentifierField from '../fields/identifier-field.ts';
+import DescriptionTemplate from '../shared/description-template.ts';
+import EquippableTemplate from '../shared/equippable-template.ts';
+import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
 /**
  * Data model for Gear items (general equipment).
@@ -131,7 +131,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Consume one use.
      * @returns {Promise<Item>}
      */
-    async consume() {
+    consume() {
         if (!this.hasLimitedUses) return this.parent;
         const newValue = Math.max(0, (this.uses.value ?? 0) - 1);
         return this.parent?.update({ 'system.uses.value': newValue });

@@ -1,6 +1,6 @@
 import CreatureTemplate from './templates/creature.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField, SetField } = (foundry.data as any).fields;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = (foundry.data as any).fields;
 
 /**
  * List of characteristic keys used for character generation.
@@ -542,7 +542,9 @@ export default class CharacterData extends CreatureTemplate {
                 try {
                     // Evaluate the remaining flat terms (e.g., "0+0+1" → 1)
                     flatBonus = Function(`"use strict"; return (${withoutDice})`)();
-                } catch { flatBonus = 0; }
+                } catch {
+                    flatBonus = 0;
+                }
 
                 // Die result = stored total - (old TB component + flat bonus)
                 // We don't know old TB, so extract die from breakdown or re-derive

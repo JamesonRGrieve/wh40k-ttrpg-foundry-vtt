@@ -3,10 +3,7 @@
  * Each WH40K RPG game line provides a concrete subclass.
  */
 
-import type {
-    GameSystemId, SkillRankDef, CharacteristicTierDef,
-    OriginStepConfig, AdvanceCostResult, AdvanceOption,
-} from './types.ts';
+import type { GameSystemId, SkillRankDef, CharacteristicTierDef, OriginStepConfig, AdvanceCostResult, AdvanceOption } from './types.ts';
 
 export abstract class BaseSystemConfig {
     /** Canonical system identifier */
@@ -41,7 +38,7 @@ export abstract class BaseSystemConfig {
 
     /** Tier key array (convenience) */
     get characteristicTierOrder(): string[] {
-        return this.getCharacteristicTiers().map(t => t.key);
+        return this.getCharacteristicTiers().map((t) => t.key);
     }
 
     // ── Origin Path ──────────────────────────────────────────────
@@ -58,11 +55,7 @@ export abstract class BaseSystemConfig {
      * @param currentTier Number of advances already purchased (0-based)
      * @returns Cost result, or null if maxed
      */
-    abstract getCharacteristicAdvanceCost(
-        actor: any,
-        charKey: string,
-        currentTier: number,
-    ): AdvanceCostResult | null;
+    abstract getCharacteristicAdvanceCost(actor: any, charKey: string, currentTier: number): AdvanceCostResult | null;
 
     /**
      * Compute the XP cost for advancing a skill to its next rank.
@@ -72,12 +65,7 @@ export abstract class BaseSystemConfig {
      * @param context     Optional system-specific context
      * @returns Cost in XP, or null if not advanceable
      */
-    abstract getSkillAdvanceCost(
-        actor: any,
-        skillKey: string,
-        currentRank: number,
-        context?: Record<string, unknown>,
-    ): number | null;
+    abstract getSkillAdvanceCost(actor: any, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null;
 
     /**
      * Compute the XP cost for acquiring a talent.
@@ -86,11 +74,7 @@ export abstract class BaseSystemConfig {
      * @param context Optional system-specific context
      * @returns Cost in XP, or null if not available
      */
-    abstract getTalentAdvanceCost(
-        actor: any,
-        talent: any,
-        context?: Record<string, unknown>,
-    ): number | null;
+    abstract getTalentAdvanceCost(actor: any, talent: any, context?: Record<string, unknown>): number | null;
 
     /**
      * Get the list of advances available to a character.

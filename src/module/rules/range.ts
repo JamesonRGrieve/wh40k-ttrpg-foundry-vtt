@@ -1,10 +1,9 @@
-import { PsychicRollData, RollData, WeaponRollData } from '../rolls/roll-data.ts';
 import { calculateRangeModifier } from '../utils/range-calculator.ts';
 
 /**
  * @param rollData {WeaponRollData}
  */
-async function calculateWeaponMaxRange(rollData) {
+function calculateWeaponMaxRange(rollData) {
     const weapon = rollData.weapon;
     if (!weapon) {
         rollData.maxRange = 0;
@@ -29,7 +28,7 @@ async function calculateWeaponMaxRange(rollData) {
             const rangeCalculation = new Roll(String(weaponRange), rollData);
             rangeCalculation.evaluateSync();
             range = rangeCalculation.total ?? 0;
-        } catch (error) {
+        } catch {
             (ui.notifications as any).warn('Range formula failed - setting to 0');
             range = 0;
         }
@@ -72,7 +71,7 @@ async function calculatePsychicAbilityMaxRange(rollData) {
             const rangeCalculation = new Roll(rollData.power.system.range, rollData);
             await rangeCalculation.evaluate();
             range = rangeCalculation.total ?? 0;
-        } catch (error) {
+        } catch {
             (ui.notifications as any).warn('Range formula failed - setting to 0');
             range = 0;
         }

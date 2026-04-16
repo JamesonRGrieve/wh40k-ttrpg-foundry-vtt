@@ -6,11 +6,11 @@
  */
 
 import BaseGrantData from './base-grant.ts';
-import ItemGrantData from './item-grant.ts';
-import SkillGrantData from './skill-grant.ts';
 import CharacteristicGrantData from './characteristic-grant.ts';
-import ResourceGrantData from './resource-grant.ts';
 import ChoiceGrantData from './choice-grant.ts';
+import ItemGrantData from './item-grant.ts';
+import ResourceGrantData from './resource-grant.ts';
+import SkillGrantData from './skill-grant.ts';
 
 export { BaseGrantData, ItemGrantData, SkillGrantData, CharacteristicGrantData, ResourceGrantData, ChoiceGrantData };
 

@@ -181,7 +181,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
  * Open an add XP dialog.
  * @param {WH40KAcolyte} actor  The actor to modify.
  */
-export async function openAddXPDialog(actor) {
+export function openAddXPDialog(actor) {
     const dialog = new AddXPDialog(actor);
     dialog.render(true);
 }

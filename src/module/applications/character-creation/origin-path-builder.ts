@@ -295,7 +295,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _itemToSelectionData(item: any): any {
         const data = item.toObject ? item.toObject() : foundry.utils.deepClone(item);
         // Store original uuid for reference to compendium item
-        data._sourceUuid = item.uuid || data._sourceUuid;
+        data._sourceUuid = item.parent === this.actor ? item.flags?.core?.sourceId || data._sourceUuid || item.uuid : item.uuid || data._sourceUuid;
         // Store actor item id if this is an existing actor item
         data._actorItemId = item.parent === this.actor ? item.id : null;
         // Ensure we have the system data in a mutable form
@@ -313,10 +313,33 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _getSelectionSystem(selection: any): any {
         if (!selection) return {};
-        // For Item instances
-        if (selection.system) return selection.system;
-        // For plain data objects
-        return selection.system || {};
+        const selectionSystem = foundry.utils.deepClone(selection.system || {});
+        const sourceOrigin = this._getSourceOriginForSelection(selection);
+        const sourceSystem = foundry.utils.deepClone(sourceOrigin?.system || {});
+        return foundry.utils.mergeObject(sourceSystem, selectionSystem, { inplace: false, overwrite: true, insertKeys: true, recursive: true });
+    }
+
+    /**
+     * Resolve a compendium/source origin for a persisted selection.
+     * @private
+     */
+    _getSourceOriginForSelection(selection: any): any {
+        const pool = [...(this.allOrigins || []), ...(this.lineageOrigins || [])];
+        if (!pool.length || !selection) return null;
+
+        const selectionSystem = selection.system || {};
+        const sourceUuid = selection._sourceUuid || selection.uuid;
+        const identifier = selectionSystem.identifier;
+        const step = selectionSystem.step;
+        const name = selection.name;
+
+        return (
+            pool.find((origin) => sourceUuid && (origin.uuid === sourceUuid || origin.id === sourceUuid)) ||
+            pool.find((origin) => identifier && step && origin.system?.identifier === identifier && origin.system?.step === step) ||
+            pool.find((origin) => identifier && origin.system?.identifier === identifier) ||
+            pool.find((origin) => step && name && origin.system?.step === step && origin.name === name) ||
+            null
+        );
     }
 
     /**
@@ -514,7 +537,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 rollValue,
                 originBonus,
                 hasOriginBonus: originBonus !== 0,
+                hasOriginBonusTooltip: !!(originBonuses.breakdowns[key] || []).length,
                 originBonusTooltip: this._formatOriginBonusTooltip(originBonuses.breakdowns[key] || []),
+                originBonusTooltipData: this._formatOriginBonusTooltipData(originBonuses.breakdowns[key] || []),
                 assignedIndex,
                 total,
                 hasRoll: rollValue !== null,
@@ -554,9 +579,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _getThronesFormula(): string {
         const parts: string[] = [];
-        for (const [_step, selection] of this.selections) {
-            const sys = this._getSelectionSystem(selection);
-            const formula = sys?.homebrew?.throneGelt || sys?.homebrew?.thrones;
+        for (const [, selection] of this.selections) {
+            const formula = this._getSelectionThronesFormula(selection);
             if (formula) parts.push(formula);
         }
         return parts.join(' + ') || '';
@@ -568,7 +592,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _getInfluenceMod(): number {
         let mod = 0;
-        for (const [_step, selection] of this.selections) {
+        for (const [, selection] of this.selections) {
             const sys = this._getSelectionSystem(selection);
             const others = sys?.modifiers?.other || [];
             for (const m of others) {
@@ -742,17 +766,46 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Build rich tooltip payload for origin characteristic bonuses.
+     * @private
+     */
+    _formatOriginBonusTooltipData(entries: { source: string; value: number }[]): string {
+        if (!entries.length) return '';
+        const content = `<div class="wh40k-tooltip__breakdown">${entries
+            .map(
+                ({ source, value }) => `
+                    <div class="wh40k-tooltip__line">
+                        <span class="wh40k-tooltip__label">${source}</span>
+                        <span class="wh40k-tooltip__value">${value > 0 ? '+' : ''}${value}</span>
+                    </div>`,
+            )
+            .join('')}</div>`;
+        return JSON.stringify({
+            title: 'Origin Bonus',
+            content,
+        });
+    }
+
+    /**
      * Get the currently available throne gelt formula.
      * @private
      */
     _getContextualThronesFormula(): string {
         const parts: string[] = [];
         for (const selection of this._getSelectionsForDerivedCalculations()) {
-            const sys = this._getSelectionSystem(selection);
-            const formula = sys?.homebrew?.throneGelt || sys?.homebrew?.thrones;
+            const formula = this._getSelectionThronesFormula(selection);
             if (formula) parts.push(formula);
         }
         return parts.join(' + ');
+    }
+
+    /**
+     * Read any supported throne gelt formula field from a selection.
+     * @private
+     */
+    _getSelectionThronesFormula(selection: any): string {
+        const sys = this._getSelectionSystem(selection);
+        return sys?.homebrew?.throneGelt || sys?.homebrew?.thrones || '';
     }
 
     /**
@@ -787,7 +840,20 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _prepareLineageOrigins(): any {
-        const activeLineageId = this.previewedOrigin?.id || this.previewedOrigin?._id || this.lineageSelection?.id || this.lineageSelection?._id;
+        const activeLineageIds = new Set(
+            [
+                this.previewedOrigin?.id,
+                this.previewedOrigin?._id,
+                this.previewedOrigin?.uuid,
+                this.previewedOrigin?._sourceUuid,
+                this.previewedOrigin?.system?.identifier,
+                this.lineageSelection?.id,
+                this.lineageSelection?._id,
+                this.lineageSelection?.uuid,
+                this.lineageSelection?._sourceUuid,
+                this.lineageSelection?.system?.identifier,
+            ].filter(Boolean),
+        );
         return this.lineageOrigins.map((origin) => {
             return {
                 id: origin.id,
@@ -795,7 +861,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 name: origin.name,
                 img: origin.img,
                 shortDescription: origin.shortDescription,
-                isSelected: activeLineageId === origin.id,
+                fullDescription: this._stripHtml(origin.description || ''),
+                isSelected: activeLineageIds.has(origin.id) || activeLineageIds.has(origin.uuid) || activeLineageIds.has(origin.system?.identifier),
                 isDisabled: false,
                 isValidNext: true,
                 hasChoices: origin.hasChoices,
@@ -881,6 +948,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 this.render();
             });
         });
+
+        const divinationInput = html.querySelector('.csd-divination-input') as HTMLInputElement | null;
+        if (divinationInput) {
+            divinationInput.addEventListener('change', (e) => {
+                this._divination = (e.currentTarget as HTMLInputElement).value || '';
+            });
+            divinationInput.addEventListener('input', (e) => {
+                this._divination = (e.currentTarget as HTMLInputElement).value || '';
+            });
+        }
     }
 
     _onCharRollChipClick(event: Event): void {
@@ -923,6 +1000,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     _onCharDragStart(event: Event): void {
+        this._saveScrollPosition();
         const target = event.currentTarget as any;
         const rollIndex = parseInt(target.dataset.rollIndex);
         const fromChar = target.dataset.characteristic || null;
@@ -945,6 +1023,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _onCharDrop(event: Event): void {
         event.preventDefault();
         if (!this._charDragData) return;
+        this._saveScrollPosition();
         const slot = event.currentTarget as any;
         const targetChar = slot.dataset.characteristic;
         const draggedIndex = this._charDragData.index;
@@ -960,6 +1039,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _onCharBankDrop(event: Event): void {
         event.preventDefault();
         if (!this._charDragData || !this._charDragData.characteristic) return;
+        this._saveScrollPosition();
         this._charAssignments[this._charDragData.characteristic] = null;
         this.render();
     }
@@ -1070,6 +1150,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 name: origin.name,
                 img: origin.img,
                 shortDescription: origin.shortDescription || '',
+                fullDescription: this._stripHtml(origin.description || ''),
                 isSelected: card.isSelected,
                 isDisabled: card.isDisabled,
                 isValidNext: card.isValidNext && !card.isSelected,
@@ -1187,14 +1268,25 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Handle both Item instances and plain data objects
         const currentStep = this.currentStep;
         const itemId = item._id || item.id;
+        const itemIds = new Set([itemId, item.uuid, item._sourceUuid, system?.identifier].filter(Boolean));
         let isConfirmed = false;
         if (this.showLineage) {
-            const lineageId = this.lineageSelection?._id || this.lineageSelection?.id;
-            isConfirmed = lineageId === itemId;
+            const lineageIds = new Set(
+                [
+                    this.lineageSelection?._id,
+                    this.lineageSelection?.id,
+                    this.lineageSelection?.uuid,
+                    this.lineageSelection?._sourceUuid,
+                    this.lineageSelection?.system?.identifier,
+                ].filter(Boolean),
+            );
+            isConfirmed = [...itemIds].some((id) => lineageIds.has(id));
         } else {
             const selection = this.selections.get(currentStep.step);
-            const selectionId = selection?._id || selection?.id;
-            isConfirmed = selectionId === itemId;
+            const selectionIds = new Set(
+                [selection?._id, selection?.id, selection?.uuid, selection?._sourceUuid, selection?.system?.identifier].filter(Boolean),
+            );
+            isConfirmed = [...itemIds].some((id) => selectionIds.has(id));
         }
 
         const showThrones = ['homeWorld', 'background'].includes(currentStep.key);
@@ -1259,7 +1351,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                             if (tooltipText.length >= 200) tooltipText += '...';
                         }
                     }
-                } catch (e) {
+                } catch {
                     // Item not found, use name
                 }
             }
@@ -1298,7 +1390,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                             if (tooltipText.length >= 200) tooltipText += '...';
                         }
                     }
-                } catch (e) {
+                } catch {
                     // Item not found
                 }
             }
@@ -1356,7 +1448,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const traitMap = new Map(); // name -> {name, uuid}
         const equipmentList = [];
 
-        for (const [step, selection] of this.selections) {
+        for (const [, selection] of this.selections) {
             const system = this._getSelectionSystem(selection);
             const grants = system?.grants || {};
             const modifiers = system?.modifiers?.characteristics || {};
@@ -1365,7 +1457,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Accumulate base characteristics from modifiers
             for (const [key, value] of Object.entries(modifiers)) {
                 if (value !== 0) {
-                    charTotals[key] = (charTotals[key] || 0) + value;
+                    charTotals[key] = (charTotals[key] || 0) + Number(value);
                 }
             }
 
@@ -1439,7 +1531,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                         if (choiceGrants.characteristics) {
                             for (const [key, value] of Object.entries(choiceGrants.characteristics)) {
                                 if (value !== 0) {
-                                    charTotals[key] = (charTotals[key] || 0) + value;
+                                    charTotals[key] = (charTotals[key] || 0) + Number(value);
                                 }
                             }
                         }
@@ -1537,7 +1629,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<string|null>}
      * @private
      */
-    async _findSkillUuid(skillName: string, specialization: any = null): Promise<any> {
+    _findSkillUuid(skillName: string, specialization: any = null): any {
         try {
             const skillPack = game.packs.find((p) => p.metadata.name === 'dh2-core-stats-skills');
             if (!skillPack) return null;
@@ -1553,7 +1645,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
 
             return null;
-        } catch (error) {
+        } catch {
             return null;
         }
     }
@@ -1621,7 +1713,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         let pendingChoices = 0;
         let pendingRolls = 0;
 
-        for (const [step, selection] of this.selections) {
+        for (const [, selection] of this.selections) {
             const system = this._getSelectionSystem(selection);
             const grants = system?.grants || {};
             const selectedChoices = system?.selectedChoices || {};
@@ -1737,7 +1829,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Export path configuration
      */
-    static async #export(event: Event, target: HTMLElement): Promise<void> {
+    static #export(event: Event, target: HTMLElement): void {
         const data = {
             version: 1,
             selections: {},
@@ -1769,7 +1861,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Import path configuration
      */
-    static async #import(event: Event, target: HTMLElement): Promise<void> {
+    static #import(event: Event, target: HTMLElement): void {
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = '.json';
@@ -1816,7 +1908,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Set guided/free mode
      */
-    static async #setMode(event: Event, target: HTMLElement): Promise<void> {
+    static #setMode(event: Event, target: HTMLElement): void {
         const value = (target as HTMLInputElement).value || target.closest('[data-action]')?.querySelector('input')?.value;
         (this as any).guidedMode = value === 'guided';
         (this as any).render();
@@ -1859,7 +1951,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Navigate to a step
      */
-    static async #goToStep(event: Event, target: HTMLElement): Promise<void> {
+    static #goToStep(event: Event, target: HTMLElement): void {
         const stepKey = target.dataset.stepKey;
         const stepIndex = parseInt(target.dataset.stepIndex);
         if (!stepKey && isNaN(stepIndex)) return;
@@ -1909,7 +2001,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Preview origin card (NEW behavior - single click shows in panel, doesn't select)
      * This is the new primary preview method - clicking a card just shows it in the panel
      */
-    static async #previewOriginCard(event: Event, target: HTMLElement): Promise<void> {
+    static #previewOriginCard(event: Event, target: HTMLElement): void {
         const originId = target.dataset.originId;
         const originUuid = target.dataset.originUuid;
 
@@ -2030,7 +2122,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @param {Item|object} origin - The origin to select (Item or plain data object)
      * @private
      */
-    async _selectOrigin(origin: any): Promise<void> {
+    _selectOrigin(origin: any): void {
         const currentStep = this.currentStep;
 
         // Convert to plain data object if it's an Item
@@ -2106,7 +2198,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Clear current origin selection
      */
-    static async #clearOrigin(event: Event, target: HTMLElement): Promise<void> {
+    static #clearOrigin(event: Event, target: HTMLElement): void {
         if ((this as any).showLineage) {
             (this as any).lineageSelection = null;
         } else {
@@ -2283,7 +2375,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Go to lineage selection
      */
-    static async #goToLineage(event: Event, target: HTMLElement): Promise<void> {
+    static #goToLineage(event: Event, target: HTMLElement): void {
         (this as any).showLineage = true;
         (this as any).showCharacteristics = false;
         (this as any)._clearPreviewedOrigin();
@@ -2293,7 +2385,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Skip lineage selection
      */
-    static async #skipLineage(event: Event, target: HTMLElement): Promise<void> {
+    static #skipLineage(event: Event, target: HTMLElement): void {
         (this as any).lineageSelection = null;
         (this as any).showLineage = false;
         (this as any).showCharacteristics = true;
@@ -2304,7 +2396,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Navigate to the characteristics step.
      */
-    static async #goToCharacteristics(event: Event, target: HTMLElement): Promise<void> {
+    static #goToCharacteristics(event: Event, target: HTMLElement): void {
         (this as any).showLineage = false;
         (this as any).showCharacteristics = true;
         (this as any)._clearPreviewedOrigin();
@@ -2329,7 +2421,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Reset all characteristic assignments.
      */
-    static async #charReset(event: Event, target: HTMLElement): Promise<void> {
+    static #charReset(event: Event, target: HTMLElement): void {
         const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
         for (const key of CHARS) {
             (this as any)._charAssignments[key] = null;
@@ -2340,7 +2432,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /**
      * Toggle advanced mode for characteristics.
      */
-    static async #charToggleAdvanced(event: Event, target: HTMLElement): Promise<void> {
+    static #charToggleAdvanced(event: Event, target: HTMLElement): void {
         (this as any)._charAdvancedMode = !(this as any)._charAdvancedMode;
         (this as any).render();
     }
@@ -2479,7 +2571,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (item?.sheet) {
                 item.sheet.render(true);
             }
-        } catch (e) {
+        } catch {
             (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.ItemNotFound'));
         }
     }
@@ -2510,7 +2602,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         try {
             // Build array of origin items from selections
             const originItems = [];
-            for (const [step, selection] of (this as any).selections) {
+            for (const [, selection] of (this as any).selections) {
                 // Create an item-like object with proper system data
                 const itemData = selection.toObject ? selection.toObject() : foundry.utils.deepClone(selection);
                 // Ensure system data is present
@@ -2556,13 +2648,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             // Create origin path items on actor (for reference/display)
             const cleanOriginItems = [];
-            for (const [step, selection] of (this as any).selections) {
+            for (const [, selection] of (this as any).selections) {
                 const itemData = selection.toObject ? selection.toObject() : foundry.utils.deepClone(selection);
+                const sourceUuid = itemData.uuid || itemData._sourceUuid;
                 // Remove internal tracking properties
                 delete itemData._sourceUuid;
                 delete itemData._actorItemId;
                 // Ensure it's marked as an origin path item
                 itemData.type = 'originPath';
+                if (sourceUuid) {
+                    itemData.flags ??= {};
+                    itemData.flags.core ??= {};
+                    itemData.flags.core.sourceId = sourceUuid;
+                }
                 cleanOriginItems.push(itemData);
             }
             await (this as any).actor.createEmbeddedDocuments('Item', cleanOriginItems);
@@ -2614,7 +2712,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _buildGrantSelections(): any {
         const selections = {};
-        for (const [_step, selection] of this.selections) {
+        for (const [, selection] of this.selections) {
             const choices = selection.system?.grants?.choices || [];
             const selectedChoices = selection.system?.selectedChoices || {};
             // Deduplicate labels the same way the choice dialog does,
@@ -2644,7 +2742,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     _buildRolledValues(): any {
         const values: any = {};
-        for (const [step, selection] of this.selections) {
+        for (const [, selection] of this.selections) {
             const rollResults = selection.system?.rollResults || {};
             if (rollResults.wounds?.rolled != null) {
                 values.wounds = (values.wounds || 0) + rollResults.wounds.rolled;

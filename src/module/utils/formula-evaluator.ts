@@ -26,12 +26,12 @@ export function evaluateWoundsFormula(formula, actor) {
     }
 
     // Trim whitespace
-    formula = formula.trim();
-    if (formula === '') return 0;
+    const trimmedFormula = formula.trim();
+    if (trimmedFormula === '') return 0;
 
     try {
         // Replace characteristic bonus references with their values
-        let evaluated = formula;
+        let evaluated = trimmedFormula;
 
         // Map of characteristic abbreviations to their full names
         const charMap = {
@@ -61,11 +61,11 @@ export function evaluateWoundsFormula(formula, actor) {
         // Now evaluate dice notation using Foundry's Roll class
         const roll = new Roll(evaluated);
         // @ts-expect-error - extended property
-        roll.evaluate({ async: false });
+        void roll.evaluate({ async: false });
 
         return Math.max(0, Math.floor(roll.total));
     } catch (err) {
-        console.error(`Failed to evaluate wounds formula "${formula}":`, err);
+        console.error(`Failed to evaluate wounds formula "${trimmedFormula}":`, err);
         return 0;
     }
 }
@@ -82,8 +82,8 @@ export function evaluateFateFormula(formula) {
     }
 
     // Trim whitespace
-    formula = formula.trim();
-    if (formula === '') return 0;
+    const trimmedFormula = formula.trim();
+    if (trimmedFormula === '') return 0;
 
     try {
         // Parse the conditional format: (range|=value),(range|=value),...
@@ -93,7 +93,7 @@ export function evaluateFateFormula(formula) {
         const conditionRegex = /\((\d+)-(\d+)\|=(\d+)\)/g;
         let match;
 
-        while ((match = conditionRegex.exec(formula)) !== null) {
+        while ((match = conditionRegex.exec(trimmedFormula)) !== null) {
             conditions.push({
                 min: parseInt(match[1]),
                 max: parseInt(match[2]),
@@ -102,14 +102,14 @@ export function evaluateFateFormula(formula) {
         }
 
         if (conditions.length === 0) {
-            console.warn(`Invalid fate formula format: "${formula}"`);
+            console.warn(`Invalid fate formula format: "${trimmedFormula}"`);
             return 0;
         }
 
         // Roll 1d10 to determine which condition applies
         const roll = new Roll('1d10');
         // @ts-expect-error - extended property
-        roll.evaluate({ async: false });
+        void roll.evaluate({ async: false });
         const result = roll.total;
 
         // Find matching condition
@@ -122,7 +122,7 @@ export function evaluateFateFormula(formula) {
         // Fallback to first condition value if no match (shouldn't happen)
         return conditions[0].value;
     } catch (err) {
-        console.error(`Failed to evaluate fate formula "${formula}":`, err);
+        console.error(`Failed to evaluate fate formula "${trimmedFormula}":`, err);
         return 0;
     }
 }

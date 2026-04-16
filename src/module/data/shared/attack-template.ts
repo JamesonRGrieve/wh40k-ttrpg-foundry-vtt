@@ -1,5 +1,4 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
-import FormulaField from '../fields/formula-field.ts';
 
 /**
  * Template for items with attack capabilities.

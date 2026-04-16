@@ -10,9 +10,7 @@
  * - Auto Roll for digital rolling
  */
 
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import { getDegree, roll1d100, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
-import { RANGE_BRACKETS, calculateTokenDistance } from '../../utils/range-calculator.ts';
+import { getDegree, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import {
     getAvailableAttackModes,
     getMeleeSpecialOptions,
@@ -24,6 +22,8 @@ import {
     isMeleeSpecialOption,
     AIM_OPTIONS,
 } from '../../rules/attack-options.ts';
+import { RANGE_BRACKETS, calculateTokenDistance } from '../../utils/range-calculator.ts';
+import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
@@ -297,8 +297,6 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
 
         // Difficulty data
         const difficulty = this._currentDifficulty;
-        const canStepUp = this._selectedDifficultyIndex > 0;
-        const canStepDown = this._selectedDifficultyIndex < (this.constructor as any).DIFFICULTIES.length - 1;
 
         // Build difficulty picker list (ordered relative to current)
         const difficultyPicker = (this.constructor as any).DIFFICULTIES.map((d, i) => ({
@@ -473,7 +471,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
             }
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                this._submitToChat();
+                void this._submitToChat();
             }
         });
     }
@@ -745,7 +743,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
     _playTickSound(): void {
         const src = 'sounds/dice.wav';
         // @ts-expect-error - type assignment
-        foundry.audio.AudioHelper.play({ src, volume: 0.15, autoplay: true, loop: false }, false);
+        void foundry.audio.AudioHelper.play({ src, volume: 0.15, autoplay: true, loop: false }, false);
     }
 
     /* -------------------------------------------- */
@@ -1166,7 +1164,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
  * Open a unified roll dialog.
  * @param {ActionData} actionData  Any ActionData subclass.
  */
-export async function prepareUnifiedRoll(actionData) {
+export function prepareUnifiedRoll(actionData) {
     const prompt = new UnifiedRollDialog(actionData);
     prompt.render(true);
 }

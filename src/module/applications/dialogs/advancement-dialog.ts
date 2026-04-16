@@ -5,12 +5,12 @@
  * Supports characteristic advances, skills, and talents based on career.
  */
 
-import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
-import { getAvailableXP, spendXP, canAfford } from '../../utils/xp-transaction.ts';
 import { getCareerAdvancements, getNextCharacteristicCost, getCareerKeyFromName, TIER_ORDER } from '../../config/advancements/index.ts';
+import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
-import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
+import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
+import { getAvailableXP, spendXP, canAfford } from '../../utils/xp-transaction.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -105,7 +105,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      */
     static open(actor: any, options: Record<string, unknown> = {}): any {
         const dialog = new this(actor, options);
-        dialog.render(true);
+        void dialog.render(true);
         return dialog;
     }
 
@@ -199,9 +199,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const available = getAvailableXP(this.actor);
 
         // Use system config tier order if available, fall back to career registry
-        const tierOrder = systemConfig
-            ? systemConfig.characteristicTierOrder
-            : TIER_ORDER;
+        const tierOrder = systemConfig ? systemConfig.characteristicTierOrder : TIER_ORDER;
 
         return Object.entries(CONFIG.wh40k?.characteristics ?? {})
             .filter(([key]) => key !== 'influence')
@@ -379,7 +377,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #switchTab(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #switchTab(this: any, event: Event, target: HTMLElement): void {
         const tab = target.dataset.tab;
         if (tab) {
             this.#activeTab = tab;
@@ -550,9 +548,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         if (advance.specialization) {
             // Specialist skill — find or create entry, increment its advance
             const currentEntries = this.actor.system.skills?.[skillKey]?.entries ?? [];
-            const entryIndex = currentEntries.findIndex(
-                (e) => (e.name || '').toLowerCase() === advance.specialization.toLowerCase(),
-            );
+            const entryIndex = currentEntries.findIndex((e) => (e.name || '').toLowerCase() === advance.specialization.toLowerCase());
 
             if (entryIndex >= 0) {
                 // Existing entry — increment advance
@@ -652,7 +648,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
-                doc.sheet.render(true);
+                void doc.sheet.render(true);
                 return;
             }
         }
@@ -664,7 +660,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
-                doc.sheet.render(true);
+                void doc.sheet.render(true);
                 return;
             }
         }

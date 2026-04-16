@@ -628,7 +628,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     async _onItemClick(event: Event): Promise<void> {
         event.preventDefault();
         const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
-        const doc = await fromUuid(uuid) as any;
+        const doc = (await fromUuid(uuid)) as any;
         if (doc) doc.sheet.render(true);
     }
 
@@ -666,7 +666,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      */
     static async #openItem(event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
-        const doc = await fromUuid(uuid) as any;
+        const doc = (await fromUuid(uuid)) as any;
         if (doc) doc.sheet.render(true);
     }
 

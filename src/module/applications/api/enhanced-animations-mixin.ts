@@ -13,7 +13,7 @@
  */
 export default function EnhancedAnimationsMixin<T extends new (...args: any[]) => any>(Base: T) {
     class EnhancedAnimationsApplication extends Base {
-    [key: string]: any;
+        [key: string]: any;
         /* -------------------------------------------- */
         /*  Configuration                               */
         /* -------------------------------------------- */
@@ -122,7 +122,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
          * @param {Object} options          Animation options
          * @returns {Promise<void>}
          */
-        async animateCounter(element: HTMLElement, fromValue: number, toValue: number, options: Record<string, any> = {}): Promise<void> {
+        animateCounter(element: HTMLElement, fromValue: number, toValue: number, options: Record<string, any> = {}): void {
             if (!element || fromValue === toValue) return;
             if (this._shouldSkipAnimation()) return;
 
@@ -186,7 +186,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             // Animate the counter
             const woundsDisplay = this.element.querySelector('.wh40k-wounds-current');
             if (woundsDisplay) {
-                this.animateCounter(woundsDisplay, oldValue, newValue);
+                void this.animateCounter(woundsDisplay, oldValue, newValue);
             }
 
             // Animate the wounds bar
@@ -264,7 +264,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             const charElement = this.element.querySelector(`[data-characteristic="${charKey}"] .char-total`);
 
             if (charElement) {
-                this.animateCounter(charElement, oldValue, newValue);
+                void this.animateCounter(charElement, oldValue, newValue);
                 this._flashElement(charElement, 'changed', 500);
             }
 
@@ -299,7 +299,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             if (!bonusElement) return;
 
             // Animate counter
-            this.animateCounter(bonusElement, oldBonus, newBonus);
+            void this.animateCounter(bonusElement, oldBonus, newBonus);
 
             // Pulse effect on the circle container (V1 HUD)
             const circleContainer = bonusElement.closest('.wh40k-char-hud-circle');
@@ -339,7 +339,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             if (!xpElement) return;
 
             // Animate counter
-            this.animateCounter(xpElement, oldXP, newXP);
+            void this.animateCounter(xpElement, oldXP, newXP);
 
             // Add golden radiance effect
             this._flashElement(xpElement.closest('.xp-display') || xpElement, 'stat-advancement', 1000);
@@ -361,7 +361,6 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
         _animateProgressBar(barElement: HTMLElement): void {
             if (this._shouldSkipAnimation()) return;
 
-            const newPercent = parseFloat(barElement.dataset.percent) || 0;
             const fill = barElement.querySelector('.wh40k-wounds-bar-fill, .progress-fill');
 
             if (fill) {

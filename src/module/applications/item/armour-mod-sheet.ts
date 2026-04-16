@@ -132,13 +132,13 @@ export default class ArmourModSheet extends ContainerItemSheet {
     async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         // Get shared context from _prepareContext
         const sharedContext = await this._prepareContext(options);
-        context = { ...sharedContext, ...context };
+        const partContext = { ...sharedContext, ...context };
 
         switch (partId) {
             case 'header':
-                context.icon = this.item.system.icon;
-                context.restrictionsSummary = this.item.system.restrictionsLabelEnhanced;
-                context.modifiersSummary = this.item.system.modifierSummary;
+                partContext.icon = this.item.system.icon;
+                partContext.restrictionsSummary = this.item.system.restrictionsLabelEnhanced;
+                partContext.modifiersSummary = this.item.system.modifierSummary;
                 break;
 
             case 'restrictions':
@@ -146,7 +146,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
                 break;
 
             case 'modifiers':
-                context.modifiers = this.item.system.modifiers;
+                partContext.modifiers = this.item.system.modifiers;
                 break;
 
             case 'properties':
@@ -154,12 +154,12 @@ export default class ArmourModSheet extends ContainerItemSheet {
                 break;
 
             case 'effect':
-                context.effect = this.item.system.effect || '';
-                context.notes = this.item.system.notes || '';
+                partContext.effect = this.item.system.effect || '';
+                partContext.notes = this.item.system.notes || '';
                 break;
         }
 
-        return context;
+        return partContext;
     }
 
     /* -------------------------------------------- */
@@ -202,8 +202,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
         const current = foundry.utils.getProperty(this.item.system, field) || 0;
 
         await this.item.update({
-            // @ts-expect-error - operator type
-            [`system.${field}`]: current + delta,
+            [`system.${field}`]: Number(current) + delta,
         });
     }
 

@@ -98,9 +98,9 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * Show the preset library.
      * @returns {Promise<CombatPresetDialog>}
      */
-    static async showLibrary(): Promise<any> {
+    static showLibrary(): any {
         const dialog = new CombatPresetDialog(null, 'library');
-        dialog.render(true);
+        void dialog.render(true);
         return dialog;
     }
 
@@ -109,9 +109,9 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {WH40KNPC} npc - The NPC actor.
      * @returns {Promise<CombatPresetDialog>}
      */
-    static async savePreset(npc: any): Promise<any> {
+    static savePreset(npc: any): any {
         const dialog = new CombatPresetDialog(npc, 'save');
-        dialog.render(true);
+        void dialog.render(true);
         return dialog;
     }
 
@@ -120,9 +120,9 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {WH40KNPC} npc - The NPC actor.
      * @returns {Promise<CombatPresetDialog>}
      */
-    static async loadPreset(npc: any): Promise<any> {
+    static loadPreset(npc: any): any {
         const dialog = new CombatPresetDialog(npc, 'load');
-        dialog.render(true);
+        void dialog.render(true);
         return dialog;
     }
 
@@ -295,9 +295,9 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     static async #saveNew(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        const form = target.closest('form') as HTMLFormElement;
-        const name = (form.querySelector('[name="presetName"]') as HTMLInputElement)?.value.trim();
-        const description = (form.querySelector('[name="presetDescription"]') as HTMLInputElement)?.value.trim();
+        const form = target.closest('form');
+        const name = form.querySelector('[name="presetName"]')?.value.trim();
+        const description = form.querySelector('[name="presetDescription"]')?.value.trim();
 
         if (!name) {
             (ui.notifications as any).warn('Please enter a preset name.');
@@ -376,7 +376,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #exportPreset(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #exportPreset(this: any, event: Event, target: HTMLElement): void {
         event.preventDefault();
 
         const presetId = target.dataset.presetId;
@@ -394,7 +394,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #importPreset(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #importPreset(this: any, event: Event, target: HTMLElement): void {
         event.preventDefault();
 
         const input = document.createElement('input');
@@ -430,7 +430,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #selectPreset(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #selectPreset(this: any, event: Event, target: HTMLElement): void {
         event.preventDefault();
         const presetId = target.dataset.presetId;
         this.#state.selectedPreset = presetId;

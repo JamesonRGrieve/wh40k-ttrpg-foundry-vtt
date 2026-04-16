@@ -48,7 +48,7 @@ export class WH40KContextMenu extends foundry.applications.ux.ContextMenu {
  */
 export default function ContextMenuMixin<T extends new (...args: any[]) => any>(Base: T) {
     class ContextMenuApplication extends Base {
-    [key: string]: any;
+        [key: string]: any;
         /* -------------------------------------------- */
         /*  Lifecycle Methods                           */
         /* -------------------------------------------- */
@@ -371,8 +371,8 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
         async _postCharacteristicToChat(charKey: string, char: Record<string, unknown>): Promise<void> {
             // Create a simple chat message with characteristic info
             const content = `<div class="wh40k-char-chat">
-                <strong>${char.label || charKey}</strong>: ${char.total}
-                (Bonus: ${char.bonus})
+                <strong>${(char.label as string) || charKey}</strong>: ${char.total as number}
+                (Bonus: ${char.bonus as number})
             </div>`;
             await (ChatMessage as any).create({
                 speaker: (ChatMessage as any).getSpeaker({ actor: this.actor }),
@@ -402,8 +402,8 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
             // Implement in subclass
         }
 
-        async _showGoverningCharacteristic(skillKey: string, skill: Record<string, unknown>): Promise<void> {
-            (ui.notifications as any).info(`${skill.label || skillKey} is governed by ${skill.characteristic}`);
+        _showGoverningCharacteristic(skillKey: string, skill: Record<string, unknown>): void {
+            (ui.notifications as any).info(`${(skill.label as string) || skillKey} is governed by ${skill.characteristic as string}`);
         }
 
         async _addSkillSpecialization(skillKey: string): Promise<void> {

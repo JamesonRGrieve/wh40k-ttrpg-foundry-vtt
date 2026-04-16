@@ -1,7 +1,7 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
-import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
+import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
 /**
  * Data model for Backpack/Container items.

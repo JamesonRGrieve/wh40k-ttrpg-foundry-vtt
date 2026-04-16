@@ -185,7 +185,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     async wait(): Promise<void> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
-            this.render(true);
+            void this.render(true);
         });
     }
 

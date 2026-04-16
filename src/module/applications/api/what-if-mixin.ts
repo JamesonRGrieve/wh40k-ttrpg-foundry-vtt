@@ -23,7 +23,7 @@ import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
  */
 export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base: T) {
     return class WhatIfApplication extends Base {
-    [key: string]: any;
+        [key: string]: any;
         /* -------------------------------------------- */
         /*  What-If Mode State                          */
         /* -------------------------------------------- */
@@ -375,7 +375,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
          * Update the preview actor with current changes
          * @private
          */
-        async _updatePreview(): Promise<void> {
+        _updatePreview(): void {
             // Create preview data
             const baseData = this.document.toObject();
             const previewData = foundry.utils.mergeObject(baseData, this._whatIfChanges, { inplace: false });

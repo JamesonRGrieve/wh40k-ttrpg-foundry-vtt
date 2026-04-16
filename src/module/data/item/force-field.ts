@@ -1,8 +1,8 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import DescriptionTemplate from '../shared/description-template.ts';
-import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import EquippableTemplate from '../shared/equippable-template.ts';
 import IdentifierField from '../fields/identifier-field.ts';
+import DescriptionTemplate from '../shared/description-template.ts';
+import EquippableTemplate from '../shared/equippable-template.ts';
+import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
 /**
  * Data model for Force Field items.
@@ -231,7 +231,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Toggle activation state.
      * @returns {Promise<Item>}
      */
-    async toggleActivated() {
+    toggleActivated() {
         return this.parent?.update({ 'system.activated': !this.activated });
     }
 
@@ -240,7 +240,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {boolean} overloaded
      * @returns {Promise<Item>}
      */
-    async setOverloaded(overloaded) {
+    setOverloaded(overloaded) {
         return this.parent?.update({ 'system.overloaded': overloaded });
     }
 
@@ -248,7 +248,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Recover from overload.
      * @returns {Promise<Item>}
      */
-    async recover() {
+    recover() {
         return this.parent?.update({ 'system.overloaded': false });
     }
 

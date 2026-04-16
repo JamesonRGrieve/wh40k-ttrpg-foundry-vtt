@@ -1,6 +1,6 @@
-import { hitDropdown } from '../rules/hit-locations.ts';
 import { getCriticalDamage } from '../rules/critical-damage.ts';
 import { damageTypeDropdown } from '../rules/damage-type.ts';
+import { hitDropdown } from '../rules/hit-locations.ts';
 import { applyRollModeWhispers } from './roll-helpers.ts';
 
 export class AssignDamageData {
@@ -28,7 +28,7 @@ export class AssignDamageData {
         this.hit = hit;
     }
 
-    async update() {
+    update() {
         this.armour = 0;
         this.tb = 0;
         const location = this.hit?.location;
@@ -44,7 +44,7 @@ export class AssignDamageData {
         }
     }
 
-    async finalize() {
+    finalize() {
         const totalDamage = Number.parseInt(this.hit.totalDamage);
         const totalPenetration = Number.parseInt(this.hit.totalPenetration);
 

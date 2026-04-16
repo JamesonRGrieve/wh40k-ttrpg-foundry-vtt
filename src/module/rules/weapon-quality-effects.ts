@@ -21,7 +21,7 @@
  * - Coordinates with range system for Melta
  */
 
-import { RollData, WeaponRollData } from '../rolls/roll-data.ts';
+// rolls/roll-data types used implicitly via JSDoc
 
 /* -------------------------------------------- */
 /*  Quality Effect Constants                    */

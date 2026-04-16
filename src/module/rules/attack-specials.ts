@@ -1,4 +1,3 @@
-import { RollData } from '../rolls/roll-data.ts';
 import { calculateAmmoAttackSpecials } from './ammo.ts';
 import { calculateWeaponModifiersAttackSpecials } from './weapon-modifiers.ts';
 import { applyQualityModifiersToRollData } from './weapon-quality-effects.ts';
@@ -51,7 +50,7 @@ export async function updateAttackSpecials(rollData) {
 /**
  * @param rollData {RollData}
  */
-export async function calculateAttackSpecialAttackBonuses(rollData) {
+export function calculateAttackSpecialAttackBonuses(rollData) {
     // Reset Attack Specials
     rollData.specialModifiers = {};
     const actionItem = rollData.weapon ?? rollData.power;

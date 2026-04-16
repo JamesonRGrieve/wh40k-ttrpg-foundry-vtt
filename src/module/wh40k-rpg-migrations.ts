@@ -1,5 +1,5 @@
-import { WH40KSettings } from './wh40k-rpg-settings.ts';
 import { SYSTEM_ID } from './constants.ts';
+import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
 export async function checkAndMigrateWorld() {
     const worldVersion = 185;
@@ -37,7 +37,7 @@ export async function checkAndMigrateWorld() {
         await displayReleaseNotes(worldVersion);
 
         // @ts-expect-error - argument type
-        game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, worldVersion);
+        void game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, worldVersion);
         (ui.notifications as any).info('Upgrade complete!');
     }
 
@@ -361,7 +361,7 @@ export async function checkAndMigrateWorld() {
 
     async function releaseNotes(data) {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/prompt/release-notes-prompt.hbs', data);
-        foundry.applications.api.DialogV2.prompt({
+        void foundry.applications.api.DialogV2.prompt({
             window: { title: 'Release Notes' },
             content: html,
             ok: { label: 'Ok' },

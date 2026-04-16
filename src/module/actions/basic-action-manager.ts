@@ -1,12 +1,9 @@
-import { refundAmmo } from '../rules/ammo.ts';
-import { uuid, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
-import { AssignDamageData } from '../rolls/assign-damage-data.ts';
-import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.ts';
-import { DHTargetedActionManager } from './targeted-action-manager.ts';
-import { Hit } from '../rolls/damage-data.ts';
-import { WH40KSettings } from '../wh40k-rpg-settings.ts';
-import { SYSTEM_ID } from '../constants.ts';
 import { ConfirmationDialog } from '../applications/dialogs/_module.ts';
+import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.ts';
+import { AssignDamageData } from '../rolls/assign-damage-data.ts';
+import { Hit } from '../rolls/damage-data.ts';
+import { uuid, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
+import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
 export class BasicActionManager {
     [key: string]: any;
@@ -15,7 +12,7 @@ export class BasicActionManager {
 
     initializeHooks() {
         // Add show/hide support for chat messages
-        Hooks.on('renderChatMessageHTML', async (message, html, context) => {
+        Hooks.on('renderChatMessageHTML', (message, html, context) => {
             game.wh40k.log('renderChatMessageHTML', { message, html, context });
             html.querySelectorAll('.roll-control__hide-control').forEach((el) =>
                 el.addEventListener('click', async (ev) => await this._toggleExpandChatMessage(ev)),
@@ -44,7 +41,7 @@ export class BasicActionManager {
         });
     }
 
-    async _toggleExpandChatMessage(event) {
+    _toggleExpandChatMessage(event) {
         game.wh40k.log('roll-control-toggle');
         event.preventDefault();
         const displayToggle = event.currentTarget;

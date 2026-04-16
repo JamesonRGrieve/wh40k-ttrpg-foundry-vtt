@@ -9,8 +9,8 @@
  * - origin-grants-processor.mjs (batch processing with choices)
  */
 
-import { evaluateWoundsFormula, evaluateFateFormula } from './formula-evaluator.ts';
 import { SkillKeyHelper } from '../helpers/skill-key-helper.ts';
+import { evaluateWoundsFormula, evaluateFateFormula } from './formula-evaluator.ts';
 
 /**
  * Processing modes
@@ -135,7 +135,7 @@ export class GrantsProcessor {
             for (const [char, value] of Object.entries(result.characteristics)) {
                 if (value !== 0) {
                     const currentAdvance = actor.system.characteristics[char]?.advance || 0;
-                    updates[`system.characteristics.${char}.advance`] = currentAdvance + value;
+                    updates[`system.characteristics.${char}.advance`] = currentAdvance + Number(value);
                 }
             }
         }
@@ -246,11 +246,11 @@ export class GrantsProcessor {
      * Process characteristic modifiers from the modifiers template.
      * @private
      */
-    static async _processCharacteristicModifiers(originItem, context) {
+    static _processCharacteristicModifiers(originItem, context) {
         const charMods = originItem.system?.modifiers?.characteristics || {};
         for (const [char, value] of Object.entries(charMods)) {
             if (value !== 0) {
-                context.result.characteristics[char] = (context.result.characteristics[char] || 0) + value;
+                context.result.characteristics[char] = (context.result.characteristics[char] || 0) + Number(value);
             }
         }
     }
@@ -323,10 +323,10 @@ export class GrantsProcessor {
 
                 // Characteristics from choice
                 if (optionGrants.characteristics) {
-                    for (const [char, value] of Object.entries(optionGrants.characteristics) as [string, any][]) {
+                    for (const [char, value] of Object.entries(optionGrants.characteristics)) {
                         if (value !== 0) {
-                            context.result.characteristics[char] = (context.result.characteristics[char] || 0) + value;
-                            game.wh40k?.log(`Origin choice "${choice.label}" grants ${value >= 0 ? '+' : ''}${value} ${char}`);
+                            context.result.characteristics[char] = (context.result.characteristics[char] || 0) + Number(value);
+                            game.wh40k?.log(`Origin choice "${choice.label}" grants ${Number(value) >= 0 ? '+' : ''}${value as number} ${char}`);
                         }
                     }
                 }
@@ -412,7 +412,7 @@ export class GrantsProcessor {
      * Uses SkillKeyHelper for robust name-to-key conversion.
      * @private
      */
-    static async _processSkillGrant(skillGrant, context) {
+    static _processSkillGrant(skillGrant, context) {
         // Normalize skill grant (might be string or object)
         const normalized = typeof skillGrant === 'string' ? { name: skillGrant, level: 'trained' } : skillGrant;
 
@@ -713,7 +713,7 @@ export class GrantsProcessor {
      * Process a special ability grant.
      * @private
      */
-    static async _processSpecialAbilityGrant(abilityGrant, context) {
+    static _processSpecialAbilityGrant(abilityGrant, context) {
         // Special abilities are descriptive text, not items
         // They could be stored as journal entries or just logged
         game.wh40k?.log(`Special ability granted: ${abilityGrant.name || abilityGrant}`);
@@ -774,7 +774,7 @@ export class GrantsProcessor {
      * Evaluate wounds formula with optional stored roll.
      * @private
      */
-    static async _evaluateWounds(formula, actor, originItem) {
+    static _evaluateWounds(formula, actor, originItem) {
         const storedRoll = originItem.system?.rollResults?.wounds;
 
         if (storedRoll?.rolled !== null && storedRoll?.rolled !== undefined) {
@@ -791,7 +791,7 @@ export class GrantsProcessor {
      * Evaluate fate formula with optional stored roll.
      * @private
      */
-    static async _evaluateFate(formula, originItem) {
+    static _evaluateFate(formula, originItem) {
         const storedRoll = originItem.system?.rollResults?.fate;
 
         if (storedRoll?.rolled !== null && storedRoll?.rolled !== undefined) {
@@ -859,7 +859,7 @@ export class GrantsProcessor {
             if (pack.documentName !== 'Item') continue;
 
             const index = await pack.getIndex({ fields: ['name'] });
-            const entry = index.find((i) => i.name === itemName || i.name.toLowerCase() === nameLower);
+            const entry = index.find((i) => i.name === itemName || (i.name as string).toLowerCase() === nameLower);
             if (entry) {
                 return await pack.getDocument(entry._id);
             }
@@ -875,7 +875,7 @@ export class GrantsProcessor {
     static _mergeResults(parent, child) {
         // Merge characteristics
         for (const [char, value] of Object.entries(child.characteristics)) {
-            parent.characteristics[char] = (parent.characteristics[char] || 0) + value;
+            parent.characteristics[char] = (parent.characteristics[char] || 0) + Number(value);
         }
 
         // Merge items

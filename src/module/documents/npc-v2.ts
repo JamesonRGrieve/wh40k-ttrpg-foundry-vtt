@@ -1,9 +1,9 @@
-import { WH40KBaseActor } from './base-actor.ts';
-import { SimpleSkillData } from '../rolls/action-data.ts';
-import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
+import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { SYSTEM_ID } from '../constants.ts';
+import { SimpleSkillData } from '../rolls/action-data.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { WH40KBaseActor } from './base-actor.ts';
 
 /**
  * Document class for npcV2 type actors.
@@ -294,7 +294,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {number} amount - Amount of wounds to heal.
      * @returns {Promise<Actor>}
      */
-    async healWounds(amount) {
+    healWounds(amount) {
         const newWounds = Math.min(this.system.wounds.max, this.system.wounds.value + amount);
         return (this as any).update({ 'system.wounds.value': newWounds });
     }
@@ -308,7 +308,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {number} newThreatLevel - The new threat level (1-30).
      * @returns {Promise<Actor>}
      */
-    async scaleToThreat(newThreatLevel) {
+    scaleToThreat(newThreatLevel) {
         const currentThreat = this.threatLevel;
         const diff = newThreatLevel - currentThreat;
 
@@ -323,7 +323,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {number} factor - The scaling factor (e.g., 1.2 for +20%, 0.8 for -20%).
      * @returns {Promise<Actor>}
      */
-    async adjustStatsByPercent(factor) {
+    adjustStatsByPercent(factor) {
         const updates = {};
 
         // Scale characteristics
@@ -346,7 +346,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
             const newArmour = Math.round(this.system.armour.total * factor);
             updates['system.armour.total'] = Math.max(0, newArmour);
         } else {
-            for (const [loc, value] of Object.entries(this.system.armour.locations) as [string, any][]) {
+            for (const [loc, value] of Object.entries(this.system.armour.locations) as [string, number][]) {
                 const newArmour = Math.round(value * factor);
                 updates[`system.armour.locations.${loc}`] = Math.max(0, newArmour);
             }
@@ -367,7 +367,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * Disables horde mode and adjusts stats.
      * @returns {Promise<Actor>}
      */
-    async convertToSingleEnemy() {
+    convertToSingleEnemy() {
         if (!this.isHordeMode) return this;
 
         return (this as any).update({
@@ -387,14 +387,14 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {boolean} [options.randomize] - Whether to randomize stats slightly.
      * @returns {Promise<Actor>} The created duplicate.
      */
-    async duplicate(options: any = {}) {
+    duplicate(options: any = {}) {
         const data = this.toObject() as any;
 
         // Modify name
         if (options.name) {
             data.name = options.name;
         } else {
-            data.name = `${this.name} (Copy)`;
+            data.name = `${this.name as string} (Copy)`;
         }
 
         // Randomize stats slightly if requested
@@ -417,14 +417,14 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      */
     exportStatBlock() {
         const s = this.system;
-        let block = `=== ${this.name} ===\n`;
+        let block = `=== ${this.name as string} ===\n`;
         block += `${s.typeLabel} | Threat ${s.threatLevel} | ${s.roleLabel}\n`;
         if (s.faction) block += `Faction: ${s.faction}\n`;
         block += `\n`;
 
         // Characteristics
         block += `--- Characteristics ---\n`;
-        for (const [key, char] of Object.entries(s.characteristics) as [string, any][]) {
+        for (const [, char] of Object.entries(s.characteristics) as [string, any][]) {
             const unnat = char.unnatural >= 2 ? ` (×${char.unnatural})` : '';
             block += `${char.short}: ${char.total}${unnat}\n`;
         }
@@ -494,7 +494,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {string} [source] - Source of the damage.
      * @returns {Promise<Actor>}
      */
-    async applyMagnitudeDamage(amount, source = '') {
+    applyMagnitudeDamage(amount, source = '') {
         if (typeof this.system.applyMagnitudeDamage === 'function') {
             return this.system.applyMagnitudeDamage(amount, source);
         }
@@ -508,7 +508,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {string} [source] - Source of the restoration.
      * @returns {Promise<Actor>}
      */
-    async restoreMagnitude(amount, source = '') {
+    restoreMagnitude(amount, source = '') {
         if (typeof this.system.restoreMagnitude === 'function') {
             return this.system.restoreMagnitude(amount, source);
         }
@@ -520,7 +520,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * Delegates to the data model.
      * @returns {Promise<Actor>}
      */
-    async toggleHordeMode() {
+    toggleHordeMode() {
         if (typeof this.system.toggleHordeMode === 'function') {
             return this.system.toggleHordeMode();
         }

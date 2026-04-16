@@ -1,5 +1,5 @@
-import { WH40KBaseActor } from './base-actor.ts';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
+import { WH40KBaseActor } from './base-actor.ts';
 
 export class WH40KVehicle extends WH40KBaseActor {
     [key: string]: any;
@@ -77,7 +77,7 @@ export class WH40KVehicle extends WH40KBaseActor {
             return;
         }
 
-        game.wh40k.log(`Vehicle ${this.name} is rolling ${item.name} for character ${character.name}`);
+        game.wh40k.log(`Vehicle ${this.name as string} is rolling ${item.name as string} for character ${character.name as string}`);
         switch (item.type) {
             // @ts-expect-error - TS2678
             case 'weapon':

@@ -96,6 +96,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /* -------------------------------------------- */
 
     /** @override */
+    // eslint-disable-next-line @typescript-eslint/require-await
     async _prepareContext(options: any): Promise<any> {
         const system = this.item.system;
 
@@ -310,7 +311,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object[]}
      * @protected
      */
-    _getCharacteristicOptions(): Record<string, unknown>[] {
+    _getCharacteristicOptions(): { value: string; label: string }[] {
         return [
             { value: 'weaponSkill', label: 'Weapon Skill (WS)' },
             { value: 'ballisticSkill', label: 'Ballistic Skill (BS)' },
@@ -330,7 +331,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object[]}
      * @protected
      */
-    _getSkillOptions(): Record<string, unknown>[] {
+    _getSkillOptions(): { value: string; label: string }[] {
         const skills = [
             'acrobatics',
             'athletics',
@@ -396,7 +397,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object[]}
      * @protected
      */
-    _getCombatModifierOptions(): Record<string, unknown>[] {
+    _getCombatModifierOptions(): { value: string; label: string }[] {
         return [
             { value: 'attack', label: 'Attack Bonus' },
             { value: 'damage', label: 'Damage Bonus' },
@@ -412,7 +413,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object[]}
      * @protected
      */
-    _getResourceOptions(): Record<string, unknown>[] {
+    _getResourceOptions(): { value: string; label: string }[] {
         return [
             { value: 'wounds', label: 'Wounds' },
             { value: 'fate', label: 'Fate Points' },
@@ -426,7 +427,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object[]}
      * @protected
      */
-    _getTrainingLevelOptions(): Record<string, unknown>[] {
+    _getTrainingLevelOptions(): { value: string; label: string }[] {
         return [
             { value: 'trained', label: 'Trained' },
             { value: 'plus10', label: '+10' },
@@ -571,7 +572,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Convert characteristics array back to object
             const charReqs: any = {};
             if (data.prerequisites.characteristics) {
-                for (const entry of Object.values(data.prerequisites.characteristics) as any[]) {
+                for (const entry of Object.values(data.prerequisites.characteristics) as { key: string; value: string }[]) {
                     if (entry.key && entry.value) {
                         charReqs[entry.key] = parseInt(entry.value) || 0;
                     }
@@ -582,7 +583,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Process skills array
             const skillReqs = [];
             if (data.prerequisites.skills) {
-                for (const entry of Object.values(data.prerequisites.skills) as any[]) {
+                for (const entry of Object.values(data.prerequisites.skills) as { name: string }[]) {
                     if (entry.name) skillReqs.push(entry.name);
                 }
             }
@@ -591,7 +592,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Process talents array
             const talentReqs = [];
             if (data.prerequisites.talents) {
-                for (const entry of Object.values(data.prerequisites.talents) as any[]) {
+                for (const entry of Object.values(data.prerequisites.talents) as { name: string }[]) {
                     if (entry.name) talentReqs.push(entry.name);
                 }
             }
@@ -603,7 +604,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Characteristics
             const charMods: any = {};
             if (data.modifiers.characteristics) {
-                for (const entry of Object.values(data.modifiers.characteristics) as any[]) {
+                for (const entry of Object.values(data.modifiers.characteristics) as { key: string; value: string }[]) {
                     if (entry.key) {
                         charMods[entry.key] = parseInt(entry.value) || 0;
                     }
@@ -614,7 +615,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Skills
             const skillMods: any = {};
             if (data.modifiers.skills) {
-                for (const entry of Object.values(data.modifiers.skills) as any[]) {
+                for (const entry of Object.values(data.modifiers.skills) as { key: string; value: string }[]) {
                     if (entry.key) {
                         skillMods[entry.key] = parseInt(entry.value) || 0;
                     }
@@ -624,7 +625,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
             // Combat
             if (data.modifiers.combat) {
-                for (const entry of Object.values(data.modifiers.combat) as any[]) {
+                for (const entry of Object.values(data.modifiers.combat) as { key: string; value: string }[]) {
                     if (entry.key) {
                         updateData[`system.modifiers.combat.${entry.key}`] = parseInt(entry.value) || 0;
                     }
@@ -633,7 +634,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
             // Resources
             if (data.modifiers.resources) {
-                for (const entry of Object.values(data.modifiers.resources) as any[]) {
+                for (const entry of Object.values(data.modifiers.resources) as { key: string; value: string }[]) {
                     if (entry.key) {
                         updateData[`system.modifiers.resources.${entry.key}`] = parseInt(entry.value) || 0;
                     }
@@ -643,7 +644,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Other modifiers
             const otherMods = [];
             if (data.modifiers.other) {
-                for (const entry of Object.values(data.modifiers.other) as any[]) {
+                for (const entry of Object.values(data.modifiers.other) as { key: string; label: string; value: string; mode: string }[]) {
                     if (entry.key) {
                         otherMods.push({
                             key: entry.key,
@@ -662,7 +663,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Characteristics - icon is derived, don't save it
             const sitCharMods = [];
             if (data.situational.characteristics) {
-                for (const entry of Object.values(data.situational.characteristics) as any[]) {
+                for (const entry of Object.values(data.situational.characteristics) as { key: string; value: string; condition: string }[]) {
                     if (entry.key && entry.condition) {
                         sitCharMods.push({
                             key: entry.key,
@@ -677,7 +678,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Skills - icon is derived, don't save it
             const sitSkillMods = [];
             if (data.situational.skills) {
-                for (const entry of Object.values(data.situational.skills) as any[]) {
+                for (const entry of Object.values(data.situational.skills) as { key: string; value: string; condition: string }[]) {
                     if (entry.key && entry.condition) {
                         sitSkillMods.push({
                             key: entry.key,
@@ -692,7 +693,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Combat - icon is derived, don't save it
             const sitCombatMods = [];
             if (data.situational.combat) {
-                for (const entry of Object.values(data.situational.combat) as any[]) {
+                for (const entry of Object.values(data.situational.combat) as { key: string; value: string; condition: string }[]) {
                     if (entry.key && entry.condition) {
                         sitCombatMods.push({
                             key: entry.key,
@@ -710,7 +711,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Skills
             const grantedSkills = [];
             if (data.grants.skills) {
-                for (const entry of Object.values(data.grants.skills) as any[]) {
+                for (const entry of Object.values(data.grants.skills) as { name: string; specialization: string; level: string }[]) {
                     if (entry.name) {
                         grantedSkills.push({
                             name: entry.name,
@@ -725,7 +726,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Talents
             const grantedTalents = [];
             if (data.grants.talents) {
-                for (const entry of Object.values(data.grants.talents) as any[]) {
+                for (const entry of Object.values(data.grants.talents) as { name: string; specialization: string; uuid: string }[]) {
                     if (entry.name) {
                         grantedTalents.push({
                             name: entry.name,
@@ -740,7 +741,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Traits
             const grantedTraits = [];
             if (data.grants.traits) {
-                for (const entry of Object.values(data.grants.traits) as any[]) {
+                for (const entry of Object.values(data.grants.traits) as { name: string; level: string; uuid: string }[]) {
                     if (entry.name) {
                         grantedTraits.push({
                             name: entry.name,
@@ -755,7 +756,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             // Special Abilities
             const grantedAbilities = [];
             if (data.grants.specialAbilities) {
-                for (const entry of Object.values(data.grants.specialAbilities) as any[]) {
+                for (const entry of Object.values(data.grants.specialAbilities) as { name: string; description: string }[]) {
                     if (entry.name) {
                         grantedAbilities.push({
                             name: entry.name,
@@ -778,7 +779,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {Event} event - Click event
      * @param {HTMLElement} target - The clicked button
      */
-    static async #addItem(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #addItem(this: any, event: Event, target: HTMLElement): void {
         const { category, type } = target.dataset;
         if (!category || !type) return;
 
@@ -997,7 +998,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {Event} event - Click event
      * @param {HTMLElement} target - The clicked button
      */
-    static async #removeItem(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #removeItem(this: any, event: Event, target: HTMLElement): void {
         const row = target.closest('.ted-list-row');
         if (row) {
             row.remove();

@@ -21,7 +21,7 @@ export default class SystemDataModel extends (foundry.abstract.TypeDataModel as 
      * @type {*[]}
      * @private
      */
-    static _schemaTemplates: (typeof SystemDataModel)[] = [];
+    static _schemaTemplates: typeof SystemDataModel[] = [];
 
     /* -------------------------------------------- */
 
@@ -99,7 +99,7 @@ export default class SystemDataModel extends (foundry.abstract.TypeDataModel as 
         const schema: Record<string, foundry.data.fields.DataField.Any> = {};
         for (const template of this._schemaTemplates) {
             if (!template.defineSchema) {
-                throw new Error(`Invalid WH40K template mixin ${template} defined on class ${this.constructor}`);
+                throw new Error(`Invalid WH40K template mixin ${String(template)} defined on class ${String(this.constructor)}`);
             }
             this.mergeSchema(schema, template.defineSchema());
         }
@@ -114,7 +114,10 @@ export default class SystemDataModel extends (foundry.abstract.TypeDataModel as 
      * @param {DataSchema} b  Second schema that will be merged in, overwriting any non-mergeable properties.
      * @returns {DataSchema}  Fully merged schema.
      */
-    static mergeSchema(a: Record<string, foundry.data.fields.DataField.Any>, b: Record<string, foundry.data.fields.DataField.Any>): Record<string, foundry.data.fields.DataField.Any> {
+    static mergeSchema(
+        a: Record<string, foundry.data.fields.DataField.Any>,
+        b: Record<string, foundry.data.fields.DataField.Any>,
+    ): Record<string, foundry.data.fields.DataField.Any> {
         Object.assign(a, b);
         return a;
     }
@@ -239,7 +242,7 @@ export default class SystemDataModel extends (foundry.abstract.TypeDataModel as 
      * @param {...*} templates            Template classes to mix.
      * @returns {typeof SystemDataModel}  Final prepared type.
      */
-    static mixin(...templates: (typeof SystemDataModel)[]): typeof SystemDataModel {
+    static mixin(...templates: typeof SystemDataModel[]): typeof SystemDataModel {
         for (const template of templates) {
             if (!(template.prototype instanceof SystemDataModel)) {
                 throw new Error(`${template.name} is not a subclass of SystemDataModel`);

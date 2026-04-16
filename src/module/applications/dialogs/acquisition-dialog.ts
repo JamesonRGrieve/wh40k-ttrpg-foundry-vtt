@@ -261,7 +261,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): void {
         // Get custom modifier
         this.customModifier = parseInt(formData.object.customModifier) || 0;
 
@@ -427,7 +427,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      */
     static async show(actor: any, item: any = null): Promise<any> {
         const dialog = new AcquisitionDialog(actor, { item });
-        dialog.render(true);
+        void dialog.render(true);
         return dialog.wait();
     }
 }

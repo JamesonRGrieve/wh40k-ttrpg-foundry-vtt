@@ -1,5 +1,5 @@
-import BasicRollWH40K from './basic-roll.ts';
 import RollConfigurationDialog from '../applications/dialogs/roll-configuration-dialog.ts';
+import BasicRollWH40K from './basic-roll.ts';
 
 /**
  * D100Roll - Specialized roll class for d100 skill/characteristic tests

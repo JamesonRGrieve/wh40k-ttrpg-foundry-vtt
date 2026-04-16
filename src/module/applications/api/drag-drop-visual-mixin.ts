@@ -299,7 +299,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @returns {Promise<{quantity: number}|null>}  Split result or null if cancelled
          * @private
          */
-        async _showSplitDialog(item: any): Promise<{ quantity: number } | null> {
+        _showSplitDialog(item: any): Promise<{ quantity: number } | null> {
             const quantity = item.system.quantity || 1;
 
             return (foundry.applications.api as any).DialogV2.prompt({
@@ -340,7 +340,6 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const dropZones = this.element.querySelectorAll('[data-drop-zone]');
 
             dropZones.forEach((zone) => {
-                const zoneType = zone.dataset.dropZone;
                 const accepts = zone.dataset.accepts?.split(',') || [];
 
                 // Check if zone accepts this item type
@@ -378,7 +377,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             event.dataTransfer.dropEffect = 'copy';
 
             // Update drop zone label based on dragged item type
-            const textEl = zone.querySelector('.wh40k-dropzone-text') as HTMLElement | null;
+            const textEl = zone.querySelector('.wh40k-dropzone-text');
             if (textEl) {
                 const type = _activeDragType ?? this._draggedItem?.item?.type ?? null;
                 textEl.textContent = type ? DROP_ZONE_LABELS[type] ?? DROP_ZONE_DEFAULT_LABEL : DROP_ZONE_DEFAULT_LABEL;
@@ -398,7 +397,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             zone.classList.remove('wh40k-drag-over');
 
             // Reset label
-            const textEl = zone.querySelector('.wh40k-dropzone-text') as HTMLElement | null;
+            const textEl = zone.querySelector('.wh40k-dropzone-text');
             if (textEl) textEl.textContent = 'Drag and Drop from Compendium to Add';
         }
 
@@ -656,7 +655,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             if (!this._draggedItem) return;
 
-            const targetRow = (event.target as HTMLElement).closest('[data-item-id]') as HTMLElement;
+            const targetRow = (event.target as HTMLElement).closest<HTMLElement>('[data-item-id]');
             if (!targetRow) return;
 
             const targetId = targetRow.dataset.itemId;
@@ -681,7 +680,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          */
         async _reorderItems(sourceId: string, targetId: string, clientY: number): Promise<void> {
             // Get all items in order
-            const items = Array.from(this.document.items) as any[];
+            const items: any[] = Array.from(this.document.items);
 
             // Find source and target
             const sourceIndex = items.findIndex((i: any) => i.id === sourceId);

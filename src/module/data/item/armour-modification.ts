@@ -1,7 +1,7 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
+import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import IdentifierField from '../fields/identifier-field.ts';
 
 /**
  * Data model for Armour Modification items.
@@ -260,7 +260,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      */
     get restrictionsLabel() {
         if (this.restrictions.armourTypes.size) {
-            return `Types: ${Array.from(this.restrictions.armourTypes).join(', ')}`;
+            return `Types: ${Array.from(this.restrictions.armourTypes as Set<string>).join(', ')}`;
         }
         return game.i18n.localize('WH40K.Modification.NoRestrictions');
     }
@@ -270,12 +270,11 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * @type {string}
      */
     get restrictionsLabelEnhanced() {
-        const types = Array.from(this.restrictions.armourTypes);
+        const types = Array.from(this.restrictions.armourTypes as Set<string>);
         if (!types.length) return game.i18n.localize('WH40K.Modification.NoRestrictions');
         if (types.includes('any')) return game.i18n.localize('WH40K.Modification.AnyArmour');
 
         const labels = types.map((type) => {
-            // @ts-expect-error - index type
             const config = CONFIG.wh40k?.armourTypes?.[type];
             return config ? game.i18n.localize(config.label) : type;
         });

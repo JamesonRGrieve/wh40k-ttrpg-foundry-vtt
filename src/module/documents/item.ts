@@ -1,6 +1,6 @@
-import { WH40KItemContainer } from './item-container.ts';
 import { capitalize } from '../handlebars/handlebars-helpers.ts';
 import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
+import { WH40KItemContainer } from './item-container.ts';
 
 export class WH40KItem extends WH40KItemContainer {
     [key: string]: any;
@@ -291,15 +291,15 @@ export class WH40KItem extends WH40KItemContainer {
 
     _onCreate(data, options, user) {
         game.wh40k.log('Determining nested items for', this);
-        this._determineNestedItems();
+        void this._determineNestedItems();
         return super._onCreate(data, options, user);
     }
 
-    async prepareData() {
+    prepareData() {
         super.prepareData();
         game.wh40k.log('Item prepare data', this);
 
-        this.convertNestedToItems();
+        void this.convertNestedToItems();
 
         if (this.isPsychicPower) {
             if (!this.system.damage || this.system.damage === '') {
@@ -329,10 +329,10 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Check for specials
         if (this.system.special) {
-            game.wh40k.log(`Performing first time nested item configuration for item: ${this.name} with specials: `, this.system.special);
+            game.wh40k.log(`Performing first time nested item configuration for item: ${this.name as string} with specials: `, this.system.special);
             if (this.isWeapon) await this._updateSpecialsFromPack('wh40k-rpg.weapons', this.system.special);
             if (this.isAmmunition) await this._updateSpecialsFromPack('wh40k-rpg.ammo', this.system.special);
-            game.wh40k.log(`Special migrated for item: ${this.name}`, this.system.special);
+            game.wh40k.log(`Special migrated for item: ${this.name as string}`, this.system.special);
             this.system.special = undefined;
 
             await this.convertNestedToItems();
@@ -695,7 +695,7 @@ export class WH40KItem extends WH40KItemContainer {
             for (const [key, value] of Object.entries(modifiers.characteristics)) {
                 if (value !== 0) {
                     const currentBonus = actor.system.characteristics?.[key]?.advance || 0;
-                    characteristics[`system.characteristics.${key}.advance`] = currentBonus + value;
+                    characteristics[`system.characteristics.${key}.advance`] = currentBonus + Number(value);
                 }
             }
             Object.assign(updates, characteristics);
@@ -715,7 +715,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Collect skills to add
         if (modifiers.skills && Array.isArray(modifiers.skills)) {
-            for (const skillName of (modifiers as any).skills) {
+            for (const skillName of modifiers.skills) {
                 const skillPack = game.packs.get('wh40k-rpg.dh2-core-stats-skills');
                 if (skillPack) {
                     const index = await skillPack.getIndex({ fields: ['name'] });
@@ -730,7 +730,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Collect talents to add
         if (modifiers.talents && Array.isArray(modifiers.talents)) {
-            for (const talentName of (modifiers as any).talents) {
+            for (const talentName of modifiers.talents) {
                 const talentPack = game.packs.get('wh40k-rpg.dh2-core-stats-talents');
                 if (talentPack) {
                     const index = await talentPack.getIndex({ fields: ['name'] });
@@ -756,7 +756,7 @@ export class WH40KItem extends WH40KItemContainer {
         // Add the origin path itself
         await actor.createEmbeddedDocuments('Item', [this.toObject()]);
 
-        (ui.notifications as any).info(`Applied ${this.name} to ${actor.name}`);
+        (ui.notifications as any).info(`Applied ${this.name as string} to ${actor.name}`);
     }
 
     /**
@@ -782,7 +782,7 @@ export class WH40KItem extends WH40KItemContainer {
                     const charName = key.charAt(0).toUpperCase() + key.slice(1);
                     preview.characteristics.push({
                         name: charName,
-                        value: (value as number) > 0 ? `+${value}` : value,
+                        value: (value as number) > 0 ? `+${value as number}` : value,
                     });
                 }
             }

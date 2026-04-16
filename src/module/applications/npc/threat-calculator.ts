@@ -471,7 +471,6 @@ export default class ThreatCalculator {
      */
     static generateWeapons(preset: any, threatLevel: number): any {
         const equipment = this.EQUIPMENT_PRESETS[preset] || this.EQUIPMENT_PRESETS.mixed;
-        const tier = this.getTier(threatLevel);
 
         // Scale weapon damage based on threat
         const damageBonus = Math.floor(threatLevel / 5);
@@ -497,7 +496,6 @@ export default class ThreatCalculator {
      */
     static generateArmour(preset: any, threatLevel: number): any {
         const equipment = this.EQUIPMENT_PRESETS[preset] || this.EQUIPMENT_PRESETS.mixed;
-        const tier = this.getTier(threatLevel);
 
         // Scale armour based on threat
         const armourBonus = Math.floor(threatLevel / 5);
