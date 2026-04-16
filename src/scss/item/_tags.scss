@@ -4,12 +4,12 @@
 
 .wh40k-empty-state {
     text-align: center;
-    padding: $wh40k-space-xl;
+    padding: var(--wh40k-space-xl);
     color: var(--wh40k-text-muted);
     font-style: italic;
     background: var(--wh40k-panel-bg);
     border: 1px dashed var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
 }
 
 // ============================================
@@ -88,7 +88,7 @@
     }
 
     &__value--small {
-        font-size: $wh40k-font-size-xs !important;
+        font-size: var(--wh40k-font-size-xs) !important;
         font-weight: 500;
     }
 }
@@ -100,16 +100,16 @@
 .wh40k-field__textarea {
     width: 100%;
     min-height: 100px;
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
     background: var(--wh40k-input-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-text-dark);
-    font-family: $wh40k-font-body;
-    font-size: $wh40k-font-size-base;
+    font-family: var(--wh40k-font-body);
+    font-size: var(--wh40k-font-size-base);
     line-height: 1.6;
     resize: vertical;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:focus {
         outline: none;

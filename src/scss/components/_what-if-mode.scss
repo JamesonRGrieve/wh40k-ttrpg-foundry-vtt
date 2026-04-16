@@ -85,7 +85,7 @@
         font-weight: bold;
         font-size: 0.9rem;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
         text-transform: uppercase;
         letter-spacing: 0.5px;
 

@@ -311,7 +311,7 @@
 .wh40k-portrait {
     border: 2px solid var(--wh40k-border-color, #4a3728);
     border-radius: 6px;
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
 }
 
 // Header row — layout in Tailwind

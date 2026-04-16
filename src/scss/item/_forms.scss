@@ -5,10 +5,10 @@
 .wh40k-field {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
 
     &__label {
-        font-size: $wh40k-font-size-xs;
+        font-size: var(--wh40k-font-size-xs);
         text-transform: uppercase;
         letter-spacing: 0.1em;
         color: var(--wh40k-text-muted);
@@ -19,12 +19,12 @@
     &__textarea {
         background: var(--wh40k-input-bg);
         border: 1px solid var(--wh40k-border-color-light);
-        border-radius: $wh40k-radius-sm;
-        padding: $wh40k-space-xs $wh40k-space-sm;
+        border-radius: var(--wh40k-radius-sm);
+        padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
         color: var(--wh40k-text-dark);
-        font-family: $wh40k-font-body;
-        font-size: $wh40k-font-size-base;
-        transition: all $wh40k-transition-fast;
+        font-family: var(--wh40k-font-body);
+        font-size: var(--wh40k-font-size-base);
+        transition: all var(--wh40k-transition-fast);
 
         &:focus {
             outline: none;
@@ -59,21 +59,21 @@
     &__checkbox {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
         cursor: pointer;
         color: var(--wh40k-text-dark);
-        font-size: $wh40k-font-size-sm;
+        font-size: var(--wh40k-font-size-sm);
 
         input[type='checkbox'] {
             appearance: none;
             width: 18px;
             height: 18px;
             border: 2px solid var(--wh40k-border-color);
-            border-radius: $wh40k-radius-sm;
+            border-radius: var(--wh40k-radius-sm);
             background: var(--wh40k-input-bg);
             cursor: pointer;
             position: relative;
-            transition: all $wh40k-transition-fast;
+            transition: all var(--wh40k-transition-fast);
             flex-shrink: 0;
 
             &:checked {
@@ -102,7 +102,7 @@
 // Field Grid Layouts
 .wh40k-field-grid {
     display: grid;
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
 
     &--2 {
         grid-template-columns: repeat(2, 1fr);
@@ -122,8 +122,8 @@
 .wh40k-description {
     background: var(--wh40k-panel-body-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-md;
-    padding: $wh40k-space-md;
+    border-radius: var(--wh40k-radius-md);
+    padding: var(--wh40k-space-md);
     min-height: 80px;
 
     .editor-content,
@@ -135,14 +135,14 @@
         h2,
         h3,
         h4 {
-            font-family: $wh40k-font-heading;
+            font-family: var(--wh40k-font-heading);
             color: var(--wh40k-gold);
-            margin-top: $wh40k-space-md;
-            margin-bottom: $wh40k-space-sm;
+            margin-top: var(--wh40k-space-md);
+            margin-bottom: var(--wh40k-space-sm);
         }
 
         p {
-            margin-bottom: $wh40k-space-sm;
+            margin-bottom: var(--wh40k-space-sm);
         }
 
         strong,
@@ -152,12 +152,12 @@
 
         ul,
         ol {
-            padding-left: $wh40k-space-lg;
-            margin-bottom: $wh40k-space-sm;
+            padding-left: var(--wh40k-space-lg);
+            margin-bottom: var(--wh40k-space-sm);
         }
 
         li {
-            margin-bottom: $wh40k-space-xs;
+            margin-bottom: var(--wh40k-space-xs);
         }
     }
 }
@@ -170,5 +170,5 @@
     color: var(--wh40k-text-subtle);
     font-style: italic;
     text-align: center;
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 }

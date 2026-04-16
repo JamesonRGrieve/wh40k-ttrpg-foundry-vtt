@@ -8,18 +8,24 @@
 // ============================================
 
 .wh40k-tab-grid {
-    @include wh40k-tab-grid(2, $wh40k-space-md);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--wh40k-space-md);
+    width: 100%;
 
     &--3col {
-        @include wh40k-tab-grid(3, $wh40k-space-md);
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--wh40k-space-md);
+        width: 100%;
     }
 
     &--gap-sm {
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
     }
 
     &--gap-lg {
-        gap: $wh40k-space-lg;
+        gap: var(--wh40k-space-lg);
     }
 }
 
@@ -28,7 +34,17 @@
 // ============================================
 
 .wh40k-tab-col {
-    @include wh40k-tab-column;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    .wh40k-panel {
+        margin-bottom: var(--wh40k-space-md);
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
 }
 
 // ============================================

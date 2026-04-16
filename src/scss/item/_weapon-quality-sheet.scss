@@ -13,7 +13,7 @@
     height: 100%;
     background: var(--wh40k-sheet-bg);
     color: var(--wh40k-text-dark);
-    font-family: $wh40k-font-ui;
+    font-family: var(--wh40k-font-ui);
     font-size: 0.9rem;
     overflow: hidden;
 
@@ -73,7 +73,7 @@
         justify-content: center;
         background: rgba(249, 115, 22, 0.7);
         opacity: 0;
-        transition: opacity $wh40k-transition-base;
+        transition: opacity var(--wh40k-transition-base);
 
         i {
             color: white;
@@ -93,11 +93,11 @@
         background: transparent;
         border: none;
         border-bottom: 1px solid transparent;
-        font-family: $wh40k-font-display;
+        font-family: var(--wh40k-font-display);
         font-size: 1.2rem;
         font-weight: 600;
         color: var(--wh40k-text-dark);
-        transition: border-color $wh40k-transition-base;
+        transition: border-color var(--wh40k-transition-base);
 
         &:hover,
         &:focus {
@@ -189,7 +189,7 @@
     }
 
     &__value {
-        font-family: $wh40k-font-display;
+        font-family: var(--wh40k-font-display);
         font-size: 0.95rem;
         font-weight: 600;
         color: var(--wh40k-text-dark);
@@ -220,7 +220,7 @@
     font-weight: 500;
     color: var(--wh40k-text-muted);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.9rem;
@@ -300,7 +300,7 @@
         h3 {
             flex: 1;
             margin: 0;
-            font-family: $wh40k-font-display;
+            font-family: var(--wh40k-font-display);
             font-size: 0.95rem;
             font-weight: 600;
             color: var(--wh40k-text-dark);
@@ -395,7 +395,7 @@
             cursor: pointer;
             border-radius: 4px;
             text-transform: none;
-            transition: background $wh40k-transition-base;
+            transition: background var(--wh40k-transition-base);
 
             &:hover {
                 background: var(--wh40k-panel-bg-translucent);

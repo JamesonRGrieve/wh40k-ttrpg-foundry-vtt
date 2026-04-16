@@ -630,7 +630,7 @@
             border: 2px solid transparent;
             border-radius: 4px;
             cursor: pointer;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
 
             &:hover {
                 background: var(--wh40k-bg-secondary);

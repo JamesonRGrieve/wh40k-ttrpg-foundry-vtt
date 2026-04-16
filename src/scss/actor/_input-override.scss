@@ -14,7 +14,7 @@
         background: var(--wh40k-input-bg);
         border: 1px solid var(--wh40k-border-color-light);
         color: var(--wh40k-text-dark);
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:focus {
             outline: none;

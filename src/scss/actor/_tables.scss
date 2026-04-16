@@ -43,7 +43,7 @@
     cursor: pointer;
     padding: 4px 6px;
     border-radius: 4px;
-    transition: background-color $wh40k-transition-base;
+    transition: background-color var(--wh40k-transition-base);
     color: inherit;
 
     &:hover {

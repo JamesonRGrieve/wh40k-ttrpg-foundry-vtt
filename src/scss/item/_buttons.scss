@@ -6,16 +6,16 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    gap: var(--wh40k-space-xs);
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: var(--wh40k-btn-bg);
     border: 1px solid var(--wh40k-border-color);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-text-dark);
-    font-family: $wh40k-font-body;
-    font-size: $wh40k-font-size-sm;
+    font-family: var(--wh40k-font-body);
+    font-size: var(--wh40k-font-size-sm);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 14px;
@@ -51,7 +51,7 @@
     }
 
     &--icon-only {
-        padding: $wh40k-space-xs;
+        padding: var(--wh40k-space-xs);
         width: 28px;
         height: 28px;
     }
@@ -67,13 +67,13 @@
 
     th,
     td {
-        padding: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm);
         text-align: left;
         border-bottom: 1px solid var(--wh40k-border-color-light);
     }
 
     th {
-        font-size: $wh40k-font-size-xs;
+        font-size: var(--wh40k-font-size-xs);
         text-transform: uppercase;
         letter-spacing: 0.1em;
         color: var(--wh40k-text-muted);
@@ -81,7 +81,7 @@
     }
 
     tr {
-        transition: background $wh40k-transition-fast;
+        transition: background var(--wh40k-transition-fast);
 
         &:hover {
             background: rgba(212, 175, 55, 0.05);

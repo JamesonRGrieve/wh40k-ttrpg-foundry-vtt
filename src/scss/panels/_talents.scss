@@ -37,13 +37,13 @@
     // Dropzone styling when empty or dragging
     &[data-drop-zone] {
         position: relative;
-        transition: all $wh40k-transition-medium;
+        transition: all var(--wh40k-transition-medium);
 
         &.drop-valid {
             background: linear-gradient(135deg, rgba($wh40k-accent-talents, 0.08) 0%, rgba($wh40k-accent-talents, 0.02) 100%);
             border: 2px dashed rgba($wh40k-accent-talents, 0.5);
             border-radius: 6px;
-            padding: $wh40k-space-sm;
+            padding: var(--wh40k-space-sm);
             min-height: 100px;
         }
 
@@ -51,7 +51,7 @@
             background: linear-gradient(135deg, rgba(139, 0, 0, 0.05) 0%, transparent 100%);
             border: 2px dashed rgba(139, 0, 0, 0.3);
             border-radius: 6px;
-            padding: $wh40k-space-sm;
+            padding: var(--wh40k-space-sm);
         }
     }
 }
@@ -68,7 +68,7 @@
     padding: 3px 6px;
     background: var(--wh40k-panel-bg-solid);
     border: 1px solid var(--wh40k-border-color-light);
-    border-left: 3px solid $wh40k-accent-talents;
+    border-left: 3px solid var(--wh40k-accent-talents);
     border-radius: 4px;
     min-height: 28px;
     transition: border-color 0.15s ease;
@@ -109,14 +109,14 @@
     color: var(--wh40k-text-dark);
 
     &:hover {
-        color: $wh40k-accent-talents;
+        color: var(--wh40k-accent-talents);
     }
 }
 
 .wh40k-tp_granted {
     margin-left: 4px;
     font-size: 0.6rem;
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
     cursor: help;
 }
 
@@ -124,7 +124,7 @@
     @apply tw-flex tw-items-center tw-gap-1 tw-shrink-0;
     font-size: 0.6rem;
     color: var(--wh40k-text-muted);
-    transition: opacity $wh40k-transition-fast;
+    transition: opacity var(--wh40k-transition-fast);
 }
 
 .wh40k-tp_tier {
@@ -133,7 +133,7 @@
     border: 1px solid rgba($wh40k-accent-talents, 0.3);
     border-radius: 3px;
     font-weight: 700;
-    color: $wh40k-accent-talents;
+    color: var(--wh40k-accent-talents);
     font-size: 0.55rem;
 }
 
@@ -144,7 +144,7 @@
 }
 
 .wh40k-tp_rank {
-    color: $wh40k-accent-talents;
+    color: var(--wh40k-accent-talents);
     font-weight: 700;
 }
 
@@ -160,7 +160,7 @@
     border-radius: 3px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity $wh40k-transition-fast;
+    transition: opacity var(--wh40k-transition-fast);
 }
 
 .wh40k-tp_btn {
@@ -175,15 +175,15 @@
 
     &:hover {
         background: rgba($wh40k-color-gold, 0.2);
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
     }
 
     &.wh40k-tp_btn--active {
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
     }
 
     &.wh40k-tp_btn--danger:hover {
-        color: $wh40k-color-crimson;
+        color: var(--wh40k-color-crimson);
         background: rgba($wh40k-color-crimson, 0.15);
     }
 }
@@ -191,12 +191,12 @@
 // Trait rows - keep existing styling with drag support
 .wh40k-trait-row {
     @apply tw-flex tw-items-center tw-gap-2 tw-overflow-hidden;
-    padding: 6px $wh40k-space-sm;
+    padding: 6px var(--wh40k-space-sm);
     background: var(--wh40k-panel-bg-solid);
     border: 1px solid var(--wh40k-border-color-light);
-    border-left: 3px solid $wh40k-accent-equipment;
+    border-left: 3px solid var(--wh40k-accent-equipment);
     border-radius: 4px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     min-height: 40px;
     cursor: grab;
 
@@ -216,7 +216,7 @@
     }
 
     .wh40k-row-name:hover {
-        color: $wh40k-accent-equipment;
+        color: var(--wh40k-accent-equipment);
     }
 }
 
@@ -251,7 +251,7 @@
     color: var(--wh40k-text-dark);
 
     &:hover {
-        color: $wh40k-accent-equipment;
+        color: var(--wh40k-accent-equipment);
     }
 }
 
@@ -285,20 +285,20 @@
     cursor: pointer;
     padding: 4px 6px;
     border-radius: 3px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     font-size: 0.85rem;
 
     &:hover {
         background: rgba($wh40k-color-gold, 0.1);
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
     }
 
     &.active {
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
     }
 
     &.wh40k-btn-danger:hover {
-        color: $wh40k-color-crimson;
+        color: var(--wh40k-color-crimson);
         background: rgba($wh40k-color-crimson, 0.1);
     }
 }
@@ -319,7 +319,7 @@
     cursor: pointer;
     padding: 2px 4px;
     border-radius: 2px;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
     font-size: 0.7rem;
 
     &:hover {
@@ -338,7 +338,7 @@
 
 // Expanded Details View
 .wh40k-row-expanded {
-    padding: $wh40k-space-sm;
+    padding: var(--wh40k-space-sm);
     padding-top: 0;
     background: var(--wh40k-panel-bg-translucent);
     border-top: 1px solid var(--wh40k-border-color-light);
@@ -358,7 +358,7 @@
 
 .wh40k-detail-row {
     display: flex;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
     padding: 4px 0;
     font-size: 0.8rem;
 
@@ -390,7 +390,7 @@
 
 .wh40k-detail-content {
     width: 100%;
-    padding: $wh40k-space-xs;
+    padding: var(--wh40k-space-xs);
     background: var(--wh40k-panel-bg);
     border-radius: 3px;
     font-size: 0.75rem;
@@ -419,9 +419,9 @@
 
 .wh40k-group-header {
     @apply tw-flex tw-items-center tw-gap-1;
-    padding: 4px $wh40k-space-sm;
+    padding: 4px var(--wh40k-space-sm);
     background: var(--wh40k-panel-bg-translucent);
-    border-left: 3px solid $wh40k-accent-equipment;
+    border-left: 3px solid var(--wh40k-accent-equipment);
     border-radius: 3px;
     font-size: 0.75rem;
     font-weight: 700;
@@ -486,12 +486,12 @@
 // Empty State
 .wh40k-empty-state {
     text-align: center;
-    padding: $wh40k-space-lg;
+    padding: var(--wh40k-space-lg);
     color: var(--wh40k-text-muted);
 
     i {
         font-size: 2rem;
-        margin-bottom: $wh40k-space-sm;
+        margin-bottom: var(--wh40k-space-sm);
         opacity: 0.5;
     }
 

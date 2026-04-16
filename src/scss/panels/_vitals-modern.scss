@@ -9,7 +9,7 @@
 .wh40k-vital-display {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 // Vital Tracker (Number Display with +/- buttons)
@@ -17,8 +17,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-xs 0;
+    gap: var(--wh40k-space-xs);
+    padding: var(--wh40k-space-xs) 0;
 }
 
 // Vital button extends the unified control button
@@ -70,20 +70,20 @@
 .wh40k-vital-bar-fill {
     height: 100%;
     border-radius: 4px;
-    transition: width $wh40k-transition-medium;
+    transition: width var(--wh40k-transition-medium);
 }
 
 // Vital-specific bar colors
 .wh40k-wounds-fill {
-    background: linear-gradient(90deg, $wh40k-accent-combat, lighten($wh40k-accent-combat, 15%));
+    background: linear-gradient(90deg, var(--wh40k-accent-combat), lighten($wh40k-accent-combat, 15%));
 }
 
 .wh40k-fatigue-fill {
-    background: linear-gradient(90deg, $wh40k-color-gold-dark, $wh40k-color-gold);
+    background: linear-gradient(90deg, var(--wh40k-color-gold-dark), var(--wh40k-color-gold));
 }
 
 .wh40k-corruption-fill {
-    background: linear-gradient(90deg, darken($wh40k-color-success, 10%), $wh40k-color-success);
+    background: linear-gradient(90deg, darken($wh40k-color-success, 10%), var(--wh40k-color-success));
 }
 
 .wh40k-insanity-fill {
@@ -92,15 +92,15 @@
 
 // Fate value special styling
 .wh40k-fate-value {
-    color: $wh40k-accent-gold !important;
+    color: var(--wh40k-accent-gold) !important;
 }
 
 // Warning Messages
 .wh40k-vital-warning {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-xs;
-    padding: 6px $wh40k-space-sm;
+    gap: var(--wh40k-space-xs);
+    padding: 6px var(--wh40k-space-sm);
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -114,13 +114,13 @@
 
 .wh40k-critical-warning {
     background: rgba($wh40k-accent-combat, 0.15);
-    color: $wh40k-accent-combat;
+    color: var(--wh40k-accent-combat);
     border: 1px solid rgba($wh40k-accent-combat, 0.3);
 }
 
 .wh40k-exhausted-warning {
     background: rgba($wh40k-color-gold, 0.15);
-    color: $wh40k-color-gold-dark;
+    color: var(--wh40k-color-gold-dark);
     border: 1px solid rgba($wh40k-color-gold, 0.3);
 }
 
@@ -148,7 +148,7 @@
     border: 1px solid var(--color-border-secondary);
     border-radius: 6px;
     cursor: pointer;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
     flex-shrink: 0;
     margin-left: auto;
     color: var(--color-text-secondary);
@@ -167,8 +167,8 @@
 .wh40k-vital-edit-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: $wh40k-space-md;
-    margin-bottom: $wh40k-space-sm;
+    gap: var(--wh40k-space-md);
+    margin-bottom: var(--wh40k-space-sm);
 }
 
 .wh40k-vital-edit-field {
@@ -206,7 +206,7 @@
     font-weight: 700;
     padding: 2px 6px;
     background: rgba($wh40k-accent-gold, 0.15);
-    color: $wh40k-accent-gold;
+    color: var(--wh40k-accent-gold);
     border-radius: 3px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -216,8 +216,8 @@
 .wh40k-vital-info {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-xs $wh40k-space-sm;
+    gap: var(--wh40k-space-xs);
+    padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
     background: rgba($wh40k-accent-gold, 0.08);
     border-left: 3px solid rgba($wh40k-accent-gold, 0.4);
     border-radius: 4px;
@@ -225,15 +225,15 @@
     color: var(--color-text-secondary);
 
     i {
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
         font-size: 0.9em;
     }
 }
 
 // Subsections (Critical, Injuries, etc.)
 .wh40k-vital-subsection {
-    margin-top: $wh40k-space-md;
-    padding-top: $wh40k-space-sm;
+    margin-top: var(--wh40k-space-md);
+    padding-top: var(--wh40k-space-sm);
     border-top: 1px solid rgba(120, 46, 34, 0.2);
 }
 
@@ -241,7 +241,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: $wh40k-space-xs;
+    margin-bottom: var(--wh40k-space-xs);
 }
 
 .wh40k-subsection-title {
@@ -262,15 +262,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-md;
+    gap: var(--wh40k-space-xs);
+    padding: var(--wh40k-space-md);
     background: var(--color-bg-option);
     border: 1px dashed var(--color-border-tertiary);
     border-radius: 6px;
 
     i {
         font-size: 1.5rem;
-        color: $wh40k-color-success;
+        color: var(--wh40k-color-success);
         opacity: 0.6;
     }
 
@@ -286,8 +286,8 @@
 // ============================================
 
 .wh40k-vitals-panel .wh40k-panel-details {
-    margin-top: $wh40k-space-md;
-    padding: $wh40k-space-md;
+    margin-top: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md);
     background: var(--color-bg-secondary);
     border-radius: 6px;
     border: 1px solid var(--color-border-tertiary);
@@ -320,14 +320,14 @@
 .wh40k-checkbox-wrapper {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
     height: 36px;
-    padding: 0 $wh40k-space-sm;
+    padding: 0 var(--wh40k-space-sm);
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
     border-radius: 6px;
     cursor: pointer;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:hover {
         background: var(--color-bg-tertiary);
@@ -339,7 +339,7 @@
     width: 18px;
     height: 18px;
     cursor: pointer;
-    accent-color: $wh40k-color-success;
+    accent-color: var(--wh40k-color-success);
 }
 
 .wh40k-checkbox-label {
@@ -422,5 +422,5 @@
 .wh40k-fatigue-bar-fill,
 .wh40k-corruption-bar-fill,
 .wh40k-insanity-bar-fill {
-    transition: width $wh40k-transition-medium;
+    transition: width var(--wh40k-transition-medium);
 }

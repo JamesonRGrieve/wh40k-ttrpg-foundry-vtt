@@ -110,7 +110,7 @@
             text-align: center;
             color: var(--color-text-light-6);
             margin-bottom: 0.5rem;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
 
             i {
                 font-size: 1.5rem;
@@ -191,7 +191,7 @@
                             height: 32px;
                             border-radius: 4px;
                             cursor: pointer;
-                            transition: transform $wh40k-transition-base;
+                            transition: transform var(--wh40k-transition-base);
 
                             &:hover {
                                 transform: scale(1.1);

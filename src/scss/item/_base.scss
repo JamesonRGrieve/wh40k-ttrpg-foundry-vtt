@@ -23,8 +23,8 @@
     height: 100%;
     background: var(--wh40k-sheet-bg);
     color: var(--wh40k-text-dark);
-    font-family: $wh40k-font-body;
-    font-size: $wh40k-font-size-base;
+    font-family: var(--wh40k-font-body);
+    font-size: var(--wh40k-font-size-base);
     overflow: hidden;
 
     // Form should fill container
@@ -50,7 +50,7 @@
     &::-webkit-scrollbar-thumb,
     .wh40k-tab-content::-webkit-scrollbar-thumb {
         background: var(--wh40k-border-color);
-        border-radius: $wh40k-radius-md;
+        border-radius: var(--wh40k-radius-md);
 
         &:hover {
             background: var(--wh40k-gold-dark);

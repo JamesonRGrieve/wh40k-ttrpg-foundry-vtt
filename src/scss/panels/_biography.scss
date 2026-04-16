@@ -6,7 +6,7 @@
     &.active {
         display: block !important;
     }
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
     overflow: hidden;
     min-width: 0;
     max-width: 100%;
@@ -24,18 +24,18 @@
 
 .wh40k-origin-step {
     @apply tw-flex tw-items-center tw-gap-2 tw-py-1 tw-px-2 tw-min-h-9 tw-relative tw-overflow-hidden;
-    background: $wh40k-bg-paper-light;
-    border: 1px solid $wh40k-border-light;
+    background: var(--wh40k-bg-paper-light);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 4px;
 
     &.wh40k-filled {
-        background: $wh40k-bg-input;
+        background: var(--wh40k-bg-input);
         border-color: rgba($wh40k-accent-bio, 0.3);
     }
 
     &:hover {
-        background: $wh40k-bg-paper;
-        border-color: $wh40k-border-medium;
+        background: var(--wh40k-bg-paper);
+        border-color: var(--wh40k-border-medium);
     }
 }
 
@@ -52,7 +52,7 @@
 
 .wh40k-origin-img {
     @apply tw-w-6 tw-h-6 tw-shrink-0;
-    border: 1px solid $wh40k-border-light;
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 3px;
     object-fit: cover;
 }
@@ -63,7 +63,7 @@
     color: var(--color-text-primary);
 
     &:hover {
-        color: $wh40k-accent-bio;
+        color: var(--wh40k-accent-bio);
     }
 }
 
@@ -74,7 +74,7 @@
 .wh40k-origin-summary {
     @apply tw-truncate;
     font-size: 0.72rem;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     line-height: 1.2;
     max-width: 360px;
 }
@@ -82,22 +82,22 @@
 .wh40k-origin-remove {
     background: transparent;
     border: none;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     cursor: pointer;
     padding: 4px;
 
     &:hover {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 }
 
 .wh40k-origin-empty {
     flex: 1;
     padding: 4px 8px;
-    border: 1px dashed $wh40k-border-medium;
+    border: 1px dashed var(--wh40k-border-medium);
     border-radius: 4px;
     font-size: 0.75rem;
-    color: $wh40k-text-muted;
+    color: var(--wh40k-text-muted);
     text-align: center;
     font-style: italic;
     display: grid;
@@ -131,7 +131,7 @@
 
 // Journal Entries Section - Modern Design
 .wh40k-journal-entries-section {
-    margin-top: $wh40k-space-md; // Consistent spacing
+    margin-top: var(--wh40k-space-md); // Consistent spacing
 }
 
 .wh40k-section-header {
@@ -145,7 +145,7 @@
     color: var(--color-text-secondary);
 
     i {
-        color: $wh40k-accent-bio;
+        color: var(--wh40k-accent-bio);
     }
 }
 
@@ -156,13 +156,13 @@
     cursor: pointer;
     padding: 4px 8px;
     border-radius: 4px;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
     font-size: 0.75rem;
 
     &:hover {
         background: var(--wh40k-panel-bg-translucent);
-        border-color: $wh40k-accent-bio;
-        color: $wh40k-accent-bio;
+        border-color: var(--wh40k-accent-bio);
+        color: var(--wh40k-accent-bio);
     }
 }
 
@@ -173,7 +173,7 @@
     cursor: pointer;
     padding: 4px 10px;
     border-radius: 4px;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
     font-size: 0.8rem;
     display: flex;
     align-items: center;
@@ -186,11 +186,11 @@
 
     &:hover {
         background: rgba($wh40k-accent-bio, 0.1);
-        border-color: $wh40k-accent-bio;
-        color: $wh40k-accent-bio;
+        border-color: var(--wh40k-accent-bio);
+        color: var(--wh40k-accent-bio);
 
         i {
-            color: $wh40k-accent-bio;
+            color: var(--wh40k-accent-bio);
         }
     }
 
@@ -204,12 +204,12 @@
 }
 
 .wh40k-journal-entry {
-    padding: $wh40k-space-sm;
+    padding: var(--wh40k-space-sm);
     background: var(--wh40k-panel-bg-solid);
     border: 1px solid var(--wh40k-border-color-light);
-    border-left: 3px solid $wh40k-accent-bio;
+    border-left: 3px solid var(--wh40k-accent-bio);
     border-radius: 4px;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: var(--wh40k-panel-bg);
@@ -231,7 +231,7 @@
     padding: 0;
 
     &:hover {
-        color: $wh40k-accent-bio;
+        color: var(--wh40k-accent-bio);
         text-decoration: underline;
     }
 }
@@ -249,7 +249,7 @@
     cursor: pointer;
     padding: 2px 6px;
     border-radius: 3px;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
     font-size: 0.75rem;
 
     &:hover {
@@ -260,8 +260,8 @@
 }
 
 .wh40k-entry-preview {
-    margin-top: $wh40k-space-xs;
-    padding-top: $wh40k-space-xs;
+    margin-top: var(--wh40k-space-xs);
+    padding-top: var(--wh40k-space-xs);
     border-top: 1px solid var(--wh40k-border-color-light);
     font-size: 0.8rem;
     color: var(--wh40k-text-secondary);
@@ -271,7 +271,7 @@
 
 // Connections
 .wh40k-connections-section {
-    margin-bottom: $wh40k-space-sm;
+    margin-bottom: var(--wh40k-space-sm);
 
     &:last-child {
         margin-bottom: 0;
@@ -281,7 +281,7 @@
 .wh40k-connection-bonus {
     font-size: 0.75rem;
     font-weight: 600;
-    color: $wh40k-color-success;
+    color: var(--wh40k-color-success);
     padding: 2px 6px;
     background: rgba($wh40k-color-success, 0.15);
     border-radius: 3px;
@@ -290,7 +290,7 @@
 .wh40k-connection-penalty {
     font-size: 0.75rem;
     font-weight: 600;
-    color: $wh40k-accent-combat;
+    color: var(--wh40k-accent-combat);
     padding: 2px 6px;
     background: rgba($wh40k-accent-combat, 0.15);
     border-radius: 3px;
@@ -327,8 +327,8 @@
 .wh40k-prose-editor {
     flex: 1;
     min-height: 250px;
-    background: $wh40k-bg-input;
-    border: 1px solid $wh40k-border-light;
+    background: var(--wh40k-bg-input);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 4px;
     overflow-y: auto;
     font-size: 0.9rem;
@@ -337,18 +337,18 @@
     &:focus,
     &:focus-within {
         outline: none;
-        border-color: $wh40k-accent-bio;
+        border-color: var(--wh40k-accent-bio);
         box-shadow: 0 0 0 2px rgba($wh40k-accent-bio, 0.1);
     }
 
     // ProseMirror content styling
     .ProseMirror {
-        padding: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm);
         min-height: 100%;
         outline: none;
 
         p {
-            margin: 0 0 $wh40k-space-sm 0;
+            margin: 0 0 var(--wh40k-space-sm) 0;
             &:last-child {
                 margin-bottom: 0;
             }
@@ -356,8 +356,8 @@
 
         ul,
         ol {
-            margin: 0 0 $wh40k-space-sm $wh40k-space-lg;
-            padding-left: $wh40k-space-md;
+            margin: 0 0 var(--wh40k-space-sm) var(--wh40k-space-lg);
+            padding-left: var(--wh40k-space-md);
         }
 
         h1,
@@ -366,8 +366,8 @@
         h4,
         h5,
         h6 {
-            font-family: $wh40k-font-alt;
-            margin: $wh40k-space-md 0 $wh40k-space-sm 0;
+            font-family: var(--wh40k-font-alt);
+            margin: var(--wh40k-space-md) 0 var(--wh40k-space-sm) 0;
             color: var(--color-text-primary);
             font-weight: 700;
 
@@ -390,9 +390,9 @@
         }
 
         blockquote {
-            margin: $wh40k-space-sm 0;
-            padding: $wh40k-space-sm $wh40k-space-md;
-            border-left: 3px solid $wh40k-accent-bio;
+            margin: var(--wh40k-space-sm) 0;
+            padding: var(--wh40k-space-sm) var(--wh40k-space-md);
+            border-left: 3px solid var(--wh40k-accent-bio);
             background: rgba($wh40k-accent-bio, 0.05);
             font-style: italic;
         }
@@ -407,7 +407,7 @@
 
         pre {
             background: rgba(0, 0, 0, 0.1);
-            padding: $wh40k-space-sm;
+            padding: var(--wh40k-space-sm);
             border-radius: 4px;
             overflow-x: auto;
 
@@ -421,12 +421,12 @@
         table {
             border-collapse: collapse;
             width: 100%;
-            margin: $wh40k-space-sm 0;
+            margin: var(--wh40k-space-sm) 0;
 
             th,
             td {
-                border: 1px solid $wh40k-border-light;
-                padding: $wh40k-space-xs $wh40k-space-sm;
+                border: 1px solid var(--wh40k-border-light);
+                padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
                 text-align: left;
             }
 
@@ -438,7 +438,7 @@
 
         // Links
         a {
-            color: $wh40k-accent-bio;
+            color: var(--wh40k-accent-bio);
             text-decoration: underline;
 
             &:hover {
@@ -451,30 +451,30 @@
             max-width: 100%;
             height: auto;
             border-radius: 4px;
-            margin: $wh40k-space-sm 0;
+            margin: var(--wh40k-space-sm) 0;
         }
 
         // Horizontal rule
         hr {
-            margin: $wh40k-space-md 0;
+            margin: var(--wh40k-space-md) 0;
             border: none;
-            border-top: 2px solid $wh40k-border-light;
+            border-top: 2px solid var(--wh40k-border-light);
         }
     }
 }
 
 // Read-only prose content (for non-editable view)
 .wh40k-prose-content {
-    padding: $wh40k-space-sm;
-    background: $wh40k-bg-input;
-    border: 1px solid $wh40k-border-light;
+    padding: var(--wh40k-space-sm);
+    background: var(--wh40k-bg-input);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 4px;
     font-size: 0.9rem;
     line-height: 1.6;
     min-height: 100px;
 
     p {
-        margin: 0 0 $wh40k-space-sm 0;
+        margin: 0 0 var(--wh40k-space-sm) 0;
         &:last-child {
             margin-bottom: 0;
         }
@@ -482,19 +482,19 @@
 
     ul,
     ol {
-        margin: 0 0 $wh40k-space-sm $wh40k-space-lg;
+        margin: 0 0 var(--wh40k-space-sm) var(--wh40k-space-lg);
     }
 
     h1,
     h2,
     h3 {
-        font-family: $wh40k-font-alt;
-        margin: $wh40k-space-sm 0;
+        font-family: var(--wh40k-font-alt);
+        margin: var(--wh40k-space-sm) 0;
     }
 
     &:empty::before {
         content: 'No notes recorded...';
-        color: $wh40k-text-muted;
+        color: var(--wh40k-text-muted);
         font-style: italic;
     }
 }
@@ -502,9 +502,9 @@
 .wh40k-journal-editor {
     flex: 1;
     min-height: 150px;
-    padding: $wh40k-space-sm;
-    background: $wh40k-bg-input;
-    border: 1px solid $wh40k-border-light;
+    padding: var(--wh40k-space-sm);
+    background: var(--wh40k-bg-input);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 4px;
     overflow-y: auto;
     font-size: 0.9rem;
@@ -513,22 +513,22 @@
     &:focus,
     &:focus-within {
         outline: none;
-        border-color: $wh40k-accent-bio;
+        border-color: var(--wh40k-accent-bio);
     }
 
     // Rich text styling
     p {
-        margin: 0 0 $wh40k-space-sm 0;
+        margin: 0 0 var(--wh40k-space-sm) 0;
     }
     ul,
     ol {
-        margin: 0 0 $wh40k-space-sm $wh40k-space-lg;
+        margin: 0 0 var(--wh40k-space-sm) var(--wh40k-space-lg);
     }
     h1,
     h2,
     h3 {
-        font-family: $wh40k-font-alt;
-        margin: $wh40k-space-sm 0;
+        font-family: var(--wh40k-font-alt);
+        margin: var(--wh40k-space-sm) 0;
     }
 }
 
@@ -558,28 +558,28 @@
 .wh40k-field-input {
     width: 100%;
     padding: 6px 8px;
-    background: $wh40k-bg-input;
-    border: 1px solid $wh40k-border-light;
+    background: var(--wh40k-bg-input);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 4px;
     color: var(--color-text-primary);
     font-size: 0.9rem;
 
     &:focus {
         outline: none;
-        border-color: $wh40k-accent-gold;
+        border-color: var(--wh40k-accent-gold);
     }
 
     &::placeholder {
-        color: $wh40k-text-muted;
+        color: var(--wh40k-text-muted);
         font-style: italic;
     }
 }
 
 .wh40k-textarea {
     width: 100%;
-    padding: $wh40k-space-sm;
-    background: $wh40k-bg-input;
-    border: 1px solid $wh40k-border-light;
+    padding: var(--wh40k-space-sm);
+    background: var(--wh40k-bg-input);
+    border: 1px solid var(--wh40k-border-light);
     border-radius: 4px;
     color: var(--color-text-primary);
     font-size: 0.85rem;
@@ -589,11 +589,11 @@
 
     &:focus {
         outline: none;
-        border-color: $wh40k-accent-gold;
+        border-color: var(--wh40k-accent-gold);
     }
 
     &::placeholder {
-        color: $wh40k-text-muted;
+        color: var(--wh40k-text-muted);
         font-style: italic;
     }
 }

@@ -9,7 +9,7 @@
 // ============================================
 
 .wh40k-talent-sheet-v2 {
-    --talent-accent: #{$wh40k-accent-talents};
+    --talent-accent: var(--wh40k-accent-talents);
     --talent-accent-light: #{lighten($wh40k-accent-talents, 15%)};
     --talent-accent-bg: #{rgba($wh40k-accent-talents, 0.1)};
     --talent-accent-border: #{rgba($wh40k-accent-talents, 0.3)};
@@ -38,7 +38,7 @@
     height: 100%;
     background: var(--color-bg-primary);
     color: var(--color-text-primary);
-    font-family: $wh40k-font-body;
+    font-family: var(--wh40k-font-body);
 
     form {
         display: flex;
@@ -55,8 +55,8 @@
 .wh40k-talent-header {
     display: flex;
     align-items: flex-start;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md);
     background: linear-gradient(180deg, rgba($wh40k-accent-talents, 0.15) 0%, transparent 100%);
     border-bottom: 2px solid var(--talent-accent-border);
     flex-shrink: 0;
@@ -68,11 +68,11 @@
     width: 80px;
     height: 80px;
     flex-shrink: 0;
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
     border: 2px solid var(--color-border-secondary);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     img {
         width: 100%;
@@ -81,7 +81,7 @@
     }
 
     &:hover {
-        border-color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
         box-shadow: 0 0 12px rgba($wh40k-color-gold, 0.3);
 
         .wh40k-talent-portrait-overlay {
@@ -98,10 +98,10 @@
     justify-content: center;
     background: rgba(0, 0, 0, 0.7);
     opacity: 0;
-    transition: opacity $wh40k-transition-base;
+    transition: opacity var(--wh40k-transition-base);
 
     i {
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         font-size: 1.5rem;
     }
 }
@@ -111,7 +111,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
     min-width: 0;
 }
 
@@ -120,7 +120,7 @@
     margin: 0;
     font-size: 1.4rem;
     font-weight: 700;
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     color: var(--color-text-primary);
 
     // Input variant
@@ -129,11 +129,11 @@
         border: none;
         border-bottom: 2px solid transparent;
         padding: 4px 0;
-        transition: border-color $wh40k-transition-base;
+        transition: border-color var(--wh40k-transition-base);
 
         &:focus {
             outline: none;
-            border-bottom-color: $wh40k-color-gold;
+            border-bottom-color: var(--wh40k-color-gold);
         }
 
         &::placeholder {
@@ -157,21 +157,21 @@
     height: 36px;
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
     color: var(--color-text-secondary);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: var(--color-bg-secondary);
-        border-color: $wh40k-color-gold;
-        color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
+        color: var(--wh40k-color-gold);
     }
 
     &.active {
         background: rgba($wh40k-color-gold, 0.15);
-        border-color: $wh40k-color-gold;
-        color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
+        color: var(--wh40k-color-gold);
     }
 
     &--roll {
@@ -199,7 +199,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: $wh40k-space-xs;
+    margin-top: var(--wh40k-space-xs);
 }
 
 .wh40k-badge {
@@ -207,7 +207,7 @@
     align-items: center;
     gap: 4px;
     padding: 4px 10px;
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     font-size: 0.72rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -253,7 +253,7 @@
     &--category {
         background: rgba($wh40k-color-gold, 0.1);
         border-color: rgba($wh40k-color-gold, 0.3);
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
     }
 
     &--cost {
@@ -282,8 +282,8 @@
 .wh40k-talent-quickstats {
     display: flex;
     flex-wrap: wrap;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: var(--color-bg-secondary);
     border-bottom: 1px solid var(--color-border-light);
 }
@@ -291,11 +291,11 @@
 .wh40k-quickstat {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-xs $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     font-size: 0.8rem;
 
     > i {
@@ -331,7 +331,7 @@
     border-radius: 10px;
     font-size: 0.7rem;
     font-weight: 600;
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
 }
 
 // ============================================
@@ -343,7 +343,7 @@
     gap: 0;
     background: var(--color-bg-secondary);
     border-bottom: 2px solid var(--color-border-secondary);
-    padding: 0 $wh40k-space-md;
+    padding: 0 var(--wh40k-space-md);
     flex-shrink: 0;
 }
 
@@ -353,7 +353,7 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: transparent;
     border: none;
     border-bottom: 3px solid transparent;
@@ -363,7 +363,7 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.95em;
@@ -375,8 +375,8 @@
     }
 
     &.active {
-        color: $wh40k-color-gold;
-        border-bottom-color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
+        border-bottom-color: var(--wh40k-color-gold);
         background: rgba($wh40k-color-gold, 0.08);
     }
 }
@@ -396,7 +396,7 @@
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 
     &.active {
         display: block;
@@ -413,7 +413,7 @@
 
     &::-webkit-scrollbar-thumb {
         background: var(--color-border-secondary);
-        border-radius: $wh40k-radius-sm;
+        border-radius: var(--wh40k-radius-sm);
 
         &:hover {
             background: var(--color-border-highlight);
@@ -426,10 +426,10 @@
 // ============================================
 
 .wh40k-section {
-    margin-bottom: $wh40k-space-lg;
+    margin-bottom: var(--wh40k-space-lg);
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
 
     &:last-child {
@@ -441,25 +441,25 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     margin: 0;
     background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.12) 0%, transparent 100%);
     border-bottom: 1px solid var(--color-border-light);
     font-size: 0.9rem;
     font-weight: 700;
-    font-family: $wh40k-font-heading;
+    font-family: var(--wh40k-font-heading);
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--color-text-primary);
 
     i {
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         font-size: 0.9em;
     }
 }
 
 .wh40k-section-body {
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 }
 
 // ============================================
@@ -474,7 +474,7 @@
     color: var(--color-text-primary);
 
     p {
-        margin: 0 0 $wh40k-space-sm 0;
+        margin: 0 0 var(--wh40k-space-sm) 0;
 
         &:last-child {
             margin-bottom: 0;
@@ -483,7 +483,7 @@
 
     strong,
     b {
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         font-weight: 600;
     }
 
@@ -495,12 +495,12 @@
 
     ul,
     ol {
-        margin: $wh40k-space-sm 0;
-        padding-left: $wh40k-space-lg;
+        margin: var(--wh40k-space-sm) 0;
+        padding-left: var(--wh40k-space-lg);
     }
 
     li {
-        margin: $wh40k-space-xs 0;
+        margin: var(--wh40k-space-xs) 0;
     }
 }
 
@@ -511,26 +511,26 @@
 .wh40k-abilities-list {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-ability-card {
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-left: 3px solid $wh40k-color-gold;
-    border-radius: $wh40k-radius-sm;
+    border-left: 3px solid var(--wh40k-color-gold);
+    border-radius: var(--wh40k-radius-sm);
 }
 
 .wh40k-ability-name {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 0 0 $wh40k-space-sm 0;
+    margin: 0 0 var(--wh40k-space-sm) 0;
     font-size: 0.95rem;
     font-weight: 700;
-    font-family: $wh40k-font-heading;
-    color: $wh40k-color-gold;
+    font-family: var(--wh40k-font-heading);
+    color: var(--wh40k-color-gold);
 
     i {
         font-size: 0.6em;
@@ -543,7 +543,7 @@
     color: var(--color-text-secondary);
 
     p {
-        margin: 0 0 $wh40k-space-xs 0;
+        margin: 0 0 var(--wh40k-space-xs) 0;
 
         &:last-child {
             margin-bottom: 0;
@@ -558,7 +558,7 @@
 .wh40k-grants-grid {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
 }
 
 .wh40k-grants-category {
@@ -569,7 +569,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    margin: 0 0 $wh40k-space-sm 0;
+    margin: 0 0 var(--wh40k-space-sm) 0;
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -594,16 +594,16 @@
     padding: 6px 10px;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     font-size: 0.82rem;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &--skill {
-        border-left: 3px solid $wh40k-accent-skills;
+        border-left: 3px solid var(--wh40k-accent-skills);
     }
 
     &--talent {
-        border-left: 3px solid $wh40k-accent-talents;
+        border-left: 3px solid var(--wh40k-accent-talents);
     }
 
     &--trait {
@@ -615,7 +615,7 @@
 
         &:hover {
             background: rgba($wh40k-color-gold, 0.1);
-            border-color: $wh40k-color-gold;
+            border-color: var(--wh40k-color-gold);
         }
     }
 }
@@ -639,12 +639,12 @@
 
     &--trained {
         background: rgba($wh40k-accent-skills, 0.15);
-        color: $wh40k-accent-skills;
+        color: var(--wh40k-accent-skills);
     }
 
     &--plus10 {
         background: rgba($wh40k-color-gold, 0.15);
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
     }
 
     &--plus20 {
@@ -665,21 +665,21 @@
 .wh40k-situational-list {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-situational-item {
-    padding: $wh40k-space-sm $wh40k-space-md;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
 }
 
 .wh40k-situational-header {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
-    margin-bottom: $wh40k-space-xs;
+    gap: var(--wh40k-space-sm);
+    margin-bottom: var(--wh40k-space-xs);
 
     i {
         color: var(--talent-accent);
@@ -696,7 +696,7 @@
 
 .wh40k-situational-value {
     margin-left: auto;
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     font-weight: 700;
 
     &.positive {
@@ -704,7 +704,7 @@
     }
 
     &.negative {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 }
 
@@ -723,7 +723,7 @@
 .wh40k-properties-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
 
     @media (max-width: 500px) {
         grid-template-columns: 1fr;
@@ -770,15 +770,15 @@
     padding: 8px 12px;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--color-text-primary);
     font-size: 0.88rem;
     font-family: inherit;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:focus {
         outline: none;
-        border-color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
         box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.15);
     }
 
@@ -814,7 +814,7 @@
         width: 18px;
         height: 18px;
         cursor: pointer;
-        accent-color: $wh40k-color-gold;
+        accent-color: var(--wh40k-color-gold);
     }
 
     span {
@@ -836,15 +836,15 @@
     height: 28px;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--color-text-secondary);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: rgba($wh40k-color-gold, 0.15);
-        border-color: $wh40k-color-gold;
-        color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
+        color: var(--wh40k-color-gold);
     }
 }
 
@@ -868,7 +868,7 @@
     padding: 6px 12px;
     background: var(--talent-accent-bg);
     border: 1px solid var(--talent-accent-border);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--talent-accent-light);
@@ -881,7 +881,7 @@
 .wh40k-prerequisites-display {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-prereq-text {
@@ -910,7 +910,7 @@
     padding: 3px 8px;
     background: rgba($wh40k-accent-combat, 0.1);
     border: 1px solid rgba($wh40k-accent-combat, 0.3);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     font-size: 0.8rem;
     font-weight: 600;
     color: lighten($wh40k-accent-combat, 15%);
@@ -923,17 +923,17 @@
 .wh40k-roll-config-display {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-config-item {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     font-size: 0.9rem;
 
     i {
@@ -945,7 +945,7 @@
 
 .wh40k-config-mod {
     margin-left: auto;
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     font-weight: 700;
 
     &.positive {
@@ -953,7 +953,7 @@
     }
 
     &.negative {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 }
 
@@ -972,13 +972,13 @@
 .wh40k-modifiers-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
 }
 
 .wh40k-modifier-group {
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     overflow: hidden;
 }
 
@@ -986,7 +986,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     margin: 0;
     background: rgba($wh40k-color-gold, 0.08);
     border-bottom: 1px solid var(--color-border-light);
@@ -994,7 +994,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
 
     i {
         font-size: 0.9em;
@@ -1005,7 +1005,7 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
-    padding: $wh40k-space-xs;
+    padding: var(--wh40k-space-xs);
 }
 
 .wh40k-modifier-item {
@@ -1013,7 +1013,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 6px 10px;
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
 
     &:hover {
         background: rgba($wh40k-color-gold, 0.05);
@@ -1026,7 +1026,7 @@
 }
 
 .wh40k-modifier-value {
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     font-size: 0.9rem;
     font-weight: 700;
 
@@ -1035,7 +1035,7 @@
     }
 
     &.negative {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 }
 
@@ -1046,24 +1046,24 @@
 .wh40k-effects-list {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-xs;
-    margin-bottom: $wh40k-space-md;
+    gap: var(--wh40k-space-xs);
+    margin-bottom: var(--wh40k-space-md);
 }
 
 .wh40k-effect-item {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
 }
 
 .wh40k-effect-icon {
     width: 28px;
     height: 28px;
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     object-fit: cover;
 }
 
@@ -1105,20 +1105,20 @@
     height: 26px;
     background: transparent;
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--color-text-tertiary);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: var(--color-bg-tertiary);
-        border-color: $wh40k-color-gold;
-        color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
+        color: var(--wh40k-color-gold);
     }
 
     &--delete:hover {
-        border-color: $wh40k-accent-combat;
-        color: $wh40k-accent-combat;
+        border-color: var(--wh40k-accent-combat);
+        color: var(--wh40k-accent-combat);
     }
 }
 
@@ -1128,19 +1128,19 @@
     justify-content: center;
     gap: 6px;
     width: 100%;
-    padding: $wh40k-space-sm;
+    padding: var(--wh40k-space-sm);
     background: transparent;
     border: 1px dashed var(--color-border-secondary);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--color-text-tertiary);
     font-size: 0.85rem;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: rgba($wh40k-color-gold, 0.08);
-        border-color: $wh40k-color-gold;
-        color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
+        color: var(--wh40k-color-gold);
     }
 }
 
@@ -1151,8 +1151,8 @@
 .wh40k-editor-container {
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
-    padding: $wh40k-space-sm;
+    border-radius: var(--wh40k-radius-sm);
+    padding: var(--wh40k-space-sm);
     min-height: 150px;
 
     .editor {
@@ -1167,7 +1167,7 @@
 .wh40k-source-display {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
     font-size: 0.9rem;
     font-style: italic;
     color: var(--color-text-secondary);
@@ -1186,13 +1186,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: $wh40k-space-xl;
+    padding: var(--wh40k-space-xl);
     text-align: center;
 
     i {
         font-size: 2.5rem;
         color: var(--color-text-tertiary);
-        margin-bottom: $wh40k-space-md;
+        margin-bottom: var(--wh40k-space-md);
         opacity: 0.4;
     }
 
@@ -1203,11 +1203,11 @@
     }
 
     &--compact {
-        padding: $wh40k-space-md;
+        padding: var(--wh40k-space-md);
 
         i {
             font-size: 1.5rem;
-            margin-bottom: $wh40k-space-sm;
+            margin-bottom: var(--wh40k-space-sm);
         }
 
         p {
@@ -1232,18 +1232,18 @@
 .wh40k-hint-text {
     display: flex;
     align-items: flex-start;
-    gap: $wh40k-space-sm;
-    margin-bottom: $wh40k-space-md;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    gap: var(--wh40k-space-sm);
+    margin-bottom: var(--wh40k-space-md);
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: rgba($wh40k-accent-skills, 0.08);
     border: 1px solid rgba($wh40k-accent-skills, 0.2);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     font-size: 0.8rem;
     font-style: italic;
     color: var(--color-text-secondary);
 
     i {
-        color: $wh40k-accent-skills;
+        color: var(--wh40k-accent-skills);
         margin-top: 2px;
     }
 }
@@ -1255,10 +1255,10 @@
 .wh40k-property--radio {
     .wh40k-radio-group {
         display: flex;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
         padding: 4px;
         background: rgba(0, 0, 0, 0.2);
-        border-radius: $wh40k-radius-md;
+        border-radius: var(--wh40k-radius-md);
     }
 
     .wh40k-radio-label {
@@ -1267,9 +1267,9 @@
         gap: 6px;
         padding: 6px 12px;
         cursor: pointer;
-        border-radius: $wh40k-radius-sm;
+        border-radius: var(--wh40k-radius-sm);
         font-size: 0.85rem;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         input[type='radio'] {
             display: none;
@@ -1282,12 +1282,12 @@
         i {
             font-size: 0.9rem;
             color: var(--color-text-tertiary);
-            transition: color $wh40k-transition-base;
+            transition: color var(--wh40k-transition-base);
         }
 
         span {
             color: var(--color-text-secondary);
-            transition: color $wh40k-transition-base;
+            transition: color var(--wh40k-transition-base);
         }
 
         &:hover {
@@ -1325,7 +1325,7 @@
     .wh40k-checkbox-inline {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
         cursor: pointer;
         font-size: 0.85rem;
         color: var(--color-text-secondary);
@@ -1338,7 +1338,7 @@
         }
 
         span {
-            transition: color $wh40k-transition-base;
+            transition: color var(--wh40k-transition-base);
         }
 
         &:hover span {
@@ -1347,7 +1347,7 @@
     }
 
     .wh40k-specialization-field {
-        margin-top: $wh40k-space-sm;
+        margin-top: var(--wh40k-space-sm);
         padding-left: 24px;
 
         .wh40k-property-input--inline {
@@ -1371,10 +1371,10 @@
     padding: 0;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--color-text-tertiary);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.75rem;
@@ -1397,7 +1397,7 @@
     &--done {
         background: rgba($wh40k-color-success, 0.15);
         border-color: rgba($wh40k-color-success, 0.4);
-        color: $wh40k-color-success;
+        color: var(--wh40k-color-success);
 
         &:hover {
             background: rgba($wh40k-color-success, 0.25);
@@ -1427,7 +1427,7 @@
 // Clickable empty states
 .wh40k-empty-state--clickable {
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: var(--talent-accent-bg);
@@ -1448,17 +1448,17 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin-top: $wh40k-space-sm;
+    margin-top: var(--wh40k-space-sm);
     padding: 8px 14px;
     background: rgba(var(--talent-accent), 0.1);
     background: var(--talent-accent-bg);
     border: 1px dashed var(--talent-accent-border);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
     color: var(--talent-accent-light);
     font-size: 0.8rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.75rem;
@@ -1477,20 +1477,20 @@
 
 .wh40k-talent-footer {
     flex-shrink: 0;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
     border-top: 1px solid var(--color-border-light);
 
     .wh40k-footer-edit {
         display: flex;
-        gap: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
         align-items: center;
     }
 
     .wh40k-footer-field {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
         flex: 1;
 
         &--page {
@@ -1520,7 +1520,7 @@
         font-size: 0.8rem;
         background: rgba(0, 0, 0, 0.2);
         border: 1px solid var(--color-border-light);
-        border-radius: $wh40k-radius-sm;
+        border-radius: var(--wh40k-radius-sm);
         color: var(--color-text-primary);
 
         &::placeholder {
@@ -1536,7 +1536,7 @@
     .wh40k-footer-display {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
         font-size: 0.8rem;
         color: var(--color-text-secondary);
 
@@ -1562,28 +1562,28 @@
 .wh40k-effects-banner {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.2) 100%);
     border: 1px solid rgba(var(--talent-accent-border-rgb, 139, 113, 82), 0.4);
-    border-radius: $wh40k-radius-lg;
+    border-radius: var(--wh40k-radius-lg);
     backdrop-filter: blur(4px);
-    margin-bottom: $wh40k-space-md;
+    margin-bottom: var(--wh40k-space-md);
 
     &__header {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-xs;
-        padding-right: $wh40k-space-md;
+        gap: var(--wh40k-space-xs);
+        padding-right: var(--wh40k-space-md);
         border-right: 1px solid rgba(255, 255, 255, 0.1);
 
         i {
-            color: $wh40k-color-gold;
+            color: var(--wh40k-color-gold);
             font-size: 0.9rem;
         }
 
         span {
-            font-family: $wh40k-font-heading;
+            font-family: var(--wh40k-font-heading);
             font-size: 0.75rem;
             font-weight: 600;
             color: var(--talent-accent-light);
@@ -1595,7 +1595,7 @@
     &__pills {
         display: flex;
         flex-wrap: wrap;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
         flex: 1;
     }
 
@@ -1607,18 +1607,18 @@
         background: rgba($wh40k-color-gold, 0.1);
         border: 1px solid rgba($wh40k-color-gold, 0.3);
         border-radius: 12px;
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         font-size: 0.7rem;
         font-weight: 500;
         text-decoration: none;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: rgba($wh40k-color-gold, 0.2);
-            border-color: $wh40k-color-gold;
+            border-color: var(--wh40k-color-gold);
             color: lighten($wh40k-color-gold, 10%);
 
             i {
@@ -1628,7 +1628,7 @@
 
         i {
             font-size: 0.65rem;
-            transition: transform $wh40k-transition-base;
+            transition: transform var(--wh40k-transition-base);
         }
     }
 }
@@ -1642,7 +1642,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     font-size: 0.75rem;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: rgba(0, 0, 0, 0.4);
@@ -1683,7 +1683,7 @@
         border-color: rgba($wh40k-accent-talents, 0.4);
 
         i {
-            color: $wh40k-accent-talents;
+            color: var(--wh40k-accent-talents);
         }
 
         .wh40k-effect-pill__count {
@@ -1726,22 +1726,22 @@
 .wh40k-effects-summary {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
 }
 
 .wh40k-summary-card {
     display: flex;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md);
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid var(--color-border-light);
     border-left: 3px solid var(--talent-accent-border);
-    border-radius: $wh40k-radius-md;
-    transition: all $wh40k-transition-base;
+    border-radius: var(--wh40k-radius-md);
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: rgba(0, 0, 0, 0.3);
-        border-left-color: $wh40k-color-gold;
+        border-left-color: var(--wh40k-color-gold);
     }
 
     &--modifiers {
@@ -1766,8 +1766,8 @@
     justify-content: center;
     background: rgba($wh40k-accent-talents, 0.15);
     border: 1px solid var(--talent-accent-border);
-    border-radius: $wh40k-radius-md;
-    color: $wh40k-color-gold;
+    border-radius: var(--wh40k-radius-md);
+    color: var(--wh40k-color-gold);
     font-size: 1.2rem;
 }
 
@@ -1780,7 +1780,7 @@
 
 .wh40k-summary-title {
     margin: 0;
-    font-family: $wh40k-font-heading;
+    font-family: var(--wh40k-font-heading);
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--talent-accent-light);

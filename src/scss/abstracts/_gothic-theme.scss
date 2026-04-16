@@ -26,7 +26,7 @@
    ======================================== */
 
 :root {
-    // Imperial Gothic Accents (consistent across themes)
+    /* Imperial Gothic Accents (consistent across themes) */
     --wh40k-gold: #d4af37;
     --wh40k-gold-bright: #ffd700;
     --wh40k-gold-dark: #b8941f;
@@ -35,40 +35,114 @@
     --wh40k-bronze-bright: #e89b5a;
     --wh40k-bronze-dark: #8b5a2b;
 
-    // Combat/Blood accents
+    /* Combat/Blood accents */
     --wh40k-red: #8b0000;
     --wh40k-red-bright: #dc143c;
     --wh40k-red-dark: #5a0000;
 
-    // Success/Health accents
+    /* Success/Health accents */
     --wh40k-green: #2d5a2d;
     --wh40k-green-bright: #4ade80;
 
-    // Typography
+    /* Accent colors — aligned with SCSS $wh40k-accent-* tokens */
+    --wh40k-accent-gold: #d4a520;
+    --wh40k-accent-combat: #a82020;
+    --wh40k-accent-red: #e74c3c;
+    --wh40k-accent-skills: #2a7a9a;
+    --wh40k-accent-talents: #a07818;
+    --wh40k-accent-equipment: #3a5f5f;
+    --wh40k-accent-powers: #6a2090;
+    --wh40k-accent-dynasty: #d4a520;
+    --wh40k-accent-bio: #6a5a4a;
+
+    /* SCSS $wh40k-color-* tokens */
+    --wh40k-color-gold: #c9a227;
+    --wh40k-color-gold-dark: #8b7015;
+    --wh40k-color-gold-light: #e6c84a;
+    --wh40k-color-brass: #b5a642;
+    --wh40k-color-bronze: #cd7f32;
+    --wh40k-color-crimson: #8b0000;
+    --wh40k-color-crimson-dark: #5c0000;
+    --wh40k-color-crimson-light: #b22222;
+    --wh40k-color-success: #2d5016;
+    --wh40k-color-failure: #6b1010;
+    --wh40k-color-warning: #8b6914;
+
+    /* SCSS text color tokens */
+    --wh40k-text-primary: #e8e0d0;
+    --wh40k-text-secondary: #b8a890;
+    --wh40k-text-highlight: #c9a227;
+
+    /* SCSS background tokens */
+    --wh40k-bg-overlay-light: rgba(255, 255, 255, 0.05);
+    --wh40k-bg-overlay-medium: rgba(0, 0, 0, 0.2);
+    --wh40k-bg-input: rgba(0, 0, 0, 0.3);
+    --wh40k-bg-input-focus: rgba(192, 128, 32, 0.15);
+    --wh40k-bg-paper: rgba(30, 25, 20, 0.9);
+    --wh40k-bg-paper-light: rgba(40, 35, 28, 0.85);
+    --wh40k-bg-subtle: rgba(50, 45, 35, 0.6);
+    --wh40k-bg-translucent: rgba(30, 25, 20, 0.7);
+
+    /* SCSS border tokens */
+    --wh40k-border-light: rgba(120, 100, 80, 0.4);
+    --wh40k-border-medium: rgba(120, 100, 80, 0.6);
+
+    /* SCSS degree colors (corruption/insanity) */
+    --wh40k-degree-pure: #22c55e;
+    --wh40k-degree-tainted: #eab308;
+    --wh40k-degree-soiled: #f97316;
+    --wh40k-degree-debased: #ef4444;
+    --wh40k-degree-profane: #dc2626;
+    --wh40k-degree-damned: #7f1d1d;
+    --wh40k-degree-stable: #22c55e;
+    --wh40k-degree-unsettled: #eab308;
+    --wh40k-degree-disturbed: #f97316;
+    --wh40k-degree-unhinged: #ef4444;
+    --wh40k-degree-deranged: #dc2626;
+    --wh40k-degree-terminally: #7f1d1d;
+
+    /* Typography — gothic theme fonts (original) */
     --wh40k-font-header: 'Caslon Antique', 'Trajan Pro', serif;
-    --wh40k-font-body: 'Garamond', 'Georgia', serif;
     --wh40k-font-numbers: 'Cinzel', serif;
+
+    /* Typography — aligned with SCSS $wh40k-font-* tokens */
+    --wh40k-font-display: 'Cinzel', serif;
+    --wh40k-font-heading: 'IM Fell DW Pica', serif;
+    --wh40k-font-body: 'Lusitana', serif;
     --wh40k-font-ui: 'Roboto', sans-serif;
+    --wh40k-font-alt: 'Modesto Condensed', 'Palatino Linotype', serif;
 
-    // Spacing Scale (based on 8px grid)
-    --wh40k-space-xs: 0.25rem; // 4px
-    --wh40k-space-sm: 0.5rem; // 8px
-    --wh40k-space-md: 1rem; // 16px
-    --wh40k-space-lg: 1.5rem; // 24px
-    --wh40k-space-xl: 2rem; // 32px
-    --wh40k-space-2xl: 3rem; // 48px
+    /* Font Sizes — aligned with SCSS $wh40k-font-size-* tokens */
+    --wh40k-font-size-2xs: 0.625rem;
+    --wh40k-font-size-xs: 0.7rem;
+    --wh40k-font-size-sm: 0.8rem;
+    --wh40k-font-size-base: 0.9rem;
+    --wh40k-font-size-md: 1rem;
+    --wh40k-font-size-lg: 1.2rem;
+    --wh40k-font-size-xl: 1.5rem;
+    --wh40k-font-size-xxl: 2rem;
 
-    // Border Radius
+    /* Spacing Scale — aligned with SCSS $wh40k-space-* tokens */
+    --wh40k-space-xs: 4px;
+    --wh40k-space-sm: 8px;
+    --wh40k-space-md: 12px;
+    --wh40k-space-lg: 16px;
+    --wh40k-space-xl: 24px;
+    --wh40k-space-2xl: 48px;
+
+    /* Border Radius — aligned with SCSS $wh40k-radius-* tokens */
     --wh40k-radius-sm: 2px;
     --wh40k-radius-md: 4px;
-    --wh40k-radius-lg: 6px;
+    --wh40k-radius-lg: 8px;
 
-    // Transitions
-    --wh40k-transition-fast: 0.15s ease;
-    --wh40k-transition-normal: 0.2s ease;
-    --wh40k-transition-slow: 0.3s ease;
+    /* Transitions — aligned with SCSS $wh40k-transition-* tokens */
+    --wh40k-transition-fast: 150ms ease;
+    --wh40k-transition-base: 200ms ease;
+    --wh40k-transition-normal: 200ms ease; /* alias for base */
+    --wh40k-transition-medium: 300ms ease;
+    --wh40k-transition-slow: 450ms ease;
 
-    // Z-Index Scale
+    /* Z-Index Scale */
     --wh40k-z-base: 1;
     --wh40k-z-panel: 10;
     --wh40k-z-dropdown: 100;
@@ -80,7 +154,7 @@
    THEME-ADAPTIVE ROGUE TRADER COLORS
    ======================================== */
 
-// Light theme (Parchment style) - Default
+/* Light theme (Parchment style) - Default */
 :root,
 body.theme-light {
     // Sheet backgrounds
@@ -318,18 +392,16 @@ body.theme-dark {
 }
 
 /* ========================================
-   MIXINS - Reusable Style Patterns
+   COMPONENT CLASSES (inlined from former mixins)
    ======================================== */
 
-// Gothic Panel - Uses Foundry background colors
-@mixin gothic-panel {
+.wh40k-panel {
     background: var(--color-bg-secondary);
     border: 2px solid var(--wh40k-bronze);
     border-radius: var(--wh40k-radius-md);
     box-shadow: 0 4px 8px var(--color-shadow-primary), 0 0 20px rgba(212, 175, 55, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.1);
     position: relative;
 
-    // Subtle texture overlay
     &::before {
         content: '';
         position: absolute;
@@ -343,8 +415,7 @@ body.theme-dark {
     }
 }
 
-// Gothic Panel Header
-@mixin gothic-panel-header {
+.wh40k-panel-header {
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: linear-gradient(135deg, var(--color-warm-2) 0%, var(--color-warm-4) 100%);
     border-bottom: 1px solid var(--color-border-highlight);
@@ -364,8 +435,7 @@ body.theme-dark {
     }
 }
 
-// Gothic Button
-@mixin gothic-button {
+.wh40k-button {
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: linear-gradient(135deg, var(--wh40k-bronze) 0%, var(--wh40k-gold-dark) 100%);
     border: 2px solid var(--wh40k-gold);
@@ -381,7 +451,6 @@ body.theme-dark {
     position: relative;
     overflow: hidden;
 
-    // Shine effect
     &::before {
         content: '';
         position: absolute;
@@ -417,8 +486,7 @@ body.theme-dark {
     }
 }
 
-// Gothic Input - Uses Foundry colors
-@mixin gothic-input {
+.wh40k-input {
     padding: var(--wh40k-space-sm);
     background: var(--color-bg-option);
     border: 2px solid var(--color-border-secondary);
@@ -440,38 +508,14 @@ body.theme-dark {
     }
 }
 
-// Gothic Divider
-@mixin gothic-divider {
+.wh40k-divider {
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--wh40k-gold), transparent);
     margin: var(--wh40k-space-md) 0;
     opacity: 0.5;
 }
 
-// Stat Bar
-@mixin stat-bar($color: var(--wh40k-gold)) {
-    height: 8px;
-    background: var(--color-bg-tertiary);
-    border: 1px solid var(--color-border-secondary);
-    border-radius: var(--wh40k-radius-sm);
-    overflow: hidden;
-    position: relative;
-
-    .bar-fill {
-        height: 100%;
-        background: linear-gradient(90deg, darken($color, 10%), $color);
-        transition: width var(--wh40k-transition-slow);
-        box-shadow: 0 0 8px rgba($color, 0.6);
-    }
-}
-
-// Gothic Text Shadow
-@mixin gothic-text-shadow {
-    text-shadow: 1px 1px 2px var(--color-shadow-primary), 0 0 4px rgba(212, 175, 55, 0.3);
-}
-
-// Hover Lift
-@mixin hover-lift {
+.wh40k-hover-lift {
     transition: transform var(--wh40k-transition-normal);
 
     &:hover {
@@ -481,57 +525,6 @@ body.theme-dark {
     &:active {
         transform: translateY(0);
     }
-}
-
-// Scrollbar Styling
-@mixin gothic-scrollbar {
-    &::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-        background: var(--color-bg-primary);
-        border-radius: var(--wh40k-radius-sm);
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, var(--wh40k-bronze), var(--wh40k-gold-dark));
-        border-radius: var(--wh40k-radius-sm);
-        border: 1px solid var(--wh40k-gold);
-
-        &:hover {
-            background: linear-gradient(135deg, var(--wh40k-bronze-bright), var(--wh40k-gold));
-        }
-    }
-}
-
-/* ========================================
-   UTILITY CLASSES
-   ======================================== */
-
-.wh40k-panel {
-    @include gothic-panel;
-}
-
-.wh40k-panel-header {
-    @include gothic-panel-header;
-}
-
-.wh40k-button {
-    @include gothic-button;
-}
-
-.wh40k-input {
-    @include gothic-input;
-}
-
-.wh40k-divider {
-    @include gothic-divider;
-}
-
-.wh40k-hover-lift {
-    @include hover-lift;
 }
 
 // Text Colors - Use Foundry variables with accent overrides

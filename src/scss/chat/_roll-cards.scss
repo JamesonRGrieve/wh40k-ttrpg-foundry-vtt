@@ -23,7 +23,7 @@
     --wh40k-card-fail: var(--wh40k-danger-primary);
     --wh40k-card-fail-glow: rgba(168, 50, 50, 0.4);
 
-    font-family: $wh40k-font-ui;
+    font-family: var(--wh40k-font-ui);
     color: var(--wh40k-card-text);
 
     * {
@@ -170,7 +170,7 @@
     }
 
     .wh40k-roll-card__title {
-        font-family: $wh40k-font-display;
+        font-family: var(--wh40k-font-display);
         font-size: 1.1rem;
         font-weight: 600;
         color: var(--wh40k-card-gold);
@@ -350,7 +350,7 @@
 }
 
 .wh40k-roll-card__result-label {
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     font-size: 0.9rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -452,7 +452,7 @@
         border-bottom: 1px solid var(--wh40k-wounds-border);
 
         .wh40k-roll-card__damage-title {
-            font-family: $wh40k-font-display;
+            font-family: var(--wh40k-font-display);
             font-size: 0.9rem;
             color: var(--wh40k-wounds-secondary);
             text-transform: uppercase;
@@ -538,7 +538,7 @@
     text-align: center;
 
     .wh40k-roll-card__fury-title {
-        font-family: $wh40k-font-display;
+        font-family: var(--wh40k-font-display);
         font-size: 1rem;
         font-weight: 700;
         color: var(--wh40k-gold-bright);
@@ -667,7 +667,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     white-space: nowrap;
 
     .material-icons {
@@ -968,7 +968,7 @@
     font-size: 0.8rem;
     font-weight: 600;
     cursor: help;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: rgba(75, 192, 115, 0.25);
