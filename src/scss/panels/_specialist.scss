@@ -27,14 +27,10 @@
 // ============================================
 
 .wh40k-specialist-panel {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-sm;
+    @apply tw-flex tw-flex-col tw-gap-2;
 
     .wh40k-panel-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        @apply tw-flex tw-items-center tw-justify-between;
 
         .wh40k-specialist-add-btn {
             @include wh40k-icon-button(26px, $wh40k-accent-talents, 0.8rem);
@@ -52,9 +48,7 @@
 }
 
 .wh40k-specialist-header {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-sm;
+    @apply tw-flex tw-items-center tw-gap-2;
     padding: $wh40k-space-xs $wh40k-space-md;
     background: linear-gradient(180deg, rgba($wh40k-accent-talents, 0.12) 0%, transparent 100%);
     border-bottom: 1px solid $wh40k-border-light;
@@ -101,18 +95,12 @@
     }
 
     .wh40k-spec-info {
-        display: flex;
-        align-items: center;
-        gap: $wh40k-space-xs;
-        min-width: 0;
+        @apply tw-flex tw-items-center tw-gap-1 tw-min-w-0;
 
         .wh40k-spec-name {
-            flex: 1;
+            @apply tw-flex-1 tw-truncate;
             font-size: 0.9rem;
             color: var(--color-text-primary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .wh40k-spec-roll,
@@ -198,12 +186,8 @@
 }
 
 .wh40k-specialist-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    @apply tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-center;
     padding: $wh40k-space-xl $wh40k-space-lg;
-    text-align: center;
     color: $wh40k-text-muted;
     background: rgba($wh40k-accent-talents, 0.03);
     border: 2px dashed rgba($wh40k-accent-talents, 0.2);

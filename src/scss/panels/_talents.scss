@@ -5,17 +5,14 @@
 .wh40k-panel-talents-table,
 .wh40k-panel-traits-table {
     .wh40k-panel-body {
-        display: flex;
-        flex-direction: column;
-        gap: $wh40k-space-sm;
+        @apply tw-flex tw-flex-col tw-gap-2;
     }
 }
 
 // Table Containers
 .wh40k-talents-table,
 .wh40k-traits-table {
-    display: flex;
-    flex-direction: column;
+    @apply tw-flex tw-flex-col;
     gap: 2px;
     min-height: 60px;
 
@@ -56,9 +53,7 @@
 // maximum space to talent names when not interacting
 
 .wh40k-tp_row {
-    position: relative;
-    display: flex;
-    align-items: center;
+    @apply tw-relative tw-flex tw-items-center;
     gap: 6px;
     padding: 3px 6px;
     background: var(--wh40k-panel-bg-solid);
@@ -86,29 +81,22 @@
 }
 
 .wh40k-tp_icon {
+    @apply tw-shrink-0;
     width: 22px;
     height: 22px;
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 3px;
     object-fit: cover;
-    flex-shrink: 0;
 }
 
 .wh40k-tp_name {
-    flex: 1;
-    min-width: 0;
+    @apply tw-flex-1 tw-min-w-0 tw-text-left tw-cursor-pointer tw-truncate tw-font-semibold;
     background: transparent;
     border: none;
     padding: 0;
     margin: 0;
-    text-align: left;
     font-size: 0.78rem;
-    font-weight: 600;
     color: var(--wh40k-text-dark);
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 
     &:hover {
         color: $wh40k-accent-talents;
@@ -123,10 +111,7 @@
 }
 
 .wh40k-tp_meta {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    flex-shrink: 0;
+    @apply tw-flex tw-items-center tw-gap-1 tw-shrink-0;
     font-size: 0.6rem;
     color: var(--wh40k-text-muted);
     transition: opacity $wh40k-transition-fast;
@@ -155,13 +140,11 @@
 
 // Overlay actions - positioned absolute over the meta area
 .wh40k-tp_actions {
-    position: absolute;
+    @apply tw-absolute tw-flex tw-items-center;
     right: 6px;
     top: 50%;
     transform: translateY(-50%);
-    display: flex;
     gap: 1px;
-    align-items: center;
     padding: 2px 4px;
     background: linear-gradient(90deg, transparent 0%, var(--wh40k-panel-bg-solid) 20%);
     border-radius: 3px;
@@ -197,15 +180,12 @@
 
 // Trait rows - keep existing styling with drag support
 .wh40k-trait-row {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-sm;
+    @apply tw-flex tw-items-center tw-gap-2 tw-overflow-hidden;
     padding: 6px $wh40k-space-sm;
     background: var(--wh40k-panel-bg-solid);
     border: 1px solid var(--wh40k-border-color-light);
     border-left: 3px solid $wh40k-accent-equipment;
     border-radius: 4px;
-    overflow: hidden;
     transition: all $wh40k-transition-base;
     min-height: 40px;
     cursor: grab;
@@ -232,12 +212,10 @@
 
 // Shared row components (used by traits)
 .wh40k-row-icon {
-    width: 28px;
-    height: 28px;
+    @apply tw-w-7 tw-h-7 tw-shrink-0;
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 3px;
     object-fit: cover;
-    flex-shrink: 0;
 }
 
 .wh40k-row-icon-inline {
@@ -250,27 +228,17 @@
 
 // Trait row main content
 .wh40k-trait-row .wh40k-row-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    @apply tw-flex-1 tw-flex tw-flex-col tw-min-w-0 tw-overflow-hidden;
     gap: 2px;
-    min-width: 0;
-    overflow: hidden;
 }
 
 .wh40k-trait-row .wh40k-row-name {
+    @apply tw-text-left tw-cursor-pointer tw-truncate tw-w-full tw-font-semibold;
     background: transparent;
     border: none;
     padding: 0;
-    text-align: left;
     font-size: 0.875rem;
-    font-weight: 600;
     color: var(--wh40k-text-dark);
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
 
     &:hover {
         color: $wh40k-accent-equipment;
@@ -278,34 +246,26 @@
 }
 
 .wh40k-trait-row .wh40k-row-meta {
-    display: flex;
-    gap: $wh40k-space-sm;
-    flex-wrap: wrap;
+    @apply tw-flex tw-flex-wrap tw-items-center tw-gap-2;
     font-size: 0.7rem;
     color: var(--wh40k-text-muted);
-    align-items: center;
     line-height: 1.2;
 }
 
 .wh40k-meta-item {
-    display: flex;
-    align-items: center;
+    @apply tw-flex tw-items-center tw-whitespace-nowrap;
     gap: 3px;
-    white-space: nowrap;
 
     i {
+        @apply tw-shrink-0;
         font-size: 0.7rem;
-        flex-shrink: 0;
     }
 }
 
 // Trait row actions (keep visible, not hover-reveal)
 .wh40k-trait-row .wh40k-row-actions {
-    display: flex;
+    @apply tw-flex tw-items-center tw-ml-auto tw-shrink-0;
     gap: 2px;
-    align-items: center;
-    margin-left: auto;
-    flex-shrink: 0;
 }
 
 .wh40k-action-btn {
@@ -335,14 +295,11 @@
 
 // Level Stepper (for traits)
 .wh40k-level-stepper {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+    @apply tw-flex tw-items-center tw-gap-1 tw-shrink-0;
     padding: 2px 6px;
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 4px;
-    flex-shrink: 0;
 }
 
 .wh40k-stepper-btn {
@@ -413,9 +370,7 @@
 }
 
 .wh40k-detail-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
+    @apply tw-flex tw-flex-wrap tw-gap-1;
 }
 
 .wh40k-detail-benefit {
@@ -443,25 +398,17 @@
 
 // Trait Grouping
 .wh40k-traits-grouped {
-    display: flex;
-    flex-direction: column;
-    gap: $wh40k-space-md;
+    @apply tw-flex tw-flex-col tw-gap-3;
 }
 
 .wh40k-trait-group {
-    display: flex;
-    flex-direction: column;
+    @apply tw-flex tw-flex-col tw-relative;
     gap: 4px;
-
-    // Ensure proper stacking context
-    position: relative;
     z-index: 1;
 }
 
 .wh40k-group-header {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
+    @apply tw-flex tw-items-center tw-gap-1;
     padding: 4px $wh40k-space-sm;
     background: var(--wh40k-panel-bg-translucent);
     border-left: 3px solid $wh40k-accent-equipment;
@@ -482,11 +429,7 @@
 }
 
 .wh40k-group-title {
-    flex: 1;
-    min-width: 0; // Allow text truncation if needed
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    @apply tw-flex-1 tw-min-w-0 tw-truncate;
 }
 
 .wh40k-count-badge {

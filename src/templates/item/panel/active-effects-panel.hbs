@@ -17,7 +17,7 @@
 
   <div class="wh40k-panel-body">
     {{#if effects.length}}
-    <div class="wh40k-effects-list">
+    <div class="wh40k-effects-list tw-flex tw-flex-col tw-gap-2 tw-mb-3">
       {{#each effects as |effect|}}
       <div class="wh40k-effect-item {{#if effect.disabled}}wh40k-effect-item--disabled{{/if}}">
         <div class="wh40k-effect-item__icon">
@@ -75,7 +75,7 @@
       {{/each}}
     </div>
     {{else}}
-    <div class="wh40k-empty-state">
+    <div class="wh40k-empty-state tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-center">
       <i class="fas fa-magic"></i>
       <p>{{localize "WH40K.Effects.None"}}</p>
       {{#unless item.isEmbedded}}

@@ -9,6 +9,17 @@ module.exports = {
     preflight: false, // Don't reset existing Foundry/system styles
   },
   theme: {
+    // Override Tailwind defaults to match $wh40k-font-size-* tokens
+    fontSize: {
+      '2xs': '0.625rem',
+      'xs': '0.7rem',
+      'sm': '0.8rem',
+      'base': '0.9rem',
+      'md': '1rem',
+      'lg': '1.2rem',
+      'xl': '1.5rem',
+      '2xl': '2rem',
+    },
     extend: {
       spacing: {
         // Map to $wh40k-space-* tokens — fills gaps in Tailwind's default scale
@@ -31,7 +42,30 @@ module.exports = {
       colors: {
         gold: {
           DEFAULT: '#d4af37',
+          dark: '#8b7015',
+          light: '#e6c84a',
+          accent: '#d4a520',
         },
+        bronze: { DEFAULT: '#cd7f32' },
+        crimson: {
+          DEFAULT: '#8b0000',
+          light: '#b22222',
+          dark: '#5c0000',
+        },
+        success: '#2d5016',
+        failure: '#6b1010',
+        warning: '#8b6914',
+      },
+      boxShadow: {
+        sm: '0 1px 3px rgba(0, 0, 0, 0.3)',
+        md: '0 4px 6px rgba(0, 0, 0, 0.4)',
+        lg: '0 10px 20px rgba(0, 0, 0, 0.5)',
+        inset: 'inset 0 2px 4px rgba(0, 0, 0, 0.3)',
+      },
+      borderRadius: {
+        sm: '2px',
+        md: '4px',
+        lg: '8px',
       },
       gridTemplateColumns: {
         'skill-row': '1fr auto 40px',
