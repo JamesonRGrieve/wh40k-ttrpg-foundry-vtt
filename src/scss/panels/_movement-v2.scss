@@ -109,9 +109,7 @@
 
 // Speed Tiers (Stacked Bars)
 .wh40k-speed-tiers {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    @apply tw-flex-1 tw-flex tw-flex-col;
     gap: 6px;
 }
 
@@ -181,9 +179,7 @@
 // Physical Grid - Athletics & Carrying
 // ============================================
 .wh40k-physical-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: $wh40k-space-md;
+    @apply tw-grid tw-grid-cols-2 tw-gap-3;
 }
 
 .wh40k-physical-column {
@@ -200,11 +196,7 @@
 }
 
 .wh40k-column-header {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-sm;
-    margin-bottom: $wh40k-space-md;
-    padding-bottom: $wh40k-space-sm;
+    @apply tw-flex tw-items-center tw-gap-2 tw-mb-3 tw-pb-2;
     border-bottom: 1px solid rgba(#fff, 0.1);
 
     i {
@@ -236,17 +228,11 @@
 
 // Athletics Metrics
 .wh40k-metric-row {
-    display: flex;
-    gap: $wh40k-space-sm;
-    margin-bottom: $wh40k-space-sm;
+    @apply tw-flex tw-gap-2 tw-mb-2;
 }
 
 .wh40k-metric {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm;
+    @apply tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-p-2;
     background: rgba(#9b59b6, 0.1);
     border-radius: 6px;
     border: 1px solid rgba(#9b59b6, 0.2);
@@ -265,8 +251,7 @@
 }
 
 .wh40k-metric-data {
-    display: flex;
-    flex-direction: column;
+    @apply tw-flex tw-flex-col;
 }
 
 .wh40k-metric-value {
@@ -286,17 +271,11 @@
 
 // Carrying Metrics
 .wh40k-carry-metrics {
-    display: flex;
-    justify-content: space-between;
-    gap: $wh40k-space-xs;
-    margin-bottom: $wh40k-space-md;
+    @apply tw-flex tw-justify-between tw-gap-1 tw-mb-3;
 }
 
 .wh40k-carry-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    @apply tw-flex-1 tw-flex tw-flex-col tw-items-center;
     padding: $wh40k-space-sm $wh40k-space-xs;
     background: linear-gradient(180deg, rgba(#27ae60, 0.15) 0%, rgba(#27ae60, 0.05) 100%);
     border-radius: 6px;
@@ -339,9 +318,7 @@
 }
 
 .wh40k-enc-header {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
+    @apply tw-flex tw-items-baseline tw-justify-center;
     gap: 2px;
     margin-bottom: 6px;
 }
@@ -551,15 +528,11 @@
 
 // Legacy compact styles (kept for backwards compatibility)
 .wh40k-movement-grid-compact {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: $wh40k-space-xs;
+    @apply tw-grid tw-grid-cols-2 tw-gap-1;
 }
 
 .wh40k-move-cell-compact {
-    display: flex;
-    align-items: center;
-    gap: $wh40k-space-xs;
+    @apply tw-flex tw-items-center tw-gap-1;
     padding: $wh40k-space-xs $wh40k-space-sm;
     background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.04) 0%, rgba($wh40k-accent-gold, 0.01) 100%);
     border: 1px solid rgba($wh40k-border-light, 0.5);
@@ -579,10 +552,8 @@
 }
 
 .wh40k-move-info-compact {
-    display: flex;
-    flex-direction: column;
+    @apply tw-flex tw-flex-col tw-flex-1;
     gap: 1px;
-    flex: 1;
 }
 
 .wh40k-move-label-sm {
