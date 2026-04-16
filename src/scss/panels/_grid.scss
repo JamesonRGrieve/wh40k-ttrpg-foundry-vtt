@@ -13,7 +13,7 @@
 .wh40k-dynasty-col,
 .wh40k-bio-col {
     .wh40k-panel {
-        margin-bottom: $wh40k-space-md;
+        margin-bottom: var(--wh40k-space-md);
         overflow: visible;
     }
 }

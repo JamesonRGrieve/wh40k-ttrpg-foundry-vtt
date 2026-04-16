@@ -21,7 +21,7 @@
     border: 2px solid var(--wh40k-item-border);
     border-radius: 4px;
     overflow: hidden;
-    font-family: $wh40k-font-ui;
+    font-family: var(--wh40k-font-ui);
     color: var(--wh40k-item-text);
     box-shadow: 0 4px 12px var(--wh40k-shadow-medium);
 
@@ -64,7 +64,7 @@
 }
 
 .wh40k-item-card__name {
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--wh40k-item-border);
@@ -212,7 +212,7 @@
 }
 
 .wh40k-item-card__section-title {
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     font-size: 0.8rem;
     font-weight: 600;
     color: var(--wh40k-item-border);
@@ -280,7 +280,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     .material-icons {
         font-size: 14px;
@@ -458,9 +458,9 @@
 // Quick stats row
 .wh40k-item-card__quick-stats {
     display: flex;
-    gap: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
     flex-wrap: wrap;
-    margin-bottom: $wh40k-space-sm;
+    margin-bottom: var(--wh40k-space-sm);
 }
 
 .wh40k-quick-stat {
@@ -469,7 +469,7 @@
     gap: 2px;
     padding: 6px 10px;
     background: var(--wh40k-accent-overlay);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     border: 1px solid var(--wh40k-border-color-light);
 }
 
@@ -485,7 +485,7 @@
     font-size: 0.9rem;
     font-weight: 700;
     color: var(--wh40k-item-border);
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
 }
 
 // Property tags in vocalize
@@ -498,12 +498,12 @@
     font-weight: 600;
     background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.12), rgba($wh40k-accent-gold, 0.06));
     border: 1px solid rgba($wh40k-accent-gold, 0.3);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--wh40k-item-border);
 
     i {
         font-size: 0.75rem;
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
     }
 }
 
@@ -518,10 +518,10 @@
     }
 
     .wh40k-item-card__effect-text {
-        padding: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm);
         background: linear-gradient(135deg, rgba(#9b59b6, 0.08), transparent);
         border-left: 3px solid rgba(#9b59b6, 0.4);
-        border-radius: 0 $wh40k-radius-sm $wh40k-radius-sm 0;
+        border-radius: 0 var(--wh40k-radius-sm) var(--wh40k-radius-sm) 0;
     }
 }
 
@@ -535,10 +535,10 @@
     }
 
     .wh40k-item-card__benefit-text {
-        padding: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm);
         background: linear-gradient(135deg, rgba(#27ae60, 0.08), transparent);
         border-left: 3px solid rgba(#27ae60, 0.4);
-        border-radius: 0 $wh40k-radius-sm $wh40k-radius-sm 0;
+        border-radius: 0 var(--wh40k-radius-sm) var(--wh40k-radius-sm) 0;
     }
 }
 
@@ -546,12 +546,12 @@
 .wh40k-item-card__requirements {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-xs;
-    padding: $wh40k-space-sm;
-    margin-top: $wh40k-space-sm;
+    gap: var(--wh40k-space-xs);
+    padding: var(--wh40k-space-sm);
+    margin-top: var(--wh40k-space-sm);
     background: linear-gradient(135deg, rgba(#e67e22, 0.1), transparent);
     border-left: 3px solid rgba(#e67e22, 0.5);
-    border-radius: 0 $wh40k-radius-sm $wh40k-radius-sm 0;
+    border-radius: 0 var(--wh40k-radius-sm) var(--wh40k-radius-sm) 0;
     font-size: 0.8rem;
 }
 
@@ -613,7 +613,7 @@
     border: 2px solid var(--wh40k-movement-border);
     border-radius: 4px;
     overflow: hidden;
-    font-family: $wh40k-font-ui;
+    font-family: var(--wh40k-font-ui);
     color: var(--wh40k-movement-text);
     box-shadow: 0 4px 12px var(--wh40k-shadow-medium);
 
@@ -649,7 +649,7 @@
     }
 
     .wh40k-card-title {
-        font-family: $wh40k-font-display;
+        font-family: var(--wh40k-font-display);
         font-size: 1.1rem;
         font-weight: 600;
         color: var(--wh40k-gold-dark);
@@ -682,7 +682,7 @@
         gap: 4px;
 
         .wh40k-movement-distance {
-            font-family: $wh40k-font-alt;
+            font-family: var(--wh40k-font-alt);
             font-size: 2rem;
             font-weight: 700;
             line-height: 1;

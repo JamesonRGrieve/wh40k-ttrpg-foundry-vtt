@@ -22,7 +22,7 @@
 
     &__display {
         border: $grid-border;
-        font-family: $wh40k-font-body;
+        font-family: var(--wh40k-font-body);
         font-size: 14pt;
         font-weight: bold;
         line-height: 3.5rem;

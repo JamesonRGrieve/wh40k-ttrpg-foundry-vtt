@@ -61,7 +61,7 @@
 
                 &.active {
                     background: $form-input-background;
-                    border: 1px solid $wh40k-border-medium;
+                    border: 1px solid var(--wh40k-border-medium);
                 }
             }
         }

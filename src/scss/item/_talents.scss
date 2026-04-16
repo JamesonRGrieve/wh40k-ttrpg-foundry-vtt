@@ -10,10 +10,10 @@
         min-height: 0; // Critical for flex scrolling
         overflow-y: auto; // Enable vertical scrolling
         overflow-x: hidden; // Prevent horizontal scrolling
-        padding: $wh40k-space-md;
+        padding: var(--wh40k-space-md);
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
 
         // Modern scrollbar styling
         &::-webkit-scrollbar {
@@ -22,12 +22,12 @@
 
         &::-webkit-scrollbar-track {
             background: var(--wh40k-panel-bg);
-            border-radius: $wh40k-radius-sm;
+            border-radius: var(--wh40k-radius-sm);
         }
 
         &::-webkit-scrollbar-thumb {
             background: var(--wh40k-border-color);
-            border-radius: $wh40k-radius-sm;
+            border-radius: var(--wh40k-radius-sm);
 
             &:hover {
                 background: var(--wh40k-gold-dark);
@@ -39,10 +39,10 @@
     .wh40k-panel {
         background: var(--wh40k-panel-bg);
         border: 1px solid var(--wh40k-border-color-light);
-        border-radius: $wh40k-radius-md;
+        border-radius: var(--wh40k-radius-md);
         box-shadow: $wh40k-shadow-sm;
         overflow: hidden;
-        transition: border-color $wh40k-transition-fast;
+        transition: border-color var(--wh40k-transition-fast);
 
         &:hover {
             border-color: var(--wh40k-border-color);
@@ -52,8 +52,8 @@
     .wh40k-panel-header {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
-        padding: $wh40k-space-sm $wh40k-space-md;
+        gap: var(--wh40k-space-sm);
+        padding: var(--wh40k-space-sm) var(--wh40k-space-md);
         background: linear-gradient(180deg, rgba($wh40k-color-gold, 0.12) 0%, rgba($wh40k-color-gold, 0.04) 100%);
         border-bottom: 1px solid var(--wh40k-border-color-light);
     }
@@ -61,9 +61,9 @@
     .wh40k-panel-title {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-xs;
-        font-family: $wh40k-font-heading;
-        font-size: $wh40k-font-size-base;
+        gap: var(--wh40k-space-xs);
+        font-family: var(--wh40k-font-heading);
+        font-size: var(--wh40k-font-size-base);
         color: var(--wh40k-gold);
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -75,7 +75,7 @@
     }
 
     .wh40k-panel-body {
-        padding: $wh40k-space-md;
+        padding: var(--wh40k-space-md);
         background: var(--wh40k-panel-body-bg);
     }
 
@@ -83,10 +83,10 @@
     .wh40k-field {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-xs;
+        gap: var(--wh40k-space-xs);
 
         label {
-            font-size: $wh40k-font-size-sm;
+            font-size: var(--wh40k-font-size-sm);
             color: var(--wh40k-text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -98,12 +98,12 @@
         textarea {
             background: var(--wh40k-input-bg);
             border: 1px solid var(--wh40k-border-color-light);
-            border-radius: $wh40k-radius-sm;
+            border-radius: var(--wh40k-radius-sm);
             color: var(--wh40k-text-dark);
-            font-family: $wh40k-font-ui;
-            font-size: $wh40k-font-size-sm;
-            padding: $wh40k-space-xs $wh40k-space-sm;
-            transition: border-color $wh40k-transition-fast, background-color $wh40k-transition-fast;
+            font-family: var(--wh40k-font-ui);
+            font-size: var(--wh40k-font-size-sm);
+            padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
+            transition: border-color var(--wh40k-transition-fast), background-color var(--wh40k-transition-fast);
 
             &:focus {
                 outline: none;
@@ -125,12 +125,12 @@
         &--checkbox {
             flex-direction: row;
             align-items: center;
-            gap: $wh40k-space-sm;
+            gap: var(--wh40k-space-sm);
 
             label {
                 margin: 0;
                 text-transform: none;
-                font-size: $wh40k-font-size-sm;
+                font-size: var(--wh40k-font-size-sm);
                 cursor: pointer;
             }
 
@@ -144,7 +144,7 @@
 
     .wh40k-field-grid {
         display: grid;
-        gap: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
 
         &--2col {
             grid-template-columns: repeat(2, 1fr);
@@ -156,28 +156,28 @@
     }
 
     .wh40k-field-hint {
-        font-size: $wh40k-font-size-xs;
+        font-size: var(--wh40k-font-size-xs);
         color: var(--wh40k-text-subtle);
         font-style: italic;
-        margin-top: $wh40k-space-xs;
+        margin-top: var(--wh40k-space-xs);
     }
 
     // Modifiers display
     .wh40k-modifiers-display {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
     }
 
     .wh40k-modifier-section {
         h4 {
-            font-family: $wh40k-font-heading;
-            font-size: $wh40k-font-size-sm;
+            font-family: var(--wh40k-font-heading);
+            font-size: var(--wh40k-font-size-sm);
             color: var(--wh40k-gold);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin: 0 0 $wh40k-space-sm 0;
-            padding-bottom: $wh40k-space-xs;
+            margin: 0 0 var(--wh40k-space-sm) 0;
+            padding-bottom: var(--wh40k-space-xs);
             border-bottom: 1px solid var(--wh40k-border-color-light);
         }
     }
@@ -186,24 +186,24 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: $wh40k-space-xs $wh40k-space-sm;
+        padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
         background: var(--wh40k-input-bg);
-        border-radius: $wh40k-radius-sm;
+        border-radius: var(--wh40k-radius-sm);
 
         &:not(:last-child) {
-            margin-bottom: $wh40k-space-xs;
+            margin-bottom: var(--wh40k-space-xs);
         }
     }
 
     .wh40k-modifier-name {
-        font-size: $wh40k-font-size-sm;
+        font-size: var(--wh40k-font-size-sm);
         color: var(--wh40k-text-dark);
         text-transform: capitalize;
     }
 
     .wh40k-modifier-value {
-        font-family: $wh40k-font-display;
-        font-size: $wh40k-font-size-base;
+        font-family: var(--wh40k-font-display);
+        font-size: var(--wh40k-font-size-base);
         font-weight: 600;
         color: var(--wh40k-gold);
     }
@@ -212,10 +212,10 @@
     .wh40k-meta-badge--talent {
         background: rgba(181, 166, 66, 0.15);
         border-color: rgba(181, 166, 66, 0.4);
-        color: $wh40k-color-brass;
+        color: var(--wh40k-color-brass);
 
         i {
-            color: $wh40k-color-brass;
+            color: var(--wh40k-color-brass);
         }
     }
 
@@ -233,7 +233,7 @@
     .editor {
         background: var(--wh40k-input-bg);
         border: 1px solid var(--wh40k-border-color-light);
-        border-radius: $wh40k-radius-sm;
+        border-radius: var(--wh40k-radius-sm);
         min-height: 120px;
 
         &:focus-within {
@@ -243,14 +243,14 @@
     }
 
     .editor-content {
-        padding: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm);
         color: var(--wh40k-text-dark);
-        font-family: $wh40k-font-ui;
-        font-size: $wh40k-font-size-sm;
+        font-family: var(--wh40k-font-ui);
+        font-size: var(--wh40k-font-size-sm);
         line-height: 1.5;
 
         p {
-            margin: 0 0 $wh40k-space-xs 0;
+            margin: 0 0 var(--wh40k-space-xs) 0;
 
             &:last-child {
                 margin-bottom: 0;
@@ -266,8 +266,8 @@
 .wh40k-compact {
     .wh40k-item-header--compact {
         grid-template-columns: 50px 1fr;
-        padding: $wh40k-space-sm $wh40k-space-md;
-        gap: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm) var(--wh40k-space-md);
+        gap: var(--wh40k-space-sm);
     }
 
     .wh40k-item-image--sm {
@@ -276,15 +276,15 @@
     }
 
     .wh40k-item-title__name {
-        font-size: $wh40k-font-size-lg;
-        padding: 2px $wh40k-space-xs;
+        font-size: var(--wh40k-font-size-lg);
+        padding: 2px var(--wh40k-space-xs);
     }
 
     .wh40k-item-body--compact {
-        padding: $wh40k-space-sm $wh40k-space-md;
+        padding: var(--wh40k-space-sm) var(--wh40k-space-md);
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
         flex: 1 1 auto;
         overflow-y: auto;
         min-height: 0;
@@ -294,7 +294,7 @@
     .wh40k-text-field textarea,
     .wh40k-inline-field input,
     .wh40k-prereq-row input {
-        font-family: $wh40k-font-ui;
+        font-family: var(--wh40k-font-ui);
     }
 }
 
@@ -302,9 +302,9 @@
 .wh40k-meta-select {
     background: var(--wh40k-input-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--wh40k-text-dark);
-    font-size: $wh40k-font-size-xs;
+    font-size: var(--wh40k-font-size-xs);
     padding: 2px 4px;
     cursor: pointer;
 
@@ -320,7 +320,7 @@
     gap: 2px;
     background: var(--wh40k-input-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     padding: 0 4px;
 
     input {
@@ -328,7 +328,7 @@
         background: transparent;
         border: none;
         color: var(--wh40k-text-dark);
-        font-size: $wh40k-font-size-xs;
+        font-size: var(--wh40k-font-size-xs);
         text-align: center;
 
         &:focus {
@@ -337,7 +337,7 @@
     }
 
     span {
-        font-size: $wh40k-font-size-xs;
+        font-size: var(--wh40k-font-size-xs);
         color: var(--wh40k-text-muted);
     }
 }
@@ -346,7 +346,7 @@
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    font-size: $wh40k-font-size-xs;
+    font-size: var(--wh40k-font-size-xs);
     color: var(--wh40k-text-muted);
     cursor: pointer;
 
@@ -360,15 +360,15 @@
 .wh40k-prereq-row {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-xs $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
     background: rgba(139, 0, 0, 0.1);
     border: 1px solid rgba(139, 0, 0, 0.3);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
 
     i {
         color: var(--wh40k-red);
-        font-size: $wh40k-font-size-sm;
+        font-size: var(--wh40k-font-size-sm);
     }
 
     input {
@@ -376,7 +376,7 @@
         background: transparent;
         border: none;
         color: var(--wh40k-text-dark);
-        font-size: $wh40k-font-size-sm;
+        font-size: var(--wh40k-font-size-sm);
 
         &::placeholder {
             color: var(--wh40k-text-subtle);
@@ -391,7 +391,7 @@
 // Inline field rows
 .wh40k-inline-row {
     display: flex;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-inline-field {
@@ -401,7 +401,7 @@
     gap: 2px;
 
     label {
-        font-size: $wh40k-font-size-xs;
+        font-size: var(--wh40k-font-size-xs);
         color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -415,10 +415,10 @@
     input {
         background: var(--wh40k-input-bg);
         border: 1px solid var(--wh40k-border-color-light);
-        border-radius: $wh40k-radius-sm;
+        border-radius: var(--wh40k-radius-sm);
         color: var(--wh40k-text-dark);
-        font-size: $wh40k-font-size-sm;
-        padding: $wh40k-space-xs $wh40k-space-sm;
+        font-size: var(--wh40k-font-size-sm);
+        padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
 
         &:focus {
             outline: none;
@@ -439,7 +439,7 @@
     gap: 2px;
 
     label {
-        font-size: $wh40k-font-size-xs;
+        font-size: var(--wh40k-font-size-xs);
         color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -448,10 +448,10 @@
     textarea {
         background: var(--wh40k-input-bg);
         border: 1px solid var(--wh40k-border-color-light);
-        border-radius: $wh40k-radius-sm;
+        border-radius: var(--wh40k-radius-sm);
         color: var(--wh40k-text-dark);
-        font-size: $wh40k-font-size-sm;
-        padding: $wh40k-space-sm;
+        font-size: var(--wh40k-font-size-sm);
+        padding: var(--wh40k-space-sm);
         resize: vertical;
         min-height: 60px;
 
@@ -467,7 +467,7 @@
 .wh40k-item-footer {
     display: flex;
     justify-content: flex-end;
-    padding-top: $wh40k-space-xs;
+    padding-top: var(--wh40k-space-xs);
     border-top: 1px solid var(--wh40k-border-color-light);
 }
 
@@ -475,7 +475,7 @@
     background: transparent;
     border: none;
     color: var(--wh40k-text-subtle);
-    font-size: $wh40k-font-size-xs;
+    font-size: var(--wh40k-font-size-xs);
     font-style: italic;
     text-align: right;
 
@@ -493,10 +493,10 @@
 .wh40k-meta-text {
     background: var(--wh40k-input-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--wh40k-text-dark);
-    font-family: $wh40k-font-ui;
-    font-size: $wh40k-font-size-xs;
+    font-family: var(--wh40k-font-ui);
+    font-size: var(--wh40k-font-size-xs);
     padding: 2px 6px;
     width: 70px;
 
@@ -525,7 +525,7 @@
     min-height: 0;
 
     label {
-        font-size: $wh40k-font-size-xs;
+        font-size: var(--wh40k-font-size-xs);
         color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -541,11 +541,11 @@
 .wh40k-prose {
     background: var(--wh40k-panel-body-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--wh40k-text-dark);
-    font-family: $wh40k-font-ui;
-    font-size: $wh40k-font-size-sm;
-    padding: $wh40k-space-sm;
+    font-family: var(--wh40k-font-ui);
+    font-size: var(--wh40k-font-size-sm);
+    padding: var(--wh40k-space-sm);
     min-height: 40px;
     max-height: 120px;
     overflow-y: auto;

@@ -9,7 +9,7 @@
 // ============================================
 $adv-card-bg: rgba(40, 35, 28, 0.8);
 $adv-card-border: rgba(120, 100, 80, 0.4);
-$adv-card-hover-border: $wh40k-color-gold;
+$adv-card-hover-border: var(--wh40k-color-gold);
 $adv-purchased-glow: rgba(45, 80, 22, 0.6);
 $adv-blocked-opacity: 0.5;
 $adv-transition-fast: 150ms ease;
@@ -32,7 +32,7 @@ $adv-transition-normal: 250ms ease;
     flex-direction: column;
     height: 100%;
     gap: 0;
-    font-family: $wh40k-font-ui;
+    font-family: var(--wh40k-font-ui);
 }
 
 // ============================================
@@ -41,7 +41,7 @@ $adv-transition-normal: 250ms ease;
 .wh40k-adv__header {
     padding: 1rem 1.25rem;
     background: linear-gradient(135deg, rgba(30, 25, 20, 0.95), rgba(40, 35, 28, 0.9));
-    border-bottom: 2px solid $wh40k-color-gold-dark;
+    border-bottom: 2px solid var(--wh40k-color-gold-dark);
 }
 
 .wh40k-adv__xp-display {
@@ -60,7 +60,7 @@ $adv-transition-normal: 250ms ease;
 
 .wh40k-adv__xp-fill {
     height: 100%;
-    background: linear-gradient(90deg, $wh40k-color-gold-dark, $wh40k-color-gold);
+    background: linear-gradient(90deg, var(--wh40k-color-gold-dark), var(--wh40k-color-gold));
     border-radius: 4px;
     transition: width 0.5s ease-out;
     position: relative;
@@ -91,13 +91,13 @@ $adv-transition-normal: 250ms ease;
 }
 
 .wh40k-adv__xp-available {
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
     display: flex;
     align-items: center;
     gap: 0.4rem;
 
     i {
-        color: $wh40k-color-gold-light;
+        color: var(--wh40k-color-gold-light);
     }
 
     strong {
@@ -139,16 +139,16 @@ $adv-transition-normal: 250ms ease;
 
     i {
         font-size: 2.5rem;
-        color: $wh40k-color-warning;
+        color: var(--wh40k-color-warning);
         opacity: 0.7;
     }
 }
 
 .wh40k-adv__blocked-title {
-    font-family: $wh40k-font-display;
+    font-family: var(--wh40k-font-display);
     font-size: 1.3rem;
     font-weight: 600;
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
     margin: 0 0 0.75rem 0;
 }
 
@@ -169,11 +169,11 @@ $adv-transition-normal: 250ms ease;
     border: 1px solid rgba(201, 162, 39, 0.3);
     border-radius: 6px;
     font-size: 0.85rem;
-    color: $wh40k-color-gold-light;
+    color: var(--wh40k-color-gold-light);
 
     i {
         font-size: 1rem;
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
     }
 }
 
@@ -209,12 +209,12 @@ $adv-transition-normal: 250ms ease;
     }
 
     &--active {
-        color: $wh40k-color-gold;
-        border-bottom-color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
+        border-bottom-color: var(--wh40k-color-gold);
         background: rgba(201, 162, 39, 0.1);
 
         i {
-            color: $wh40k-color-gold-light;
+            color: var(--wh40k-color-gold-light);
         }
     }
 
@@ -308,8 +308,8 @@ $adv-transition-normal: 250ms ease;
 .wh40k-adv__char-abbr {
     font-size: 1.4rem;
     font-weight: 700;
-    color: $wh40k-color-gold;
-    font-family: $wh40k-font-display;
+    color: var(--wh40k-color-gold);
+    font-family: var(--wh40k-font-display);
 }
 
 .wh40k-adv__char-value {
@@ -341,13 +341,13 @@ $adv-transition-normal: 250ms ease;
     transition: all $adv-transition-fast;
 
     &--purchased {
-        background: $wh40k-color-gold;
-        border-color: $wh40k-color-gold-light;
-        box-shadow: 0 0 4px $wh40k-color-gold;
+        background: var(--wh40k-color-gold);
+        border-color: var(--wh40k-color-gold-light);
+        box-shadow: 0 0 4px var(--wh40k-color-gold);
     }
 
     &--current {
-        border-color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
         animation: currentPulse 1.5s ease-in-out infinite;
     }
 }
@@ -367,9 +367,9 @@ $adv-transition-normal: 250ms ease;
     width: 100%;
     padding: 0.4rem 0.6rem;
     background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(139, 112, 21, 0.3));
-    border: 1px solid $wh40k-color-gold-dark;
+    border: 1px solid var(--wh40k-color-gold-dark);
     border-radius: 4px;
-    color: $wh40k-color-gold-light;
+    color: var(--wh40k-color-gold-light);
     font-size: 0.75rem;
     cursor: pointer;
     display: flex;
@@ -380,7 +380,7 @@ $adv-transition-normal: 250ms ease;
 
     &:hover {
         background: linear-gradient(135deg, rgba(201, 162, 39, 0.35), rgba(139, 112, 21, 0.45));
-        border-color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
         transform: scale(1.02);
     }
 
@@ -400,7 +400,7 @@ $adv-transition-normal: 250ms ease;
     font-weight: 600;
 
     &--expensive {
-        color: $wh40k-color-crimson-light;
+        color: var(--wh40k-color-crimson-light);
     }
 }
 
@@ -417,7 +417,7 @@ $adv-transition-normal: 250ms ease;
         background: rgba(45, 80, 22, 0.2);
 
         i {
-            color: $wh40k-color-gold;
+            color: var(--wh40k-color-gold);
         }
     }
 
@@ -467,7 +467,7 @@ $adv-transition-normal: 250ms ease;
 
     &--cant-afford {
         .wh40k-adv__advance-cost {
-            color: $wh40k-color-crimson-light;
+            color: var(--wh40k-color-crimson-light);
         }
     }
 
@@ -506,7 +506,7 @@ $adv-transition-normal: 250ms ease;
     }
 
     &:hover {
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         background: rgba(201, 162, 39, 0.15);
     }
 }
@@ -528,7 +528,7 @@ $adv-transition-normal: 250ms ease;
 
 .wh40k-adv__advance-prereq {
     font-size: 0.7rem;
-    color: $wh40k-color-warning;
+    color: var(--wh40k-color-warning);
     display: flex;
     align-items: center;
     gap: 0.25rem;
@@ -542,9 +542,9 @@ $adv-transition-normal: 250ms ease;
 .wh40k-adv__advance-btn {
     padding: 0.4rem 0.8rem;
     background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(139, 112, 21, 0.3));
-    border: 1px solid $wh40k-color-gold-dark;
+    border: 1px solid var(--wh40k-color-gold-dark);
     border-radius: 4px;
-    color: $wh40k-color-gold-light;
+    color: var(--wh40k-color-gold-light);
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
@@ -552,7 +552,7 @@ $adv-transition-normal: 250ms ease;
 
     &:hover {
         background: linear-gradient(135deg, rgba(201, 162, 39, 0.35), rgba(139, 112, 21, 0.45));
-        border-color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
         transform: scale(1.05);
     }
 
@@ -569,7 +569,7 @@ $adv-transition-normal: 250ms ease;
     cursor: help;
 
     i {
-        color: $wh40k-color-warning;
+        color: var(--wh40k-color-warning);
     }
 }
 
@@ -585,7 +585,7 @@ $adv-transition-normal: 250ms ease;
 
     &--cant-afford {
         i {
-            color: $wh40k-color-crimson-light;
+            color: var(--wh40k-color-crimson-light);
         }
     }
 }

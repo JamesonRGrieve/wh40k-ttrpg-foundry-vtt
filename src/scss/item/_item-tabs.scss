@@ -33,7 +33,7 @@
     font-weight: 500;
     color: var(--wh40k-text-muted);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.9rem;

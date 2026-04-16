@@ -9,17 +9,17 @@
 // ============================================
 
 .talent-editor-dialog {
-    --ted-accent: #{$wh40k-accent-talents};
+    --ted-accent: var(--wh40k-accent-talents);
     --ted-accent-light: #{lighten($wh40k-accent-talents, 15%)};
     --ted-accent-bg: #{rgba($wh40k-accent-talents, 0.1)};
     --ted-accent-border: #{rgba($wh40k-accent-talents, 0.3)};
 
-    font-family: $wh40k-font-body;
+    font-family: var(--wh40k-font-body);
     color: var(--color-text-primary);
 }
 
 .ted-container {
-    --ted-accent: #{$wh40k-accent-talents};
+    --ted-accent: var(--wh40k-accent-talents);
     --ted-accent-light: #{lighten($wh40k-accent-talents, 15%)};
     --ted-accent-bg: #{rgba($wh40k-accent-talents, 0.1)};
     --ted-accent-border: #{rgba($wh40k-accent-talents, 0.3)};
@@ -28,7 +28,7 @@
     flex-direction: column;
     height: 100%;
     background: var(--color-bg-primary);
-    font-family: $wh40k-font-body;
+    font-family: var(--wh40k-font-body);
 }
 
 // ============================================
@@ -38,7 +38,7 @@
 .ted-section-tabs {
     display: flex;
     gap: 0;
-    padding: 0 $wh40k-space-md;
+    padding: 0 var(--wh40k-space-md);
     background: var(--color-bg-secondary);
     border-bottom: 2px solid var(--color-border-secondary);
     flex-shrink: 0;
@@ -50,7 +50,7 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: transparent;
     border: none;
     border-bottom: 3px solid transparent;
@@ -60,7 +60,7 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.95em;
@@ -72,8 +72,8 @@
     }
 
     &.active {
-        color: $wh40k-color-gold;
-        border-bottom-color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
+        border-bottom-color: var(--wh40k-color-gold);
         background: rgba($wh40k-color-gold, 0.08);
     }
 }
@@ -85,7 +85,7 @@
 .ted-content {
     flex: 1;
     overflow-y: auto;
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
 }
 
 // ============================================
@@ -107,9 +107,9 @@
 .ted-section-header {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
-    margin-bottom: $wh40k-space-lg;
-    padding-bottom: $wh40k-space-md;
+    gap: var(--wh40k-space-sm);
+    margin-bottom: var(--wh40k-space-lg);
+    padding-bottom: var(--wh40k-space-md);
     border-bottom: 2px solid var(--color-border-secondary);
 
     > i {
@@ -123,10 +123,10 @@
         align-items: center;
         gap: 8px;
         margin: 0;
-        font-family: $wh40k-font-heading;
+        font-family: var(--wh40k-font-heading);
         font-size: 1.1rem;
         font-weight: 700;
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         text-transform: uppercase;
         letter-spacing: 0.05em;
 
@@ -152,12 +152,12 @@
 // ============================================
 
 .ted-field-group {
-    margin-bottom: $wh40k-space-lg;
-    padding: $wh40k-space-md;
+    margin-bottom: var(--wh40k-space-lg);
+    padding: var(--wh40k-space-md);
     background: rgba(0, 0, 0, 0.15);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-md;
-    transition: all $wh40k-transition-base;
+    border-radius: var(--wh40k-radius-md);
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: rgba(0, 0, 0, 0.2);
@@ -174,10 +174,10 @@
     align-items: center;
     gap: 6px;
     margin-bottom: 8px;
-    font-family: $wh40k-font-heading;
+    font-family: var(--wh40k-font-heading);
     font-size: 0.82rem;
     font-weight: 700;
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
     text-transform: uppercase;
     letter-spacing: 0.06em;
 
@@ -196,13 +196,13 @@
 .ted-textarea {
     width: 100%;
     padding: 8px 12px;
-    font-family: $wh40k-font-body;
+    font-family: var(--wh40k-font-body);
     font-size: 0.9rem;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--color-text-primary);
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     &::placeholder {
         color: var(--color-text-tertiary);
@@ -211,7 +211,7 @@
 
     &:focus {
         background: rgba(0, 0, 0, 0.4);
-        border-color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
         outline: none;
         box-shadow: 0 0 8px rgba($wh40k-color-gold, 0.2);
     }
@@ -224,7 +224,7 @@
 .ted-textarea {
     min-height: 80px;
     resize: vertical;
-    font-family: $wh40k-font-body;
+    font-family: var(--wh40k-font-body);
     line-height: 1.5;
 }
 
@@ -243,20 +243,20 @@
 .ted-list {
     display: flex;
     flex-direction: column;
-    gap: $wh40k-space-sm;
-    margin-top: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
+    margin-top: var(--wh40k-space-sm);
 }
 
 .ted-list-row {
     display: grid;
     grid-template-columns: 1fr 80px 32px;
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
     align-items: center;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: rgba(0, 0, 0, 0.25);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
-    transition: all $wh40k-transition-base;
+    border-radius: var(--wh40k-radius-sm);
+    transition: all var(--wh40k-transition-base);
 
     &:hover {
         background: rgba(0, 0, 0, 0.35);
@@ -270,13 +270,13 @@
     &--stacked {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
         align-items: stretch;
 
         .ted-row-inline {
             display: grid;
             grid-template-columns: 1fr 80px 32px;
-            gap: $wh40k-space-sm;
+            gap: var(--wh40k-space-sm);
             align-items: center;
         }
     }
@@ -284,12 +284,12 @@
     &--column {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
 
         .ted-list-row-main {
             display: grid;
             grid-template-columns: 1fr 32px;
-            gap: $wh40k-space-sm;
+            gap: var(--wh40k-space-sm);
             align-items: center;
         }
     }
@@ -298,15 +298,15 @@
     select {
         padding: 6px 10px;
         font-size: 0.85rem;
-        font-family: $wh40k-font-body;
+        font-family: var(--wh40k-font-body);
         background: rgba(0, 0, 0, 0.4);
         border: 1px solid var(--color-border-light);
-        border-radius: $wh40k-radius-sm;
+        border-radius: var(--wh40k-radius-sm);
         color: var(--color-text-primary);
-        transition: all $wh40k-transition-fast;
+        transition: all var(--wh40k-transition-fast);
 
         &:focus {
-            border-color: $wh40k-color-gold;
+            border-color: var(--wh40k-color-gold);
             outline: none;
             box-shadow: 0 0 6px rgba($wh40k-color-gold, 0.2);
         }
@@ -326,17 +326,17 @@
     width: 100%;
     padding: 8px 12px;
     font-size: 0.85rem;
-    font-family: $wh40k-font-body;
+    font-family: var(--wh40k-font-body);
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--color-text-primary);
     resize: vertical;
     min-height: 50px;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
 
     &:focus {
-        border-color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
         outline: none;
         box-shadow: 0 0 6px rgba($wh40k-color-gold, 0.2);
     }
@@ -359,19 +359,19 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin-top: $wh40k-space-sm;
+    margin-top: var(--wh40k-space-sm);
     padding: 8px 16px;
     background: var(--ted-accent-bg);
     border: 1px dashed var(--ted-accent-border);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: var(--ted-accent-light);
-    font-family: $wh40k-font-heading;
+    font-family: var(--wh40k-font-heading);
     font-size: 0.82rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.85em;
@@ -380,8 +380,8 @@
     &:hover {
         background: rgba($wh40k-accent-talents, 0.2);
         border-style: solid;
-        border-color: $wh40k-color-gold;
-        color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
+        color: var(--wh40k-color-gold);
         box-shadow: 0 0 10px rgba($wh40k-color-gold, 0.15);
     }
 }
@@ -394,10 +394,10 @@
     height: 28px;
     background: rgba($wh40k-color-crimson, 0.15);
     border: 1px solid rgba($wh40k-color-crimson, 0.4);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
     color: lighten($wh40k-color-crimson, 20%);
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
 
     i {
         font-size: 0.8rem;
@@ -405,7 +405,7 @@
 
     &:hover {
         background: rgba($wh40k-color-crimson, 0.3);
-        border-color: $wh40k-color-crimson;
+        border-color: var(--wh40k-color-crimson);
         color: lighten($wh40k-color-crimson, 30%);
         box-shadow: 0 0 8px rgba($wh40k-color-crimson, 0.3);
     }
@@ -418,8 +418,8 @@
 .ted-footer {
     display: flex;
     justify-content: flex-end;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md);
     background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.2));
     border-top: 2px solid var(--color-border-secondary);
     flex-shrink: 0;
@@ -432,15 +432,15 @@
     padding: 12px 24px;
     background: linear-gradient(180deg, rgba($wh40k-color-gold, 0.15), rgba($wh40k-color-gold, 0.1));
     border: 1px solid rgba($wh40k-color-gold, 0.4);
-    border-radius: $wh40k-radius-md;
-    color: $wh40k-color-gold;
-    font-family: $wh40k-font-heading;
+    border-radius: var(--wh40k-radius-md);
+    color: var(--wh40k-color-gold);
+    font-family: var(--wh40k-font-heading);
     font-size: 0.9rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: all $wh40k-transition-base;
+    transition: all var(--wh40k-transition-base);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
     i {
@@ -449,7 +449,7 @@
 
     &:hover {
         background: linear-gradient(180deg, rgba($wh40k-color-gold, 0.25), rgba($wh40k-color-gold, 0.15));
-        border-color: $wh40k-color-gold;
+        border-color: var(--wh40k-color-gold);
         color: lighten($wh40k-color-gold, 10%);
         box-shadow: 0 0 16px rgba($wh40k-color-gold, 0.3);
         transform: translateY(-1px);
@@ -468,17 +468,17 @@
 .ted-modifier-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
 }
 
 .ted-modifier-cell {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-sm;
-    padding: 6px $wh40k-space-sm;
+    gap: var(--wh40k-space-sm);
+    padding: 6px var(--wh40k-space-sm);
     background: rgba(0, 0, 0, 0.1);
     border: 1px solid var(--color-border-light);
-    border-radius: $wh40k-radius-sm;
+    border-radius: var(--wh40k-radius-sm);
 
     label {
         flex: 1;
@@ -493,7 +493,7 @@
         font-size: 0.85rem;
         background: rgba(0, 0, 0, 0.2);
         border: 1px solid var(--color-border-light);
-        border-radius: $wh40k-radius-sm;
+        border-radius: var(--wh40k-radius-sm);
         color: var(--color-text-primary);
 
         &:focus {
@@ -508,7 +508,7 @@
 // ============================================
 
 .ted-subsection {
-    margin-bottom: $wh40k-space-lg;
+    margin-bottom: var(--wh40k-space-lg);
 
     &:last-child {
         margin-bottom: 0;
@@ -519,7 +519,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-bottom: $wh40k-space-sm;
+    margin-bottom: var(--wh40k-space-sm);
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--color-text-secondary);
@@ -537,7 +537,7 @@
 // ============================================
 
 .ted-empty {
-    padding: $wh40k-space-lg;
+    padding: var(--wh40k-space-lg);
     text-align: center;
     color: var(--color-text-tertiary);
     font-size: 0.85rem;
@@ -545,7 +545,7 @@
 
     i {
         display: block;
-        margin-bottom: $wh40k-space-sm;
+        margin-bottom: var(--wh40k-space-sm);
         font-size: 1.5rem;
         opacity: 0.5;
     }

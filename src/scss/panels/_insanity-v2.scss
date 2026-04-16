@@ -58,15 +58,15 @@
         border-radius: 4px;
         border: 2px solid;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        transition: all $wh40k-transition-base;
-        font-family: $wh40k-font-alt;
+        transition: all var(--wh40k-transition-base);
+        font-family: var(--wh40k-font-alt);
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
 
         .wh40k-badge-icon {
             font-size: 1rem;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
         }
 
         .wh40k-badge-label {
@@ -174,21 +174,21 @@
     .wh40k-insanity-display {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
     }
 
     // Header with value and modifier
     .wh40k-insanity-header {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
         align-items: center;
     }
 
     .wh40k-insanity-value {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-md;
+        gap: var(--wh40k-space-md);
     }
 
     // +/- Control Buttons
@@ -203,7 +203,7 @@
         border: 2px solid var(--wh40k-border-color);
         border-radius: 8px;
         cursor: pointer;
-        transition: all $wh40k-transition-fast;
+        transition: all var(--wh40k-transition-fast);
         color: var(--wh40k-text-medium);
 
         i {
@@ -244,7 +244,7 @@
         display: flex;
         align-items: baseline;
         gap: 4px;
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
     }
 
     .wh40k-insanity-current {
@@ -273,7 +273,7 @@
     .wh40k-modifier-value {
         font-size: 1.1rem;
         color: #ef4444; // Brighter red instead of dark purple
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
     }
 
     // ============================================
@@ -337,7 +337,7 @@
 
     .wh40k-insanity-alert {
         @include wh40k-alert;
-        padding: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm);
         font-size: 0.8rem;
 
         i {
@@ -392,7 +392,7 @@
     // ============================================
 
     .wh40k-disorder-preview {
-        padding: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm);
         background: var(--wh40k-insanity-bg);
         border: 1px solid var(--wh40k-insanity-border);
         border-radius: 6px;
@@ -401,7 +401,7 @@
     .wh40k-disorder-count {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-xs;
+        gap: var(--wh40k-space-xs);
         font-size: 0.8rem;
         font-weight: 700;
         color: var(--wh40k-insanity-primary);
@@ -452,12 +452,12 @@
     .wh40k-insanity-quick-set {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: $wh40k-space-xs;
-        margin-top: $wh40k-space-sm;
+        gap: var(--wh40k-space-xs);
+        margin-top: var(--wh40k-space-sm);
     }
 
     .wh40k-quick-adjust-btn {
-        padding: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm);
         background: var(--wh40k-panel-bg-solid);
         border: 2px solid var(--wh40k-border-color);
         border-radius: 4px;
@@ -465,8 +465,8 @@
         font-weight: 700;
         color: var(--wh40k-text-medium);
         cursor: pointer;
-        transition: all $wh40k-transition-fast;
-        font-family: $wh40k-font-alt;
+        transition: all var(--wh40k-transition-fast);
+        font-family: var(--wh40k-font-alt);
 
         &:hover {
             background: var(--wh40k-panel-bg-alt);
@@ -516,12 +516,12 @@
     .wh40k-disorder-card {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-xs;
-        padding: $wh40k-space-xs $wh40k-space-sm;
+        gap: var(--wh40k-space-xs);
+        padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
         background: var(--wh40k-insanity-bg);
         border: 1px solid var(--wh40k-insanity-border);
         border-radius: 6px;
-        transition: all $wh40k-transition-fast;
+        transition: all var(--wh40k-transition-fast);
 
         &:hover {
             background: rgba(139, 0, 0, 0.15);
@@ -542,7 +542,7 @@
         display: flex;
         align-items: center;
         gap: 6px;
-        transition: color $wh40k-transition-fast;
+        transition: color var(--wh40k-transition-fast);
 
         i {
             font-size: 0.9em;
@@ -565,7 +565,7 @@
         border: 1px solid var(--wh40k-wounds-border);
         border-radius: 4px;
         cursor: pointer;
-        transition: all $wh40k-transition-fast;
+        transition: all var(--wh40k-transition-fast);
 
         i {
             font-size: 0.7rem;
@@ -606,7 +606,7 @@
 
     .wh40k-insanity-info-box {
         @include wh40k-info-box(var(--wh40k-insanity-bg), var(--wh40k-insanity-border), var(--wh40k-insanity-secondary));
-        padding: $wh40k-space-md;
+        padding: var(--wh40k-space-md);
 
         > i {
             font-size: 1.3rem;
@@ -651,7 +651,7 @@
     }
 
     .wh40k-insanity-warning {
-        padding: $wh40k-space-xs $wh40k-space-sm;
+        padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
         background: var(--wh40k-insanity-bg);
         border-left: 2px solid var(--wh40k-insanity-primary);
         border-radius: 3px;
@@ -677,7 +677,7 @@
         border: 1px solid rgba(74, 143, 92, 0.4);
         border-radius: 4px;
         cursor: pointer;
-        transition: all $wh40k-transition-fast;
+        transition: all var(--wh40k-transition-fast);
 
         i {
             font-size: 0.7rem;

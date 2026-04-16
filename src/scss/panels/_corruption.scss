@@ -3,26 +3,26 @@
 // ============================================
 
 .wh40k-panel-vitality {
-    border-left-color: $wh40k-accent-combat;
+    border-left-color: var(--wh40k-accent-combat);
 
     .wh40k-panel-header {
         background: linear-gradient(180deg, rgba($wh40k-accent-combat, 0.12) 0%, transparent 100%);
     }
 
     .wh40k-panel-title i {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 }
 
 .wh40k-panel-movement {
-    border-left-color: $wh40k-accent-skills;
+    border-left-color: var(--wh40k-accent-skills);
 
     .wh40k-panel-header {
         background: linear-gradient(180deg, rgba($wh40k-accent-skills, 0.12) 0%, transparent 100%);
     }
 
     .wh40k-panel-title i {
-        color: $wh40k-accent-skills;
+        color: var(--wh40k-accent-skills);
     }
 }
 
@@ -36,7 +36,7 @@
     }
 
     .wh40k-panel-title i {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 
     &.degree-pure {
@@ -65,7 +65,7 @@
     }
 
     .wh40k-panel-title i {
-        color: $wh40k-accent-powers;
+        color: var(--wh40k-accent-powers);
     }
 
     &.degree-stable {
@@ -147,8 +147,8 @@
 .wh40k-tracker-row {
     display: flex;
     align-items: center;
-    gap: $wh40k-space-md;
-    margin-bottom: $wh40k-space-sm;
+    gap: var(--wh40k-space-md);
+    margin-bottom: var(--wh40k-space-sm);
 }
 
 .wh40k-tracker-main {

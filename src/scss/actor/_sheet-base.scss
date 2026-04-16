@@ -14,7 +14,7 @@
 }
 
 .wh40k-sheet {
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     background: var(--wh40k-sheet-bg) !important;
     position: relative;
     display: flex;
@@ -44,7 +44,7 @@
 
     .wh40k-panel-title {
         flex: 1;
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
         font-size: 1rem;
         font-weight: 600;
         color: var(--wh40k-text-medium);
@@ -309,7 +309,7 @@
     padding: 6px 8px;
     background: var(--wh40k-input-bg);
     resize: vertical;
-    font-family: $wh40k-font-alt;
+    font-family: var(--wh40k-font-alt);
     font-size: 0.9em;
     color: var(--wh40k-text-dark);
 
@@ -346,7 +346,7 @@
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(218, 165, 32, 0.1) 100%);
     border: 2px solid var(--wh40k-fate-primary, #d4af37);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    transition: all $wh40k-transition-medium;
+    transition: all var(--wh40k-transition-medium);
     cursor: help;
 
     i {
@@ -354,7 +354,7 @@
         font-size: 2.5rem;
         color: var(--wh40k-fate-primary, #d4af37);
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-        transition: all $wh40k-transition-medium;
+        transition: all var(--wh40k-transition-medium);
         opacity: 0.9;
     }
 
@@ -700,16 +700,16 @@
     align-self: stretch;
 
     &.wh40k-drag-over {
-        border-color: $wh40k-accent-gold;
+        border-color: var(--wh40k-accent-gold);
         background-color: rgba($wh40k-accent-gold, 0.12);
         box-shadow: 0 0 10px rgba($wh40k-accent-gold, 0.35);
         color: var(--wh40k-text-light);
 
         .wh40k-dropzone-icon {
-            color: $wh40k-accent-gold;
+            color: var(--wh40k-accent-gold);
         }
         .wh40k-dropzone-text {
-            color: $wh40k-accent-gold;
+            color: var(--wh40k-accent-gold);
         }
     }
 }

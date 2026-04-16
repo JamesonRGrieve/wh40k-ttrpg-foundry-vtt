@@ -7,16 +7,16 @@
     .wh40k-combat-preset-dialog {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-lg;
-        padding: $wh40k-space-md;
+        gap: var(--wh40k-space-lg);
+        padding: var(--wh40k-space-md);
 
         // Save Mode
         .wh40k-panel--save-preset {
             .wh40k-panel-header {
                 display: flex;
                 align-items: center;
-                gap: $wh40k-space-sm;
-                padding: $wh40k-space-md $wh40k-space-md $wh40k-space-sm;
+                gap: var(--wh40k-space-sm);
+                padding: var(--wh40k-space-md) var(--wh40k-space-md) var(--wh40k-space-sm);
                 border-bottom: 2px solid var(--color-border-secondary);
 
                 h3 {
@@ -26,22 +26,22 @@
                 }
 
                 i {
-                    color: $wh40k-accent-gold;
+                    color: var(--wh40k-accent-gold);
                 }
             }
 
             .wh40k-panel-body {
-                padding: $wh40k-space-md;
+                padding: var(--wh40k-space-md);
             }
 
             .wh40k-npc-preview {
                 display: flex;
                 align-items: center;
-                gap: $wh40k-space-md;
-                padding: $wh40k-space-md;
+                gap: var(--wh40k-space-md);
+                padding: var(--wh40k-space-md);
                 background: var(--color-bg-secondary);
                 border-radius: 8px;
-                margin-bottom: $wh40k-space-lg;
+                margin-bottom: var(--wh40k-space-lg);
 
                 .wh40k-token-image {
                     width: 60px;
@@ -55,27 +55,27 @@
                     flex: 1;
 
                     h4 {
-                        margin: 0 0 $wh40k-space-sm 0;
+                        margin: 0 0 var(--wh40k-space-sm) 0;
                         font-size: 1.2rem;
                         color: var(--color-text-light-primary);
                     }
 
                     .wh40k-npc-stats {
                         display: flex;
-                        gap: $wh40k-space-sm;
+                        gap: var(--wh40k-space-sm);
                     }
                 }
             }
 
             .wh40k-form-group {
-                margin-bottom: $wh40k-space-md;
+                margin-bottom: var(--wh40k-space-md);
 
                 .wh40k-label {
                     display: block;
                     font-weight: 600;
                     font-size: 0.9rem;
                     color: var(--color-text-light-secondary);
-                    margin-bottom: $wh40k-space-sm;
+                    margin-bottom: var(--wh40k-space-sm);
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
                 }
@@ -83,16 +83,16 @@
                 input,
                 textarea {
                     width: 100%;
-                    padding: $wh40k-space-sm $wh40k-space-md;
+                    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
                     background: var(--color-bg-secondary);
                     border: 2px solid var(--color-border-secondary);
                     border-radius: 4px;
                     color: var(--color-text-light-primary);
                     font-family: inherit;
-                    transition: all $wh40k-transition-base;
+                    transition: all var(--wh40k-transition-base);
 
                     &:focus {
-                        border-color: $wh40k-accent-gold;
+                        border-color: var(--wh40k-accent-gold);
                         outline: none;
                     }
                 }
@@ -105,7 +105,7 @@
             .wh40k-form-actions {
                 display: flex;
                 justify-content: flex-end;
-                padding-top: $wh40k-space-md;
+                padding-top: var(--wh40k-space-md);
                 border-top: 2px solid var(--color-border-secondary);
             }
         }
@@ -115,8 +115,8 @@
             .wh40k-panel-header {
                 display: flex;
                 align-items: center;
-                gap: $wh40k-space-sm;
-                padding: $wh40k-space-md $wh40k-space-md $wh40k-space-sm;
+                gap: var(--wh40k-space-sm);
+                padding: var(--wh40k-space-md) var(--wh40k-space-md) var(--wh40k-space-sm);
                 border-bottom: 2px solid var(--color-border-secondary);
 
                 h3 {
@@ -126,12 +126,12 @@
                 }
 
                 i {
-                    color: $wh40k-accent-gold;
+                    color: var(--wh40k-accent-gold);
                 }
             }
 
             .wh40k-panel-body {
-                padding: $wh40k-space-md;
+                padding: var(--wh40k-space-md);
             }
 
             .wh40k-warning {
@@ -144,30 +144,30 @@
             .wh40k-preset-list {
                 display: flex;
                 flex-direction: column;
-                gap: $wh40k-space-sm;
+                gap: var(--wh40k-space-sm);
                 max-height: 400px;
                 overflow-y: auto;
-                margin-bottom: $wh40k-space-md;
+                margin-bottom: var(--wh40k-space-md);
                 padding: 2px; // Prevent box-shadow clip
             }
 
             .wh40k-preset-item {
-                padding: $wh40k-space-md;
+                padding: var(--wh40k-space-md);
                 background: var(--color-bg-secondary);
                 border: 2px solid var(--color-border-secondary);
                 border-radius: 8px;
                 cursor: pointer;
-                transition: all $wh40k-transition-base;
+                transition: all var(--wh40k-transition-base);
 
                 &:hover {
                     background: var(--color-bg-tertiary);
-                    border-color: $wh40k-accent-gold;
+                    border-color: var(--wh40k-accent-gold);
                     box-shadow: 0 2px 8px $wh40k-shadow-md;
                 }
 
                 &.wh40k-preset-item--selected {
                     background: rgba(139, 0, 0, 0.2);
-                    border-color: $wh40k-accent-gold;
+                    border-color: var(--wh40k-accent-gold);
                     box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.3);
                 }
 
@@ -175,7 +175,7 @@
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    margin-bottom: $wh40k-space-sm;
+                    margin-bottom: var(--wh40k-space-sm);
 
                     .wh40k-preset-name {
                         margin: 0;
@@ -191,7 +191,7 @@
                 }
 
                 .wh40k-preset-description {
-                    margin: 0 0 $wh40k-space-sm 0;
+                    margin: 0 0 var(--wh40k-space-sm) 0;
                     font-size: 0.9rem;
                     color: var(--color-text-light-secondary);
                     font-style: italic;
@@ -199,7 +199,7 @@
 
                 .wh40k-preset-stats {
                     display: flex;
-                    gap: $wh40k-space-sm;
+                    gap: var(--wh40k-space-sm);
                     flex-wrap: wrap;
                 }
             }
@@ -207,7 +207,7 @@
             .wh40k-form-actions {
                 display: flex;
                 justify-content: flex-end;
-                padding-top: $wh40k-space-md;
+                padding-top: var(--wh40k-space-md);
                 border-top: 2px solid var(--color-border-secondary);
             }
         }
@@ -217,8 +217,8 @@
             .wh40k-panel-header {
                 display: flex;
                 align-items: center;
-                gap: $wh40k-space-sm;
-                padding: $wh40k-space-md;
+                gap: var(--wh40k-space-sm);
+                padding: var(--wh40k-space-md);
                 border-bottom: 2px solid var(--color-border-secondary);
 
                 h3 {
@@ -229,30 +229,30 @@
                 }
 
                 i {
-                    color: $wh40k-accent-gold;
+                    color: var(--wh40k-accent-gold);
                 }
             }
 
             .wh40k-panel-body {
-                padding: $wh40k-space-md;
+                padding: var(--wh40k-space-md);
             }
 
             .wh40k-preset-library-list {
                 display: flex;
                 flex-direction: column;
-                gap: $wh40k-space-md;
+                gap: var(--wh40k-space-md);
                 max-height: 500px;
                 overflow-y: auto;
             }
 
             .wh40k-preset-library-item {
                 display: flex;
-                gap: $wh40k-space-md;
-                padding: $wh40k-space-md;
+                gap: var(--wh40k-space-md);
+                padding: var(--wh40k-space-md);
                 background: var(--color-bg-secondary);
                 border: 2px solid var(--color-border-secondary);
                 border-radius: 8px;
-                transition: all $wh40k-transition-base;
+                transition: all var(--wh40k-transition-base);
 
                 &:hover {
                     background: var(--color-bg-tertiary);
@@ -265,7 +265,7 @@
 
                 .wh40k-preset-actions {
                     display: flex;
-                    gap: $wh40k-space-sm;
+                    gap: var(--wh40k-space-sm);
                     align-items: flex-start;
                 }
 
@@ -273,7 +273,7 @@
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    margin-bottom: $wh40k-space-sm;
+                    margin-bottom: var(--wh40k-space-sm);
 
                     .wh40k-preset-name {
                         margin: 0;
@@ -289,7 +289,7 @@
                 }
 
                 .wh40k-preset-description {
-                    margin: 0 0 $wh40k-space-sm 0;
+                    margin: 0 0 var(--wh40k-space-sm) 0;
                     font-size: 0.9rem;
                     color: var(--color-text-light-secondary);
                     font-style: italic;
@@ -297,7 +297,7 @@
 
                 .wh40k-preset-stats {
                     display: flex;
-                    gap: $wh40k-space-sm;
+                    gap: var(--wh40k-space-sm);
                     flex-wrap: wrap;
                 }
             }
@@ -322,14 +322,14 @@
 
         .wh40k-empty-message {
             text-align: center;
-            padding: $wh40k-space-xl;
+            padding: var(--wh40k-space-xl);
             color: var(--color-text-light-secondary);
             font-style: italic;
 
             i {
                 display: block;
                 font-size: 2rem;
-                margin-bottom: $wh40k-space-md;
+                margin-bottom: var(--wh40k-space-md);
                 color: var(--color-border-secondary);
             }
         }
@@ -337,13 +337,13 @@
         .wh40k-btn {
             display: inline-flex;
             align-items: center;
-            gap: $wh40k-space-sm;
-            padding: $wh40k-space-sm $wh40k-space-lg;
+            gap: var(--wh40k-space-sm);
+            padding: var(--wh40k-space-sm) var(--wh40k-space-lg);
             border-radius: 4px;
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all $wh40k-transition-base;
+            transition: all var(--wh40k-transition-base);
             border: 2px solid;
 
             i {
@@ -356,19 +356,19 @@
             }
 
             &.wh40k-btn--primary {
-                background: $wh40k-accent-gold;
-                border-color: $wh40k-accent-gold;
+                background: var(--wh40k-accent-gold);
+                border-color: var(--wh40k-accent-gold);
                 color: #000;
 
                 &:hover:not(:disabled) {
-                    background: $wh40k-color-gold-light;
-                    border-color: $wh40k-color-gold-light;
+                    background: var(--wh40k-color-gold-light);
+                    border-color: var(--wh40k-color-gold-light);
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
                 }
             }
 
             &.wh40k-btn--icon {
-                padding: $wh40k-space-sm;
+                padding: var(--wh40k-space-sm);
                 background: transparent;
                 border-color: var(--color-border-secondary);
                 color: var(--color-text-light-primary);
@@ -379,7 +379,7 @@
 
                 &:hover:not(:disabled) {
                     background: var(--color-bg-tertiary);
-                    border-color: $wh40k-accent-gold;
+                    border-color: var(--wh40k-accent-gold);
                 }
 
                 &.wh40k-btn--danger {

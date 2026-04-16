@@ -11,7 +11,7 @@
     font-size: 0.9em;
     font-weight: 500;
     cursor: pointer;
-    transition: all $wh40k-transition-fast;
+    transition: all var(--wh40k-transition-fast);
     white-space: nowrap;
 
     i {
@@ -29,16 +29,16 @@
 .wh40k-enricher-characteristic {
     background: rgba($wh40k-accent-gold, 0.15);
     border: 1px solid rgba($wh40k-accent-gold, 0.3);
-    color: $wh40k-accent-gold;
+    color: var(--wh40k-accent-gold);
 
     &:hover {
         background: rgba($wh40k-accent-gold, 0.25);
-        border-color: $wh40k-accent-gold;
+        border-color: var(--wh40k-accent-gold);
         color: lighten($wh40k-accent-gold, 10%);
     }
 
     i {
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
     }
 }
 
@@ -46,16 +46,16 @@
 .wh40k-enricher-skill {
     background: rgba($wh40k-accent-skills, 0.15);
     border: 1px solid rgba($wh40k-accent-skills, 0.3);
-    color: $wh40k-accent-skills;
+    color: var(--wh40k-accent-skills);
 
     &:hover {
         background: rgba($wh40k-accent-skills, 0.25);
-        border-color: $wh40k-accent-skills;
+        border-color: var(--wh40k-accent-skills);
         color: lighten($wh40k-accent-skills, 10%);
     }
 
     i {
-        color: $wh40k-accent-skills;
+        color: var(--wh40k-accent-skills);
     }
 }
 
@@ -66,10 +66,10 @@
     &.positive {
         background: rgba($wh40k-color-success, 0.15);
         border: 1px solid rgba($wh40k-color-success, 0.3);
-        color: $wh40k-color-success;
+        color: var(--wh40k-color-success);
 
         i {
-            color: $wh40k-color-success;
+            color: var(--wh40k-color-success);
         }
 
         &:hover {
@@ -82,10 +82,10 @@
     &.negative {
         background: rgba($wh40k-accent-combat, 0.15);
         border: 1px solid rgba($wh40k-accent-combat, 0.3);
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
 
         i {
-            color: $wh40k-accent-combat;
+            color: var(--wh40k-accent-combat);
         }
 
         &:hover {
@@ -104,7 +104,7 @@
     cursor: default;
 
     i {
-        color: $wh40k-accent-combat;
+        color: var(--wh40k-accent-combat);
     }
 
     &:hover {
@@ -168,8 +168,8 @@
 // Error enricher
 .wh40k-enricher-error {
     background: rgba($wh40k-accent-combat, 0.2);
-    border: 1px dashed $wh40k-accent-combat;
-    color: $wh40k-accent-combat;
+    border: 1px dashed var(--wh40k-accent-combat);
+    color: var(--wh40k-accent-combat);
     cursor: help;
     font-family: monospace;
     font-size: 0.85em;
@@ -200,7 +200,7 @@
         border-radius: 3px;
         opacity: 0;
         pointer-events: none;
-        transition: opacity $wh40k-transition-base;
+        transition: opacity var(--wh40k-transition-base);
         z-index: 1000;
     }
 

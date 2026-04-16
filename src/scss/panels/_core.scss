@@ -7,7 +7,7 @@
     border: 1px solid var(--wh40k-border-color-light);
     border-radius: 8px;
     overflow: hidden;
-    margin-bottom: $wh40k-space-md;
+    margin-bottom: var(--wh40k-space-md);
     box-shadow: 0 2px 8px var(--wh40k-shadow-soft);
     position: relative;
 
@@ -29,10 +29,10 @@
 
     // Accent color modifiers (use CSS custom properties for icon/accent colors)
     &--wounds {
-        --panel-accent: #{$wh40k-accent-combat};
+        --panel-accent: var(--wh40k-accent-combat);
     }
     &--fatigue {
-        --panel-accent: #{$wh40k-color-gold};
+        --panel-accent: var(--wh40k-color-gold);
     }
     &--fate {
         --panel-accent: var(--wh40k-fate-secondary);
@@ -44,33 +44,33 @@
         --panel-accent: #7b5aa6;
     }
     &--skills {
-        --panel-accent: #{$wh40k-accent-skills};
+        --panel-accent: var(--wh40k-accent-skills);
     }
     &--talents {
-        --panel-accent: #{$wh40k-accent-talents};
+        --panel-accent: var(--wh40k-accent-talents);
     }
     &--equipment {
-        --panel-accent: #{$wh40k-accent-equipment};
+        --panel-accent: var(--wh40k-accent-equipment);
     }
     &--powers {
-        --panel-accent: #{$wh40k-accent-powers};
+        --panel-accent: var(--wh40k-accent-powers);
     }
     &--dynasty {
-        --panel-accent: #{$wh40k-accent-dynasty};
+        --panel-accent: var(--wh40k-accent-dynasty);
     }
     &--bio {
-        --panel-accent: #{$wh40k-accent-bio};
+        --panel-accent: var(--wh40k-accent-bio);
     }
     &--combat {
-        --panel-accent: #{$wh40k-accent-combat};
+        --panel-accent: var(--wh40k-accent-combat);
     }
     &--xp {
-        --panel-accent: #{$wh40k-color-gold};
+        --panel-accent: var(--wh40k-color-gold);
     }
 
     // Apply accent color to header icon when modifier is present
     &[class*='--'] .wh40k-panel-header .wh40k-panel-title i {
-        color: var(--panel-accent, $wh40k-accent-gold);
+        color: var(--panel-accent, var(--wh40k-accent-gold));
     }
 }
 
@@ -78,8 +78,8 @@
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: $wh40k-space-sm;
-    padding: $wh40k-space-sm $wh40k-space-md;
+    gap: var(--wh40k-space-sm);
+    padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: linear-gradient(180deg, rgba($wh40k-accent-gold, 0.15) 0%, rgba($wh40k-accent-gold, 0.05) 100%);
     border-bottom: 1px solid var(--wh40k-border-color-light);
     transition: box-shadow 0.2s ease, background 0.2s ease;
@@ -99,12 +99,12 @@
         text-overflow: ellipsis;
         display: flex !important;
         align-items: center !important;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
         min-width: 0;
 
         i {
             margin-right: 0;
-            color: var(--panel-accent, $wh40k-accent-gold);
+            color: var(--panel-accent, var(--wh40k-accent-gold));
             flex-shrink: 0;
         }
     }
@@ -144,7 +144,7 @@
     flex-shrink: 0;
 
     .wh40k-panel-header--clickable:hover & {
-        color: $wh40k-accent-gold;
+        color: var(--wh40k-accent-gold);
     }
 }
 
@@ -153,14 +153,14 @@
 }
 
 .wh40k-panel-body {
-    padding: $wh40k-space-md;
+    padding: var(--wh40k-space-md);
     background: var(--wh40k-panel-body-bg);
 }
 
 // Expandable details section within panel body
 .wh40k-panel-details {
-    margin-top: $wh40k-space-md;
-    padding-top: $wh40k-space-md;
+    margin-top: var(--wh40k-space-md);
+    padding-top: var(--wh40k-space-md);
     border-top: 1px solid rgba($wh40k-border-light, 0.5);
 
     // Collapsed state - hide the details

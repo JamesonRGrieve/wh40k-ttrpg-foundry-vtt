@@ -13,15 +13,15 @@
     .wh40k-fatigue-display {
         display: flex;
         flex-direction: column;
-        gap: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
     }
 
     .wh40k-fatigue-tracker {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: $wh40k-space-md;
-        padding: $wh40k-space-sm 0;
+        gap: var(--wh40k-space-md);
+        padding: var(--wh40k-space-sm) 0;
     }
 
     // +/- Control Buttons
@@ -38,7 +38,7 @@
         font-size: 1.1rem;
         font-weight: 700;
         cursor: pointer;
-        transition: all $wh40k-transition-fast;
+        transition: all var(--wh40k-transition-fast);
         color: var(--wh40k-text-medium);
 
         &:hover {
@@ -79,7 +79,7 @@
         display: flex;
         align-items: baseline;
         gap: 6px;
-        font-family: $wh40k-font-alt;
+        font-family: var(--wh40k-font-alt);
     }
 
     .wh40k-fatigue-current {
@@ -87,7 +87,7 @@
         font-weight: 700;
         color: var(--wh40k-text-dark);
         line-height: 1;
-        transition: all $wh40k-transition-medium;
+        transition: all var(--wh40k-transition-medium);
     }
 
     .wh40k-fatigue-sep {
@@ -110,8 +110,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: $wh40k-space-xs;
-        padding: $wh40k-space-xs $wh40k-space-sm;
+        gap: var(--wh40k-space-xs);
+        padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
         background: var(--wh40k-success-bg);
         border: 1px solid rgba(74, 143, 92, 0.3);
         border-radius: 6px;
@@ -167,7 +167,7 @@
     .wh40k-fatigue-alert {
         @include wh40k-alert;
 
-        padding: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm);
         font-size: 0.8rem;
 
         i {
@@ -221,8 +221,8 @@
 
     .wh40k-fatigue-actions {
         display: flex;
-        gap: $wh40k-space-sm;
-        margin-top: $wh40k-space-xs;
+        gap: var(--wh40k-space-sm);
+        margin-top: var(--wh40k-space-xs);
     }
 
     .wh40k-fatigue-action-btn {
@@ -231,14 +231,14 @@
         align-items: center;
         justify-content: center;
         gap: 6px;
-        padding: $wh40k-space-sm $wh40k-space-md;
+        padding: var(--wh40k-space-sm) var(--wh40k-space-md);
         background: var(--wh40k-panel-bg-solid);
         border: 2px solid var(--wh40k-border-color-light);
         border-radius: 8px;
         font-size: 0.8rem;
         font-weight: 700;
         cursor: pointer;
-        transition: all $wh40k-transition-fast;
+        transition: all var(--wh40k-transition-fast);
         color: var(--wh40k-text-medium);
 
         i {
@@ -305,20 +305,20 @@
     .wh40k-mode-toggle {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: $wh40k-space-sm;
-        margin-bottom: $wh40k-space-sm;
+        gap: var(--wh40k-space-sm);
+        margin-bottom: var(--wh40k-space-sm);
     }
 
     .wh40k-mode-option {
         position: relative;
         display: flex;
         align-items: center;
-        padding: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm);
         background: var(--wh40k-panel-bg);
         border: 2px solid var(--wh40k-border-color-light);
         border-radius: 8px;
         cursor: pointer;
-        transition: all $wh40k-transition-base;
+        transition: all var(--wh40k-transition-base);
 
         &:hover {
             background: var(--wh40k-panel-bg-solid);
@@ -366,8 +366,8 @@
     .wh40k-fatigue-formula {
         display: flex;
         align-items: flex-start;
-        gap: $wh40k-space-xs;
-        padding: $wh40k-space-sm;
+        gap: var(--wh40k-space-xs);
+        padding: var(--wh40k-space-sm);
         background: var(--wh40k-success-bg);
         border-left: 3px solid rgba(74, 143, 92, 0.4);
         border-radius: 4px;

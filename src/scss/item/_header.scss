@@ -5,8 +5,8 @@
 .wh40k-item-header {
     display: grid;
     grid-template-columns: 80px 1fr;
-    gap: $wh40k-space-md;
-    padding: $wh40k-space-md $wh40k-space-lg;
+    gap: var(--wh40k-space-md);
+    padding: var(--wh40k-space-md) var(--wh40k-space-lg);
     background: linear-gradient(180deg, rgba(212, 175, 55, 0.15) 0%, transparent 100%);
     border-bottom: 2px solid var(--wh40k-gold-dark);
     flex-shrink: 0;
@@ -14,8 +14,8 @@
     // Compact variant for smaller sheets
     &--compact {
         grid-template-columns: 50px 1fr;
-        padding: $wh40k-space-sm $wh40k-space-md;
-        gap: $wh40k-space-sm;
+        padding: var(--wh40k-space-sm) var(--wh40k-space-md);
+        gap: var(--wh40k-space-sm);
     }
 }
 
@@ -24,11 +24,11 @@
     width: 80px;
     height: 80px;
     border: 2px solid var(--wh40k-gold);
-    border-radius: $wh40k-radius-md;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
     box-shadow: $wh40k-shadow-md, 0 0 10px rgba(212, 175, 55, 0.3);
     cursor: pointer;
-    transition: transform $wh40k-transition-base, box-shadow $wh40k-transition-base;
+    transition: transform var(--wh40k-transition-base), box-shadow var(--wh40k-transition-base);
     flex-shrink: 0;
 
     img {
@@ -54,24 +54,24 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
     min-width: 0;
 
     &__name {
-        font-family: $wh40k-font-display;
-        font-size: $wh40k-font-size-xl;
+        font-family: var(--wh40k-font-display);
+        font-size: var(--wh40k-font-size-xl);
         color: var(--wh40k-gold);
         text-shadow: 0 1px 2px var(--wh40k-text-shadow);
         border: none;
         background: transparent;
-        padding: $wh40k-space-xs $wh40k-space-sm;
+        padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
         margin: 0;
         width: 100%;
 
         &:focus {
             outline: none;
             background: var(--wh40k-input-bg-focus);
-            border-radius: $wh40k-radius-sm;
+            border-radius: var(--wh40k-radius-sm);
         }
 
         &::placeholder {
@@ -82,8 +82,8 @@
     &__type {
         display: flex;
         align-items: center;
-        gap: $wh40k-space-sm;
-        font-size: $wh40k-font-size-sm;
+        gap: var(--wh40k-space-sm);
+        font-size: var(--wh40k-font-size-sm);
         color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.1em;
@@ -94,7 +94,7 @@
     }
 
     &__source {
-        font-size: $wh40k-font-size-xs;
+        font-size: var(--wh40k-font-size-xs);
         color: var(--wh40k-text-subtle);
         font-style: italic;
     }
@@ -104,8 +104,8 @@
 .wh40k-item-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: $wh40k-space-xs;
-    margin-top: $wh40k-space-xs;
+    gap: var(--wh40k-space-xs);
+    margin-top: var(--wh40k-space-xs);
     align-items: center;
 }
 
@@ -113,11 +113,11 @@
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    padding: 2px $wh40k-space-sm;
+    padding: 2px var(--wh40k-space-sm);
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: $wh40k-radius-sm;
-    font-size: $wh40k-font-size-xs;
+    border-radius: var(--wh40k-radius-sm);
+    font-size: var(--wh40k-font-size-xs);
     color: var(--wh40k-text-muted);
 
     i {
@@ -128,7 +128,7 @@
     &--craft {
         background: rgba(181, 166, 66, 0.15);
         border-color: rgba(181, 166, 66, 0.4);
-        color: $wh40k-color-brass;
+        color: var(--wh40k-color-brass);
     }
 
     &--availability {
