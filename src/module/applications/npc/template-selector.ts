@@ -189,24 +189,24 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /** @override */
     _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
-        super._onRender(context, options);
+        void super._onRender(context, options);
 
         // Filter inputs
-        const categorySelect = this.element.querySelector('[name="filterCategory"]') as HTMLSelectElement;
-        const factionSelect = this.element.querySelector('[name="filterFaction"]') as HTMLSelectElement;
-        const searchInput = this.element.querySelector('[name="filterSearch"]') as HTMLInputElement;
+        const categorySelect = this.element.querySelector('[name="filterCategory"]');
+        const factionSelect = this.element.querySelector('[name="filterFaction"]');
+        const searchInput = this.element.querySelector('[name="filterSearch"]');
 
         if (categorySelect) {
             categorySelect.addEventListener('change', () => {
                 this.#filters.category = categorySelect.value;
-                this.render({ parts: ['content'] });
+                void this.render({ parts: ['content'] });
             });
         }
 
         if (factionSelect) {
             factionSelect.addEventListener('change', () => {
                 this.#filters.faction = factionSelect.value;
-                this.render({ parts: ['content'] });
+                void this.render({ parts: ['content'] });
             });
         }
 
@@ -218,7 +218,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         }
 
         // Threat level slider
-        const threatSlider = this.element.querySelector('[name="threatLevel"]') as HTMLInputElement;
+        const threatSlider = this.element.querySelector('[name="threatLevel"]');
         const threatValue = this.element.querySelector('.threat-value');
         if (threatSlider) {
             threatSlider.addEventListener('input', () => {
@@ -229,7 +229,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         }
 
         // Horde checkbox
-        const hordeCheckbox = this.element.querySelector('[name="isHorde"]') as HTMLInputElement;
+        const hordeCheckbox = this.element.querySelector('[name="isHorde"]');
         if (hordeCheckbox) {
             hordeCheckbox.addEventListener('change', () => {
                 this.#isHorde = hordeCheckbox.checked;
@@ -244,7 +244,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     _debounceRender(): void {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
         this._renderTimeout = setTimeout(() => {
-            this.render({ parts: ['content'] });
+            void this.render({ parts: ['content'] });
         }, 150);
     }
 
@@ -322,7 +322,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #selectTemplate(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #selectTemplate(this: any, event: Event, target: HTMLElement): void {
         const uuid = target.dataset.uuid;
         if (!uuid) return;
 
@@ -335,7 +335,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #clearFilter(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #clearFilter(this: any, event: Event, target: HTMLElement): void {
         this.#filters = { category: '', faction: '', search: '' };
         this.render({ parts: ['content'] });
     }
@@ -456,7 +456,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     async wait(): Promise<any> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
-            this.render(true);
+            void this.render(true);
         });
     }
 

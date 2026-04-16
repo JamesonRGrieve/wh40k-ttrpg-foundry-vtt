@@ -9,7 +9,7 @@ export class WH40KItemContainer extends Item {
 
     get actor(): Actor | null {
         if (this.parent instanceof Item) return null;
-        return this.parent as Actor;
+        return this.parent;
     }
 
     async update(data: Record<string, unknown> = {}, options: Record<string, unknown> = {}): Promise<any> {
@@ -32,15 +32,15 @@ export class WH40KItemContainer extends Item {
         if (!this.flags[SYSTEM_ID][DH_CONTAINER_ID]) this.flags[SYSTEM_ID][DH_CONTAINER_ID] = [];
         // Set the value at the deepest level of the object
         // Make array if not
-        if (!Array.isArray(data)) data = [data];
-        this.flags[SYSTEM_ID][DH_CONTAINER_ID] = data;
+        const dataArray = Array.isArray(data) ? data : [data];
+        this.flags[SYSTEM_ID][DH_CONTAINER_ID] = dataArray;
     }
 
     async setNested(data: Record<string, unknown> | Record<string, unknown>[]): Promise<any> {
         // Make array if not
-        if (!Array.isArray(data)) data = [data];
+        const dataArray = Array.isArray(data) ? data : [data];
         // @ts-expect-error - argument type
-        return await this.setFlag(SYSTEM_ID, DH_CONTAINER_ID, data);
+        return await this.setFlag(SYSTEM_ID, DH_CONTAINER_ID, dataArray);
     }
 
     getNested(): any[] {
@@ -54,13 +54,13 @@ export class WH40KItemContainer extends Item {
 
     async convertNestedToItems(): Promise<void> {
         // Convert Nested to Items
-        game.wh40k.log(`Convert ${this.name} Nested`, this.hasNested());
+        game.wh40k.log(`Convert ${this.name as string} Nested`, this.hasNested());
         this.items = new foundry.utils.Collection();
         for (const nestedData of this.getNested()) {
             const item = new (CONFIG as any).Item.documentClass(nestedData, { parent: this });
             await this.items.set(nestedData._id, item);
         }
-        game.wh40k.log(`Item ${this.name} items:`, this.items);
+        game.wh40k.log(`Item ${this.name as string} items:`, this.items);
     }
 
     static async _onCreateOperation(items: any[], context: any, user: any): Promise<any> {
@@ -106,12 +106,12 @@ export class WH40KItemContainer extends Item {
     }
 
     async createNestedDocuments(data: Record<string, unknown> | Record<string, unknown>[]): Promise<void> {
-        if (!Array.isArray(data)) data = [data];
-        game.wh40k.log(`ItemContainer: ${this.name} createNestedDocuments`, data);
+        const dataArray = Array.isArray(data) ? data : [data];
+        game.wh40k.log(`ItemContainer: ${this.name as string} createNestedDocuments`, dataArray);
         const currentItems = this.getNested();
 
-        if (data.length > 0) {
-            for (const itemData of data) {
+        if (dataArray.length > 0) {
+            for (const itemData of dataArray) {
                 let clone = JSON.parse(JSON.stringify(itemData));
                 clone._id = foundry.utils.randomID();
                 clone = new (CONFIG as any).Item.documentClass(clone, { parent: this }).toJSON();
@@ -123,7 +123,7 @@ export class WH40KItemContainer extends Item {
     }
 
     async deleteNestedDocuments(ids: string[] = []): Promise<any[]> {
-        game.wh40k.log(`ItemContainer: ${this.name} deleteNestedDocuments`, ids);
+        game.wh40k.log(`ItemContainer: ${this.name as string} deleteNestedDocuments`, ids);
         const containedItems = this.getNested();
         const newContained = containedItems.filter((itemData) => !ids.includes(itemData._id));
         const deletedItems = this.items.filter((item) => ids.includes(item.id));
@@ -133,11 +133,11 @@ export class WH40KItemContainer extends Item {
 
     async updateNestedDocuments(data: Record<string, unknown> | Record<string, unknown>[]): Promise<any[]> {
         const contained = this.getNested();
-        if (!Array.isArray(data)) data = [data];
-        game.wh40k.log(`ItemContainer: ${this.name} updateNestedDocuments`, data);
+        const dataArray = Array.isArray(data) ? data : [data];
+        game.wh40k.log(`ItemContainer: ${this.name as string} updateNestedDocuments`, dataArray);
         const updated = [];
         const newContained = contained.map((existing) => {
-            const theUpdate = data.find((update) => update._id === existing._id);
+            const theUpdate = dataArray.find((update) => update._id === existing._id);
             if (theUpdate) {
                 game.wh40k.log('Found Update object', theUpdate);
                 const newData = foundry.utils.mergeObject(theUpdate, existing, {
@@ -162,7 +162,7 @@ export class WH40KItemContainer extends Item {
     prepareEmbeddedDocuments(): void {
         super.prepareEmbeddedDocuments();
         if (!(this instanceof Item && this.system.container)) return;
-        game.wh40k.log(`ItemContainer: ${this.name}`, 'prepareEmbeddedDocuments');
+        game.wh40k.log(`ItemContainer: ${this.name as string}`, 'prepareEmbeddedDocuments');
         const containedItems = this.getNested();
         const oldItems = this.items;
         this.items = new foundry.utils.Collection();

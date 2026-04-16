@@ -1,7 +1,7 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
+import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
-import IdentifierField from '../fields/identifier-field.ts';
 
 /**
  * Data model for Talent items.
@@ -264,7 +264,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
         // Characteristics
         for (const [char, value] of Object.entries(this.prerequisites.characteristics)) {
-            parts.push(`${char} ${value}+`);
+            parts.push(`${char} ${value as number}+`);
         }
 
         // Skills

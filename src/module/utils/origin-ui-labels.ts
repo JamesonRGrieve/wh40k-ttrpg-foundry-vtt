@@ -13,16 +13,16 @@ import type { BaseSystemConfig } from '../config/game-systems/base-system-config
 /* -------------------------------------------- */
 
 const CHARACTERISTIC_INFO: Record<string, { label: string; short: string }> = {
-    weaponSkill:    { label: 'Weapon Skill',    short: 'WS'  },
-    ballisticSkill: { label: 'Ballistic Skill', short: 'BS'  },
-    strength:       { label: 'Strength',        short: 'S'   },
-    toughness:      { label: 'Toughness',       short: 'T'   },
-    agility:        { label: 'Agility',         short: 'Ag'  },
-    intelligence:   { label: 'Intelligence',    short: 'Int' },
-    perception:     { label: 'Perception',      short: 'Per' },
-    willpower:      { label: 'Willpower',       short: 'WP'  },
-    fellowship:     { label: 'Fellowship',      short: 'Fel' },
-    influence:      { label: 'Influence',       short: 'Inf' },
+    weaponSkill: { label: 'Weapon Skill', short: 'WS' },
+    ballisticSkill: { label: 'Ballistic Skill', short: 'BS' },
+    strength: { label: 'Strength', short: 'S' },
+    toughness: { label: 'Toughness', short: 'T' },
+    agility: { label: 'Agility', short: 'Ag' },
+    intelligence: { label: 'Intelligence', short: 'Int' },
+    perception: { label: 'Perception', short: 'Per' },
+    willpower: { label: 'Willpower', short: 'WP' },
+    fellowship: { label: 'Fellowship', short: 'Fel' },
+    influence: { label: 'Influence', short: 'Inf' },
 };
 
 /**
@@ -55,7 +55,7 @@ export function getAllCharacteristicDisplayInfo(): Record<string, { label: strin
 export function getTrainingLabel(level: string, systemConfig?: BaseSystemConfig): string {
     if (systemConfig) {
         const ranks = systemConfig.getSkillRanks();
-        const rank = ranks.find(r => r.key === level);
+        const rank = ranks.find((r) => r.key === level);
         if (rank) return rank.tooltip;
     }
 

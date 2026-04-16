@@ -283,7 +283,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
      * @returns {Promise<object>}
      * @private
      */
-    async _createItemData(sourceItem, uuid, overrides = {}) {
+    _createItemData(sourceItem, uuid, overrides = {}) {
         const itemData = sourceItem.toObject();
 
         // Apply overrides

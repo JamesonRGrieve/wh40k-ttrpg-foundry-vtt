@@ -2,8 +2,8 @@
  * @file SimpleRollDialog - V2 dialog for simple skill/characteristic rolls
  */
 
-import BaseRollDialog from './base-roll-dialog.ts';
 import { sendActionDataToChat } from '../../rolls/roll-helpers.ts';
+import BaseRollDialog from './base-roll-dialog.ts';
 
 /**
  * Dialog for configuring simple skill or characteristic rolls.
@@ -71,7 +71,7 @@ export default class SimpleRollDialog extends BaseRollDialog {
  * Open a simple roll dialog.
  * @param {object} simpleSkillData  The skill data.
  */
-export async function prepareSimpleRoll(simpleSkillData) {
+export function prepareSimpleRoll(simpleSkillData) {
     const prompt = new SimpleRollDialog(simpleSkillData);
     prompt.render(true);
 }

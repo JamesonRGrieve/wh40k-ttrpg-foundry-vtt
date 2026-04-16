@@ -3,11 +3,11 @@
  * Based on dnd5e's ItemSheet5e pattern for Foundry V13+
  */
 
-import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
-import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.ts';
-import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
 import WH40K from '../../config.ts';
+import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.ts';
+import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
+import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -352,7 +352,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
             if (!isNaN(absolute)) input.value = String(absolute);
         } else if (['+', '-'].includes(firstChar)) {
             // Add or subtract delta
-            const current = foundry.utils.getProperty(this.item, input.name) as number ?? 0;
+            const current = (foundry.utils.getProperty(this.item, input.name) as number) ?? 0;
             const delta = parseFloat(value);
             if (!isNaN(delta)) input.value = String(current + delta);
         }
@@ -389,7 +389,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {PointerEvent} event  The triggering event.
      * @param {HTMLElement} target  The action target.
      */
-    static async #toggleEditMode(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #toggleEditMode(this: any, event: Event, target: HTMLElement): void {
         if (!this.canEdit) return;
         this.#editMode = !this.#editMode;
         this.render();
@@ -431,7 +431,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {HTMLElement} target  Button that was clicked.
      */
     static #effectEdit(this: any, event: Event, target: HTMLElement): void {
-        const effectId = (target.closest('[data-effect-id]') as HTMLElement)?.dataset.effectId;
+        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         effect?.sheet.render(true);
     }
@@ -445,7 +445,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectDelete(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const effectId = (target.closest('[data-effect-id]') as HTMLElement)?.dataset.effectId;
+        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         await effect?.delete();
     }
@@ -459,7 +459,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #effectToggle(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const effectId = (target.closest('[data-effect-id]') as HTMLElement)?.dataset.effectId;
+        const effectId = target.closest('[data-effect-id]')?.dataset.effectId;
         const effect = this.item.effects.get(effectId);
         await effect?.update({ disabled: !effect.disabled });
     }
@@ -472,7 +472,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleSection(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #toggleSection(this: any, event: Event, target: HTMLElement): void {
         const sectionName = target.dataset.toggle;
         if (!sectionName) return;
 

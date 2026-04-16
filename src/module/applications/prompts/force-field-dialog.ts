@@ -114,7 +114,7 @@ export default class ForceFieldDialog extends BaseRollDialog {
  * Open a force field dialog.
  * @param {object} forceFieldData  The force field data.
  */
-export async function prepareForceFieldRoll(forceFieldData) {
+export function prepareForceFieldRoll(forceFieldData) {
     const prompt = new ForceFieldDialog(forceFieldData);
     prompt.render(true);
 }

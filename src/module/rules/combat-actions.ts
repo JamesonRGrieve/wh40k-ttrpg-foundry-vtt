@@ -1,4 +1,3 @@
-import { WeaponRollData } from '../rolls/roll-data.ts';
 import { hitLocationNames } from './hit-locations.ts';
 
 /**

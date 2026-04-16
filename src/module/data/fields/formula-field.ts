@@ -30,7 +30,7 @@ export default class FormulaField extends (foundry.data as any).fields.StringFie
             if (this.deterministic && !roll.isDeterministic) {
                 throw new Error(`Formula "${value}" must be deterministic`);
             }
-        } catch (err) {
+        } catch {
             throw new Error(`Invalid formula: ${value}`);
         }
     }

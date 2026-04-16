@@ -316,7 +316,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
         }
 
         // Copy trained skills
-        for (const [key, skill] of Object.entries(this.trainedSkills) as [string, any][]) {
+        for (const key of Object.keys(this.trainedSkills)) {
             stats.skills[key] = this.getSkillTarget(key);
         }
 
@@ -495,7 +495,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {number} bonus - Additional bonus
      * @returns {Promise<Actor>}
      */
-    async addTrainedSkill(name, characteristic = null, level = 'trained', bonus = 0) {
+    addTrainedSkill(name, characteristic = null, level = 'trained', bonus = 0) {
         const skills = foundry.utils.deepClone(this.trainedSkills);
 
         const charKey = characteristic || NPCDataV2.SKILL_CHARACTERISTIC_MAP[name] || 'perception';
@@ -517,7 +517,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} name - The skill key
      * @returns {Promise<Actor>}
      */
-    async removeSkill(name) {
+    removeSkill(name) {
         const skills = foundry.utils.deepClone(this.trainedSkills);
         delete skills[name];
         return this.parent.update({ 'system.trainedSkills': skills });
@@ -529,7 +529,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {Object} updates - Properties to update
      * @returns {Promise<Actor>}
      */
-    async updateSkill(name, updates) {
+    updateSkill(name, updates) {
         const skills = foundry.utils.deepClone(this.trainedSkills);
         if (!skills[name]) return this.parent;
 
@@ -546,7 +546,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} mode - The mode to switch to: "simple" or "embedded"
      * @returns {Promise<Actor>}
      */
-    async switchWeaponMode(mode) {
+    switchWeaponMode(mode) {
         if (!['simple', 'embedded'].includes(mode)) return this.parent;
         return this.parent.update({ 'system.weapons.mode': mode });
     }
@@ -556,7 +556,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {Object} data - Weapon data
      * @returns {Promise<Actor>}
      */
-    async addSimpleWeapon(data: Record<string, any> = {}) {
+    addSimpleWeapon(data: Record<string, any> = {}) {
         const weapons = foundry.utils.deepClone(this.weapons.simple || []);
         weapons.push({
             name: data.name || 'New Weapon',
@@ -577,7 +577,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {number} index - The weapon index
      * @returns {Promise<Actor>}
      */
-    async removeSimpleWeapon(index) {
+    removeSimpleWeapon(index) {
         const weapons = foundry.utils.deepClone(this.weapons.simple || []);
         if (index < 0 || index >= weapons.length) return this.parent;
         weapons.splice(index, 1);
@@ -629,7 +629,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} mode - The mode to switch to: "simple" or "locations"
      * @returns {Promise<Actor>}
      */
-    async switchArmourMode(mode) {
+    switchArmourMode(mode) {
         if (!['simple', 'locations'].includes(mode)) return this.parent;
         return this.parent.update({ 'system.armour.mode': mode });
     }
@@ -655,7 +655,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} skillKey - The skill key to toggle
      * @returns {Promise<Actor>}
      */
-    async toggleFavoriteSkill(skillKey) {
+    toggleFavoriteSkill(skillKey) {
         const favorites = [...(this.parent.getFlag('wh40k-rpg', 'favoriteSkills') || [])];
         const index = favorites.indexOf(skillKey);
         if (index >= 0) favorites.splice(index, 1);
@@ -668,7 +668,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} itemId - The talent item ID to toggle
      * @returns {Promise<Actor>}
      */
-    async toggleFavoriteTalent(itemId) {
+    toggleFavoriteTalent(itemId) {
         const favorites = [...(this.parent.getFlag('wh40k-rpg', 'favoriteTalents') || [])];
         const index = favorites.indexOf(itemId);
         if (index >= 0) favorites.splice(index, 1);
@@ -701,7 +701,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} itemId - The item ID to pin
      * @returns {Promise<Actor>}
      */
-    async pinAbility(itemId) {
+    pinAbility(itemId) {
         const pinned = foundry.utils.deepClone(this.pinnedAbilities || []);
         if (!pinned.includes(itemId)) {
             pinned.push(itemId);
@@ -715,7 +715,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} itemId - The item ID to unpin
      * @returns {Promise<Actor>}
      */
-    async unpinAbility(itemId) {
+    unpinAbility(itemId) {
         const pinned = foundry.utils.deepClone(this.pinnedAbilities || []);
         const idx = pinned.indexOf(itemId);
         if (idx >= 0) {
@@ -730,7 +730,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {string} itemId - The item ID to toggle
      * @returns {Promise<Actor>}
      */
-    async togglePinAbility(itemId) {
+    togglePinAbility(itemId) {
         const pinned = this.pinnedAbilities || [];
         if (pinned.includes(itemId)) {
             return this.unpinAbility(itemId);
@@ -765,7 +765,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @protected
      */
     _prepareCharacteristics() {
-        for (const [key, char] of Object.entries(this.characteristics) as [string, any][]) {
+        for (const [, char] of Object.entries(this.characteristics) as [string, any][]) {
             // Total = base + modifier
             char.total = char.base + char.modifier;
 

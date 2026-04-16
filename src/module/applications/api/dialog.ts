@@ -120,7 +120,12 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
      * @param {Function} options.callback   Callback when submitted.
      * @returns {Promise<any>}
      */
-    static async prompt({ title, content, label = 'OK', callback }: { title?: string; content?: string; label?: string; callback?: Function } = {}): Promise<any> {
+    static async prompt({
+        title,
+        content,
+        label = 'OK',
+        callback,
+    }: { title?: string; content?: string; label?: string; callback?: Function } = {}): Promise<any> {
         // @ts-expect-error - DialogV2 argument type
         return foundry.applications.api.DialogV2.prompt({
             window: { title },

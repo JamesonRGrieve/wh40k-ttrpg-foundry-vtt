@@ -112,24 +112,23 @@
             {{!-- Characteristic Setup (embedded) --}}
             <div class="csd-embedded">
                 <div class="csd-workspace">
-                    <section class="csd-section csd-rolls-bank" data-drop-zone="bank">
+                        <section class="csd-section csd-rolls-bank" data-drop-zone="bank">
                         <div class="csd-section-header-row">
                             <h3 class="csd-section-header">
                                 <i class="fa-solid fa-dice-d20"></i>
                                 {{localize "WH40K.CharacteristicSetup.RollsBank"}}
                             </h3>
-                            <button type="button" class="csd-btn csd-btn-primary csd-bank-roll-btn" data-action="rollCharacteristicsBank">
+                            <button type="button" class="csd-icon-btn csd-bank-roll-btn" data-action="rollCharacteristicsBank" data-tooltip="{{localize 'WH40K.CharacteristicSetup.RollBank'}}">
                                 <i class="fa-solid fa-dice"></i>
-                                {{localize "WH40K.CharacteristicSetup.RollBank"}}
                             </button>
                         </div>
-                        <div class="csd-rolls-container csd-rolls-container--vertical">
+                        <div class="csd-rolls-container csd-rolls-container--bank">
                             {{#each charGen.rollsBank}}
                             <div class="csd-roll-chip {{#if isEmpty}}empty{{/if}} {{#if isAssigned}}assigned{{/if}}"
                                  data-roll-index="{{index}}"
                                  {{#unless isEmpty}}{{#unless isAssigned}}draggable="true"{{/unless}}{{/unless}}>
                                 <span class="csd-roll-value">{{#if isEmpty}}—{{else}}{{value}}{{/if}}</span>
-                                <span class="csd-roll-label">{{localize "WH40K.CharacteristicSetup.Roll"}} {{displayIndex}}</span>
+                                <span class="csd-roll-label">{{displayIndex}}</span>
                             </div>
                             {{/each}}
                         </div>
@@ -138,10 +137,20 @@
 
                     <div class="csd-main-column">
                         <section class="csd-section csd-characteristics">
-                            <h3 class="csd-section-header">
-                                <i class="fa-solid fa-user-gear"></i>
-                                {{localize "WH40K.CharacteristicSetup.Characteristics"}}
-                            </h3>
+                            <div class="csd-section-header-row">
+                                <h3 class="csd-section-header">
+                                    <i class="fa-solid fa-user-gear"></i>
+                                    {{localize "WH40K.CharacteristicSetup.Characteristics"}}
+                                </h3>
+                                <div class="csd-header-actions">
+                                    <button type="button" class="csd-icon-btn" data-action="charToggleAdvanced" data-tooltip="{{#if charGen.advancedMode}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOn'}}{{else}}{{localize 'WH40K.CharacteristicSetup.AdvancedModeOff'}}{{/if}}">
+                                        <i class="fa-solid {{#if charGen.advancedMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
+                                    </button>
+                                    <button type="button" class="csd-icon-btn" data-action="charReset" data-tooltip="{{localize 'WH40K.CharacteristicSetup.Reset'}}">
+                                        <i class="fa-solid fa-rotate-left"></i>
+                                    </button>
+                                </div>
+                            </div>
                             <div class="csd-char-grid">
                                 {{#each charGen.characteristicRows}}
                                 <div class="csd-char-row">
@@ -180,7 +189,8 @@
                                                 {{/if}}
                                             </div>
                                             <span class="csd-char-plus">+</span>
-                                            <div class="csd-char-origin {{#if hasOriginBonus}}has-origin{{/if}}" {{#if hasOriginBonusTooltip}}data-tooltip="{{originBonusTooltip}}"{{/if}}>
+                                            <div class="csd-char-origin {{#if hasOriginBonus}}has-origin{{/if}}"
+                                                 {{#if hasOriginBonusTooltip}}data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{originBonusTooltipData}}" data-tooltip="{{originBonusTooltip}}"{{/if}}>
                                                 <span class="csd-char-origin-value">{{#if hasOriginBonus}}{{#if (gt originBonus 0)}}+{{/if}}{{originBonus}}{{else}}0{{/if}}</span>
                                                 <span class="csd-char-origin-label">Origin</span>
                                             </div>
@@ -196,55 +206,17 @@
                             </div>
                         </section>
 
-                        <div class="csd-controls">
-                            <button type="button" class="csd-toggle-btn" data-action="charToggleAdvanced">
-                                <i class="fa-solid {{#if charGen.advancedMode}}fa-lock-open{{else}}fa-lock{{/if}}"></i>
-                                {{#if charGen.advancedMode}}{{localize "WH40K.CharacteristicSetup.AdvancedModeOn"}}{{else}}{{localize "WH40K.CharacteristicSetup.AdvancedModeOff"}}{{/if}}
-                            </button>
-                            <button type="button" class="csd-reset-btn" data-action="charReset">
-                                <i class="fa-solid fa-rotate-left"></i>
-                                {{localize "WH40K.CharacteristicSetup.Reset"}}
-                            </button>
-                        </div>
-
-                        <section class="csd-section csd-preview">
-                            <div class="csd-preview-bar">
-                                {{#each charGen.preview}}
-                                <div class="csd-preview-stat {{#unless hasValue}}empty{{/unless}}">
-                                    <span class="csd-preview-label">{{short}}</span>
-                                    <span class="csd-preview-value">{{#if hasValue}}{{total}}{{else}}—{{/if}}</span>
-                                </div>
-                                {{/each}}
-                            </div>
-                        </section>
-
                         <section class="csd-section csd-divination">
-                            <h3 class="csd-section-header">
-                                <i class="fa-solid fa-eye"></i>
-                                Divination
-                            </h3>
-                            {{#if charGen.divination}}
-                            <div class="csd-divination-result">
-                                <p class="csd-divination-text">"{{charGen.divination}}"</p>
-                                <div class="csd-divination-actions">
-                                    <button type="button" class="csd-btn csd-btn-secondary csd-divination-reroll" data-action="rollDivination">
-                                        <i class="fa-solid fa-rotate-right"></i> Reroll
-                                    </button>
-                                    <button type="button" class="csd-btn csd-btn-secondary" data-action="manualDivination">
-                                        <i class="fa-solid fa-keyboard"></i> Edit
-                                    </button>
-                                </div>
-                            </div>
-                            {{else}}
-                            <div class="csd-divination-actions">
-                                <button type="button" class="csd-btn csd-btn-primary" data-action="rollDivination">
-                                    <i class="fa-solid fa-dice"></i> Roll on Table
-                                </button>
-                                <button type="button" class="csd-btn csd-btn-secondary" data-action="manualDivination">
-                                    <i class="fa-solid fa-keyboard"></i> Enter Manually
+                            <div class="csd-section-header-row">
+                                <h3 class="csd-section-header">
+                                    <i class="fa-solid fa-eye"></i>
+                                    Divination
+                                </h3>
+                                <button type="button" class="csd-icon-btn" data-action="rollDivination" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
+                                    <i class="fa-solid fa-dice"></i>
                                 </button>
                             </div>
-                            {{/if}}
+                            <input type="text" class="csd-divination-input" value="{{charGen.divination}}" placeholder="Enter divination" />
                         </section>
                     </div>
                 </div>
@@ -295,12 +267,15 @@
         <aside class="selection-panel">
             {{#if selectedOrigin}}
                 {{!-- Header --}}
-                <div class="selection-header">
-                    <img src="{{selectedOrigin.img}}" alt="{{selectedOrigin.name}}" class="selection-img" />
-                    <div class="selection-info">
-                        <h3>{{selectedOrigin.name}}</h3>
-                    </div>
-                    <div class="selection-actions">
+                    <div class="selection-header">
+                        <img src="{{selectedOrigin.img}}" alt="{{selectedOrigin.name}}" class="selection-img" />
+                        <div class="selection-info">
+                            <h3>{{selectedOrigin.name}}</h3>
+                            {{#if selectedOrigin.description}}
+                                <div class="selection-description">{{{selectedOrigin.description}}}</div>
+                            {{/if}}
+                        </div>
+                        <div class="selection-actions">
                         <button type="button" class="toolbar-btn" data-action="viewOrigin" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">
                             <i class="fa-solid fa-eye"></i>
                         </button>
@@ -671,23 +646,6 @@
             {{/if}}
         </div>
         <div class="footer-actions">
-            {{!-- Optional step controls (Lineage for RT, Elite for DH2e, etc.) --}}
-            {{#if hasOptionalStep}}
-                {{#if showLineage}}
-                    <button type="button" class="skip-lineage-btn" data-action="skipLineage">
-                        <i class="fa-solid fa-forward"></i>
-                        {{localize "WH40K.OriginPath.Skip"}} {{optionalStepLabel}}
-                    </button>
-                {{/if}}
-                {{#if status.stepsComplete}}
-                    {{#unless showLineage}}
-                        <button type="button" class="lineage-btn" data-action="goToLineage">
-                            <i class="fa-solid {{optionalStepIcon}}"></i>
-                            {{optionalStepLabel}}
-                        </button>
-                    {{/unless}}
-                {{/if}}
-            {{/if}}
             <button type="button" class="commit-btn" data-action="commit" {{#unless status.canCommit}}disabled{{/unless}}>
                 <i class="fa-solid fa-save"></i>
                 {{localize "WH40K.OriginPath.CommitToCharacter"}}

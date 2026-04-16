@@ -7,10 +7,8 @@ import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import WH40K from '../../config.ts';
-import { HandlebarManager } from '../../handlebars/handlebars-manager.ts';
 import { AssignDamageData } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
-import { WH40KContextMenu } from '../api/context-menu-mixin.ts';
 import AcquisitionDialog from '../dialogs/acquisition-dialog.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.ts';
@@ -360,17 +358,17 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @protected
      */
     async _preparePartContext(partId: string, context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
-        context = await super._preparePartContext(partId, context, options);
+        const partContext = await super._preparePartContext(partId, context, options);
 
         switch (partId) {
             case 'header':
-                return this._prepareHeaderContext(context, options);
+                return this._prepareHeaderContext(partContext, options);
             case 'tabs':
-                return this._prepareTabsContext(context, options);
+                return this._prepareTabsContext(partContext, options);
             case 'biography':
-                return await this._prepareBiographyContext(context, options);
+                return await this._prepareBiographyContext(partContext, options);
             case 'overview':
-                return await this._prepareOverviewDashboardContext(context, options);
+                return await this._prepareOverviewDashboardContext(partContext, options);
             case 'status':
             case 'combat':
             case 'skills':
@@ -378,9 +376,9 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             case 'powers':
             case 'dynasty':
                 // Provide tab object for the template
-                return this._prepareTabPartContext(partId, context, options);
+                return this._prepareTabPartContext(partId, partContext, options);
             default:
-                return context;
+                return partContext;
         }
     }
 
@@ -500,7 +498,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         for (const pack of game.packs) {
             if (pack.documentName !== 'Item') continue;
             // Only check packs that contain origin path items for this game system
-            const packName = pack.metadata.name || '';
+            const packName = (pack.metadata.name as string) || '';
             const prefix = gameSystem === 'dh2e' ? 'dh2' : gameSystem === 'dh1e' ? 'dh1' : gameSystem;
             if (!packName.startsWith(prefix) && !packName.startsWith('homebrew')) continue;
 
@@ -533,7 +531,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    async _prepareTabsContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    _prepareTabsContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
         // Tabs use the static TABS configuration
         context.tabs = (this.constructor as any).TABS.map((tab) => ({
             ...tab,
@@ -574,7 +572,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    async _prepareBodyContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    _prepareBodyContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
         // All tab data is already prepared in _prepareContext
         return context;
     }
@@ -674,7 +672,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                 // Accumulate base characteristics
                 for (const [key, value] of Object.entries(modifiers)) {
                     if (value !== 0) {
-                        charTotals[key] = (charTotals[key] || 0) + value;
+                        charTotals[key] = (charTotals[key] || 0) + Number(value);
                     }
                 }
 
@@ -713,7 +711,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                             if (choiceGrants.characteristics) {
                                 for (const [key, value] of Object.entries(choiceGrants.characteristics)) {
                                     if (value !== 0) {
-                                        charTotals[key] = (charTotals[key] || 0) + value;
+                                        charTotals[key] = (charTotals[key] || 0) + Number(value);
                                     }
                                 }
                             }
@@ -1136,7 +1134,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    async _prepareOverviewContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    _prepareOverviewContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
         // Add Active Effects data
         context.effects = this.actor.effects.map((effect) => ({
             id: effect.id,
@@ -1306,7 +1304,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    async _prepareCombatTabContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    _prepareCombatTabContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
         // Combat data already prepared in _prepareCombatData
         return context;
     }
@@ -1320,7 +1318,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    async _prepareEquipmentContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    _prepareEquipmentContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
         // Equipment data already prepared in _prepareLoadoutData
         return context;
     }
@@ -1334,7 +1332,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    async _prepareAbilitiesContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    _prepareAbilitiesContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
         // Talents and traits already prepared in _prepareItems
         return context;
     }
@@ -1348,7 +1346,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    async _prepareNotesContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    _prepareNotesContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
         return context;
     }
 
@@ -1361,7 +1359,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    async _prepareEffectsContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    _prepareEffectsContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
         return context;
     }
 
@@ -1789,7 +1787,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #increment(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static #increment(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent header toggle
         target.dataset.statAction = 'increment';
         return CharacterSheet.#adjustStat.call(this, event, target);
@@ -1801,7 +1799,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #decrement(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static #decrement(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Prevent header toggle
         target.dataset.statAction = 'decrement';
         return CharacterSheet.#adjustStat.call(this, event, target);
@@ -2193,16 +2191,21 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
 
         if (!updates.length) return;
 
-        await Promise.all(
-            updates.map((update) => {
+        const forcedUpdates = updates
+            .map((update) => {
                 const item = (this as any).actor.items.get(update._id);
                 if (!item) return null;
 
-                const payload = { ...update };
-                delete payload._id;
-                return item.update(payload);
-            }),
-        );
+                const nextSystem = foundry.utils.deepClone(item.toObject().system ?? item.system ?? {});
+                nextSystem.inShipStorage = update['system.inShipStorage'];
+                nextSystem.inBackpack = update['system.inBackpack'];
+                nextSystem.equipped = update['system.equipped'];
+                return { _id: update._id, system: nextSystem };
+            })
+            .filter(Boolean);
+
+        if (!forcedUpdates.length) return;
+        await (this as any).actor.updateEmbeddedDocuments('Item', forcedUpdates, { diff: false, recursive: false });
     }
 
     /* -------------------------------------------- */
@@ -2367,7 +2370,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #openAdvancement(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static #openAdvancement(this: CharacterSheet, event: Event, target: HTMLElement): void {
         event.preventDefault();
         // Default to rogueTrader career for now
         // TODO: Get career from actor.system.originPath.career or rogueTrader.careerPath
@@ -2444,7 +2447,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {PointerEvent} event  The triggering event.
      * @param {HTMLElement} target  The action target.
      */
-    static async #toggleEditMode(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static #toggleEditMode(this: CharacterSheet, event: Event, target: HTMLElement): void {
         if (!(this as any).isEditable) return;
         this.#editMode = !this.#editMode;
         (this as any).render();
@@ -2465,7 +2468,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {Event} event     The originating click event
      * @param {HTMLElement} target  The capturing HTML element which defined a [data-action]
      */
-    static async #showUtilityMenu(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+    static #showUtilityMenu(this: CharacterSheet, event: Event, target: HTMLElement): void {
         event.preventDefault();
         event.stopPropagation();
 

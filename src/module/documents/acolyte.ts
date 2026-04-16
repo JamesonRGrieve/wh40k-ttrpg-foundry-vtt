@@ -1,13 +1,13 @@
+import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
 import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.ts';
-import { WH40KBaseActor } from './base-actor.ts';
-import { ForceFieldData } from '../rolls/force-field-data.ts';
-import { SimpleSkillData } from '../rolls/action-data.ts';
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
-import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
 import { SYSTEM_ID } from '../constants.ts';
-import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { D100Roll } from '../dice/_module.ts';
+import { SimpleSkillData } from '../rolls/action-data.ts';
+import { ForceFieldData } from '../rolls/force-field-data.ts';
+import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { WH40KBaseActor } from './base-actor.ts';
 
 const SKILL_ALIASES = {
     navigate: 'navigation',
@@ -170,7 +170,10 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} [key] - Optional key to filter by (e.g., "weaponSkill", "dodge", "attack")
      * @returns {Array<{key: string, value: number, condition: string, icon: string, source: string, itemId: string}>}
      */
-    getSituationalModifiers(type: 'characteristics' | 'skills' | 'combat', key: string | null = null): Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string }> {
+    getSituationalModifiers(
+        type: 'characteristics' | 'skills' | 'combat',
+        key: string | null = null,
+    ): Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string }> {
         const modifiers = [];
 
         // Collect from all modifier-providing items
@@ -211,7 +214,9 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} charKey - The characteristic key (e.g., "weaponSkill")
      * @returns {Array} Array of situational modifier objects
      */
-    getCharacteristicSituationalModifiers(charKey: string): Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string }> {
+    getCharacteristicSituationalModifiers(
+        charKey: string,
+    ): Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string }> {
         return this.getSituationalModifiers('characteristics', charKey);
     }
 
@@ -229,7 +234,9 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} [combatKey] - Optional combat key (e.g., "attack", "damage")
      * @returns {Array} Array of situational modifier objects
      */
-    getCombatSituationalModifiers(combatKey: string | null = null): Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string }> {
+    getCombatSituationalModifiers(
+        combatKey: string | null = null,
+    ): Array<{ key: string; value: number; condition: string; icon: string; source: string; itemId: string }> {
         return this.getSituationalModifiers('combat', combatKey);
     }
 

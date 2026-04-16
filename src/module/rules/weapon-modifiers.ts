@@ -1,5 +1,3 @@
-import { WeaponRollData } from '../rolls/roll-data.ts';
-
 /* -------------------------------------------- */
 /*  Weapon Modifier Effects Table               */
 /* -------------------------------------------- */
@@ -64,7 +62,7 @@ const MOD_EFFECTS: Record<string, WeaponModifierEffects> = {
 /*  Weapon Modifier Functions                   */
 /* -------------------------------------------- */
 
-export async function updateWeaponModifiers(rollData) {
+export function updateWeaponModifiers(rollData) {
     rollData.weaponModifiers = [];
 
     const actionItem = rollData.weapon ?? rollData.power;
@@ -80,7 +78,7 @@ export async function updateWeaponModifiers(rollData) {
     }
 }
 
-export async function calculateWeaponModifiersDamageBonuses(actionData, hit) {
+export function calculateWeaponModifiersDamageBonuses(actionData, hit) {
     const actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (!actionItem) return;
 
@@ -96,7 +94,7 @@ export async function calculateWeaponModifiersDamageBonuses(actionData, hit) {
     }
 }
 
-export async function calculateWeaponModifiersPenetrationBonuses(actionData, hit) {
+export function calculateWeaponModifiersPenetrationBonuses(actionData, hit) {
     const actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (!actionItem) return;
 
@@ -112,7 +110,7 @@ export async function calculateWeaponModifiersPenetrationBonuses(actionData, hit
     }
 }
 
-export async function calculateWeaponModifiersAttackSpecials(rollData) {
+export function calculateWeaponModifiersAttackSpecials(rollData) {
     const actionItem = rollData.weapon ?? rollData.power;
     if (!actionItem) return;
 
@@ -131,7 +129,7 @@ export async function calculateWeaponModifiersAttackSpecials(rollData) {
 /**
  * @param rollData {WeaponRollData}
  */
-export async function calculateWeaponModifiersAttackBonuses(rollData) {
+export function calculateWeaponModifiersAttackBonuses(rollData) {
     // Reset Data -- this prevents needing to ensure removal if modifiers change
     rollData.weaponModifiers = {};
     const actionItem = rollData.weapon ?? rollData.power;

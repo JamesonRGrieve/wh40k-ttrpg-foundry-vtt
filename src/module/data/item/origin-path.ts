@@ -1,7 +1,7 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
+import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
-import IdentifierField from '../fields/identifier-field.ts';
 
 /**
  * Data model for Origin Path items (homeworld, birthright, career, etc).
@@ -206,6 +206,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
             // Homebrew extensions (campaign-specific fields not in RAW)
             homebrew: new fields.SchemaField({
+                throneGelt: new fields.StringField({ required: false, blank: true, initial: '' }),
                 thrones: new fields.StringField({ required: false, blank: true, initial: '' }),
             }),
 
@@ -347,8 +348,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         const charMods = this.modifiers.characteristics;
         for (const [char, value] of Object.entries(charMods)) {
             if (value !== 0) {
-                // @ts-expect-error - operator type
-                summary.push(`${char}: ${value >= 0 ? '+' : ''}${value}`);
+                const numVal = value as number;
+                summary.push(`${char}: ${numVal >= 0 ? '+' : ''}${numVal}`);
             }
         }
 

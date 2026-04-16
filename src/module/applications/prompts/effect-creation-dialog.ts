@@ -77,7 +77,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
 
     /** @override */
     async _prepareContext(options: any): Promise<any> {
-        const context = await super._prepareContext(options) as any;
+        const context = await super._prepareContext(options);
 
         context.actor = this.actor;
         context.selectedCategory = this.selectedCategory;
@@ -205,7 +205,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create condition effect data
      */
-    static async _createConditionData(data: any): Promise<any> {
+    static _createConditionData(data: any): any {
         const conditionId = data.conditionId;
 
         // Use the helper function
@@ -300,7 +300,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create characteristic modifier data
      */
-    static async _createCharacteristicData(data: any): Promise<any> {
+    static _createCharacteristicData(data: any): any {
         const characteristic = data.characteristic;
         const value = parseInt(data.modifierValue) || 0;
 
@@ -343,7 +343,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create skill modifier data
      */
-    static async _createSkillData(data: any): Promise<any> {
+    static _createSkillData(data: any): any {
         const skill = data.skill;
         const value = parseInt(data.modifierValue) || 0;
 
@@ -386,7 +386,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create combat modifier data
      */
-    static async _createCombatData(data: any): Promise<any> {
+    static _createCombatData(data: any): any {
         const combatType = data.combatType;
         const value = parseInt(data.modifierValue) || 0;
 
@@ -429,7 +429,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create custom effect data
      */
-    static async _createCustomData(data: any): Promise<any> {
+    static _createCustomData(data: any): any {
         const name = data.customName?.trim();
 
         if (!name) return null;

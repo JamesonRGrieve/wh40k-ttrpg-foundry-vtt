@@ -93,30 +93,36 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
             const { type, formula, optional: resOptional } = resourceConfig;
 
             const resourceDef = (this.constructor as any).RESOURCES[type];
-            if (!resourceDef) { result.errors.push(`Invalid resource type: ${type}`); continue; }
+            if (!resourceDef) {
+                result.errors.push(`Invalid resource type: ${type}`);
+                continue;
+            }
 
             if (!selectedResources.includes(type)) {
                 if (!resOptional && !this.optional) result.errors.push(`Required resource ${type} not selected`);
                 continue;
             }
 
-            let value = rolledValues[type] ?? await this._evaluateFormula(formula, actor);
+            const value = rolledValues[type] ?? (await this._evaluateFormula(formula, actor));
             if (value === 0) continue;
 
             const currentValue = foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0;
             let currentMax = null;
 
-            updates[resourceDef.valuePath] = currentValue + value;
+            updates[resourceDef.valuePath] = Number(currentValue) + value;
 
             if (resourceDef.affectsMax && resourceDef.maxPath) {
                 currentMax = foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0;
-                updates[resourceDef.maxPath] = currentMax + value;
+                updates[resourceDef.maxPath] = Number(currentMax) + value;
             }
 
             result.applied[type] = {
-                formula, rolledValue: value,
-                previousValue: currentValue, previousMax: currentMax,
-                newValue: currentValue + value, newMax: currentMax !== null ? currentMax + value : null,
+                formula,
+                rolledValue: value,
+                previousValue: currentValue,
+                previousMax: currentMax,
+                newValue: Number(currentValue) + value,
+                newMax: currentMax !== null ? Number(currentMax) + value : null,
             };
 
             const label = game.i18n.localize(resourceDef.label);

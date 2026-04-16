@@ -151,8 +151,12 @@ export class OriginChartLayout {
             const position = origin.system?.primaryPosition || 4;
             maxPosition = Math.max(maxPosition, position);
 
-            const selectedId = selectedOrigin?.id || selectedOrigin?._id;
-            const isSelected = selectedId === originId;
+            const selectedIds = new Set(
+                [selectedOrigin?.id, selectedOrigin?._id, selectedOrigin?.uuid, selectedOrigin?._sourceUuid, selectedOrigin?.system?.identifier].filter(
+                    Boolean,
+                ),
+            );
+            const isSelected = selectedIds.has(originId) || selectedIds.has(origin.uuid) || selectedIds.has(origin.system?.identifier);
             const isSelectable = this._isSelectable(origin, lastSelection, allowedPositions, guidedMode);
             const isValidNext = this._isPositionAllowed(origin, allowedPositions);
 

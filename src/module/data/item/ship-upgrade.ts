@@ -1,6 +1,6 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import DescriptionTemplate from '../shared/description-template.ts';
 import IdentifierField from '../fields/identifier-field.ts';
+import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
  * Data model for Ship Upgrade items.

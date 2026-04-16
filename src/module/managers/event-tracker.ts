@@ -98,11 +98,9 @@ export class EventTracker {
         if (!event) return false;
         const resolved = EventTracker.getResolved();
 
-        const reqsMet = !event.requires?.length ||
-            event.requires.every((id: string) => id in resolved);
+        const reqsMet = !event.requires?.length || event.requires.every((id: string) => id in resolved);
 
-        const reqsAnyMet = !event.requires_any?.length ||
-            event.requires_any.some((id: string) => id in resolved);
+        const reqsAnyMet = !event.requires_any?.length || event.requires_any.some((id: string) => id in resolved);
 
         return reqsMet && reqsAnyMet;
     }
@@ -158,7 +156,7 @@ export class EventTracker {
         // Count stats
         const total = Object.keys(graph).length;
         const resolvedCount = Object.keys(resolved).length;
-        const availableCount = Object.keys(graph).filter(id => !(id in resolved) && EventTracker.isAvailable(id)).length;
+        const availableCount = Object.keys(graph).filter((id) => !(id in resolved) && EventTracker.isAvailable(id)).length;
 
         let html = `<style>
             .evt-tracker { font-family: var(--font-primary); font-size: 13px; max-height: 70vh; overflow-y: auto; }
@@ -213,9 +211,7 @@ export class EventTracker {
 
     /** Open the tracker dialog. GM only. */
     static open(): void {
-        // @ts-expect-error - argument type
         if (!game.user.isGM) {
-            // @ts-expect-error - argument type
             ui.notifications.warn('Event Tracker is GM-only.');
             return;
         }
@@ -235,14 +231,17 @@ export class EventTracker {
             render: (html: any) => {
                 const $html = html instanceof HTMLElement ? $(html) : html;
                 const bindCheckboxes = () => {
-                    $html.find('input[type="checkbox"]').off('change').on('change', async (ev: any) => {
-                        const id = ev.currentTarget.dataset.eventId;
-                        const isChecked = ev.currentTarget.checked;
-                        await EventTracker.setResolved(id, isChecked);
-                        // Re-render content
-                        $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent());
-                        bindCheckboxes();
-                    });
+                    $html
+                        .find('input[type="checkbox"]')
+                        .off('change')
+                        .on('change', async (ev: any) => {
+                            const id = ev.currentTarget.dataset.eventId;
+                            const isChecked = ev.currentTarget.checked;
+                            await EventTracker.setResolved(id, isChecked);
+                            // Re-render content
+                            $html.closest('.dialog').find('.dialog-content').html(EventTracker._buildContent());
+                            bindCheckboxes();
+                        });
                 };
                 bindCheckboxes();
             },

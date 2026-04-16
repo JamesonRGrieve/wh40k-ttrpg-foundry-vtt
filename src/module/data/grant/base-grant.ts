@@ -135,6 +135,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @protected
      * @abstract
      */
+    // eslint-disable-next-line @typescript-eslint/require-await
     async _applyGrant(actor, data, options, result): Promise<void> {
         throw new Error(`${this.constructor.name} must implement _applyGrant()`);
     }
@@ -146,6 +147,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @returns {Promise<object>} Data needed to restore the grant
      * @abstract
      */
+    // eslint-disable-next-line @typescript-eslint/require-await
     async reverse(actor, appliedState) {
         throw new Error(`${this.constructor.name} must implement reverse()`);
     }
@@ -186,6 +188,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * Get a summary of what this grant provides.
      * @returns {Promise<GrantSummary>}
      */
+    // eslint-disable-next-line @typescript-eslint/require-await
     async getSummary() {
         return {
             type: (this.constructor as any).TYPE,

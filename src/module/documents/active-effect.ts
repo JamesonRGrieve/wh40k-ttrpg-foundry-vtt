@@ -121,7 +121,6 @@ export class WH40KActiveEffect extends ActiveEffect {
     _applyCharacteristicChange(actor: any, change: any): number | null {
         const path = change.key;
         const charKey = path.split('.')[2]; // e.g., "strength" from "system.characteristics.strength.modifier"
-        const property = path.split('.')[3] ?? 'modifier'; // Default to modifier if not specified
 
         if (!actor.system.characteristics?.[charKey]) return null;
 

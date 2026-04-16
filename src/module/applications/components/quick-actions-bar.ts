@@ -152,7 +152,8 @@ export default class QuickActionsBar {
         return actions
             .map((action) => {
                 const dataAttrs = Object.entries(action.dataset)
-                    .map(([key, value]) => `data-${key}="${value}"`)
+                    .map(([key, value]) => `data-${key}="${value as string}"`)
+
                     .join(' ');
 
                 const classList = ['wh40k-quick-action', `wh40k-quick-action--${action.variant}`, compact ? 'wh40k-quick-action--compact' : ''].join(' ');

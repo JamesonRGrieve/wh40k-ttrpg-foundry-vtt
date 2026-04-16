@@ -1,11 +1,10 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import DescriptionTemplate from '../shared/description-template.ts';
-import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import EquippableTemplate from '../shared/equippable-template.ts';
+import IdentifierField from '../fields/identifier-field.ts';
 import AttackTemplate from '../shared/attack-template.ts';
 import DamageTemplate from '../shared/damage-template.ts';
-import FormulaField from '../fields/formula-field.ts';
-import IdentifierField from '../fields/identifier-field.ts';
+import DescriptionTemplate from '../shared/description-template.ts';
+import EquippableTemplate from '../shared/equippable-template.ts';
+import PhysicalItemTemplate from '../shared/physical-item-template.ts';
 
 /**
  * Data model for Weapon items.
@@ -706,7 +705,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
 
         // Show effective qualities (including craftsmanship)
         if (this.effectiveSpecial?.size) {
-            props.push(`Qualities: ${Array.from(this.effectiveSpecial).join(', ')}`);
+            props.push(`Qualities: ${Array.from(this.effectiveSpecial as Set<string>).join(', ')}`);
         }
 
         // Show craftsmanship modifiers if any
@@ -922,7 +921,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {number} [shots=1]   Number of shots to fire.
      * @returns {Promise<Item>}
      */
-    async fire(shots = 1) {
+    fire(shots = 1) {
         if (!this.usesAmmo) return this.parent;
         const newValue = Math.max(0, this.clip.value - shots);
         return this.parent?.update({ 'system.clip.value': newValue });
@@ -949,7 +948,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @returns {Promise<Item>}
      * @deprecated Use reload() instead for full action economy support
      */
-    async reloadSimple(amount = null) {
+    reloadSimple(amount = null) {
         if (!this.usesAmmo) return this.parent;
         const newValue = amount ?? this.clip.max;
         return this.parent?.update({ 'system.clip.value': Math.min(newValue, this.clip.max) });

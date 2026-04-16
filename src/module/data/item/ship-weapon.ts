@@ -1,6 +1,6 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import DescriptionTemplate from '../shared/description-template.ts';
 import IdentifierField from '../fields/identifier-field.ts';
+import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
  * Data model for Ship Weapon items.
@@ -247,7 +247,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         ];
 
         if (this.special.size) {
-            props.push(`Special: ${Array.from(this.special).join(', ')}`);
+            props.push(`Special: ${Array.from(this.special as Set<string>).join(', ')}`);
         }
 
         return props;

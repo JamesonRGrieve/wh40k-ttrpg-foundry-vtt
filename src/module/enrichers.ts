@@ -3,8 +3,6 @@
  * Provides inline content enrichment for characteristics, skills, modifiers, etc.
  */
 
-import { WH40KAcolyte } from './documents/acolyte.ts';
-
 /**
  * Register custom text enrichers for WH40K RPG system.
  */
@@ -60,9 +58,10 @@ export function registerCustomEnrichers() {
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
+// eslint-disable-next-line @typescript-eslint/require-await
 async function enrichCharacteristic(match, options) {
-    const { config, label } = match.groups;
-    config = config.trim().toLowerCase();
+    const { label } = match.groups;
+    const config = match.groups.config.trim().toLowerCase();
 
     // Map short codes to full names
     const charMap = {
@@ -126,9 +125,10 @@ async function enrichCharacteristic(match, options) {
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
+// eslint-disable-next-line @typescript-eslint/require-await
 async function enrichSkill(match, options) {
-    const { config, label } = match.groups;
-    config = config.trim().toLowerCase();
+    const { label } = match.groups;
+    const config = match.groups.config.trim().toLowerCase();
 
     // Parse skill and specialization
     const [skillKey, specialization] = config.split(':').map((s) => s.trim());
@@ -190,6 +190,7 @@ async function enrichSkill(match, options) {
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
+// eslint-disable-next-line @typescript-eslint/require-await
 async function enrichModifier(match, options) {
     const { config, label } = match.groups;
     const parts = config.trim().split(/\s+/);
@@ -226,9 +227,10 @@ async function enrichModifier(match, options) {
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
+// eslint-disable-next-line @typescript-eslint/require-await
 async function enrichArmor(match, options) {
-    const { config, label } = match.groups;
-    config = config.trim().toLowerCase();
+    const { label } = match.groups;
+    const config = match.groups.config.trim().toLowerCase();
 
     // Get actor from relativeTo
     const actor = options.relativeTo;
@@ -392,8 +394,8 @@ async function handleEnricherClick(event) {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 async function enrichQuality(match, options) {
-    const { config, label } = match.groups;
-    config = config.trim().toLowerCase();
+    const { label } = match.groups;
+    const config = match.groups.config.trim().toLowerCase();
 
     // Try to find the quality in compendiums
     const qualityPack = game.packs.get('wh40k-rpg.wh40k-items-weapon-qualities');
@@ -434,8 +436,8 @@ async function enrichQuality(match, options) {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 async function enrichProperty(match, options) {
-    const { config, label } = match.groups;
-    config = config.trim().toLowerCase();
+    const { label } = match.groups;
+    const config = match.groups.config.trim().toLowerCase();
 
     // Try to find the property in compendiums
     const propertyPack = game.packs.get('wh40k-rpg.rt-items-armour-properties');
@@ -476,8 +478,8 @@ async function enrichProperty(match, options) {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 async function enrichCondition(match, options) {
-    const { config, label } = match.groups;
-    config = config.trim().toLowerCase();
+    const { label } = match.groups;
+    const config = match.groups.config.trim().toLowerCase();
 
     // Try to find the condition in compendiums
     const conditionPack = game.packs.get('wh40k-rpg.dh2-core-stats-conditions');

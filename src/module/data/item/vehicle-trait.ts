@@ -1,6 +1,6 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import DescriptionTemplate from '../shared/description-template.ts';
 import IdentifierField from '../fields/identifier-field.ts';
+import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
  * Data model for Vehicle Trait items.
@@ -63,8 +63,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
                     key,
                     label,
                     value,
-                    // @ts-expect-error - operator type
-                    formatted: `${value >= 0 ? '+' : ''}${value}`,
+                    formatted: `${(value as number) >= 0 ? '+' : ''}${value as number}`,
                 });
             }
         }

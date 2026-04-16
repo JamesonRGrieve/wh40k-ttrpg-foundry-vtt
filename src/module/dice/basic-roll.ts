@@ -99,6 +99,7 @@ export default class BasicRollWH40K extends Roll {
      * @returns {Promise<Object|null>} Dialog result, or null if cancelled
      * @protected
      */
+    // eslint-disable-next-line @typescript-eslint/require-await
     static async _showConfigurationDialog(config) {
         // Base implementation just returns the config unchanged
         // Subclasses override this to show actual dialogs

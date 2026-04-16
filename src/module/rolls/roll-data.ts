@@ -1,12 +1,12 @@
-import { rollDifficulties } from '../rules/difficulties.ts';
 import { aimModifiers } from '../rules/aim.ts';
-import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.ts';
-import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.ts';
-import { calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../rules/attack-specials.ts';
 import { calculateAmmoAttackBonuses, calculateAmmoInformation } from '../rules/ammo.ts';
-import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
-import { hitDropdown } from '../rules/hit-locations.ts';
+import { calculateAttackSpecialAttackBonuses, updateAttackSpecials } from '../rules/attack-specials.ts';
+import { calculateCombatActionModifier, updateAvailableCombatActions } from '../rules/combat-actions.ts';
 import { WH40K } from '../rules/config.ts';
+import { rollDifficulties } from '../rules/difficulties.ts';
+import { hitDropdown } from '../rules/hit-locations.ts';
+import { calculatePsychicPowerRange, calculateWeaponRange } from '../rules/range.ts';
+import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '../rules/weapon-modifiers.ts';
 import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
 
 export class RollData {
@@ -169,7 +169,7 @@ export class RollData {
             } else {
                 this.modifierTotal = roll.total;
             }
-        } catch (error) {
+        } catch {
             this.modifierTotal = 0;
         }
     }
@@ -277,7 +277,7 @@ export class WeaponRollData extends RollData {
             try {
                 const size = Number.parseInt(this.targetActor.system.size);
                 this.modifiers['target-size'] = (size - 4) * 10;
-            } catch (error) {
+            } catch {
                 (ui.notifications as any).warn('Target size is not a number. Unexpected error.');
             }
         }

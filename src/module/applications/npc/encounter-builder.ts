@@ -155,7 +155,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         // Prepare NPC list with expanded details
         const npcList = await Promise.all(
-            this.#npcs.map(async (npc, index) => {
+            this.#npcs.map((npc, index) => {
                 return {
                     ...npc,
                     index,
@@ -204,7 +204,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
     /** @override */
     _onRender(context: any, options: any): any {
-        super._onRender(context, options);
+        void super._onRender(context, options);
 
         // Party configuration inputs
         const partyCount = this.element.querySelector('[name="partyCount"]');
@@ -213,14 +213,14 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         if (partyCount) {
             partyCount.addEventListener('change', (e: any) => {
                 this.#party.count = parseInt((e.target as HTMLInputElement).value, 10) || 4;
-                this.render({ parts: ['content'] });
+                void this.render({ parts: ['content'] });
             });
         }
 
         if (partyLevel) {
             partyLevel.addEventListener('change', (e: any) => {
                 this.#party.averageLevel = parseInt((e.target as HTMLInputElement).value, 10) || 5;
-                this.render({ parts: ['content'] });
+                void this.render({ parts: ['content'] });
             });
         }
 
@@ -250,7 +250,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             dropZone.classList.remove('drag-over');
 
             try {
-                const data = JSON.parse((e as DragEvent).dataTransfer!.getData('text/plain'));
+                const data = JSON.parse((e as DragEvent).dataTransfer.getData('text/plain'));
 
                 if (data.type === 'Actor') {
                     await this._handleActorDrop(data);
@@ -300,7 +300,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             });
         }
 
-        this.render({ parts: ['content'] });
+        void this.render({ parts: ['content'] });
     }
 
     /* -------------------------------------------- */
@@ -411,7 +411,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #removeNPC(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #removeNPC(this: any, event: Event, target: HTMLElement): void {
         const index = parseInt(target.dataset.index, 10);
         if (isNaN(index) || index < 0 || index >= this.#npcs.length) return;
 
@@ -424,7 +424,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #adjustCount(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #adjustCount(this: any, event: Event, target: HTMLElement): void {
         const index = parseInt(target.dataset.index, 10);
         const delta = parseInt(target.dataset.delta, 10);
 
@@ -442,7 +442,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #clearAll(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #clearAll(this: any, event: Event, target: HTMLElement): void {
         this.#npcs = [];
         this.render({ parts: ['content'] });
     }
@@ -484,7 +484,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #loadTemplate(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #loadTemplate(this: any, event: Event, target: HTMLElement): void {
         const index = parseInt(target.dataset.index, 10);
         if (isNaN(index) || index < 0 || index >= this.#templates.length) return;
 
@@ -522,8 +522,8 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             if (!actor) continue;
 
             for (let i = 0; i < npcEntry.count; i++) {
-                // Create token data
-                const tokenData = await actor.getTokenDocument({
+                // Create token data (side-effect: validates token document)
+                await actor.getTokenDocument({
                     name: npcEntry.count > 1 ? `${actor.name} ${i + 1}` : actor.name,
                 });
 
@@ -552,7 +552,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         const actor = await (fromUuid as any)(uuid);
         if (actor) {
-            (actor as any).sheet.render(true);
+            actor.sheet.render(true);
         }
     }
 
@@ -593,7 +593,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         }
 
         if (this.rendered) {
-            this.render({ parts: ['content'] });
+            void this.render({ parts: ['content'] });
         }
     }
 
@@ -607,7 +607,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         this.#party.averageLevel = averageLevel;
 
         if (this.rendered) {
-            this.render({ parts: ['content'] });
+            void this.render({ parts: ['content'] });
         }
     }
 
@@ -629,7 +629,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     clear(): void {
         this.#npcs = [];
         if (this.rendered) {
-            this.render({ parts: ['content'] });
+            void this.render({ parts: ['content'] });
         }
     }
 }

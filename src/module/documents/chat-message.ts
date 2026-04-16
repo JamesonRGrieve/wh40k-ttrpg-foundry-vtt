@@ -95,7 +95,7 @@ export class ChatMessageWH40K extends ChatMessage {
         if (typeof item.rollDamage === 'function') {
             // @ts-expect-error - dynamic property access
             await item.rollDamage();
-        // @ts-expect-error - dynamic property access
+            // @ts-expect-error - dynamic property access
         } else if (item.type === 'weapon') {
             // Fallback for weapons without rollDamage method
             // @ts-expect-error - dynamic property access
@@ -164,7 +164,7 @@ export class ChatMessageWH40K extends ChatMessage {
         if (typeof item.use === 'function') {
             // @ts-expect-error - dynamic property access
             await item.use();
-        // @ts-expect-error - dynamic property access
+            // @ts-expect-error - dynamic property access
         } else if (typeof item.roll === 'function') {
             // @ts-expect-error - dynamic property access
             await item.roll();

@@ -1,7 +1,7 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
+import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
-import IdentifierField from '../fields/identifier-field.ts';
 
 /**
  * Data model for Condition items (status effects).

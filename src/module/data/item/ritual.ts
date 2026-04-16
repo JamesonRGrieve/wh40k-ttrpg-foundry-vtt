@@ -1,7 +1,7 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
-import DescriptionTemplate from '../shared/description-template.ts';
-import ActivationTemplate from '../shared/activation-template.ts';
 import IdentifierField from '../fields/identifier-field.ts';
+import ActivationTemplate from '../shared/activation-template.ts';
+import DescriptionTemplate from '../shared/description-template.ts';
 
 /**
  * Data model for Ritual items.

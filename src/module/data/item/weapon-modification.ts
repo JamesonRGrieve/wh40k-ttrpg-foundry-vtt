@@ -1,7 +1,7 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
+import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
-import IdentifierField from '../fields/identifier-field.ts';
 
 /**
  * Data model for Weapon Modification items.
@@ -75,10 +75,10 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
     get restrictionsLabel() {
         const parts = [];
         if (this.restrictions.weaponClasses.size) {
-            parts.push(`Classes: ${Array.from(this.restrictions.weaponClasses).join(', ')}`);
+            parts.push(`Classes: ${Array.from(this.restrictions.weaponClasses as Set<string>).join(', ')}`);
         }
         if (this.restrictions.weaponTypes.size) {
-            parts.push(`Types: ${Array.from(this.restrictions.weaponTypes).join(', ')}`);
+            parts.push(`Types: ${Array.from(this.restrictions.weaponTypes as Set<string>).join(', ')}`);
         }
         return parts.join('; ') || game.i18n.localize('WH40K.Modification.NoRestrictions');
     }
@@ -140,10 +140,10 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
         if (mods.range !== 0) props.push(`Range: ${mods.range >= 0 ? '+' : ''}${mods.range}`);
 
         if (this.addedQualities.size) {
-            props.push(`Adds: ${Array.from(this.addedQualities).join(', ')}`);
+            props.push(`Adds: ${Array.from(this.addedQualities as Set<string>).join(', ')}`);
         }
         if (this.removedQualities.size) {
-            props.push(`Removes: ${Array.from(this.removedQualities).join(', ')}`);
+            props.push(`Removes: ${Array.from(this.removedQualities as Set<string>).join(', ')}`);
         }
 
         return props;

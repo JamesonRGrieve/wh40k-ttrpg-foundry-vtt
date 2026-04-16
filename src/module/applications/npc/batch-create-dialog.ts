@@ -158,7 +158,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     _onRender(context: any, options: any): any {
-        super._onRender(context, options);
+        void super._onRender(context, options);
 
         const form = this.element;
 
@@ -211,7 +211,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     _debounceRender(): void {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
         this._renderTimeout = setTimeout(() => {
-            this.render({ parts: ['form'] });
+            void this.render({ parts: ['form'] });
         }, 150);
     }
 
@@ -320,7 +320,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             }
 
             try {
-                const actor = await Actor.create(actorData as any);
+                const actor = await Actor.create(actorData);
                 if (actor) actors.push(actor);
             } catch (err) {
                 console.error(`Failed to create NPC "${name}":`, err);
@@ -346,7 +346,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onUpdatePreview(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #onUpdatePreview(this: any, event: Event, target: HTMLElement): void {
         this.render({ parts: ['form'] });
     }
 
@@ -377,7 +377,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     async wait(): Promise<void> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
-            this.render(true);
+            void this.render(true);
         });
     }
 
@@ -435,7 +435,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
             if (randomize) {
                 const variance = (randomizeAmount as number) / 100;
-                for (const char of Object.values(systemData.characteristics) as any[]) {
+                for (const char of Object.values(systemData.characteristics)) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
                     char.total = char.base + char.modifier;

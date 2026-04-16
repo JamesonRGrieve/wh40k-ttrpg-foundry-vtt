@@ -82,9 +82,9 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
      * @param {WH40KNPC} npc - The NPC actor.
      * @returns {Promise<DifficultyCalculatorDialog>}
      */
-    static async show(npc: any): Promise<any> {
+    static show(npc: any): any {
         const dialog = new DifficultyCalculatorDialog(npc);
-        dialog.render(true);
+        void dialog.render(true);
         return dialog;
     }
 
@@ -214,9 +214,9 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #updateQuantity(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static #updateQuantity(this: any, event: Event, target: HTMLElement): void {
         event.preventDefault();
-        const input = (target.closest('form') as HTMLFormElement).querySelector('[name="quantity"]') as HTMLInputElement;
+        const input = target.closest('form').querySelector('[name="quantity"]');
         const quantity = parseInt(input.value, 10) || 1;
         this.#state.quantity = Math.max(1, quantity);
         this.render();
@@ -236,7 +236,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
             quantityInput.addEventListener('input', (event: any) => {
                 const quantity = parseInt((event.target as HTMLInputElement).value, 10) || 1;
                 this.#state.quantity = Math.max(1, quantity);
-                this.render();
+                void this.render();
             });
         }
     }

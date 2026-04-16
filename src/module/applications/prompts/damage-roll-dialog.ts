@@ -2,9 +2,9 @@
  * @file DamageRollDialog - V2 dialog for damage rolls
  */
 
-import BaseRollDialog from './base-roll-dialog.ts';
-import { sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import { ActionData } from '../../rolls/action-data.ts';
+import { sendActionDataToChat } from '../../rolls/roll-helpers.ts';
+import BaseRollDialog from './base-roll-dialog.ts';
 
 /**
  * Dialog for configuring damage rolls.
@@ -75,7 +75,7 @@ export default class DamageRollDialog extends BaseRollDialog {
  * Open a damage roll dialog.
  * @param {object} rollData  The roll data.
  */
-export async function prepareDamageRoll(rollData) {
+export function prepareDamageRoll(rollData) {
     rollData.dh = CONFIG.wh40k;
     const prompt = new DamageRollDialog(rollData);
     prompt.render(true);

@@ -62,7 +62,7 @@ export function ActiveModifiersMixin(Base) {
          * @param {PointerEvent} event - Triggering event
          * @param {HTMLElement} target - Action target
          */
-        static async #viewModifierSource(this: any, event: Event, target: HTMLElement): Promise<void> {
+        static #viewModifierSource(this: any, event: Event, target: HTMLElement): void {
             const itemId = target.dataset.itemId;
             if (!itemId) return;
 
@@ -78,7 +78,7 @@ export function ActiveModifiersMixin(Base) {
          * @param {PointerEvent} event - Triggering event
          * @param {HTMLElement} target - Action target
          */
-        static async #toggleModifiersPanel(this: any, event: Event, target: HTMLElement): Promise<void> {
+        static #toggleModifiersPanel(this: any, event: Event, target: HTMLElement): void {
             this.#modifiersPanelCollapsed = !this.#modifiersPanelCollapsed;
             this.render();
         }
@@ -236,8 +236,8 @@ export function ActiveModifiersMixin(Base) {
             if (modifiers.characteristics) {
                 for (const [char, value] of Object.entries(modifiers.characteristics)) {
                     if (value) {
-                        // @ts-expect-error - operator type
-                        parts.push(`${char.toUpperCase()} ${value > 0 ? '+' : ''}${value}`);
+                        const numVal = Number(value);
+                        parts.push(`${char.toUpperCase()} ${numVal > 0 ? '+' : ''}${numVal}`);
                     }
                 }
             }
@@ -246,8 +246,8 @@ export function ActiveModifiersMixin(Base) {
             if (modifiers.skills) {
                 for (const [skill, value] of Object.entries(modifiers.skills)) {
                     if (value) {
-                        // @ts-expect-error - operator type
-                        parts.push(`${skill} ${value > 0 ? '+' : ''}${value}`);
+                        const numVal = Number(value);
+                        parts.push(`${skill} ${numVal > 0 ? '+' : ''}${numVal}`);
                     }
                 }
             }
@@ -256,8 +256,8 @@ export function ActiveModifiersMixin(Base) {
             if (modifiers.combat) {
                 for (const [type, value] of Object.entries(modifiers.combat)) {
                     if (value) {
-                        // @ts-expect-error - operator type
-                        parts.push(`${type} ${value > 0 ? '+' : ''}${value}`);
+                        const numVal = Number(value);
+                        parts.push(`${type} ${numVal > 0 ? '+' : ''}${numVal}`);
                     }
                 }
             }

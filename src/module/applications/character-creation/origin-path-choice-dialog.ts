@@ -127,9 +127,10 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         // Initialize selections from existing selectedChoices
         const existing = item.system?.selectedChoices || {};
         for (const [key, selected] of Object.entries(existing)) {
-            this.selections.set(key, new Set(selected));
+            const selectedValues = Array.isArray(selected) ? selected : [selected].filter(Boolean);
+            this.selections.set(key, new Set(selectedValues));
             // Reverse-engineer specialization selections from composite values
-            for (const sel of selected) {
+            for (const sel of selectedValues) {
                 const match = sel.match(/^(.+?)\s*\((.+)\)$/);
                 if (match) {
                     const baseValue = match[1].trim();
@@ -213,7 +214,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                                     if (!optUuid) optUuid = resolved.uuid;
                                     const rawDesc = resolved.system?.description?.value || '';
                                     if (rawDesc) {
-                                        optDesc = this._stripAndTruncate(rawDesc, 200);
+                                        optDesc = rawDesc;
                                     }
                                     statBlock = this._buildStatBlock(resolved);
                                 }
@@ -496,7 +497,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #confirm(event: Event, target: HTMLElement): Promise<void> {
+    static #confirm(event: Event, target: HTMLElement): void {
         // Validate all choices are complete
         const incomplete = this.pendingChoices.filter((choice) => {
             const selections = this.selections.get(choice._key) || new Set();
@@ -528,7 +529,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #cancel(event: Event, target: HTMLElement): Promise<void> {
+    static #cancel(event: Event, target: HTMLElement): void {
         if (this._resolvePromise) {
             this._resolvePromise(null);
         }
@@ -566,7 +567,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {FormDataExtended} formData - The form data
      * @private
      */
-    static async #onSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static #onSubmit(event: Event, form: HTMLFormElement, formData: any): void {
         // Same as confirm - call directly on instance
         return OriginPathChoiceDialog.#confirm.call(this, event, form);
     }
