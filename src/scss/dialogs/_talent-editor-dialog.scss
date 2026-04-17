@@ -139,7 +139,7 @@
     .ted-section-hint {
         width: 100%;
         margin: 0;
-        padding-left: calc(1.2rem + #{$wh40k-space-sm});
+        padding-left: calc(1.2rem + var(--wh40k-space-sm));
         font-size: 0.82rem;
         font-style: italic;
         color: var(--color-text-tertiary);
