@@ -8,22 +8,22 @@
 
     // Dynamic border color based on insanity degree
     &.degree-stable {
-        border-left: 4px solid $wh40k-degree-stable;
+        border-left: 4px solid var(--wh40k-degree-stable);
     }
     &.degree-unsettled {
-        border-left: 4px solid $wh40k-degree-unsettled;
+        border-left: 4px solid var(--wh40k-degree-unsettled);
     }
     &.degree-disturbed {
-        border-left: 4px solid $wh40k-degree-disturbed;
+        border-left: 4px solid var(--wh40k-degree-disturbed);
     }
     &.degree-unhinged {
-        border-left: 4px solid $wh40k-degree-unhinged;
+        border-left: 4px solid var(--wh40k-degree-unhinged);
     }
     &.degree-deranged {
-        border-left: 4px solid $wh40k-degree-deranged;
+        border-left: 4px solid var(--wh40k-degree-deranged);
     }
     &.degree-terminally {
-        border-left: 4px solid $wh40k-degree-terminally;
+        border-left: 4px solid var(--wh40k-degree-terminally);
         animation: insane-pulse 2s ease-in-out infinite;
     }
 

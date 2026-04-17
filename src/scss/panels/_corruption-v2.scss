@@ -8,22 +8,22 @@
 
     // Dynamic border color based on corruption degree
     &.degree-pure {
-        border-left: 4px solid $wh40k-degree-pure;
+        border-left: 4px solid var(--wh40k-degree-pure);
     }
     &.degree-tainted {
-        border-left: 4px solid $wh40k-degree-tainted;
+        border-left: 4px solid var(--wh40k-degree-tainted);
     }
     &.degree-soiled {
-        border-left: 4px solid $wh40k-degree-soiled;
+        border-left: 4px solid var(--wh40k-degree-soiled);
     }
     &.degree-debased {
-        border-left: 4px solid $wh40k-degree-debased;
+        border-left: 4px solid var(--wh40k-degree-debased);
     }
     &.degree-profane {
-        border-left: 4px solid $wh40k-degree-profane;
+        border-left: 4px solid var(--wh40k-degree-profane);
     }
     &.degree-damned {
-        border-left: 4px solid $wh40k-degree-damned;
+        border-left: 4px solid var(--wh40k-degree-damned);
         animation: damned-pulse 2s ease-in-out infinite;
     }
 
@@ -434,39 +434,39 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 
         &.degree-pure {
-            background: rgba($wh40k-degree-pure, 0.2);
-            border: 2px solid $wh40k-degree-pure;
-            color: darken($wh40k-degree-pure, 20%);
+            background: #{'rgb(from var(--wh40k-degree-pure) r g b / 0.2)'};
+            border: 2px solid var(--wh40k-degree-pure);
+            color: color-mix(in srgb, var(--wh40k-degree-pure), black 20%);
         }
 
         &.degree-tainted {
-            background: rgba($wh40k-degree-tainted, 0.2);
-            border: 2px solid $wh40k-degree-tainted;
-            color: darken($wh40k-degree-tainted, 25%);
+            background: #{'rgb(from var(--wh40k-degree-tainted) r g b / 0.2)'};
+            border: 2px solid var(--wh40k-degree-tainted);
+            color: color-mix(in srgb, var(--wh40k-degree-tainted), black 25%);
         }
 
         &.degree-soiled {
-            background: rgba($wh40k-degree-soiled, 0.2);
-            border: 2px solid $wh40k-degree-soiled;
-            color: darken($wh40k-degree-soiled, 20%);
+            background: #{'rgb(from var(--wh40k-degree-soiled) r g b / 0.2)'};
+            border: 2px solid var(--wh40k-degree-soiled);
+            color: color-mix(in srgb, var(--wh40k-degree-soiled), black 20%);
         }
 
         &.degree-debased {
-            background: rgba($wh40k-degree-debased, 0.25);
-            border: 2px solid $wh40k-degree-debased;
-            color: $wh40k-degree-debased;
+            background: #{'rgb(from var(--wh40k-degree-debased) r g b / 0.25)'};
+            border: 2px solid var(--wh40k-degree-debased);
+            color: var(--wh40k-degree-debased);
         }
 
         &.degree-profane {
-            background: rgba($wh40k-degree-profane, 0.3);
-            border: 2px solid $wh40k-degree-profane;
-            color: $wh40k-degree-profane;
+            background: #{'rgb(from var(--wh40k-degree-profane) r g b / 0.3)'};
+            border: 2px solid var(--wh40k-degree-profane);
+            color: var(--wh40k-degree-profane);
         }
 
         &.degree-damned {
-            background: rgba($wh40k-degree-damned, 0.3);
-            border: 2px solid $wh40k-degree-damned;
-            color: $wh40k-degree-damned;
+            background: #{'rgb(from var(--wh40k-degree-damned) r g b / 0.3)'};
+            border: 2px solid var(--wh40k-degree-damned);
+            color: var(--wh40k-degree-damned);
             animation: badge-pulse 2s ease-in-out infinite;
         }
     }

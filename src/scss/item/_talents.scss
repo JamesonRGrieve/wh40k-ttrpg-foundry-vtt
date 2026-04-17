@@ -40,7 +40,7 @@
         background: var(--wh40k-panel-bg);
         border: 1px solid var(--wh40k-border-color-light);
         border-radius: var(--wh40k-radius-md);
-        box-shadow: $wh40k-shadow-sm;
+        box-shadow: var(--wh40k-shadow-sm);
         overflow: hidden;
         transition: border-color var(--wh40k-transition-fast);
 
@@ -54,7 +54,7 @@
         align-items: center;
         gap: var(--wh40k-space-sm);
         padding: var(--wh40k-space-sm) var(--wh40k-space-md);
-        background: linear-gradient(180deg, rgba($wh40k-color-gold, 0.12) 0%, rgba($wh40k-color-gold, 0.04) 100%);
+        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.12)'} 0%, #{'rgb(from var(--wh40k-color-gold) r g b / 0.04)'} 100%);
         border-bottom: 1px solid var(--wh40k-border-color-light);
     }
 
@@ -222,10 +222,10 @@
     .wh40k-meta-badge--trait {
         background: rgba(139, 0, 0, 0.15);
         border-color: rgba(139, 0, 0, 0.4);
-        color: lighten($wh40k-color-crimson, 25%);
+        color: color-mix(in srgb, var(--wh40k-color-crimson), white 25%);
 
         i {
-            color: lighten($wh40k-color-crimson, 25%);
+            color: color-mix(in srgb, var(--wh40k-color-crimson), white 25%);
         }
     }
 

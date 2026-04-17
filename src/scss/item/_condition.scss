@@ -139,7 +139,7 @@
             &:focus {
                 outline: none;
                 border-color: var(--wh40k-accent-gold);
-                box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.1);
+                box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.1)'};
             }
         }
 
@@ -157,7 +157,7 @@
             &:focus {
                 outline: none;
                 border-color: var(--wh40k-accent-gold);
-                box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.1);
+                box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.1)'};
             }
         }
     }
@@ -311,7 +311,7 @@
     }
 
     .wh40k-condition-effect {
-        background: rgba($wh40k-accent-gold, 0.08);
+        background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.08)'};
         padding: var(--wh40k-space-sm) var(--wh40k-space-md);
         border-left: 3px solid var(--wh40k-accent-gold);
         border-radius: 4px;
