@@ -49,7 +49,7 @@
 
     &:hover {
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 12px rgba($wh40k-color-gold, 0.3);
+        box-shadow: 0 0 12px #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
 
         .wh40k-talent-header__image-overlay,
         .wh40k-trait-header__image-overlay {
@@ -146,8 +146,8 @@
 
 // Talent Specific Badges
 .wh40k-talent-badge--tier {
-    background: linear-gradient(135deg, rgba($wh40k-accent-talents, 0.15), rgba($wh40k-accent-talents, 0.05));
-    border-color: rgba($wh40k-accent-talents, 0.3);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-talents) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-talents) r g b / 0.05)'});
+    border-color: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.3)'};
     color: var(--wh40k-accent-talents);
 }
 
@@ -170,8 +170,8 @@
 }
 
 .wh40k-talent-badge--category {
-    background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15), rgba($wh40k-color-gold, 0.05));
-    border-color: rgba($wh40k-color-gold, 0.3);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'});
+    border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
     color: var(--wh40k-color-gold);
 }
 
@@ -195,14 +195,14 @@
 
 // Trait Specific Badges
 .wh40k-trait-badge--category {
-    background: linear-gradient(135deg, rgba($wh40k-accent-combat, 0.15), rgba($wh40k-accent-combat, 0.05));
-    border-color: rgba($wh40k-accent-combat, 0.3);
-    color: lighten($wh40k-accent-combat, 15%);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-combat) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-combat) r g b / 0.05)'});
+    border-color: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.3)'};
+    color: color-mix(in srgb, var(--wh40k-accent-combat), white 15%);
 }
 
 .wh40k-trait-badge--level {
-    background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15), rgba($wh40k-color-gold, 0.05));
-    border-color: rgba($wh40k-color-gold, 0.3);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'});
+    border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
     color: var(--wh40k-color-gold);
 }
 
@@ -250,13 +250,13 @@
 
     &:hover {
         color: var(--color-text-primary);
-        background: rgba($wh40k-color-gold, 0.05);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'};
     }
 
     &.active {
         color: var(--wh40k-color-gold);
         border-bottom-color: var(--wh40k-color-gold);
-        background: rgba($wh40k-color-gold, 0.08);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.08)'};
     }
 }
 
@@ -401,7 +401,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.15);
+        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
     }
 
     &::placeholder {
@@ -436,8 +436,8 @@
     display: inline-flex;
     align-items: center;
     padding: 4px 10px;
-    background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15), rgba($wh40k-color-gold, 0.05));
-    border: 1px solid rgba($wh40k-color-gold, 0.3);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'});
+    border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
     border-radius: var(--wh40k-radius-sm);
     font-size: 0.75rem;
     font-weight: 600;
@@ -450,8 +450,8 @@
 
 .wh40k-requirements-display {
     padding: var(--wh40k-space-sm);
-    background: rgba($wh40k-accent-combat, 0.05);
-    border: 1px solid rgba($wh40k-accent-combat, 0.2);
+    background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.05)'};
+    border: 1px solid #{'rgb(from var(--wh40k-accent-combat) r g b / 0.2)'};
     border-radius: var(--wh40k-radius-sm);
 }
 
@@ -459,7 +459,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: lighten($wh40k-accent-combat, 10%);
+    color: color-mix(in srgb, var(--wh40k-accent-combat), white 10%);
     font-size: 0.85rem;
     font-weight: 600;
 

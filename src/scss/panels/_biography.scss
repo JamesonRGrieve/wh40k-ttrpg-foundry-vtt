@@ -30,7 +30,7 @@
 
     &.wh40k-filled {
         background: var(--wh40k-bg-input);
-        border-color: rgba($wh40k-accent-bio, 0.3);
+        border-color: #{'rgb(from var(--wh40k-accent-bio) r g b / 0.3)'};
     }
 
     &:hover {
@@ -185,7 +185,7 @@
     }
 
     &:hover {
-        background: rgba($wh40k-accent-bio, 0.1);
+        background: #{'rgb(from var(--wh40k-accent-bio) r g b / 0.1)'};
         border-color: var(--wh40k-accent-bio);
         color: var(--wh40k-accent-bio);
 
@@ -283,7 +283,7 @@
     font-weight: 600;
     color: var(--wh40k-color-success);
     padding: 2px 6px;
-    background: rgba($wh40k-color-success, 0.15);
+    background: #{'rgb(from var(--wh40k-color-success) r g b / 0.15)'};
     border-radius: 3px;
 }
 
@@ -292,7 +292,7 @@
     font-weight: 600;
     color: var(--wh40k-accent-combat);
     padding: 2px 6px;
-    background: rgba($wh40k-accent-combat, 0.15);
+    background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.15)'};
     border-radius: 3px;
 }
 
@@ -338,7 +338,7 @@
     &:focus-within {
         outline: none;
         border-color: var(--wh40k-accent-bio);
-        box-shadow: 0 0 0 2px rgba($wh40k-accent-bio, 0.1);
+        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-bio) r g b / 0.1)'};
     }
 
     // ProseMirror content styling
@@ -393,7 +393,7 @@
             margin: var(--wh40k-space-sm) 0;
             padding: var(--wh40k-space-sm) var(--wh40k-space-md);
             border-left: 3px solid var(--wh40k-accent-bio);
-            background: rgba($wh40k-accent-bio, 0.05);
+            background: #{'rgb(from var(--wh40k-accent-bio) r g b / 0.05)'};
             font-style: italic;
         }
 
@@ -431,7 +431,7 @@
             }
 
             th {
-                background: rgba($wh40k-accent-bio, 0.1);
+                background: #{'rgb(from var(--wh40k-accent-bio) r g b / 0.1)'};
                 font-weight: 600;
             }
         }
@@ -442,7 +442,7 @@
             text-decoration: underline;
 
             &:hover {
-                color: lighten($wh40k-accent-bio, 10%);
+                color: color-mix(in srgb, var(--wh40k-accent-bio), white 10%);
             }
         }
 

@@ -81,7 +81,7 @@
     &.wh40k-vital-critical-row {
         padding: 4px 0;
         margin-top: 2px;
-        border-top: 1px solid rgba($wh40k-accent-combat, 0.15);
+        border-top: 1px solid #{'rgb(from var(--wh40k-accent-combat) r g b / 0.15)'};
     }
 }
 
@@ -166,7 +166,7 @@
     }
 
     &.wh40k-warning {
-        color: darken($wh40k-accent-gold, 10%);
+        color: color-mix(in srgb, var(--wh40k-accent-gold), black 10%);
     }
 
     &.wh40k-vital-value--static {
@@ -203,7 +203,7 @@
     font-size: 0.7rem;
     font-weight: 700;
     color: var(--wh40k-accent-combat);
-    background: rgba($wh40k-accent-combat, 0.1);
+    background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.1)'};
     padding: 1px 4px;
     border-radius: 3px;
 }
@@ -306,12 +306,12 @@
     &:hover {
         transform: scale(1.2);
         border-color: var(--wh40k-accent-combat);
-        box-shadow: 0 0 4px rgba($wh40k-accent-combat, 0.4);
+        box-shadow: 0 0 4px #{'rgb(from var(--wh40k-accent-combat) r g b / 0.4)'};
     }
 
     &.wh40k-crit-pip-mini--filled {
         background: var(--wh40k-accent-combat);
-        border-color: darken($wh40k-accent-combat, 10%);
+        border-color: color-mix(in srgb, var(--wh40k-accent-combat), black 10%);
     }
 }
 
@@ -611,8 +611,8 @@
     font-size: 0.6rem;
     font-weight: 700;
     padding: 1px 4px;
-    background: rgba($wh40k-accent-talents, 0.15);
-    border: 1px solid rgba($wh40k-accent-talents, 0.4);
+    background: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.15)'};
+    border: 1px solid #{'rgb(from var(--wh40k-accent-talents) r g b / 0.4)'};
     border-radius: 3px;
     color: var(--wh40k-accent-talents);
 }
@@ -789,7 +789,7 @@
     transition: all var(--wh40k-transition-fast);
 
     &:hover {
-        background: darken($wh40k-accent-combat, 10%);
+        background: color-mix(in srgb, var(--wh40k-accent-combat), black 10%);
         transform: scale(1.05);
     }
 }
@@ -1125,7 +1125,7 @@
     transition: all var(--wh40k-transition-fast);
 
     &:hover {
-        background: rgba($wh40k-color-gold, 0.15);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
         border-color: var(--wh40k-color-gold);
         color: var(--wh40k-color-gold);
     }

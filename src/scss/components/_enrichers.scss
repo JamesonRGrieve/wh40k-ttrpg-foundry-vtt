@@ -27,14 +27,14 @@
 
 // Characteristic enricher
 .wh40k-enricher-characteristic {
-    background: rgba($wh40k-accent-gold, 0.15);
-    border: 1px solid rgba($wh40k-accent-gold, 0.3);
+    background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.15)'};
+    border: 1px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.3)'};
     color: var(--wh40k-accent-gold);
 
     &:hover {
-        background: rgba($wh40k-accent-gold, 0.25);
+        background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.25)'};
         border-color: var(--wh40k-accent-gold);
-        color: lighten($wh40k-accent-gold, 10%);
+        color: color-mix(in srgb, var(--wh40k-accent-gold), white 10%);
     }
 
     i {
@@ -44,14 +44,14 @@
 
 // Skill enricher
 .wh40k-enricher-skill {
-    background: rgba($wh40k-accent-skills, 0.15);
-    border: 1px solid rgba($wh40k-accent-skills, 0.3);
+    background: #{'rgb(from var(--wh40k-accent-skills) r g b / 0.15)'};
+    border: 1px solid #{'rgb(from var(--wh40k-accent-skills) r g b / 0.3)'};
     color: var(--wh40k-accent-skills);
 
     &:hover {
-        background: rgba($wh40k-accent-skills, 0.25);
+        background: #{'rgb(from var(--wh40k-accent-skills) r g b / 0.25)'};
         border-color: var(--wh40k-accent-skills);
-        color: lighten($wh40k-accent-skills, 10%);
+        color: color-mix(in srgb, var(--wh40k-accent-skills), white 10%);
     }
 
     i {
@@ -64,8 +64,8 @@
     cursor: default;
 
     &.positive {
-        background: rgba($wh40k-color-success, 0.15);
-        border: 1px solid rgba($wh40k-color-success, 0.3);
+        background: #{'rgb(from var(--wh40k-color-success) r g b / 0.15)'};
+        border: 1px solid #{'rgb(from var(--wh40k-color-success) r g b / 0.3)'};
         color: var(--wh40k-color-success);
 
         i {
@@ -73,15 +73,15 @@
         }
 
         &:hover {
-            background: rgba($wh40k-color-success, 0.25);
+            background: #{'rgb(from var(--wh40k-color-success) r g b / 0.25)'};
             transform: none;
             box-shadow: none;
         }
     }
 
     &.negative {
-        background: rgba($wh40k-accent-combat, 0.15);
-        border: 1px solid rgba($wh40k-accent-combat, 0.3);
+        background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.15)'};
+        border: 1px solid #{'rgb(from var(--wh40k-accent-combat) r g b / 0.3)'};
         color: var(--wh40k-accent-combat);
 
         i {
@@ -89,7 +89,7 @@
         }
 
         &:hover {
-            background: rgba($wh40k-accent-combat, 0.25);
+            background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.25)'};
             transform: none;
             box-shadow: none;
         }
@@ -98,8 +98,8 @@
 
 // Armor enricher
 .wh40k-enricher-armor {
-    background: rgba($wh40k-accent-combat, 0.15);
-    border: 1px solid rgba($wh40k-accent-combat, 0.3);
+    background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.15)'};
+    border: 1px solid #{'rgb(from var(--wh40k-accent-combat) r g b / 0.3)'};
     color: var(--color-text-primary);
     cursor: default;
 
@@ -108,7 +108,7 @@
     }
 
     &:hover {
-        background: rgba($wh40k-accent-combat, 0.25);
+        background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.25)'};
         transform: none;
         box-shadow: none;
     }
@@ -167,7 +167,7 @@
 
 // Error enricher
 .wh40k-enricher-error {
-    background: rgba($wh40k-accent-combat, 0.2);
+    background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.2)'};
     border: 1px dashed var(--wh40k-accent-combat);
     color: var(--wh40k-accent-combat);
     cursor: help;
@@ -177,7 +177,7 @@
     border-radius: 3px;
 
     &:hover {
-        background: rgba($wh40k-accent-combat, 0.3);
+        background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.3)'};
     }
 }
 

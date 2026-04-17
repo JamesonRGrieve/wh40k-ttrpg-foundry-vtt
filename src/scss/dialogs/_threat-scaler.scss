@@ -219,7 +219,7 @@
             &:hover {
                 background: rgba(139, 0, 0, 0.2);
                 border-color: var(--wh40k-accent-gold);
-                box-shadow: 0 1px 3px $wh40k-shadow-sm;
+                box-shadow: 0 1px 3px var(--wh40k-shadow-sm);
             }
 
             i {

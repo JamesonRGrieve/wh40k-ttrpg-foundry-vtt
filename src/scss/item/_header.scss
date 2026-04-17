@@ -26,7 +26,7 @@
     border: 2px solid var(--wh40k-gold);
     border-radius: var(--wh40k-radius-md);
     overflow: hidden;
-    box-shadow: $wh40k-shadow-md, 0 0 10px rgba(212, 175, 55, 0.3);
+    box-shadow: var(--wh40k-shadow-md), 0 0 10px rgba(212, 175, 55, 0.3);
     cursor: pointer;
     transition: transform var(--wh40k-transition-base), box-shadow var(--wh40k-transition-base);
     flex-shrink: 0;
@@ -39,7 +39,7 @@
 
     &:hover {
         transform: scale(1.05);
-        box-shadow: $wh40k-shadow-lg, 0 0 20px rgba(212, 175, 55, 0.5);
+        box-shadow: var(--wh40k-shadow-lg), 0 0 20px rgba(212, 175, 55, 0.5);
     }
 
     // Small variant for compact sheets

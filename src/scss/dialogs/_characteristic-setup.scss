@@ -42,9 +42,9 @@ $csd-danger: #dc143c;
     font-size: 0.9rem;
     opacity: 0.9;
     padding: 0.5rem 1rem;
-    background: rgba($csd-primary, 0.1);
+    background: #{'rgb(from var(--csd-primary) r g b / 0.1)'};
     border-radius: 6px;
-    border: 1px solid rgba($csd-primary, 0.2);
+    border: 1px solid #{'rgb(from var(--csd-primary) r g b / 0.2)'};
 
     p {
         margin: 0;
@@ -57,18 +57,18 @@ $csd-danger: #dc143c;
 .csd-section {
     background: rgba(255, 255, 255, 0.03);
     border-radius: 8px;
-    border: 1px solid rgba($csd-primary, 0.3);
+    border: 1px solid #{'rgb(from var(--csd-primary) r g b / 0.3)'};
     padding: 1rem;
     transition: border-color 0.3s ease;
 
     &.drop-valid {
-        border-color: $csd-gold;
-        background: rgba($csd-gold, 0.05);
+        border-color: var(--csd-gold);
+        background: #{'rgb(from var(--csd-gold) r g b / 0.05)'};
     }
 
     &.drop-hover {
-        border-color: $csd-gold;
-        box-shadow: 0 0 15px rgba($csd-gold, 0.3);
+        border-color: var(--csd-gold);
+        box-shadow: 0 0 15px #{'rgb(from var(--csd-gold) r g b / 0.3)'};
     }
 }
 
@@ -78,7 +78,7 @@ $csd-danger: #dc143c;
     gap: 0.5rem;
     margin: 0 0 0.75rem 0;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba($csd-primary, 0.3);
+    border-bottom: 1px solid #{'rgb(from var(--csd-primary) r g b / 0.3)'};
     color: $csd-primary;
     font-size: 1rem;
     font-weight: 600;
@@ -86,7 +86,7 @@ $csd-danger: #dc143c;
     letter-spacing: 0.05em;
 
     i {
-        color: $csd-gold;
+        color: var(--csd-gold);
     }
 }
 
@@ -153,8 +153,8 @@ $csd-danger: #dc143c;
     justify-content: center;
     width: 60px;
     height: 65px;
-    background: linear-gradient(135deg, rgba($csd-primary, 0.2), rgba($csd-primary, 0.1));
-    border: 2px solid rgba($csd-primary, 0.4);
+    background: linear-gradient(135deg, #{'rgb(from var(--csd-primary) r g b / 0.2)'}, #{'rgb(from var(--csd-primary) r g b / 0.1)'});
+    border: 2px solid #{'rgb(from var(--csd-primary) r g b / 0.4)'};
     border-radius: 8px;
     cursor: pointer;
     transition: all var(--wh40k-transition-base);
@@ -186,11 +186,11 @@ $csd-danger: #dc143c;
 
         &:hover {
             opacity: 0.9;
-            border-color: $csd-gold;
+            border-color: var(--csd-gold);
         }
 
         .csd-roll-value {
-            color: rgba($csd-bone, 0.5);
+            color: #{'rgb(from var(--csd-bone) r g b / 0.5)'};
         }
     }
 
@@ -228,7 +228,7 @@ $csd-danger: #dc143c;
 
 .csd-roll-label {
     font-size: 0.65rem;
-    color: rgba($csd-bone, 0.6);
+    color: #{'rgb(from var(--csd-bone) r g b / 0.6)'};
     text-transform: uppercase;
     margin-top: 0.25rem;
     font-weight: 700;
@@ -252,17 +252,17 @@ $csd-danger: #dc143c;
     font-size: 1.2rem;
     font-weight: bold;
     background: rgba(0, 0, 0, 0.5);
-    border: 2px solid $csd-gold;
+    border: 2px solid var(--csd-gold);
     border-radius: 4px;
     color: $csd-bone;
     outline: none;
 
     &:focus {
-        box-shadow: 0 0 8px rgba($csd-gold, 0.5);
+        box-shadow: 0 0 8px #{'rgb(from var(--csd-gold) r g b / 0.5)'};
     }
 
     &::placeholder {
-        color: rgba($csd-bone, 0.3);
+        color: #{'rgb(from var(--csd-bone) r g b / 0.3)'};
         font-size: 0.7rem;
     }
 }
@@ -270,7 +270,7 @@ $csd-danger: #dc143c;
 .csd-bank-hint {
     text-align: center;
     font-size: 0.75rem;
-    color: rgba($csd-bone, 0.5);
+    color: #{'rgb(from var(--csd-bone) r g b / 0.5)'};
     margin: 0.5rem 0 0 0;
     font-style: italic;
 }
@@ -282,17 +282,17 @@ $csd-danger: #dc143c;
     align-items: center;
     justify-content: center;
     padding: 0;
-    background: rgba($csd-primary, 0.2);
-    border: 1px solid rgba($csd-primary, 0.45);
+    background: #{'rgb(from var(--csd-primary) r g b / 0.2)'};
+    border: 1px solid #{'rgb(from var(--csd-primary) r g b / 0.45)'};
     border-radius: 6px;
     color: $csd-bone;
     cursor: pointer;
     transition: all var(--wh40k-transition-base);
 
     &:hover {
-        background: rgba($csd-gold, 0.18);
-        border-color: rgba($csd-gold, 0.55);
-        color: $csd-gold;
+        background: #{'rgb(from var(--csd-gold) r g b / 0.18)'};
+        border-color: #{'rgb(from var(--csd-gold) r g b / 0.55)'};
+        color: var(--csd-gold);
     }
 
     i {
@@ -318,36 +318,36 @@ $csd-danger: #dc143c;
 .csd-char-slot {
     flex: 1;
     max-width: none;
-    background: linear-gradient(135deg, rgba($csd-primary, 0.15), rgba($csd-primary, 0.05));
-    border: 2px solid rgba($csd-primary, 0.35);
+    background: linear-gradient(135deg, #{'rgb(from var(--csd-primary) r g b / 0.15)'}, #{'rgb(from var(--csd-primary) r g b / 0.05)'});
+    border: 2px solid #{'rgb(from var(--csd-primary) r g b / 0.35)'};
     border-radius: 8px;
     padding: 0.75rem;
     transition: all var(--wh40k-transition-medium);
 
     &:hover {
-        border-color: rgba($csd-primary, 0.6);
+        border-color: #{'rgb(from var(--csd-primary) r g b / 0.6)'};
     }
 
     &.empty {
         .csd-char-total {
-            color: rgba($csd-bone, 0.3);
+            color: #{'rgb(from var(--csd-bone) r g b / 0.3)'};
         }
     }
 
     &.has-roll {
-        border-color: rgba($csd-success, 0.5);
-        background: linear-gradient(135deg, rgba($csd-success, 0.1), rgba($csd-primary, 0.05));
+        border-color: #{'rgb(from var(--csd-success) r g b / 0.5)'};
+        background: linear-gradient(135deg, #{'rgb(from var(--csd-success) r g b / 0.1)'}, #{'rgb(from var(--csd-primary) r g b / 0.05)'});
     }
 
     // Drop states
     &.drop-valid {
-        border-color: $csd-gold;
-        background: linear-gradient(135deg, rgba($csd-gold, 0.15), rgba($csd-gold, 0.05));
+        border-color: var(--csd-gold);
+        background: linear-gradient(135deg, #{'rgb(from var(--csd-gold) r g b / 0.15)'}, #{'rgb(from var(--csd-gold) r g b / 0.05)'});
     }
 
     &.drop-hover {
         transform: scale(1.02);
-        box-shadow: 0 0 20px rgba($csd-gold, 0.4);
+        box-shadow: 0 0 20px #{'rgb(from var(--csd-gold) r g b / 0.4)'};
         border-style: solid;
     }
 
@@ -378,7 +378,7 @@ $csd-danger: #dc143c;
     gap: 0.5rem;
     margin-bottom: 0.5rem;
     padding-bottom: 0.35rem;
-    border-bottom: 1px solid rgba($csd-primary, 0.2);
+    border-bottom: 1px solid #{'rgb(from var(--csd-primary) r g b / 0.2)'};
 }
 
 .csd-char-short {
@@ -389,7 +389,7 @@ $csd-danger: #dc143c;
 
 .csd-char-name {
     font-size: 0.7rem;
-    color: rgba($csd-bone, 0.7);
+    color: #{'rgb(from var(--csd-bone) r g b / 0.7)'};
     text-transform: uppercase;
     letter-spacing: 0.03em;
 }
@@ -421,20 +421,20 @@ $csd-danger: #dc143c;
     font-size: 1rem;
     font-weight: 600;
     background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba($csd-gold, 0.5);
+    border: 1px solid #{'rgb(from var(--csd-gold) r g b / 0.5)'};
     border-radius: 4px;
     color: $csd-bone;
 
     &:focus {
         outline: none;
-        border-color: $csd-gold;
-        box-shadow: 0 0 6px rgba($csd-gold, 0.4);
+        border-color: var(--csd-gold);
+        box-shadow: 0 0 6px #{'rgb(from var(--csd-gold) r g b / 0.4)'};
     }
 }
 
 .csd-base-label {
     font-size: 0.55rem;
-    color: rgba($csd-bone, 0.5);
+    color: #{'rgb(from var(--csd-bone) r g b / 0.5)'};
     text-transform: uppercase;
 }
 
@@ -442,7 +442,7 @@ $csd-danger: #dc143c;
 .csd-char-equals {
     font-size: 1rem;
     font-weight: bold;
-    color: rgba($csd-bone, 0.6);
+    color: #{'rgb(from var(--csd-bone) r g b / 0.6)'};
 }
 
 .csd-char-roll-slot {
@@ -461,13 +461,13 @@ $csd-danger: #dc143c;
     align-items: center;
     justify-content: center;
     padding: 0.2rem 0.35rem;
-    background: rgba($csd-primary, 0.14);
-    border: 2px solid rgba($csd-primary, 0.25);
+    background: #{'rgb(from var(--csd-primary) r g b / 0.14)'};
+    border: 2px solid #{'rgb(from var(--csd-primary) r g b / 0.25)'};
     border-radius: 6px;
 
     &.has-origin {
-        background: rgba($csd-gold, 0.12);
-        border-color: rgba($csd-gold, 0.45);
+        background: #{'rgb(from var(--csd-gold) r g b / 0.12)'};
+        border-color: #{'rgb(from var(--csd-gold) r g b / 0.45)'};
         cursor: help;
     }
 }
@@ -482,7 +482,7 @@ $csd-danger: #dc143c;
     font-size: 0.5rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: rgba($csd-bone, 0.55);
+    color: #{'rgb(from var(--csd-bone) r g b / 0.55)'};
 }
 
 .csd-drop-zone {
@@ -491,12 +491,12 @@ $csd-danger: #dc143c;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px dashed rgba($csd-primary, 0.4);
+    border: 2px dashed #{'rgb(from var(--csd-primary) r g b / 0.4)'};
     border-radius: 6px;
     background: rgba(0, 0, 0, 0.2);
 
     i {
-        color: rgba($csd-bone, 0.3);
+        color: #{'rgb(from var(--csd-bone) r g b / 0.3)'};
         font-size: 1rem;
         animation: csd-bounce 2s ease-in-out infinite;
     }
@@ -518,8 +518,8 @@ $csd-danger: #dc143c;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba($csd-success, 0.3), rgba($csd-success, 0.15));
-    border: 2px solid rgba($csd-success, 0.6);
+    background: linear-gradient(135deg, #{'rgb(from var(--csd-success) r g b / 0.3)'}, #{'rgb(from var(--csd-success) r g b / 0.15)'});
+    border: 2px solid #{'rgb(from var(--csd-success) r g b / 0.6)'};
     border-radius: 6px;
     font-size: 1.2rem;
     font-weight: bold;
@@ -530,7 +530,7 @@ $csd-danger: #dc143c;
     &:hover {
         transform: scale(1.1);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        border-color: $csd-gold;
+        border-color: var(--csd-gold);
     }
 
     &.dragging {
@@ -545,8 +545,8 @@ $csd-danger: #dc143c;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba($csd-primary, 0.2);
-    border: 2px solid rgba($csd-primary, 0.4);
+    background: #{'rgb(from var(--csd-primary) r g b / 0.2)'};
+    border: 2px solid #{'rgb(from var(--csd-primary) r g b / 0.4)'};
     border-radius: 6px;
     font-size: 1.3rem;
     font-weight: bold;
@@ -554,9 +554,9 @@ $csd-danger: #dc143c;
     transition: all var(--wh40k-transition-medium);
 
     &.has-value {
-        background: rgba($csd-gold, 0.15);
-        border-color: rgba($csd-gold, 0.5);
-        color: $csd-gold;
+        background: #{'rgb(from var(--csd-gold) r g b / 0.15)'};
+        border-color: #{'rgb(from var(--csd-gold) r g b / 0.5)'};
+        color: var(--csd-gold);
         animation: csd-value-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 }
@@ -583,7 +583,7 @@ $csd-danger: #dc143c;
     justify-content: flex-end;
     gap: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba($csd-primary, 0.2);
+    border-top: 1px solid #{'rgb(from var(--csd-primary) r g b / 0.2)'};
 }
 
 .csd-btn {
@@ -604,24 +604,24 @@ $csd-danger: #dc143c;
 }
 
 .csd-btn-secondary {
-    background: rgba($csd-primary, 0.2);
-    border: 1px solid rgba($csd-primary, 0.4);
+    background: #{'rgb(from var(--csd-primary) r g b / 0.2)'};
+    border: 1px solid #{'rgb(from var(--csd-primary) r g b / 0.4)'};
     color: $csd-bone;
 
     &:hover:not(:disabled) {
-        background: rgba($csd-primary, 0.3);
-        border-color: rgba($csd-primary, 0.6);
+        background: #{'rgb(from var(--csd-primary) r g b / 0.3)'};
+        border-color: #{'rgb(from var(--csd-primary) r g b / 0.6)'};
     }
 }
 
 .csd-btn-primary {
-    background: linear-gradient(135deg, $csd-gold, darken($csd-gold, 15%));
-    border: 1px solid $csd-gold;
+    background: linear-gradient(135deg, var(--csd-gold), color-mix(in srgb, var(--csd-gold), black 15%));
+    border: 1px solid var(--csd-gold);
     color: #1a1a24;
 
     &:hover:not(:disabled) {
-        background: linear-gradient(135deg, lighten($csd-gold, 10%), $csd-gold);
-        box-shadow: 0 2px 12px rgba($csd-gold, 0.4);
+        background: linear-gradient(135deg, color-mix(in srgb, var(--csd-gold), white 10%), var(--csd-gold));
+        box-shadow: 0 2px 12px #{'rgb(from var(--csd-gold) r g b / 0.4)'};
         transform: translateY(-1px);
     }
 }
@@ -643,10 +643,10 @@ $csd-danger: #dc143c;
 @keyframes csd-pulse-border {
     0%,
     100% {
-        border-color: rgba($csd-primary, 0.35);
+        border-color: #{'rgb(from var(--csd-primary) r g b / 0.35)'};
     }
     50% {
-        border-color: rgba($csd-gold, 0.6);
+        border-color: #{'rgb(from var(--csd-gold) r g b / 0.6)'};
     }
 }
 

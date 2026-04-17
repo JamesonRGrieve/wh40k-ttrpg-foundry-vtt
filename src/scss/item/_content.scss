@@ -22,7 +22,7 @@
         font-family: var(--wh40k-font-display);
         font-size: var(--wh40k-font-size-lg);
         color: #fff;
-        box-shadow: $wh40k-shadow-md;
+        box-shadow: var(--wh40k-shadow-md);
     }
 
     &__info {

@@ -10,7 +10,7 @@
     }
 
     .wh40k-panel-header {
-        background: linear-gradient(180deg, rgba($wh40k-accent-gold, 0.12) 0%, transparent 100%);
+        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.12)'} 0%, transparent 100%);
     }
 }
 
@@ -22,7 +22,7 @@
     }
 
     .wh40k-panel-header {
-        background: linear-gradient(180deg, rgba($wh40k-accent-combat, 0.08) 0%, transparent 100%);
+        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-combat) r g b / 0.08)'} 0%, transparent 100%);
     }
 }
 
@@ -34,7 +34,7 @@
     }
 
     .wh40k-panel-header {
-        background: linear-gradient(180deg, rgba($wh40k-accent-combat, 0.12) 0%, transparent 100%);
+        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-combat) r g b / 0.12)'} 0%, transparent 100%);
     }
 
     .wh40k-panel-title i {
@@ -50,7 +50,7 @@
     padding: var(--wh40k-space-md);
 
     .wh40k-panel-header {
-        background: linear-gradient(180deg, rgba($wh40k-accent-skills, 0.12) 0%, transparent 100%);
+        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-skills) r g b / 0.12)'} 0%, transparent 100%);
     }
 
     .wh40k-panel-title i {
@@ -75,7 +75,7 @@
     // Note: specialties uses wh40k-specialties-layout which has its own grid styling
     .wh40k-panel-header,
     .wh40k-specialist-header {
-        background: linear-gradient(180deg, rgba($wh40k-accent-talents, 0.12) 0%, transparent 100%);
+        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-talents) r g b / 0.12)'} 0%, transparent 100%);
     }
 }
 
@@ -84,7 +84,7 @@
     .wh40k-panel-header,
     .wh40k-specialist-header,
     .wh40k-ability-header {
-        background: linear-gradient(180deg, rgba($wh40k-accent-talents, 0.12) 0%, transparent 100%);
+        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-talents) r g b / 0.12)'} 0%, transparent 100%);
     }
 }
 
@@ -95,7 +95,7 @@
     }
 
     .wh40k-panel-header {
-        background: linear-gradient(180deg, rgba($wh40k-accent-equipment, 0.12) 0%, transparent 100%);
+        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-equipment) r g b / 0.12)'} 0%, transparent 100%);
     }
 }
 
@@ -106,7 +106,7 @@
     }
 
     .wh40k-panel-header {
-        background: linear-gradient(180deg, rgba($wh40k-accent-powers, 0.12) 0%, transparent 100%);
+        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-powers) r g b / 0.12)'} 0%, transparent 100%);
     }
 }
 
@@ -117,7 +117,7 @@
     }
 
     .wh40k-panel-header {
-        background: linear-gradient(180deg, rgba($wh40k-accent-dynasty, 0.12) 0%, transparent 100%);
+        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-dynasty) r g b / 0.12)'} 0%, transparent 100%);
     }
 }
 
@@ -128,7 +128,7 @@
     }
 
     .wh40k-panel-header {
-        background: linear-gradient(180deg, rgba($wh40k-accent-bio, 0.08) 0%, transparent 100%);
+        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-bio) r g b / 0.08)'} 0%, transparent 100%);
     }
 }
 

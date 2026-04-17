@@ -46,7 +46,7 @@
 
     &:hover {
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 12px rgba($wh40k-color-gold, 0.3);
+        box-shadow: 0 0 12px #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
 
         .wh40k-origin-header__image-overlay {
             opacity: 1;
@@ -149,7 +149,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.15);
+        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
     }
 }
 
@@ -183,8 +183,8 @@
 
 // Step-specific colors (matching step index)
 .wh40k-origin-badge--step {
-    background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15), rgba($wh40k-color-gold, 0.05));
-    border-color: rgba($wh40k-color-gold, 0.3);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'});
+    border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
     color: var(--wh40k-color-gold);
 }
 
@@ -225,14 +225,14 @@
 
 .wh40k-origin-badge--step5 {
     // Career - Gold/Achievement
-    background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.2), rgba($wh40k-color-gold, 0.1));
-    border-color: rgba($wh40k-color-gold, 0.4);
-    color: lighten($wh40k-color-gold, 10%);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.2)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.1)'});
+    border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.4)'};
+    color: color-mix(in srgb, var(--wh40k-color-gold), white 10%);
 }
 
 .wh40k-origin-badge--index {
-    background: linear-gradient(135deg, rgba($wh40k-accent-skills, 0.15), rgba($wh40k-accent-skills, 0.05));
-    border-color: rgba($wh40k-accent-skills, 0.3);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-skills) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-skills) r g b / 0.05)'});
+    border-color: #{'rgb(from var(--wh40k-accent-skills) r g b / 0.3)'};
     color: var(--wh40k-accent-skills);
 }
 
@@ -272,13 +272,13 @@
 
     &:hover {
         color: var(--color-text-primary);
-        background: rgba($wh40k-color-gold, 0.05);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'};
     }
 
     &.active {
         color: var(--wh40k-color-gold);
         border-bottom-color: var(--wh40k-color-gold);
-        background: rgba($wh40k-color-gold, 0.08);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.08)'};
     }
 }
 
@@ -404,7 +404,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.15);
+        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
     }
 }
 
@@ -475,7 +475,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.15);
+        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
     }
 }
 
@@ -545,14 +545,14 @@
     text-transform: uppercase;
 
     &--trained {
-        background: rgba($wh40k-accent-skills, 0.15);
-        border: 1px solid rgba($wh40k-accent-skills, 0.3);
+        background: #{'rgb(from var(--wh40k-accent-skills) r g b / 0.15)'};
+        border: 1px solid #{'rgb(from var(--wh40k-accent-skills) r g b / 0.3)'};
         color: var(--wh40k-accent-skills);
     }
 
     &--plus10 {
-        background: rgba($wh40k-color-gold, 0.15);
-        border: 1px solid rgba($wh40k-color-gold, 0.3);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+        border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
         color: var(--wh40k-color-gold);
     }
 
@@ -577,8 +577,8 @@
     display: inline-flex;
     align-items: center;
     padding: 4px 10px;
-    background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15), rgba($wh40k-color-gold, 0.05));
-    border: 1px solid rgba($wh40k-color-gold, 0.3);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'});
+    border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
     border-radius: var(--wh40k-radius-sm);
     font-size: 0.75rem;
     font-weight: 600;
@@ -677,9 +677,9 @@
     }
 
     &--excluded {
-        background: rgba($wh40k-accent-combat, 0.1);
-        border: 1px solid rgba($wh40k-accent-combat, 0.3);
-        color: lighten($wh40k-accent-combat, 15%);
+        background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.1)'};
+        border: 1px solid #{'rgb(from var(--wh40k-accent-combat) r g b / 0.3)'};
+        color: color-mix(in srgb, var(--wh40k-accent-combat), white 15%);
 
         i {
             color: var(--wh40k-accent-combat);
@@ -709,27 +709,27 @@
     text-transform: uppercase;
 
     &--skill {
-        background: rgba($wh40k-accent-skills, 0.15);
-        border: 1px solid rgba($wh40k-accent-skills, 0.3);
+        background: #{'rgb(from var(--wh40k-accent-skills) r g b / 0.15)'};
+        border: 1px solid #{'rgb(from var(--wh40k-accent-skills) r g b / 0.3)'};
         color: var(--wh40k-accent-skills);
     }
 
     &--talent {
-        background: rgba($wh40k-accent-talents, 0.15);
-        border: 1px solid rgba($wh40k-accent-talents, 0.3);
+        background: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.15)'};
+        border: 1px solid #{'rgb(from var(--wh40k-accent-talents) r g b / 0.3)'};
         color: var(--wh40k-accent-talents);
     }
 
     &--characteristic {
-        background: rgba($wh40k-accent-combat, 0.15);
-        border: 1px solid rgba($wh40k-accent-combat, 0.3);
-        color: lighten($wh40k-accent-combat, 15%);
+        background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.15)'};
+        border: 1px solid #{'rgb(from var(--wh40k-accent-combat) r g b / 0.3)'};
+        color: color-mix(in srgb, var(--wh40k-accent-combat), white 15%);
     }
 
     &--equipment {
-        background: rgba($wh40k-accent-equipment, 0.15);
-        border: 1px solid rgba($wh40k-accent-equipment, 0.3);
-        color: lighten($wh40k-accent-equipment, 15%);
+        background: #{'rgb(from var(--wh40k-accent-equipment) r g b / 0.15)'};
+        border: 1px solid #{'rgb(from var(--wh40k-accent-equipment) r g b / 0.3)'};
+        color: color-mix(in srgb, var(--wh40k-accent-equipment), white 15%);
     }
 }
 
@@ -738,7 +738,7 @@
     font-weight: 600;
     color: var(--wh40k-color-gold);
     padding: 4px 10px;
-    background: rgba($wh40k-color-gold, 0.1);
+    background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.1)'};
     border-radius: var(--wh40k-radius-sm);
 }
 
@@ -797,7 +797,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.15);
+        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
     }
 
     &::placeholder {

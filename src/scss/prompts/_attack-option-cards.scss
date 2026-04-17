@@ -192,7 +192,7 @@
         border-color: var(--wh40k-border-medium);
         background: var(--wh40k-bg-paper-light);
         transform: translateY(-1px);
-        box-shadow: $wh40k-shadow-sm;
+        box-shadow: var(--wh40k-shadow-sm);
         color: var(--wh40k-text-primary);
     }
 
@@ -204,14 +204,14 @@
     // ── Selected state ──
     &--selected {
         border-color: var(--wh40k-color-gold);
-        background: rgba($wh40k-color-gold, 0.1);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.1)'};
         color: var(--wh40k-text-primary);
-        box-shadow: 0 0 6px rgba($wh40k-color-gold, 0.15);
+        box-shadow: 0 0 6px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
 
         &:hover:not(:disabled) {
             border-color: var(--wh40k-color-gold-light);
-            background: rgba($wh40k-color-gold, 0.15);
-            box-shadow: 0 0 8px rgba($wh40k-color-gold, 0.25);
+            background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+            box-shadow: 0 0 8px #{'rgb(from var(--wh40k-color-gold) r g b / 0.25)'};
         }
 
         .urd-card__icon {
@@ -222,13 +222,13 @@
     // ── Active toggle state (multi-select) ──
     &--active {
         border-color: var(--wh40k-color-gold);
-        background: rgba($wh40k-color-gold, 0.1);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.1)'};
         color: var(--wh40k-text-primary);
-        box-shadow: 0 0 6px rgba($wh40k-color-gold, 0.15);
+        box-shadow: 0 0 6px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
 
         &:hover:not(:disabled) {
             border-color: var(--wh40k-color-gold-light);
-            background: rgba($wh40k-color-gold, 0.15);
+            background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
         }
 
         .urd-card__icon {

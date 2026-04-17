@@ -39,8 +39,8 @@ $cyber-success: #2ecc71;
     grid-template-columns: 64px 1fr auto;
     gap: 1rem;
     padding: 0.75rem 1rem;
-    background: linear-gradient(135deg, rgba($cyber-primary, 0.15) 0%, rgba($cyber-primary, 0.05) 100%);
-    border-bottom: 2px solid rgba($cyber-primary, 0.4);
+    background: linear-gradient(135deg, #{'rgb(from var(--cyber-primary) r g b / 0.15)'} 0%, #{'rgb(from var(--cyber-primary) r g b / 0.05)'} 100%);
+    border-bottom: 2px solid #{'rgb(from var(--cyber-primary) r g b / 0.4)'};
 
     &__image {
         width: 64px;
@@ -48,7 +48,7 @@ $cyber-success: #2ecc71;
         border-radius: 8px;
         overflow: hidden;
         position: relative;
-        border: 2px solid rgba($cyber-primary, 0.5);
+        border: 2px solid #{'rgb(from var(--cyber-primary) r g b / 0.5)'};
         cursor: pointer;
 
         img {
@@ -139,16 +139,16 @@ $cyber-success: #2ecc71;
 
     // Type badge
     &--type {
-        background: rgba($cyber-primary, 0.25);
-        border-color: rgba($cyber-primary, 0.5);
+        background: #{'rgb(from var(--cyber-primary) r g b / 0.25)'};
+        border-color: #{'rgb(from var(--cyber-primary) r g b / 0.5)'};
         color: $cyber-primary;
     }
 
     // Location badge
     &--location {
-        background: rgba($cyber-secondary, 0.25);
-        border-color: rgba($cyber-secondary, 0.5);
-        color: lighten($cyber-secondary, 20%);
+        background: #{'rgb(from var(--cyber-secondary) r g b / 0.25)'};
+        border-color: #{'rgb(from var(--cyber-secondary) r g b / 0.5)'};
+        color: color-mix(in srgb, var(--cyber-secondary), white 20%);
     }
 
     // Craftsmanship
@@ -161,13 +161,13 @@ $cyber-success: #2ecc71;
     }
     &--good {
         color: $cyber-success;
-        border-color: rgba($cyber-success, 0.4);
-        background: rgba($cyber-success, 0.15);
+        border-color: #{'rgb(from var(--cyber-success) r g b / 0.4)'};
+        background: #{'rgb(from var(--cyber-success) r g b / 0.15)'};
     }
     &--best {
         color: var(--wh40k-color-gold);
-        border-color: rgba($wh40k-color-gold, 0.4);
-        background: rgba($wh40k-color-gold, 0.15);
+        border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.4)'};
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
     }
 }
 
@@ -192,11 +192,11 @@ $cyber-success: #2ecc71;
     }
 
     &::-webkit-scrollbar-thumb {
-        background: rgba($cyber-primary, 0.4);
+        background: #{'rgb(from var(--cyber-primary) r g b / 0.4)'};
         border-radius: 4px;
 
         &:hover {
-            background: rgba($cyber-primary, 0.6);
+            background: #{'rgb(from var(--cyber-primary) r g b / 0.6)'};
         }
     }
 }
@@ -207,7 +207,7 @@ $cyber-success: #2ecc71;
 
 .wh40k-cybernetic-sheet .wh40k-panel {
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba($cyber-primary, 0.2);
+    border: 1px solid #{'rgb(from var(--cyber-primary) r g b / 0.2)'};
     border-radius: 8px;
     margin-bottom: 0.75rem;
     overflow: hidden;
@@ -254,8 +254,8 @@ $cyber-success: #2ecc71;
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 0.75rem;
-    background: linear-gradient(135deg, rgba($cyber-primary, 0.15) 0%, rgba($cyber-primary, 0.05) 100%);
-    border-bottom: 1px solid rgba($cyber-primary, 0.2);
+    background: linear-gradient(135deg, #{'rgb(from var(--cyber-primary) r g b / 0.15)'} 0%, #{'rgb(from var(--cyber-primary) r g b / 0.05)'} 100%);
+    border-bottom: 1px solid #{'rgb(from var(--cyber-primary) r g b / 0.2)'};
     font-size: 0.85rem;
     font-weight: 600;
     color: $cyber-primary;
@@ -349,8 +349,8 @@ $cyber-success: #2ecc71;
     }
 
     &:hover {
-        border-color: rgba($cyber-primary, 0.5);
-        background: rgba($cyber-primary, 0.1);
+        border-color: #{'rgb(from var(--cyber-primary) r g b / 0.5)'};
+        background: #{'rgb(from var(--cyber-primary) r g b / 0.1)'};
 
         i,
         span {
@@ -359,19 +359,19 @@ $cyber-success: #2ecc71;
     }
 
     &--active {
-        background: rgba($cyber-primary, 0.2);
+        background: #{'rgb(from var(--cyber-primary) r g b / 0.2)'};
         border-color: $cyber-primary;
 
         i {
             color: $cyber-primary;
-            text-shadow: 0 0 8px rgba($cyber-primary, 0.5);
+            text-shadow: 0 0 8px #{'rgb(from var(--cyber-primary) r g b / 0.5)'};
         }
         span {
             color: #fff;
         }
 
         &:hover {
-            background: rgba($cyber-primary, 0.25);
+            background: #{'rgb(from var(--cyber-primary) r g b / 0.25)'};
         }
     }
 }
@@ -417,7 +417,7 @@ $cyber-success: #2ecc71;
         &:focus {
             outline: none;
             border-color: $cyber-primary;
-            box-shadow: 0 0 0 2px rgba($cyber-primary, 0.2);
+            box-shadow: 0 0 0 2px #{'rgb(from var(--cyber-primary) r g b / 0.2)'};
         }
     }
 
@@ -466,7 +466,7 @@ $cyber-success: #2ecc71;
         width: 100%;
         padding: 0.375rem 0.5rem;
         background: rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba($cyber-primary, 0.3);
+        border: 1px solid #{'rgb(from var(--cyber-primary) r g b / 0.3)'};
         border-radius: 4px;
         color: $cyber-primary;
         font-size: 1.25rem;
@@ -477,7 +477,7 @@ $cyber-success: #2ecc71;
         &:focus {
             outline: none;
             border-color: $cyber-primary;
-            box-shadow: 0 0 0 2px rgba($cyber-primary, 0.2);
+            box-shadow: 0 0 0 2px #{'rgb(from var(--cyber-primary) r g b / 0.2)'};
         }
     }
 }
@@ -514,7 +514,7 @@ $cyber-success: #2ecc71;
 
     input:checked ~ &__indicator i {
         color: $cyber-success;
-        text-shadow: 0 0 8px rgba($cyber-success, 0.5);
+        text-shadow: 0 0 8px #{'rgb(from var(--cyber-success) r g b / 0.5)'};
     }
 
     input:checked ~ &__label {
@@ -523,7 +523,7 @@ $cyber-success: #2ecc71;
 
     &:hover {
         .wh40k-toggle-equipped__indicator i {
-            color: rgba($cyber-success, 0.7);
+            color: #{'rgb(from var(--cyber-success) r g b / 0.7)'};
         }
         .wh40k-toggle-equipped__label {
             color: rgba(255, 255, 255, 0.8);
@@ -557,7 +557,7 @@ $cyber-success: #2ecc71;
         color: $cyber-primary;
         margin: 0;
         padding-bottom: 0.375rem;
-        border-bottom: 1px solid rgba($cyber-primary, 0.3);
+        border-bottom: 1px solid #{'rgb(from var(--cyber-primary) r g b / 0.3)'};
 
         i {
             font-size: 0.9rem;
@@ -588,7 +588,7 @@ $cyber-success: #2ecc71;
 
     &:hover {
         background: rgba(255, 255, 255, 0.05);
-        border-color: rgba($cyber-primary, 0.3);
+        border-color: #{'rgb(from var(--cyber-primary) r g b / 0.3)'};
     }
 
     &__name {
@@ -607,14 +607,14 @@ $cyber-success: #2ecc71;
 
         &--positive {
             color: $cyber-success;
-            background: rgba($cyber-success, 0.15);
-            border: 1px solid rgba($cyber-success, 0.3);
+            background: #{'rgb(from var(--cyber-success) r g b / 0.15)'};
+            border: 1px solid #{'rgb(from var(--cyber-success) r g b / 0.3)'};
         }
 
         &--negative {
             color: $cyber-danger;
-            background: rgba($cyber-danger, 0.15);
-            border: 1px solid rgba($cyber-danger, 0.3);
+            background: #{'rgb(from var(--cyber-danger) r g b / 0.15)'};
+            border: 1px solid #{'rgb(from var(--cyber-danger) r g b / 0.3)'};
         }
     }
 }
