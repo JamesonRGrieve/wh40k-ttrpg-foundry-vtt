@@ -724,7 +724,7 @@ $bp-wide: 1200px;
             }
 
             &.wh40k-vital--wounds {
-                --accent-color: #{$npc-accent-combat};
+                --accent-color: #dc3545;
                 border-top: 3px solid var(--accent-color);
                 .vital-icon {
                     color: var(--accent-color);
@@ -732,7 +732,7 @@ $bp-wide: 1200px;
             }
 
             &.wh40k-vital--defense {
-                --accent-color: #{$npc-accent-defense};
+                --accent-color: #2196f3;
                 border-top: 3px solid var(--accent-color);
                 .vital-icon {
                     color: var(--accent-color);
@@ -740,7 +740,7 @@ $bp-wide: 1200px;
             }
 
             &.wh40k-vital--movement {
-                --accent-color: #{$npc-accent-movement};
+                --accent-color: #4caf50;
                 border-top: 3px solid var(--accent-color);
                 .vital-icon {
                     color: var(--accent-color);

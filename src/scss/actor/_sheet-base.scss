@@ -160,34 +160,48 @@
     // Overview Panel Tints
     // ============================================
 
-    // Panel color definitions
-    $wh40k-panel-wounds: rgb(139, 0, 0);
-    $wh40k-panel-fatigue: rgb(160, 120, 24);
-    $wh40k-panel-fate: rgb(212, 165, 32);
-    $wh40k-panel-corruption: rgb(168, 32, 32);
-    $wh40k-panel-insanity: rgb(106, 32, 144);
-    $wh40k-panel-movement: rgb(42, 122, 154);
-
+    // Panel tints — pre-generated (replaces @include wh40k-panel-tint)
     .wh40k-wounds-panel {
-        @include wh40k-panel-tint($wh40k-panel-wounds);
+        border-left: 3px solid rgba(139, 0, 0, 0.75);
+        .wh40k-panel-header {
+            background: linear-gradient(180deg, rgba(139, 0, 0, 0.12), transparent);
+        }
     }
     .wh40k-fatigue-panel {
-        @include wh40k-panel-tint($wh40k-panel-fatigue);
+        border-left: 3px solid rgba(160, 120, 24, 0.75);
+        .wh40k-panel-header {
+            background: linear-gradient(180deg, rgba(160, 120, 24, 0.12), transparent);
+        }
     }
     .wh40k-fate-panel {
-        @include wh40k-panel-tint($wh40k-panel-fate);
+        border-left: 3px solid rgba(212, 165, 32, 0.75);
+        .wh40k-panel-header {
+            background: linear-gradient(180deg, rgba(212, 165, 32, 0.12), transparent);
+        }
     }
     .wh40k-panel-corruption {
-        @include wh40k-panel-tint($wh40k-panel-corruption, 0.8, 0.14);
+        border-left: 3px solid rgba(168, 32, 32, 0.8);
+        .wh40k-panel-header {
+            background: linear-gradient(180deg, rgba(168, 32, 32, 0.14), transparent);
+        }
     }
     .wh40k-panel-insanity {
-        @include wh40k-panel-tint($wh40k-panel-insanity, 0.75, 0.14);
+        border-left: 3px solid rgba(106, 32, 144, 0.75);
+        .wh40k-panel-header {
+            background: linear-gradient(180deg, rgba(106, 32, 144, 0.14), transparent);
+        }
     }
     .wh40k-panel-movement {
-        @include wh40k-panel-tint($wh40k-panel-movement);
+        border-left: 3px solid rgba(42, 122, 154, 0.75);
+        .wh40k-panel-header {
+            background: linear-gradient(180deg, rgba(42, 122, 154, 0.12), transparent);
+        }
     }
     .wh40k-panel-bonuses {
-        @include wh40k-panel-tint($wh40k-panel-fatigue, 0.65, 0.1);
+        border-left: 3px solid rgba(160, 120, 24, 0.65);
+        .wh40k-panel-header {
+            background: linear-gradient(180deg, rgba(160, 120, 24, 0.1), transparent);
+        }
     }
 
     .wh40k-effects-panel {
