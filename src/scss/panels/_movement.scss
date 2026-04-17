@@ -20,7 +20,28 @@
 }
 
 .wh40k-add-btn {
-    @include wh40k-icon-button(20px, var(--wh40k-accent-gold), 0.65rem);
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--wh40k-border-medium);
+    border-radius: var(--wh40k-radius-md);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--wh40k-transition-fast);
+
+    &:hover {
+        background: var(--wh40k-bg-subtle);
+        color: var(--wh40k-accent-gold);
+        border-color: var(--wh40k-accent-gold);
+    }
+
+    i {
+        font-size: 0.65rem;
+    }
 }
 
 .wh40k-affliction-list {

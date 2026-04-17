@@ -174,23 +174,73 @@
     // ============================================
 
     .wh40k-xp-edit-section {
-        @include wh40k-edit-section;
+        padding: var(--wh40k-space-md);
+        background: var(--wh40k-panel-bg-translucent);
+        border: 1px solid var(--wh40k-border-color-light);
+        border-radius: 8px;
+        margin-bottom: var(--wh40k-space-sm);
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
     .wh40k-xp-edit-header {
-        @include wh40k-edit-header;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--wh40k-text-medium);
+        margin-bottom: var(--wh40k-space-sm);
+        display: flex;
+        align-items: center;
+
+        i {
+            font-size: 0.9em;
+            margin-right: 4px;
+        }
         justify-content: space-between;
     }
     .wh40k-xp-edit-grid {
-        @include wh40k-edit-grid;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--wh40k-space-md);
     }
     .wh40k-edit-field {
-        @include wh40k-edit-field;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
     }
     .wh40k-edit-label {
-        @include wh40k-edit-label;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--wh40k-text-muted);
     }
     .wh40k-edit-input {
-        @include wh40k-edit-input($focus-shadow: rgba(120, 46, 34, 0.1));
+        width: 100%;
+        height: 40px;
+        padding: 0 var(--wh40k-space-sm);
+        border: 2px solid var(--wh40k-border-color-light);
+        border-radius: 6px;
+        background: var(--wh40k-input-bg);
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--wh40k-text-dark);
+        text-align: center;
+        font-family: var(--wh40k-font-alt);
+        transition: all var(--wh40k-transition-fast);
+
+        &:focus {
+            outline: none;
+            border-color: var(--wh40k-border-color-strong);
+            background: var(--wh40k-input-bg-focus);
+            box-shadow: 0 0 0 3px rgba(120, 46, 34, 0.1);
+        }
+
+        &:hover {
+            border-color: var(--wh40k-border-color);
+        }
     }
 
     // ============================================
@@ -202,10 +252,39 @@
     }
 
     .wh40k-xp-info-box {
-        @include wh40k-info-box(rgba(192, 128, 32, 0.08), rgba(192, 128, 32, 0.4), #c08020);
+        display: flex;
+        gap: var(--wh40k-space-sm);
+        padding: var(--wh40k-space-sm);
+        background: rgba(192, 128, 32, 0.08);
+        border-left: 3px solid rgba(192, 128, 32, 0.4);
+        border-radius: 4px;
+
+        > i {
+            color: #c08020;
+            font-size: 1.2rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
     }
 
     .wh40k-info-content {
-        @include wh40k-info-content;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        strong {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--wh40k-text-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        p {
+            font-size: 0.75rem;
+            color: var(--wh40k-text-muted);
+            line-height: 1.4;
+            margin: 0;
+        }
     }
 }
