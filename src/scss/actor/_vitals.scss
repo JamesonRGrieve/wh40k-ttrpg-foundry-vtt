@@ -171,14 +171,35 @@
     }
 
     // Default progress gradient (wounds/health)
-    @include wh40k-progress-gradient(linear-gradient(90deg, rgba(139, 0, 0, 0.85), rgba(200, 70, 40, 0.85)));
+    &::-webkit-progress-value {
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(139, 0, 0, 0.85), rgba(200, 70, 40, 0.85));
+    }
+    &::-moz-progress-bar {
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(139, 0, 0, 0.85), rgba(200, 70, 40, 0.85));
+    }
 
     &--corruption {
-        @include wh40k-progress-gradient(linear-gradient(90deg, rgba(20, 90, 80, 0.9), rgba(40, 140, 120, 0.9)));
+        &::-webkit-progress-value {
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(20, 90, 80, 0.9), rgba(40, 140, 120, 0.9));
+        }
+        &::-moz-progress-bar {
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(20, 90, 80, 0.9), rgba(40, 140, 120, 0.9));
+        }
     }
 
     &--insanity {
-        @include wh40k-progress-gradient(linear-gradient(90deg, rgba(90, 60, 120, 0.9), rgba(130, 90, 170, 0.9)));
+        &::-webkit-progress-value {
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(90, 60, 120, 0.9), rgba(130, 90, 170, 0.9));
+        }
+        &::-moz-progress-bar {
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(90, 60, 120, 0.9), rgba(130, 90, 170, 0.9));
+        }
     }
 }
 
@@ -255,17 +276,62 @@
     color: var(--wh40k-text-subtle);
 }
 
-// Panel-specific vitals theming using mixin
+// Panel-specific vitals theming — pre-generated
 .wh40k-wounds-panel {
-    @include wh40k-panel-vitals-theme(linear-gradient(90deg, rgba(120, 15, 15, 0.9), rgba(200, 70, 40, 0.9)), #5c1a1a, #b63a2b);
+    .wh40k-vitals-progress {
+        &::-webkit-progress-value {
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(120, 15, 15, 0.9), rgba(200, 70, 40, 0.9));
+        }
+        &::-moz-progress-bar {
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(120, 15, 15, 0.9), rgba(200, 70, 40, 0.9));
+        }
+    }
+    .wh40k-vitals-title {
+        color: #5c1a1a;
+        i {
+            color: #b63a2b;
+        }
+    }
 }
 
 .wh40k-fatigue-panel {
-    @include wh40k-panel-vitals-theme(linear-gradient(90deg, rgba(180, 120, 20, 0.9), rgba(220, 160, 30, 0.9)), #6b4a12, #c4871d);
+    .wh40k-vitals-progress {
+        &::-webkit-progress-value {
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(180, 120, 20, 0.9), rgba(220, 160, 30, 0.9));
+        }
+        &::-moz-progress-bar {
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(180, 120, 20, 0.9), rgba(220, 160, 30, 0.9));
+        }
+    }
+    .wh40k-vitals-title {
+        color: #6b4a12;
+        i {
+            color: #c4871d;
+        }
+    }
 }
 
 .wh40k-fate-panel {
-    @include wh40k-panel-vitals-theme(linear-gradient(90deg, rgba(30, 80, 140, 0.9), rgba(60, 140, 200, 0.9)), #1e4f86, #3c8cd0);
+    .wh40k-vitals-progress {
+        &::-webkit-progress-value {
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(30, 80, 140, 0.9), rgba(60, 140, 200, 0.9));
+        }
+        &::-moz-progress-bar {
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(30, 80, 140, 0.9), rgba(60, 140, 200, 0.9));
+        }
+    }
+    .wh40k-vitals-title {
+        color: #1e4f86;
+        i {
+            color: #3c8cd0;
+        }
+    }
 }
 
 .wh40k-tracker-row {
