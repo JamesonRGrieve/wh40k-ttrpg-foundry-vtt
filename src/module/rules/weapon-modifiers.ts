@@ -62,7 +62,7 @@ const MOD_EFFECTS: Record<string, WeaponModifierEffects> = {
 /*  Weapon Modifier Functions                   */
 /* -------------------------------------------- */
 
-export function updateWeaponModifiers(rollData) {
+export function updateWeaponModifiers(rollData: any): void {
     rollData.weaponModifiers = [];
 
     const actionItem = rollData.weapon ?? rollData.power;
@@ -78,7 +78,7 @@ export function updateWeaponModifiers(rollData) {
     }
 }
 
-export function calculateWeaponModifiersDamageBonuses(actionData, hit) {
+export function calculateWeaponModifiersDamageBonuses(actionData: any, hit: any): number {
     const actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (!actionItem) return;
 
@@ -94,7 +94,7 @@ export function calculateWeaponModifiersDamageBonuses(actionData, hit) {
     }
 }
 
-export function calculateWeaponModifiersPenetrationBonuses(actionData, hit) {
+export function calculateWeaponModifiersPenetrationBonuses(actionData: any, hit: any): number {
     const actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (!actionItem) return;
 
@@ -110,7 +110,7 @@ export function calculateWeaponModifiersPenetrationBonuses(actionData, hit) {
     }
 }
 
-export function calculateWeaponModifiersAttackSpecials(rollData) {
+export function calculateWeaponModifiersAttackSpecials(rollData: any): void {
     const actionItem = rollData.weapon ?? rollData.power;
     if (!actionItem) return;
 
@@ -129,7 +129,7 @@ export function calculateWeaponModifiersAttackSpecials(rollData) {
 /**
  * @param rollData {WeaponRollData}
  */
-export function calculateWeaponModifiersAttackBonuses(rollData) {
+export function calculateWeaponModifiersAttackBonuses(rollData: any): number {
     // Reset Data -- this prevents needing to ensure removal if modifiers change
     rollData.weaponModifiers = {};
     const actionItem = rollData.weapon ?? rollData.power;

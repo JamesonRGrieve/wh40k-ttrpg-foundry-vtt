@@ -15,8 +15,6 @@ import BaseActorSheet from './base-actor-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class VehicleSheet extends BaseActorSheet {
-    [key: string]: any;
-
     declare actor: WH40KVehicle;
     declare document: WH40KVehicle;
 
@@ -32,6 +30,7 @@ export default class VehicleSheet extends BaseActorSheet {
             height: 800,
         },
         tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             // Vehicle-specific actions
             rollCharacteristic: VehicleSheet.#rollCharacteristic,
@@ -51,6 +50,7 @@ export default class VehicleSheet extends BaseActorSheet {
             toggleComponentActive: VehicleSheet.#toggleComponentActive,
             damageComponent: VehicleSheet.#damageComponent,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -123,7 +123,7 @@ export default class VehicleSheet extends BaseActorSheet {
             items: Array.from(this.actor.items),
             limited: this.actor.limited,
             rollableClass: this.isEditable ? 'rollable' : '',
-            isGM: (game as any).user.isGM,
+            isGM: game.user.isGM,
             editable: this.isEditable,
             isVehicle: true,
             isShip: this.actor.system.primaryUse === 'ship',
@@ -135,7 +135,7 @@ export default class VehicleSheet extends BaseActorSheet {
         context.characteristicsArray = this._prepareCharacteristics(context);
 
         // Categorize items
-        await this._prepareItems(context);
+        this._prepareItems(context);
 
         // Prepare tabs
         context.tabs = this._prepareTabs();
@@ -152,20 +152,20 @@ export default class VehicleSheet extends BaseActorSheet {
      * @protected
      */
     _prepareVehicleStats(context: Record<string, unknown>): any {
-        const sys = context.system as any;
+        const sys = context.system as Record<string, unknown>;
 
         return {
             size: sys.size || 4,
             speed: {
-                cruising: sys.speed?.cruising || 0,
-                tactical: sys.speed?.tactical || 0,
-                notes: sys.speed?.notes || '',
+                cruising: (sys as any).speed?.cruising || 0,
+                tactical: (sys as any).speed?.tactical || 0,
+                notes: (sys as any).speed?.notes || '',
             },
             handling: sys.handling || 0,
             structure: {
-                value: sys.wounds?.value || 0,
-                max: sys.wounds?.max || 0,
-                percent: Math.round(((sys.wounds?.value || 0) / Math.max(1, sys.wounds?.max || 1)) * 100),
+                value: (sys as any).wounds?.value || 0,
+                max: (sys as any).wounds?.max || 0,
+                percent: Math.round((((sys as any).wounds?.value || 0) / Math.max(1, (sys as any).wounds?.max || 1)) * 100),
             },
             hull: sys.hull || 0,
             manoeuvrability: this._calculateManoeuvrability(sys),
@@ -181,13 +181,13 @@ export default class VehicleSheet extends BaseActorSheet {
      * @protected
      */
     _prepareCrewStats(context: Record<string, unknown>): any {
-        const sys = context.system as any;
+        const sys = context.system as Record<string, unknown>;
 
         return {
-            required: sys.crew?.required || 1,
-            rating: sys.crew?.rating || 30,
-            morale: sys.crew?.morale || 50,
-            notes: sys.crew?.notes || '',
+            required: (sys as any).crew?.required || 1,
+            rating: (sys as any).crew?.rating || 30,
+            morale: (sys as any).crew?.morale || 50,
+            notes: (sys as any).crew?.notes || '',
         };
     }
 
@@ -215,10 +215,10 @@ export default class VehicleSheet extends BaseActorSheet {
      * @protected
      */
     _prepareCharacteristics(context: Record<string, unknown>): any {
-        const chars = (context.system as any).characteristics || {};
+        const chars = (context.system as Record<string, unknown>).characteristics || {};
         const charArray = [];
 
-        for (const [key, char] of Object.entries(chars) as any) {
+        for (const [key, char] of Object.entries(chars) as [string, any][]) {
             charArray.push({
                 key,
                 label: char.label,
@@ -284,11 +284,11 @@ export default class VehicleSheet extends BaseActorSheet {
      * @protected
      */
     _prepareTabs(): Record<string, unknown>[] {
-        return (this.constructor as any).TABS.map((tab: any) => ({
+        return (this.constructor as unknown as { TABS: Array<Record<string, unknown>> }).TABS.map((tab: any) => ({
             id: tab.tab,
             tab: tab.tab,
             group: tab.group,
-            label: (game as any).i18n.localize(tab.label),
+            label: game.i18n.localize(tab.label),
             active: this.tabGroups[tab.group] === tab.tab,
             cssClass: tab.cssClass,
         }));
@@ -303,7 +303,7 @@ export default class VehicleSheet extends BaseActorSheet {
         // Add tab metadata for all tab parts
         const tabParts = ['overview', 'combat', 'crew', 'components', 'notes'];
         if (tabParts.includes(partId)) {
-            const tabConfig = (this.constructor as any).TABS.find((t: any) => t.tab === partId);
+            const tabConfig = (this.constructor as unknown as { TABS: Array<Record<string, unknown>> }).TABS.find((t: any) => t.tab === partId);
             partContext.tab = {
                 id: partId,
                 group: tabConfig?.group || 'primary',
@@ -405,7 +405,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const newValue = Math.min(max, current + amount);
         await this.actor.update({ 'system.wounds.value': newValue });
 
-        (ui.notifications as any).info(`Repaired ${amount} structure points.`);
+        ui.notifications.info(`Repaired ${amount} structure points.`);
     }
 
     /* -------------------------------------------- */
@@ -473,6 +473,6 @@ export default class VehicleSheet extends BaseActorSheet {
         const damaged = item.system.damaged || false;
         await item.update({ 'system.damaged': !damaged });
 
-        (ui.notifications as any).info(`${item.name} ${damaged ? 'repaired' : 'damaged'}.`);
+        ui.notifications.info(`${item.name} ${damaged ? 'repaired' : 'damaged'}.`);
     }
 }

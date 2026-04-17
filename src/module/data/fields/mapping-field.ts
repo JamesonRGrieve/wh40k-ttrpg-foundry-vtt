@@ -2,9 +2,7 @@
  * A special ObjectField for mapping data.
  * Similar to DnD5e's MappingField for handling object-based data.
  */
-// @ts-expect-error - TS2339
 export default class MappingField extends foundry.data.fields.ObjectField {
-    [key: string]: any;
     model: foundry.data.fields.DataField.Any;
     initialKeys: string[] | null;
     initialKeysOnly: boolean;
@@ -30,9 +28,8 @@ export default class MappingField extends foundry.data.fields.ObjectField {
 
         // Clean each mapped value
         for (const [key, v] of Object.entries(cleaned)) {
-            // @ts-expect-error - TS2339
-            if (this.model instanceof foundry.data.fields.DataField) {
-                cleaned[key] = (this.model as any).clean(v, options);
+            if (this.model instanceof (foundry.data.fields as any).DataField) {
+                cleaned[key] = this.model.clean(v as any, options);
             }
         }
 
@@ -47,11 +44,9 @@ export default class MappingField extends foundry.data.fields.ObjectField {
 
         const initialized: Record<string, unknown> = {};
         for (const [key, v] of Object.entries(value)) {
-            // @ts-expect-error - TS2339
-            if (this.model instanceof foundry.data.fields.SchemaField) {
+            if (this.model instanceof (foundry.data.fields as any).SchemaField) {
                 initialized[key] = (this.model as any).initialize(v, model, options);
-                // @ts-expect-error - TS2339
-            } else if (this.model instanceof foundry.data.fields.DataField) {
+            } else if (this.model instanceof (foundry.data.fields as any).DataField) {
                 initialized[key] = (this.model as any).initialize(v, model, options);
             } else {
                 initialized[key] = v;
@@ -77,9 +72,8 @@ export default class MappingField extends foundry.data.fields.ObjectField {
             }
 
             try {
-                // @ts-expect-error - TS2339
-                if (this.model instanceof foundry.data.fields.DataField) {
-                    (this.model as any).validate(v, options);
+                if (this.model instanceof (foundry.data.fields as any).DataField) {
+                    this.model.validate(v, options);
                 }
             } catch (err) {
                 errors.push(`${key}: ${(err as Error).message}`);

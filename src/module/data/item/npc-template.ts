@@ -17,7 +17,53 @@ const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectF
  * @extends {ItemDataModel}
  */
 export default class NPCTemplateData extends ItemDataModel {
-    [key: string]: any;
+    // Schema-defined properties
+    declare category: string;
+    declare faction: string;
+    declare subfaction: string;
+    declare baseThreatLevel: number;
+    declare role: string;
+    declare type: string;
+    declare baseCharacteristics: Record<string, number>;
+    declare baseWounds: number;
+    declare unnaturals: Record<string, number>;
+    declare trainedSkills: Array<{ key: string; name: string; characteristic: string; level: string }>;
+    declare equipmentPreset: string;
+    declare customWeapons: Array<Record<string, any>>;
+    declare baseArmour: number;
+    declare scaling: {
+        characteristicScale: number;
+        woundsScale: number;
+        armourScale: number;
+        weaponScale: number;
+        minMultiplier: number;
+        maxMultiplier: number;
+    };
+    declare traits: Array<{ uuid: string; name: string; description: string }>;
+    declare talents: Array<{ uuid: string; name: string; description: string }>;
+    declare specialAbilities: string;
+    declare description: string;
+    declare tactics: string;
+    declare source: string;
+    declare allowHorde: boolean;
+    declare defaultMagnitude: number;
+    declare variants: Array<{
+        name: string;
+        description: string;
+        threatModifier: number;
+        characteristicModifiers: Record<string, number>;
+        additionalEquipment: string[];
+        additionalTraits: string[];
+        additionalTalents: string[];
+    }>;
+    declare parent: any;
+
+    // Derived properties
+    declare _skillCount: number;
+    declare _traitCount: number;
+    declare _talentCount: number;
+    declare _variantCount: number;
+
     /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */
@@ -287,8 +333,7 @@ export default class NPCTemplateData extends ItemDataModel {
         };
 
         for (const [key, base] of Object.entries(this.baseCharacteristics)) {
-            // @ts-expect-error - arithmetic type
-            let value = Math.round(base * clampedScale);
+            let value = Math.round((base as number) * clampedScale);
 
             // Apply variant modifier if present
             if (variantData?.characteristicModifiers?.[key]) {

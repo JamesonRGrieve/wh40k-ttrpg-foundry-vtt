@@ -9,7 +9,6 @@ import BaseRollDialog from './base-roll-dialog.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class ForceFieldDialog extends BaseRollDialog {
-    [key: string]: any;
     /**
      * @param {object} forceFieldData  The force field data.
      * @param {object} [options={}]    Dialog options.
@@ -82,12 +81,12 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /** @override */
     _validateRoll(): boolean {
         if (!this.rollData.forceField?.system?.activated) {
-            (ui.notifications as any).warn('Force Field not activated!');
+            ui.notifications.warn('Force Field not activated!');
             return false;
         }
 
         if (this.rollData.forceField?.system?.overloaded) {
-            (ui.notifications as any).warn('Force Field currently overloaded!');
+            ui.notifications.warn('Force Field currently overloaded!');
             return false;
         }
 
@@ -114,7 +113,7 @@ export default class ForceFieldDialog extends BaseRollDialog {
  * Open a force field dialog.
  * @param {object} forceFieldData  The force field data.
  */
-export function prepareForceFieldRoll(forceFieldData) {
+export function prepareForceFieldRoll(forceFieldData: any): void {
     const prompt = new ForceFieldDialog(forceFieldData);
     prompt.render(true);
 }

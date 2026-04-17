@@ -11,8 +11,6 @@ import BaseRollDialog from './base-roll-dialog.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class DamageRollDialog extends BaseRollDialog {
-    [key: string]: any;
-
     constructor(rollData = {}, options = {}) {
         super(rollData, options);
     }
@@ -75,7 +73,7 @@ export default class DamageRollDialog extends BaseRollDialog {
  * Open a damage roll dialog.
  * @param {object} rollData  The roll data.
  */
-export function prepareDamageRoll(rollData) {
+export function prepareDamageRoll(rollData: any): void {
     rollData.dh = CONFIG.wh40k;
     const prompt = new DamageRollDialog(rollData);
     prompt.render(true);

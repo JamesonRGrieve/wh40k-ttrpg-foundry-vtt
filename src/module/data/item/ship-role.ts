@@ -8,8 +8,6 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes DescriptionTemplate
  */
 export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare rank: number;
@@ -26,7 +24,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -158,7 +156,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * Get primary ability description.
      * @type {string}
      */
-    get primaryAbility() {
+    get primaryAbility(): string {
         if (this.abilities && this.abilities.length > 0) {
             const ability = this.abilities[0];
             return ability.description || ability.name;
@@ -171,7 +169,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * Get all ship bonuses as array for display.
      * @type {Array<{label: string, value: number, display: string}>}
      */
-    get shipBonusesArray() {
+    get shipBonusesArray(): any[] {
         const bonuses = [];
         const labels = {
             manoeuvrability: 'Manoeuvrability',

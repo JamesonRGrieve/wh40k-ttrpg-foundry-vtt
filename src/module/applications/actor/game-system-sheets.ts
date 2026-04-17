@@ -17,8 +17,8 @@ interface SystemSheetOptions {
     gameSystemId: GameSystemId;
 }
 
-function makeSystemSheet(className: string, cssClass: string, headerFile: string, opts: SystemSheetOptions) {
-    const BASE = CharacterSheet as any;
+function makeSystemSheet(className: string, cssClass: string, headerFile: string, opts: SystemSheetOptions): any {
+    const BASE = CharacterSheet as typeof CharacterSheet & { DEFAULT_OPTIONS: Record<string, unknown> };
     const cls = class extends CharacterSheet {
         static DEFAULT_OPTIONS = {
             ...BASE.DEFAULT_OPTIONS,

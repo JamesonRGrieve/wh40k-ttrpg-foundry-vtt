@@ -1,8 +1,7 @@
 import { WH40KBaseActor } from './base-actor.ts';
 
 export class WH40KStarship extends WH40KBaseActor {
-    [key: string]: any;
-    async _preCreate(data, options, user): Promise<any> {
+    async _preCreate(data: any, options: any, user: any): Promise<any> {
         await super._preCreate(data, options, user);
         const initData = {
             'token.bar1': { attribute: 'hullIntegrity' },
@@ -121,7 +120,7 @@ export class WH40KStarship extends WH40KBaseActor {
     /**
      * Get ship weapons grouped by location
      */
-    get weaponsByLocation() {
+    get weaponsByLocation(): Record<string, any[]> {
         const grouped = {
             prow: [],
             dorsal: [],
@@ -140,10 +139,10 @@ export class WH40KStarship extends WH40KBaseActor {
      * Fire a ship weapon
      * @param {string} weaponId - The ID of the weapon to fire
      */
-    async fireWeapon(weaponId): Promise<void> {
+    async fireWeapon(weaponId: string): Promise<void> {
         const weapon = this.items.get(weaponId);
         if (!weapon || (weapon.type as string) !== 'shipWeapon') {
-            (ui.notifications as any).warn('Invalid ship weapon');
+            ui.notifications.warn('Invalid ship weapon');
             return;
         }
 
@@ -157,11 +156,11 @@ export class WH40KStarship extends WH40KBaseActor {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
-        await (ChatMessage as any).create({
+        await ChatMessage.create({
             user: game.user.id,
-            speaker: (ChatMessage as any).getSpeaker({ actor: this }),
+            speaker: ChatMessage.getSpeaker({ actor: this }),
             content: html,
-        });
+        } as any);
     }
 
     /**
@@ -182,11 +181,11 @@ export class WH40KStarship extends WH40KBaseActor {
             </div>
         `;
 
-        await (ChatMessage as any).create({
-            speaker: (ChatMessage as any).getSpeaker({ actor: this }),
+        await ChatMessage.create({
+            speaker: ChatMessage.getSpeaker({ actor: this }),
             content: content,
             rolls: [roll],
-        });
+        } as any);
 
         return roll;
     }

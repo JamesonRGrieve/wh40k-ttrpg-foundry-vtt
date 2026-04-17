@@ -12,7 +12,6 @@
  * Validator for stat block data.
  */
 export default class StatBlockValidator {
-    [key: string]: any;
     /**
      * Characteristic value ranges (min/max)
      */
@@ -37,7 +36,7 @@ export default class StatBlockValidator {
      * @param {Object} data - Parsed stat block data
      * @returns {Object} Validation result with errors and warnings
      */
-    static validate(data) {
+    static validate(data): any {
         const result = {
             valid: true,
             errors: [],
@@ -104,7 +103,7 @@ export default class StatBlockValidator {
      * Validate basic structure.
      * @private
      */
-    static _validateStructure(data, result) {
+    static _validateStructure(data, result): any {
         if (!data.name || data.name === 'Imported NPC') {
             result.warnings.push("No name extracted. Using default 'Imported NPC'.");
         }
@@ -124,7 +123,7 @@ export default class StatBlockValidator {
      * Validate characteristics.
      * @private
      */
-    static _validateCharacteristics(characteristics, result) {
+    static _validateCharacteristics(characteristics, result): any {
         const required = ['weaponSkill', 'ballisticSkill', 'strength', 'toughness', 'agility', 'intelligence', 'perception', 'willpower', 'fellowship'];
 
         let foundCount = 0;
@@ -167,7 +166,7 @@ export default class StatBlockValidator {
      * Validate wounds.
      * @private
      */
-    static _validateWounds(wounds, result) {
+    static _validateWounds(wounds, result): any {
         const max = wounds.max;
         if (max === undefined || max === null) {
             result.warnings.push('Wounds max value is missing');
@@ -183,7 +182,7 @@ export default class StatBlockValidator {
      * Validate movement.
      * @private
      */
-    static _validateMovement(movement, result) {
+    static _validateMovement(movement, result): any {
         const rates = ['half', 'full', 'charge', 'run'];
         let hasAny = false;
 
@@ -219,7 +218,7 @@ export default class StatBlockValidator {
      * Validate armour.
      * @private
      */
-    static _validateArmour(armour, result) {
+    static _validateArmour(armour, result): any {
         if (armour.mode === 'simple') {
             const total = armour.total;
             if (total !== undefined && total !== null) {
@@ -246,7 +245,7 @@ export default class StatBlockValidator {
      * Validate threat level.
      * @private
      */
-    static _validateThreatLevel(threatLevel, result) {
+    static _validateThreatLevel(threatLevel, result): any {
         if (threatLevel < this.STAT_RANGES.threatLevel.min || threatLevel > this.STAT_RANGES.threatLevel.max) {
             result.warnings.push(
                 `Threat level (${threatLevel}) is outside reasonable range (${this.STAT_RANGES.threatLevel.min}-${this.STAT_RANGES.threatLevel.max})`,
@@ -258,7 +257,7 @@ export default class StatBlockValidator {
      * Validate skills.
      * @private
      */
-    static _validateSkills(trainedSkills, result) {
+    static _validateSkills(trainedSkills, result): any {
         const skillCount = Object.keys(trainedSkills).length;
         if (skillCount === 0) {
             result.warnings.push('No trained skills found');
@@ -284,7 +283,7 @@ export default class StatBlockValidator {
      * Validate items (talents, traits, weapons).
      * @private
      */
-    static _validateItems(items, result) {
+    static _validateItems(items, result): any {
         if (!Array.isArray(items)) {
             result.errors.push('Items is not an array');
             return;
@@ -319,7 +318,7 @@ export default class StatBlockValidator {
      * Check completeness of parsed data.
      * @private
      */
-    static _checkCompleteness(data, result) {
+    static _checkCompleteness(data, result): any {
         const components = {
             name: data.name && data.name !== 'Imported NPC',
             characteristics: data.system?.characteristics && Object.keys(data.system.characteristics).length > 0,
@@ -344,7 +343,7 @@ export default class StatBlockValidator {
      * @param {Object} data - Parsed data
      * @returns {boolean} True if data is valid
      */
-    static isValid(data) {
+    static isValid(data): any {
         const result = this.validate(data);
         return result.valid;
     }
@@ -354,7 +353,7 @@ export default class StatBlockValidator {
      * @param {Object} validationResult - Result from validate()
      * @returns {string} Human-readable summary
      */
-    static getSummary(validationResult) {
+    static getSummary(validationResult): any {
         const parts = [];
 
         if (validationResult.errors.length > 0) {

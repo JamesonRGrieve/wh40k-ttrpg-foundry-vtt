@@ -20,16 +20,18 @@
  * @param {typeof Application} Base - Base class to extend
  * @returns {typeof Application} Extended class
  */
-export function ActiveModifiersMixin(Base) {
+export function ActiveModifiersMixin(Base: any): any {
     return class extends Base {
         /** @override */
         static DEFAULT_OPTIONS = {
+            /* eslint-disable @typescript-eslint/unbound-method */
             actions: {
                 ...super.DEFAULT_OPTIONS?.actions,
                 toggleModifier: this.#toggleModifier,
                 viewModifierSource: this.#viewModifierSource,
                 toggleModifiersPanel: this.#toggleModifiersPanel,
             },
+            /* eslint-enable @typescript-eslint/unbound-method */
         };
 
         /**

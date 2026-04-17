@@ -1,4 +1,4 @@
-export function rollDifficulties() {
+export function rollDifficulties(): Record<string, any> {
     return {
         '0': 'Challenging (+0)',
         '40': 'Simple (+40)',

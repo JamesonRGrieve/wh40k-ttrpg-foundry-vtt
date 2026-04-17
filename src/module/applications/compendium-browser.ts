@@ -11,7 +11,6 @@ const { ApplicationV2 } = foundry.applications.api;
  * Compendium browser for browsing and filtering WH40K system compendiums.
  */
 export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
-    [key: string]: any;
     constructor(options: Record<string, unknown> = {}) {
         // @ts-expect-error - argument count
         super(options);
@@ -31,10 +30,12 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         id: 'wh40k-compendium-browser',
         classes: ['wh40k-compendium-browser', 'standard-form'],
         tag: 'div',
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             clearFilters: RTCompendiumBrowser.#clearFilters,
             openItem: RTCompendiumBrowser.#openItem,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 900,
             height: 700,
@@ -99,20 +100,20 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         context.filters = this._filters;
         context.results = await this._getFilteredResults();
         context.groupByOptions = this._getGroupByOptions();
-        context.groupedResults = this._groupResults(context.results as any[]);
+        context.groupedResults = this._groupResults(context.results as Record<string, unknown>[]);
 
         // Add armour-specific filters if filtering armour
-        const hasArmour = (context.results as any[]).some((r: any) => r.type === 'armour');
+        const hasArmour = (context.results as Record<string, unknown>[]).some((r: any) => r.type === 'armour');
         if (hasArmour) {
-            context.armourTypes = (CONFIG as any).WH40K?.armourTypes || {};
+            context.armourTypes = CONFIG.WH40K?.armourTypes || {};
             context.hasArmourFilters = true;
         }
 
         // Add armour modification filters if filtering armour mods
-        const hasArmourMods = (context.results as any[]).some((r: any) => r.type === 'armourModification');
+        const hasArmourMods = (context.results as Record<string, unknown>[]).some((r: any) => r.type === 'armourModification');
         if (hasArmourMods) {
             context.hasArmourModFilters = true;
-            context.armourTypesForMods = (CONFIG as any).WH40K?.armourTypes || {};
+            context.armourTypesForMods = CONFIG.WH40K?.armourTypes || {};
         }
 
         return context;
@@ -159,6 +160,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
 
         for (const pack of packs) {
+            // eslint-disable-next-line no-await-in-loop -- Sequential compendium index loading
             const index = await pack.getIndex({ fields: ['system.source'] });
             for (const entry of index) {
                 const source = this._getEntrySource(entry);
@@ -174,6 +176,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
 
         for (const pack of packs) {
+            // eslint-disable-next-line no-await-in-loop -- Sequential compendium index loading
             const index = await pack.getIndex({ fields: ['system.category', 'flags'] });
             for (const entry of index) {
                 const category = this._getEntryCategory(entry);
@@ -189,6 +192,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         const packs = game.packs.filter((p: any) => p.metadata.system === 'wh40k-rpg');
 
         for (const pack of packs) {
+            // eslint-disable-next-line no-await-in-loop -- Sequential compendium index loading
             const index = await pack.getIndex({
                 fields: [
                     'name',
@@ -214,7 +218,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
             });
 
             for (const entry of index) {
-                const e = entry as any;
+                const e = entry as Record<string, unknown>;
                 if (!this._passesFilters(e, pack)) continue;
 
                 const sourceLabel = this._getEntrySource(e);
@@ -381,8 +385,8 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      * @returns {object}       Prepared quality data
      */
     _prepareQualityData(system: any): Record<string, unknown> {
-        // Access (CONFIG as any).wh40k (set during init hook)
-        const rtConfig = (CONFIG as any)?.rt;
+        // Access CONFIG.wh40k (set during init hook)
+        const rtConfig = (CONFIG as Record<string, unknown>).rt as Record<string, unknown>;
 
         if (!rtConfig) {
             console.warn('WH40K | CONFIG.wh40k not available in compendium browser');
@@ -499,6 +503,19 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     }
 
     _passesFilters(entry: any, pack: any): boolean {
+        if (!this._passesBaseFilters(entry)) return false;
+        if (!this._passesArmourFilters(entry)) return false;
+        if (!this._passesArmourModFilters(entry)) return false;
+        return true;
+    }
+
+    /**
+     * Check base filters: search, source, and category.
+     * @param {object} entry - The compendium index entry
+     * @returns {boolean}
+     * @protected
+     */
+    _passesBaseFilters(entry: any): boolean {
         // Search filter
         if (this._filters.search) {
             const searchLower = this._filters.search.toLowerCase();
@@ -515,57 +532,75 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
             if (this._getEntryCategory(entry) !== this._filters.category) return false;
         }
 
-        // Armour-specific filters
-        if (entry.type === 'armour' && entry.system) {
-            // Armour type filter
-            if (this._filters.armourType && this._filters.armourType !== 'all') {
-                if (entry.system.type !== this._filters.armourType) return false;
-            }
+        return true;
+    }
 
-            // Minimum AP filter
-            if (this._filters.minAP && this._filters.minAP > 0) {
-                const ap = entry.system.armourPoints || {};
-                const maxAP = Math.max(ap.head || 0, ap.body || 0, ap.leftArm || 0, ap.rightArm || 0, ap.leftLeg || 0, ap.rightLeg || 0);
-                if (maxAP < this._filters.minAP) return false;
-            }
+    /**
+     * Check armour-specific filters.
+     * @param {object} entry - The compendium index entry
+     * @returns {boolean}
+     * @protected
+     */
+    _passesArmourFilters(entry: any): boolean {
+        if (entry.type !== 'armour' || !entry.system) return true;
 
-            // Coverage filter
-            if (this._filters.coverage && this._filters.coverage !== 'all') {
-                const coverage = entry.system.coverage || [];
-                if (this._filters.coverage === 'full') {
-                    if (!coverage.includes('all')) return false;
-                } else if (this._filters.coverage === 'partial') {
-                    if (coverage.includes('all')) return false;
-                }
+        // Armour type filter
+        if (this._filters.armourType && this._filters.armourType !== 'all') {
+            if (entry.system.type !== this._filters.armourType) return false;
+        }
+
+        // Minimum AP filter
+        if (this._filters.minAP && this._filters.minAP > 0) {
+            const ap = entry.system.armourPoints || {};
+            const maxAP = Math.max(ap.head || 0, ap.body || 0, ap.leftArm || 0, ap.rightArm || 0, ap.leftLeg || 0, ap.rightLeg || 0);
+            if (maxAP < this._filters.minAP) return false;
+        }
+
+        // Coverage filter
+        if (this._filters.coverage && this._filters.coverage !== 'all') {
+            const coverage = entry.system.coverage || [];
+            if (this._filters.coverage === 'full') {
+                if (!coverage.includes('all')) return false;
+            } else if (this._filters.coverage === 'partial') {
+                if (coverage.includes('all')) return false;
             }
         }
 
-        // Armour modification filters
-        if (entry.type === 'armourModification' && entry.system) {
-            // Filter by applicable armour type
-            if (this._filters.modType && this._filters.modType !== 'all') {
-                const types = entry.system?.restrictions?.armourTypes || [];
-                if (!types.includes('any') && !types.includes(this._filters.modType)) {
-                    return false;
-                }
-            }
+        return true;
+    }
 
-            // Filter by has modifiers
-            if (this._filters.hasModifiers) {
-                const mods = entry.system?.modifiers || {};
-                const hasAny =
-                    (mods.armourPoints !== undefined && mods.armourPoints !== 0) ||
-                    (mods.maxAgility !== undefined && mods.maxAgility !== 0) ||
-                    (mods.weight !== undefined && mods.weight !== 0);
-                if (!hasAny) return false;
-            }
+    /**
+     * Check armour modification-specific filters.
+     * @param {object} entry - The compendium index entry
+     * @returns {boolean}
+     * @protected
+     */
+    _passesArmourModFilters(entry: any): boolean {
+        if (entry.type !== 'armourModification' || !entry.system) return true;
 
-            // Filter by has properties
-            if (this._filters.hasProperties) {
-                const added = entry.system?.addedProperties?.length || 0;
-                const removed = entry.system?.removedProperties?.length || 0;
-                if (added === 0 && removed === 0) return false;
+        // Filter by applicable armour type
+        if (this._filters.modType && this._filters.modType !== 'all') {
+            const types = entry.system?.restrictions?.armourTypes || [];
+            if (!types.includes('any') && !types.includes(this._filters.modType)) {
+                return false;
             }
+        }
+
+        // Filter by has modifiers
+        if (this._filters.hasModifiers) {
+            const mods = entry.system?.modifiers || {};
+            const hasAny =
+                (mods.armourPoints !== undefined && mods.armourPoints !== 0) ||
+                (mods.maxAgility !== undefined && mods.maxAgility !== 0) ||
+                (mods.weight !== undefined && mods.weight !== 0);
+            if (!hasAny) return false;
+        }
+
+        // Filter by has properties
+        if (this._filters.hasProperties) {
+            const added = entry.system?.addedProperties?.length || 0;
+            const removed = entry.system?.removedProperties?.length || 0;
+            if (added === 0 && removed === 0) return false;
         }
 
         return true;
@@ -628,13 +663,13 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     async _onItemClick(event: Event): Promise<void> {
         event.preventDefault();
         const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
-        const doc = (await fromUuid(uuid)) as any;
-        if (doc) doc.sheet.render(true);
+        const doc = await fromUuid(uuid);
+        if (doc) (doc as any).sheet.render(true);
     }
 
     _onDragStart(event: Event): void {
         const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
-        (event as any).dataTransfer.setData(
+        (event as DragEvent).dataTransfer.setData(
             'text/plain',
             JSON.stringify({
                 type: 'Item',
@@ -666,8 +701,8 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      */
     static async #openItem(event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
-        const doc = (await fromUuid(uuid)) as any;
-        if (doc) doc.sheet.render(true);
+        const doc = await fromUuid(uuid);
+        if (doc) (doc as any).sheet.render(true);
     }
 
     /* -------------------------------------------- */

@@ -194,7 +194,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          */
         async _onEnhancedDragStart(event: DragEvent): Promise<void> {
             const element = event.currentTarget as HTMLElement;
-            const itemId = (element as any).dataset.itemId;
+            const itemId = (element as HTMLElement).dataset.itemId;
             const item = this.document.items.get(itemId);
 
             if (!item) return;
@@ -207,7 +207,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                 id: itemId,
                 item: item,
                 element: element,
-                sourceList: (element as any).closest('.inventory-list, .item-list'),
+                sourceList: (element as HTMLElement).closest('.inventory-list, .item-list'),
             };
 
             // Check for split modifier (Ctrl key)
@@ -231,7 +231,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             event.dataTransfer.setData('text/plain', JSON.stringify(item.toDragData()));
 
             // Visual feedback
-            (element as any).classList.add('dragging');
+            (element as HTMLElement).classList.add('dragging');
             this.element.classList.add('drag-active');
 
             // Show valid drop zones
@@ -302,7 +302,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
         _showSplitDialog(item: any): Promise<{ quantity: number } | null> {
             const quantity = item.system.quantity || 1;
 
-            return (foundry.applications.api as any).DialogV2.prompt({
+            // @ts-expect-error - DialogV2 may not be in api namespace types
+            return foundry.applications.api.DialogV2.prompt({
                 window: { title: `Split ${item.name}` },
                 content: `
                     <form class="wh40k-split-dialog">
@@ -321,7 +322,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                         if (qty > 0 && qty <= quantity) {
                             return { quantity: qty };
                         }
-                        (ui.notifications as any).warn('Invalid quantity');
+                        ui.notifications.warn('Invalid quantity');
                         return null;
                     },
                 },
@@ -469,15 +470,15 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             zone.classList.remove('drop-hover');
 
             // Parse drag data
-            const data = TextEditor.getDragEventData(event) as any;
+            const data = TextEditor.getDragEventData(event) as Record<string, unknown>;
             if (!data?.uuid) return;
 
-            const item = (await fromUuid(data.uuid)) as any;
+            const item = (await fromUuid(data.uuid as string)) as any;
             if (!item) return;
 
             // Get zone type and slot
-            const zoneType = (zone as any).dataset.dropZone;
-            const slot = (zone as any).dataset.slot;
+            const zoneType = (zone as HTMLElement).dataset.dropZone;
+            const slot = (zone as HTMLElement).dataset.slot;
 
             // Handle ship/personal storage zone drops
             if (zoneType === 'personal') {
@@ -486,7 +487,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                     const itemData = item.toObject();
                     itemData.system.inShipStorage = false;
                     itemData.system.equipped = false;
-                    await this.document.createEmbeddedDocuments('Item', [itemData]);
+                    await this.document.createEmbeddedDocuments('Item', [itemData], {});
                     if (this.flashElement) this.flashElement(zone, 'success');
                 } else {
                     // Move existing item to personal inventory (remove from ship)
@@ -502,7 +503,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                     itemData.system.inShipStorage = true;
                     itemData.system.equipped = false;
                     itemData.system.inBackpack = false;
-                    await this.document.createEmbeddedDocuments('Item', [itemData]);
+                    await this.document.createEmbeddedDocuments('Item', [itemData], {});
                     if (this.flashElement) this.flashElement(zone, 'success');
                 } else {
                     // Move existing item to ship storage
@@ -537,14 +538,14 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
         async _handleEquipmentDrop(item: any, slot: string): Promise<void> {
             // Check if item belongs to this actor
             if (item.actor?.id !== this.document.id) {
-                (ui.notifications as any).warn('Cannot equip items from other actors');
+                ui.notifications.warn('Cannot equip items from other actors');
                 return;
             }
 
             // Check if item can be equipped in this slot
             const validSlot = this._validateEquipmentSlot(item, slot);
             if (!validSlot) {
-                (ui.notifications as any).warn(`${item.name} cannot be equipped in ${slot} slot`);
+                ui.notifications.warn(`${item.name} cannot be equipped in ${slot} slot`);
                 return;
             }
 
@@ -552,7 +553,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             await item.update({ 'system.equipped': true });
 
             // Show feedback
-            (ui.notifications as any).info(`Equipped ${item.name}`);
+            ui.notifications.info(`Equipped ${item.name}`);
 
             // Animate snap-to-slot
             this._animateSnapToSlot(item);
@@ -603,10 +604,10 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             if (behavior === 'copy') {
                 const itemData = item.toObject();
                 await this.document.createEmbeddedDocuments('Item', [itemData]);
-                (ui.notifications as any).info(`Added ${item.name} to inventory`);
+                ui.notifications.info(`Added ${item.name} to inventory`);
             } else if (behavior === 'move') {
                 // Item is already on this actor, no action needed
-                (ui.notifications as any).info(`Moved ${item.name}`);
+                ui.notifications.info(`Moved ${item.name}`);
             }
         }
 
@@ -622,7 +623,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const remaining = (item.system.quantity || 1) - quantity;
 
             if (remaining <= 0) {
-                (ui.notifications as any).error('Cannot split entire stack');
+                ui.notifications.error('Cannot split entire stack');
                 return;
             }
 
@@ -636,7 +637,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             // Update original item quantity
             await item.update({ 'system.quantity': remaining });
 
-            (ui.notifications as any).info(`Split ${item.name}: ${quantity} moved, ${remaining} remaining`);
+            ui.notifications.info(`Split ${item.name}: ${quantity} moved, ${remaining} remaining`);
         }
 
         /* -------------------------------------------- */
@@ -700,7 +701,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             await this.document.updateEmbeddedDocuments('Item', updates);
 
-            (ui.notifications as any).info('Items reordered');
+            ui.notifications.info('Items reordered');
         }
 
         /* -------------------------------------------- */
@@ -718,10 +719,10 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             favBar.classList.remove('drop-hover');
 
             // Parse drag data
-            const data = TextEditor.getDragEventData(event) as any;
+            const data = TextEditor.getDragEventData(event) as Record<string, unknown>;
             if (!data?.uuid) return;
 
-            const item = (await fromUuid(data.uuid)) as any;
+            const item = (await fromUuid(data.uuid as string)) as any;
             if (!item || item.actor?.id !== this.document.id) return;
 
             // Add to favorites
@@ -741,19 +742,19 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const favorites = this.document.getFlag('wh40k-rpg', 'favorites') || [];
 
             if (favorites.includes(item.id)) {
-                (ui.notifications as any).warn(`${item.name} is already in favorites`);
+                ui.notifications.warn(`${item.name} is already in favorites`);
                 return;
             }
 
             if (favorites.length >= 8) {
-                (ui.notifications as any).warn('Favorites bar is full (max 8 items)');
+                ui.notifications.warn('Favorites bar is full (max 8 items)');
                 return;
             }
 
             favorites.push(item.id);
             await this.document.setFlag('wh40k-rpg', 'favorites', favorites);
 
-            (ui.notifications as any).info(`Added ${item.name} to favorites`);
+            ui.notifications.info(`Added ${item.name} to favorites`);
         }
 
         /* -------------------------------------------- */

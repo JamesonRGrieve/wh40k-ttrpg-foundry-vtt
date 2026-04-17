@@ -4,7 +4,6 @@
  * @extends ChatMessage
  */
 export class ChatMessageWH40K extends ChatMessage {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
@@ -80,13 +79,13 @@ export class ChatMessageWH40K extends ChatMessage {
     async rollDamage(): Promise<void> {
         const itemUuid = this.itemUuid;
         if (!itemUuid) {
-            (ui.notifications as any).warn('WH40K.Chat.NoItemFound', { localize: true });
+            ui.notifications.warn('WH40K.Chat.NoItemFound', { localize: true });
             return;
         }
 
         const item = await fromUuid(itemUuid);
         if (!item) {
-            (ui.notifications as any).warn('WH40K.Chat.ItemNotFound', { localize: true });
+            ui.notifications.warn('WH40K.Chat.ItemNotFound', { localize: true });
             return;
         }
 
@@ -115,11 +114,11 @@ export class ChatMessageWH40K extends ChatMessage {
      * @param {string} [options.location] - Hit location
      * @returns {Promise<void>}
      */
-    async applyDamage(damage, options = {}): Promise<void> {
+    async applyDamage(damage: number, options: any = {}): Promise<void> {
         const targets = game.user.targets;
 
         if (targets.size === 0) {
-            (ui.notifications as any).warn('WH40K.Chat.NoTokensTargeted', { localize: true });
+            ui.notifications.warn('WH40K.Chat.NoTokensTargeted', { localize: true });
             return;
         }
 
@@ -130,13 +129,13 @@ export class ChatMessageWH40K extends ChatMessage {
             // @ts-expect-error - TS2339
             if (typeof actor.applyDamage === 'function') {
                 // @ts-expect-error - TS2339
+                // eslint-disable-next-line no-await-in-loop -- Foundry document updates must be sequential
                 await actor.applyDamage(damage, options);
             } else {
                 // Fallback: directly modify wounds
-                // @ts-expect-error - system data access
-                const currentWounds = actor.system.wounds?.value ?? 0;
+                const currentWounds = (actor as any).system.wounds?.value ?? 0;
                 const newWounds = Math.max(0, currentWounds - damage);
-                // @ts-expect-error - extended property
+                // eslint-disable-next-line no-await-in-loop -- Foundry document updates must be sequential
                 await actor.update({ 'system.wounds.value': newWounds });
             }
         }
@@ -149,13 +148,13 @@ export class ChatMessageWH40K extends ChatMessage {
     async useItem(): Promise<void> {
         const itemUuid = this.itemUuid;
         if (!itemUuid) {
-            (ui.notifications as any).warn('WH40K.Chat.NoItemFound', { localize: true });
+            ui.notifications.warn('WH40K.Chat.NoItemFound', { localize: true });
             return;
         }
 
         const item = await fromUuid(itemUuid);
         if (!item) {
-            (ui.notifications as any).warn('WH40K.Chat.ItemNotFound', { localize: true });
+            ui.notifications.warn('WH40K.Chat.ItemNotFound', { localize: true });
             return;
         }
 
@@ -181,7 +180,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * @param {Event} event - The click event
      * @param {HTMLElement} html - The message HTML element
      */
-    static async onChatCardAction(event, html) {
+    static async onChatCardAction(event: any, html: any): Promise<void> {
         event.preventDefault();
         const button = event.currentTarget;
         const action = button.dataset.action;
@@ -256,7 +255,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * @param {HTMLElement} html - The message HTML
      * @param {ChatMessageWH40K} message - The chat message
      */
-    static enrichDegreeBadge(html, message) {
+    static enrichDegreeBadge(html: any, message: any): void {
         const result = message.calculateDegrees();
         if (!result) return;
 
@@ -282,7 +281,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * @param {HTMLElement} html - The message HTML
      * @param {ChatMessageWH40K} message - The chat message
      */
-    static enrichSpeakerPortrait(html, message) {
+    static enrichSpeakerPortrait(html: any, message: any): void {
         const actor = message.speakerActor;
         if (!actor) return;
 
@@ -305,7 +304,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * @param {HTMLElement} html - The message HTML
      * @param {ChatMessageWH40K} message - The chat message
      */
-    static enrichActionButtons(html, message) {
+    static enrichActionButtons(html: any, message: any): void {
         html.querySelectorAll('[data-action]').forEach((btn) => {
             // Add message ID if not present
             if (!btn.dataset.messageId) {

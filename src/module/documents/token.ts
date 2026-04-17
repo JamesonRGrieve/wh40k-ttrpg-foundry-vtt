@@ -6,7 +6,6 @@ import { SYSTEM_ID } from '../constants.ts';
  * Foundry V13's CONFIG.Token.movement.actions system.
  */
 export class TokenDocumentWH40K extends TokenDocument {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Movement                                    */
     /* -------------------------------------------- */
@@ -17,10 +16,10 @@ export class TokenDocumentWH40K extends TokenDocument {
      * their cost functions and animation options.
      * Called during system init after CONFIG.wh40k is set.
      */
-    static registerMovementActions(this: any) {
+    static registerMovementActions(this: any): void {
         for (const [type, config] of Object.entries(CONFIG.wh40k.movementTypes)) {
             // Create the action entry if it doesn't already exist (WH40K-specific actions)
-            (CONFIG as any).Token.movement.actions[type] ??= {
+            CONFIG.Token.movement.actions[type] ??= {
                 label: config.label,
                 icon: config.icon,
                 order: config.order,
@@ -33,12 +32,12 @@ export class TokenDocumentWH40K extends TokenDocument {
                 },
             };
 
-            const actionConfig = (CONFIG as any).Token.movement.actions[type];
+            const actionConfig = CONFIG.Token.movement.actions[type];
             actionConfig.getAnimationOptions = (token) => {
                 const movement = token?.actor?.system?.movement;
                 // Slow animation if actor has no speed for this type
                 if (!movement?.[type]) {
-                    return { movementSpeed: (CONFIG as any).Token.movement.defaultSpeed / 2 };
+                    return { movementSpeed: CONFIG.Token.movement.defaultSpeed / 2 };
                 }
                 return {};
             };
@@ -56,7 +55,7 @@ export class TokenDocumentWH40K extends TokenDocument {
      * @param {object} [options] - Additional options
      * @returns {Function} Cost function (cost, from, to, distance, segment) => number
      */
-    static #getMovementCostFunction(type, token, options) {
+    static #getMovementCostFunction(type: string, token: any, options: any): (cost: number, from?: any, to?: any, distance?: number) => number {
         // @ts-expect-error - comparison type
         const noAutomation = game.settings.get(SYSTEM_ID, 'movementAutomation') === 'none';
         const { actor } = token;
@@ -75,7 +74,7 @@ export class TokenDocumentWH40K extends TokenDocument {
     /**
      * Register Token HUD hooks for movement buttons.
      */
-    static registerHUDListeners() {
+    static registerHUDListeners(): void {
         Hooks.on('renderTokenHUD', this.onTokenHUDRender.bind(this));
     }
 
@@ -84,7 +83,7 @@ export class TokenDocumentWH40K extends TokenDocument {
      * @param {TokenHUD} app - The TokenHUD application
      * @param {HTMLElement} html - The rendered HTML
      */
-    static onTokenHUDRender(app, html) {
+    static onTokenHUDRender(app: any, html: any): void {
         const token = app.object?.document;
         const actor = token?.actor;
         const movement = actor?.system?.movement;
@@ -134,11 +133,11 @@ export class TokenDocumentWH40K extends TokenDocument {
      * @param {TokenDocument} token - The token document
      * @param {string} type - Movement type key
      */
-    static #setMovementAction(token, type) {
+    static #setMovementAction(token: any, type: string): void {
         const config = CONFIG.wh40k.movementTypes[type];
         const label = config ? game.i18n.localize(config.label) : type;
         const speed = token.actor?.system?.movement?.[type];
         token.update({ 'flags.wh40k-rpg.movementAction': type });
-        (ui.notifications as any).info(`${label}: ${speed}m set as active movement mode.`);
+        ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
     }
 }

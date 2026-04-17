@@ -14,7 +14,13 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginRollDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
+    // Instance property declarations
+    declare rollType: string;
+    declare formula: string;
+    declare context: any;
+    declare rollResult: any;
+    declare _resolvePromise: ((value: any) => void) | null;
+    declare rollHistory: any[];
     /** @override */
     static DEFAULT_OPTIONS = {
         id: 'origin-roll-dialog-{rollType}',
@@ -30,6 +36,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             width: 600,
             height: 'auto' as const,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             roll: OriginRollDialog.#roll,
             accept: OriginRollDialog.#accept,
@@ -42,6 +49,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             submitOnChange: false,
             closeOnSubmit: false,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /** @override */
@@ -105,7 +113,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
         const typeLabel = this.rollType === 'wounds' ? 'Wounds' : 'Fate Points';
         return `Roll Starting ${typeLabel}`;
     }
@@ -673,12 +681,12 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/origin-roll-card.hbs', templateData);
 
-        return ChatMessage.create({
+        return (ChatMessage as any).create({
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.context.actor }),
             ...(this.rollResult.roll ? { rolls: [this.rollResult.roll] } : {}),
             sound: (CONFIG as any).sounds.dice,
-        } as any);
+        });
     }
 
     /* -------------------------------------------- */

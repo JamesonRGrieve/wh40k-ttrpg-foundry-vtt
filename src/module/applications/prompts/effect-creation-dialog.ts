@@ -5,7 +5,7 @@
 
 const { DialogV2 } = foundry.applications.api;
 
-export default class EffectCreationDialog extends (DialogV2 as any) {
+export default class EffectCreationDialog extends DialogV2 {
     [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
@@ -18,6 +18,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
             width: 520,
             height: 'auto' as const,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         form: {
             handler: EffectCreationDialog.formHandler,
             submitOnChange: false,
@@ -27,6 +28,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
             selectCondition: EffectCreationDialog._onSelectCondition,
             selectCategory: EffectCreationDialog._onSelectCategory,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         buttons: [
             {
                 action: 'create',
@@ -77,7 +79,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
 
     /** @override */
     async _prepareContext(options: any): Promise<any> {
-        const context = await super._prepareContext(options);
+        const context = (await super._prepareContext(options)) as any;
 
         context.actor = this.actor;
         context.selectedCategory = this.selectedCategory;
@@ -135,7 +137,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Handle category selection
      */
-    static _onSelectCategory(event: Event, target: HTMLElement): void {
+    static _onSelectCategory(this: EffectCreationDialog, event: Event, target: HTMLElement): void {
         this.selectedCategory = target.dataset.category;
         this.render();
     }
@@ -145,13 +147,13 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Handle quick condition selection
      */
-    static _onSelectCondition(event: Event, target: HTMLElement): void {
+    static _onSelectCondition(this: EffectCreationDialog, event: Event, target: HTMLElement): void {
         const conditionId = target.dataset.conditionId;
 
         // Set form values for the selected condition
         const form = this.element.querySelector('form');
-        form.querySelector("[name='effectType']").value = 'condition';
-        form.querySelector("[name='conditionId']").value = conditionId;
+        (form as any).querySelector("[name='effectType']").value = 'condition';
+        (form as any).querySelector("[name='conditionId']").value = conditionId;
 
         // Auto-submit
         this.submit();
@@ -162,8 +164,8 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Handle form submission
      */
-    static async formHandler(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object) as any;
+    static async formHandler(this: EffectCreationDialog, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+        const data = foundry.utils.expandObject(formData.object) as Record<string, unknown>;
 
         let effectData = null;
 
@@ -191,12 +193,12 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
         }
 
         if (!effectData) {
-            (ui.notifications as any).warn('WH40K.ActiveEffect.InvalidData');
+            ui.notifications.warn('WH40K.ActiveEffect.InvalidData');
             return this.resolve(null);
         }
 
         // Create the effect
-        const effects = await this.options.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+        const effects = await (this.options as any).actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
         return this.resolve(effects[0]);
     }
 
@@ -306,7 +308,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
 
         if (!characteristic || value === 0) return null;
 
-        const charLabel = (CONFIG as any).WH40K?.characteristics?.[characteristic] ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
+        const charLabel = CONFIG.WH40K?.characteristics?.[characteristic] ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
 
         const effectData: any = {
             name: `${charLabel} ${value > 0 ? '+' : ''}${value}`,
@@ -437,7 +439,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
         return {
             name: name,
             icon: 'icons/svg/aura.svg',
-            origin: this.options.actor.uuid,
+            origin: (this as any).options.actor.uuid,
             disabled: false,
         };
     }

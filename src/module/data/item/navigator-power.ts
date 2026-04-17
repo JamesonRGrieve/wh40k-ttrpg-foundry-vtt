@@ -10,8 +10,6 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes ActivationTemplate
  */
 export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionTemplate, ActivationTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare test: { characteristic: string; modifier: number; opposed: boolean; opposedCharacteristic: string };
@@ -26,7 +24,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -93,7 +91,7 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
      * Get the test description.
      * @type {string}
      */
-    get testLabel() {
+    get testLabel(): string {
         let label = this.testCharacteristicLabel;
         if (this.test.modifier !== 0) {
             label += ` ${this.test.modifier >= 0 ? '+' : ''}${this.test.modifier}`;

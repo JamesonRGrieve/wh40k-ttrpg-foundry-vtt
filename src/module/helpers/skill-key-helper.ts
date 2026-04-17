@@ -267,7 +267,7 @@ export class SkillKeyHelper {
      * SkillKeyHelper.nameToKey("Chem-Use")     // → "chemUse"
      * SkillKeyHelper.nameToKey("Unknown")      // → "unknown" (fallback)
      */
-    static nameToKey(name) {
+    static nameToKey(name): any {
         if (!name || typeof name !== 'string') {
             console.warn(`SkillKeyHelper: Invalid skill name:`, name);
             return '';
@@ -294,7 +294,7 @@ export class SkillKeyHelper {
      * @example
      * SkillKeyHelper.keyToName("commonLore")  // → "Common Lore"
      */
-    static keyToName(key) {
+    static keyToName(key): any {
         return this.SKILL_KEY_TO_NAME[key] || key;
     }
 
@@ -309,7 +309,7 @@ export class SkillKeyHelper {
      * SkillKeyHelper.validateKey("awareness", actor)  // → true
      * SkillKeyHelper.validateKey("invalid", actor)    // → false
      */
-    static validateKey(key, actor) {
+    static validateKey(key, actor): any {
         if (!actor?.system?.skills) return false;
         return Object.prototype.hasOwnProperty.call(actor.system.skills, key);
     }
@@ -326,7 +326,7 @@ export class SkillKeyHelper {
      * SkillKeyHelper.isSpecialist("Common Lore")   // → true
      * SkillKeyHelper.isSpecialist("awareness")     // → false
      */
-    static isSpecialist(keyOrName) {
+    static isSpecialist(keyOrName): any {
         const key = this.SKILL_NAME_TO_KEY[keyOrName] || keyOrName;
         return this.SPECIALIST_KEYS.has(key);
     }
@@ -341,7 +341,7 @@ export class SkillKeyHelper {
      * SkillKeyHelper.getCharacteristic("dodge")      // → "Ag"
      * SkillKeyHelper.getCharacteristic("Medicae")    // → "Int"
      */
-    static getCharacteristic(keyOrName) {
+    static getCharacteristic(keyOrName): any {
         const key = this.SKILL_NAME_TO_KEY[keyOrName] || keyOrName;
         return this.SKILL_CHARACTERISTICS[key] || null;
     }
@@ -356,7 +356,7 @@ export class SkillKeyHelper {
      * SkillKeyHelper.isAdvanced("acrobatics")  // → true
      * SkillKeyHelper.isAdvanced("awareness")   // → false
      */
-    static isAdvanced(keyOrName) {
+    static isAdvanced(keyOrName): any {
         const key = this.SKILL_NAME_TO_KEY[keyOrName] || keyOrName;
         return this.SKILL_TYPES[key] ?? false;
     }
@@ -369,7 +369,7 @@ export class SkillKeyHelper {
      * Get all skill display names (for autocomplete, validation).
      * @returns {string[]} Array of all skill display names
      */
-    static getAllSkillNames() {
+    static getAllSkillNames(): any {
         return Object.keys(this.SKILL_NAME_TO_KEY);
     }
 
@@ -377,7 +377,7 @@ export class SkillKeyHelper {
      * Get all skill internal keys.
      * @returns {string[]} Array of all skill keys
      */
-    static getAllSkillKeys() {
+    static getAllSkillKeys(): any {
         return Object.values(this.SKILL_NAME_TO_KEY);
     }
 
@@ -385,7 +385,7 @@ export class SkillKeyHelper {
      * Get all specialist skill keys.
      * @returns {string[]} Array of specialist skill keys
      */
-    static getAllSpecialistKeys() {
+    static getAllSpecialistKeys(): any {
         return Array.from(this.SPECIALIST_KEYS);
     }
 
@@ -393,7 +393,7 @@ export class SkillKeyHelper {
      * Get all specialist skill display names.
      * @returns {string[]} Array of specialist skill names
      */
-    static getAllSpecialistNames() {
+    static getAllSpecialistNames(): any {
         return this.getAllSpecialistKeys().map((key) => this.keyToName(key));
     }
 
@@ -407,7 +407,7 @@ export class SkillKeyHelper {
      * SkillKeyHelper.findSkillsByCharacteristic("Ag")
      * // → [{key: "acrobatics", name: "Acrobatics"}, {key: "dodge", name: "Dodge"}, ...]
      */
-    static findSkillsByCharacteristic(charShort) {
+    static findSkillsByCharacteristic(charShort): any {
         const results = [];
         for (const [key, char] of Object.entries(this.SKILL_CHARACTERISTICS)) {
             if (char === charShort) {
@@ -433,7 +433,7 @@ export class SkillKeyHelper {
      * //   isSpecialist: true
      * // }
      */
-    static getSkillMetadata(keyOrName) {
+    static getSkillMetadata(keyOrName): any {
         const key = this.SKILL_NAME_TO_KEY[keyOrName] || keyOrName;
         if (!this.SKILL_KEY_TO_NAME[key]) return null;
 

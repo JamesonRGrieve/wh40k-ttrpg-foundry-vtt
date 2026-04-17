@@ -10,16 +10,17 @@ import ContainerItemSheet from './container-item-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class ArmourModSheet extends ContainerItemSheet {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour-modification'],
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             toggleArmourType: ArmourModSheet.#onToggleArmourType,
             adjustModifier: ArmourModSheet.#onAdjustModifier,
             addProperty: ArmourModSheet.#onAddProperty,
             removeProperty: ArmourModSheet.#onRemoveProperty,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 620,
             height: 720,

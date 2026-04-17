@@ -6,17 +6,14 @@ import { uuid, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
 export class BasicActionManager {
-    [key: string]: any;
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
     storedRolls = {};
 
-    initializeHooks() {
+    initializeHooks(): void {
         // Add show/hide support for chat messages
         Hooks.on('renderChatMessageHTML', (message, html, context) => {
             game.wh40k.log('renderChatMessageHTML', { message, html, context });
-            html.querySelectorAll('.roll-control__hide-control').forEach((el) =>
-                el.addEventListener('click', async (ev) => await this._toggleExpandChatMessage(ev)),
-            );
+            html.querySelectorAll('.roll-control__hide-control').forEach((el) => el.addEventListener('click', (ev) => this._toggleExpandChatMessage(ev)));
             html.querySelectorAll('.roll-control__refund').forEach((el) => el.addEventListener('click', async (ev) => await this._refundResources(ev)));
             html.querySelectorAll('.roll-control__fate-reroll').forEach((el) => el.addEventListener('click', async (ev) => await this._fateReroll(ev)));
             html.querySelectorAll('.roll-control__assign-damage').forEach((el) => el.addEventListener('click', async (ev) => await this._assignDamage(ev)));
@@ -41,7 +38,7 @@ export class BasicActionManager {
         });
     }
 
-    _toggleExpandChatMessage(event) {
+    _toggleExpandChatMessage(event: any): void {
         game.wh40k.log('roll-control-toggle');
         event.preventDefault();
         const displayToggle = event.currentTarget;
@@ -56,13 +53,13 @@ export class BasicActionManager {
         }
     }
 
-    async _rollDamage(event) {
+    async _rollDamage(event: any): Promise<void> {
         event.preventDefault();
         const btn = event.currentTarget;
         const rollId = btn.dataset.rollId;
         const actionData = this.getActionData(rollId);
         if (!actionData) {
-            (ui.notifications as any).warn('Roll data no longer available. Cannot roll damage.');
+            ui.notifications.warn('Roll data no longer available. Cannot roll damage.');
             return;
         }
 
@@ -91,17 +88,17 @@ export class BasicActionManager {
             rolls: damageRolls,
         };
         applyRollModeWhispers(chatData);
-        await (ChatMessage as any).create(chatData);
+        await ChatMessage.create(chatData);
     }
 
-    async _refundResources(event) {
+    async _refundResources(event: any): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget;
         const rollId = div.dataset.rollId;
         const actionData = this.getActionData(rollId);
 
         if (!actionData) {
-            (ui.notifications as any).warn(`Action data expired. Unable to perform action.`);
+            ui.notifications.warn(`Action data expired. Unable to perform action.`);
             return;
         }
 
@@ -114,23 +111,23 @@ export class BasicActionManager {
 
         if (confirmed) {
             await actionData.refundResources();
-            (ui.notifications as any).info(`Resources refunded`);
+            ui.notifications.info(`Resources refunded`);
         }
     }
 
-    async _fateReroll(event) {
+    async _fateReroll(event: any): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget;
         const rollId = div.dataset.rollId;
         const actionData = this.getActionData(rollId);
 
         if (!actionData) {
-            (ui.notifications as any).warn(`Action data expired. Unable to perform action.`);
+            ui.notifications.warn(`Action data expired. Unable to perform action.`);
             return;
         }
 
         if (actionData.rollData?.sourceActor?.system?.fate?.value <= 0) {
-            (ui.notifications as any).warn(`Actor does not have enough fate points!`);
+            ui.notifications.warn(`Actor does not have enough fate points!`);
             return;
         }
 
@@ -155,7 +152,7 @@ export class BasicActionManager {
         }
     }
 
-    async _assignDamage(event) {
+    async _assignDamage(event: any): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget;
 
@@ -188,15 +185,15 @@ export class BasicActionManager {
             }
         }
         if (!targetActor) {
-            (ui.notifications as any).warn(`Cannot determine target actor to assign hit.`);
+            ui.notifications.warn(`Cannot determine target actor to assign hit.`);
             return;
         }
 
         const assignData = new AssignDamageData(targetActor, hitData);
-        await prepareAssignDamageRoll(assignData);
+        prepareAssignDamageRoll(assignData);
     }
 
-    async _applyDamage(event) {
+    async _applyDamage(event: any): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget;
         const targetUuid = div.dataset.uuid;
@@ -210,12 +207,12 @@ export class BasicActionManager {
         // @ts-expect-error - dynamic property access
         const actor = (await fromUuid(targetUuid)).actor;
         if (!actor) {
-            (ui.notifications as any).warn(`Cannot determine actor to assign hit.`);
+            ui.notifications.warn(`Cannot determine actor to assign hit.`);
             return;
         }
         for (const field of [damage, penetration, fatigue]) {
             if (field && isNaN(parseInt(field))) {
-                (ui.notifications as any).warn(`Unable to determine damage/penetration/fatigue to assign.`);
+                ui.notifications.warn(`Unable to determine damage/penetration/fatigue to assign.`);
                 return;
             }
         }
@@ -246,12 +243,12 @@ export class BasicActionManager {
 
         assignDamageData.hit = hit;
 
-        await assignDamageData.update();
-        await assignDamageData.finalize();
+        assignDamageData.update();
+        assignDamageData.finalize();
         await assignDamageData.performActionAndSendToChat();
     }
 
-    async assignDamageTool() {
+    async assignDamageTool(): Promise<void> {
         // @ts-expect-error - argument count
         const sourceToken = DHTargetedActionManager.getSourceToken();
         // @ts-expect-error - missing name
@@ -260,14 +257,14 @@ export class BasicActionManager {
 
         const hitData = new Hit();
         const assignData = new AssignDamageData(sourceActorData, hitData);
-        await prepareAssignDamageRoll(assignData);
+        prepareAssignDamageRoll(assignData);
     }
 
-    getActionData(id) {
+    getActionData(id: string): any {
         return this.storedRolls[id];
     }
 
-    storeActionData(actionData) {
+    storeActionData(actionData: any): void {
         // Store roll data for fate re-rolls and ammo refunds during session
         // Note: Rolls persist for entire session, consider adding cleanup on combat end if memory becomes an issue
         this.storedRolls[actionData.id] = actionData;
@@ -279,7 +276,7 @@ export class BasicActionManager {
      * @param data
      * @returns {Promise<void>}
      */
-    async sendItemVocalizeChat(data) {
+    async sendItemVocalizeChat(data: any): Promise<void> {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
         const chatData: Record<string, any> = {
             user: game.user.id,
@@ -287,7 +284,7 @@ export class BasicActionManager {
             rollMode: game.settings.get('core', 'rollMode'),
         };
         applyRollModeWhispers(chatData);
-        await (ChatMessage as any).create(chatData);
+        await ChatMessage.create(chatData);
     }
 }
 

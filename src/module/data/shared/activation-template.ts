@@ -4,10 +4,10 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  * Template for items with activation requirements (actions, powers).
  * @mixin
  */
+// @ts-expect-error - SystemDataModel extends foundry.abstract.TypeDataModel which has complex generic constraints
 export default class ActivationTemplate extends SystemDataModel {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
+    declare parent: any;
     declare activation: { type: string; cost: number; condition: string };
     declare target: { type: string; value: number; units: string; width: number; length: number };
     declare duration: { value: number; units: string; sustained: boolean };
@@ -15,7 +15,7 @@ export default class ActivationTemplate extends SystemDataModel {
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             activation: new fields.SchemaField({
                 type: new fields.StringField({
@@ -151,7 +151,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * Does this item have limited uses?
      * @type {boolean}
      */
-    get hasLimitedUses() {
+    get hasLimitedUses(): boolean {
         return this.uses.max !== null && this.uses.max > 0;
     }
 
@@ -161,7 +161,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * Are uses exhausted?
      * @type {boolean}
      */
-    get usesExhausted() {
+    get usesExhausted(): boolean {
         return this.hasLimitedUses && this.uses.value <= 0;
     }
 

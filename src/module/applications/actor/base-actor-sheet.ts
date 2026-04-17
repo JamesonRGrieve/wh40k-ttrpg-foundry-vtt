@@ -129,7 +129,6 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     // CollapsiblePanelMixin static action handlers
     static _onTogglePanel: (event: Event, target: HTMLElement) => Promise<void>;
     static _onApplyPreset: (event: Event, target: HTMLElement) => Promise<void>;
-    [key: string]: any;
 
     constructor(...args: any[]) {
         super(...(args as []));
@@ -139,6 +138,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
     /** @override */
     static DEFAULT_OPTIONS = {
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             editImage: BaseActorSheet.#onEditImage,
             roll: BaseActorSheet.#roll,
@@ -156,11 +156,12 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             addSpecialistSkill: BaseActorSheet.#addSpecialistSkill,
             deleteSpecialization: BaseActorSheet.#deleteSpecialization,
             viewSkillInfo: BaseActorSheet.#viewSkillInfo,
-            togglePanel: (BaseActorSheet as any)._onTogglePanel,
-            applyPreset: (BaseActorSheet as any)._onApplyPreset,
+            togglePanel: BaseActorSheet._onTogglePanel,
+            applyPreset: BaseActorSheet._onApplyPreset,
             spendXPAdvance: BaseActorSheet.#spendXPAdvance,
             editCharacteristic: BaseActorSheet.#editCharacteristic,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         classes: ['wh40k-rpg', 'sheet', 'actor'],
         tag: 'form',
         form: {
@@ -238,10 +239,10 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         context.skillTrainingConfig = this._getSkillTrainingConfig();
 
         // Prepare skills
-        await this._prepareSkills(context);
+        this._prepareSkills(context);
 
         // Prepare items by category
-        await this._prepareItems(context);
+        this._prepareItems(context);
 
         return context;
     }
@@ -367,7 +368,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         if (this._stateRestored) return;
         this._stateRestored = true;
 
-        const state = (this.actor as any).getFlag('wh40k-rpg', 'sheetState') as any;
+        const state = (this.actor as any).getFlag('wh40k-rpg', 'sheetState') as Record<string, unknown>;
         if (!state) return;
 
         // Restore scroll positions
@@ -376,12 +377,15 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Restore window size if different from default
-        if (state.windowSize?.width && state.windowSize?.height) {
-            const defaultPos = (this.constructor as any).DEFAULT_OPTIONS.position;
-            if (state.windowSize.width !== defaultPos?.width || state.windowSize.height !== defaultPos?.height) {
+        const windowSize = state.windowSize as Record<string, unknown> | undefined;
+        if (windowSize?.width && windowSize?.height) {
+            const defaultPos = (this.constructor as unknown as { DEFAULT_OPTIONS: Record<string, unknown> }).DEFAULT_OPTIONS.position as
+                | Record<string, unknown>
+                | undefined;
+            if (windowSize.width !== defaultPos?.width || windowSize.height !== defaultPos?.height) {
                 this.setPosition({
-                    width: state.windowSize.width,
-                    height: state.windowSize.height,
+                    width: windowSize.width as number,
+                    height: windowSize.height as number,
                 });
             }
         }
@@ -983,23 +987,23 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @protected
      */
     _prepareTraitsContext(context: Record<string, unknown>): Record<string, unknown> {
-        const traits = (context.items as any[]).filter((i: any) => i.type === 'trait');
+        const traits = Array.from(context.items as Iterable<Record<string, unknown>>).filter((i: any) => i.type === 'trait');
 
         // Apply filters if present
         let filteredTraits = traits;
         const filter = this._traitsFilter || {};
 
         if (filter.search) {
-            const search = filter.search.toLowerCase();
-            filteredTraits = filteredTraits.filter((t) => t.name.toLowerCase().includes(search));
+            const search = (filter.search as string).toLowerCase();
+            filteredTraits = filteredTraits.filter((t) => (t as any).name.toLowerCase().includes(search));
         }
 
         if (filter.category && filter.category !== 'all') {
-            filteredTraits = filteredTraits.filter((t) => t.system.category === filter.category);
+            filteredTraits = filteredTraits.filter((t) => (t as any).system.category === filter.category);
         }
 
         if (filter.hasLevel) {
-            filteredTraits = filteredTraits.filter((t) => t.system.hasLevel);
+            filteredTraits = filteredTraits.filter((t) => (t as any).system.hasLevel);
         }
 
         // Augment with display properties
@@ -1183,7 +1187,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         // Restore sheet state on first render
         if (!this._stateRestored) {
-            await this._restoreSheetState();
+            this._restoreSheetState();
         }
 
         // Add wh40k-sheet class to the form element for CSS styling
@@ -1455,14 +1459,14 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static async #onEditImage(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset.edit ?? 'img';
-        const current = foundry.utils.getProperty((this as any).document._source, attr);
+        const current = foundry.utils.getProperty(this.document._source, attr);
         const fp = new (CONFIG as any).ux.FilePicker({
             current,
             type: 'image',
-            callback: (path: string) => (this as any).document.update({ [attr]: path }),
+            callback: (path: string) => this.document.update({ [attr]: path }),
             position: {
-                top: (this as any).position.top + 40,
-                left: (this as any).position.left + 10,
+                top: this.position.top + 40,
+                left: this.position.left + 10,
             },
         });
         await fp.browse();
@@ -1557,10 +1561,10 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         switch (rollType) {
             case 'characteristic':
-                (this as any).actor.rollCharacteristic?.(rollTarget);
+                this.actor.rollCharacteristic?.(rollTarget);
                 return;
             case 'skill':
-                (this as any).actor.rollSkill?.(rollTarget, specialty);
+                (this.actor as any).rollSkill?.(rollTarget, specialty);
                 return;
         }
     }
@@ -1575,7 +1579,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static async #itemRoll(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
-        if (itemId) await (this as any).actor.rollItem?.(itemId);
+        if (itemId) await (this.actor as any).rollItem?.(itemId);
     }
 
     /* -------------------------------------------- */
@@ -1594,7 +1598,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             console.warn('WH40K | itemEdit: No itemId found', target);
             return;
         }
-        const item = (this as any).actor.items.get(itemId);
+        const item = this.actor.items.get(itemId);
         console.log('WH40K | itemEdit item:', item);
         if (!item) {
             console.warn('WH40K | itemEdit: Item not found with ID', itemId);
@@ -1620,7 +1624,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             return;
         }
 
-        const item = (this as any).actor.items.get(itemId);
+        const item = this.actor.items.get(itemId);
         console.log('WH40K | itemDelete item:', item);
         if (!item) {
             console.warn('WH40K | itemDelete: Item not found with ID', itemId);
@@ -1637,11 +1641,11 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         console.log('WH40K | itemDelete confirmed:', confirmed);
         if (confirmed) {
             try {
-                await (this as any).actor.deleteEmbeddedDocuments('Item', [itemId]);
+                await this.actor.deleteEmbeddedDocuments('Item', [itemId]);
                 console.log('WH40K | itemDelete: Successfully deleted item', itemId);
             } catch (err) {
                 console.error('WH40K | itemDelete: Error deleting item', err);
-                (ui as any).notifications.error(`Failed to delete ${item.name}`);
+                (ui.notifications as any).error(`Failed to delete ${item.name}`);
             }
         }
     }
@@ -1663,7 +1667,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             return;
         }
 
-        const item = (this as any).actor.items.get(itemId);
+        const item = this.actor.items.get(itemId);
         console.log('WH40K | itemVocalize item:', item);
         if (!item) {
             console.warn(`WH40K | itemVocalize: Item ${itemId} not found on actor`);
@@ -1672,11 +1676,11 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         try {
             console.log('WH40K | itemVocalize: Calling item.sendToChat()');
-            await item.sendToChat();
+            await (item as any).sendToChat();
             console.log('WH40K | itemVocalize: Successfully sent to chat');
         } catch (err) {
             console.error('WH40K | itemVocalize: Error sending item to chat', err);
-            (ui as any).notifications.error(`Failed to send ${item.name} to chat`);
+            (ui.notifications as any).error(`Failed to send ${item.name} to chat`);
         }
     }
 
@@ -1707,7 +1711,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             };
         }
 
-        await (this as any).actor.createEmbeddedDocuments('Item', [data], { renderSheet: true });
+        await this.actor.createEmbeddedDocuments('Item', [data] as any, { renderSheet: true });
     }
 
     /* -------------------------------------------- */
@@ -1722,7 +1726,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     // static async #effectCreate(event, target) {
     //     const effect = await EffectCreationDialog.show(this.actor);
     //     if (effect) {
-    //         (ui as any).notifications.info(`Created effect: ${effect.name}`);
+    //         (ui.notifications as any).info(`Created effect: ${effect.name}`);
     //     }
     // }
 
@@ -1736,7 +1740,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static #effectEdit(event: Event, target: HTMLElement): void {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
-        const effect = (this as any).actor.effects.get(effectId);
+        const effect = this.actor.effects.get(effectId);
         effect?.sheet.render(true);
     }
 
@@ -1750,7 +1754,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static async #effectDelete(event: Event, target: HTMLElement): Promise<void> {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
-        const effect = (this as any).actor.effects.get(effectId);
+        const effect = this.actor.effects.get(effectId);
         await effect?.delete();
     }
 
@@ -1764,7 +1768,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static async #effectToggle(event: Event, target: HTMLElement): Promise<void> {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
-        const effect = (this as any).actor.effects.get(effectId);
+        const effect = this.actor.effects.get(effectId);
         await effect?.update({ disabled: !effect.disabled });
     }
 
@@ -1783,11 +1787,11 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         if (!sectionName) return;
 
         // Find the dropdown panel element
-        const dropdown = (this as any).element.querySelector(`.wh40k-char-hud-details.${sectionName}`);
+        const dropdown = this.element.querySelector(`.wh40k-char-hud-details.${sectionName}`);
         if (!dropdown) return;
 
         // Close all other dropdowns first
-        (this as any).element.querySelectorAll('.wh40k-char-hud-details.expanded').forEach((el) => {
+        this.element.querySelectorAll('.wh40k-char-hud-details.expanded').forEach((el) => {
             if (el !== dropdown) {
                 el.classList.remove('expanded');
                 // Also remove active class from the toggle icon
@@ -1823,7 +1827,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Pattern 1: Simple field toggle
         if (field) {
             const currentValue = target.dataset.value === 'true';
-            await (this as any).actor.update({ [field]: !currentValue });
+            await this.actor.update({ [field]: !currentValue });
             return;
         }
 
@@ -1832,8 +1836,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             const basePath = specialty != null ? `system.skills.${skillKey}.entries.${specialty}` : `system.skills.${skillKey}`;
 
             // Get current training level
-            const skill =
-                specialty != null ? (this as any).actor.system.skills?.[skillKey]?.entries?.[specialty] : (this as any).actor.system.skills?.[skillKey];
+            const skill = specialty != null ? this.actor.system.skills?.[skillKey]?.entries?.[specialty] : this.actor.system.skills?.[skillKey];
 
             const currentLevel = skill?.plus20 ? 3 : skill?.plus10 ? 2 : skill?.trained ? 1 : 0;
 
@@ -1846,7 +1849,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                 [`${basePath}.plus20`]: newLevel >= 3,
             };
 
-            await (this as any).actor.update(updateData);
+            await this.actor.update(updateData);
         }
     }
 
@@ -1860,15 +1863,15 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static async #addSpecialistSkill(event: Event, target: HTMLElement): Promise<void> {
         const skillKey = target.dataset.skill;
-        const skill = (this as any).actor.system.skills?.[skillKey];
+        const skill = this.actor.system.skills?.[skillKey];
         if (!skill) {
-            (ui as any).notifications.warn('Skill not specified.');
+            (ui.notifications as any).warn('Skill not specified.');
             return;
         }
 
         // Check if skill is specialist type
         if (!Array.isArray(skill.entries)) {
-            (ui as any).notifications.error(`${skill.label} is not a specialist skill.`);
+            (ui.notifications as any).error(`${skill.label} is not a specialist skill.`);
             return;
         }
 
@@ -1882,8 +1885,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             (target as unknown as HTMLSelectElement).selectedIndex = 0;
         } else {
             const { prepareCreateSpecialistSkillPrompt } = await import('../prompts/specialist-skill-dialog.ts');
-            await prepareCreateSpecialistSkillPrompt({
-                actor: (this as any).actor,
+            prepareCreateSpecialistSkillPrompt({
+                actor: this.actor,
                 skillName: skillKey,
             });
             return;
@@ -1893,7 +1896,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Check if specialization already exists
         const existing = skill.entries.find((e) => e.name.toLowerCase() === name.toLowerCase());
         if (existing) {
-            (ui as any).notifications.warn(`${skill.label} (${name}) already exists.`);
+            (ui.notifications as any).warn(`${skill.label} (${name}) already exists.`);
             return;
         }
 
@@ -1912,11 +1915,11 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             current: 0,
         });
 
-        await (this as any).actor.update({
+        await this.actor.update({
             [`system.skills.${skillKey}.entries`]: entries,
         });
 
-        (ui as any).notifications.info(`Added ${skill.label} (${name}) specialization.`);
+        (ui.notifications as any).info(`Added ${skill.label} (${name}) specialization.`);
     }
 
     /* -------------------------------------------- */
@@ -1931,7 +1934,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         const skillName = target.dataset.skill;
         const index = parseInt(target.dataset.index);
 
-        const skill = (this as any).actor.system.skills[skillName];
+        const skill = this.actor.system.skills[skillName];
         if (!skill || !Array.isArray(skill.entries)) return;
 
         const entries = [...skill.entries];
@@ -1946,7 +1949,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         if (confirmed) {
             entries.splice(index, 1);
-            await (this as any).actor.update({ [`system.skills.${skillName}.entries`]: entries });
+            await this.actor.update({ [`system.skills.${skillName}.entries`]: entries });
         }
     }
 
@@ -1969,7 +1972,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             return;
         }
 
-        const skill = (this as any).actor.system.skills?.[skillKey];
+        const skill = this.actor.system.skills?.[skillKey];
         if (!skill) {
             console.warn(`WH40K | viewSkillInfo: Skill ${skillKey} not found`);
             return;
@@ -1979,7 +1982,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         const skillPackNames = ['wh40k-rpg.dh2-core-stats-skills', 'wh40k-rpg.rt-core-items-skills', 'wh40k-rpg.dw-core-items-skills'];
         const pack = skillPackNames.map((n) => game.packs.get(n)).find((p) => p);
         if (!pack) {
-            (ui as any).notifications.warn('Skills compendium not found.');
+            (ui.notifications as any).warn('Skills compendium not found.');
             return;
         }
 
@@ -1987,12 +1990,12 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         const searchLabel = skill.label.toLowerCase().replace(/[^a-z0-9]/g, '');
         const index = await pack.getIndex();
         const entry = index.find((i) => {
-            const indexName = (i as any).name.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const indexName = (i as { name: string }).name.toLowerCase().replace(/[^a-z0-9]/g, '');
             return indexName === searchLabel;
         });
 
         if (!entry) {
-            (ui as any).notifications.info(`No compendium entry found for ${skill.label}.`);
+            (ui.notifications as any).info(`No compendium entry found for ${skill.label}.`);
             return;
         }
 
@@ -2012,8 +2015,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         if (!this.actor.isOwner) return undefined;
 
         // Check if this item type is supported
-        if ((this.constructor as any).unsupportedItemTypes.has(item.type)) {
-            (ui as any).notifications.warn(
+        if ((this.constructor as unknown as { unsupportedItemTypes: Set<string> }).unsupportedItemTypes.has(item.type)) {
+            (ui.notifications as any).warn(
                 game.i18n.format('WH40K.Warning.InvalidItem', {
                     itemType: game.i18n.localize((CONFIG as any).Item.typeLabels[item.type]),
                     actorType: game.i18n.localize((CONFIG as any).Actor.typeLabels[this.actor.type]),
@@ -2080,25 +2083,25 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static async #spendXPAdvance(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const charKey = target.dataset.characteristic;
-        const char = (this as any).actor.system.characteristics[charKey];
+        const char = this.actor.system.characteristics[charKey];
 
         if (!char) {
-            (ui as any).notifications.error('Invalid characteristic!');
+            (ui.notifications as any).error('Invalid characteristic!');
             return;
         }
 
         const cost = char.nextAdvanceCost;
-        const available = (this as any).actor.system.experience?.available || 0;
+        const available = this.actor.system.experience?.available || 0;
 
         // Check if enough XP
         if (available < cost) {
-            (ui as any).notifications.warn(`Not enough XP! Need ${cost}, have ${available}.`);
+            (ui.notifications as any).warn(`Not enough XP! Need ${cost}, have ${available}.`);
             return;
         }
 
         // Check if already maxed
         if ((char.advance || 0) >= 5) {
-            (ui as any).notifications.warn(`${char.label} is already at maximum advancement!`);
+            (ui.notifications as any).warn(`${char.label} is already at maximum advancement!`);
             return;
         }
 
@@ -2120,49 +2123,49 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         // Update actor
         const newAdvance = oldAdvance + 1;
-        const newSpent = ((this as any).actor.system.experience?.spent || 0) + cost;
+        const newSpent = (this.actor.system.experience?.spent || 0) + cost;
 
-        await (this as any).actor.update({
+        await this.actor.update({
             [`system.characteristics.${charKey}.advance`]: newAdvance,
             'system.experience.spent': newSpent,
-        });
+        } as any);
 
         // Calculate new values
         const newTotal = char.base + newAdvance * 5 + (char.modifier || 0);
         const newBonus = Math.floor(newTotal / 10) * (char.unnatural || 1);
 
         // Success notification
-        (ui as any).notifications.info(`${char.label} advanced to ${newTotal}! (−${cost} XP)`);
+        (ui.notifications as any).info(`${char.label} advanced to ${newTotal}! (−${cost} XP)`);
 
         // Trigger characteristic change animation
-        if ((this as any).animateCharacteristicChange) {
-            (this as any).animateCharacteristicChange(charKey, oldTotal, newTotal);
+        if (this.animateCharacteristicChange) {
+            this.animateCharacteristicChange(charKey, oldTotal, newTotal);
         }
 
         // Trigger bonus change animation if bonus changed
-        if (oldBonus !== newBonus && (this as any).animateCharacteristicBonus) {
-            (this as any).animateCharacteristicBonus(charKey, oldBonus, newBonus);
+        if (oldBonus !== newBonus && this.animateCharacteristicBonus) {
+            this.animateCharacteristicBonus(charKey, oldBonus, newBonus);
         }
 
         // Animate circle for V1 HUD (bonus display)
-        const circleElement = (this as any).element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-circle`);
+        const circleElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-circle`);
         if (circleElement) {
             circleElement.classList.add('value-changed');
             setTimeout(() => circleElement.classList.remove('value-changed'), 500);
         }
 
         // Add value-changed animation to mod display for V1 HUD
-        const modElement = (this as any).element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`);
+        const modElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`);
         if (modElement) {
             modElement.classList.add('value-changed');
             setTimeout(() => modElement.classList.remove('value-changed'), 500);
         }
 
         // Update the border progress indicator
-        const charBox = (this as any).element.querySelector(`[data-characteristic="${charKey}"]`);
+        const charBox = this.element.querySelector(`[data-characteristic="${charKey}"]`) as HTMLElement | null;
         if (charBox) {
-            charBox.style.setProperty('--advance-progress', newAdvance / 5);
-            charBox.dataset.advance = newAdvance;
+            charBox.style.setProperty('--advance-progress', String(newAdvance / 5));
+            charBox.dataset.advance = String(newAdvance);
         }
     }
 
@@ -2178,9 +2181,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         const charKey = (target.closest('[data-characteristic]') as HTMLElement | null)?.dataset.characteristic;
         if (!charKey) return;
 
-        const char = (this as any).actor.system.characteristics[charKey];
+        const char = this.actor.system.characteristics[charKey];
         if (!char) {
-            (ui as any).notifications.error('Invalid characteristic!');
+            (ui.notifications as any).error('Invalid characteristic!');
             return;
         }
 
@@ -2242,14 +2245,14 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
 
         // Update actor with new values if saved
         if (result) {
-            await (this as any).actor.update({
+            await this.actor.update({
                 [`system.characteristics.${charKey}.base`]: parseInt(result.base) || 0,
                 [`system.characteristics.${charKey}.advance`]: parseInt(result.advance) || 0,
                 [`system.characteristics.${charKey}.modifier`]: parseInt(result.modifier) || 0,
                 [`system.characteristics.${charKey}.unnatural`]: parseInt(result.unnatural) || 1,
             });
 
-            (ui as any).notifications.info(`${char.label} updated successfully!`);
+            (ui.notifications as any).info(`${char.label} updated successfully!`);
         }
     }
 }

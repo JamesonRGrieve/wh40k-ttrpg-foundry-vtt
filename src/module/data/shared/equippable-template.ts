@@ -4,9 +4,7 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  * Template for items that can be equipped.
  * @mixin
  */
-export default class EquippableTemplate extends SystemDataModel {
-    [key: string]: any;
-
+export default class EquippableTemplate extends (SystemDataModel as any) {
     // Typed property declarations matching defineSchema()
     declare equipped: boolean;
     declare inBackpack: boolean;
@@ -15,7 +13,7 @@ export default class EquippableTemplate extends SystemDataModel {
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             equipped: new fields.BooleanField({ required: true, initial: false }),
             inBackpack: new fields.BooleanField({ required: true, initial: false }),
@@ -88,7 +86,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @returns {Promise<Item>}
      */
     toggleEquipped(): any {
-        return this.parent?.update({ 'system.equipped': !this.equipped });
+        return (this as any).parent?.update({ 'system.equipped': !this.equipped });
     }
 
     /* -------------------------------------------- */
@@ -98,7 +96,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @returns {Promise<Item>}
      */
     stowInBackpack(): any {
-        return this.parent?.update({
+        return (this as any).parent?.update({
             'system.equipped': false,
             'system.inBackpack': true,
         });
@@ -111,7 +109,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @returns {Promise<Item>}
      */
     removeFromBackpack(): any {
-        return this.parent?.update({ 'system.inBackpack': false });
+        return (this as any).parent?.update({ 'system.inBackpack': false });
     }
 
     /* -------------------------------------------- */
@@ -121,7 +119,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @returns {Promise<Item>}
      */
     stowInShipStorage(): any {
-        return this.parent?.update({
+        return (this as any).parent?.update({
             'system.equipped': false,
             'system.inBackpack': false,
             'system.inShipStorage': true,
@@ -135,6 +133,6 @@ export default class EquippableTemplate extends SystemDataModel {
      * @returns {Promise<Item>}
      */
     removeFromShipStorage(): any {
-        return this.parent?.update({ 'system.inShipStorage': false });
+        return (this as any).parent?.update({ 'system.inShipStorage': false });
     }
 }

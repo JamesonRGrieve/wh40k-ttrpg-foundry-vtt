@@ -10,8 +10,6 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes ModifiersTemplate
  */
 export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare category: string;
@@ -36,7 +34,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -255,7 +253,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the full name including specialization and rank.
      * @type {string}
      */
-    get fullName() {
+    get fullName(): string {
         let name = this.parent?.name ?? '';
         if (this.specialization) name += ` (${this.specialization})`;
         if (this.stackable && this.rank > 1) name += ` x${this.rank}`;
@@ -279,7 +277,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get a formatted prerequisites string.
      * @type {string}
      */
-    get prerequisitesLabel() {
+    get prerequisitesLabel(): string {
         if (this.prerequisites.text) return this.prerequisites.text;
 
         const parts = [];
@@ -319,7 +317,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get a summary of what this talent grants.
      * @type {string[]}
      */
-    get grantsSummary() {
+    get grantsSummary(): any[] {
         const grants = this.grants;
         const summary = [];
 
@@ -391,7 +389,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Post this talent to chat with rich formatting.
      * @returns {Promise<ChatMessage>}
      */
-    async toChat(): Promise<void> {
+    async toChat(): Promise<any> {
         const templateData = {
             talent: {
                 id: this.parent.id,
@@ -418,9 +416,9 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-card.hbs', templateData);
 
-        return (ChatMessage as any).create({
+        return ChatMessage.create({
             content: html,
-            speaker: (ChatMessage as any).getSpeaker({ actor: this.parent.actor }),
-        });
+            speaker: ChatMessage.getSpeaker({ actor: this.parent.actor }),
+        } as any);
     }
 }

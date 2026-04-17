@@ -1,4 +1,4 @@
-export function getHitLocationForRoll(roll) {
+export function getHitLocationForRoll(roll: number): string {
     game.wh40k.log('getHitLocationForRoll', roll);
     const rollString = roll.toString().split('');
     const reverseArray = rollString.reverse();
@@ -7,7 +7,7 @@ export function getHitLocationForRoll(roll) {
     return creatureHitLocations().find((i) => reverseInt >= i.min && reverseInt <= i.max)?.name;
 }
 
-export function hitDropdown() {
+export function hitDropdown(): Record<string, string> {
     const dropdown = {};
     creatureHitLocations().forEach((i) => {
         dropdown[i.name] = i.name;
@@ -15,11 +15,11 @@ export function hitDropdown() {
     return dropdown;
 }
 
-export function hitLocationNames() {
+export function hitLocationNames(): string[] {
     return creatureHitLocations().map((i) => i.name);
 }
 
-export function additionalHitLocations() {
+export function additionalHitLocations(): any {
     return {
         'Head': ['Head', 'Head', 'Right Arm', 'Body', 'Left Arm', 'Body'],
         'Right Arm': ['Right Arm', 'Right Arm', 'Body', 'Head', 'Body', 'Right Arm'],
@@ -30,7 +30,7 @@ export function additionalHitLocations() {
     };
 }
 
-export function creatureHitLocations() {
+export function creatureHitLocations(): Record<string, any> {
     return [
         {
             name: 'Head',

@@ -6,7 +6,8 @@ import BaseGrantData from './base-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class ItemGrantData extends (BaseGrantData as any) {
+// @ts-expect-error - BaseGrantData extends foundry.abstract.DataModel with complex generic constraints
+export default class ItemGrantData extends BaseGrantData {
     [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
@@ -27,7 +28,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
 
     /** @inheritDoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -56,7 +57,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
      * Whether any items have been applied.
      * @type {boolean}
      */
-    get hasApplied() {
+    get hasApplied(): boolean {
         return Object.keys(this.applied).length > 0;
     }
 
@@ -83,11 +84,13 @@ export default class ItemGrantData extends (BaseGrantData as any) {
             let resolvedUuid = uuid;
 
             if (uuid) {
+                // eslint-disable-next-line no-await-in-loop -- Sequential item resolution with fallback logic
                 sourceItem = await this._fetchItem(uuid);
             }
 
             // Fallback: lookup by name if no UUID or UUID not found
             if (!sourceItem && _legacyName) {
+                // eslint-disable-next-line no-await-in-loop -- Sequential fallback lookup
                 sourceItem = await this._findItemByName(_legacyName, _legacySpecialization);
                 if (sourceItem) {
                     resolvedUuid = sourceItem.uuid;
@@ -114,7 +117,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
             }
 
             // Validate item type
-            if (!(this.constructor as any).VALID_TYPES.has(sourceItem.type)) {
+            if (!(this.constructor as typeof ItemGrantData).VALID_TYPES.has(sourceItem.type)) {
                 result.errors.push(`Invalid item type "${sourceItem.type}" for ${sourceItem.name}`);
                 continue;
             }
@@ -131,6 +134,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
                 effectiveOverrides['system.specialization'] = _legacySpecialization;
                 effectiveOverrides['name'] = `${sourceItem.name} (${_legacySpecialization})`;
             }
+            // eslint-disable-next-line no-await-in-loop -- Sequential item data creation
             const itemData = await this._createItemData(sourceItem, resolvedUuid, effectiveOverrides);
             itemsToCreate.push({ uuid: resolvedUuid, data: itemData });
         }
@@ -210,9 +214,10 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     /** @inheritDoc */
     async getSummary(): Promise<void> {
         const summary = await super.getSummary();
-        summary.icon = (this.constructor as any).ICON;
+        summary.icon = (this.constructor as typeof ItemGrantData).ICON;
 
         for (const itemConfig of this.items) {
+            // eslint-disable-next-line no-await-in-loop -- Sequential item fetching for summary
             const item = await this._fetchItem(itemConfig.uuid);
             if (item) {
                 summary.details.push({
@@ -319,6 +324,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
         for (const pack of game.packs) {
             if (pack.documentName !== 'Item') continue;
 
+            // eslint-disable-next-line no-await-in-loop -- Sequential search with early return
             const index = await pack.getIndex();
 
             const match = index.find((entry: any) => {

@@ -12,8 +12,6 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes DamageTemplate
  */
 export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, DamageTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare weaponTypes: Set<string>;
@@ -27,7 +25,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 

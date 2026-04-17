@@ -17,7 +17,7 @@
  * @param {Actor} actor - The actor to check
  * @returns {number} Available XP
  */
-export function getAvailableXP(actor) {
+export function getAvailableXP(actor: any): number {
     const experience = actor.system?.experience;
     if (!experience) return 0;
 
@@ -31,7 +31,7 @@ export function getAvailableXP(actor) {
  * @param {number} cost - The XP cost
  * @returns {boolean}
  */
-export function canAfford(actor, cost) {
+export function canAfford(actor: any, cost: number): boolean {
     return getAvailableXP(actor) >= cost;
 }
 
@@ -44,7 +44,7 @@ export function canAfford(actor, cost) {
  * @param {string} [reason] - Optional reason for the transaction (for logging)
  * @returns {Promise<TransactionResult>}
  */
-export async function spendXP(actor, cost, reason = '') {
+export async function spendXP(actor: any, cost: number, reason: string = ''): Promise<{ success: boolean; error?: string; newAvailable?: number }> {
     // Validate inputs
     if (!actor) {
         return { success: false, error: 'No actor provided' };
@@ -60,10 +60,9 @@ export async function spendXP(actor, cost, reason = '') {
         return {
             success: false,
             error: game.i18n.format('WH40K.Advancement.Error.InsufficientXP', {
-                cost,
-                // @ts-expect-error - type assignment
-                available,
-            }),
+                cost: String(cost),
+                available: String(available),
+            } as any),
         };
     }
 
@@ -103,7 +102,10 @@ export async function spendXP(actor, cost, reason = '') {
  * @param {Array<{cost: number, reason: string}>} purchases - Array of purchases
  * @returns {Promise<TransactionResult>}
  */
-export async function spendXPBatch(actor, purchases) {
+export async function spendXPBatch(
+    actor: any,
+    purchases: Array<{ cost: number; reason: string }>,
+): Promise<{ success: boolean; error?: string; newAvailable?: number }> {
     if (!actor || !purchases?.length) {
         return { success: false, error: 'Invalid arguments' };
     }
@@ -116,10 +118,9 @@ export async function spendXPBatch(actor, purchases) {
         return {
             success: false,
             error: game.i18n.format('WH40K.Advancement.Error.InsufficientXP', {
-                cost: totalCost,
-                // @ts-expect-error - type assignment
-                available,
-            }),
+                cost: String(totalCost),
+                available: String(available),
+            } as any),
         };
     }
 
@@ -156,7 +157,7 @@ export async function spendXPBatch(actor, purchases) {
  * @param {Actor} actor - The actor to check
  * @returns {Object} Summary of XP allocation
  */
-export function getXPSummary(actor) {
+export function getXPSummary(actor: any): Record<string, number> {
     const exp = actor.system?.experience ?? {};
 
     return {
@@ -175,7 +176,7 @@ export function getXPSummary(actor) {
  * @param {Array<{cost: number}>} advancements - List of advancements
  * @returns {number} Total cost
  */
-export function calculateTotalCost(advancements) {
+export function calculateTotalCost(advancements: Array<{ cost: number }>): number {
     if (!advancements?.length) return 0;
     return advancements.reduce((sum, adv) => sum + (adv.cost ?? 0), 0);
 }

@@ -11,8 +11,8 @@ import BaseItemSheet from './base-item-sheet.ts';
  *
  * @extends {BaseItemSheet}
  */
-export default class NPCTemplateSheet extends (BaseItemSheet as any) {
-    [key: string]: any;
+// @ts-expect-error - Mixin chain loses static type information
+export default class NPCTemplateSheet extends BaseItemSheet {
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -24,6 +24,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
             width: 700,
             height: 700,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             // Skill actions
             addSkill: NPCTemplateSheet.#addSkill,
@@ -44,6 +45,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
             // Instantiate
             createFromTemplate: NPCTemplateSheet.#createFromTemplate,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -132,8 +134,8 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
 
         // Add icons from TABS definition
         for (const tabDef of (this.constructor as any).TABS) {
-            if (tabs[tabDef.tab] && tabDef.icon) {
-                tabs[tabDef.tab].icon = tabDef.icon;
+            if (tabs[(tabDef as any).tab] && (tabDef as any).icon) {
+                tabs[(tabDef as any).tab].icon = (tabDef as any).icon;
             }
         }
 
@@ -249,7 +251,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         super._onRender(context, options);
 
         // Preview threat slider
@@ -488,50 +490,31 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
         };
 
         try {
-            const actor = await (Actor as any).create(actorData);
+            const actor = await Actor.create(actorData as any);
 
             if (actor) {
                 // Create embedded traits and talents
-                const itemsToCreate = [];
-
-                for (const trait of this.item.system.traits || []) {
-                    if (trait.uuid) {
-                        const item = (await fromUuid(trait.uuid)) as any;
-                        if (item) {
-                            itemsToCreate.push({
-                                name: item.name,
-                                type: item.type,
-                                img: item.img,
-                                system: foundry.utils.deepClone(item.system),
-                            });
-                        }
-                    }
-                }
-
-                for (const talent of this.item.system.talents || []) {
-                    if (talent.uuid) {
-                        const item = (await fromUuid(talent.uuid)) as any;
-                        if (item) {
-                            itemsToCreate.push({
-                                name: item.name,
-                                type: item.type,
-                                img: item.img,
-                                system: foundry.utils.deepClone(item.system),
-                            });
-                        }
-                    }
-                }
+                const allRefs = [...(this.item.system.traits || []), ...(this.item.system.talents || [])];
+                const resolvedItems = await Promise.all(allRefs.filter((ref) => ref.uuid).map((ref) => fromUuid(ref.uuid)));
+                const itemsToCreate = resolvedItems
+                    .filter((item) => item != null)
+                    .map((item: any) => ({
+                        name: item.name,
+                        type: item.type,
+                        img: item.img,
+                        system: foundry.utils.deepClone(item.system),
+                    }));
 
                 if (itemsToCreate.length > 0) {
                     await actor.createEmbeddedDocuments('Item', itemsToCreate);
                 }
 
-                (ui.notifications as any).info(`Created NPC: ${actor.name}`);
+                ui.notifications.info(`Created NPC: ${actor.name}`);
                 actor.sheet.render(true);
             }
         } catch (err) {
             console.error('Failed to create NPC from template:', err);
-            (ui.notifications as any).error('Failed to create NPC from template');
+            ui.notifications.error('Failed to create NPC from template');
         }
     }
 }

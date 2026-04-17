@@ -4,7 +4,6 @@ import { hitDropdown } from '../rules/hit-locations.ts';
 import { applyRollModeWhispers } from './roll-helpers.ts';
 
 export class AssignDamageData {
-    [key: string]: any;
     locations = hitDropdown();
     actor;
     hit;
@@ -23,12 +22,12 @@ export class AssignDamageData {
     criticalDamageTaken = 0;
     criticalEffect = '';
 
-    constructor(actor, hit) {
+    constructor(actor: any, hit: any) {
         this.actor = actor;
         this.hit = hit;
     }
 
-    update() {
+    update(): any {
         this.armour = 0;
         this.tb = 0;
         const location = this.hit?.location;
@@ -44,7 +43,7 @@ export class AssignDamageData {
         }
     }
 
-    finalize() {
+    finalize(): any {
         const totalDamage = Number.parseInt(this.hit.totalDamage);
         const totalPenetration = Number.parseInt(this.hit.totalPenetration);
 
@@ -101,7 +100,7 @@ export class AssignDamageData {
         }
     }
 
-    async performActionAndSendToChat() {
+    async performActionAndSendToChat(): Promise<any> {
         // Assign Damage - use dot notation to avoid overwriting sibling properties
         this.actor = await this.actor.update({
             'system.wounds.value': this.actor.system.wounds.value - this.damageTaken,
@@ -115,21 +114,21 @@ export class AssignDamageData {
             await this._createCriticalInjuryItem();
         }
 
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs', this);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs', this as any);
         const chatData: Record<string, any> = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,
         };
         applyRollModeWhispers(chatData);
-        await (ChatMessage as any).create(chatData);
+        await ChatMessage.create(chatData as any);
     }
 
     /**
      * Create a criticalInjury item on the actor from the critical damage.
      * @private
      */
-    async _createCriticalInjuryItem() {
+    async _createCriticalInjuryItem(): Promise<any> {
         const severity = this.actor.system.wounds.critical + this.criticalDamageTaken;
         const clampedSeverity = Math.min(severity, 10);
 

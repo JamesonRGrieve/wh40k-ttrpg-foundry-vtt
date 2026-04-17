@@ -113,12 +113,12 @@ WH40K.ui = {
     expanded: [],
 };
 
-export function toggleUIExpanded(name) {
+export function toggleUIExpanded(name: string): void {
     // @ts-expect-error - dynamic property access
     CONFIG.wh40k.ui.toggleExpanded(name);
 }
 
-export function fieldMatch(val1, val2) {
+export function fieldMatch(val1: any, val2: any): boolean {
     if (!val1 || !val2) return false;
     const one = val1.replace(/\s/g, '');
     const two = val2.replace(/\s/g, '');

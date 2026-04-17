@@ -22,7 +22,7 @@ export class OriginGrantsProcessor {
      *   insanityBonus: number
      * }>}
      */
-    static async processOriginGrants(originItem, actor) {
+    static async processOriginGrants(originItem: any, actor: any): Promise<void> {
         // Use unified processor in batch mode
         return await GrantsProcessor.processGrants(originItem, actor, {
             mode: GRANT_MODE.BATCH,

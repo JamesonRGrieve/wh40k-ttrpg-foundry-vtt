@@ -16,8 +16,6 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {ApplicationV2}
  */
 export default class TemplateSelector extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -38,12 +36,14 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             width: 800,
             height: 650,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             selectTemplate: TemplateSelector.#selectTemplate,
             clearFilter: TemplateSelector.#clearFilter,
             create: TemplateSelector.#onCreate,
             cancel: TemplateSelector.#onCancel,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -260,19 +260,21 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         this.#templates = [];
 
         // Load from world items
-        const worldTemplates = (game as any).items.filter((i: any) => i.type === 'npcTemplate');
+        const worldTemplates = (game.items as any).filter((i: any) => i.type === 'npcTemplate');
         this.#templates.push(...worldTemplates);
 
         // Load from compendiums
-        for (const pack of (game as any).packs) {
+        for (const pack of game.packs) {
             if (pack.documentName !== 'Item') continue;
             if (pack.locked && !pack.visible) continue;
 
             try {
+                // eslint-disable-next-line no-await-in-loop -- Sequential compendium index loading
                 const index = await pack.getIndex({ fields: ['type', 'system.category', 'system.faction'] });
                 const templateEntries = index.filter((e: any) => e.type === 'npcTemplate');
 
                 for (const entry of templateEntries) {
+                    // eslint-disable-next-line no-await-in-loop -- Sequential compendium document loading
                     const item = await pack.getDocument(entry._id);
                     if (item) this.#templates.push(item);
                 }
@@ -347,7 +349,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      */
     static async #onCreate(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.#selectedUuid) {
-            (ui.notifications as any).warn('Select a template first.');
+            ui.notifications.warn('Select a template first.');
             return;
         }
 
@@ -366,45 +368,26 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                 system: systemData,
             };
 
-            const actor = await (Actor as any).create(actorData);
+            const actor = await Actor.create(actorData as any);
 
             if (actor) {
                 // Create embedded traits and talents
-                const itemsToCreate: any[] = [];
-
-                for (const trait of template.system.traits || []) {
-                    if (trait.uuid) {
-                        const item = await (fromUuid as any)(trait.uuid);
-                        if (item) {
-                            itemsToCreate.push({
-                                name: item.name,
-                                type: item.type,
-                                img: item.img,
-                                system: foundry.utils.deepClone(item.system),
-                            });
-                        }
-                    }
-                }
-
-                for (const talent of template.system.talents || []) {
-                    if (talent.uuid) {
-                        const item = await (fromUuid as any)(talent.uuid);
-                        if (item) {
-                            itemsToCreate.push({
-                                name: item.name,
-                                type: item.type,
-                                img: item.img,
-                                system: foundry.utils.deepClone(item.system),
-                            });
-                        }
-                    }
-                }
+                const allRefs = [...(template.system.traits || []), ...(template.system.talents || [])];
+                const resolvedItems = await Promise.all(allRefs.filter((ref) => ref.uuid).map((ref) => fromUuid(ref.uuid)));
+                const itemsToCreate = resolvedItems
+                    .filter((item) => item != null)
+                    .map((item: any) => ({
+                        name: item.name,
+                        type: item.type,
+                        img: item.img,
+                        system: foundry.utils.deepClone(item.system),
+                    }));
 
                 if (itemsToCreate.length > 0) {
                     await actor.createEmbeddedDocuments('Item', itemsToCreate);
                 }
 
-                (ui.notifications as any).info(`Created NPC: ${actor.name}`);
+                ui.notifications.info(`Created NPC: ${actor.name}`);
                 actor.sheet.render(true);
 
                 this.#submitted = true;
@@ -413,7 +396,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             }
         } catch (err) {
             console.error('Failed to create NPC from template:', err);
-            (ui.notifications as any).error('Failed to create NPC from template');
+            ui.notifications.error('Failed to create NPC from template');
         }
     }
 

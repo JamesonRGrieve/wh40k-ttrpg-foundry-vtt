@@ -14,7 +14,6 @@ interface WH40KCharacteristic {
     bonus?: number;
     short?: string;
     label?: string;
-    [key: string]: any;
 }
 
 interface WH40KModifierEntry {
@@ -32,7 +31,6 @@ interface WH40KStatBreakdown {
 }
 
 export class WH40KBaseActor extends Actor {
-    [key: string]: any;
     declare system: any;
     /* -------------------------------------------- */
     /*  Descendant Document Hooks                   */
@@ -45,7 +43,8 @@ export class WH40KBaseActor extends Actor {
      * @override
      */
     _onCreateDescendantDocuments(parent: any, collection: string, documents: any[], data: any[], options: any, userId: string): void {
-        (super._onCreateDescendantDocuments as any)(parent, collection, documents, data, options, userId);
+        // @ts-expect-error - Foundry mixin chain
+        super._onCreateDescendantDocuments(parent, collection, documents, data, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
 
@@ -68,7 +67,8 @@ export class WH40KBaseActor extends Actor {
      * @override
      */
     _onUpdateDescendantDocuments(parent: any, collection: string, documents: any[], changes: any[], options: any, userId: string): void {
-        (super._onUpdateDescendantDocuments as any)(parent, collection, documents, changes, options, userId);
+        // @ts-expect-error - Foundry mixin chain
+        super._onUpdateDescendantDocuments(parent, collection, documents, changes, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
         }
@@ -91,7 +91,8 @@ export class WH40KBaseActor extends Actor {
             }
         }
 
-        (super._onDeleteDescendantDocuments as any)(parent, collection, documents, ids, options, userId);
+        // @ts-expect-error - Foundry mixin chain
+        super._onDeleteDescendantDocuments(parent, collection, documents, ids, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
         }
@@ -114,8 +115,8 @@ export class WH40KBaseActor extends Actor {
     }
 
     async _preCreate(data: any, options: any, user: any): Promise<void> {
-        await (super._preCreate as any)(data, options, user);
-        const initData = {
+        await super._preCreate(data, options, user);
+        const initData: Record<string, any> = {
             'token.bar1': { attribute: 'wounds' },
             'token.bar2': { attribute: 'fate' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
@@ -136,7 +137,7 @@ export class WH40KBaseActor extends Actor {
                 initData['flags.wh40k-rpg.favoriteSkills'] = ['dodge', 'awareness', 'scrutiny', 'inquiry', 'commerce', 'techUse', 'command', 'medicae'];
             }
         }
-        (this as any).updateSource(initData);
+        this.updateSource(initData as any);
     }
 
     get characteristics(): Record<string, WH40KCharacteristic> {
@@ -181,7 +182,7 @@ export class WH40KBaseActor extends Actor {
         rollData.type = override ? override : 'Characteristic';
         rollData.baseTarget = characteristic.total;
         rollData.modifiers.modifier = 0;
-        await prepareUnifiedRoll(simpleSkillData);
+        prepareUnifiedRoll(simpleSkillData);
     }
 
     getCharacteristicFuzzy(char: string): WH40KCharacteristic | undefined {
@@ -247,14 +248,14 @@ export class WH40KBaseActor extends Actor {
         const parent = this.system.skills[skill];
         const specialityKey = toCamelCase(speciality);
         if (!parent) {
-            (ui.notifications as any).warn(`Skill not specified -- unexpected error.`);
+            ui.notifications.warn(`Skill not specified -- unexpected error.`);
             return;
         }
 
         const entries = Array.isArray(parent.entries) ? [...parent.entries] : [];
 
         if (entries.some((entry) => entry.name?.toLowerCase() === speciality.toLowerCase() || entry.slug === specialityKey)) {
-            (ui.notifications as any).warn(`Speciality already exists. Unable to create.`);
+            ui.notifications.warn(`Speciality already exists. Unable to create.`);
             return;
         }
 
@@ -568,8 +569,8 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectCharacteristicModifiers(charKey: string, modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as any[]) {
-            const modifiers = item.system.modifiers;
+        for (const item of this.items) {
+            const modifiers = (item as Item & { system: { modifiers?: any } }).system.modifiers;
             if (!modifiers?.characteristics) continue;
 
             const value = modifiers.characteristics[charKey];
@@ -591,8 +592,8 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectSkillModifiers(skillKey: string, modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as any[]) {
-            const modifiers = item.system.modifiers;
+        for (const item of this.items) {
+            const modifiers = (item as Item & { system: { modifiers?: any } }).system.modifiers;
             if (!modifiers?.skills) continue;
 
             const value = modifiers.skills[skillKey];
@@ -613,8 +614,8 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectWoundsModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as any[]) {
-            const modifiers = item.system.modifiers;
+        for (const item of this.items) {
+            const modifiers = (item as Item & { system: { modifiers?: any } }).system.modifiers;
             if (!modifiers?.other) continue;
 
             const woundsMod = modifiers.other.find((m) => m.key === 'wounds' || m.key === 'wounds.max');
@@ -635,8 +636,8 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectInitiativeModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as any[]) {
-            const modifiers = item.system.modifiers;
+        for (const item of this.items) {
+            const modifiers = (item as Item & { system: { modifiers?: any } }).system.modifiers;
             if (!modifiers?.other) continue;
 
             const initiativeMod = modifiers.other.find((m) => m.key === 'initiative');

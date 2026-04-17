@@ -14,7 +14,6 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class ConfirmationDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
@@ -35,10 +34,12 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
             width: 400,
             height: 'auto' as const,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             confirm: ConfirmationDialog.#onConfirm,
             cancel: ConfirmationDialog.#onCancel,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -105,7 +106,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
         // @ts-expect-error - dynamic property
         return this.#config.title;
     }

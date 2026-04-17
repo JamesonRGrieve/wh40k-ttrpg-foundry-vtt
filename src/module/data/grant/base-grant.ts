@@ -8,7 +8,8 @@
  *
  * @abstract
  */
-export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
+// @ts-expect-error - foundry.abstract.DataModel has complex generic constraints
+export default class BaseGrantData extends foundry.abstract.DataModel {
     [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
@@ -40,7 +41,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
 
     /** @inheritDoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             // Unique identifier for this grant within its parent
             _id: new fields.DocumentIdField({ initial: () => foundry.utils.randomID() }),
@@ -72,15 +73,15 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * The parent item containing this grant.
      * @type {WH40KItem|null}
      */
-    get item() {
-        return this.parent?.parent ?? null;
+    get item(): any {
+        return (this as any).parent?.parent ?? null;
     }
 
     /**
      * The actor this grant is being applied to (if any).
      * @type {WH40KActor|null}
      */
-    get actor() {
+    get actor(): any {
         return this.item?.actor ?? null;
     }
 
@@ -88,8 +89,8 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * Display label for this grant.
      * @type {string}
      */
-    get displayLabel() {
-        return this.label || game.i18n.localize((this.constructor as any).typeLabel);
+    get displayLabel(): string {
+        return (this as any).label || game.i18n.localize((this.constructor as any).typeLabel);
     }
 
     /* -------------------------------------------- */
@@ -180,7 +181,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @returns {object|false} Data to auto-apply, or false if user input needed
      */
     getAutomaticValue(): Record<string, any> | false {
-        if (this.optional) return false;
+        if ((this as any).optional) return false;
         return {};
     }
 
@@ -225,7 +226,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
         return {
             'wh40k-rpg': {
                 sourceId: sourceUuid,
-                grantId: this._id,
+                grantId: (this as any)._id,
                 grantType: (this.constructor as any).TYPE,
                 grantedBy: this.item?.name,
                 grantedById: this.item?.id,

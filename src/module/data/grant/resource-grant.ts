@@ -7,7 +7,8 @@ import BaseGrantData from './base-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class ResourceGrantData extends (BaseGrantData as any) {
+// @ts-expect-error - BaseGrantData extends foundry.abstract.DataModel with complex generic constraints
+export default class ResourceGrantData extends BaseGrantData {
     [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
@@ -53,7 +54,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
 
     /** @inheritDoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -92,7 +93,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
         for (const resourceConfig of this.resources) {
             const { type, formula, optional: resOptional } = resourceConfig;
 
-            const resourceDef = (this.constructor as any).RESOURCES[type];
+            const resourceDef = (this.constructor as typeof ResourceGrantData).RESOURCES[type];
             if (!resourceDef) {
                 result.errors.push(`Invalid resource type: ${type}`);
                 continue;
@@ -103,6 +104,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
                 continue;
             }
 
+            // eslint-disable-next-line no-await-in-loop -- Sequential formula evaluation
             const value = rolledValues[type] ?? (await this._evaluateFormula(formula, actor));
             if (value === 0) continue;
 
@@ -138,7 +140,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
         const updates = {};
 
         for (const [type, state] of Object.entries(appliedState) as [string, any][]) {
-            const resourceDef = (this.constructor as any).RESOURCES[type];
+            const resourceDef = (this.constructor as typeof ResourceGrantData).RESOURCES[type];
             if (!resourceDef) continue;
 
             const currentValue = (foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0) as number;
@@ -165,7 +167,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
         const updates = {};
 
         for (const [type, state] of Object.entries(restoreData.resources ?? {}) as [string, any][]) {
-            const resourceDef = (this.constructor as any).RESOURCES[type];
+            const resourceDef = (this.constructor as typeof ResourceGrantData).RESOURCES[type];
             if (!resourceDef) continue;
 
             const currentValue = (foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0) as number;
@@ -201,10 +203,10 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     /** @inheritDoc */
     async getSummary(): Promise<any> {
         const summary = await super.getSummary();
-        summary.icon = (this.constructor as any).ICON;
+        summary.icon = (this.constructor as typeof ResourceGrantData).ICON;
 
         for (const resourceConfig of this.resources) {
-            const resourceDef = (this.constructor as any).RESOURCES[resourceConfig.type];
+            const resourceDef = (this.constructor as typeof ResourceGrantData).RESOURCES[resourceConfig.type];
             const label = resourceDef ? game.i18n.localize(resourceDef.label) : resourceConfig.type;
 
             summary.details.push({

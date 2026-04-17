@@ -16,8 +16,8 @@ import BaseActorSheet from './base-actor-sheet.ts';
  *
  * @extends {BaseActorSheet}
  */
-export default class NPCSheetV2 extends (BaseActorSheet as any) {
-    [key: string]: any;
+// @ts-expect-error - Mixin chain loses static type information
+export default class NPCSheetV2 extends BaseActorSheet {
     declare actor: WH40KNPCV2;
     declare document: WH40KNPCV2;
     declare element: HTMLElement;
@@ -25,6 +25,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
     declare isEditable: boolean;
     declare _notify: (message: string, type?: string) => void;
     declare render: (options?: Record<string, unknown> | boolean) => any;
+    declare submit: () => Promise<void>;
 
     /** NPC sheets default to EDIT mode for GM convenience. */
     _mode = 2;
@@ -40,6 +41,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
             width: 900,
             height: 700,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             // Horde actions
             toggleHordeMode: NPCSheetV2.#toggleHordeMode,
@@ -92,6 +94,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
             toggleGMTools: NPCSheetV2.#toggleGMTools,
             toggleAbilityDesc: NPCSheetV2.#toggleAbilityDesc,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -187,7 +190,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
         this._prepareHordeContext(context);
 
         // Prepare items (talents, traits)
-        await this._prepareItems(context);
+        this._prepareItems(context);
 
         return context;
     }
@@ -646,9 +649,9 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleHordeMode(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleHordeMode(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await (this as any).actor.system.toggleHordeMode();
+        await this.actor.system.toggleHordeMode();
     }
 
     /* -------------------------------------------- */
@@ -658,11 +661,11 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollCharacteristic(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollCharacteristic(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const charKey = target.dataset.characteristic;
         if (!charKey) return;
-        await (this as any).actor.rollCharacteristic(charKey);
+        await this.actor.rollCharacteristic(charKey);
     }
 
     /* -------------------------------------------- */
@@ -674,19 +677,19 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #reloadWeapon(event: Event, target: HTMLElement): Promise<void> {
+    static async #reloadWeapon(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId ?? target.dataset.itemId;
         if (!itemId) return;
-        const weapon = (this as any).actor.items.get(itemId);
+        const weapon = this.actor.items.get(itemId);
         if (!weapon) return;
         const { ReloadActionManager } = await import('../../actions/reload-action-manager.ts');
-        const result = await ReloadActionManager.reloadWeapon(weapon, { skipValidation: (event as any).shiftKey });
+        const result = await ReloadActionManager.reloadWeapon(weapon, { skipValidation: (event as MouseEvent).shiftKey });
         if (result.success) {
-            (ui.notifications as any).info(result.message);
-            await ReloadActionManager.sendReloadToChat((this as any).actor, weapon, result);
+            ui.notifications.info(result.message);
+            await ReloadActionManager.sendReloadToChat(this.actor, weapon, result);
         } else {
-            (ui.notifications as any).warn(result.message);
+            ui.notifications.warn(result.message);
         }
     }
 
@@ -697,10 +700,10 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #applyMagnitudeDamage(event: Event, target: HTMLElement): Promise<void> {
+    static async #applyMagnitudeDamage(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const amount = parseInt(target.dataset.amount || '1', 10);
-        await (this as any).actor.system.applyMagnitudeDamage(amount, 'Manual');
+        await this.actor.system.applyMagnitudeDamage(amount, 'Manual');
     }
 
     /* -------------------------------------------- */
@@ -710,10 +713,10 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #restoreMagnitude(event: Event, target: HTMLElement): Promise<void> {
+    static async #restoreMagnitude(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const amount = parseInt(target.dataset.amount || '1', 10);
-        await (this as any).actor.system.restoreMagnitude(amount, 'Manual');
+        await this.actor.system.restoreMagnitude(amount, 'Manual');
     }
 
     /* -------------------------------------------- */
@@ -723,11 +726,11 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollSkill(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollSkill(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
-        await (this as any).actor.rollSkill(skillKey);
+        await this.actor.rollSkill(skillKey);
     }
 
     /* -------------------------------------------- */
@@ -737,11 +740,11 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollInitiative(event: Event, target: HTMLElement): Promise<void> {
+    static async #rollInitiative(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         // Roll initiative using the system's initiative formula
-        const initChar = (this as any).actor.system.initiative.characteristic;
-        const char = (this as any).actor.system.characteristics[initChar];
+        const initChar = this.actor.system.initiative.characteristic;
+        const char = this.actor.system.characteristics[initChar];
         if (!char) return;
 
         const formula = `1d10 + ${char.bonus}`;
@@ -749,9 +752,9 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
         await roll.evaluate();
 
         await roll.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
-            flavor: 'Initiative Roll' as any,
-        });
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            flavor: 'Initiative Roll',
+        } as any);
     }
 
     /* -------------------------------------------- */
@@ -761,11 +764,11 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleArmourMode(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleArmourMode(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const currentMode = (this as any).actor.system.armour?.mode || 'simple';
+        const currentMode = this.actor.system.armour?.mode || 'simple';
         const newMode = currentMode === 'simple' ? 'locations' : 'simple';
-        await (this as any).actor.system.switchArmourMode(newMode);
+        await this.actor.system.switchArmourMode(newMode);
     }
 
     /* -------------------------------------------- */
@@ -775,7 +778,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #addTrainedSkill(event: Event, target: HTMLElement): Promise<void> {
+    static async #addTrainedSkill(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         if (!skillKey) {
@@ -802,7 +805,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
                 { key: 'stealth', name: 'Stealth' },
                 { key: 'survival', name: 'Survival' },
                 { key: 'techUse', name: 'Tech-Use' },
-            ].filter((s) => !(this as any).actor.system.trainedSkills[s.key]);
+            ].filter((s) => !this.actor.system.trainedSkills[s.key]);
 
             const options = skills.map((s) => `<option value="${s.key}">${s.name}</option>`).join('');
 
@@ -838,7 +841,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
                             const form = button.form;
                             const skill = (form.querySelector('[name="skill"]') as HTMLSelectElement).value;
                             const level = (form.querySelector('[name="level"]') as HTMLSelectElement).value;
-                            await (this as any).actor.system.addTrainedSkill(skill, null, level);
+                            await this.actor.system.addTrainedSkill(skill, null, level);
                         },
                     },
                     {
@@ -851,7 +854,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
             void dialog.render(true);
             return;
         }
-        await (this as any).actor.system.addTrainedSkill(skillKey);
+        await this.actor.system.addTrainedSkill(skillKey);
     }
 
     /* -------------------------------------------- */
@@ -861,11 +864,11 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #removeTrainedSkill(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeTrainedSkill(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
-        await (this as any).actor.system.removeSkill(skillKey);
+        await this.actor.system.removeSkill(skillKey);
     }
 
     /* -------------------------------------------- */
@@ -875,13 +878,13 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #setSkillLevel(event: Event, target: HTMLElement): Promise<void> {
+    static async #setSkillLevel(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         const level = target.dataset.level;
         if (!skillKey || !level) return;
 
-        const currentSkills = foundry.utils.deepClone((this as any).actor.system.trainedSkills) || {};
+        const currentSkills = foundry.utils.deepClone(this.actor.system.trainedSkills) || {};
         const currentState = currentSkills[skillKey];
 
         // Skill characteristic mapping
@@ -913,7 +916,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
         switch (level) {
             case 'untrained':
                 // Remove the skill entirely using Foundry's deletion syntax
-                await (this as any).actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
+                await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
                 return; // Early return - we've already updated
             case 'trained':
                 // Add skill at trained level
@@ -972,7 +975,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
                 break;
         }
 
-        await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
+        await this.actor.update({ 'system.trainedSkills': currentSkills });
     }
 
     /* -------------------------------------------- */
@@ -983,12 +986,12 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #cycleSkillLevel(event: Event, target: HTMLElement): Promise<void> {
+    static async #cycleSkillLevel(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
 
-        const currentSkills = foundry.utils.deepClone((this as any).actor.system.trainedSkills) || {};
+        const currentSkills = foundry.utils.deepClone(this.actor.system.trainedSkills) || {};
         const current = currentSkills[skillKey];
 
         // Skill characteristic mapping
@@ -1028,18 +1031,18 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
                 plus20: false,
                 bonus: 0,
             };
-            await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
+            await this.actor.update({ 'system.trainedSkills': currentSkills });
         } else if (current.trained && !current.plus10 && !current.plus20) {
             // Trained → +10
             currentSkills[skillKey] = { ...current, plus10: true, plus20: false };
-            await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
+            await this.actor.update({ 'system.trainedSkills': currentSkills });
         } else if (current.plus10 && !current.plus20) {
             // +10 → +20
             currentSkills[skillKey] = { ...current, plus10: true, plus20: true };
-            await (this as any).actor.update({ 'system.trainedSkills': currentSkills });
+            await this.actor.update({ 'system.trainedSkills': currentSkills });
         } else {
             // +20 → Untrained (remove)
-            await (this as any).actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
+            await this.actor.update({ [`system.trainedSkills.-=${skillKey}`]: null });
         }
     }
 
@@ -1050,11 +1053,11 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #pinAbility(event: Event, target: HTMLElement): Promise<void> {
+    static async #pinAbility(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const itemId = target.dataset.itemId;
         if (!itemId) return;
-        await (this as any).actor.system.pinAbility(itemId);
+        await this.actor.system.pinAbility(itemId);
     }
 
     /* -------------------------------------------- */
@@ -1064,11 +1067,11 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #unpinAbility(event: Event, target: HTMLElement): Promise<void> {
+    static async #unpinAbility(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const itemId = target.dataset.itemId;
         if (!itemId) return;
-        await (this as any).actor.system.unpinAbility(itemId);
+        await this.actor.system.unpinAbility(itemId);
     }
 
     /* -------------------------------------------- */
@@ -1078,13 +1081,13 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #editImage(event: Event, target: HTMLElement): void {
+    static #editImage(this: NPCSheetV2, event: Event, target: HTMLElement): void {
         event.preventDefault();
         const fp = new FilePicker({
             type: 'image',
-            current: (this as any).actor.img,
+            current: this.actor.img,
             callback: (path) => {
-                (this as any).actor.update({ img: path });
+                this.actor.update({ img: path });
             },
         });
         void fp.render(true);
@@ -1097,9 +1100,9 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #setupToken(event: Event, target: HTMLElement): Promise<void> {
+    static async #setupToken(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const npc = (this as any).actor;
+        const npc = this.actor;
         const updates: Record<string, any> = {};
 
         // Size-based dimensions
@@ -1138,7 +1141,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
         updates.displayName = 20; // OWNER_HOVER
 
         await npc.update({ prototypeToken: updates });
-        (ui.notifications as any).info(`Token configured for ${npc.name}`);
+        ui.notifications.info(`Token configured for ${npc.name}`);
     }
 
     /* -------------------------------------------- */
@@ -1148,10 +1151,10 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #duplicateNPC(event: Event, target: HTMLElement): Promise<void> {
+    static async #duplicateNPC(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await (this as any).actor.duplicate();
-        (ui.notifications as any).info(`Created copy of ${(this as any).actor.name}`);
+        await this.actor.duplicate();
+        ui.notifications.info(`Created copy of ${this.actor.name}`);
     }
 
     /* -------------------------------------------- */
@@ -1162,9 +1165,9 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #scaleToThreat(event: Event, target: HTMLElement): Promise<void> {
+    static async #scaleToThreat(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await NPCThreatScalerDialog.scale((this as any).actor);
+        await NPCThreatScalerDialog.scale(this.actor);
     }
 
     /* -------------------------------------------- */
@@ -1175,10 +1178,10 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #calculateDifficulty(event: Event, target: HTMLElement): Promise<void> {
+    static async #calculateDifficulty(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const { DifficultyCalculatorDialog: DiffCalcDialog } = (game as any).wh40k.applications;
-        await DiffCalcDialog.show((this as any).actor);
+        await DiffCalcDialog.show(this.actor);
     }
 
     /* -------------------------------------------- */
@@ -1188,9 +1191,9 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #saveCombatPreset(event: Event, target: HTMLElement): Promise<void> {
+    static async #saveCombatPreset(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await CombatPresetDialog.savePreset((this as any).actor);
+        await CombatPresetDialog.savePreset(this.actor);
     }
 
     /* -------------------------------------------- */
@@ -1200,9 +1203,9 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #loadCombatPreset(event: Event, target: HTMLElement): Promise<void> {
+    static async #loadCombatPreset(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        await CombatPresetDialog.loadPreset((this as any).actor);
+        await CombatPresetDialog.loadPreset(this.actor);
     }
 
     /* -------------------------------------------- */
@@ -1212,17 +1215,17 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #deleteNPC(event: Event, target: HTMLElement): Promise<void> {
+    static async #deleteNPC(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const confirmed = await foundry.applications.api.DialogV2.confirm({
             window: { title: 'Delete NPC' },
-            content: `<p>Are you sure you want to delete <strong>${(this as any).actor.name}</strong>?</p>`,
+            content: `<p>Are you sure you want to delete <strong>${this.actor.name}</strong>?</p>`,
             rejectClose: false,
         });
 
         if (confirmed) {
-            await (this as any).actor.delete();
-            (ui.notifications as any).info(`Deleted ${(this as any).actor.name}`);
+            await this.actor.delete();
+            ui.notifications.info(`Deleted ${this.actor.name}`);
         }
     }
 
@@ -1233,11 +1236,11 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #exportStatBlock(event: Event, target: HTMLElement): void {
+    static #exportStatBlock(this: NPCSheetV2, event: Event, target: HTMLElement): void {
         event.preventDefault();
 
         // Open the full exporter dialog
-        StatBlockExporter.show((this as any).actor);
+        StatBlockExporter.show(this.actor);
     }
 
     /* -------------------------------------------- */
@@ -1247,10 +1250,10 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #importStatBlock(event: Event, target: HTMLElement): Promise<void> {
+    static async #importStatBlock(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        await StatBlockParser.open({ actor: (this as any).actor } as any);
+        await StatBlockParser.open({ actor: this.actor } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
@@ -1260,11 +1263,11 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #applyDamage(event: Event, target: HTMLElement): Promise<void> {
+    static async #applyDamage(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const amount = parseInt(target.dataset.amount || '1', 10);
         const location = target.dataset.location || 'body';
-        await (this as any).actor.applyDamage(amount, location);
+        await this.actor.applyDamage(amount, location);
     }
 
     /* -------------------------------------------- */
@@ -1274,10 +1277,10 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #healWounds(event: Event, target: HTMLElement): Promise<void> {
+    static async #healWounds(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const amount = parseInt(target.dataset.amount || '1', 10);
-        await (this as any).actor.healWounds(amount);
+        await this.actor.healWounds(amount);
     }
 
     /* -------------------------------------------- */
@@ -1287,7 +1290,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #addTag(event: Event, target: HTMLElement): void {
+    static #addTag(this: NPCSheetV2, event: Event, target: HTMLElement): void {
         event.preventDefault();
         const content = `
       <form>
@@ -1310,8 +1313,8 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
                         const form = button.form;
                         const tag = (form.querySelector('[name="tag"]') as HTMLInputElement).value.trim();
                         if (tag) {
-                            const tags = [...((this as any).actor.system.tags || []), tag];
-                            await (this as any).actor.update({ 'system.tags': tags });
+                            const tags = [...(this.actor.system.tags || []), tag];
+                            await this.actor.update({ 'system.tags': tags });
                         }
                     },
                 },
@@ -1331,12 +1334,12 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #removeTag(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeTag(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const tag = target.dataset.tag;
         if (!tag) return;
-        const tags = ((this as any).actor.system.tags || []).filter((t) => t !== tag);
-        await (this as any).actor.update({ 'system.tags': tags });
+        const tags = (this.actor.system.tags || []).filter((t) => t !== tag);
+        await this.actor.update({ 'system.tags': tags });
     }
 
     /* -------------------------------------------- */
@@ -1346,17 +1349,17 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #toggleEditSection(event: Event, target: HTMLElement): void {
+    static #toggleEditSection(this: NPCSheetV2, event: Event, target: HTMLElement): void {
         event.preventDefault();
         const sectionId = target.dataset.target;
         if (!sectionId) return;
 
         // Find the section to toggle
-        const section = (this as any).element.querySelector(`[data-section-id="${sectionId}"]`);
+        const section = this.element.querySelector(`[data-section-id="${sectionId}"]`);
         if (!section) return;
 
         // Toggle hidden attribute
-        section.hidden = !section.hidden;
+        (section as HTMLElement).hidden = !(section as HTMLElement).hidden;
 
         // Toggle button state
         target.classList.toggle('active');
@@ -1369,15 +1372,15 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleEditMode(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleEditMode(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const { MODES } = this.constructor as any;
-        (this as any)._mode = (this as any)._mode === MODES.EDIT ? MODES.PLAY : MODES.EDIT;
+        const { MODES } = this.constructor as unknown as { MODES: Record<string, number> };
+        this._mode = this._mode === MODES.EDIT ? MODES.PLAY : MODES.EDIT;
         // Keep header slide-toggle in sync if present
-        const headerToggle = (this as any).element.querySelector('.window-header .mode-slider');
-        if (headerToggle) headerToggle.checked = (this as any)._mode === MODES.EDIT;
-        await (this as any).submit();
-        (this as any).render();
+        const headerToggle = this.element.querySelector('.window-header .mode-slider');
+        if (headerToggle) (headerToggle as HTMLInputElement).checked = this._mode === MODES.EDIT;
+        await this.submit();
+        this.render();
     }
 
     /* -------------------------------------------- */
@@ -1387,7 +1390,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #toggleGMTools(event: Event, target: HTMLElement): void {
+    static #toggleGMTools(this: NPCSheetV2, event: Event, target: HTMLElement): void {
         event.preventDefault();
         const wrapper = target.closest('.wh40k-gm-tools-wrapper');
         if (!wrapper) return;
@@ -1404,7 +1407,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static #toggleAbilityDesc(event: Event, target: HTMLElement): void {
+    static #toggleAbilityDesc(this: NPCSheetV2, event: Event, target: HTMLElement): void {
         event.preventDefault();
         const card = target.closest('.wh40k-ability-card');
         if (!card) return;
@@ -1423,25 +1426,25 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleFavoriteSkill(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleFavoriteSkill(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const skillKey = target.dataset.skill;
         if (!skillKey) return;
 
-        const currentFavorites = (this as any).actor.getFlag('wh40k-rpg', 'favoriteSkills') || [];
+        const currentFavorites = (this.actor as any).getFlag('wh40k-rpg', 'favoriteSkills') || [];
         const isFavorite = currentFavorites.includes(skillKey);
 
         if (isFavorite) {
-            await (this as any).actor.setFlag(
+            await (this.actor as any).setFlag(
                 'wh40k-rpg',
                 'favoriteSkills',
                 currentFavorites.filter((k) => k !== skillKey),
             );
         } else {
-            await (this as any).actor.setFlag('wh40k-rpg', 'favoriteSkills', [...currentFavorites, skillKey]);
+            await (this.actor as any).setFlag('wh40k-rpg', 'favoriteSkills', [...currentFavorites, skillKey]);
         }
 
-        await (this as any).render({ parts: ['overview', 'skills'] });
+        await this.render({ parts: ['overview', 'skills'] });
     }
 
     /* -------------------------------------------- */
@@ -1451,25 +1454,25 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleFavoriteTalent(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleFavoriteTalent(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
-        const currentFavorites = (this as any).actor.getFlag('wh40k-rpg', 'favoriteTalents') || [];
+        const currentFavorites = (this.actor as any).getFlag('wh40k-rpg', 'favoriteTalents') || [];
         const isFavorite = currentFavorites.includes(itemId);
 
         if (isFavorite) {
-            await (this as any).actor.setFlag(
+            await (this.actor as any).setFlag(
                 'wh40k-rpg',
                 'favoriteTalents',
                 currentFavorites.filter((id) => id !== itemId),
             );
         } else {
-            await (this as any).actor.setFlag('wh40k-rpg', 'favoriteTalents', [...currentFavorites, itemId]);
+            await (this.actor as any).setFlag('wh40k-rpg', 'favoriteTalents', [...currentFavorites, itemId]);
         }
 
-        await (this as any).render({ parts: ['overview', 'abilities'] });
+        await this.render({ parts: ['overview', 'abilities'] });
     }
 
     /* -------------------------------------------- */
@@ -1479,11 +1482,11 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #applyCustomDamage(event: Event, target: HTMLElement): Promise<void> {
+    static async #applyCustomDamage(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const input = (this as any).element.querySelector('[data-custom-damage]');
+        const input = this.element.querySelector('[data-custom-damage]') as HTMLInputElement | null;
         const amount = parseInt(input?.value || '1', 10);
-        await (this as any).actor.applyDamage(amount, 'body');
+        await this.actor.applyDamage(amount, 'body');
     }
 
     /* -------------------------------------------- */
@@ -1493,11 +1496,11 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #healCustomWounds(event: Event, target: HTMLElement): Promise<void> {
+    static async #healCustomWounds(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const input = (this as any).element.querySelector('[data-custom-damage]');
+        const input = this.element.querySelector('[data-custom-damage]') as HTMLInputElement | null;
         const amount = parseInt(input?.value || '1', 10);
-        await (this as any).actor.healWounds(amount);
+        await this.actor.healWounds(amount);
     }
 
     /* -------------------------------------------- */
@@ -1507,9 +1510,9 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rerollInitiative(event: Event, target: HTMLElement): Promise<void> {
+    static async #rerollInitiative(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const combatant = game.combat?.getCombatantByActor((this as any).actor.id);
+        const combatant = game.combat?.getCombatantByActor(this.actor.id);
         if (combatant) {
             await game.combat.rollInitiative([combatant.id]);
         }
@@ -1522,23 +1525,23 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #addToCombat(event: Event, target: HTMLElement): Promise<void> {
+    static async #addToCombat(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         if (!game.combat) {
-            (ui.notifications as any).warn('No active combat encounter.');
+            ui.notifications.warn('No active combat encounter.');
             return;
         }
         // Prevent duplicate combatants
-        const existing = game.combat.getCombatantByActor((this as any).actor.id);
+        const existing = game.combat.getCombatantByActor(this.actor.id);
         if (existing) {
-            (ui.notifications as any).info(`${(this as any).actor.name} is already in combat.`);
+            ui.notifications.info(`${this.actor.name} is already in combat.`);
             return;
         }
         await game.combat.createEmbeddedDocuments('Combatant', [
             {
-                actorId: (this as any).actor.id,
-                tokenId: (this as any).actor.token?.id,
-            } as any,
+                actorId: this.actor.id,
+                tokenId: this.actor.token?.id,
+            } as Record<string, unknown>,
         ]);
     }
 
@@ -1549,9 +1552,9 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #removeFromCombat(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeFromCombat(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const combatant = game.combat?.getCombatantByActor((this as any).actor.id);
+        const combatant = game.combat?.getCombatantByActor(this.actor.id);
         if (combatant) {
             await game.combat.deleteEmbeddedDocuments('Combatant', [combatant.id]);
         }
@@ -1564,11 +1567,11 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @param {PointerEvent} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #removeItem(event: Event, target: HTMLElement): Promise<void> {
+    static async #removeItem(this: NPCSheetV2, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
         if (!itemId) return;
-        const item = (this as any).actor.items.get(itemId);
+        const item = this.actor.items.get(itemId);
         if (item) await item.delete();
     }
     /*  Overrides                                   */

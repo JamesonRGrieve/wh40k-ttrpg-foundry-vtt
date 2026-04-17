@@ -12,9 +12,9 @@ import BaseItemSheet from './base-item-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class ContainerItemSheet extends BaseItemSheet {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             ...BaseItemSheet.DEFAULT_OPTIONS?.actions,
             nestedItemCreate: ContainerItemSheet.#nestedItemCreate,
@@ -22,6 +22,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
             nestedItemDelete: ContainerItemSheet.#nestedItemDelete,
             nestedItemRoll: ContainerItemSheet.#nestedItemRoll,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -154,7 +155,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
 
         // Prevent dropping item onto itself or ancestors
         if (!this._validateDropTarget(droppedItem)) {
-            (ui.notifications as any).info('Cannot drop item into itself');
+            ui.notifications.info('Cannot drop item into itself');
             // @ts-expect-error - type assignment
             return false;
         }
@@ -218,7 +219,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
         event.stopPropagation();
 
         const element = event.currentTarget as HTMLElement;
-        const itemId = (element as any).dataset.nestedItemId;
+        const itemId = (element as HTMLElement).dataset.nestedItemId;
         if (!itemId) return;
 
         const nestedItem = this.item.items?.get(itemId);

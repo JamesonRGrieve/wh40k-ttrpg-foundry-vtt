@@ -1,19 +1,20 @@
 import { SYSTEM_ID } from './constants.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
-export async function checkAndMigrateWorld() {
+export async function checkAndMigrateWorld(): Promise<void> {
     const worldVersion = 185;
 
     // @ts-expect-error - argument type
     const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
     // @ts-expect-error - comparison type
     if (worldVersion !== currentVersion && game.user.isGM) {
-        (ui.notifications as any).info('Upgrading the world, please wait...');
+        ui.notifications.info('Upgrading the world, please wait...');
 
         // Update Actors
         // @ts-expect-error - dynamic property access
         for (const actor of game.actors.contents) {
             try {
+                // eslint-disable-next-line no-await-in-loop -- Sequential actor migration
                 await migrateActorData(actor, currentVersion);
             } catch (e) {
                 console.error(e);
@@ -24,6 +25,7 @@ export async function checkAndMigrateWorld() {
         // @ts-expect-error - dynamic property access
         for (const item of game.items.contents) {
             try {
+                // eslint-disable-next-line no-await-in-loop -- Sequential item migration
                 await migrateItemData(item, currentVersion);
             } catch (e) {
                 console.error(e);
@@ -38,16 +40,17 @@ export async function checkAndMigrateWorld() {
 
         // @ts-expect-error - argument type
         void game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, worldVersion);
-        (ui.notifications as any).info('Upgrade complete!');
+        ui.notifications.info('Upgrade complete!');
     }
 
-    async function updateCompendiumPermissions(version) {
+    async function updateCompendiumPermissions(version: any): Promise<void> {
         if (version < 181) {
             // Every compendium in our system should be owned by everyone and have full owner permissions.
             // Otherwise, issues will occur when trying to create items from the compendium.
             const compendiums = game.packs.filter((p) => p.metadata.packageName === SYSTEM_ID);
 
             for (const compendium of compendiums) {
+                // eslint-disable-next-line no-await-in-loop -- Sequential compendium configuration
                 await compendium.configure({
                     ownership: {
                         PLAYER: 'OWNER',
@@ -60,219 +63,203 @@ export async function checkAndMigrateWorld() {
         }
     }
 
-    async function migrateItemData(item, version) {
+    async function migrateItemData(item: any, version: any): Promise<void> {
         if (version < 180) {
-            // Get itemcollection.contentsData flag
-            const itemCollection = item.flags['itemcollection'];
-            if (itemCollection && itemCollection.contentsData) {
-                await item.createNestedDocuments(itemCollection.contentsData);
-            }
+            await migrateItemV180(item);
         }
 
         if (version < 183) {
-            if (item.type === 'talent') {
-                const updateData = {};
-                const system = item.system ?? {};
-                if (system.effect && !system.benefit) {
-                    updateData['system.benefit'] = system.effect;
-                }
-                if (system.requirements && !system.prerequisites?.text) {
-                    updateData['system.prerequisites.text'] = system.requirements;
-                }
-                if (Object.keys(updateData).length) {
-                    await item.update(updateData);
-                }
-            }
-
-            if (item.type === 'trait') {
-                const updateData = {};
-                const system = item.system ?? {};
-                if (system.effects && !system.effect) {
-                    updateData['system.effect'] = system.effects;
-                }
-                if (system.descriptionText && !system.description?.value) {
-                    updateData['system.description.value'] = `<p>${system.descriptionText}</p>`;
-                }
-                if (Object.keys(updateData).length) {
-                    await item.update(updateData);
-                }
-            }
-
-            if (item.type === 'skill') {
-                const updateData = {};
-                const system = item.system ?? {};
-                const rawType = system.type?.toString().toLowerCase() ?? '';
-                if (!system.skillType && rawType) {
-                    if (rawType.includes('specialist')) {
-                        updateData['system.skillType'] = 'specialist';
-                    } else if (rawType.includes('advanced')) {
-                        updateData['system.skillType'] = 'advanced';
-                    } else if (rawType.includes('basic')) {
-                        updateData['system.skillType'] = 'basic';
-                    }
-                }
-                if (Object.keys(updateData).length) {
-                    await item.update(updateData);
-                }
-            }
+            await migrateItemV183(item);
         }
 
         // V13 Compatibility Migration (v184)
         if (version < 184) {
+            await migrateItemV184(item);
+        }
+    }
+
+    async function migrateItemV180(item: any): Promise<void> {
+        const itemCollection = item.flags['itemcollection'];
+        if (itemCollection && itemCollection.contentsData) {
+            await item.createNestedDocuments(itemCollection.contentsData);
+        }
+    }
+
+    async function migrateItemV183(item: any): Promise<void> {
+        if (item.type === 'talent') {
             const updateData = {};
             const system = item.system ?? {};
+            if (system.effect && !system.benefit) {
+                updateData['system.benefit'] = system.effect;
+            }
+            if (system.requirements && !system.prerequisites?.text) {
+                updateData['system.prerequisites.text'] = system.requirements;
+            }
+            if (Object.keys(updateData).length) {
+                await item.update(updateData);
+            }
+        }
 
-            // Fix armour coverage (Array → Set is handled by DataModel.migrateData)
-            // But we still need to persist the change to the database
-            if (item.type === 'armour' && system.coverage) {
-                if (Array.isArray(system.coverage)) {
-                    // Update to trigger DataModel migration
-                    updateData['system.coverage'] = [...system.coverage];
+        if (item.type === 'trait') {
+            const updateData = {};
+            const system = item.system ?? {};
+            if (system.effects && !system.effect) {
+                updateData['system.effect'] = system.effects;
+            }
+            if (system.descriptionText && !system.description?.value) {
+                updateData['system.description.value'] = `<p>${system.descriptionText}</p>`;
+            }
+            if (Object.keys(updateData).length) {
+                await item.update(updateData);
+            }
+        }
+
+        if (item.type === 'skill') {
+            const updateData = {};
+            const system = item.system ?? {};
+            const rawType = system.type?.toString().toLowerCase() ?? '';
+            if (!system.skillType && rawType) {
+                if (rawType.includes('specialist')) {
+                    updateData['system.skillType'] = 'specialist';
+                } else if (rawType.includes('advanced')) {
+                    updateData['system.skillType'] = 'advanced';
+                } else if (rawType.includes('basic')) {
+                    updateData['system.skillType'] = 'basic';
                 }
             }
-
-            // Fix HTMLField nulls in description
-            if (system.description) {
-                if (system.description.chat === null) {
-                    updateData['system.description.chat'] = '';
-                }
-                if (system.description.summary === null) {
-                    updateData['system.description.summary'] = '';
-                }
-            }
-
-            // Fix source field nulls
-            if (system.source) {
-                if (system.source.book === null) {
-                    updateData['system.source.book'] = '';
-                }
-                if (system.source.page === null) {
-                    updateData['system.source.page'] = '';
-                }
-                if (system.source.custom === null) {
-                    updateData['system.source.custom'] = '';
-                }
-            }
-
             if (Object.keys(updateData).length) {
                 await item.update(updateData);
             }
         }
     }
 
-    async function migrateActorData(actor, version) {
-        if (version < 1) {
-            // Update Storage Locations to Hold Consumables
-            for (const location of actor.items.filter((i) => i.isStorageLocation)) {
-                await location.update({
-                    system: {
-                        containerTypes: [
-                            'ammunition',
-                            'armour',
-                            'armourModification',
-                            'cybernetic',
-                            'consumable',
-                            'drug',
-                            'forceField',
-                            'gear',
-                            'tool',
-                            'weapon',
-                            'weaponModification',
-                        ],
-                    },
-                });
+    async function migrateItemV184(item: any): Promise<void> {
+        const updateData = {};
+        const system = item.system ?? {};
+
+        if (item.type === 'armour' && system.coverage) {
+            if (Array.isArray(system.coverage)) {
+                updateData['system.coverage'] = [...system.coverage];
             }
+        }
+
+        if (system.description) {
+            if (system.description.chat === null) {
+                updateData['system.description.chat'] = '';
+            }
+            if (system.description.summary === null) {
+                updateData['system.description.summary'] = '';
+            }
+        }
+
+        if (system.source) {
+            if (system.source.book === null) {
+                updateData['system.source.book'] = '';
+            }
+            if (system.source.page === null) {
+                updateData['system.source.page'] = '';
+            }
+            if (system.source.custom === null) {
+                updateData['system.source.custom'] = '';
+            }
+        }
+
+        if (Object.keys(updateData).length) {
+            await item.update(updateData);
+        }
+    }
+
+    async function migrateActorData(actor: any, version: any): Promise<void> {
+        if (version < 1) {
+            await migrateActorV1(actor);
         }
 
         // @ts-expect-error - operator type
         if (currentVersion < 180) {
-            // Update User Items to be Nested
-            for (const item of actor.items) {
-                // Get itemcollection.contentsData flag
-                const itemCollection = item.flags['itemcollection'];
-                if (itemCollection && itemCollection.contentsData) {
-                    await item.createNestedDocuments(itemCollection.contentsData);
-                }
-            }
+            await migrateActorV180(actor);
         }
 
         // @ts-expect-error - operator type
         if (currentVersion < 182) {
-            const skills = actor.system?.skills;
-
-            if (skills?.navigate) {
-                const navigationSkill = foundry.utils.duplicate(skills.navigate);
-                navigationSkill.label = 'Navigation';
-                navigationSkill.characteristic = navigationSkill.characteristic ?? 'Int';
-                navigationSkill.characteristics = navigationSkill.characteristics?.length ? navigationSkill.characteristics : ['Int'];
-
-                const updateData = {
-                    'system.skills.navigation': skills.navigation ?? navigationSkill,
-                    'system.skills.-=navigate': null,
-                };
-
-                await actor.update(updateData);
-            }
+            await migrateActorV182(actor);
         }
 
-        // V13 Compatibility Migration (v184)
-        // Migrate embedded items on actors
         // @ts-expect-error - operator type
         if (currentVersion < 184) {
-            for (const item of actor.items) {
-                const updateData = {};
-                const system = item.system ?? {};
-
-                // Fix armour coverage
-                if (item.type === 'armour' && system.coverage) {
-                    if (Array.isArray(system.coverage)) {
-                        updateData['system.coverage'] = [...system.coverage];
-                    }
-                }
-
-                // Fix HTMLField nulls
-                if (system.description) {
-                    if (system.description.chat === null) {
-                        updateData['system.description.chat'] = '';
-                    }
-                    if (system.description.summary === null) {
-                        updateData['system.description.summary'] = '';
-                    }
-                }
-
-                // Fix source field nulls
-                if (system.source) {
-                    if (system.source.book === null) {
-                        updateData['system.source.book'] = '';
-                    }
-                    if (system.source.page === null) {
-                        updateData['system.source.page'] = '';
-                    }
-                    if (system.source.custom === null) {
-                        updateData['system.source.custom'] = '';
-                    }
-                }
-
-                if (Object.keys(updateData).length) {
-                    await item.update(updateData);
-                }
-            }
+            await migrateActorV184(actor);
         }
 
-        // Remove deprecated loadout system flags (v185)
         // @ts-expect-error - operator type
         if (currentVersion < 185) {
-            const flags = actor.flags?.['wh40k-rpg'];
-            if (flags?.equipmentViewMode !== undefined || flags?.equipmentPresets !== undefined) {
-                await actor.update({
-                    'flags.wh40k-rpg.-=equipmentViewMode': null,
-                    'flags.wh40k-rpg.-=equipmentPresets': null,
-                });
+            await migrateActorV185(actor);
+        }
+    }
+
+    async function migrateActorV1(actor: any): Promise<void> {
+        for (const location of actor.items.filter((i) => i.isStorageLocation)) {
+            // eslint-disable-next-line no-await-in-loop -- Sequential Foundry document updates
+            await location.update({
+                system: {
+                    containerTypes: [
+                        'ammunition',
+                        'armour',
+                        'armourModification',
+                        'cybernetic',
+                        'consumable',
+                        'drug',
+                        'forceField',
+                        'gear',
+                        'tool',
+                        'weapon',
+                        'weaponModification',
+                    ],
+                },
+            });
+        }
+    }
+
+    async function migrateActorV180(actor: any): Promise<void> {
+        for (const item of actor.items) {
+            const itemCollection = item.flags['itemcollection'];
+            if (itemCollection && itemCollection.contentsData) {
+                // eslint-disable-next-line no-await-in-loop -- Sequential Foundry document updates
+                await item.createNestedDocuments(itemCollection.contentsData);
             }
         }
     }
 
-    async function displayReleaseNotes(version) {
+    async function migrateActorV182(actor: any): Promise<void> {
+        const skills = actor.system?.skills;
+        if (skills?.navigate) {
+            const navigationSkill = foundry.utils.duplicate(skills.navigate);
+            navigationSkill.label = 'Navigation';
+            navigationSkill.characteristic = navigationSkill.characteristic ?? 'Int';
+            navigationSkill.characteristics = navigationSkill.characteristics?.length ? navigationSkill.characteristics : ['Int'];
+            await actor.update({
+                'system.skills.navigation': skills.navigation ?? navigationSkill,
+                'system.skills.-=navigate': null,
+            });
+        }
+    }
+
+    async function migrateActorV184(actor: any): Promise<void> {
+        for (const item of actor.items) {
+            // eslint-disable-next-line no-await-in-loop -- Sequential Foundry document updates
+            await migrateItemV184(item);
+        }
+    }
+
+    async function migrateActorV185(actor: any): Promise<void> {
+        const flags = actor.flags?.['wh40k-rpg'];
+        if (flags?.equipmentViewMode !== undefined || flags?.equipmentPresets !== undefined) {
+            await actor.update({
+                'flags.wh40k-rpg.-=equipmentViewMode': null,
+                'flags.wh40k-rpg.-=equipmentPresets': null,
+            });
+        }
+    }
+
+    async function displayReleaseNotes(version: number): Promise<void> {
         switch (version) {
             case 157:
                 await releaseNotes({
@@ -359,7 +346,7 @@ export async function checkAndMigrateWorld() {
         }
     }
 
-    async function releaseNotes(data) {
+    async function releaseNotes(data: any): Promise<void> {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/prompt/release-notes-prompt.hbs', data);
         void foundry.applications.api.DialogV2.prompt({
             window: { title: 'Release Notes' },

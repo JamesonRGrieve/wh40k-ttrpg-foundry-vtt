@@ -10,8 +10,6 @@ import BaseRollDialog from './base-roll-dialog.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class SimpleRollDialog extends BaseRollDialog {
-    [key: string]: any;
-
     constructor(simpleSkillData = {}, options = {}) {
         super(simpleSkillData, options);
         this.simpleSkillData = simpleSkillData;
@@ -71,7 +69,7 @@ export default class SimpleRollDialog extends BaseRollDialog {
  * Open a simple roll dialog.
  * @param {object} simpleSkillData  The skill data.
  */
-export function prepareSimpleRoll(simpleSkillData) {
+export function prepareSimpleRoll(simpleSkillData: any): void {
     const prompt = new SimpleRollDialog(simpleSkillData);
     prompt.render(true);
 }

@@ -11,8 +11,6 @@ interface VehicleArmourFacing {
 }
 
 export default class VehicleData extends ActorDataModel {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare vehicleClass: 'ground' | 'air' | 'water' | 'space' | 'walker';
     declare size: number;
@@ -51,7 +49,7 @@ export default class VehicleData extends ActorDataModel {
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -156,7 +154,8 @@ export default class VehicleData extends ActorDataModel {
 
     /** @override */
     prepareBaseData(): void {
-        super.prepareBaseData();
+        // @ts-expect-error - DataModel lifecycle method
+        super.prepareBaseData?.();
 
         // Ensure integrity.value doesn't exceed max
         if (this.integrity.value > this.integrity.max) {
@@ -166,7 +165,8 @@ export default class VehicleData extends ActorDataModel {
 
     /** @override */
     prepareDerivedData(): void {
-        super.prepareDerivedData();
+        // @ts-expect-error - DataModel lifecycle method
+        super.prepareDerivedData?.();
 
         // No derived calculations needed yet
         // Future: Apply trait/upgrade modifiers here

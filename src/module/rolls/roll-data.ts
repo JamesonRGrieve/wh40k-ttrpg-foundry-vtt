@@ -66,18 +66,18 @@ export class RollData {
     dos = 0;
     dof = 0;
 
-    get showDamage() {
+    get showDamage(): boolean {
         return this.success || this.isThrown;
     }
 
-    reset() {
+    reset(): any {
         this.automatic = false;
         this.success = false;
         this.opposedSuccess = false;
     }
 
     nameOverride;
-    get name() {
+    get name(): string {
         if (this.nameOverride) return this.nameOverride;
 
         const actionItem = this.weapon ?? this.power;
@@ -86,7 +86,7 @@ export class RollData {
         return '';
     }
 
-    get effectString() {
+    get effectString(): string {
         const actionItem = this.weapon ?? this.power;
         if (!actionItem) return '';
 
@@ -111,11 +111,11 @@ export class RollData {
         return str.join(' | ');
     }
 
-    get modifiedTarget() {
+    get modifiedTarget(): number {
         return this.baseTarget + this.modifierTotal;
     }
 
-    get activeModifiers() {
+    get activeModifiers(): any {
         const modifiers = {};
         for (const m of Object.keys(this.modifiers)) {
             try {
@@ -130,15 +130,15 @@ export class RollData {
         return modifiers;
     }
 
-    hasAttackSpecial(special) {
+    hasAttackSpecial(special): any {
         return !!this.attackSpecials.find((s) => s.name === special);
     }
 
-    getAttackSpecial(special) {
+    getAttackSpecial(special): any {
         return this.attackSpecials.find((s) => s.name === special);
     }
 
-    modifiersToRollData() {
+    modifiersToRollData(): any {
         let formula = '0 ';
         const rollParams = {};
         for (const modifier of Object.keys(this.modifiers)) {
@@ -157,7 +157,7 @@ export class RollData {
         };
     }
 
-    async calculateTotalModifiers() {
+    async calculateTotalModifiers(): Promise<any> {
         const rollDetails = this.modifiersToRollData();
         try {
             const roll = new Roll(rollDetails.formula, rollDetails.params);
@@ -176,7 +176,6 @@ export class RollData {
 }
 
 export class WeaponRollData extends RollData {
-    [key: string]: any;
     weapons = [];
     weapon;
     weaponSelect = false;
@@ -205,15 +204,15 @@ export class WeaponRollData extends RollData {
         this.template = 'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs';
     }
 
-    hasWeaponModification(special) {
+    hasWeaponModification(special): any {
         return !!this.weaponModifications.find((s) => s.name === special);
     }
 
-    getWeaponModification(special) {
+    getWeaponModification(special): any {
         return this.weaponModifications.find((s) => s.name === special);
     }
 
-    async update() {
+    async update(): Promise<any> {
         if (this.weapon.system.attackBonus) {
             this.modifiers['weapon'] = this.weapon.system.attackBonus;
         }
@@ -251,8 +250,8 @@ export class WeaponRollData extends RollData {
             }
         }
 
-        await updateWeaponModifiers(this);
-        await updateAttackSpecials(this);
+        updateWeaponModifiers(this);
+        updateAttackSpecials(this);
         updateAvailableCombatActions(this);
         calculateCombatActionModifier(this);
         if (this.weapon.usesAmmo) {
@@ -265,7 +264,7 @@ export class WeaponRollData extends RollData {
         this.updateBaseTarget();
     }
 
-    initialize() {
+    initialize(): any {
         this.baseTarget = 0;
         this.modifiers['attack'] = 0;
         this.modifiers['difficulty'] = 0;
@@ -278,7 +277,7 @@ export class WeaponRollData extends RollData {
                 const size = Number.parseInt(this.targetActor.system.size);
                 this.modifiers['target-size'] = (size - 4) * 10;
             } catch {
-                (ui.notifications as any).warn('Target size is not a number. Unexpected error.');
+                ui.notifications.warn('Target size is not a number. Unexpected error.');
             }
         }
 
@@ -292,14 +291,14 @@ export class WeaponRollData extends RollData {
         this.weapon.isSelected = true;
     }
 
-    selectWeapon(weaponName) {
+    selectWeapon(weaponName): any {
         // Unselect All
         this.weapons.filter((weapon) => weapon.id !== weaponName).forEach((weapon) => (weapon.isSelected = false));
         this.weapon = this.weapons.find((weapon) => weapon.id === weaponName);
         this.weapon.isSelected = true;
     }
 
-    updateBaseTarget() {
+    updateBaseTarget(): any {
         if (this.weapon.isRanged) {
             this.baseTarget = this.sourceActor?.characteristics?.ballisticSkill?.total ?? 0;
             this.baseChar = 'BS';
@@ -314,16 +313,16 @@ export class WeaponRollData extends RollData {
         }
     }
 
-    async finalize() {
+    async finalize(): Promise<any> {
         // Remove Aim Modifier for All out attack in the case
         // where aim was selected and then the attack changed
         if (this.action === 'All Out Attack') {
             this.modifiers['aim'] = 0;
         }
 
-        await calculateAmmoAttackBonuses(this);
-        await calculateAttackSpecialAttackBonuses(this);
-        await calculateWeaponModifiersAttackBonuses(this);
+        calculateAmmoAttackBonuses(this);
+        calculateAttackSpecialAttackBonuses(this);
+        calculateWeaponModifiersAttackBonuses(this);
         this.modifiers = {
             ...this.modifiers,
             ...this.specialModifiers,
@@ -348,7 +347,6 @@ export class WeaponRollData extends RollData {
 }
 
 export class PsychicRollData extends RollData {
-    [key: string]: any;
     psychicPowers = [];
     power;
     powerSelect = false;
@@ -364,7 +362,7 @@ export class PsychicRollData extends RollData {
         this.template = 'systems/wh40k-rpg/templates/chat/action-roll-chat.hbs';
     }
 
-    initialize() {
+    initialize(): any {
         this.baseTarget = 0;
         this.modifiers['bonus'] = 0;
         this.modifiers['difficulty'] = 0;
@@ -378,23 +376,23 @@ export class PsychicRollData extends RollData {
         this.hasDamage = this.power.system.subtype.includes('Attack');
     }
 
-    selectPower(powerName) {
+    selectPower(powerName): any {
         this.psychicPowers.filter((power) => power.id !== powerName).forEach((power) => (power.isSelected = false));
         this.power = this.psychicPowers.find((power) => power.id === powerName);
         this.power.isSelected = true;
     }
 
-    async update() {
+    async update(): Promise<any> {
         this.modifiers['bonus'] = 10 * Math.floor(this.sourceActor.psy.rating - this.pr);
         this.modifiers['focus'] = this.hasFocus ? 10 : 0;
         this.modifiers['power'] = this.power.system.target.bonus ?? 0;
         this.hasDamage = this.power.system.subtype.includes('Attack');
-        await updateAttackSpecials(this);
+        updateAttackSpecials(this);
         this.updateBaseTarget();
         await calculatePsychicPowerRange(this);
     }
 
-    updateBaseTarget() {
+    updateBaseTarget(): any {
         const target = this.power.system.target;
         if (!target) return;
 
@@ -427,8 +425,8 @@ export class PsychicRollData extends RollData {
         }
     }
 
-    async finalize() {
-        await calculateAttackSpecialAttackBonuses(this);
+    async finalize(): Promise<any> {
+        calculateAttackSpecialAttackBonuses(this);
         this.modifiers = { ...this.modifiers, ...this.specialModifiers };
         await this.calculateTotalModifiers();
     }

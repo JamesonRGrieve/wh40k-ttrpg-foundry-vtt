@@ -4,7 +4,6 @@
  * Similar to dnd5e's modern roll architecture
  * @extends Roll
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class BasicRollWH40K extends Roll {
     [key: string]: any;
     /* -------------------------------------------- */
@@ -55,7 +54,7 @@ export default class BasicRollWH40K extends Roll {
      * @param {Object} [config.data] - Roll data for formula evaluation
      * @returns {Promise<ChatMessage|null>} The created chat message, or null if cancelled
      */
-    static async build(config = {}) {
+    static async build(config = {}): Promise<any> {
         // Stage 1: Configure
         const configured = await this.buildConfigure(config);
         if (!configured) return null;
@@ -72,7 +71,7 @@ export default class BasicRollWH40K extends Roll {
      * @param {Object} config - Initial configuration
      * @returns {Promise<Object|null>} Final configuration, or null if cancelled
      */
-    static async buildConfigure(config) {
+    static async buildConfigure(config): Promise<any> {
         // Fire pre-roll hook - allows modules to modify or cancel the roll
         const hookResult = Hooks.call('wh40k-rpg.preRoll', this, config);
         if (hookResult === false) return null;
@@ -100,7 +99,7 @@ export default class BasicRollWH40K extends Roll {
      * @protected
      */
     // eslint-disable-next-line @typescript-eslint/require-await
-    static async _showConfigurationDialog(config) {
+    static async _showConfigurationDialog(config): Promise<any> {
         // Base implementation just returns the config unchanged
         // Subclasses override this to show actual dialogs
         return config;
@@ -111,7 +110,7 @@ export default class BasicRollWH40K extends Roll {
      * @param {Object} config - Final configuration
      * @returns {Promise<BasicRollWH40K>} The evaluated roll
      */
-    static async buildEvaluate(config) {
+    static async buildEvaluate(config): Promise<any> {
         // Construct roll formula
         const formula = this.constructFormula(config);
 
@@ -139,7 +138,7 @@ export default class BasicRollWH40K extends Roll {
      * @param {BasicRollWH40K} roll - The evaluated roll
      * @returns {Promise<ChatMessage>} The created chat message
      */
-    static async buildPost(roll) {
+    static async buildPost(roll): Promise<any> {
         const config = roll.configuration;
 
         // Prepare chat message data
@@ -147,11 +146,10 @@ export default class BasicRollWH40K extends Roll {
 
         // Apply roll mode visibility
         const rollMode = config.rollMode || game.settings.get('core', 'rollMode');
-        // @ts-expect-error - argument type
-        ChatMessage.applyRollMode(chatData, rollMode);
+        ChatMessage.applyRollMode(chatData as any, rollMode as any);
 
         // Create the chat message
-        const message = await (ChatMessage as any).create(chatData);
+        const message = await ChatMessage.create(chatData);
 
         // Fire post-message hook
         Hooks.callAll('wh40k-rpg.postRollPost', message, roll, config);
@@ -166,9 +164,9 @@ export default class BasicRollWH40K extends Roll {
      * @returns {Promise<Object>} Chat message data
      * @protected
      */
-    static async _prepareChatData(roll, config) {
+    static async _prepareChatData(roll, config): Promise<any> {
         // Get speaker data
-        const speaker = config.speaker || (ChatMessage as any).getSpeaker({ actor: config.actor });
+        const speaker = config.speaker || ChatMessage.getSpeaker({ actor: config.actor });
 
         // Render the chat template - V13: use namespaced renderTemplate
         const templateData = await this._prepareTemplateData(roll, config);
@@ -197,7 +195,7 @@ export default class BasicRollWH40K extends Roll {
      * @returns {Promise<Object>} Template data
      * @protected
      */
-    static async _prepareTemplateData(roll, config) {
+    static async _prepareTemplateData(roll, config): Promise<any> {
         return {
             roll: roll,
             rollData: {
@@ -215,7 +213,7 @@ export default class BasicRollWH40K extends Roll {
      * @param {Object} config - Roll configuration
      * @returns {string} The roll formula
      */
-    static constructFormula(config) {
+    static constructFormula(config): any {
         const parts = [config.base || '1d100'];
 
         // Add flat modifier
@@ -238,9 +236,8 @@ export default class BasicRollWH40K extends Roll {
      * @param {Object} config - Roll configuration
      * @returns {Promise<ChatMessage|null>}
      */
-    static async roll(config = {}) {
-        // @ts-expect-error - dynamic property
-        config.configure = false;
+    static async roll(config = {}): Promise<any> {
+        (config as any).configure = false;
         return this.build(config);
     }
 
@@ -249,7 +246,7 @@ export default class BasicRollWH40K extends Roll {
      * @param {Object} config - Roll configuration
      * @returns {Promise<BasicRollWH40K>} The evaluated roll
      */
-    static async evaluate(config = {}) {
+    static async evaluate(config = {}): Promise<any> {
         const configured = await this.buildConfigure(config);
         if (!configured) return null;
         return this.buildEvaluate(configured);
@@ -264,7 +261,7 @@ export default class BasicRollWH40K extends Roll {
      * @returns {Object}
      * @override
      */
-    toJSON() {
+    toJSON(): any {
         const json = super.toJSON();
         // @ts-expect-error - dynamic property
         json.configuration = this.configuration;
@@ -277,7 +274,7 @@ export default class BasicRollWH40K extends Roll {
      * @returns {BasicRollWH40K}
      * @override
      */
-    static fromData(data) {
+    static fromData(data): any {
         try {
             // Let parent class handle core roll reconstruction
             const roll = super.fromData(data);

@@ -12,7 +12,6 @@ const { ApplicationV2 } = foundry.applications.api;
  * Provides common functionality for weapon, psychic, force field, and other roll dialogs.
  */
 export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
-    [key: string]: any;
     /**
      * @param {object} rollData     The roll data to configure.
      * @param {object} [options={}] Dialog options.
@@ -30,6 +29,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     static DEFAULT_OPTIONS = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'roll-dialog', 'standard-form'],
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             roll: BaseRollDialog.#onRoll,
             cancel: BaseRollDialog.#onCancel,
@@ -39,6 +39,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
             submitOnChange: true,
             closeOnSubmit: false,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 500,
         },

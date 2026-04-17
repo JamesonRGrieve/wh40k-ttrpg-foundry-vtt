@@ -10,8 +10,6 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes ActivationTemplate
  */
 export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate, ActivationTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare type: string;
@@ -24,7 +22,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -92,7 +90,7 @@ export default class RitualData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the test description.
      * @type {string}
      */
-    get testLabel() {
+    get testLabel(): string {
         let label = game.i18n.localize(`WH40K.Characteristic.${this.test.characteristic.capitalize()}`);
         if (this.test.skill) label = this.test.skill;
         if (this.test.modifier !== 0) {

@@ -10,8 +10,6 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes ModifiersTemplate
  */
 export default class OriginPathData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare step: string;
@@ -49,7 +47,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -272,7 +270,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Returns array of positions where this origin appears in the chart.
      * @type {number[]}
      */
-    get allPositions() {
+    get allPositions(): number[] {
         return this.positions && this.positions.length > 0 ? [...this.positions].sort((a, b) => a - b) : [4]; // Default to center position if not set
     }
 
@@ -281,7 +279,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Used for card placement in the chart.
      * @type {number}
      */
-    get primaryPosition() {
+    get primaryPosition(): number {
         return this.allPositions[0] || 4;
     }
 
@@ -289,7 +287,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Get the step label.
      * @type {string}
      */
-    get stepLabel() {
+    get stepLabel(): string {
         const fallbackLabels = {
             homeWorld: 'Home World',
             birthright: 'Birthright',
@@ -331,7 +329,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Does this origin have requirements?
      * @type {boolean}
      */
-    get hasRequirements() {
+    get hasRequirements(): boolean {
         const reqs = this.requirements;
         return !!(reqs.text || reqs.previousSteps.length || reqs.excludedSteps.length);
     }
@@ -340,7 +338,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Does this origin have choices?
      * @type {boolean}
      */
-    get hasChoices() {
+    get hasChoices(): boolean {
         return this.grants.choices.length > 0;
     }
 
@@ -348,7 +346,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Get choices that still need selection.
      * @type {object[]}
      */
-    get pendingChoices() {
+    get pendingChoices(): any[] {
         return this.grants.choices.filter((choice) => {
             const selected = this.selectedChoices[choice.label] || [];
             return selected.length < choice.count;
@@ -359,7 +357,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Check if all choices have been made.
      * @type {boolean}
      */
-    get choicesComplete() {
+    get choicesComplete(): boolean {
         return this.pendingChoices.length === 0;
     }
 
@@ -367,7 +365,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Get the active modifiers derived from selected choices.
      * @type {object[]}
      */
-    get derivedModifiers() {
+    get derivedModifiers(): any {
         return this.activeModifiers || [];
     }
 
@@ -375,7 +373,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Get a summary of grants.
      * @type {object}
      */
-    get grantsSummary() {
+    get grantsSummary(): any[] {
         const grants = this.grants;
         const summary = [];
 

@@ -13,8 +13,6 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class RollConfigurationDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
@@ -34,6 +32,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             width: 400,
             height: 'auto' as const,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         form: {
             handler: this.#onSubmit,
             submitOnChange: false,
@@ -44,6 +43,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             cancel: this.#cancel,
             viewModifierSource: this.#viewModifierSource,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -148,7 +148,9 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const context: any = await super._prepareContext(options);
 
         // Calculate the difficulty modifier
-        const difficultyPreset = (this.constructor as any).DIFFICULTY_PRESETS.find((p: any) => p.key === this.selectedDifficulty) || { value: 0 };
+        const difficultyPreset = (this.constructor as typeof RollConfigurationDialog).DIFFICULTY_PRESETS.find(
+            (p: any) => p.key === this.selectedDifficulty,
+        ) || { value: 0 };
         const difficultyModifier = difficultyPreset.value;
 
         // Calculate situational modifier from active checkboxes
@@ -207,19 +209,19 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             hasPermanentModifiers,
 
             // Difficulty presets
-            difficulties: (this.constructor as any).DIFFICULTY_PRESETS.map((d: any) => ({
+            difficulties: (this.constructor as typeof RollConfigurationDialog).DIFFICULTY_PRESETS.map((d: any) => ({
                 ...d,
-                label: (game as any).i18n.localize(d.label),
+                label: game.i18n.localize(d.label),
                 selected: d.key === this.selectedDifficulty,
                 cssClass: d.value > 0 ? 'positive' : d.value < 0 ? 'negative' : 'neutral',
             })),
             selectedDifficulty: this.selectedDifficulty,
 
             // Roll modes - V13: rollModes values are objects with a label property
-            rollModes: Object.entries((CONFIG as any).Dice.rollModes).map(([key, mode]: [string, any]) => ({
+            rollModes: Object.entries(CONFIG.Dice.rollModes).map(([key, mode]: [string, any]) => ({
                 key: key,
-                label: (game as any).i18n.localize(mode.label),
-                selected: key === (this.config.rollMode || (game as any).settings.get('core', 'rollMode')),
+                label: game.i18n.localize(mode.label),
+                selected: key === (this.config.rollMode || game.settings.get('core', 'rollMode')),
             })),
 
             // Form buttons
@@ -304,14 +306,14 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const uuid = target.dataset.uuid;
         if (!uuid) return;
 
-        const item = await (fromUuid as any)(uuid);
+        const item = await fromUuid(uuid);
         if (item) {
             // Check for Shift+Click to post to chat
-            if ((event as any).shiftKey) {
-                item.toMessage();
+            if ((event as MouseEvent).shiftKey) {
+                (item as any).toMessage();
             } else {
                 // Default: open sheet
-                item.sheet.render(true);
+                (item as any).sheet.render(true);
             }
         }
     }
@@ -396,7 +398,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     // @ts-expect-error - override type
     async close(options: Record<string, unknown> = {}): Promise<void> {
         // Ensure we resolve with null if closed without submitting
-        if (this.#resolve && !(options as any).submitted) {
+        if (this.#resolve && !(options as Record<string, unknown>).submitted) {
             this.#resolve(null);
         }
         // @ts-expect-error - type assignment

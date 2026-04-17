@@ -13,13 +13,16 @@ const { HandlebarsApplicationMixin } = foundry.applications.api;
  * @mixin
  */
 export default function ApplicationV2Mixin<T extends new (...args: any[]) => any>(Base: T) {
-    class BaseApplicationWH40K extends HandlebarsApplicationMixin(Base as any) {
+    // @ts-expect-error - Mixin chain loses type information
+    class BaseApplicationWH40K extends HandlebarsApplicationMixin(Base) {
         [key: string]: any;
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+            /* eslint-disable @typescript-eslint/unbound-method */
             actions: {
                 toggleCollapsed: BaseApplicationWH40K.#toggleCollapsed,
             },
+            /* eslint-enable @typescript-eslint/unbound-method */
             classes: ['wh40k-rpg'],
             window: {
                 subtitle: '',
@@ -54,7 +57,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
          * @type {string}
          */
         get subtitle(): string {
-            return game.i18n.localize((this as any).options?.window?.subtitle ?? '');
+            return game.i18n.localize(this.options?.window?.subtitle ?? '');
         }
 
         /* -------------------------------------------- */
@@ -66,7 +69,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
             super._configureRenderOptions(options);
             if (options.isFirstRender && this.hasFrame) {
                 options.window ||= {};
-                (options.window as any).subtitle ||= this.subtitle;
+                (options.window as Record<string, string>).subtitle ||= this.subtitle;
             }
         }
 
@@ -74,6 +77,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
 
         /** @inheritDoc */
         _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+            // @ts-expect-error - Mixin chain super access
             super._onFirstRender(context, options);
             this._renderContainers(context, options);
         }
@@ -82,6 +86,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
 
         /** @inheritDoc */
         async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+            // @ts-expect-error - Mixin chain super access
             const context = await super._prepareContext(options);
             context.CONFIG = CONFIG.wh40k;
             return context;
@@ -132,17 +137,18 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
                         ?.classList.toggle('collapsed', !this.#expandedSections.get((element as HTMLElement).dataset.expandId));
                 }
             }
-            super._replaceHTML(result, content, options);
+            super._replaceHTML(result, content, options as any);
         }
 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
         _updateFrame(options: Record<string, unknown>): void {
+            // @ts-expect-error - Mixin chain super access
             super._updateFrame(options);
             if (options.window && 'subtitle' in (options.window as object)) {
                 const subtitle = this.element.querySelector('.window-header > .window-subtitle');
-                if (subtitle) subtitle.innerText = (options as any).window.subtitle;
+                if (subtitle) subtitle.innerText = ((options as any).window as any).subtitle;
             }
         }
 
@@ -150,6 +156,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
 
         /** @inheritDoc */
         _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void | Promise<void> {
+            // @ts-expect-error - Mixin chain super access
             super._onRender(context, options);
 
             // Add special styling for multi-select tags

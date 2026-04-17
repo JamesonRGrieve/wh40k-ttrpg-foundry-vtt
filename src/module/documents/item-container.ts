@@ -3,7 +3,6 @@ import { SYSTEM_ID } from '../constants.ts';
 export const DH_CONTAINER_ID = 'nested';
 
 export class WH40KItemContainer extends Item {
-    [key: string]: any;
     declare system: any;
     declare items: foundry.utils.Collection<Item>;
 
@@ -53,13 +52,13 @@ export class WH40KItemContainer extends Item {
         return this.getNested().length > 0;
     }
 
-    async convertNestedToItems(): Promise<void> {
+    convertNestedToItems(): void {
         // Convert Nested to Items
         game.wh40k.log(`Convert ${this.name as string} Nested`, this.hasNested());
         this.items = new foundry.utils.Collection();
         for (const nestedData of this.getNested()) {
-            const item = new (CONFIG as any).Item.documentClass(nestedData, { parent: this });
-            await this.items.set(nestedData._id, item);
+            const item = new CONFIG.Item.documentClass(nestedData, { parent: this });
+            this.items.set(nestedData._id, item);
         }
         game.wh40k.log(`Item ${this.name as string} items:`, this.items);
     }
@@ -115,7 +114,7 @@ export class WH40KItemContainer extends Item {
             for (const itemData of dataArray) {
                 let clone = JSON.parse(JSON.stringify(itemData));
                 clone._id = foundry.utils.randomID();
-                clone = new (CONFIG as any).Item.documentClass(clone, { parent: this }).toJSON();
+                clone = new CONFIG.Item.documentClass(clone, { parent: this }).toJSON();
                 currentItems.push(clone);
             }
 
@@ -169,7 +168,7 @@ export class WH40KItemContainer extends Item {
         this.items = new foundry.utils.Collection();
         containedItems.forEach((idata) => {
             if (!oldItems?.has(idata._id)) {
-                const theItem = new (CONFIG as any).Item.documentClass(idata, { parent: this });
+                const theItem = new CONFIG.Item.documentClass(idata, { parent: this });
                 this.items.set(idata._id, theItem);
             } else {
                 // Reuse existing item instance and update its data

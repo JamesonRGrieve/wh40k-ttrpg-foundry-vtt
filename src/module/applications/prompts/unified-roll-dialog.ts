@@ -30,8 +30,8 @@ const { ApplicationV2 } = foundry.applications.api;
 /**
  * Unified dialog for configuring all roll types.
  */
-export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2) as any) {
-    [key: string]: any;
+// @ts-expect-error - Mixin chain loses static type information
+export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     declare render: any;
     declare close: any;
     declare position: any;
@@ -40,10 +40,11 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
      * @param {ActionData} actionData  Any ActionData subclass (SimpleSkillData, WeaponActionData, etc.)
      * @param {object} [options={}]    Dialog options.
      */
-    constructor(actionData, options = {}) {
-        super(options as any);
+    constructor(actionData: any, options: any = {}) {
+        // @ts-expect-error - Mixin chain constructor constraint
+        super(options);
         this.actionData = actionData;
-        this._selectedDifficultyIndex = (this.constructor as any).DIFFICULTIES.findIndex((d) => d.default);
+        this._selectedDifficultyIndex = (this.constructor as typeof UnifiedRollDialog).DIFFICULTIES.findIndex((d) => d.default);
         this._situationalModifiers = {};
         this._customModifier = 0;
         this._manualRollTens = null;
@@ -74,6 +75,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
     static DEFAULT_OPTIONS = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'unified-roll-dialog', 'standard-form'],
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             toggleDifficultyPicker: UnifiedRollDialog.#onToggleDifficultyPicker,
             selectDifficulty: UnifiedRollDialog.#onSelectDifficulty,
@@ -105,6 +107,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
             submitOnChange: true,
             closeOnSubmit: false,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 460,
             height: 'auto' as const,
@@ -174,7 +177,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
      * Detect the roll type from the action data.
      * @returns {"simple"|"weapon"|"psychic"|"forceField"}
      */
-    get rollType() {
+    get rollType(): string {
         const rd = this.rollData;
         if (rd?.constructor?.name === 'WeaponRollData') return 'weapon';
         if (rd?.constructor?.name === 'PsychicRollData') return 'psychic';
@@ -183,22 +186,22 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
     }
 
     /** @returns {object} The underlying roll data (ForceFieldData IS the rollData) */
-    get rollData() {
+    get rollData(): any {
         return this.actionData.rollData ?? this.actionData;
     }
 
     /** Get the current difficulty preset */
-    get _currentDifficulty() {
-        return (this.constructor as any).DIFFICULTIES[this._selectedDifficultyIndex];
+    get _currentDifficulty(): any {
+        return (this.constructor as typeof UnifiedRollDialog).DIFFICULTIES[this._selectedDifficultyIndex];
     }
 
     /** Get the applicable modifier list for the current roll type */
-    get _applicableModifiers() {
+    get _applicableModifiers(): any {
         return this._cachedSituationalModifiers || [];
     }
 
     /** Compute the manual roll total, or null if incomplete */
-    get _manualRollTotal() {
+    get _manualRollTotal(): number {
         if (this._diceInputMode === 'two-dice') {
             if (this._manualRollTens === null || this._manualRollUnits === null) return null;
             const total = this._manualRollTens * 10 + this._manualRollUnits;
@@ -214,18 +217,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
 
     /** @inheritDoc */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        // Initialize on first render
-        if (!this._initialized && this.rollData.initialize) {
-            this.rollData.initialize();
-            this._initialized = true;
-
-            // Sync card state with initial rollData
-            if (this.rollType === 'weapon') {
-                const isRanged = !!this.rollData.weapon?.isRanged;
-                this._attackModeKey = getAttackModeKeyForAction(this.rollData.action, isRanged);
-                this._aimModeKey = getAimKeyForModifier(this.rollData.modifiers?.aim ?? 0);
-            }
-        }
+        this._initializeRollData();
 
         if (this.rollData.update) {
             await this.rollData.update();
@@ -240,93 +232,41 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
             this._cachedSituationalModifiers = this._collectSituationalModifiers();
         }
 
-        // Calculate modifiers (force fields have no modifiers)
-        const difficultyMod = isForceField ? 0 : this._currentDifficulty.modifier;
-        const situationalMod = isForceField ? 0 : this._calculateSituationalModifiers();
-        const customMod = isForceField ? 0 : this._customModifier;
-        const combatSitMod = !isForceField && this.rollType === 'weapon' ? this._calculateCombatSituationalModifiers() : 0;
+        // Calculate all modifier sums
+        const modifiers = this._calculateAllModifiers(isForceField);
+        const { difficultyMod, situationalMod, customMod, combatSitMod, weaponModSum, baseTarget, finalTarget } = modifiers;
 
-        const baseTarget = isForceField ? rollData.protectionRating || 0 : rollData.baseTarget || 0;
-
-        // Sum weapon/combat modifiers already on rollData (exclude dialog-managed keys and range)
-        const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational']);
-        const weaponModSum = !isForceField
-            ? Object.entries(rollData.modifiers || {})
-                  .filter(([k]) => !dialogManagedKeys.has(k))
-                  .reduce((sum, [, v]) => sum + (parseInt(v as string) || 0), 0) + (rollData.rangeBonus || 0)
-            : 0;
-
-        const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod);
-
-        // Build target breakdown tooltip
-        const tooltipParts = [`Base: ${baseTarget}`];
-        if (weaponModSum !== 0) tooltipParts.push(`Weapon/Combat: ${weaponModSum >= 0 ? '+' : ''}${weaponModSum}`);
-        if (difficultyMod !== 0) tooltipParts.push(`Difficulty: ${difficultyMod >= 0 ? '+' : ''}${difficultyMod}`);
-        if (situationalMod !== 0) tooltipParts.push(`Situational: ${situationalMod >= 0 ? '+' : ''}${situationalMod}`);
-        if (customMod !== 0) tooltipParts.push(`Custom: ${customMod >= 0 ? '+' : ''}${customMod}`);
-        if (combatSitMod !== 0) tooltipParts.push(`Combat Mods: ${combatSitMod >= 0 ? '+' : ''}${combatSitMod}`);
-        tooltipParts.push(`= ${finalTarget}`);
-        const targetBreakdownTooltip = tooltipParts.join('\n');
-
-        // Dynamic color class based on success chance
-        let targetColorClass;
-        if (finalTarget <= 15) targetColorClass = 'urd-target__number--dire';
-        else if (finalTarget <= 30) targetColorClass = 'urd-target__number--poor';
-        else if (finalTarget <= 45) targetColorClass = 'urd-target__number--fair';
-        else if (finalTarget <= 60) targetColorClass = 'urd-target__number--good';
-        else if (finalTarget <= 80) targetColorClass = 'urd-target__number--great';
-        else targetColorClass = 'urd-target__number--legendary';
+        const targetBreakdownTooltip = this._buildTargetBreakdownTooltip(
+            baseTarget,
+            weaponModSum,
+            difficultyMod,
+            situationalMod,
+            customMod,
+            combatSitMod,
+            finalTarget,
+        );
+        const targetColorClass = this._getTargetColorClass(finalTarget);
 
         // Track previous target for animation
         this._previousTarget = this._previousTarget ?? finalTarget;
 
         // Calculate roll result if manual roll is complete
-        let rollResult = null;
         const manualTotal = this._manualRollTotal;
-        if (manualTotal !== null) {
-            const success = manualTotal === 1 || (manualTotal <= finalTarget && manualTotal !== 100);
-            if (success) {
-                const dos = 1 + getDegree(finalTarget, manualTotal);
-                rollResult = { success: true, dos, dof: 0, total: manualTotal };
-            } else {
-                const dof = 1 + getDegree(manualTotal, finalTarget);
-                rollResult = { success: false, dos: 0, dof, total: manualTotal };
-            }
-        }
+        const rollResult = this._calculateManualRollResult(manualTotal, finalTarget);
         this._rollResult = rollResult;
 
-        // Difficulty data
-        const difficulty = this._currentDifficulty;
-
-        // Build difficulty picker list (ordered relative to current)
-        const difficultyPicker = (this.constructor as any).DIFFICULTIES.map((d, i) => ({
-            ...d,
-            index: i,
-            isCurrent: i === this._selectedDifficultyIndex,
-            modifierLabel: d.modifier >= 0 ? `+${d.modifier}` : `${d.modifier}`,
-        }));
-
-        // Situational modifiers with toggle state
-        const situationalModifiers = (this._cachedSituationalModifiers || []).map((m) => ({
-            ...m,
-            active: this._situationalModifiers[`${m.key}_${m.source}`] ?? false,
-            toggleKey: `${m.key}_${m.source}`,
-            valueLabel: m.value >= 0 ? `+${m.value}` : `${m.value}`,
-        }));
-        const hasSituationalModifiers = situationalModifiers.length > 0;
-
-        // Modifier aggregate
+        // Build UI data
+        const difficultyPicker = this._buildDifficultyPicker();
+        const situationalModifiers = this._buildSituationalModifierList();
         const modifierAggregate = difficultyMod + situationalMod + customMod + combatSitMod;
 
-        // Roll type specific data
+        // Roll type flags
         const isWeapon = this.rollType === 'weapon';
         const isPsychic = this.rollType === 'psychic';
         const isSimple = this.rollType === 'simple';
 
-        // Actor info (ForceFieldData uses .actor, ActionData uses .sourceActor or .actor)
+        // Actor info
         const actor = rollData.sourceActor || rollData.actor;
-        const actorName = actor?.name || '';
-        const actorImg = actor?.img || '';
 
         // Roll name
         const rollName = isForceField ? rollData.forceField?.name || 'Force Field' : rollData.name || rollData.nameOverride || 'Test';
@@ -335,8 +275,8 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
         return {
             ...context,
             rollData,
-            actorName,
-            actorImg,
+            actorName: actor?.name || '',
+            actorImg: actor?.img || '',
             rollName,
             rollSubtitle,
             baseTarget,
@@ -344,7 +284,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
             targetColorClass,
             targetBreakdownTooltip,
             previousTarget: this._previousTarget,
-            difficulty,
+            difficulty: this._currentDifficulty,
             difficultyMod,
             situationalMod,
             customMod: this._customModifier,
@@ -352,7 +292,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
             difficultyPicker,
             difficultyPickerOpen: this._difficultyPickerOpen,
             situationalModifiers,
-            hasSituationalModifiers,
+            hasSituationalModifiers: situationalModifiers.length > 0,
             showCustomModifier: this._showCustomModifier || this._customModifier !== 0,
             rollResult,
             manualRollTens: this._manualRollTens,
@@ -378,6 +318,119 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
             // Base char
             baseChar: rollData.baseChar || '',
         };
+    }
+
+    /**
+     * Initialize roll data on first render.
+     */
+    _initializeRollData(): void {
+        if (!this._initialized && this.rollData.initialize) {
+            this.rollData.initialize();
+            this._initialized = true;
+
+            // Sync card state with initial rollData
+            if (this.rollType === 'weapon') {
+                const isRanged = !!this.rollData.weapon?.isRanged;
+                this._attackModeKey = getAttackModeKeyForAction(this.rollData.action, isRanged);
+                this._aimModeKey = getAimKeyForModifier(this.rollData.modifiers?.aim ?? 0);
+            }
+        }
+    }
+
+    /**
+     * Calculate all modifier sums and target values.
+     */
+    _calculateAllModifiers(isForceField: boolean): any {
+        const rollData = this.rollData;
+        const difficultyMod = isForceField ? 0 : this._currentDifficulty.modifier;
+        const situationalMod = isForceField ? 0 : this._calculateSituationalModifiers();
+        const customMod = isForceField ? 0 : this._customModifier;
+        const combatSitMod = !isForceField && this.rollType === 'weapon' ? this._calculateCombatSituationalModifiers() : 0;
+
+        const baseTarget = isForceField ? rollData.protectionRating || 0 : rollData.baseTarget || 0;
+
+        const dialogManagedKeys = new Set(['difficulty', 'situational', 'modifier', 'range', 'combat-situational']);
+        const weaponModSum = !isForceField
+            ? Object.entries(rollData.modifiers || {})
+                  .filter(([k]) => !dialogManagedKeys.has(k))
+                  .reduce((sum, [, v]) => sum + (parseInt(v as string) || 0), 0) + (rollData.rangeBonus || 0)
+            : 0;
+
+        const finalTarget = Math.max(0, baseTarget + weaponModSum + difficultyMod + situationalMod + customMod + combatSitMod);
+
+        return { difficultyMod, situationalMod, customMod, combatSitMod, weaponModSum, baseTarget, finalTarget };
+    }
+
+    /**
+     * Build target breakdown tooltip string.
+     */
+    _buildTargetBreakdownTooltip(
+        baseTarget: number,
+        weaponModSum: number,
+        difficultyMod: number,
+        situationalMod: number,
+        customMod: number,
+        combatSitMod: number,
+        finalTarget: number,
+    ): string {
+        const tooltipParts = [`Base: ${baseTarget}`];
+        if (weaponModSum !== 0) tooltipParts.push(`Weapon/Combat: ${weaponModSum >= 0 ? '+' : ''}${weaponModSum}`);
+        if (difficultyMod !== 0) tooltipParts.push(`Difficulty: ${difficultyMod >= 0 ? '+' : ''}${difficultyMod}`);
+        if (situationalMod !== 0) tooltipParts.push(`Situational: ${situationalMod >= 0 ? '+' : ''}${situationalMod}`);
+        if (customMod !== 0) tooltipParts.push(`Custom: ${customMod >= 0 ? '+' : ''}${customMod}`);
+        if (combatSitMod !== 0) tooltipParts.push(`Combat Mods: ${combatSitMod >= 0 ? '+' : ''}${combatSitMod}`);
+        tooltipParts.push(`= ${finalTarget}`);
+        return tooltipParts.join('\n');
+    }
+
+    /**
+     * Get CSS color class for the target number.
+     */
+    _getTargetColorClass(finalTarget: number): string {
+        if (finalTarget <= 15) return 'urd-target__number--dire';
+        if (finalTarget <= 30) return 'urd-target__number--poor';
+        if (finalTarget <= 45) return 'urd-target__number--fair';
+        if (finalTarget <= 60) return 'urd-target__number--good';
+        if (finalTarget <= 80) return 'urd-target__number--great';
+        return 'urd-target__number--legendary';
+    }
+
+    /**
+     * Calculate manual roll result from dice input.
+     */
+    _calculateManualRollResult(manualTotal: number | null, finalTarget: number): any {
+        if (manualTotal === null) return null;
+        const success = manualTotal === 1 || (manualTotal <= finalTarget && manualTotal !== 100);
+        if (success) {
+            const dos = 1 + getDegree(finalTarget, manualTotal);
+            return { success: true, dos, dof: 0, total: manualTotal };
+        }
+        const dof = 1 + getDegree(manualTotal, finalTarget);
+        return { success: false, dos: 0, dof, total: manualTotal };
+    }
+
+    /**
+     * Build difficulty picker list for the UI.
+     */
+    _buildDifficultyPicker(): any[] {
+        return (this.constructor as typeof UnifiedRollDialog).DIFFICULTIES.map((d, i) => ({
+            ...d,
+            index: i,
+            isCurrent: i === this._selectedDifficultyIndex,
+            modifierLabel: d.modifier >= 0 ? `+${d.modifier}` : `${d.modifier}`,
+        }));
+    }
+
+    /**
+     * Build situational modifiers list with toggle state for the UI.
+     */
+    _buildSituationalModifierList(): any[] {
+        return (this._cachedSituationalModifiers || []).map((m) => ({
+            ...m,
+            active: this._situationalModifiers[`${m.key}_${m.source}`] ?? false,
+            toggleKey: `${m.key}_${m.source}`,
+            valueLabel: m.value >= 0 ? `+${m.value}` : `${m.value}`,
+        }));
     }
 
     /** @inheritDoc */
@@ -696,7 +749,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
     _calculateCombatSituationalModifiers(): any {
         if (this._activeCombatSituationals.size === 0) return 0;
         const isRanged = !!this.rollData.weapon?.isRanged;
-        const situationals = getSituationalModifiers(isRanged);
+        const situationals = getSituationalModifiers(isRanged) as any;
         let total = 0;
         for (const s of situationals) {
             if (this._activeCombatSituationals.has(s.key)) {
@@ -708,7 +761,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
 
     _stepDifficulty(direction: number): any {
         const newIndex = this._selectedDifficultyIndex + direction;
-        if (newIndex < 0 || newIndex >= (this.constructor as any).DIFFICULTIES.length) return;
+        if (newIndex < 0 || newIndex >= (this.constructor as typeof UnifiedRollDialog).DIFFICULTIES.length) return;
         this._selectedDifficultyIndex = newIndex;
         this._difficultyPickerOpen = false;
         this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
@@ -750,16 +803,16 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
     /*  Form Handler                                 */
     /* -------------------------------------------- */
 
-    static async #onFormSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #onFormSubmit(this: UnifiedRollDialog, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         const data = foundry.utils.expandObject(formData.object);
         // Update roll data fields from form
-        if ((this as any).rollData) {
-            foundry.utils.mergeObject((this as any).rollData, data, { recursive: true });
-            if ((this as any).rollData.update) {
-                await (this as any).rollData.update();
+        if (this.rollData) {
+            foundry.utils.mergeObject(this.rollData, data, { recursive: true });
+            if (this.rollData.update) {
+                await this.rollData.update();
             }
             // Re-render dependent parts (e.g., Called Shot location dropdown, range info)
-            await (this as any).render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+            await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
         }
     }
 
@@ -767,199 +820,199 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
     /*  Action Handlers                              */
     /* -------------------------------------------- */
 
-    static async #onToggleDifficultyPicker(event: Event, target: HTMLElement): Promise<void> {
-        (this as any)._difficultyPickerOpen = !(this as any)._difficultyPickerOpen;
-        await (this as any).render(false, { parts: ['targetDisplay'] });
+    static async #onToggleDifficultyPicker(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        this._difficultyPickerOpen = !this._difficultyPickerOpen;
+        await this.render(false, { parts: ['targetDisplay'] });
     }
 
-    static async #onSelectDifficulty(event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectDifficulty(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.difficultyIndex);
-        if (Number.isInteger(index) && index >= 0 && index < (this.constructor as any).DIFFICULTIES.length) {
-            (this as any)._selectedDifficultyIndex = index;
-            (this as any)._difficultyPickerOpen = false;
-            await (this as any).render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+        if (Number.isInteger(index) && index >= 0 && index < (this.constructor as typeof UnifiedRollDialog).DIFFICULTIES.length) {
+            this._selectedDifficultyIndex = index;
+            this._difficultyPickerOpen = false;
+            await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
         }
     }
 
-    static async #onToggleSituational(event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleSituational(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.toggleKey;
         if (!key) return;
-        (this as any)._situationalModifiers[key] = !(this as any)._situationalModifiers[key];
-        await (this as any).render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+        this._situationalModifiers[key] = !this._situationalModifiers[key];
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
-    static async #onCustomModUp(event: Event, target: HTMLElement): Promise<void> {
-        (this as any)._customModifier += 5;
-        await (this as any).render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+    static async #onCustomModUp(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        this._customModifier += 5;
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
-    static async #onCustomModDown(event: Event, target: HTMLElement): Promise<void> {
-        (this as any)._customModifier -= 5;
-        await (this as any).render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+    static async #onCustomModDown(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        this._customModifier -= 5;
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
-    static async #onToggleCustomModifier(event: Event, target: HTMLElement): Promise<void> {
-        (this as any)._showCustomModifier = !(this as any)._showCustomModifier;
-        if (!(this as any)._showCustomModifier) (this as any)._customModifier = 0;
-        await (this as any).render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
+    static async #onToggleCustomModifier(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        this._showCustomModifier = !this._showCustomModifier;
+        if (!this._showCustomModifier) this._customModifier = 0;
+        await this.render(false, { parts: ['targetDisplay', 'modifiers', 'diceInput'] });
     }
 
-    static async #onSubmitToChat(event: Event, target: HTMLElement): Promise<void> {
-        await (this as any)._submitToChat();
+    static async #onSubmitToChat(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        await this._submitToChat();
     }
 
-    static async #onSystemRoll(event: Event, target: HTMLElement): Promise<void> {
-        await (this as any)._systemRoll();
+    static async #onSystemRoll(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        await this._systemRoll();
     }
 
-    static async #onClearManualRoll(event: Event, target: HTMLElement): Promise<void> {
-        (this as any)._manualRollTens = null;
-        (this as any)._manualRollUnits = null;
-        (this as any)._singleRollValue = null;
-        (this as any)._rollResult = null;
-        await (this as any).render(false, { parts: ['diceInput', 'footer'] });
+    static async #onClearManualRoll(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        this._manualRollTens = null;
+        this._manualRollUnits = null;
+        this._singleRollValue = null;
+        this._rollResult = null;
+        await this.render(false, { parts: ['diceInput', 'footer'] });
     }
 
-    static async #onToggleDiceMode(event: Event, target: HTMLElement): Promise<void> {
-        (this as any)._diceInputMode = (this as any)._diceInputMode === 'two-dice' ? 'single' : 'two-dice';
-        (this as any)._manualRollTens = null;
-        (this as any)._manualRollUnits = null;
-        (this as any)._singleRollValue = null;
-        (this as any)._rollResult = null;
-        await (this as any).render(false, { parts: ['diceInput', 'footer'] });
+    static async #onToggleDiceMode(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        this._diceInputMode = this._diceInputMode === 'two-dice' ? 'single' : 'two-dice';
+        this._manualRollTens = null;
+        this._manualRollUnits = null;
+        this._singleRollValue = null;
+        this._rollResult = null;
+        await this.render(false, { parts: ['diceInput', 'footer'] });
     }
 
-    static async #onToggleContextSection(event: Event, target: HTMLElement): Promise<void> {
-        (this as any)._contextExpanded = !(this as any)._contextExpanded;
-        await (this as any).render(false, { parts: ['contextPanel'] });
+    static async #onToggleContextSection(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        this._contextExpanded = !this._contextExpanded;
+        await this.render(false, { parts: ['contextPanel'] });
     }
 
-    static async #onSelectWeapon(event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectWeapon(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
         const weaponId = target.dataset.weaponId || (target as HTMLInputElement).name;
-        if ((this as any).rollData.selectWeapon) {
-            (this as any).rollData.selectWeapon(weaponId);
-            if ((this as any).rollData.update) await (this as any).rollData.update();
-            await (this as any).render();
+        if (this.rollData.selectWeapon) {
+            this.rollData.selectWeapon(weaponId);
+            if (this.rollData.update) await this.rollData.update();
+            await this.render();
         }
     }
 
-    static async #onSelectPower(event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectPower(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
         const powerId = target.dataset.powerId || (target as HTMLInputElement).name;
-        if ((this as any).rollData.selectPower) {
-            (this as any).rollData.selectPower(powerId);
-            if ((this as any).rollData.update) await (this as any).rollData.update();
-            await (this as any).render();
+        if (this.rollData.selectPower) {
+            this.rollData.selectPower(powerId);
+            if (this.rollData.update) await this.rollData.update();
+            await this.render();
         }
     }
 
-    static async #onCancel(event: Event, target: HTMLElement): Promise<void> {
-        await (this as any).close();
+    static async #onCancel(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        await this.close();
     }
 
     /* ---- Card-based Weapon Panel Handlers ---- */
 
-    static async #onSelectAttackMode(event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectAttackMode(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.modeKey;
         if (!key) return;
-        (this as any)._attackModeKey = key;
+        this._attackModeKey = key;
 
         // Map card key to combat action name and set on rollData
-        const isRanged = !!(this as any).rollData.weapon?.isRanged;
+        const isRanged = !!this.rollData.weapon?.isRanged;
         const actionName = getActionNameForMode(key, isRanged);
         if (actionName) {
-            (this as any).rollData.action = actionName;
+            this.rollData.action = actionName;
         }
 
         // If selecting a special option, auto-expand that section
         if (isMeleeSpecialOption(key)) {
-            (this as any)._specialOptionsExpanded = true;
+            this._specialOptionsExpanded = true;
         }
 
         // If aim is disabled by this mode (e.g., All Out Attack), reset aim
-        if ((this as any).rollData.update) await (this as any).rollData.update();
-        if (!(this as any).rollData.canAim && (this as any)._aimModeKey !== 'none') {
-            (this as any)._aimModeKey = 'none';
-            (this as any).rollData.modifiers['aim'] = 0;
+        if (this.rollData.update) await this.rollData.update();
+        if (!this.rollData.canAim && this._aimModeKey !== 'none') {
+            this._aimModeKey = 'none';
+            this.rollData.modifiers['aim'] = 0;
         }
 
-        await (this as any).render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
-    static async #onSelectAimMode(event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectAimMode(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.aimKey;
         if (!key) return;
-        (this as any)._aimModeKey = key;
-        (this as any).rollData.modifiers['aim'] = getAimModifier(key);
-        if ((this as any).rollData.update) await (this as any).rollData.update();
-        await (this as any).render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+        this._aimModeKey = key;
+        this.rollData.modifiers['aim'] = getAimModifier(key);
+        if (this.rollData.update) await this.rollData.update();
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
-    static async #onToggleCombatSituational(event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleCombatSituational(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.situationalKey;
         if (!key) return;
-        if ((this as any)._activeCombatSituationals.has(key)) {
-            (this as any)._activeCombatSituationals.delete(key);
+        if (this._activeCombatSituationals.has(key)) {
+            this._activeCombatSituationals.delete(key);
         } else {
-            (this as any)._activeCombatSituationals.add(key);
+            this._activeCombatSituationals.add(key);
         }
-        await (this as any).render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
-    static async #onSelectSizeModifier(event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectSizeModifier(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.sizeKey;
         if (!key) return;
-        (this as any)._sizeModifierKey = key;
-        (this as any).rollData.modifiers['target-size'] = (parseInt(key) - 4) * 10;
-        await (this as any).render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+        this._sizeModifierKey = key;
+        this.rollData.modifiers['target-size'] = (parseInt(key) - 4) * 10;
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
-    static async #onToggleSpecialOptions(event: Event, target: HTMLElement): Promise<void> {
-        (this as any)._specialOptionsExpanded = !(this as any)._specialOptionsExpanded;
-        await (this as any).render(false, { parts: ['contextPanel'] });
+    static async #onToggleSpecialOptions(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        this._specialOptionsExpanded = !this._specialOptionsExpanded;
+        await this.render(false, { parts: ['contextPanel'] });
     }
 
-    static async #onToggleSizeSection(event: Event, target: HTMLElement): Promise<void> {
-        (this as any)._sizeExpanded = !(this as any)._sizeExpanded;
-        await (this as any).render(false, { parts: ['contextPanel'] });
+    static async #onToggleSizeSection(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        this._sizeExpanded = !this._sizeExpanded;
+        await this.render(false, { parts: ['contextPanel'] });
     }
 
-    static async #onToggleRangeSection(event: Event, target: HTMLElement): Promise<void> {
-        (this as any)._rangeExpanded = !(this as any)._rangeExpanded;
-        await (this as any).render(false, { parts: ['contextPanel'] });
+    static async #onToggleRangeSection(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        this._rangeExpanded = !this._rangeExpanded;
+        await this.render(false, { parts: ['contextPanel'] });
     }
 
-    static async #onToggleSituationalSection(event: Event, target: HTMLElement): Promise<void> {
-        (this as any)._situationalExpanded = !(this as any)._situationalExpanded;
-        await (this as any).render(false, { parts: ['contextPanel'] });
+    static async #onToggleSituationalSection(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
+        this._situationalExpanded = !this._situationalExpanded;
+        await this.render(false, { parts: ['contextPanel'] });
     }
 
-    static async #onSelectRangeBracket(event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectRangeBracket(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
         const bracket = target.dataset.bracket;
         if (!bracket) return;
-        (this as any)._selectedRangeBracket = bracket;
+        this._selectedRangeBracket = bracket;
         const bracketData = RANGE_BRACKETS[bracket];
         if (bracketData) {
-            (this as any).rollData.rangeName = bracketData.label;
-            (this as any).rollData.rangeBonus = bracketData.modifier;
-            (this as any).rollData.rangeBracket = bracket;
+            this.rollData.rangeName = bracketData.label;
+            this.rollData.rangeBonus = bracketData.modifier;
+            this.rollData.rangeBracket = bracket;
         }
-        await (this as any).render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
-    static async #onSelectTarget(event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectTarget(this: UnifiedRollDialog, event: Event, target: HTMLElement): Promise<void> {
         // Get source token
-        const actor = (this as any).rollData.sourceActor;
+        const actor = this.rollData.sourceActor;
         if (!actor) return;
         const sourceToken = actor.token ?? actor.getActiveTokens()[0];
         if (!sourceToken) {
-            (ui.notifications as any).warn('No token found for the attacking actor.');
+            ui.notifications.warn('No token found for the attacking actor.');
             return;
         }
 
         // Check for existing target
         const targets = game.user.targets;
         if (targets.size === 0) {
-            (ui.notifications as any).info('Target a token first, then click Select Target.');
+            ui.notifications.info('Target a token first, then click Select Target.');
             return;
         }
         const targetToken = [...targets.values()][0];
@@ -967,15 +1020,15 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
 
         // Calculate distance
         const distance = calculateTokenDistance(sourceToken, targetToken);
-        (this as any).rollData.distance = distance;
-        (this as any).rollData.targetActor = targetToken.actor;
+        this.rollData.distance = distance;
+        this.rollData.targetActor = targetToken.actor;
 
         // Recalculate range with new distance
-        if ((this as any).rollData.update) await (this as any).rollData.update();
+        if (this.rollData.update) await this.rollData.update();
 
         // Clear manual bracket override so calculated bracket takes effect
-        (this as any)._selectedRangeBracket = null;
-        await (this as any).render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
+        this._selectedRangeBracket = null;
+        await this.render(false, { parts: ['contextPanel', 'targetDisplay', 'diceInput'] });
     }
 
     /* -------------------------------------------- */
@@ -1051,7 +1104,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
         // Apply combat situational card modifiers (weapon panel)
         if (this.rollType === 'weapon' && this._activeCombatSituationals.size > 0) {
             const isRanged = !!rd.weapon?.isRanged;
-            const situationals = getSituationalModifiers(isRanged);
+            const situationals = getSituationalModifiers(isRanged) as any;
             let combatSitTotal = 0;
             for (const s of situationals) {
                 if (this._activeCombatSituationals.has(s.key)) {
@@ -1137,7 +1190,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
 
     _validateWeaponRoll(): boolean {
         if (this.rollData.fireRate === 0) {
-            (ui.notifications as any).warn('Not enough ammo to perform action. Do you need to reload?');
+            ui.notifications.warn('Not enough ammo to perform action. Do you need to reload?');
             return false;
         }
         return true;
@@ -1145,11 +1198,11 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
 
     _validateForceFieldRoll(): boolean {
         if (!this.rollData.forceField?.system?.activated) {
-            (ui.notifications as any).warn('Force Field not activated!');
+            ui.notifications.warn('Force Field not activated!');
             return false;
         }
         if (this.rollData.forceField?.system?.overloaded) {
-            (ui.notifications as any).warn('Force Field currently overloaded!');
+            ui.notifications.warn('Force Field currently overloaded!');
             return false;
         }
         return true;
@@ -1164,7 +1217,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
  * Open a unified roll dialog.
  * @param {ActionData} actionData  Any ActionData subclass.
  */
-export function prepareUnifiedRoll(actionData) {
+export function prepareUnifiedRoll(actionData: any): void {
     const prompt = new UnifiedRollDialog(actionData);
     prompt.render(true);
 }

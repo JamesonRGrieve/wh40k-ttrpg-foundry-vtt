@@ -1,7 +1,7 @@
 import HordeTemplate from './mixins/horde-template.ts';
 import CreatureTemplate from './templates/creature.ts';
 
-const { NumberField, SchemaField, StringField, ArrayField, HTMLField } = (foundry.data as any).fields;
+const { NumberField, SchemaField, StringField, ArrayField, HTMLField } = foundry.data.fields;
 
 /**
  * Data model for NPC actors.
@@ -27,8 +27,6 @@ interface NPCSimpleWeapon {
 }
 
 export default class NPCData extends HordeTemplate(CreatureTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare faction: string;
     declare subfaction: string;

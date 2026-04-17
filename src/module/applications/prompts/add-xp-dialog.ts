@@ -10,7 +10,6 @@ const { ApplicationV2 } = foundry.applications.api;
  * Dialog for adding or subtracting experience points.
  */
 export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
-    [key: string]: any;
     /**
      * @param {WH40KAcolyte} actor  The actor to modify.
      * @param {object} [options={}]       Dialog options.
@@ -28,6 +27,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
     static DEFAULT_OPTIONS = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'add-xp-dialog', 'standard-form'],
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             apply: AddXPDialog.#onApply,
             cancel: AddXPDialog.#onCancel,
@@ -37,6 +37,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
             submitOnChange: true,
             closeOnSubmit: false,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 400,
         },
@@ -154,7 +155,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
         await this.actor.update({ 'system.experience.total': newTotal });
 
         const verb = this.xpAmount > 0 ? 'added' : 'removed';
-        (ui.notifications as any).info(`${Math.abs(this.xpAmount)} XP ${verb}. Total: ${newTotal}`);
+        ui.notifications.info(`${Math.abs(this.xpAmount)} XP ${verb}. Total: ${newTotal}`);
 
         await this.close();
     }
@@ -181,7 +182,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
  * Open an add XP dialog.
  * @param {WH40KAcolyte} actor  The actor to modify.
  */
-export function openAddXPDialog(actor) {
+export function openAddXPDialog(actor: any): void {
     const dialog = new AddXPDialog(actor);
     dialog.render(true);
 }

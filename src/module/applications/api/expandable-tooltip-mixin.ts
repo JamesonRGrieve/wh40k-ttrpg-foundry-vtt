@@ -36,11 +36,13 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
         static DEFAULT_OPTIONS = {
             // @ts-expect-error - TS2339
             ...super.DEFAULT_OPTIONS,
+            /* eslint-disable @typescript-eslint/unbound-method */
             actions: {
                 // @ts-expect-error - TS2339
                 ...super.DEFAULT_OPTIONS.actions,
                 toggleExpandable: ExpandableTooltipMixin.#toggleExpandable,
             },
+            /* eslint-enable @typescript-eslint/unbound-method */
         };
 
         /* -------------------------------------------- */
@@ -143,6 +145,7 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
 
             for (const element of unenriched) {
                 const content = element.innerHTML;
+                // eslint-disable-next-line no-await-in-loop -- Sequential HTML enrichment per element
                 const enriched = await TextEditor.enrichHTML(content, {
                     // @ts-expect-error - extended property
                     async: true,

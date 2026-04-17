@@ -17,8 +17,6 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {ApplicationV2}
  */
 export default class EncounterBuilder extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -39,6 +37,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             width: 800,
             height: 650,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             addNPC: EncounterBuilder.#addNPC,
             removeNPC: EncounterBuilder.#removeNPC,
@@ -49,6 +48,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             deployToCombat: EncounterBuilder.#deployToCombat,
             openNPC: EncounterBuilder.#openNPC,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -182,7 +182,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
             // Difficulty
             difficulty,
-            difficultyLabel: (game as any).i18n.localize(difficulty.label),
+            difficultyLabel: game.i18n.localize(difficulty.label),
             difficultyColor: difficulty.color,
             threatRatio: ratio.toFixed(1),
 
@@ -198,7 +198,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             hasTemplates: this.#templates.length > 0,
 
             // Combat availability
-            hasCombat: (game as any).combat !== null,
+            hasCombat: game.combat !== null,
         };
     }
 
@@ -272,19 +272,19 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         let actor;
 
         if (data.uuid) {
-            actor = await (fromUuid as any)(data.uuid);
+            actor = await fromUuid(data.uuid);
         } else if (data.id) {
-            actor = (game as any).actors.get(data.id);
+            actor = (game.actors as any).get(data.id);
         }
 
         if (!actor) {
-            (ui.notifications as any).warn('Could not find the dropped actor.');
+            ui.notifications.warn('Could not find the dropped actor.');
             return;
         }
 
         // Only allow NPC types
         if (actor.type !== 'npc' && actor.type !== 'npcV2') {
-            (ui.notifications as any).warn('Only NPC actors can be added to encounters.');
+            ui.notifications.warn('Only NPC actors can be added to encounters.');
             return;
         }
 
@@ -334,10 +334,10 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     _getActionAdvantage(partyActions: number, enemyActions: number): any {
         const diff = enemyActions - partyActions;
 
-        if (diff <= -2) return { text: (game as any).i18n.localize('WH40K.NPC.Encounter.PartyAdvantage'), color: '#4ade80' };
-        if (diff <= 0) return { text: (game as any).i18n.localize('WH40K.NPC.Encounter.Balanced'), color: '#facc15' };
-        if (diff <= 2) return { text: (game as any).i18n.localize('WH40K.NPC.Encounter.EnemyAdvantage'), color: '#fb923c' };
-        return { text: (game as any).i18n.localize('WH40K.NPC.Encounter.EnemyOverwhelming'), color: '#ef4444' };
+        if (diff <= -2) return { text: game.i18n.localize('WH40K.NPC.Encounter.PartyAdvantage'), color: '#4ade80' };
+        if (diff <= 0) return { text: game.i18n.localize('WH40K.NPC.Encounter.Balanced'), color: '#facc15' };
+        if (diff <= 2) return { text: game.i18n.localize('WH40K.NPC.Encounter.EnemyAdvantage'), color: '#fb923c' };
+        return { text: game.i18n.localize('WH40K.NPC.Encounter.EnemyOverwhelming'), color: '#ef4444' };
     }
 
     /* -------------------------------------------- */
@@ -351,10 +351,10 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      */
     static async #addNPC(this: any, event: Event, target: HTMLElement): Promise<void> {
         // Show a simple actor picker
-        const actors = (game as any).actors.filter((a: any) => a.type === 'npc' || a.type === 'npcV2');
+        const actors = (game.actors as any).filter((a: any) => a.type === 'npc' || a.type === 'npcV2');
 
         if (actors.length === 0) {
-            (ui.notifications as any).warn('No NPC actors found in the world.');
+            ui.notifications.warn('No NPC actors found in the world.');
             return;
         }
 
@@ -373,7 +373,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
       </form>
     `;
 
-        const result = await (Dialog as any).prompt({
+        const result = await Dialog.prompt({
             title: 'Add NPC',
             content,
             label: 'Add',
@@ -389,7 +389,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         if (!result) return;
 
-        const actor = await (fromUuid as any)(result.uuid);
+        const actor = await fromUuid(result.uuid);
         if (!actor) return;
 
         const existing = this.#npcs.find((n: any) => n.uuid === result.uuid);
@@ -399,8 +399,8 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             this.#npcs.push({
                 uuid: result.uuid,
                 name: actor.name,
-                img: actor.img || 'icons/svg/mystery-man.svg',
-                threat: actor.system.threatLevel || 5,
+                img: (actor as any).img || 'icons/svg/mystery-man.svg',
+                threat: (actor as any).system.threatLevel || 5,
                 count: result.count,
             });
         }
@@ -456,11 +456,11 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      */
     static async #saveTemplate(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
-            (ui.notifications as any).warn('No NPCs to save.');
+            ui.notifications.warn('No NPCs to save.');
             return;
         }
 
-        const name = await (Dialog as any).prompt({
+        const name = await Dialog.prompt({
             title: 'Save Encounter Template',
             content: '<form><div class="form-group"><label>Template Name</label><input type="text" name="name" placeholder="My Encounter"/></div></form>',
             label: 'Save',
@@ -477,7 +477,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             savedAt: Date.now(),
         });
 
-        (ui.notifications as any).info(`Saved encounter template: ${name}`);
+        ui.notifications.info(`Saved encounter template: ${name}`);
         this.render({ parts: ['content'] });
     }
 
@@ -496,7 +496,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             this.#party = foundry.utils.deepClone(template.party);
         }
 
-        (ui.notifications as any).info(`Loaded encounter: ${template.name}`);
+        ui.notifications.info(`Loaded encounter: ${template.name}`);
         this.render({ parts: ['content'] });
     }
 
@@ -507,25 +507,27 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      */
     static async #deployToCombat(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (this.#npcs.length === 0) {
-            (ui.notifications as any).warn('No NPCs to deploy.');
+            ui.notifications.warn('No NPCs to deploy.');
             return;
         }
 
         // Ensure combat exists
-        let combat = (game as any).combat;
+        let combat = game.combat;
         if (!combat) {
-            combat = await (Combat as any).create({ scene: (game as any).scenes.active?.id } as any);
+            combat = await Combat.create({ scene: (game.scenes as any).active?.id } as Record<string, unknown>);
         }
 
         const combatants: any[] = [];
 
         for (const npcEntry of this.#npcs) {
-            const actor = await (fromUuid as any)(npcEntry.uuid);
+            // eslint-disable-next-line no-await-in-loop -- Sequential actor resolution
+            const actor = await fromUuid(npcEntry.uuid);
             if (!actor) continue;
 
             for (let i = 0; i < npcEntry.count; i++) {
                 // Create token data (side-effect: validates token document)
-                await actor.getTokenDocument({
+                // eslint-disable-next-line no-await-in-loop -- Sequential token document creation
+                await (actor as any).getTokenDocument({
                     name: npcEntry.count > 1 ? `${actor.name} ${i + 1}` : actor.name,
                 });
 
@@ -533,14 +535,14 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
                     actorId: actor.id,
                     tokenId: null, // No token placed
                     name: npcEntry.count > 1 ? `${actor.name} ${i + 1}` : actor.name,
-                    img: actor.img,
+                    img: (actor as any).img,
                 });
             }
         }
 
         await combat.createEmbeddedDocuments('Combatant', combatants);
 
-        (ui.notifications as any).info((game as any).i18n.format('WH40K.NPC.Encounter.Deployed', { count: combatants.length }));
+        ui.notifications.info(game.i18n.format('WH40K.NPC.Encounter.Deployed', { count: String(combatants.length) }));
     }
 
     /**
@@ -552,9 +554,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         const uuid = target.dataset.uuid;
         if (!uuid) return;
 
-        const actor = await (fromUuid as any)(uuid);
+        const actor = await fromUuid(uuid);
         if (actor) {
-            actor.sheet.render(true);
+            (actor as any).sheet.render(true);
         }
     }
 
@@ -573,7 +575,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         if (typeof actorOrUuid === 'string') {
             uuid = actorOrUuid;
-            actor = await (fromUuid as any)(uuid);
+            actor = await fromUuid(uuid);
         } else {
             actor = actorOrUuid;
             uuid = actor.uuid;

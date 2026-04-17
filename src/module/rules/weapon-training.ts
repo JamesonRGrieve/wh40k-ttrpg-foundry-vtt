@@ -9,7 +9,7 @@
  * @param {WH40KItem} weapon - The weapon being used
  * @returns {{trained: boolean, talent: WH40KItem|null}} Training status and talent if found
  */
-export function checkWeaponTraining(actor, weapon) {
+export function checkWeaponTraining(actor: any, weapon: any): any {
     if (!actor || !weapon) {
         return { trained: true, talent: null }; // Default to trained if missing data
     }
@@ -84,7 +84,7 @@ export function checkWeaponTraining(actor, weapon) {
  * @param {WH40KItem} weapon - The weapon being used
  * @returns {number} The modifier to apply (-20 or 0)
  */
-export function getWeaponTrainingModifier(actor, weapon) {
+export function getWeaponTrainingModifier(actor: any, weapon: any): number {
     const { trained } = checkWeaponTraining(actor, weapon);
     return trained ? 0 : -20;
 }
@@ -96,7 +96,7 @@ export function getWeaponTrainingModifier(actor, weapon) {
  * @param {WH40KItem} weapon - The weapon being used
  * @returns {string} Description of training status
  */
-export function getWeaponTrainingDescription(actor, weapon) {
+export function getWeaponTrainingDescription(actor: any, weapon: any): string {
     const { trained, talent } = checkWeaponTraining(actor, weapon);
 
     if (trained && talent) {

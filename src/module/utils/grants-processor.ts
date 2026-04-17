@@ -24,8 +24,26 @@ export const GRANT_MODE = {
  * Context object for grant processing
  */
 class GrantContext {
-    [key: string]: any;
-    constructor(actor, options: any = {}) {
+    declare actor: any;
+    declare mode: string;
+    declare depth: number;
+    declare maxDepth: number;
+    declare dryRun: boolean;
+    declare showNotification: boolean;
+    declare sourceItem: any;
+    declare result: {
+        characteristics: Record<string, number>;
+        itemsToCreate: any[];
+        skillUpdates: Record<string, any>;
+        woundsBonus: number;
+        fateBonus: number;
+        corruptionBonus: number;
+        insanityBonus: number;
+        aptitudes: string[];
+        notifications: string[];
+    };
+
+    constructor(actor: any, options: any = {}) {
         this.actor = actor;
         this.mode = options.mode || GRANT_MODE.IMMEDIATE;
         this.depth = options.depth || 0;
@@ -50,7 +68,6 @@ class GrantContext {
 }
 
 export class GrantsProcessor {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Main Entry Points                           */
     /* -------------------------------------------- */
@@ -69,7 +86,7 @@ export class GrantsProcessor {
      * @param {WH40KItem} options.sourceItem - Item granting this (for nested grants)
      * @returns {Promise<object>} Result object with grants processed
      */
-    static async processGrants(item, actor, options: Record<string, any> = {}) {
+    static async processGrants(item: any, actor: any, options: Record<string, any> = {}): Promise<any> {
         if (!item || !actor) {
             console.warn('GrantsProcessor: Missing item or actor');
             return null;
@@ -125,48 +142,11 @@ export class GrantsProcessor {
      * @param {object} options - Application options
      * @returns {Promise<void>}
      */
-    static async applyGrants(actor, result, options: Record<string, any> = {}) {
+    static async applyGrants(actor: any, result: any, options: Record<string, any> = {}): Promise<any> {
         if (!actor || !result) return;
 
-        const updates = {};
+        const updates = this._buildGrantUpdates(actor, result);
 
-        // Apply characteristic advances
-        if (result.characteristics && Object.keys(result.characteristics).length > 0) {
-            for (const [char, value] of Object.entries(result.characteristics)) {
-                if (value !== 0) {
-                    const currentAdvance = actor.system.characteristics[char]?.advance || 0;
-                    updates[`system.characteristics.${char}.advance`] = currentAdvance + Number(value);
-                }
-            }
-        }
-
-        // Apply wounds bonus
-        if (result.woundsBonus) {
-            const current = actor.system.wounds?.value || 0;
-            const max = actor.system.wounds?.max || 0;
-            updates['system.wounds.value'] = current + result.woundsBonus;
-            updates['system.wounds.max'] = max + result.woundsBonus;
-        }
-
-        // Apply fate bonus
-        if (result.fateBonus) {
-            const current = actor.system.fate?.value || 0;
-            const max = actor.system.fate?.max || 0;
-            updates['system.fate.value'] = current + result.fateBonus;
-            updates['system.fate.max'] = max + result.fateBonus;
-        }
-
-        // Apply corruption/insanity
-        if (result.corruptionBonus) {
-            const current = actor.system.corruption?.value || 0;
-            updates['system.corruption.value'] = current + result.corruptionBonus;
-        }
-        if (result.insanityBonus) {
-            const current = actor.system.insanity?.value || 0;
-            updates['system.insanity.value'] = current + result.insanityBonus;
-        }
-
-        // Apply actor updates
         if (Object.keys(updates).length > 0) {
             await actor.update(updates);
         }
@@ -178,6 +158,54 @@ export class GrantsProcessor {
         }
 
         // Apply skill upgrades
+        await this._applySkillUpgrades(actor, result);
+
+        if (options.showNotification !== false && result.itemsToCreate.length > 0) {
+            ui.notifications.info(`Applied grants: ${result.itemsToCreate.length} items created/upgraded`);
+        }
+    }
+
+    /**
+     * Build actor update object from grant results.
+     * @private
+     */
+    static _buildGrantUpdates(actor, result): Record<string, any> {
+        const updates = {};
+
+        if (result.characteristics && Object.keys(result.characteristics).length > 0) {
+            for (const [char, value] of Object.entries(result.characteristics)) {
+                if (value !== 0) {
+                    const currentAdvance = actor.system.characteristics[char]?.advance || 0;
+                    updates[`system.characteristics.${char}.advance`] = currentAdvance + Number(value);
+                }
+            }
+        }
+
+        if (result.woundsBonus) {
+            updates['system.wounds.value'] = (actor.system.wounds?.value || 0) + result.woundsBonus;
+            updates['system.wounds.max'] = (actor.system.wounds?.max || 0) + result.woundsBonus;
+        }
+
+        if (result.fateBonus) {
+            updates['system.fate.value'] = (actor.system.fate?.value || 0) + result.fateBonus;
+            updates['system.fate.max'] = (actor.system.fate?.max || 0) + result.fateBonus;
+        }
+
+        if (result.corruptionBonus) {
+            updates['system.corruption.value'] = (actor.system.corruption?.value || 0) + result.corruptionBonus;
+        }
+        if (result.insanityBonus) {
+            updates['system.insanity.value'] = (actor.system.insanity?.value || 0) + result.insanityBonus;
+        }
+
+        return updates;
+    }
+
+    /**
+     * Apply skill training upgrades to existing skill items.
+     * @private
+     */
+    static async _applySkillUpgrades(actor, result): Promise<any> {
         const upgrades = result.itemsToCreate.filter((i) => i._upgradeExisting);
         for (const upgrade of upgrades) {
             const existingSkill = actor.items.get(upgrade._existingId);
@@ -187,14 +215,10 @@ export class GrantsProcessor {
                 if (upgrade.system.plus10) skillUpdates['system.plus10'] = true;
                 if (upgrade.system.plus20) skillUpdates['system.plus20'] = true;
                 if (Object.keys(skillUpdates).length > 0) {
+                    // eslint-disable-next-line no-await-in-loop -- Sequential Foundry document updates
                     await existingSkill.update(skillUpdates);
                 }
             }
-        }
-
-        // Show notification
-        if (options.showNotification !== false && result.itemsToCreate.length > 0) {
-            (ui.notifications as any).info(`Applied grants: ${result.itemsToCreate.length} items created/upgraded`);
         }
     }
 
@@ -205,7 +229,7 @@ export class GrantsProcessor {
      * @param {WH40KActor} actor - The actor that would receive grants
      * @returns {Promise<object>} Summary object
      */
-    static async getSummary(item, actor) {
+    static async getSummary(item, actor): Promise<any> {
         const result = await this.processGrants(item, actor, { dryRun: true, mode: GRANT_MODE.BATCH });
 
         return {
@@ -231,9 +255,9 @@ export class GrantsProcessor {
      * Process origin path grants (includes base + choice grants).
      * @private
      */
-    static async _processOriginGrants(originItem, context) {
+    static async _processOriginGrants(originItem, context): Promise<any> {
         // 1. Process characteristic modifiers (from modifiers template)
-        await this._processCharacteristicModifiers(originItem, context);
+        this._processCharacteristicModifiers(originItem, context);
 
         // 2. Process base grants
         await this._processBaseGrants(originItem, context);
@@ -246,7 +270,7 @@ export class GrantsProcessor {
      * Process characteristic modifiers from the modifiers template.
      * @private
      */
-    static _processCharacteristicModifiers(originItem, context) {
+    static _processCharacteristicModifiers(originItem, context): any {
         const charMods = originItem.system?.modifiers?.characteristics || {};
         for (const [char, value] of Object.entries(charMods)) {
             if (value !== 0) {
@@ -259,7 +283,7 @@ export class GrantsProcessor {
      * Process base grants (always applied).
      * @private
      */
-    static async _processBaseGrants(originItem, context) {
+    static async _processBaseGrants(originItem, context): Promise<any> {
         const grants = originItem.system?.grants || {};
 
         // Wounds - prefer formula over legacy field
@@ -307,7 +331,7 @@ export class GrantsProcessor {
      * Process choice grants from selectedChoices.
      * @private
      */
-    static async _processChoiceGrants(originItem, context) {
+    static async _processChoiceGrants(originItem, context): Promise<any> {
         const choices = originItem.system?.grants?.choices || [];
         const selectedChoices = originItem.system?.selectedChoices || {};
 
@@ -334,18 +358,24 @@ export class GrantsProcessor {
                 }
 
                 // Process grant arrays from choice
+                // eslint-disable-next-line no-await-in-loop -- Sequential grant processing
                 await this._processGrantArray(optionGrants.skills, 'skill', context, choice.label);
+                // eslint-disable-next-line no-await-in-loop -- Sequential grant processing
                 await this._processGrantArray(optionGrants.talents, 'talent', context, choice.label);
+                // eslint-disable-next-line no-await-in-loop -- Sequential grant processing
                 await this._processGrantArray(optionGrants.traits, 'trait', context, choice.label);
+                // eslint-disable-next-line no-await-in-loop -- Sequential grant processing
                 await this._processGrantArray(optionGrants.equipment, 'equipment', context, choice.label);
 
                 // Corruption/Insanity from choice
                 if (optionGrants.corruption) {
+                    // eslint-disable-next-line no-await-in-loop -- Sequential dice evaluation
                     const corruptionValue = await this._evaluateDiceFormula(optionGrants.corruption);
                     context.result.corruptionBonus += corruptionValue;
                     game.wh40k?.log(`Origin choice "${choice.label}" grants ${corruptionValue} corruption`);
                 }
                 if (optionGrants.insanity) {
+                    // eslint-disable-next-line no-await-in-loop -- Sequential dice evaluation
                     const insanityValue = await this._evaluateDiceFormula(optionGrants.insanity);
                     context.result.insanityBonus += insanityValue;
                     game.wh40k?.log(`Origin choice "${choice.label}" grants ${insanityValue} insanity`);
@@ -362,7 +392,7 @@ export class GrantsProcessor {
      * Process grants from a talent or trait item.
      * @private
      */
-    static async _processItemGrants(item, context) {
+    static async _processItemGrants(item, context): Promise<any> {
         const grants = item.system?.grants;
         if (!grants) return;
 
@@ -377,25 +407,28 @@ export class GrantsProcessor {
      * Process an array of grants.
      * @private
      */
-    static async _processGrantArray(grantArray, type, context, choiceLabel = null) {
+    static async _processGrantArray(grantArray, type, context, choiceLabel = null): Promise<any> {
         if (!grantArray || !Array.isArray(grantArray) || grantArray.length === 0) return;
 
         for (const grant of grantArray) {
             switch (type) {
                 case 'skill':
-                    await this._processSkillGrant(grant, context);
+                    this._processSkillGrant(grant, context);
                     break;
                 case 'talent':
+                    // eslint-disable-next-line no-await-in-loop -- Sequential Foundry document creation
                     await this._processTalentGrant(grant, context);
                     break;
                 case 'trait':
+                    // eslint-disable-next-line no-await-in-loop -- Sequential Foundry document creation
                     await this._processTraitGrant(grant, context);
                     break;
                 case 'equipment':
+                    // eslint-disable-next-line no-await-in-loop -- Sequential Foundry document creation
                     await this._processEquipmentGrant(grant, context);
                     break;
                 case 'specialAbility':
-                    await this._processSpecialAbilityGrant(grant, context);
+                    this._processSpecialAbilityGrant(grant, context);
                     break;
             }
 
@@ -414,7 +447,7 @@ export class GrantsProcessor {
      * Uses SkillKeyHelper for robust name-to-key conversion.
      * @private
      */
-    static _processSkillGrant(skillGrant, context) {
+    static _processSkillGrant(skillGrant, context): any {
         // Normalize skill grant (might be string or object)
         const normalized = typeof skillGrant === 'string' ? { name: skillGrant, level: 'trained' } : skillGrant;
 
@@ -493,7 +526,7 @@ export class GrantsProcessor {
      * May trigger recursive processing if talent has grants.
      * @private
      */
-    static async _processTalentGrant(talentGrant, context) {
+    static async _processTalentGrant(talentGrant, context): Promise<any> {
         // Check for duplicates
         const existing = context.actor?.items?.find(
             (i) =>
@@ -574,7 +607,7 @@ export class GrantsProcessor {
      * Create a basic talent item when full data is unavailable.
      * @private
      */
-    static _createBasicTalent(talentGrant, context) {
+    static _createBasicTalent(talentGrant, context): any {
         const itemData = {
             type: 'talent',
             name: talentGrant.name,
@@ -594,7 +627,7 @@ export class GrantsProcessor {
      * Process a single trait grant.
      * @private
      */
-    static async _processTraitGrant(traitGrant, context) {
+    static async _processTraitGrant(traitGrant, context): Promise<any> {
         // Check for duplicates (stackable traits can increase level)
         const existing = context.actor?.items?.find((i) => i.type === 'trait' && i.name === traitGrant.name);
 
@@ -655,7 +688,7 @@ export class GrantsProcessor {
      * Create a basic trait item when full data is unavailable.
      * @private
      */
-    static _createBasicTrait(traitGrant, context) {
+    static _createBasicTrait(traitGrant, context): any {
         const itemData = {
             type: 'trait',
             name: traitGrant.name,
@@ -675,13 +708,13 @@ export class GrantsProcessor {
      * Process a single equipment grant.
      * @private
      */
-    static async _processEquipmentGrant(equipGrant, context) {
+    static async _processEquipmentGrant(equipGrant, context): Promise<any> {
         let doc = null;
 
         // Try UUID first
         if (equipGrant.uuid) {
             try {
-                doc = (await fromUuid(equipGrant.uuid)) as any;
+                doc = await fromUuid(equipGrant.uuid);
                 if (!doc) {
                     console.warn(`Could not find equipment with UUID: ${equipGrant.uuid}`);
                 }
@@ -715,7 +748,7 @@ export class GrantsProcessor {
      * Process a special ability grant.
      * @private
      */
-    static _processSpecialAbilityGrant(abilityGrant, context) {
+    static _processSpecialAbilityGrant(abilityGrant, context): any {
         // Special abilities are descriptive text, not items
         // They could be stored as journal entries or just logged
         game.wh40k?.log(`Special ability granted: ${abilityGrant.name || abilityGrant}`);
@@ -733,7 +766,7 @@ export class GrantsProcessor {
      * Apply grants immediately (talent/trait mode).
      * @private
      */
-    static async _applyGrantsImmediate(context) {
+    static async _applyGrantsImmediate(context): Promise<any> {
         // Create items
         const itemsToAdd = context.result.itemsToCreate.filter((i) => !i._upgradeExisting);
         if (itemsToAdd.length > 0) {
@@ -750,6 +783,7 @@ export class GrantsProcessor {
                 if (upgrade.system.plus10) skillUpdates['system.plus10'] = true;
                 if (upgrade.system.plus20) skillUpdates['system.plus20'] = true;
                 if (Object.keys(skillUpdates).length > 0) {
+                    // eslint-disable-next-line no-await-in-loop -- Sequential Foundry document updates
                     await existingSkill.update(skillUpdates);
                 }
             }
@@ -764,7 +798,7 @@ export class GrantsProcessor {
         if (context.depth === 0 && context.showNotification && context.result.notifications.length > 0) {
             const sourceItemName = context.sourceItem?.name || 'Item';
             const message = `<strong>${sourceItemName}</strong> granted:<br/>• ${context.result.notifications.join('<br/>• ')}`;
-            (ui.notifications as any).info(message, { permanent: false });
+            ui.notifications.info(message, { permanent: false });
         }
     }
 
@@ -776,7 +810,7 @@ export class GrantsProcessor {
      * Evaluate wounds formula with optional stored roll.
      * @private
      */
-    static _evaluateWounds(formula, actor, originItem) {
+    static _evaluateWounds(formula, actor, originItem): any {
         const storedRoll = originItem.system?.rollResults?.wounds;
 
         if (storedRoll?.rolled !== null && storedRoll?.rolled !== undefined) {
@@ -793,7 +827,7 @@ export class GrantsProcessor {
      * Evaluate fate formula with optional stored roll.
      * @private
      */
-    static _evaluateFate(formula, originItem) {
+    static _evaluateFate(formula, originItem): any {
         const storedRoll = originItem.system?.rollResults?.fate;
 
         if (storedRoll?.rolled !== null && storedRoll?.rolled !== undefined) {
@@ -810,7 +844,7 @@ export class GrantsProcessor {
      * Evaluate a dice formula like "1d5" or "2d10".
      * @private
      */
-    static async _evaluateDiceFormula(formula) {
+    static async _evaluateDiceFormula(formula): Promise<any> {
         try {
             const roll = new Roll(formula);
             await roll.evaluate();
@@ -830,7 +864,7 @@ export class GrantsProcessor {
      * Find an item in a compendium pack by name.
      * @private
      */
-    static async _findInCompendium(packId, itemName) {
+    static async _findInCompendium(packId, itemName): Promise<any> {
         const pack = game.packs.get(packId);
         if (!pack) {
             console.error(`Compendium pack not found: ${packId}`);
@@ -838,7 +872,7 @@ export class GrantsProcessor {
         }
 
         const index = await pack.getIndex({ fields: ['name'] });
-        const entry = index.find((i) => i.name === itemName);
+        const entry = index.find((i: any) => i.name === itemName);
         if (entry) {
             return await pack.getDocument(entry._id);
         }
@@ -852,7 +886,7 @@ export class GrantsProcessor {
      * (dh2-core-stats-talents, rt-core-items-traits, etc.).
      * @private
      */
-    static async _findInAllPacks(itemName) {
+    static async _findInAllPacks(itemName): Promise<any> {
         if (!itemName) return null;
 
         const nameLower = itemName.toLowerCase();
@@ -860,9 +894,11 @@ export class GrantsProcessor {
         for (const pack of game.packs) {
             if (pack.documentName !== 'Item') continue;
 
+            // eslint-disable-next-line no-await-in-loop -- Sequential search with early return
             const index = await pack.getIndex({ fields: ['name'] });
-            const entry = index.find((i) => i.name === itemName || (i.name as string).toLowerCase() === nameLower);
+            const entry = index.find((i: any) => i.name === itemName || (i.name as string).toLowerCase() === nameLower);
             if (entry) {
+                // eslint-disable-next-line no-await-in-loop -- Early return after match
                 return await pack.getDocument(entry._id);
             }
         }
@@ -874,7 +910,7 @@ export class GrantsProcessor {
      * Merge nested result into parent result.
      * @private
      */
-    static _mergeResults(parent, child) {
+    static _mergeResults(parent, child): any {
         // Merge characteristics
         for (const [char, value] of Object.entries(child.characteristics)) {
             parent.characteristics[char] = (parent.characteristics[char] || 0) + Number(value);
@@ -908,7 +944,7 @@ export class GrantsProcessor {
  * @param {WH40KActor} actor - The actor losing the item
  * @returns {Promise<void>}
  */
-export async function handleGrantRemoval(item, actor) {
+export async function handleGrantRemoval(item: any, actor: any): Promise<void> {
     if (!item || !actor) return;
     if (item.type !== 'talent' && item.type !== 'trait') return;
     if (item.type === 'talent' && !item.system?.hasGrants) return;
@@ -937,6 +973,6 @@ export async function handleGrantRemoval(item, actor) {
     if (remove) {
         const ids = grantedItems.map((i) => i.id);
         await actor.deleteEmbeddedDocuments('Item', ids);
-        (ui.notifications as any).info(`Removed ${grantedItems.length} granted abilities from ${item.name}`);
+        ui.notifications.info(`Removed ${grantedItems.length} granted abilities from ${item.name}`);
     }
 }

@@ -68,7 +68,7 @@ const AMMO_EFFECTS: Record<string, AmmoEffects> = {
 /*  Ammo Utility Functions                      */
 /* -------------------------------------------- */
 
-export function ammoText(item) {
+export function ammoText(item: any): string {
     game.wh40k.log('ammoText', item);
     if (item.usesAmmo) {
         const ammo = item.items.find((i) => i.isAmmunition);
@@ -79,7 +79,7 @@ export function ammoText(item) {
     return undefined;
 }
 
-export async function useAmmo(actionData) {
+export async function useAmmo(actionData: any): Promise<void> {
     const actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (!actionItem) return;
     if (actionItem.usesAmmo) {
@@ -94,12 +94,12 @@ export async function useAmmo(actionData) {
         });
 
         if (actionItem.system.clip.value === 0) {
-            (ui.notifications as any).warn(`Clip is now empty. Ammo should be removed or reloaded.`);
+            ui.notifications.warn(`Clip is now empty. Ammo should be removed or reloaded.`);
         }
     }
 }
 
-export async function refundAmmo(actionData) {
+export async function refundAmmo(actionData: any): Promise<void> {
     const actionItem = actionData.rollData.weapon ?? actionData.rollData.power;
     if (actionItem.usesAmmo) {
         await actionItem.update({
@@ -115,7 +115,7 @@ export async function refundAmmo(actionData) {
 /**
  * @param rollData {WeaponRollData}
  */
-export function calculateAmmoAttackBonuses(rollData) {
+export function calculateAmmoAttackBonuses(rollData: any): number {
     const ammo = rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
     const effects = AMMO_EFFECTS[ammo.name];
@@ -125,7 +125,7 @@ export function calculateAmmoAttackBonuses(rollData) {
     }
 }
 
-export function calculateAmmoAttackSpecials(rollData) {
+export function calculateAmmoAttackSpecials(rollData: any): void {
     const ammo = rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
     game.wh40k.log('calculateAmmoAttackSpecials', ammo.name);
@@ -141,7 +141,7 @@ export function calculateAmmoAttackSpecials(rollData) {
 /*  Hit Phase                                   */
 /* -------------------------------------------- */
 
-export function calculateAmmoSpecials(actionData, hit) {
+export function calculateAmmoSpecials(actionData: any, hit: any): void {
     const ammo = actionData.rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
     const effects = AMMO_EFFECTS[ammo.name];
@@ -156,7 +156,7 @@ export function calculateAmmoSpecials(actionData, hit) {
  * @param actionData {WeaponAttackData}
  * @param hit {Hit}
  */
-export function calculateAmmoDamageBonuses(actionData, hit) {
+export function calculateAmmoDamageBonuses(actionData: any, hit: any): number {
     const ammo = actionData.rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
     const effects = AMMO_EFFECTS[ammo.name];
@@ -170,7 +170,7 @@ export function calculateAmmoDamageBonuses(actionData, hit) {
  * @param actionData {actionData}
  * @param hit {Hit}
  */
-export function calculateAmmoPenetrationBonuses(actionData, hit) {
+export function calculateAmmoPenetrationBonuses(actionData: any, hit: any): number {
     const ammo = actionData.rollData.weapon.items.find((i) => i.isAmmunition);
     if (!ammo) return;
     const effects = AMMO_EFFECTS[ammo.name];
@@ -187,7 +187,7 @@ export function calculateAmmoPenetrationBonuses(actionData, hit) {
 /**
  * @param rollData {WeaponRollData}
  */
-export function calculateAmmoInformation(rollData) {
+export function calculateAmmoInformation(rollData: any): void {
     const availableAmmo = rollData.weapon.system.clip.value;
 
     if (!rollData.weapon.usesAmmo) {

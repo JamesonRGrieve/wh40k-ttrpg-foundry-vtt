@@ -25,7 +25,7 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.getModifiers(armour)
      * // Returns: { armourBonus: 1, weight: 0.5 } (for Best)
      */
-    static getModifiers(item) {
+    static getModifiers(item): any {
         const craftsmanship = item.craftsmanship ?? 'common';
         const rules = CONFIG.WH40K.craftsmanshipRules;
 
@@ -80,7 +80,7 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.getWeaponQualities(poorRangedWeapon)
      * // Returns: Set(['unreliable'])
      */
-    static getWeaponQualities(weapon) {
+    static getWeaponQualities(weapon): any {
         const craftsmanship = weapon.craftsmanship ?? 'common';
         // @ts-expect-error - dynamic property access
         const rules = CONFIG.WH40K.craftsmanshipRules?.weapon;
@@ -106,7 +106,7 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.getRemoveQualities(bestRangedWeapon)
      * // Returns: Set(['unreliable', 'overheats'])
      */
-    static getRemoveQualities(weapon) {
+    static getRemoveQualities(weapon): any {
         const craftsmanship = weapon.craftsmanship ?? 'common';
         // @ts-expect-error - dynamic property access
         const rules = CONFIG.WH40K.craftsmanshipRules?.weapon;
@@ -134,7 +134,7 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.applyWeaponQualities(goodWeapon, qualities);
      * // qualities is now Set(['scatter']) - unreliable removed
      */
-    static applyWeaponQualities(weapon, qualities) {
+    static applyWeaponQualities(weapon, qualities): any {
         // Only ranged weapons get craftsmanship qualities
         const isMelee = weapon.melee || weapon.isMeleeWeapon;
         if (isMelee) return qualities;
@@ -174,7 +174,7 @@ export default class CraftsmanshipHelper {
      * @param {ItemDataModel} item - Item data model
      * @returns {boolean} - True if craftsmanship is not 'common'
      */
-    static hasCraftsmanshipEffects(item) {
+    static hasCraftsmanshipEffects(item): any {
         const craftsmanship = item.craftsmanship ?? 'common';
         return craftsmanship !== 'common';
     }
@@ -189,7 +189,7 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.getForceFieldOverloadRange(poorField)
      * // Returns: [1, 20]
      */
-    static getForceFieldOverloadRange(forceField) {
+    static getForceFieldOverloadRange(forceField): any {
         const craftsmanship = forceField.craftsmanship ?? 'common';
         // @ts-expect-error - dynamic property access
         const rules = CONFIG.WH40K.craftsmanshipRules?.forceField;
@@ -207,7 +207,7 @@ export default class CraftsmanshipHelper {
      * @param {number} roll - Protection roll result (1-100)
      * @returns {boolean} - True if roll is in overload range
      */
-    static isOverloadRoll(forceField, roll) {
+    static isOverloadRoll(forceField, roll): any {
         const [min, max] = this.getForceFieldOverloadRange(forceField);
         return roll >= min && roll <= max;
     }
@@ -223,7 +223,7 @@ export default class CraftsmanshipHelper {
      * CraftsmanshipHelper.getEffectSummary(bestMeleeWeapon)
      * // Returns: ['+10 to attack', '+1 damage']
      */
-    static getEffectSummary(item) {
+    static getEffectSummary(item): any {
         const modifiers = this.getModifiers(item);
         const effects = [];
         const itemType = item.parent?.type;
@@ -244,12 +244,10 @@ export default class CraftsmanshipHelper {
                 const removeQualities = this.getRemoveQualities(item);
 
                 for (const quality of addQualities) {
-                    // @ts-expect-error - dynamic property access
-                    effects.push(`Gains ${quality.capitalize()} quality`);
+                    effects.push(`Gains ${(quality as any).capitalize()} quality`);
                 }
                 for (const quality of removeQualities) {
-                    // @ts-expect-error - dynamic property access
-                    effects.push(`Removes ${quality.capitalize()} quality`);
+                    effects.push(`Removes ${(quality as any).capitalize()} quality`);
                 }
             }
         }

@@ -11,7 +11,7 @@
  * @mixin
  */
 export default function CollapsiblePanelMixin<T extends new (...args: any[]) => any>(Base: T) {
-    class CollapsiblePanelApplication extends (Base as any) {
+    class CollapsiblePanelApplication extends Base {
         [key: string]: any;
         /* -------------------------------------------- */
         /*  Properties                                  */
@@ -95,7 +95,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             const context = await super._prepareContext(options);
 
             // Load saved panel states
-            await this._loadPanelStates();
+            this._loadPanelStates();
 
             // Add panel state to context
             context.panelStates = this._getPanelStates();
@@ -132,7 +132,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             if (!game.user) return;
 
             const flagKey = this._getPanelFlagKey();
-            const savedStates = (game.user as any).getFlag('wh40k-rpg', flagKey) || {};
+            const savedStates = ((game.user as any).getFlag('wh40k-rpg', flagKey) as Record<string, boolean>) || {};
 
             // Merge with current states
             Object.entries(savedStates).forEach(([panelId, isExpanded]) => {
@@ -155,9 +155,9 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             if (!game.user || !panelId) return;
 
             const flagKey = this._getPanelFlagKey();
-            const currentStates = (game.user as any).getFlag('wh40k-rpg', flagKey) || {};
+            const currentStates = ((game.user as any).getFlag('wh40k-rpg', flagKey) as Record<string, boolean>) || {};
 
-            currentStates[panelId] = isExpanded;
+            (currentStates as any)[panelId] = isExpanded;
 
             await (game.user as any).setFlag('wh40k-rpg', flagKey, currentStates);
         }
@@ -257,6 +257,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
+                // eslint-disable-next-line no-await-in-loop -- Sequential UI panel toggling
                 await this.togglePanel(panelId, true);
             }
         }
@@ -272,6 +273,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
+                // eslint-disable-next-line no-await-in-loop -- Sequential UI panel toggling
                 await this.togglePanel(panelId, false);
             }
         }
@@ -303,11 +305,12 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
                 const shouldExpand = preset.panels[panelId] ?? false;
+                // eslint-disable-next-line no-await-in-loop -- Sequential UI panel toggling
                 await this.togglePanel(panelId, shouldExpand);
             }
 
             // Show notification
-            (ui.notifications as any).info(`Applied ${preset.label} panel layout`);
+            ui.notifications.info(`Applied ${preset.label} panel layout`);
         }
 
         /* -------------------------------------------- */
@@ -323,6 +326,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
                 const shouldExpand = panelId === exceptPanelId;
+                // eslint-disable-next-line no-await-in-loop -- Sequential UI panel toggling
                 await this.togglePanel(panelId, shouldExpand);
             }
         }

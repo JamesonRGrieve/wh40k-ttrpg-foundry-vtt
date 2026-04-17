@@ -1,50 +1,46 @@
-function getTokenActor(actorId) {
+function getTokenActor(actorId: string): any {
     // Fetch the actor from the current users token or the actor collection.
-    const speaker = (ChatMessage as any).getSpeaker();
+    const speaker = ChatMessage.getSpeaker();
     let actor;
-    // @ts-expect-error - dynamic property access
-    if (actorId) actor = game.actors.get(actorId);
-    // @ts-expect-error - dynamic property access
-    if (!actor && speaker.token) actor = game.actors.tokens[speaker.token];
-    // @ts-expect-error - dynamic property access
-    if (!actor) actor = game.actors.get(speaker.actor);
-    if (!actor) return (ui.notifications as any).warn(`Cannot find controlled Actor. Is an Actor selector and do you have permissions?`);
+    if (actorId) actor = (game.actors as any).get(actorId);
+    if (!actor && speaker.token) actor = (game.actors as any).tokens[speaker.token];
+    if (!actor) actor = (game.actors as any).get(speaker.actor);
+    if (!actor) return ui.notifications.warn(`Cannot find controlled Actor. Is an Actor selector and do you have permissions?`);
     return actor;
 }
 
-function checkCanRollMacro(data) {
+function checkCanRollMacro(data: any): boolean {
     if (!game || !game.actors) {
-        (ui.notifications as any).warn(`Game or Actors not found. Unable to perform roll`);
+        ui.notifications.warn(`Game or Actors not found. Unable to perform roll`);
         return false;
     } else if (!data) {
-        (ui.notifications as any).warn(`Must provide data to perform roll`);
+        ui.notifications.warn(`Must provide data to perform roll`);
         return false;
     } else {
         return true;
     }
 }
 
-function checkMacroCanCreate() {
+function checkMacroCanCreate(): boolean {
     if (!game.macros || !game.user) {
-        (ui.notifications as any).warn(`Game or User not found. Unable to create macro`);
+        ui.notifications.warn(`Game or User not found. Unable to create macro`);
         return false;
     } else {
         return true;
     }
 }
 
-function checkExistingMacro(name, command) {
-    // @ts-expect-error - dynamic property access
-    const existingMacro = game.macros.find((m) => m.name === name && m.command === command);
+function checkExistingMacro(name: string, command: string): boolean {
+    const existingMacro = (game.macros as any).find((m: any) => m.name === name && m.command === command);
     if (existingMacro) {
-        (ui.notifications as any).warn(`Macro already exists`);
+        ui.notifications.warn(`Macro already exists`);
         return true;
     } else {
         return false;
     }
 }
 
-export async function createItemMacro(data, slot) {
+export async function createItemMacro(data: any, slot: number): Promise<void> {
     if (!checkMacroCanCreate()) return;
 
     const macroName = `${data.actorName}: ${data.data.name}`;
@@ -53,19 +49,16 @@ export async function createItemMacro(data, slot) {
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
-        // @ts-expect-error - type assignment
         name: macroName,
         type: 'script',
         img: data.data.img,
-        // @ts-expect-error - type assignment
         command: command,
-        // @ts-expect-error - extended property
         flags: { 'dh.itemMacro': true },
-    });
+    } as any);
     if (macro) await game.user.assignHotbarMacro(macro, slot);
 }
 
-export function rollItemMacro(actorId, itemId) {
+export function rollItemMacro(actorId: string, itemId: string): any {
     game.wh40k.log('RollItemMacro');
     if (!checkCanRollMacro(itemId)) return undefined;
     const actor = getTokenActor(actorId);
@@ -73,13 +66,13 @@ export function rollItemMacro(actorId, itemId) {
 
     const item = actor ? actor.items.find((i) => i._id === itemId) : null;
     if (!item) {
-        (ui.notifications as any).warn(`Actor does not have an item id: ${itemId}`);
+        ui.notifications.warn(`Actor does not have an item id: ${itemId}`);
         return undefined;
     }
     return actor.rollItem(item._id);
 }
 
-export async function createSkillMacro(data, slot) {
+export async function createSkillMacro(data: any, slot: number): Promise<void> {
     if (!checkMacroCanCreate()) return;
 
     const { skill, speciality, name } = data.data;
@@ -94,32 +87,29 @@ export async function createSkillMacro(data, slot) {
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
-        // @ts-expect-error - type assignment
         name: macroName,
         img: 'systems/wh40k-rpg/icons/talents/red/r_36.png',
         type: 'script',
-        // @ts-expect-error - type assignment
         command: command,
-        // @ts-expect-error - extended property
         flags: { 'dh.skillMacro': true },
-    });
+    } as any);
     if (macro) await game.user.assignHotbarMacro(macro, slot);
 }
 
-export async function rollSkillMacro(actorId, skillName, speciality) {
+export async function rollSkillMacro(actorId: string, skillName: string, speciality?: string): Promise<void> {
     if (!checkCanRollMacro(skillName)) return;
     const actor = getTokenActor(actorId);
     if (!actor) return;
 
     const skill = actor?.getSkillFuzzy ? actor.getSkillFuzzy(skillName) : actor?.skills?.[skillName];
     if (!skill) {
-        (ui.notifications as any).warn(`Your controlled Actor does not have a skill named ${skillName}`);
+        ui.notifications.warn(`Your controlled Actor does not have a skill named ${skillName}`);
         return;
     }
     await actor.rollSkill(skillName, speciality);
 }
 
-export async function createCharacteristicMacro(data, slot) {
+export async function createCharacteristicMacro(data: any, slot: number): Promise<void> {
     if (!checkMacroCanCreate()) return;
 
     const { characteristic, name } = data.data;
@@ -130,26 +120,23 @@ export async function createCharacteristicMacro(data, slot) {
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
-        // @ts-expect-error - type assignment
         name: macroName,
         img: 'systems/wh40k-rpg/icons/talents/violet/p_05.png',
         type: 'script',
-        // @ts-expect-error - type assignment
         command: command,
-        // @ts-expect-error - extended property
         flags: { 'dh.characteristicMacro': true },
-    });
+    } as any);
     if (macro) await game.user.assignHotbarMacro(macro, slot);
 }
 
-export async function rollCharacteristicMacro(actorId, characteristic) {
+export async function rollCharacteristicMacro(actorId: string, characteristic: string): Promise<void> {
     if (!checkCanRollMacro(characteristic)) return;
     const actor = getTokenActor(actorId);
     if (!actor) return;
 
     const charCheck = actor ? actor.characteristics[characteristic] : null;
     if (!charCheck) {
-        (ui.notifications as any).warn(`Your controlled Actor does not have a characteristic named ${characteristic}`);
+        ui.notifications.warn(`Your controlled Actor does not have a characteristic named ${characteristic}`);
         return;
     }
     await actor.rollCharacteristic(characteristic);

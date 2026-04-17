@@ -20,7 +20,7 @@
  * @param {Actor} actor - The actor to evaluate for (provides characteristic bonuses)
  * @returns {number} Evaluated wounds value
  */
-export function evaluateWoundsFormula(formula, actor) {
+export function evaluateWoundsFormula(formula: string, actor: any): number {
     if (!formula || typeof formula !== 'string') {
         return 0;
     }
@@ -76,7 +76,7 @@ export function evaluateWoundsFormula(formula, actor) {
  * @param {string} formula - The fate formula (e.g., "(1-5|=2),(6-10|=3)")
  * @returns {number} Evaluated fate threshold value
  */
-export function evaluateFateFormula(formula) {
+export function evaluateFateFormula(formula: string): number {
     if (!formula || typeof formula !== 'string') {
         return 0;
     }
@@ -133,7 +133,7 @@ export function evaluateFateFormula(formula) {
  * @param {string} formula - The wounds formula
  * @returns {number} The multiplier (e.g., "2xTB" returns 2)
  */
-export function parseTBMultiplier(formula) {
+export function parseTBMultiplier(formula: string): number {
     if (!formula || typeof formula !== 'string') {
         return 0;
     }
@@ -148,7 +148,7 @@ export function parseTBMultiplier(formula) {
  * @param {string} formula - The formula containing dice notation
  * @returns {string|null} The dice notation (e.g., "1d5+2") or null
  */
-export function parseDiceRoll(formula) {
+export function parseDiceRoll(formula: string): string | null {
     if (!formula || typeof formula !== 'string') {
         return null;
     }
@@ -163,7 +163,7 @@ export function parseDiceRoll(formula) {
  * @param {string} formula - The wounds formula
  * @returns {string} Description (e.g., "2×TB + 1d5+2")
  */
-export function describeWoundsFormula(formula) {
+export function describeWoundsFormula(formula: string): string {
     if (!formula || typeof formula !== 'string') {
         return 'None';
     }
@@ -178,7 +178,7 @@ export function describeWoundsFormula(formula) {
  * @param {string} formula - The fate formula
  * @returns {string} Description (e.g., "1d10: 1-5=2, 6-10=3")
  */
-export function describeFateFormula(formula) {
+export function describeFateFormula(formula: string): string {
     if (!formula || typeof formula !== 'string') {
         return 'None';
     }

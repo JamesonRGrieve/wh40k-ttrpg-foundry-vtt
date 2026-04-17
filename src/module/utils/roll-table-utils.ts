@@ -11,7 +11,6 @@
  */
 
 export class RollTableUtils {
-    [key: string]: any;
     /**
      * Roll on a roll table by name and send results to chat.
      * @param {string} tableName - The name of the roll table
@@ -20,8 +19,7 @@ export class RollTableUtils {
      * @param {Roll} options.roll - Optional pre-rolled Roll object
      * @returns {Promise<TableResult>} The table result
      */
-    static async rollTable(tableName, options = {}) {
-        // @ts-expect-error - dynamic property
+    static async rollTable(tableName: string, options: any = {}): Promise<any> {
         const { displayChat = true, roll = null } = options;
 
         // Find the table in world tables first, then compendiums
@@ -34,7 +32,7 @@ export class RollTableUtils {
         }
 
         if (!table) {
-            (ui.notifications as any).warn(`Roll table "${tableName}" not found.`);
+            ui.notifications.warn(`Roll table "${tableName}" not found.`);
             return null;
         }
 
@@ -45,7 +43,7 @@ export class RollTableUtils {
             await table.toMessage(rollResult.results, {
                 roll: rollResult.roll,
                 messageData: {
-                    speaker: (ChatMessage as any).getSpeaker(),
+                    speaker: ChatMessage.getSpeaker(),
                 },
             });
         }
@@ -58,14 +56,16 @@ export class RollTableUtils {
      * @param {string} tableName - The name of the table to find
      * @returns {Promise<RollTable|null>} The found table or null
      */
-    static async findTableInCompendiums(tableName) {
+    static async findTableInCompendiums(tableName: string): Promise<any> {
         for (const pack of game.packs) {
             if (pack.documentName !== 'RollTable') continue;
 
+            // eslint-disable-next-line no-await-in-loop -- Sequential search with early return
             const index = await pack.getIndex();
-            const entry = index.find((e) => e.name === tableName);
+            const entry = index.find((e: any) => e.name === tableName);
 
             if (entry) {
+                // eslint-disable-next-line no-await-in-loop -- Early return after match
                 return await pack.getDocument(entry._id);
             }
         }
@@ -78,7 +78,7 @@ export class RollTableUtils {
      * @param {number} modifier - Modifier to the roll (e.g., from Psy Rating)
      * @returns {Promise<TableResult>}
      */
-    static async rollPsychicPhenomena(actor, modifier = 0) {
+    static async rollPsychicPhenomena(actor: any, modifier: number = 0): Promise<any> {
         const roll = new Roll(`1d100 + ${modifier}`);
         await roll.evaluate();
 
@@ -100,7 +100,7 @@ export class RollTableUtils {
      * @param {Actor} actor - The actor rolling
      * @returns {Promise<TableResult>}
      */
-    static async rollPerilsOfTheWarp(actor) {
+    static async rollPerilsOfTheWarp(actor: any): Promise<any> {
         return await this.rollTable('Perils of the Warp', { displayChat: true });
     }
 
@@ -110,7 +110,7 @@ export class RollTableUtils {
      * @param {number} degreeOfFailure - Degrees of failure on the Fear test
      * @returns {Promise<TableResult>}
      */
-    static async rollFearEffects(fearRating = 1, degreeOfFailure = 1) {
+    static async rollFearEffects(fearRating: number = 1, degreeOfFailure: number = 1): Promise<any> {
         const modifier = (fearRating - 1) * 10 + degreeOfFailure * 10;
         const roll = new Roll(`1d100 + ${modifier}`);
         await roll.evaluate();
@@ -125,7 +125,7 @@ export class RollTableUtils {
      * Roll on the Mutations table.
      * @returns {Promise<TableResult>}
      */
-    static async rollMutation() {
+    static async rollMutation(): Promise<any> {
         return await this.rollTable('Mutations', { displayChat: true });
     }
 
@@ -133,7 +133,7 @@ export class RollTableUtils {
      * Roll on the Malignancies table.
      * @returns {Promise<TableResult>}
      */
-    static async rollMalignancy() {
+    static async rollMalignancy(): Promise<any> {
         return await this.rollTable('Malignancies', { displayChat: true });
     }
 
@@ -141,7 +141,7 @@ export class RollTableUtils {
      * Roll on the Navigator Mutations table.
      * @returns {Promise<TableResult>}
      */
-    static async rollNavigatorMutation() {
+    static async rollNavigatorMutation(): Promise<any> {
         return await this.rollTable('Navigator Mutations', { displayChat: true });
     }
 
@@ -150,7 +150,7 @@ export class RollTableUtils {
      * @param {string} godName - Optional god name to filter results
      * @returns {Promise<TableResult>}
      */
-    static async rollGiftOfTheGods(godName = null) {
+    static async rollGiftOfTheGods(godName: string | null = null): Promise<any> {
         const tableName = godName ? `Gifts of ${godName}` : 'Gifts of the Gods';
         return await this.rollTable(tableName, { displayChat: true });
     }
@@ -162,7 +162,7 @@ export class RollTableUtils {
      * @param {number} severity - The critical damage value
      * @returns {Promise<TableResult>}
      */
-    static async rollCriticalInjury(damageType, location, severity) {
+    static async rollCriticalInjury(damageType: string, location: string, severity: number): Promise<any> {
         const tableName = `Critical ${damageType} - ${location}`;
         const roll = new Roll(`${severity}`);
         await roll.evaluate();
@@ -177,7 +177,7 @@ export class RollTableUtils {
      * Create a quick roll dialog for common tables.
      * Opens a dialog allowing the user to select which table to roll on.
      */
-    static showRollTableDialog() {
+    static showRollTableDialog(): void {
         const tables = [
             { name: 'Psychic Phenomena', category: 'Psychic' },
             { name: 'Perils of the Warp', category: 'Psychic' },

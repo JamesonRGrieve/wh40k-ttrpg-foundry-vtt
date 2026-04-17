@@ -9,7 +9,6 @@ import BaseRollDialog from './base-roll-dialog.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class PsychicPowerDialog extends BaseRollDialog {
-    [key: string]: any;
     /**
      * @param {PsychicActionData} psychicActionData  The psychic action data.
      * @param {object} [options={}]                  Dialog options.
@@ -25,9 +24,11 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['psychic-power'],
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             selectPower: PsychicPowerDialog.#onSelectPower,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         window: {
             title: 'Psychic Power',
         },
@@ -145,7 +146,7 @@ export default class PsychicPowerDialog extends BaseRollDialog {
  * Open a psychic power dialog.
  * @param {PsychicActionData} psychicAttackData  The psychic action data.
  */
-export function preparePsychicPowerRoll(psychicAttackData) {
+export function preparePsychicPowerRoll(psychicAttackData: any): void {
     const prompt = new PsychicPowerDialog(psychicAttackData);
     prompt.render(true);
 }

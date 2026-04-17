@@ -8,8 +8,6 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes DescriptionTemplate
  */
 export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare characteristic: string;
@@ -29,7 +27,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -114,7 +112,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      * Get the characteristic abbreviation.
      * @type {string}
      */
-    get characteristicAbbr() {
+    get characteristicAbbr(): string {
         const abbrs = {
             weaponSkill: 'WS',
             ballisticSkill: 'BS',
@@ -191,7 +189,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     async toChat(): Promise<any> {
         const messageData = {
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-            speaker: (ChatMessage as any).getSpeaker(),
+            speaker: ChatMessage.getSpeaker(),
             content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/skill-card.hbs', { skill: this.parent }),
             flags: {
                 'wh40k-rpg': {
@@ -202,6 +200,6 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
             },
         };
 
-        return (ChatMessage as any).create(messageData);
+        return ChatMessage.create(messageData as any);
     }
 }

@@ -18,8 +18,7 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {ApplicationV2}
  */
 export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
+    _renderTimeout: ReturnType<typeof setTimeout> | null = null;
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -40,6 +39,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             width: 650,
             height: 700,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         form: {
             handler: NPCQuickCreateDialog.#onSubmit,
             submitOnChange: false,
@@ -49,6 +49,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             cancel: NPCQuickCreateDialog.#onCancel,
             updatePreview: NPCQuickCreateDialog.#onUpdatePreview,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -236,7 +237,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const nameInput = form.querySelector('[name="name"]');
         if (nameInput) {
             nameInput.addEventListener('input', () => {
-                this.#state.name = (nameInput as any).value || 'New NPC';
+                this.#state.name = (nameInput as HTMLInputElement).value || 'New NPC';
             });
         }
 
@@ -245,7 +246,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const threatValue = form.querySelector('.threat-value');
         if (threatSlider) {
             threatSlider.addEventListener('input', () => {
-                this.#state.threatLevel = parseInt((threatSlider as any).value, 10);
+                this.#state.threatLevel = parseInt((threatSlider as HTMLInputElement).value, 10);
                 if (threatValue) threatValue.textContent = String(this.#state.threatLevel);
                 this._debounceRender();
             });
@@ -255,7 +256,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const roleSelect = form.querySelector('[name="role"]');
         if (roleSelect) {
             roleSelect.addEventListener('change', () => {
-                this.#state.role = (roleSelect as any).value;
+                this.#state.role = (roleSelect as HTMLSelectElement).value;
                 this._debounceRender();
             });
         }
@@ -264,7 +265,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const typeSelect = form.querySelector('[name="type"]');
         if (typeSelect) {
             typeSelect.addEventListener('change', () => {
-                this.#state.type = (typeSelect as any).value;
+                this.#state.type = (typeSelect as HTMLSelectElement).value;
                 // Auto-enable horde mode for horde/swarm types
                 if (this.#state.type === 'horde' || this.#state.type === 'swarm') {
                     this.#state.isHorde = true;
@@ -277,7 +278,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const presetSelect = form.querySelector('[name="preset"]');
         if (presetSelect) {
             presetSelect.addEventListener('change', () => {
-                this.#state.preset = (presetSelect as any).value;
+                this.#state.preset = (presetSelect as HTMLSelectElement).value;
                 this._debounceRender();
             });
         }
@@ -286,7 +287,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const factionInput = form.querySelector('[name="faction"]');
         if (factionInput) {
             factionInput.addEventListener('input', () => {
-                this.#state.faction = (factionInput as any).value;
+                this.#state.faction = (factionInput as HTMLInputElement).value;
             });
         }
 
@@ -294,7 +295,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const hordeCheckbox = form.querySelector('[name="isHorde"]');
         if (hordeCheckbox) {
             hordeCheckbox.addEventListener('change', () => {
-                this.#state.isHorde = (hordeCheckbox as any).checked;
+                this.#state.isHorde = (hordeCheckbox as HTMLInputElement).checked;
                 this._debounceRender();
             });
         }
@@ -348,7 +349,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             const actor = await Actor.create(actorData as any);
 
             if (actor) {
-                (ui.notifications as any).info(`Created NPC: ${String(actor.name)}`);
+                ui.notifications.info(`Created NPC: ${String(actor.name)}`);
 
                 // Open the sheet
                 void actor.sheet.render(true);
@@ -358,7 +359,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             }
         } catch (error) {
             console.error('Failed to create NPC:', error);
-            (ui.notifications as any).error('Failed to create NPC');
+            ui.notifications.error('Failed to create NPC');
             if (this.#resolve) this.#resolve(null);
         }
     }
@@ -453,11 +454,11 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
             if (randomize) {
                 // Randomize characteristics slightly (±5)
-                for (const char of Object.values(systemData.characteristics) as any[]) {
+                for (const char of Object.values(systemData.characteristics) as Record<string, unknown>[]) {
                     const variance = Math.floor(Math.random() * 11) - 5;
-                    char.base = Math.max(10, Math.min(99, char.base + variance));
-                    char.total = char.base + char.modifier;
-                    char.bonus = Math.floor(char.total / 10);
+                    char.base = Math.max(10, Math.min(99, (char.base as number) + variance));
+                    char.total = (char.base as number) + (char.modifier as number);
+                    char.bonus = Math.floor((char.total as number) / 10);
                 }
             }
 
@@ -468,11 +469,12 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
                 system: systemData,
             };
 
+            // eslint-disable-next-line no-await-in-loop -- Sequential Foundry document creation
             const actor = await Actor.create(actorData as any);
             if (actor) actors.push(actor);
         }
 
-        (ui.notifications as any).info(`Created ${actors.length} NPCs`);
+        ui.notifications.info(`Created ${actors.length} NPCs`);
         return actors;
     }
 }

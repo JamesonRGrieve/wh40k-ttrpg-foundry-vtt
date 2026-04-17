@@ -9,14 +9,15 @@ import BaseItemSheet from './base-item-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class GearSheet extends BaseItemSheet {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'gear'],
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             resetUses: GearSheet.#onResetUses,
             consumeUse: GearSheet.#onConsumeUse,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 600,
             height: 700,

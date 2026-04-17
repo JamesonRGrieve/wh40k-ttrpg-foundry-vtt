@@ -24,7 +24,7 @@ import { createGrant } from '../data/grant/_module.ts';
  * @param {string} seed - Input string to hash
  * @returns {string} 16-character alphanumeric ID
  */
-export function generateDeterministicId(seed) {
+export function generateDeterministicId(seed: string): string {
     // Simple string hash
     let hash = 0;
     for (let i = 0; i < seed.length; i++) {
@@ -53,7 +53,6 @@ export function generateDeterministicId(seed) {
 }
 
 export class GrantsManager {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -82,7 +81,7 @@ export class GrantsManager {
      * @param {number} [options.depth=0] - Current recursion depth
      * @returns {Promise<GrantsApplicationResult>}
      */
-    static async applyItemGrants(item: any, actor: any, options: Record<string, any> = {}) {
+    static async applyItemGrants(item: any, actor: any, options: Record<string, any> = {}): Promise<any> {
         const result = {
             success: true,
             appliedState: {},
@@ -127,44 +126,8 @@ export class GrantsManager {
 
         // Apply each grant
         for (const grantConfig of grants) {
-            const grant = createGrant(grantConfig);
-            if (!grant) {
-                result.errors.push(`Failed to create grant of type "${grantConfig.type}"`);
-                continue;
-            }
-
-            // Get selection data for this grant
-            const grantData = options.selections?.[grant._id] ?? {};
-
-            // Check if grant can auto-apply
-            const autoValue = grant.getAutomaticValue();
-            const applyData = autoValue || grantData;
-
-            const grantResult = await grant.apply(actor, applyData, {
-                dryRun: options.dryRun,
-                depth: depth,
-            });
-
-            // Store state
-            result.appliedState[grant._id] = {
-                type: grant.constructor.TYPE,
-                applied: grantResult.applied,
-            };
-
-            result.notifications.push(...grantResult.notifications);
-            result.errors.push(...grantResult.errors);
-
-            if (!grantResult.success) {
-                result.success = false;
-            }
-
-            // Handle recursive grants from granted items
-            if (grantConfig.type === 'item' && grantResult.applied) {
-                await this._processNestedGrants(actor, grantResult.applied, {
-                    ...options,
-                    depth: depth + 1,
-                });
-            }
+            // eslint-disable-next-line no-await-in-loop -- Sequential grant application
+            await this._applySingleGrant(grantConfig, actor, options, depth, result);
         }
 
         // Save applied state to actor flags (unless dry run or explicitly disabled)
@@ -178,7 +141,7 @@ export class GrantsManager {
 
         // Show notification summary
         if (!options.dryRun && result.notifications.length > 0 && options.showNotification !== false) {
-            (ui.notifications as any).info(`Applied grants from ${item.name}`);
+            ui.notifications.info(`Applied grants from ${item.name}`);
         }
 
         return result;
@@ -192,7 +155,47 @@ export class GrantsManager {
      * @param {object} appliedState - State from when grants were applied
      * @returns {Promise<object>} Restore data for re-applying
      */
-    static async reverseItemGrants(item, actor, appliedState) {
+    /**
+     * Apply a single grant configuration to an actor.
+     * @private
+     */
+    static async _applySingleGrant(grantConfig: any, actor: any, options: any, depth: number, result: any): Promise<void> {
+        const grant = createGrant(grantConfig);
+        if (!grant) {
+            result.errors.push(`Failed to create grant of type "${grantConfig.type}"`);
+            return;
+        }
+
+        const grantData = options.selections?.[grant._id] ?? {};
+        const autoValue = grant.getAutomaticValue();
+        const applyData = autoValue || grantData;
+
+        const grantResult = await grant.apply(actor, applyData, {
+            dryRun: options.dryRun,
+            depth: depth,
+        });
+
+        result.appliedState[grant._id] = {
+            type: grant.constructor.TYPE,
+            applied: grantResult.applied,
+        };
+
+        result.notifications.push(...grantResult.notifications);
+        result.errors.push(...grantResult.errors);
+
+        if (!grantResult.success) {
+            result.success = false;
+        }
+
+        if (grantConfig.type === 'item' && grantResult.applied) {
+            await this._processNestedGrants(actor, grantResult.applied, {
+                ...options,
+                depth: depth + 1,
+            });
+        }
+    }
+
+    static async reverseItemGrants(item, actor, appliedState): Promise<any> {
         const restoreData = {};
 
         if (!item || !actor || !appliedState) return restoreData;
@@ -207,6 +210,7 @@ export class GrantsManager {
             const grant = createGrant(grantConfig);
             if (!grant) continue;
 
+            // eslint-disable-next-line no-await-in-loop -- Sequential grant reversal
             restoreData[grantConfig._id] = await grant.reverse(actor, state.applied);
         }
 
@@ -219,7 +223,7 @@ export class GrantsManager {
      * @param {WH40KItem} item - The item to preview
      * @returns {Promise<object>} Summary of grants
      */
-    static async getGrantsSummary(item) {
+    static async getGrantsSummary(item): Promise<any> {
         const summary = {
             item: item.name,
             grants: [],
@@ -230,6 +234,7 @@ export class GrantsManager {
         for (const grantConfig of grants) {
             const grant = createGrant(grantConfig);
             if (grant) {
+                // eslint-disable-next-line no-await-in-loop -- Sequential grant summary collection
                 summary.grants.push(await grant.getSummary());
             }
         }
@@ -243,7 +248,7 @@ export class GrantsManager {
      * @param {WH40KItem} item - The item to validate
      * @returns {string[]} Array of validation errors
      */
-    static validateItemGrants(item) {
+    static validateItemGrants(item): any {
         const errors = [];
         const grants = this._extractGrants(item);
 
@@ -273,7 +278,7 @@ export class GrantsManager {
      * @param {boolean} [options.reverseExisting=false] - Reverse all existing grants before applying
      * @returns {Promise<GrantsApplicationResult>}
      */
-    static async applyBatchGrants(items: any[], actor: any, options: Record<string, any> = {}) {
+    static async applyBatchGrants(items: any[], actor: any, options: Record<string, any> = {}): Promise<any> {
         const result = {
             success: true,
             appliedState: {},
@@ -303,6 +308,7 @@ export class GrantsManager {
 
         // Apply grants from each item in order
         for (const item of items) {
+            // eslint-disable-next-line no-await-in-loop -- Sequential grant application per item
             const itemResult = await this.applyItemGrants(item, actor, {
                 ...options,
                 showNotification: false, // Suppress per-item notifications
@@ -322,7 +328,7 @@ export class GrantsManager {
 
         // Show combined notification
         if (!options.dryRun && result.notifications.length > 0 && options.showNotification !== false) {
-            (ui.notifications as any).info(`Applied grants from ${items.length} items`);
+            ui.notifications.info(`Applied grants from ${items.length} items`);
         }
 
         return result;
@@ -347,7 +353,7 @@ export class GrantsManager {
      * @param {object} [metadata={}] - Additional metadata
      * @returns {Promise<void>}
      */
-    static async saveAppliedState(actor: any, sourceKey: any, state: any, metadata: any = {}) {
+    static async saveAppliedState(actor: any, sourceKey: any, state: any, metadata: any = {}): Promise<any> {
         if (!actor || !sourceKey) return;
 
         const flagData = {
@@ -371,7 +377,7 @@ export class GrantsManager {
      * @param {string} [sourceKey] - Optional source key to load specific grants
      * @returns {object|null} The applied state, or null if not found
      */
-    static loadAppliedState(actor, sourceKey = null) {
+    static loadAppliedState(actor, sourceKey = null): any {
         if (!actor) return null;
 
         const allGrants = actor.getFlag('wh40k-rpg', this.FLAG_KEY) || {};
@@ -391,7 +397,7 @@ export class GrantsManager {
      * @param {string} [sourceKey] - Optional source key to clear specific grants
      * @returns {Promise<void>}
      */
-    static async clearAppliedState(actor, sourceKey = null) {
+    static async clearAppliedState(actor, sourceKey = null): Promise<any> {
         if (!actor) return;
 
         if (sourceKey) {
@@ -411,7 +417,7 @@ export class GrantsManager {
      * @param {string} sourceKey - The source key to check
      * @returns {boolean}
      */
-    static hasAppliedGrants(actor, sourceKey) {
+    static hasAppliedGrants(actor, sourceKey): any {
         const state = this.loadAppliedState(actor, sourceKey);
         return state !== null && Object.keys(state.grants || {}).length > 0;
     }
@@ -422,7 +428,7 @@ export class GrantsManager {
      * @returns {string}
      * @private
      */
-    static _sanitizeKey(key) {
+    static _sanitizeKey(key): any {
         // Replace dots and special characters with underscores
         return key.replace(/[./\\]/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
     }
@@ -438,7 +444,7 @@ export class GrantsManager {
      * @param {string} sourceKey - The source key to reverse
      * @returns {Promise<object>} Result of the reversal
      */
-    static async reverseAppliedGrants(actor, sourceKey) {
+    static async reverseAppliedGrants(actor, sourceKey): Promise<any> {
         const result = {
             success: true,
             reversed: {},
@@ -468,6 +474,7 @@ export class GrantsManager {
             if (!grantState) continue;
 
             try {
+                // eslint-disable-next-line no-await-in-loop -- Sequential grant reversal
                 const reversed = await this._reverseGrant(actor, grantId, grantState);
                 result.reversed[grantId] = reversed;
                 result.notifications.push(...(reversed.notifications || []));
@@ -490,7 +497,7 @@ export class GrantsManager {
      * @param {WH40KActor} actor - The actor
      * @returns {Promise<object>} Result of the reversal
      */
-    static async reverseAllAppliedGrants(actor) {
+    static async reverseAllAppliedGrants(actor): Promise<any> {
         const result = {
             success: true,
             reversed: {},
@@ -516,6 +523,7 @@ export class GrantsManager {
         const sourceKeys = Object.keys(allApplied).reverse();
 
         for (const sourceKey of sourceKeys) {
+            // eslint-disable-next-line no-await-in-loop -- Sequential source reversal
             const sourceResult = await this.reverseAppliedGrants(actor, sourceKey);
             result.reversed[sourceKey] = sourceResult.reversed;
             result.notifications.push(...sourceResult.notifications);
@@ -537,7 +545,7 @@ export class GrantsManager {
      * @returns {Promise<object>}
      * @private
      */
-    static async _reverseGrant(actor, grantId, grantState) {
+    static async _reverseGrant(actor, grantId, grantState): Promise<any> {
         const { type, applied } = grantState;
         const result = { notifications: [] };
 
@@ -562,6 +570,7 @@ export class GrantsManager {
                 // Choice grants contain nested grants, reverse them
                 if (applied.grantResults) {
                     for (const [key, nestedState] of Object.entries(applied.grantResults) as [string, any][]) {
+                        // eslint-disable-next-line no-await-in-loop -- Sequential nested grant reversal
                         await this._reverseGrant(actor, key, { type: nestedState.type || 'unknown', applied: nestedState });
                     }
                 }
@@ -578,7 +587,7 @@ export class GrantsManager {
      * Reverse characteristic grant.
      * @private
      */
-    static async _reverseCharacteristicGrant(actor: any, applied: any, result: any) {
+    static async _reverseCharacteristicGrant(actor: any, applied: any, result: any): Promise<any> {
         const updates = {};
 
         for (const [key, state] of Object.entries(applied || {}) as [string, any][]) {
@@ -597,7 +606,7 @@ export class GrantsManager {
      * Reverse skill grant.
      * @private
      */
-    static async _reverseSkillGrant(actor: any, applied: any, result: any) {
+    static async _reverseSkillGrant(actor: any, applied: any, result: any): Promise<any> {
         const idsToDelete = [];
         const itemsToUpdate = [];
 
@@ -627,7 +636,7 @@ export class GrantsManager {
      * Reverse item grant.
      * @private
      */
-    static async _reverseItemGrant(actor: any, applied: any, result: any) {
+    static async _reverseItemGrant(actor: any, applied: any, result: any): Promise<any> {
         const idsToDelete = [];
 
         for (const [, itemId] of Object.entries(applied || {}) as [string, any][]) {
@@ -647,7 +656,7 @@ export class GrantsManager {
      * Reverse resource grant.
      * @private
      */
-    static async _reverseResourceGrant(actor: any, applied: any, result: any) {
+    static async _reverseResourceGrant(actor: any, applied: any, result: any): Promise<any> {
         const updates = {};
 
         const resourcePaths: Record<string, any> = {
@@ -680,7 +689,7 @@ export class GrantsManager {
      * Get skill level update data.
      * @private
      */
-    static _getSkillLevelUpdates(level) {
+    static _getSkillLevelUpdates(level): any {
         const updates = {
             'system.trained': false,
             'system.plus10': false,
@@ -713,7 +722,7 @@ export class GrantsManager {
      * @param {object} [modifiers] - Optional modifiers object from item.system.modifiers
      * @returns {object[]} Array of grant configurations
      */
-    static migrateOldGrants(oldGrants, modifiers = null, options: { skipSkills?: boolean } = {}) {
+    static migrateOldGrants(oldGrants, modifiers = null, options: { skipSkills?: boolean } = {}): any {
         const newGrants = [];
 
         // NOTE: Characteristic modifiers from origin paths are applied via ModifiersTemplate
@@ -864,7 +873,7 @@ export class GrantsManager {
      * @returns {object[]}
      * @private
      */
-    static _extractGrants(item) {
+    static _extractGrants(item): any {
         // Check for new-style grants array
         if (Array.isArray(item.system?.grantsV2)) {
             return item.system.grantsV2;
@@ -890,7 +899,7 @@ export class GrantsManager {
      * @param {object} options
      * @private
      */
-    static async _processNestedGrants(actor, appliedItems, options) {
+    static async _processNestedGrants(actor, appliedItems, options): Promise<any> {
         for (const [, itemId] of Object.entries(appliedItems)) {
             const item = actor.items.get(itemId);
             if (!item) continue;
@@ -899,6 +908,7 @@ export class GrantsManager {
             const grants = this._extractGrants(item);
             if (grants.length > 0) {
                 game.wh40k?.log(`GrantsManager: Processing nested grants from ${item.name}`);
+                // eslint-disable-next-line no-await-in-loop -- Sequential nested grant application
                 await this.applyItemGrants(item, actor, options);
             }
         }
@@ -910,7 +920,7 @@ export class GrantsManager {
      * @returns {object[]}
      * @private
      */
-    static _migrateChoiceOption(option, choiceType = '') {
+    static _migrateChoiceOption(option, choiceType = ''): any {
         const grants = [];
 
         // If option has a nested grants object, migrate it recursively

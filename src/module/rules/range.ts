@@ -3,7 +3,7 @@ import { calculateRangeModifier } from '../utils/range-calculator.ts';
 /**
  * @param rollData {WeaponRollData}
  */
-function calculateWeaponMaxRange(rollData) {
+function calculateWeaponMaxRange(rollData: any): number {
     const weapon = rollData.weapon;
     if (!weapon) {
         rollData.maxRange = 0;
@@ -29,7 +29,7 @@ function calculateWeaponMaxRange(rollData) {
             rangeCalculation.evaluateSync();
             range = rangeCalculation.total ?? 0;
         } catch {
-            (ui.notifications as any).warn('Range formula failed - setting to 0');
+            ui.notifications.warn('Range formula failed - setting to 0');
             range = 0;
         }
     }
@@ -55,7 +55,7 @@ function calculateWeaponMaxRange(rollData) {
 /**
  * @param rollData {PsychicRollData}
  */
-async function calculatePsychicAbilityMaxRange(rollData) {
+async function calculatePsychicAbilityMaxRange(rollData: any): Promise<number> {
     const data = rollData;
     if (!data.power) {
         data.maxRange = 0;
@@ -73,7 +73,7 @@ async function calculatePsychicAbilityMaxRange(rollData) {
             await rangeCalculation.evaluate();
             range = rangeCalculation.total ?? 0;
         } catch {
-            (ui.notifications as any).warn('Range formula failed - setting to 0');
+            ui.notifications.warn('Range formula failed - setting to 0');
             range = 0;
         }
     }
@@ -85,7 +85,7 @@ async function calculatePsychicAbilityMaxRange(rollData) {
  * Calculate range bracket and bonus using the new range calculator system.
  * @param rollData {RollData}
  */
-function calculateRangeNameAndBonus(rollData) {
+function calculateRangeNameAndBonus(rollData: any): void {
     if (rollData.weapon && rollData.weapon.isMelee) {
         rollData.rangeName = 'Melee';
         rollData.rangeBonus = 0;
@@ -119,8 +119,8 @@ function calculateRangeNameAndBonus(rollData) {
 /**
  * @param rollData {WeaponRollData}
  */
-export async function calculateWeaponRange(rollData) {
-    await calculateWeaponMaxRange(rollData);
+export async function calculateWeaponRange(rollData: any): Promise<void> {
+    calculateWeaponMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
 
     // Ignore Negative Range Bonus for certain modifications
@@ -136,7 +136,7 @@ export async function calculateWeaponRange(rollData) {
 /**
  * @param rollData {PsychicRollData}
  */
-export async function calculatePsychicPowerRange(rollData) {
+export async function calculatePsychicPowerRange(rollData: any): Promise<void> {
     await calculatePsychicAbilityMaxRange(rollData);
     calculateRangeNameAndBonus(rollData);
     // Ignore Bonus for Psychic Powers

@@ -10,8 +10,6 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes ModifiersTemplate
  */
 export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare damageType: string;
@@ -24,7 +22,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -74,7 +72,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Check if this injury uses the new consolidated format.
      * @type {boolean}
      */
-    get isConsolidated() {
+    get isConsolidated(): boolean {
         return Object.keys(this.effects || {}).length > 0;
     }
 
@@ -83,7 +81,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Supports both legacy (single effect) and consolidated (effects object) formats.
      * @type {string}
      */
-    get currentEffect() {
+    get currentEffect(): any {
         if (this.isConsolidated) {
             const severityData = this.effects[this.severity];
             return severityData?.text || '';
@@ -96,7 +94,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Check if current severity is permanent.
      * @type {boolean}
      */
-    get isPermanent() {
+    get isPermanent(): boolean {
         if (this.isConsolidated) {
             const severityData = this.effects[this.severity];
             return severityData?.permanent || false;
@@ -110,7 +108,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Returns array of numbers.
      * @type {number[]}
      */
-    get availableSeverities() {
+    get availableSeverities(): any[] {
         if (this.isConsolidated) {
             return Object.keys(this.effects)
                 .map((k) => parseInt(k))
@@ -152,7 +150,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Get icon for damage type.
      * @type {string}
      */
-    get damageTypeIcon() {
+    get damageTypeIcon(): string {
         const icons = {
             impact: 'fa-hammer',
             rending: 'fa-cut',
@@ -166,7 +164,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Get icon for body part.
      * @type {string}
      */
-    get bodyPartIcon() {
+    get bodyPartIcon(): string {
         const icons = {
             head: 'fa-head-side-brain',
             arm: 'fa-hand-paper',
@@ -192,7 +190,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * Uses currentEffect to support both legacy and consolidated formats.
      * @type {string}
      */
-    get fullDescription() {
+    get fullDescription(): string {
         let desc = this.currentEffect || '';
         if (this.notes) {
             desc += desc ? `\n\n<strong>Notes:</strong> ${this.notes}` : this.notes;

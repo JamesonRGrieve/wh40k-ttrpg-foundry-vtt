@@ -5,16 +5,15 @@ import FormulaField from '../fields/formula-field.ts';
  * Template for items that deal damage.
  * @mixin
  */
+// @ts-expect-error - SystemDataModel extends foundry.abstract.TypeDataModel which has complex generic constraints
 export default class DamageTemplate extends SystemDataModel {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare damage: { formula: string; type: string; bonus: number; penetration: number };
     declare special: Set<string>;
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             damage: new fields.SchemaField({
                 // @ts-expect-error - argument count
@@ -92,7 +91,7 @@ export default class DamageTemplate extends SystemDataModel {
      * Get the damage type abbreviation.
      * @type {string}
      */
-    get damageTypeAbbr() {
+    get damageTypeAbbr(): string {
         const abbrs = {
             impact: 'I',
             rending: 'R',

@@ -1,7 +1,6 @@
 import { roll1d100, applyRollModeWhispers } from './roll-helpers.ts';
 
 export class ForceFieldData {
-    [key: string]: any;
     actor;
     forceField;
     protectionRating = 0;
@@ -11,7 +10,7 @@ export class ForceFieldData {
     success = false;
     overload = false;
 
-    constructor(actor, forceField) {
+    constructor(actor: any, forceField: any) {
         this.actor = actor;
         this.forceField = forceField;
 
@@ -19,7 +18,7 @@ export class ForceFieldData {
         this.overloadRating = this.craftsmanshipToOverload(this.forceField.system.craftsmanship);
     }
 
-    craftsmanshipToOverload(craftsmanship) {
+    craftsmanshipToOverload(craftsmanship): any {
         switch (craftsmanship) {
             case 'Poor':
                 return 15;
@@ -32,7 +31,7 @@ export class ForceFieldData {
         }
     }
 
-    async finalize() {
+    async finalize(): Promise<any> {
         this.roll = await roll1d100();
 
         if (this.roll.total <= this.protectionRating) {
@@ -44,7 +43,7 @@ export class ForceFieldData {
         }
     }
 
-    async performActionAndSendToChat() {
+    async performActionAndSendToChat(): Promise<any> {
         game.wh40k.log('performActionAndSendToChat', this);
 
         // Update to overloaded if necessary
@@ -54,13 +53,13 @@ export class ForceFieldData {
             });
         }
 
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs', this);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs', this as any);
         const chatData: Record<string, any> = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,
         };
         applyRollModeWhispers(chatData);
-        await (ChatMessage as any).create(chatData);
+        await ChatMessage.create(chatData as any);
     }
 }
