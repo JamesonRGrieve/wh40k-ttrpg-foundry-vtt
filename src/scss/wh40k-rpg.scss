@@ -829,11 +829,18 @@
         flex-shrink: 0 !important;
     }
 
-    .wh40k-header__logo-image,
-    .wh40k-portrait {
+    .wh40k-header__logo-image {
         width: 100% !important;
         height: 100% !important;
         object-fit: contain !important;
+        cursor: pointer !important;
+        background: rgba(0, 0, 0, 0.25) !important;
+    }
+
+    .wh40k-portrait {
+        width: 11rem !important;
+        height: 15rem !important;
+        object-fit: cover !important;
         cursor: pointer !important;
         background: rgba(0, 0, 0, 0.25) !important;
     }
@@ -895,6 +902,85 @@
         font-size: 1.2em !important;
         font-weight: bold !important;
         max-width: 320px !important;
+    }
+
+    .wh40k-header-name-line {
+        min-width: 0 !important;
+        justify-content: flex-start !important;
+        gap: 0 !important;
+
+        .wh40k-header-label {
+            min-width: 0 !important;
+            margin-right: 6px !important;
+        }
+
+        .wh40k-header-paren {
+            font-size: 0.85em !important;
+            color: var(--wh40k-text-medium, #666) !important;
+            flex: 0 0 auto !important;
+            padding: 0 !important;
+        }
+    }
+
+    .wh40k-inline-edit {
+        position: relative !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        flex: 0 1 auto !important;
+        min-width: 0 !important;
+    }
+
+    .wh40k-inline-edit-input {
+        flex: 0 1 auto !important;
+        min-width: 0 !important;
+        width: auto !important;
+        field-sizing: content !important;
+    }
+
+    // All inputs in the name line size to content — leaves a left-aligned group
+    .wh40k-header-name-line .wh40k-name-input {
+        flex: 0 1 auto !important;
+        max-width: none !important;
+    }
+
+    // Readonly state: look like plain text (no border, no input styling)
+    .wh40k-inline-edit-input[readonly] {
+        border-bottom-color: transparent !important;
+        cursor: text !important;
+    }
+
+    .wh40k-inline-edit-input[readonly]:hover {
+        border-bottom-color: var(--wh40k-border-color-light, rgba(74, 55, 40, 0.3)) !important;
+    }
+
+    .wh40k-inline-edit-save {
+        display: none !important;
+        margin-left: 4px !important;
+        padding: 2px 6px !important;
+        background: rgba(212, 175, 55, 0.15) !important;
+        border: 1px solid var(--wh40k-gold, #d4af37) !important;
+        border-radius: 3px !important;
+        color: var(--wh40k-gold, #d4af37) !important;
+        cursor: pointer !important;
+        font-size: 0.7rem !important;
+        line-height: 1 !important;
+        transition: all 0.15s ease !important;
+
+        &:hover {
+            background: rgba(212, 175, 55, 0.3) !important;
+        }
+    }
+
+    .wh40k-inline-edit.is-editing .wh40k-inline-edit-save {
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    .wh40k-player-inline {
+        font-size: 0.85em !important;
+        font-style: italic !important;
+        color: var(--wh40k-text-medium, #666) !important;
+        max-width: none !important;
     }
 
     .wh40k-header-right {

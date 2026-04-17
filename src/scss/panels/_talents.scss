@@ -4,8 +4,26 @@
 
 .wh40k-panel-talents-table,
 .wh40k-panel-traits-table {
+    margin-top: 0;
+    align-self: stretch !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+
     .wh40k-panel-body {
         @apply tw-flex tw-flex-col tw-gap-2;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+// Ensure the skills-tab talents/traits grid actually stretches its items
+.wh40k-talents-col {
+    width: 100%;
+    align-self: stretch;
+
+    > .wh40k-panel {
+        width: 100%;
+        box-sizing: border-box;
     }
 }
 
@@ -14,15 +32,6 @@
 .wh40k-traits-table {
     @apply tw-flex tw-flex-col;
     gap: 2px;
-    min-height: 60px;
-
-    // Empty state when no items
-    &:empty {
-        min-height: 100px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
 
     // Dropzone styling when empty or dragging
     &[data-drop-zone] {

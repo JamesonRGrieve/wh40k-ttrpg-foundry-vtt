@@ -4,7 +4,7 @@
     
     <div class="wh40k-dashboard tw-grid tw-grid-cols-3 tw-grid-rows-[auto_auto] tw-items-start tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden">
 
-        {{!-- COLUMN 1: Vitals → Progression → Resources --}}
+        {{!-- COLUMN 1: Vitals → Active Effects --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Vitals --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-vitals">
@@ -103,9 +103,11 @@
                 {{!-- Mental State (compact) --}}
                 <div class="wh40k-zone-subsection">
                     <div class="wh40k-mental-row">
-                        <span class="wh40k-mental-icon"><i class="fas fa-skull"></i></span>
-                        <span class="wh40k-mental-label">Corruption</span>
-                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
+                        <span class="wh40k-mental-label-group">
+                            <span class="wh40k-mental-icon"><i class="fas fa-skull"></i></span>
+                            <span class="wh40k-mental-label">Corruption</span>
+                        </span>
+                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1">
                             <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.corruption" data-min="0" title="−1">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -117,9 +119,11 @@
                         <span class="wh40k-mental-degree {{corruptionDegreeClass system.corruption}}">{{corruptionDegree system.corruption}}</span>
                     </div>
                     <div class="wh40k-mental-row">
-                        <span class="wh40k-mental-icon"><i class="fas fa-brain"></i></span>
-                        <span class="wh40k-mental-label">Insanity</span>
-                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
+                        <span class="wh40k-mental-label-group">
+                            <span class="wh40k-mental-icon"><i class="fas fa-brain"></i></span>
+                            <span class="wh40k-mental-label">Insanity</span>
+                        </span>
+                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1">
                             <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.insanity" data-min="0" title="−1">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -133,86 +137,49 @@
                 </div>
             </div>
 
-            {{!-- Progression --}}
-            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-progression">
+            {{!-- Active Effects --}}
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-effects">
                 <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
-                    <div class="wh40k-xp-ring-header" data-tooltip="{{#if system.experience.total}}{{floor (multiply (divide system.experience.used system.experience.total) 100)}}{{else}}0{{/if}}% XP spent ({{system.experience.used}}/{{system.experience.total}})">
-                        <svg viewBox="0 0 100 100" class="wh40k-xp-ring-header-svg">
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(120, 46, 34, 0.2)" stroke-width="12"/>
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="#c08020" stroke-width="12" stroke-linecap="round"
-                                    stroke-dasharray="282.74"
-                                    stroke-dashoffset="{{multiply (subtract 1 (divide system.experience.used system.experience.total)) 282.74}}"
-                                    transform="rotate(-90 50 50)"/>
-                        </svg>
-                    </div>
-                    <span>Progression — Rank {{system.rank}}</span>
+                    <i class="fas fa-magic"></i>
+                    <span>Active Effects</span>
                 </div>
                 <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
-                    <div class="wh40k-xp-row">
-                        <span class="wh40k-xp-label">Experience</span>
-                        <span class="wh40k-xp-value">{{system.experience.available}}/{{system.experience.total}}</span>
-                    </div>
-                    <div class="wh40k-xp-actions">
-                        <button type="button" class="wh40k-xp-action-btn" data-action="customXP" title="Add XP">
-                            <i class="fas fa-plus"></i> Add XP
-                        </button>
-                        <button type="button" class="wh40k-xp-action-btn" data-action="openAdvancement" title="Buy Advancements">
-                            <i class="fa-solid fa-arrow-up-big-small"></i> Advance
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            {{!-- Resources --}}
-            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-resources">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
-                    <i class="fas fa-coins"></i>
-                    <span>Resources</span>
-                </div>
-                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-w-full">
-                    <div class="tw-grid tw-grid-cols-3 tw-gap-2 tw-w-full">
-                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
-                            <span class="wh40k-vital-label tw-text-xs" data-tooltip="Social and political pull — calling in favours, securing audiences, persuading officials. Not bought with coin.">Influence</span>
-                            <div class="tw-flex tw-items-center tw-gap-1">
-                                <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.influence" data-min="0" title="-1">
-                                    <i class="fas fa-minus"></i>
+                    {{#if effects.length}}
+                    <div class="wh40k-effects-preview">
+                        {{#each effects as |effect|}}
+                        <div class="wh40k-effect-chip {{#if effect.disabled}}wh40k-effect-chip--disabled{{/if}}" title="{{effect.name}}">
+                            <img src="{{effect.icon}}" alt="" class="wh40k-effect-icon-mini" />
+                            <span class="wh40k-effect-name-mini">{{effect.name}}</span>
+                            <div class="wh40k-effect-chip-controls">
+                                <button type="button" class="wh40k-effect-chip-btn"
+                                        data-action="toggleEffect"
+                                        data-effect-id="{{effect.id}}"
+                                        title="{{#if effect.disabled}}Enable{{else}}Disable{{/if}}">
+                                    <i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i>
                                 </button>
-                                <input type="number" class="wh40k-vital-input" name="system.influence" value="{{system.influence}}" min="0" />
-                                <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.influence" data-max="100" title="+1">
-                                    <i class="fas fa-plus"></i>
+                                <button type="button" class="wh40k-effect-chip-btn wh40k-effect-chip-btn--danger"
+                                        data-action="deleteEffect"
+                                        data-effect-id="{{effect.id}}"
+                                        title="Delete">
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </div>
                         </div>
-                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
-                            <span class="wh40k-vital-label tw-text-xs" data-tooltip="Drawing on Inquisitorial resources — weapons from the armoury, specialist equipment, transport, and backup.">Requisition</span>
-                            <div class="tw-flex tw-items-center tw-gap-1">
-                                <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.requisition" data-min="0" title="-1">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" class="wh40k-vital-input" name="system.requisition" value="{{system.requisition}}" min="0" />
-                                <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.requisition" title="+1">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
-                            <span class="wh40k-vital-label tw-text-xs" data-tooltip="Hard currency for street-level transactions — food, lodging, bribes, and black market purchases.">Throne Gelt</span>
-                            <div class="tw-flex tw-items-center tw-gap-1">
-                                <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.throneGelt" data-min="0" title="-1">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <input type="number" class="wh40k-vital-input" name="system.throneGelt" value="{{system.throneGelt}}" min="0" />
-                                <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.throneGelt" title="+1">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
+                        {{/each}}
                     </div>
+                    {{else}}
+                    <div class="wh40k-effects-empty">
+                        <span>No active effects</span>
+                    </div>
+                    {{/if}}
+                    <button type="button" class="wh40k-effect-create-btn" data-action="createEffect" title="Create Effect">
+                        <i class="fas fa-plus"></i> New Effect
+                    </button>
                 </div>
             </div>
         </div>
 
-        {{!-- COLUMN 2: Favourite Skills → Favourite Talents --}}
+        {{!-- COLUMN 2: Favourite Skills → Favourite Talents → Progression --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Favourite Skills --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-skills">
@@ -288,9 +255,41 @@
                     </div>
                 </div>
             </div>
+
+            {{!-- Progression --}}
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-progression">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
+                    <div class="wh40k-xp-ring-header" data-tooltip="{{#if system.experience.total}}{{floor (multiply (divide system.experience.used system.experience.total) 100)}}{{else}}0{{/if}}% XP spent ({{system.experience.used}}/{{system.experience.total}})">
+                        <svg viewBox="0 0 100 100" class="wh40k-xp-ring-header-svg">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(120, 46, 34, 0.2)" stroke-width="12"/>
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#c08020" stroke-width="12" stroke-linecap="round"
+                                    stroke-dasharray="282.74"
+                                    stroke-dashoffset="{{multiply (subtract 1 (divide system.experience.used system.experience.total)) 282.74}}"
+                                    transform="rotate(-90 50 50)"/>
+                        </svg>
+                    </div>
+                    <span>Progression — Rank {{system.rank}}</span>
+                </div>
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+                    <div class="wh40k-xp-row">
+                        <span class="wh40k-xp-label">Experience</span>
+                        <span class="wh40k-xp-value">{{system.experience.available}}/{{system.experience.total}}</span>
+                    </div>
+                    <div class="wh40k-xp-actions">
+                        <button type="button" class="wh40k-xp-action-btn" data-action="customXP" title="Add XP">
+                            <i class="fas fa-plus"></i> Add XP
+                        </button>
+                        <button type="button" class="wh40k-xp-action-btn" data-action="openAdvancement" title="Buy Advancements">
+                            <i class="fa-solid fa-arrow-up-big-small"></i> Advance
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
 
-        {{!-- COLUMN 3: Weapons + [Movement | Armour] → Active Effects --}}
+        {{!-- COLUMN 3: Weapons + [Movement | Armour] → Resources --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Equipped Weapons --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-weapons">
@@ -401,44 +400,51 @@
                 </div>
             </div>
 
-            {{!-- Active Effects --}}
-            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-effects">
+            {{!-- Resources --}}
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-resources">
                 <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
-                    <i class="fas fa-magic"></i>
-                    <span>Active Effects</span>
+                    <i class="fas fa-coins"></i>
+                    <span>Resources</span>
                 </div>
-                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
-                    {{#if effects.length}}
-                    <div class="wh40k-effects-preview">
-                        {{#each effects as |effect|}}
-                        <div class="wh40k-effect-chip {{#if effect.disabled}}wh40k-effect-chip--disabled{{/if}}" title="{{effect.name}}">
-                            <img src="{{effect.icon}}" alt="" class="wh40k-effect-icon-mini" />
-                            <span class="wh40k-effect-name-mini">{{effect.name}}</span>
-                            <div class="wh40k-effect-chip-controls">
-                                <button type="button" class="wh40k-effect-chip-btn"
-                                        data-action="toggleEffect"
-                                        data-effect-id="{{effect.id}}"
-                                        title="{{#if effect.disabled}}Enable{{else}}Disable{{/if}}">
-                                    <i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i>
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-w-full">
+                    <div class="tw-grid tw-grid-cols-3 tw-gap-2 tw-w-full">
+                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                            <span class="wh40k-vital-label tw-text-xs" data-tooltip="Social and political pull — calling in favours, securing audiences, persuading officials. Not bought with coin.">Influence</span>
+                            <div class="tw-flex tw-items-center tw-gap-1">
+                                <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.influence" data-min="0" title="-1">
+                                    <i class="fas fa-minus"></i>
                                 </button>
-                                <button type="button" class="wh40k-effect-chip-btn wh40k-effect-chip-btn--danger"
-                                        data-action="deleteEffect"
-                                        data-effect-id="{{effect.id}}"
-                                        title="Delete">
-                                    <i class="fas fa-trash"></i>
+                                <input type="number" class="wh40k-vital-input" name="system.influence" value="{{system.influence}}" min="0" />
+                                <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.influence" data-max="100" title="+1">
+                                    <i class="fas fa-plus"></i>
                                 </button>
                             </div>
                         </div>
-                        {{/each}}
+                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                            <span class="wh40k-vital-label tw-text-xs" data-tooltip="Drawing on Inquisitorial resources — weapons from the armoury, specialist equipment, transport, and backup.">Requisition</span>
+                            <div class="tw-flex tw-items-center tw-gap-1">
+                                <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.requisition" data-min="0" title="-1">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="wh40k-vital-input" name="system.requisition" value="{{system.requisition}}" min="0" />
+                                <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.requisition" title="+1">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                            <span class="wh40k-vital-label tw-text-xs" data-tooltip="Hard currency for street-level transactions — food, lodging, bribes, and black market purchases.">Throne Gelt</span>
+                            <div class="tw-flex tw-items-center tw-gap-1">
+                                <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.throneGelt" data-min="0" title="-1">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="wh40k-vital-input" name="system.throneGelt" value="{{system.throneGelt}}" min="0" />
+                                <button type="button" class="wh40k-vital-btn" data-action="increment" data-field="system.throneGelt" title="+1">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    {{else}}
-                    <div class="wh40k-effects-empty">
-                        <span>No active effects</span>
-                    </div>
-                    {{/if}}
-                    <button type="button" class="wh40k-effect-create-btn" data-action="createEffect" title="Create Effect">
-                        <i class="fas fa-plus"></i> New Effect
-                    </button>
                 </div>
             </div>
         </div>

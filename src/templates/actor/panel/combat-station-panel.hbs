@@ -2,20 +2,21 @@
 {{!-- Streamlined combat interface --}}
 
 <div class="wh40k-combat-tab tw-flex tw-flex-col tw-gap-3 tw-p-3">
-    {{!-- Main Combat Layout: Left (4-col grid + weapons) | Right (actions) --}}
-    <div class="wh40k-combat-layout tw-grid tw-grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] tw-gap-3 tw-w-full tw-items-start">
+    {{!-- Main Combat Layout: Left (vitals + armour + weapons) | Right (actions) --}}
+    <div class="wh40k-combat-layout tw-grid tw-grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] tw-gap-3 tw-w-full tw-items-start">
         <div class="tw-flex tw-flex-col tw-gap-3">
-            {{!-- Row 1: 4-column grid --}}
-            <div class="wh40k-combat-top-grid tw-grid tw-grid-cols-[minmax(140px,1fr)_minmax(140px,1fr)_minmax(240px,1.5fr)] tw-gap-3 tw-items-start">
-                {{!-- Col 1: Vitals, Critical Injuries, Effects --}}
+            {{!-- Row 1: Vitals left, armour right --}}
+            <div class="wh40k-combat-top-grid tw-grid tw-grid-cols-[minmax(280px,1.1fr)_minmax(280px,1fr)] tw-gap-3 tw-items-start">
+                {{!-- Left: Unified Vitals panel --}}
                 <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2">
-                    {{!-- Compact Vitals Monitor --}}
-                    <div class="wh40k-vitals-hud tw-flex tw-flex-col tw-gap-2 tw-pt-0 tw-px-2 tw-pb-2">
-                        <div class="wh40k-vitals-hud-header tw-flex tw-items-center tw-gap-1 tw-py-1.5 tw-px-2">
-                            <i class="fas fa-heartbeat"></i>
-                            <span>VITALS</span>
+                    <div class="wh40k-panel wh40k-panel-vitals">
+                        <div class="wh40k-panel-header">
+                            <span class="wh40k-panel-title"><i class="fas fa-heartbeat"></i> Vitals</span>
                         </div>
+                        <div class="wh40k-panel-body wh40k-vitals-hud tw-flex tw-flex-col tw-gap-2">
 
+                        {{!-- Row: Wounds | Fatigue --}}
+                        <div class="tw-grid tw-grid-cols-2 tw-gap-2 tw-items-start">
                         {{!-- Wounds Status --}}
                         <div class="wh40k-vital-stat wh40k-vital-wounds {{#if (eq system.wounds.value 0)}}wh40k-vital-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}wh40k-vital-warning{{/if}}">
                             <div class="wh40k-vital-stat-header">
@@ -86,161 +87,167 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    {{!-- Critical Injuries --}}
-                    <div class="wh40k-panel wh40k-panel-injuries">
-                        <div class="wh40k-panel-header">
-                            <span class="wh40k-panel-title"><i class="fas fa-band-aid"></i> Critical Injuries</span>
-                        </div>
-                        <div class="wh40k-panel-body">
-                            {{#if criticalInjuries.length}}
-                            <div class="wh40k-injuries-list tw-flex tw-flex-col tw-gap-1">
-                                {{#each criticalInjuries as |injury|}}
-                                <div class="wh40k-injury-row" data-item-id="{{injury.id}}">
-                                    <span class="wh40k-injury-name item-edit" data-item-id="{{injury.id}}">{{injury.name}}</span>
-                                    <button type="button" class="wh40k-injury-delete item-delete" data-item-id="{{injury.id}}" title="Remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
+                        {{!-- Fatigue --}}
+                        <div class="wh40k-vital-stat wh40k-vital-fatigue {{#if (gt system.fatigue.value system.fatigue.max)}}wh40k-vital-critical{{else if (gt system.fatigue.value 0)}}wh40k-vital-warning{{/if}}">
+                            <div class="wh40k-vital-stat-header">
+                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control"
+                                     data-toggle="combat_fatigue_details"
+                                     title="Click to {{#if (isExpanded 'combat_fatigue_details' actor)}}collapse{{else}}expand{{/if}}">
+                                    <div class="wh40k-vital-label">
+                                        <i class="fas fa-bolt"></i>
+                                        <span>FATIGUE</span>
+                                    </div>
+                                    <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'combat_fatigue_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
                                 </div>
-                                {{/each}}
+                                <div class="wh40k-vital-controls">
+                                    <button type="button" class="wh40k-vital-ctrl-btn" data-action="decrement" data-field="system.fatigue.value" data-min="0" title="Decrease"><i class="fas fa-minus"></i></button>
+                                    <button type="button" class="wh40k-vital-ctrl-btn" data-action="increment" data-field="system.fatigue.value" title="Increase"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                            <div class="wh40k-vital-stat-body">
+                                <div class="wh40k-fatigue-bolts-combat tw-flex tw-items-center tw-justify-center tw-gap-2.5 tw-py-1.5 tw-flex-wrap">
+                                    {{#each (range 1 system.fatigue.max) as |index|}}
+                                        <button type="button" class="wh40k-fatigue-pip {{#if (lte index ../system.fatigue.value)}}wh40k-fatigue-pip--filled{{/if}}" data-action="setFatigueBolt" data-fatigue-index="{{index}}" title="Fatigue Level {{index}}">
+                                            <i class="fas fa-bolt"></i>
+                                        </button>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            {{#if (gt system.fatigue.value 0)}}
+                            <div class="wh40k-vital-alert wh40k-alert-fatigue">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>{{#if (gt system.fatigue.value system.fatigue.max)}}UNCONSCIOUS{{else}}−10 ALL TESTS{{/if}}</span>
                             </div>
                             {{/if}}
-                            <div class="wh40k-dropzone" data-action="itemCreate" data-type="criticalInjury">
-                                <i class="fas fa-band-aid wh40k-dropzone-icon"></i>
-                                <span class="wh40k-dropzone-text">Drop injuries here</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{!-- Active Effects --}}
-                    {{> systems/wh40k-rpg/templates/actor/panel/active-effects-compact.hbs}}
-                </div>
-
-                {{!-- Col 2: Fatigue, Fate, Mobility --}}
-                <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2">
-                    {{!-- Fatigue --}}
-                    <div class="wh40k-vital-stat wh40k-vital-fatigue {{#if (gt system.fatigue.value system.fatigue.max)}}wh40k-vital-critical{{else if (gt system.fatigue.value 0)}}wh40k-vital-warning{{/if}}">
-                        <div class="wh40k-vital-stat-header">
-                            <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control"
-                                 data-toggle="combat_fatigue_details"
-                                 title="Click to {{#if (isExpanded 'combat_fatigue_details' actor)}}collapse{{else}}expand{{/if}}">
-                                <div class="wh40k-vital-label">
-                                    <i class="fas fa-bolt"></i>
-                                    <span>FATIGUE</span>
+                            <div class="wh40k-panel-details combat_fatigue_details {{#unless (isExpanded 'combat_fatigue_details' actor)}}wh40k-panel-details--collapsed{{/unless}}">
+                                <div class="wh40k-vital-edit-section">
+                                    <label class="wh40k-vital-edit-field">
+                                        <span class="wh40k-vital-edit-label">Threshold (TB)</span>
+                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fatigue.max" value="{{system.fatigue.max}}" min="0" readonly placeholder="Threshold" />
+                                    </label>
+                                    <label class="wh40k-vital-edit-field">
+                                        <span class="wh40k-vital-edit-label">Current Fatigue</span>
+                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fatigue.value" value="{{system.fatigue.value}}" min="0" placeholder="Current" />
+                                    </label>
                                 </div>
-                                <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'combat_fatigue_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
-                            </div>
-                            <div class="wh40k-vital-controls">
-                                <button type="button" class="wh40k-vital-ctrl-btn" data-action="decrement" data-field="system.fatigue.value" data-min="0" title="Decrease"><i class="fas fa-minus"></i></button>
-                                <button type="button" class="wh40k-vital-ctrl-btn" data-action="increment" data-field="system.fatigue.value" title="Increase"><i class="fas fa-plus"></i></button>
                             </div>
                         </div>
-                        <div class="wh40k-vital-stat-body">
-                            <div class="wh40k-fatigue-bolts-combat tw-flex tw-items-center tw-justify-center tw-gap-1 tw-py-1.5 tw-flex-wrap">
-                                {{#each (range 1 system.fatigue.max) as |index|}}
-                                    <button type="button" class="wh40k-fatigue-pip {{#if (lte index ../system.fatigue.value)}}wh40k-fatigue-pip--filled{{/if}}" data-action="setFatigueBolt" data-fatigue-index="{{index}}" title="Fatigue Level {{index}}">
-                                        <i class="fas fa-bolt"></i>
-                                    </button>
-                                {{/each}}
-                            </div>
                         </div>
-                        {{#if (gt system.fatigue.value 0)}}
-                        <div class="wh40k-vital-alert wh40k-alert-fatigue">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <span>{{#if (gt system.fatigue.value system.fatigue.max)}}UNCONSCIOUS{{else}}−10 ALL TESTS{{/if}}</span>
-                        </div>
-                        {{/if}}
-                        <div class="wh40k-panel-details combat_fatigue_details {{#unless (isExpanded 'combat_fatigue_details' actor)}}wh40k-panel-details--collapsed{{/unless}}">
-                            <div class="wh40k-vital-edit-section">
-                                <label class="wh40k-vital-edit-field">
-                                    <span class="wh40k-vital-edit-label">Threshold (TB)</span>
-                                    <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fatigue.max" value="{{system.fatigue.max}}" min="0" readonly placeholder="Threshold" />
-                                </label>
-                                <label class="wh40k-vital-edit-field">
-                                    <span class="wh40k-vital-edit-label">Current Fatigue</span>
-                                    <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fatigue.value" value="{{system.fatigue.value}}" min="0" placeholder="Current" />
-                                </label>
-                            </div>
-                        </div>
-                    </div>
 
-                    {{!-- Fate --}}
-                    <div class="wh40k-vital-stat wh40k-vital-fate">
-                        <div class="wh40k-vital-stat-header">
-                            <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control"
-                                 data-toggle="combat_fate_details"
-                                 title="Click to {{#if (isExpanded 'combat_fate_details' actor)}}collapse{{else}}expand{{/if}}">
+                        {{!-- Critical Injuries --}}
+                        <div class="wh40k-vital-stat wh40k-vital-injuries">
+                            <div class="wh40k-vital-stat-header">
                                 <div class="wh40k-vital-label">
-                                    <i class="fas fa-star"></i>
-                                    <span>FATE</span>
+                                    <i class="fas fa-band-aid"></i>
+                                    <span>CRITICAL INJURIES</span>
                                 </div>
-                                <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'combat_fate_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
                             </div>
-                            <div class="wh40k-vital-controls">
-                                <button type="button" class="wh40k-vital-ctrl-btn" data-action="decrement" data-field="system.fate.value" data-min="0" title="Spend"><i class="fas fa-minus"></i></button>
-                                <button type="button" class="wh40k-vital-ctrl-btn" data-action="increment" data-field="system.fate.value" title="Restore"><i class="fas fa-plus"></i></button>
+                            <div class="wh40k-vital-stat-body">
+                                {{#if criticalInjuries.length}}
+                                <div class="wh40k-injuries-list tw-flex tw-flex-col tw-gap-1">
+                                    {{#each criticalInjuries as |injury|}}
+                                    <div class="wh40k-injury-row" data-item-id="{{injury.id}}">
+                                        <span class="wh40k-injury-name item-edit" data-item-id="{{injury.id}}">{{injury.name}}</span>
+                                        <button type="button" class="wh40k-injury-delete item-delete" data-item-id="{{injury.id}}" title="Remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    {{/each}}
+                                </div>
+                                {{/if}}
+                                <div class="wh40k-dropzone wh40k-dropzone--compact" data-action="itemCreate" data-type="criticalInjury">
+                                    <i class="fas fa-band-aid wh40k-dropzone-icon"></i>
+                                    <span class="wh40k-dropzone-text">Drop injuries here</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="wh40k-vital-stat-body">
-                            <div class="wh40k-fate-stars tw-flex tw-items-center tw-justify-center tw-gap-1 tw-py-1.5">
-                                {{#each (range 1 system.fate.max) as |index|}}
-                                    <button type="button" class="wh40k-fate-pip {{#if (lte index ../system.fate.value)}}wh40k-fate-pip--active{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}">
+
+                        {{!-- Active Effects --}}
+                        {{> systems/wh40k-rpg/templates/actor/panel/active-effects-compact.hbs}}
+
+                        {{!-- Row: Fate | Mobility --}}
+                        <div class="tw-grid tw-grid-cols-2 tw-gap-2 tw-items-start">
+                        {{!-- Fate --}}
+                        <div class="wh40k-vital-stat wh40k-vital-fate">
+                            <div class="wh40k-vital-stat-header">
+                                <div class="wh40k-vital-header-clickable wh40k-panel-header--clickable sheet-control__hide-control"
+                                     data-toggle="combat_fate_details"
+                                     title="Click to {{#if (isExpanded 'combat_fate_details' actor)}}collapse{{else}}expand{{/if}}">
+                                    <div class="wh40k-vital-label">
                                         <i class="fas fa-star"></i>
-                                    </button>
-                                {{/each}}
+                                        <span>FATE</span>
+                                    </div>
+                                    <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'combat_fate_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
+                                </div>
+                                <div class="wh40k-vital-controls">
+                                    <button type="button" class="wh40k-vital-ctrl-btn" data-action="decrement" data-field="system.fate.value" data-min="0" title="Spend"><i class="fas fa-minus"></i></button>
+                                    <button type="button" class="wh40k-vital-ctrl-btn" data-action="increment" data-field="system.fate.value" title="Restore"><i class="fas fa-plus"></i></button>
+                                </div>
+                            </div>
+                            <div class="wh40k-vital-stat-body">
+                                <div class="wh40k-fate-stars tw-flex tw-items-center tw-justify-center tw-gap-2.5 tw-py-1.5">
+                                    {{#each (range 1 system.fate.max) as |index|}}
+                                        <button type="button" class="wh40k-fate-pip {{#if (lte index ../system.fate.value)}}wh40k-fate-pip--active{{/if}}" data-action="setFateStar" data-fate-index="{{index}}" title="Fate Point {{index}}">
+                                            <i class="fas fa-star"></i>
+                                        </button>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            <div class="wh40k-panel-details combat_fate_details {{#unless (isExpanded 'combat_fate_details' actor)}}wh40k-panel-details--collapsed{{/unless}}">
+                                <div class="wh40k-vital-edit-section">
+                                    <label class="wh40k-vital-edit-field">
+                                        <span class="wh40k-vital-edit-label">Max Fate</span>
+                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fate.max" value="{{system.fate.max}}" min="0" placeholder="Max" />
+                                    </label>
+                                    <label class="wh40k-vital-edit-field">
+                                        <span class="wh40k-vital-edit-label">Current Fate</span>
+                                        <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fate.value" value="{{system.fate.value}}" min="0" max="{{system.fate.max}}" placeholder="Current" />
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                        <div class="wh40k-panel-details combat_fate_details {{#unless (isExpanded 'combat_fate_details' actor)}}wh40k-panel-details--collapsed{{/unless}}">
-                            <div class="wh40k-vital-edit-section">
-                                <label class="wh40k-vital-edit-field">
-                                    <span class="wh40k-vital-edit-label">Max Fate</span>
-                                    <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fate.max" value="{{system.fate.max}}" min="0" placeholder="Max" />
-                                </label>
-                                <label class="wh40k-vital-edit-field">
-                                    <span class="wh40k-vital-edit-label">Current Fate</span>
-                                    <input type="number" data-dtype="Number" class="wh40k-vital-edit-input" name="system.fate.value" value="{{system.fate.value}}" min="0" max="{{system.fate.max}}" placeholder="Current" />
-                                </label>
-                            </div>
-                        </div>
-                    </div>
 
-                    {{!-- Mobility --}}
-                    <div class="wh40k-vital-stat wh40k-vital-mobility">
-                        <div class="wh40k-vital-stat-header">
-                            <div class="wh40k-vital-label">
-                                <i class="fas fa-person-running"></i>
-                                <span>MOBILITY</span>
+                        {{!-- Mobility --}}
+                        <div class="wh40k-vital-stat wh40k-vital-mobility">
+                            <div class="wh40k-vital-stat-header">
+                                <div class="wh40k-vital-label">
+                                    <i class="fas fa-person-running"></i>
+                                    <span>MOBILITY</span>
+                                </div>
+                            </div>
+                            <div class="wh40k-vital-stat-body">
+                                <div class="wh40k-mobility-speeds-inline">
+                                    <button type="button" class="wh40k-speed-inline wh40k-speed-half" data-action="vocalizeMovement" data-movement-type="half" title="Click to announce movement">
+                                        <i class="fas fa-walking"></i>
+                                        <span class="wh40k-speed-value">{{system.movement.half}}m</span>
+                                        <span class="wh40k-speed-label">Half</span>
+                                    </button>
+                                    <button type="button" class="wh40k-speed-inline wh40k-speed-full" data-action="vocalizeMovement" data-movement-type="full" title="Click to announce movement">
+                                        <i class="fas fa-shoe-prints"></i>
+                                        <span class="wh40k-speed-value">{{system.movement.full}}m</span>
+                                        <span class="wh40k-speed-label">Full</span>
+                                    </button>
+                                    <button type="button" class="wh40k-speed-inline wh40k-speed-charge" data-action="vocalizeMovement" data-movement-type="charge" title="Click to announce movement">
+                                        <i class="fas fa-running"></i>
+                                        <span class="wh40k-speed-value">{{system.movement.charge}}m</span>
+                                        <span class="wh40k-speed-label">Charge</span>
+                                    </button>
+                                    <button type="button" class="wh40k-speed-inline wh40k-speed-run" data-action="vocalizeMovement" data-movement-type="run" title="Click to announce movement">
+                                        <i class="fas fa-wind"></i>
+                                        <span class="wh40k-speed-value">{{system.movement.run}}m</span>
+                                        <span class="wh40k-speed-label">Run</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="wh40k-vital-stat-body">
-                            <div class="wh40k-mobility-speeds-inline">
-                                <button type="button" class="wh40k-speed-inline wh40k-speed-half" data-action="vocalizeMovement" data-movement-type="half" title="Click to announce movement">
-                                    <i class="fas fa-walking"></i>
-                                    <span class="wh40k-speed-value">{{system.movement.half}}m</span>
-                                    <span class="wh40k-speed-label">Half</span>
-                                </button>
-                                <button type="button" class="wh40k-speed-inline wh40k-speed-full" data-action="vocalizeMovement" data-movement-type="full" title="Click to announce movement">
-                                    <i class="fas fa-shoe-prints"></i>
-                                    <span class="wh40k-speed-value">{{system.movement.full}}m</span>
-                                    <span class="wh40k-speed-label">Full</span>
-                                </button>
-                                <button type="button" class="wh40k-speed-inline wh40k-speed-charge" data-action="vocalizeMovement" data-movement-type="charge" title="Click to announce movement">
-                                    <i class="fas fa-running"></i>
-                                    <span class="wh40k-speed-value">{{system.movement.charge}}m</span>
-                                    <span class="wh40k-speed-label">Charge</span>
-                                </button>
-                                <button type="button" class="wh40k-speed-inline wh40k-speed-run" data-action="vocalizeMovement" data-movement-type="run" title="Click to announce movement">
-                                    <i class="fas fa-wind"></i>
-                                    <span class="wh40k-speed-value">{{system.movement.run}}m</span>
-                                    <span class="wh40k-speed-label">Run</span>
-                                </button>
-                            </div>
+                        </div>
+
                         </div>
                     </div>
                 </div>
 
-                {{!-- Col 3-4: Armour (spans 2 columns) --}}
+                {{!-- Right: Armour --}}
                 <div class="wh40k-combat-armour-wide tw-flex tw-flex-col tw-gap-2">
                     {{> systems/wh40k-rpg/templates/actor/panel/armour-display-panel.hbs}}
                     {{#if hasForceField}}
@@ -265,7 +272,6 @@
                     {{/if}}
                 </div>
             </div>
-
             {{!-- Row 2: Weapons (full width) --}}
             <div class="wh40k-panel wh40k-panel-arsenal" data-drop-zone="general" data-accepts="weapon">
                 <div class="wh40k-panel-header">
