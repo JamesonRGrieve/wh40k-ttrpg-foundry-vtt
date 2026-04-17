@@ -110,7 +110,7 @@
 
         .clear-filters {
             width: 100%;
-            background: #{'rgb(from var(--wh40k-color-crimson-dark) r g b / 0.2)'};
+            background: rgba($wh40k-color-crimson-dark, 0.2);
             border: 1px solid var(--wh40k-color-crimson-dark);
             border-radius: var(--wh40k-radius-sm);
             color: var(--wh40k-text-dark);
@@ -119,7 +119,7 @@
             cursor: pointer;
 
             &:hover {
-                background: #{'rgb(from var(--wh40k-color-crimson) r g b / 0.3)'};
+                background: rgba($wh40k-color-crimson, 0.3);
             }
         }
     }

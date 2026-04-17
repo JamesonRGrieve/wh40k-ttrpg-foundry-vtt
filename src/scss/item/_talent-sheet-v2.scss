@@ -11,8 +11,8 @@
 .wh40k-talent-sheet-v2 {
     --talent-accent: var(--wh40k-accent-talents);
     --talent-accent-light: #{color-mix(in srgb, var(--wh40k-accent-talents), white 15%)};
-    --talent-accent-bg: #{#{'rgb(from var(--wh40k-accent-talents) r g b / 0.1)'}};
-    --talent-accent-border: #{#{'rgb(from var(--wh40k-accent-talents) r g b / 0.3)'}};
+    --talent-accent-bg: #{rgba($wh40k-accent-talents, 0.1)};
+    --talent-accent-border: #{rgba($wh40k-accent-talents, 0.3)};
 
     // Tier colors
     --tier-1-color: #5ba86d;
@@ -57,7 +57,7 @@
     align-items: flex-start;
     gap: var(--wh40k-space-md);
     padding: var(--wh40k-space-md);
-    background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-talents) r g b / 0.15)'} 0%, transparent 100%);
+    background: linear-gradient(180deg, rgba($wh40k-accent-talents, 0.15) 0%, transparent 100%);
     border-bottom: 2px solid var(--talent-accent-border);
     flex-shrink: 0;
 }
@@ -82,7 +82,7 @@
 
     &:hover {
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 12px #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+        box-shadow: 0 0 12px rgba($wh40k-color-gold, 0.3);
 
         .wh40k-talent-portrait-overlay {
             opacity: 1;
@@ -169,7 +169,7 @@
     }
 
     &.active {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+        background: rgba($wh40k-color-gold, 0.15);
         border-color: var(--wh40k-color-gold);
         color: var(--wh40k-color-gold);
     }
@@ -251,8 +251,8 @@
     }
 
     &--category {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.1)'};
-        border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+        background: rgba($wh40k-color-gold, 0.1);
+        border-color: rgba($wh40k-color-gold, 0.3);
         color: var(--wh40k-color-gold);
     }
 
@@ -326,8 +326,8 @@
     display: inline-flex;
     align-items: center;
     padding: 2px 8px;
-    background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
-    border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+    background: rgba($wh40k-color-gold, 0.15);
+    border: 1px solid rgba($wh40k-color-gold, 0.3);
     border-radius: 10px;
     font-size: 0.7rem;
     font-weight: 600;
@@ -371,13 +371,13 @@
 
     &:hover {
         color: var(--color-text-primary);
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'};
+        background: rgba($wh40k-color-gold, 0.05);
     }
 
     &.active {
         color: var(--wh40k-color-gold);
         border-bottom-color: var(--wh40k-color-gold);
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.08)'};
+        background: rgba($wh40k-color-gold, 0.08);
     }
 }
 
@@ -443,7 +443,7 @@
     gap: 8px;
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     margin: 0;
-    background: linear-gradient(90deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.12)'} 0%, transparent 100%);
+    background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.12) 0%, transparent 100%);
     border-bottom: 1px solid var(--color-border-light);
     font-size: 0.9rem;
     font-weight: 700;
@@ -614,7 +614,7 @@
         cursor: pointer;
 
         &:hover {
-            background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.1)'};
+            background: rgba($wh40k-color-gold, 0.1);
             border-color: var(--wh40k-color-gold);
         }
     }
@@ -638,12 +638,12 @@
     border-radius: 3px;
 
     &--trained {
-        background: #{'rgb(from var(--wh40k-accent-skills) r g b / 0.15)'};
+        background: rgba($wh40k-accent-skills, 0.15);
         color: var(--wh40k-accent-skills);
     }
 
     &--plus10 {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+        background: rgba($wh40k-color-gold, 0.15);
         color: var(--wh40k-color-gold);
     }
 
@@ -779,7 +779,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+        box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.15);
     }
 
     &::placeholder {
@@ -842,7 +842,7 @@
     transition: all var(--wh40k-transition-base);
 
     &:hover {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+        background: rgba($wh40k-color-gold, 0.15);
         border-color: var(--wh40k-color-gold);
         color: var(--wh40k-color-gold);
     }
@@ -908,8 +908,8 @@
 .wh40k-prereq-tag {
     display: inline-flex;
     padding: 3px 8px;
-    background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.1)'};
-    border: 1px solid #{'rgb(from var(--wh40k-accent-combat) r g b / 0.3)'};
+    background: rgba($wh40k-accent-combat, 0.1);
+    border: 1px solid rgba($wh40k-accent-combat, 0.3);
     border-radius: var(--wh40k-radius-sm);
     font-size: 0.8rem;
     font-weight: 600;
@@ -988,7 +988,7 @@
     gap: 6px;
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     margin: 0;
-    background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.08)'};
+    background: rgba($wh40k-color-gold, 0.08);
     border-bottom: 1px solid var(--color-border-light);
     font-size: 0.75rem;
     font-weight: 700;
@@ -1016,7 +1016,7 @@
     border-radius: var(--wh40k-radius-sm);
 
     &:hover {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'};
+        background: rgba($wh40k-color-gold, 0.05);
     }
 }
 
@@ -1138,7 +1138,7 @@
     transition: all var(--wh40k-transition-base);
 
     &:hover {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.08)'};
+        background: rgba($wh40k-color-gold, 0.08);
         border-color: var(--wh40k-color-gold);
         color: var(--wh40k-color-gold);
     }
@@ -1235,8 +1235,8 @@
     gap: var(--wh40k-space-sm);
     margin-bottom: var(--wh40k-space-md);
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
-    background: #{'rgb(from var(--wh40k-accent-skills) r g b / 0.08)'};
-    border: 1px solid #{'rgb(from var(--wh40k-accent-skills) r g b / 0.2)'};
+    background: rgba($wh40k-accent-skills, 0.08);
+    border: 1px solid rgba($wh40k-accent-skills, 0.2);
     border-radius: var(--wh40k-radius-sm);
     font-size: 0.8rem;
     font-style: italic;
@@ -1395,13 +1395,13 @@
 
     // Done button (green checkmark)
     &--done {
-        background: #{'rgb(from var(--wh40k-color-success) r g b / 0.15)'};
-        border-color: #{'rgb(from var(--wh40k-color-success) r g b / 0.4)'};
+        background: rgba($wh40k-color-success, 0.15);
+        border-color: rgba($wh40k-color-success, 0.4);
         color: var(--wh40k-color-success);
 
         &:hover {
-            background: #{'rgb(from var(--wh40k-color-success) r g b / 0.25)'};
-            border-color: #{'rgb(from var(--wh40k-color-success) r g b / 0.6)'};
+            background: rgba($wh40k-color-success, 0.25);
+            border-color: rgba($wh40k-color-success, 0.6);
             color: color-mix(in srgb, var(--wh40k-color-success), white 10%);
         }
     }
@@ -1465,7 +1465,7 @@
     }
 
     &:hover {
-        background: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.2)'};
+        background: rgba($wh40k-accent-talents, 0.2);
         border-style: solid;
         color: var(--color-text-primary);
     }
@@ -1604,8 +1604,8 @@
         align-items: center;
         gap: 6px;
         padding: 4px 10px;
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.1)'};
-        border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+        background: rgba($wh40k-color-gold, 0.1);
+        border: 1px solid rgba($wh40k-color-gold, 0.3);
         border-radius: 12px;
         color: var(--wh40k-color-gold);
         font-size: 0.7rem;
@@ -1617,7 +1617,7 @@
         transition: all var(--wh40k-transition-base);
 
         &:hover {
-            background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.2)'};
+            background: rgba($wh40k-color-gold, 0.2);
             border-color: var(--wh40k-color-gold);
             color: color-mix(in srgb, var(--wh40k-color-gold), white 10%);
 
@@ -1680,40 +1680,40 @@
 
     // Variant colors
     &--modifiers {
-        border-color: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.4)'};
+        border-color: rgba($wh40k-accent-talents, 0.4);
 
         i {
             color: var(--wh40k-accent-talents);
         }
 
         .wh40k-effect-pill__count {
-            background: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.2)'};
+            background: rgba($wh40k-accent-talents, 0.2);
             color: color-mix(in srgb, var(--wh40k-accent-talents), white 15%);
         }
     }
 
     &--situational {
-        border-color: #{'rgb(from color-mix(in srgb, var(--wh40k-accent-talents), black 10%) r g b / 0.4)'};
+        border-color: rgba(darken($wh40k-accent-talents, 10%), 0.4);
 
         i {
             color: color-mix(in srgb, var(--wh40k-accent-talents), black 5%);
         }
 
         .wh40k-effect-pill__count {
-            background: #{'rgb(from color-mix(in srgb, var(--wh40k-accent-talents), black 10%) r g b / 0.2)'};
+            background: rgba(darken($wh40k-accent-talents, 10%), 0.2);
             color: color-mix(in srgb, var(--wh40k-accent-talents), black 5%);
         }
     }
 
     &--grants {
-        border-color: #{'rgb(from color-mix(in srgb, var(--wh40k-accent-talents), white 10%) r g b / 0.4)'};
+        border-color: rgba(lighten($wh40k-accent-talents, 10%), 0.4);
 
         i {
             color: color-mix(in srgb, var(--wh40k-accent-talents), white 15%);
         }
 
         .wh40k-effect-pill__count {
-            background: #{'rgb(from color-mix(in srgb, var(--wh40k-accent-talents), white 10%) r g b / 0.2)'};
+            background: rgba(lighten($wh40k-accent-talents, 10%), 0.2);
             color: color-mix(in srgb, var(--wh40k-accent-talents), white 20%);
         }
     }
@@ -1745,15 +1745,15 @@
     }
 
     &--modifiers {
-        border-left-color: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.6)'};
+        border-left-color: rgba($wh40k-accent-talents, 0.6);
     }
 
     &--situational {
-        border-left-color: #{'rgb(from color-mix(in srgb, var(--wh40k-accent-talents), black 10%) r g b / 0.6)'};
+        border-left-color: rgba(darken($wh40k-accent-talents, 10%), 0.6);
     }
 
     &--grants {
-        border-left-color: #{'rgb(from color-mix(in srgb, var(--wh40k-accent-talents), white 10%) r g b / 0.6)'};
+        border-left-color: rgba(lighten($wh40k-accent-talents, 10%), 0.6);
     }
 }
 
@@ -1764,7 +1764,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.15)'};
+    background: rgba($wh40k-accent-talents, 0.15);
     border: 1px solid var(--talent-accent-border);
     border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-color-gold);

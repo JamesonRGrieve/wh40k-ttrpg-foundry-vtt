@@ -2,20 +2,19 @@
 {{!-- Streamlined combat interface --}}
 
 <div class="wh40k-combat-tab tw-flex tw-flex-col tw-gap-3 tw-p-3">
-    {{!-- Main Combat Layout: Left (4-col grid + weapons) | Right (actions) --}}
-    <div class="wh40k-combat-layout tw-grid tw-grid-cols-[minmax(0,1.15fr)_minmax(320px,1fr)] tw-gap-3 tw-w-full tw-items-start">
+    {{!-- Main Combat Layout: Left (vitals + armour + weapons) | Right (actions) --}}
+    <div class="wh40k-combat-layout tw-grid tw-grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] tw-gap-3 tw-w-full tw-items-start">
         <div class="tw-flex tw-flex-col tw-gap-3">
             {{!-- Row 1: 4-column grid --}}
-            <div class="wh40k-combat-top-grid tw-grid tw-grid-cols-[minmax(140px,1fr)_minmax(140px,1fr)_minmax(240px,1.5fr)] tw-gap-3 tw-items-start">
-                {{!-- Col 1: Vitals, Critical Injuries, Effects --}}
-                <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2">
-                    {{!-- Compact Vitals Monitor --}}
-                    <div class="wh40k-vitals-hud tw-flex tw-flex-col tw-gap-2 tw-pt-0 tw-px-2 tw-pb-2">
-                        <div class="wh40k-vitals-hud-header tw-flex tw-items-center tw-gap-1 tw-py-1.5 tw-px-2">
-                            <i class="fas fa-heartbeat"></i>
-                            <span>VITALS</span>
-                        </div>
-
+            <div class="wh40k-combat-top-grid tw-grid tw-grid-cols-[minmax(360px,1.2fr)_minmax(260px,0.9fr)] tw-gap-3 tw-items-start">
+                {{!-- Col 1-2: Vitals Section --}}
+                <div class="wh40k-panel wh40k-panel-vitals-station">
+                    <div class="wh40k-panel-header">
+                        <span class="wh40k-panel-title"><i class="fas fa-heartbeat"></i> Vitals</span>
+                    </div>
+                    <div class="wh40k-panel-body wh40k-panel-body--flush">
+                        <div class="wh40k-combat-vitals-grid">
+                            <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2">
                         {{!-- Wounds Status --}}
                         <div class="wh40k-vital-stat wh40k-vital-wounds {{#if (eq system.wounds.value 0)}}wh40k-vital-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}wh40k-vital-warning{{/if}}">
                             <div class="wh40k-vital-stat-header">
@@ -115,10 +114,9 @@
 
                     {{!-- Active Effects --}}
                     {{> systems/wh40k-rpg/templates/actor/panel/active-effects-compact.hbs}}
-                </div>
+                            </div>
 
-                {{!-- Col 2: Fatigue, Fate, Mobility --}}
-                <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2">
+                            <div class="wh40k-combat-col tw-flex tw-flex-col tw-gap-2">
                     {{!-- Fatigue --}}
                     <div class="wh40k-vital-stat wh40k-vital-fatigue {{#if (gt system.fatigue.value system.fatigue.max)}}wh40k-vital-critical{{else if (gt system.fatigue.value 0)}}wh40k-vital-warning{{/if}}">
                         <div class="wh40k-vital-stat-header">
@@ -238,10 +236,13 @@
                             </div>
                         </div>
                     </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 {{!-- Col 3-4: Armour (spans 2 columns) --}}
-                <div class="wh40k-combat-armour-wide tw-flex tw-flex-col tw-gap-2">
+                <div class="tw-flex tw-flex-col tw-gap-2">
                     {{> systems/wh40k-rpg/templates/actor/panel/armour-display-panel.hbs}}
                     {{#if hasForceField}}
                     <div class="wh40k-panel wh40k-panel-forcefield">

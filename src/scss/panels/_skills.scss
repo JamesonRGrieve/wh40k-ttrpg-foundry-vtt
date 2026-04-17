@@ -52,7 +52,7 @@
 
     &:hover {
         color: var(--wh40k-accent-skills);
-        text-shadow: 0 0 8px #{'rgb(from var(--wh40k-accent-skills) r g b / 0.3)'};
+        text-shadow: 0 0 8px rgba($wh40k-accent-skills, 0.3);
     }
 
     &:active {
@@ -89,7 +89,7 @@
 
     &:hover {
         color: var(--wh40k-accent-skills);
-        background: #{'rgb(from var(--wh40k-accent-skills) r g b / 0.1)'};
+        background: rgba($wh40k-accent-skills, 0.1);
         transform: scale(1.1);
     }
 
@@ -134,7 +134,7 @@
         opacity: 0.5;
 
         &.active {
-            background: #{'rgb(from var(--wh40k-accent-skills) r g b / 0.25)'};
+            background: rgba($wh40k-accent-skills, 0.25);
             border-color: var(--wh40k-accent-skills);
             color: var(--color-text-primary);
             opacity: 1;
@@ -355,7 +355,7 @@
         color: var(--wh40k-color-gold);
 
         i {
-            filter: drop-shadow(0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.5)'});
+            filter: drop-shadow(0 0 2px rgba($wh40k-color-gold, 0.5));
         }
     }
 }

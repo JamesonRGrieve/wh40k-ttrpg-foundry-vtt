@@ -8,7 +8,7 @@
     border-left: 3px solid var(--wh40k-accent-combat);
 
     .wh40k-panel-header {
-        background: linear-gradient(90deg, #{'rgb(from var(--wh40k-accent-combat) r g b / 0.12)'} 0%, transparent 100%);
+        background: linear-gradient(90deg, rgba($wh40k-accent-combat, 0.12) 0%, transparent 100%);
 
         .wh40k-panel-title i {
             color: var(--wh40k-accent-combat);
@@ -20,7 +20,7 @@
     border-left: 3px solid var(--wh40k-color-gold);
 
     .wh40k-panel-header {
-        background: linear-gradient(90deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.12)'} 0%, transparent 100%);
+        background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.12) 0%, transparent 100%);
 
         .wh40k-panel-title i {
             color: var(--wh40k-color-gold);
@@ -68,7 +68,7 @@
     border-left: 3px solid var(--wh40k-color-gold);
 
     .wh40k-panel-header {
-        background: linear-gradient(90deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.12)'} 0%, transparent 100%);
+        background: linear-gradient(90deg, rgba($wh40k-color-gold, 0.12) 0%, transparent 100%);
 
         .wh40k-panel-title i {
             color: var(--wh40k-color-gold);
@@ -138,8 +138,8 @@
     align-items: center;
     gap: 4px;
     padding: 2px 6px;
-    background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.1)'};
-    border: 1px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'};
+    background: rgba($wh40k-accent-gold, 0.1);
+    border: 1px solid rgba($wh40k-accent-gold, 0.2);
     border-radius: 3px;
     font-size: var(--wh40k-text-micro, 0.65rem);
     color: var(--color-text-tertiary);
@@ -212,7 +212,7 @@
         outline: none;
         background: var(--color-bg-tertiary);
         border-color: var(--wh40k-accent-gold);
-        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'};
+        box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
     }
 
     &.wh40k-xp-spent {
@@ -226,8 +226,8 @@
     align-items: center;
     gap: 4px;
     padding: var(--wh40k-space-sm);
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'} 0%, #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'} 100%);
-    border: 2px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15) 0%, rgba($wh40k-color-gold, 0.05) 100%);
+    border: 2px solid rgba($wh40k-color-gold, 0.3);
     border-radius: 6px;
 }
 
@@ -244,7 +244,7 @@
     font-weight: 700;
     font-family: var(--wh40k-font-alt);
     color: var(--wh40k-color-gold);
-    text-shadow: 0 0 8px #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+    text-shadow: 0 0 8px rgba($wh40k-color-gold, 0.3);
 }
 
 .wh40k-xp-bar {
@@ -258,7 +258,7 @@
         background: linear-gradient(90deg, var(--wh40k-color-gold-dark) 0%, var(--wh40k-color-gold) 100%);
         border-radius: 3px;
         transition: width var(--wh40k-transition-medium);
-        box-shadow: 0 0 6px #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+        box-shadow: 0 0 6px rgba($wh40k-color-gold, 0.3);
     }
 }
 

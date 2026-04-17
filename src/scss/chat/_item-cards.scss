@@ -496,8 +496,8 @@
     padding: 4px 8px;
     font-size: 0.7rem;
     font-weight: 600;
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.12)'}, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.06)'});
-    border: 1px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgba($wh40k-accent-gold, 0.12), rgba($wh40k-accent-gold, 0.06));
+    border: 1px solid rgba($wh40k-accent-gold, 0.3);
     border-radius: var(--wh40k-radius-sm);
     color: var(--wh40k-item-border);
 

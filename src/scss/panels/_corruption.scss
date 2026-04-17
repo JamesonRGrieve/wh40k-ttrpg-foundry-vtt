@@ -6,7 +6,7 @@
     border-left-color: var(--wh40k-accent-combat);
 
     .wh40k-panel-header {
-        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-combat) r g b / 0.12)'} 0%, transparent 100%);
+        background: linear-gradient(180deg, rgba($wh40k-accent-combat, 0.12) 0%, transparent 100%);
     }
 
     .wh40k-panel-title i {
@@ -18,7 +18,7 @@
     border-left-color: var(--wh40k-accent-skills);
 
     .wh40k-panel-header {
-        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-skills) r g b / 0.12)'} 0%, transparent 100%);
+        background: linear-gradient(180deg, rgba($wh40k-accent-skills, 0.12) 0%, transparent 100%);
     }
 
     .wh40k-panel-title i {
@@ -32,7 +32,7 @@
 
 .wh40k-panel-corruption {
     .wh40k-panel-header {
-        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-combat) r g b / 0.15)'} 0%, transparent 100%);
+        background: linear-gradient(180deg, rgba($wh40k-accent-combat, 0.15) 0%, transparent 100%);
     }
 
     .wh40k-panel-title i {
@@ -61,7 +61,7 @@
 
 .wh40k-panel-insanity {
     .wh40k-panel-header {
-        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-powers) r g b / 0.15)'} 0%, transparent 100%);
+        background: linear-gradient(180deg, rgba($wh40k-accent-powers, 0.15) 0%, transparent 100%);
     }
 
     .wh40k-panel-title i {
@@ -101,64 +101,64 @@
 
     // Corruption degrees — pre-generated (replaces @include wh40k-degree-badge-style)
     &.degree-pure {
-        background: #{'rgb(from var(--wh40k-degree-pure) r g b / 0.15)'};
+        background: rgba($wh40k-degree-pure, 0.15);
         border: 2px solid var(--wh40k-degree-pure);
         color: #15803d;
     }
     &.degree-tainted {
-        background: #{'rgb(from var(--wh40k-degree-tainted) r g b / 0.15)'};
+        background: rgba($wh40k-degree-tainted, 0.15);
         border: 2px solid var(--wh40k-degree-tainted);
         color: #7e6104;
     }
     &.degree-soiled {
-        background: #{'rgb(from var(--wh40k-degree-soiled) r g b / 0.15)'};
+        background: rgba($wh40k-degree-soiled, 0.15);
         border: 2px solid var(--wh40k-degree-soiled);
         color: #b35309;
     }
     &.degree-debased {
-        background: #{'rgb(from var(--wh40k-degree-debased) r g b / 0.15)'};
+        background: rgba($wh40k-degree-debased, 0.15);
         border: 2px solid var(--wh40k-degree-debased);
         color: #d62828;
     }
     &.degree-profane {
-        background: #{'rgb(from var(--wh40k-degree-profane) r g b / 0.15)'};
+        background: rgba($wh40k-degree-profane, 0.15);
         border: 2px solid var(--wh40k-degree-profane);
         color: #dc2626;
     }
     &.degree-damned {
-        background: #{'rgb(from var(--wh40k-degree-damned) r g b / 0.15)'};
+        background: rgba($wh40k-degree-damned, 0.15);
         border: 2px solid var(--wh40k-degree-damned);
         color: #a92626;
     }
 
     // Insanity degrees
     &.degree-stable {
-        background: #{'rgb(from var(--wh40k-degree-stable) r g b / 0.15)'};
+        background: rgba($wh40k-degree-stable, 0.15);
         border: 2px solid var(--wh40k-degree-stable);
         color: #15803d;
     }
     &.degree-unsettled {
-        background: #{'rgb(from var(--wh40k-degree-unsettled) r g b / 0.15)'};
+        background: rgba($wh40k-degree-unsettled, 0.15);
         border: 2px solid var(--wh40k-degree-unsettled);
         color: #7e6104;
     }
     &.degree-disturbed {
-        background: #{'rgb(from var(--wh40k-degree-disturbed) r g b / 0.15)'};
+        background: rgba($wh40k-degree-disturbed, 0.15);
         border: 2px solid var(--wh40k-degree-disturbed);
         color: #b35309;
     }
     &.degree-unhinged {
-        background: #{'rgb(from var(--wh40k-degree-unhinged) r g b / 0.15)'};
+        background: rgba($wh40k-degree-unhinged, 0.15);
         border: 2px solid var(--wh40k-degree-unhinged);
         color: #d62828;
     }
     &.degree-deranged {
-        background: #{'rgb(from var(--wh40k-degree-deranged) r g b / 0.15)'};
+        background: rgba($wh40k-degree-deranged, 0.15);
         border: 2px solid var(--wh40k-degree-deranged);
         color: #dc2626;
     }
     &.degree-terminally-insane {
-        background: #{'rgb(from var(--wh40k-degree-terminally) r g b / 0.15)'};
+        background: rgba($wh40k-degree-terminally, 0.15);
         border: 2px solid var(--wh40k-degree-terminally);
         color: #a92626;
     }

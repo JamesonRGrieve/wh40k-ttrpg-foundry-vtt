@@ -15,7 +15,8 @@
                     <p class="wh40k-divination tw-italic tw-opacity-50">{{system.originPath.divination}}</p>
                     {{/if}}
                 </div>
-                <div class="wh40k-header-info tw-grid tw-grid-cols-4 tw-gap-1.5 tw-items-center">
+                <div class="wh40k-header-info wh40k-header-info--dh tw-flex tw-flex-col tw-h-full tw-min-h-[15rem]">
+                    <div class="tw-grid tw-grid-cols-4 tw-gap-1.5 tw-items-center">
                     <div class="wh40k-header-row wh40k-name-row tw-col-span-4">
                         <span class="wh40k-header-label">{{localize "WH40K.Character.Name"}}</span>
                         <input class="wh40k-header-input wh40k-name-input" name="name" type="text" value="{{actor.name}}" />
@@ -24,18 +25,21 @@
                         <span class="wh40k-header-label">{{localize "WH40K.Character.Player"}}</span>
                         <input class="wh40k-header-input wh40k-player-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" />
                     </div>
-                    {{!-- Origin Path Step Icons --}}
-                    {{#each originPathSteps as |step|}}
-                    <div class="tw-flex tw-items-center tw-justify-center tw-w-14 tw-h-14 tw-rounded-full tw-overflow-hidden tw-border-2 tw-border-solid tw-bg-[rgba(0,0,0,0.2)] tw-justify-self-center tw-transition-all {{#if step.item}}tw-border-gold tw-cursor-pointer hover:tw-border-[#f0d060] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)] hover:tw-scale-110{{else}}tw-border-[var(--wh40k-border-color,#4a3728)] tw-opacity-40 tw-cursor-default{{/if}}"
-                         {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
-                         {{#if step.tooltipData}}data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{step.tooltipData}}"{{else}}data-tooltip="{{step.label}}"{{/if}}>
-                        {{#if step.item}}
-                            <img src="{{step.item.img}}" alt="{{step.item.name}}" class="tw-w-12 tw-h-12 tw-max-w-12 tw-max-h-12 tw-object-cover tw-rounded-full tw-border-2 tw-border-solid tw-border-gold" />
-                        {{else}}
-                            <i class="fas {{step.icon}} tw-text-xl tw-text-[var(--wh40k-text-muted)]"></i>
-                        {{/if}}
                     </div>
-                    {{/each}}
+                    {{!-- Origin Path Step Icons --}}
+                    <div class="wh40k-origin-step-strip tw-grid tw-grid-cols-4 tw-gap-1.5 tw-items-center tw-content-center tw-flex-1">
+                        {{#each originPathSteps as |step|}}
+                        <div class="wh40k-origin-step-chip tw-flex tw-items-center tw-justify-center tw-w-[4.2rem] tw-h-[4.2rem] tw-rounded-full tw-overflow-hidden tw-border-2 tw-border-solid tw-bg-[rgba(0,0,0,0.2)] tw-justify-self-center tw-transition-all {{#if step.item}}tw-border-gold tw-cursor-pointer hover:tw-border-[#f0d060] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)] hover:tw-scale-110{{else}}tw-border-[var(--wh40k-border-color,#4a3728)] tw-opacity-40 tw-cursor-default{{/if}}"
+                             {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
+                             {{#if step.tooltipData}}data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{step.tooltipData}}"{{else}}data-tooltip="{{step.label}}"{{/if}}>
+                            {{#if step.item}}
+                                <img src="{{step.item.img}}" alt="{{step.item.name}}" class="wh40k-origin-step-chip__img tw-w-[3.6rem] tw-h-[3.6rem] tw-max-w-[3.6rem] tw-max-h-[3.6rem] tw-object-cover tw-rounded-full tw-border-2 tw-border-solid tw-border-gold" />
+                            {{else}}
+                                <i class="fas {{step.icon}} tw-text-[1.45rem] tw-text-[var(--wh40k-text-muted)]"></i>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                    </div>
                 </div>
             </div>
         </div>
