@@ -96,19 +96,19 @@
 
         &--severity-minor {
             background: rgba(#2ecc71, 0.2);
-            color: darken(#2ecc71, 20%);
+            color: #1b7943;
             border: 1px solid rgba(#2ecc71, 0.3);
         }
 
         &--severity-moderate {
             background: rgba(#f39c12, 0.2);
-            color: darken(#f39c12, 20%);
+            color: #976008;
             border: 1px solid rgba(#f39c12, 0.3);
         }
 
         &--severity-severe {
             background: rgba(#e74c3c, 0.2);
-            color: darken(#e74c3c, 15%);
+            color: #bf2718;
             border: 1px solid rgba(#e74c3c, 0.3);
         }
 
@@ -121,7 +121,7 @@
 
         &--permanent {
             background: rgba(#9b59b6, 0.2);
-            color: darken(#9b59b6, 15%);
+            color: #713b87;
             border: 1px solid rgba(#9b59b6, 0.3);
         }
     }

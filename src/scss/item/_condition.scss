@@ -39,51 +39,51 @@
         // Nature badges
         &--nature-beneficial {
             background: rgba(#2ecc71, 0.2);
-            color: darken(#2ecc71, 20%);
+            color: #1b7943;
             border: 1px solid rgba(#2ecc71, 0.3);
         }
 
         &--nature-harmful {
             background: rgba(#e74c3c, 0.2);
-            color: darken(#e74c3c, 15%);
+            color: #bf2718;
             border: 1px solid rgba(#e74c3c, 0.3);
         }
 
         &--nature-neutral {
             background: rgba(#95a5a6, 0.2);
-            color: darken(#95a5a6, 20%);
+            color: #617374;
             border: 1px solid rgba(#95a5a6, 0.3);
         }
 
         // AppliesTo badges
         &--applies-self {
             background: rgba(#3498db, 0.2);
-            color: darken(#3498db, 15%);
+            color: #1d6fa5;
             border: 1px solid rgba(#3498db, 0.3);
         }
 
         &--applies-target {
             background: rgba(#e74c3c, 0.2);
-            color: darken(#e74c3c, 15%);
+            color: #bf2718;
             border: 1px solid rgba(#e74c3c, 0.3);
         }
 
         &--applies-both {
             background: rgba(#9b59b6, 0.2);
-            color: darken(#9b59b6, 15%);
+            color: #713b87;
             border: 1px solid rgba(#9b59b6, 0.3);
         }
 
         &--applies-area {
             background: rgba(#f39c12, 0.2);
-            color: darken(#f39c12, 20%);
+            color: #976008;
             border: 1px solid rgba(#f39c12, 0.3);
         }
 
         // Stacks badge
         &--stacks {
             background: rgba(#34495e, 0.2);
-            color: darken(#34495e, 10%);
+            color: #222f3d;
             border: 1px solid rgba(#34495e, 0.3);
             font-weight: 700;
         }
@@ -91,7 +91,7 @@
         // Duration badge
         &--duration {
             background: rgba(#16a085, 0.2);
-            color: darken(#16a085, 15%);
+            color: #0d5d4d;
             border: 1px solid rgba(#16a085, 0.3);
         }
     }
