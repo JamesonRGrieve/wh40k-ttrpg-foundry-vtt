@@ -33,7 +33,28 @@
         @apply tw-flex tw-items-center tw-justify-between;
 
         .wh40k-specialist-add-btn {
-            @include wh40k-icon-button(26px, var(--wh40k-accent-talents), 0.8rem);
+            width: 26px;
+            height: 26px;
+            padding: 0;
+            background: transparent;
+            border: 1px solid var(--wh40k-border-medium);
+            border-radius: var(--wh40k-radius-md);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--wh40k-transition-fast);
+
+            &:hover {
+                background: var(--wh40k-bg-subtle);
+                color: var(--wh40k-accent-talents);
+                border-color: var(--wh40k-accent-talents);
+            }
+
+            i {
+                font-size: 0.8rem;
+            }
             margin-left: auto;
         }
     }
