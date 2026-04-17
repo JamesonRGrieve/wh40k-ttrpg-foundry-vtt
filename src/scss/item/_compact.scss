@@ -88,12 +88,12 @@
     color: var(--wh40k-text-dark);
 
     &--wounds {
-        background: rgba($wh40k-color-crimson, 0.2);
+        background: #{'rgb(from var(--wh40k-color-crimson) r g b / 0.2)'};
         border-color: var(--wh40k-color-crimson-dark);
         color: var(--wh40k-color-crimson);
 
         .theme-dark & {
-            color: lighten($wh40k-color-crimson, 30%);
+            color: color-mix(in srgb, var(--wh40k-color-crimson), white 30%);
         }
     }
 
@@ -104,12 +104,12 @@
     }
 
     &--profit {
-        background: rgba($wh40k-color-brass, 0.2);
-        border-color: darken($wh40k-color-brass, 15%);
+        background: #{'rgb(from var(--wh40k-color-brass) r g b / 0.2)'};
+        border-color: color-mix(in srgb, var(--wh40k-color-brass), black 15%);
         color: var(--wh40k-color-brass);
 
         .theme-dark & {
-            color: lighten($wh40k-color-brass, 20%);
+            color: color-mix(in srgb, var(--wh40k-color-brass), white 20%);
         }
     }
 
@@ -142,7 +142,7 @@
     align-items: center;
     gap: var(--wh40k-space-sm);
     padding: var(--wh40k-space-sm);
-    background: rgba($wh40k-color-warning, 0.15);
+    background: #{'rgb(from var(--wh40k-color-warning) r g b / 0.15)'};
     border-left: 3px solid var(--wh40k-color-warning);
     border-radius: var(--wh40k-radius-sm);
     margin-bottom: var(--wh40k-space-md);

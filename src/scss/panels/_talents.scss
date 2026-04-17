@@ -40,8 +40,12 @@
         transition: all var(--wh40k-transition-medium);
 
         &.drop-valid {
-            background: linear-gradient(135deg, rgba($wh40k-accent-talents, 0.08) 0%, rgba($wh40k-accent-talents, 0.02) 100%);
-            border: 2px dashed rgba($wh40k-accent-talents, 0.5);
+            background: linear-gradient(
+                135deg,
+                #{'rgb(from var(--wh40k-accent-talents) r g b / 0.08)'} 0%,
+                #{'rgb(from var(--wh40k-accent-talents) r g b / 0.02)'} 100%
+            );
+            border: 2px dashed #{'rgb(from var(--wh40k-accent-talents) r g b / 0.5)'};
             border-radius: 6px;
             padding: var(--wh40k-space-sm);
             min-height: 100px;
@@ -129,8 +133,8 @@
 
 .wh40k-tp_tier {
     padding: 1px 4px;
-    background: rgba($wh40k-accent-talents, 0.15);
-    border: 1px solid rgba($wh40k-accent-talents, 0.3);
+    background: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.15)'};
+    border: 1px solid #{'rgb(from var(--wh40k-accent-talents) r g b / 0.3)'};
     border-radius: 3px;
     font-weight: 700;
     color: var(--wh40k-accent-talents);
@@ -174,7 +178,7 @@
     font-size: 0.7rem;
 
     &:hover {
-        background: rgba($wh40k-color-gold, 0.2);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.2)'};
         color: var(--wh40k-color-gold);
     }
 
@@ -184,7 +188,7 @@
 
     &.wh40k-tp_btn--danger:hover {
         color: var(--wh40k-color-crimson);
-        background: rgba($wh40k-color-crimson, 0.15);
+        background: #{'rgb(from var(--wh40k-color-crimson) r g b / 0.15)'};
     }
 }
 
@@ -289,7 +293,7 @@
     font-size: 0.85rem;
 
     &:hover {
-        background: rgba($wh40k-color-gold, 0.1);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.1)'};
         color: var(--wh40k-color-gold);
     }
 
@@ -299,7 +303,7 @@
 
     &.wh40k-btn-danger:hover {
         color: var(--wh40k-color-crimson);
-        background: rgba($wh40k-color-crimson, 0.1);
+        background: #{'rgb(from var(--wh40k-color-crimson) r g b / 0.1)'};
     }
 }
 
@@ -474,8 +478,12 @@
 .wh40k-badge-aptitude {
     display: inline-block;
     padding: 2px 6px;
-    background: linear-gradient(135deg, rgba($wh40k-accent-talents, 0.15) 0%, rgba($wh40k-accent-talents, 0.08) 100%);
-    border: 1px solid rgba($wh40k-accent-talents, 0.3);
+    background: linear-gradient(
+        135deg,
+        #{'rgb(from var(--wh40k-accent-talents) r g b / 0.15)'} 0%,
+        #{'rgb(from var(--wh40k-accent-talents) r g b / 0.08)'} 100%
+    );
+    border: 1px solid #{'rgb(from var(--wh40k-accent-talents) r g b / 0.3)'};
     border-radius: 3px;
     font-size: 0.7rem;
     font-weight: 600;

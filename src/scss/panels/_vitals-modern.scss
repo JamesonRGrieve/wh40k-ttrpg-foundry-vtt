@@ -75,7 +75,7 @@
 
 // Vital-specific bar colors
 .wh40k-wounds-fill {
-    background: linear-gradient(90deg, var(--wh40k-accent-combat), lighten($wh40k-accent-combat, 15%));
+    background: linear-gradient(90deg, var(--wh40k-accent-combat), color-mix(in srgb, var(--wh40k-accent-combat), white 15%));
 }
 
 .wh40k-fatigue-fill {
@@ -83,7 +83,7 @@
 }
 
 .wh40k-corruption-fill {
-    background: linear-gradient(90deg, darken($wh40k-color-success, 10%), var(--wh40k-color-success));
+    background: linear-gradient(90deg, color-mix(in srgb, var(--wh40k-color-success), black 10%), var(--wh40k-color-success));
 }
 
 .wh40k-insanity-fill {
@@ -113,15 +113,15 @@
 }
 
 .wh40k-critical-warning {
-    background: rgba($wh40k-accent-combat, 0.15);
+    background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.15)'};
     color: var(--wh40k-accent-combat);
-    border: 1px solid rgba($wh40k-accent-combat, 0.3);
+    border: 1px solid #{'rgb(from var(--wh40k-accent-combat) r g b / 0.3)'};
 }
 
 .wh40k-exhausted-warning {
-    background: rgba($wh40k-color-gold, 0.15);
+    background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
     color: var(--wh40k-color-gold-dark);
-    border: 1px solid rgba($wh40k-color-gold, 0.3);
+    border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
 }
 
 // Modifier Display (for Corruption/Insanity)
@@ -205,7 +205,7 @@
     font-size: var(--wh40k-text-micro, 0.65rem);
     font-weight: 700;
     padding: 2px 6px;
-    background: rgba($wh40k-accent-gold, 0.15);
+    background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.15)'};
     color: var(--wh40k-accent-gold);
     border-radius: 3px;
     text-transform: uppercase;
@@ -218,8 +218,8 @@
     align-items: center;
     gap: var(--wh40k-space-xs);
     padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
-    background: rgba($wh40k-accent-gold, 0.08);
-    border-left: 3px solid rgba($wh40k-accent-gold, 0.4);
+    background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.08)'};
+    border-left: 3px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.4)'};
     border-radius: 4px;
     font-size: var(--wh40k-text-tiny, 0.7rem);
     color: var(--color-text-secondary);

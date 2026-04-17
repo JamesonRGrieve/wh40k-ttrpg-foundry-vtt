@@ -74,8 +74,8 @@
         font-size: var(--wh40k-font-size-xs);
         font-weight: 600;
         text-transform: uppercase;
-        background: linear-gradient(135deg, rgba($wh40k-color-gold, 0.15), rgba($wh40k-color-gold, 0.08));
-        border: 1px solid rgba($wh40k-color-gold, 0.4);
+        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.08)'});
+        border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.4)'};
         color: var(--wh40k-color-gold);
 
         i {

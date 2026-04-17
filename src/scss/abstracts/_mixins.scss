@@ -41,7 +41,7 @@
     align-items: center;
     gap: var(--wh40k-space-sm);
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
-    background: linear-gradient(180deg, rgba($accent-color, 0.12) 0%, transparent 100%);
+    background: linear-gradient(180deg, #{'rgb(from var(--accent-color) r g b / 0.12)'} 0%, transparent 100%);
     border-bottom: 1px solid var(--wh40k-border-light);
 }
 
@@ -155,7 +155,7 @@ $wh40k-degree-badges: (
     border-left: 3px solid $color;
 
     .wh40k-zone-header {
-        background: linear-gradient(90deg, rgba($color, 0.12) 0%, var(--color-bg-tertiary) 100%);
+        background: linear-gradient(90deg, #{'rgb(from var(--color) r g b / 0.12)'} 0%, var(--color-bg-tertiary) 100%);
 
         i {
             color: $color;
@@ -418,15 +418,15 @@ $wh40k-zones: (
     justify-content: center;
 
     &:hover {
-        background: rgba($active-color, 0.1);
+        background: #{'rgb(from var(--active-color) r g b / 0.1)'};
         border-color: $active-color;
         color: $active-color;
     }
 
     &.active {
-        background: linear-gradient(180deg, rgba($active-color, 0.2) 0%, rgba($active-color, 0.3) 100%);
+        background: linear-gradient(180deg, #{'rgb(from var(--active-color) r g b / 0.2)'} 0%, #{'rgb(from var(--active-color) r g b / 0.3)'} 100%);
         border-color: $active-color;
-        color: darken($active-color, 10%);
+        color: color-mix(in srgb, var(--active-color), black 10%);
     }
 }
 
@@ -438,7 +438,7 @@ $wh40k-zones: (
     transition: background var(--wh40k-transition-fast);
 
     &:hover {
-        background: rgba($accent-color, 0.06);
+        background: #{'rgb(from var(--accent-color) r g b / 0.06)'};
     }
 }
 

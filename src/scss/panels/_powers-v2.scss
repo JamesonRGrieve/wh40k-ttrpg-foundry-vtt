@@ -22,8 +22,12 @@
 
 .wh40k-panel-powers {
     .wh40k-panel-header {
-        background: linear-gradient(135deg, rgba($wh40k-accent-powers, 0.15) 0%, rgba($wh40k-accent-powers, 0.05) 100%);
-        border-bottom: 2px solid rgba($wh40k-accent-powers, 0.3);
+        background: linear-gradient(
+            135deg,
+            #{'rgb(from var(--wh40k-accent-powers) r g b / 0.15)'} 0%,
+            #{'rgb(from var(--wh40k-accent-powers) r g b / 0.05)'} 100%
+        );
+        border-bottom: 2px solid #{'rgb(from var(--wh40k-accent-powers) r g b / 0.3)'};
 
         .wh40k-panel-title {
             color: var(--wh40k-text-dark);
@@ -35,7 +39,7 @@
     }
 
     .wh40k-count-badge {
-        background: rgba($wh40k-accent-powers, 0.2);
+        background: #{'rgb(from var(--wh40k-accent-powers) r g b / 0.2)'};
         color: var(--wh40k-accent-powers);
         padding: 2px 8px;
         border-radius: 10px;
@@ -272,8 +276,8 @@
 
     &.wh40k-btn-danger {
         &:hover {
-            background: rgba($wh40k-accent-combat, 0.1);
-            border-color: rgba($wh40k-accent-combat, 0.4);
+            background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.1)'};
+            border-color: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.4)'};
             color: var(--wh40k-accent-combat);
         }
     }
@@ -365,8 +369,12 @@
         transition: all var(--wh40k-transition-medium);
 
         &.drop-valid {
-            background: linear-gradient(135deg, rgba($wh40k-accent-powers, 0.08) 0%, rgba($wh40k-accent-powers, 0.02) 100%);
-            border: 2px dashed rgba($wh40k-accent-powers, 0.5);
+            background: linear-gradient(
+                135deg,
+                #{'rgb(from var(--wh40k-accent-powers) r g b / 0.08)'} 0%,
+                #{'rgb(from var(--wh40k-accent-powers) r g b / 0.02)'} 100%
+            );
+            border: 2px dashed #{'rgb(from var(--wh40k-accent-powers) r g b / 0.5)'};
             border-radius: 6px;
             padding: var(--wh40k-space-sm);
         }
@@ -423,7 +431,7 @@
     align-items: center;
     gap: var(--wh40k-space-sm);
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
-    background: linear-gradient(135deg, rgba($wh40k-accent-powers, 0.08) 0%, transparent 100%);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-powers) r g b / 0.08)'} 0%, transparent 100%);
 }
 
 .wh40k-power-icon {
@@ -475,7 +483,7 @@
     align-items: center;
     gap: 3px;
     padding: 2px 6px;
-    background: rgba($wh40k-accent-powers, 0.15);
+    background: #{'rgb(from var(--wh40k-accent-powers) r g b / 0.15)'};
     border-radius: 3px;
     font-size: 0.7rem;
     font-weight: 600;
@@ -630,8 +638,8 @@
     }
 
     &.wh40k-btn-roll:hover {
-        background: rgba($wh40k-accent-powers, 0.15);
-        border-color: rgba($wh40k-accent-powers, 0.3);
+        background: #{'rgb(from var(--wh40k-accent-powers) r g b / 0.15)'};
+        border-color: #{'rgb(from var(--wh40k-accent-powers) r g b / 0.3)'};
         color: var(--wh40k-accent-powers);
     }
 
@@ -899,26 +907,26 @@
 .wh40k-panel-powers .wh40k-dropzone {
     background: repeating-linear-gradient(
         45deg,
-        rgba($wh40k-accent-powers, 0.03),
-        rgba($wh40k-accent-powers, 0.03) 10px,
-        rgba($wh40k-accent-powers, 0.08) 10px,
-        rgba($wh40k-accent-powers, 0.08) 20px
+        #{'rgb(from var(--wh40k-accent-powers) r g b / 0.03)'},
+        #{'rgb(from var(--wh40k-accent-powers) r g b / 0.03)'} 10px,
+        #{'rgb(from var(--wh40k-accent-powers) r g b / 0.08)'} 10px,
+        #{'rgb(from var(--wh40k-accent-powers) r g b / 0.08)'} 20px
     );
-    border: 2px dashed rgba($wh40k-accent-powers, 0.3);
+    border: 2px dashed #{'rgb(from var(--wh40k-accent-powers) r g b / 0.3)'};
 
     &:hover {
         background: repeating-linear-gradient(
             45deg,
-            rgba($wh40k-accent-powers, 0.08),
-            rgba($wh40k-accent-powers, 0.08) 10px,
-            rgba($wh40k-accent-powers, 0.15) 10px,
-            rgba($wh40k-accent-powers, 0.15) 20px
+            #{'rgb(from var(--wh40k-accent-powers) r g b / 0.08)'},
+            #{'rgb(from var(--wh40k-accent-powers) r g b / 0.08)'} 10px,
+            #{'rgb(from var(--wh40k-accent-powers) r g b / 0.15)'} 10px,
+            #{'rgb(from var(--wh40k-accent-powers) r g b / 0.15)'} 20px
         );
-        border-color: rgba($wh40k-accent-powers, 0.5);
+        border-color: #{'rgb(from var(--wh40k-accent-powers) r g b / 0.5)'};
     }
 
     .wh40k-dropzone-icon {
-        color: rgba($wh40k-accent-powers, 0.5);
+        color: #{'rgb(from var(--wh40k-accent-powers) r g b / 0.5)'};
     }
 
     &:hover .wh40k-dropzone-icon {
