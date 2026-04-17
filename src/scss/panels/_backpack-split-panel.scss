@@ -246,7 +246,7 @@
 
 .wh40k-ship-storage .wh40k-column-header {
     i {
-        color: lighten(#6a9bdc, 10%);
+        color: #93b7e6;
     }
 }
 
@@ -548,7 +548,7 @@
 
     &.wh40k-badge-ship {
         background: rgba(#6a9bdc, 0.2);
-        color: lighten(#6a9bdc, 15%);
+        color: #a8c5eb;
     }
 }
 
@@ -572,7 +572,7 @@
     &.wh40k-btn-ship {
         background: rgba(#6a9bdc, 0.15);
         border-color: rgba(#6a9bdc, 0.3);
-        color: lighten(#6a9bdc, 15%);
+        color: #a8c5eb;
 
         &:hover {
             background: rgba(#6a9bdc, 0.25);
