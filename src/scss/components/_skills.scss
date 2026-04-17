@@ -1,9 +1,7 @@
 // Rogue Trader Skills Styling
 // Improved layout and readability for skills panels
 
-// Grid layout variables
-$wh40k-skill-grid: 2fr 0.7fr 1fr 0.7fr 0.8fr;
-$wh40k-skill-group-grid: 1.5rem 1fr auto;
+// Grid layout values (inlined from former SCSS variables)
 
 // Skills panel layout adjustments
 .wh40k-skills-panel,
@@ -311,7 +309,7 @@ $wh40k-skill-group-grid: 1.5rem 1fr auto;
     .table-row,
     .wh40k-skill-row,
     .wh40k-specialist-row {
-        grid-template-columns: $wh40k-skill-grid;
+        grid-template-columns: 2fr 0.7fr 1fr 0.7fr 0.8fr;
         display: grid;
         align-items: center;
     }
@@ -319,7 +317,7 @@ $wh40k-skill-group-grid: 1.5rem 1fr auto;
     .table-row--grouped,
     .wh40k-specialist-group,
     .wh40k-no-specializations {
-        grid-template-columns: $wh40k-skill-group-grid;
+        grid-template-columns: 1.5rem 1fr auto;
         display: grid;
         align-items: center;
     }
