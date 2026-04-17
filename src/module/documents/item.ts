@@ -5,6 +5,26 @@ import { WH40KItemContainer } from './item-container.ts';
 export class WH40KItem extends WH40KItemContainer {
     [key: string]: any;
 
+    static #pruneUndefined(value: any): any {
+        if (Array.isArray(value)) {
+            return value.map((entry) => this.#pruneUndefined(entry));
+        }
+
+        if (value && typeof value === 'object' && !(value instanceof Set) && !(value instanceof Map)) {
+            for (const key of Object.keys(value)) {
+                const entry = value[key];
+                if (entry === undefined) {
+                    delete value[key];
+                    continue;
+                }
+
+                value[key] = this.#pruneUndefined(entry);
+            }
+        }
+
+        return value;
+    }
+
     /**
      * Override to clean/validate img field before validation runs.
      * Foundry V13 has strict img validation - ensure valid file extension.
@@ -14,6 +34,10 @@ export class WH40KItem extends WH40KItemContainer {
      * @override
      */
     static cleanData(source: any = {}, options: any = {}) {
+        // Remove explicit undefined values before schema validation runs.
+        // Foundry treats `undefined` differently from an omitted field during updates.
+        this.#pruneUndefined(source);
+
         // CRITICAL: Clean img field if present - V13 validation is very strict
         if ('img' in source) {
             const imgValue = source.img;

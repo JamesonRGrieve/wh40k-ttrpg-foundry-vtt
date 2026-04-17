@@ -1237,6 +1237,48 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             });
         });
 
+        // Inline-edit: dblclick to edit readonly text fields, save button to commit
+        this.element.querySelectorAll<HTMLElement>('[data-inline-edit]').forEach((wrap) => {
+            const input = wrap.querySelector<HTMLInputElement>('.wh40k-inline-edit-input');
+            const saveBtn = wrap.querySelector<HTMLButtonElement>('[data-inline-edit-save]');
+            if (!input || !saveBtn) return;
+
+            const enterEdit = () => {
+                input.removeAttribute('readonly');
+                wrap.classList.add('is-editing');
+                input.focus();
+                input.select();
+            };
+            const exitEdit = () => {
+                input.setAttribute('readonly', 'readonly');
+                wrap.classList.remove('is-editing');
+            };
+
+            input.addEventListener('dblclick', enterEdit);
+            input.addEventListener('blur', (event) => {
+                // Delay so a click on save button is processed first
+                window.setTimeout(() => {
+                    if (document.activeElement !== input && !wrap.contains(document.activeElement)) {
+                        exitEdit();
+                    }
+                }, 0);
+                void event;
+            });
+            input.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    input.blur();
+                } else if (event.key === 'Escape') {
+                    event.preventDefault();
+                    exitEdit();
+                }
+            });
+            saveBtn.addEventListener('mousedown', (event) => event.preventDefault());
+            saveBtn.addEventListener('click', () => {
+                input.blur();
+            });
+        });
+
         // Set up drag handlers for items
         // Note: Talent panel rows (wh40k-tp_row) are excluded by EnhancedDragDropMixin
         this.element.querySelectorAll('[data-item-id]').forEach((el: Element) => {
