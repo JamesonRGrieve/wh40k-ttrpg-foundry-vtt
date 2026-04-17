@@ -10,8 +10,8 @@
         align-items: center;
         gap: var(--wh40k-space-md);
         padding: var(--wh40k-space-md);
-        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-red) r g b / 0.1)'} 0%, #{'rgb(from var(--wh40k-accent-red) r g b / 0.05)'} 100%);
-        border-bottom: 2px solid #{'rgb(from var(--wh40k-accent-red) r g b / 0.2)'};
+        background: linear-gradient(135deg, rgba($wh40k-accent-red, 0.1) 0%, rgba($wh40k-accent-red, 0.05) 100%);
+        border-bottom: 2px solid rgba($wh40k-accent-red, 0.2);
     }
 
     .wh40k-item-sheet__image-wrapper {
@@ -22,7 +22,7 @@
     .wh40k-item-sheet__image {
         width: 64px;
         height: 64px;
-        border: 2px solid #{'rgb(from var(--wh40k-accent-red) r g b / 0.3)'};
+        border: 2px solid rgba($wh40k-accent-red, 0.3);
         border-radius: 8px;
         object-fit: cover;
         cursor: pointer;
@@ -30,7 +30,7 @@
 
         &:hover {
             transform: scale(1.05);
-            box-shadow: 0 2px 8px #{'rgb(from var(--wh40k-accent-red) r g b / 0.3)'};
+            box-shadow: 0 2px 8px rgba($wh40k-accent-red, 0.3);
         }
     }
 
@@ -63,7 +63,7 @@
             outline: none;
             border-color: var(--wh40k-accent-gold);
             background: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'};
+            box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
         }
     }
 
@@ -167,7 +167,7 @@
             &:focus {
                 outline: none;
                 border-color: var(--wh40k-accent-gold);
-                box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'};
+                box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
             }
         }
 
@@ -184,7 +184,7 @@
             &:focus {
                 outline: none;
                 border-color: var(--wh40k-accent-gold);
-                box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'};
+                box-shadow: 0 0 0 2px rgba($wh40k-accent-gold, 0.2);
             }
         }
 

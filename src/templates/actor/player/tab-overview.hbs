@@ -4,7 +4,7 @@
     
     <div class="wh40k-dashboard tw-grid tw-grid-cols-3 tw-grid-rows-[auto_auto] tw-items-start tw-gap-2 tw-p-2 tw-h-full tw-overflow-y-auto tw-overflow-x-hidden">
 
-        {{!-- COLUMN 1: Vitals → Progression → Resources --}}
+        {{!-- COLUMN 1: Vitals → Resources --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
             {{!-- Vitals --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-vitals">
@@ -69,12 +69,17 @@
                     </div>
 
                     {{!-- Lift & Push --}}
-                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5">
-                        <span class="wh40k-vital-icon"><i class="fas fa-dumbbell"></i></span>
-                        <span class="wh40k-vital-label">Lift</span>
-                        <span class="wh40k-vital-value tw-ml-auto">{{system.lifting.lift}} kg</span>
-                        <span class="wh40k-vital-label tw-ml-2">Push</span>
-                        <span class="wh40k-vital-value">{{system.lifting.push}} kg</span>
+                    <div class="wh40k-vital-row wh40k-vital-row--paired tw-flex tw-items-center tw-gap-3 tw-py-0.5">
+                        <span class="wh40k-vital-pair">
+                            <span class="wh40k-vital-icon"><i class="fas fa-dumbbell"></i></span>
+                            <span class="wh40k-vital-label">Lift</span>
+                            <span class="wh40k-vital-value">{{system.lifting.lift}} kg</span>
+                        </span>
+                        <span class="wh40k-vital-pair wh40k-vital-pair--push">
+                            <span class="wh40k-vital-icon"><i class="fas fa-hand-fist"></i></span>
+                            <span class="wh40k-vital-label">Push</span>
+                            <span class="wh40k-vital-value">{{system.lifting.push}} kg</span>
+                        </span>
                     </div>
 
                     {{!-- Fate Points --}}
@@ -103,9 +108,12 @@
                 {{!-- Mental State (compact) --}}
                 <div class="wh40k-zone-subsection">
                     <div class="wh40k-mental-row">
-                        <span class="wh40k-mental-icon"><i class="fas fa-skull"></i></span>
-                        <span class="wh40k-mental-label">Corruption</span>
-                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
+                        <div class="wh40k-mental-main">
+                            <span class="wh40k-mental-icon"><i class="fas fa-skull"></i></span>
+                            <span class="wh40k-mental-label">Corruption</span>
+                            <span class="wh40k-mental-degree {{corruptionDegreeClass system.corruption}}">{{corruptionDegree system.corruption}}</span>
+                        </div>
+                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1">
                             <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.corruption" data-min="0" title="−1">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -114,12 +122,14 @@
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
-                        <span class="wh40k-mental-degree {{corruptionDegreeClass system.corruption}}">{{corruptionDegree system.corruption}}</span>
                     </div>
                     <div class="wh40k-mental-row">
-                        <span class="wh40k-mental-icon"><i class="fas fa-brain"></i></span>
-                        <span class="wh40k-mental-label">Insanity</span>
-                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1 tw-ml-auto">
+                        <div class="wh40k-mental-main">
+                            <span class="wh40k-mental-icon"><i class="fas fa-brain"></i></span>
+                            <span class="wh40k-mental-label">Insanity</span>
+                            <span class="wh40k-mental-degree {{insanityDegreeClass system.insanity}}">{{insanityDegree system.insanity}}</span>
+                        </div>
+                        <div class="wh40k-vital-controls tw-flex tw-items-center tw-gap-1">
                             <button type="button" class="wh40k-vital-btn" data-action="decrement" data-field="system.insanity" data-min="0" title="−1">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -128,37 +138,6 @@
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
-                        <span class="wh40k-mental-degree {{insanityDegreeClass system.insanity}}">{{insanityDegree system.insanity}}</span>
-                    </div>
-                </div>
-            </div>
-
-            {{!-- Progression --}}
-            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-progression">
-                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
-                    <div class="wh40k-xp-ring-header" data-tooltip="{{#if system.experience.total}}{{floor (multiply (divide system.experience.used system.experience.total) 100)}}{{else}}0{{/if}}% XP spent ({{system.experience.used}}/{{system.experience.total}})">
-                        <svg viewBox="0 0 100 100" class="wh40k-xp-ring-header-svg">
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(120, 46, 34, 0.2)" stroke-width="12"/>
-                            <circle cx="50" cy="50" r="45" fill="none" stroke="#c08020" stroke-width="12" stroke-linecap="round"
-                                    stroke-dasharray="282.74"
-                                    stroke-dashoffset="{{multiply (subtract 1 (divide system.experience.used system.experience.total)) 282.74}}"
-                                    transform="rotate(-90 50 50)"/>
-                        </svg>
-                    </div>
-                    <span>Progression — Rank {{system.rank}}</span>
-                </div>
-                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
-                    <div class="wh40k-xp-row">
-                        <span class="wh40k-xp-label">Experience</span>
-                        <span class="wh40k-xp-value">{{system.experience.available}}/{{system.experience.total}}</span>
-                    </div>
-                    <div class="wh40k-xp-actions">
-                        <button type="button" class="wh40k-xp-action-btn" data-action="customXP" title="Add XP">
-                            <i class="fas fa-plus"></i> Add XP
-                        </button>
-                        <button type="button" class="wh40k-xp-action-btn" data-action="openAdvancement" title="Buy Advancements">
-                            <i class="fa-solid fa-arrow-up-big-small"></i> Advance
-                        </button>
                     </div>
                 </div>
             </div>
@@ -212,8 +191,38 @@
             </div>
         </div>
 
-        {{!-- COLUMN 2: Favourite Skills → Favourite Talents --}}
+        {{!-- COLUMN 2: Progression → Favourite Skills → Favourite Talents --}}
         <div class="tw-flex tw-flex-col tw-gap-2">
+            {{!-- Progression --}}
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-progression">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
+                    <div class="wh40k-xp-ring-header" data-tooltip="{{#if system.experience.total}}{{floor (multiply (divide system.experience.used system.experience.total) 100)}}{{else}}0{{/if}}% XP spent ({{system.experience.used}}/{{system.experience.total}})">
+                        <svg viewBox="0 0 100 100" class="wh40k-xp-ring-header-svg">
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(120, 46, 34, 0.2)" stroke-width="12"/>
+                            <circle cx="50" cy="50" r="45" fill="none" stroke="#c08020" stroke-width="12" stroke-linecap="round"
+                                    stroke-dasharray="282.74"
+                                    stroke-dashoffset="{{multiply (subtract 1 (divide system.experience.used system.experience.total)) 282.74}}"
+                                    transform="rotate(-90 50 50)"/>
+                        </svg>
+                    </div>
+                    <span>Progression — Rank {{system.rank}}</span>
+                </div>
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+                    <div class="wh40k-xp-row">
+                        <span class="wh40k-xp-label">Experience</span>
+                        <span class="wh40k-xp-value">{{system.experience.available}}/{{system.experience.total}}</span>
+                    </div>
+                    <div class="wh40k-xp-actions">
+                        <button type="button" class="wh40k-xp-action-btn" data-action="customXP" title="Add XP">
+                            <i class="fas fa-plus"></i> Add XP
+                        </button>
+                        <button type="button" class="wh40k-xp-action-btn" data-action="openAdvancement" title="Buy Advancements">
+                            <i class="fa-solid fa-arrow-up-big-small"></i> Advance
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             {{!-- Favourite Skills --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-skills">
                 <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">

@@ -484,37 +484,37 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 
         &.degree-pure {
-            background: #{'rgb(from var(--wh40k-degree-pure) r g b / 0.2)'};
+            background: rgba($wh40k-degree-pure, 0.2);
             border: 2px solid var(--wh40k-degree-pure);
             color: color-mix(in srgb, var(--wh40k-degree-pure), black 20%);
         }
 
         &.degree-tainted {
-            background: #{'rgb(from var(--wh40k-degree-tainted) r g b / 0.2)'};
+            background: rgba($wh40k-degree-tainted, 0.2);
             border: 2px solid var(--wh40k-degree-tainted);
             color: color-mix(in srgb, var(--wh40k-degree-tainted), black 25%);
         }
 
         &.degree-soiled {
-            background: #{'rgb(from var(--wh40k-degree-soiled) r g b / 0.2)'};
+            background: rgba($wh40k-degree-soiled, 0.2);
             border: 2px solid var(--wh40k-degree-soiled);
             color: color-mix(in srgb, var(--wh40k-degree-soiled), black 20%);
         }
 
         &.degree-debased {
-            background: #{'rgb(from var(--wh40k-degree-debased) r g b / 0.25)'};
+            background: rgba($wh40k-degree-debased, 0.25);
             border: 2px solid var(--wh40k-degree-debased);
             color: var(--wh40k-degree-debased);
         }
 
         &.degree-profane {
-            background: #{'rgb(from var(--wh40k-degree-profane) r g b / 0.3)'};
+            background: rgba($wh40k-degree-profane, 0.3);
             border: 2px solid var(--wh40k-degree-profane);
             color: var(--wh40k-degree-profane);
         }
 
         &.degree-damned {
-            background: #{'rgb(from var(--wh40k-degree-damned) r g b / 0.3)'};
+            background: rgba($wh40k-degree-damned, 0.3);
             border: 2px solid var(--wh40k-degree-damned);
             color: var(--wh40k-degree-damned);
             animation: badge-pulse 2s ease-in-out infinite;
