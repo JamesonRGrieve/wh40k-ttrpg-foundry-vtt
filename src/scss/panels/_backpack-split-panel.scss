@@ -23,7 +23,7 @@
     background: var(--wh40k-bg-paper);
     border: 1px solid var(--wh40k-border-light);
     border-radius: var(--wh40k-radius-lg);
-    box-shadow: $wh40k-shadow-md;
+    box-shadow: var(--wh40k-shadow-md);
     margin-bottom: var(--wh40k-space-lg);
     overflow: hidden;
 }
@@ -40,7 +40,7 @@
 .wh40k-backpack-header {
     display: flex;
     padding: var(--wh40k-space-md) var(--wh40k-space-lg);
-    background: linear-gradient(180deg, rgba($wh40k-color-gold, 0.12), rgba($wh40k-color-gold, 0.04));
+    background: linear-gradient(180deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.12)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.04)'});
     border-bottom: 1px solid var(--wh40k-border-light);
 }
 
@@ -67,7 +67,7 @@
 
 .wh40k-encumbrance-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--wh40k-color-success), lighten($wh40k-color-success, 10%));
+    background: linear-gradient(90deg, var(--wh40k-color-success), color-mix(in srgb, var(--wh40k-color-success), white 10%));
     transition: width 0.3s ease, background 0.3s ease;
 
     &.wh40k-enc-caution {
@@ -79,7 +79,7 @@
     }
 
     &.wh40k-enc-danger {
-        background: linear-gradient(90deg, var(--wh40k-color-failure), lighten($wh40k-color-failure, 10%));
+        background: linear-gradient(90deg, var(--wh40k-color-failure), color-mix(in srgb, var(--wh40k-color-failure), white 10%));
     }
 }
 
@@ -127,7 +127,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px rgba($wh40k-color-gold, 0.2);
+        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.2)'};
     }
 
     &::placeholder {
@@ -227,8 +227,8 @@
     .wh40k-item-badge {
         margin-left: auto;
         padding: 1px 6px;
-        background: rgba($wh40k-color-gold, 0.2);
-        border: 1px solid rgba($wh40k-color-gold, 0.4);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.2)'};
+        border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.4)'};
         border-radius: var(--wh40k-radius-sm);
         font-size: 0.7rem;
         font-weight: 600;
@@ -240,7 +240,7 @@
     border-right: 1px solid var(--wh40k-border-light);
 
     i {
-        color: lighten($wh40k-color-gold, 10%);
+        color: color-mix(in srgb, var(--wh40k-color-gold), white 10%);
     }
 }
 
@@ -267,11 +267,11 @@
     }
 
     &::-webkit-scrollbar-thumb {
-        background: rgba($wh40k-color-gold, 0.3);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
         border-radius: var(--wh40k-radius-sm);
 
         &:hover {
-            background: rgba($wh40k-color-gold, 0.5);
+            background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.5)'};
         }
     }
 }
@@ -286,7 +286,7 @@
     align-items: center;
     justify-content: center;
     width: 32px;
-    background: linear-gradient(180deg, rgba($wh40k-color-gold, 0.08), rgba($wh40k-color-gold, 0.02));
+    background: linear-gradient(180deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.08)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.02)'});
     border-left: 1px solid var(--wh40k-border-light);
     border-right: 1px solid var(--wh40k-border-light);
     position: relative;
@@ -305,8 +305,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba($wh40k-color-gold, 0.15);
-    border: 1px solid rgba($wh40k-color-gold, 0.3);
+    background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+    border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
     border-radius: 50%;
     color: var(--wh40k-color-gold);
     font-size: 0.75rem;
@@ -365,16 +365,16 @@
     height: 28px;
 
     &:hover {
-        background: rgba($wh40k-color-gold, 0.08);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.08)'};
     }
 
     &.wh40k-row-equipped {
-        background: rgba($wh40k-color-success, 0.08);
+        background: #{'rgb(from var(--wh40k-color-success) r g b / 0.08)'};
         border-left: 2px solid var(--wh40k-color-success);
     }
 
     &.wh40k-row-stowed {
-        background: rgba($wh40k-color-gold, 0.05);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'};
     }
 
     &.wh40k-row-ship {
@@ -521,12 +521,12 @@
     }
 
     &.wh40k-badge-equipped {
-        background: rgba($wh40k-color-success, 0.2);
-        color: lighten($wh40k-color-success, 20%);
+        background: #{'rgb(from var(--wh40k-color-success) r g b / 0.2)'};
+        color: color-mix(in srgb, var(--wh40k-color-success), white 20%);
     }
 
     &.wh40k-badge-backpack {
-        background: rgba($wh40k-color-gold, 0.2);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.2)'};
         color: var(--wh40k-color-gold);
     }
 
@@ -543,8 +543,8 @@
 
 .wh40k-action-btn {
     padding: 2px 6px;
-    background: rgba($wh40k-color-gold, 0.15);
-    border: 1px solid rgba($wh40k-color-gold, 0.3);
+    background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+    border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
     border-radius: var(--wh40k-radius-sm);
     color: var(--wh40k-color-gold);
     cursor: pointer;
@@ -553,9 +553,9 @@
     display: inline-block;
 
     &:hover {
-        background: rgba($wh40k-color-gold, 0.25);
-        border-color: rgba($wh40k-color-gold, 0.5);
-        box-shadow: 0 0 4px rgba($wh40k-color-gold, 0.3);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.25)'};
+        border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.5)'};
+        box-shadow: 0 0 4px #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
     }
 
     &.wh40k-btn-ship {
@@ -570,13 +570,13 @@
     }
 
     &.wh40k-btn-backpack {
-        background: rgba($wh40k-color-gold, 0.15);
-        border-color: rgba($wh40k-color-gold, 0.3);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+        border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
         color: var(--wh40k-color-gold);
 
         &:hover {
-            background: rgba($wh40k-color-gold, 0.25);
-            border-color: rgba($wh40k-color-gold, 0.5);
+            background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.25)'};
+            border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.5)'};
         }
     }
 }
@@ -589,7 +589,7 @@
     position: relative;
 
     &[data-drop-zone='personal'].wh40k-drag-over {
-        background: rgba($wh40k-color-gold, 0.1);
+        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.1)'};
         border: 2px dashed var(--wh40k-color-gold);
 
         &::after {
@@ -599,7 +599,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             padding: var(--wh40k-space-md) var(--wh40k-space-lg);
-            background: rgba($wh40k-color-gold, 0.9);
+            background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.9)'};
             color: #000;
             border-radius: var(--wh40k-radius-md);
             font-weight: 600;

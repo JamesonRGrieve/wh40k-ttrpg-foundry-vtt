@@ -162,7 +162,7 @@
                 &:hover {
                     background: var(--color-bg-tertiary);
                     border-color: var(--wh40k-accent-gold);
-                    box-shadow: 0 2px 8px $wh40k-shadow-md;
+                    box-shadow: 0 2px 8px var(--wh40k-shadow-md);
                 }
 
                 &.wh40k-preset-item--selected {
@@ -256,7 +256,7 @@
 
                 &:hover {
                     background: var(--color-bg-tertiary);
-                    box-shadow: 0 2px 8px $wh40k-shadow-md;
+                    box-shadow: 0 2px 8px var(--wh40k-shadow-md);
                 }
 
                 .wh40k-preset-content {

@@ -7,7 +7,7 @@
 
 .wh40k-controls {
     button {
-        background: rgba($form-button-background, 0.125);
+        background: #{'rgb(from var(--form-button-background) r g b / 0.125)'};
         text-align: center;
     }
 }
