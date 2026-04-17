@@ -2172,60 +2172,55 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             return;
         }
 
-        const transferStates = new Map<string, { inShipStorage: boolean; inBackpack: boolean; equipped: boolean }>();
+        const transferOperations: Promise<unknown>[] = [];
 
         // Backpack → Ship
         backpackChecks.forEach((cb: Element) => {
             const itemId = (cb as HTMLElement).dataset.itemId;
-            if (itemId) {
-                transferStates.set(itemId, {
-                    inShipStorage: true,
-                    inBackpack: false,
-                    equipped: false,
-                });
+            if (!itemId) return;
+
+            const item = (this as any).actor.items.get(itemId);
+            if (!item) return;
+
+            const equippable = item.system as any;
+            if (typeof equippable?.stowInShipStorage === 'function') {
+                transferOperations.push(equippable.stowInShipStorage());
+                return;
             }
+
+            transferOperations.push(
+                item.update({
+                    'system.equipped': false,
+                    'system.inBackpack': false,
+                    'system.inShipStorage': true,
+                }),
+            );
         });
 
-        // Ship → Backpack
+        // Ship → Backpack/Carried
         shipChecks.forEach((cb: Element) => {
             const itemId = (cb as HTMLElement).dataset.itemId;
-            if (itemId) {
-                transferStates.set(itemId, {
-                    inShipStorage: false,
-                    inBackpack: false,
-                    equipped: false,
-                });
+            if (!itemId) return;
+
+            const item = (this as any).actor.items.get(itemId);
+            if (!item) return;
+
+            const equippable = item.system as any;
+            if (typeof equippable?.removeFromShipStorage === 'function') {
+                transferOperations.push(equippable.removeFromShipStorage());
+                return;
             }
+
+            transferOperations.push(
+                item.update({
+                    'system.inShipStorage': false,
+                }),
+            );
         });
 
-        if (!transferStates.size) return;
+        if (!transferOperations.length) return;
 
-        const updates = Array.from(transferStates.entries())
-            .map(([itemId, nextState]) => {
-                const item = (this as any).actor.items.get(itemId);
-                if (!item) return null;
-
-                const nextSystem = foundry.utils.deepClone(item.system ?? {});
-                nextSystem.inShipStorage = nextState.inShipStorage;
-                nextSystem.inBackpack = nextState.inBackpack;
-                nextSystem.equipped = nextState.equipped;
-
-                const forcedReplacement = new foundry.data.operators.ForcedReplacement();
-                foundry.data.operators.DataFieldOperator.set(forcedReplacement, nextSystem);
-
-                return {
-                    _id: itemId,
-                    system: forcedReplacement as any,
-                };
-            })
-            .filter(Boolean);
-
-        if (!updates.length) return;
-
-        await (this as any).actor.updateEmbeddedDocuments('Item', updates as any[], {
-            diff: false,
-            recursive: false,
-        });
+        await Promise.all(transferOperations);
     }
 
     /* -------------------------------------------- */

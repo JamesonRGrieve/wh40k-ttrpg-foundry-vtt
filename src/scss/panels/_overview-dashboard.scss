@@ -298,47 +298,63 @@
     }
 }
 
-// Mental State Rows
+// Mental State Rows — 3-col grid: label left | controls centered | stamp right
 .wh40k-mental-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 6px;
     padding: 2px 0;
 
     .wh40k-vital-controls {
+        justify-self: center;
         margin-left: 0;
         min-width: 70px;
         justify-content: center;
     }
 }
 
+.wh40k-mental-label-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-self: start;
+}
+
+.wh40k-mental-row .wh40k-mental-degree {
+    justify-self: end;
+    margin-left: 0;
+}
+
 .wh40k-mental-icon {
-    width: 16px;
+    width: 18px;
     text-align: center;
     color: var(--color-text-tertiary);
-    font-size: 0.75rem;
+    font-size: 0.85rem;
 }
 
 .wh40k-mental-label {
-    font-size: 0.7rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: var(--color-text-secondary);
     min-width: 60px;
 }
 
 .wh40k-mental-value {
-    font-size: 0.8rem;
+    font-size: 1.4rem;
     font-weight: 700;
     font-family: $wh40k-font-alt;
     color: var(--color-text-primary);
-    min-width: 25px;
+    min-width: 45px;
     text-align: center;
 }
 
 .wh40k-mental-degree {
     padding: 3px 8px;
     border-radius: 4px;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;

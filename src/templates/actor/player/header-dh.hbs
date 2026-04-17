@@ -9,33 +9,44 @@
             <div class="wh40k-header-topline tw-grid tw-grid-cols-header-topline tw-gap-2.5 tw-items-center">
                 <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-shrink-0">
                     <div class="wh40k-portrait-container tw-relative tw-shrink-0 tw-cursor-pointer">
-                        <img class="wh40k-portrait tw-w-44 tw-h-auto tw-max-h-60 tw-object-contain" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+                        <img class="wh40k-portrait tw-w-44 tw-h-60 tw-object-cover" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
                     </div>
                     {{#if system.originPath.divination}}
                     <p class="wh40k-divination tw-italic tw-opacity-50">{{system.originPath.divination}}</p>
                     {{/if}}
                 </div>
                 <div class="wh40k-header-info tw-grid tw-grid-cols-4 tw-gap-1.5 tw-items-center">
-                    <div class="wh40k-header-row wh40k-name-row tw-col-span-4">
-                        <span class="wh40k-header-label">{{localize "WH40K.Character.Name"}}</span>
-                        <input class="wh40k-header-input wh40k-name-input" name="name" type="text" value="{{actor.name}}" />
-                    </div>
-                    <div class="wh40k-header-row wh40k-player-row tw-col-span-4">
-                        <span class="wh40k-header-label">{{localize "WH40K.Character.Player"}}</span>
-                        <input class="wh40k-header-input wh40k-player-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" />
+                    <div class="wh40k-header-name-line tw-col-span-4 tw-flex tw-items-center tw-gap-1">
+                        <span class="wh40k-header-label">{{localize "WH40K.Character.Name"}}:</span>
+                        <span class="wh40k-inline-edit" data-inline-edit>
+                            <input class="wh40k-header-input wh40k-name-input wh40k-inline-edit-input" name="name" type="text" value="{{actor.name}}" readonly />
+                            <button type="button" class="wh40k-inline-edit-save" data-inline-edit-save tabindex="-1" title="Save">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </span>
+                        <span class="wh40k-header-paren">(</span>
+                        <span class="wh40k-inline-edit" data-inline-edit>
+                            <input class="wh40k-header-input wh40k-player-input wh40k-player-inline wh40k-inline-edit-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" readonly />
+                            <button type="button" class="wh40k-inline-edit-save" data-inline-edit-save tabindex="-1" title="Save">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </span>
+                        <span class="wh40k-header-paren">)</span>
                     </div>
                     {{!-- Origin Path Step Icons --}}
-                    {{#each originPathSteps as |step|}}
-                    <div class="tw-flex tw-items-center tw-justify-center tw-w-14 tw-h-14 tw-rounded-full tw-overflow-hidden tw-border-2 tw-border-solid tw-bg-[rgba(0,0,0,0.2)] tw-justify-self-center tw-transition-all {{#if step.item}}tw-border-gold tw-cursor-pointer hover:tw-border-[#f0d060] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)] hover:tw-scale-110{{else}}tw-border-[var(--wh40k-border-color,#4a3728)] tw-opacity-40 tw-cursor-default{{/if}}"
-                         {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
-                         {{#if step.tooltipData}}data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{step.tooltipData}}"{{else}}data-tooltip="{{step.label}}"{{/if}}>
-                        {{#if step.item}}
-                            <img src="{{step.item.img}}" alt="{{step.item.name}}" class="tw-w-12 tw-h-12 tw-max-w-12 tw-max-h-12 tw-object-cover tw-rounded-full tw-border-2 tw-border-solid tw-border-gold" />
-                        {{else}}
-                            <i class="fas {{step.icon}} tw-text-xl tw-text-[var(--wh40k-text-muted)]"></i>
-                        {{/if}}
+                    <div class="tw-col-span-4 tw-flex tw-justify-center tw-items-center tw-gap-2">
+                        {{#each originPathSteps as |step|}}
+                        <div class="tw-flex tw-items-center tw-justify-center tw-w-14 tw-h-14 tw-rounded-full tw-overflow-hidden tw-border-2 tw-border-solid tw-bg-[rgba(0,0,0,0.2)] tw-transition-all {{#if step.item}}tw-border-gold tw-cursor-pointer hover:tw-border-[#f0d060] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)] hover:tw-scale-110{{else}}tw-border-[var(--wh40k-border-color,#4a3728)] tw-opacity-40 tw-cursor-default{{/if}}"
+                             {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
+                             {{#if step.tooltipData}}data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{step.tooltipData}}"{{else}}data-tooltip="{{step.label}}"{{/if}}>
+                            {{#if step.item}}
+                                <img src="{{step.item.img}}" alt="{{step.item.name}}" class="tw-w-12 tw-h-12 tw-max-w-12 tw-max-h-12 tw-object-cover tw-rounded-full tw-border-2 tw-border-solid tw-border-gold" />
+                            {{else}}
+                                <i class="fas {{step.icon}} tw-text-xl tw-text-[var(--wh40k-text-muted)]"></i>
+                            {{/if}}
+                        </div>
+                        {{/each}}
                     </div>
-                    {{/each}}
                 </div>
             </div>
         </div>

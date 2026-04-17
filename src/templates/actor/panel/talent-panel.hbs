@@ -8,6 +8,7 @@
     </div>
     
     <div class="wh40k-panel-body">
+        {{#if talentsCount}}
         <div class="wh40k-talents-table" data-drop-zone="talents" data-accepts="talent">
             {{#each talents as |talent|}}
             <div class="wh40k-tp_row" data-tooltip="{{talent.tooltipText}}">
@@ -42,7 +43,8 @@
             </div>
             {{/each}}
         </div>
-        
+        {{/if}}
+
         <div class="wh40k-dropzone {{#if talentsCount}}wh40k-dropzone--compact{{/if}}" data-action="itemCreate" data-type="talent">
             <i class="fas fa-star wh40k-dropzone-icon"></i>
             <span class="wh40k-dropzone-text">{{#if talentsCount}}Drop to add{{else}}Drop Talent or Click to Create{{/if}}</span>
