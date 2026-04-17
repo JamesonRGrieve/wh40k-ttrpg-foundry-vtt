@@ -54,10 +54,86 @@
 // Zone 1: Vitals
 // ============================================
 
-// Zone accent colors — generated from $wh40k-zones map in _mixins.scss
-@each $zone, $color in $wh40k-zones {
-    .wh40k-zone-#{$zone} {
-        @include wh40k-zone-accent($color);
+// Zone accent colors — pre-generated (replaces @each loop + wh40k-zone-accent mixin)
+.wh40k-zone-vitals {
+    border-left: 3px solid var(--wh40k-accent-combat);
+    .wh40k-zone-header {
+        background: linear-gradient(90deg, #{'rgb(from var(--wh40k-accent-combat) r g b / 0.12)'} 0%, var(--color-bg-tertiary) 100%);
+        i {
+            color: var(--wh40k-accent-combat);
+        }
+    }
+}
+.wh40k-zone-skills {
+    border-left: 3px solid #2ecc71;
+    .wh40k-zone-header {
+        background: linear-gradient(90deg, rgba(46, 204, 113, 0.12) 0%, var(--color-bg-tertiary) 100%);
+        i {
+            color: #2ecc71;
+        }
+    }
+}
+.wh40k-zone-talents {
+    border-left: 3px solid var(--wh40k-accent-talents);
+    .wh40k-zone-header {
+        background: linear-gradient(90deg, #{'rgb(from var(--wh40k-accent-talents) r g b / 0.12)'} 0%, var(--color-bg-tertiary) 100%);
+        i {
+            color: var(--wh40k-accent-talents);
+        }
+    }
+}
+.wh40k-zone-movement {
+    border-left: 3px solid #3498db;
+    .wh40k-zone-header {
+        background: linear-gradient(90deg, rgba(52, 152, 219, 0.12) 0%, var(--color-bg-tertiary) 100%);
+        i {
+            color: #3498db;
+        }
+    }
+}
+.wh40k-zone-progression {
+    border-left: 3px solid var(--wh40k-color-gold);
+    .wh40k-zone-header {
+        background: linear-gradient(90deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.12)'} 0%, var(--color-bg-tertiary) 100%);
+        i {
+            color: var(--wh40k-color-gold);
+        }
+    }
+}
+.wh40k-zone-weapons {
+    border-left: 3px solid var(--wh40k-accent-combat);
+    .wh40k-zone-header {
+        background: linear-gradient(90deg, #{'rgb(from var(--wh40k-accent-combat) r g b / 0.12)'} 0%, var(--color-bg-tertiary) 100%);
+        i {
+            color: var(--wh40k-accent-combat);
+        }
+    }
+}
+.wh40k-zone-armour {
+    border-left: 3px solid #7f8c8d;
+    .wh40k-zone-header {
+        background: linear-gradient(90deg, rgba(127, 140, 141, 0.12) 0%, var(--color-bg-tertiary) 100%);
+        i {
+            color: #7f8c8d;
+        }
+    }
+}
+.wh40k-zone-resources {
+    border-left: 3px solid var(--wh40k-color-gold);
+    .wh40k-zone-header {
+        background: linear-gradient(90deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.12)'} 0%, var(--color-bg-tertiary) 100%);
+        i {
+            color: var(--wh40k-color-gold);
+        }
+    }
+}
+.wh40k-zone-effects {
+    border-left: 3px solid #9b59b6;
+    .wh40k-zone-header {
+        background: linear-gradient(90deg, rgba(155, 89, 182, 0.12) 0%, var(--color-bg-tertiary) 100%);
+        i {
+            color: #9b59b6;
+        }
     }
 }
 
@@ -372,11 +448,66 @@
     white-space: nowrap;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
-    // Corruption & Insanity degree badges — generated from $wh40k-degree-badges map
-    @each $degree, $params in $wh40k-degree-badges {
-        &.wh40k-degree-#{$degree} {
-            @include wh40k-degree-badge-style(nth($params, 1), nth($params, 2), nth($params, 3), 1px);
-        }
+    // Corruption & Insanity degree badges — pre-generated (replaces @each + wh40k-degree-badge-style)
+    &.wh40k-degree-pure {
+        background: #{'rgb(from var(--wh40k-degree-pure) r g b / 0.2)'};
+        border: 1px solid var(--wh40k-degree-pure);
+        color: #136e34;
+    }
+    &.wh40k-degree-tainted {
+        background: #{'rgb(from var(--wh40k-degree-tainted) r g b / 0.2)'};
+        border: 1px solid var(--wh40k-degree-tainted);
+        color: #6f5504;
+    }
+    &.wh40k-degree-soiled {
+        background: #{'rgb(from var(--wh40k-degree-soiled) r g b / 0.2)'};
+        border: 1px solid var(--wh40k-degree-soiled);
+        color: #a54604;
+    }
+    &.wh40k-degree-debased {
+        background: #{'rgb(from var(--wh40k-degree-debased) r g b / 0.25)'};
+        border: 1px solid var(--wh40k-degree-debased);
+        color: #ef4444;
+    }
+    &.wh40k-degree-profane {
+        background: #{'rgb(from var(--wh40k-degree-profane) r g b / 0.3)'};
+        border: 1px solid var(--wh40k-degree-profane);
+        color: #dc2626;
+    }
+    &.wh40k-degree-damned {
+        background: #{'rgb(from var(--wh40k-degree-damned) r g b / 0.3)'};
+        border: 1px solid var(--wh40k-degree-damned);
+        color: #a92626;
+    }
+    &.wh40k-degree-stable {
+        background: #{'rgb(from var(--wh40k-degree-stable) r g b / 0.2)'};
+        border: 1px solid var(--wh40k-degree-stable);
+        color: #136e34;
+    }
+    &.wh40k-degree-unsettled {
+        background: #{'rgb(from var(--wh40k-degree-unsettled) r g b / 0.2)'};
+        border: 1px solid var(--wh40k-degree-unsettled);
+        color: #6f5504;
+    }
+    &.wh40k-degree-disturbed {
+        background: #{'rgb(from var(--wh40k-degree-disturbed) r g b / 0.2)'};
+        border: 1px solid var(--wh40k-degree-disturbed);
+        color: #a54604;
+    }
+    &.wh40k-degree-unhinged {
+        background: #{'rgb(from var(--wh40k-degree-unhinged) r g b / 0.25)'};
+        border: 1px solid var(--wh40k-degree-unhinged);
+        color: #ef4444;
+    }
+    &.wh40k-degree-deranged {
+        background: #{'rgb(from var(--wh40k-degree-deranged) r g b / 0.3)'};
+        border: 1px solid var(--wh40k-degree-deranged);
+        color: #dc2626;
+    }
+    &.wh40k-degree-terminally {
+        background: #{'rgb(from var(--wh40k-degree-terminally) r g b / 0.3)'};
+        border: 1px solid var(--wh40k-degree-terminally);
+        color: #a92626;
     }
 }
 
