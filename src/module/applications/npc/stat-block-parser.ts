@@ -22,8 +22,6 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {ApplicationV2}
  */
 export default class StatBlockParser extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -44,6 +42,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             width: 800,
             height: 700,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         form: {
             handler: StatBlockParser._onSubmit,
             submitOnChange: false,
@@ -54,6 +53,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             cancel: StatBlockParser._onCancel,
             clearInput: StatBlockParser._onClearInput,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -1082,7 +1082,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      */
     static async _onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         if (!this.#parsedData) {
-            (ui.notifications as any).error('No valid data to import. Parse input first.');
+            ui.notifications.error('No valid data to import. Parse input first.');
             return;
         }
 
@@ -1101,7 +1101,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                     await this.#targetActor.createEmbeddedDocuments('Item', this.#parsedData.items);
                 }
 
-                (ui.notifications as any).info(game.i18n.format('WH40K.NPC.Import.Success', { name: this.#targetActor.name }));
+                ui.notifications.info(game.i18n.format('WH40K.NPC.Import.Success', { name: this.#targetActor.name }));
                 this.#targetActor.sheet.render(true);
 
                 this.#submitted = true;
@@ -1116,21 +1116,21 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
                 system: this.#parsedData.system,
             };
 
-            const actor = await Actor.create(actorData as any);
+            const actor = await Actor.create(actorData);
 
             // Create embedded items if any
             if (this.#parsedData.items?.length > 0) {
                 await actor.createEmbeddedDocuments('Item', this.#parsedData.items);
             }
 
-            (ui.notifications as any).info(game.i18n.format('WH40K.NPC.Import.Success', { name: actor.name }));
+            ui.notifications.info(game.i18n.format('WH40K.NPC.Import.Success', { name: actor.name }));
             void actor.sheet.render(true);
 
             this.#submitted = true;
             if (this.#resolve) this.#resolve(actor);
         } catch (err) {
             console.error('Failed to import NPC:', err);
-            (ui.notifications as any).error(game.i18n.localize('WH40K.NPC.Import.Failed'));
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.Import.Failed'));
             if (this.#resolve) this.#resolve(null);
         }
     }
@@ -1200,7 +1200,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             input = initialInput.initialInput ?? '';
         }
 
-        const { actor, initialInput: _ignored, ...appOptions } = options as any;
+        const { actor, initialInput: _ignored, ...appOptions } = options as Record<string, unknown>;
         const parser = new this(appOptions);
         parser.#rawInput = input;
         parser.#targetActor = actor ?? null;

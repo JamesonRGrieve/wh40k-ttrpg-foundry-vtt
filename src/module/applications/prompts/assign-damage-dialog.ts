@@ -9,7 +9,6 @@ import BaseRollDialog from './base-roll-dialog.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class AssignDamageDialog extends BaseRollDialog {
-    [key: string]: any;
     /**
      * @param {object} assignDamageData  The damage assignment data.
      * @param {object} [options={}]      Dialog options.
@@ -95,7 +94,7 @@ export default class AssignDamageDialog extends BaseRollDialog {
  * Open an assign damage dialog.
  * @param {object} assignDamageData  The damage assignment data.
  */
-export function prepareAssignDamageRoll(assignDamageData) {
+export function prepareAssignDamageRoll(assignDamageData: any): void {
     const prompt = new AssignDamageDialog(assignDamageData);
     prompt.render(true);
 }

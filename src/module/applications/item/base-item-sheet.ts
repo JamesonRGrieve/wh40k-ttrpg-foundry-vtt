@@ -22,8 +22,7 @@ const { ItemSheetV2 } = foundry.applications.sheets;
  * - ExpandableTooltipMixin (click-to-expand tooltips)
  * - StatBreakdownMixin (stat calculation breakdowns)
  */
-export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any)))) {
-    [key: string]: any;
+export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2)))) {
     constructor(options: any = {}) {
         // @ts-expect-error Foundry V2 constructor accepts options
         super(options);
@@ -34,6 +33,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /** @override */
     static DEFAULT_OPTIONS = {
         tag: 'form',
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             editImage: BaseItemSheet.#onEditImage,
             toggleEditMode: BaseItemSheet.#toggleEditMode,
@@ -43,6 +43,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
             effectToggle: BaseItemSheet.#effectToggle,
             toggleSection: BaseItemSheet.#toggleSection,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         tabs: [
             {
                 navSelector: '.wh40k-tabs',
@@ -96,7 +97,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Convenience access to the item.
      * @type {Item}
      */
-    get item() {
+    get item(): any {
         return this.document;
     }
 
@@ -114,7 +115,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Whether this item is from a compendium (read-only).
      * @type {boolean}
      */
-    get isCompendiumItem() {
+    get isCompendiumItem(): boolean {
         return this.item.pack !== null;
     }
 
@@ -122,7 +123,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Whether this item is owned by an actor.
      * @type {boolean}
      */
-    get isOwnedByActor() {
+    get isOwnedByActor(): boolean {
         return !!this.item.actor;
     }
 
@@ -130,7 +131,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * Whether the sheet should show edit controls.
      * @type {boolean}
      */
-    get canEdit() {
+    get canEdit(): boolean {
         if (this.isCompendiumItem) return false;
         return this.isEditable;
     }
@@ -204,14 +205,14 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     _getTabs(): any {
         const tabs = {};
         for (const { tab, group, label, condition } of (this.constructor as any).TABS) {
-            if (condition && !condition(this.document)) continue;
-            tabs[tab] = {
+            if (condition && !(condition as any)(this.document)) continue;
+            (tabs as any)[tab as string] = {
                 id: tab,
                 tab,
                 group,
                 label,
-                active: this.tabGroups[group] === tab,
-                cssClass: this.tabGroups[group] === tab ? 'active' : '',
+                active: this.tabGroups[group as string] === tab,
+                cssClass: this.tabGroups[group as string] === tab ? 'active' : '',
             };
         }
         return tabs;
@@ -369,7 +370,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     static async #onEditImage(this: any, event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset.edit ?? 'img';
         const current = foundry.utils.getProperty(this.document._source, attr);
-        const fp = new (CONFIG as any).ux.FilePicker({
+        const fp = new CONFIG.ux.FilePicker({
             current,
             type: 'image',
             callback: (path) => this.document.update({ [attr]: path }),

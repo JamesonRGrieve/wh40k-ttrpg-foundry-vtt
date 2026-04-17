@@ -18,8 +18,6 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {HandlebarsApplicationMixin(ApplicationV2)}
  */
 export default class CombatPresetDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /**
      * Internal state for the dialog.
      * @type {Object}
@@ -47,6 +45,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
             width: 700,
             height: 600,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             saveNew: CombatPresetDialog.#saveNew,
             loadSelected: CombatPresetDialog.#loadSelected,
@@ -55,6 +54,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
             importPreset: CombatPresetDialog.#importPreset,
             selectPreset: CombatPresetDialog.#selectPreset,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /** @override */
@@ -135,7 +135,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Array<Object>} Array of preset objects.
      */
     static getPresets(): any {
-        return (game as any).settings.get('wh40k-rpg', this.SETTING_KEY) || [];
+        return (game.settings as any).get('wh40k-rpg', this.SETTING_KEY) || [];
     }
 
     /**
@@ -150,7 +150,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
             id: foundry.utils.randomID(),
             createdAt: Date.now(),
         });
-        await (game as any).settings.set('wh40k-rpg', this.SETTING_KEY, presets);
+        await (game.settings as any).set('wh40k-rpg', this.SETTING_KEY, presets);
     }
 
     /**
@@ -164,7 +164,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         const index = presets.findIndex((p: any) => p.id === id);
         if (index >= 0) {
             presets[index] = { ...presets[index], ...updates };
-            await (game as any).settings.set('wh40k-rpg', this.SETTING_KEY, presets);
+            await (game.settings as any).set('wh40k-rpg', this.SETTING_KEY, presets);
         }
     }
 
@@ -176,7 +176,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     static async deletePresetById(id: string): Promise<void> {
         const presets = this.getPresets();
         const filtered = presets.filter((p: any) => p.id !== id);
-        await (game as any).settings.set('wh40k-rpg', this.SETTING_KEY, filtered);
+        await (game.settings as any).set('wh40k-rpg', this.SETTING_KEY, filtered);
     }
 
     /**
@@ -246,7 +246,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         };
 
         await npc.update(updates);
-        (ui.notifications as any).info(`Applied preset "${preset.name}" to ${npc.name}`);
+        ui.notifications.info(`Applied preset "${preset.name}" to ${npc.name}`);
     }
 
     /* -------------------------------------------- */
@@ -300,19 +300,19 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         const description = (form.querySelector('[name="presetDescription"]') as HTMLTextAreaElement | null)?.value.trim();
 
         if (!name) {
-            (ui.notifications as any).warn('Please enter a preset name.');
+            ui.notifications.warn('Please enter a preset name.');
             return;
         }
 
         if (!this.#state.npc) {
-            (ui.notifications as any).error('No NPC selected.');
+            ui.notifications.error('No NPC selected.');
             return;
         }
 
         const preset = this.constructor.createPresetFromNPC(this.#state.npc, name, description);
         await this.constructor.addPreset(preset);
 
-        (ui.notifications as any).info(`Saved preset "${name}"`);
+        ui.notifications.info(`Saved preset "${name}"`);
         this.close();
     }
 
@@ -325,18 +325,18 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         event.preventDefault();
 
         if (!this.#state.selectedPreset) {
-            (ui.notifications as any).warn('Please select a preset to load.');
+            ui.notifications.warn('Please select a preset to load.');
             return;
         }
 
         if (!this.#state.npc) {
-            (ui.notifications as any).error('No NPC selected.');
+            ui.notifications.error('No NPC selected.');
             return;
         }
 
         const preset = this.constructor.getPreset(this.#state.selectedPreset);
         if (!preset) {
-            (ui.notifications as any).error('Preset not found.');
+            ui.notifications.error('Preset not found.');
             return;
         }
 
@@ -358,7 +358,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         const preset = this.constructor.getPreset(presetId);
         if (!preset) return;
 
-        const confirmed = await (foundry as any).applications.api.DialogV2.confirm({
+        const confirmed = await foundry.applications.api.DialogV2.confirm({
             window: { title: 'Delete Preset' },
             content: `<p>Delete preset <strong>${preset.name}</strong>?</p>`,
             rejectClose: false,
@@ -366,7 +366,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
         if (confirmed) {
             await this.constructor.deletePresetById(presetId);
-            (ui.notifications as any).info(`Deleted preset "${preset.name}"`);
+            ui.notifications.info(`Deleted preset "${preset.name}"`);
             this.render();
         }
     }
@@ -386,7 +386,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         if (!preset) return;
 
         const json = JSON.stringify(preset, null, 2);
-        (saveDataToFile as any)(json, 'application/json', `${preset.name.slugify()}.json`);
+        saveDataToFile(json, 'application/json', `${preset.name.slugify()}.json`);
     }
 
     /**
@@ -416,10 +416,10 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
                     }
 
                     await this.constructor.addPreset(preset);
-                    (ui.notifications as any).info(`Imported preset "${preset.name}"`);
+                    ui.notifications.info(`Imported preset "${preset.name}"`);
                     this.render();
                 } catch (error: any) {
-                    (ui.notifications as any).error(`Failed to import preset: ${error.message}`);
+                    ui.notifications.error(`Failed to import preset: ${error.message}`);
                 }
             })();
         });

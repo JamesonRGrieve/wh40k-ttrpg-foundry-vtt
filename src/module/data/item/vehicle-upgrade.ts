@@ -8,8 +8,6 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes DescriptionTemplate
  */
 export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare upgradeType: string;
@@ -24,7 +22,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -98,7 +96,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
      * Has any non-zero modifiers?
      * @type {boolean}
      */
-    get hasModifiers() {
+    get hasModifiers(): boolean {
         return Object.values(this.modifiers).some((v) => v !== 0);
     }
 
@@ -106,7 +104,7 @@ export default class VehicleUpgradeData extends ItemDataModel.mixin(DescriptionT
      * Get modifiers as a formatted list.
      * @type {object[]}
      */
-    get modifiersList() {
+    get modifiersList(): any[] {
         const list = [];
         for (const [key, value] of Object.entries(this.modifiers)) {
             if (value !== 0) {

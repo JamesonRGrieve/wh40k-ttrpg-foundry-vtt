@@ -163,9 +163,7 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  *
  * @mixin
  */
-export default class ModifiersTemplate extends SystemDataModel {
-    [key: string]: any;
-
+export default class ModifiersTemplate extends (SystemDataModel as any) {
     // Typed property declarations matching defineSchema()
     declare modifiers: {
         characteristics: Record<string, unknown>;
@@ -182,7 +180,7 @@ export default class ModifiersTemplate extends SystemDataModel {
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             modifiers: new fields.SchemaField({
                 characteristics: new fields.ObjectField({ required: true, initial: {} }),
@@ -344,7 +342,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * Get all modifiers as a flat array for display.
      * @type {object[]}
      */
-    get modifiersList() {
+    get modifiersList(): any[] {
         const list = [];
         const mods = this.modifiers;
 
@@ -414,7 +412,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @type {object}
      */
     get situationalModifiers(): Record<string, any> {
-        const situational = (this.modifiers as any).situational || {};
+        const situational = ((this.modifiers as Record<string, unknown>).situational as Record<string, unknown[]>) || {};
         return {
             characteristics: situational.characteristics || [],
             skills: situational.skills || [],
@@ -428,7 +426,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * Check if this item has any situational modifiers.
      * @type {boolean}
      */
-    get hasSituationalModifiers() {
+    get hasSituationalModifiers(): boolean {
         const sit = this.situationalModifiers;
         return sit.characteristics.length > 0 || sit.skills.length > 0 || sit.combat.length > 0;
     }

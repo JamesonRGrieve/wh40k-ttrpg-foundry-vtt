@@ -15,9 +15,13 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes AttackTemplate
  * @mixes DamageTemplate
  */
-export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, AttackTemplate, DamageTemplate) {
-    [key: string]: any;
-
+export default class WeaponData extends (ItemDataModel as any).mixin(
+    DescriptionTemplate,
+    PhysicalItemTemplate,
+    EquippableTemplate,
+    AttackTemplate,
+    DamageTemplate,
+) {
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare class: string;
@@ -25,7 +29,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     declare twoHanded: boolean;
     declare melee: boolean;
     declare clip: { max: number; value: number; type: string };
-    // Note: 'reload' schema field accessed via [key: string]: any; to avoid conflict with reload() method
+    // Note: 'reload' schema field conflicts with inherited reload() method; access via this['reload'] if needed
     declare loadedAmmo: {
         uuid: string;
         name: string;
@@ -42,6 +46,21 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     }>;
     declare requiredTraining: string;
     declare notes: string;
+
+    // Properties from mixin templates
+    declare equipped: boolean;
+    declare inShipStorage: boolean;
+    declare special: Set<string>;
+    declare craftsmanship: string;
+    declare damage: { formula: string; bonus: number; penetration: number; type: string };
+    declare attack: { type: string; range: { value: number; units: string; special: string }; rateOfFire: { single: boolean; semi: number; full: number } };
+    declare weight: number;
+    declare parent: any;
+
+    // Derived labels from templates
+    declare damageLabel: string;
+    declare rangeLabel: string;
+    declare rateOfFireLabel: string;
 
     // Derived in prepareDerivedData()
     declare _modificationModifiers: { damage: number; penetration: number; toHit: number; range: number; weight: number };
@@ -292,7 +311,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Alias for isPrimitive (for consistency with armour API).
      * @type {boolean}
      */
-    get primitive() {
+    get primitive(): boolean {
         return this.isPrimitive;
     }
 
@@ -300,7 +319,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Does this weapon use ammunition?
      * @type {boolean}
      */
-    get usesAmmo() {
+    get usesAmmo(): boolean {
         return this.clip.max > 0;
     }
 
@@ -308,7 +327,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Is the weapon jammed or out of ammo?
      * @type {boolean}
      */
-    get isOutOfAmmo() {
+    get isOutOfAmmo(): boolean {
         return this.usesAmmo && this.clip.value <= 0;
     }
 
@@ -323,8 +342,8 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      *
      * @type {Set<string>}
      */
-    get effectiveSpecial() {
-        const qualities = new Set(this.special || []);
+    get effectiveSpecial(): Set<string> {
+        const qualities = new Set<string>(this.special || []);
 
         // Add craftsmanship-derived qualities for RANGED weapons only
         // Melee weapons get toHit/damage modifiers instead
@@ -410,7 +429,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      *
      * @type {object}
      */
-    get craftsmanshipModifiers() {
+    get craftsmanshipModifiers(): any {
         const mods = {
             toHit: 0, // WS/BS modifier
             damage: 0, // Damage bonus
@@ -493,7 +512,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get effective penetration (base + modifications).
      * @type {number}
      */
-    get effectivePenetration() {
+    get effectivePenetration(): number {
         const basePen = this.damage.penetration || 0;
         const modPen = this._modificationModifiers?.penetration ?? 0;
         return basePen + modPen;
@@ -503,7 +522,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get effective to-hit modifier (craftsmanship + modifications).
      * @type {number}
      */
-    get effectiveToHit() {
+    get effectiveToHit(): number {
         const craftMod = this.craftsmanshipModifiers.toHit;
         const modMod = this._modificationModifiers?.toHit ?? 0;
         return craftMod + modMod;
@@ -531,7 +550,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get effective weight (base + modifications).
      * @type {number}
      */
-    get effectiveWeight() {
+    get effectiveWeight(): number {
         const baseWeight = this.weight || 0;
         const modWeight = this._modificationModifiers?.weight ?? 0;
         return baseWeight + modWeight;
@@ -632,7 +651,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the reload time label.
      * @type {string}
      */
-    get reloadLabel() {
+    get reloadLabel(): string {
         const labels = {
             '-': '-',
             'free': game.i18n.localize('WH40K.Reload.Free'),
@@ -652,7 +671,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Customised quality halves reload time.
      * @type {string}
      */
-    get effectiveReloadTime() {
+    get effectiveReloadTime(): string {
         // Access schema field via index — see reloadLabel comment
         const baseReload = (this as Record<string, any>)['reload'] as string;
 
@@ -678,7 +697,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get effective reload time label.
      * @type {string}
      */
-    get effectiveReloadLabel() {
+    get effectiveReloadLabel(): string {
         const labels = {
             '-': '-',
             'free': game.i18n.localize('WH40K.Reload.Free'),
@@ -774,7 +793,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get icon class for weapon class.
      * @type {string}
      */
-    get classIcon() {
+    get classIcon(): string {
         const icons = {
             melee: 'fa-sword',
             pistol: 'fa-gun',
@@ -790,7 +809,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get icon class for weapon type.
      * @type {string}
      */
-    get typeIcon() {
+    get typeIcon(): string {
         const icons = {
             'primitive': 'fa-axe',
             'las': 'fa-laser-pointer',
@@ -852,7 +871,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get a compact summary string for compendium/list display.
      * @type {string}
      */
-    get compendiumSummary() {
+    get compendiumSummary(): string {
         const parts = [];
         parts.push(this.damageLabel || '-');
         if (this.damage.penetration > 0) parts.push(`Pen ${this.damage.penetration}`);
@@ -864,7 +883,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get full stat line for display.
      * @type {string}
      */
-    get statLine() {
+    get statLine(): string {
         const parts = [];
         parts.push(`${this.classLabel}`);
         if (this.isRangedWeapon) {
@@ -881,25 +900,22 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get qualities as array of objects with labels and descriptions.
      * @type {Array<{id: string, label: string, description: string, level: number|null}>}
      */
-    get qualitiesArray() {
+    get qualitiesArray(): any[] {
         const qualities = [];
         const config = CONFIG.WH40K?.weaponQualities ?? {};
 
         for (const qualityId of this.effectiveSpecial) {
             // Parse level from quality ID (e.g., "blast-3" -> "blast", 3)
-            // @ts-expect-error - dynamic property access
             const match = qualityId.match(/^(.+?)-(\d+)$/);
             const baseId = match ? match[1] : qualityId;
             const level = match ? parseInt(match[2]) : null;
 
-            // @ts-expect-error - index type
             const definition = config[baseId] || config[qualityId];
 
             qualities.push({
                 id: qualityId,
                 baseId: baseId,
-                // @ts-expect-error - dynamic property access
-                label: definition?.label ? game.i18n.localize(definition.label) : qualityId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+                label: definition?.label ? game.i18n.localize(definition.label) : qualityId.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
                 description: definition?.description ? game.i18n.localize(definition.description) : '',
                 level: level,
                 hasLevel: definition?.hasLevel ?? false,
@@ -913,7 +929,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Check if weapon is two-handed.
      * @type {boolean}
      */
-    get isTwoHanded() {
+    get isTwoHanded(): boolean {
         return this.twoHanded || this.class === 'heavy';
     }
 
@@ -921,7 +937,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get hands required string.
      * @type {string}
      */
-    get handsLabel() {
+    get handsLabel(): string {
         return this.isTwoHanded ? game.i18n.localize('WH40K.Weapon.TwoHanded') : game.i18n.localize('WH40K.Weapon.OneHanded');
     }
 

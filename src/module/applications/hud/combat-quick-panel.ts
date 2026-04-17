@@ -16,8 +16,6 @@
 const { ApplicationV2 } = foundry.applications.api;
 
 export default class CombatQuickPanel extends ApplicationV2 {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
@@ -38,6 +36,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
             width: 340,
             height: 'auto' as const,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             rollInitiative: CombatQuickPanel.#rollInitiative,
             standardAttack: CombatQuickPanel.#standardAttack,
@@ -52,6 +51,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
             useConsumable: CombatQuickPanel.#useConsumable,
             toggleOpacity: CombatQuickPanel.#toggleOpacity,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -123,7 +123,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
         return `Combat: ${this.actor.name}`;
     }
 
@@ -156,10 +156,10 @@ export default class CombatQuickPanel extends ApplicationV2 {
         };
 
         // Initiative
-        const combatant = game.combat?.combatants.find((c) => (c as any).actorId === this.actor.id);
+        const combatant = game.combat?.combatants.find((c) => c.actorId === this.actor.id);
         context.initiative = {
-            rolled: (combatant as any)?.initiative !== null,
-            value: (combatant as any)?.initiative || 0,
+            rolled: combatant?.initiative !== null,
+            value: combatant?.initiative || 0,
             bonus: this.actor.system.initiative.bonus || 0,
         };
 
@@ -373,9 +373,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
         });
 
         // Unsubscribe from hooks
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         Hooks.off('updateActor', this._onActorUpdate);
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         Hooks.off('updateItem', this._onItemUpdate);
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         Hooks.off('combatRound', this._onCombatRound);
+        // eslint-disable-next-line @typescript-eslint/unbound-method
         Hooks.off('deleteCombat', this._onCombatEnd);
 
         super._onClose(options);
@@ -444,14 +448,14 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {HTMLElement} target
      */
     static async #rollInitiative(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const combatant = game.combat?.combatants.find((c) => (c as any).actorId === this.actor.id);
+        const combatant = game.combat?.combatants.find((c) => c.actorId === this.actor.id);
         if (!combatant) {
-            (ui.notifications as any).warn('Character not in combat');
+            ui.notifications.warn('Character not in combat');
             return;
         }
 
         await game.combat.rollInitiative([combatant.id]);
-        (ui.notifications as any).info(`Rolled initiative for ${this.actor.name}`);
+        ui.notifications.info(`Rolled initiative for ${this.actor.name}`);
     }
 
     /* -------------------------------------------- */
@@ -464,7 +468,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #standardAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
-            (ui.notifications as any).warn('No weapon equipped');
+            ui.notifications.warn('No weapon equipped');
             return;
         }
 
@@ -485,7 +489,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #semiAutoAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon?.system.rateOfFire?.semiAuto) {
-            (ui.notifications as any).warn('Weapon does not support semi-auto');
+            ui.notifications.warn('Weapon does not support semi-auto');
             return;
         }
 
@@ -505,7 +509,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #fullAutoAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon?.system.rateOfFire?.fullAuto) {
-            (ui.notifications as any).warn('Weapon does not support full-auto');
+            ui.notifications.warn('Weapon does not support full-auto');
             return;
         }
 
@@ -525,13 +529,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #dodge(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.dodge) {
-            (ui.notifications as any).warn('Already used dodge this round');
+            ui.notifications.warn('Already used dodge this round');
             return;
         }
 
         const skill = this.actor.system.skills?.dodge;
         if (!skill) {
-            (ui.notifications as any).warn('No dodge skill');
+            ui.notifications.warn('No dodge skill');
             return;
         }
 
@@ -550,13 +554,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #parry(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.parry) {
-            (ui.notifications as any).warn('Already used parry this round');
+            ui.notifications.warn('Already used parry this round');
             return;
         }
 
         const skill = this.actor.system.skills?.parry;
         if (!skill) {
-            (ui.notifications as any).warn('No parry skill');
+            ui.notifications.warn('No parry skill');
             return;
         }
 
@@ -575,25 +579,25 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #reload(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
-            (ui.notifications as any).warn('No weapon equipped');
+            ui.notifications.warn('No weapon equipped');
             return;
         }
 
         const clip = this.primaryWeapon.system.clip;
         if (!clip) {
-            (ui.notifications as any).warn('Weapon does not use ammunition');
+            ui.notifications.warn('Weapon does not use ammunition');
             return;
         }
 
         if (clip.value >= clip.max) {
-            (ui.notifications as any).warn('Weapon is fully loaded');
+            ui.notifications.warn('Weapon is fully loaded');
             return;
         }
 
         // Reload to max
         await this.primaryWeapon.update({ 'system.clip.value': clip.max });
 
-        (ui.notifications as any).info(`Reloaded ${this.primaryWeapon.name}`);
+        ui.notifications.info(`Reloaded ${this.primaryWeapon.name}`);
 
         // Play reload animation
         this._animateReload();
@@ -613,9 +617,9 @@ export default class CombatQuickPanel extends ApplicationV2 {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content: `<p><strong>${this.actor.name}</strong> takes aim (+10 to next attack)</p>`,
             flavor: 'Aim Action',
-        } as any);
+        } as Record<string, unknown>);
 
-        (ui.notifications as any).info('Aim action taken (+10 next attack)');
+        ui.notifications.info('Aim action taken (+10 next attack)');
     }
 
     /* -------------------------------------------- */
@@ -630,20 +634,20 @@ export default class CombatQuickPanel extends ApplicationV2 {
         const weapons = this.actor.items.filter((i) => i.type === 'weapon' && !i.system.equipped);
 
         if (weapons.length === 0) {
-            (ui.notifications as any).warn('No weapons to draw');
+            ui.notifications.warn('No weapons to draw');
             return;
         }
 
         // Show weapon selection if multiple
         if (weapons.length > 1) {
             // TODO: Show weapon selection dialog
-            (ui.notifications as any).info('Multiple weapons available - use character sheet to select');
+            ui.notifications.info('Multiple weapons available - use character sheet to select');
             return;
         }
 
         // Equip the weapon
         await weapons[0].update({ 'system.equipped': true });
-        (ui.notifications as any).info(`Drew ${weapons[0].name}`);
+        ui.notifications.info(`Drew ${weapons[0].name}`);
     }
 
     /* -------------------------------------------- */
@@ -668,7 +672,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         // Equip new
         await weapon.update({ 'system.equipped': true });
 
-        (ui.notifications as any).info(`Switched to ${weapon.name}`);
+        ui.notifications.info(`Switched to ${weapon.name}`);
         this.render(false);
     }
 
@@ -690,9 +694,9 @@ export default class CombatQuickPanel extends ApplicationV2 {
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content: `<p><strong>${this.actor.name}</strong> uses ${item.name}</p>`,
-        } as any);
+        } as Record<string, unknown>);
 
-        (ui.notifications as any).info(`Used ${item.name}`);
+        ui.notifications.info(`Used ${item.name}`);
     }
 
     /* -------------------------------------------- */
@@ -742,11 +746,11 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static show(actor: any): Promise<any> {
         // Check if panel already exists
-        const existing = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
+        const existing = Object.values((ui as any).windows).find((app: any) => app instanceof CombatQuickPanel && app.actor.id === actor.id) as any;
 
         if (existing) {
             existing.render(true, { focus: true });
-            return existing as any;
+            return existing;
         }
 
         // Create new panel
@@ -763,7 +767,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @static
      */
     static close(actor: any): void {
-        const panel = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
+        const panel = Object.values((ui as any).windows).find((app: any) => app instanceof CombatQuickPanel && app.actor.id === actor.id) as any;
 
         if (panel) void panel.close();
     }
@@ -776,7 +780,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @static
      */
     static toggle(actor: any): void {
-        const panel = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
+        const panel = Object.values((ui as any).windows).find((app: any) => app instanceof CombatQuickPanel && app.actor.id === actor.id) as any;
 
         if (panel) {
             void panel.close();

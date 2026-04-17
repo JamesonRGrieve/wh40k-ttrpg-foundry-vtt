@@ -10,8 +10,6 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes PhysicalItemTemplate
  */
 export default class ArmourModificationData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare restrictions: { armourTypes: Set<string> };
@@ -23,7 +21,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -157,8 +155,8 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
         // Convert SetFields to Arrays for storage
-        if ((source.restrictions as any)?.armourTypes instanceof Set) {
-            (source.restrictions as any).armourTypes = Array.from((source.restrictions as any).armourTypes);
+        if ((source.restrictions as Record<string, unknown>)?.armourTypes instanceof Set) {
+            (source.restrictions as Record<string, unknown>).armourTypes = Array.from((source.restrictions as Record<string, Set<unknown>>).armourTypes);
         }
         if (source.addedProperties instanceof Set) {
             source.addedProperties = Array.from(source.addedProperties);
@@ -295,7 +293,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * Has any non-zero modifiers?
      * @type {boolean}
      */
-    get hasModifiers() {
+    get hasModifiers(): boolean {
         const mods = this.modifiers;
         return mods.armourPoints !== 0 || mods.maxAgility !== 0 || mods.weight !== 0;
     }
@@ -304,7 +302,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * Get modifier summary for display.
      * @type {string}
      */
-    get modifierSummary() {
+    get modifierSummary(): string {
         const parts = [];
         const mods = this.modifiers;
 
@@ -325,7 +323,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * Get properties summary.
      * @type {string}
      */
-    get propertiesSummary() {
+    get propertiesSummary(): string {
         const added = Array.from(this.addedProperties);
         const removed = Array.from(this.removedProperties);
         const parts = [];

@@ -24,14 +24,14 @@ const BODY_LOCATIONS: string[] = ['body', 'head', 'leftArm', 'rightArm', 'leftLe
  * @param {object} itemSystem - The item's system data
  * @returns {object|null} The armour points object or null
  */
-function getArmourPointsObject(itemSystem: Record<string, unknown>): Record<string, unknown> | null {
-    const raw = (itemSystem as any)?.armourPoints;
+function getArmourPointsObject(itemSystem: any): Record<string, unknown> | null {
+    const raw: any = itemSystem?.armourPoints;
     if (!raw || typeof raw !== 'object') return null;
     // Handle nested structure
     if (raw.armourPoints && typeof raw.armourPoints === 'object') {
-        return raw.armourPoints;
+        return raw.armourPoints as Record<string, unknown>;
     }
-    return raw;
+    return raw as Record<string, unknown>;
 }
 
 /**
@@ -137,7 +137,7 @@ function getArmourAPForLocation(armourSystem: Record<string, any>, location: str
     if (armourPoints) {
         const hasValues = Object.values(armourPoints).some((value: unknown) => Number(value) > 0);
         if (hasValues) {
-            const value = Number((armourPoints as any)?.[location] ?? 0);
+            const value = Number((armourPoints as Record<string, number>)?.[location] ?? 0);
             return Number.isFinite(value) ? value : 0;
         }
     }
@@ -203,7 +203,7 @@ export function computeArmour(actor: any): Record<string, ArmourLocationData> {
         .forEach((cybernetic: any) => {
             const armourPoints = getArmourPointsObject(cybernetic.system);
             BODY_LOCATIONS.forEach((location: string) => {
-                const armourVal = (armourPoints as any)?.[location] ?? 0;
+                const armourVal = (armourPoints as Record<string, number>)?.[location] ?? 0;
                 armour[location].total += Number(armourVal);
             });
         });

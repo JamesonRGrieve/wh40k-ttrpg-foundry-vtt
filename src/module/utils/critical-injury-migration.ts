@@ -10,7 +10,6 @@
  */
 
 export default class CriticalInjuryMigration {
-    [key: string]: any;
     static PACK_NAME = 'wh40k-rpg.dh2-core-stats-critical-injuries';
     static DAMAGE_TYPES = ['impact', 'rending', 'explosive', 'energy'];
     static BODY_PARTS = ['head', 'arm', 'body', 'leg'];
@@ -22,17 +21,17 @@ export default class CriticalInjuryMigration {
      * @param {boolean} options.backup - If true, create backup before migration (default: true)
      * @returns {Promise<object>} Migration results
      */
-    static async migrate(options = {}) {
+    static async migrate(options = {}): Promise<any> {
         // @ts-expect-error - dynamic property
         const { dryRun = false, backup = true } = options;
 
-        (ui.notifications as any).info('Starting critical injury migration...');
+        ui.notifications.info('Starting critical injury migration...');
         console.log('[Critical Injury Migration] Starting migration...');
 
         const pack = game.packs.get(this.PACK_NAME);
         if (!pack) {
             const msg = `Pack ${this.PACK_NAME} not found!`;
-            (ui.notifications as any).error(msg);
+            ui.notifications.error(msg);
             throw new Error(msg);
         }
 
@@ -54,7 +53,7 @@ export default class CriticalInjuryMigration {
         console.log(`[Critical Injury Migration] Created ${consolidatedItems.length} consolidated items`);
 
         if (dryRun) {
-            (ui.notifications as any).info(
+            ui.notifications.info(
                 `Dry run complete. Would create ${consolidatedItems.length} consolidated items and remove ${existingItems.length} old items.`,
             );
             return {
@@ -69,6 +68,7 @@ export default class CriticalInjuryMigration {
         console.log('[Critical Injury Migration] Writing consolidated items to pack...');
         const created = [];
         for (const itemData of consolidatedItems) {
+            // eslint-disable-next-line no-await-in-loop -- Sequential document creation in compendium
             const doc = await pack.documentClass.create(itemData, { pack: pack.collection });
             created.push(doc);
             console.log(`  Created: ${String(doc.name)} (${String(doc.id)})`);
@@ -78,12 +78,13 @@ export default class CriticalInjuryMigration {
         console.log('[Critical Injury Migration] Deleting old items...');
         const deleted = [];
         for (const item of existingItems) {
+            // eslint-disable-next-line no-await-in-loop -- Sequential document deletion
             await item.delete();
             deleted.push(item.id);
             console.log(`  Deleted: ${String(item.name)} (${String(item.id)})`);
         }
 
-        (ui.notifications as any).info(`Migration complete! Created ${created.length} consolidated items, removed ${deleted.length} old items.`);
+        ui.notifications.info(`Migration complete! Created ${created.length} consolidated items, removed ${deleted.length} old items.`);
 
         return {
             dryRun: false,
@@ -98,11 +99,11 @@ export default class CriticalInjuryMigration {
      * @param {CompendiumCollection} pack - Pack to backup
      * @private
      */
-    static async _createBackup(pack) {
+    static async _createBackup(pack): Promise<any> {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const backupName = `${pack.metadata.name}-backup-${timestamp}`;
 
-        (ui.notifications as any).info(`Creating backup: ${backupName}...`);
+        ui.notifications.info(`Creating backup: ${backupName}...`);
         console.log(`[Critical Injury Migration] Creating backup: ${backupName}`);
 
         // Note: Foundry doesn't have a built-in pack duplication API,
@@ -118,7 +119,7 @@ export default class CriticalInjuryMigration {
         // Log backup data to console for manual save
         console.log('[Critical Injury Migration] Backup data:', JSON.stringify(backupData, null, 2));
 
-        (ui.notifications as any).warn('Backup data logged to console. Please save manually if needed.');
+        ui.notifications.warn('Backup data logged to console. Please save manually if needed.');
     }
 
     /**
@@ -127,7 +128,7 @@ export default class CriticalInjuryMigration {
      * @returns {object} Grouped items by "damageType-bodyPart" key
      * @private
      */
-    static _groupItems(items) {
+    static _groupItems(items): any {
         const grouped = {};
 
         for (const item of items) {
@@ -160,7 +161,7 @@ export default class CriticalInjuryMigration {
      * @returns {object[]} Array of consolidated item data
      * @private
      */
-    static _createConsolidatedItems(grouped) {
+    static _createConsolidatedItems(grouped): any {
         const consolidated = [];
 
         for (const [, data] of Object.entries(grouped)) {
@@ -224,7 +225,7 @@ export default class CriticalInjuryMigration {
      * @returns {object} Summary report
      * @private
      */
-    static _generateSummary(consolidated, grouped) {
+    static _generateSummary(consolidated, grouped): any {
         const summary = {
             totalConsolidated: consolidated.length,
             byDamageType: {},
@@ -257,7 +258,7 @@ export default class CriticalInjuryMigration {
      * @param {object} results - Migration results
      * @returns {boolean} True if validation passes
      */
-    static validateMigration(results) {
+    static validateMigration(results): any {
         const { summary } = results;
 
         console.log('[Critical Injury Migration] Validation Report:');

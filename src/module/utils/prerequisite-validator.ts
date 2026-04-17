@@ -42,7 +42,7 @@ const CHAR_ABBREVIATIONS = {
  * @param {string} key - Input key (e.g., 'Fel', 'fellowship', 'Fellowship')
  * @returns {string} Normalized key (e.g., 'fellowship')
  */
-function normalizeCharacteristicKey(key) {
+function normalizeCharacteristicKey(key: string): string {
     const lower = key.toLowerCase();
     return CHAR_ABBREVIATIONS[lower] ?? lower;
 }
@@ -53,7 +53,7 @@ function normalizeCharacteristicKey(key) {
  * @param {Prerequisite[]} prerequisites - Array of prerequisites to check
  * @returns {ValidationResult} Validation result
  */
-export function checkPrerequisites(actor, prerequisites) {
+export function checkPrerequisites(actor: any, prerequisites: any[]): { valid: boolean; unmet: string[] } {
     if (!prerequisites || prerequisites.length === 0) {
         return { valid: true, unmet: [] };
     }
@@ -79,7 +79,7 @@ export function checkPrerequisites(actor, prerequisites) {
  * @param {Prerequisite} prereq - The prerequisite to check
  * @returns {{valid: boolean, reason?: string}}
  */
-function checkSinglePrerequisite(actor, prereq) {
+function checkSinglePrerequisite(actor: any, prereq: any): { valid: boolean; reason?: string } {
     switch (prereq.type) {
         case 'characteristic':
             return checkCharacteristicPrereq(actor, prereq);
@@ -99,7 +99,7 @@ function checkSinglePrerequisite(actor, prereq) {
  * @param {Prerequisite} prereq
  * @returns {{valid: boolean, reason?: string}}
  */
-function checkCharacteristicPrereq(actor, prereq) {
+function checkCharacteristicPrereq(actor: any, prereq: any): { valid: boolean; reason?: string } {
     const charKey = normalizeCharacteristicKey(prereq.key);
     const characteristic = actor.system?.characteristics?.[charKey];
 
@@ -137,7 +137,7 @@ function checkCharacteristicPrereq(actor, prereq) {
  * @param {Prerequisite} prereq
  * @returns {{valid: boolean, reason?: string}}
  */
-function checkSkillPrereq(actor, prereq) {
+function checkSkillPrereq(actor: any, prereq: any): { valid: boolean; reason?: string } {
     const skillName = prereq.key;
     const requiredLevel = prereq.value ?? 'trained'; // 'trained', 'plus10', or 'plus20'
 
@@ -173,7 +173,7 @@ function checkSkillPrereq(actor, prereq) {
  * @param {Prerequisite} prereq
  * @returns {{valid: boolean, reason?: string}}
  */
-function checkTalentPrereq(actor, prereq) {
+function checkTalentPrereq(actor: any, prereq: any): { valid: boolean; reason?: string } {
     const talentName = prereq.key.toLowerCase();
 
     // Check if actor has the talent as an item
@@ -196,7 +196,7 @@ function checkTalentPrereq(actor, prereq) {
  * @param {string} skillName - Skill name, optionally with specialization in parentheses
  * @returns {Object|null} The skill object or null
  */
-function findSkill(actor, skillName) {
+function findSkill(actor: any, skillName: string): any {
     const skills = actor.system?.skills;
     if (!skills) return null;
 
@@ -231,7 +231,7 @@ function findSkill(actor, skillName) {
  * @param {string} name - Skill display name
  * @returns {string} System skill key
  */
-function getSkillKey(name) {
+function getSkillKey(name: string): string {
     // Common mappings
     const mappings = {
         'common lore': 'commonLore',
@@ -262,7 +262,7 @@ function getSkillKey(name) {
  * @param {string} requiredLevel - 'trained', 'plus10', or 'plus20'
  * @returns {boolean}
  */
-function checkSkillLevel(skill, requiredLevel) {
+function checkSkillLevel(skill: any, requiredLevel: string): boolean {
     switch (requiredLevel) {
         case 'plus20':
             return skill.plus20 === true;
@@ -280,7 +280,7 @@ function checkSkillLevel(skill, requiredLevel) {
  * @param {string} prereqString - Raw prerequisite string
  * @returns {Prerequisite|null}
  */
-export function parsePrerequisiteString(prereqString) {
+export function parsePrerequisiteString(prereqString: string): { type: string; key: string; value?: number } | null {
     if (!prereqString || prereqString.trim() === '') {
         return null;
     }

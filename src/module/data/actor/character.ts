@@ -1,6 +1,6 @@
 import CreatureTemplate from './templates/creature.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = (foundry.data as any).fields;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
 
 /**
  * List of characteristic keys used for character generation.
@@ -69,8 +69,6 @@ interface CharacterGenerationCustomBases {
 }
 
 export default class CharacterData extends CreatureTemplate {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare rank: number;
     declare mutations: string;
@@ -447,7 +445,7 @@ export default class CharacterData extends CreatureTemplate {
      * @protected
      */
     _computeOriginPathEffects(): void {
-        const actor = this.parent;
+        const actor = (this as any).parent;
         if (!actor?.items) return;
 
         const originItems = actor.items.filter((item) => item.isOriginPath);
@@ -502,27 +500,7 @@ export default class CharacterData extends CreatureTemplate {
 
         // Update the originPath system data with the names (only if origin builder items exist)
         if (this.originPath) {
-            // RT steps
-            if (stepMap.homeWorld?.name) this.originPath.homeWorld = stepMap.homeWorld.name;
-            if (stepMap.birthright?.name) this.originPath.birthright = stepMap.birthright.name;
-            if (stepMap.lureOfTheVoid?.name) this.originPath.lureOfTheVoid = stepMap.lureOfTheVoid.name;
-            if (stepMap.trialsAndTravails?.name) this.originPath.trialsAndTravails = stepMap.trialsAndTravails.name;
-            if (stepMap.motivation?.name) this.originPath.motivation = stepMap.motivation.name;
-            if (stepMap.career?.name) this.originPath.career = stepMap.career.name;
-            // DH2e steps
-            if (stepMap.background?.name) this.originPath.background = stepMap.background.name;
-            if (stepMap.role?.name) this.originPath.role = stepMap.role.name;
-            if (stepMap.elite?.name) this.originPath.elite = stepMap.elite.name;
-            if (stepMap.divination?.name) this.originPath.divination = stepMap.divination.name;
-            // BC steps
-            if (stepMap.race?.name) this.originPath.race = stepMap.race.name;
-            if (stepMap.archetype?.name) this.originPath.archetype = stepMap.archetype.name;
-            if (stepMap.pride?.name) this.originPath.pride = stepMap.pride.name;
-            if (stepMap.disgrace?.name) this.originPath.disgrace = stepMap.disgrace.name;
-            // OW / DW steps
-            if (stepMap.regiment?.name) this.originPath.regiment = stepMap.regiment.name;
-            if (stepMap.speciality?.name) this.originPath.speciality = stepMap.speciality.name;
-            if (stepMap.chapter?.name) this.originPath.chapter = stepMap.chapter.name;
+            this._syncOriginPathNames(stepMap);
         }
 
         // Collect aptitudes from all origin path items (DH2e/BC/OW use aptitudes for XP costs)
@@ -542,6 +520,38 @@ export default class CharacterData extends CreatureTemplate {
             const firstSystem = originItems[0]?.system?.gameSystem;
             if (firstSystem && firstSystem !== this.gameSystem) {
                 this.gameSystem = firstSystem;
+            }
+        }
+    }
+
+    /**
+     * Sync origin path step names from step map to the originPath data.
+     * @param {object} stepMap - Map of step keys to item data
+     * @private
+     */
+    _syncOriginPathNames(stepMap: Record<string, any>): void {
+        const allStepKeys = [
+            'homeWorld',
+            'birthright',
+            'lureOfTheVoid',
+            'trialsAndTravails',
+            'motivation',
+            'career',
+            'background',
+            'role',
+            'elite',
+            'divination',
+            'race',
+            'archetype',
+            'pride',
+            'disgrace',
+            'regiment',
+            'speciality',
+            'chapter',
+        ];
+        for (const key of allStepKeys) {
+            if (stepMap[key]?.name) {
+                this.originPath[key] = stepMap[key].name;
             }
         }
     }
@@ -585,7 +595,7 @@ export default class CharacterData extends CreatureTemplate {
      * @protected
      */
     _computeExperienceSpent(): void {
-        const actor = this.parent;
+        const actor = (this as any).parent;
         if (!actor?.items || !this.experience) return;
 
         this.experience.spentCharacteristics = 0;
@@ -639,7 +649,7 @@ export default class CharacterData extends CreatureTemplate {
      * @protected
      */
     _computeWoundsMax(): void {
-        const actor = this.parent;
+        const actor = (this as any).parent;
         if (!actor?.items) return;
 
         const originItems = actor.items.filter((item) => item.isOriginPath);

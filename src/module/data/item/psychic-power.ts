@@ -12,8 +12,6 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes DamageTemplate
  */
 export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTemplate, ActivationTemplate, DamageTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare discipline: string;
@@ -29,7 +27,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -110,7 +108,7 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
      * Get the focus test description.
      * @type {string}
      */
-    get focusTestLabel() {
+    get focusTestLabel(): string {
         let label = this.focusCharacteristicLabel;
         if (this.focusPower.modifier !== 0) {
             label += ` ${this.focusPower.modifier >= 0 ? '+' : ''}${this.focusPower.modifier}`;

@@ -9,7 +9,6 @@ import BaseRollDialog from './base-roll-dialog.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class WeaponAttackDialog extends BaseRollDialog {
-    [key: string]: any;
     /**
      * @param {WeaponActionData} weaponActionData  The weapon action data.
      * @param {object} [options={}]                Dialog options.
@@ -25,9 +24,11 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['weapon-attack'],
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             selectWeapon: WeaponAttackDialog.#onSelectWeapon,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         window: {
             title: 'Weapon Attack',
         },
@@ -132,7 +133,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /** @override */
     _validateRoll(): boolean {
         if (this.rollData.fireRate === 0) {
-            (ui.notifications as any).warn('Not enough ammo to perform action. Do you need to reload?');
+            ui.notifications.warn('Not enough ammo to perform action. Do you need to reload?');
             return false;
         }
         return true;
@@ -158,7 +159,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
  * Open a weapon attack dialog.
  * @param {WeaponActionData} weaponAttackData  The weapon action data.
  */
-export function prepareWeaponRoll(weaponAttackData) {
+export function prepareWeaponRoll(weaponAttackData: any): void {
     const prompt = new WeaponAttackDialog(weaponAttackData);
     prompt.render(true);
 }

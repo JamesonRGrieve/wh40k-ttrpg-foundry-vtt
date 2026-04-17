@@ -2,7 +2,7 @@ import { calculateAmmoAttackSpecials } from './ammo.ts';
 import { calculateWeaponModifiersAttackSpecials } from './weapon-modifiers.ts';
 import { applyQualityModifiersToRollData } from './weapon-quality-effects.ts';
 
-export async function updateAttackSpecials(rollData) {
+export function updateAttackSpecials(rollData: any): void {
     rollData.attackSpecials = [];
     const actionItem = rollData.weapon ?? rollData.power;
     if (!actionItem) return;
@@ -41,16 +41,16 @@ export async function updateAttackSpecials(rollData) {
     }
 
     if (actionItem.isRanged) {
-        await calculateAmmoAttackSpecials(rollData);
+        calculateAmmoAttackSpecials(rollData);
     }
 
-    await calculateWeaponModifiersAttackSpecials(rollData);
+    calculateWeaponModifiersAttackSpecials(rollData);
 }
 
 /**
  * @param rollData {RollData}
  */
-export function calculateAttackSpecialAttackBonuses(rollData) {
+export function calculateAttackSpecialAttackBonuses(rollData: any): number {
     // Reset Attack Specials
     rollData.specialModifiers = {};
     const actionItem = rollData.weapon ?? rollData.power;
@@ -90,7 +90,7 @@ export function calculateAttackSpecialAttackBonuses(rollData) {
     applyQualityModifiersToRollData(rollData);
 }
 
-export function attackSpecials() {
+export function attackSpecials(): Record<string, any> {
     return [
         {
             name: 'Accurate',
@@ -255,6 +255,6 @@ export function attackSpecials() {
     ];
 }
 
-export function attackSpecialsNames() {
+export function attackSpecialsNames(): string[] {
     return attackSpecials().map((a) => a.name);
 }

@@ -17,7 +17,6 @@ import BaseItemSheet from './base-item-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class TalentSheetV2 extends BaseItemSheet {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -25,6 +24,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'talent-sheet-v2'],
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             ...super.DEFAULT_OPTIONS?.actions,
             rollTalent: TalentSheetV2.#rollTalent,
@@ -33,6 +33,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
             adjustRank: TalentSheetV2.#adjustRank,
             openTalentEditor: TalentSheetV2.#openTalentEditor,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 650,
             height: 700,
@@ -758,13 +759,13 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     static async #rollTalent(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.item.system.isRollable) {
-            (ui.notifications as any).warn('This talent cannot be rolled.');
+            ui.notifications.warn('This talent cannot be rolled.');
             return;
         }
 
         const actor = this.item.actor;
         if (!actor) {
-            (ui.notifications as any).warn('This talent must be on an actor to roll.');
+            ui.notifications.warn('This talent must be on an actor to roll.');
             return;
         }
 
@@ -784,9 +785,9 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @param {PointerEvent} event - The triggering event
      * @param {HTMLElement} target - The action target
      */
-    static async #postToChat(event: Event, target: HTMLElement): Promise<void> {
-        const chatResult = await (this as any).item.system.toChat?.();
-        if (chatResult == null) (this as any)._postTalentToChat();
+    static async #postToChat(this: any, event: Event, target: HTMLElement): Promise<void> {
+        const chatResult = await this.item.system.toChat?.();
+        if (chatResult == null) this._postTalentToChat();
     }
 
     /* -------------------------------------------- */
@@ -802,9 +803,9 @@ export default class TalentSheetV2 extends BaseItemSheet {
         if (!uuid) return;
 
         try {
-            const item = (await fromUuid(uuid)) as any;
+            const item = await fromUuid(uuid);
             if (item) {
-                item.sheet.render(true);
+                (item as any).sheet.render(true);
             }
         } catch (err) {
             console.warn(`Could not load item from UUID: ${uuid}`, err);
@@ -870,9 +871,9 @@ export default class TalentSheetV2 extends BaseItemSheet {
             </div>
         `;
 
-        await (ChatMessage as any).create({
+        await ChatMessage.create({
             content,
-            speaker: (ChatMessage as any).getSpeaker({ actor: this.item.actor }),
-        });
+            speaker: ChatMessage.getSpeaker({ actor: this.item.actor }),
+        } as any);
     }
 }

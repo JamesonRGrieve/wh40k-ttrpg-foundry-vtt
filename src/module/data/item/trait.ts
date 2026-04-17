@@ -10,8 +10,6 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes ModifiersTemplate
  */
 export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare category: string;
@@ -22,7 +20,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -74,7 +72,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * Get the full name including level.
      * @type {string}
      */
-    get fullName() {
+    get fullName(): string {
         let name = this.parent?.name ?? '';
         if (this.hasLevel) {
             name += ` (${this.level})`;
@@ -123,7 +121,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * Is this a variable trait (name contains (X))?
      * @type {boolean}
      */
-    get isVariable() {
+    get isVariable(): boolean {
         const name = this.parent?.name ?? '';
         return name.includes('(X)') || name.includes('(x)');
     }
@@ -137,7 +135,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
      * @param {object} [options]  Additional options
      * @returns {Promise<ChatMessage>}
      */
-    async toChat(options = {}): Promise<void> {
+    async toChat(options: any = {}): Promise<any> {
         // Prepare template data
         const templateData = {
             trait: this.parent,
@@ -159,7 +157,7 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         // Prepare chat message data
         const chatData = {
             user: game.user.id,
-            speaker: (ChatMessage as any).getSpeaker(),
+            speaker: ChatMessage.getSpeaker(),
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             content: content,
             flags: {
@@ -175,6 +173,6 @@ export default class TraitData extends ItemDataModel.mixin(DescriptionTemplate, 
         ChatMessage.applyRollMode(chatData, options.rollMode || game.settings.get('core', 'rollMode'));
 
         // Create and return chat message
-        return (ChatMessage as any).create(chatData);
+        return ChatMessage.create(chatData as any);
     }
 }

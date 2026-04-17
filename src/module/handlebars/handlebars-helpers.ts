@@ -1,11 +1,11 @@
 import WH40K from '../config.ts';
 
-export function capitalize(text) {
+export function capitalize(text: string): string {
     if (!text) return '';
     return text[0].toUpperCase() + text.substring(1);
 }
 
-export function toCamelCase(str) {
+export function toCamelCase(str: string): string {
     return str
         .replace(/\s(.)/g, ($1) => {
             return $1.toUpperCase();
@@ -18,7 +18,7 @@ export function toCamelCase(str) {
 
 const ARMOUR_LOCATIONS = ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg'];
 
-function getArmourPointsObject(armour) {
+function getArmourPointsObject(armour: any): any {
     const raw = armour?.armourPoints;
     if (!raw || typeof raw !== 'object') return null;
     if (raw.armourPoints && typeof raw.armourPoints === 'object') {
@@ -27,13 +27,13 @@ function getArmourPointsObject(armour) {
     return raw;
 }
 
-function parseLegacyLocations(rawLocations) {
+function parseLegacyLocations(rawLocations: any): Set<string> | null {
     if (!rawLocations || typeof rawLocations !== 'string') return null;
     const normalized = rawLocations.toLowerCase();
     if (normalized.includes('all')) {
         return new Set(['all']);
     }
-    const coverage = new Set();
+    const coverage = new Set<string>();
     const tokens = normalized
         .split(',')
         .map((token) => token.trim())
@@ -57,7 +57,7 @@ function parseLegacyLocations(rawLocations) {
     return coverage.size ? coverage : null;
 }
 
-function parseLegacyAP(rawAp) {
+function parseLegacyAP(rawAp: any): { defaultValue?: number; pointsByLocation?: Record<string, number> } | null {
     if (rawAp === null || rawAp === undefined) return null;
     if (typeof rawAp === 'number') {
         return { defaultValue: rawAp };
@@ -96,7 +96,7 @@ function parseLegacyAP(rawAp) {
     return null;
 }
 
-function getArmourAPForLocation(armour, location) {
+function getArmourAPForLocation(armour: any, location: string): number {
     if (!armour) return 0;
     if (typeof armour.getAPForLocation === 'function') {
         return armour.getAPForLocation(location);
@@ -122,7 +122,7 @@ function getArmourAPForLocation(armour, location) {
     return legacy.defaultValue ?? 0;
 }
 
-export function registerHandlebarsHelpers() {
+export function registerHandlebarsHelpers(): void {
     Handlebars.registerHelper('isPsychicAttack', (power) => {
         if (power && power.system.subtype) {
             return power.system.subtype.includes('Attack');
@@ -529,7 +529,8 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('skillIcon', (skillKey) => {
-        const config = (CONFIG as any)?.rt?.getSkillIcon ? (CONFIG as any).wh40k : WH40K;
+        const rt = (CONFIG as Record<string, unknown>).rt as Record<string, (...args: unknown[]) => unknown> | undefined;
+        const config = rt?.getSkillIcon ? CONFIG.wh40k : WH40K;
         const icon = config?.getSkillIcon?.(skillKey) || 'modules/game-icons-net/blacktransparent/skills.svg';
         if (foundry?.utils?.getRoute) return foundry.utils.getRoute(icon);
         return icon;
@@ -786,7 +787,7 @@ export function registerHandlebarsHelpers() {
         const qualityIds = Array.isArray(specialSet) ? specialSet : Array.from(specialSet);
         if (!qualityIds.length) return [];
 
-        const rtConfig = (CONFIG as any)?.rt;
+        const rtConfig = (CONFIG as Record<string, unknown>).rt as Record<string, unknown>;
         if (!rtConfig?.weaponQualities) {
             console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return [];
@@ -842,7 +843,7 @@ export function registerHandlebarsHelpers() {
      * @returns {object[]}             Array of quality objects
      */
     Handlebars.registerHelper('craftsmanshipQualities', (weaponSystem) => {
-        const rtConfig = (CONFIG as any)?.rt;
+        const rtConfig = (CONFIG as Record<string, unknown>).rt as Record<string, unknown>;
         if (!rtConfig?.weaponQualities) {
             console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return [];
@@ -953,7 +954,7 @@ export function registerHandlebarsHelpers() {
      * @returns {object}
      */
     Handlebars.registerHelper('qualityLookup', (identifier) => {
-        const rtConfig = (CONFIG as any)?.rt;
+        const rtConfig = (CONFIG as Record<string, unknown>).rt as Record<string, unknown>;
         if (!rtConfig?.weaponQualities) {
             console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return {
@@ -999,7 +1000,7 @@ export function registerHandlebarsHelpers() {
  * @param {number} strength - Weapon strength value
  * @returns {string} Display string
  */
-export function displayStrength(strength) {
+export function displayStrength(strength: number): number | string {
     return strength && strength > 0 ? strength : '-';
 }
 
@@ -1008,7 +1009,7 @@ export function displayStrength(strength) {
  * @param {number} crit - Crit rating value
  * @returns {string} Display string
  */
-export function displayCrit(crit) {
+export function displayCrit(crit: number): string {
     return crit && crit > 0 ? `${crit}+` : '-';
 }
 
@@ -1018,7 +1019,7 @@ export function displayCrit(crit) {
  * @param {number} maxLength - Maximum length before truncation
  * @returns {string} Truncated string
  */
-export function truncate(str, maxLength = 100) {
+export function truncate(str: string, maxLength: number = 100): string {
     if (!str || typeof str !== 'string') return '';
     // Strip HTML tags for text length calculation
     const plainText = str.replace(/<[^>]*>/g, '');
@@ -1031,7 +1032,7 @@ export function truncate(str, maxLength = 100) {
  * Usage: {{#select currentValue}}...options...{{/select}}
  * Marks the matching option as selected
  */
-export function select(selected, options) {
+export function select(selected: any, options: any): string {
     const escapedValue = String(selected).replace(/['"]/g, '\\$&');
 
     // Replace selected attribute in options

@@ -6,7 +6,8 @@ import BaseGrantData from './base-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class CharacteristicGrantData extends (BaseGrantData as any) {
+// @ts-expect-error - BaseGrantData extends foundry.abstract.DataModel with complex generic constraints
+export default class CharacteristicGrantData extends BaseGrantData {
     [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
@@ -37,7 +38,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
 
     /** @inheritDoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -72,7 +73,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
         for (const charConfig of this.characteristics) {
             const { key, value, optional: charOptional } = charConfig;
 
-            if (!(this.constructor as any).VALID_CHARACTERISTICS.has(key)) {
+            if (!(this.constructor as typeof CharacteristicGrantData).VALID_CHARACTERISTICS.has(key)) {
                 result.errors.push(`Invalid characteristic: ${key}`);
                 continue;
             }
@@ -140,7 +141,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     /** @inheritDoc */
     async getSummary(): Promise<any> {
         const summary = await super.getSummary();
-        summary.icon = (this.constructor as any).ICON;
+        summary.icon = (this.constructor as typeof CharacteristicGrantData).ICON;
 
         for (const charConfig of this.characteristics) {
             const label = game.i18n.localize(`WH40K.Characteristic.${charConfig.key}`);
@@ -162,7 +163,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
 
         const characteristics = this.characteristics ?? [];
         for (const charConfig of characteristics) {
-            if (!(this.constructor as any).VALID_CHARACTERISTICS.has(charConfig.key)) {
+            if (!(this.constructor as typeof CharacteristicGrantData).VALID_CHARACTERISTICS.has(charConfig.key)) {
                 errors.push(`Invalid characteristic key: ${charConfig.key}`);
             }
         }

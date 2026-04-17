@@ -205,6 +205,28 @@ declare global {
     namespace CONFIG {
         let wh40k: Record<string, unknown>;
         let WH40K: Record<string, unknown>;
+        let Actor: Record<string, any>;
+        let Item: Record<string, any>;
+        let Token: Record<string, any>;
+        let TextEditor: Record<string, any>;
+        let Dice: Record<string, any>;
+        let ux: Record<string, any>;
+    }
+
+    // Type ui.notifications so .warn/.info/.error resolve
+    interface Notifications {
+        warn(message: string, options?: Record<string, unknown>): void;
+        info(message: string, options?: Record<string, unknown>): void;
+        error(message: string, options?: Record<string, unknown>): void;
+    }
+    namespace ui {
+        let notifications: Notifications;
+    }
+
+    // Make foundry.data.fields available as a runtime value for destructuring patterns
+    // like `const { StringField, NumberField } = foundry.data.fields;`
+    namespace foundry.data {
+        const fields: any;
     }
 }
 

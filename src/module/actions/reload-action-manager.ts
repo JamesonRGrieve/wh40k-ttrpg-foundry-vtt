@@ -31,7 +31,10 @@ export class ReloadActionManager {
      * @param {boolean} options.force - Force reload even if already full
      * @returns {Promise<{success: boolean, message: string, actionsSpent: {half: number, full: number}}>}
      */
-    static async reloadWeapon(weapon, { skipValidation = false, force = false } = {}) {
+    static async reloadWeapon(
+        weapon: any,
+        { skipValidation = false, force = false } = {},
+    ): Promise<{ success: boolean; message: string; actionsSpent: { half: number; full: number } }> {
         // Validate weapon
         if (!weapon || weapon.type !== 'weapon') {
             return {
@@ -129,7 +132,7 @@ export class ReloadActionManager {
      * @param {Item} weapon - The weapon item
      * @returns {string} - Effective reload time
      */
-    static getEffectiveReloadTime(weapon) {
+    static getEffectiveReloadTime(weapon: any): string {
         const baseReload = weapon.system.reload;
 
         // Check for Customised quality
@@ -155,7 +158,7 @@ export class ReloadActionManager {
      * @param {Item} weapon - The weapon item
      * @returns {boolean}
      */
-    static hasCustomisedQuality(weapon) {
+    static hasCustomisedQuality(weapon: any): boolean {
         const qualities = weapon.system.effectiveSpecial;
         return qualities?.has('customised') ?? false;
     }
@@ -167,7 +170,7 @@ export class ReloadActionManager {
      * @param {object} actionCost - Action cost object with half/full counts
      * @returns {Promise<{success: boolean, message: string}>}
      */
-    static async validateActionEconomy(actor, actionCost) {
+    static async validateActionEconomy(actor: any, actionCost: any): Promise<{ success: boolean; message: string }> {
         // If no actions required, always succeed (free action)
         if (actionCost.half === 0 && actionCost.full === 0) {
             return { success: true, message: 'Free action' };
@@ -175,8 +178,7 @@ export class ReloadActionManager {
 
         // Check if in combat
         const combat = game.combat;
-        // @ts-expect-error - property access
-        const isInCombat = combat?.started && combat.combatants.some((c) => c.actorId === actor.id);
+        const isInCombat = combat?.started && combat.combatants.some((c: any) => c.actorId === actor.id);
 
         if (!isInCombat) {
             // Out of combat - allow reload with notification
@@ -189,8 +191,7 @@ export class ReloadActionManager {
 
         // Check if it's the actor's turn
         const currentCombatant = combat.combatant;
-        // @ts-expect-error - property access
-        const isActorsTurn = currentCombatant?.actorId === actor.id;
+        const isActorsTurn = (currentCombatant as any)?.actorId === actor.id;
 
         if (!isActorsTurn) {
             // Not actor's turn - ask for confirmation
@@ -225,7 +226,7 @@ export class ReloadActionManager {
      * @returns {string}
      * @private
      */
-    static _getActionCostDescription(actionCost) {
+    static _getActionCostDescription(actionCost: any): string {
         const parts = [];
         if (actionCost.full > 0) {
             parts.push(`${actionCost.full} Full Action${actionCost.full > 1 ? 's' : ''}`);
@@ -243,7 +244,7 @@ export class ReloadActionManager {
      * @param {object} result - Reload result object
      * @returns {Promise<ChatMessage>}
      */
-    static async sendReloadToChat(actor, weapon, result) {
+    static async sendReloadToChat(actor: any, weapon: any, result: any): Promise<any> {
         const templateData = {
             actor: actor,
             weapon: weapon,
@@ -259,13 +260,13 @@ export class ReloadActionManager {
 
         const chatData = {
             user: game.user.id,
-            speaker: (ChatMessage as any).getSpeaker({ actor }),
+            speaker: ChatMessage.getSpeaker({ actor }),
             content: html,
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             flavor: `${weapon.name} - Reload`,
         };
 
-        return (ChatMessage as any).create(chatData);
+        return ChatMessage.create(chatData as any);
     }
 
     /**
@@ -274,7 +275,7 @@ export class ReloadActionManager {
      * @param {Item} weapon - The weapon
      * @returns {Array<Item>} - Array of compatible ammunition items
      */
-    static findSpareAmmunition(actor, weapon) {
+    static findSpareAmmunition(actor: any, weapon: any): any[] {
         if (!actor || !weapon) return [];
 
         const ammoType = weapon.system.clip.type;
@@ -292,7 +293,7 @@ export class ReloadActionManager {
      * @param {Item} weapon - The weapon
      * @returns {boolean}
      */
-    static hasSpareAmmunition(actor, weapon) {
+    static hasSpareAmmunition(actor: any, weapon: any): boolean {
         const spareAmmo = this.findSpareAmmunition(actor, weapon);
         return spareAmmo.length > 0 && spareAmmo.some((ammo) => ammo.system.quantity > 0);
     }

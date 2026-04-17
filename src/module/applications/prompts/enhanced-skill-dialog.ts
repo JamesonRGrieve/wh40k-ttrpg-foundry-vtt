@@ -17,8 +17,7 @@ const { ApplicationV2 } = foundry.applications.api;
  * Enhanced dialog for configuring skill or characteristic rolls.
  */
 // @ts-expect-error Foundry V2 mixin pattern
-export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV2 as any) {
-    [key: string]: any;
+export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV2) {
     /**
      * @param {object} simpleSkillData  The skill data.
      * @param {object} [options={}]     Dialog options.
@@ -38,6 +37,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     static DEFAULT_OPTIONS = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'enhanced-skill-roll', 'standard-form'],
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             selectDifficulty: EnhancedSkillDialog.#onSelectDifficulty,
             toggleModifier: EnhancedSkillDialog.#onToggleModifier,
@@ -46,6 +46,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
             rollRepeat: EnhancedSkillDialog.#onRollRepeat,
             cancel: EnhancedSkillDialog.#onCancel,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         form: {
             submitOnChange: false,
             closeOnSubmit: false,
@@ -230,14 +231,14 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         const totalModifier = difficultyMod + commonMod + customMod;
 
         // Prepare difficulty buttons
-        const difficulties = (this.constructor as any).DIFFICULTIES.map((d) => ({
+        const difficulties = (this.constructor as any).DIFFICULTIES.map((d: any) => ({
             ...d,
             selected: d.modifier === this._selectedDifficulty,
             cssClass: d.modifier === this._selectedDifficulty ? 'selected' : '',
         }));
 
         // Prepare common modifiers
-        const commonModifiers = (this.constructor as any).COMMON_MODIFIERS.map((m) => ({
+        const commonModifiers = (this.constructor as typeof EnhancedSkillDialog).COMMON_MODIFIERS.map((m) => ({
             ...m,
             checked: this._commonModifiers[m.key] || false,
         }));
@@ -297,7 +298,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         let total = 0;
         for (const [key, active] of Object.entries(this._commonModifiers)) {
             if (!active) continue;
-            const modifier = (this.constructor as any).COMMON_MODIFIERS.find((m) => m.key === key);
+            const modifier = (this.constructor as typeof EnhancedSkillDialog).COMMON_MODIFIERS.find((m) => m.key === key);
             if (modifier) total += modifier.value;
         }
         return total;
@@ -311,7 +312,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @private
      */
     _getRecentRolls(): any {
-        const recent = (game.user as any).getFlag('wh40k-rpg', 'recentRolls') || [];
+        const recent = ((game.user as any).getFlag('wh40k-rpg', 'recentRolls') as any[]) || [];
         return recent.slice(0, 3); // Last 3 rolls
     }
 
@@ -323,7 +324,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @private
      */
     async _saveToRecentRolls(modifier: any): Promise<void> {
-        const recent = (game.user as any).getFlag('wh40k-rpg', 'recentRolls') || [];
+        const recent = ((game.user as any).getFlag('wh40k-rpg', 'recentRolls') as any[]) || [];
         recent.unshift({
             name: this.simpleSkillData.name || 'Test',
             modifier,
@@ -463,7 +464,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
  * Open an enhanced skill roll dialog.
  * @param {object} simpleSkillData  The skill data.
  */
-export function prepareEnhancedSkillRoll(simpleSkillData) {
+export function prepareEnhancedSkillRoll(simpleSkillData: any): void {
     const prompt = new EnhancedSkillDialog(simpleSkillData);
     prompt.render(true);
 }

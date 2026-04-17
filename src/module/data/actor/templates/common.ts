@@ -20,7 +20,6 @@ import ActorDataModel from '../../abstract/actor-data-model.ts';
  * @extends {ActorDataModel}
  */
 export default class CommonTemplate extends ActorDataModel {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */
@@ -39,16 +38,16 @@ export default class CommonTemplate extends ActorDataModel {
 
     /** @inheritDoc */
     static _migrateData(source: Record<string, unknown>): void {
+        // @ts-expect-error - DataModel lifecycle method
         super._migrateData?.(source);
-        // Add shared migrations here that apply to ALL actor types
     }
 
     /* -------------------------------------------- */
 
     /** @inheritDoc */
     static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown> = {}): void {
+        // @ts-expect-error - DataModel lifecycle method
         super._cleanData?.(source, options);
-        // Add shared cleaning here that applies to ALL actor types
     }
 
     /* -------------------------------------------- */
@@ -57,15 +56,15 @@ export default class CommonTemplate extends ActorDataModel {
 
     /** @inheritDoc */
     prepareBaseData(): void {
-        super.prepareBaseData();
-        // Add shared base data prep that applies to ALL actor types
+        // @ts-expect-error - DataModel lifecycle method
+        super.prepareBaseData?.();
     }
 
     /* -------------------------------------------- */
 
     /** @inheritDoc */
     prepareDerivedData(): void {
-        super.prepareDerivedData();
-        // Add shared derived data prep that applies to ALL actor types
+        // @ts-expect-error - DataModel lifecycle method
+        super.prepareDerivedData?.();
     }
 }

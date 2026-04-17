@@ -5,7 +5,7 @@
 export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.TokenRuler {
     [key: string]: any;
     /** @inheritDoc */
-    _getWaypointStyle(waypoint) {
+    _getWaypointStyle(waypoint): any {
         const style = super._getWaypointStyle(waypoint);
         return this.#getSpeedBasedStyle(waypoint, style);
     }
@@ -13,7 +13,7 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
     /* -------------------------------------------- */
 
     /** @override */
-    _getSegmentStyle(waypoint) {
+    _getSegmentStyle(waypoint): any {
         const style = super._getSegmentStyle(waypoint);
         return this.#getSpeedBasedStyle(waypoint, style);
     }
@@ -21,7 +21,7 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
     /* -------------------------------------------- */
 
     /** @override */
-    _getGridHighlightStyle(waypoint, offset) {
+    _getGridHighlightStyle(waypoint, offset): any {
         const style = super._getGridHighlightStyle(waypoint, offset);
         return this.#getSpeedBasedStyle(waypoint, style);
     }

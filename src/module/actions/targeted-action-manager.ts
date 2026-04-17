@@ -5,7 +5,7 @@ import { calculateTokenDistance } from '../utils/range-calculator.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 
 export class TargetedActionManager {
-    initializeHooks() {
+    initializeHooks(): void {
         // Initialize Scene Control Buttons
         Hooks.on('getSceneControlButtons', (controls) => {
             const bar = controls.token;
@@ -30,12 +30,12 @@ export class TargetedActionManager {
         });
     }
 
-    tokenDistance(token1, token2) {
+    tokenDistance(token1: any, token2: any): number {
         // Use the new range calculator for consistent distance calculation
         return calculateTokenDistance(token1, token2);
     }
 
-    getSourceToken(source) {
+    getSourceToken(source: any): any {
         game.wh40k.log('getSourceToken', source);
         let sourceToken;
         if (source) {
@@ -43,25 +43,25 @@ export class TargetedActionManager {
         } else {
             const controlledObjects = game.canvas.tokens.controlledObjects;
             if (!controlledObjects || controlledObjects.size === 0) {
-                (ui.notifications as any).warn('You need to control a token!');
+                ui.notifications.warn('You need to control a token!');
                 return undefined;
             }
             if (controlledObjects.size > 1) {
-                (ui.notifications as any).warn('You need to control a single token! Multi-token support is not yet added.');
+                ui.notifications.warn('You need to control a single token! Multi-token support is not yet added.');
                 return undefined;
             }
             sourceToken = [...controlledObjects.values()][0];
         }
 
         if (sourceToken && !sourceToken.actor) {
-            (ui.notifications as any).warn('Token must be associated with an actor!');
+            ui.notifications.warn('Token must be associated with an actor!');
             return undefined;
         }
 
         return sourceToken;
     }
 
-    getTargetToken(target) {
+    getTargetToken(target: any): any {
         game.wh40k.log('getTargetToken', target);
         let targetToken;
         if (target) {
@@ -70,21 +70,21 @@ export class TargetedActionManager {
             const targetedObjects = game.user.targets;
             if (!targetedObjects || targetedObjects.size === 0) return undefined;
             if (targetedObjects.size > 1) {
-                (ui.notifications as any).warn('You need to target a single token! Multi-token targeting is not yet added.');
+                ui.notifications.warn('You need to target a single token! Multi-token targeting is not yet added.');
                 return undefined;
             }
             targetToken = [...targetedObjects.values()][0];
         }
 
         if (targetToken && !targetToken.actor) {
-            (ui.notifications as any).warn('Target token must be associated with an actor!');
+            ui.notifications.warn('Target token must be associated with an actor!');
             return undefined;
         }
 
         return targetToken;
     }
 
-    createSourceAndTargetData(source, target) {
+    createSourceAndTargetData(source: any, target: any): { actor: any; target: any; distance: number } | undefined {
         game.wh40k.log('createSourceAndTargetData', { source, target });
 
         // Source
@@ -106,7 +106,7 @@ export class TargetedActionManager {
         };
     }
 
-    async performWeaponAttack(source = null, target = null, weapon = null) {
+    async performWeaponAttack(source: any = null, target: any = null, weapon: any = null): Promise<void> {
         game.wh40k.log('performWeaponAttack', { source, target, weapon });
         const rollData = this.createSourceAndTargetData(source, target);
         if (!rollData) return;
@@ -114,7 +114,7 @@ export class TargetedActionManager {
         // Weapon
         const weapons = weapon ? [weapon] : rollData.actor.items.filter((item) => item.type === 'weapon').filter((item) => item.system.equipped);
         if (!weapons || weapons.length === 0) {
-            (ui.notifications as any).warn('Actor must have an equipped weapon!');
+            ui.notifications.warn('Actor must have an equipped weapon!');
             return;
         }
 
@@ -124,10 +124,10 @@ export class TargetedActionManager {
         weaponRollData.sourceActor = rollData.actor;
         weaponRollData.targetActor = rollData.target;
         weaponRollData.distance = rollData.distance;
-        await prepareUnifiedRoll(weaponAttack);
+        prepareUnifiedRoll(weaponAttack);
     }
 
-    async performPsychicAttack(source = null, target = null, psychicPower = null) {
+    async performPsychicAttack(source: any = null, target: any = null, psychicPower: any = null): Promise<void> {
         game.wh40k.log('performPsychicAttack');
         const rollData = this.createSourceAndTargetData(source, target);
         if (!rollData) return;
@@ -135,7 +135,7 @@ export class TargetedActionManager {
         // Powers
         const powers = psychicPower ? [psychicPower] : rollData.actor.items.filter((item) => item.type === 'psychicPower');
         if (!powers || powers.length === 0) {
-            (ui.notifications as any).warn('Actor must have psychic power!');
+            ui.notifications.warn('Actor must have psychic power!');
             return;
         }
 
@@ -145,7 +145,7 @@ export class TargetedActionManager {
         psychicRollData.sourceActor = rollData.actor;
         psychicRollData.targetActor = rollData.target;
         psychicRollData.distance = rollData.distance;
-        await prepareUnifiedRoll(psychicAttack);
+        prepareUnifiedRoll(psychicAttack);
     }
 }
 

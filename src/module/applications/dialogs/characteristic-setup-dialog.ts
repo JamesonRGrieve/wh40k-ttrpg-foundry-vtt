@@ -31,8 +31,6 @@ const GENERATION_CHARACTERISTICS = [
 const DEFAULT_BASE = 25;
 
 export default class CharacteristicSetupDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
@@ -53,11 +51,13 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
             width: 700,
             height: 'auto' as const,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             apply: CharacteristicSetupDialog.#onApply,
             reset: CharacteristicSetupDialog.#onReset,
             toggleAdvanced: CharacteristicSetupDialog.#onToggleAdvanced,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -139,7 +139,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
         return game.i18n.localize('WH40K.CharacteristicSetup.Title');
     }
 
@@ -335,7 +335,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onRollChipClick(event: Event): void {
-        const chip = event.currentTarget as any;
+        const chip = event.currentTarget as HTMLElement;
         const index = parseInt(chip.dataset.rollIndex);
 
         // If already editing, don't restart
@@ -346,11 +346,11 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         const input = document.createElement('input');
         input.type = 'number';
         input.className = 'csd-roll-input';
-        input.min = 2 as any;
-        input.max = 40 as any;
+        input.min = '2';
+        input.max = '40';
         input.value = currentValue || '';
         input.placeholder = '2-40';
-        input.dataset.rollIndex = index as any;
+        input.dataset.rollIndex = String(index);
 
         // Attach event listeners to the dynamically created input
         input.addEventListener('blur', this.#onRollInputBlur.bind(this));
@@ -358,7 +358,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
         // Replace chip content with input
         const valueEl = chip.querySelector('.csd-roll-value');
-        if (valueEl) valueEl.style.display = 'none';
+        if (valueEl) (valueEl as HTMLElement).style.display = 'none';
         chip.appendChild(input);
         input.focus();
         input.select();
@@ -372,7 +372,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onRollInputBlur(event: Event): void {
-        const input = event.currentTarget as any;
+        const input = event.currentTarget as HTMLElement;
         this.#saveRollInput(input);
     }
 
@@ -384,12 +384,12 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onRollInputKeydown(event: Event): void {
-        if ((event as any).key === 'Enter') {
+        if ((event as KeyboardEvent).key === 'Enter') {
             event.preventDefault();
-            this.#saveRollInput(event.currentTarget as any);
-        } else if ((event as any).key === 'Escape') {
+            this.#saveRollInput(event.currentTarget as HTMLElement);
+        } else if ((event as KeyboardEvent).key === 'Escape') {
             event.preventDefault();
-            this.#cancelRollInput(event.currentTarget as any);
+            this.#cancelRollInput(event.currentTarget as HTMLElement);
         }
     }
 
@@ -433,7 +433,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onDragStart(event: Event): void {
-        const target = event.currentTarget as any;
+        const target = event.currentTarget as HTMLElement;
         const rollIndex = parseInt(target.dataset.rollIndex);
         const fromCharacteristic = target.dataset.characteristic || null;
 
@@ -450,8 +450,8 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         };
 
         target.classList.add('dragging');
-        (event as any).dataTransfer.effectAllowed = 'move';
-        (event as any).dataTransfer.setData('text/plain', JSON.stringify(this.#dragData));
+        (event as DragEvent).dataTransfer.effectAllowed = 'move';
+        (event as DragEvent).dataTransfer.setData('text/plain', JSON.stringify(this.#dragData));
 
         // Add drag-active class to dialog
         this.element.classList.add('drag-active');
@@ -465,7 +465,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onDragEnd(event: Event): void {
-        (event.currentTarget as any).classList.remove('dragging');
+        (event.currentTarget as HTMLElement).classList.remove('dragging');
         this.element.classList.remove('drag-active');
         this.element.querySelectorAll('.drop-valid, .drop-hover').forEach((el) => {
             el.classList.remove('drop-valid', 'drop-hover');
@@ -483,9 +483,9 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     #onDragOver(event: Event): void {
         if (!this.#dragData) return;
         event.preventDefault();
-        (event as any).dataTransfer.dropEffect = 'move';
+        (event as DragEvent).dataTransfer.dropEffect = 'move';
 
-        const slot = event.currentTarget as any;
+        const slot = event.currentTarget as HTMLElement;
         slot.classList.add('drop-valid', 'drop-hover');
     }
 
@@ -497,7 +497,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onDragLeave(event: Event): void {
-        (event.currentTarget as any).classList.remove('drop-hover');
+        (event.currentTarget as HTMLElement).classList.remove('drop-hover');
     }
 
     /* -------------------------------------------- */
@@ -511,7 +511,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         event.preventDefault();
         if (!this.#dragData) return;
 
-        const slot = event.currentTarget as any;
+        const slot = event.currentTarget as HTMLElement;
         const targetChar = slot.dataset.characteristic;
         const draggedIndex = this.#dragData.index;
         const sourceChar = this.#dragData.characteristic;
@@ -548,8 +548,8 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     #onBankDragOver(event: Event): void {
         if (!this.#dragData || this.#dragData.type !== 'assigned') return;
         event.preventDefault();
-        (event as any).dataTransfer.dropEffect = 'move';
-        (event.currentTarget as any).classList.add('drop-valid', 'drop-hover');
+        (event as DragEvent).dataTransfer.dropEffect = 'move';
+        (event.currentTarget as HTMLElement).classList.add('drop-valid', 'drop-hover');
     }
 
     /* -------------------------------------------- */
@@ -578,7 +578,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onBaseValueChange(event: Event): void {
-        const input = event.currentTarget as any;
+        const input = event.currentTarget as HTMLInputElement;
         const key = input.dataset.characteristic;
         let value = parseInt(input.value);
 
@@ -602,7 +602,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         const allAssigned = GENERATION_CHARACTERISTICS.every((key) => this.#assignments[key] !== null && this.#rolls[this.#assignments[key]] > 0);
 
         if (!allAssigned) {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.CharacteristicSetup.NotAllAssigned'));
+            ui.notifications.warn(game.i18n.localize('WH40K.CharacteristicSetup.NotAllAssigned'));
             return;
         }
 
@@ -632,7 +632,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         this.#applied = true;
         this.#resolve?.(true);
 
-        (ui.notifications as any).info(game.i18n.localize('WH40K.CharacteristicSetup.Applied'));
+        ui.notifications.info(game.i18n.localize('WH40K.CharacteristicSetup.Applied'));
         await this.close();
     }
 
@@ -702,7 +702,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      */
     static async open(actor: any): Promise<any> {
         if (!actor || (actor.type !== 'acolyte' && actor.type !== 'character')) {
-            (ui.notifications as any).error('Characteristic setup is only available for characters.');
+            ui.notifications.error('Characteristic setup is only available for characters.');
             return false;
         }
         const dialog = new this(actor);

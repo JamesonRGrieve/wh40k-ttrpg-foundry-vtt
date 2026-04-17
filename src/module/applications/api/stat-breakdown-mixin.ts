@@ -34,12 +34,14 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
         static DEFAULT_OPTIONS = {
             // @ts-expect-error - TS2339
             ...super.DEFAULT_OPTIONS,
+            /* eslint-disable @typescript-eslint/unbound-method */
             actions: {
                 // @ts-expect-error - TS2339
                 ...super.DEFAULT_OPTIONS.actions,
                 showStatBreakdown: StatBreakdownMixin.#showStatBreakdown,
                 viewBreakdownSource: StatBreakdownMixin.#viewBreakdownSource,
             },
+            /* eslint-enable @typescript-eslint/unbound-method */
         };
 
         /* -------------------------------------------- */
@@ -106,9 +108,9 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
             if (!uuid) return;
 
             // Fetch and render the item
-            const item = (await fromUuid(uuid)) as any;
+            const item = await fromUuid(uuid);
             if (item) {
-                item.sheet.render(true);
+                (item as any).sheet.render(true);
             }
         }
 

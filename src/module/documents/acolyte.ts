@@ -8,6 +8,7 @@ import { SimpleSkillData } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { WH40KBaseActor } from './base-actor.ts';
+import type { WH40KItem } from './item.ts';
 
 const SKILL_ALIASES = {
     navigate: 'navigation',
@@ -20,7 +21,6 @@ const SKILL_ALIASES = {
  * @extends {WH40KBaseActor}
  */
 export class WH40KAcolyte extends WH40KBaseActor {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Getters                                     */
     /* -------------------------------------------- */
@@ -180,7 +180,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const modifiers = [];
 
         // Collect from all modifier-providing items
-        const modifierItems = (this.items as any).filter(
+        const modifierItems = Array.from(this.items).filter(
             (item: any) =>
                 item.isTalent ||
                 item.isTrait ||
@@ -191,7 +191,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         );
 
         for (const item of modifierItems) {
-            const situational = item.system?.modifiers?.situational?.[type];
+            const situational = (item as any).system?.modifiers?.situational?.[type];
             if (!situational || !Array.isArray(situational)) continue;
 
             for (const mod of situational) {
@@ -203,8 +203,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
                     value: mod.value,
                     condition: mod.condition,
                     icon: mod.icon || 'fa-solid fa-exclamation-triangle',
-                    source: item.name,
-                    itemId: item.id,
+                    source: (item as any).name,
+                    itemId: (item as any).id,
                 });
             }
         }
@@ -257,7 +257,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     async rollCharacteristic(charKey: string, flavorOverride?: string, options: Record<string, unknown> = {}): Promise<void> {
         const char = this.system.characteristics?.[charKey];
         if (!char) {
-            (ui.notifications as any).warn(`Characteristic "${charKey}" not found`);
+            ui.notifications.warn(`Characteristic "${charKey}" not found`);
             return;
         }
 
@@ -278,7 +278,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             for (const mod of situationalModifiers) sitMod += mod.value || 0;
             if (sitMod !== 0) rollData.modifiers.situational = sitMod;
         }
-        await prepareUnifiedRoll(simpleSkillData);
+        prepareUnifiedRoll(simpleSkillData);
     }
 
     /**
@@ -292,7 +292,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const resolvedSkillName = this._resolveSkillName(skillName);
         const skill = this.skills[resolvedSkillName];
         if (!skill) {
-            (ui.notifications as any).warn(`Unable to find skill ${skillName}`);
+            ui.notifications.warn(`Unable to find skill ${skillName}`);
             return;
         }
         let label = skill.label;
@@ -324,7 +324,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             for (const mod of situationalModifiers) sitMod += mod.value || 0;
             if (sitMod !== 0) rollData.modifiers.situational = sitMod;
         }
-        await prepareUnifiedRoll(simpleSkillData);
+        prepareUnifiedRoll(simpleSkillData);
     }
 
     /**
@@ -333,7 +333,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     async rollWeaponDamage(weapon: any): Promise<void> {
         if (!weapon.system.equipped) {
-            (ui.notifications as any).warn('Actor must have weapon equipped!');
+            ui.notifications.warn('Actor must have weapon equipped!');
             return;
         }
 
@@ -352,7 +352,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
             bonus: (weapon.system.damage.bonus || 0) + strengthBonus,
         };
 
-        await prepareDamageRoll({
+        prepareDamageRoll({
             name: weapon.name,
             damage: damageData,
             damageType: weapon.system.damageType,
@@ -373,7 +373,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {Item} power - The psychic power item
      */
     async rollPsychicPowerDamage(power: any): Promise<void> {
-        await prepareDamageRoll({
+        prepareDamageRoll({
             psychicPower: true,
             pr: this.psy.currentRating,
             name: power.name,
@@ -389,14 +389,14 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     async rollItem(itemId: string): Promise<void> {
         game.wh40k.log('RollItem', itemId);
-        const item = this.items.get(itemId) as any;
-        switch (item.type) {
+        const item = this.items.get(itemId) as WH40KItem;
+        switch (item.type as string) {
             case 'weapon':
                 if (!item.system.equipped) {
-                    (ui.notifications as any).warn('Actor must have weapon equipped!');
+                    ui.notifications.warn('Actor must have weapon equipped!');
                     return;
                 }
-                if ((game.settings as any).get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
+                if (game.settings.get(SYSTEM_ID as any, WH40KSettings.SETTINGS.simpleAttackRolls as any)) {
                     if (item.isRanged) {
                         await this.rollCharacteristic('ballisticSkill', item.name);
                     } else {
@@ -407,18 +407,18 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 }
                 return;
             case 'psychicPower':
-                if ((game.settings as any).get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
+                if (game.settings.get(SYSTEM_ID as any, WH40KSettings.SETTINGS.simplePsychicRolls as any)) {
                     await this.rollCharacteristic('willpower', item.name);
                 } else {
                     await DHTargetedActionManager.performPsychicAttack(this, null, item);
                 }
                 return;
-            case 'forceField':
+            case 'forceField' as any:
                 if (!item.system.equipped || !item.system.activated) {
-                    (ui.notifications as any).warn('Actor must have force field equipped and activated!');
+                    ui.notifications.warn('Actor must have force field equipped and activated!');
                     return;
                 }
-                await prepareUnifiedRoll(new ForceFieldData(this, item));
+                prepareUnifiedRoll(new ForceFieldData(this, item));
                 return;
             default:
                 await DHBasicActionManager.sendItemVocalizeChat({
@@ -441,8 +441,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} itemId - The item ID
      */
     async damageItem(itemId: string): Promise<void> {
-        const item = this.items.get(itemId) as any;
-        switch (item.type) {
+        const item = this.items.get(itemId) as WH40KItem;
+        switch (item.type as string) {
             case 'weapon':
                 await this.rollWeaponDamage(item);
                 return;
@@ -450,7 +450,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
                 await this.rollPsychicPowerDamage(item);
                 return;
             default:
-                (ui.notifications as any).warn(`No actions implemented for item type: ${item.type}`);
+                ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
                 return;
         }
     }
@@ -504,7 +504,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     async opposedCharacteristicTest(targetActor: Actor | null, characteristic: string): Promise<any> {
         const sourceRoll = await this.rollCharacteristicCheck(characteristic);
-        const targetRoll = targetActor ? await (targetActor as any).rollCharacteristicCheck(characteristic) : null;
+        const targetRoll = targetActor ? await (targetActor as WH40KAcolyte).rollCharacteristicCheck(characteristic) : null;
         return this.opposedTest(sourceRoll, targetRoll);
     }
 
@@ -583,11 +583,13 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     hasTalent(talent: string): boolean {
-        return !!(this.items as any).filter((i: any) => i.type === 'talent').find((t: any) => t.name === talent);
+        return !!Array.from(this.items)
+            .filter((i: any) => i.type === 'talent')
+            .find((t: any) => t.name === talent);
     }
 
     hasTalentFuzzyWords(words: string[]): boolean {
-        return !!(this.items as any)
+        return !!Array.from(this.items)
             .filter((i: any) => i.type === 'talent')
             .find((t: any) => {
                 for (const word of words) {
@@ -602,7 +604,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     async spendFate(): Promise<void> {
-        await (this as any).update({
+        await this.update({
             'system.fate.value': this.system.fate.value - 1,
         });
     }

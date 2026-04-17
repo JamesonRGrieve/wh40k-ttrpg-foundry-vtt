@@ -7,8 +7,8 @@
  * Build a SchemaField for the six standard body locations.
  * @returns {SchemaField}
  */
-export function bodyLocationsSchema() {
-    const fields = (foundry.data as any).fields;
+export function bodyLocationsSchema(): Record<string, any> {
+    const fields = foundry.data.fields;
     return new fields.SchemaField({
         head: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
         leftArm: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),

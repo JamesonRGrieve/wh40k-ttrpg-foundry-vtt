@@ -9,8 +9,8 @@ import SystemDataModel from './system-data-model.ts';
  * - prepareEmbeddedData() hook for item-dependent calculations
  * - getRollData() base for dice roll commands
  */
+// @ts-expect-error - SystemDataModel extends foundry.abstract.TypeDataModel which has complex generic constraints
 export default class ActorDataModel extends SystemDataModel {
-    [key: string]: any;
     /**
      * Actor-specific metadata.
      * @type {ActorDataModelMetadata}
@@ -40,7 +40,7 @@ export default class ActorDataModel extends SystemDataModel {
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        return this.mergeSchema(super.defineSchema(), {});
+        return (this as any).mergeSchema(super.defineSchema(), {});
     }
 
     /* -------------------------------------------- */
@@ -67,7 +67,7 @@ export default class ActorDataModel extends SystemDataModel {
      * @returns {object}
      */
     getRollData({ deterministic = false } = {}): Record<string, unknown> {
-        const data: Record<string, unknown> = { ...this };
+        const data: Record<string, unknown> = { ...(this as Record<string, unknown>) };
         return data;
     }
 }

@@ -9,7 +9,7 @@ export class WH40KTour extends foundry.nue.Tour {
      * @param {string} selector CSS selector of the element to wait for
      * @returns {Promise<void>}
      */
-    async waitForElement(selector) {
+    async waitForElement(selector): Promise<any> {
         return new Promise((resolve, reject) => {
             const element = document.querySelector(selector);
             if (element) {
@@ -32,12 +32,12 @@ export class WH40KTour extends foundry.nue.Tour {
         });
     }
 
-    async _preStep() {
+    async _preStep(): Promise<any> {
         await super._preStep();
         await this.waitForElement(this.currentStep.selector);
     }
 
-    async _postStep() {
+    async _postStep(): Promise<any> {
         await super._postStep();
         if (this.stepIndex < 0 || !this.hasNext) return;
 
@@ -64,7 +64,7 @@ export class WH40KTour extends foundry.nue.Tour {
     /**
      * Detect when a reset is triggered and stop the actions in _postStep
      */
-    async reset() {
+    async reset(): Promise<any> {
         if (this.status !== 'completed') this.triggerReset = true;
         await super.reset();
     }

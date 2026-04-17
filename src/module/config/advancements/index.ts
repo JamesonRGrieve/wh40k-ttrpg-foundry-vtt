@@ -51,7 +51,7 @@ export const TIER_ORDER = ['simple', 'intermediate', 'trained', 'expert'];
  * @param {string} careerKey - The career key (e.g., 'rogueTrader')
  * @returns {Object|null} Career advancement configuration or null if not found
  */
-export function getCareerAdvancements(careerKey) {
+export function getCareerAdvancements(careerKey: string): any {
     const career = CAREER_REGISTRY[careerKey];
     if (!career) {
         console.warn(`Career '${careerKey}' not found in advancement registry`);
@@ -65,7 +65,7 @@ export function getCareerAdvancements(careerKey) {
  * @param {string} careerKey - The career key
  * @returns {Object|null} Characteristic cost table
  */
-export function getCharacteristicCosts(careerKey) {
+export function getCharacteristicCosts(careerKey: string): any {
     const career = getCareerAdvancements(careerKey);
     return career?.CHARACTERISTIC_COSTS ?? null;
 }
@@ -76,7 +76,7 @@ export function getCharacteristicCosts(careerKey) {
  * @param {number} rank - The rank number (1-based)
  * @returns {Array|null} Array of advancement options
  */
-export function getRankAdvancements(careerKey, rank = 1) {
+export function getRankAdvancements(careerKey: string, rank: number = 1): any[] | null {
     const career = getCareerAdvancements(careerKey);
     if (!career) return null;
 
@@ -96,7 +96,7 @@ export function getRankAdvancements(careerKey, rank = 1) {
  * @param {number} currentAdvances - Number of advances already purchased (0-4)
  * @returns {{cost: number, tier: string}|null} Cost and tier name, or null if maxed
  */
-export function getNextCharacteristicCost(careerKey, characteristicKey, currentAdvances) {
+export function getNextCharacteristicCost(careerKey: string, characteristicKey: string, currentAdvances: number): { cost: number; tier: string } | null {
     const costs = getCharacteristicCosts(careerKey);
     if (!costs || !costs[characteristicKey]) return null;
 
@@ -112,7 +112,7 @@ export function getNextCharacteristicCost(careerKey, characteristicKey, currentA
  * Get all available careers
  * @returns {Array<{key: string, name: string}>} List of career keys and names
  */
-export function getAvailableCareers() {
+export function getAvailableCareers(): Array<{ key: string; name: string }> {
     return Object.entries(CAREER_REGISTRY).map(([key, career]) => ({
         key,
         name: career.CAREER_INFO?.name ?? key,
@@ -124,7 +124,7 @@ export function getAvailableCareers() {
  * @param {string} careerName - The career name (e.g., "Arch-Militant", "Rogue Trader")
  * @returns {string|null} The career key or null if not found
  */
-export function getCareerKeyFromName(careerName) {
+export function getCareerKeyFromName(careerName: string): string | null {
     if (!careerName) return null;
 
     const normalized = careerName.toLowerCase().trim();
@@ -164,6 +164,6 @@ export function getCareerKeyFromName(careerName) {
  * @param {string} careerKey - The career key to check
  * @returns {boolean}
  */
-export function hasCareer(careerKey) {
+export function hasCareer(careerKey: string): boolean {
     return careerKey in CAREER_REGISTRY;
 }

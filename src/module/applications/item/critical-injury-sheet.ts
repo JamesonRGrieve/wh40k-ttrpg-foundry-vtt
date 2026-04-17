@@ -10,7 +10,6 @@ import BaseItemSheet from './base-item-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class CriticalInjurySheet extends BaseItemSheet {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'critical-injury'],
@@ -18,9 +17,11 @@ export default class CriticalInjurySheet extends BaseItemSheet {
             width: 560,
             height: 620,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             changeSeverity: CriticalInjurySheet.#changeSeverity,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */

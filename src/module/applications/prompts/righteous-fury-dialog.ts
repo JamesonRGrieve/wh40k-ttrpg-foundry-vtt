@@ -11,7 +11,6 @@ const { ApplicationV2 } = foundry.applications.api;
  * Shows the confirmation roll (d100 vs BS/WS) and handles the result.
  */
 export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV2) {
-    [key: string]: any;
     /**
      * @param {object} options - Dialog options
      * @param {Actor} options.actor - The actor performing the RF
@@ -43,10 +42,12 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
     static DEFAULT_OPTIONS = {
         tag: 'div',
         classes: ['wh40k-rpg', 'dialog', 'righteous-fury', 'standard-form'],
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             roll: RighteousFuryDialog.#onRoll,
             cancel: RighteousFuryDialog.#onCancel,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 400,
         },
@@ -205,7 +206,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
  * @param {object} options - Dialog options
  * @returns {Promise<boolean>} - True if confirmed, false if failed
  */
-export async function promptRighteousFury(options) {
+export async function promptRighteousFury(options: any): Promise<any> {
     return new Promise((resolve) => {
         const dialog = new RighteousFuryDialog({
             ...options,

@@ -1,4 +1,4 @@
-export function criticalDamage() {
+export function criticalDamage(): Record<string, any> {
     return {
         Energy: {
             Arm: {
@@ -207,7 +207,7 @@ export function criticalDamage() {
     };
 }
 
-export function getFuzzy(obj, term) {
+export function getFuzzy(obj: any, term: string): any {
     let resolvedTerm = term;
     if (resolvedTerm.toUpperCase() === 'LEFT LEG' || resolvedTerm.toUpperCase() === 'RIGHT LEG') {
         resolvedTerm = 'Leg';
@@ -226,7 +226,7 @@ export function getFuzzy(obj, term) {
     return undefined;
 }
 
-export function getCriticalDamage(type, location, amount) {
+export function getCriticalDamage(type: string, location: string, amount: number): any {
     const criticalDamageMap = criticalDamage();
     const damageMap = getFuzzy(criticalDamageMap, type);
     if (!damageMap) return null;

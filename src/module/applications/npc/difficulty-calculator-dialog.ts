@@ -18,8 +18,6 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {HandlebarsApplicationMixin(ApplicationV2)}
  */
 export default class DifficultyCalculatorDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /**
      * Internal state for the dialog.
      * @type {Object}
@@ -46,9 +44,13 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
             width: 600,
             height: 'auto' as const,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             updateQuantity: DifficultyCalculatorDialog.#updateQuantity,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /** @override */
@@ -96,7 +98,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         const context: any = await super._prepareContext(options);
 
         // Get party info
-        const party = (game as any).users.filter((u: any) => u.active && u.character);
+        const party = (game.users as any).filter((u: any) => u.active && u.character);
         const partySize = party.length;
 
         // Calculate average party rank

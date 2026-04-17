@@ -1,10 +1,9 @@
 import { capitalize } from '../handlebars/handlebars-helpers.ts';
 import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
+import { WH40KBaseActor } from './base-actor.ts';
 import { WH40KItemContainer } from './item-container.ts';
 
 export class WH40KItem extends WH40KItemContainer {
-    [key: string]: any;
-
     /**
      * Override to clean/validate img field before validation runs.
      * Foundry V13 has strict img validation - ensure valid file extension.
@@ -13,7 +12,7 @@ export class WH40KItem extends WH40KItemContainer {
      * @returns {object} The cleaned data
      * @override
      */
-    static cleanData(source: any = {}, options: any = {}) {
+    static cleanData(source: any = {}, options: any = {}): any {
         // CRITICAL: Clean img field if present - V13 validation is very strict
         if ('img' in source) {
             const imgValue = source.img;
@@ -56,7 +55,7 @@ export class WH40KItem extends WH40KItemContainer {
      * @returns {string} Path to default icon
      * @private
      */
-    static _getDefaultIcon(type) {
+    static _getDefaultIcon(type: string): string {
         // Use Foundry's built-in default icons that definitely exist
         const defaultIcons = {
             weapon: 'icons/svg/sword.svg',
@@ -81,7 +80,7 @@ export class WH40KItem extends WH40KItemContainer {
         };
 
         // Return type-specific icon or generic mystery-man fallback
-        return (defaultIcons as any)[type] || 'icons/svg/mystery-man.svg';
+        return defaultIcons[type as keyof typeof defaultIcons] || 'icons/svg/mystery-man.svg';
     }
 
     /** Helper to get the item type as a plain string for comparison. */
@@ -150,7 +149,7 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isOriginPath(): boolean {
-        return this._type === 'originPath' || (this._type === 'trait' && (this.flags as any)?.rt?.kind === 'origin');
+        return this._type === 'originPath' || (this._type === 'trait' && (this.flags as Record<string, Record<string, unknown>>)?.rt?.kind === 'origin');
     }
 
     get isSkill(): boolean {
@@ -194,11 +193,11 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isCondition(): boolean {
-        return this._type === 'trait' && (this.flags as any)?.rt?.kind === 'condition';
+        return this._type === 'trait' && (this.flags as Record<string, Record<string, unknown>>)?.rt?.kind === 'condition';
     }
 
     get originPathStep(): boolean {
-        return (this.flags as any)?.rt?.step || this.system?.step || '';
+        return (this.flags as Record<string, Record<string, unknown>>)?.rt?.step || this.system?.step || '';
     }
 
     get isWeapon(): boolean {
@@ -289,7 +288,7 @@ export class WH40KItem extends WH40KItemContainer {
         return this._type === 'peer';
     }
 
-    _onCreate(data, options, user): any {
+    _onCreate(data: any, options: any, user: any): any {
         game.wh40k.log('Determining nested items for', this);
         void this._determineNestedItems();
         return super._onCreate(data, options, user);
@@ -335,11 +334,11 @@ export class WH40KItem extends WH40KItemContainer {
             game.wh40k.log(`Special migrated for item: ${this.name as string}`, this.system.special);
             this.system.special = undefined;
 
-            await this.convertNestedToItems();
+            this.convertNestedToItems();
         }
     }
 
-    async _updateSpecialsFromPack(pack, data): Promise<any> {
+    async _updateSpecialsFromPack(pack: string, data: any): Promise<any> {
         const compendium = game.packs.find((p) => p.collection === pack);
         if (!compendium) return;
         await compendium.configure({ locked: false });
@@ -350,14 +349,14 @@ export class WH40KItem extends WH40KItemContainer {
         await compendium.configure({ locked: true });
     }
 
-    async _getAttackSpecials(specialData): Promise<any> {
+    async _getAttackSpecials(specialData: any): Promise<any[]> {
         const attackSpecialPack = game.packs.find((p) => p.collection === 'wh40k-rpg.attack-specials');
         if (!attackSpecialPack) return [];
         const index = await attackSpecialPack.getIndex({ fields: ['name', 'img', 'type', 'system'] });
         const specials = [];
         for (const special of Object.keys(specialData)) {
             const specialName = capitalize(special);
-            const attackSpecial: any = index.find((n) => n.name === specialName);
+            const attackSpecial: any = index.find((n: any) => n.name === specialName);
             if (attackSpecial) {
                 if (attackSpecial.system.hasLevel) {
                     attackSpecial.system.level = specialData[special];
@@ -374,7 +373,7 @@ export class WH40KItem extends WH40KItemContainer {
      * Get the item type label for display
      * @returns {string} The localized item type label
      */
-    get itemTypeLabel() {
+    get itemTypeLabel(): string {
         const typeLabels = {
             weapon: 'Weapon',
             armour: 'Armour',
@@ -395,7 +394,7 @@ export class WH40KItem extends WH40KItemContainer {
             ammunition: 'Ammunition',
             forceField: 'Force Field',
         };
-        return (typeLabels as any)[this.type] || this.type;
+        return typeLabels[this.type as keyof typeof typeLabels] || this.type;
     }
 
     /**
@@ -418,7 +417,7 @@ export class WH40KItem extends WH40KItemContainer {
      * Send this item's details to chat as a card
      * @param {Object} options - Options for the chat card
      */
-    async sendToChat(options = {}): Promise<void> {
+    async sendToChat(options: any = {}): Promise<any> {
         const cardData = {
             item: this,
             itemTypeLabel: this.itemTypeLabel,
@@ -473,7 +472,7 @@ export class WH40KItem extends WH40KItemContainer {
         chatData.rollMode = game.settings.get('core', 'rollMode');
         applyRollModeWhispers(chatData);
 
-        return (ChatMessage as any).create(chatData);
+        return ChatMessage.create(chatData as any);
     }
 
     /**
@@ -482,10 +481,12 @@ export class WH40KItem extends WH40KItemContainer {
     async performAction(): Promise<any> {
         if (this.isWeapon) {
             // Weapon attack - handled by the actor sheet
-            return (this.actor as any)?.rollWeaponAction?.(this) || this.sendToChat();
+            // @ts-expect-error - rollWeaponAction exists on actor subtypes
+            return this.actor?.rollWeaponAction?.(this) || this.sendToChat();
         } else if (this.isPsychicPower) {
             // Psychic power - handled by the actor sheet
-            return (this.actor as any)?.rollPsychicPower?.(this) || this.sendToChat();
+            // @ts-expect-error - rollPsychicPower exists on actor subtypes
+            return this.actor?.rollPsychicPower?.(this) || this.sendToChat();
         } else if (this.isNavigatorPower) {
             // Navigator power - roll navigator power
             return this.rollNavigatorPower();
@@ -519,7 +520,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Get the characteristic value
         const charKey = rollConfig.characteristic.toLowerCase();
-        const characteristic = (this.actor as any).characteristics?.[charKey];
+        const characteristic = (this.actor as WH40KBaseActor).characteristics?.[charKey];
         if (!characteristic) {
             return this.sendToChat();
         }
@@ -548,12 +549,12 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-roll-chat.hbs', cardData);
 
-        return (ChatMessage as any).create({
+        return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             rolls: [roll],
-        });
+        } as any);
     }
 
     /**
@@ -565,11 +566,11 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         // Navigator powers typically use Perception or Willpower
-        const perception = (this.actor as any).characteristics?.perception;
-        const willpower = (this.actor as any).characteristics?.willpower;
+        const perception = (this.actor as WH40KBaseActor).characteristics?.perception;
+        const willpower = (this.actor as WH40KBaseActor).characteristics?.willpower;
 
         // Use the higher of the two as base, modified by Navigator Rank
-        const navigatorRank = (this.actor as any).system?.navigatorRank || 0;
+        const navigatorRank = (this.actor as WH40KBaseActor).system?.navigatorRank || 0;
         const baseChar = perception?.total > willpower?.total ? perception : willpower;
         const targetValue = (baseChar?.total || 30) + navigatorRank * 5;
 
@@ -591,12 +592,12 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs', cardData);
 
-        return (ChatMessage as any).create({
+        return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             rolls: [roll],
-        });
+        } as any);
     }
 
     /**
@@ -608,7 +609,7 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         // Orders typically use Command or relevant skill
-        const command = (this.actor as any).skills?.command;
+        const command = (this.actor as WH40KBaseActor & { skills?: Record<string, { current?: number }> }).skills?.command;
         const targetValue = command?.current || 50;
 
         const roll = new Roll('1d100');
@@ -629,12 +630,12 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/order-roll-chat.hbs', cardData);
 
-        return (ChatMessage as any).create({
+        return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             rolls: [roll],
-        });
+        } as any);
     }
 
     /**
@@ -646,7 +647,7 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         // Rituals typically use Willpower
-        const willpower = (this.actor as any).characteristics?.willpower;
+        const willpower = (this.actor as WH40KBaseActor).characteristics?.willpower;
         const targetValue = willpower?.total || 30;
 
         const roll = new Roll('1d100');
@@ -667,21 +668,21 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ritual-roll-chat.hbs', cardData);
 
-        return (ChatMessage as any).create({
+        return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             rolls: [roll],
-        });
+        } as any);
     }
 
     /**
      * Apply origin path modifiers to an actor
      * Automatically applies characteristic bonuses, skills, and talents from origin paths
      */
-    async applyOriginToActor(actor): Promise<void> {
+    async applyOriginToActor(actor: any): Promise<void> {
         if (!this.isOriginPath) {
-            (ui.notifications as any).warn('This item is not an origin path and cannot be auto-applied.');
+            ui.notifications.warn('This item is not an origin path and cannot be auto-applied.');
             return;
         }
 
@@ -690,16 +691,7 @@ export class WH40KItem extends WH40KItemContainer {
         const modifiers = this.system.modifiers || {};
 
         // Apply characteristic modifiers
-        if (modifiers.characteristics) {
-            const characteristics: any = {};
-            for (const [key, value] of Object.entries(modifiers.characteristics)) {
-                if (value !== 0) {
-                    const currentBonus = actor.system.characteristics?.[key]?.advance || 0;
-                    characteristics[`system.characteristics.${key}.advance`] = currentBonus + Number(value);
-                }
-            }
-            Object.assign(updates, characteristics);
-        }
+        this._buildCharacteristicUpdates(modifiers, actor, updates);
 
         // Apply wounds modifier
         if (modifiers.wounds && modifiers.wounds !== 0) {
@@ -713,35 +705,9 @@ export class WH40KItem extends WH40KItemContainer {
             updates['system.fate.total'] = currentFate + modifiers.fate;
         }
 
-        // Collect skills to add
-        if (modifiers.skills && Array.isArray(modifiers.skills)) {
-            for (const skillName of modifiers.skills) {
-                const skillPack = game.packs.get('wh40k-rpg.dh2-core-stats-skills');
-                if (skillPack) {
-                    const index = await skillPack.getIndex({ fields: ['name'] });
-                    const skillEntry = index.find((s: any) => s.name.toLowerCase() === skillName.toLowerCase());
-                    if (skillEntry) {
-                        const skill = await skillPack.getDocument(skillEntry._id);
-                        if (skill) itemsToAdd.push(skill.toObject());
-                    }
-                }
-            }
-        }
-
-        // Collect talents to add
-        if (modifiers.talents && Array.isArray(modifiers.talents)) {
-            for (const talentName of modifiers.talents) {
-                const talentPack = game.packs.get('wh40k-rpg.dh2-core-stats-talents');
-                if (talentPack) {
-                    const index = await talentPack.getIndex({ fields: ['name'] });
-                    const talentEntry = index.find((t: any) => t.name.toLowerCase() === (talentName as string).toLowerCase());
-                    if (talentEntry) {
-                        const talent = await talentPack.getDocument(talentEntry._id);
-                        if (talent) itemsToAdd.push(talent.toObject());
-                    }
-                }
-            }
-        }
+        // Collect skills and talents from compendium
+        await this._collectCompendiumItems(modifiers.skills, 'wh40k-rpg.dh2-core-stats-skills', itemsToAdd);
+        await this._collectCompendiumItems(modifiers.talents, 'wh40k-rpg.dh2-core-stats-talents', itemsToAdd);
 
         // Apply updates
         if (Object.keys(updates).length > 0) {
@@ -756,7 +722,41 @@ export class WH40KItem extends WH40KItemContainer {
         // Add the origin path itself
         await actor.createEmbeddedDocuments('Item', [this.toObject()]);
 
-        (ui.notifications as any).info(`Applied ${this.name as string} to ${actor.name}`);
+        ui.notifications.info(`Applied ${this.name as string} to ${actor.name}`);
+    }
+
+    /**
+     * Build characteristic advance updates from modifiers.
+     * @private
+     */
+    _buildCharacteristicUpdates(modifiers: any, actor: any, updates: any): void {
+        if (!modifiers.characteristics) return;
+        for (const [key, value] of Object.entries(modifiers.characteristics)) {
+            if (value !== 0) {
+                const currentBonus = actor.system.characteristics?.[key]?.advance || 0;
+                updates[`system.characteristics.${key}.advance`] = currentBonus + Number(value);
+            }
+        }
+    }
+
+    /**
+     * Collect items from a compendium pack by name.
+     * @private
+     */
+    async _collectCompendiumItems(names: any, packId: string, itemsToAdd: any[]): Promise<void> {
+        if (!names || !Array.isArray(names)) return;
+        const pack = game.packs.get(packId);
+        if (!pack) return;
+
+        const index = await pack.getIndex({ fields: ['name'] });
+        for (const itemName of names) {
+            const entry = index.find((e: any) => e.name.toLowerCase() === (itemName as string).toLowerCase());
+            if (entry) {
+                // eslint-disable-next-line no-await-in-loop -- Sequential document fetch
+                const doc = await pack.getDocument(entry._id);
+                if (doc) itemsToAdd.push(doc.toObject());
+            }
+        }
     }
 
     /**

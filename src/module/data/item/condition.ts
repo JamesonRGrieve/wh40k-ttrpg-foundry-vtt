@@ -10,8 +10,6 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes ModifiersTemplate
  */
 export default class ConditionData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare nature: string;
@@ -25,7 +23,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -88,7 +86,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * Get the nature icon class.
      * @type {string}
      */
-    get natureIcon() {
+    get natureIcon(): string {
         const icons = {
             beneficial: 'fa-plus-circle',
             harmful: 'fa-exclamation-triangle',
@@ -118,7 +116,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * Get the appliesTo icon class.
      * @type {string}
      */
-    get appliesToIcon() {
+    get appliesToIcon(): string {
         const icons = {
             self: 'fa-user',
             target: 'fa-crosshairs',
@@ -132,7 +130,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * Get the full name with stacks.
      * @type {string}
      */
-    get fullName() {
+    get fullName(): string {
         let name = this.parent?.name ?? '';
         if (this.stackable && this.stacks > 1) {
             name += ` (×${this.stacks})`;
@@ -158,7 +156,7 @@ export default class ConditionData extends ItemDataModel.mixin(DescriptionTempla
      * Is this condition temporary?
      * @type {boolean}
      */
-    get isTemporary() {
+    get isTemporary(): boolean {
         return this.duration.units !== 'permanent';
     }
 

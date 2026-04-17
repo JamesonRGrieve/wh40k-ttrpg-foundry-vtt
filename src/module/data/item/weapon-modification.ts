@@ -10,8 +10,6 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes PhysicalItemTemplate
  */
 export default class WeaponModificationData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare category: string;
@@ -33,7 +31,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -91,7 +89,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
      * Get restrictions label.
      * @type {string}
      */
-    get restrictionsLabel() {
+    get restrictionsLabel(): string {
         const parts = [];
         if (this.restrictions.weaponClasses.size) {
             parts.push(`Classes: ${Array.from(this.restrictions.weaponClasses as Set<string>).join(', ')}`);
@@ -106,7 +104,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
      * Get category icon class.
      * @type {string}
      */
-    get categoryIcon() {
+    get categoryIcon(): string {
         const icons = {
             sight: 'fa-crosshairs',
             barrel: 'fa-gun',

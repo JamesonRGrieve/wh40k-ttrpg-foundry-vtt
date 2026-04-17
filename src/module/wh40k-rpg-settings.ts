@@ -10,7 +10,7 @@ export class WH40KSettings {
         movementAutomation: 'movement-automation',
     };
 
-    static registerSettings() {
+    static registerSettings(): void {
         // @ts-expect-error - argument type
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, {
             name: 'World Version',

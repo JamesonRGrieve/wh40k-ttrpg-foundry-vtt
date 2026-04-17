@@ -8,8 +8,6 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes DescriptionTemplate
  */
 export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare hasLevel: boolean;
@@ -19,7 +17,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -108,7 +106,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
      * Get the full name including level.
      * @type {string}
      */
-    get fullName() {
+    get fullName(): string {
         let name = this.parent?.name ?? '';
         if (this.hasLevel && this.level !== null) {
             name += ` (${this.level})`;

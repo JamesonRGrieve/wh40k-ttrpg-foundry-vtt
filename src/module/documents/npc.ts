@@ -1,7 +1,6 @@
 import { WH40KAcolyte } from './acolyte.ts';
 
 export class WH40KNPC extends WH40KAcolyte {
-    [key: string]: any;
     get faction(): string {
         return this.system.faction;
     }

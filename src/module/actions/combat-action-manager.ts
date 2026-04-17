@@ -1,23 +1,22 @@
 import { handleBleeding, handleOnFire } from '../rules/active-effects.ts';
 
 export class CombatActionManager {
-    [key: string]: any;
     combatTurnHook;
     combatRoundHook;
 
-    initializeHooks() {
+    initializeHooks(): void {
         // Initialize Combat Hooks
-        this.combatTurnHook = Hooks.on('combatTurn', async (combat, data) => await this.updateCombat(combat, data));
-        this.combatRoundHook = Hooks.on('combatRound', async (combat, data) => await this.updateCombat(combat, data));
+        this.combatTurnHook = Hooks.on('combatTurn', (combat, data) => this.updateCombat(combat, data));
+        this.combatRoundHook = Hooks.on('combatRound', (combat, data) => this.updateCombat(combat, data));
     }
 
-    disableHooks() {
+    disableHooks(): void {
         game.wh40k.log('Disabling Hooks', { cth: this.combatTurnHook, crh: this.combatRoundHook });
         Hooks.off('combatTurn', this.combatTurnHook);
         Hooks.off('combatRound', this.combatRoundHook);
     }
 
-    updateCombat(combat, data) {
+    updateCombat(combat: any, data: any): void {
         // Only Run on the first GM -- so it will only run once
         if (game.userId === this.getFirstGM()) {
             game.wh40k.log('updateCombat - this should only be running on first GM');
@@ -35,15 +34,16 @@ export class CombatActionManager {
      * This enables Good armour's +1 AP bonus on first attack.
      * @param {Combat} combat - The combat encounter
      */
-    async resetFirstAttackFlags(combat) {
+    async resetFirstAttackFlags(combat: any): Promise<void> {
         for (const combatant of combat.combatants) {
             if (combatant.actor) {
+                // eslint-disable-next-line no-await-in-loop -- Foundry flag operations must be sequential
                 await combatant.actor.unsetFlag('wh40k-rpg', 'hitThisRound');
             }
         }
     }
 
-    async processCombatActiveEffects(combat, data) {
+    async processCombatActiveEffects(combat: any, data: any): Promise<void> {
         const currentCombatant = combat.turns[data.turn];
         game.wh40k.log('processCombatActiveEffects', currentCombatant);
 
@@ -53,8 +53,10 @@ export class CombatActionManager {
                 for (const effect of currentCombatant.actor.effects.contents) {
                     // On Fire!
                     if (effect.label === 'Burning') {
+                        // eslint-disable-next-line no-await-in-loop -- Sequential effect processing required
                         await handleOnFire(currentCombatant.actor);
                     } else if (effect.label === 'Bleeding') {
+                        // eslint-disable-next-line no-await-in-loop -- Sequential effect processing required
                         await handleBleeding(currentCombatant.actor);
                     }
                 }
@@ -62,7 +64,7 @@ export class CombatActionManager {
         }
     }
 
-    getFirstGM() {
+    getFirstGM(): string | undefined {
         // @ts-expect-error - dynamic property access
         for (const user of game.users.contents) {
             if (user.active && user.isGM) return user.id;

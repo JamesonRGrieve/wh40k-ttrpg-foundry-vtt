@@ -5,7 +5,7 @@ import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
 import CommonTemplate from './common.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField } = (foundry.data as any).fields;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField } = foundry.data.fields;
 
 /**
  * Creature template for actors that are living beings (Characters, NPCs).
@@ -85,8 +85,6 @@ interface ModifierSource {
 }
 
 export default class CreatureTemplate extends CommonTemplate {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare characteristics: {
         weaponSkill: CharacteristicData;
@@ -871,7 +869,8 @@ export default class CreatureTemplate extends CommonTemplate {
      */
     _prepareSkills(): void {
         // Determine visible skills for this actor's game system
-        const gameSystem = (this as any).gameSystem;
+        // @ts-expect-error - gameSystem is provided by mixin chain
+        const gameSystem = this.gameSystem;
         const systemConfig = gameSystem ? SystemConfigRegistry.getOrNull(gameSystem) : null;
         const visibleSkills = systemConfig?.getVisibleSkills() ?? null;
 
@@ -959,7 +958,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _computeItemModifiers(): void {
-        const actor = this.parent;
+        const actor = (this as any).parent;
         if (!actor?.items) return;
 
         const modifierItems = actor.items.filter(
@@ -994,56 +993,51 @@ export default class CreatureTemplate extends CommonTemplate {
             id: item.id,
         };
 
-        // Characteristic modifiers
-        if (mods.characteristics) {
-            for (const [charKey, value] of Object.entries(mods.characteristics)) {
-                if (value && typeof value === 'number') {
-                    if (!this.modifierSources.characteristics[charKey]) {
-                        this.modifierSources.characteristics[charKey] = [];
-                    }
-                    this.modifierSources.characteristics[charKey].push({ ...source, value });
-                }
+        this._applyKeyedModifiers(mods.characteristics, this.modifierSources.characteristics, source);
+        this._applyKeyedModifiers(mods.skills, this.modifierSources.skills, source);
+        this._applyCombatModifiers(mods.combat, source);
+        this._applyResourceModifiers(mods.resources, source);
+        this._applyOtherModifiers(mods.other, source);
+    }
+
+    /** Apply keyed numeric modifiers (characteristics or skills). @protected */
+    _applyKeyedModifiers(modMap: Record<string, unknown> | undefined, targetSources: Record<string, any[]>, source: Record<string, any>): void {
+        if (!modMap) return;
+        for (const [key, value] of Object.entries(modMap)) {
+            if (value && typeof value === 'number') {
+                if (!targetSources[key]) targetSources[key] = [];
+                targetSources[key].push({ ...source, value });
             }
         }
+    }
 
-        // Skill modifiers
-        if (mods.skills) {
-            for (const [skillKey, value] of Object.entries(mods.skills)) {
-                if (value && typeof value === 'number') {
-                    if (!this.modifierSources.skills[skillKey]) {
-                        this.modifierSources.skills[skillKey] = [];
-                    }
-                    this.modifierSources.skills[skillKey].push({ ...source, value });
-                }
+    /** Apply combat modifiers (only to pre-existing keys). @protected */
+    _applyCombatModifiers(combatMods: Record<string, unknown> | undefined, source: Record<string, any>): void {
+        if (!combatMods) return;
+        for (const [combatKey, value] of Object.entries(combatMods)) {
+            if (value && typeof value === 'number' && this.modifierSources.combat[combatKey]) {
+                this.modifierSources.combat[combatKey].push({ ...source, value } as any);
             }
         }
+    }
 
-        // Combat modifiers
-        if (mods.combat) {
-            for (const [combatKey, value] of Object.entries(mods.combat)) {
-                if (value && typeof value === 'number' && this.modifierSources.combat[combatKey]) {
-                    this.modifierSources.combat[combatKey].push({ ...source, value });
-                }
-            }
+    /** Apply resource modifiers (wounds, fate). @protected */
+    _applyResourceModifiers(resources: any | undefined, source: Record<string, any>): void {
+        if (!resources) return;
+        if (resources.wounds && typeof resources.wounds === 'number') {
+            this.modifierSources.wounds.push({ ...source, value: resources.wounds } as any);
         }
-
-        // Resources modifiers (wounds, fate, insanity, corruption)
-        if (mods.resources) {
-            if (mods.resources.wounds && typeof mods.resources.wounds === 'number') {
-                this.modifierSources.wounds.push({ ...source, value: mods.resources.wounds });
-            }
-            if (mods.resources.fate && typeof mods.resources.fate === 'number') {
-                this.modifierSources.fate.push({ ...source, value: mods.resources.fate });
-            }
-            // Note: insanity and corruption modifiers are defined in schema but not yet implemented
+        if (resources.fate && typeof resources.fate === 'number') {
+            this.modifierSources.fate.push({ ...source, value: resources.fate } as any);
         }
+    }
 
-        // Movement modifier (from other modifiers array)
-        if (mods.other && Array.isArray(mods.other)) {
-            for (const mod of mods.other) {
-                if (mod.key === 'movement' && typeof mod.value === 'number') {
-                    this.modifierSources.movement.push({ ...source, value: mod.value, label: mod.label });
-                }
+    /** Apply other/movement modifiers. @protected */
+    _applyOtherModifiers(otherMods: any[] | undefined, source: Record<string, any>): void {
+        if (!otherMods || !Array.isArray(otherMods)) return;
+        for (const mod of otherMods) {
+            if (mod.key === 'movement' && typeof mod.value === 'number') {
+                this.modifierSources.movement.push({ ...source, value: mod.value, label: mod.label } as any);
             }
         }
     }
@@ -1125,7 +1119,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _computeArmour(): void {
-        const actor = this.parent;
+        const actor = (this as any).parent;
         if (!actor) return;
         Object.assign(this.armour, computeArmour(actor));
     }
@@ -1135,7 +1129,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _computeEncumbrance(): void {
-        const actor = this.parent;
+        const actor = (this as any).parent;
         if (!actor) return;
         Object.assign(this.encumbrance, computeEncumbrance(actor));
     }
@@ -1179,7 +1173,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number}
      */
     _getOriginPathWoundsModifier(): number {
-        const actor = this.parent;
+        const actor = (this as any).parent;
         if (!actor?.items) return 0;
         let total = 0;
         const originItems = actor.items.filter((item) => item.isOriginPath);
@@ -1196,7 +1190,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number}
      */
     _getOriginPathFateModifier(): number {
-        const actor = this.parent;
+        const actor = (this as any).parent;
         if (!actor?.items) return 0;
         let total = 0;
         const originItems = actor.items.filter((item) => item.isOriginPath);
@@ -1216,7 +1210,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number}
      */
     _getOriginPathCharacteristicModifier(charKey: string): number {
-        const actor = this.parent;
+        const actor = (this as any).parent;
         if (!actor?.items) return 0;
         let total = 0;
         const originItems = actor.items.filter((item) => item.isOriginPath);
@@ -1246,7 +1240,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _registerOriginPathModifierSources(): void {
-        const actor = this.parent;
+        const actor = (this as any).parent;
         if (!actor?.items) return;
 
         const originItems = actor.items.filter((item) => item.isOriginPath);
@@ -1298,7 +1292,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {number} Highest rank granted (0 = not granted, 1-4 = rank)
      */
     _getOriginPathSkillRank(skillKey: string, specialization?: string): number {
-        const actor = this.parent;
+        const actor = (this as any).parent;
         if (!actor?.items) return 0;
 
         let maxRank = 0;
@@ -1346,7 +1340,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _registerOriginPathSkillSources(): void {
-        const actor = this.parent;
+        const actor = (this as any).parent;
         if (!actor?.items) return;
 
         const originItems = actor.items.filter((item) => item.isOriginPath);

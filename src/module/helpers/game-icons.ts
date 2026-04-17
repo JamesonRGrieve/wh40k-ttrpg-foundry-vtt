@@ -140,7 +140,7 @@ export const ICON_CATEGORIES = {
  * @param {string} color - SVG color (default: white for dark backgrounds)
  * @returns {string} Full CDN URL
  */
-export function getIconUrl(iconPath, color = 'ffffff') {
+export function getIconUrl(iconPath: string, color: string = 'ffffff'): string {
     // If already a full path, use as-is
     if (iconPath.startsWith('svg/') || iconPath.startsWith('http')) {
         return iconPath.startsWith('http') ? iconPath : `${GAME_ICONS_CDN}/${iconPath}`;
@@ -165,7 +165,7 @@ export function getIconUrl(iconPath, color = 'ffffff') {
  * @param {string} bgColor - Background color hex (without #), optional
  * @returns {string} URL to colored icon
  */
-export function getColoredIconUrl(iconPath, fgColor = 'ffffff', bgColor = null) {
+export function getColoredIconUrl(iconPath: string, fgColor: string = 'ffffff', bgColor: string | null = null): string {
     // Use game-icons.net's own colored icon service
     const parts = iconPath.split('/');
     if (parts.length === 2) {
@@ -207,7 +207,7 @@ export const DEFAULT_ITEM_ICONS = {
  * @param {string} type - Item or actor type
  * @returns {string} CDN URL for the default icon
  */
-export function getDefaultIcon(type) {
+export function getDefaultIcon(type: string): string {
     const iconPath = DEFAULT_ITEM_ICONS[type] || 'lorc/perspective-dice-six';
     return getIconUrl(iconPath);
 }
@@ -216,7 +216,7 @@ export function getDefaultIcon(type) {
  * Preload common icons to browser cache
  * Call this during system initialization
  */
-export async function preloadCommonIcons() {
+export async function preloadCommonIcons(): Promise<any> {
     const commonIcons = [
         ...ICON_CATEGORIES.weapons.slice(0, 5),
         ...ICON_CATEGORIES.armour.slice(0, 3),

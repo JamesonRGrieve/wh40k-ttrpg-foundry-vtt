@@ -1,6 +1,6 @@
 import SystemDataModel from './system-data-model.ts';
 
-const { NumberField } = (foundry.data as any).fields;
+const { NumberField } = foundry.data.fields;
 
 /**
  * Base data model for all Item types in WH40K RPG.
@@ -12,8 +12,8 @@ const { NumberField } = (foundry.data as any).fields;
  *
  * @see SystemDataModel for mixin and template delegation details
  */
+// @ts-expect-error - SystemDataModel extends foundry.abstract.TypeDataModel which has complex generic constraints
 export default class ItemDataModel extends SystemDataModel {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Data Model Configuration                    */
     /* -------------------------------------------- */
@@ -22,6 +22,10 @@ export default class ItemDataModel extends SystemDataModel {
     declare description: { value: string; chat: string; summary: string } | string;
     declare source: { book: string; page: string; custom: string } | string;
     declare chatProperties: string[];
+    declare parent: any;
+
+    /** Re-export mixin for TypeScript visibility (inherited from SystemDataModel) */
+    static mixin: (...templates: any[]) => any;
 
     /**
      * Metadata describing this item data model.
@@ -43,7 +47,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @inheritdoc
      */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        return this.mergeSchema(super.defineSchema(), {});
+        return (this as any).mergeSchema(super.defineSchema(), {});
     }
 
     /* -------------------------------------------- */
@@ -81,13 +85,16 @@ export default class ItemDataModel extends SystemDataModel {
                 if (typeof value === 'string') {
                     const num = Number(value);
                     if (!Number.isNaN(num)) {
-                        source[key] = (field as any).integer ? Math.floor(num) : num;
+                        source[key] = (field as foundry.data.fields.NumberField & { integer?: boolean }).integer ? Math.floor(num) : num;
                     }
                 }
             }
             // Handle SchemaField - recurse into nested fields
-            else if ((field as any)?.fields && typeof value === 'object' && value !== null) {
-                ItemDataModel.#cleanNumericFields(value as Record<string, unknown>, (field as any).fields);
+            else if (typeof field === 'object' && field !== null && 'fields' in field && typeof value === 'object' && value !== null) {
+                ItemDataModel.#cleanNumericFields(
+                    value as Record<string, unknown>,
+                    (field as foundry.data.fields.SchemaField.Any & { fields: Record<string, unknown> }).fields,
+                );
             }
         }
     }
@@ -213,7 +220,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @type {string}
      */
     get typeLabel(): string {
-        return game.i18n.localize((CONFIG as any).Item.typeLabels[this.parent.type]);
+        return game.i18n.localize(CONFIG.Item.typeLabels[this.parent.type]);
     }
 
     /**
@@ -288,7 +295,8 @@ export default class ItemDataModel extends SystemDataModel {
      * @returns {Promise<object>}
      */
     async getChatData(htmlOptions: Record<string, unknown> = {}): Promise<Record<string, unknown>> {
-        const descValue = typeof this.description === 'string' ? this.description : (this.description as any)?.value ?? '';
+        const descValue =
+            typeof this.description === 'string' ? this.description : (this.description as { value: string; chat: string; summary: string })?.value ?? '';
         const data = {
             description: await TextEditor.enrichHTML(descValue, {
                 ...htmlOptions,

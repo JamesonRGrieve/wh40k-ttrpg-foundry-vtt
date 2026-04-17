@@ -15,8 +15,6 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends ApplicationV2
  */
 export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -26,6 +24,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
         id: 'talent-editor-dialog',
         classes: ['wh40k-rpg', 'dialog', 'talent-editor-dialog'],
         tag: 'form',
+        /* eslint-disable @typescript-eslint/unbound-method */
         form: {
             handler: TalentEditorDialog.#formHandler,
             closeOnSubmit: true,
@@ -35,6 +34,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             removeItem: TalentEditorDialog.#removeItem,
             switchSection: TalentEditorDialog.#switchSection,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 700,
             height: 650,
@@ -87,7 +87,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
         return `Edit: ${this.item.name}`;
     }
 
@@ -458,7 +458,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             fellowship: 'Fellowship',
             influence: 'Influence',
         };
-        return (labels as any)[key] || key;
+        return labels[key as keyof typeof labels] || key;
     }
 
     /**
@@ -490,7 +490,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             initiative: 'Initiative',
             speed: 'Movement Speed',
         };
-        return (labels as any)[key] || key;
+        return labels[key as keyof typeof labels] || key;
     }
 
     /**
@@ -506,7 +506,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             insanity: 'Insanity Threshold',
             corruption: 'Corruption Threshold',
         };
-        return (labels as any)[key] || key;
+        return labels[key as keyof typeof labels] || key;
     }
 
     /* -------------------------------------------- */
@@ -561,216 +561,239 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     static async #formHandler(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
         const data: any = foundry.utils.expandObject(formData.object);
-
-        // Process the form data into the proper structure
         const updateData: any = {};
 
-        // Process prerequisites
-        if (data.prerequisites) {
-            updateData['system.prerequisites.text'] = data.prerequisites.text || '';
+        TalentEditorDialog.#processPrerequisites(data, updateData);
+        TalentEditorDialog.#processModifiers(data, updateData);
+        TalentEditorDialog.#processSituationalModifiers(data, updateData);
+        TalentEditorDialog.#processGrants(data, updateData);
 
-            // Convert characteristics array back to object
-            const charReqs: any = {};
-            if (data.prerequisites.characteristics) {
-                for (const entry of Object.values(data.prerequisites.characteristics) as any[]) {
-                    if (entry.key && entry.value) {
-                        charReqs[entry.key] = parseInt(entry.value) || 0;
-                    }
-                }
-            }
-            updateData['system.prerequisites.characteristics'] = charReqs;
-
-            // Process skills array
-            const skillReqs = [];
-            if (data.prerequisites.skills) {
-                for (const entry of Object.values(data.prerequisites.skills) as any[]) {
-                    if (entry.name) skillReqs.push(entry.name);
-                }
-            }
-            updateData['system.prerequisites.skills'] = skillReqs;
-
-            // Process talents array
-            const talentReqs = [];
-            if (data.prerequisites.talents) {
-                for (const entry of Object.values(data.prerequisites.talents) as any[]) {
-                    if (entry.name) talentReqs.push(entry.name);
-                }
-            }
-            updateData['system.prerequisites.talents'] = talentReqs;
-        }
-
-        // Process modifiers
-        if (data.modifiers) {
-            // Characteristics
-            const charMods: any = {};
-            if (data.modifiers.characteristics) {
-                for (const entry of Object.values(data.modifiers.characteristics) as any[]) {
-                    if (entry.key) {
-                        charMods[entry.key] = parseInt(entry.value) || 0;
-                    }
-                }
-            }
-            updateData['system.modifiers.characteristics'] = charMods;
-
-            // Skills
-            const skillMods: any = {};
-            if (data.modifiers.skills) {
-                for (const entry of Object.values(data.modifiers.skills) as any[]) {
-                    if (entry.key) {
-                        skillMods[entry.key] = parseInt(entry.value) || 0;
-                    }
-                }
-            }
-            updateData['system.modifiers.skills'] = skillMods;
-
-            // Combat
-            if (data.modifiers.combat) {
-                for (const entry of Object.values(data.modifiers.combat) as any[]) {
-                    if (entry.key) {
-                        updateData[`system.modifiers.combat.${entry.key}`] = parseInt(entry.value) || 0;
-                    }
-                }
-            }
-
-            // Resources
-            if (data.modifiers.resources) {
-                for (const entry of Object.values(data.modifiers.resources) as any[]) {
-                    if (entry.key) {
-                        updateData[`system.modifiers.resources.${entry.key}`] = parseInt(entry.value) || 0;
-                    }
-                }
-            }
-
-            // Other modifiers
-            const otherMods = [];
-            if (data.modifiers.other) {
-                for (const entry of Object.values(data.modifiers.other) as any[]) {
-                    if (entry.key) {
-                        otherMods.push({
-                            key: entry.key,
-                            label: entry.label || entry.key,
-                            value: parseInt(entry.value) || 0,
-                            mode: entry.mode || 'add',
-                        });
-                    }
-                }
-            }
-            updateData['system.modifiers.other'] = otherMods;
-        }
-
-        // Process situational modifiers
-        if (data.situational) {
-            // Characteristics - icon is derived, don't save it
-            const sitCharMods = [];
-            if (data.situational.characteristics) {
-                for (const entry of Object.values(data.situational.characteristics) as any[]) {
-                    if (entry.key && entry.condition) {
-                        sitCharMods.push({
-                            key: entry.key,
-                            value: parseInt(entry.value) || 0,
-                            condition: entry.condition,
-                        });
-                    }
-                }
-            }
-            updateData['system.modifiers.situational.characteristics'] = sitCharMods;
-
-            // Skills - icon is derived, don't save it
-            const sitSkillMods = [];
-            if (data.situational.skills) {
-                for (const entry of Object.values(data.situational.skills) as any[]) {
-                    if (entry.key && entry.condition) {
-                        sitSkillMods.push({
-                            key: entry.key,
-                            value: parseInt(entry.value) || 0,
-                            condition: entry.condition,
-                        });
-                    }
-                }
-            }
-            updateData['system.modifiers.situational.skills'] = sitSkillMods;
-
-            // Combat - icon is derived, don't save it
-            const sitCombatMods = [];
-            if (data.situational.combat) {
-                for (const entry of Object.values(data.situational.combat) as any[]) {
-                    if (entry.key && entry.condition) {
-                        sitCombatMods.push({
-                            key: entry.key,
-                            value: parseInt(entry.value) || 0,
-                            condition: entry.condition,
-                        });
-                    }
-                }
-            }
-            updateData['system.modifiers.situational.combat'] = sitCombatMods;
-        }
-
-        // Process grants
-        if (data.grants) {
-            // Skills
-            const grantedSkills = [];
-            if (data.grants.skills) {
-                for (const entry of Object.values(data.grants.skills) as any[]) {
-                    if (entry.name) {
-                        grantedSkills.push({
-                            name: entry.name,
-                            specialization: entry.specialization || '',
-                            level: entry.level || 'trained',
-                        });
-                    }
-                }
-            }
-            updateData['system.grants.skills'] = grantedSkills;
-
-            // Talents
-            const grantedTalents = [];
-            if (data.grants.talents) {
-                for (const entry of Object.values(data.grants.talents) as any[]) {
-                    if (entry.name) {
-                        grantedTalents.push({
-                            name: entry.name,
-                            specialization: entry.specialization || '',
-                            uuid: entry.uuid || '',
-                        });
-                    }
-                }
-            }
-            updateData['system.grants.talents'] = grantedTalents;
-
-            // Traits
-            const grantedTraits = [];
-            if (data.grants.traits) {
-                for (const entry of Object.values(data.grants.traits) as any[]) {
-                    if (entry.name) {
-                        grantedTraits.push({
-                            name: entry.name,
-                            level: entry.level ? parseInt(entry.level) : null,
-                            uuid: entry.uuid || '',
-                        });
-                    }
-                }
-            }
-            updateData['system.grants.traits'] = grantedTraits;
-
-            // Special Abilities
-            const grantedAbilities = [];
-            if (data.grants.specialAbilities) {
-                for (const entry of Object.values(data.grants.specialAbilities) as any[]) {
-                    if (entry.name) {
-                        grantedAbilities.push({
-                            name: entry.name,
-                            description: entry.description || '',
-                        });
-                    }
-                }
-            }
-            updateData['system.grants.specialAbilities'] = grantedAbilities;
-        }
-
-        // Update the item
         await this.item.update(updateData);
-        (ui.notifications as any).info(`Updated ${this.item.name}`);
+        ui.notifications.info(`Updated ${this.item.name}`);
+    }
+
+    /**
+     * Process prerequisites data from form into update data.
+     * @param {object} data - Expanded form data
+     * @param {object} updateData - Update object to populate
+     */
+    static #processPrerequisites(data: any, updateData: any): void {
+        if (!data.prerequisites) return;
+
+        updateData['system.prerequisites.text'] = data.prerequisites.text || '';
+
+        const charReqs: any = {};
+        if (data.prerequisites.characteristics) {
+            for (const entry of Object.values(data.prerequisites.characteristics) as Record<string, any>[]) {
+                if (entry.key && entry.value) {
+                    charReqs[entry.key] = parseInt(entry.value as string) || 0;
+                }
+            }
+        }
+        updateData['system.prerequisites.characteristics'] = charReqs;
+
+        const skillReqs = [];
+        if (data.prerequisites.skills) {
+            for (const entry of Object.values(data.prerequisites.skills) as Record<string, any>[]) {
+                if (entry.name) skillReqs.push(entry.name as string);
+            }
+        }
+        updateData['system.prerequisites.skills'] = skillReqs;
+
+        const talentReqs = [];
+        if (data.prerequisites.talents) {
+            for (const entry of Object.values(data.prerequisites.talents) as Record<string, any>[]) {
+                if (entry.name) talentReqs.push(entry.name as string);
+            }
+        }
+        updateData['system.prerequisites.talents'] = talentReqs;
+    }
+
+    /**
+     * Process modifiers data from form into update data.
+     * @param {object} data - Expanded form data
+     * @param {object} updateData - Update object to populate
+     */
+    static #processModifiers(data: any, updateData: any): void {
+        if (!data.modifiers) return;
+
+        // Characteristics
+        const charMods: any = {};
+        if (data.modifiers.characteristics) {
+            for (const entry of Object.values(data.modifiers.characteristics) as Record<string, any>[]) {
+                if (entry.key) {
+                    charMods[entry.key] = parseInt(entry.value as string) || 0;
+                }
+            }
+        }
+        updateData['system.modifiers.characteristics'] = charMods;
+
+        // Skills
+        const skillMods: any = {};
+        if (data.modifiers.skills) {
+            for (const entry of Object.values(data.modifiers.skills) as Record<string, any>[]) {
+                if (entry.key) {
+                    skillMods[entry.key] = parseInt(entry.value as string) || 0;
+                }
+            }
+        }
+        updateData['system.modifiers.skills'] = skillMods;
+
+        // Combat
+        if (data.modifiers.combat) {
+            for (const entry of Object.values(data.modifiers.combat) as Record<string, any>[]) {
+                if (entry.key) {
+                    updateData[`system.modifiers.combat.${entry.key}`] = parseInt(entry.value as string) || 0;
+                }
+            }
+        }
+
+        // Resources
+        if (data.modifiers.resources) {
+            for (const entry of Object.values(data.modifiers.resources) as Record<string, any>[]) {
+                if (entry.key) {
+                    updateData[`system.modifiers.resources.${entry.key}`] = parseInt(entry.value as string) || 0;
+                }
+            }
+        }
+
+        // Other modifiers
+        const otherMods = [];
+        if (data.modifiers.other) {
+            for (const entry of Object.values(data.modifiers.other) as Record<string, any>[]) {
+                if (entry.key) {
+                    otherMods.push({
+                        key: entry.key,
+                        label: entry.label || entry.key,
+                        value: parseInt(entry.value as string) || 0,
+                        mode: entry.mode || 'add',
+                    });
+                }
+            }
+        }
+        updateData['system.modifiers.other'] = otherMods;
+    }
+
+    /**
+     * Process situational modifiers data from form into update data.
+     * @param {object} data - Expanded form data
+     * @param {object} updateData - Update object to populate
+     */
+    static #processSituationalModifiers(data: any, updateData: any): void {
+        if (!data.situational) return;
+
+        // Characteristics - icon is derived, don't save it
+        const sitCharMods = [];
+        if (data.situational.characteristics) {
+            for (const entry of Object.values(data.situational.characteristics) as Record<string, any>[]) {
+                if (entry.key && entry.condition) {
+                    sitCharMods.push({
+                        key: entry.key,
+                        value: parseInt(entry.value as string) || 0,
+                        condition: entry.condition,
+                    });
+                }
+            }
+        }
+        updateData['system.modifiers.situational.characteristics'] = sitCharMods;
+
+        // Skills - icon is derived, don't save it
+        const sitSkillMods = [];
+        if (data.situational.skills) {
+            for (const entry of Object.values(data.situational.skills) as Record<string, any>[]) {
+                if (entry.key && entry.condition) {
+                    sitSkillMods.push({
+                        key: entry.key,
+                        value: parseInt(entry.value as string) || 0,
+                        condition: entry.condition,
+                    });
+                }
+            }
+        }
+        updateData['system.modifiers.situational.skills'] = sitSkillMods;
+
+        // Combat - icon is derived, don't save it
+        const sitCombatMods = [];
+        if (data.situational.combat) {
+            for (const entry of Object.values(data.situational.combat) as Record<string, any>[]) {
+                if (entry.key && entry.condition) {
+                    sitCombatMods.push({
+                        key: entry.key,
+                        value: parseInt(entry.value as string) || 0,
+                        condition: entry.condition,
+                    });
+                }
+            }
+        }
+        updateData['system.modifiers.situational.combat'] = sitCombatMods;
+    }
+
+    /**
+     * Process grants data from form into update data.
+     * @param {object} data - Expanded form data
+     * @param {object} updateData - Update object to populate
+     */
+    static #processGrants(data: any, updateData: any): void {
+        if (!data.grants) return;
+
+        // Skills
+        const grantedSkills = [];
+        if (data.grants.skills) {
+            for (const entry of Object.values(data.grants.skills) as Record<string, any>[]) {
+                if (entry.name) {
+                    grantedSkills.push({
+                        name: entry.name,
+                        specialization: entry.specialization || '',
+                        level: entry.level || 'trained',
+                    });
+                }
+            }
+        }
+        updateData['system.grants.skills'] = grantedSkills;
+
+        // Talents
+        const grantedTalents = [];
+        if (data.grants.talents) {
+            for (const entry of Object.values(data.grants.talents) as Record<string, any>[]) {
+                if (entry.name) {
+                    grantedTalents.push({
+                        name: entry.name,
+                        specialization: entry.specialization || '',
+                        uuid: entry.uuid || '',
+                    });
+                }
+            }
+        }
+        updateData['system.grants.talents'] = grantedTalents;
+
+        // Traits
+        const grantedTraits = [];
+        if (data.grants.traits) {
+            for (const entry of Object.values(data.grants.traits) as Record<string, any>[]) {
+                if (entry.name) {
+                    grantedTraits.push({
+                        name: entry.name,
+                        level: entry.level ? parseInt(entry.level as string) : null,
+                        uuid: entry.uuid || '',
+                    });
+                }
+            }
+        }
+        updateData['system.grants.traits'] = grantedTraits;
+
+        // Special Abilities
+        const grantedAbilities = [];
+        if (data.grants.specialAbilities) {
+            for (const entry of Object.values(data.grants.specialAbilities) as Record<string, any>[]) {
+                if (entry.name) {
+                    grantedAbilities.push({
+                        name: entry.name,
+                        description: entry.description || '',
+                    });
+                }
+            }
+        }
+        updateData['system.grants.specialAbilities'] = grantedAbilities;
     }
 
     /**

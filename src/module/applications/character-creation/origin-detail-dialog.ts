@@ -11,7 +11,6 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginDetailDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     [key: string]: any;
-
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'origin-detail-dialog'],
@@ -26,11 +25,13 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             width: 700,
             height: 600,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             confirm: OriginDetailDialog.#confirm,
             cancel: OriginDetailDialog.#cancel,
             openItem: OriginDetailDialog.#openItem,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /** @override */
@@ -81,7 +82,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
         return this.origin.name;
     }
 
@@ -194,24 +195,25 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @private
      */
     async _prepareTalents(talents: any[]): Promise<any> {
-        const prepared = [];
-        for (const talent of talents) {
-            let item = null;
-            if (talent.uuid) {
-                try {
-                    item = (await fromUuid(talent.uuid)) as any;
-                } catch {
-                    // Item not found
+        const prepared = await Promise.all(
+            talents.map(async (talent) => {
+                let item = null;
+                if (talent.uuid) {
+                    try {
+                        item = await fromUuid(talent.uuid);
+                    } catch {
+                        // Item not found
+                    }
                 }
-            }
-            prepared.push({
-                name: talent.name,
-                specialization: talent.specialization || null,
-                uuid: talent.uuid || null,
-                description: item?.system?.description?.value || null,
-                hasItem: !!item,
-            });
-        }
+                return {
+                    name: talent.name,
+                    specialization: talent.specialization || null,
+                    uuid: talent.uuid || null,
+                    description: item?.system?.description?.value || null,
+                    hasItem: !!item,
+                };
+            }),
+        );
         return prepared;
     }
 
@@ -222,24 +224,25 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @private
      */
     async _prepareTraits(traits: any[]): Promise<any> {
-        const prepared = [];
-        for (const trait of traits) {
-            let item = null;
-            if (trait.uuid) {
-                try {
-                    item = (await fromUuid(trait.uuid)) as any;
-                } catch {
-                    // Item not found
+        const prepared = await Promise.all(
+            traits.map(async (trait) => {
+                let item = null;
+                if (trait.uuid) {
+                    try {
+                        item = await fromUuid(trait.uuid);
+                    } catch {
+                        // Item not found
+                    }
                 }
-            }
-            prepared.push({
-                name: trait.name,
-                level: trait.level || null,
-                uuid: trait.uuid || null,
-                description: item?.system?.description?.value || null,
-                hasItem: !!item,
-            });
-        }
+                return {
+                    name: trait.name,
+                    level: trait.level || null,
+                    uuid: trait.uuid || null,
+                    description: item?.system?.description?.value || null,
+                    hasItem: !!item,
+                };
+            }),
+        );
         return prepared;
     }
 
@@ -305,7 +308,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                 item.sheet.render(true);
             }
         } catch {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.ItemNotFound'));
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.ItemNotFound'));
         }
     }
 

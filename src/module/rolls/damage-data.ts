@@ -12,7 +12,7 @@ export class DamageData {
     additionalHits = 0;
     hits = [];
 
-    reset() {
+    reset(): any {
         this.hits = [];
         this.additionalHits = 0;
     }
@@ -47,7 +47,7 @@ export class Hit {
      * @param hitNumber
      * @returns {Promise<Hit>}
      */
-    static async createHit(attackData, hitNumber) {
+    static async createHit(attackData: any, hitNumber: number): Promise<any> {
         const hit = new Hit();
         await hit._calculateDamage(attackData);
         hit._totalDamage();
@@ -70,11 +70,11 @@ export class Hit {
         return hit;
     }
 
-    _totalDamage() {
+    _totalDamage(): any {
         this.totalDamage = this.damage + (Object.values(this.modifiers) as number[]).reduce((a, b) => a + b, 0);
     }
 
-    _totalPenetration() {
+    _totalPenetration(): any {
         this.totalPenetration = this.penetration + (Object.values(this.penetrationModifiers) as number[]).reduce((a, b) => a + b, 0);
     }
 
@@ -82,23 +82,50 @@ export class Hit {
      * @param attackData {AttackData}
      * @returns {Promise<void>}
      */
-    async _calculateDamage(attackData) {
+    async _calculateDamage(attackData): Promise<any> {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
 
-        // Get RF threshold from weapon qualities (Gauss=9, Vengeful=8, standard=10)
-        let righteousFuryThreshold = getRighteousFuryThreshold(actionItem);
+        const righteousFuryThreshold = this._getRighteousFuryThreshold(attackData, actionItem);
 
-        // Legacy support: check for Vengeful in attackSpecials (attack-specials.mjs)
-        if (attackData.rollData.hasAttackSpecial('Vengeful')) {
-            const vengefulLevel = attackData.rollData.getAttackSpecial('Vengeful').level;
-            if (vengefulLevel && vengefulLevel < righteousFuryThreshold) {
-                righteousFuryThreshold = vengefulLevel;
-            }
-            game.wh40k.log('_calculateDamage has vengeful: ', righteousFuryThreshold);
+        await this._rollBaseDamage(attackData, actionItem);
+
+        await this._processDamageResults(attackData, actionItem, sourceActor, righteousFuryThreshold);
+
+        if (actionItem.isMelee) {
+            this._applyMeleeDamageModifiers(sourceActor);
+        } else if (actionItem.isRanged) {
+            await this._applyRangedDamageModifiers(attackData, actionItem, sourceActor);
         }
 
+        calculateWeaponModifiersDamageBonuses(attackData, this);
+        await this._applyExoticQualityModifiers(actionItem, sourceActor, attackData);
+    }
+
+    /**
+     * Get the righteous fury threshold considering weapon qualities and specials.
+     * @private
+     */
+    _getRighteousFuryThreshold(attackData: any, actionItem: any): number {
+        let threshold = getRighteousFuryThreshold(actionItem);
+
+        if (attackData.rollData.hasAttackSpecial('Vengeful')) {
+            const vengefulLevel = attackData.rollData.getAttackSpecial('Vengeful').level;
+            if (vengefulLevel && vengefulLevel < threshold) {
+                threshold = vengefulLevel;
+            }
+            game.wh40k.log('_calculateDamage has vengeful: ', threshold);
+        }
+
+        return threshold;
+    }
+
+    /**
+     * Roll the base damage dice and apply Tearing.
+     * @private
+     */
+    async _rollBaseDamage(attackData: any, actionItem: any): Promise<void> {
         let rollFormula = actionItem.system.effectiveDamageFormula ?? actionItem.system.damage?.formula ?? actionItem.system.damage;
         if (!rollFormula || typeof rollFormula !== 'string' || rollFormula === '') {
             rollFormula = '0';
@@ -118,21 +145,25 @@ export class Hit {
 
         await this.damageRoll.evaluate();
         game.wh40k.log('Damage Roll', this.damageRoll);
-
         this.damage = this.damageRoll.total;
+    }
 
+    /**
+     * Process damage roll results for righteous fury, primitive, and proven.
+     * @private
+     */
+    async _processDamageResults(attackData: any, actionItem: any, sourceActor: any, righteousFuryThreshold: number): Promise<void> {
         for (const term of this.damageRoll.terms) {
             if (!term.results) continue;
             for (const result of term.results) {
                 game.wh40k.log('_calculateDamage result:', result);
                 if (result.discarded || !result.active) continue;
                 if (result.result >= righteousFuryThreshold) {
-                    // Righteous fury hit
                     const righteousFuryRoll = new Roll('1d5', {});
+                    // eslint-disable-next-line no-await-in-loop -- Sequential dice evaluation per hit
                     await righteousFuryRoll.evaluate();
                     this.righteousFury.push({ roll: righteousFuryRoll, effect: '' });
 
-                    // DeathDealer
                     if (actionItem.isMelee) {
                         if (sourceActor.hasTalentFuzzyWords('Deathdealer', 'Melee')) {
                             this.modifiers['deathdealer'] = sourceActor.getCharacteristicFuzzy('Perception').bonus;
@@ -159,85 +190,95 @@ export class Hit {
                 }
             }
         }
+    }
 
-        if (actionItem.isMelee) {
-            this.modifiers['strength bonus'] = sourceActor.getCharacteristicFuzzy('Strength').bonus;
+    /**
+     * Apply melee-specific damage modifiers.
+     * @private
+     */
+    _applyMeleeDamageModifiers(sourceActor: any): void {
+        this.modifiers['strength bonus'] = sourceActor.getCharacteristicFuzzy('Strength').bonus;
 
-            // Crushing Blow
-            if (sourceActor.hasTalent('Crushing Blow')) {
-                const wsBonus = sourceActor.getCharacteristicFuzzy('WeaponSkill').bonus;
-                this.modifiers['crushing blow'] = Math.ceil(wsBonus / 2);
-            }
-
-            // Deathdealer
-            if (sourceActor.hasTalentFuzzyWords(['Deathdealer', 'Melee'])) {
-                const perBonus = sourceActor.getCharacteristicFuzzy('Perception').bonus;
-                this.modifiers['deathdealer melee'] = Math.ceil(perBonus / 2);
-            }
-        } else if (actionItem.isRanged) {
-            // Scatter
-            if (attackData.rollData.hasAttackSpecial('Scatter')) {
-                if (attackData.rollData.rangeName === 'Point Blank') {
-                    this.modifiers['scatter'] = 3;
-                } else if (attackData.rollData.rangeName !== 'Short Range') {
-                    this.modifiers['scatter'] = -3;
-                }
-            }
-
-            // Add Accurate
-            if (attackData.rollData.action === 'Standard Attack' || attackData.rollData.action === 'Called Shot') {
-                if (attackData.rollData.hasAttackSpecial('Accurate')) {
-                    if (attackData.rollData.dos >= 3) {
-                        const accurateRoll = new Roll('1d10', {});
-                        await accurateRoll.evaluate();
-                        this.modifiers['accurate'] = accurateRoll.total;
-                    }
-                    if (attackData.rollData.dos >= 5) {
-                        const accurateRoll = new Roll('1d10', {});
-                        await accurateRoll.evaluate();
-                        this.modifiers['accurate x 2'] = accurateRoll.total;
-                    }
-                }
-            }
-
-            // Eye of Vengeance
-            if (attackData.rollData.eyeOfVengeance) {
-                this.modifiers['eye of vengeance'] = attackData.rollData.dos;
-            }
-
-            // Las Modes
-            if (attackData.rollData.hasAttackSpecial('Overcharge')) {
-                this.modifiers['overcharge'] = 1;
-            } else if (attackData.rollData.hasAttackSpecial('Overload')) {
-                this.modifiers['overload'] = 2;
-            }
-
-            // Maximal
-            if (attackData.rollData.hasAttackSpecial('Maximal')) {
-                const maximalRoll = new Roll('1d10', {});
-                await maximalRoll.evaluate();
-                this.modifiers['maximal'] = maximalRoll.total;
-            }
-
-            // Mighty Shot
-            if (sourceActor.hasTalent('Mighty Shot')) {
-                const bsBonus = sourceActor.getCharacteristicFuzzy('ballisticSkill').bonus;
-                this.modifiers['mighty shot'] = Math.ceil(bsBonus / 2);
-            }
-
-            // Deathdealer
-            if (sourceActor.hasTalentFuzzyWords(['Deathdealer', 'Ranged'])) {
-                const perBonus = sourceActor.getCharacteristicFuzzy('Perception').bonus;
-                this.modifiers['deathdealer ranged'] = Math.ceil(perBonus / 2);
-            }
-
-            // Ammo
-            await calculateAmmoDamageBonuses(attackData, this);
+        if (sourceActor.hasTalent('Crushing Blow')) {
+            const wsBonus = sourceActor.getCharacteristicFuzzy('WeaponSkill').bonus;
+            this.modifiers['crushing blow'] = Math.ceil(wsBonus / 2);
         }
 
-        await calculateWeaponModifiersDamageBonuses(attackData, this);
+        if (sourceActor.hasTalentFuzzyWords(['Deathdealer', 'Melee'])) {
+            const perBonus = sourceActor.getCharacteristicFuzzy('Perception').bonus;
+            this.modifiers['deathdealer melee'] = Math.ceil(perBonus / 2);
+        }
+    }
 
-        // Exotic quality damage bonuses (Force, Witch-Edge, Daemonbane)
+    /**
+     * Apply ranged-specific damage modifiers.
+     * @private
+     */
+    async _applyRangedDamageModifiers(attackData: any, actionItem: any, sourceActor: any): Promise<void> {
+        // Scatter
+        if (attackData.rollData.hasAttackSpecial('Scatter')) {
+            if (attackData.rollData.rangeName === 'Point Blank') {
+                this.modifiers['scatter'] = 3;
+            } else if (attackData.rollData.rangeName !== 'Short Range') {
+                this.modifiers['scatter'] = -3;
+            }
+        }
+
+        // Accurate
+        if (attackData.rollData.action === 'Standard Attack' || attackData.rollData.action === 'Called Shot') {
+            if (attackData.rollData.hasAttackSpecial('Accurate')) {
+                if (attackData.rollData.dos >= 3) {
+                    const accurateRoll = new Roll('1d10', {});
+                    await accurateRoll.evaluate();
+                    this.modifiers['accurate'] = accurateRoll.total;
+                }
+                if (attackData.rollData.dos >= 5) {
+                    const accurateRoll = new Roll('1d10', {});
+                    await accurateRoll.evaluate();
+                    this.modifiers['accurate x 2'] = accurateRoll.total;
+                }
+            }
+        }
+
+        if (attackData.rollData.eyeOfVengeance) {
+            this.modifiers['eye of vengeance'] = attackData.rollData.dos;
+        }
+
+        // Las Modes
+        if (attackData.rollData.hasAttackSpecial('Overcharge')) {
+            this.modifiers['overcharge'] = 1;
+        } else if (attackData.rollData.hasAttackSpecial('Overload')) {
+            this.modifiers['overload'] = 2;
+        }
+
+        // Maximal
+        if (attackData.rollData.hasAttackSpecial('Maximal')) {
+            const maximalRoll = new Roll('1d10', {});
+            await maximalRoll.evaluate();
+            this.modifiers['maximal'] = maximalRoll.total;
+        }
+
+        // Mighty Shot
+        if (sourceActor.hasTalent('Mighty Shot')) {
+            const bsBonus = sourceActor.getCharacteristicFuzzy('ballisticSkill').bonus;
+            this.modifiers['mighty shot'] = Math.ceil(bsBonus / 2);
+        }
+
+        // Deathdealer
+        if (sourceActor.hasTalentFuzzyWords(['Deathdealer', 'Ranged'])) {
+            const perBonus = sourceActor.getCharacteristicFuzzy('Perception').bonus;
+            this.modifiers['deathdealer ranged'] = Math.ceil(perBonus / 2);
+        }
+
+        // Ammo
+        calculateAmmoDamageBonuses(attackData, this);
+    }
+
+    /**
+     * Apply exotic quality damage modifiers (Force, Witch-Edge, Daemonbane).
+     * @private
+     */
+    async _applyExoticQualityModifiers(actionItem: any, sourceActor: any, attackData: any): Promise<void> {
         const exoticModifiers = calculateExoticQualityDamageModifiers({
             weapon: actionItem,
             actor: sourceActor,
@@ -245,21 +286,19 @@ export class Hit {
             baseDamage: this.damage,
         });
 
-        // Handle exotic modifiers - most are numeric, but Daemonbane is a dice formula
         for (const [key, value] of Object.entries(exoticModifiers)) {
             if (typeof value === 'string' && value.includes('d')) {
-                // Daemonbane: "2d10" - roll additional dice
                 const exoticRoll = new Roll(value, {});
+                // eslint-disable-next-line no-await-in-loop -- Sequential dice evaluation
                 await exoticRoll.evaluate();
                 this.modifiers[key] = exoticRoll.total;
             } else if (typeof value === 'number') {
-                // Force, Witch-Edge: numeric bonuses
                 this.modifiers[key] = value;
             }
         }
     }
 
-    async _calculatePenetration(attackData) {
+    async _calculatePenetration(attackData): Promise<any> {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
@@ -276,7 +315,7 @@ export class Hit {
                 await this.penetrationRoll.evaluate();
                 this.penetration = this.penetrationRoll.total;
             } catch {
-                (ui.notifications as any).warn('Penetration formula failed - setting to 0');
+                ui.notifications.warn('Penetration formula failed - setting to 0');
                 this.penetration = 0;
             }
         }
@@ -305,7 +344,7 @@ export class Hit {
             }
 
             // Ammo
-            await calculateAmmoPenetrationBonuses(attackData, this);
+            calculateAmmoPenetrationBonuses(attackData, this);
         }
 
         if (attackData.rollData.eyeOfVengeance) {
@@ -334,10 +373,10 @@ export class Hit {
             }
         }
 
-        await calculateWeaponModifiersPenetrationBonuses(attackData, this);
+        calculateWeaponModifiersPenetrationBonuses(attackData, this);
     }
 
-    async _calculateSpecials(attackData) {
+    async _calculateSpecials(attackData): Promise<any> {
         const actionItem = attackData.rollData.weapon ?? attackData.rollData.power;
         if (!actionItem) return;
         const sourceActor = attackData.rollData.sourceActor;
@@ -354,7 +393,7 @@ export class Hit {
         }
 
         if (actionItem.isRanged) {
-            await calculateAmmoSpecials(attackData, this);
+            calculateAmmoSpecials(attackData, this);
         }
 
         for (const special of attackData.rollData.attackSpecials) {
@@ -431,7 +470,7 @@ export class Hit {
         }
     }
 
-    addEffect(name, effect) {
+    addEffect(name, effect): any {
         this.effects.push({
             name: name,
             effect: effect,
@@ -453,7 +492,7 @@ export class PsychicDamageData extends DamageData {
     }
 }
 
-export function scatterDirection() {
+export function scatterDirection(): string {
     let direction = '';
     const directionInt = Math.floor(Math.random() * 10) + 1;
     if (directionInt === 1) direction = 'north west';

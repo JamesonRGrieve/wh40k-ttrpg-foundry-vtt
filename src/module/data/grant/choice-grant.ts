@@ -10,7 +10,8 @@ import SkillGrantData from './skill-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class ChoiceGrantData extends (BaseGrantData as any) {
+// @ts-expect-error - BaseGrantData extends foundry.abstract.DataModel with complex generic constraints
+export default class ChoiceGrantData extends BaseGrantData {
     [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
@@ -36,7 +37,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
 
     /** @inheritDoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -132,6 +133,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
                 }
 
                 const grantResults = result.applied.grantResults;
+                // eslint-disable-next-line no-await-in-loop -- Sequential grant application
                 const grantResult = await this._applySubGrant(actor, grantConfig, data, options);
                 grantResults[`${optionLabel}:${i}`] = grantResult.applied;
                 result.notifications.push(...grantResult.notifications);
@@ -156,10 +158,11 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
             if (!option || !option.grants[index]) continue;
 
             const grantConfig = option.grants[index];
-            const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
+            const GrantClass = (this.constructor as typeof ChoiceGrantData).GRANT_TYPES[grantConfig.type];
             if (!GrantClass) continue;
 
             const grant = new GrantClass(grantConfig);
+            // eslint-disable-next-line no-await-in-loop -- Sequential grant reversal
             const reverseData = await grant.reverse(actor, grantApplied);
             restoreData.grantResults[grantKey] = reverseData;
         }
@@ -176,7 +179,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
     /** @inheritDoc */
     async getSummary(): Promise<void> {
         const summary = await super.getSummary();
-        summary.icon = (this.constructor as any).ICON;
+        summary.icon = (this.constructor as typeof ChoiceGrantData).ICON;
         summary.choiceCount = this.count;
         summary.options = [];
 
@@ -188,9 +191,10 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
             };
 
             for (const grantConfig of option.grants) {
-                const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
+                const GrantClass = (this.constructor as typeof ChoiceGrantData).GRANT_TYPES[grantConfig.type];
                 if (GrantClass) {
                     const grant = new GrantClass(grantConfig);
+                    // eslint-disable-next-line no-await-in-loop -- Sequential grant summary collection
                     const grantSummary = await grant.getSummary();
                     optionSummary.grants.push(grantSummary);
                 }
@@ -221,7 +225,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
         for (const option of options) {
             const grants = option.grants ?? [];
             for (const grantConfig of grants) {
-                const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
+                const GrantClass = (this.constructor as typeof ChoiceGrantData).GRANT_TYPES[grantConfig.type];
                 if (!GrantClass) {
                     errors.push(`Unknown grant type "${grantConfig.type}" in option "${option.label}"`);
                 }
@@ -245,7 +249,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
      * @private
      */
     _applySubGrant(actor, grantConfig, data, options): any {
-        const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
+        const GrantClass = (this.constructor as typeof ChoiceGrantData).GRANT_TYPES[grantConfig.type];
         if (!GrantClass) {
             return {
                 success: false,

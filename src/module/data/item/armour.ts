@@ -13,8 +13,6 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes EquippableTemplate
  */
 export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare type: string;
@@ -203,7 +201,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
 
         return {
             ...super.defineSchema(),
@@ -295,7 +293,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Does this cover all locations?
      * @type {boolean}
      */
-    get coversAll() {
+    get coversAll(): boolean {
         return this.coverage.has('all');
     }
 
@@ -367,7 +365,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get properties as localized labels array.
      * @type {string[]}
      */
-    get propertyLabels() {
+    get propertyLabels(): string[] {
         return Array.from(this.properties).map((prop) =>
             game.i18n.localize(
                 `WH40K.ArmourProperty.${prop
@@ -640,7 +638,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * How many modification slots are available?
      * @type {number}
      */
-    get availableModSlots() {
+    get availableModSlots(): number {
         return this.modificationSlots - this.modifications.length;
     }
 
@@ -652,7 +650,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get icon class for armour type.
      * @type {string}
      */
-    get typeIcon() {
+    get typeIcon(): string {
         const icons = {
             'flak': 'fa-shield',
             'mesh': 'fa-vest',
@@ -720,7 +718,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the count of locations with AP > 0.
      * @type {number}
      */
-    get locationCount() {
+    get locationCount(): number {
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         return locations.filter((loc) => this.getAPForLocation(loc) > 0).length;
     }
@@ -729,7 +727,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get armour points as an array of location objects for visual display.
      * @type {Array<{location: string, label: string, abbr: string, ap: number, covered: boolean, icon: string}>}
      */
-    get locationArray() {
+    get locationArray(): any[] {
         const locations = [
             { location: 'head', label: 'Head', abbr: 'H', icon: 'fa-head-side' },
             { location: 'body', label: 'Body', abbr: 'B', icon: 'fa-person' },
@@ -753,7 +751,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get properties as array of objects with labels and descriptions.
      * @type {Array<{id: string, label: string, description: string}>}
      */
-    get propertiesArray() {
+    get propertiesArray(): string[] {
         const props = [];
         const config = CONFIG.WH40K?.armourProperties ?? {};
 
@@ -782,7 +780,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get a compact summary string for compendium/list display.
      * @type {string}
      */
-    get compendiumSummary() {
+    get compendiumSummary(): string {
         const parts = [];
         parts.push(`AP ${this.maxAP}`);
         parts.push(this.coverageLabel);
@@ -794,7 +792,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get full stat line for display.
      * @type {string}
      */
-    get statLine() {
+    get statLine(): string {
         const parts = [];
         parts.push(this.typeLabel);
         parts.push(`AP: ${this.apSummary}`);
@@ -824,7 +822,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      *
      * @type {object}
      */
-    get craftsmanshipModifiers() {
+    get craftsmanshipModifiers(): any {
         const mods = {
             agility: 0, // Agility test modifier
             armourBonus: 0, // Permanent AP bonus (Best only)
@@ -892,7 +890,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Check if armour has craftsmanship-derived effects.
      * @type {boolean}
      */
-    get hasCraftsmanshipEffects() {
+    get hasCraftsmanshipEffects(): boolean {
         const craft = this.craftsmanship ?? 'common';
         return craft !== 'common';
     }
@@ -902,7 +900,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Any location with AP > 7 causes -30 to Concealment/Silent Move.
      * @type {boolean}
      */
-    get imposesStealthPenalty() {
+    get imposesStealthPenalty(): boolean {
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         return locations.some((loc) => this.getEffectiveAPForLocation(loc) > 7);
     }
@@ -911,7 +909,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get the stealth penalty value (0 or -30).
      * @type {number}
      */
-    get stealthPenalty() {
+    get stealthPenalty(): number {
         return this.imposesStealthPenalty ? -30 : 0;
     }
 
@@ -935,7 +933,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Get weight display string.
      * @type {string}
      */
-    get weightLabel() {
+    get weightLabel(): string {
         return this.weight ? `${this.effectiveWeight} kg` : '-';
     }
 

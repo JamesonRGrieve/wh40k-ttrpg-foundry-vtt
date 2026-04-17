@@ -19,7 +19,7 @@ export default class TextPatternExtractor {
      * @param {Array<string>} sectionHeaders - List of all section headers
      * @returns {string} Section content
      */
-    static extractSection(lines, header, sectionHeaders = []) {
+    static extractSection(lines: string[], header: string, sectionHeaders: string[] = []): any {
         const headerLower = header.toLowerCase();
 
         for (let i = 0; i < lines.length; i++) {
@@ -56,7 +56,7 @@ export default class TextPatternExtractor {
      * @param {Array<string>} sectionHeaders - List of known headers
      * @returns {boolean} True if line starts with a section header
      */
-    static isSectionHeader(line, sectionHeaders) {
+    static isSectionHeader(line: string, sectionHeaders: string[]): boolean {
         const lower = line.toLowerCase();
         return sectionHeaders.some((header) => lower.startsWith(header.toLowerCase()));
     }
@@ -66,7 +66,7 @@ export default class TextPatternExtractor {
      * @param {string} text - Text to split
      * @returns {Array<string>} Array of entries
      */
-    static splitList(text) {
+    static splitList(text: string): string[] {
         if (!text) return [];
 
         const entries = [];
@@ -98,7 +98,7 @@ export default class TextPatternExtractor {
      * @param {string} entry - Entry to clean
      * @returns {string} Cleaned entry
      */
-    static cleanEntry(entry) {
+    static cleanEntry(entry: string): string {
         return entry
             .replace(/\.+$/, '')
             .replace(/\s{2,}/g, ' ')
@@ -110,7 +110,7 @@ export default class TextPatternExtractor {
      * @param {string} token - Token to parse
      * @returns {number} Numeric value or 0
      */
-    static parseNumericValue(token) {
+    static parseNumericValue(token: string): number | null {
         if (!token) return 0;
         if (token === '-' || token === '--') return 0;
 
@@ -123,7 +123,7 @@ export default class TextPatternExtractor {
      * @param {string} line - Line to tokenize
      * @returns {Array<string>} Array of numeric tokens (non-digits stripped)
      */
-    static extractValueTokens(line) {
+    static extractValueTokens(line: string): any[] {
         const tokens = line
             .split(/\s+/)
             .map((token) => token.trim())
@@ -137,7 +137,7 @@ export default class TextPatternExtractor {
      * @param {string} line - Line to parse
      * @returns {Array<number>} Array of numbers found in parentheses
      */
-    static extractParentheticalNumbers(line) {
+    static extractParentheticalNumbers(line: string): number[] {
         const matches = [...line.matchAll(/\((\d+)\)/g)];
         return matches.map((match) => parseInt(match[1], 10));
     }
@@ -147,7 +147,7 @@ export default class TextPatternExtractor {
      * @param {string} text - Text to parse
      * @returns {Array<string>} Array of content within parentheses
      */
-    static extractParenthesesGroups(text) {
+    static extractParenthesesGroups(text: string): string[] {
         const groups = [];
         const matches = text.matchAll(/\(([^)]+)\)/g);
 
@@ -163,7 +163,7 @@ export default class TextPatternExtractor {
      * @param {string} text - Text to modify
      * @returns {string} Text without parentheses
      */
-    static removeParentheses(text) {
+    static removeParentheses(text: string): string {
         return text.replace(/\([^)]*\)/g, '').trim();
     }
 
@@ -172,7 +172,7 @@ export default class TextPatternExtractor {
      * @param {string} input - Input text
      * @returns {string} Normalized text
      */
-    static normalizeInput(input) {
+    static normalizeInput(input: string): string {
         return input
             .replace(/\u2013|\u2014/g, '-') // Em/en dashes to hyphens
             .replace(/\t/g, ' ') // Tabs to spaces
@@ -184,7 +184,7 @@ export default class TextPatternExtractor {
      * @param {string} input - Input text
      * @returns {Array<string>} Array of lines
      */
-    static splitLines(input) {
+    static splitLines(input: string): string[] {
         return input
             .split('\n')
             .map((line) => line.trim())
@@ -197,7 +197,7 @@ export default class TextPatternExtractor {
      * @param {RegExp} pattern - Regex pattern (should have capture groups)
      * @returns {Object|null} Matched key-value or null
      */
-    static extractPattern(text, pattern) {
+    static extractPattern(text: string, pattern: RegExp): any {
         const match = text.match(pattern);
         return match || null;
     }
@@ -208,7 +208,7 @@ export default class TextPatternExtractor {
      * @param {RegExp} pattern - Regex pattern (must have 'g' flag)
      * @returns {Array<Object>} Array of matches
      */
-    static extractAllPatterns(text, pattern) {
+    static extractAllPatterns(text: string, pattern: RegExp): any[] {
         return [...text.matchAll(pattern)];
     }
 
@@ -218,7 +218,7 @@ export default class TextPatternExtractor {
      * @param {boolean} capitalize - Capitalize first letter
      * @returns {string} camelCase key
      */
-    static toKey(text, capitalize = false) {
+    static toKey(text: string, capitalize: boolean = false): string {
         const cleaned = text.replace(/[^A-Za-z0-9]/g, ' ').trim();
 
         const parts = cleaned.split(/\s+/).filter(Boolean);
@@ -238,7 +238,7 @@ export default class TextPatternExtractor {
      * @param {Array<string>} requiredTokens - Required tokens
      * @returns {boolean} True if line looks like a header
      */
-    static looksLikeHeader(line, requiredTokens) {
+    static looksLikeHeader(line: string, requiredTokens: string[]): boolean {
         const tokens = line.split(/\s+/).map((token) => token.replace(/[^A-Za-z]/g, ''));
 
         return requiredTokens.every((required) => tokens.includes(required));
@@ -249,7 +249,7 @@ export default class TextPatternExtractor {
      * @param {string} entry - Entry to parse
      * @returns {Object} Parsed value and bonus
      */
-    static parseValueWithModifier(entry) {
+    static parseValueWithModifier(entry: string): any {
         const match = entry.match(/^(.+?)\s*\+\s*(\d+)$/);
 
         if (match) {
@@ -272,7 +272,7 @@ export default class TextPatternExtractor {
      * @param {string} text - Text to parse
      * @returns {Object|null} Parsed range or null
      */
-    static parseRange(text) {
+    static parseRange(text: string): any {
         // Match patterns like "10m", "5-10m", "Melee", etc.
         const meterMatch = text.match(/(\d+)\s*m/i);
         if (meterMatch) {

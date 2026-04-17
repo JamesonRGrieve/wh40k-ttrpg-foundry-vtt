@@ -12,8 +12,6 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes EquippableTemplate
  */
 export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare category: string;
@@ -25,7 +23,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -281,7 +279,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Get the category icon.
      * @type {string}
      */
-    get categoryIcon() {
+    get categoryIcon(): string {
         const config = CONFIG.WH40K?.gearCategories?.[this.category];
         return config?.icon || 'fa-box';
     }
@@ -290,7 +288,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Does this item have limited uses?
      * @type {boolean}
      */
-    get hasLimitedUses() {
+    get hasLimitedUses(): boolean {
         return this.uses.max > 0;
     }
 
@@ -323,7 +321,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Get total weight (weight × quantity).
      * @type {number}
      */
-    get totalWeight() {
+    get totalWeight(): number {
         return (this.weight ?? 0) * (this.quantity ?? 1);
     }
 
@@ -336,7 +334,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      *
      * @type {object}
      */
-    get craftsmanshipModifiers() {
+    get craftsmanshipModifiers(): any {
         const mods = {
             weight: 1.0, // Weight multiplier
         };
@@ -369,7 +367,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Get effective total weight (effective weight × quantity).
      * @type {number}
      */
-    get effectiveTotalWeight() {
+    get effectiveTotalWeight(): number {
         return this.effectiveWeight * (this.quantity ?? 1);
     }
 
@@ -377,7 +375,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Check if gear has craftsmanship-derived effects.
      * @type {boolean}
      */
-    get hasCraftsmanshipEffects() {
+    get hasCraftsmanshipEffects(): boolean {
         const craft = this.craftsmanship ?? 'common';
         return craft !== 'common';
     }
@@ -440,12 +438,12 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      */
     async consume(): Promise<any> {
         if (!this.hasLimitedUses) {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.Gear.NoConsumableUses'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Gear.NoConsumableUses'));
             return this.parent;
         }
 
         if (this.usesExhausted) {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.Gear.UsesExhausted'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Gear.UsesExhausted'));
             return this.parent;
         }
 
@@ -453,7 +451,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         await this.parent?.update({ 'system.uses.value': newValue });
 
         // Notification
-        (ui.notifications as any).info(
+        ui.notifications.info(
             game.i18n.format('WH40K.Gear.ConsumedUse', {
                 name: this.parent.name,
                 remaining: `${newValue}/${this.uses.max}`,
@@ -472,7 +470,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
         await this.parent?.update({ 'system.uses.value': this.uses.max });
 
-        (ui.notifications as any).info(
+        ui.notifications.info(
             game.i18n.format('WH40K.Gear.UsesReset', {
                 name: this.parent.name,
                 max: String(this.uses.max),

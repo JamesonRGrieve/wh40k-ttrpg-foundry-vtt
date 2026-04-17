@@ -16,8 +16,6 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class AcquisitionDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
@@ -37,6 +35,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             width: 480,
             height: 'auto' as const,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         form: {
             handler: AcquisitionDialog.#onSubmit,
             submitOnChange: false,
@@ -46,6 +45,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             toggleModifier: AcquisitionDialog.#toggleModifier,
             roll: AcquisitionDialog.#roll,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -109,7 +109,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
         return this.item ? `Acquire: ${this.item.name}` : 'Profit Factor Acquisition Test';
     }
 
@@ -197,7 +197,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             'Near Unique': -50,
             'Unique': -60,
         };
-        return (modifiers as any)[availability] || 0;
+        return modifiers[availability as keyof typeof modifiers] || 0;
     }
 
     /* -------------------------------------------- */
@@ -215,7 +215,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             Good: -10,
             Best: -20,
         };
-        return (modifiers as any)[craftsmanship] || 0;
+        return modifiers[craftsmanship as keyof typeof modifiers] || 0;
     }
 
     /* -------------------------------------------- */
@@ -321,14 +321,14 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         // On success, add item to inventory
         if (success && this.item) {
             await this.actor.createEmbeddedDocuments('Item', [this.item]);
-            (ui.notifications as any).info(`Acquired ${this.item.name}`);
+            ui.notifications.info(`Acquired ${this.item.name}`);
         }
 
         // Critical failure: reduce PF
         if (dos <= -3) {
             const newPF = Math.max(0, this.actor.system.rogueTrader.profitFactor.current - 1);
             await this.actor.update({ 'system.rogueTrader.profitFactor.current': newPF });
-            (ui.notifications as any).warn(`Critical failure! Profit Factor reduced to ${newPF}`);
+            ui.notifications.warn(`Critical failure! Profit Factor reduced to ${newPF}`);
         }
 
         // Resolve and close
@@ -386,7 +386,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             content,
             flavor: 'Profit Factor Acquisition Test',
             rolls: [data.roll],
-        } as any);
+        } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */

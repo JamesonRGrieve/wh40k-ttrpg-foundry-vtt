@@ -4,9 +4,7 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  * Template for physical items with weight and availability.
  * @mixin
  */
-export default class PhysicalItemTemplate extends SystemDataModel {
-    [key: string]: any;
-
+export default class PhysicalItemTemplate extends (SystemDataModel as any) {
     // Typed property declarations matching defineSchema()
     declare weight: number;
     declare availability: string;
@@ -16,7 +14,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             weight: new fields.NumberField({
                 required: true,
@@ -122,7 +120,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * Get the total weight considering quantity.
      * @type {number}
      */
-    get totalWeight() {
+    get totalWeight(): number {
         return this.weight * (this.quantity || 1);
     }
 

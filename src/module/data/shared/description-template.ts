@@ -4,16 +4,16 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  * Template for items with descriptions and source references.
  * @mixin
  */
+// @ts-expect-error - SystemDataModel extends foundry.abstract.TypeDataModel which has complex generic constraints
 export default class DescriptionTemplate extends SystemDataModel {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
+    declare parent: any;
     declare description: { value: string; chat: string; summary: string };
     declare source: { book: string; page: string; custom: string };
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             description: new fields.SchemaField({
                 value: new fields.HTMLField({ required: true, initial: '' }),

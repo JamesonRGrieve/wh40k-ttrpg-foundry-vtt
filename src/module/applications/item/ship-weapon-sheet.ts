@@ -10,7 +10,6 @@ import BaseItemSheet from './base-item-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class ShipWeaponSheet extends BaseItemSheet {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'ship-weapon'],
@@ -58,7 +57,7 @@ export default class ShipWeaponSheet extends BaseItemSheet {
         context.availabilities = this._getAvailabilityChoices();
 
         // Add display helpers
-        context.hasSpecialQualities = (context.system as any).special?.size > 0;
+        context.hasSpecialQualities = ((context.system as any).special as any)?.size > 0;
 
         return context;
     }

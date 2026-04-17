@@ -8,8 +8,6 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes DescriptionTemplate
  */
 export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare descriptionText: string;
@@ -20,7 +18,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
@@ -55,7 +53,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
      * Has any non-zero modifiers?
      * @type {boolean}
      */
-    get hasModifiers() {
+    get hasModifiers(): boolean {
         return Object.values(this.modifiers).some((v) => v !== 0);
     }
 
@@ -63,7 +61,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
      * Get modifiers as a formatted list.
      * @type {object[]}
      */
-    get modifiersList() {
+    get modifiersList(): any[] {
         const list = [];
         for (const [key, value] of Object.entries(this.modifiers)) {
             if (value !== 0) {
@@ -83,7 +81,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
      * Get the full name including level.
      * @type {string}
      */
-    get fullName() {
+    get fullName(): string {
         let name = this.parent?.name ?? '';
         if (this.hasLevel && this.level !== null) {
             name += ` ${this.level}`;

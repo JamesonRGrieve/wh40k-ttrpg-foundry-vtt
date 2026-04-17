@@ -2,8 +2,7 @@ import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 
 export class WH40KVehicle extends WH40KBaseActor {
-    [key: string]: any;
-    async _preCreate(data, options, user): Promise<any> {
+    async _preCreate(data: any, options: any, user: any): Promise<any> {
         await super._preCreate(data, options, user);
         const initData = {
             'token.bar1': { attribute: 'integrity' },
@@ -69,22 +68,21 @@ export class WH40KVehicle extends WH40KBaseActor {
         return this.system.size;
     }
 
-    async rollItem(itemId): Promise<void> {
+    async rollItem(itemId: string): Promise<void> {
         const item = this.items.get(itemId);
         const character = game.user.character;
         if (!character) {
-            (ui.notifications as any).warn("Vehicle items are rolled using the current users' character. However, no character found.");
+            ui.notifications.warn("Vehicle items are rolled using the current users' character. However, no character found.");
             return;
         }
 
         game.wh40k.log(`Vehicle ${this.name as string} is rolling ${item.name as string} for character ${character.name as string}`);
         switch (item.type) {
-            // @ts-expect-error - TS2678
             case 'weapon':
                 await DHTargetedActionManager.performWeaponAttack(character, null, item);
                 return;
             default:
-                (ui.notifications as any).warn(`No actions implemented for item type: ${item.type}`);
+                ui.notifications.warn(`No actions implemented for item type: ${item.type}`);
                 return;
         }
     }

@@ -8,11 +8,11 @@ export class HandlebarManager {
     /**
      * Load all templates at startup.
      */
-    static async loadTemplates() {
+    static async loadTemplates(): Promise<any> {
         return this.preloadHandlebarsTemplates();
     }
 
-    static registerHelpers() {
+    static registerHelpers(): void {
         registerHandlebarsHelpers();
     }
 
@@ -20,7 +20,7 @@ export class HandlebarManager {
      * Load all system templates at startup.
      * This is simpler and more reliable than lazy-loading.
      */
-    static preloadHandlebarsTemplates() {
+    static preloadHandlebarsTemplates(): Promise<any> {
         const templates = [
             // Essential partials
             'systems/wh40k-rpg/templates/actor/partial/character-field.hbs',

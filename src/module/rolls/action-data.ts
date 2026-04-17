@@ -14,18 +14,18 @@ export class ActionData {
     effects = [];
     effectOutput = [];
 
-    reset() {
+    reset(): any {
         this.effects = [];
         this.effectOutput = [];
         this.damageData.reset();
         this.rollData.reset();
     }
 
-    async descriptionText() {
+    async descriptionText(): Promise<any> {
         // No-op default — subclasses (e.g. PsychicActionData) can override
     }
 
-    checkForPerils() {
+    checkForPerils(): any {
         if (this.rollData.power) {
             if (this.rollData.sourceActor.psy.rating < this.rollData.pr) {
                 if (!/^(.)\1+$/.test(this.rollData.roll.total)) {
@@ -37,7 +37,7 @@ export class ActionData {
         }
     }
 
-    async checkForOpposed() {
+    async checkForOpposed(): Promise<any> {
         if (this.rollData.isOpposed && this.rollData.targetActor) {
             const rollCheck = await this.rollData.targetActor.rollCheck(this.rollData.opposedTarget);
             this.rollData.opposedRoll = rollCheck.roll;
@@ -90,7 +90,7 @@ export class ActionData {
         }
     }
 
-    async _calculateHit() {
+    async _calculateHit(): Promise<any> {
         if (!this.rollData.isManualRoll) {
             this.rollData.roll = await roll1d100();
         }
@@ -100,44 +100,18 @@ export class ActionData {
         this.rollData.success = rollTotal === 1 || (rollTotal <= target && rollTotal !== 100);
     }
 
-    async calculateSuccessOrFailure() {
+    async calculateSuccessOrFailure(): Promise<any> {
         await this._calculateHit();
         const actionItem = this.rollData.weapon ?? this.rollData.power;
 
-        // Action Item
         if (actionItem) {
-            // All Out Attack
             if (this.rollData.action === 'All Out Attack') {
                 this.addEffect('All Out Attack', 'The character cannot attempt Evasion reactions until the beginning of his next turn.');
             }
 
-            // Stun Action
+            // Stun is handled separately and returns early
             if (this.rollData.isStun) {
-                const stunRoll = new Roll(`1d10+${this.rollData.sourceActor.getCharacteristicFuzzy('Strength').bonus}`, {});
-                await stunRoll.evaluate();
-                this.rollData.roll = stunRoll;
-
-                if (this.rollData.targetActor) {
-                    const defense = this.rollData.targetActor.system.armour.head.total;
-                    if (stunRoll.total >= defense) {
-                        this.rollData.success = true;
-                        this.addEffect(
-                            'Stun Attack',
-                            `Stun roll of ${stunRoll.total} vs ${defense}. Target is stunned for ${
-                                stunRoll.total - defense
-                            } rounds and gains 1 level of fatigue.`,
-                        );
-                    } else {
-                        this.rollData.success = false;
-                        this.addEffect('Stun Attack', `Stun roll of ${stunRoll.total} vs ${defense}. The attack fails to stun the target!`);
-                    }
-                } else {
-                    this.rollData.success = true;
-                    this.addEffect(
-                        'Stun Attack',
-                        `Stun roll of ${stunRoll.total}. Compare to the target’s total of his Toughness bonus +1 per Armour point protecting his head. If the attacker’s roll is equal to or higher than this value, the target is Stunned for a number of rounds equal to the difference between the two values and gains one level of Fatigue.`,
-                    );
-                }
+                await this._handleStunAction();
                 return;
             }
 
@@ -149,150 +123,206 @@ export class ActionData {
             }
 
             if (actionItem.isMelee) {
-                if (!this.rollData.success) {
-                    // Re-Roll Attack for Blademaster
-                    if (this.rollData.sourceActor.hasTalent('Blademaster')) {
-                        this.effects.push('blademaster');
-                        this.rollData.previousRolls.push(this.rollData.roll);
-                        await this._calculateHit();
-                    }
-                }
+                await this._checkBlademasterReroll();
             } else if (actionItem.isRanged) {
-                // Suppressing Fire
-                if (this.rollData.action === 'Suppressing Fire - Semi') {
-                    this.addEffect('Suppressing', 'All targets within a 30 degree arc must pass a Difficult (-10) Pinning test for become Pinned.');
-                } else if (this.rollData.action === 'Suppressing Fire - Full') {
-                    this.addEffect('Suppressing', 'All targets within a 45 degree arc must pass a Hard (-20) Pinning test for become Pinned.');
-                }
-
-                const rollTotal = this.rollData.roll.total;
-                const craftsmanship = actionItem.system?.craftsmanship;
-                const hasReliable = this.rollData.hasAttackSpecial('Reliable');
-                const hasUnreliable = this.rollData.hasAttackSpecial('Unreliable');
-                const hasOverheats = this.rollData.hasAttackSpecial('Overheats');
-
-                // Best craftsmanship: Never jams or overheats (convert to miss)
-                const bestNeverJamsOrOverheats = craftsmanship === 'best';
-
-                // Check for overheat
-                if (rollTotal > 91 && hasOverheats) {
-                    if (bestNeverJamsOrOverheats) {
-                        // Best craftsmanship: Overheat becomes a miss instead
-                        this.rollData.success = false;
-                        this.addEffect('Near Overheat', 'The weapon nearly overheats, but its superior craftsmanship prevents it. Attack misses.');
-                    } else {
-                        this.effects.push('overheat');
-                    }
-                }
-
-                // Check for jam
-                // Poor + Unreliable: Jams on any miss
-                if (craftsmanship === 'poor' && hasUnreliable && !this.rollData.success) {
-                    if (!bestNeverJamsOrOverheats) {
-                        this.effects.push('jam');
-                        this.addEffect(
-                            'Catastrophic Jam',
-                            'The weapon is of such poor quality with its unreliable mechanism that it jams on this failed shot!',
-                        );
-                    }
-                } else {
-                    // Normal jam logic
-                    const shouldJam = (!hasReliable && rollTotal > 96) || rollTotal === 100;
-                    if (shouldJam) {
-                        if (bestNeverJamsOrOverheats) {
-                            // Best craftsmanship: Jam becomes a miss instead
-                            this.rollData.success = false;
-                            this.addEffect('Near Jam', 'The weapon nearly jams, but its superior craftsmanship prevents it. Attack misses.');
-                        } else {
-                            this.effects.push('jam');
-                            this.rollData.success = false;
-                        }
-                    }
-                }
+                this._checkRangedSpecials(actionItem);
             }
         }
 
         if (this.rollData.success) {
-            this.rollData.dof = 0;
-            this.rollData.dos = 1 + getDegree(this.rollData.modifiedTarget, this.rollData.roll.total);
+            this._calculateSuccessDegrees(actionItem);
+        } else {
+            this._calculateFailureDegrees();
+        }
+    }
 
-            if (actionItem) {
-                if (
-                    this.rollData.action === 'Semi-Auto Burst' ||
-                    this.rollData.action === 'Swift Attack' ||
-                    actionItem.isPsychicBarrage ||
-                    this.rollData.action === 'Suppressing Fire - Semi' ||
-                    this.rollData.action === 'Suppressing Fire - Full'
-                ) {
-                    if (actionItem.isRanged && this.rollData.hasWeaponModification('Fluid Action')) {
-                        this.rollData.dos += 1;
-                    }
+    /**
+     * Handle the Stun special action.
+     * @private
+     */
+    async _handleStunAction(): Promise<any> {
+        const stunRoll = new Roll(`1d10+${this.rollData.sourceActor.getCharacteristicFuzzy('Strength').bonus}`, {});
+        await stunRoll.evaluate();
+        this.rollData.roll = stunRoll;
 
-                    // Possible Semi Rate
-                    this.damageData.additionalHits += Math.floor((this.rollData.dos - 1) / 2);
-
-                    // Storm
-                    if (this.rollData.hasAttackSpecial('Storm')) {
-                        this.damageData.additionalHits *= 2;
-                    }
-
-                    // But Max at fire rate (Ammo available / ammo per shot || rate of fire - whichever is lower)
-                    if (actionItem.isRanged && this.damageData.additionalHits > this.rollData.fireRate - 1) {
-                        this.damageData.additionalHits = this.rollData.fireRate - 1;
-                    }
-                } else if (this.rollData.action === 'Full Auto Burst' || this.rollData.action === 'Lightning Attack' || actionItem.isPsychicStorm) {
-                    // Possible Full Rate
-                    this.damageData.additionalHits += Math.floor(this.rollData.dos - 1);
-
-                    // Storm
-                    if (this.rollData.hasAttackSpecial('Storm')) {
-                        this.damageData.additionalHits *= 2;
-                    }
-
-                    // But Max at weapon rate
-                    if (actionItem.usesAmmo && this.damageData.additionalHits > this.rollData.fireRate - 1) {
-                        this.damageData.additionalHits = this.rollData.fireRate - 1;
-                    }
-                }
-            }
-
-            if (this.rollData.dos > 1 && this.rollData.hasAttackSpecial('Twin-Linked')) {
-                this.damageData.additionalHits++;
+        if (this.rollData.targetActor) {
+            const defense = this.rollData.targetActor.system.armour.head.total;
+            if (stunRoll.total >= defense) {
+                this.rollData.success = true;
+                this.addEffect(
+                    'Stun Attack',
+                    `Stun roll of ${stunRoll.total} vs ${defense}. Target is stunned for ${stunRoll.total - defense} rounds and gains 1 level of fatigue.`,
+                );
+            } else {
+                this.rollData.success = false;
+                this.addEffect('Stun Attack', `Stun roll of ${stunRoll.total} vs ${defense}. The attack fails to stun the target!`);
             }
         } else {
-            this.rollData.dos = 0;
-            this.rollData.dof = 1 + getDegree(this.rollData.roll.total, this.rollData.modifiedTarget);
+            this.rollData.success = true;
+            this.addEffect(
+                'Stun Attack',
+                `Stun roll of ${stunRoll.total}. Compare to the target's total of his Toughness bonus +1 per Armour point protecting his head. If the attacker's roll is equal to or higher than this value, the target is Stunned for a number of rounds equal to the difference between the two values and gains one level of Fatigue.`,
+            );
+        }
+    }
 
-            if (this.rollData.isThrown) {
-                this.addEffect('Deviation', `The attack deviates [[ 1d5 ]]m off course to the ${scatterDirection()}!`);
-            }
-
-            if (this.rollData.roll.total === 100) {
-                this.effects.push('auto-failure');
+    /**
+     * Check for Blademaster re-roll on melee miss.
+     * @private
+     */
+    async _checkBlademasterReroll(): Promise<any> {
+        if (!this.rollData.success) {
+            if (this.rollData.sourceActor.hasTalent('Blademaster')) {
+                this.effects.push('blademaster');
+                this.rollData.previousRolls.push(this.rollData.roll);
+                await this._calculateHit();
             }
         }
     }
 
-    async calculateHits() {
+    /**
+     * Check ranged weapon specials: suppressing fire, overheat, and jam.
+     * @param {object} actionItem - The weapon item
+     * @private
+     */
+    _checkRangedSpecials(actionItem: any): void {
+        // Suppressing Fire
+        if (this.rollData.action === 'Suppressing Fire - Semi') {
+            this.addEffect('Suppressing', 'All targets within a 30 degree arc must pass a Difficult (-10) Pinning test for become Pinned.');
+        } else if (this.rollData.action === 'Suppressing Fire - Full') {
+            this.addEffect('Suppressing', 'All targets within a 45 degree arc must pass a Hard (-20) Pinning test for become Pinned.');
+        }
+
+        const rollTotal = this.rollData.roll.total;
+        const craftsmanship = actionItem.system?.craftsmanship;
+        const hasReliable = this.rollData.hasAttackSpecial('Reliable');
+        const hasUnreliable = this.rollData.hasAttackSpecial('Unreliable');
+        const hasOverheats = this.rollData.hasAttackSpecial('Overheats');
+        const bestNeverJamsOrOverheats = craftsmanship === 'best';
+
+        // Check for overheat
+        if (rollTotal > 91 && hasOverheats) {
+            if (bestNeverJamsOrOverheats) {
+                this.rollData.success = false;
+                this.addEffect('Near Overheat', 'The weapon nearly overheats, but its superior craftsmanship prevents it. Attack misses.');
+            } else {
+                this.effects.push('overheat');
+            }
+        }
+
+        // Check for jam
+        if (craftsmanship === 'poor' && hasUnreliable && !this.rollData.success) {
+            if (!bestNeverJamsOrOverheats) {
+                this.effects.push('jam');
+                this.addEffect('Catastrophic Jam', 'The weapon is of such poor quality with its unreliable mechanism that it jams on this failed shot!');
+            }
+        } else {
+            const shouldJam = (!hasReliable && rollTotal > 96) || rollTotal === 100;
+            if (shouldJam) {
+                if (bestNeverJamsOrOverheats) {
+                    this.rollData.success = false;
+                    this.addEffect('Near Jam', 'The weapon nearly jams, but its superior craftsmanship prevents it. Attack misses.');
+                } else {
+                    this.effects.push('jam');
+                    this.rollData.success = false;
+                }
+            }
+        }
+    }
+
+    /**
+     * Calculate degrees of success and additional hits.
+     * @param {object} actionItem - The weapon/power item
+     * @private
+     */
+    _calculateSuccessDegrees(actionItem: any): void {
+        this.rollData.dof = 0;
+        this.rollData.dos = 1 + getDegree(this.rollData.modifiedTarget, this.rollData.roll.total);
+
+        if (actionItem) {
+            this._calculateAdditionalHits(actionItem);
+        }
+
+        if (this.rollData.dos > 1 && this.rollData.hasAttackSpecial('Twin-Linked')) {
+            this.damageData.additionalHits++;
+        }
+    }
+
+    /**
+     * Calculate additional hits from burst/auto fire modes.
+     * @param {object} actionItem - The weapon/power item
+     * @private
+     */
+    _calculateAdditionalHits(actionItem: any): void {
+        const isSemiRate =
+            this.rollData.action === 'Semi-Auto Burst' ||
+            this.rollData.action === 'Swift Attack' ||
+            actionItem.isPsychicBarrage ||
+            this.rollData.action === 'Suppressing Fire - Semi' ||
+            this.rollData.action === 'Suppressing Fire - Full';
+
+        const isFullRate = this.rollData.action === 'Full Auto Burst' || this.rollData.action === 'Lightning Attack' || actionItem.isPsychicStorm;
+
+        if (isSemiRate) {
+            if (actionItem.isRanged && this.rollData.hasWeaponModification('Fluid Action')) {
+                this.rollData.dos += 1;
+            }
+            this.damageData.additionalHits += Math.floor((this.rollData.dos - 1) / 2);
+            if (this.rollData.hasAttackSpecial('Storm')) {
+                this.damageData.additionalHits *= 2;
+            }
+            if (actionItem.isRanged && this.damageData.additionalHits > this.rollData.fireRate - 1) {
+                this.damageData.additionalHits = this.rollData.fireRate - 1;
+            }
+        } else if (isFullRate) {
+            this.damageData.additionalHits += Math.floor(this.rollData.dos - 1);
+            if (this.rollData.hasAttackSpecial('Storm')) {
+                this.damageData.additionalHits *= 2;
+            }
+            if (actionItem.usesAmmo && this.damageData.additionalHits > this.rollData.fireRate - 1) {
+                this.damageData.additionalHits = this.rollData.fireRate - 1;
+            }
+        }
+    }
+
+    /**
+     * Calculate degrees of failure and failure effects.
+     * @private
+     */
+    _calculateFailureDegrees(): void {
+        this.rollData.dos = 0;
+        this.rollData.dof = 1 + getDegree(this.rollData.roll.total, this.rollData.modifiedTarget);
+
+        if (this.rollData.isThrown) {
+            this.addEffect('Deviation', `The attack deviates [[ 1d5 ]]m off course to the ${scatterDirection()}!`);
+        }
+
+        if (this.rollData.roll.total === 100) {
+            this.effects.push('auto-failure');
+        }
+    }
+
+    async calculateHits(): Promise<any> {
         if (this.rollData.success || this.rollData.isThrown) {
             let hit = await Hit.createHit(this, 0);
             this.damageData.hits.push(hit);
 
             for (let i = 0; i < this.damageData.additionalHits; i++) {
+                // eslint-disable-next-line no-await-in-loop -- Sequential hit calculation depends on previous state
                 hit = await Hit.createHit(this, i + 1);
                 this.damageData.hits.push(hit);
             }
         }
     }
 
-    addEffect(name, effect) {
+    addEffect(name, effect): any {
         this.effectOutput.push({
             name: name,
             effect: effect,
         });
     }
 
-    createEffectData() {
+    createEffectData(): any {
         for (const effect of this.effects) {
             switch (effect) {
                 case 'auto-failure':
@@ -311,7 +341,7 @@ export class ActionData {
         }
     }
 
-    async useResources() {
+    async useResources(): Promise<any> {
         // Expend Ammo
         await useAmmo(this);
 
@@ -321,7 +351,7 @@ export class ActionData {
         }
     }
 
-    async refundResources() {
+    async refundResources(): Promise<any> {
         // Refund Ammo
         await refundAmmo(this);
 
@@ -333,7 +363,7 @@ export class ActionData {
         }
     }
 
-    async performActionAndSendToChat() {
+    async performActionAndSendToChat(): Promise<any> {
         // Store Roll Information
         DHBasicActionManager.storeActionData(this);
 
@@ -345,7 +375,7 @@ export class ActionData {
 
         if (this.rollData.action !== 'Stun') {
             await this.checkForOpposed();
-            await this.checkForPerils();
+            this.checkForPerils();
 
             // Damage is deferred — calculated when user clicks Damage button
             // Compute hit location directly from roll for attack card display
@@ -354,7 +384,7 @@ export class ActionData {
             }
 
             // Create Specials
-            await this.createEffectData();
+            this.createEffectData();
 
             game.wh40k.log('Perform Action', this);
 
@@ -395,7 +425,7 @@ export class PsychicActionData extends ActionData {
         this.damageData = new PsychicDamageData();
     }
 
-    async performActionAndSendToChat() {
+    async performActionAndSendToChat(): Promise<any> {
         if (!this.rollData.hasDamage) {
             this.rollData.template = 'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs';
             this.template = 'systems/wh40k-rpg/templates/chat/psychic-action-chat.hbs';
@@ -403,7 +433,7 @@ export class PsychicActionData extends ActionData {
         await super.performActionAndSendToChat();
     }
 
-    async descriptionText() {
+    async descriptionText(): Promise<any> {
         if (this.rollData.power) {
             this.psychicEffect = await TextEditor.enrichHTML(this.rollData.power.system.description, { rollData: this.rollData });
         }

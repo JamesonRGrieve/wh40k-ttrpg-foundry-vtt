@@ -8,15 +8,13 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * These are storage containers that can hold other items.
  */
 export default class BackpackData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare capacity: number;
     declare isCombatVest: boolean;
 
     /** @override */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
             capacity: new fields.NumberField({ initial: 30, min: 0 }),

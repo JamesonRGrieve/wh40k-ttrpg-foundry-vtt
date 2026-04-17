@@ -6,9 +6,9 @@
 /**
  * Register custom text enrichers for WH40K RPG system.
  */
-export function registerCustomEnrichers() {
+export function registerCustomEnrichers(): void {
     // Register enricher patterns
-    (CONFIG as any).TextEditor.enrichers.push(
+    CONFIG.TextEditor.enrichers.push(
         {
             // [[/characteristic ws]], [[/characteristic weaponSkill]]
             pattern: /\[\[\/characteristic (?<config>[^\]]+)]](?:{(?<label>[^}]+)})?/gi,
@@ -59,7 +59,7 @@ export function registerCustomEnrichers() {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function enrichCharacteristic(match, options) {
+async function enrichCharacteristic(match: any, options: any): Promise<HTMLElement | null> {
     const { label } = match.groups;
     const config = match.groups.config.trim().toLowerCase();
 
@@ -126,7 +126,7 @@ async function enrichCharacteristic(match, options) {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function enrichSkill(match, options) {
+async function enrichSkill(match: any, options: any): Promise<HTMLElement | null> {
     const { label } = match.groups;
     const config = match.groups.config.trim().toLowerCase();
 
@@ -191,7 +191,7 @@ async function enrichSkill(match, options) {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function enrichModifier(match, options) {
+async function enrichModifier(match: any, options: any): Promise<HTMLElement | null> {
     const { config, label } = match.groups;
     const parts = config.trim().split(/\s+/);
 
@@ -228,7 +228,7 @@ async function enrichModifier(match, options) {
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-async function enrichArmor(match, options) {
+async function enrichArmor(match: any, options: any): Promise<HTMLElement | null> {
     const { label } = match.groups;
     const config = match.groups.config.trim().toLowerCase();
 
@@ -300,7 +300,7 @@ async function enrichArmor(match, options) {
  * @param {string} error     Error message.
  * @returns {HTMLElement}    Error span element.
  */
-function createErrorElement(original, error) {
+function createErrorElement(original: string, error: string): HTMLElement {
     const span = document.createElement('span');
     span.className = 'wh40k-enricher wh40k-enricher-error';
     span.title = error;
@@ -314,8 +314,8 @@ function createErrorElement(original, error) {
  * Handle clicks on enriched elements.
  * @param {MouseEvent} event  The click event.
  */
-async function handleEnricherClick(event) {
-    const enricher = event.target.closest('.wh40k-enricher');
+async function handleEnricherClick(event: Event): Promise<void> {
+    const enricher = (event.target as HTMLElement)?.closest('.wh40k-enricher') as HTMLElement;
     if (!enricher) return;
 
     const type = enricher.dataset.enricherType;
@@ -329,10 +329,8 @@ async function handleEnricherClick(event) {
     switch (type) {
         case 'characteristic':
             if (actorUuid) {
-                const actor = await fromUuid(actorUuid);
-                // @ts-expect-error - dynamic property access
+                const actor = (await fromUuid(actorUuid)) as any;
                 if (actor?.rollCharacteristic) {
-                    // @ts-expect-error - dynamic property access
                     await actor.rollCharacteristic(config);
                 }
             }
@@ -340,11 +338,9 @@ async function handleEnricherClick(event) {
 
         case 'skill':
             if (actorUuid) {
-                const actor = await fromUuid(actorUuid);
-                // @ts-expect-error - dynamic property access
+                const actor = (await fromUuid(actorUuid)) as any;
                 if (actor?.rollSkill) {
                     const [skillKey, specialization] = config.split(':');
-                    // @ts-expect-error - dynamic property access
                     await actor.rollSkill(skillKey, specialization);
                 }
             }
@@ -358,20 +354,17 @@ async function handleEnricherClick(event) {
                 const item = await fromUuid(itemUuid);
                 if (item) {
                     // Check for Shift+Click to post to chat
-                    if (event.shiftKey) {
-                        // @ts-expect-error - dynamic property access
-                        item.toMessage();
+                    if ((event as MouseEvent).shiftKey) {
+                        (item as any).toMessage();
                     }
                     // Check for Ctrl+Click to open sheet
-                    else if (event.ctrlKey || event.metaKey) {
-                        // @ts-expect-error - dynamic property access
-                        item.sheet.render(true);
+                    else if ((event as MouseEvent).ctrlKey || (event as MouseEvent).metaKey) {
+                        (item as any).sheet.render(true);
                     }
                     // Default: show inline preview
                     else {
                         // TODO: Integrate with ItemPreviewCard when available
-                        // @ts-expect-error - dynamic property access
-                        item.sheet.render(true);
+                        (item as any).sheet.render(true);
                     }
                 }
             }
@@ -393,7 +386,7 @@ async function handleEnricherClick(event) {
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
-async function enrichQuality(match, options) {
+async function enrichQuality(match: any, options: any): Promise<HTMLElement | null> {
     const { label } = match.groups;
     const config = match.groups.config.trim().toLowerCase();
 
@@ -435,7 +428,7 @@ async function enrichQuality(match, options) {
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
-async function enrichProperty(match, options) {
+async function enrichProperty(match: any, options: any): Promise<HTMLElement | null> {
     const { label } = match.groups;
     const config = match.groups.config.trim().toLowerCase();
 
@@ -477,7 +470,7 @@ async function enrichProperty(match, options) {
  * @param {EnrichmentOptions} options    Options provided to customize text enrichment.
  * @returns {Promise<HTMLElement|null>}  An HTML element to insert in place of the matched text.
  */
-async function enrichCondition(match, options) {
+async function enrichCondition(match: any, options: any): Promise<HTMLElement | null> {
     const { label } = match.groups;
     const config = match.groups.config.trim().toLowerCase();
 

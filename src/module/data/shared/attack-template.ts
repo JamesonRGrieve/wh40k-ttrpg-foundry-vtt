@@ -4,9 +4,8 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  * Template for items with attack capabilities.
  * @mixin
  */
+// @ts-expect-error - SystemDataModel extends foundry.abstract.TypeDataModel which has complex generic constraints
 export default class AttackTemplate extends SystemDataModel {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare attack: {
         type: string;
@@ -18,7 +17,7 @@ export default class AttackTemplate extends SystemDataModel {
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             attack: new fields.SchemaField({
                 type: new fields.StringField({
@@ -118,7 +117,7 @@ export default class AttackTemplate extends SystemDataModel {
      * Get a formatted rate of fire string.
      * @type {string}
      */
-    get rateOfFireLabel() {
+    get rateOfFireLabel(): string {
         const rof = this.attack.rateOfFire;
         const parts = [];
         parts.push(rof.single ? 'S' : '-');

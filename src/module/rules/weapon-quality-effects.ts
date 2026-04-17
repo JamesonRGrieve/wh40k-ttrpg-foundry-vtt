@@ -118,7 +118,7 @@ export const WEAPON_QUALITY_EFFECTS = {
  * @param {string} qualityName - Quality name to check (case-insensitive)
  * @returns {boolean} True if weapon has the quality
  */
-export function weaponHasQuality(weapon, qualityName) {
+export function weaponHasQuality(weapon: any, qualityName: string): boolean {
     if (!weapon) return false;
 
     const normalizedName = qualityName.toLowerCase();
@@ -153,7 +153,7 @@ export function weaponHasQuality(weapon, qualityName) {
  * @param {string} qualityName - Quality name to check
  * @returns {boolean} True if the quality is present in attackSpecials
  */
-export function rollDataHasQuality(rollData, qualityName) {
+export function rollDataHasQuality(rollData: any, qualityName: string): boolean {
     if (!rollData?.attackSpecials) return false;
     return rollData.attackSpecials.some((s) => s.name?.toLowerCase() === qualityName.toLowerCase());
 }
@@ -169,8 +169,8 @@ export function rollDataHasQuality(rollData, qualityName) {
  * @param {WeaponRollData} rollData - The weapon roll data
  * @returns {Object} Object with modifier entries { qualityName: value }
  */
-export function calculateQualityAttackModifiers(rollData) {
-    const modifiers = {};
+export function calculateQualityAttackModifiers(rollData: any): any {
+    const modifiers: Record<string, any> = {};
     const weapon = rollData.weapon;
     if (!weapon) return modifiers;
 
@@ -199,7 +199,7 @@ export function calculateQualityAttackModifiers(rollData) {
  * @param {Item} weapon - The weapon being used to parry
  * @returns {number} Total parry modifier (can be positive, negative, or 0)
  */
-export function getWeaponParryModifier(weapon) {
+export function getWeaponParryModifier(weapon: any): number {
     if (!weapon) return 0;
 
     let totalModifier = 0;
@@ -233,7 +233,7 @@ export function getWeaponParryModifier(weapon) {
  * @param {Item} weapon - The weapon to check
  * @returns {boolean} True if weapon can be used to parry
  */
-export function canWeaponParry(weapon) {
+export function canWeaponParry(weapon: any): boolean {
     if (!weapon) return false;
     return !weaponHasQuality(weapon, 'unwieldy');
 }
@@ -245,7 +245,7 @@ export function canWeaponParry(weapon) {
  * @param {Item} attackerWeapon - The weapon being parried against
  * @returns {number} Penalty to apply to defender's parry test
  */
-export function getAttackerWeaponParryPenalty(attackerWeapon) {
+export function getAttackerWeaponParryPenalty(attackerWeapon: any): number {
     if (!attackerWeapon) return 0;
 
     // Fast: Enemies suffer -20 to parry this weapon
@@ -270,8 +270,8 @@ export function getAttackerWeaponParryPenalty(attackerWeapon) {
  * @param {number} damageContext.basePenetration - Base penetration value
  * @returns {Object} Object with penetration modifiers { qualityName: value }
  */
-export function calculateQualityPenetrationModifiers(damageContext) {
-    const modifiers = {};
+export function calculateQualityPenetrationModifiers(damageContext: any): any {
+    const modifiers: Record<string, any> = {};
     const { weapon, rangeName, basePenetration } = damageContext;
 
     if (!weapon || basePenetration === undefined) return modifiers;
@@ -303,8 +303,8 @@ export function calculateQualityPenetrationModifiers(damageContext) {
  * @param {number} damageContext.baseDamage - Base damage value
  * @returns {Object} Object with damage modifiers { qualityName: value }
  */
-export function calculateExoticQualityDamageModifiers(damageContext) {
-    const modifiers = {};
+export function calculateExoticQualityDamageModifiers(damageContext: any): any {
+    const modifiers: Record<string, any> = {};
     const { weapon, actor, target } = damageContext;
 
     if (!weapon || !actor) return modifiers;
@@ -349,7 +349,7 @@ export function calculateExoticQualityDamageModifiers(damageContext) {
  * @param {Item} armor - The armor item (if any)
  * @returns {boolean} True if weapon ignores this armor
  */
-export function weaponIgnoresArmor(weapon, armor) {
+export function weaponIgnoresArmor(weapon: any, armor: any): boolean {
     if (!weapon || !armor) return false;
 
     // Warp Weapon: Ignores non-warded armor
@@ -369,7 +369,7 @@ export function weaponIgnoresArmor(weapon, armor) {
  * @param {Item} weapon - The weapon item
  * @returns {number} RF threshold (standard is 10)
  */
-export function getRighteousFuryThreshold(weapon) {
+export function getRighteousFuryThreshold(weapon: any): number {
     if (!weapon) return 10; // Standard RF threshold
 
     // Gauss: RF on 9-10
@@ -392,7 +392,7 @@ export function getRighteousFuryThreshold(weapon) {
  * @param {number} dieResult - The d10 damage die result
  * @returns {boolean} True if this triggers RF
  */
-export function checkRighteousFury(weapon, dieResult) {
+export function checkRighteousFury(weapon: any, dieResult: number): boolean {
     const threshold = getRighteousFuryThreshold(weapon);
     return dieResult >= threshold;
 }
@@ -407,7 +407,7 @@ export function checkRighteousFury(weapon, dieResult) {
  *
  * @param {WeaponRollData} rollData - The weapon roll data
  */
-export function applyQualityModifiersToRollData(rollData) {
+export function applyQualityModifiersToRollData(rollData: any): void {
     if (!rollData?.weapon) return;
 
     // Get quality modifiers
@@ -429,7 +429,7 @@ export function applyQualityModifiersToRollData(rollData) {
  * @param {string} context - Context for summary ('attack', 'parry', 'damage', 'all')
  * @returns {string[]} Array of quality effect descriptions
  */
-export function getWeaponQualitySummary(weapon, context = 'all') {
+export function getWeaponQualitySummary(weapon: any, context: string = 'all'): any[] {
     const summary = [];
 
     if (!weapon) return summary;

@@ -10,7 +10,6 @@ import BaseItemSheet from './base-item-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class AmmoSheet extends BaseItemSheet {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'ammunition'],
@@ -18,11 +17,13 @@ export default class AmmoSheet extends BaseItemSheet {
             width: 580,
             height: 660,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             addQuality: AmmoSheet.#addQuality,
             removeAddedQuality: AmmoSheet.#removeAddedQuality,
             removeRemovedQuality: AmmoSheet.#removeRemovedQuality,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */

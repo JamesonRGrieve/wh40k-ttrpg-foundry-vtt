@@ -18,8 +18,6 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {ApplicationV2}
  */
 export default class BatchCreateDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */
@@ -40,6 +38,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             width: 550,
             height: 550,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         form: {
             handler: BatchCreateDialog.#onSubmit,
             submitOnChange: false,
@@ -49,6 +48,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             cancel: BatchCreateDialog.#onCancel,
             updatePreview: BatchCreateDialog.#onUpdatePreview,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -95,6 +95,12 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      */
     #submitted = false;
 
+    /**
+     * Render debounce timeout.
+     * @type {ReturnType<typeof setTimeout>|null}
+     */
+    _renderTimeout: ReturnType<typeof setTimeout> | null = null;
+
     /* -------------------------------------------- */
     /*  Constructor                                 */
     /* -------------------------------------------- */
@@ -122,7 +128,9 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         const types = ThreatCalculator.getTypes();
 
         // Get available folders
-        const folders = (game.folders as any).filter((f: any) => f.type === 'Actor' && f.displayed).map((f: any) => ({ id: f.id, name: f.name }));
+        const folders = Array.from(game.folders as any)
+            .filter((f: any) => f.type === 'Actor' && f.displayed)
+            .map((f: any) => ({ id: f.id, name: f.name }));
 
         // Generate preview names
         const previewNames = [];
@@ -184,11 +192,11 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
             el.addEventListener(field.type === 'boolean' ? 'change' : 'input', () => {
                 if (field.type === 'boolean') {
-                    this.#state[field.name] = (el as any).checked;
+                    this.#state[field.name] = (el as HTMLInputElement).checked;
                 } else if (field.type === 'number') {
-                    this.#state[field.name] = parseInt((el as any).value, 10) || 0;
+                    this.#state[field.name] = parseInt((el as HTMLInputElement).value, 10) || 0;
                 } else {
-                    this.#state[field.name] = (el as any).value;
+                    this.#state[field.name] = (el as HTMLInputElement).value;
                 }
                 this._debounceRender();
             });
@@ -199,7 +207,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         const threatValue = form.querySelector('.threat-value');
         if (threatSlider && threatValue) {
             threatSlider.addEventListener('input', () => {
-                threatValue.textContent = (threatSlider as any).value;
+                threatValue.textContent = (threatSlider as HTMLInputElement).value;
             });
         }
     }
@@ -246,7 +254,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         const actors = await this._createNPCs();
 
         if (actors.length > 0) {
-            (ui.notifications as any).info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: actors.length }));
+            ui.notifications.info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: actors.length }));
 
             // Open sheets if requested (only first 5 to avoid overwhelming)
             if (this.#state.openSheets) {
@@ -259,7 +267,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             this.#submitted = true;
             if (this.#resolve) this.#resolve(actors);
         } else {
-            (ui.notifications as any).error(game.i18n.localize('WH40K.NPC.BatchCreate.Failed'));
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.BatchCreate.Failed'));
             if (this.#resolve) this.#resolve([]);
         }
     }
@@ -294,7 +302,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 const variance = this.#state.randomizeAmount / 100;
 
                 // Randomize characteristics
-                for (const char of Object.values(systemData.characteristics) as any[]) {
+                for (const char of Object.values(systemData.characteristics) as Record<string, any>[]) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
                     char.total = char.base + char.modifier;
@@ -320,7 +328,8 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             }
 
             try {
-                const actor = await Actor.create(actorData);
+                // eslint-disable-next-line no-await-in-loop -- Sequential Foundry document creation
+                const actor = await Actor.create(actorData as any);
                 if (actor) actors.push(actor);
             } catch (err) {
                 console.error(`Failed to create NPC "${name}":`, err);
@@ -403,7 +412,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {string} [config.folder] - Folder ID.
      * @returns {Promise<Array<Actor>>} Created actors.
      */
-    static async quickCreate(config: Record<string, unknown>): Promise<void> {
+    static async quickCreate(config: Record<string, unknown>): Promise<any> {
         const {
             namePattern = 'NPC {n}',
             count = 1,
@@ -434,7 +443,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
             if (randomize) {
                 const variance = (randomizeAmount as number) / 100;
-                for (const char of Object.values(systemData.characteristics) as any[]) {
+                for (const char of Object.values(systemData.characteristics) as Record<string, any>[]) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
                     char.total = char.base + char.modifier;
@@ -450,14 +459,15 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 folder: folder || undefined,
             };
 
+            // eslint-disable-next-line no-await-in-loop -- Sequential Foundry document creation
             const actor = await Actor.create(actorData as any);
             if (actor) actors.push(actor);
         }
 
         if (actors.length > 0) {
-            (ui.notifications as any).info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: String(actors.length) }));
+            ui.notifications.info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: String(actors.length) }));
         }
 
-        return actors as any;
+        return actors;
     }
 }

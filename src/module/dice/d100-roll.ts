@@ -38,7 +38,7 @@ export default class D100Roll extends BasicRollWH40K {
      * Get the target number for this roll
      * @type {number}
      */
-    get target() {
+    get target(): number {
         // @ts-expect-error - dynamic property
         return this.configuration.target ?? 0;
     }
@@ -47,7 +47,7 @@ export default class D100Roll extends BasicRollWH40K {
      * Check if the roll succeeded (roll <= target)
      * @type {boolean}
      */
-    get isSuccess() {
+    get isSuccess(): boolean {
         return this.total <= this.target;
     }
 
@@ -55,7 +55,7 @@ export default class D100Roll extends BasicRollWH40K {
      * Check if the roll failed (roll > target)
      * @type {boolean}
      */
-    get isFailure() {
+    get isFailure(): boolean {
         return !this.isSuccess;
     }
 
@@ -64,7 +64,7 @@ export default class D100Roll extends BasicRollWH40K {
      * WH40K RPG: DoS = floor((target - roll) / 10) + 1
      * @type {number}
      */
-    get degreesOfSuccess() {
+    get degreesOfSuccess(): number {
         if (!this.isSuccess) return 0;
         return Math.floor((this.target - this.total) / 10) + 1;
     }
@@ -74,7 +74,7 @@ export default class D100Roll extends BasicRollWH40K {
      * WH40K RPG: DoF = floor((roll - target) / 10) + 1
      * @type {number}
      */
-    get degreesOfFailure() {
+    get degreesOfFailure(): number {
         if (this.isSuccess) return 0;
         return Math.floor((this.total - this.target) / 10) + 1;
     }
@@ -83,7 +83,7 @@ export default class D100Roll extends BasicRollWH40K {
      * Get degrees (positive for success, negative for failure)
      * @type {number}
      */
-    get degrees() {
+    get degrees(): number {
         if (this.isSuccess) return this.degreesOfSuccess;
         return -this.degreesOfFailure;
     }
@@ -92,7 +92,7 @@ export default class D100Roll extends BasicRollWH40K {
      * Absolute value of degrees
      * @type {number}
      */
-    get absoluteDegrees() {
+    get absoluteDegrees(): number {
         return Math.abs(this.degrees);
     }
 
@@ -101,7 +101,7 @@ export default class D100Roll extends BasicRollWH40K {
      * Critical Success: Roll 01-05 OR succeed by 3+ DoS
      * @type {boolean}
      */
-    get isCriticalSuccess() {
+    get isCriticalSuccess(): boolean {
         if (!this.isSuccess) return false;
         if (this.total <= 5) return true; // Natural crit (01-05)
         return this.degreesOfSuccess >= 3; // 3+ DoS
@@ -112,7 +112,7 @@ export default class D100Roll extends BasicRollWH40K {
      * Critical Failure: Roll 96-00 OR fail by 3+ DoF
      * @type {boolean}
      */
-    get isCriticalFailure() {
+    get isCriticalFailure(): boolean {
         if (this.isSuccess) return false;
         if (this.total >= 96) return true; // Natural fumble (96-00)
         return this.degreesOfFailure >= 3; // 3+ DoF
@@ -123,7 +123,7 @@ export default class D100Roll extends BasicRollWH40K {
      * Important for some special rules
      * @type {boolean}
      */
-    get isDoubles() {
+    get isDoubles(): boolean {
         const total = this.total;
         const tens = Math.floor(total / 10);
         const ones = total % 10;
@@ -134,7 +134,7 @@ export default class D100Roll extends BasicRollWH40K {
      * For weapon attacks: check if doubles on a success triggers Righteous Fury
      * @type {boolean}
      */
-    get triggersRighteousFury() {
+    get triggersRighteousFury(): boolean {
         return this.isSuccess && this.isDoubles;
     }
 
@@ -148,7 +148,7 @@ export default class D100Roll extends BasicRollWH40K {
      * @returns {Promise<Object|null>} Dialog result, or null if cancelled
      * @override
      */
-    static async _showConfigurationDialog(config) {
+    static async _showConfigurationDialog(config): Promise<any> {
         // Use the configured dialog class
         const DialogClass = this.configurationDialog;
         if (!DialogClass) return config;
@@ -166,7 +166,7 @@ export default class D100Roll extends BasicRollWH40K {
      * @returns {string} The roll formula (always "1d100")
      * @override
      */
-    static constructFormula(config) {
+    static constructFormula(config): any {
         // d100 rolls don't add modifiers to the roll itself
         // Modifiers affect the target number instead
         return '1d100';
@@ -183,7 +183,7 @@ export default class D100Roll extends BasicRollWH40K {
      * @returns {Promise<Object>} Template data
      * @override
      */
-    static async _prepareTemplateData(roll, config) {
+    static async _prepareTemplateData(roll, config): Promise<any> {
         const baseData = await super._prepareTemplateData(roll, config);
 
         // Calculate modifiers for display
@@ -223,7 +223,7 @@ export default class D100Roll extends BasicRollWH40K {
      * @returns {Promise<Object>} Chat message data
      * @override
      */
-    static async _prepareChatData(roll, config) {
+    static async _prepareChatData(roll, config): Promise<any> {
         const chatData = await super._prepareChatData(roll, config);
 
         // Add d100-specific flags
@@ -252,7 +252,7 @@ export default class D100Roll extends BasicRollWH40K {
      * @returns {Promise<string>} Tooltip HTML
      * @override
      */
-    async getTooltip() {
+    async getTooltip(): Promise<any> {
         const html = await super.getTooltip();
         const target = this.target;
 
@@ -323,7 +323,7 @@ export default class D100Roll extends BasicRollWH40K {
      * @param {boolean} [options.configure=true] - Whether to show configuration
      * @returns {Promise<ChatMessage|null>}
      */
-    static async test(options = {}) {
+    static async test(options = {}): Promise<any> {
         return this.build({
             ...options,
             // @ts-expect-error - dynamic property
@@ -338,10 +338,10 @@ export default class D100Roll extends BasicRollWH40K {
      * @param {Object} [options] - Additional options
      * @returns {Promise<ChatMessage|null>}
      */
-    static async characteristicTest(actor, characteristic, options = {}) {
+    static async characteristicTest(actor, characteristic, options = {}): Promise<any> {
         const charData = actor.system.characteristics?.[characteristic];
         if (!charData) {
-            (ui.notifications as any).warn(`Characteristic "${characteristic}" not found`);
+            ui.notifications.warn(`Characteristic "${characteristic}" not found`);
             return null;
         }
 
@@ -350,7 +350,7 @@ export default class D100Roll extends BasicRollWH40K {
             target: charData.total,
             baseTarget: charData.total,
             flavor: `${charData.label || characteristic} Test`,
-            speaker: (ChatMessage as any).getSpeaker({ actor }),
+            speaker: ChatMessage.getSpeaker({ actor }),
             ...options,
         });
     }
@@ -362,10 +362,10 @@ export default class D100Roll extends BasicRollWH40K {
      * @param {Object} [options] - Additional options
      * @returns {Promise<ChatMessage|null>}
      */
-    static async skillTest(actor, skill, options = {}) {
+    static async skillTest(actor, skill, options = {}): Promise<any> {
         const skillData = actor.system.skills?.[skill];
         if (!skillData) {
-            (ui.notifications as any).warn(`Skill "${skill}" not found`);
+            ui.notifications.warn(`Skill "${skill}" not found`);
             return null;
         }
 
@@ -374,7 +374,7 @@ export default class D100Roll extends BasicRollWH40K {
             target: skillData.current,
             baseTarget: skillData.current,
             flavor: `${skillData.label || skill} Test`,
-            speaker: (ChatMessage as any).getSpeaker({ actor }),
+            speaker: ChatMessage.getSpeaker({ actor }),
             ...options,
         });
     }

@@ -7,7 +7,8 @@
  *
  * @see https://github.com/foundryvtt/dnd5e/blob/master/module/data/abstract/system-data-model.mjs
  */
-export default class SystemDataModel extends (foundry.abstract.TypeDataModel as any) {
+// @ts-expect-error - foundry.abstract.TypeDataModel has complex generic constraints
+export default class SystemDataModel extends foundry.abstract.TypeDataModel {
     /**
      * System type that this data model represents (e.g. "acolyte", "npcV2", "vehicle").
      * @type {string}
@@ -77,7 +78,7 @@ export default class SystemDataModel extends (foundry.abstract.TypeDataModel as 
     });
 
     get metadata(): Record<string, unknown> {
-        return (this.constructor as typeof SystemDataModel).metadata;
+        return (this.constructor as unknown as typeof SystemDataModel).metadata;
     }
 
     /* -------------------------------------------- */
@@ -154,7 +155,7 @@ export default class SystemDataModel extends (foundry.abstract.TypeDataModel as 
     static *_initializationOrder(): Generator<[string, foundry.data.fields.DataField.Any]> {
         for (const template of this._schemaTemplates) {
             for (const entry of template._initializationOrder()) {
-                entry[1] = this.schema.get(entry[0]);
+                entry[1] = this.schema.get(entry[0]) as any;
                 yield entry;
             }
         }
@@ -244,11 +245,12 @@ export default class SystemDataModel extends (foundry.abstract.TypeDataModel as 
      */
     static mixin(...templates: typeof SystemDataModel[]): typeof SystemDataModel {
         for (const template of templates) {
-            if (!(template.prototype instanceof SystemDataModel)) {
-                throw new Error(`${template.name} is not a subclass of SystemDataModel`);
+            if (!((template as any).prototype instanceof (SystemDataModel as any))) {
+                throw new Error(`${(template as any).name} is not a subclass of SystemDataModel`);
             }
         }
 
+        // @ts-expect-error - dynamic class extension for mixin pattern
         const Base = class extends this {};
         Object.defineProperty(Base, '_schemaTemplates', {
             value: Object.seal([...this._schemaTemplates, ...templates]),
@@ -270,7 +272,7 @@ export default class SystemDataModel extends (foundry.abstract.TypeDataModel as 
             }
         }
 
-        return Base as typeof SystemDataModel;
+        return Base as unknown as typeof SystemDataModel;
     }
 
     /* -------------------------------------------- */

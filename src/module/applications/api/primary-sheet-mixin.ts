@@ -16,11 +16,13 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
         [key: string]: any;
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+            /* eslint-disable @typescript-eslint/unbound-method */
             actions: {
                 editDocument: PrimarySheetWH40K.#showDocument,
                 deleteDocument: PrimarySheetWH40K.#deleteDocument,
                 showDocument: PrimarySheetWH40K.#showDocument,
             },
+            /* eslint-enable @typescript-eslint/unbound-method */
         };
 
         /* -------------------------------------------- */
@@ -72,8 +74,8 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
             // Set initial mode
             const { renderContext } = options;
             let { mode } = options;
-            if (mode === undefined && renderContext === 'createItem') mode = (this.constructor as any).MODES.EDIT;
-            this._mode = mode ?? this._mode ?? (this.constructor as any).MODES.PLAY;
+            if (mode === undefined && renderContext === 'createItem') mode = (this.constructor as unknown as { MODES: Record<string, number> }).MODES.EDIT;
+            this._mode = (mode as number) ?? this._mode ?? (this.constructor as unknown as { MODES: Record<string, number> }).MODES.PLAY;
         }
 
         /* -------------------------------------------- */
@@ -82,8 +84,8 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
         _configureRenderParts(options: Record<string, unknown>): Record<string, unknown> {
             const parts = super._configureRenderParts(options);
             for (const key of Object.keys(parts)) {
-                const tab = (this.constructor as any).TABS.find((t) => t.tab === key);
-                if (tab?.condition && !tab.condition(this.document)) delete parts[key];
+                const tab = (this.constructor as unknown as { TABS: Array<Record<string, unknown>> }).TABS.find((t) => t.tab === key);
+                if (tab?.condition && !(tab.condition as any)(this.document)) delete parts[key];
             }
             return parts;
         }
@@ -118,7 +120,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
                 newToggle.addEventListener('pointerdown', (event) => event.stopPropagation());
                 header.prepend(newToggle);
             } else if (this.isEditable && toggle) {
-                toggle.checked = this._mode === (this.constructor as any).MODES.EDIT;
+                toggle.checked = this._mode === (this.constructor as unknown as { MODES: Record<string, number> }).MODES.EDIT;
             } else if (!this.isEditable && toggle) {
                 toggle.remove();
             }
@@ -131,7 +133,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
             const context = await super._prepareContext(options);
             context.owner = this.document.isOwner;
             context.locked = !this.isEditable;
-            context.editable = this.isEditable && this._mode === (this.constructor as any).MODES.EDIT;
+            context.editable = this.isEditable && this._mode === (this.constructor as unknown as { MODES: Record<string, number> }).MODES.EDIT;
             context.tabs = this._getTabs();
             return context;
         }
@@ -153,9 +155,9 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
          * @protected
          */
         _getTabs(): Record<string, Record<string, unknown>> {
-            return (this.constructor as any).TABS.reduce((tabs, { tab, condition, ...config }) => {
+            return (this.constructor as unknown as { TABS: Array<Record<string, unknown>> }).TABS.reduce((tabs: any, { tab, condition, ...config }: any) => {
                 if (!condition || condition(this.document))
-                    tabs[tab] = {
+                    tabs[tab as string] = {
                         ...config,
                         id: tab,
                         group: 'primary',
@@ -163,7 +165,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
                         cssClass: this.tabGroups.primary === tab ? 'active' : '',
                     };
                 return tabs;
-            }, {});
+            }, {} as Record<string, Record<string, unknown>>);
         }
 
         /* -------------------------------------------- */
@@ -184,8 +186,14 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
 
             // Set toggle state and add status class to frame
             this._renderModeToggle();
-            this.element.classList.toggle('editable', this.isEditable && this._mode === (this.constructor as any).MODES.EDIT);
-            this.element.classList.toggle('interactable', this.isEditable && this._mode === (this.constructor as any).MODES.PLAY);
+            this.element.classList.toggle(
+                'editable',
+                this.isEditable && this._mode === (this.constructor as unknown as { MODES: Record<string, number> }).MODES.EDIT,
+            );
+            this.element.classList.toggle(
+                'interactable',
+                this.isEditable && this._mode === (this.constructor as unknown as { MODES: Record<string, number> }).MODES.PLAY,
+            );
             this.element.classList.toggle('locked', !this.isEditable);
 
             if (this.isEditable) {
@@ -355,8 +363,8 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
             // @ts-expect-error - property access
             if ((await this._deleteDocument(event, target)) === false) return;
             const uuid = target.closest<HTMLElement>('[data-uuid]')?.dataset.uuid;
-            const doc = (await fromUuid(uuid)) as any;
-            doc?.deleteDialog();
+            const doc = await fromUuid(uuid);
+            (doc as any)?.deleteDialog();
         }
 
         /* -------------------------------------------- */
@@ -377,10 +385,10 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
          * @protected
          */
         async _onChangeSheetMode(event: Event): Promise<void> {
-            const { MODES } = this.constructor as any;
+            const { MODES } = this.constructor as unknown as { MODES: Record<string, number> };
             const toggle = event.currentTarget as HTMLInputElement;
             const label = game.i18n.localize(`WH40K.SheetMode${toggle.checked ? 'Play' : 'Edit'}`);
-            (toggle as any).dataset.tooltip = label;
+            (toggle as HTMLElement).dataset.tooltip = label;
             toggle.setAttribute('aria-label', label);
             this._mode = toggle.checked ? MODES.EDIT : MODES.PLAY;
             await this.submit();
@@ -408,8 +416,8 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
             if ((await this._showDocument(event, target)) === false) return;
             if ([HTMLInputElement, HTMLSelectElement].some((el) => event.target instanceof el)) return;
             const uuid = target.closest<HTMLElement>('[data-uuid]')?.dataset.uuid;
-            const doc = (await fromUuid(uuid)) as any;
-            doc?.sheet?.render({ force: true });
+            const doc = await fromUuid(uuid);
+            (doc as any)?.sheet?.render({ force: true });
         }
 
         /* -------------------------------------------- */

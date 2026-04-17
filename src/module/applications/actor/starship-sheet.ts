@@ -12,17 +12,17 @@ import BaseActorSheet from './base-actor-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class StarshipSheet extends BaseActorSheet {
-    [key: string]: any;
-
     declare actor: WH40KStarship;
     declare document: WH40KStarship;
 
     /** @override */
     static DEFAULT_OPTIONS = {
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             fireShipWeapon: StarshipSheet.#fireShipWeapon,
             rollInitiative: StarshipSheet.#rollInitiative,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         classes: ['starship'],
         position: {
             width: 900,
@@ -93,7 +93,7 @@ export default class StarshipSheet extends BaseActorSheet {
     /** @inheritDoc */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context: any = await super._prepareContext(options);
-        context.dh = (CONFIG as any).wh40k || WH40K;
+        context.dh = CONFIG.wh40k || WH40K;
 
         // Prepare ship-specific data
         this._prepareShipData(context);
@@ -156,7 +156,7 @@ export default class StarshipSheet extends BaseActorSheet {
 
         // Add tab metadata for tab parts
         if (['stats', 'components', 'weapons', 'crew', 'history'].includes(partId)) {
-            const tabConfig = (this.constructor as any).TABS.find((t: any) => t.tab === partId);
+            const tabConfig = (this.constructor as unknown as { TABS: Array<Record<string, unknown>> }).TABS.find((t: any) => t.tab === partId);
             partContext.tab = {
                 id: partId,
                 group: tabConfig?.group || 'primary',
@@ -189,13 +189,13 @@ export default class StarshipSheet extends BaseActorSheet {
             crewRating: this.actor.system.crew?.crewRating || 30,
         };
 
-        const html = await (foundry as any).applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
-        (ChatMessage as any).create({
-            user: (game as any).user.id,
-            speaker: (ChatMessage as any).getSpeaker({ actor: this.actor }),
+        ChatMessage.create({
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content: html,
-        });
+        } as any);
     }
 
     /* -------------------------------------------- */

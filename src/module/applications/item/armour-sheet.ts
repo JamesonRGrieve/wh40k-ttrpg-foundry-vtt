@@ -8,7 +8,6 @@ import ContainerItemSheet from './container-item-sheet.ts';
  * Sheet for armour items with support for armour modifications.
  */
 export default class ArmourSheet extends ContainerItemSheet {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour'],
@@ -16,6 +15,7 @@ export default class ArmourSheet extends ContainerItemSheet {
             width: 560,
             height: 580,
         },
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             ...ContainerItemSheet.DEFAULT_OPTIONS?.actions,
             toggleCoverage: ArmourSheet.#toggleCoverage,
@@ -25,6 +25,7 @@ export default class ArmourSheet extends ContainerItemSheet {
             editMod: ArmourSheet.#editMod,
             removeMod: ArmourSheet.#removeMod,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
     };
 
     /* -------------------------------------------- */
@@ -198,12 +199,12 @@ export default class ArmourSheet extends ContainerItemSheet {
     static #addModification(this: any, event: Event, target: HTMLElement): void {
         // Check if slots available
         if (this.item.system.availableModSlots <= 0) {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.Armour.NoSlotsAvailable'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Armour.NoSlotsAvailable'));
             return;
         }
 
         // Open compendium browser or item picker
-        (ui.notifications as any).info(game.i18n.localize('WH40K.Armour.DragModification'));
+        ui.notifications.info(game.i18n.localize('WH40K.Armour.DragModification'));
     }
 
     /**
@@ -217,8 +218,8 @@ export default class ArmourSheet extends ContainerItemSheet {
         if (!mod?.uuid) return;
 
         try {
-            const item = (await fromUuid(mod.uuid)) as any;
-            if (item) item.sheet.render(true);
+            const item = await fromUuid(mod.uuid);
+            if (item) (item as any).sheet.render(true);
         } catch (err) {
             console.error('Failed to open modification:', err);
         }

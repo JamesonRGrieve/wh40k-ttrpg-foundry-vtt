@@ -14,8 +14,6 @@ const { ApplicationV2 } = foundry.applications.api;
  * from compendium data when the skill selection changes.
  */
 export default class SpecialistSkillDialog extends ApplicationV2Mixin(ApplicationV2) {
-    [key: string]: any;
-
     /**
      * @param {Actor} actor                The owning actor.
      * @param {object} [options={}]        Dialog options.
@@ -36,10 +34,12 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     static DEFAULT_OPTIONS = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'specialist-skill', 'standard-form'],
+        /* eslint-disable @typescript-eslint/unbound-method */
         actions: {
             add: SpecialistSkillDialog.#onAdd,
             cancel: SpecialistSkillDialog.#onCancel,
         },
+        /* eslint-enable @typescript-eslint/unbound-method */
         position: {
             width: 420,
         },
@@ -73,14 +73,15 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         this._compendiumLoaded = true;
 
         for (const pack of game.packs) {
-            if ((pack as any).metadata.type !== 'Item') continue;
-            if (!(pack as any).metadata.name.includes('skill')) continue;
+            if (pack.metadata.type !== 'Item') continue;
+            if (!(pack.metadata.name as string).includes('skill')) continue;
 
+            // eslint-disable-next-line no-await-in-loop -- Sequential compendium index loading
             const index = await pack.getIndex();
-            // @ts-expect-error - index filter
-            const skillEntries = index.filter((entry) => entry.name.includes('(X)'));
+            const skillEntries = index.filter((entry: any) => entry.name.includes('(X)'));
 
             for (const entry of skillEntries) {
+                // eslint-disable-next-line no-await-in-loop -- Sequential compendium document loading
                 const doc = await pack.getDocument(entry._id);
                 // @ts-expect-error - system data access
                 const specs = doc?.system?.specializations;
@@ -108,13 +109,13 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         // Get specialist skills from actor
         const skills = this.actorDoc.system?.skills ?? {};
         const specialistSkills = Object.entries(skills)
-            .filter(([_, data]) => (data as any).entries !== undefined)
+            .filter(([_, data]) => (data as Record<string, unknown>).entries !== undefined)
             .map(([key, data]) => ({
                 key,
-                label: (data as any).label || key,
-                characteristic: (data as any).charShort || (data as any).characteristic,
+                label: (data as Record<string, unknown>).label || key,
+                characteristic: (data as Record<string, unknown>).charShort || (data as Record<string, unknown>).characteristic,
             }))
-            .sort((a, b) => a.label.localeCompare(b.label));
+            .sort((a, b) => String(a.label).localeCompare(String(b.label)));
 
         // Get specializations for pre-selected skill
         const selectedKey = this.preSelectedSkillKey;
@@ -219,7 +220,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
 
         const skillKey = (form.querySelector('#skill-select') as HTMLSelectElement | null)?.value;
         if (!skillKey) {
-            (ui.notifications as any).warn('Please select a skill type.');
+            ui.notifications.warn('Please select a skill type.');
             return;
         }
 
@@ -228,7 +229,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         const speciality = customValue || specValue;
 
         if (!speciality) {
-            (ui.notifications as any).warn('Please enter or select a specialization name.');
+            ui.notifications.warn('Please enter or select a specialization name.');
             return;
         }
 
@@ -245,7 +246,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
  * Open a specialist skill dialog.
  * @param {object} data  Dialog data — must include `actor`, may include `skillName`.
  */
-export function prepareCreateSpecialistSkillPrompt(data: { actor: any; skillName?: string; [key: string]: any }) {
+export function prepareCreateSpecialistSkillPrompt(data: { actor: any; skillName?: string; [key: string]: any }): void {
     const prompt = new SpecialistSkillDialog(data.actor, {
         preSelectedSkillKey: data.skillName || '',
     });

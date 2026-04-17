@@ -1,4 +1,4 @@
-export function damageTypeDropdown() {
+export function damageTypeDropdown(): Record<string, string> {
     const dropdown = {};
     damageType().forEach((i) => {
         dropdown[i.name] = i.name;
@@ -6,11 +6,11 @@ export function damageTypeDropdown() {
     return dropdown;
 }
 
-export function damageTypeNames() {
+export function damageTypeNames(): string[] {
     return damageType().map((i) => i.name);
 }
 
-export function damageType() {
+export function damageType(): Record<string, any> {
     return [
         {
             name: 'Energy',
