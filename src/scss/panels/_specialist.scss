@@ -19,7 +19,7 @@
 .wh40k-injuries-section {
     margin-top: var(--wh40k-space-md);
     padding-top: var(--wh40k-space-sm);
-    border-top: 1px solid rgba($wh40k-accent-combat, 0.2);
+    border-top: 1px solid #{'rgb(from var(--wh40k-accent-combat) r g b / 0.2)'};
 }
 
 // ============================================
@@ -50,7 +50,7 @@
 .wh40k-specialist-header {
     @apply tw-flex tw-items-center tw-gap-2;
     padding: var(--wh40k-space-xs) var(--wh40k-space-md);
-    background: linear-gradient(180deg, rgba($wh40k-accent-talents, 0.12) 0%, transparent 100%);
+    background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-talents) r g b / 0.12)'} 0%, transparent 100%);
     border-bottom: 1px solid var(--wh40k-border-light);
 
     .wh40k-specialist-name {
@@ -145,7 +145,7 @@
 
         .wh40k-train-indicator {
             background: rgba(255, 255, 255, 0.35);
-            border: 1px solid rgba($wh40k-accent-talents, 0.35);
+            border: 1px solid #{'rgb(from var(--wh40k-accent-talents) r g b / 0.35)'};
             border-radius: 3px;
             color: var(--wh40k-text-muted);
             font-size: 0.65rem;
@@ -156,7 +156,7 @@
             opacity: 0.5;
 
             &.active {
-                background: rgba($wh40k-accent-talents, 0.25);
+                background: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.25)'};
                 border-color: var(--wh40k-accent-talents);
                 color: var(--color-text-primary);
                 opacity: 1;
@@ -173,7 +173,7 @@
         align-items: center;
         justify-content: center;
         background: var(--color-bg-option);
-        border: 2px solid rgba($wh40k-accent-talents, 0.45);
+        border: 2px solid #{'rgb(from var(--wh40k-accent-talents) r g b / 0.45)'};
         box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1), 0 2px 6px rgba(0, 0, 0, 0.15);
 
         span {
@@ -189,14 +189,14 @@
     @apply tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-center;
     padding: var(--wh40k-space-xl) var(--wh40k-space-lg);
     color: var(--wh40k-text-muted);
-    background: rgba($wh40k-accent-talents, 0.03);
-    border: 2px dashed rgba($wh40k-accent-talents, 0.2);
+    background: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.03)'};
+    border: 2px dashed #{'rgb(from var(--wh40k-accent-talents) r g b / 0.2)'};
     border-radius: 8px;
     margin: var(--wh40k-space-sm);
 
     i.fa-graduation-cap {
         font-size: 2.5rem;
-        color: rgba($wh40k-accent-talents, 0.3);
+        color: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.3)'};
         margin-bottom: var(--wh40k-space-sm);
     }
 
@@ -225,9 +225,13 @@
 
 .wh40k-specialist-group--advanced {
     // Subtle left border accent
-    border-left: 2px solid rgba($wh40k-accent-talents, 0.5);
+    border-left: 2px solid #{'rgb(from var(--wh40k-accent-talents) r g b / 0.5)'};
 
     .wh40k-specialist-header {
-        background: linear-gradient(180deg, rgba($wh40k-accent-talents, 0.18) 0%, rgba($wh40k-accent-talents, 0.08) 100%);
+        background: linear-gradient(
+            180deg,
+            #{'rgb(from var(--wh40k-accent-talents) r g b / 0.18)'} 0%,
+            #{'rgb(from var(--wh40k-accent-talents) r g b / 0.08)'} 100%
+        );
     }
 }
