@@ -4,10 +4,15 @@
 // ============================================
 
 .wh40k-armour-panel {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+
     .wh40k-panel-body {
         display: flex;
         justify-content: center;
-        align-items: flex-start;
+        align-items: center;
+        flex: 1 1 auto;
         padding: var(--wh40k-space-sm, 8px);
         background: var(--wh40k-panel-body-bg, rgba(40, 35, 30, 0.6));
         min-height: auto;

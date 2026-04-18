@@ -88,7 +88,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    get title() {
+    get title(): string {
+        const systemConfig = SystemConfigRegistry.getOrNull(this.actor?.system?.gameSystem);
+        if (systemConfig && !systemConfig.usesCareerTables) {
+            return game.i18n.localize('WH40K.Advancement.Title') || 'Advancement';
+        }
         const careerLabel = game.i18n.localize(CONFIG.wh40k?.careers?.[this.careerKey]?.label ?? this.careerKey);
         return game.i18n.format('WH40K.Advancement.TitleWithCareer', { career: careerLabel });
     }
@@ -117,26 +121,38 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     async _prepareContext(options: any): Promise<any> {
         const context: any = await super._prepareContext(options);
 
-        // Check if character has completed origin path (has career selected)
-        const originCareer = this.actor.system.originPath?.career;
-        const careerKey = getCareerKeyFromName(originCareer);
-        context.hasCareer = !!careerKey;
-        context.originCareerName = originCareer || null;
+        // Get system config early — determines career-based vs aptitude-based flow
+        const systemConfig = SystemConfigRegistry.getOrNull(this.actor.system?.gameSystem);
+        context.systemConfig = systemConfig;
+        context.usesAptitudes = systemConfig?.usesAptitudes ?? false;
+        context.usesCareerTables = systemConfig?.usesCareerTables ?? true;
 
-        // If no career, show blocked state
-        if (!context.hasCareer) {
-            context.xp = {
-                total: this.actor.system.experience?.total ?? 0,
-                used: this.actor.system.experience?.used ?? 0,
-                available: getAvailableXP(this.actor),
-                usedPercent: 0,
-            };
-            return context;
+        let career: any = null;
+
+        if (systemConfig?.usesCareerTables || !systemConfig) {
+            // Career-based systems (RT, DH1e, DW): require a career selection
+            const originCareer = this.actor.system.originPath?.career;
+            const careerKey = getCareerKeyFromName(originCareer);
+            context.hasCareer = !!careerKey;
+            context.originCareerName = originCareer || null;
+
+            if (!context.hasCareer) {
+                context.xp = {
+                    total: this.actor.system.experience?.total ?? 0,
+                    used: this.actor.system.experience?.used ?? 0,
+                    available: getAvailableXP(this.actor),
+                    usedPercent: 0,
+                };
+                return context;
+            }
+
+            this.careerKey = careerKey;
+            career = getCareerAdvancements(this.careerKey);
+        } else {
+            // Aptitude-based systems (DH2e, BC, OW): no career needed
+            context.hasCareer = true;
+            context.originCareerName = null;
         }
-
-        // Use the mapped career key
-        this.careerKey = careerKey;
-        const career = getCareerAdvancements(this.careerKey);
 
         // XP Summary
         const total = this.actor.system.experience?.total ?? 0;
@@ -158,11 +174,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             { id: 'talents', label: 'WH40K.Advancement.Tab.Talents', icon: 'fa-star', active: this.#activeTab === 'talents' },
         ];
 
-        // Get system config for this actor's game system
-        const systemConfig = SystemConfigRegistry.getOrNull(this.actor.system?.gameSystem);
-        context.systemConfig = systemConfig;
-        context.usesAptitudes = systemConfig?.usesAptitudes ?? false;
-
         // Prepare characteristic advances
         context.characteristics = this.#prepareCharacteristics(career, systemConfig);
 
@@ -173,10 +184,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             context.skills = this.#prepareAdvances(advances.filter((a) => a.type === 'skill'));
             context.talents = this.#prepareAdvances(advances.filter((a) => a.type === 'talent'));
         } else {
-            // Aptitude-based: all skills available, costs computed dynamically
-            // TODO: Build full skill browser with aptitude-based costs
-            context.skills = [];
-            context.talents = [];
+            // Aptitude-based: prepare skills from actor's skill items with aptitude costs
+            context.skills = this.#prepareAptitudeSkills(systemConfig);
+            context.talents = this.#prepareAptitudeTalents(systemConfig);
         }
 
         // Recent purchases for animation
@@ -285,6 +295,87 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 recentlyPurchased: this.#recentPurchases.has(id),
             };
         });
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare skill advances for aptitude-based systems (DH2e, BC, OW).
+     * Lists all visible skills with their current rank, next cost, and aptitude match count.
+     */
+    #prepareAptitudeSkills(systemConfig: any): any[] {
+        const available = getAvailableXP(this.actor);
+        const actorSkills = this.actor.system.skills ?? {};
+        const visibleSkills = systemConfig.getVisibleSkills?.() ?? new Set<string>();
+        const skillConfigs = CONFIG.wh40k?.skills ?? {};
+        const ranks = systemConfig.getSkillRanks();
+
+        const result: any[] = [];
+
+        for (const skillKey of visibleSkills) {
+            const config = skillConfigs[skillKey];
+            if (!config) continue;
+            const skillData = actorSkills[skillKey] ?? {};
+            const currentRank = skillData.advance ?? 0;
+            const isMaxed = currentRank >= ranks.length;
+            const cost = isMaxed ? null : systemConfig.getSkillAdvanceCost(this.actor, skillKey, currentRank);
+            const canPurchase = !isMaxed && cost != null && available >= cost;
+
+            const currentLabel = currentRank > 0 ? ranks[currentRank - 1]?.tooltip : 'Untrained';
+            const nextLabel = !isMaxed && ranks[currentRank] ? ranks[currentRank].tooltip : null;
+
+            result.push({
+                id: `skill:${skillKey}`,
+                name: config.label ?? skillKey,
+                displayName: config.label ?? skillKey,
+                type: 'skill',
+                skillKey,
+                cost,
+                currentRank,
+                currentLabel,
+                nextLabel,
+                owned: isMaxed,
+                canPurchase,
+                cantAfford: !isMaxed && cost != null && available < cost,
+                blocked: false,
+            });
+        }
+
+        return result.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Prepare talent advances for aptitude-based systems (DH2e, BC, OW).
+     * Lists actor's existing talents that can be ranked up, plus a note about browsing compendiums.
+     */
+    #prepareAptitudeTalents(systemConfig: any): any[] {
+        const available = getAvailableXP(this.actor);
+        const result: any[] = [];
+
+        // List existing talents that are stackable (can be ranked up)
+        for (const item of this.actor.items) {
+            if (item.type !== 'talent') continue;
+            if (!item.system.stackable) continue;
+
+            const cost = systemConfig.getTalentAdvanceCost?.(this.actor, item);
+            const canPurchase = cost != null && available >= cost;
+
+            result.push({
+                id: `talent:${item.name}:rank`,
+                name: item.name,
+                displayName: `${item.name} (Rank ${(item.system.rank ?? 1) + 1})`,
+                type: 'talent',
+                cost,
+                owned: false,
+                canPurchase,
+                cantAfford: cost != null && available < cost,
+                blocked: false,
+            });
+        }
+
+        return result.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     /* -------------------------------------------- */

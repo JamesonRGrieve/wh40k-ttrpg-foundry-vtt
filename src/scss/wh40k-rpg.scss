@@ -908,27 +908,61 @@
         max-width: 320px !important;
     }
 
+    // ---- Name line: four flex spans, left-aligned ----
     .wh40k-header-name-line {
-        min-width: 0 !important;
         justify-content: flex-start !important;
-        align-self: stretch !important;
-        text-align: left !important;
         gap: 0 !important;
+    }
 
-        .wh40k-header-label {
-            min-width: 0 !important;
-            margin-right: 6px !important;
-            flex: 0 0 auto !important;
+    .wh40k-hdr-name,
+    .wh40k-hdr-player {
+        display: inline-flex !important;
+        align-items: center !important;
+        flex: 0 0 auto !important;
+        min-width: 0 !important;
+        position: relative !important;
+    }
+
+    .wh40k-hdr-name-input,
+    .wh40k-hdr-player-input {
+        border: none !important;
+        background: transparent !important;
+        border-bottom: 1px solid transparent !important;
+        color: var(--wh40k-text-dark, #333) !important;
+        padding: 2px 4px !important;
+        width: auto !important;
+        flex: 0 0 auto !important;
+        field-sizing: content !important;
+
+        &:focus {
+            outline: none !important;
+            border-bottom-color: var(--wh40k-gold, #d4af37) !important;
         }
 
-        .wh40k-header-paren {
-            font-size: 0.85em !important;
-            color: var(--wh40k-text-medium, #666) !important;
-            flex: 0 0 auto !important;
-            padding: 0 !important;
+        &[readonly]:hover {
+            border-bottom-color: var(--wh40k-border-color-light, rgba(74, 55, 40, 0.3)) !important;
         }
     }
 
+    .wh40k-hdr-name-input {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+    }
+
+    .wh40k-hdr-player-input {
+        font-size: 0.85em !important;
+        font-style: italic !important;
+        color: var(--wh40k-text-medium, #666) !important;
+    }
+
+    .wh40k-hdr-paren {
+        flex: 0 0 auto !important;
+        font-size: 0.85em !important;
+        color: var(--wh40k-text-medium, #666) !important;
+        padding: 0 1px !important;
+    }
+
+    // Generic inline-edit (used elsewhere in the sheet)
     .wh40k-inline-edit {
         position: relative !important;
         display: inline-flex !important;
@@ -942,24 +976,15 @@
         min-width: 0 !important;
         width: auto !important;
         field-sizing: content !important;
-    }
 
-    // All inputs in the name line size to content — leaves a left-aligned group
-    .wh40k-header-name-line .wh40k-header-input {
-        flex: 0 1 auto !important;
-        width: auto !important;
-        max-width: none !important;
-        field-sizing: content !important;
-    }
+        &[readonly] {
+            border-bottom-color: transparent !important;
+            cursor: text !important;
+        }
 
-    // Readonly state: look like plain text (no border, no input styling)
-    .wh40k-inline-edit-input[readonly] {
-        border-bottom-color: transparent !important;
-        cursor: text !important;
-    }
-
-    .wh40k-inline-edit-input[readonly]:hover {
-        border-bottom-color: var(--wh40k-border-color-light, rgba(74, 55, 40, 0.3)) !important;
+        &[readonly]:hover {
+            border-bottom-color: var(--wh40k-border-color-light, rgba(74, 55, 40, 0.3)) !important;
+        }
     }
 
     .wh40k-inline-edit-save {
@@ -980,17 +1005,13 @@
         }
     }
 
-    .wh40k-inline-edit.is-editing .wh40k-inline-edit-save {
+    .wh40k-inline-edit.is-editing .wh40k-inline-edit-save,
+    [data-inline-edit].is-editing .wh40k-inline-edit-save {
         display: inline-flex !important;
         align-items: center !important;
     }
 
-    .wh40k-player-inline {
-        font-size: 0.85em !important;
-        font-style: italic !important;
-        color: var(--wh40k-text-medium, #666) !important;
-        max-width: none !important;
-    }
+    // .wh40k-player-inline removed — replaced by .wh40k-hdr-player-input
 
     .wh40k-header-right {
         position: relative !important;
