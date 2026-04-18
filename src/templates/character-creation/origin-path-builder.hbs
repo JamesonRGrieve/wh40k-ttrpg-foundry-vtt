@@ -317,6 +317,8 @@
                                         {{#each selectedOrigin.grants.skills as |skill|}}
                                             <div class="grant-tag skill-tag clickable" 
                                                   {{#if skill.uuid}}data-action="openItem" data-uuid="{{skill.uuid}}"{{/if}}
+                                                  data-wh40k-tooltip="generic"
+                                                  data-wh40k-tooltip-data="{{skill.tooltipData}}"
                                                   data-tooltip="{{skill.displayName}} ({{skill.levelLabel}})">
                                                 <i class="fa-solid fa-book-open"></i>
                                                 <span class="tag-label">{{skill.displayName}}</span>
@@ -336,6 +338,8 @@
                                         {{#each selectedOrigin.grants.talents as |talent|}}
                                             <div class="grant-tag talent-tag {{#if talent.hasItem}}clickable{{/if}}" 
                                                   {{#if talent.uuid}}data-action="openItem" data-uuid="{{talent.uuid}}"{{/if}}
+                                                  data-wh40k-tooltip="generic"
+                                                  data-wh40k-tooltip-data="{{talent.tooltipData}}"
                                                   data-tooltip="{{talent.tooltip}}">
                                                 <i class="fa-solid fa-star"></i>
                                                 <span class="tag-label">{{talent.name}}</span>
@@ -573,6 +577,8 @@
                         {{#each preview.skills as |skill|}}
                             <div class="grant-tag skill-tag {{#if skill.uuid}}clickable{{/if}} {{#if skill.fromChoice}}from-choice{{/if}}"
                                   {{#if skill.uuid}}data-action="openItem" data-uuid="{{skill.uuid}}"{{/if}}
+                                  data-wh40k-tooltip="generic"
+                                  data-wh40k-tooltip-data="{{skill.tooltipData}}"
                                   data-tooltip="{{skill.name}}">
                                 <i class="fa-solid fa-book-open"></i>
                                 <span class="tag-label">{{skill.name}}</span>
@@ -589,6 +595,8 @@
                         {{#each preview.talents as |talent|}}
                             <div class="grant-tag talent-tag {{#if talent.uuid}}clickable{{/if}} {{#if talent.fromChoice}}from-choice{{/if}}"
                                   {{#if talent.uuid}}data-action="openItem" data-uuid="{{talent.uuid}}"{{/if}}
+                                  data-wh40k-tooltip="generic"
+                                  data-wh40k-tooltip-data="{{talent.tooltipData}}"
                                   data-tooltip="{{talent.name}}">
                                 <i class="fa-solid fa-star"></i>
                                 <span class="tag-label">{{talent.name}}</span>
