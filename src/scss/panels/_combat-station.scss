@@ -5,6 +5,8 @@
 // Layout (flex, gap, padding) now in Tailwind utilities on the template element
 .wh40k-combat-tab {
     container-type: inline-size;
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
 // ============================================
@@ -1049,6 +1051,7 @@
 .wh40k-panel-arsenal {
     display: flex;
     flex-direction: column;
+    min-height: 0;
 
     .wh40k-panel-header {
         order: -1; // Force header to top
@@ -1056,8 +1059,10 @@
     }
 
     .wh40k-panel-body {
-        flex: 1;
-        overflow: auto;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 }
 
