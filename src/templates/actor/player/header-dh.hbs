@@ -16,22 +16,17 @@
                     {{/if}}
                 </div>
                 <div class="wh40k-header-info tw-flex tw-flex-col tw-gap-1.5">
-                    <div class="wh40k-header-name-line tw-flex tw-items-center tw-justify-start tw-gap-1">
-                        <span class="wh40k-header-label">{{localize "WH40K.Character.Name"}}:</span>
-                        <span class="wh40k-inline-edit" data-inline-edit>
-                            <input class="wh40k-header-input wh40k-name-input wh40k-inline-edit-input" name="name" type="text" value="{{actor.name}}" readonly />
-                            <button type="button" class="wh40k-inline-edit-save" data-inline-edit-save tabindex="-1" title="Save">
-                                <i class="fas fa-check"></i>
-                            </button>
+                    <div class="wh40k-header-name-line tw-flex tw-items-center tw-justify-start">
+                        <span class="wh40k-hdr-name" data-inline-edit>
+                            <input class="wh40k-hdr-name-input wh40k-inline-edit-input" name="name" type="text" value="{{actor.name}}" placeholder="Character Name" readonly />
+                            <button type="button" class="wh40k-inline-edit-save" data-inline-edit-save tabindex="-1" title="Save"><i class="fas fa-check"></i></button>
                         </span>
-                        <span class="wh40k-header-paren">(</span>
-                        <span class="wh40k-inline-edit" data-inline-edit>
-                            <input class="wh40k-header-input wh40k-player-input wh40k-player-inline wh40k-inline-edit-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" readonly />
-                            <button type="button" class="wh40k-inline-edit-save" data-inline-edit-save tabindex="-1" title="Save">
-                                <i class="fas fa-check"></i>
-                            </button>
+                        <span class="wh40k-hdr-paren">(</span>
+                        <span class="wh40k-hdr-player" data-inline-edit>
+                            <input class="wh40k-hdr-player-input wh40k-inline-edit-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" readonly />
+                            <button type="button" class="wh40k-inline-edit-save" data-inline-edit-save tabindex="-1" title="Save"><i class="fas fa-check"></i></button>
                         </span>
-                        <span class="wh40k-header-paren">)</span>
+                        <span class="wh40k-hdr-paren">)</span>
                     </div>
                     {{!-- Origin Path Step Icons --}}
                     <div class="tw-flex tw-justify-center tw-items-center tw-gap-2">

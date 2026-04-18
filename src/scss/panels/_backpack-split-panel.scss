@@ -253,6 +253,8 @@
 .wh40k-column-body {
     position: relative;
     flex: 1;
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
     min-height: 0;
@@ -319,6 +321,15 @@
 
 .wh40k-inventory-table {
     padding: 0;
+    flex: 1 1 auto;
+}
+
+.wh40k-empty-state {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .wh40k-item-table {
