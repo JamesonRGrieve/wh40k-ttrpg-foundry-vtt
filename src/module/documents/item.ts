@@ -33,7 +33,7 @@ export class WH40KItem extends WH40KItemContainer {
      * @returns {object} The cleaned data
      * @override
      */
-    static cleanData(source: any = {}, options: any = {}) {
+    static cleanData(source: any = {}, options: any = {}, _state: any = {}) {
         // Remove explicit undefined values before schema validation runs.
         // Foundry treats `undefined` differently from an omitted field during updates.
         this.#pruneUndefined(source);
@@ -70,7 +70,7 @@ export class WH40KItem extends WH40KItemContainer {
         // Note: If img is not in source, that's fine - it just won't be updated
         // No need to add a default since the existing document img will remain
 
-        return super.cleanData(source, options);
+        return super.cleanData(source, options, _state);
     }
 
     /**
