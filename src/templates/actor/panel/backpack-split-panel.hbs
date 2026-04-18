@@ -89,10 +89,13 @@
             </div>
         </div>
 
-        {{!-- DIVIDER with Swap Button --}}
+        {{!-- DIVIDER with Give To + Swap Buttons --}}
         <div class="wh40k-split-divider">
             <div class="wh40k-divider-line"></div>
-            <button type="button" class="wh40k-divider-icon" data-action="swapCheckedItems" title="Move selected items">
+            <button type="button" class="wh40k-divider-icon wh40k-divider-give" data-action="giveCheckedItems" title="Give selected items to another character">
+                <i class="fas fa-hand-holding"></i>
+            </button>
+            <button type="button" class="wh40k-divider-icon" data-action="swapCheckedItems" title="Move selected items between backpack and ship">
                 <i class="fas fa-exchange-alt"></i>
             </button>
             <div class="wh40k-divider-line"></div>
