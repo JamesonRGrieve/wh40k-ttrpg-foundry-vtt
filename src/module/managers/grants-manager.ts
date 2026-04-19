@@ -177,7 +177,7 @@ export class GrantsManager {
 
         // Show notification summary
         if (!options.dryRun && result.notifications.length > 0 && options.showNotification !== false) {
-            (ui.notifications as any).info(`Applied grants from ${item.name}`);
+            ui.notifications.info(`Applied grants from ${item.name}`);
         }
 
         return result;
@@ -321,7 +321,7 @@ export class GrantsManager {
 
         // Show combined notification
         if (!options.dryRun && result.notifications.length > 0 && options.showNotification !== false) {
-            (ui.notifications as any).info(`Applied grants from ${items.length} items`);
+            ui.notifications.info(`Applied grants from ${items.length} items`);
         }
 
         return result;

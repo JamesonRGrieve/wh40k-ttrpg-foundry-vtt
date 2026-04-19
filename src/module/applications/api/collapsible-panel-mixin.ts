@@ -306,7 +306,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             }
 
             // Show notification
-            (ui.notifications as any).info(`Applied ${preset.label} panel layout`);
+            ui.notifications.info(`Applied ${preset.label} panel layout`);
         }
 
         /* -------------------------------------------- */

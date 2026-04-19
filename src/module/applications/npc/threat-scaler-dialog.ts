@@ -349,7 +349,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
 
         // Check for no change
         if (currentThreat === newThreat) {
-            (ui.notifications as any).info('No threat level change specified');
+            ui.notifications.info('No threat level change specified');
             this.#submitted = true;
             if (this.#resolve) this.#resolve(false);
             return;
@@ -373,7 +373,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         try {
             await this.#actor.update(actorUpdates);
 
-            (ui.notifications as any).info(
+            ui.notifications.info(
                 game.i18n.format('WH40K.NPC.ScaledThreat', {
                     name: this.#actor.name,
                     from: currentThreat,
@@ -385,7 +385,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
             if (this.#resolve) this.#resolve(true);
         } catch (error) {
             console.error('Failed to scale NPC:', error);
-            (ui.notifications as any).error('Failed to scale NPC');
+            ui.notifications.error('Failed to scale NPC');
             if (this.#resolve) this.#resolve(false);
         }
     }
@@ -444,7 +444,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      */
     static async scale(actor: any): Promise<any> {
         if (!actor || actor.type !== 'npcV2') {
-            (ui.notifications as any).warn('Can only scale npcV2 type actors');
+            ui.notifications.warn('Can only scale npcV2 type actors');
             return false;
         }
 

@@ -459,12 +459,12 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      */
     async consume(): Promise<any> {
         if (!this.hasLimitedUses) {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.Gear.NoConsumableUses'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Gear.NoConsumableUses'));
             return this.parent;
         }
 
         if (this.usesExhausted) {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.Gear.UsesExhausted'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Gear.UsesExhausted'));
             return this.parent;
         }
 
@@ -472,7 +472,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         await this.parent?.update({ 'system.uses.value': newValue });
 
         // Notification
-        (ui.notifications as any).info(
+        ui.notifications.info(
             game.i18n.format('WH40K.Gear.ConsumedUse', {
                 name: this.parent.name,
                 remaining: `${newValue}/${this.uses.max}`,
@@ -491,7 +491,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
         await this.parent?.update({ 'system.uses.value': this.uses.max });
 
-        (ui.notifications as any).info(
+        ui.notifications.info(
             game.i18n.format('WH40K.Gear.UsesReset', {
                 name: this.parent.name,
                 max: String(this.uses.max),

@@ -298,13 +298,13 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Each modification can only be added once
         if (this.item.items.some((i) => i.name === item.name)) {
-            (ui.notifications as any).info(`Weapon can only hold one ${item.name}`);
+            ui.notifications.info(`Weapon can only hold one ${item.name}`);
             return false;
         }
 
         // Only one ammo type can be loaded
         if (item.type === 'ammunition' && this.item.items.some((i) => i.type === 'ammunition')) {
-            (ui.notifications as any).info('Only one type of ammunition can be loaded.');
+            ui.notifications.info('Only one type of ammunition can be loaded.');
             return false;
         }
 
@@ -376,7 +376,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     static async #rollAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
         const actor = this.item.actor;
         if (!actor) {
-            (ui.notifications as any).warn('This weapon must be on an actor to roll.');
+            ui.notifications.warn('This weapon must be on an actor to roll.');
             return;
         }
 
@@ -394,7 +394,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     static async #rollDamage(this: any, event: Event, target: HTMLElement): Promise<void> {
         const actor = this.item.actor;
         if (!actor) {
-            (ui.notifications as any).warn('This weapon must be on an actor to roll.');
+            ui.notifications.warn('This weapon must be on an actor to roll.');
             return;
         }
 
@@ -445,13 +445,13 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Check if weapon uses ammo
         if (!system.usesAmmo) {
-            (ui.notifications as any).warn('This weapon does not use ammunition.');
+            ui.notifications.warn('This weapon does not use ammunition.');
             return;
         }
 
         // Check if there's ammo to spend
         if (system.clip.value <= 0) {
-            (ui.notifications as any).warn(`${this.item.name} is out of ammunition!`);
+            ui.notifications.warn(`${this.item.name} is out of ammunition!`);
             return;
         }
 
@@ -461,7 +461,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Show feedback
         if (newValue === 0) {
-            (ui.notifications as any).warn(`${this.item.name} is now empty!`);
+            ui.notifications.warn(`${this.item.name} is now empty!`);
         }
     }
 
@@ -480,7 +480,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         // Try to find the quality in the weapon qualities compendium
         const pack = game.packs.get('wh40k-rpg.wh40k-items-weapon-qualities');
         if (!pack) {
-            (ui.notifications as any).warn('Weapon qualities compendium not found.');
+            ui.notifications.warn('Weapon qualities compendium not found.');
             return;
         }
 
@@ -502,9 +502,9 @@ export default class WeaponSheet extends ContainerItemSheet {
             if (def) {
                 const label = game.i18n.localize(def.label);
                 const description = game.i18n.localize(def.description);
-                (ui.notifications as any).info(`${label}: ${description}`);
+                ui.notifications.info(`${label}: ${description}`);
             } else {
-                (ui.notifications as any).warn(`Quality "${identifier}" not found.`);
+                ui.notifications.warn(`Quality "${identifier}" not found.`);
             }
         }
     }
@@ -574,14 +574,14 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Show result notification
         if (result.success) {
-            (ui.notifications as any).info(result.message);
+            ui.notifications.info(result.message);
 
             // Send to chat if actor is present
             if (actor) {
                 await ReloadActionManager.sendReloadToChat(actor, this.item, result);
             }
         } else {
-            (ui.notifications as any).warn(result.message);
+            ui.notifications.warn(result.message);
         }
     }
 
@@ -596,7 +596,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     static #onAddModification(this: any, event: Event, target: HTMLElement): void {
         // Open a dialog or compendium browser to add modifications
         // For now, show a notification
-        (ui.notifications as any).info('Drag a weapon modification from a compendium to add it.');
+        ui.notifications.info('Drag a weapon modification from a compendium to add it.');
     }
 
     /* -------------------------------------------- */
@@ -619,7 +619,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         await this.item.update({ 'system.modifications': mods });
 
         const mod = mods[index];
-        (ui.notifications as any).info(`${mod.name} ${mod.active ? 'activated' : 'deactivated'}.`);
+        ui.notifications.info(`${mod.name} ${mod.active ? 'activated' : 'deactivated'}.`);
     }
 
     /* -------------------------------------------- */
@@ -639,7 +639,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         const modItem: any = await fromUuid(mod.uuid);
         if (!modItem) {
-            (ui.notifications as any).error(`Modification "${mod.name}" not found. It may have been deleted.`);
+            ui.notifications.error(`Modification "${mod.name}" not found. It may have been deleted.`);
             return;
         }
 
@@ -673,7 +673,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         const mods = this.item.system.modifications.filter((_, i) => i !== index);
         await this.item.update({ 'system.modifications': mods });
 
-        (ui.notifications as any).info(`${mod.name} removed.`);
+        ui.notifications.info(`${mod.name} removed.`);
     }
 
     /* -------------------------------------------- */
@@ -709,7 +709,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         const mods = [...this.item.system.modifications, modEntry];
         await this.item.update({ 'system.modifications': mods });
 
-        (ui.notifications as any).info(`${modItem.name} installed.`);
+        ui.notifications.info(`${modItem.name} installed.`);
         return true;
     }
 
@@ -728,7 +728,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         // Check weapon class restriction
         if (restrictions?.weaponClasses?.size > 0) {
             if (!restrictions.weaponClasses.has(weapon.class)) {
-                (ui.notifications as any).warn(`${modItem.name} cannot be installed on ${weapon.classLabel} weapons.`);
+                ui.notifications.warn(`${modItem.name} cannot be installed on ${weapon.classLabel} weapons.`);
                 return false;
             }
         }
@@ -736,14 +736,14 @@ export default class WeaponSheet extends ContainerItemSheet {
         // Check weapon type restriction
         if (restrictions?.weaponTypes?.size > 0) {
             if (!restrictions.weaponTypes.has(weapon.type)) {
-                (ui.notifications as any).warn(`${modItem.name} is not compatible with ${weapon.typeLabel} weapons.`);
+                ui.notifications.warn(`${modItem.name} is not compatible with ${weapon.typeLabel} weapons.`);
                 return false;
             }
         }
 
         // Check for duplicates
         if (weapon.modifications.some((m) => m.uuid === modItem.uuid)) {
-            (ui.notifications as any).info(`${modItem.name} is already installed.`);
+            ui.notifications.info(`${modItem.name} is already installed.`);
             return false;
         }
 
@@ -764,7 +764,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         const ammoItem = await fromUuid(ammoUuid);
         if (!ammoItem) {
-            (ui.notifications as any).error('Ammunition item not found');
+            ui.notifications.error('Ammunition item not found');
             return;
         }
 
@@ -894,14 +894,14 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         // Must use ammo
         if (!weapon.usesAmmo) {
-            (ui.notifications as any).warn('This weapon does not use ammunition');
+            ui.notifications.warn('This weapon does not use ammunition');
             return false;
         }
 
         // Check weapon type compatibility
         if (ammoItem.system.weaponTypes?.size > 0) {
             if (!ammoItem.system.weaponTypes.has(weapon.type)) {
-                (ui.notifications as any).warn(`${ammoItem.name} is not compatible with ${weapon.typeLabel} weapons`);
+                ui.notifications.warn(`${ammoItem.name} is not compatible with ${weapon.typeLabel} weapons`);
                 return false;
             }
         }

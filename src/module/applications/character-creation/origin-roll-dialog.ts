@@ -205,7 +205,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             await this.render();
         } catch (error) {
             console.error('Error rolling:', error);
-            (ui.notifications as any).error('Error rolling dice. Check console for details.');
+            ui.notifications.error('Error rolling dice. Check console for details.');
         }
     }
 
@@ -219,7 +219,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         event.preventDefault();
 
         if (!this.rollResult) {
-            (ui.notifications as any).warn('Please roll or input a value first!');
+            ui.notifications.warn('Please roll or input a value first!');
             return;
         }
 

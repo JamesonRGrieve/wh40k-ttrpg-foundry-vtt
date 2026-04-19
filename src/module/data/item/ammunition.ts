@@ -3,6 +3,7 @@ import IdentifierField from '../fields/identifier-field.ts';
 import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Data model for Ammunition items.
@@ -33,35 +34,34 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // What weapon types can use this ammo
-            weaponTypes: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: new Set() }),
+            weaponTypes: new fields.ObjectField({ required: true, initial: [] }),
 
             // Ammo modifiers (applied to weapon when loaded)
-            modifiers: new fields.SchemaField({
-                damage: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                penetration: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                range: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                rateOfFire: new fields.SchemaField({
-                    single: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                    semi: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                    full: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                }),
+            modifiers: new fields.ObjectField({
+                required: true,
+                initial: {
+                    damage: 0,
+                    penetration: 0,
+                    range: 0,
+                    rateOfFire: { single: 0, semi: 0, full: 0 },
+                },
             }),
 
             // Special qualities added by this ammo
-            addedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: new Set() }),
+            addedQualities: new fields.ObjectField({ required: true, initial: [] }),
 
             // Qualities removed by this ammo
-            removedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: new Set() }),
+            removedQualities: new fields.ObjectField({ required: true, initial: [] }),
 
             // Clip size modifier
-            clipModifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+            clipModifier: new fields.ObjectField({ required: true, initial: 0 }),
 
             // Effect description
-            effect: new fields.HTMLField({ required: false, blank: true }),
+            effect: new fields.ObjectField({ required: false, initial: '' }),
 
             // Notes & source
-            notes: new fields.StringField({ required: false, blank: true }),
-            source: new fields.StringField({ required: false, blank: true }),
+            notes: new fields.ObjectField({ required: false, initial: '' }),
+            source: new fields.ObjectField({ required: false, initial: '' }),
         };
     }
 
@@ -83,6 +83,37 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         delete source.damageModifier;
         delete source.penetrationModifier;
         delete source.specialRules;
+    }
+
+    /** @inheritdoc */
+    prepareBaseData(): void {
+        super.prepareBaseData();
+
+        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
+        const resolvedWeaponTypes = resolveLineVariant(this.weaponTypes as unknown, lineKey);
+        this.weaponTypes = new Set(Array.isArray(resolvedWeaponTypes) ? resolvedWeaponTypes : Array.from((resolvedWeaponTypes as Set<string>) ?? new Set()));
+
+        this.modifiers = foundry.utils.mergeObject(
+            {
+                damage: 0,
+                penetration: 0,
+                range: 0,
+                rateOfFire: { single: 0, semi: 0, full: 0 },
+            },
+            (resolveLineVariant(this.modifiers as unknown, lineKey) as Record<string, unknown>) ?? {},
+            { inplace: false },
+        ) as typeof this.modifiers;
+
+        const resolvedAdded = resolveLineVariant(this.addedQualities as unknown, lineKey);
+        this.addedQualities = new Set(Array.isArray(resolvedAdded) ? resolvedAdded : Array.from((resolvedAdded as Set<string>) ?? new Set()));
+
+        const resolvedRemoved = resolveLineVariant(this.removedQualities as unknown, lineKey);
+        this.removedQualities = new Set(Array.isArray(resolvedRemoved) ? resolvedRemoved : Array.from((resolvedRemoved as Set<string>) ?? new Set()));
+
+        this.clipModifier = Number(resolveLineVariant(this.clipModifier as unknown, lineKey) ?? 0);
+        this.effect = (resolveLineVariant(this.effect as unknown, lineKey) as string) ?? '';
+        this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
+        this.source = (resolveLineVariant(this.source as unknown, lineKey) as { book: string; page: string; custom: string }) ?? ({ book: '', page: '', custom: '' } as any);
     }
 
     /* -------------------------------------------- */

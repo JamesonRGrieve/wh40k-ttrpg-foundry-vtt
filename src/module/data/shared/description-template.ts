@@ -1,4 +1,5 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
+import { resolveLineVariant, inferActiveGameLine } from '../../utils/item-variant-utils.ts';
 
 /**
  * Template for items with descriptions and source references.
@@ -13,16 +14,8 @@ export default class DescriptionTemplate extends SystemDataModel {
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
-            description: new fields.SchemaField({
-                value: new fields.HTMLField({ required: true, initial: '' }),
-                chat: new fields.HTMLField({ required: false, initial: '' }),
-                summary: new fields.StringField({ required: false, blank: true, initial: '' }),
-            }),
-            source: new fields.SchemaField({
-                book: new fields.StringField({ required: false, blank: true, initial: '' }),
-                page: new fields.StringField({ required: false, blank: true, initial: '' }),
-                custom: new fields.StringField({ required: false, blank: true, initial: '' }),
-            }),
+            description: new fields.ObjectField({ required: true, initial: DescriptionTemplate.#emptyDescription() }),
+            source: new fields.ObjectField({ required: true, initial: DescriptionTemplate.#emptySource() }),
         };
     }
 
@@ -79,6 +72,22 @@ export default class DescriptionTemplate extends SystemDataModel {
         }
     }
 
+    static #emptyDescription(): Record<string, string> {
+        return {
+            value: '',
+            chat: '',
+            summary: '',
+        };
+    }
+
+    static #emptySource(): Record<string, string> {
+        return {
+            book: '',
+            page: '',
+            custom: '',
+        };
+    }
+
     /* -------------------------------------------- */
     /*  Data Cleaning                               */
     /* -------------------------------------------- */
@@ -91,6 +100,24 @@ export default class DescriptionTemplate extends SystemDataModel {
      */
     static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
+    }
+
+    /** @inheritdoc */
+    prepareBaseData(): void {
+        super.prepareBaseData();
+
+        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
+        const resolvedDescription = resolveLineVariant(this.description, lineKey) as Record<string, unknown>;
+        const resolvedSource = resolveLineVariant(this.source, lineKey) as Record<string, unknown>;
+
+        this.description = {
+            ...DescriptionTemplate.#emptyDescription(),
+            ...(resolvedDescription ?? {}),
+        };
+        this.source = {
+            ...DescriptionTemplate.#emptySource(),
+            ...(resolvedSource ?? {}),
+        };
     }
 
     /* -------------------------------------------- */

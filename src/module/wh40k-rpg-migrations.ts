@@ -8,7 +8,7 @@ export async function checkAndMigrateWorld() {
     const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
     // @ts-expect-error - comparison type
     if (worldVersion !== currentVersion && game.user.isGM) {
-        (ui.notifications as any).info('Upgrading the world, please wait...');
+        ui.notifications.info('Upgrading the world, please wait...');
 
         // Update Actors
         // @ts-expect-error - dynamic property access
@@ -38,7 +38,7 @@ export async function checkAndMigrateWorld() {
 
         // @ts-expect-error - argument type
         void game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, worldVersion);
-        (ui.notifications as any).info('Upgrade complete!');
+        ui.notifications.info('Upgrade complete!');
     }
 
     async function updateCompendiumPermissions(version) {

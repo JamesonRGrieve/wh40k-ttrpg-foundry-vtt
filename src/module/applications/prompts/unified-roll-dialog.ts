@@ -951,14 +951,14 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
         if (!actor) return;
         const sourceToken = actor.token ?? actor.getActiveTokens()[0];
         if (!sourceToken) {
-            (ui.notifications as any).warn('No token found for the attacking actor.');
+            ui.notifications.warn('No token found for the attacking actor.');
             return;
         }
 
         // Check for existing target
         const targets = game.user.targets;
         if (targets.size === 0) {
-            (ui.notifications as any).info('Target a token first, then click Select Target.');
+            ui.notifications.info('Target a token first, then click Select Target.');
             return;
         }
         const targetToken = [...targets.values()][0];
@@ -1136,7 +1136,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
 
     _validateWeaponRoll(): boolean {
         if (this.rollData.fireRate === 0) {
-            (ui.notifications as any).warn('Not enough ammo to perform action. Do you need to reload?');
+            ui.notifications.warn('Not enough ammo to perform action. Do you need to reload?');
             return false;
         }
         return true;
@@ -1144,11 +1144,11 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
 
     _validateForceFieldRoll(): boolean {
         if (!this.rollData.forceField?.system?.activated) {
-            (ui.notifications as any).warn('Force Field not activated!');
+            ui.notifications.warn('Force Field not activated!');
             return false;
         }
         if (this.rollData.forceField?.system?.overloaded) {
-            (ui.notifications as any).warn('Force Field currently overloaded!');
+            ui.notifications.warn('Force Field currently overloaded!');
             return false;
         }
         return true;

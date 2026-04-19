@@ -1725,7 +1725,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         // Find the actor's active token on the canvas
         const token = (this as any).actor.getActiveTokens()?.[0]?.document;
         if (!token) {
-            (ui.notifications as any).info(`${game.i18n.localize('WH40K.MOVEMENT.Label')}: No active token on canvas.`);
+            ui.notifications.info(`${game.i18n.localize('WH40K.MOVEMENT.Label')}: No active token on canvas.`);
             return;
         }
 
@@ -1735,7 +1735,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         const config = CONFIG.wh40k.movementTypes[movementType];
         const label = config ? game.i18n.localize(config.label) : movementType;
         const speed = (this as any).actor.system.movement[movementType];
-        (ui.notifications as any).info(`${label}: ${speed}m set as active movement mode.`);
+        ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
     }
 
     /* -------------------------------------------- */
@@ -2179,7 +2179,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         const shipChecks = panel.querySelectorAll('.wh40k-ship-storage .wh40k-transfer-check:checked');
 
         if (!backpackChecks.length && !shipChecks.length) {
-            (ui.notifications as any).warn('No items selected to transfer.');
+            ui.notifications.warn('No items selected to transfer.');
             return;
         }
 
@@ -2247,7 +2247,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
 
         const allChecks = panel.querySelectorAll('.wh40k-transfer-check:checked');
         if (!allChecks.length) {
-            (ui.notifications as any).warn('No items selected to give.');
+            ui.notifications.warn('No items selected to give.');
             return;
         }
 
@@ -2262,7 +2262,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         const targets = (game as any).actors.filter((a: any) => a.id !== sourceActor.id && a.isOwner);
 
         if (!targets.length) {
-            (ui.notifications as any).warn('No other actors available to give items to.');
+            ui.notifications.warn('No other actors available to give items to.');
             return;
         }
 
@@ -2303,7 +2303,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
 
         await targetActor.createEmbeddedDocuments('Item', itemsData);
         await sourceActor.deleteEmbeddedDocuments('Item', itemIds);
-        (ui.notifications as any).info(`Gave ${itemsData.length} item(s) to ${targetActor.name}.`);
+        ui.notifications.info(`Gave ${itemsData.length} item(s) to ${targetActor.name}.`);
     }
 
     /* -------------------------------------------- */
@@ -2666,10 +2666,10 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                 const gameSystem = (this as any)._gameSystemId || this.actor.system?.gameSystem || 'rt';
                 await game.wh40k.openOriginPathBuilder(this.actor, { gameSystem });
             } else {
-                (ui.notifications as any).warn(game.i18n.localize('WH40K.Utility.OriginPathNotAvailable'));
+                ui.notifications.warn(game.i18n.localize('WH40K.Utility.OriginPathNotAvailable'));
             }
         } catch (error) {
-            (ui.notifications as any).error(`${game.i18n.localize('WH40K.Utility.OriginPathError')}: ${error.message}`);
+            ui.notifications.error(`${game.i18n.localize('WH40K.Utility.OriginPathError')}: ${error.message}`);
             console.error('Origin Path Builder error:', error);
         }
     }
@@ -3063,7 +3063,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         await item.update({ 'system.level': newLevel });
 
         // Provide visual feedback
-        (ui.notifications as any).info(`${item.name} level ${delta > 0 ? 'increased' : 'decreased'} to ${newLevel}`);
+        ui.notifications.info(`${item.name} level ${delta > 0 ? 'increased' : 'decreased'} to ${newLevel}`);
     }
 
     /* -------------------------------------------- */

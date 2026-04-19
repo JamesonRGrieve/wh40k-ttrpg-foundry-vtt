@@ -320,7 +320,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
          */
         async enterWhatIfMode(): Promise<void> {
             if (this._whatIfActive) {
-                (ui.notifications as any).warn('Already in What-If mode');
+                ui.notifications.warn('Already in What-If mode');
                 return;
             }
 
@@ -331,7 +331,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
             // Re-render to show toolbar
             await this.render(false);
 
-            (ui.notifications as any).info('What-If mode activated - changes will be previewed');
+            ui.notifications.info('What-If mode activated - changes will be previewed');
         }
 
         /* -------------------------------------------- */
@@ -451,7 +451,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
             if (!this._whatIfActive) return;
 
             if (Object.keys(this._whatIfChanges).length === 0) {
-                (ui.notifications as any).warn('No changes to commit');
+                ui.notifications.warn('No changes to commit');
                 await this.exitWhatIfMode();
                 return;
             }
@@ -459,7 +459,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
             // Apply all changes
             await this.document.update(this._whatIfChanges);
 
-            (ui.notifications as any).info(`Committed ${Object.keys(this._whatIfChanges).length} changes`);
+            ui.notifications.info(`Committed ${Object.keys(this._whatIfChanges).length} changes`);
 
             // Exit What-If mode
             await this.exitWhatIfMode();
@@ -489,7 +489,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
 
             await this.exitWhatIfMode();
 
-            (ui.notifications as any).info('What-If mode cancelled - changes discarded');
+            ui.notifications.info('What-If mode cancelled - changes discarded');
         }
 
         /* -------------------------------------------- */

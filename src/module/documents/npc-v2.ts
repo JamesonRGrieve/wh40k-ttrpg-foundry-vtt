@@ -129,7 +129,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
     async rollCharacteristic(characteristicKey, flavor): Promise<void> {
         const char = this.system.characteristics[characteristicKey];
         if (!char) {
-            (ui.notifications as any).warn(`Unknown characteristic: ${characteristicKey}`);
+            ui.notifications.warn(`Unknown characteristic: ${characteristicKey}`);
             return;
         }
 
@@ -154,7 +154,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
         const weapons = this.system.weapons?.simple || [];
         const weapon = weapons[weaponIndex];
         if (!weapon) {
-            (ui.notifications as any).warn(`No weapon at index ${weaponIndex}`);
+            ui.notifications.warn(`No weapon at index ${weaponIndex}`);
             return;
         }
 
