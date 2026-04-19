@@ -1,5 +1,6 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
 import FormulaField from '../fields/formula-field.ts';
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Template for items that deal damage.
@@ -14,18 +15,8 @@ export default class DamageTemplate extends SystemDataModel {
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
-            damage: new fields.SchemaField({
-                // @ts-expect-error - argument count
-                formula: new FormulaField({ required: true, blank: true, initial: '' }),
-                type: new fields.StringField({
-                    required: true,
-                    initial: 'impact',
-                    choices: ['impact', 'rending', 'explosive', 'energy', 'fire', 'shock', 'cold', 'toxic'],
-                }),
-                bonus: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                penetration: new fields.NumberField({ required: true, initial: 0, integer: true, min: 0 }),
-            }),
-            special: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: [] }),
+            damage: new fields.ObjectField({ required: true, initial: DamageTemplate.#emptyDamage() }),
+            special: new fields.ObjectField({ required: true, initial: [] }),
         };
     }
 
@@ -53,6 +44,15 @@ export default class DamageTemplate extends SystemDataModel {
         }
     }
 
+    static #emptyDamage(): Record<string, unknown> {
+        return {
+            formula: '',
+            type: 'impact',
+            bonus: 0,
+            penetration: 0,
+        };
+    }
+
     /* -------------------------------------------- */
     /*  Data Cleaning                               */
     /* -------------------------------------------- */
@@ -65,6 +65,25 @@ export default class DamageTemplate extends SystemDataModel {
      */
     static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
+    }
+
+    /** @inheritdoc */
+    prepareBaseData(): void {
+        super.prepareBaseData();
+
+        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
+        const resolvedDamage = resolveLineVariant(this.damage, lineKey) as Record<string, unknown>;
+        const resolvedSpecial = resolveLineVariant(this.special, lineKey) as string[] | Set<string> | null;
+
+        this.damage = foundry.utils.mergeObject(DamageTemplate.#emptyDamage(), resolvedDamage ?? {}, { inplace: false }) as typeof this.damage;
+
+        if (resolvedSpecial instanceof Set) {
+            this.special = resolvedSpecial;
+        } else if (Array.isArray(resolvedSpecial)) {
+            this.special = new Set(resolvedSpecial);
+        } else {
+            this.special = new Set();
+        }
     }
 
     /* -------------------------------------------- */

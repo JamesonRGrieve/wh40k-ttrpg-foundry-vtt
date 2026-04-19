@@ -768,7 +768,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
         // Update the item
         await this.item.update(updateData);
-        (ui.notifications as any).info(`Updated ${this.item.name}`);
+        ui.notifications.info(`Updated ${this.item.name}`);
     }
 
     /**

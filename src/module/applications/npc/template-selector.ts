@@ -345,7 +345,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      */
     static async #onCreate(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.#selectedUuid) {
-            (ui.notifications as any).warn('Select a template first.');
+            ui.notifications.warn('Select a template first.');
             return;
         }
 
@@ -402,7 +402,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                     await actor.createEmbeddedDocuments('Item', itemsToCreate);
                 }
 
-                (ui.notifications as any).info(`Created NPC: ${actor.name}`);
+                ui.notifications.info(`Created NPC: ${actor.name}`);
                 actor.sheet.render(true);
 
                 this.#submitted = true;
@@ -411,7 +411,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             }
         } catch (err) {
             console.error('Failed to create NPC from template:', err);
-            (ui.notifications as any).error('Failed to create NPC from template');
+            ui.notifications.error('Failed to create NPC from template');
         }
     }
 

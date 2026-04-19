@@ -447,7 +447,7 @@ export class EventTracker {
     /** Open the tracker dialog. GM only. */
     static open(): void {
         if (!game.user.isGM) {
-            (ui.notifications as any).warn('Event Tracker is GM-only.');
+            ui.notifications.warn('Event Tracker is GM-only.');
             return;
         }
 

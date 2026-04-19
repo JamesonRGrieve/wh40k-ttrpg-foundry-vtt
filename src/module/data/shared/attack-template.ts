@@ -1,4 +1,5 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Template for items with attack capabilities.
@@ -18,29 +19,7 @@ export default class AttackTemplate extends SystemDataModel {
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
-            attack: new fields.SchemaField({
-                type: new fields.StringField({
-                    required: true,
-                    initial: 'melee',
-                    choices: ['melee', 'ranged', 'thrown', 'psychic'],
-                }),
-                characteristic: new fields.StringField({
-                    required: true,
-                    initial: 'weaponSkill',
-                    choices: ['weaponSkill', 'ballisticSkill', 'willpower', 'perception'],
-                }),
-                modifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                range: new fields.SchemaField({
-                    value: new fields.NumberField({ required: false, initial: 0, min: 0 }),
-                    units: new fields.StringField({ required: false, initial: 'm' }),
-                    special: new fields.StringField({ required: false, blank: true }),
-                }),
-                rateOfFire: new fields.SchemaField({
-                    single: new fields.BooleanField({ required: true, initial: true }),
-                    semi: new fields.NumberField({ required: true, initial: 0, min: 0 }),
-                    full: new fields.NumberField({ required: true, initial: 0, min: 0 }),
-                }),
-            }),
+            attack: new fields.ObjectField({ required: true, initial: AttackTemplate.#emptyAttack() }),
         };
     }
 
@@ -70,6 +49,24 @@ export default class AttackTemplate extends SystemDataModel {
         if (typeof rof.full === 'string') rof.full = Number(rof.full) || 0;
     }
 
+    static #emptyAttack(): Record<string, unknown> {
+        return {
+            type: 'melee',
+            characteristic: 'weaponSkill',
+            modifier: 0,
+            range: {
+                value: 0,
+                units: 'm',
+                special: '',
+            },
+            rateOfFire: {
+                single: true,
+                semi: 0,
+                full: 0,
+            },
+        };
+    }
+
     /* -------------------------------------------- */
     /*  Data Cleaning                               */
     /* -------------------------------------------- */
@@ -82,6 +79,16 @@ export default class AttackTemplate extends SystemDataModel {
      */
     static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
+    }
+
+    /** @inheritdoc */
+    prepareBaseData(): void {
+        super.prepareBaseData();
+
+        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
+        const resolvedAttack = resolveLineVariant(this.attack, lineKey) as Record<string, unknown>;
+
+        this.attack = foundry.utils.mergeObject(AttackTemplate.#emptyAttack(), resolvedAttack ?? {}, { inplace: false }) as typeof this.attack;
     }
 
     /* -------------------------------------------- */

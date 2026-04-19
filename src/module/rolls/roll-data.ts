@@ -276,7 +276,7 @@ export class WeaponRollData extends RollData {
                 const size = Number.parseInt(this.targetActor.system.size);
                 this.modifiers['target-size'] = (size - 4) * 10;
             } catch {
-                (ui.notifications as any).warn('Target size is not a number. Unexpected error.');
+                ui.notifications.warn('Target size is not a number. Unexpected error.');
             }
         }
 

@@ -4,6 +4,7 @@ import { bodyLocationsSchema } from '../shared/body-locations.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Data model for Armour items.
@@ -210,48 +211,35 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Armour classification
-            type: new fields.StringField({
-                required: true,
-                initial: 'flak',
-                choices: [
-                    'flak',
-                    'mesh',
-                    'carapace',
-                    'power',
-                    'light-power',
-                    'storm-trooper',
-                    'feudal-world',
-                    'primitive',
-                    'xenos',
-                    'void',
-                    'enforcer',
-                    'hostile-environment',
-                ],
-            }),
+            type: new fields.ObjectField({ required: true, initial: 'flak' }),
 
             // Armour points per location
-            armourPoints: bodyLocationsSchema(),
+            armourPoints: new fields.ObjectField({
+                required: true,
+                initial: {
+                    head: 0,
+                    leftArm: 0,
+                    rightArm: 0,
+                    body: 0,
+                    leftLeg: 0,
+                    rightLeg: 0,
+                },
+            }),
 
             // Coverage - which locations does this cover?
-            coverage: new fields.SetField(
-                new fields.StringField({
-                    required: true,
-                    choices: ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg', 'all'],
-                }),
-                { required: true, initial: new Set(['body']) },
-            ),
+            coverage: new fields.ObjectField({ required: true, initial: ['body'] }),
 
             // Maximum agility bonus while wearing
-            maxAgility: new fields.NumberField({ required: false, nullable: true, min: 0 }),
+            maxAgility: new fields.ObjectField({ required: false, initial: null }),
 
             // Special properties
-            properties: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: new Set() }),
+            properties: new fields.ObjectField({ required: true, initial: [] }),
 
             // Primitive armour flag
-            primitive: new fields.BooleanField({ required: true, initial: false }),
+            primitive: new fields.ObjectField({ required: true, initial: false }),
 
             // Notes
-            notes: new fields.StringField({ required: false, blank: true }),
+            notes: new fields.ObjectField({ required: false, initial: '' }),
 
             // Modifications
             modifications: new fields.ArrayField(
@@ -268,8 +256,40 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             ),
 
             // Number of modification slots
-            modificationSlots: new fields.NumberField({ required: true, initial: 2, min: 0, max: 10, integer: true }),
+            modificationSlots: new fields.ObjectField({ required: true, initial: 2 }),
         };
+    }
+
+    /** @inheritdoc */
+    prepareBaseData(): void {
+        super.prepareBaseData();
+
+        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
+        this.type = (resolveLineVariant(this.type, lineKey) as string) ?? 'flak';
+        this.armourPoints = foundry.utils.mergeObject(
+            {
+                head: 0,
+                leftArm: 0,
+                rightArm: 0,
+                body: 0,
+                leftLeg: 0,
+                rightLeg: 0,
+            },
+            (resolveLineVariant(this.armourPoints, lineKey) as Record<string, unknown>) ?? {},
+            { inplace: false },
+        ) as typeof this.armourPoints;
+
+        const resolvedCoverage = resolveLineVariant(this.coverage as unknown, lineKey);
+        this.coverage = new Set(Array.isArray(resolvedCoverage) ? resolvedCoverage : Array.from((resolvedCoverage as Set<string>) ?? new Set(['body'])));
+
+        this.maxAgility = (resolveLineVariant(this.maxAgility as unknown, lineKey) as number | null) ?? null;
+
+        const resolvedProperties = resolveLineVariant(this.properties as unknown, lineKey);
+        this.properties = new Set(Array.isArray(resolvedProperties) ? resolvedProperties : Array.from((resolvedProperties as Set<string>) ?? new Set()));
+
+        this.primitive = Boolean(resolveLineVariant(this.primitive as unknown, lineKey));
+        this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
+        this.modificationSlots = Number(resolveLineVariant(this.modificationSlots as unknown, lineKey) ?? 2);
     }
 
     /* -------------------------------------------- */

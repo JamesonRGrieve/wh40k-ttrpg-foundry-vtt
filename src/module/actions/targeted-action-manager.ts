@@ -43,18 +43,18 @@ export class TargetedActionManager {
         } else {
             const controlledObjects = game.canvas.tokens.controlledObjects;
             if (!controlledObjects || controlledObjects.size === 0) {
-                (ui.notifications as any).warn('You need to control a token!');
+                ui.notifications.warn('You need to control a token!');
                 return undefined;
             }
             if (controlledObjects.size > 1) {
-                (ui.notifications as any).warn('You need to control a single token! Multi-token support is not yet added.');
+                ui.notifications.warn('You need to control a single token! Multi-token support is not yet added.');
                 return undefined;
             }
             sourceToken = [...controlledObjects.values()][0];
         }
 
         if (sourceToken && !sourceToken.actor) {
-            (ui.notifications as any).warn('Token must be associated with an actor!');
+            ui.notifications.warn('Token must be associated with an actor!');
             return undefined;
         }
 
@@ -70,14 +70,14 @@ export class TargetedActionManager {
             const targetedObjects = game.user.targets;
             if (!targetedObjects || targetedObjects.size === 0) return undefined;
             if (targetedObjects.size > 1) {
-                (ui.notifications as any).warn('You need to target a single token! Multi-token targeting is not yet added.');
+                ui.notifications.warn('You need to target a single token! Multi-token targeting is not yet added.');
                 return undefined;
             }
             targetToken = [...targetedObjects.values()][0];
         }
 
         if (targetToken && !targetToken.actor) {
-            (ui.notifications as any).warn('Target token must be associated with an actor!');
+            ui.notifications.warn('Target token must be associated with an actor!');
             return undefined;
         }
 
@@ -114,7 +114,7 @@ export class TargetedActionManager {
         // Weapon
         const weapons = weapon ? [weapon] : rollData.actor.items.filter((item) => item.type === 'weapon').filter((item) => item.system.equipped);
         if (!weapons || weapons.length === 0) {
-            (ui.notifications as any).warn('Actor must have an equipped weapon!');
+            ui.notifications.warn('Actor must have an equipped weapon!');
             return;
         }
 
@@ -135,7 +135,7 @@ export class TargetedActionManager {
         // Powers
         const powers = psychicPower ? [psychicPower] : rollData.actor.items.filter((item) => item.type === 'psychicPower');
         if (!powers || powers.length === 0) {
-            (ui.notifications as any).warn('Actor must have psychic power!');
+            ui.notifications.warn('Actor must have psychic power!');
             return;
         }
 

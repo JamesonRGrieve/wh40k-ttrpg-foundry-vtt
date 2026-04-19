@@ -497,12 +497,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             : getNextCharacteristicCost(this.careerKey, charKey, currentAdvances);
 
         if (!nextCost) {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.Advancement.Error.MaxedOut'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Advancement.Error.MaxedOut'));
             return;
         }
 
         if (!canAfford(this.actor, nextCost.cost)) {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.Advancement.Error.CannotAfford'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Advancement.Error.CannotAfford'));
             return;
         }
 
@@ -521,7 +521,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // Spend XP
         const result = await spendXP(this.actor, nextCost.cost, `${charLabel} (${tierLabel})`);
         if (!result.success) {
-            (ui.notifications as any).error(result.error);
+            ui.notifications.error(result.error);
             return;
         }
 
@@ -538,7 +538,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         this.#recentPurchases.add(`char:${charKey}`);
 
         // Notify success
-        (ui.notifications as any).info(
+        ui.notifications.info(
             game.i18n.format('WH40K.Advancement.PurchasedCharacteristic', {
                 char: charLabel,
                 tier: tierLabel,
@@ -575,13 +575,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         // Validate
         if (!canAfford(this.actor, advance.cost)) {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.Advancement.Error.CannotAfford'));
+            ui.notifications.warn(game.i18n.localize('WH40K.Advancement.Error.CannotAfford'));
             return;
         }
 
         const prereqResult = checkPrerequisites(this.actor, advance.prerequisites ?? []);
         if (!prereqResult.valid) {
-            (ui.notifications as any).warn(
+            ui.notifications.warn(
                 game.i18n.format('WH40K.Advancement.Error.PrerequisitesNotMet', {
                     reasons: prereqResult.unmet.join(', '),
                 }),
@@ -601,7 +601,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         // Spend XP
         const result = await spendXP(this.actor, advance.cost, displayName);
         if (!result.success) {
-            (ui.notifications as any).error(result.error);
+            ui.notifications.error(result.error);
             return;
         }
 
@@ -617,7 +617,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         this.#recentPurchases.add(id);
 
         // Notify
-        (ui.notifications as any).info(
+        ui.notifications.info(
             game.i18n.format('WH40K.Advancement.Purchased', {
                 name: displayName,
                 cost: advance.cost,
@@ -769,6 +769,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
 
         // Not found
-        (ui.notifications as any).warn(game.i18n.format('WH40K.Advancement.ItemNotFound', { name: itemName }));
+        ui.notifications.warn(game.i18n.format('WH40K.Advancement.ItemNotFound', { name: itemName }));
     }
 }

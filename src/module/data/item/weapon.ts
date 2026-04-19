@@ -5,6 +5,7 @@ import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Data model for Weapon items.
@@ -55,49 +56,17 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Weapon classification (usage pattern only)
-            class: new fields.StringField({
-                required: true,
-                initial: 'melee',
-                choices: ['melee', 'pistol', 'basic', 'heavy', 'thrown', 'exotic'],
-            }),
+            class: new fields.ObjectField({ required: true, initial: 'melee' }),
 
-            type: new fields.StringField({
-                required: true,
-                initial: 'primitive',
-                choices: [
-                    'primitive',
-                    'las',
-                    'solid-projectile',
-                    'bolt',
-                    'melta',
-                    'plasma',
-                    'flame',
-                    'launcher',
-                    'explosive',
-                    'power',
-                    'chain',
-                    'shock',
-                    'force',
-                    'exotic',
-                    'xenos',
-                ],
-            }),
+            type: new fields.ObjectField({ required: true, initial: 'primitive' }),
 
             // Weapon properties
-            twoHanded: new fields.BooleanField({ required: true, initial: false }),
-            melee: new fields.BooleanField({ required: true, initial: false }),
+            twoHanded: new fields.ObjectField({ required: true, initial: false }),
+            melee: new fields.ObjectField({ required: true, initial: false }),
 
             // Ammunition
-            clip: new fields.SchemaField({
-                max: new fields.NumberField({ required: true, initial: 0, min: 0 }),
-                value: new fields.NumberField({ required: true, initial: 0, min: 0 }),
-                type: new fields.StringField({ required: false, blank: true }),
-            }),
-            reload: new fields.StringField({
-                required: true,
-                initial: '-',
-                choices: ['-', 'free', 'half', 'full', '2-full', '3-full'],
-            }),
+            clip: new fields.ObjectField({ required: true, initial: { max: 0, value: 0, type: '' } }),
+            reload: new fields.ObjectField({ required: true, initial: '-' }),
 
             // Loaded ammunition (reference to ammunition item)
             loadedAmmo: new fields.SchemaField(
@@ -145,10 +114,10 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             ),
 
             // Required training (for future talent integration)
-            requiredTraining: new fields.StringField({ required: false, blank: true }),
+            requiredTraining: new fields.ObjectField({ required: false, initial: '' }),
 
             // Notes
-            notes: new fields.StringField({ required: false, blank: true }),
+            notes: new fields.ObjectField({ required: false, initial: '' }),
         };
     }
 
@@ -221,6 +190,23 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
 
         // Aggregate modifiers from modifications (when they're active)
         this._aggregateModificationModifiers();
+    }
+
+    /** @inheritdoc */
+    prepareBaseData(): void {
+        super.prepareBaseData();
+
+        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
+        this.class = (resolveLineVariant(this.class, lineKey) as string) ?? 'melee';
+        this.type = (resolveLineVariant(this.type, lineKey) as string) ?? 'primitive';
+        this.twoHanded = Boolean(resolveLineVariant(this.twoHanded, lineKey));
+        this.melee = Boolean(resolveLineVariant(this.melee, lineKey));
+        this.clip = foundry.utils.mergeObject({ max: 0, value: 0, type: '' }, (resolveLineVariant(this.clip, lineKey) as Record<string, unknown>) ?? {}, {
+            inplace: false,
+        }) as typeof this.clip;
+        this.reload = (resolveLineVariant(this.reload as unknown, lineKey) as string) ?? '-';
+        this.requiredTraining = (resolveLineVariant(this.requiredTraining as unknown, lineKey) as string) ?? '';
+        this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
     }
 
     /**
@@ -998,7 +984,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     async loadAmmo(ammoItem): Promise<any> {
         if (!ammoItem || ammoItem.type !== 'ammunition') {
-            (ui.notifications as any).warn('Invalid ammunition item');
+            ui.notifications.warn('Invalid ammunition item');
             return this.parent;
         }
 
@@ -1036,7 +1022,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             'system.clip.value': roundsToLoad,
         });
 
-        (ui.notifications as any).info(`${ammoItem.name} loaded into ${this.parent.name} (${roundsToLoad} rounds)`);
+        ui.notifications.info(`${ammoItem.name} loaded into ${this.parent.name} (${roundsToLoad} rounds)`);
         return this.parent;
     }
 
@@ -1046,7 +1032,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     async ejectAmmo(): Promise<any> {
         if (!this.hasLoadedAmmo) {
-            (ui.notifications as any).warn('No ammunition loaded');
+            ui.notifications.warn('No ammunition loaded');
             return this.parent;
         }
 
@@ -1068,7 +1054,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             'system.clip.value': 0,
         });
 
-        (ui.notifications as any).info(`Ammunition ejected from ${this.parent.name}`);
+        ui.notifications.info(`Ammunition ejected from ${this.parent.name}`);
         return this.parent;
     }
 

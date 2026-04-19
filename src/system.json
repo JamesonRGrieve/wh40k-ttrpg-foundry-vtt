@@ -49,7 +49,11 @@
             "ow-vehicle": { "htmlFields": ["details.biography"] },
             "dw-character": { "htmlFields": ["details.biography"] },
             "dw-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
-            "dw-vehicle": { "htmlFields": ["details.biography"] }
+            "dw-vehicle": { "htmlFields": ["details.biography"] },
+            "character": { "htmlFields": ["details.biography"] },
+            "npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
+            "vehicle": { "htmlFields": ["details.biography"] },
+            "starship": { "htmlFields": ["details.biography"] }
         },
         "Item": {
             "ammunition": {

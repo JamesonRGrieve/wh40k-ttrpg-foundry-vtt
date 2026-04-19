@@ -310,7 +310,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
                 item.sheet.render(true);
             }
         } catch {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.ItemNotFound'));
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.ItemNotFound'));
         }
     }
 

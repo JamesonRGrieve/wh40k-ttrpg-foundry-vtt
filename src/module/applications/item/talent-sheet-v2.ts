@@ -757,13 +757,13 @@ export default class TalentSheetV2 extends BaseItemSheet {
      */
     static async #rollTalent(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.item.system.isRollable) {
-            (ui.notifications as any).warn('This talent cannot be rolled.');
+            ui.notifications.warn('This talent cannot be rolled.');
             return;
         }
 
         const actor = this.item.actor;
         if (!actor) {
-            (ui.notifications as any).warn('This talent must be on an actor to roll.');
+            ui.notifications.warn('This talent must be on an actor to roll.');
             return;
         }
 

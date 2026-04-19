@@ -190,7 +190,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
         }
 
         if (!effectData) {
-            (ui.notifications as any).warn('WH40K.ActiveEffect.InvalidData');
+            ui.notifications.warn('WH40K.ActiveEffect.InvalidData');
             return this.resolve(null);
         }
 
