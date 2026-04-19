@@ -48,7 +48,8 @@
                     </div>
                     {{/if}}
 
-                    {{!-- Fatigue --}}
+                    {{#unless isNPC}}
+                    {{!-- Fatigue (PC-only) --}}
                     <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5">
                         <span class="wh40k-vital-icon"><i class="fas fa-bolt"></i></span>
                         <span class="wh40k-vital-label">Fatigue</span>
@@ -68,7 +69,7 @@
                         {{/if}}
                     </div>
 
-                    {{!-- Lift & Push --}}
+                    {{!-- Lift & Push (PC-only) --}}
                     <div class="wh40k-vital-row tw-flex tw-items-center tw-justify-between tw-py-0.5">
                         <span class="tw-flex tw-items-center tw-gap-1.5">
                             <span class="wh40k-vital-icon"><i class="fas fa-dumbbell"></i></span>
@@ -81,7 +82,7 @@
                         </span>
                     </div>
 
-                    {{!-- Fate Points --}}
+                    {{!-- Fate Points (PC-only) --}}
                     {{#if (gt system.fate.max 0)}}
                     <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5">
                         <span class="wh40k-vital-icon"><i class="fas fa-star"></i></span>
@@ -102,9 +103,11 @@
                         </button>
                     </div>
                     {{/if}}
+                    {{/unless}}
                 </div>
 
-                {{!-- Mental State (compact) --}}
+                {{#unless isNPC}}
+                {{!-- Mental State (compact) — PC-only (NPC schema has no corruption/insanity) --}}
                 <div class="wh40k-zone-subsection">
                     <div class="wh40k-mental-row">
                         <span class="wh40k-mental-label-group">
@@ -139,6 +142,7 @@
                         <span class="wh40k-mental-degree {{insanityDegreeClass system.insanity}}">{{insanityDegree system.insanity}}</span>
                     </div>
                 </div>
+                {{/unless}}
             </div>
 
             {{!-- Active Effects --}}
@@ -260,7 +264,8 @@
                 </div>
             </div>
 
-            {{!-- Progression --}}
+            {{#unless isNPC}}
+            {{!-- Progression (XP) — PC-only --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-progression">
                 <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
                     <div class="wh40k-xp-ring-header" data-tooltip="{{#if system.experience.total}}{{floor (multiply (divide system.experience.used system.experience.total) 100)}}{{else}}0{{/if}}% XP spent ({{system.experience.used}}/{{system.experience.total}})">
@@ -291,6 +296,32 @@
                     </div>
                 </div>
             </div>
+            {{/unless}}
+            {{#if isNPC}}
+            {{!-- NPC summary panel in the progression slot --}}
+            <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-progression">
+                <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
+                    <i class="fa-solid fa-skull"></i>
+                    <span>Threat — {{threatTier.label}}</span>
+                </div>
+                <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
+                    <div class="wh40k-xp-row">
+                        <span class="wh40k-xp-label">Threat Level</span>
+                        <span class="wh40k-xp-value" style="color: {{threatTier.color}};">{{source.threatLevel}}/30</span>
+                    </div>
+                    <div class="wh40k-xp-row">
+                        <span class="wh40k-xp-label">Type / Role</span>
+                        <span class="wh40k-xp-value">{{source.type}} / {{source.role}}</span>
+                    </div>
+                    {{#if horde.enabled}}
+                    <div class="wh40k-xp-row">
+                        <span class="wh40k-xp-label">Magnitude</span>
+                        <span class="wh40k-xp-value">{{horde.magnitude}}/{{horde.magnitudeMax}}</span>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            {{/if}}
 
 
         </div>
@@ -406,7 +437,8 @@
                 </div>
             </div>
 
-            {{!-- Resources --}}
+            {{#unless isNPC}}
+            {{!-- Resources (Influence / Requisition / Gelt) — PC-only --}}
             <div class="wh40k-dashboard-zone tw-flex tw-flex-col tw-overflow-hidden wh40k-zone-resources">
                 <div class="wh40k-zone-header tw-flex tw-items-center tw-gap-1.5 tw-py-1.5 tw-px-2.5">
                     <i class="fas fa-coins"></i>
@@ -453,6 +485,7 @@
                     </div>
                 </div>
             </div>
+            {{/unless}}
         </div>
 
     </div>

@@ -12,6 +12,7 @@
                         <span class="wh40k-header-label">{{localize "WH40K.Character.Name"}}</span>
                         <input class="wh40k-header-input wh40k-name-input" name="name" type="text" value="{{actor.name}}" />
                     </div>
+                    {{#unless isNPC}}
                     <div class="wh40k-header-row wh40k-player-row">
                         <span class="wh40k-header-label">{{localize "WH40K.Character.Player"}}</span>
                         <input class="wh40k-header-input wh40k-player-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" />
@@ -28,6 +29,30 @@
                         <span class="wh40k-header-label">{{localize "WH40K.Character.Rank"}}</span>
                         <input class="wh40k-header-input wh40k-rank-input" name="system.rank" type="number" value="{{system.rank}}" placeholder="Rank" />
                     </div>
+                    {{/unless}}
+                    {{#if isNPC}}
+                    <div class="wh40k-header-row wh40k-threat-row">
+                        <span class="wh40k-header-label"><i class="fa-solid fa-skull"></i> Threat</span>
+                        <input class="wh40k-header-input wh40k-threat-input" name="system.threatLevel" type="number" min="1" max="30" value="{{source.threatLevel}}" style="border-color: {{threatTier.color}};" />
+                        <span class="wh40k-header-value wh40k-threat-tier" style="color: {{threatTier.color}};">{{threatTier.label}}</span>
+                    </div>
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">Type</span>
+                        <select class="wh40k-header-input" name="system.type">
+                            {{selectOptions npcTypeOptions selected=source.type}}
+                        </select>
+                    </div>
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">Role</span>
+                        <select class="wh40k-header-input" name="system.role">
+                            {{selectOptions npcRoleOptions selected=source.role}}
+                        </select>
+                    </div>
+                    <div class="wh40k-header-row">
+                        <span class="wh40k-header-label">Faction</span>
+                        <input class="wh40k-header-input" name="system.faction" type="text" value="{{source.faction}}" placeholder="Faction" />
+                    </div>
+                    {{/if}}
                 </div>
             </div>
         </div>
@@ -39,8 +64,8 @@
                         {{#unless (eq name "influence")}}
                         <div class="wh40k-char-hud-item {{#if (gt this.modifier 0)}}wh40k-char-buffed{{/if}}{{#if (lt this.modifier 0)}}wh40k-char-debuffed{{/if}}"
                              data-characteristic="{{name}}"
-                             data-advance="{{this.advance}}"
-                             style="--advance-progress: {{divide this.advance 5}};">
+                             data-advance="{{#if this.advance}}{{this.advance}}{{else}}0{{/if}}"
+                             style="--advance-progress: {{#if this.advance}}{{divide this.advance 5}}{{else}}0{{/if}};">
                             <button
                                 class="wh40k-char-hud-name roll-characteristic actor-drag"
                                 type="button"
