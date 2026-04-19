@@ -1,0 +1,36 @@
+{{! Ammo Picker Dialog Template }}
+{{! Allows selecting ammunition type for weapon reload }}
+
+<div class="ammo-picker-content">
+    <p class="ammo-picker-header">Select ammunition to load into <strong>{{weaponName}}</strong> (Clip: {{clipMax}})</p>
+
+    <div class="ammo-picker-list">
+        {{#each ammoItems as |ammo|}}
+        <label class="ammo-picker-option {{#if ammo.isCurrentlyLoaded}}ammo-picker-option--current{{/if}}" data-uuid="{{ammo.uuid}}">
+            <input type="radio" name="selectedAmmo" value="{{ammo.uuid}}" {{#if @first}}checked{{/if}} />
+            <img class="ammo-picker-icon" src="{{ammo.img}}" alt="{{ammo.name}}" width="32" height="32" />
+            <div class="ammo-picker-details">
+                <span class="ammo-picker-name">
+                    {{ammo.name}}
+                    {{#if ammo.isCurrentlyLoaded}}<span class="ammo-picker-badge">loaded</span>{{/if}}
+                </span>
+                <span class="ammo-picker-info">
+                    <span class="ammo-picker-qty">{{ammo.quantity}} rounds</span>
+                    {{#if ammo.modifierSummary}}<span class="ammo-picker-mods">{{ammo.modifierSummary}}</span>{{/if}}
+                </span>
+            </div>
+        </label>
+        {{/each}}
+    </div>
+
+    <footer class="form-footer">
+        <button type="button" class="dialog-button cancel" data-action="cancel">
+            <i class="fas fa-times"></i>
+            Cancel
+        </button>
+        <button type="button" class="dialog-button confirm" data-action="selectAmmo" autofocus>
+            <i class="fas fa-arrow-up-from-bracket"></i>
+            Load
+        </button>
+    </footer>
+</div>

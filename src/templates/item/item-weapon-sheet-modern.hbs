@@ -150,7 +150,7 @@
             <i class="fa-solid fa-gun"></i>
           </div>
           <div class="wh40k-iconic-stat__content">
-            <span class="wh40k-iconic-stat__value">{{system.clip.value}}/{{system.clip.max}}</span>
+            <span class="wh40k-iconic-stat__value">{{system.clip.value}}/{{system.effectiveClipMax}}</span>
             <span class="wh40k-iconic-stat__label">Clip</span>
           </div>
           <div class="wh40k-iconic-stat__progress" style="--progress: {{system.ammoPercentage}}%"></div>
@@ -159,7 +159,7 @@
         
         {{!-- Reload Action Card (if owned by actor and uses ammo) --}}
         {{#if isOwnedByActor}}
-        <div class="wh40k-iconic-stat wh40k-iconic-stat--action wh40k-iconic-stat--reload wh40k-iconic-stat--small {{#if (eq system.clip.value system.clip.max)}}wh40k-iconic-stat--disabled{{/if}}"
+        <div class="wh40k-iconic-stat wh40k-iconic-stat--action wh40k-iconic-stat--reload wh40k-iconic-stat--small {{#if (eq system.clip.value system.effectiveClipMax)}}wh40k-iconic-stat--disabled{{/if}}"
              data-action="reload"
              data-tooltip="Reload ({{system.reloadLabel}})">
           <div class="wh40k-iconic-stat__shape">
