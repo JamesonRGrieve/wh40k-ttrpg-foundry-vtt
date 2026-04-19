@@ -40,13 +40,13 @@
                 gap: var(--wh40k-space-md);
                 padding: var(--wh40k-space-md);
                 background: var(--color-bg-secondary);
-                border-radius: 8px;
+                border-radius: var(--wh40k-radius-lg);
                 margin-bottom: var(--wh40k-space-lg);
 
                 .wh40k-token-image {
                     width: 60px;
                     height: 60px;
-                    border-radius: 8px;
+                    border-radius: var(--wh40k-radius-lg);
                     border: 2px solid var(--color-border-secondary);
                     object-fit: cover;
                 }
@@ -86,7 +86,7 @@
                     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
                     background: var(--color-bg-secondary);
                     border: 2px solid var(--color-border-secondary);
-                    border-radius: 4px;
+                    border-radius: var(--wh40k-radius-md);
                     color: var(--color-text-light-primary);
                     font-family: inherit;
                     transition: all var(--wh40k-transition-base);
@@ -155,7 +155,7 @@
                 padding: var(--wh40k-space-md);
                 background: var(--color-bg-secondary);
                 border: 2px solid var(--color-border-secondary);
-                border-radius: 8px;
+                border-radius: var(--wh40k-radius-lg);
                 cursor: pointer;
                 transition: all var(--wh40k-transition-base);
 
@@ -251,7 +251,7 @@
                 padding: var(--wh40k-space-md);
                 background: var(--color-bg-secondary);
                 border: 2px solid var(--color-border-secondary);
-                border-radius: 8px;
+                border-radius: var(--wh40k-radius-lg);
                 transition: all var(--wh40k-transition-base);
 
                 &:hover {
@@ -306,7 +306,7 @@
         // Common Elements
         .wh40k-badge {
             padding: 4px 12px;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
@@ -339,7 +339,7 @@
             align-items: center;
             gap: var(--wh40k-space-sm);
             padding: var(--wh40k-space-sm) var(--wh40k-space-lg);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;

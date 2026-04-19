@@ -34,7 +34,7 @@
         justify-content: center;
         background: var(--wh40k-btn-bg);
         border: 2px solid var(--wh40k-fatigue-border);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         font-size: 1.1rem;
         font-weight: 700;
         cursor: pointer;
@@ -169,7 +169,7 @@
             color: var(--wh40k-text-muted);
             background: var(--wh40k-panel-bg-solid);
             padding: 1px 3px;
-            border-radius: 2px;
+            border-radius: var(--wh40k-radius-sm);
             border: 1px solid var(--wh40k-border-color-light);
         }
         // Fatigue uses skills-themed threshold colors
@@ -289,7 +289,7 @@
         padding: var(--wh40k-space-sm) var(--wh40k-space-md);
         background: var(--wh40k-panel-bg-solid);
         border: 2px solid var(--wh40k-border-color-light);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         font-size: 0.8rem;
         font-weight: 700;
         cursor: pointer;
@@ -349,7 +349,7 @@
         padding: var(--wh40k-space-md);
         background: var(--wh40k-panel-bg-translucent);
         border: 1px solid var(--wh40k-border-color-light);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         margin-bottom: var(--wh40k-space-sm);
 
         &:last-child {
@@ -391,7 +391,7 @@
         padding: var(--wh40k-space-sm);
         background: var(--wh40k-panel-bg);
         border: 2px solid var(--wh40k-border-color-light);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         cursor: pointer;
         transition: all var(--wh40k-transition-base);
 
@@ -445,7 +445,7 @@
         padding: var(--wh40k-space-sm);
         background: var(--wh40k-success-bg);
         border-left: 3px solid rgba(74, 143, 92, 0.4);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.75rem;
         color: var(--wh40k-text-medium);
 
@@ -474,7 +474,7 @@
     .wh40k-edit-field {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
     }
     .wh40k-edit-label {
         font-size: 0.7rem;
@@ -545,7 +545,7 @@
         padding: var(--wh40k-space-sm);
         background: var(--wh40k-fatigue-bg);
         border-left: 3px solid var(--wh40k-fatigue-border);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         > i {
             color: var(--wh40k-fatigue-secondary);

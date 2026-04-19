@@ -34,7 +34,7 @@
 .wh40k-gear-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 12px;
     background: linear-gradient(135deg, var(--wh40k-equipment-bg) 0%, transparent 100%);
     border-bottom: 2px solid var(--wh40k-equipment-border);
@@ -127,9 +127,9 @@
 .wh40k-gear-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 3px 8px;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -197,7 +197,7 @@
     min-width: 60px;
     padding: 8px 6px;
     background: var(--wh40k-panel-bg);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border: 1px solid var(--wh40k-border-color-light);
 
     &__icon {
@@ -307,7 +307,7 @@
 
     &::-webkit-scrollbar-thumb {
         background: var(--wh40k-border-color);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         &:hover {
             background: var(--wh40k-gold-dark);
@@ -337,7 +337,7 @@
     &__header {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         padding: 10px 12px;
         background: linear-gradient(135deg, var(--wh40k-accent-overlay) 0%, transparent 100%);
         border-bottom: 1px solid var(--wh40k-border-color-light);
@@ -360,9 +360,9 @@
     &__badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         padding: 3px 8px;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.7rem;
         font-weight: 600;
 
@@ -405,7 +405,7 @@
 
 .wh40k-consumable-actions {
     display: flex;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     margin-top: 10px;
 }
 
@@ -416,7 +416,7 @@
 .wh40k-gear-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
 
     @media (max-width: 600px) {
         grid-template-columns: 1fr;
@@ -426,7 +426,7 @@
 .wh40k-gear-column {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
 }
 
 // ============================================
@@ -475,17 +475,17 @@
 .wh40k-checkbox-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-checkbox {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 6px;
     cursor: pointer;
     transition: background var(--wh40k-transition-base);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     &:hover {
         background: var(--wh40k-panel-bg-translucent);
@@ -521,7 +521,7 @@
 .wh40k-field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     margin-bottom: 8px;
 
     &:last-child {
@@ -542,7 +542,7 @@
         padding: 6px 10px;
         background: var(--wh40k-input-bg);
         border: 1px solid var(--wh40k-border-color-light);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-family: inherit;
         font-size: 0.85rem;
         color: var(--wh40k-text-dark);
@@ -570,7 +570,7 @@
 .wh40k-field-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     margin-bottom: 8px;
 
     @media (max-width: 500px) {

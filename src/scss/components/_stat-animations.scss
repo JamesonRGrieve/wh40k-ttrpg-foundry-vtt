@@ -54,7 +54,7 @@
         text-shadow: none;
     }
     50% {
-        color: #d4af37;
+        color: $wh40k-color-gold;
         text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
     }
 }
@@ -282,7 +282,7 @@ input[type='text'].stat-value,
 
 .wh40k-brief-notification {
     padding: 6px 12px;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.85em;
     font-weight: 600;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -373,7 +373,7 @@ input[type='text'].stat-value,
 
     &.derived-stat-changed {
         animation: pulse-glow 0.8s ease-out;
-        color: var(--wh40k-gold, #d4af37);
+        color: var(--wh40k-gold, $wh40k-color-gold);
     }
 }
 

@@ -26,13 +26,13 @@
                 gap: var(--wh40k-space-md);
                 padding: var(--wh40k-space-md);
                 background: var(--color-bg-secondary);
-                border-radius: 8px;
+                border-radius: var(--wh40k-radius-lg);
             }
 
             .wh40k-token-image {
                 width: 60px;
                 height: 60px;
-                border-radius: 8px;
+                border-radius: var(--wh40k-radius-lg);
                 border: 2px solid var(--color-border-secondary);
                 object-fit: cover;
             }
@@ -59,7 +59,7 @@
                 background: #9c27b0;
                 color: white;
                 padding: 2px 8px;
-                border-radius: 4px;
+                border-radius: var(--wh40k-radius-md);
                 font-size: 0.7rem;
                 font-weight: 700;
                 text-transform: uppercase;
@@ -91,7 +91,7 @@
                 font-weight: 700;
                 background: var(--color-bg-secondary);
                 border: 2px solid var(--color-border-secondary);
-                border-radius: 4px;
+                border-radius: var(--wh40k-radius-md);
                 color: var(--color-text-light-primary);
                 transition: all var(--wh40k-transition-base);
 
@@ -143,7 +143,7 @@
                 gap: var(--wh40k-space-sm);
                 padding: var(--wh40k-space-sm);
                 background: var(--color-bg-secondary);
-                border-radius: 4px;
+                border-radius: var(--wh40k-radius-md);
 
                 .wh40k-avatar {
                     width: 36px;
@@ -179,7 +179,7 @@
                 align-items: center;
                 padding: var(--wh40k-space-md);
                 background: var(--color-bg-secondary);
-                border-radius: 8px;
+                border-radius: var(--wh40k-radius-lg);
                 border: 2px solid var(--color-border-secondary);
 
                 .wh40k-stat-label {
@@ -249,7 +249,7 @@
                     width: 100%;
                     height: 30px;
                     background: var(--color-bg-secondary);
-                    border-radius: 4px;
+                    border-radius: var(--wh40k-radius-md);
                     overflow: hidden;
                     border: 2px solid var(--color-border-secondary);
                 }
@@ -274,7 +274,7 @@
                 align-items: center;
                 padding: var(--wh40k-space-lg);
                 background: var(--color-bg-secondary);
-                border-radius: 8px;
+                border-radius: var(--wh40k-radius-lg);
                 margin-bottom: var(--wh40k-space-lg);
 
                 .wh40k-ratio-value {
@@ -292,7 +292,7 @@
 
             .wh40k-difficulty-result {
                 padding: var(--wh40k-space-lg);
-                border-radius: 8px;
+                border-radius: var(--wh40k-radius-lg);
                 border: 3px solid;
                 margin-bottom: var(--wh40k-space-lg);
                 text-align: center;
@@ -300,7 +300,7 @@
                 .wh40k-difficulty-badge {
                     display: inline-block;
                     padding: var(--wh40k-space-sm) var(--wh40k-space-lg);
-                    border-radius: 8px;
+                    border-radius: var(--wh40k-radius-lg);
                     font-size: 1.4rem;
                     font-weight: 700;
                     text-transform: uppercase;
@@ -342,7 +342,7 @@
                     gap: var(--wh40k-space-sm);
                     padding: var(--wh40k-space-sm);
                     background: var(--color-bg-secondary);
-                    border-radius: 4px;
+                    border-radius: var(--wh40k-radius-md);
                     flex-wrap: wrap;
 
                     .wh40k-scale-dot {

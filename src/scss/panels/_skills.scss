@@ -26,7 +26,7 @@
 .wh40k-skill-row {
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     &:hover {
         background: var(--color-bg-tertiary);
@@ -62,7 +62,7 @@
     .wh40k-skill-label {
         display: inline-flex;
         align-items: baseline;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         line-height: 1;
         font-family: var(--wh40k-font-body);
     }
@@ -112,13 +112,13 @@
 
 .wh40k-skill-row .wh40k-spec-training {
     background: var(--color-bg-secondary);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border: 1px solid var(--color-border-tertiary);
 }
 
 .wh40k-training-display {
     background: var(--color-bg-secondary);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border: 1px solid var(--color-border-tertiary);
 
     .wh40k-train-indicator {

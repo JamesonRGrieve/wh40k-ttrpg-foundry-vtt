@@ -70,11 +70,11 @@
 
 .wh40k-equipment-legend {
     display: grid;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-equipment) r g b / 0.12)'}, rgba(255, 255, 255, 0.6));
     border: 1px solid #{'rgb(from var(--wh40k-accent-equipment) r g b / 0.25)'};
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     color: var(--color-text-secondary);
 }
 

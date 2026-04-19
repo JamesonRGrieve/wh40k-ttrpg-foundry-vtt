@@ -30,7 +30,7 @@
             right: -8px;
             width: 36px;
             height: 36px;
-            background: linear-gradient(135deg, #d4af37 0%, #b8962f 100%);
+            background: linear-gradient(135deg, $wh40k-color-gold 0%, #b8962f 100%);
             border: 2px solid #2c2417;
             border-radius: 50%;
             display: flex;
@@ -65,7 +65,7 @@
 
         i {
             font-size: 0.9rem;
-            color: #d4af37;
+            color: $wh40k-color-gold;
         }
 
         &--restrictions {
@@ -73,7 +73,7 @@
             background: rgba(52, 152, 219, 0.1);
 
             i {
-                color: #3498db;
+                color: $wh40k-accent-info;
             }
         }
 
@@ -82,7 +82,7 @@
             background: rgba(46, 204, 113, 0.1);
 
             i {
-                color: #2ecc71;
+                color: $wh40k-accent-green-bright;
             }
         }
     }
@@ -108,7 +108,7 @@
         padding: 0.875rem 1rem;
         background: rgba(255, 255, 255, 0.03);
         border: 2px solid rgba(212, 197, 166, 0.2);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         cursor: pointer;
         transition: all var(--wh40k-transition-base);
         user-select: none;
@@ -119,7 +119,7 @@
             height: 20px;
             margin: 0;
             cursor: pointer;
-            accent-color: #d4af37;
+            accent-color: $wh40k-color-gold;
         }
 
         .wh40k-restriction-label {
@@ -135,7 +135,7 @@
             top: 6px;
             right: 6px;
             font-size: 0.75rem;
-            color: #d4af37;
+            color: $wh40k-color-gold;
             opacity: 0;
             transition: opacity var(--wh40k-transition-base);
         }
@@ -152,7 +152,7 @@
 
         &.selected {
             background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
-            border-color: #d4af37;
+            border-color: $wh40k-color-gold;
             box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
             .wh40k-restriction-label {
@@ -169,7 +169,7 @@
                     display: block;
                     width: 100%;
                     height: 100%;
-                    background: #d4af37;
+                    background: $wh40k-color-gold;
                 }
             }
         }
@@ -178,8 +178,8 @@
     .wh40k-help-text {
         padding: 0.75rem 1rem;
         background: rgba(52, 152, 219, 0.1);
-        border-left: 3px solid #3498db;
-        border-radius: 4px;
+        border-left: 3px solid $wh40k-accent-info;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.85rem;
         color: rgba(255, 255, 255, 0.7);
         margin-bottom: 1rem;
@@ -198,7 +198,7 @@
         padding: 1.25rem;
         background: rgba(255, 255, 255, 0.02);
         border: 1px solid rgba(212, 197, 166, 0.15);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         margin-bottom: 1rem;
         transition: all var(--wh40k-transition-base);
 
@@ -220,7 +220,7 @@
 
             i {
                 font-size: 1.5rem;
-                color: #d4af37;
+                color: $wh40k-color-gold;
             }
         }
 
@@ -257,12 +257,12 @@
             background: rgba(212, 175, 55, 0.1);
             border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 6px;
-            color: #d4af37;
+            color: $wh40k-color-gold;
             cursor: pointer;
             transition: all var(--wh40k-transition-fast);
 
             &:hover:not(:disabled) {
-                background: #d4af37;
+                background: $wh40k-color-gold;
                 border-color: #e5c558;
                 color: #2c2417;
                 transform: scale(1.05);
@@ -292,11 +292,11 @@
             color: rgba(255, 255, 255, 0.9);
 
             &.positive {
-                color: #2ecc71;
+                color: $wh40k-accent-green-bright;
             }
 
             &.negative {
-                color: #e74c3c;
+                color: $wh40k-accent-red;
             }
         }
 
@@ -314,7 +314,7 @@
 
             &:focus {
                 outline: none;
-                border-color: #d4af37;
+                border-color: $wh40k-color-gold;
                 box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
             }
         }
@@ -335,7 +335,7 @@
     .wh40k-properties-column {
         background: rgba(255, 255, 255, 0.02);
         border: 1px solid rgba(212, 197, 166, 0.15);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         overflow: hidden;
 
         &--added {
@@ -344,7 +344,7 @@
                 border-bottom: 2px solid rgba(46, 204, 113, 0.3);
 
                 i {
-                    color: #2ecc71;
+                    color: $wh40k-accent-green-bright;
                 }
             }
         }
@@ -355,7 +355,7 @@
                 border-bottom: 2px solid rgba(231, 76, 60, 0.3);
 
                 i {
-                    color: #e74c3c;
+                    color: $wh40k-accent-red;
                 }
             }
         }
@@ -405,11 +405,11 @@
         }
 
         &--added {
-            border-left: 3px solid #2ecc71;
+            border-left: 3px solid $wh40k-accent-green-bright;
         }
 
         &--removed {
-            border-left: 3px solid #e74c3c;
+            border-left: 3px solid $wh40k-accent-red;
         }
 
         .wh40k-property-info {
@@ -440,14 +440,14 @@
             justify-content: center;
             background: rgba(231, 76, 60, 0.1);
             border: 1px solid rgba(231, 76, 60, 0.3);
-            border-radius: 4px;
-            color: #e74c3c;
+            border-radius: var(--wh40k-radius-md);
+            color: $wh40k-accent-red;
             cursor: pointer;
             opacity: 0.6;
             transition: all var(--wh40k-transition-fast);
 
             &:hover:not(:disabled) {
-                background: #e74c3c;
+                background: $wh40k-accent-red;
                 border-color: #e98b80;
                 color: #fff;
                 opacity: 1;
@@ -487,7 +487,7 @@
 
             &:focus {
                 outline: none;
-                border-color: #d4af37;
+                border-color: $wh40k-color-gold;
                 box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
             }
         }
@@ -498,7 +498,7 @@
             background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
             border: 1px solid rgba(212, 175, 55, 0.4);
             border-radius: 6px;
-            color: #d4af37;
+            color: $wh40k-color-gold;
             font-weight: 600;
             font-size: 0.9rem;
             cursor: pointer;
@@ -509,7 +509,7 @@
             gap: 0.5rem;
 
             &:hover:not(:disabled) {
-                background: #d4af37;
+                background: $wh40k-color-gold;
                 border-color: #e5c558;
                 color: #2c2417;
                 transform: translateY(-1px);
@@ -555,7 +555,7 @@
             border-radius: 6px;
 
             &:focus-within {
-                border-color: #d4af37;
+                border-color: $wh40k-color-gold;
                 box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
             }
         }
@@ -575,7 +575,7 @@
 
         &:focus {
             outline: none;
-            border-color: #d4af37;
+            border-color: $wh40k-color-gold;
             box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
         }
 
@@ -621,7 +621,7 @@
 
             &:focus {
                 outline: none;
-                border-color: #d4af37;
+                border-color: $wh40k-color-gold;
                 box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
             }
         }

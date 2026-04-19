@@ -11,7 +11,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 10px 12px 6px;
     border-bottom: 1px solid var(--wh40k-border-color-light);
 }
@@ -38,7 +38,7 @@
 
 .wh40k-vitals-body {
     display: grid;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 8px 12px 12px;
 }
 
@@ -46,7 +46,7 @@
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-bar-btn {
@@ -112,7 +112,7 @@
     display: grid;
     gap: 2px;
     height: 26px;
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color);
     overflow: hidden;
@@ -206,12 +206,12 @@
 .wh40k-vitals-edit {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-vitals-field {
     display: grid;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-vitals-label {
@@ -371,7 +371,7 @@
     height: 24px;
     background: var(--wh40k-btn-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
@@ -435,7 +435,7 @@
 
 .wh40k-crit-bar {
     display: flex;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     margin-bottom: 8px;
 }
 
@@ -444,7 +444,7 @@
     height: 12px;
     background: var(--wh40k-shadow-soft);
     border: 1px solid rgba(139, 0, 0, 0.3);
-    border-radius: 2px;
+    border-radius: var(--wh40k-radius-sm);
     transition: all var(--wh40k-transition-base);
     cursor: pointer;
 
@@ -509,7 +509,7 @@
 .wh40k-fatigue-warning {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 8px 12px;
     margin-top: 10px;
     background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.2));
@@ -540,7 +540,7 @@
 .wh40k-fatigue-info {
     padding: 10px;
     background: var(--wh40k-shadow-soft);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     margin-top: 10px;
 }
 

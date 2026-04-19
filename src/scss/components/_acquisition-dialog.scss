@@ -32,7 +32,7 @@
         padding: 0.75rem;
         background: rgba(0, 0, 0, 0.3);
         border: 1px solid var(--wh40k-bronze);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         .item-icon {
             width: 48px;
@@ -72,7 +72,7 @@
         padding: 0.75rem;
         background: rgba(212, 175, 55, 0.1);
         border: 2px solid var(--wh40k-gold);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         .final {
             font-size: 1.2rem;

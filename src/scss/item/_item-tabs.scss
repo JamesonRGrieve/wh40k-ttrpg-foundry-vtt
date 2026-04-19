@@ -89,7 +89,7 @@
 
     &::-webkit-scrollbar-thumb {
         background: var(--wh40k-border-color);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         &:hover {
             background: var(--wh40k-gold-dark);

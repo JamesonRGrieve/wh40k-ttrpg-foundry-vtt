@@ -82,7 +82,7 @@
 .wh40k-wrapper .wh40k-skills-panel .wh40k-skill-label {
     display: inline-flex;
     align-items: baseline;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     line-height: 1;
 }
 
@@ -179,7 +179,7 @@
 // Portrait container — sizing is in Tailwind, only visual styling here
 .wh40k-portrait-container {
     &:hover .wh40k-portrait {
-        border-color: var(--wh40k-gold, #d4af37);
+        border-color: var(--wh40k-gold, $wh40k-color-gold);
         box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
     }
 }
@@ -192,13 +192,13 @@
 .csd-resource-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
 }
 
 .csd-resource-item {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 8px 12px;
     background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.2));
     border-radius: var(--wh40k-radius-md, 6px);
@@ -226,14 +226,14 @@
 .csd-resource-value {
     font-size: 1.4rem;
     font-weight: bold;
-    color: var(--wh40k-gold, #d4af37);
+    color: var(--wh40k-gold, $wh40k-color-gold);
 }
 
 .csd-divination {
     .csd-divination-result {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
     }
 
     .csd-divination-text {
@@ -252,7 +252,7 @@
 
     .csd-divination-actions {
         display: flex;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
     }
 }
 
@@ -269,13 +269,13 @@
 
     &:focus {
         outline: none;
-        border-bottom-color: var(--wh40k-gold, #d4af37);
+        border-bottom-color: var(--wh40k-gold, $wh40k-color-gold);
     }
 }
 
 // Origin builder btn — sizing/position in Tailwind, visual only here
 .wh40k-origin-builder-btn {
-    color: var(--wh40k-gold, #d4af37);
+    color: var(--wh40k-gold, $wh40k-color-gold);
 
     &:hover {
         color: #f0d060;
@@ -356,8 +356,8 @@
 
     &:focus {
         outline: none;
-        border-bottom-color: var(--wh40k-gold, #d4af37);
-        box-shadow: 0 1px 0 var(--wh40k-gold, #d4af37);
+        border-bottom-color: var(--wh40k-gold, $wh40k-color-gold);
+        box-shadow: 0 1px 0 var(--wh40k-gold, $wh40k-color-gold);
     }
 }
 

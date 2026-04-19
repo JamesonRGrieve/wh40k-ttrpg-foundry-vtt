@@ -147,7 +147,7 @@
         background: rgba(201, 162, 39, 0.1);
         border: 2px solid rgba(201, 162, 39, 0.4);
         border-radius: 50%;
-        color: #c9a227;
+        color: $wh40k-color-gold;
         cursor: pointer;
         transition: all var(--wh40k-transition-base);
         flex-shrink: 0;
@@ -159,7 +159,7 @@
 
         &:hover {
             background: rgba(201, 162, 39, 0.25);
-            border-color: #c9a227;
+            border-color: $wh40k-color-gold;
             transform: scale(1.1);
             box-shadow: 0 2px 6px rgba(201, 162, 39, 0.3);
         }
@@ -177,7 +177,7 @@
         padding: var(--wh40k-space-md);
         background: var(--wh40k-panel-bg-translucent);
         border: 1px solid var(--wh40k-border-color-light);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         margin-bottom: var(--wh40k-space-sm);
 
         &:last-child {
@@ -208,7 +208,7 @@
     .wh40k-edit-field {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
     }
     .wh40k-edit-label {
         font-size: 0.7rem;
@@ -257,7 +257,7 @@
         padding: var(--wh40k-space-sm);
         background: rgba(192, 128, 32, 0.08);
         border-left: 3px solid rgba(192, 128, 32, 0.4);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         > i {
             color: #c08020;

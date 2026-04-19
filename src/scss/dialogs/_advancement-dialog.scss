@@ -53,7 +53,7 @@ $adv-transition-normal: 250ms ease;
 .wh40k-adv__xp-bar {
     height: 8px;
     background: rgba(0, 0, 0, 0.4);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
     position: relative;
 }
@@ -61,7 +61,7 @@ $adv-transition-normal: 250ms ease;
 .wh40k-adv__xp-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--wh40k-color-gold-dark), var(--wh40k-color-gold));
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     transition: width 0.5s ease-out;
     position: relative;
 
@@ -260,7 +260,7 @@ $adv-transition-normal: 250ms ease;
 .wh40k-adv__char-card {
     background: $adv-card-bg;
     border: 1px solid $adv-card-border;
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     padding: 0.75rem;
     display: flex;
     flex-direction: column;
@@ -368,7 +368,7 @@ $adv-transition-normal: 250ms ease;
     padding: 0.4rem 0.6rem;
     background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(139, 112, 21, 0.3));
     border: 1px solid var(--wh40k-color-gold-dark);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-color-gold-light);
     font-size: 0.75rem;
     cursor: pointer;
@@ -407,7 +407,7 @@ $adv-transition-normal: 250ms ease;
 .wh40k-adv__char-status {
     font-size: 0.75rem;
     padding: 0.3rem 0.5rem;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     display: flex;
     align-items: center;
     gap: 0.3rem;
@@ -543,7 +543,7 @@ $adv-transition-normal: 250ms ease;
     padding: 0.4rem 0.8rem;
     background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(139, 112, 21, 0.3));
     border: 1px solid var(--wh40k-color-gold-dark);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-color-gold-light);
     font-size: 0.8rem;
     font-weight: 600;

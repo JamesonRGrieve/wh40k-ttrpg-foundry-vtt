@@ -34,7 +34,7 @@
 .wh40k-cybernetic-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 12px;
     background: linear-gradient(135deg, rgba(128, 128, 128, 0.15) 0%, transparent 100%);
     border-bottom: 2px solid rgba(128, 128, 128, 0.4);
@@ -127,9 +127,9 @@
 .wh40k-cybernetic-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 3px 8px;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -197,7 +197,7 @@
     min-width: 60px;
     padding: 8px 6px;
     background: var(--wh40k-panel-bg);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border: 1px solid var(--wh40k-border-color-light);
 
     &__icon {
@@ -307,7 +307,7 @@
 
     &::-webkit-scrollbar-thumb {
         background: var(--wh40k-border-color);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         &:hover {
             background: var(--wh40k-gold-dark);
@@ -337,7 +337,7 @@
     &__header {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         padding: 10px 12px;
         background: linear-gradient(135deg, var(--wh40k-accent-overlay) 0%, transparent 100%);
         border-bottom: 1px solid var(--wh40k-border-color-light);
@@ -360,9 +360,9 @@
     &__badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         padding: 3px 8px;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.7rem;
         font-weight: 600;
         background: var(--wh40k-panel-bg-translucent);
@@ -394,7 +394,7 @@
 .wh40k-location-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-location-toggle {

@@ -62,14 +62,14 @@
 .wh40k-vital-bar {
     height: 8px;
     background: var(--color-bg-tertiary);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
     position: relative;
 }
 
 .wh40k-vital-bar-fill {
     height: 100%;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     transition: width var(--wh40k-transition-medium);
 }
 
@@ -174,7 +174,7 @@
 .wh40k-vital-edit-field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-edit-label {
@@ -185,7 +185,7 @@
     color: var(--color-text-secondary);
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 }
 
 // Vital input extends the unified numeric input
@@ -220,7 +220,7 @@
     padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
     background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.08)'};
     border-left: 3px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.4)'};
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: var(--wh40k-text-tiny, 0.7rem);
     color: var(--color-text-secondary);
 
@@ -314,7 +314,7 @@
 .wh40k-checkbox-field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-checkbox-wrapper {

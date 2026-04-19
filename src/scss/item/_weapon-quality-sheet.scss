@@ -33,7 +33,7 @@
 .wh40k-quality-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 12px;
     background: linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, transparent 100%);
     border-bottom: 2px solid rgba(249, 115, 22, 0.3);
@@ -122,9 +122,9 @@
 .wh40k-quality-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 3px 8px;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -164,7 +164,7 @@
     min-width: 80px;
     padding: 8px 6px;
     background: var(--wh40k-panel-bg);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border: 1px solid var(--wh40k-border-color-light);
 
     &__icon {
@@ -257,7 +257,7 @@
 
     &::-webkit-scrollbar-thumb {
         background: var(--wh40k-border-color);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         &:hover {
             background: var(--wh40k-gold-dark);
@@ -287,7 +287,7 @@
     &__header {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         padding: 10px 12px;
         background: linear-gradient(135deg, var(--wh40k-accent-overlay) 0%, transparent 100%);
         border-bottom: 1px solid var(--wh40k-border-color-light);
@@ -340,7 +340,7 @@
 .wh40k-field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     margin-bottom: 12px;
 
     &:last-child {
@@ -361,7 +361,7 @@
         padding: 6px 10px;
         background: var(--wh40k-input-bg);
         border: 1px solid var(--wh40k-border-color-light);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-family: inherit;
         font-size: 0.85rem;
         color: var(--wh40k-text-dark);
@@ -390,10 +390,10 @@
         label {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--wh40k-space-sm);
             padding: 6px;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             text-transform: none;
             transition: background var(--wh40k-transition-base);
 
@@ -413,7 +413,7 @@
 .wh40k-field-row {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     margin-bottom: 12px;
 
     @media (max-width: 500px) {
@@ -430,7 +430,7 @@
     padding: 10px;
     background: rgba(59, 130, 246, 0.08);
     border-left: 3px solid rgba(59, 130, 246, 0.5);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.85rem;
     line-height: 1.5;
     color: var(--wh40k-text-medium);

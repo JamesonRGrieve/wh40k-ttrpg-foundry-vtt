@@ -125,7 +125,7 @@
 .wh40k-config-field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 
     label {
         font-size: 0.7rem;
@@ -165,7 +165,7 @@
 .wh40k-origin-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 4px 10px;
     border-radius: var(--wh40k-radius-sm);
     font-size: 0.75rem;
@@ -340,7 +340,7 @@
 .wh40k-section-title {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     font-size: 1rem;
     font-weight: 700;
     font-family: var(--wh40k-font-heading);
@@ -374,7 +374,7 @@
 .wh40k-char-field {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 8px 10px;
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
@@ -443,7 +443,7 @@
 .wh40k-bonus-label-inline {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     cursor: pointer;
     font-size: 0.85rem;
     color: var(--color-text-primary);
@@ -557,9 +557,9 @@
     }
 
     &--plus20 {
-        background: rgba(#27ae60, 0.15);
-        border: 1px solid rgba(#27ae60, 0.3);
-        color: #2ecc71;
+        background: #{'rgb(from var(--wh40k-accent-green) r g b / 0.15)'};
+        border: 1px solid #{'rgb(from var(--wh40k-accent-green) r g b / 0.3)'};
+        color: var(--wh40k-accent-green-bright);
     }
 }
 
@@ -656,7 +656,7 @@
 .wh40k-requirement-tag {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 8px 12px;
     border-radius: var(--wh40k-radius-sm);
     font-size: 0.85rem;
@@ -667,12 +667,12 @@
     }
 
     &--required {
-        background: rgba(#27ae60, 0.1);
-        border: 1px solid rgba(#27ae60, 0.3);
-        color: #2ecc71;
+        background: #{'rgb(from var(--wh40k-accent-green) r g b / 0.1)'};
+        border: 1px solid #{'rgb(from var(--wh40k-accent-green) r g b / 0.3)'};
+        color: var(--wh40k-accent-green-bright);
 
         i {
-            color: #27ae60;
+            color: var(--wh40k-accent-green);
         }
     }
 
@@ -701,7 +701,7 @@
 .wh40k-choice-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 4px 10px;
     border-radius: var(--wh40k-radius-sm);
     font-size: 0.75rem;
@@ -751,7 +751,7 @@
 .wh40k-choice-option {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 8px 12px;
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-light);
