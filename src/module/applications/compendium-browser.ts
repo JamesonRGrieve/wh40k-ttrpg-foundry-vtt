@@ -11,7 +11,6 @@ const { ApplicationV2 } = foundry.applications.api;
  * Compendium browser for browsing and filtering WH40K system compendiums.
  */
 export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
-    [key: string]: any;
     constructor(options: Record<string, unknown> = {}) {
         // @ts-expect-error - argument count
         super(options);

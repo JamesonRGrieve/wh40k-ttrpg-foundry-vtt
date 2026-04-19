@@ -15,8 +15,6 @@ import BaseActorSheet from './base-actor-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class VehicleSheet extends BaseActorSheet {
-    [key: string]: any;
-
     declare actor: WH40KVehicle;
     declare document: WH40KVehicle;
 

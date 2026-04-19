@@ -8,7 +8,6 @@ import ContainerItemSheet from './container-item-sheet.ts';
  * Sheet for armour items with support for armour modifications.
  */
 export default class ArmourSheet extends ContainerItemSheet {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour'],

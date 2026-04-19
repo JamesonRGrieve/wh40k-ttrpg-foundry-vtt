@@ -9,7 +9,6 @@ import BaseRollDialog from './base-roll-dialog.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class WeaponAttackDialog extends BaseRollDialog {
-    [key: string]: any;
     /**
      * @param {WeaponActionData} weaponActionData  The weapon action data.
      * @param {object} [options={}]                Dialog options.

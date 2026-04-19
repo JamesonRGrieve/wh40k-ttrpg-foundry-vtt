@@ -6,7 +6,6 @@
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class BasicRollWH40K extends Roll {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */

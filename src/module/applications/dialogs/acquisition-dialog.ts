@@ -16,8 +16,6 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class AcquisitionDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */

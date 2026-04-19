@@ -129,7 +129,6 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     // CollapsiblePanelMixin static action handlers
     static _onTogglePanel: (event: Event, target: HTMLElement) => Promise<void>;
     static _onApplyPreset: (event: Event, target: HTMLElement) => Promise<void>;
-    [key: string]: any;
 
     constructor(...args: any[]) {
         super(...(args as []));

@@ -10,7 +10,6 @@ import ContainerItemSheet from './container-item-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class ArmourModSheet extends ContainerItemSheet {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'armour-modification'],

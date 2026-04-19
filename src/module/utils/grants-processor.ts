@@ -24,7 +24,6 @@ export const GRANT_MODE = {
  * Context object for grant processing
  */
 class GrantContext {
-    [key: string]: any;
     constructor(actor, options: any = {}) {
         this.actor = actor;
         this.mode = options.mode || GRANT_MODE.IMMEDIATE;
@@ -50,7 +49,6 @@ class GrantContext {
 }
 
 export class GrantsProcessor {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Main Entry Points                           */
     /* -------------------------------------------- */
@@ -922,7 +920,7 @@ export async function handleGrantRemoval(item, actor) {
     const itemNames = grantedItems.map((i) => i.name).join(', ');
     const content = `
     <p><strong>${item.name}</strong> granted the following abilities:</p>
-    <p style="margin-left: 1em; color: #c9a227;">${itemNames}</p>
+    <p style="margin-left: 1em; color: #d4af37;">${itemNames}</p>
     <p>Do you want to remove these granted abilities as well?</p>
   `;
 

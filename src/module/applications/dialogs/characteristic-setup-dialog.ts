@@ -31,8 +31,6 @@ const GENERATION_CHARACTERISTICS = [
 const DEFAULT_BASE = 25;
 
 export default class CharacteristicSetupDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */

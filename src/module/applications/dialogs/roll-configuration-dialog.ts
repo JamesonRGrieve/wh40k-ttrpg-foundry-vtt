@@ -13,8 +13,6 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class RollConfigurationDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
