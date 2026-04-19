@@ -33,8 +33,11 @@
 //           .wh40k-btn-minus, .wh40k-btn-plus, .wh40k-quick-action-btn,
 //           .wh40k-control-button, .wh40k-header-btn, .wh40k-add-btn-small, etc.
 
-// Base button reset and shared styles
-%wh40k-btn-base {
+// Shared button base styles (grouped selector replaces %wh40k-btn-base placeholder)
+.wh40k-btn-primary,
+.wh40k-btn-control,
+.wh40k-btn-icon,
+.wh40k-btn-quick {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -84,7 +87,6 @@
 // PRIMARY BUTTON - Major actions (roll, use, activate)
 // ----------------------------------------
 .wh40k-btn-primary {
-    @extend %wh40k-btn-base;
     padding: 6px 12px;
     background: linear-gradient(135deg, var(--wh40k-gold) 0%, var(--wh40k-gold-dark) 100%);
     border: 1px solid var(--wh40k-gold-dark);
@@ -139,7 +141,6 @@
 // CONTROL BUTTON - Stat adjustments (±), toggle, edit
 // ----------------------------------------
 .wh40k-btn-control {
-    @extend %wh40k-btn-base;
     width: 28px;
     height: 28px;
     border-radius: 6px;
@@ -192,7 +193,6 @@
 // ICON BUTTON - Config, delete, expand, collapse
 // ----------------------------------------
 .wh40k-btn-icon {
-    @extend %wh40k-btn-base;
     width: 22px;
     height: 22px;
     background: transparent;
@@ -257,7 +257,6 @@
 // QUICK ACTION BUTTON - Rest, clear, restore, etc.
 // ----------------------------------------
 .wh40k-btn-quick {
-    @extend %wh40k-btn-base;
     flex: 1;
     padding: 6px 10px;
     font-size: var(--wh40k-font-size-xs);
@@ -332,8 +331,12 @@
 // Replaces: .wh40k-edit-input, .wh40k-vital-input, .wh40k-field-input,
 //           .wh40k-xp-input, .wh40k-critical-input, .wh40k-bio-input, etc.
 
-// Base input styles
-%wh40k-input-base {
+// Shared input base styles (grouped selector replaces %wh40k-input-base placeholder)
+.wh40k-input,
+.wh40k-input-numeric,
+.wh40k-input-inline,
+.wh40k-select,
+.wh40k-textarea {
     width: 100%;
     padding: 4px 8px;
     background: var(--wh40k-input-bg);
@@ -372,8 +375,6 @@
 // STANDARD INPUT - Default text/number input
 // ----------------------------------------
 .wh40k-input {
-    @extend %wh40k-input-base;
-
     // Compact variant
     &--compact {
         padding: 2px 6px;
@@ -391,7 +392,6 @@
 // NUMERIC INPUT - Numbers with special styling
 // ----------------------------------------
 .wh40k-input-numeric {
-    @extend %wh40k-input-base;
     width: auto;
     min-width: 50px;
     max-width: 80px;
@@ -434,7 +434,6 @@
 // INLINE INPUT - Transparent, underline style
 // ----------------------------------------
 .wh40k-input-inline {
-    @extend %wh40k-input-base;
     background: transparent;
     border: none;
     border-bottom: 1px solid var(--wh40k-border-color-light);
@@ -463,7 +462,6 @@
 // SELECT INPUT - Dropdown styling
 // ----------------------------------------
 .wh40k-select {
-    @extend %wh40k-input-base;
     appearance: none;
     cursor: pointer;
     padding-right: 24px;
@@ -480,7 +478,6 @@
 // TEXTAREA - Multi-line input
 // ----------------------------------------
 .wh40k-textarea {
-    @extend %wh40k-input-base;
     resize: vertical;
     min-height: 60px;
     line-height: 1.4;
