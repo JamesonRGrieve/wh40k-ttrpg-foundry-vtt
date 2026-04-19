@@ -660,9 +660,11 @@ export class HooksManager {
             DHCombatActionManager.disableHooks();
         }
 
-        // One-time migration: rewrite any persisted sheetClass flag pointing at
-        // the renamed NPCSheetV2 class so existing NPC actor sheets reopen cleanly.
+        // Legacy migration carried over from the last sheet rename.
         await HooksManager._migrateNPCSheetClassFlag();
+        // (system, kind) type split — retype any actors still on the legacy
+        // `character` / `npc` / `vehicle` / `starship` types.
+        await HooksManager._migrateLegacyActorTypes();
     }
 
     /**
@@ -684,6 +686,82 @@ export class HooksManager {
             await Actor.updateDocuments(updates);
             (game as any).wh40k?.log?.(`Migrated ${updates.length} NPC sheetClass flag(s) from NPCSheetV2 to NPCSheet.`);
         }
+    }
+
+    /**
+     * Retype every actor still on the legacy 4 types (character/npc/vehicle/
+     * starship) to the new (system, kind) concrete type, inferring the system
+     * from the actor's stored `system.gameSystem` (default: dh2e). Foundry
+     * doesn't support changing `type` in place — we recreate each actor with
+     * the new type and copy forward items, effects, flags, token data, then
+     * delete the original. Runs once per world startup, gated by a world
+     * setting so existing worlds migrate exactly once.
+     */
+    static async _migrateLegacyActorTypes() {
+        const SETTING_KEY = 'migration-actor-types-v1-complete';
+        // @ts-expect-error - setting argument typing
+        const already = game.settings.settings.has(`${SYSTEM_ID}.${SETTING_KEY}`);
+        if (!already) {
+            // Register the flag setting on the fly.
+            (game.settings as any).register(SYSTEM_ID, SETTING_KEY, {
+                name: 'Actor Type Migration v1 Complete',
+                scope: 'world',
+                config: false,
+                type: Boolean,
+                default: false,
+            });
+        }
+        const done = (game.settings as any).get(SYSTEM_ID, SETTING_KEY) as boolean | undefined;
+        if (done) return;
+        if (!(game.user as any)?.isGM) return; // Only the GM runs migrations.
+
+        const LEGACY = new Set(['character', 'npc', 'vehicle', 'starship']);
+        const targets = Array.from((game as any).actors ?? []).filter((a: any) => LEGACY.has(a.type));
+        if (!targets.length) {
+            await (game.settings as any).set(SYSTEM_ID, SETTING_KEY, true);
+            return;
+        }
+
+        const inferSystem = (a: any): string => {
+            const raw = a.system?.gameSystem;
+            if (!raw || typeof raw !== 'string') return 'dh2';
+            return raw === 'dh2e' ? 'dh2' : raw === 'dh1e' ? 'dh1' : raw;
+        };
+
+        let migrated = 0;
+        for (const actor of targets) {
+            try {
+                const sys = inferSystem(actor);
+                const newType = `${sys}-${actor.type}`;
+                // Build a payload that preserves everything Foundry will accept
+                // on a fresh actor document.
+                const source = actor.toObject();
+                delete source._id;
+                source.type = newType;
+                // Preserve items (item collection is embedded)
+                const created = await (Actor as any).create(source, { keepId: false });
+                if (created) {
+                    // Remap token references in scenes pointing at the old actor id.
+                    for (const scene of (game as any).scenes ?? []) {
+                        const tokenUpdates: any[] = [];
+                        for (const token of scene.tokens ?? []) {
+                            if (token.actorId === actor.id) {
+                                tokenUpdates.push({ _id: token.id, actorId: created.id });
+                            }
+                        }
+                        if (tokenUpdates.length > 0) {
+                            await (scene as any).updateEmbeddedDocuments('Token', tokenUpdates);
+                        }
+                    }
+                    await actor.delete();
+                    migrated++;
+                }
+            } catch (err) {
+                (game as any).wh40k?.error?.(`Migration failed for actor ${actor.name} (${actor.id}):`, err);
+            }
+        }
+        (game as any).wh40k?.log?.(`Retyped ${migrated} legacy actor(s) to new (system, kind) types.`);
+        await (game.settings as any).set(SYSTEM_ID, SETTING_KEY, true);
     }
 
     static hotbarDrop(bar, data, slot) {
