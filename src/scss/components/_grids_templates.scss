@@ -57,7 +57,7 @@
 
 %grid-row {
     display: grid;
-    border-bottom: $grid-border;
+    border-bottom: 1px solid var(--color-border-primary);
 }
 
 %grid-row--unknown {
@@ -68,7 +68,7 @@
 %grid-row--inverted {
     @extend %grid-row;
     border-bottom: 0;
-    border-top: $grid-border;
+    border-top: 1px solid var(--color-border-primary);
 }
 
 %grid-row-head {
@@ -85,7 +85,7 @@
 }
 
 %grid-cell {
-    border-right: $grid-border !important;
+    border-right: 1px solid var(--color-border-primary) !important;
     overflow: hidden;
 
     input[type='number'] {
@@ -117,7 +117,7 @@
 }
 
 %grid-cell--description {
-    border-top: $grid-border-description;
+    border-top: 1px dotted var(--color-border-secondary);
     grid-column: 1 / -1;
     font-size: 0.95em;
     font-style: italic;

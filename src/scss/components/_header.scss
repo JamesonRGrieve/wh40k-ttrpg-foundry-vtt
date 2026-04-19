@@ -46,7 +46,7 @@
         flex-flow: row nowrap;
         align-items: baseline;
         min-width: 0;
-        border-bottom: $grid-border;
+        border-bottom: 1px solid var(--color-border-primary);
 
         &--age,
         &--gender,
@@ -97,7 +97,7 @@
     &__title {
         flex-shrink: 0;
         margin: auto;
-        padding: $margin-small;
+        padding: 0.25rem;
         font-size: $h1-size;
         //font-weight: bold;
         text-align: center;

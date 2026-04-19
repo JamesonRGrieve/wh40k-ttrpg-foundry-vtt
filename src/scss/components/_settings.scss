@@ -1,8 +1,8 @@
 .rt {
     &-settings {
-        padding-top: $margin-general;
-        padding-bottom: $margin-general;
-        border-top: $grid-border-settings;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-top: 2px dashed var(--color-border-tertiary);
         background: rgba(195, 223, 241, 0.125);
         grid-column: 1 / -1;
         display: grid;
@@ -13,8 +13,8 @@
         input.wh40k-settings__input[type='number'],
         textarea.wh40k-settings__textarea,
         select.wh40k-settings__select {
-            background-color: $form-input-background;
-            color: $form-input-foreground;
+            background-color: var(--color-bg-option);
+            color: var(--color-text-primary);
             border-radius: 3px;
             text-align: center;
         }
@@ -31,7 +31,7 @@
                 &__row--xlarge,
                 &__row--large,
                 &__row {
-                    border-bottom: 1px solid $border-color;
+                    border-bottom: 1px solid var(--color-border-primary);
                 }
             }
         }
@@ -41,7 +41,7 @@
             text-align: center;
             text-transform: uppercase;
             font-family: var(--wh40k-font-body);
-            border-bottom: 1px solid $border-color;
+            border-bottom: 1px solid var(--color-border-primary);
 
             :first-child {
                 margin-top: -3pt;
@@ -58,8 +58,8 @@
         }
 
         &__header {
-            margin-top: $margin-general;
-            border-bottom: $grid-border;
+            margin-top: 0.5rem;
+            border-bottom: 1px solid var(--color-border-primary);
             font-weight: bold;
 
             &:not(:first-child) {
@@ -305,8 +305,8 @@
         &__row {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: $margin-small;
-            margin: $margin-small;
+            gap: 0.25rem;
+            margin: 0.25rem;
         }
     }
 }
