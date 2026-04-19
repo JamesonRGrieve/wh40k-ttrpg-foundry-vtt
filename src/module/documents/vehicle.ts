@@ -2,7 +2,6 @@ import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 
 export class WH40KVehicle extends WH40KBaseActor {
-    [key: string]: any;
     async _preCreate(data, options, user): Promise<any> {
         await super._preCreate(data, options, user);
         const initData = {
