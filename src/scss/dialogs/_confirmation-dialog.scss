@@ -36,7 +36,7 @@
     }
 
     strong {
-        color: var(--wh40k-accent-gold, $wh40k-color-gold);
+        color: var(--wh40k-accent-gold, var(--wh40k-color-gold));
         font-weight: 600;
     }
 
@@ -91,7 +91,7 @@
 
 // Confirm button (primary action)
 .confirmation-dialog .dialog-button.confirm {
-    background: linear-gradient(135deg, $wh40k-color-gold 0%, #8b6914 100%);
+    background: linear-gradient(135deg, var(--wh40k-color-gold) 0%, #8b6914 100%);
     color: #0a0a0f;
     box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 

@@ -22,7 +22,7 @@
             h3 {
                 margin: 0 0 0.5rem 0;
                 font-size: 0.9rem;
-                color: var(--wh40k-color-accent, $wh40k-color-gold);
+                color: var(--wh40k-color-accent, var(--wh40k-color-gold));
 
                 i {
                     margin-right: 0.5rem;
@@ -84,13 +84,13 @@
 
                 i {
                     margin-right: 0.5rem;
-                    color: var(--wh40k-color-accent, $wh40k-color-gold);
+                    color: var(--wh40k-color-accent, var(--wh40k-color-gold));
                 }
             }
 
             .icon-button {
                 padding: 0.25rem 0.5rem;
-                background: var(--wh40k-color-accent, $wh40k-color-gold);
+                background: var(--wh40k-color-accent, var(--wh40k-color-gold));
                 color: #fff;
                 border: none;
                 border-radius: 3px;
@@ -119,9 +119,9 @@
             }
 
             &.drag-over {
-                border-color: var(--wh40k-color-accent, $wh40k-color-gold);
+                border-color: var(--wh40k-color-accent, var(--wh40k-color-gold));
                 background: rgba(201, 162, 39, 0.1);
-                color: var(--wh40k-color-accent, $wh40k-color-gold);
+                color: var(--wh40k-color-accent, var(--wh40k-color-gold));
             }
         }
 
@@ -204,7 +204,7 @@
                         text-decoration: none;
 
                         &:hover {
-                            color: var(--wh40k-color-accent, $wh40k-color-gold);
+                            color: var(--wh40k-color-accent, var(--wh40k-color-gold));
                         }
                     }
 
@@ -407,7 +407,7 @@
         }
 
         .primary {
-            background: var(--wh40k-color-accent, $wh40k-color-gold);
+            background: var(--wh40k-color-accent, var(--wh40k-color-gold));
             color: #fff;
 
             &:hover {

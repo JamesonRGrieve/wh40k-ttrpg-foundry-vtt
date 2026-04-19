@@ -35,7 +35,7 @@
 
         h3 {
             margin: 0 0 0.5rem 0;
-            color: var(--wh40k-gold, $wh40k-color-gold);
+            color: var(--wh40k-gold, var(--wh40k-color-gold));
             font-size: 0.9rem;
             font-weight: bold;
             text-transform: uppercase;
@@ -96,7 +96,7 @@
         .weapon-icon {
             width: 40px;
             height: 40px;
-            border: 1px solid var(--wh40k-gold, $wh40k-color-gold);
+            border: 1px solid var(--wh40k-gold, var(--wh40k-color-gold));
             border-radius: var(--wh40k-radius-sm);
         }
 
@@ -110,7 +110,7 @@
 
             .weapon-stats {
                 font-size: 0.85rem;
-                color: var(--wh40k-gold, $wh40k-color-gold);
+                color: var(--wh40k-gold, var(--wh40k-color-gold));
             }
         }
     }
@@ -125,13 +125,13 @@
             flex: 1;
             padding: 0.5rem;
             background: var(--wh40k-bronze, #cd7f32);
-            border: 1px solid var(--wh40k-gold, $wh40k-color-gold);
+            border: 1px solid var(--wh40k-gold, var(--wh40k-color-gold));
             color: var(--wh40k-bone, #e8dcc8);
             font-weight: bold;
             cursor: pointer;
 
             &:hover {
-                background: var(--wh40k-gold, $wh40k-color-gold);
+                background: var(--wh40k-gold, var(--wh40k-color-gold));
             }
         }
     }
@@ -153,7 +153,7 @@
 
             &:hover:not(:disabled) {
                 background: var(--wh40k-bronze, #cd7f32);
-                border-color: var(--wh40k-gold, $wh40k-color-gold);
+                border-color: var(--wh40k-gold, var(--wh40k-color-gold));
             }
 
             &:disabled {

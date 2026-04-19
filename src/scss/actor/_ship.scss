@@ -233,7 +233,7 @@
             transition: all var(--wh40k-transition-base);
 
             &:hover {
-                color: var(--wh40k-accent-gold, $wh40k-color-gold);
+                color: var(--wh40k-accent-gold, var(--wh40k-color-gold));
                 transform: scale(1.1);
             }
         }
@@ -305,7 +305,7 @@
     min-width: 32px;
     height: 24px;
     padding: 0 8px;
-    background: linear-gradient(135deg, $wh40k-color-gold 0%, #c9a42b 100%);
+    background: linear-gradient(135deg, var(--wh40k-color-gold) 0%, #c9a42b 100%);
     border: 1px solid #b89420;
     border-radius: 12px;
     font-size: 0.8em;
@@ -368,7 +368,7 @@
     padding: 8px 10px;
     background: rgba(74, 55, 40, 0.05);
     border-radius: 6px;
-    border-left: 3px solid var(--wh40k-accent-gold, $wh40k-color-gold);
+    border-left: 3px solid var(--wh40k-accent-gold, var(--wh40k-color-gold));
 }
 
 .wh40k-ability-name {
@@ -465,7 +465,7 @@
         align-items: center;
         gap: 6px;
         padding: 8px 16px;
-        background: linear-gradient(180deg, var(--wh40k-accent-gold, $wh40k-color-gold) 0%, #c9a42b 100%);
+        background: linear-gradient(180deg, var(--wh40k-accent-gold, var(--wh40k-color-gold)) 0%, #c9a42b 100%);
         border: 1px solid #b89420;
         border-radius: 6px;
         color: #2a1a0a;
@@ -474,7 +474,7 @@
         transition: all var(--wh40k-transition-base);
 
         &:hover {
-            background: linear-gradient(180deg, #e0c050 0%, var(--wh40k-accent-gold, $wh40k-color-gold) 100%);
+            background: linear-gradient(180deg, #e0c050 0%, var(--wh40k-accent-gold, var(--wh40k-color-gold)) 100%);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
     }
