@@ -774,16 +774,16 @@
     }
 
     &.skill-tag i:first-child {
-        color: $wh40k-accent-info;
+        color: var(--wh40k-accent-info);
     }
     &.talent-tag i:first-child {
         color: #f39c12;
     }
     &.trait-tag i:first-child {
-        color: $wh40k-accent-psychic;
+        color: var(--wh40k-accent-psychic);
     }
     &.equipment-tag i:first-child {
-        color: $wh40k-accent-green;
+        color: var(--wh40k-accent-green);
     }
 
     &.clickable {
@@ -840,7 +840,7 @@
         }
         &.negative {
             border-color: rgba(231, 76, 60, 0.3);
-            color: $wh40k-accent-red;
+            color: var(--wh40k-accent-red);
         }
     }
 }
@@ -1217,8 +1217,8 @@
         }
 
         &.negative {
-            border-color: $wh40k-accent-red;
-            color: $wh40k-accent-red;
+            border-color: var(--wh40k-accent-red);
+            color: var(--wh40k-accent-red);
         }
 
         &.from-choice {
@@ -1272,7 +1272,7 @@
     }
 
     &.error i {
-        color: $wh40k-accent-red;
+        color: var(--wh40k-accent-red);
     }
 }
 

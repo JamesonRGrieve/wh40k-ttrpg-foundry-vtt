@@ -16,12 +16,12 @@
 .journal-entry-page .wh40k-header,
 .journal-entry-content .wh40k-header {
     background: linear-gradient(135deg, #8b0000 0%, #4a0000 100%);
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
     padding: 20px;
     border-radius: var(--wh40k-radius-lg);
     margin-bottom: 20px;
     text-align: center;
-    border: 2px solid $wh40k-color-gold;
+    border: 2px solid var(--wh40k-color-gold);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
@@ -55,7 +55,7 @@
     color: #8b0000;
     margin-top: 0;
     font-family: var(--wh40k-font-display);
-    border-bottom: 2px solid $wh40k-color-gold;
+    border-bottom: 2px solid var(--wh40k-color-gold);
     padding-bottom: 8px;
 }
 
@@ -72,7 +72,7 @@
 .journal-entry-page .wh40k-table th,
 .journal-entry-content .wh40k-table th {
     background: linear-gradient(180deg, #8b0000 0%, #6a0000 100%);
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
     padding: 12px;
     text-align: left;
     font-weight: bold;
@@ -100,7 +100,7 @@
 .journal-entry-page .wh40k-callout,
 .journal-entry-content .wh40k-callout {
     background: #fff8dc;
-    border: 2px solid $wh40k-color-gold;
+    border: 2px solid var(--wh40k-color-gold);
     border-radius: 6px;
     padding: 15px;
     margin: 15px 0;
@@ -123,7 +123,7 @@
 .journal-entry-page .wh40k-stat-block,
 .journal-entry-content .wh40k-stat-block {
     background: #2c2c2c;
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
     padding: 15px;
     border-radius: 6px;
     font-family: monospace;
@@ -147,7 +147,7 @@
 .journal-entry-content .wh40k-characteristic {
     display: inline-block;
     background: #4a0000;
-    color: $wh40k-color-gold;
+    color: var(--wh40k-color-gold);
     padding: 2px 6px;
     border-radius: 3px;
     font-weight: bold;
