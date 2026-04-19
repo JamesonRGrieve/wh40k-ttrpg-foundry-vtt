@@ -381,7 +381,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
             const previewData = foundry.utils.mergeObject(baseData, this._whatIfChanges, { inplace: false });
 
             // Create temporary actor (not in world)
-            this._whatIfPreview = new (CONFIG as any).Actor.documentClass(previewData, { parent: null });
+            this._whatIfPreview = new CONFIG.Actor.documentClass(previewData, { parent: null });
             this._whatIfPreview.prepareData();
 
             // Calculate impacts

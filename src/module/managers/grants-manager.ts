@@ -579,7 +579,7 @@ export class GrantsManager {
      * Reverse characteristic grant.
      * @private
      */
-    static async _reverseCharacteristicGrant(actor: WH40KBaseActor, applied: any, result: any) {
+    static async _reverseCharacteristicGrant(actor: WH40KBaseActor, applied: any, result: Record<string, unknown>) {
         const updates = {};
 
         for (const [key, state] of Object.entries(applied || {}) as [string, any][]) {
@@ -598,7 +598,7 @@ export class GrantsManager {
      * Reverse skill grant.
      * @private
      */
-    static async _reverseSkillGrant(actor: WH40KBaseActor, applied: any, result: any) {
+    static async _reverseSkillGrant(actor: WH40KBaseActor, applied: any, result: Record<string, unknown>) {
         const idsToDelete = [];
         const itemsToUpdate = [];
 
@@ -628,7 +628,7 @@ export class GrantsManager {
      * Reverse item grant.
      * @private
      */
-    static async _reverseItemGrant(actor: WH40KBaseActor, applied: any, result: any) {
+    static async _reverseItemGrant(actor: WH40KBaseActor, applied: any, result: Record<string, unknown>) {
         const idsToDelete = [];
 
         for (const [, itemId] of Object.entries(applied || {}) as [string, any][]) {
@@ -648,7 +648,7 @@ export class GrantsManager {
      * Reverse resource grant.
      * @private
      */
-    static async _reverseResourceGrant(actor: WH40KBaseActor, applied: any, result: any) {
+    static async _reverseResourceGrant(actor: WH40KBaseActor, applied: any, result: Record<string, unknown>) {
         const updates = {};
 
         const resourcePaths: Record<string, unknown> = {

@@ -127,10 +127,10 @@ export default class WeaponSheet extends ContainerItemSheet {
             const level = match ? parseInt(match[1]) : null;
 
             // Get localized label using CONFIG helper (CONFIG.wh40k not CONFIG.WH40K)
-            const label = (CONFIG as any).wh40k?.getQualityLabel?.(q, level) || q;
+            const label = CONFIG.wh40k?.getQualityLabel?.(q, level) || q;
 
             // Get definition for description
-            const def = (CONFIG as any).wh40k?.getQualityDefinition?.(q) || null;
+            const def = CONFIG.wh40k?.getQualityDefinition?.(q) || null;
 
             return {
                 identifier: q,
@@ -196,7 +196,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _onRender(context: any, options: Record<string, unknown>): Promise<void> {
+    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
         // Set up drag-and-drop visual feedback
@@ -499,7 +499,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             void quality?.sheet.render(true);
         } else {
             // Fallback: show tooltip from CONFIG
-            const def = (CONFIG as any).wh40k?.getQualityDefinition?.(identifier);
+            const def = CONFIG.wh40k?.getQualityDefinition?.(identifier);
             if (def) {
                 const label = game.i18n.localize(def.label);
                 const description = game.i18n.localize(def.description);

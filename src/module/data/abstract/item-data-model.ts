@@ -215,7 +215,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @type {string}
      */
     get typeLabel(): string {
-        return game.i18n.localize((CONFIG as any).Item.typeLabels[this.parent.type]);
+        return game.i18n.localize(CONFIG.Item.typeLabels[this.parent.type]);
     }
 
     /**

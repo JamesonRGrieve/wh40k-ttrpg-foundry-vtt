@@ -77,7 +77,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: any): Promise<void> {
+    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: Record<string, unknown>): Promise<void> {
         await (super._preCreate as any)(data, options, user);
 
         // Configure token defaults for NPC V2

@@ -529,7 +529,7 @@ export function registerHandlebarsHelpers() {
     });
 
     Handlebars.registerHelper('skillIcon', (skillKey) => {
-        const config = (CONFIG as any)?.rt?.getSkillIcon ? (CONFIG as any).wh40k : WH40K;
+        const config = CONFIG?.rt?.getSkillIcon ? CONFIG.wh40k : WH40K;
         const icon = config?.getSkillIcon?.(skillKey) || 'modules/game-icons-net/blacktransparent/skills.svg';
         if (foundry?.utils?.getRoute) return foundry.utils.getRoute(icon);
         return icon;
@@ -786,7 +786,7 @@ export function registerHandlebarsHelpers() {
         const qualityIds = Array.isArray(specialSet) ? specialSet : Array.from(specialSet);
         if (!qualityIds.length) return [];
 
-        const rtConfig = (CONFIG as any)?.rt;
+        const rtConfig = CONFIG?.rt;
         if (!rtConfig?.weaponQualities) {
             console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return [];
@@ -842,7 +842,7 @@ export function registerHandlebarsHelpers() {
      * @returns {object[]}             Array of quality objects
      */
     Handlebars.registerHelper('craftsmanshipQualities', (weaponSystem) => {
-        const rtConfig = (CONFIG as any)?.rt;
+        const rtConfig = CONFIG?.rt;
         if (!rtConfig?.weaponQualities) {
             console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return [];
@@ -953,7 +953,7 @@ export function registerHandlebarsHelpers() {
      * @returns {object}
      */
     Handlebars.registerHelper('qualityLookup', (identifier) => {
-        const rtConfig = (CONFIG as any)?.rt;
+        const rtConfig = CONFIG?.rt;
         if (!rtConfig?.weaponQualities) {
             console.warn('WH40K | CONFIG.wh40k.weaponQualities not available');
             return {

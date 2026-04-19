@@ -512,7 +512,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
     /* -------------------------------------------- */
 
     /** @override */
-    async _onRender(context: any, options: Record<string, unknown>): Promise<void> {
+    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
         // Set up section tab handlers
@@ -557,7 +557,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {HTMLFormElement} form - The form element
      * @param {FormDataExtended} formData - The form data
      */
-    static async #formHandler(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #formHandler(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
         const data: any = foundry.utils.expandObject(formData.object);
 
         // Process the form data into the proper structure

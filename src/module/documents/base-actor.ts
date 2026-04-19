@@ -20,7 +20,7 @@ export class WH40KBaseActor extends Actor {
      * @override
      */
     _onCreateDescendantDocuments(
-        parent: any,
+        parent: Record<string, unknown>,
         collection: string,
         documents: unknown[],
         data: unknown[],
@@ -50,7 +50,7 @@ export class WH40KBaseActor extends Actor {
      * @override
      */
     _onUpdateDescendantDocuments(
-        parent: any,
+        parent: Record<string, unknown>,
         collection: string,
         documents: unknown[],
         changes: unknown[],
@@ -69,7 +69,14 @@ export class WH40KBaseActor extends Actor {
      * Also handles removal of granted items when a talent is deleted.
      * @override
      */
-    _onDeleteDescendantDocuments(parent: any, collection: string, documents: unknown[], ids: string[], options: Record<string, unknown>, userId: string): void {
+    _onDeleteDescendantDocuments(
+        parent: Record<string, unknown>,
+        collection: string,
+        documents: unknown[],
+        ids: string[],
+        options: Record<string, unknown>,
+        userId: string,
+    ): void {
         // Process talent removal BEFORE deletion to access the talent's data
         if (collection === 'items' && game.user.id === userId) {
             for (const item of documents) {
@@ -102,7 +109,7 @@ export class WH40KBaseActor extends Actor {
         }
     }
 
-    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: any): Promise<void> {
+    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: Record<string, unknown>): Promise<void> {
         await (super._preCreate as any)(data, options, user);
         const initData = {
             'token.bar1': { attribute: 'wounds' },

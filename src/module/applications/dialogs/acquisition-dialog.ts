@@ -262,7 +262,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): void {
+    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): void {
         // Get custom modifier
         this.customModifier = parseInt(formData.object.customModifier) || 0;
 

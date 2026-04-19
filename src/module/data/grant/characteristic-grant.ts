@@ -65,7 +65,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _applyGrant(actor: WH40KBaseActor, data: Record<string, unknown>, options: Record<string, unknown>, result: any): Promise<void> {
+    async _applyGrant(actor: WH40KBaseActor, data: Record<string, unknown>, options: Record<string, unknown>, result: Record<string, unknown>): Promise<void> {
         const selectedChars = data.selected ?? this.characteristics.map((c) => c.key);
         const updates = {};
 
