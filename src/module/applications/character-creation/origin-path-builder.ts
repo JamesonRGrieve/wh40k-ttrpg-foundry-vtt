@@ -1314,7 +1314,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             isConfirmed = [...itemIds].some((id) => selectionIds.has(id));
         }
 
-        const showThrones = ['homeWorld', 'background'].includes(currentStep.key);
+        // Show thrones section whenever any selection has a throne formula
+        const showThrones = !!(this as any)._getContextualThronesFormula();
         const showInfluence = currentStep.key === 'background';
         const thronesFormula = this._getContextualThronesFormula();
         const influenceMod = this._getContextualInfluenceMod();
@@ -1325,6 +1326,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             name: item.name,
             img: item.img,
             description: system?.description?.value || '',
+            requirementsText: system?.requirements?.text || '',
             isConfirmed: isConfirmed, // Track if confirmed vs previewed
             hasChoices: choices.length > 0,
             choices: choices,
@@ -2564,7 +2566,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static async #rollThrones(event: Event, target: HTMLElement): Promise<void> {
         const formula = (this as any)._getContextualThronesFormula();
         if (!formula) {
-            (ui.notifications as any).warn('No thrones formula — select a homeworld and background first.');
+            (ui.notifications as any).warn('No thrones formula available yet — select an origin with a throne gelt formula.');
             return;
         }
         const roll = new Roll(formula);
