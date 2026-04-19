@@ -62,7 +62,7 @@ export interface NormalizedOrigin {
     description: string;
     /** Pre-stripped and truncated plain text */
     shortDescription: string;
-    requirements: { previousSteps: string[]; excludedSteps: string[] };
+    requirements: { text: string; previousSteps: string[]; excludedSteps: string[] };
     grants: NormalizedGrants;
     modifiers: { characteristics: Record<string, number> };
     isAdvanced: boolean;
@@ -186,6 +186,7 @@ export function normalizeOrigin(doc: any): NormalizedOrigin {
         description: description,
         shortDescription: stripped.length > 150 ? `${stripped.substring(0, 150)}...` : stripped,
         requirements: {
+            text: system.requirements?.text || '',
             previousSteps: system.requirements?.previousSteps || [],
             excludedSteps: system.requirements?.excludedSteps || [],
         },
