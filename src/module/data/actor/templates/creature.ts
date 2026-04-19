@@ -5,7 +5,7 @@ import { computeArmour } from '../../../utils/armour-calculator.ts';
 import { computeEncumbrance } from '../../../utils/encumbrance-calculator.ts';
 import CommonTemplate from './common.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField } = (foundry.data as any).fields;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField } = foundry.data.fields;
 
 /**
  * Creature template for actors that are living beings (Characters, NPCs).
@@ -85,8 +85,6 @@ interface ModifierSource {
 }
 
 export default class CreatureTemplate extends CommonTemplate {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare characteristics: {
         weaponSkill: CharacteristicData;

@@ -5,8 +5,6 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  * @mixin
  */
 export default class ActivationTemplate extends SystemDataModel {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare activation: { type: string; cost: number; condition: string };
     declare target: { type: string; value: number; units: string; width: number; length: number };
@@ -15,7 +13,7 @@ export default class ActivationTemplate extends SystemDataModel {
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             activation: new fields.SchemaField({
                 type: new fields.StringField({

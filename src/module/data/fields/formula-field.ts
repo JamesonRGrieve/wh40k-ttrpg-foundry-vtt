@@ -2,7 +2,7 @@
  * A special string field for dice formula values.
  * Validates that the string is a valid dice formula.
  */
-export default class FormulaField extends (foundry.data as any).fields.StringField {
+export default class FormulaField extends foundry.data.fields.StringField {
     /** @inheritdoc */
     static get _defaults(): Record<string, unknown> {
         return foundry.utils.mergeObject(super._defaults, {

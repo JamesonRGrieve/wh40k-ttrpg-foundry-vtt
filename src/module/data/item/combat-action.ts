@@ -7,8 +7,6 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes DescriptionTemplate
  */
 export default class CombatActionData extends ItemDataModel.mixin(DescriptionTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare actionType: string;
     declare subtypes: Set<string>;
@@ -19,7 +17,7 @@ export default class CombatActionData extends ItemDataModel.mixin(DescriptionTem
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 

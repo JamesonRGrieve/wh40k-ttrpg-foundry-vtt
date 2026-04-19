@@ -4,7 +4,6 @@
  */
 // @ts-expect-error - TS2339
 export default class MappingField extends foundry.data.fields.ObjectField {
-    [key: string]: any;
     model: foundry.data.fields.DataField.Any;
     initialKeys: string[] | null;
     initialKeysOnly: boolean;
