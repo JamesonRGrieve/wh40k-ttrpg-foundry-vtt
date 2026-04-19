@@ -552,7 +552,7 @@ function createCraftsmanshipVariant(weapon, quality) {
 
     // Update cost
     const multiplier = qualityMultipliers[quality] || 1;
-    variant.system.cost.value = Math.round(weapon.system.cost.value * multiplier);
+    variant.system.cost.dh2.homebrew.throneGelt = Math.round(weapon.system.cost.dh2.homebrew.throneGelt * multiplier);
 
     // Update availability (one step harder to find for better quality)
     if (quality === 'best' || quality === 'master') {
