@@ -9,16 +9,16 @@
 .wh40k-control-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-control-btn {
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 8px 10px;
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     border: 1px solid rgba(74, 55, 40, 0.3);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(245, 240, 232, 0.8));
     color: #3a2820;
@@ -86,7 +86,7 @@
 
         &__cell--head {
             background: rgba(36, 107, 131, 0.15);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             padding: 4px;
 
             button {
@@ -154,7 +154,7 @@
         padding: 6px 8px;
         margin: 2px 4px;
         background: rgba(255, 255, 255, 0.6);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
     }
 
     .table-row--head {

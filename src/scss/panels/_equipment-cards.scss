@@ -10,7 +10,7 @@
 .wh40k-equip-row {
     background: var(--wh40k-panel-bg-solid);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     transition: all var(--wh40k-transition-base);
     cursor: grab;
 
@@ -55,7 +55,7 @@
 // Icon (Small)
 .wh40k-equip-icon {
     @apply tw-w-7 tw-h-7 tw-shrink-0;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     object-fit: cover;
     border: 1px solid var(--wh40k-border-color-light);
 }
@@ -91,7 +91,7 @@
     color: var(--wh40k-text-muted);
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     flex-shrink: 0;
 
     i {
@@ -197,7 +197,7 @@
     gap: var(--wh40k-space-xs);
     background: var(--wh40k-panel-bg-translucent);
     border: 1px dashed var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     cursor: pointer;
     transition: all var(--wh40k-transition-base);
     color: var(--wh40k-text-muted);
@@ -247,7 +247,7 @@
 .wh40k-equipment-card {
     background: var(--wh40k-panel-bg-solid);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     padding: var(--wh40k-space-sm);
     transition: all var(--wh40k-transition-base);
     cursor: grab;
@@ -419,9 +419,9 @@
 .wh40k-status-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 2px 8px;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -452,7 +452,7 @@
     margin-bottom: var(--wh40k-space-xs);
     padding: var(--wh40k-space-xs);
     background: var(--wh40k-panel-bg-translucent);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-style: italic;
 }
 
@@ -465,11 +465,11 @@
 .wh40k-stat-badge {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 4px 8px;
     background: var(--wh40k-btn-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.7rem;
 }
 
@@ -519,7 +519,7 @@
     justify-content: center;
     background: var(--wh40k-btn-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     color: var(--wh40k-text-medium);
@@ -586,7 +586,7 @@
     gap: var(--wh40k-space-xs);
     background: var(--wh40k-panel-bg-translucent);
     border: 2px dashed var(--wh40k-border-color-light);
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     cursor: pointer;
     transition: all var(--wh40k-transition-base);
     color: var(--wh40k-text-muted);
@@ -617,7 +617,7 @@
 
 .wh40k-equipment-list.drag-over {
     background: var(--wh40k-accent-overlay);
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
 }
 
 // ============================================

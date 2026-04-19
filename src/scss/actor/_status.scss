@@ -6,7 +6,7 @@
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 8px 6px 6px;
     max-width: none;
     white-space: nowrap;
@@ -101,7 +101,7 @@
 .wh40k-status-row {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-status-input {
@@ -121,7 +121,7 @@
     text-align: center;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(120, 120, 120, 0.35);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: #333;
     font-family: var(--wh40k-font-alt);
     font-size: 1em;
@@ -224,7 +224,7 @@
 .wh40k-crit-display {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-crit-value {
@@ -262,7 +262,7 @@
 }
 
 .wh40k-move-body {
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     align-items: center;
 }
 
@@ -276,7 +276,7 @@
     gap: 6px;
     width: 100%;
     padding: 1px 4px;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(74, 55, 40, 0.15);
     text-align: center;
@@ -285,7 +285,7 @@
 .wh40k-fate-display {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 
     .wh40k-gothic-input {
         width: 28px;
@@ -322,13 +322,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-points-row {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-points-input {

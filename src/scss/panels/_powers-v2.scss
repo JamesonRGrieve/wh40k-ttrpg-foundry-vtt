@@ -134,7 +134,7 @@
     width: 60px;
     padding: 4px 8px;
     border: 1px solid var(--wh40k-border-color);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     background: var(--wh40k-input-bg);
     color: var(--wh40k-text-dark);
     font-size: 0.9rem;
@@ -152,7 +152,7 @@
     flex: 1;
     padding: 6px 10px;
     border: 1px solid var(--wh40k-border-color);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     background: var(--wh40k-input-bg);
     color: var(--wh40k-text-dark);
     font-size: 0.85rem;
@@ -197,7 +197,7 @@
     width: 100%;
     padding: 6px 10px;
     border: 1px solid var(--wh40k-border-color);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     background: var(--wh40k-input-bg);
     color: var(--wh40k-text-dark);
     font-size: 0.85rem;
@@ -217,7 +217,7 @@
     padding: 4px 8px;
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     transition: all var(--wh40k-transition-base);
 
     &:hover {
@@ -235,7 +235,7 @@
         color: var(--wh40k-text-secondary);
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
 
         i {
             color: #7c3aed;
@@ -256,7 +256,7 @@
     gap: var(--wh40k-space-xs);
     padding: 8px 12px;
     border: 1px solid var(--wh40k-border-color);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     background: var(--wh40k-btn-bg);
     color: var(--wh40k-text-secondary);
     font-size: 0.8rem;
@@ -290,7 +290,7 @@
 .wh40k-power-filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: var(--wh40k-space-sm);
     background: var(--wh40k-panel-bg-translucent);
     border-radius: var(--wh40k-radius-sm);
@@ -437,7 +437,7 @@
 .wh40k-power-icon {
     width: 36px;
     height: 36px;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border: 1px solid var(--wh40k-border-color-light);
     object-fit: cover;
     flex-shrink: 0;
@@ -625,7 +625,7 @@
     width: 30px;
     height: 30px;
     border: 1px solid transparent;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     background: transparent;
     color: var(--wh40k-text-muted);
     cursor: pointer;
@@ -706,7 +706,7 @@
 
 .wh40k-navigator-levels {
     display: flex;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: var(--wh40k-space-xs) var(--wh40k-space-md);
     background: var(--wh40k-panel-bg-translucent);
     border-top: 1px solid var(--wh40k-border-color-light);
@@ -715,7 +715,7 @@
 .wh40k-level-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 3px 8px;
     border-radius: 12px;
     font-size: 0.7rem;
@@ -797,7 +797,7 @@
 .wh40k-detail-content {
     padding: var(--wh40k-space-sm);
     background: var(--wh40k-panel-bg);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.8rem;
     line-height: 1.5;
     color: var(--wh40k-text-dark);
@@ -851,10 +851,10 @@
 .wh40k-detail-btn {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 6px 12px;
     border: 1px solid var(--wh40k-border-color);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     background: var(--wh40k-btn-bg);
     color: var(--wh40k-text-secondary);
     font-size: 0.75rem;

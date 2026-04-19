@@ -128,7 +128,7 @@
 .wh40k-trait-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 4px 10px;
     border-radius: var(--wh40k-radius-sm);
     font-size: 0.75rem;
@@ -182,9 +182,9 @@
 }
 
 .wh40k-talent-badge--passive {
-    background: linear-gradient(135deg, rgba(#27ae60, 0.15), rgba(#27ae60, 0.05));
-    border-color: rgba(#27ae60, 0.3);
-    color: #2ecc71;
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-green) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-green) r g b / 0.05)'});
+    border-color: #{'rgb(from var(--wh40k-accent-green) r g b / 0.3)'};
+    color: var(--wh40k-accent-green-bright);
 }
 
 .wh40k-talent-badge--stackable {
@@ -207,8 +207,8 @@
 }
 
 .wh40k-trait-badge--variable {
-    background: linear-gradient(135deg, rgba(#9b59b6, 0.15), rgba(#9b59b6, 0.05));
-    border-color: rgba(#9b59b6, 0.3);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.05)'});
+    border-color: #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.3)'};
     color: #c39bd3;
 }
 
@@ -316,7 +316,7 @@
 .wh40k-section-title {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     font-size: 1rem;
     font-weight: 700;
     font-family: var(--wh40k-font-heading);
@@ -371,7 +371,7 @@
 .wh40k-property-label-inline {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     cursor: pointer;
     font-size: 0.85rem;
     color: var(--color-text-primary);
@@ -458,7 +458,7 @@
 .wh40k-requirement-tag {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     color: color-mix(in srgb, var(--wh40k-accent-combat), white 10%);
     font-size: 0.85rem;
     font-weight: 600;
@@ -520,7 +520,7 @@
 .wh40k-modifier-list {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-modifier-item {
@@ -544,7 +544,7 @@
     font-size: 0.95rem;
 
     &.positive {
-        color: #2ecc71;
+        color: var(--wh40k-accent-green-bright);
     }
 
     &.negative {

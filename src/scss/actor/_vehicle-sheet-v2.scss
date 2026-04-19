@@ -47,7 +47,7 @@
         gap: var(--wh40k-space-md, 1rem);
         padding: var(--wh40k-space-md, 1rem);
         background: var(--wh40k-panel-bg, rgba(30, 30, 30, 0.9));
-        border-bottom: 2px solid var(--wh40k-gold, #d4af37);
+        border-bottom: 2px solid var(--wh40k-gold, $wh40k-color-gold);
 
         .wh40k-header__info {
             display: contents;
@@ -59,7 +59,7 @@
         width: 100px;
         height: 100px;
         border: 2px solid var(--wh40k-border-color, #444);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         overflow: hidden;
 
         .wh40k-portrait {
@@ -94,7 +94,7 @@
 
         &:hover,
         &:focus {
-            border-bottom-color: var(--wh40k-gold, #d4af37);
+            border-bottom-color: var(--wh40k-gold, $wh40k-color-gold);
             outline: none;
         }
     }
@@ -127,7 +127,7 @@
             font-size: 0.85rem;
 
             &:focus {
-                border-color: var(--wh40k-gold, #d4af37);
+                border-color: var(--wh40k-gold, $wh40k-color-gold);
                 outline: none;
             }
         }
@@ -152,7 +152,7 @@
         padding: 0.5rem;
         background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
         border: 1px solid var(--wh40k-border-color, #444);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         min-width: 70px;
     }
 
@@ -172,7 +172,7 @@
         color: var(--wh40k-text-dark, #f0f0f0);
 
         &:focus {
-            outline: 1px solid var(--wh40k-gold, #d4af37);
+            outline: 1px solid var(--wh40k-gold, $wh40k-color-gold);
         }
     }
 
@@ -199,14 +199,14 @@
     .wh40k-vehicle-v2-panel-title {
         font-size: 1.1rem;
         font-weight: bold;
-        color: var(--wh40k-gold, #d4af37);
+        color: var(--wh40k-gold, $wh40k-color-gold);
         margin-bottom: var(--wh40k-space-sm, 0.5rem);
         display: flex;
         align-items: center;
         gap: 0.5rem;
 
         i {
-            color: var(--wh40k-gold, #d4af37);
+            color: var(--wh40k-gold, $wh40k-color-gold);
         }
     }
 
@@ -228,14 +228,14 @@
             text-decoration: none;
 
             &:hover {
-                color: var(--wh40k-gold, #d4af37);
+                color: var(--wh40k-gold, $wh40k-color-gold);
                 border-color: var(--wh40k-border-color, #444);
             }
 
             &.active {
                 color: var(--wh40k-text-dark, #f0f0f0);
                 background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
-                border-color: var(--wh40k-gold, #d4af37);
+                border-color: var(--wh40k-gold, $wh40k-color-gold);
             }
         }
     }
@@ -275,7 +275,7 @@
             border-radius: 3px;
 
             &:focus {
-                border-color: var(--wh40k-gold, #d4af37);
+                border-color: var(--wh40k-gold, $wh40k-color-gold);
                 outline: none;
             }
         }
@@ -314,7 +314,7 @@
         transition: all var(--wh40k-transition-base);
 
         &:hover {
-            border-color: var(--wh40k-gold, #d4af37);
+            border-color: var(--wh40k-gold, $wh40k-color-gold);
         }
     }
 
@@ -323,7 +323,7 @@
         cursor: pointer;
 
         &:hover {
-            color: var(--wh40k-gold, #d4af37);
+            color: var(--wh40k-gold, $wh40k-color-gold);
         }
     }
 
@@ -371,7 +371,7 @@
             border-radius: 3px;
 
             &:hover {
-                border-color: var(--wh40k-gold, #d4af37);
+                border-color: var(--wh40k-gold, $wh40k-color-gold);
             }
         }
 
@@ -427,7 +427,7 @@
         border-radius: 3px;
 
         strong {
-            color: var(--wh40k-gold, #d4af37);
+            color: var(--wh40k-gold, $wh40k-color-gold);
         }
 
         p {
@@ -454,7 +454,7 @@
         border-radius: 3px;
 
         &:hover {
-            border-color: var(--wh40k-gold, #d4af37);
+            border-color: var(--wh40k-gold, $wh40k-color-gold);
         }
     }
 }

@@ -1,4 +1,5 @@
 import SystemDataModel from './system-data-model.ts';
+import { isLineVariantContainer } from '../../utils/item-variant-utils.ts';
 
 const { NumberField } = foundry.data.fields;
 
@@ -145,6 +146,7 @@ export default class ItemDataModel extends SystemDataModel {
                 summary: '',
             };
         }
+        if (isLineVariantContainer(source.description)) return;
 
         // Ensure description sub-fields are not null (V13 HTMLField strictness)
         if (source.description && typeof source.description === 'object') {
@@ -165,6 +167,7 @@ export default class ItemDataModel extends SystemDataModel {
                 custom: source.source,
             };
         }
+        if (isLineVariantContainer(source.source)) return;
 
         // Ensure source sub-fields are not null
         if (source.source && typeof source.source === 'object') {

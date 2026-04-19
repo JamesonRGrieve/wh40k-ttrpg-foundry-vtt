@@ -11,7 +11,7 @@
 .app.dialog:has(.wh40k-prompt) {
     background: linear-gradient(180deg, #0d0d12 0%, #1a1a24 100%);
     border: 1px solid rgba(201, 162, 39, 0.4);
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 80px rgba(201, 162, 39, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     overflow: hidden;
 
@@ -25,7 +25,7 @@
             font-family: var(--wh40k-font-display);
             font-size: 1rem;
             font-weight: 600;
-            color: #c9a227;
+            color: $wh40k-color-gold;
             text-transform: uppercase;
             letter-spacing: 0.12em;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -34,7 +34,7 @@
         .close {
             color: rgba(255, 255, 255, 0.6);
             &:hover {
-                color: #c9a227;
+                color: $wh40k-color-gold;
             }
         }
     }
@@ -67,10 +67,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: var(--wh40k-space-sm);
             padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             font-family: var(--wh40k-font-ui);
             font-size: 0.9rem;
             font-weight: 600;
@@ -87,7 +87,7 @@
             // Primary/Roll button
             &.default,
             &[data-button='roll'] {
-                background: linear-gradient(135deg, #c9a227 0%, #8b6914 100%);
+                background: linear-gradient(135deg, $wh40k-color-gold 0%, #8b6914 100%);
                 color: #0a0a0f;
                 box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 
@@ -127,7 +127,7 @@
     --wh40k-bg-primary: #0d0d12;
     --wh40k-bg-secondary: #14141c;
     --wh40k-bg-elevated: #1a1a24;
-    --wh40k-accent-gold: #c9a227;
+    --wh40k-accent-gold: #{$wh40k-color-gold};
     --wh40k-accent-gold-dim: rgba(201, 162, 39, 0.6);
     --wh40k-accent-red: #8b2a2a;
     --wh40k-accent-green: #2a8b4a;
@@ -259,7 +259,7 @@
 .wh40k-prompt__section-title {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     font-family: var(--wh40k-font-display);
     font-size: 0.8rem;
     font-weight: 600;
@@ -284,7 +284,7 @@
 .wh40k-prompt__field {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     align-items: center;
     padding: 8px 0;
     min-height: 40px;
@@ -314,7 +314,7 @@
     padding: 10px 14px;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--wh40k-border-subtle);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-text-primary);
     font-size: 0.9rem;
     font-family: inherit;
@@ -368,7 +368,7 @@
     background-repeat: no-repeat;
     background-position: right 12px center;
     border: 1px solid var(--wh40k-border-subtle);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-text-primary);
     font-size: 0.9rem;
     font-family: inherit;
@@ -435,7 +435,7 @@
 .wh40k-prompt__weapon-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     margin: 8px 0;
 }
 
@@ -506,7 +506,7 @@
     width: 42px;
     height: 42px;
     border: 1px solid var(--wh40k-border-subtle);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     object-fit: cover;
     flex-shrink: 0;
     background: rgba(0, 0, 0, 0.3);
@@ -523,7 +523,7 @@
     padding: 10px 14px;
     margin: 8px 0;
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.15) 100%);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border-left: 3px solid var(--wh40k-accent-gold);
 }
 
@@ -557,12 +557,12 @@
 .wh40k-prompt__hint {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 8px 12px;
     margin: 8px 0;
     background: rgba(59, 130, 246, 0.1);
     border-left: 3px solid rgba(59, 130, 246, 0.6);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.85rem;
     color: rgba(147, 197, 253, 0.9);
 
@@ -610,10 +610,10 @@
 .wh40k-prompt__btn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 12px 24px;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.9rem;
     font-weight: 600;
     font-family: inherit;
@@ -693,7 +693,7 @@
 
 .wh40k-prompt__grid {
     display: grid;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
 
     &--2col {
         grid-template-columns: repeat(2, 1fr);
@@ -711,7 +711,7 @@
 .wh40k-prompt__info {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 12px 14px;
     background: rgba(42, 90, 139, 0.15);
     border: 1px solid rgba(42, 90, 139, 0.3);
@@ -741,7 +741,7 @@
 .wh40k-prompt__warning {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 12px 14px;
     background: rgba(218, 165, 32, 0.1);
     border: 1px solid rgba(218, 165, 32, 0.3);
@@ -815,11 +815,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 16px;
     background: linear-gradient(135deg, rgba(201, 162, 39, 0.1) 0%, rgba(0, 0, 0, 0.2) 100%);
     border: 1px solid var(--wh40k-accent-gold);
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     margin: 12px 0;
 
     &-label {
@@ -864,7 +864,7 @@
 .roll-config-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding-bottom: 12px;
     margin-bottom: 16px;
     border-bottom: 1px solid rgba(201, 162, 39, 0.3);
@@ -878,7 +878,7 @@
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    border: 2px solid #c9a227;
+    border: 2px solid $wh40k-color-gold;
     object-fit: cover;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
@@ -891,7 +891,7 @@
     font-family: var(--wh40k-font-display);
     font-size: 1.1rem;
     font-weight: 600;
-    color: #c9a227;
+    color: $wh40k-color-gold;
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -946,7 +946,7 @@
 
     &--large {
         font-size: 1.5rem;
-        color: #c9a227;
+        color: $wh40k-color-gold;
         text-shadow: 0 0 10px rgba(201, 162, 39, 0.3);
     }
 }
@@ -958,7 +958,7 @@
         display: block;
         font-size: 0.8rem;
         font-weight: 600;
-        color: #c9a227;
+        color: $wh40k-color-gold;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         margin-bottom: 4px;
@@ -970,13 +970,13 @@
     padding: 8px 12px;
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(201, 162, 39, 0.3);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: #e8e4d9;
     font-size: 0.9rem;
 
     &:focus {
         outline: none;
-        border-color: #c9a227;
+        border-color: $wh40k-color-gold;
         box-shadow: 0 0 8px rgba(201, 162, 39, 0.3);
     }
 
@@ -989,20 +989,20 @@
 .roll-config-modifier-input {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 
     input {
         width: 100%;
         padding: 8px 12px;
         background: rgba(0, 0, 0, 0.4);
         border: 1px solid rgba(201, 162, 39, 0.3);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         color: #e8e4d9;
         font-size: 0.9rem;
 
         &:focus {
             outline: none;
-            border-color: #c9a227;
+            border-color: $wh40k-color-gold;
             box-shadow: 0 0 8px rgba(201, 162, 39, 0.3);
         }
     }
@@ -1016,7 +1016,7 @@
 
 .roll-config-footer {
     display: flex;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     margin-top: 16px;
     padding-top: 16px;
     border-top: 1px solid rgba(201, 162, 39, 0.2);
@@ -1027,12 +1027,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 10px 16px;
     background: linear-gradient(135deg, rgba(201, 162, 39, 0.2) 0%, rgba(201, 162, 39, 0.1) 100%);
     border: 1px solid rgba(201, 162, 39, 0.4);
-    border-radius: 4px;
-    color: #c9a227;
+    border-radius: var(--wh40k-radius-md);
+    color: $wh40k-color-gold;
     font-size: 0.85rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -1042,13 +1042,13 @@
 
     &:hover {
         background: linear-gradient(135deg, rgba(201, 162, 39, 0.4) 0%, rgba(201, 162, 39, 0.2) 100%);
-        border-color: #c9a227;
+        border-color: $wh40k-color-gold;
         box-shadow: 0 0 12px rgba(201, 162, 39, 0.3);
     }
 
     &.primary {
-        background: linear-gradient(135deg, #c9a227 0%, #8b7015 100%);
-        border-color: #c9a227;
+        background: linear-gradient(135deg, $wh40k-color-gold 0%, #8b7015 100%);
+        border-color: $wh40k-color-gold;
         color: #0d0d12;
 
         &:hover {
@@ -1073,7 +1073,7 @@
         display: block;
         font-size: 0.8rem;
         font-weight: 600;
-        color: #c9a227;
+        color: $wh40k-color-gold;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         margin-bottom: 8px;
@@ -1093,7 +1093,7 @@
     padding: 10px 12px;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(201, 162, 39, 0.2);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: #9a9a8a;
     cursor: pointer;
     transition: all var(--wh40k-transition-base);
@@ -1140,17 +1140,17 @@
         border-color: rgba(201, 162, 39, 0.4);
 
         i {
-            color: #c9a227;
+            color: $wh40k-color-gold;
         }
     }
 
     &.active {
         background: linear-gradient(135deg, rgba(201, 162, 39, 0.25) 0%, rgba(201, 162, 39, 0.15) 100%);
-        border-color: #c9a227;
+        border-color: $wh40k-color-gold;
         box-shadow: 0 0 8px rgba(201, 162, 39, 0.2);
 
         i {
-            color: #c9a227;
+            color: $wh40k-color-gold;
         }
 
         .situational-source {
@@ -1206,11 +1206,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 8px 12px;
     background: rgba(0, 0, 0, 0.2);
     border-left: 3px solid rgba(168, 85, 247, 0.5);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     transition: all var(--wh40k-transition-fast);
 
     &:hover {
@@ -1234,7 +1234,7 @@
     transition: color var(--wh40k-transition-fast);
 
     &:hover {
-        color: #c9a227;
+        color: $wh40k-color-gold;
     }
 
     i {
@@ -1323,7 +1323,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 16px;
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.2) 100%);
     border: 1px solid rgba(201, 162, 39, 0.2);
@@ -1338,7 +1338,7 @@
     .wh40k-xp-value {
         font-size: 1.5rem;
         font-weight: 700;
-        color: #c9a227;
+        color: $wh40k-color-gold;
         text-shadow: 0 0 12px rgba(201, 162, 39, 0.3);
         font-variant-numeric: tabular-nums;
     }
@@ -1347,13 +1347,13 @@
 .wh40k-dialog-label {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-dialog-label-text {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #c9a227;
+    color: $wh40k-color-gold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -1363,7 +1363,7 @@
     padding: 12px 16px;
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(201, 162, 39, 0.3);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: #e8e4d9;
     font-size: 1rem;
     font-weight: 500;
@@ -1376,7 +1376,7 @@
 
     &:focus {
         outline: none;
-        border-color: #c9a227;
+        border-color: $wh40k-color-gold;
         box-shadow: 0 0 12px rgba(201, 162, 39, 0.3);
         background: rgba(0, 0, 0, 0.5);
     }
@@ -1395,11 +1395,11 @@
 .wh40k-dialog-hint {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 10px 12px;
     background: rgba(42, 90, 139, 0.1);
     border: 1px solid rgba(42, 90, 139, 0.2);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.8rem;
     color: #9a9a8a;
     line-height: 1.4;
@@ -1419,7 +1419,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 16px;
     border-radius: 6px;
     border: 1px solid;
@@ -1439,7 +1439,7 @@
 .wh40k-xp-preview-change {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     font-size: 1.1rem;
     font-weight: 600;
 
@@ -1462,7 +1462,7 @@
     gap: 10px;
     padding: 10px 16px;
     background: rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 }
 
 .wh40k-xp-preview-label {
@@ -1476,7 +1476,7 @@
 .wh40k-xp-preview-value {
     font-size: 1.3rem;
     font-weight: 700;
-    color: #c9a227;
+    color: $wh40k-color-gold;
     text-shadow: 0 0 12px rgba(201, 162, 39, 0.3);
     font-variant-numeric: tabular-nums;
 }
@@ -1505,10 +1505,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 12px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-family: var(--wh40k-font-ui);
     font-size: 0.9rem;
     font-weight: 600;
@@ -1522,7 +1522,7 @@
     }
 
     &--primary {
-        background: linear-gradient(135deg, #c9a227 0%, #8b6914 100%);
+        background: linear-gradient(135deg, $wh40k-color-gold 0%, #8b6914 100%);
         color: #0a0a0f;
         box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3);
 
@@ -1582,7 +1582,7 @@
 .wh40k-specialist-prompt__icon {
     width: 48px;
     height: 48px;
-    border: 2px solid #c9a227;
+    border: 2px solid $wh40k-color-gold;
     border-radius: 6px;
     object-fit: cover;
     flex-shrink: 0;
@@ -1598,7 +1598,7 @@
     font-family: var(--wh40k-font-display);
     font-size: 1.2rem;
     font-weight: 600;
-    color: #c9a227;
+    color: $wh40k-color-gold;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     white-space: nowrap;
@@ -1620,7 +1620,7 @@
     display: block;
     font-size: 0.8rem;
     font-weight: 600;
-    color: #c9a227;
+    color: $wh40k-color-gold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 8px;
@@ -1629,7 +1629,7 @@
 .wh40k-specialist-prompt__divider {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     margin: 16px 0;
 
     &::before,

@@ -225,7 +225,7 @@
             color: white;
             border: none;
             padding: 0.35rem 0.75rem;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             cursor: pointer;
             font-size: 0.85em;
             font-weight: 500;
@@ -349,7 +349,7 @@
 .wh40k-skills-panel .wh40k-table--border,
 .wh40k-specialist-skills-panel .wh40k-table--border {
     border: 1px solid rgba(36, 107, 131, 0.3);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
 }
 

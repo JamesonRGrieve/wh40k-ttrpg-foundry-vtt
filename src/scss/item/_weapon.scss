@@ -89,7 +89,7 @@
     input.wh40k-item-title__name {
         background: rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(212, 175, 55, 0.3);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         padding: 4px 8px;
         width: 100%;
 
@@ -103,16 +103,16 @@
     .wh40k-weapon-meta {
         display: flex;
         flex-wrap: wrap;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         margin-top: 4px;
     }
 
     .wh40k-meta-badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         padding: 2px 8px;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.7rem;
         font-weight: 600;
         text-transform: uppercase;
@@ -224,7 +224,7 @@
         grid-template-columns: repeat(6, 1fr);
         grid-auto-rows: minmax(60px, auto);
         grid-auto-flow: dense;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         padding: 12px;
 
         // Adjust column count based on container width
@@ -249,7 +249,7 @@
         justify-content: center;
         padding: 8px 6px;
         background: rgba(12, 16, 24, 0.6);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         border: 2px solid transparent;
         backdrop-filter: blur(12px);
         overflow: hidden;
@@ -982,7 +982,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         width: 100%;
         padding: 8px 16px;
         margin-top: 8px;
@@ -1016,7 +1016,7 @@
     .wh40k-toggle-row {
         display: flex;
         flex-wrap: wrap;
-        gap: 16px;
+        gap: var(--wh40k-space-lg);
         margin-top: 12px;
         padding-top: 12px;
         border-top: 1px solid rgba(255, 255, 255, 0.06);
@@ -1146,7 +1146,7 @@
         max-width: 85px;
         padding: 8px 6px;
         background: rgba(12, 16, 24, 0.6);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         border: 1px solid rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(8px);
         transition: all var(--wh40k-transition-base);
@@ -1197,7 +1197,7 @@
             height: 3px;
             margin-top: 4px;
             background: rgba(12, 16, 24, 0.5);
-            border-radius: 2px;
+            border-radius: var(--wh40k-radius-sm);
             overflow: hidden;
         }
 
@@ -1324,17 +1324,17 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         margin-bottom: 10px;
         padding: 8px 10px;
         background: linear-gradient(135deg, rgba(58, 93, 132, 0.2), rgba(18, 22, 30, 0.15));
         border: 1px solid rgba(98, 142, 185, 0.25);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
 
         &__label {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: var(--wh40k-space-xs);
             font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
@@ -1350,7 +1350,7 @@
         &__pills {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: var(--wh40k-space-xs);
         }
     }
 
@@ -1391,7 +1391,7 @@
         &__header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--wh40k-space-sm);
 
             i {
                 color: var(--wh40k-green);
@@ -1418,7 +1418,7 @@
         display: inline-flex;
         padding: 2px 8px;
         background: rgba(0, 0, 0, 0.2);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.7rem;
         font-weight: 600;
 
@@ -1487,13 +1487,13 @@
         margin-bottom: 8px;
         background: rgba(12, 16, 24, 0.5);
         border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         overflow: hidden;
 
         &__header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--wh40k-space-sm);
             padding: 8px 12px;
             background: linear-gradient(135deg, rgba(62, 34, 22, 0.35), rgba(16, 20, 28, 0.15));
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -1560,7 +1560,7 @@
                         cursor: pointer;
                         transition: all var(--wh40k-transition-base);
                         border: 1px solid transparent;
-                        border-radius: 4px;
+                        border-radius: var(--wh40k-radius-md);
                         margin: 8px;
                         padding: 8px 10px;
 
@@ -1573,7 +1573,7 @@
                     &__placeholder {
                         display: flex;
                         align-items: center;
-                        gap: 8px;
+                        gap: var(--wh40k-space-sm);
                         color: rgba(214, 221, 235, 0.4);
                         font-style: italic;
                         margin: 0;
@@ -1609,7 +1609,7 @@
                         background: rgba(12, 16, 24, 0.8);
                         border: 1px solid rgba(212, 175, 55, 0.2);
                         border-bottom: none;
-                        border-radius: 4px 4px 0 0;
+                        border-radius: var(--wh40k-radius-md) 4px 0 0;
                         padding: 4px 8px;
 
                         button {
@@ -1651,7 +1651,7 @@
     // ── Form Fields ──────────────────────────────────────────────────────
     .wh40k-form-grid {
         display: grid;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
 
         &--2col {
             grid-template-columns: 1fr 1fr;
@@ -1689,7 +1689,7 @@
             padding: 6px 10px;
             background: rgba(0, 0, 0, 0.25);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             font-size: 0.85rem;
             color: var(--wh40k-text-dark);
             transition: all var(--wh40k-transition-base);
@@ -1718,7 +1718,7 @@
             padding: 6px 10px;
             background: rgba(0, 0, 0, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             font-size: 0.85rem;
             color: var(--wh40k-text-medium);
             min-height: 30px;
@@ -1728,7 +1728,7 @@
     .wh40k-form-checkboxes {
         display: flex;
         flex-wrap: wrap;
-        gap: 12px;
+        gap: var(--wh40k-space-md);
         margin-top: 8px;
     }
 
@@ -1747,7 +1747,7 @@
         span {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: var(--wh40k-space-xs);
             font-size: 0.8rem;
             color: var(--wh40k-text-medium);
 
@@ -1953,7 +1953,7 @@
     .wh40k-rof-grid {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: var(--wh40k-space-md);
         margin-top: 8px;
     }
 
@@ -2010,7 +2010,7 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         padding: 8px 10px;
         background: rgba(0, 0, 0, 0.2);
         border: 1px solid rgba(255, 255, 255, 0.08);
@@ -2032,7 +2032,7 @@
         &__info {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--wh40k-space-sm);
             flex: 1;
             min-width: 0;
 
@@ -2054,7 +2054,7 @@
         &__effects {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: var(--wh40k-space-xs);
             width: 100%;
         }
 
@@ -2110,7 +2110,7 @@
         display: flex;
         flex-direction: column-reverse;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         z-index: 30;
 
         .wh40k-fab-actions {
@@ -2221,11 +2221,11 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         padding: 6px 12px;
         background: rgba(14, 18, 26, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.8rem;
         color: var(--wh40k-text-dark);
         cursor: pointer;
@@ -2417,7 +2417,7 @@
     display: grid;
     grid-template-columns: 56px 1fr auto;
     align-items: center;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 12px;
     background: linear-gradient(135deg, rgba(60, 34, 20, 0.45) 0%, rgba(18, 22, 30, 0.2) 100%);
     border-bottom: 1px solid rgba(212, 175, 55, 0.25);
@@ -2450,7 +2450,7 @@
 .wh40k-weapon-header-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
 }
 
 // ============================================
@@ -2631,7 +2631,7 @@
     min-width: 60px;
     padding: 8px 6px;
     background: rgba(12, 16, 24, 0.55);
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     border: 1px solid rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(8px);
 
@@ -2677,7 +2677,7 @@
         height: 4px;
         margin-top: 4px;
         background: rgba(12, 16, 24, 0.45);
-        border-radius: 2px;
+        border-radius: var(--wh40k-radius-sm);
         overflow: hidden;
     }
 
@@ -2745,7 +2745,7 @@
     &__label {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
@@ -2757,14 +2757,14 @@
     &__tags {
         display: flex;
         flex-wrap: wrap;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
     }
 }
 
 .wh40k-quality-tag {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 3px 8px;
     border-radius: 3px;
     font-size: 0.75rem;
@@ -2878,7 +2878,7 @@
 
     &::-webkit-scrollbar-thumb {
         background: var(--wh40k-border-color);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         &:hover {
             background: var(--wh40k-gold-dark);
@@ -2900,7 +2900,7 @@
 
 .wh40k-weapon-actions {
     display: flex;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     margin-bottom: 12px;
     padding: 12px;
     background: rgba(12, 16, 24, 0.55);
@@ -2958,7 +2958,7 @@
 .wh40k-edit-notice {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 10px 12px;
     margin-bottom: 12px;
     background: rgba(58, 93, 132, 0.2);
@@ -2988,7 +2988,7 @@
     &__header {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         padding: 10px 12px;
         background: linear-gradient(135deg, rgba(62, 34, 22, 0.5) 0%, rgba(16, 20, 28, 0.2) 100%);
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -3026,9 +3026,9 @@
     &__badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         padding: 3px 8px;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.7rem;
         font-weight: 600;
 
@@ -3079,7 +3079,7 @@
 
     &--checkboxes {
         flex-wrap: wrap;
-        gap: 16px;
+        gap: var(--wh40k-space-lg);
     }
 }
 
@@ -3087,7 +3087,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 
     &--small {
         flex: 0 0 70px;
@@ -3107,7 +3107,7 @@
         padding: 6px 10px;
         background: var(--wh40k-input-bg);
         border: 1px solid var(--wh40k-border-color-light);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.9rem;
         color: var(--wh40k-text-dark);
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -3136,7 +3136,7 @@
         padding: 6px 10px;
         background: rgba(12, 16, 24, 0.35);
         border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.9rem;
         color: var(--wh40k-text-medium);
         min-height: 32px;
@@ -3148,7 +3148,7 @@
 .wh40k-checkbox {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     cursor: pointer;
 
     input {
@@ -3160,7 +3160,7 @@
     span {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         font-size: 0.85rem;
         color: var(--wh40k-text-medium);
 
@@ -3186,7 +3186,7 @@
         height: 28px;
         background: var(--wh40k-panel-bg-translucent);
         border: 1px solid var(--wh40k-border-color);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         overflow: hidden;
     }
 
@@ -3238,17 +3238,17 @@
 .wh40k-craftsmanship-effects {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
 }
 
 .wh40k-craftsmanship-effect {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 8px 12px;
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-gold);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     &__label {
         font-size: 0.8rem;
@@ -3282,19 +3282,19 @@
 .wh40k-qualities-grid {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-quality-card {
     padding: 10px 12px;
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     &__header {
         display: flex;
         align-items: baseline;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         margin-bottom: 4px;
     }
 
@@ -3333,7 +3333,7 @@
     padding: 8px 10px;
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     &__name {
         font-weight: 500;
@@ -3342,7 +3342,7 @@
 
     &__actions {
         display: flex;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
     }
 }
 
@@ -3353,7 +3353,7 @@
 .wh40k-mod-card {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     padding: 10px 12px;
     margin-bottom: 8px;
     transition: all var(--wh40k-transition-base);
@@ -3387,7 +3387,7 @@
     &__title {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
 
         i {
             color: var(--wh40k-gold);
@@ -3402,7 +3402,7 @@
 
     &__actions {
         display: flex;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
     }
 
     &__effects {
@@ -3416,11 +3416,11 @@
 .wh40k-mod-effect {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 4px 8px;
     background: rgba(58, 93, 132, 0.2);
     border: 1px solid rgba(98, 142, 185, 0.3);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.75rem;
     color: rgba(178, 208, 234, 0.95);
 
@@ -3470,7 +3470,7 @@
     padding: 3px 8px;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.7rem;
     font-weight: 500;
     color: var(--wh40k-text-dark);
@@ -3557,7 +3557,7 @@
         padding: 12px;
         background: var(--wh40k-input-bg);
         border: 1px solid var(--wh40k-border-color-light);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
     }
 }
 
@@ -3585,7 +3585,7 @@
     padding: 8px 16px;
     background: var(--wh40k-btn-bg);
     border: 1px solid var(--wh40k-border-color);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.85rem;
     font-weight: 500;
     color: var(--wh40k-text-dark);
@@ -3652,7 +3652,7 @@
         width: 40px;
         height: 40px;
         border: 2px solid var(--wh40k-bronze);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         object-fit: cover;
     }
 
@@ -3674,7 +3674,7 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         margin-top: 2px;
         font-size: 0.75rem;
         color: var(--wh40k-text-muted);
@@ -3741,7 +3741,7 @@
     &__craft-mods {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         padding: 8px 12px;
         background: rgba(212, 175, 55, 0.1);
         border-bottom: 1px solid var(--wh40k-border-color-light);
@@ -3766,7 +3766,7 @@
     &__qualities {
         display: flex;
         flex-wrap: wrap;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         padding: 8px 12px;
         border-bottom: 1px solid var(--wh40k-border-color-light);
     }
@@ -3809,7 +3809,7 @@
         gap: 5px;
         padding: 6px 14px;
         border: 1px solid;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
@@ -3879,7 +3879,7 @@
         position: absolute;
         inset: 0;
         border: 2px dashed transparent;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         transition: all var(--wh40k-transition-medium);
         pointer-events: none;
     }
@@ -3919,12 +3919,12 @@
     padding: 12px;
     background: rgba(10, 12, 18, 0.45);
     border: 1px solid rgba(212, 175, 55, 0.2);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     &__header {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         margin-bottom: 12px;
         padding-bottom: 8px;
         border-bottom: 1px solid rgba(212, 175, 55, 0.15);
@@ -3942,7 +3942,7 @@
     &__body {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: var(--wh40k-space-md);
     }
 }
 
@@ -3955,11 +3955,11 @@
 .wh40k-dropzone-compat__item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 6px 10px;
     background: rgba(212, 175, 55, 0.05);
     border-left: 2px solid rgba(212, 175, 55, 0.4);
-    border-radius: 2px;
+    border-radius: var(--wh40k-radius-sm);
     font-size: 0.8rem;
     color: rgba(240, 232, 220, 0.85);
 
@@ -3977,7 +3977,7 @@
 .wh40k-dropzone-categories {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-dropzone-category__label {
@@ -4087,7 +4087,7 @@
         padding: 20px;
         background: rgba(212, 175, 55, 0.12);
         border: 2px dashed rgba(212, 175, 55, 0.6);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-weight: 600;
         color: var(--wh40k-gold-bright);
         text-align: center;

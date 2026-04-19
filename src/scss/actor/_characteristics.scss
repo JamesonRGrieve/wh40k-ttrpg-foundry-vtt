@@ -38,7 +38,7 @@
 .wh40k-origin-step-header {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 8px 10px;
     background: var(--wh40k-accent-overlay);
     border-bottom: 1px solid var(--wh40k-border-color-light);
@@ -78,7 +78,7 @@
 .wh40k-origin-item-img {
     width: 40px;
     height: 40px;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border: 1px solid var(--wh40k-border-color-light);
 }
 
@@ -118,7 +118,7 @@
     justify-content: center;
     min-height: 50px;
     border: 2px dashed var(--wh40k-border-color);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-text-muted);
     transition: all var(--wh40k-transition-base);
 
@@ -149,7 +149,7 @@
 .wh40k-effect-card {
     background: var(--wh40k-panel-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
 }
 

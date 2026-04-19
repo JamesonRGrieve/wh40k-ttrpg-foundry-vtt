@@ -42,7 +42,7 @@
     .wh40k-item-img {
         width: 20px;
         height: 20px;
-        border-radius: 2px;
+        border-radius: var(--wh40k-radius-sm);
     }
 }
 
@@ -56,7 +56,7 @@
 .wh40k-bio-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    gap: var(--wh40k-space-lg);
     width: 100%;
 }
 
@@ -161,7 +161,7 @@
 .wh40k-char-field {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     font-size: 0.75em;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -169,7 +169,7 @@
 
     select {
         border: 1px solid rgba(74, 55, 40, 0.2);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         padding: 4px 6px;
         background: rgba(255, 255, 255, 0.9);
         font-size: 0.9em;
@@ -182,7 +182,7 @@
 
     input {
         border: 1px solid rgba(74, 55, 40, 0.2);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         padding: 4px 6px;
         background: rgba(255, 255, 255, 0.9);
         font-size: 0.9em;
@@ -213,7 +213,7 @@
     .wh40k-panel-header {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
 
         .wh40k-panel-count {
             margin-left: auto;
@@ -233,7 +233,7 @@
             transition: all var(--wh40k-transition-base);
 
             &:hover {
-                color: var(--wh40k-accent-gold, #d4af37);
+                color: var(--wh40k-accent-gold, $wh40k-color-gold);
                 transform: scale(1.1);
             }
         }
@@ -243,13 +243,13 @@
 .wh40k-ship-roles-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
 }
 
 .wh40k-ship-role-card {
     background: rgba(255, 255, 255, 0.5);
     border: 1px solid rgba(74, 55, 40, 0.15);
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     overflow: hidden;
     transition: all var(--wh40k-transition-base);
 
@@ -262,7 +262,7 @@
 .wh40k-ship-role-header {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 10px 12px;
     background: linear-gradient(180deg, rgba(74, 55, 40, 0.08) 0%, rgba(74, 55, 40, 0.03) 100%);
     border-bottom: 1px solid rgba(74, 55, 40, 0.1);
@@ -271,7 +271,7 @@
 .wh40k-ship-role-name {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     flex: 1;
     background: none;
     border: none;
@@ -287,7 +287,7 @@
     .wh40k-item-img {
         width: 28px;
         height: 28px;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         border: 1px solid rgba(74, 55, 40, 0.2);
     }
 
@@ -305,7 +305,7 @@
     min-width: 32px;
     height: 24px;
     padding: 0 8px;
-    background: linear-gradient(135deg, #d4af37 0%, #c9a42b 100%);
+    background: linear-gradient(135deg, $wh40k-color-gold 0%, #c9a42b 100%);
     border: 1px solid #b89420;
     border-radius: 12px;
     font-size: 0.8em;
@@ -319,13 +319,13 @@
     padding: 12px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-role-section {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     font-size: 0.9em;
 
     &.wh40k-role-abilities,
@@ -364,11 +364,11 @@
 .wh40k-role-ability {
     display: flex;
     align-items: flex-start;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 8px 10px;
     background: rgba(74, 55, 40, 0.05);
     border-radius: 6px;
-    border-left: 3px solid var(--wh40k-accent-gold, #d4af37);
+    border-left: 3px solid var(--wh40k-accent-gold, $wh40k-color-gold);
 }
 
 .wh40k-ability-name {
@@ -422,7 +422,7 @@
 .wh40k-bonus-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 4px 10px;
     border-radius: 14px;
     font-size: 0.85em;
@@ -465,7 +465,7 @@
         align-items: center;
         gap: 6px;
         padding: 8px 16px;
-        background: linear-gradient(180deg, var(--wh40k-accent-gold, #d4af37) 0%, #c9a42b 100%);
+        background: linear-gradient(180deg, var(--wh40k-accent-gold, $wh40k-color-gold) 0%, #c9a42b 100%);
         border: 1px solid #b89420;
         border-radius: 6px;
         color: #2a1a0a;
@@ -474,7 +474,7 @@
         transition: all var(--wh40k-transition-base);
 
         &:hover {
-            background: linear-gradient(180deg, #e0c050 0%, var(--wh40k-accent-gold, #d4af37) 100%);
+            background: linear-gradient(180deg, #e0c050 0%, var(--wh40k-accent-gold, $wh40k-color-gold) 100%);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
     }
@@ -485,7 +485,7 @@
     margin-top: 10px;
     padding: 10px;
     background: rgba(0, 0, 0, 0.05);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 }
 
 .wh40k-ship-role-detail {
@@ -510,7 +510,7 @@
 .wh40k-ship-initiative-box {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 8px 12px;
     margin-bottom: 10px;
     background: linear-gradient(135deg, rgba(30, 60, 90, 0.15) 0%, rgba(40, 80, 120, 0.2) 100%);
@@ -525,7 +525,7 @@
     padding: 6px 12px;
     background: linear-gradient(180deg, #4a6b8a 0%, #3a5a7a 100%);
     border: 1px solid #2a4a6a;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: #fff;
     font-size: 0.85em;
     font-weight: 600;
@@ -555,7 +555,7 @@
     margin-left: auto;
     padding: 4px 10px;
     background: rgba(255, 255, 255, 0.8);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border: 1px solid rgba(30, 60, 90, 0.2);
 }
 
@@ -563,7 +563,7 @@
 .wh40k-resource-status {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 8px 12px;
     margin-bottom: 6px;
     background: linear-gradient(135deg, rgba(40, 120, 60, 0.1) 0%, rgba(60, 140, 80, 0.15) 100%);

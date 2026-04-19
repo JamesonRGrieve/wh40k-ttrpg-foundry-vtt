@@ -20,7 +20,7 @@
                 height: 80px;
                 object-fit: cover;
                 border: 2px solid var(--wh40k-border-color);
-                border-radius: 4px;
+                border-radius: var(--wh40k-radius-md);
                 cursor: pointer;
                 transition: border-color 0.2s;
 
@@ -249,7 +249,7 @@
                     padding: 0.5rem;
                     font-size: 1.25rem;
                     border: 2px solid var(--wh40k-border-color);
-                    border-radius: 4px;
+                    border-radius: var(--wh40k-radius-md);
                 }
             }
         }
@@ -265,7 +265,7 @@
                 gap: 0.5rem;
                 padding: 0.5rem;
                 background: var(--wh40k-bg-secondary);
-                border-radius: 4px;
+                border-radius: var(--wh40k-radius-md);
 
                 .skill-name {
                     flex: 2;
@@ -384,13 +384,13 @@
                 gap: 0.5rem;
                 padding: 0.5rem;
                 background: var(--wh40k-bg-secondary);
-                border-radius: 4px;
+                border-radius: var(--wh40k-radius-md);
 
                 .ability-icon {
                     width: 24px;
                     height: 24px;
                     object-fit: contain;
-                    border-radius: 2px;
+                    border-radius: var(--wh40k-radius-sm);
                 }
 
                 .ability-name {
@@ -407,7 +407,7 @@
                     font-size: 0.75rem;
                     padding: 0.125rem 0.5rem;
                     background: var(--wh40k-accent-color-light);
-                    border-radius: 8px;
+                    border-radius: var(--wh40k-radius-lg);
                 }
             }
         }
@@ -444,7 +444,7 @@
                 font-size: 0.875rem;
                 padding: 0.125rem 0.5rem;
                 background: var(--wh40k-warning);
-                border-radius: 4px;
+                border-radius: var(--wh40k-radius-md);
                 margin-left: 0.5rem;
             }
 
@@ -475,7 +475,7 @@
                     text-align: center;
                     padding: 0.5rem;
                     background: var(--wh40k-bg-secondary);
-                    border-radius: 4px;
+                    border-radius: var(--wh40k-radius-md);
                     min-width: 50px;
 
                     .char-label {
@@ -526,7 +526,7 @@
                 .ability-tag {
                     padding: 0.25rem 0.5rem;
                     background: var(--wh40k-bg-secondary);
-                    border-radius: 4px;
+                    border-radius: var(--wh40k-radius-md);
                     font-size: 0.875rem;
 
                     &.talent {
@@ -628,7 +628,7 @@
             padding: 0.75rem;
             background: var(--wh40k-bg-primary);
             border: 2px solid transparent;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             cursor: pointer;
             transition: all var(--wh40k-transition-base);
 
@@ -645,7 +645,7 @@
                 width: 48px;
                 height: 48px;
                 object-fit: cover;
-                border-radius: 4px;
+                border-radius: var(--wh40k-radius-md);
             }
 
             .template-info {

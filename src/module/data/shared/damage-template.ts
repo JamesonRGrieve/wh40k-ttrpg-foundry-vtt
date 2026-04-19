@@ -1,5 +1,4 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
-import FormulaField from '../fields/formula-field.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
