@@ -17,12 +17,14 @@
                 </div>
                 <div class="wh40k-header-info tw-flex tw-flex-col tw-gap-1.5">
                     <div class="wh40k-header-name-line tw-flex tw-items-center tw-justify-start">
-                        <span class="wh40k-hdr-name" data-inline-edit>
+                        <span class="wh40k-hdr-name" data-inline-edit {{#unless actor.name}}data-inline-edit-start{{/unless}}>
+                            <span class="wh40k-hdr-name-text wh40k-inline-edit-text">{{#if actor.name}}{{actor.name}}{{else}}<em class="wh40k-hdr-placeholder">Character Name</em>{{/if}}</span>
                             <input class="wh40k-hdr-name-input wh40k-inline-edit-input" name="name" type="text" value="{{actor.name}}" placeholder="Character Name" readonly />
                             <button type="button" class="wh40k-inline-edit-save" data-inline-edit-save tabindex="-1" title="Save"><i class="fas fa-check"></i></button>
                         </span>
                         <span class="wh40k-hdr-paren">(</span>
-                        <span class="wh40k-hdr-player" data-inline-edit>
+                        <span class="wh40k-hdr-player" data-inline-edit {{#unless system.bio.playerName}}data-inline-edit-start{{/unless}}>
+                            <span class="wh40k-hdr-player-text wh40k-inline-edit-text">{{#if system.bio.playerName}}{{system.bio.playerName}}{{else}}<em class="wh40k-hdr-placeholder">Player Name</em>{{/if}}</span>
                             <input class="wh40k-hdr-player-input wh40k-inline-edit-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" readonly />
                             <button type="button" class="wh40k-inline-edit-save" data-inline-edit-save tabindex="-1" title="Save"><i class="fas fa-check"></i></button>
                         </span>

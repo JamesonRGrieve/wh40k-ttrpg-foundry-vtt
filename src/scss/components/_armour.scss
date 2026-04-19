@@ -4,15 +4,16 @@
 // ============================================
 
 .wh40k-armour-panel {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
 
     .wh40k-panel-body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex: 1 1 auto;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        flex: 1 1 auto !important;
         padding: var(--wh40k-space-sm, 8px);
         background: var(--wh40k-panel-body-bg, rgba(40, 35, 30, 0.6));
         min-height: auto;
@@ -69,7 +70,7 @@
         '.       head      .'
         'rarm    body      larm'
         'rleg    body      lleg'; // Legs positioned at bottom, body spans
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: var(--wh40k-space-xs, 4px);
     width: 100%;
     max-width: 300px;
@@ -245,7 +246,7 @@
     padding: 12px;
     background: var(--wh40k-panel-bg-solid);
     border: 2px solid var(--wh40k-border-color);
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     text-align: center;
     box-shadow: 0 2px 8px var(--wh40k-shadow-medium);
 
@@ -279,7 +280,7 @@
     color: var(--wh40k-text-dark);
     background: var(--wh40k-panel-bg);
     border: 2px solid var(--wh40k-border-color-strong);
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     padding: 6px 20px;
     min-width: 70px;
     box-shadow: inset 0 1px 0 var(--wh40k-text-shadow), 0 2px 4px var(--wh40k-shadow-medium);
@@ -288,7 +289,7 @@
 .wh40k-hit-location {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     margin-top: 8px;
 }
 

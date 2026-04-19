@@ -229,6 +229,43 @@
             "Player": "Player",
             "Rank": "Rank"
         },
+        "Characteristic": {
+            "WeaponSkill": "Weapon Skill",
+            "BallisticSkill": "Ballistic Skill",
+            "Strength": "Strength",
+            "Toughness": "Toughness",
+            "Agility": "Agility",
+            "Intelligence": "Intelligence",
+            "Perception": "Perception",
+            "Willpower": "Willpower",
+            "Fellowship": "Fellowship",
+            "Influence": "Influence"
+        },
+        "Advancement": {
+            "Title": "Advancement",
+            "TitleWithCareer": "Advancement — {career}",
+            "XPAvailable": "XP Available",
+            "XPUsed": "XP Used",
+            "Maxed": "Maxed",
+            "CannotAfford": "Not enough XP",
+            "ConfirmPurchase": "Spend {cost} XP to advance {name}?",
+            "PurchaseSuccess": "Advanced {name} for {cost} XP",
+            "NoCareerTitle": "No Career Selected",
+            "NoCareerMessage": "Select a career in the Origin Path to unlock advancements.",
+            "NoCareerHint": "Open the Origin Path Builder from the character header.",
+            "Tab": {
+                "Characteristics": "Characteristics",
+                "Skills": "Skills",
+                "Talents": "Talents"
+            },
+            "Tier": {
+                "Simple": "Simple",
+                "Intermediate": "Intermediate",
+                "Trained": "Trained",
+                "Proficient": "Proficient",
+                "Expert": "Expert"
+            }
+        },
         "Tabs": {
             "Overview": "Overview",
             "Status": "Status",

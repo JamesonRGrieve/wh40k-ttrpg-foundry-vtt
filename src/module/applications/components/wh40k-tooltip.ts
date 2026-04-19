@@ -4,6 +4,8 @@
  * with MutationObserver to provide rich tooltip content.
  */
 
+import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+
 /**
  * A class responsible for orchestrating rich tooltips in the WH40K RPG system.
  * Uses Foundry's native TooltipManager and observes tooltip activation via MutationObserver.
@@ -360,20 +362,28 @@ export class TooltipsWH40K {
             }
         }
 
+        // Get system-specific skill ranks
+        let gameSystem: string | null = null;
+        if (actorUuid) {
+            const actor = await fromUuid(actorUuid);
+            // @ts-expect-error - system data access
+            gameSystem = actor?.system?.gameSystem ?? null;
+        }
+        const systemConfig = gameSystem ? SystemConfigRegistry.getOrNull(gameSystem) : null;
+        const skillRanks = systemConfig?.getSkillRanks() ?? [
+            { level: 1, key: 'trained', tooltip: 'Trained', bonus: 0 },
+            { level: 2, key: 'plus10', tooltip: '+10', bonus: 10 },
+            { level: 3, key: 'plus20', tooltip: '+20', bonus: 20 },
+        ];
+
         // Determine training level
         const level = plus20 ? 3 : plus10 ? 2 : trained ? 1 : 0;
-        let training = 'Untrained';
+        let training = basic ? 'Basic (Untrained)' : 'Untrained';
         let trainingBonus = dataTB ?? 0;
-        if (plus20) {
-            training = '+20';
-            trainingBonus = dataTB ?? 20;
-        } else if (plus10) {
-            training = '+10';
-            trainingBonus = dataTB ?? 10;
-        } else if (trained) {
-            training = 'Trained';
-        } else if (basic) {
-            training = 'Basic (Untrained)';
+        if (level > 0 && level <= skillRanks.length) {
+            const rank = skillRanks[level - 1];
+            training = rank.tooltip;
+            trainingBonus = dataTB ?? rank.bonus;
         }
 
         // Use provided baseValue or calculate it
@@ -452,12 +462,12 @@ export class TooltipsWH40K {
                 <div class="wh40k-tooltip__training-title">Training Progression:</div>
                 <div class="wh40k-tooltip__training-track">
                     <span class="${level === 0 ? 'active' : ''}">Untrained</span>
-                    <i class="fas fa-arrow-right"></i>
-                    <span class="${level === 1 ? 'active' : ''}">Trained</span>
-                    <i class="fas fa-arrow-right"></i>
-                    <span class="${level === 2 ? 'active' : ''}">+10</span>
-                    <i class="fas fa-arrow-right"></i>
-                    <span class="${level === 3 ? 'active' : ''}">+20</span>
+                    ${skillRanks
+                        .map(
+                            (rank: any, i: number) =>
+                                `<i class="fas fa-arrow-right"></i><span class="${level === i + 1 ? 'active' : ''}">${rank.tooltip}</span>`,
+                        )
+                        .join('')}
                 </div>
             </div>
             <div class="wh40k-tooltip__hint">

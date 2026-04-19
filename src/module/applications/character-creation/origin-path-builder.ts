@@ -85,6 +85,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static PARTS = {
         main: {
             template: 'systems/wh40k-rpg/templates/character-creation/origin-path-builder.hbs',
+            scrollable: ['', '.step-content', '.selection-panel', '.preview-panel'],
         },
     };
 
@@ -2755,6 +2756,22 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if ((this as any)._influenceRolled) resourceUpdate['system.influence'] = (this as any)._influenceRolled;
             if (Object.keys(resourceUpdate).length > 0) {
                 await (this as any).actor.update(resourceUpdate);
+            }
+
+            // Offer to reset XP to system starting value
+            const systemConfig = (this as any).systemConfig;
+            const startingXP = systemConfig?.startingXP ?? 0;
+            if (startingXP > 0) {
+                const resetXP = await Dialog.confirm({
+                    title: 'Reset Experience',
+                    content: `<p>Reset experience to the starting value for this game system?</p><p><strong>${startingXP} XP</strong> will be set as both total and available.</p>`,
+                });
+                if (resetXP) {
+                    await (this as any).actor.update({
+                        'system.experience.total': startingXP,
+                        'system.experience.used': 0,
+                    });
+                }
             }
 
             // Success

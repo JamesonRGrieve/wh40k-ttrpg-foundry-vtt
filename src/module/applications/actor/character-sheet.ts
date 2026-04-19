@@ -10,10 +10,12 @@ import WH40K from '../../config.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import { AssignDamageData } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
+import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import AcquisitionDialog from '../dialogs/acquisition-dialog.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
+import TransactionRequestDialog from '../dialogs/transaction-request-dialog.ts';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 
@@ -84,6 +86,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             'stowToShip': CharacterSheet.#stowToShip,
             'unstowFromShip': CharacterSheet.#unstowFromShip,
             'swapCheckedItems': CharacterSheet.#swapCheckedItems,
+            'giveCheckedItems': CharacterSheet.#giveCheckedItems,
             'toggleActivate': CharacterSheet.#toggleActivate,
             'filterEquipment': CharacterSheet.#filterEquipment,
             'clearEquipmentSearch': CharacterSheet.#clearEquipmentSearch,
@@ -122,6 +125,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             'addAcquisition': CharacterSheet.#addAcquisition,
             'removeAcquisition': CharacterSheet.#removeAcquisition,
             'openAcquisitionDialog': CharacterSheet.#openAcquisitionDialog,
+            'openTransactionDialog': CharacterSheet.#openTransactionDialog,
 
             // Experience actions
             'customXP': CharacterSheet.#customXP,
@@ -307,6 +311,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
 
         // Edit mode state
         context.inEditMode = this.inEditMode;
+        context.isGM = (game as any).user?.isGM ?? false;
 
         // WH40K-specific configuration
         context.dh = CONFIG.wh40k || WH40K;
@@ -1331,6 +1336,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      */
     _prepareEquipmentContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
         // Equipment data already prepared in _prepareLoadoutData
+        context.transactionSourceCount = TransactionManager.listSourcesForBuyer(this.actor).length;
         return context;
     }
 
@@ -2226,6 +2232,78 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     /* -------------------------------------------- */
 
     /**
+     * Give all checked items (from both backpack and ship columns) to another actor.
+     * Opens an actor picker dialog and transfers each selected item.
+     */
+    static async #giveCheckedItems(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const panel = target.closest('.wh40k-panel-backpack-split') || this.element.querySelector('.wh40k-panel-backpack-split');
+        if (!panel) return;
+
+        const allChecks = panel.querySelectorAll('.wh40k-transfer-check:checked');
+        if (!allChecks.length) {
+            (ui.notifications as any).warn('No items selected to give.');
+            return;
+        }
+
+        const itemIds: string[] = [];
+        allChecks.forEach((cb: Element) => {
+            const id = (cb as HTMLElement).dataset.itemId;
+            if (id) itemIds.push(id);
+        });
+        if (!itemIds.length) return;
+
+        const sourceActor = (this as any).actor;
+        const targets = (game as any).actors.filter((a: any) => a.id !== sourceActor.id && a.isOwner);
+
+        if (!targets.length) {
+            (ui.notifications as any).warn('No other actors available to give items to.');
+            return;
+        }
+
+        const options = targets.map((a: any) => `<option value="${a.id}">${a.name}</option>`).join('');
+        const content = `<form><div class="form-group"><label>Give ${itemIds.length} item(s) to:</label><select name="targetActorId">${options}</select></div></form>`;
+
+        const targetId = await foundry.applications.api.DialogV2.prompt({
+            window: { title: 'Give Items' },
+            content,
+            ok: {
+                label: 'Give',
+                icon: 'fas fa-hand-holding',
+                callback: (_event: any, button: any) => {
+                    return button.form.elements.targetActorId.value;
+                },
+            },
+        });
+
+        if (!targetId) return;
+        const targetActor = (game as any).actors.get(targetId);
+        if (!targetActor) return;
+
+        const itemsData = itemIds
+            .map((id: string) => sourceActor.items.get(id))
+            .filter(Boolean)
+            .map((item: any) => {
+                const data = item.toObject();
+                if (data.system) {
+                    data.system.equipped = false;
+                    data.system.inBackpack = true;
+                    data.system.inShipStorage = false;
+                }
+                delete data._id;
+                return data;
+            });
+
+        if (!itemsData.length) return;
+
+        await targetActor.createEmbeddedDocuments('Item', itemsData);
+        await sourceActor.deleteEmbeddedDocuments('Item', itemIds);
+        (ui.notifications as any).info(`Gave ${itemsData.length} item(s) to ${targetActor.name}.`);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
      * Handle toggling force field activation.
      * @this {CharacterSheet}
      * @param {Event} event         Triggering click event.
@@ -2359,6 +2437,26 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     static async #openAcquisitionDialog(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         await AcquisitionDialog.show((this as any).actor);
+    }
+
+    /**
+     * Open the barter / requisition dialog from the equipment page.
+     * @this {CharacterSheet}
+     * @param {Event} event         Triggering click event.
+     * @param {HTMLElement} target  Button that was clicked.
+     */
+    static async #openTransactionDialog(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+
+        const sourceCount = TransactionManager.listSourcesForBuyer((this as any).actor).length;
+        if (!sourceCount) {
+            (this as any)._notify('warning', 'No barter or requisition sources are currently available.', {
+                duration: 4000,
+            });
+            return;
+        }
+
+        await TransactionRequestDialog.show((this as any).actor);
     }
 
     /* -------------------------------------------- */

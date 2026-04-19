@@ -21,6 +21,13 @@ export abstract class BaseSystemConfig {
     /** Whether this system uses career-based advance tables */
     abstract readonly usesCareerTables: boolean;
 
+    // ── Starting Resources ────────────────────────────────────────
+
+    /** Starting XP for a new character in this system */
+    get startingXP(): number {
+        return 0;
+    }
+
     // ── Skill Ranks ──────────────────────────────────────────────
 
     /** Ordered skill rank definitions for this system */

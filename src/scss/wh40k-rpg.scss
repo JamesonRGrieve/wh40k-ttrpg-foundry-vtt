@@ -223,7 +223,7 @@
         .filter-subheader {
             margin: 0 0 1rem 0;
             font-size: 0.95rem;
-            color: #d4af37;
+            color: $wh40k-color-gold;
             font-weight: 600;
 
             i {
@@ -292,7 +292,7 @@
         margin-bottom: 0.5rem;
         background: rgba(0, 0, 0, 0.2);
         border: 1px solid var(--color-border-dark);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         cursor: pointer;
         transition: all var(--wh40k-transition-base);
 
@@ -306,7 +306,7 @@
             width: 40px;
             height: 40px;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             margin-right: 1rem;
             border: 1px solid var(--color-border-dark);
         }
@@ -362,7 +362,7 @@
                     padding: 0.25rem 0.625rem;
                     background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
                     border: 1px solid rgba(212, 175, 55, 0.4);
-                    border-radius: 4px;
+                    border-radius: var(--wh40k-radius-md);
                     font-size: 0.75rem;
                     font-weight: 600;
                     color: #fff;
@@ -441,7 +441,7 @@
                     padding: 0.25rem 0.625rem;
                     background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
                     border: 1px solid rgba(212, 175, 55, 0.4);
-                    border-radius: 4px;
+                    border-radius: var(--wh40k-radius-md);
                     font-size: 0.75rem;
                     font-weight: 600;
                     color: #fff;
@@ -553,7 +553,7 @@
     .wh40k-header-layout {
         display: flex !important;
         flex-direction: row !important;
-        gap: 16px !important;
+        gap: var(--wh40k-space-lg) !important;
         padding: 8px 12px !important;
         align-items: flex-start !important;
     }
@@ -581,12 +581,12 @@
         height: 72px !important;
         object-fit: cover !important;
         border: 2px solid var(--wh40k-border-color, #4a3728) !important;
-        border-radius: 4px !important;
+        border-radius: var(--wh40k-radius-md) !important;
         transition: border-color 0.2s !important;
     }
 
     .wh40k-portrait-box:hover .wh40k-portrait {
-        border-color: var(--wh40k-gold, #d4af37) !important;
+        border-color: var(--wh40k-gold, $wh40k-color-gold) !important;
     }
 
     .wh40k-bio-fields {
@@ -611,7 +611,7 @@
 
     .wh40k-bio-name:focus {
         outline: none !important;
-        border-bottom-color: var(--wh40k-gold, #d4af37) !important;
+        border-bottom-color: var(--wh40k-gold, $wh40k-color-gold) !important;
     }
 
     .wh40k-bio-row {
@@ -646,7 +646,7 @@
 
     .wh40k-bio-input:focus {
         outline: none !important;
-        border-bottom-color: var(--wh40k-gold, #d4af37) !important;
+        border-bottom-color: var(--wh40k-gold, $wh40k-color-gold) !important;
     }
 
     // RIGHT: Characteristics HUD (V1 enhanced)
@@ -667,7 +667,7 @@
     nav.wh40k-navigation {
         display: flex !important;
         flex-wrap: wrap !important;
-        gap: 4px !important;
+        gap: var(--wh40k-space-xs) !important;
         padding: 8px !important;
         background: rgba(0, 0, 0, 0.2) !important;
         flex: 0 0 auto !important;
@@ -675,7 +675,7 @@
 
     nav.wh40k-navigation .wh40k-nav-item {
         padding: 6px 12px !important;
-        border-radius: 4px !important;
+        border-radius: var(--wh40k-radius-md) !important;
         cursor: pointer !important;
         transition: background-color 0.2s !important;
         text-transform: uppercase !important;
@@ -724,7 +724,7 @@
     .wh40k-utility-menu {
         background: rgba(40, 40, 40, 0.95) !important;
         border: 1px solid rgba(196, 135, 29, 0.5) !important;
-        border-radius: 4px !important;
+        border-radius: var(--wh40k-radius-md) !important;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
         min-width: 200px !important;
         padding: 4px 0 !important;
@@ -736,7 +736,7 @@
             font-size: 0.9rem !important;
             display: flex !important;
             align-items: center !important;
-            gap: 8px !important;
+            gap: var(--wh40k-space-sm) !important;
 
             &:hover {
                 background: rgba(196, 135, 29, 0.2) !important;
@@ -786,7 +786,7 @@
     #tab-body section.tab.active {
         display: flex !important;
         flex-direction: column !important;
-        gap: 12px !important;
+        gap: var(--wh40k-space-md) !important;
         padding: 12px !important;
     }
 
@@ -806,7 +806,7 @@
         display: grid !important;
         grid-template-columns: minmax(280px, 1fr) auto !important;
         grid-template-rows: auto !important;
-        gap: 12px !important;
+        gap: var(--wh40k-space-md) !important;
         align-items: start !important;
         padding: 8px 12px 6px !important;
     }
@@ -814,7 +814,7 @@
     .wh40k-header-left {
         display: flex !important;
         flex-direction: column !important;
-        gap: 8px !important;
+        gap: var(--wh40k-space-sm) !important;
     }
 
     .wh40k-header-topline {
@@ -922,8 +922,8 @@
 
     .wh40k-header-input:focus {
         outline: none !important;
-        border-bottom-color: var(--wh40k-gold, #d4af37) !important;
-        box-shadow: 0 1px 0 var(--wh40k-gold, #d4af37) !important;
+        border-bottom-color: var(--wh40k-gold, $wh40k-color-gold) !important;
+        box-shadow: 0 1px 0 var(--wh40k-gold, $wh40k-color-gold) !important;
     }
 
     .wh40k-name-input {
@@ -945,13 +945,52 @@
         flex: 0 0 auto !important;
         min-width: 0 !important;
         position: relative !important;
+        cursor: text !important;
+
+        // Default: show text, hide input
+        .wh40k-inline-edit-text {
+            display: inline !important;
+        }
+        .wh40k-inline-edit-input {
+            display: none !important;
+        }
+
+        // Editing: hide text, show input
+        &.is-editing {
+            .wh40k-inline-edit-text {
+                display: none !important;
+            }
+            .wh40k-inline-edit-input {
+                display: inline !important;
+                min-width: 60px !important;
+            }
+        }
+    }
+
+    .wh40k-hdr-name-text {
+        font-size: 1.2em !important;
+        font-weight: bold !important;
+        color: var(--wh40k-text-dark, #333) !important;
+        padding: 2px 4px !important;
+    }
+
+    .wh40k-hdr-player-text {
+        font-size: 0.85em !important;
+        font-style: italic !important;
+        color: var(--wh40k-text-medium, #666) !important;
+        padding: 2px 4px !important;
+    }
+
+    .wh40k-hdr-placeholder {
+        color: var(--wh40k-text-muted, #999) !important;
+        font-weight: normal !important;
     }
 
     .wh40k-hdr-name-input,
     .wh40k-hdr-player-input {
         border: none !important;
         background: transparent !important;
-        border-bottom: 1px solid transparent !important;
+        border-bottom: 1px solid var(--wh40k-gold, $wh40k-color-gold) !important;
         color: var(--wh40k-text-dark, #333) !important;
         padding: 2px 4px !important;
         width: auto !important;
@@ -960,11 +999,7 @@
 
         &:focus {
             outline: none !important;
-            border-bottom-color: var(--wh40k-gold, #d4af37) !important;
-        }
-
-        &[readonly]:hover {
-            border-bottom-color: var(--wh40k-border-color-light, rgba(74, 55, 40, 0.3)) !important;
+            border-bottom-color: var(--wh40k-gold, $wh40k-color-gold) !important;
         }
     }
 
@@ -1016,9 +1051,9 @@
         margin-left: 4px !important;
         padding: 2px 6px !important;
         background: rgba(212, 175, 55, 0.15) !important;
-        border: 1px solid var(--wh40k-gold, #d4af37) !important;
+        border: 1px solid var(--wh40k-gold, $wh40k-color-gold) !important;
         border-radius: 3px !important;
-        color: var(--wh40k-gold, #d4af37) !important;
+        color: var(--wh40k-gold, $wh40k-color-gold) !important;
         cursor: pointer !important;
         font-size: 0.7rem !important;
         line-height: 1 !important;
@@ -1042,7 +1077,7 @@
         display: flex !important;
         flex-direction: column !important;
         align-items: flex-end !important;
-        gap: 8px !important;
+        gap: var(--wh40k-space-sm) !important;
         justify-self: stretch !important;
         justify-content: flex-start !important;
         padding: 4px 12px 4px 0 !important;
@@ -1083,7 +1118,7 @@
         position: relative !important;
         background: var(--wh40k-hud-bg, linear-gradient(180deg, #f5f0e6 0%, #ede8dc 100%)) !important;
         border: 1px solid var(--wh40k-border-color-strong, rgba(140, 120, 90, 0.5)) !important;
-        border-radius: 8px !important;
+        border-radius: var(--wh40k-radius-lg) !important;
         box-shadow: inset 0 1px 0 var(--wh40k-text-shadow, rgba(255, 255, 255, 0.3)), 0 2px 6px var(--wh40k-shadow-soft, rgba(0, 0, 0, 0.1)) !important;
         z-index: 1 !important;
     }
@@ -1092,7 +1127,7 @@
         display: grid !important;
         grid-template-rows: auto auto auto auto !important;
         justify-items: center !important;
-        gap: 4px !important;
+        gap: var(--wh40k-space-xs) !important;
         padding: 5px !important;
         flex: 1 1 0 !important;
         min-width: 0 !important;
@@ -1136,7 +1171,7 @@
     }
 
     .wh40k-char-hud-name:hover {
-        color: var(--wh40k-gold, #d4af37) !important;
+        color: var(--wh40k-gold, $wh40k-color-gold) !important;
     }
 
     .wh40k-char-hud-circle {
@@ -1148,7 +1183,7 @@
         align-items: center !important;
         justify-content: center !important;
         gap: 1px !important;
-        background: var(--wh40k-circle-bg, linear-gradient(180deg, #f4d03f 0%, #d4af37 70%, #b8860b 100%)) !important;
+        background: var(--wh40k-circle-bg, linear-gradient(180deg, #f4d03f 0%, $wh40k-color-gold 70%, #b8860b 100%)) !important;
         border: 2px solid var(--wh40k-border-color-strong, #8b6914) !important;
         box-shadow: inset 0 1px 2px var(--wh40k-text-shadow, rgba(0, 0, 0, 0.1)), 0 3px 8px var(--wh40k-shadow-soft, rgba(0, 0, 0, 0.15)) !important;
     }
@@ -1208,7 +1243,7 @@
         width: 170px !important;
         background: var(--wh40k-panel-bg-solid, #f8f4ec) !important;
         border: 1px solid var(--wh40k-border-color, rgba(140, 120, 90, 0.5)) !important;
-        border-radius: 8px !important;
+        border-radius: var(--wh40k-radius-lg) !important;
         box-shadow: 0 6px 16px var(--wh40k-shadow-medium, rgba(0, 0, 0, 0.2)) !important;
         z-index: 20 !important;
 
@@ -1220,7 +1255,7 @@
 
     .wh40k-char-hud-field {
         display: grid !important;
-        gap: 4px !important;
+        gap: var(--wh40k-space-xs) !important;
         text-align: left !important;
     }
 
@@ -1235,7 +1270,7 @@
     .wh40k-char-hud-details select {
         width: 100% !important;
         border: 1px solid var(--wh40k-border-color-light, rgba(140, 120, 90, 0.3)) !important;
-        border-radius: 4px !important;
+        border-radius: var(--wh40k-radius-md) !important;
         padding: 2px 4px !important;
         background: var(--wh40k-input-bg, #fff) !important;
         color: var(--wh40k-text-dark, #333) !important;
@@ -1283,7 +1318,7 @@
     nav.wh40k-sidebar-nav .wh40k-nav-item {
         display: block !important;
         padding: 6px 8px !important;
-        border-radius: 4px !important;
+        border-radius: var(--wh40k-radius-md) !important;
         cursor: pointer !important;
         transition: background-color 0.2s !important;
         text-transform: uppercase !important;
