@@ -92,9 +92,9 @@ export class RollData {
 
         const str = [];
 
-        const ammo = actionItem.items.find((i) => i.isAmmunition);
-        if (ammo) {
-            str.push(ammo.name);
+        const ammoName = actionItem.system?.loadedAmmo?.name;
+        if (ammoName) {
+            str.push(ammoName);
         }
 
         const specials = this.attackSpecials.map((s) => s.name).join(',');

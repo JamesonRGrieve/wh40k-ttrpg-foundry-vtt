@@ -161,9 +161,9 @@
                 <span class="wh40k-action-btn-cost">{{#if system.isMeleeWeapon}}—{{else}}Half+{{/if}}</span>
               </button>
               <button type="button" class="wh40k-action-btn wh40k-action-btn--ammo {{#if system.isMeleeWeapon}}disabled{{/if}}"
-                      title="{{#if system.isMeleeWeapon}}N/A — Melee{{else}}Ammo: {{system.clip.value}}/{{system.clip.max}}{{/if}}">
+                      title="{{#if system.isMeleeWeapon}}N/A — Melee{{else}}Ammo: {{system.clip.value}}/{{system.effectiveClipMax}}{{/if}}">
                 <i class="fa-solid fa-box-open"></i>
-                <span class="wh40k-action-btn-value">{{#if system.isMeleeWeapon}}—{{else}}{{system.clip.value}}/{{system.clip.max}}{{/if}}</span>
+                <span class="wh40k-action-btn-value">{{#if system.isMeleeWeapon}}—{{else}}{{system.clip.value}}/{{system.effectiveClipMax}}{{/if}}</span>
                 <span class="wh40k-action-btn-label">Ammo</span>
                 <span class="wh40k-action-btn-cost">—</span>
               </button>

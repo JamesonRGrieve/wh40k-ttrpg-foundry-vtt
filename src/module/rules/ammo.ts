@@ -71,10 +71,9 @@ const AMMO_EFFECTS: Record<string, AmmoEffects> = {
 export function ammoText(item) {
     game.wh40k.log('ammoText', item);
     if (item.usesAmmo) {
-        const ammo = item.items.find((i) => i.isAmmunition);
-        const name = ammo ? ammo.name : 'Standard';
+        const name = item.system.loadedAmmo?.name || 'Standard';
         game.wh40k.log('ammoName', name);
-        return `${name} (${item.system.clip.value}/${item.system.clip.max})`;
+        return `${name} (${item.system.clip.value}/${item.system.effectiveClipMax})`;
     }
     return undefined;
 }
@@ -116,9 +115,9 @@ export async function refundAmmo(actionData) {
  * @param rollData {WeaponRollData}
  */
 export function calculateAmmoAttackBonuses(rollData) {
-    const ammo = rollData.weapon.items.find((i) => i.isAmmunition);
-    if (!ammo) return;
-    const effects = AMMO_EFFECTS[ammo.name];
+    const ammoName = rollData.weapon.system.loadedAmmo?.name;
+    if (!ammoName) return;
+    const effects = AMMO_EFFECTS[ammoName];
     if (!effects?.attackBonuses) return;
     for (const [key, value] of Object.entries(effects.attackBonuses)) {
         rollData.specialModifiers[key] = value;
@@ -126,10 +125,10 @@ export function calculateAmmoAttackBonuses(rollData) {
 }
 
 export function calculateAmmoAttackSpecials(rollData) {
-    const ammo = rollData.weapon.items.find((i) => i.isAmmunition);
-    if (!ammo) return;
-    game.wh40k.log('calculateAmmoAttackSpecials', ammo.name);
-    const effects = AMMO_EFFECTS[ammo.name];
+    const ammoName = rollData.weapon.system.loadedAmmo?.name;
+    if (!ammoName) return;
+    game.wh40k.log('calculateAmmoAttackSpecials', ammoName);
+    const effects = AMMO_EFFECTS[ammoName];
     if (!effects?.attackSpecials) return;
     for (const spec of effects.attackSpecials) {
         if (spec.remove) rollData.attackSpecials.findSplice((i) => i.name === spec.remove);
@@ -142,9 +141,9 @@ export function calculateAmmoAttackSpecials(rollData) {
 /* -------------------------------------------- */
 
 export function calculateAmmoSpecials(actionData, hit) {
-    const ammo = actionData.rollData.weapon.items.find((i) => i.isAmmunition);
-    if (!ammo) return;
-    const effects = AMMO_EFFECTS[ammo.name];
+    const ammoName = actionData.rollData.weapon.system.loadedAmmo?.name;
+    if (!ammoName) return;
+    const effects = AMMO_EFFECTS[ammoName];
     if (!effects) return;
     if (effects.hitEffects) {
         for (const e of effects.hitEffects) hit.addEffect(e.key, e.description);
@@ -157,9 +156,9 @@ export function calculateAmmoSpecials(actionData, hit) {
  * @param hit {Hit}
  */
 export function calculateAmmoDamageBonuses(actionData, hit) {
-    const ammo = actionData.rollData.weapon.items.find((i) => i.isAmmunition);
-    if (!ammo) return;
-    const effects = AMMO_EFFECTS[ammo.name];
+    const ammoName = actionData.rollData.weapon.system.loadedAmmo?.name;
+    if (!ammoName) return;
+    const effects = AMMO_EFFECTS[ammoName];
     if (!effects?.damageModifiers) return;
     for (const [key, value] of Object.entries(effects.damageModifiers)) {
         hit.modifiers[key] = value;
@@ -171,9 +170,9 @@ export function calculateAmmoDamageBonuses(actionData, hit) {
  * @param hit {Hit}
  */
 export function calculateAmmoPenetrationBonuses(actionData, hit) {
-    const ammo = actionData.rollData.weapon.items.find((i) => i.isAmmunition);
-    if (!ammo) return;
-    const effects = AMMO_EFFECTS[ammo.name];
+    const ammoName = actionData.rollData.weapon.system.loadedAmmo?.name;
+    if (!ammoName) return;
+    const effects = AMMO_EFFECTS[ammoName];
     if (!effects?.penetrationModifiers) return;
     for (const [key, value] of Object.entries(effects.penetrationModifiers)) {
         hit.penetrationModifiers[key] = value;
@@ -230,9 +229,9 @@ export function calculateAmmoInformation(rollData) {
     }
 
     // Ammunition fire rate override
-    const ammunition = rollData.weapon.items.find((i) => i.isAmmunition);
-    if (ammunition) {
-        const effects = AMMO_EFFECTS[ammunition.name];
+    const ammoName = rollData.weapon.system.loadedAmmo?.name;
+    if (ammoName) {
+        const effects = AMMO_EFFECTS[ammoName];
         if (effects?.fireRate !== undefined) fireRate = effects.fireRate;
     }
 

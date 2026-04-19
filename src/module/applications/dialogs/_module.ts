@@ -3,6 +3,8 @@
  */
 
 export { default as AcquisitionDialog } from './acquisition-dialog.ts';
+export { default as AmmoPickerDialog } from './ammo-picker-dialog.ts';
 export { default as CharacteristicSetupDialog } from './characteristic-setup-dialog.ts';
 export { default as ConfirmationDialog } from './confirmation-dialog.ts';
 export { default as RollConfigurationDialog } from './roll-configuration-dialog.ts';
+export { default as TransactionRequestDialog } from './transaction-request-dialog.ts';

@@ -13,6 +13,8 @@
  * - Gothic 40K themed
  */
 
+import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
+
 const { ApplicationV2 } = foundry.applications.api;
 
 export default class CombatQuickPanel extends ApplicationV2 {
@@ -214,9 +216,9 @@ export default class CombatQuickPanel extends ApplicationV2 {
             clip: weapon.system.clip,
             ammo: {
                 current: weapon.system.clip?.value || 0,
-                max: weapon.system.clip?.max || 0,
-                percentage: weapon.system.clip?.max ? Math.round((weapon.system.clip.value / weapon.system.clip.max) * 100) : 100,
-                low: weapon.system.clip?.value <= weapon.system.clip?.max * 0.25,
+                max: weapon.system.effectiveClipMax || weapon.system.clip?.max || 0,
+                percentage: weapon.system.ammoPercentage ?? 100,
+                low: weapon.system.clip?.value <= (weapon.system.effectiveClipMax || weapon.system.clip?.max || 0) * 0.25,
             },
             rateOfFire: {
                 single: rof.single,
@@ -579,24 +581,16 @@ export default class CombatQuickPanel extends ApplicationV2 {
             return;
         }
 
-        const clip = this.primaryWeapon.system.clip;
-        if (!clip) {
-            (ui.notifications as any).warn('Weapon does not use ammunition');
-            return;
+        const result = await ReloadActionManager.reloadWeapon(this.primaryWeapon, {
+            skipValidation: (event as any).shiftKey,
+        });
+
+        if (result.success) {
+            (ui.notifications as any).info(result.message);
+            this._animateReload();
+        } else {
+            (ui.notifications as any).warn(result.message);
         }
-
-        if (clip.value >= clip.max) {
-            (ui.notifications as any).warn('Weapon is fully loaded');
-            return;
-        }
-
-        // Reload to max
-        await this.primaryWeapon.update({ 'system.clip.value': clip.max });
-
-        (ui.notifications as any).info(`Reloaded ${this.primaryWeapon.name}`);
-
-        // Play reload animation
-        this._animateReload();
     }
 
     /* -------------------------------------------- */
