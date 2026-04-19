@@ -403,7 +403,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const newValue = Math.min(max, current + amount);
         await this.actor.update({ 'system.wounds.value': newValue });
 
-        (ui.notifications as any).info(`Repaired ${amount} structure points.`);
+        ui.notifications.info(`Repaired ${amount} structure points.`);
     }
 
     /* -------------------------------------------- */
@@ -471,6 +471,6 @@ export default class VehicleSheet extends BaseActorSheet {
         const damaged = item.system.damaged || false;
         await item.update({ 'system.damaged': !damaged });
 
-        (ui.notifications as any).info(`${item.name} ${damaged ? 'repaired' : 'damaged'}.`);
+        ui.notifications.info(`${item.name} ${damaged ? 'repaired' : 'damaged'}.`);
     }
 }

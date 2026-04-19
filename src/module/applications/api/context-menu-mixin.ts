@@ -401,7 +401,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
         }
 
         _showGoverningCharacteristic(skillKey: string, skill: Record<string, unknown>): void {
-            (ui.notifications as any).info(`${(skill.label as string) || skillKey} is governed by ${skill.characteristic as string}`);
+            ui.notifications.info(`${(skill.label as string) || skillKey} is governed by ${skill.characteristic as string}`);
         }
 
         async _addSkillSpecialization(skillKey: string): Promise<void> {
@@ -410,7 +410,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
 
         async _duplicateItem(item: any): Promise<void> {
             await item.clone({ name: `${item.name} (Copy)` }, { save: true });
-            (ui.notifications as any).info(`Duplicated ${item.name}`);
+            ui.notifications.info(`Duplicated ${item.name}`);
         }
 
         async _deleteItem(item: any): Promise<void> {
@@ -423,7 +423,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
 
             if (confirmed) {
                 await item.delete();
-                (ui.notifications as any).info(`Deleted ${item.name}`);
+                ui.notifications.info(`Deleted ${item.name}`);
             }
         }
 
@@ -456,7 +456,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
                 const currentTotal = this.actor.system.fate?.total ?? 0;
                 if (currentTotal > 0) {
                     await this.actor.update({ 'system.fate.total': currentTotal - 1 });
-                    (ui.notifications as any).warn('Fate Point burned! Maximum reduced permanently.');
+                    ui.notifications.warn('Fate Point burned! Maximum reduced permanently.');
                 }
             }
         }

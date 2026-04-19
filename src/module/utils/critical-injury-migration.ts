@@ -25,13 +25,13 @@ export default class CriticalInjuryMigration {
         // @ts-expect-error - dynamic property
         const { dryRun = false, backup = true } = options;
 
-        (ui.notifications as any).info('Starting critical injury migration...');
+        ui.notifications.info('Starting critical injury migration...');
         console.log('[Critical Injury Migration] Starting migration...');
 
         const pack = game.packs.get(this.PACK_NAME);
         if (!pack) {
             const msg = `Pack ${this.PACK_NAME} not found!`;
-            (ui.notifications as any).error(msg);
+            ui.notifications.error(msg);
             throw new Error(msg);
         }
 
@@ -53,7 +53,7 @@ export default class CriticalInjuryMigration {
         console.log(`[Critical Injury Migration] Created ${consolidatedItems.length} consolidated items`);
 
         if (dryRun) {
-            (ui.notifications as any).info(
+            ui.notifications.info(
                 `Dry run complete. Would create ${consolidatedItems.length} consolidated items and remove ${existingItems.length} old items.`,
             );
             return {
@@ -82,7 +82,7 @@ export default class CriticalInjuryMigration {
             console.log(`  Deleted: ${String(item.name)} (${String(item.id)})`);
         }
 
-        (ui.notifications as any).info(`Migration complete! Created ${created.length} consolidated items, removed ${deleted.length} old items.`);
+        ui.notifications.info(`Migration complete! Created ${created.length} consolidated items, removed ${deleted.length} old items.`);
 
         return {
             dryRun: false,
@@ -101,7 +101,7 @@ export default class CriticalInjuryMigration {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         const backupName = `${pack.metadata.name}-backup-${timestamp}`;
 
-        (ui.notifications as any).info(`Creating backup: ${backupName}...`);
+        ui.notifications.info(`Creating backup: ${backupName}...`);
         console.log(`[Critical Injury Migration] Creating backup: ${backupName}`);
 
         // Note: Foundry doesn't have a built-in pack duplication API,
@@ -117,7 +117,7 @@ export default class CriticalInjuryMigration {
         // Log backup data to console for manual save
         console.log('[Critical Injury Migration] Backup data:', JSON.stringify(backupData, null, 2));
 
-        (ui.notifications as any).warn('Backup data logged to console. Please save manually if needed.');
+        ui.notifications.warn('Backup data logged to console. Please save manually if needed.');
     }
 
     /**

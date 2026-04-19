@@ -219,6 +219,13 @@ export class HooksManager {
             'dw-character': documents.WH40KDWCharacter,
             'dw-npc': documents.WH40KDWNPC,
             'dw-vehicle': documents.WH40KDWVehicle,
+            // Legacy-type fallbacks — kept so existing actors still load and
+            // render until the ready-hook migration retypes them. Default to
+            // DH2 concrete classes (this campaign's active system).
+            'character': documents.WH40KDH2Character,
+            'npc': documents.WH40KDH2NPC,
+            'vehicle': documents.WH40KDH2Vehicle,
+            'starship': documents.WH40KRTStarship,
         };
         CFG.Item.documentClass = WH40KItem;
         CFG.ActiveEffect.documentClass = documents.WH40KActiveEffect;
@@ -253,6 +260,11 @@ export class HooksManager {
             'dw-character': dataModels.DWCharacterData,
             'dw-npc': dataModels.DWNPCData,
             'dw-vehicle': dataModels.DWVehicleData,
+            // Legacy-type data-model fallbacks (same reasoning as above).
+            'character': dataModels.DH2CharacterData,
+            'npc': dataModels.DH2NPCData,
+            'vehicle': dataModels.DH2VehicleData,
+            'starship': dataModels.RTStarshipData,
         };
 
         // Register Item data models
@@ -447,6 +459,30 @@ export class HooksManager {
             types: starshipTypeIds,
             makeDefault: false,
             label: 'WH40K.Sheet.Starship',
+        });
+
+        // --- Legacy-type sheets (bridge while ready-hook migration runs) ---
+        // Actors with legacy types (character/npc/vehicle/starship) render
+        // with the DH2 concrete sheet until the migration retypes them.
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2PlayerSheet, {
+            types: ['character'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.DarkHeresy2',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2NPCSheet, {
+            types: ['npc'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.DarkHeresy2NPC',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2VehicleSheet, {
+            types: ['vehicle'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.DarkHeresy2Vehicle',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderStarshipSheet, {
+            types: ['starship'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.RogueTraderStarship',
         });
 
         // Unregister core V1 item sheet and register V2 item sheets
@@ -793,9 +829,7 @@ export class HooksManager {
         );
         if (failed.length) {
             console.warn('[WH40K] Actor migration failures:', failed);
-            (ui.notifications as any).warn(
-                `Actor migration: ${failed.length} failed. Check console. Backup in world settings (${SYSTEM_ID}.${SETTING_BACKUP}).`,
-            );
+            ui.notifications.warn(`Actor migration: ${failed.length} failed. Check console. Backup in world settings (${SYSTEM_ID}.${SETTING_BACKUP}).`);
         }
         await (game.settings as any).set(SYSTEM_ID, SETTING_DONE, true);
     }

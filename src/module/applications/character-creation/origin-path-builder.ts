@@ -1916,7 +1916,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         a.click();
 
         URL.revokeObjectURL(url);
-        (ui.notifications as any).info(game.i18n.localize('WH40K.OriginPath.ExportSuccess'));
+        ui.notifications.info(game.i18n.localize('WH40K.OriginPath.ExportSuccess'));
     }
 
     /**
@@ -1957,10 +1957,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
                     (this as any).currentStepIndex = 0;
                     (this as any).render();
-                    (ui.notifications as any).info(game.i18n.localize('WH40K.OriginPath.ImportSuccess'));
+                    ui.notifications.info(game.i18n.localize('WH40K.OriginPath.ImportSuccess'));
                 } catch (err) {
                     console.error('Import failed:', err);
-                    (ui.notifications as any).error(game.i18n.localize('WH40K.OriginPath.ImportFailed'));
+                    ui.notifications.error(game.i18n.localize('WH40K.OriginPath.ImportFailed'));
                 }
             })();
         });
@@ -2021,7 +2021,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if (stepKey === 'characteristics') {
             if ((this as any).guidedMode && (this as any).selections.size < (this as any).systemConfig.coreSteps.length) {
-                (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
+                ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
                 return;
             }
 
@@ -2034,7 +2034,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if (stepKey === (this as any).systemConfig.optionalStep?.key) {
             if ((this as any).guidedMode && (this as any).selections.size < (this as any).systemConfig.coreSteps.length) {
-                (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
+                ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
                 return;
             }
 
@@ -2052,7 +2052,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         (this as any)._clearPreviewedOrigin();
 
         if ((this as any).guidedMode && !(this as any)._isStepAccessible(stepIndex)) {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.CompletePreviousStep'));
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompletePreviousStep'));
             return;
         }
 
@@ -2072,7 +2072,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         // Check if disabled
         if (target.classList.contains('disabled')) {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.OriginNotAvailable'));
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.OriginNotAvailable'));
             return;
         }
 
@@ -2104,7 +2104,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 (this as any).render();
                 return;
             }
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.NoPreviewedOrigin'));
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.NoPreviewedOrigin'));
             return;
         }
 
@@ -2565,7 +2565,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static async #rollThrones(event: Event, target: HTMLElement): Promise<void> {
         const formula = (this as any)._getContextualThronesFormula();
         if (!formula) {
-            (ui.notifications as any).warn('No thrones formula available yet — select an origin with a throne gelt formula.');
+            ui.notifications.warn('No thrones formula available yet — select an origin with a throne gelt formula.');
             return;
         }
         const roll = new Roll(formula);
@@ -2635,7 +2635,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 item.sheet.render(true);
             }
         } catch {
-            (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.ItemNotFound'));
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.ItemNotFound'));
         }
     }
 
@@ -2647,9 +2647,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if (!status.canCommit) {
             if (!status.stepsComplete) {
-                (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
+                ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllSteps'));
             } else if (!status.choicesComplete) {
-                (ui.notifications as any).warn(game.i18n.localize('WH40K.OriginPath.CompleteAllChoices'));
+                ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.CompleteAllChoices'));
             }
             return;
         }
@@ -2776,11 +2776,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
 
             // Success
-            (ui.notifications as any).info(game.i18n.localize('WH40K.OriginPath.CommitSuccess'));
+            ui.notifications.info(game.i18n.localize('WH40K.OriginPath.CommitSuccess'));
             (this as any).close();
         } catch (err) {
             console.error('Failed to commit origin path:', err);
-            (ui.notifications as any).error(game.i18n.localize('WH40K.OriginPath.CommitFailed'));
+            ui.notifications.error(game.i18n.localize('WH40K.OriginPath.CommitFailed'));
         }
     }
 

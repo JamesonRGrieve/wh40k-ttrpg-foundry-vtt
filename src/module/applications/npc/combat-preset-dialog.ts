@@ -244,7 +244,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         };
 
         await npc.update(updates);
-        (ui.notifications as any).info(`Applied preset "${preset.name}" to ${npc.name}`);
+        ui.notifications.info(`Applied preset "${preset.name}" to ${npc.name}`);
     }
 
     /* -------------------------------------------- */
@@ -298,19 +298,19 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         const description = (form.querySelector('[name="presetDescription"]') as HTMLTextAreaElement | null)?.value.trim();
 
         if (!name) {
-            (ui.notifications as any).warn('Please enter a preset name.');
+            ui.notifications.warn('Please enter a preset name.');
             return;
         }
 
         if (!this.#state.npc) {
-            (ui.notifications as any).error('No NPC selected.');
+            ui.notifications.error('No NPC selected.');
             return;
         }
 
         const preset = this.constructor.createPresetFromNPC(this.#state.npc, name, description);
         await this.constructor.addPreset(preset);
 
-        (ui.notifications as any).info(`Saved preset "${name}"`);
+        ui.notifications.info(`Saved preset "${name}"`);
         this.close();
     }
 
@@ -323,18 +323,18 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         event.preventDefault();
 
         if (!this.#state.selectedPreset) {
-            (ui.notifications as any).warn('Please select a preset to load.');
+            ui.notifications.warn('Please select a preset to load.');
             return;
         }
 
         if (!this.#state.npc) {
-            (ui.notifications as any).error('No NPC selected.');
+            ui.notifications.error('No NPC selected.');
             return;
         }
 
         const preset = this.constructor.getPreset(this.#state.selectedPreset);
         if (!preset) {
-            (ui.notifications as any).error('Preset not found.');
+            ui.notifications.error('Preset not found.');
             return;
         }
 
@@ -364,7 +364,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
         if (confirmed) {
             await this.constructor.deletePresetById(presetId);
-            (ui.notifications as any).info(`Deleted preset "${preset.name}"`);
+            ui.notifications.info(`Deleted preset "${preset.name}"`);
             this.render();
         }
     }
@@ -414,10 +414,10 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
                     }
 
                     await this.constructor.addPreset(preset);
-                    (ui.notifications as any).info(`Imported preset "${preset.name}"`);
+                    ui.notifications.info(`Imported preset "${preset.name}"`);
                     this.render();
                 } catch (error: any) {
-                    (ui.notifications as any).error(`Failed to import preset: ${error.message}`);
+                    ui.notifications.error(`Failed to import preset: ${error.message}`);
                 }
             })();
         });

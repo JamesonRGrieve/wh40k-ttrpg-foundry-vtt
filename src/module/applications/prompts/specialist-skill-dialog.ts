@@ -217,7 +217,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
 
         const skillKey = (form.querySelector('#skill-select') as HTMLSelectElement | null)?.value;
         if (!skillKey) {
-            (ui.notifications as any).warn('Please select a skill type.');
+            ui.notifications.warn('Please select a skill type.');
             return;
         }
 
@@ -226,7 +226,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         const speciality = customValue || specValue;
 
         if (!speciality) {
-            (ui.notifications as any).warn('Please enter or select a specialization name.');
+            ui.notifications.warn('Please enter or select a specialization name.');
             return;
         }
 

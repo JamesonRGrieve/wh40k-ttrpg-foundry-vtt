@@ -742,10 +742,10 @@ export default class NPCSheet extends (CharacterSheet as any) {
         const { ReloadActionManager } = await import('../../actions/reload-action-manager.ts');
         const result = await ReloadActionManager.reloadWeapon(weapon, { skipValidation: (event as any).shiftKey });
         if (result.success) {
-            (ui.notifications as any).info(result.message);
+            ui.notifications.info(result.message);
             await ReloadActionManager.sendReloadToChat((this as any).actor, weapon, result);
         } else {
-            (ui.notifications as any).warn(result.message);
+            ui.notifications.warn(result.message);
         }
     }
 
@@ -1197,7 +1197,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
         updates.displayName = 20; // OWNER_HOVER
 
         await npc.update({ prototypeToken: updates });
-        (ui.notifications as any).info(`Token configured for ${npc.name}`);
+        ui.notifications.info(`Token configured for ${npc.name}`);
     }
 
     /* -------------------------------------------- */
@@ -1210,7 +1210,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
     static async #duplicateNPC(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         await (this as any).actor.duplicate();
-        (ui.notifications as any).info(`Created copy of ${(this as any).actor.name}`);
+        ui.notifications.info(`Created copy of ${(this as any).actor.name}`);
     }
 
     /* -------------------------------------------- */
@@ -1281,7 +1281,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
 
         if (confirmed) {
             await (this as any).actor.delete();
-            (ui.notifications as any).info(`Deleted ${(this as any).actor.name}`);
+            ui.notifications.info(`Deleted ${(this as any).actor.name}`);
         }
     }
 
@@ -1484,7 +1484,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
         event.preventDefault();
         const mode = (target.dataset.mode as 'none' | 'barter' | 'requisition' | undefined) ?? 'none';
         await TransactionManager.setMode((this as any).actor, mode);
-        (ui.notifications as any).info(`${(this as any).actor.name} source mode set to ${mode}.`);
+        ui.notifications.info(`${(this as any).actor.name} source mode set to ${mode}.`);
         await (this as any).render(false);
     }
 
@@ -1597,13 +1597,13 @@ export default class NPCSheet extends (CharacterSheet as any) {
     static async #addToCombat(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         if (!game.combat) {
-            (ui.notifications as any).warn('No active combat encounter.');
+            ui.notifications.warn('No active combat encounter.');
             return;
         }
         // Prevent duplicate combatants
         const existing = game.combat.getCombatantByActor((this as any).actor.id);
         if (existing) {
-            (ui.notifications as any).info(`${(this as any).actor.name} is already in combat.`);
+            ui.notifications.info(`${(this as any).actor.name} is already in combat.`);
             return;
         }
         await game.combat.createEmbeddedDocuments('Combatant', [

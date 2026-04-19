@@ -142,7 +142,7 @@ export class WH40KStarship extends WH40KBaseActor {
     async fireWeapon(weaponId): Promise<void> {
         const weapon = this.items.get(weaponId);
         if (!weapon || (weapon.type as string) !== 'shipWeapon') {
-            (ui.notifications as any).warn('Invalid ship weapon');
+            ui.notifications.warn('Invalid ship weapon');
             return;
         }
 

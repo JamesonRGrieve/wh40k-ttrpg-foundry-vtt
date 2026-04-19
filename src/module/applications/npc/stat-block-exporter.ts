@@ -355,10 +355,10 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
         try {
             await navigator.clipboard.writeText(content);
-            (ui.notifications as any).info((game as any).i18n.localize('WH40K.NPC.Export.CopiedToClipboard'));
+            ui.notifications.info((game as any).i18n.localize('WH40K.NPC.Export.CopiedToClipboard'));
         } catch (err) {
             console.error('Failed to copy to clipboard:', err);
-            (ui.notifications as any).error((game as any).i18n.localize('WH40K.NPC.Export.CopyFailed'));
+            ui.notifications.error((game as any).i18n.localize('WH40K.NPC.Export.CopyFailed'));
         }
     }
 
@@ -372,7 +372,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         const filename = `${this.#actor.name.slugify()}.json`;
 
         StatBlockExporter._downloadFile(content, filename, 'application/json');
-        (ui.notifications as any).info((game as any).i18n.format('WH40K.NPC.Export.Downloaded', { filename }));
+        ui.notifications.info((game as any).i18n.format('WH40K.NPC.Export.Downloaded', { filename }));
     }
 
     /**
@@ -385,7 +385,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         const filename = `${this.#actor.name.slugify()}.txt`;
 
         StatBlockExporter._downloadFile(content, filename, 'text/plain');
-        (ui.notifications as any).info((game as any).i18n.format('WH40K.NPC.Export.Downloaded', { filename }));
+        ui.notifications.info((game as any).i18n.format('WH40K.NPC.Export.Downloaded', { filename }));
     }
 
     /**
@@ -447,10 +447,10 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
         try {
             await navigator.clipboard.writeText(content);
-            (ui.notifications as any).info((game as any).i18n.localize('WH40K.NPC.Export.CopiedToClipboard'));
+            ui.notifications.info((game as any).i18n.localize('WH40K.NPC.Export.CopiedToClipboard'));
         } catch (err) {
             console.error('Failed to copy to clipboard:', err);
-            (ui.notifications as any).error((game as any).i18n.localize('WH40K.NPC.Export.CopyFailed'));
+            ui.notifications.error((game as any).i18n.localize('WH40K.NPC.Export.CopyFailed'));
         }
     }
 }

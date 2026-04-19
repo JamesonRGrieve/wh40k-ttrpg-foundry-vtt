@@ -434,7 +434,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                 }
                 selections.add(compositeValue);
             } else {
-                (ui.notifications as any).warn(`You can only select ${choice.count} option(s).`);
+                ui.notifications.warn(`You can only select ${choice.count} option(s).`);
                 return;
             }
         }
@@ -504,7 +504,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         });
 
         if (incomplete.length > 0) {
-            (ui.notifications as any).warn('Please complete all required choices.');
+            ui.notifications.warn('Please complete all required choices.');
             return;
         }
 
@@ -555,7 +555,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
             }
         } catch (error) {
             console.warn('Could not load item:', uuid, error);
-            (ui.notifications as any).warn('Could not find that item.');
+            ui.notifications.warn('Could not find that item.');
         }
     }
 

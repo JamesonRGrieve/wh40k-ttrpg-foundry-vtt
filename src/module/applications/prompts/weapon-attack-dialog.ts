@@ -131,7 +131,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /** @override */
     _validateRoll(): boolean {
         if (this.rollData.fireRate === 0) {
-            (ui.notifications as any).warn('Not enough ammo to perform action. Do you need to reload?');
+            ui.notifications.warn('Not enough ammo to perform action. Do you need to reload?');
             return false;
         }
         return true;

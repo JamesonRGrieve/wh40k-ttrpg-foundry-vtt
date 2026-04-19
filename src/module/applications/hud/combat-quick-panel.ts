@@ -446,12 +446,12 @@ export default class CombatQuickPanel extends ApplicationV2 {
     static async #rollInitiative(this: any, event: Event, target: HTMLElement): Promise<void> {
         const combatant = game.combat?.combatants.find((c) => (c as any).actorId === this.actor.id);
         if (!combatant) {
-            (ui.notifications as any).warn('Character not in combat');
+            ui.notifications.warn('Character not in combat');
             return;
         }
 
         await game.combat.rollInitiative([combatant.id]);
-        (ui.notifications as any).info(`Rolled initiative for ${this.actor.name}`);
+        ui.notifications.info(`Rolled initiative for ${this.actor.name}`);
     }
 
     /* -------------------------------------------- */
@@ -464,7 +464,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #standardAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
-            (ui.notifications as any).warn('No weapon equipped');
+            ui.notifications.warn('No weapon equipped');
             return;
         }
 
@@ -485,7 +485,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #semiAutoAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon?.system.rateOfFire?.semiAuto) {
-            (ui.notifications as any).warn('Weapon does not support semi-auto');
+            ui.notifications.warn('Weapon does not support semi-auto');
             return;
         }
 
@@ -505,7 +505,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #fullAutoAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon?.system.rateOfFire?.fullAuto) {
-            (ui.notifications as any).warn('Weapon does not support full-auto');
+            ui.notifications.warn('Weapon does not support full-auto');
             return;
         }
 
@@ -525,13 +525,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #dodge(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.dodge) {
-            (ui.notifications as any).warn('Already used dodge this round');
+            ui.notifications.warn('Already used dodge this round');
             return;
         }
 
         const skill = this.actor.system.skills?.dodge;
         if (!skill) {
-            (ui.notifications as any).warn('No dodge skill');
+            ui.notifications.warn('No dodge skill');
             return;
         }
 
@@ -550,13 +550,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #parry(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.parry) {
-            (ui.notifications as any).warn('Already used parry this round');
+            ui.notifications.warn('Already used parry this round');
             return;
         }
 
         const skill = this.actor.system.skills?.parry;
         if (!skill) {
-            (ui.notifications as any).warn('No parry skill');
+            ui.notifications.warn('No parry skill');
             return;
         }
 
@@ -575,7 +575,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      */
     static async #reload(this: any, event: Event, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
-            (ui.notifications as any).warn('No weapon equipped');
+            ui.notifications.warn('No weapon equipped');
             return;
         }
 
@@ -584,10 +584,10 @@ export default class CombatQuickPanel extends ApplicationV2 {
         });
 
         if (result.success) {
-            (ui.notifications as any).info(result.message);
+            ui.notifications.info(result.message);
             this._animateReload();
         } else {
-            (ui.notifications as any).warn(result.message);
+            ui.notifications.warn(result.message);
         }
     }
 
@@ -607,7 +607,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
             flavor: 'Aim Action',
         } as any);
 
-        (ui.notifications as any).info('Aim action taken (+10 next attack)');
+        ui.notifications.info('Aim action taken (+10 next attack)');
     }
 
     /* -------------------------------------------- */
@@ -622,20 +622,20 @@ export default class CombatQuickPanel extends ApplicationV2 {
         const weapons = this.actor.items.filter((i) => i.type === 'weapon' && !i.system.equipped);
 
         if (weapons.length === 0) {
-            (ui.notifications as any).warn('No weapons to draw');
+            ui.notifications.warn('No weapons to draw');
             return;
         }
 
         // Show weapon selection if multiple
         if (weapons.length > 1) {
             // TODO: Show weapon selection dialog
-            (ui.notifications as any).info('Multiple weapons available - use character sheet to select');
+            ui.notifications.info('Multiple weapons available - use character sheet to select');
             return;
         }
 
         // Equip the weapon
         await weapons[0].update({ 'system.equipped': true });
-        (ui.notifications as any).info(`Drew ${weapons[0].name}`);
+        ui.notifications.info(`Drew ${weapons[0].name}`);
     }
 
     /* -------------------------------------------- */
@@ -660,7 +660,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         // Equip new
         await weapon.update({ 'system.equipped': true });
 
-        (ui.notifications as any).info(`Switched to ${weapon.name}`);
+        ui.notifications.info(`Switched to ${weapon.name}`);
         this.render(false);
     }
 
@@ -684,7 +684,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
             content: `<p><strong>${this.actor.name}</strong> uses ${item.name}</p>`,
         } as any);
 
-        (ui.notifications as any).info(`Used ${item.name}`);
+        ui.notifications.info(`Used ${item.name}`);
     }
 
     /* -------------------------------------------- */

@@ -346,7 +346,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             const actor = await Actor.create(actorData as any);
 
             if (actor) {
-                (ui.notifications as any).info(`Created NPC: ${String(actor.name)}`);
+                ui.notifications.info(`Created NPC: ${String(actor.name)}`);
 
                 // Open the sheet
                 void actor.sheet.render(true);
@@ -356,7 +356,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             }
         } catch (error) {
             console.error('Failed to create NPC:', error);
-            (ui.notifications as any).error('Failed to create NPC');
+            ui.notifications.error('Failed to create NPC');
             if (this.#resolve) this.#resolve(null);
         }
     }
@@ -470,7 +470,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
             if (actor) actors.push(actor);
         }
 
-        (ui.notifications as any).info(`Created ${actors.length} NPCs`);
+        ui.notifications.info(`Created ${actors.length} NPCs`);
         return actors;
     }
 }

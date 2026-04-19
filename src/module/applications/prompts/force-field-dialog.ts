@@ -81,12 +81,12 @@ export default class ForceFieldDialog extends BaseRollDialog {
     /** @override */
     _validateRoll(): boolean {
         if (!this.rollData.forceField?.system?.activated) {
-            (ui.notifications as any).warn('Force Field not activated!');
+            ui.notifications.warn('Force Field not activated!');
             return false;
         }
 
         if (this.rollData.forceField?.system?.overloaded) {
-            (ui.notifications as any).warn('Force Field currently overloaded!');
+            ui.notifications.warn('Force Field currently overloaded!');
             return false;
         }
 

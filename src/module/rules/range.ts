@@ -29,7 +29,7 @@ function calculateWeaponMaxRange(rollData) {
             rangeCalculation.evaluateSync();
             range = rangeCalculation.total ?? 0;
         } catch {
-            (ui.notifications as any).warn('Range formula failed - setting to 0');
+            ui.notifications.warn('Range formula failed - setting to 0');
             range = 0;
         }
     }
@@ -73,7 +73,7 @@ async function calculatePsychicAbilityMaxRange(rollData) {
             await rangeCalculation.evaluate();
             range = rangeCalculation.total ?? 0;
         } catch {
-            (ui.notifications as any).warn('Range formula failed - setting to 0');
+            ui.notifications.warn('Range formula failed - setting to 0');
             range = 0;
         }
     }
