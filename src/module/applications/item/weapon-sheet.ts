@@ -13,7 +13,6 @@ import ContainerItemSheet from './container-item-sheet.ts';
  */
 // @ts-expect-error Foundry ApplicationV2 static override pattern
 export default class WeaponSheet extends ContainerItemSheet {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'sheet', 'item', 'weapon', 'wh40k-weapon-sheet-v3'],

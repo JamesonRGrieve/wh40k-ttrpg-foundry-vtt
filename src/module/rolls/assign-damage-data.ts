@@ -4,7 +4,6 @@ import { hitDropdown } from '../rules/hit-locations.ts';
 import { applyRollModeWhispers } from './roll-helpers.ts';
 
 export class AssignDamageData {
-    [key: string]: any;
     locations = hitDropdown();
     actor;
     hit;

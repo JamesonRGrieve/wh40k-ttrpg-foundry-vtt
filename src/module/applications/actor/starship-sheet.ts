@@ -12,8 +12,6 @@ import BaseActorSheet from './base-actor-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class StarshipSheet extends BaseActorSheet {
-    [key: string]: any;
-
     declare actor: WH40KStarship;
     declare document: WH40KStarship;
 

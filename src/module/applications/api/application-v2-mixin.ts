@@ -14,7 +14,6 @@ const { HandlebarsApplicationMixin } = foundry.applications.api;
  */
 export default function ApplicationV2Mixin<T extends new (...args: any[]) => any>(Base: T) {
     class BaseApplicationWH40K extends HandlebarsApplicationMixin(Base as any) {
-        [key: string]: any;
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             actions: {

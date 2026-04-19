@@ -11,7 +11,6 @@ import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
  * Uses Foundry's native TooltipManager and observes tooltip activation via MutationObserver.
  */
 export class TooltipsWH40K {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */

@@ -12,7 +12,6 @@
  */
 export default function CollapsiblePanelMixin<T extends new (...args: any[]) => any>(Base: T) {
     class CollapsiblePanelApplication extends (Base as any) {
-        [key: string]: any;
         /* -------------------------------------------- */
         /*  Properties                                  */
         /* -------------------------------------------- */

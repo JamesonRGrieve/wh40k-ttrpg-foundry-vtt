@@ -9,7 +9,6 @@ import BaseRollDialog from './base-roll-dialog.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class PsychicPowerDialog extends BaseRollDialog {
-    [key: string]: any;
     /**
      * @param {PsychicActionData} psychicActionData  The psychic action data.
      * @param {object} [options={}]                  Dialog options.

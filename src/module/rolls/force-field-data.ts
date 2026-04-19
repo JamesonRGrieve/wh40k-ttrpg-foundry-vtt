@@ -1,7 +1,6 @@
 import { roll1d100, applyRollModeWhispers } from './roll-helpers.ts';
 
 export class ForceFieldData {
-    [key: string]: any;
     actor;
     forceField;
     protectionRating = 0;

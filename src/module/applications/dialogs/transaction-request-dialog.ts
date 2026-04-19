@@ -1,0 +1,205 @@
+import { TransactionManager } from '../../transactions/transaction-manager.ts';
+
+const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+export default class TransactionRequestDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+    static DEFAULT_OPTIONS = {
+        id: 'transaction-request-dialog-{id}',
+        classes: ['wh40k-rpg', 'transaction-request-dialog'],
+        tag: 'form',
+        window: {
+            title: 'Barter',
+            icon: 'fa-solid fa-handshake',
+            minimizable: false,
+            resizable: true,
+            contentClasses: ['standard-form'],
+        },
+        position: {
+            width: 720,
+            height: 'auto' as const,
+        },
+        form: {
+            handler: TransactionRequestDialog.#onSubmit,
+            submitOnChange: false,
+            closeOnSubmit: false,
+        },
+        actions: {
+            selectItem: TransactionRequestDialog.#selectItem,
+            requestApproval: TransactionRequestDialog.#requestApproval,
+        },
+    };
+
+    static PARTS = {
+        form: {
+            template: 'systems/wh40k-rpg/templates/dialogs/transaction-request-dialog.hbs',
+        },
+    };
+
+    actor = null;
+    sourceId = '';
+    itemId = '';
+    quantity = 1;
+    influenceBurn = 0;
+    #resolve = null;
+
+    constructor(actor, options: Record<string, unknown> = {}) {
+        super(options);
+        this.actor = actor;
+
+        const sources = TransactionManager.listSourcesForBuyer(actor);
+        if (sources.length) {
+            this.sourceId = sources[0].id;
+            const items = TransactionManager.listItemsForSource(sources[0]);
+            if (items.length) this.itemId = items[0].id;
+        }
+    }
+
+    get title(): string {
+        return 'Barter';
+    }
+
+    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        const context = await super._prepareContext(options);
+        const sources = TransactionManager.listSourcesForBuyer(this.actor);
+        const selectedSource = sources.find((source) => source.id === this.sourceId) ?? sources[0] ?? null;
+
+        if (selectedSource && this.sourceId !== selectedSource.id) {
+            this.sourceId = selectedSource.id;
+        }
+
+        const items = TransactionManager.listItemsForSource(selectedSource);
+        const selectedItem = items.find((item) => item.id === this.itemId) ?? items[0] ?? null;
+
+        if (selectedItem && this.itemId !== selectedItem.id) {
+            this.itemId = selectedItem.id;
+        }
+
+        let quote = null;
+        if (selectedSource && selectedItem) {
+            try {
+                quote = TransactionManager.prepareQuote({
+                    buyerActorId: this.actor.id,
+                    sourceActorId: selectedSource.id,
+                    itemId: selectedItem.id,
+                    quantity: this.quantity,
+                    influenceBurn: this.influenceBurn,
+                });
+            } catch (error) {
+                quote = null;
+            }
+        }
+
+        return {
+            ...context,
+            buyer: this.actor,
+            hasSources: sources.length > 0,
+            sources: sources.map((source) => ({
+                id: source.id,
+                name: source.name,
+                modeLabel: TransactionManager.getSourceLabel(source),
+                selected: source.id === selectedSource?.id,
+            })),
+            selectedSource,
+            items: items.map((item) => ({
+                id: item.id,
+                name: item.name,
+                img: item.img,
+                type: item.type,
+                quantity: item.system?.quantity ?? 1,
+                cost: item.system?.cost?.value ?? 0,
+                selected: item.id === selectedItem?.id,
+            })),
+            selectedItem,
+            quantity: this.quantity,
+            influenceBurn: this.influenceBurn,
+            quote,
+            isBarter: quote?.mode === 'barter',
+            isRequisition: quote?.mode === 'requisition',
+        };
+    }
+
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+        super._onRender(context, options);
+
+        const sourceSelect = this.element.querySelector('[name="sourceId"]') as HTMLSelectElement | null;
+        const quantityInput = this.element.querySelector('[name="quantity"]') as HTMLInputElement | null;
+        const influenceInput = this.element.querySelector('[name="influenceBurn"]') as HTMLInputElement | null;
+
+        sourceSelect?.addEventListener('change', () => {
+            this.sourceId = sourceSelect.value;
+            this.itemId = '';
+            this.quantity = 1;
+            this.influenceBurn = 0;
+            void this.render(false);
+        });
+
+        quantityInput?.addEventListener('change', () => {
+            this.quantity = Math.max(1, Number.parseInt(quantityInput.value || '1', 10) || 1);
+            void this.render(false);
+        });
+
+        influenceInput?.addEventListener('change', () => {
+            this.influenceBurn = Math.max(0, Number.parseInt(influenceInput.value || '0', 10) || 0);
+            void this.render(false);
+        });
+    }
+
+    static #onSubmit(this: TransactionRequestDialog, event: Event, form: HTMLFormElement, formData: any): void {
+        this.quantity = Math.max(1, Number.parseInt(formData.object.quantity || '1', 10) || 1);
+        this.influenceBurn = Math.max(0, Number.parseInt(formData.object.influenceBurn || '0', 10) || 0);
+        this.sourceId = formData.object.sourceId || this.sourceId;
+    }
+
+    static async #selectItem(this: TransactionRequestDialog, event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const itemId = target.dataset.itemId;
+        if (!itemId) return;
+
+        this.itemId = itemId;
+        this.quantity = 1;
+        await this.render(false);
+    }
+
+    static async #requestApproval(this: TransactionRequestDialog, event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+
+        try {
+            if (!this.sourceId || !this.itemId) {
+                throw new Error('Choose a source and an item first.');
+            }
+
+            await TransactionManager.submitRequest({
+                buyerActorId: this.actor.id,
+                sourceActorId: this.sourceId,
+                itemId: this.itemId,
+                quantity: this.quantity,
+                influenceBurn: this.influenceBurn,
+            });
+
+            await TransactionManager.notifyRequester('Transaction request sent to the GM for approval.', 'info');
+            this.#resolve?.(true);
+            await this.close({ _skipResolve: true });
+        } catch (error) {
+            await TransactionManager.notifyRequester(error instanceof Error ? error.message : 'Unable to submit transaction request.', 'error');
+        }
+    }
+
+    async wait(): Promise<boolean | null> {
+        return new Promise((resolve) => {
+            this.#resolve = resolve;
+            void this.render(true);
+        });
+    }
+
+    async close(options: Record<string, unknown> = {}): Promise<any> {
+        if (this.#resolve && !options._skipResolve) {
+            this.#resolve(null);
+        }
+        return super.close(options);
+    }
+
+    static async show(actor: Actor): Promise<boolean | null> {
+        const dialog = new TransactionRequestDialog(actor);
+        return dialog.wait();
+    }
+}

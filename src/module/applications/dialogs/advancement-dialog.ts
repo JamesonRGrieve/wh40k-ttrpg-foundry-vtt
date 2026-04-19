@@ -15,8 +15,6 @@ import { getAvailableXP, spendXP, canAfford } from '../../utils/xp-transaction.t
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class AdvancementDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */

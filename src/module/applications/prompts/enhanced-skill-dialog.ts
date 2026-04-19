@@ -18,7 +18,6 @@ const { ApplicationV2 } = foundry.applications.api;
  */
 // @ts-expect-error Foundry V2 mixin pattern
 export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV2 as any) {
-    [key: string]: any;
     /**
      * @param {object} simpleSkillData  The skill data.
      * @param {object} [options={}]     Dialog options.

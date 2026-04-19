@@ -18,8 +18,6 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
  * @extends {HandlebarsApplicationMixin(ApplicationV2)}
  */
 export default class CombatPresetDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /**
      * Internal state for the dialog.
      * @type {Object}

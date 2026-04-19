@@ -11,7 +11,6 @@ import { getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(ApplicationV2 as any) {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'origin-choice-dialog'],

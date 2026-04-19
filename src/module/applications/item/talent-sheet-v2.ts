@@ -17,7 +17,6 @@ import BaseItemSheet from './base-item-sheet.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class TalentSheetV2 extends BaseItemSheet {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */

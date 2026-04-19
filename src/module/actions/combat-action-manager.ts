@@ -1,7 +1,6 @@
 import { handleBleeding, handleOnFire } from '../rules/active-effects.ts';
 
 export class CombatActionManager {
-    [key: string]: any;
     combatTurnHook;
     combatRoundHook;
 

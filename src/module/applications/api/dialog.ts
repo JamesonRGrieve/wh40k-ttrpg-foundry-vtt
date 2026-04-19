@@ -11,7 +11,6 @@ const { ApplicationV2 } = foundry.applications.api;
  * Base dialog class for creating WH40K dialogs.
  */
 export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         tag: 'dialog',

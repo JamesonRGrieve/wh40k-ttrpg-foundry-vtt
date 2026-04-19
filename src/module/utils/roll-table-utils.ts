@@ -11,7 +11,6 @@
  */
 
 export class RollTableUtils {
-    [key: string]: any;
     /**
      * Roll on a roll table by name and send results to chat.
      * @param {string} tableName - The name of the roll table

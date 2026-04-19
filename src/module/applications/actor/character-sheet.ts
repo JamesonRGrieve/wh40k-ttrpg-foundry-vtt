@@ -25,7 +25,6 @@ const TextEditor = foundry.applications.ux.TextEditor.implementation;
  * Actor sheet for Acolyte/Character type actors.
  */
 export default class CharacterSheet extends (BaseActorSheet as any) {
-    [key: string]: any;
     declare actor: WH40KAcolyte;
     declare document: WH40KAcolyte;
     declare element: HTMLElement;

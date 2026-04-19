@@ -14,7 +14,6 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginRollDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         id: 'origin-roll-dialog-{rollType}',
