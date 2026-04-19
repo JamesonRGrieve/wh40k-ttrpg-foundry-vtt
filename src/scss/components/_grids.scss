@@ -140,8 +140,8 @@ $grid-tables: (
         &__wrapper {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-gap: $margin-small;
-            margin: $margin-small;
+            grid-gap: 0.25rem;
+            margin: 0.25rem;
         }
     }
 
