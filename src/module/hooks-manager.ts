@@ -690,35 +690,42 @@ export class HooksManager {
 
     /**
      * Retype every actor still on the legacy 4 types (character/npc/vehicle/
-     * starship) to the new (system, kind) concrete type, inferring the system
-     * from the actor's stored `system.gameSystem` (default: dh2e). Foundry
-     * doesn't support changing `type` in place — we recreate each actor with
-     * the new type and copy forward items, effects, flags, token data, then
-     * delete the original. Runs once per world startup, gated by a world
-     * setting so existing worlds migrate exactly once.
+     * starship) to the new (system, kind) concrete type. Foundry doesn't
+     * support changing `type` in place — we delete the actor and recreate it
+     * under the same id with the new type so all existing references
+     * (scene tokens, macros, journals with `@Actor[id]` links, chat messages)
+     * keep resolving.
+     *
+     * Before any destructive action, a full JSON snapshot of every legacy
+     * actor's `toObject()` is cached in a world setting so a broken migration
+     * can be rolled back. Runs GM-only, once per world (setting-gated).
      */
     static async _migrateLegacyActorTypes() {
-        const SETTING_KEY = 'migration-actor-types-v1-complete';
-        // @ts-expect-error - setting argument typing
-        const already = game.settings.settings.has(`${SYSTEM_ID}.${SETTING_KEY}`);
-        if (!already) {
-            // Register the flag setting on the fly.
-            (game.settings as any).register(SYSTEM_ID, SETTING_KEY, {
-                name: 'Actor Type Migration v1 Complete',
-                scope: 'world',
-                config: false,
-                type: Boolean,
-                default: false,
-            });
-        }
-        const done = (game.settings as any).get(SYSTEM_ID, SETTING_KEY) as boolean | undefined;
+        const SETTING_DONE = 'migration-actor-types-v1-complete';
+        const SETTING_BACKUP = 'migration-actor-types-v1-backup';
+        const register = (key: string, type: any, def: any) => {
+            // @ts-expect-error - setting argument typing
+            if (!(game.settings as any).settings.has(`${SYSTEM_ID}.${key}`)) {
+                (game.settings as any).register(SYSTEM_ID, key, {
+                    name: key,
+                    scope: 'world',
+                    config: false,
+                    type,
+                    default: def,
+                });
+            }
+        };
+        register(SETTING_DONE, Boolean, false);
+        register(SETTING_BACKUP, Object, {});
+
+        const done = (game.settings as any).get(SYSTEM_ID, SETTING_DONE) as boolean | undefined;
         if (done) return;
-        if (!(game.user as any)?.isGM) return; // Only the GM runs migrations.
+        if (!(game.user as any)?.isGM) return;
 
         const LEGACY = new Set(['character', 'npc', 'vehicle', 'starship']);
         const targets = Array.from((game as any).actors ?? []).filter((a: any) => LEGACY.has(a.type));
         if (!targets.length) {
-            await (game.settings as any).set(SYSTEM_ID, SETTING_KEY, true);
+            await (game.settings as any).set(SYSTEM_ID, SETTING_DONE, true);
             return;
         }
 
@@ -728,40 +735,70 @@ export class HooksManager {
             return raw === 'dh2e' ? 'dh2' : raw === 'dh1e' ? 'dh1' : raw;
         };
 
+        // --- Safety net: dump every legacy actor's full data to a world setting
+        // before touching anything. Restorable via a console macro if the
+        // migration leaves anyone in a bad state:
+        //   const backup = game.settings.get('wh40k-rpg', 'migration-actor-types-v1-backup');
+        //   // iterate backup.actors and re-create any missing ones manually.
+        const backup = {
+            timestamp: new Date().toISOString(),
+            actors: targets.map((a: any) => a.toObject()),
+        };
+        await (game.settings as any).set(SYSTEM_ID, SETTING_BACKUP, backup);
+        (game as any).wh40k?.log?.(`Backed up ${backup.actors.length} legacy actor(s) to world setting ${SYSTEM_ID}.${SETTING_BACKUP} before migration.`);
+
         let migrated = 0;
+        const failed: Array<{ id: string; name: string; error: string }> = [];
+
         for (const actor of targets) {
+            const id = actor.id;
+            const name = actor.name;
             try {
                 const sys = inferSystem(actor);
                 const newType = `${sys}-${actor.type}`;
-                // Build a payload that preserves everything Foundry will accept
-                // on a fresh actor document.
+                // Snapshot BEFORE any destructive action, so the recreate call
+                // below has the source if the delete succeeded.
                 const source = actor.toObject();
-                delete source._id;
                 source.type = newType;
-                // Preserve items (item collection is embedded)
-                const created = await (Actor as any).create(source, { keepId: false });
-                if (created) {
-                    // Remap token references in scenes pointing at the old actor id.
-                    for (const scene of (game as any).scenes ?? []) {
-                        const tokenUpdates: any[] = [];
-                        for (const token of scene.tokens ?? []) {
-                            if (token.actorId === actor.id) {
-                                tokenUpdates.push({ _id: token.id, actorId: created.id });
-                            }
-                        }
-                        if (tokenUpdates.length > 0) {
-                            await (scene as any).updateEmbeddedDocuments('Token', tokenUpdates);
-                        }
+
+                // Delete-then-create preserves the id so existing references
+                // (tokens, macros, journals) keep resolving.
+                await actor.delete();
+                const created = await (Actor as any).create(source, { keepId: true });
+                if (!created) {
+                    // Recreate failed after delete — fall back to creating with
+                    // a new id so at least the data exists somewhere.
+                    delete (source as any)._id;
+                    const fallback = await (Actor as any).create(source);
+                    if (!fallback) {
+                        failed.push({ id, name, error: 'Create returned falsy — data is in the world-setting backup.' });
+                    } else {
+                        failed.push({
+                            id,
+                            name,
+                            error: `Recreated with new id ${fallback.id} (old id lost; references may need remapping).`,
+                        });
                     }
-                    await actor.delete();
-                    migrated++;
+                    continue;
                 }
+                migrated++;
             } catch (err) {
-                (game as any).wh40k?.error?.(`Migration failed for actor ${actor.name} (${actor.id}):`, err);
+                (game as any).wh40k?.error?.(`Migration error for ${name} (${id}):`, err);
+                failed.push({ id, name, error: String(err) });
             }
         }
-        (game as any).wh40k?.log?.(`Retyped ${migrated} legacy actor(s) to new (system, kind) types.`);
-        await (game.settings as any).set(SYSTEM_ID, SETTING_KEY, true);
+
+        (game as any).wh40k?.log?.(
+            `Actor-type migration: ${migrated}/${targets.length} retyped successfully` +
+                (failed.length ? `, ${failed.length} failed (see console). Backup available in world setting ${SYSTEM_ID}.${SETTING_BACKUP}.` : '.'),
+        );
+        if (failed.length) {
+            console.warn('[WH40K] Actor migration failures:', failed);
+            (ui.notifications as any).warn(
+                `Actor migration: ${failed.length} failed. Check console. Backup in world settings (${SYSTEM_ID}.${SETTING_BACKUP}).`,
+            );
+        }
+        await (game.settings as any).set(SYSTEM_ID, SETTING_DONE, true);
     }
 
     static hotbarDrop(bar, data, slot) {
