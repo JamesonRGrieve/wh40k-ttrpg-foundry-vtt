@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const postcss = require('gulp-postcss');
 const tailwindcss = require('tailwindcss');
 const autoprefixer = require('autoprefixer');
+const cssnano = require('cssnano');
 const through2 = require("through2");
 const yaml = require("js-yaml");
 const merge = require("merge-stream");
@@ -32,6 +33,44 @@ const STATIC_FILES = [
 ];
 const PACK_SRC = "src/packs";
 const BUILD_DIR = "dist";
+
+function readJsonFile(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+function isReferenceStub(doc) {
+  return (
+    doc &&
+    typeof doc === 'object' &&
+    !Array.isArray(doc) &&
+    typeof doc.reference === 'string' &&
+    Object.keys(doc).length === 1
+  );
+}
+
+function resolveReferencePath(reference, fromFile) {
+  if (path.isAbsolute(reference)) return reference;
+  if (reference.startsWith('src/')) return path.resolve(__dirname, reference);
+  if (reference.startsWith('packs/')) return path.resolve(__dirname, 'src', reference);
+  return path.resolve(path.dirname(fromFile), reference);
+}
+
+function resolvePackSourceDocument(filePath, seen = new Set()) {
+  const normalizedPath = path.resolve(filePath);
+  if (seen.has(normalizedPath)) {
+    throw new Error(`Circular pack reference detected: ${[...seen, normalizedPath].join(' -> ')}`);
+  }
+
+  const doc = readJsonFile(normalizedPath);
+  if (!isReferenceStub(doc)) return doc;
+
+  seen.add(normalizedPath);
+  const targetPath = resolveReferencePath(doc.reference, normalizedPath);
+  if (!fs.existsSync(targetPath)) {
+    throw new Error(`Pack reference target not found: ${doc.reference} (from ${normalizedPath})`);
+  }
+  return resolvePackSourceDocument(targetPath, seen);
+}
 
 /* ----------------------------------------- */
 /*  Compile Packs (V13 LevelDB Format)
@@ -121,10 +160,9 @@ async function compilePacks() {
       
       for (const file of files) {
         const filePath = path.join(sourceDir, file);
-        const content = fs.readFileSync(filePath, 'utf8');
         
         try {
-          const doc = JSON.parse(content);
+          const doc = resolvePackSourceDocument(filePath);
           
           // For origin-path items, assign to appropriate folder based on stepIndex
           if (folder === 'rt-items-origin-path' && doc.flags?.wh40k?.stepIndex) {
@@ -183,6 +221,7 @@ function compileScss() {
     .pipe(postcss([
       tailwindcss,
       autoprefixer({ cascade: false }),
+      cssnano({ preset: 'default' }),
     ]))
     .pipe(gulp.dest(BUILD_DIR + "/css"))
 }
