@@ -219,8 +219,29 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
             const costMatch = String(source.notes).match(/(\d+(?:,\d+)?)\s*T(?:hrone)?/i);
             if (costMatch) {
                 source.cost = {
-                    value: parseInt(costMatch[1].replace(/,/g, ''), 10),
-                    currency: 'throne',
+                    dh1: {
+                        throneGelt: null,
+                    },
+                    dh2: {
+                        influence: null,
+                        homebrew: {
+                            requisition: null,
+                            throneGelt:
+                                Array.isArray(source.gameSystems) && source.gameSystems.includes('dh2e') ? parseInt(costMatch[1].replace(/,/g, ''), 10) : null,
+                        },
+                    },
+                    rt: {
+                        profitFactor: null,
+                    },
+                    dw: {
+                        requisition: null,
+                    },
+                    bc: {
+                        infamy: null,
+                    },
+                    ow: {
+                        logistics: null,
+                    },
                 };
             }
         }

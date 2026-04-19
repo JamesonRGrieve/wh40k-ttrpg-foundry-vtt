@@ -12,7 +12,30 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     declare availability: string;
     declare craftsmanship: string;
     declare quantity: number;
-    declare cost: { value: number; currency: string };
+    declare cost: {
+        dh1: {
+            throneGelt: number | null;
+        };
+        dh2: {
+            influence: number | null;
+            homebrew: {
+                requisition: number | null;
+                throneGelt: number | null;
+            };
+        };
+        rt: {
+            profitFactor: number | null;
+        };
+        dw: {
+            requisition: number | null;
+        };
+        bc: {
+            infamy: number | null;
+        };
+        ow: {
+            logistics: number | null;
+        };
+    };
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
@@ -58,8 +81,28 @@ export default class PhysicalItemTemplate extends SystemDataModel {
                 integer: true,
             }),
             cost: new fields.SchemaField({
-                value: new fields.NumberField({ required: false, initial: 0 }),
-                currency: new fields.StringField({ required: false, initial: 'throne' }),
+                dh1: new fields.SchemaField({
+                    throneGelt: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                }),
+                dh2: new fields.SchemaField({
+                    influence: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                    homebrew: new fields.SchemaField({
+                        requisition: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                        throneGelt: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                    }),
+                }),
+                rt: new fields.SchemaField({
+                    profitFactor: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                }),
+                dw: new fields.SchemaField({
+                    requisition: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                }),
+                bc: new fields.SchemaField({
+                    infamy: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                }),
+                ow: new fields.SchemaField({
+                    logistics: new fields.NumberField({ required: false, nullable: true, initial: null, min: 0 }),
+                }),
             }),
         };
     }
@@ -96,10 +139,93 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @param {object} source  The source data
      */
     static #migrateCost(source: Record<string, any>): void {
+        const emptyCost = PhysicalItemTemplate.#emptyCost();
+        const normalizeNullableNumber = (value: unknown): number | null => {
+            if (value === null || value === undefined || value === '') return null;
+            const numericValue = Number(value);
+            if (!Number.isFinite(numericValue)) return null;
+            return numericValue;
+        };
+
         // Convert number cost to object
         if (typeof source.cost === 'number') {
-            source.cost = { value: source.cost, currency: 'throne' };
+            const legacyCost = source.cost;
+            source.cost = emptyCost;
+            if (Array.isArray(source.gameSystems) && source.gameSystems.includes('dh2e')) {
+                source.cost.dh2.homebrew.throneGelt = normalizeNullableNumber(legacyCost) ?? 0;
+            }
+            return;
         }
+
+        if (!source.cost || typeof source.cost !== 'object') {
+            source.cost = emptyCost;
+            return;
+        }
+
+        if ('value' in source.cost || 'requisition' in source.cost || 'currency' in source.cost) {
+            const legacyValue = normalizeNullableNumber(source.cost.value);
+            const legacyDh2Req = normalizeNullableNumber(source.cost.requisition?.dh2);
+            const legacyDwReq = normalizeNullableNumber(source.cost.requisition?.dw);
+            source.cost = emptyCost;
+            if (Array.isArray(source.gameSystems) && source.gameSystems.includes('dh2e')) {
+                source.cost.dh2.homebrew.throneGelt = legacyValue;
+                source.cost.dh2.homebrew.requisition = legacyDh2Req;
+            }
+            source.cost.dw.requisition = legacyDwReq;
+            return;
+        }
+
+        source.cost = {
+            dh1: {
+                throneGelt: normalizeNullableNumber(source.cost.dh1?.throneGelt),
+            },
+            dh2: {
+                influence: normalizeNullableNumber(source.cost.dh2?.influence),
+                homebrew: {
+                    requisition: normalizeNullableNumber(source.cost.dh2?.homebrew?.requisition),
+                    throneGelt: normalizeNullableNumber(source.cost.dh2?.homebrew?.throneGelt),
+                },
+            },
+            rt: {
+                profitFactor: normalizeNullableNumber(source.cost.rt?.profitFactor),
+            },
+            dw: {
+                requisition: normalizeNullableNumber(source.cost.dw?.requisition),
+            },
+            bc: {
+                infamy: normalizeNullableNumber(source.cost.bc?.infamy),
+            },
+            ow: {
+                logistics: normalizeNullableNumber(source.cost.ow?.logistics),
+            },
+        };
+    }
+
+    static #emptyCost(): Record<string, any> {
+        return {
+            dh1: {
+                throneGelt: null,
+            },
+            dh2: {
+                influence: null,
+                homebrew: {
+                    requisition: null,
+                    throneGelt: null,
+                },
+            },
+            rt: {
+                profitFactor: null,
+            },
+            dw: {
+                requisition: null,
+            },
+            bc: {
+                infamy: null,
+            },
+            ow: {
+                logistics: null,
+            },
+        };
     }
 
     /* -------------------------------------------- */
