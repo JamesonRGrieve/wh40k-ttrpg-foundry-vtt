@@ -26,7 +26,7 @@
     @apply tw-flex tw-items-center tw-gap-2 tw-py-1 tw-px-2 tw-min-h-9 tw-relative tw-overflow-hidden;
     background: var(--wh40k-bg-paper-light);
     border: 1px solid var(--wh40k-border-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     &.wh40k-filled {
         background: var(--wh40k-bg-input);
@@ -95,7 +95,7 @@
     flex: 1;
     padding: 4px 8px;
     border: 1px dashed var(--wh40k-border-medium);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.75rem;
     color: var(--wh40k-text-muted);
     text-align: center;
@@ -155,7 +155,7 @@
     color: var(--wh40k-text-muted);
     cursor: pointer;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     transition: all var(--wh40k-transition-fast);
     font-size: 0.75rem;
 
@@ -172,7 +172,7 @@
     color: var(--wh40k-text-muted);
     cursor: pointer;
     padding: 4px 10px;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     transition: all var(--wh40k-transition-fast);
     font-size: 0.8rem;
     display: flex;
@@ -208,7 +208,7 @@
     background: var(--wh40k-panel-bg-solid);
     border: 1px solid var(--wh40k-border-color-light);
     border-left: 3px solid var(--wh40k-accent-bio);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     transition: all var(--wh40k-transition-base);
 
     &:hover {
@@ -329,7 +329,7 @@
     min-height: 250px;
     background: var(--wh40k-bg-input);
     border: 1px solid var(--wh40k-border-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     overflow-y: auto;
     font-size: 0.9rem;
     line-height: 1.6;
@@ -408,7 +408,7 @@
         pre {
             background: rgba(0, 0, 0, 0.1);
             padding: var(--wh40k-space-sm);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             overflow-x: auto;
 
             code {
@@ -450,7 +450,7 @@
         img {
             max-width: 100%;
             height: auto;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             margin: var(--wh40k-space-sm) 0;
         }
 
@@ -468,7 +468,7 @@
     padding: var(--wh40k-space-sm);
     background: var(--wh40k-bg-input);
     border: 1px solid var(--wh40k-border-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.9rem;
     line-height: 1.6;
     min-height: 100px;
@@ -505,7 +505,7 @@
     padding: var(--wh40k-space-sm);
     background: var(--wh40k-bg-input);
     border: 1px solid var(--wh40k-border-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     overflow-y: auto;
     font-size: 0.9rem;
     line-height: 1.5;
@@ -560,7 +560,7 @@
     padding: 6px 8px;
     background: var(--wh40k-bg-input);
     border: 1px solid var(--wh40k-border-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: var(--color-text-primary);
     font-size: 0.9rem;
 
@@ -580,7 +580,7 @@
     padding: var(--wh40k-space-sm);
     background: var(--wh40k-bg-input);
     border: 1px solid var(--wh40k-border-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: var(--color-text-primary);
     font-size: 0.85rem;
     line-height: 1.5;

@@ -1,5 +1,5 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
-import { resolveLineVariant, inferActiveGameLine } from '../../utils/item-variant-utils.ts';
+import { resolveLineVariant, inferActiveGameLine, isLineVariantContainer } from '../../utils/item-variant-utils.ts';
 
 /**
  * Template for items with descriptions and source references.
@@ -46,6 +46,7 @@ export default class DescriptionTemplate extends SystemDataModel {
                 summary: '',
             };
         }
+        if (isLineVariantContainer(source.description)) return;
         // Ensure sub-fields are not null (V13 HTMLField strictness)
         if (source.description && typeof source.description === 'object') {
             source.description.chat ??= '';
@@ -65,6 +66,7 @@ export default class DescriptionTemplate extends SystemDataModel {
                 custom: source.source,
             };
         }
+        if (isLineVariantContainer(source.source)) return;
         if (source.source && typeof source.source === 'object') {
             source.source.book ??= '';
             source.source.page ??= '';

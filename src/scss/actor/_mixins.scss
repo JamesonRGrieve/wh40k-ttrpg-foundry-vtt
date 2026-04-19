@@ -1,35 +1,7 @@
-//noinspection CssUnknownTarget
 // ============================================
-// Mixins
+// Actor Mixins
 // ============================================
-
-@mixin wh40k-progress-gradient($gradient) {
-    &::-webkit-progress-value {
-        border-radius: 999px;
-        background: $gradient;
-    }
-    &::-moz-progress-bar {
-        border-radius: 999px;
-        background: $gradient;
-    }
-}
-
-@mixin wh40k-panel-vitals-theme($progress-gradient, $title-color, $icon-color) {
-    .wh40k-vitals-progress {
-        @include wh40k-progress-gradient($progress-gradient);
-    }
-    .wh40k-vitals-title {
-        color: $title-color;
-        i {
-            color: $icon-color;
-        }
-    }
-}
-
-@mixin wh40k-panel-tint($color, $border-opacity: 0.75, $header-opacity: 0.12) {
-    border-left: 3px solid rgba($color, $border-opacity);
-
-    .wh40k-panel-header {
-        background: linear-gradient(180deg, rgba($color, $header-opacity), transparent);
-    }
-}
+// All mixins (wh40k-progress-gradient, wh40k-panel-vitals-theme,
+// wh40k-panel-tint) were confirmed unused and removed.
+// Panel tints and vitals themes are now pre-generated as static
+// classes in _sheet-base.scss.

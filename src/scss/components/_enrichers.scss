@@ -5,7 +5,7 @@
 .wh40k-enricher {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 2px 6px;
     border-radius: 3px;
     font-size: 0.9em;

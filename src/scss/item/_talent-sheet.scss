@@ -37,7 +37,7 @@
 .wh40k-talent-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 12px;
     background: linear-gradient(135deg, var(--talent-bg) 0%, transparent 100%);
     border-bottom: 2px solid var(--talent-border);
@@ -142,7 +142,7 @@
     min-width: 60px;
     padding: 8px 6px;
     background: var(--wh40k-panel-bg);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border: 1px solid var(--wh40k-border-color-light);
 
     &__icon {
@@ -198,9 +198,9 @@
 .wh40k-talent-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 3px 8px;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.7rem;
     font-weight: 600;
     background: var(--wh40k-panel-bg);
@@ -285,7 +285,7 @@
     &__header {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         padding: 10px 12px;
         background: linear-gradient(135deg, var(--wh40k-accent-overlay) 0%, transparent 100%);
         border-bottom: 1px solid var(--wh40k-border-color-light);
@@ -314,7 +314,7 @@
 .wh40k-section-title {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     margin: 0 0 12px 0;
     padding: 8px 12px;
     background: linear-gradient(90deg, var(--talent-bg) 0%, transparent 100%);
@@ -337,13 +337,13 @@
 .wh40k-properties-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
+    gap: var(--wh40k-space-md);
 }
 
 .wh40k-property {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 
     &--checkbox {
         flex-direction: row;
@@ -390,7 +390,7 @@
     padding: 6px 10px;
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-family: var(--wh40k-font-ui);
     font-size: 0.85rem;
     color: var(--wh40k-text-dark);
@@ -449,7 +449,7 @@
     padding: 12px;
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 }
 
 .wh40k-prereq-label {
@@ -466,13 +466,13 @@
 .wh40k-modifiers-display {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
+    gap: var(--wh40k-space-md);
 }
 
 .wh40k-modifier-group {
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     padding: 10px;
 }
 
@@ -572,7 +572,7 @@
 
 .wh40k-editor-container {
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
 
     .editor {
@@ -602,7 +602,7 @@
 .wh40k-grants-group-title {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     margin: 0 0 10px 0;
     padding: 6px 10px;
     background: linear-gradient(90deg, rgba(201, 162, 39, 0.1) 0%, transparent 100%);
@@ -632,11 +632,11 @@
 .wh40k-grants-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 6px 10px;
     background: var(--wh40k-panel-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.85rem;
     color: var(--wh40k-text-dark);
 
@@ -667,7 +667,7 @@
     padding: 10px;
     background: var(--wh40k-panel-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     margin-bottom: 10px;
 
     &:last-child {

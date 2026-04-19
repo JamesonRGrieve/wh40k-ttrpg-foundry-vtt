@@ -38,7 +38,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 0;
     margin: 0;
     background: var(--wh40k-btn-bg);
@@ -176,7 +176,7 @@
         width: 24px;
         height: 24px;
         font-size: 0.85rem;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
     }
 
     // Large variant (36px)
@@ -184,7 +184,7 @@
         width: 36px;
         height: 36px;
         font-size: 1.1rem;
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
     }
 }
 
@@ -495,7 +495,7 @@
 .wh40k-panel {
     background: var(--wh40k-panel-bg);
     border: 1px solid var(--wh40k-border-color-light);
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     overflow: hidden;
     margin-bottom: var(--wh40k-space-md);
     box-shadow: 0 2px 8px var(--wh40k-shadow-soft);
@@ -706,7 +706,7 @@
 }
 
 .wh40k-vital-fate {
-    --vital-color: #3498db;
+    --vital-color: #{$wh40k-accent-info};
     --vital-color-rgb: 52, 152, 219;
 }
 
@@ -789,7 +789,7 @@
 .wh40k-vital-readout {
     display: flex;
     align-items: baseline;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     justify-content: center;
     padding: 4px 0;
 }

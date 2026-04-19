@@ -33,7 +33,7 @@
         .wh40k-scaler-npc-portrait {
             width: 80px;
             height: 80px;
-            border-radius: 8px;
+            border-radius: var(--wh40k-radius-lg);
             border: 2px solid var(--color-border-secondary);
             object-fit: cover;
         }
@@ -57,7 +57,7 @@
         .wh40k-threat-tier-badge {
             display: inline-block;
             padding: 2px 8px;
-            border-radius: 8px;
+            border-radius: var(--wh40k-radius-lg);
             font-size: 0.7rem;
             text-transform: uppercase;
             font-weight: 700;
@@ -200,7 +200,7 @@
 
         .wh40k-quick-presets {
             display: flex;
-            gap: 8px;
+            gap: var(--wh40k-space-sm);
             justify-content: center;
             margin-top: var(--wh40k-space-md);
         }
@@ -209,7 +209,7 @@
             padding: 8px 16px;
             background: var(--color-bg-tertiary);
             border: 1px solid var(--color-border-secondary);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             color: var(--color-text-light-primary);
             cursor: pointer;
             font-size: 0.85rem;
@@ -253,11 +253,11 @@
         .wh40k-checkbox-label {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--wh40k-space-sm);
             padding: 8px 12px;
             background: var(--color-bg-tertiary);
             border: 1px solid var(--color-border-secondary);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             cursor: pointer;
             transition: all var(--wh40k-transition-base);
 
@@ -296,7 +296,7 @@
             padding: var(--wh40k-space-sm) var(--wh40k-space-md);
             background: rgba(255, 152, 0, 0.2);
             border: 1px solid #ff9800;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             color: #ff9800;
             font-weight: 600;
             margin-bottom: var(--wh40k-space-md);
@@ -308,7 +308,7 @@
 
         .wh40k-preview-tabs {
             display: flex;
-            gap: 4px;
+            gap: var(--wh40k-space-xs);
             border-bottom: 2px solid var(--color-border-secondary);
             margin-bottom: var(--wh40k-space-md);
         }
@@ -452,7 +452,7 @@
             gap: var(--wh40k-space-md);
             padding: var(--wh40k-space-sm);
             background: var(--color-bg-tertiary);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
 
             .wh40k-change-label {
                 font-weight: 600;
@@ -491,7 +491,7 @@
         .wh40k-preview-note {
             padding: var(--wh40k-space-md);
             background: var(--color-bg-tertiary);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             color: var(--color-text-light-secondary);
             font-style: italic;
             text-align: center;
@@ -512,7 +512,7 @@
                 align-items: center;
                 gap: 6px;
                 padding: 10px 20px;
-                border-radius: 4px;
+                border-radius: var(--wh40k-radius-md);
                 font-size: 0.9rem;
                 font-weight: 600;
                 cursor: pointer;

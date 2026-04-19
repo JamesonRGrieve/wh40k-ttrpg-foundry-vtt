@@ -8,6 +8,7 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.ts';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
+import { getMaterializedItemSource, remapSubmitDataToVariantPaths } from '../../utils/item-variant-utils.ts';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -162,7 +163,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
             data: this.item, // Legacy compatibility
             document: this.item, // Required for V13 {{editor}} helper
             system: this.item.system,
-            source: this.isEditable ? this.item.system._source : this.item.system,
+            source: this.isEditable ? getMaterializedItemSource(this.item) : this.item.system,
             fields: this.item.system.schema?.fields ?? {},
             effects: this.item.getEmbeddedCollection('ActiveEffect').contents,
             flags: this.item.flags,
@@ -230,7 +231,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @protected
      */
     _prepareSubmitData(event: Event, form: HTMLFormElement, formData: any): Record<string, unknown> {
-        const submitData = super._prepareSubmitData(event, form, formData);
+        let submitData = super._prepareSubmitData(event, form, formData);
 
         // CRITICAL FIX: Clean img field if present to prevent validation errors
         // Foundry V13 has very strict validation on img field
@@ -252,6 +253,8 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
                 }
             }
         }
+
+        submitData = remapSubmitDataToVariantPaths(this.item, submitData);
 
         return submitData;
     }

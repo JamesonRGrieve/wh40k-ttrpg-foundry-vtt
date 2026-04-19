@@ -65,7 +65,7 @@
 
 .wh40k-effect-icon {
     // Size: tw-w-9 tw-h-9 tw-shrink-0
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border: 1px solid var(--wh40k-border-medium);
     object-fit: cover;
     background: rgba(0, 0, 0, 0.05);
@@ -100,7 +100,7 @@
     // Layout: tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-cursor-pointer
     background: transparent;
     border: 1px solid var(--wh40k-border-medium);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-text-muted);
     transition: all var(--wh40k-transition-base);
 
@@ -118,24 +118,24 @@
 .wh40k-effect-toggle {
     &:hover {
         background: rgba(46, 204, 113, 0.1);
-        border-color: #2ecc71;
-        color: #2ecc71;
+        border-color: $wh40k-accent-green-bright;
+        color: $wh40k-accent-green-bright;
     }
 }
 
 .wh40k-effect-edit {
     &:hover {
         background: rgba(52, 152, 219, 0.1);
-        border-color: #3498db;
-        color: #3498db;
+        border-color: $wh40k-accent-info;
+        color: $wh40k-accent-info;
     }
 }
 
 .wh40k-effect-delete {
     &:hover {
         background: rgba(231, 76, 60, 0.1);
-        border-color: #e74c3c;
-        color: #e74c3c;
+        border-color: $wh40k-accent-red;
+        color: $wh40k-accent-red;
     }
 }
 
@@ -147,7 +147,7 @@
 .wh40k-effect-change {
     // Layout: tw-flex tw-items-center tw-gap-1 tw-py-1 tw-px-2
     background: rgba(0, 0, 0, 0.03);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.75rem;
     font-family: 'Courier New', monospace;
 }
@@ -200,7 +200,7 @@
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.1)'} 0%, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.05)'} 100%);
     border: 1px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.3)'};
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-accent-gold);
     font-size: 0.85rem;
     font-weight: 600;

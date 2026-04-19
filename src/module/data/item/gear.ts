@@ -3,6 +3,7 @@ import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Data model for Gear items (general equipment).
@@ -31,43 +32,22 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Gear category
-            category: new fields.StringField({
-                required: true,
-                initial: 'general',
-                choices: [
-                    'general',
-                    'tools',
-                    'drugs',
-                    'consumable',
-                    'clothing',
-                    'survival',
-                    'communications',
-                    'detection',
-                    'medical',
-                    'tech',
-                    'religious',
-                    'luxury',
-                    'contraband',
-                ],
-            }),
+            category: new fields.ObjectField({ required: true, initial: 'general' }),
 
             // Is this consumable?
-            consumable: new fields.BooleanField({ required: true, initial: false }),
+            consumable: new fields.ObjectField({ required: true, initial: false }),
 
             // Uses/charges (for consumables)
-            uses: new fields.SchemaField({
-                value: new fields.NumberField({ required: true, nullable: false, initial: 0, min: 0, integer: true }),
-                max: new fields.NumberField({ required: true, nullable: false, initial: 0, min: 0, integer: true }),
-            }),
+            uses: new fields.ObjectField({ required: true, initial: { value: 0, max: 0 } }),
 
             // Effect when used
-            effect: new fields.HTMLField({ required: false, blank: true }),
+            effect: new fields.ObjectField({ required: false, initial: '' }),
 
             // Duration of effect (for drugs, etc.)
-            duration: new fields.StringField({ required: false, blank: true }),
+            duration: new fields.ObjectField({ required: false, initial: '' }),
 
             // Notes
-            notes: new fields.StringField({ required: false, blank: true }),
+            notes: new fields.ObjectField({ required: false, initial: '' }),
         };
     }
 
@@ -243,6 +223,21 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
                 };
             }
         }
+    }
+
+    /** @inheritdoc */
+    prepareBaseData(): void {
+        super.prepareBaseData();
+
+        const lineKey = inferActiveGameLine(this.parent?._source?.system ?? {}, this.parent);
+        this.category = (resolveLineVariant(this.category as unknown, lineKey) as string) ?? 'general';
+        this.consumable = Boolean(resolveLineVariant(this.consumable as unknown, lineKey));
+        this.uses = foundry.utils.mergeObject({ value: 0, max: 0 }, (resolveLineVariant(this.uses as unknown, lineKey) as Record<string, unknown>) ?? {}, {
+            inplace: false,
+        }) as typeof this.uses;
+        this.effect = (resolveLineVariant(this.effect as unknown, lineKey) as string) ?? '';
+        this.duration = (resolveLineVariant(this.duration as unknown, lineKey) as string) ?? '';
+        this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
     }
 
     /**

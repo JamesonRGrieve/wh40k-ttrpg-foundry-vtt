@@ -63,7 +63,7 @@
 .wh40k-specialist-group {
     background: var(--wh40k-bg-paper);
     border: 1px solid var(--wh40k-border-light);
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     overflow: hidden;
     margin-bottom: var(--wh40k-space-xs);
 }
@@ -88,7 +88,7 @@
         color: var(--wh40k-text-muted);
         padding: 2px 6px;
         background: var(--wh40k-bg-input);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         border: 1px solid var(--wh40k-border-light);
     }
 }
@@ -107,7 +107,7 @@
     padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
     background: var(--wh40k-bg-input);
     border: 1px solid var(--wh40k-border-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     margin-bottom: 2px;
 
     &:hover {
@@ -132,7 +132,7 @@
             color: var(--wh40k-text-muted);
             cursor: pointer;
             padding: 4px;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             flex-shrink: 0;
 
             &:hover {
@@ -212,7 +212,7 @@
     color: var(--wh40k-text-muted);
     background: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.03)'};
     border: 2px dashed #{'rgb(from var(--wh40k-accent-talents) r g b / 0.2)'};
-    border-radius: 8px;
+    border-radius: var(--wh40k-radius-lg);
     margin: var(--wh40k-space-sm);
 
     i.fa-graduation-cap {

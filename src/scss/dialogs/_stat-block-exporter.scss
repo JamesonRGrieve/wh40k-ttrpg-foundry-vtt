@@ -22,7 +22,7 @@
             padding: 0.5rem 1rem;
             background: var(--color-bg-option);
             border: 1px solid var(--color-border-light-tertiary);
-            border-radius: 4px 4px 0 0;
+            border-radius: var(--wh40k-radius-md) 4px 0 0;
             cursor: pointer;
             transition: all var(--wh40k-transition-base);
 
@@ -31,9 +31,9 @@
             }
 
             &.active {
-                background: var(--wh40k-color-accent, #c9a227);
+                background: var(--wh40k-color-accent, $wh40k-color-gold);
                 color: #fff;
-                border-color: var(--wh40k-color-accent, #c9a227);
+                border-color: var(--wh40k-color-accent, $wh40k-color-gold);
             }
 
             i {
@@ -60,7 +60,7 @@
             background: #1a1a1a;
             color: #e0e0e0;
             padding: 1rem;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             font-family: 'Fira Code', 'Consolas', monospace;
             font-size: 0.75rem;
             line-height: 1.4;
@@ -86,7 +86,7 @@
         }
 
         .primary {
-            background: var(--wh40k-color-accent, #c9a227);
+            background: var(--wh40k-color-accent, $wh40k-color-gold);
             color: #fff;
 
             &:hover {

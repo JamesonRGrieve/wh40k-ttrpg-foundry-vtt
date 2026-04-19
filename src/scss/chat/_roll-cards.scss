@@ -121,7 +121,7 @@
     position: relative;
     background: var(--wh40k-card-bg);
     border: 2px solid var(--wh40k-card-border);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
     box-shadow: 0 4px 12px var(--wh40k-shadow-medium), inset 0 1px 0 var(--wh40k-accent-overlay);
 
@@ -289,7 +289,7 @@
     margin: 8px 0;
     background: var(--wh40k-accent-overlay);
     border: 1px solid var(--wh40k-border-color);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     .wh40k-roll-card__label {
         font-weight: 600;
@@ -313,7 +313,7 @@
     text-align: center;
     padding: 16px;
     margin: 12px 0;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     &--success {
         background: var(--wh40k-success-bg);
@@ -373,11 +373,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     margin-top: 8px;
     padding: 8px 16px;
     background: var(--wh40k-panel-bg-translucent);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     .wh40k-roll-card__degrees-count {
         font-size: 1.5rem;
@@ -441,7 +441,7 @@
     margin: 8px 0;
     background: var(--wh40k-wounds-bg);
     border: 1px solid var(--wh40k-wounds-border);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     .wh40k-roll-card__damage-header {
         display: flex;
@@ -495,12 +495,12 @@
     padding: 10px;
     background: var(--wh40k-panel-bg-translucent);
     border: 1px solid var(--wh40k-border-color);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     .wh40k-roll-card__hit-header {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         margin-bottom: 8px;
 
         .wh40k-roll-card__hit-number {
@@ -534,7 +534,7 @@
     padding: 12px;
     background: var(--wh40k-fate-bg);
     border: 2px solid var(--wh40k-gold-bright);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     text-align: center;
 
     .wh40k-roll-card__fury-title {
@@ -551,7 +551,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 8px;
+        gap: var(--wh40k-space-sm);
         margin: 8px 0;
         padding: 6px 12px;
         background: rgba(255, 215, 0, 0.1);
@@ -660,7 +660,7 @@
     padding: 8px 12px;
     background: var(--wh40k-btn-bg);
     border: 1px solid var(--wh40k-border-color);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-card-gold);
     font-size: 0.8rem;
     font-weight: 600;
@@ -762,7 +762,7 @@
 .wh40k-roll-card__effect {
     display: flex;
     align-items: flex-start;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 6px 0;
     font-size: 0.85rem;
 
@@ -850,7 +850,7 @@
     margin-top: 8px;
     padding: 8px;
     background: var(--wh40k-panel-bg-translucent);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.85rem;
     line-height: 1.5;
 }
@@ -895,7 +895,7 @@
 .wh40k-roll-card__manual-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 3px 10px;
     margin-top: 6px;
     background: rgba(168, 85, 247, 0.15);
@@ -919,7 +919,7 @@
     margin: 8px 0;
     background: rgba(201, 162, 39, 0.08);
     border: 1px dashed rgba(201, 162, 39, 0.3);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-size: 0.8rem;
     font-style: italic;
     color: var(--wh40k-card-muted);
@@ -934,7 +934,7 @@
     padding: 12px;
     background: linear-gradient(135deg, rgba(75, 192, 115, 0.08) 0%, rgba(75, 192, 115, 0.03) 100%);
     border-left: 3px solid rgba(75, 192, 115, 0.5);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 }
 
 .wh40k-roll-card__qualities-header {
@@ -963,7 +963,7 @@
     padding: 4px 10px;
     background: rgba(75, 192, 115, 0.15);
     border: 1px solid rgba(75, 192, 115, 0.3);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: #4bc073;
     font-size: 0.8rem;
     font-weight: 600;

@@ -88,12 +88,12 @@
 
         &::-webkit-scrollbar-track {
             background: rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
         }
 
         &::-webkit-scrollbar-thumb {
             background: rgba(100, 100, 120, 0.4);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
 
             &:hover {
                 background: rgba(100, 100, 120, 0.6);

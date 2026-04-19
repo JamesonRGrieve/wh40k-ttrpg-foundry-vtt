@@ -55,7 +55,7 @@
     padding: 4px 8px;
     background: var(--wh40k-bg-paper-light);
     border: 1px solid var(--wh40k-border-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 
     &:hover {
         background: var(--wh40k-bg-paper);
@@ -169,7 +169,7 @@
 
 // Speed-specific colors
 .wh40k-speed-half i {
-    color: #27ae60;
+    color: var(--wh40k-accent-green);
 }
 .wh40k-speed-full i {
     color: #2980b9;
@@ -224,7 +224,7 @@
 .wh40k-athletic-stat {
     @apply tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1;
     background: rgba(255, 255, 255, 0.5);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 }
 
 .wh40k-athletic-label {
@@ -249,7 +249,7 @@
 .wh40k-carry-stat {
     @apply tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-1;
     background: rgba(255, 255, 255, 0.5);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 }
 
 .wh40k-carry-label {
@@ -284,7 +284,7 @@
     font-weight: 600;
     text-align: center;
     border: 1px solid var(--wh40k-border-medium);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     background: rgba(255, 255, 255, 0.8);
     color: var(--color-text-primary);
     cursor: pointer;
@@ -335,7 +335,7 @@
 .wh40k-movement-item {
     @apply tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer;
     background: rgba(255, 255, 255, 0.5);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     transition: background var(--wh40k-transition-fast);
 
     &:hover {
@@ -367,7 +367,7 @@
     @apply tw-flex tw-flex-col tw-items-center tw-p-1;
     background: var(--wh40k-bg-paper-light);
     border: 1px solid var(--wh40k-border-light);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
 }
 
 .wh40k-move-label {
@@ -411,14 +411,14 @@
 .wh40k-movement-modern-compact {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-move-modern-cell {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 10px 12px;
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-light);
@@ -451,7 +451,7 @@
 .wh40k-move-modern-content {
     display: flex;
     align-items: baseline;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     flex: 1;
     z-index: 2;
 }
@@ -494,12 +494,16 @@
 
 // Specific movement type styling
 .wh40k-move-half .wh40k-move-modern-icon {
-    background: linear-gradient(135deg, rgba(#2ecc71, 0.15) 0%, rgba(#2ecc71, 0.05) 100%);
-    color: #27ae60;
+    background: linear-gradient(
+        135deg,
+        #{'rgb(from var(--wh40k-accent-green-bright) r g b / 0.15)'} 0%,
+        #{'rgb(from var(--wh40k-accent-green-bright) r g b / 0.05)'} 100%
+    );
+    color: var(--wh40k-accent-green);
 }
 
 .wh40k-move-full .wh40k-move-modern-icon {
-    background: linear-gradient(135deg, rgba(#3498db, 0.15) 0%, rgba(#3498db, 0.05) 100%);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-info) r g b / 0.15)'} 0%, #{'rgb(from var(--wh40k-accent-info) r g b / 0.05)'} 100%);
     color: #2980b9;
 }
 
@@ -509,7 +513,7 @@
 }
 
 .wh40k-move-run .wh40k-move-modern-icon {
-    background: linear-gradient(135deg, rgba(#e74c3c, 0.15) 0%, rgba(#e74c3c, 0.05) 100%);
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-red) r g b / 0.15)'} 0%, #{'rgb(from var(--wh40k-accent-red) r g b / 0.05)'} 100%);
     color: #c0392b;
 }
 
@@ -520,14 +524,14 @@
 .wh40k-movement-dense-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-stat-compact {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: var(--wh40k-space-sm);
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-light);
@@ -573,7 +577,7 @@
         font-weight: 600;
         text-align: center;
         border: 1px solid var(--color-border-light);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         background: var(--color-bg-primary);
         color: var(--color-text-dark-primary);
 
@@ -587,7 +591,7 @@
 // Encumbrance status
 .wh40k-enc-compact {
     .wh40k-enc-over {
-        color: #e74c3c;
+        color: var(--wh40k-accent-red);
         font-weight: 700;
     }
 }
@@ -597,7 +601,7 @@
 // ============================================
 .wh40k-token-movement {
     display: flex;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     justify-content: center;
     padding: 4px;
     position: absolute;
@@ -614,7 +618,7 @@
     padding: 4px 8px;
     background: rgba(0, 0, 0, 0.7);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: #ddd;
     font-size: 0.7rem;
     cursor: pointer;

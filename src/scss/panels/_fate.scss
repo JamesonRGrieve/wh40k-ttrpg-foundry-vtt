@@ -234,7 +234,7 @@
         padding: var(--wh40k-space-sm) var(--wh40k-space-md);
         background: linear-gradient(180deg, var(--wh40k-fate-bg), transparent);
         border: 2px solid var(--wh40k-fate-border);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         font-size: 0.85rem;
         font-weight: 700;
         color: var(--wh40k-fate-secondary);
@@ -275,7 +275,7 @@
         right: 0;
         background: var(--wh40k-panel-bg-solid);
         border: 2px solid var(--wh40k-fate-border);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         box-shadow: 0 4px 16px var(--wh40k-shadow-medium);
         z-index: 100;
         overflow: hidden;
@@ -356,7 +356,7 @@
         padding: var(--wh40k-space-md);
         background: var(--wh40k-panel-bg-translucent);
         border: 1px solid var(--wh40k-border-color-light);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         margin-bottom: var(--wh40k-space-sm);
 
         &:last-child {
@@ -392,7 +392,7 @@
     .wh40k-edit-field {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
     }
     .wh40k-edit-label {
         font-size: 0.7rem;
@@ -446,7 +446,7 @@
         padding: var(--wh40k-space-sm) var(--wh40k-space-md);
         background: var(--wh40k-panel-bg-solid);
         border: 2px solid var(--wh40k-border-color-light);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         font-size: 0.8rem;
         font-weight: 700;
         cursor: pointer;
@@ -540,7 +540,7 @@
         padding: var(--wh40k-space-sm);
         background: var(--wh40k-fate-bg);
         border-left: 3px solid var(--wh40k-fate-border);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         > i {
             color: var(--wh40k-fate-secondary);

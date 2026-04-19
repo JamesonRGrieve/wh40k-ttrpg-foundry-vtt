@@ -36,7 +36,7 @@
     }
 
     strong {
-        color: var(--wh40k-accent-gold, #c9a227);
+        color: var(--wh40k-accent-gold, $wh40k-color-gold);
         font-weight: 600;
     }
 
@@ -59,10 +59,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 12px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     font-family: var(--wh40k-font-ui);
     font-size: 0.9rem;
     font-weight: 600;
@@ -91,7 +91,7 @@
 
 // Confirm button (primary action)
 .confirmation-dialog .dialog-button.confirm {
-    background: linear-gradient(135deg, #c9a227 0%, #8b6914 100%);
+    background: linear-gradient(135deg, $wh40k-color-gold 0%, #8b6914 100%);
     color: #0a0a0f;
     box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 

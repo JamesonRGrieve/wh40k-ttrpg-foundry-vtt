@@ -339,7 +339,7 @@
 
 .wh40k-fate-pip {
     font-size: 1.2rem;
-    color: rgba($wh40k-accent-info, 0.25); // Unfilled: faded blue
+    color: #{'rgb(from var(--wh40k-accent-info) r g b / 0.25)'}; // Unfilled: faded blue
     transition: all var(--wh40k-transition-base);
     cursor: pointer;
     background: none;
@@ -355,8 +355,8 @@
     }
 
     &.wh40k-fate-pip--active {
-        color: $wh40k-accent-info; // Filled: solid blue
-        text-shadow: 0 0 8px rgba($wh40k-accent-info, 0.5), 0 0 4px rgba($wh40k-accent-info, 0.3);
+        color: var(--wh40k-accent-info); // Filled: solid blue
+        text-shadow: 0 0 8px #{'rgb(from var(--wh40k-accent-info) r g b / 0.5)'}, 0 0 4px #{'rgb(from var(--wh40k-accent-info) r g b / 0.3)'};
         animation: star-glow 2s ease-in-out infinite;
     }
 }
@@ -445,7 +445,7 @@
 
 // Speed-specific icon colors
 .wh40k-speed-half i {
-    color: $wh40k-accent-green;
+    color: var(--wh40k-accent-green);
 }
 .wh40k-speed-full i {
     color: #2980b9;
