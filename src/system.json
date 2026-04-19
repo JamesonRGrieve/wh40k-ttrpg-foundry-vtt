@@ -31,18 +31,25 @@
     "scripts": [],
     "documentTypes": {
         "Actor": {
-            "character": {
-                "htmlFields": ["details.biography"]
-            },
-            "npc": {
-                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
-            },
-            "vehicle": {
-                "htmlFields": ["details.biography"]
-            },
-            "starship": {
-                "htmlFields": ["details.biography"]
-            }
+            "dh2-character": { "htmlFields": ["details.biography"] },
+            "dh2-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
+            "dh2-vehicle": { "htmlFields": ["details.biography"] },
+            "dh1-character": { "htmlFields": ["details.biography"] },
+            "dh1-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
+            "dh1-vehicle": { "htmlFields": ["details.biography"] },
+            "rt-character": { "htmlFields": ["details.biography"] },
+            "rt-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
+            "rt-vehicle": { "htmlFields": ["details.biography"] },
+            "rt-starship": { "htmlFields": ["details.biography"] },
+            "bc-character": { "htmlFields": ["details.biography"] },
+            "bc-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
+            "bc-vehicle": { "htmlFields": ["details.biography"] },
+            "ow-character": { "htmlFields": ["details.biography"] },
+            "ow-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
+            "ow-vehicle": { "htmlFields": ["details.biography"] },
+            "dw-character": { "htmlFields": ["details.biography"] },
+            "dw-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
+            "dw-vehicle": { "htmlFields": ["details.biography"] }
         },
         "Item": {
             "ammunition": {
