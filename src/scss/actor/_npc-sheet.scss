@@ -7,7 +7,6 @@
 // Variables & Theme Colors
 // ============================================
 
-$npc-accent-primary: $wh40k-color-gold; // Gold
 $npc-accent-combat: #dc3545; // Red
 $npc-accent-defense: #2196f3; // Blue
 $npc-accent-movement: #4caf50; // Green
@@ -605,7 +604,7 @@ $bp-wide: 1200px;
                 color: white;
             }
             &.wh40k-threat--legendary {
-                background: linear-gradient(45deg, #8b0000, $wh40k-color-gold);
+                background: linear-gradient(45deg, #8b0000, var(--wh40k-color-gold));
                 color: white;
             }
         }
@@ -3165,7 +3164,7 @@ $bp-wide: 1200px;
     .wh40k-form-label {
         font-size: 0.8rem;
         font-weight: 600;
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }
@@ -3187,7 +3186,7 @@ $bp-wide: 1200px;
         }
 
         &:focus {
-            border-color: $wh40k-color-gold;
+            border-color: var(--wh40k-color-gold);
             outline: none;
             box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.2);
         }
@@ -3234,7 +3233,7 @@ $bp-wide: 1200px;
 
             &.default,
             &[data-action='add'] {
-                background: linear-gradient(135deg, $wh40k-color-gold 0%, #8b6914 100%);
+                background: linear-gradient(135deg, var(--wh40k-color-gold) 0%, #8b6914 100%);
                 border: none;
                 color: #0a0a0f;
                 font-weight: 600;

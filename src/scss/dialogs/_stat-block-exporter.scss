@@ -31,9 +31,9 @@
             }
 
             &.active {
-                background: var(--wh40k-color-accent, $wh40k-color-gold);
+                background: var(--wh40k-color-accent, var(--wh40k-color-gold));
                 color: #fff;
-                border-color: var(--wh40k-color-accent, $wh40k-color-gold);
+                border-color: var(--wh40k-color-accent, var(--wh40k-color-gold));
             }
 
             i {
@@ -86,7 +86,7 @@
         }
 
         .primary {
-            background: var(--wh40k-color-accent, $wh40k-color-gold);
+            background: var(--wh40k-color-accent, var(--wh40k-color-gold));
             color: #fff;
 
             &:hover {

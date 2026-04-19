@@ -54,7 +54,7 @@
         text-shadow: none;
     }
     50% {
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
     }
 }
@@ -373,7 +373,7 @@ input[type='text'].stat-value,
 
     &.derived-stat-changed {
         animation: pulse-glow 0.8s ease-out;
-        color: var(--wh40k-gold, $wh40k-color-gold);
+        color: var(--wh40k-gold, var(--wh40k-color-gold));
     }
 }
 

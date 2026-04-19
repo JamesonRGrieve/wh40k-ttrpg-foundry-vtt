@@ -31,7 +31,7 @@
 
             &:focus {
                 outline: none;
-                border-color: var(--wh40k-color-accent, $wh40k-color-gold);
+                border-color: var(--wh40k-color-accent, var(--wh40k-color-gold));
             }
         }
 
@@ -76,7 +76,7 @@
 
             input[type='range'] {
                 flex: 1;
-                accent-color: var(--wh40k-color-accent, $wh40k-color-gold);
+                accent-color: var(--wh40k-color-accent, var(--wh40k-color-gold));
             }
 
             .threat-value {
@@ -89,7 +89,7 @@
 
         .tier-label {
             font-size: 0.8rem;
-            color: var(--wh40k-color-accent, $wh40k-color-gold);
+            color: var(--wh40k-color-accent, var(--wh40k-color-gold));
             font-style: italic;
             margin-top: 0.25rem;
         }
@@ -127,7 +127,7 @@
         h4 {
             margin: 0 0 0.5rem 0;
             font-size: 0.9rem;
-            color: var(--wh40k-color-accent, $wh40k-color-gold);
+            color: var(--wh40k-color-accent, var(--wh40k-color-gold));
         }
 
         .name-preview-list {
@@ -158,7 +158,7 @@
         }
 
         .primary {
-            background: var(--wh40k-color-accent, $wh40k-color-gold);
+            background: var(--wh40k-color-accent, var(--wh40k-color-gold));
             color: #fff;
 
             &:hover {

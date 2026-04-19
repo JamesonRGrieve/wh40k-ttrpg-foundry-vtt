@@ -147,7 +147,7 @@
         background: rgba(201, 162, 39, 0.1);
         border: 2px solid rgba(201, 162, 39, 0.4);
         border-radius: 50%;
-        color: $wh40k-color-gold;
+        color: var(--wh40k-color-gold);
         cursor: pointer;
         transition: all var(--wh40k-transition-base);
         flex-shrink: 0;
@@ -159,7 +159,7 @@
 
         &:hover {
             background: rgba(201, 162, 39, 0.25);
-            border-color: $wh40k-color-gold;
+            border-color: var(--wh40k-color-gold);
             transform: scale(1.1);
             box-shadow: 0 2px 6px rgba(201, 162, 39, 0.3);
         }

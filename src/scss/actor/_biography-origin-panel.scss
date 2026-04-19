@@ -446,7 +446,7 @@
     }
 
     &.wh40k-tag-skill {
-        border-left: 3px solid $wh40k-accent-info;
+        border-left: 3px solid var(--wh40k-accent-info);
     }
 
     &.wh40k-tag-talent {
@@ -454,7 +454,7 @@
     }
 
     &.wh40k-tag-trait {
-        border-left: 3px solid $wh40k-accent-psychic;
+        border-left: 3px solid var(--wh40k-accent-psychic);
     }
 }
 

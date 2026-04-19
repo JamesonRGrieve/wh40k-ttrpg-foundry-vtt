@@ -19,8 +19,8 @@
 .wh40k-tag {
     &--success {
         background: rgba(46, 204, 113, 0.2);
-        border-color: $wh40k-accent-green-bright;
-        color: $wh40k-accent-green;
+        border-color: var(--wh40k-accent-green-bright);
+        color: var(--wh40k-accent-green);
 
         .theme-dark & {
             background: rgba(46, 204, 113, 0.3);

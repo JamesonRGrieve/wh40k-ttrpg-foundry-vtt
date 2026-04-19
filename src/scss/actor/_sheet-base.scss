@@ -358,7 +358,7 @@
     height: 60px;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(218, 165, 32, 0.1) 100%);
-    border: 2px solid var(--wh40k-fate-primary, $wh40k-color-gold);
+    border: 2px solid var(--wh40k-fate-primary, var(--wh40k-color-gold));
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.3);
     transition: all var(--wh40k-transition-medium);
     cursor: help;
@@ -366,7 +366,7 @@
     i {
         position: absolute;
         font-size: 2.5rem;
-        color: var(--wh40k-fate-primary, $wh40k-color-gold);
+        color: var(--wh40k-fate-primary, var(--wh40k-color-gold));
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
         transition: all var(--wh40k-transition-medium);
         opacity: 0.9;
@@ -461,7 +461,7 @@
 
 // Generic drag-over highlight for any panel drop zone
 [data-drop-zone].wh40k-drag-over {
-    outline: 2px dashed var(--wh40k-gold, $wh40k-color-gold);
+    outline: 2px dashed var(--wh40k-gold, var(--wh40k-color-gold));
     outline-offset: -2px;
     background-color: rgba(212, 175, 55, 0.05);
 }
@@ -568,7 +568,7 @@
     transition: color 0.15s ease, transform 0.15s ease;
 
     &:hover {
-        color: var(--wh40k-gold, $wh40k-color-gold);
+        color: var(--wh40k-gold, var(--wh40k-color-gold));
     }
 
     &:active {
@@ -628,7 +628,7 @@
         text-shadow: 0 1px 0 var(--wh40k-text-shadow);
     }
     50% {
-        color: var(--wh40k-gold, $wh40k-color-gold);
+        color: var(--wh40k-gold, var(--wh40k-color-gold));
         text-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
     }
     100% {
@@ -652,7 +652,7 @@
         color: var(--wh40k-text-muted);
     }
     50% {
-        color: var(--wh40k-gold, $wh40k-color-gold);
+        color: var(--wh40k-gold, var(--wh40k-color-gold));
     }
     100% {
         color: var(--wh40k-text-muted);

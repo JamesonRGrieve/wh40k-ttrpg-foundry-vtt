@@ -39,17 +39,17 @@
         i {
             width: 16px;
             text-align: center;
-            color: var(--wh40k-gold, $wh40k-color-gold);
+            color: var(--wh40k-gold, var(--wh40k-color-gold));
             font-size: 0.9em;
         }
 
         &:hover {
             background: rgba(212, 175, 55, 0.15);
             border-color: rgba(212, 175, 55, 0.3);
-            color: var(--wh40k-gold, $wh40k-color-gold);
+            color: var(--wh40k-gold, var(--wh40k-color-gold));
 
             i {
-                color: var(--wh40k-gold, $wh40k-color-gold);
+                color: var(--wh40k-gold, var(--wh40k-color-gold));
                 text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
             }
         }
@@ -99,7 +99,7 @@
 /* -------------------------------------------- */
 
 #context-menu.wh40k-context-menu .context-item:focus {
-    outline: 2px solid var(--wh40k-gold, $wh40k-color-gold);
+    outline: 2px solid var(--wh40k-gold, var(--wh40k-color-gold));
     outline-offset: -2px;
     background: rgba(212, 175, 55, 0.1);
 }

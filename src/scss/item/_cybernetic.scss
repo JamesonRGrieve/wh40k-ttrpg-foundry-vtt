@@ -5,8 +5,6 @@
 // Color variables for cybernetic
 $cyber-primary: #00d4ff;
 $cyber-secondary: #0096c7;
-$cyber-danger: $wh40k-accent-red;
-$cyber-success: $wh40k-accent-green-bright;
 
 /* -------------------------------------------- */
 /*  Main Sheet Container                        */
@@ -160,7 +158,7 @@ $cyber-success: $wh40k-accent-green-bright;
         color: #bdc3c7;
     }
     &--good {
-        color: $cyber-success;
+        color: var(--wh40k-accent-green-bright);
         border-color: #{'rgb(from var(--cyber-success) r g b / 0.4)'};
         background: #{'rgb(from var(--cyber-success) r g b / 0.15)'};
     }
@@ -217,7 +215,7 @@ $cyber-success: $wh40k-accent-green-bright;
     }
 
     &.wh40k-panel--modifiers {
-        border-left: 3px solid $wh40k-accent-psychic;
+        border-left: 3px solid var(--wh40k-accent-psychic);
     }
 
     &.wh40k-panel--armour {
@@ -233,11 +231,11 @@ $cyber-success: $wh40k-accent-green-bright;
     }
 
     &.wh40k-panel--effect {
-        border-left: 3px solid $cyber-success;
+        border-left: 3px solid var(--wh40k-accent-green-bright);
     }
 
     &.wh40k-panel--drawbacks {
-        border-left: 3px solid $cyber-danger;
+        border-left: 3px solid var(--wh40k-accent-red);
     }
 
     &.wh40k-panel--description {
@@ -245,7 +243,7 @@ $cyber-success: $wh40k-accent-green-bright;
     }
 
     &.wh40k-panel--notes {
-        border-left: 3px solid $wh40k-accent-info;
+        border-left: 3px solid var(--wh40k-accent-info);
     }
 }
 
@@ -513,12 +511,12 @@ $cyber-success: $wh40k-accent-green-bright;
     }
 
     input:checked ~ &__indicator i {
-        color: $cyber-success;
+        color: var(--wh40k-accent-green-bright);
         text-shadow: 0 0 8px #{'rgb(from var(--cyber-success) r g b / 0.5)'};
     }
 
     input:checked ~ &__label {
-        color: $cyber-success;
+        color: var(--wh40k-accent-green-bright);
     }
 
     &:hover {
@@ -606,13 +604,13 @@ $cyber-success: $wh40k-accent-green-bright;
         border-radius: 3px;
 
         &--positive {
-            color: $cyber-success;
+            color: var(--wh40k-accent-green-bright);
             background: #{'rgb(from var(--cyber-success) r g b / 0.15)'};
             border: 1px solid #{'rgb(from var(--cyber-success) r g b / 0.3)'};
         }
 
         &--negative {
-            color: $cyber-danger;
+            color: var(--wh40k-accent-red);
             background: #{'rgb(from var(--cyber-danger) r g b / 0.15)'};
             border: 1px solid #{'rgb(from var(--cyber-danger) r g b / 0.3)'};
         }
