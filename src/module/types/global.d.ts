@@ -180,7 +180,6 @@ interface WH40KGameSystem {
     BasicRollWH40K: unknown;
     D100Roll: unknown;
     tooltips?: unknown;
-    [key: string]: unknown;
 }
 
 // =========================================================================
@@ -203,8 +202,8 @@ declare global {
 
     // Extend CONFIG with wh40k system config (both cases used in codebase)
     namespace CONFIG {
-        let wh40k: Record<string, unknown>;
-        let WH40K: Record<string, unknown>;
+        let wh40k: import('../config.ts').WH40KSystemConfig;
+        let WH40K: import('../config.ts').WH40KSystemConfig;
     }
 }
 
