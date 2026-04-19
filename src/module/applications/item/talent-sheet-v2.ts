@@ -869,9 +869,9 @@ export default class TalentSheetV2 extends BaseItemSheet {
             </div>
         `;
 
-        await (ChatMessage as any).create({
+        await ChatMessage.create({
             content,
-            speaker: (ChatMessage as any).getSpeaker({ actor: this.item.actor }),
+            speaker: ChatMessage.getSpeaker({ actor: this.item.actor }),
         });
     }
 }

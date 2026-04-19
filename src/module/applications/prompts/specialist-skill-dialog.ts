@@ -4,6 +4,7 @@
  * from indexed compendium packs.
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
@@ -19,7 +20,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
      * @param {object} [options={}]        Dialog options.
      * @param {string} [options.preSelectedSkillKey]  Skill key to pre-select.
      */
-    constructor(actor: any, options: Record<string, unknown> = {}) {
+    constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
         // @ts-expect-error - argument count
         super(options);
         this.actorDoc = actor;

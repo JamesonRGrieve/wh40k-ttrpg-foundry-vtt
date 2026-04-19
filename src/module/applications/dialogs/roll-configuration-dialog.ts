@@ -207,7 +207,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             // Difficulty presets
             difficulties: (this.constructor as any).DIFFICULTY_PRESETS.map((d: any) => ({
                 ...d,
-                label: (game as any).i18n.localize(d.label),
+                label: game.i18n.localize(d.label),
                 selected: d.key === this.selectedDifficulty,
                 cssClass: d.value > 0 ? 'positive' : d.value < 0 ? 'negative' : 'neutral',
             })),
@@ -216,8 +216,8 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             // Roll modes - V13: rollModes values are objects with a label property
             rollModes: Object.entries((CONFIG as any).Dice.rollModes).map(([key, mode]: [string, any]) => ({
                 key: key,
-                label: (game as any).i18n.localize(mode.label),
-                selected: key === (this.config.rollMode || (game as any).settings.get('core', 'rollMode')),
+                label: game.i18n.localize(mode.label),
+                selected: key === (this.config.rollMode || game.settings.get('core', 'rollMode')),
             })),
 
             // Form buttons

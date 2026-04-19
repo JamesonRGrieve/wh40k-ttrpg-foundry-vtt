@@ -3,6 +3,7 @@
  * Handles weapons with mods, armour with upgrades, etc.
  */
 
+import type { WH40KItem } from '../../documents/item.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import BaseItemSheet from './base-item-sheet.ts';
 
@@ -201,7 +202,7 @@ export default class ContainerItemSheet extends BaseItemSheet {
      * @returns {boolean}
      * @protected
      */
-    _canAddItem(item: any): boolean {
+    _canAddItem(item: WH40KItem): boolean {
         if (!this.item.system?.containerTypes) return false;
         return this.item.system.containerTypes.includes(item.type);
     }

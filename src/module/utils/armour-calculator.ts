@@ -3,6 +3,9 @@
  * Extracts complex armour computation logic from the main actor document.
  */
 
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import type { WH40KItem } from '../documents/item.ts';
+
 interface LegacyAPResult {
     defaultValue?: number;
     pointsByLocation?: Record<string, number>;
@@ -163,12 +166,12 @@ function getArmourAPForLocation(armourSystem: Record<string, unknown>, location:
  * @param {Actor} actor - The actor to compute armour for
  * @returns {object} Armour object with totals for each location
  */
-export function computeArmour(actor: any): Record<string, ArmourLocationData> {
+export function computeArmour(actor: WH40KBaseActor): Record<string, ArmourLocationData> {
     const toughness = actor.characteristics.toughness;
     let traitBonus = 0;
 
     // Compute highest trait bonus from Machine or Natural Armor traits
-    const traits = actor.items.filter((item: any) => item.type === 'trait');
+    const traits = actor.items.filter((item: WH40KItem) => item.type === 'trait');
     for (const trait of traits) {
         switch (trait.name) {
             case 'Machine':
@@ -197,9 +200,9 @@ export function computeArmour(actor: any): Record<string, ArmourLocationData> {
 
     // Add cybernetic armour (cumulative)
     actor.items
-        .filter((item: any) => item.type === 'cybernetic')
-        .filter((item: any) => item.system.equipped)
-        .filter((item: any) => item.system.hasArmourPoints)
+        .filter((item: WH40KItem) => item.type === 'cybernetic')
+        .filter((item: WH40KItem) => item.system.equipped)
+        .filter((item: WH40KItem) => item.system.hasArmourPoints)
         .forEach((cybernetic: any) => {
             const armourPoints = getArmourPointsObject(cybernetic.system);
             BODY_LOCATIONS.forEach((location: string) => {
@@ -216,8 +219,8 @@ export function computeArmour(actor: any): Record<string, ArmourLocationData> {
     let hasGoodArmour = false;
 
     actor.items
-        .filter((item: any) => item.type === 'armour')
-        .filter((item: any) => item.system.equipped)
+        .filter((item: WH40KItem) => item.type === 'armour')
+        .filter((item: WH40KItem) => item.system.equipped)
         .forEach((armourItem: any) => {
             // Check for Good craftsmanship armour
             if (armourItem.system.craftsmanship === 'good') {

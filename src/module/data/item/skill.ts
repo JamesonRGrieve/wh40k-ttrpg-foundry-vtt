@@ -189,7 +189,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
     async toChat(): Promise<any> {
         const messageData = {
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-            speaker: (ChatMessage as any).getSpeaker(),
+            speaker: ChatMessage.getSpeaker(),
             content: await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/skill-card.hbs', { skill: this.parent }),
             flags: {
                 'wh40k-rpg': {
@@ -200,6 +200,6 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
             },
         };
 
-        return (ChatMessage as any).create(messageData);
+        return ChatMessage.create(messageData);
     }
 }

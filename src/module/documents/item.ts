@@ -114,7 +114,7 @@ export class WH40KItem extends WH40KItemContainer {
     get totalWeight(): boolean {
         let weight = this.system.weight || 0;
         if (this.items && this.items.size > 0) {
-            this.items.forEach((item: any) => (weight += item.totalWeight));
+            this.items.forEach((item: WH40KItem) => (weight += item.totalWeight));
         }
         return weight;
     }
@@ -495,7 +495,7 @@ export class WH40KItem extends WH40KItemContainer {
         chatData.rollMode = game.settings.get('core', 'rollMode');
         applyRollModeWhispers(chatData);
 
-        return (ChatMessage as any).create(chatData);
+        return ChatMessage.create(chatData);
     }
 
     /**
@@ -570,7 +570,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/talent-roll-chat.hbs', cardData);
 
-        return (ChatMessage as any).create({
+        return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -613,7 +613,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/navigator-power-chat.hbs', cardData);
 
-        return (ChatMessage as any).create({
+        return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -651,7 +651,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/order-roll-chat.hbs', cardData);
 
-        return (ChatMessage as any).create({
+        return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -689,7 +689,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ritual-roll-chat.hbs', cardData);
 
-        return (ChatMessage as any).create({
+        return ChatMessage.create({
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),

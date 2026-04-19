@@ -8,6 +8,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 
 /* -------------------------------------------- */
 /*  Individual Mixin Interfaces                 */
@@ -179,11 +180,11 @@ export interface ContextMenuMixinAPI {
     _toggleSkillTraining(skillKey: string, level: string): Promise<void>;
     _showGoverningCharacteristic(skillKey: string, skill: Record<string, unknown>): void;
     _addSkillSpecialization(skillKey: string): Promise<void>;
-    _duplicateItem(item: any): Promise<void>;
-    _deleteItem(item: any): Promise<void>;
-    _weaponAttack(item: any, mode: string): Promise<void>;
-    _toggleEquipped(item: any): Promise<void>;
-    _toggleActivated(item: any): Promise<void>;
+    _duplicateItem(item: WH40KItem): Promise<void>;
+    _deleteItem(item: WH40KItem): Promise<void>;
+    _weaponAttack(item: WH40KItem, mode: string): Promise<void>;
+    _toggleEquipped(item: WH40KItem): Promise<void>;
+    _toggleActivated(item: WH40KItem): Promise<void>;
     _spendFate(purpose: string): Promise<void>;
     _burnFatePoint(): Promise<void>;
 }
@@ -200,26 +201,26 @@ export interface EnhancedDragDropMixinAPI {
     _setupDropZones(): void;
     _setupFavoritesBar(): void;
     _onEnhancedDragStart(event: DragEvent): Promise<void>;
-    _createDragGhost(item: any, event: DragEvent): HTMLElement;
-    _canSplitItem(item: any): boolean;
-    _showSplitDialog(item: any): Promise<{ quantity: number } | null>;
-    _highlightValidDropZones(item: any): void;
+    _createDragGhost(item: WH40KItem, event: DragEvent): HTMLElement;
+    _canSplitItem(item: WH40KItem): boolean;
+    _showSplitDialog(item: WH40KItem): Promise<{ quantity: number } | null>;
+    _highlightValidDropZones(item: WH40KItem): void;
     _onEnhancedDragOver(event: DragEvent): void;
     _onEnhancedDragLeave(event: DragEvent): void;
     _onInventoryDragOver(event: DragEvent): void;
     _onFavoritesDragOver(event: DragEvent): void;
     _onEnhancedDrop(event: DragEvent): Promise<void>;
-    _handleEquipmentDrop(item: any, slot: string): Promise<void>;
-    _validateEquipmentSlot(item: any, slot: string): boolean;
-    _handleGeneralDrop(item: any, event: DragEvent): Promise<void>;
-    _handleSplitDrop(item: any, quantity: number): Promise<void>;
+    _handleEquipmentDrop(item: WH40KItem, slot: string): Promise<void>;
+    _validateEquipmentSlot(item: WH40KItem, slot: string): boolean;
+    _handleGeneralDrop(item: WH40KItem, event: DragEvent): Promise<void>;
+    _handleSplitDrop(item: WH40KItem, quantity: number): Promise<void>;
     _onInventoryDrop(event: DragEvent): Promise<void>;
     _reorderItems(sourceId: string, targetId: string, clientY: number): Promise<void>;
     _onFavoritesDrop(event: DragEvent): Promise<void>;
-    _addToFavorites(item: any): Promise<void>;
+    _addToFavorites(item: WH40KItem): Promise<void>;
     _onEnhancedDragEnd(event: DragEvent): void;
     _resetDrag(): void;
-    _animateSnapToSlot(item: any): void;
+    _animateSnapToSlot(item: WH40KItem): void;
     removeFromFavorites(itemId: string): Promise<void>;
     clearFavorites(): Promise<void>;
     getFavoriteItems(): unknown[];

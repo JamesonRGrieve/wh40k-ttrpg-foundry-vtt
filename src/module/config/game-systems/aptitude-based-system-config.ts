@@ -8,6 +8,7 @@
  * Characteristic tiers: Simple / Intermediate / Trained / Proficient / Expert (5 tiers).
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { BaseSystemConfig } from './base-system-config.ts';
 import type { SkillRankDef, CharacteristicTierDef, AdvanceCostResult, AdvanceOption } from './types.ts';
 
@@ -103,7 +104,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
      * Collect all aptitudes the character possesses.
      * Reads from the actor's aptitudes array (populated from origin path items at runtime).
      */
-    getCharacterAptitudes(actor: any): string[] {
+    getCharacterAptitudes(actor: WH40KBaseActor): string[] {
         return actor.system?.aptitudes ?? [];
     }
 
@@ -117,7 +118,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
 
     // ── Cost Implementations ─────────────────────────────────────
 
-    getCharacteristicAdvanceCost(actor: any, charKey: string, currentTier: number): AdvanceCostResult | null {
+    getCharacteristicAdvanceCost(actor: WH40KBaseActor, charKey: string, currentTier: number): AdvanceCostResult | null {
         const tiers = this.characteristicTierOrder;
         if (currentTier >= tiers.length) return null;
 
@@ -131,7 +132,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         return { cost, tier: tiers[currentTier] };
     }
 
-    getSkillAdvanceCost(actor: any, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
+    getSkillAdvanceCost(actor: WH40KBaseActor, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
         if (currentRank >= this.skillRankCount) return null;
 
         const charAptitudes = this.getCharacterAptitudes(actor);
@@ -141,7 +142,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         return this.getSkillCostTable()[matches]?.[currentRank] ?? null;
     }
 
-    getTalentAdvanceCost(actor: any, talent: any, context?: Record<string, unknown>): number | null {
+    getTalentAdvanceCost(actor: WH40KBaseActor, talent: any, context?: Record<string, unknown>): number | null {
         const charAptitudes = this.getCharacterAptitudes(actor);
         const advAptitudes = (context?.advanceAptitudes as string[]) ?? talent.system?.aptitudes ?? [];
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);
@@ -150,7 +151,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         return this.getTalentCostTable()[tier]?.[matches] ?? null;
     }
 
-    getAvailableAdvances(_actor: any): AdvanceOption[] {
+    getAvailableAdvances(_actor: WH40KBaseActor): AdvanceOption[] {
         // Aptitude-based: all skills/talents available. The advancement dialog
         // queries compendiums and computes costs dynamically.
         return [];

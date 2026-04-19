@@ -3,6 +3,7 @@
  */
 
 import WH40K from '../../config.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KStarship } from '../../documents/starship.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 
@@ -110,10 +111,10 @@ export default class StarshipSheet extends BaseActorSheet {
         const items = this.actor.items;
 
         // Get ship components grouped by type
-        context.shipComponents = items.filter((item: any) => item.type === 'shipComponent');
-        context.shipWeapons = items.filter((item: any) => item.type === 'shipWeapon');
-        context.shipUpgrades = items.filter((item: any) => item.type === 'shipUpgrade');
-        context.shipRoles = items.filter((item: any) => item.type === 'shipRole');
+        context.shipComponents = items.filter((item: WH40KItem) => item.type === 'shipComponent');
+        context.shipWeapons = items.filter((item: WH40KItem) => item.type === 'shipWeapon');
+        context.shipUpgrades = items.filter((item: WH40KItem) => item.type === 'shipUpgrade');
+        context.shipRoles = items.filter((item: WH40KItem) => item.type === 'shipRole');
 
         // Calculate power and space usage (use DataModel fields)
         context.powerGenerated = 0;
@@ -189,9 +190,9 @@ export default class StarshipSheet extends BaseActorSheet {
 
         const html = await (foundry as any).applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
-        (ChatMessage as any).create({
-            user: (game as any).user.id,
-            speaker: (ChatMessage as any).getSpeaker({ actor: this.actor }),
+        ChatMessage.create({
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content: html,
         });
     }

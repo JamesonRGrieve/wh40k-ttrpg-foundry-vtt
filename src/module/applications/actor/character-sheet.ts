@@ -8,6 +8,7 @@ import { DHTargetedActionManager } from '../../actions/targeted-action-manager.t
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import WH40K from '../../config.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 import { AssignDamageData } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
@@ -316,7 +317,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
 
         // Edit mode state
         context.inEditMode = this.inEditMode;
-        context.isGM = (game as any).user?.isGM ?? false;
+        context.isGM = game.user?.isGM ?? false;
 
         // WH40K-specific configuration
         context.dh = CONFIG.wh40k || WH40K;
@@ -1562,7 +1563,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                 </div>
             `;
 
-            await (ChatMessage as any).create({
+            await ChatMessage.create({
                 speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                 content,
                 rolls: [roll],
@@ -1668,7 +1669,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         };
 
         // Create chat message
-        await (ChatMessage as any).create(chatData);
+        await ChatMessage.create(chatData);
     }
 
     /**
@@ -1708,7 +1709,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         };
 
         // Create chat message
-        await (ChatMessage as any).create(chatData);
+        await ChatMessage.create(chatData);
     }
 
     /**
@@ -2061,7 +2062,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
 
         await this._updateSystemField('system.fate.value', currentFate - 1);
 
-        await (ChatMessage as any).create({
+        await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content: `
                 <div class="wh40k-fate-spend-message">
@@ -2259,7 +2260,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         if (!itemIds.length) return;
 
         const sourceActor = (this as any).actor;
-        const targets = (game as any).actors.filter((a: any) => a.id !== sourceActor.id && a.isOwner);
+        const targets = game.actors.filter((a: any) => a.id !== sourceActor.id && a.isOwner);
 
         if (!targets.length) {
             ui.notifications.warn('No other actors available to give items to.');
@@ -2282,13 +2283,13 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         });
 
         if (!targetId) return;
-        const targetActor = (game as any).actors.get(targetId);
+        const targetActor = game.actors.get(targetId);
         if (!targetActor) return;
 
         const itemsData = itemIds
             .map((id: string) => sourceActor.items.get(id))
             .filter(Boolean)
-            .map((item: any) => {
+            .map((item: WH40KItem) => {
                 const data = item.toObject();
                 if (data.system) {
                     data.system.equipped = false;
@@ -3247,7 +3248,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                 await item.toChat();
             } else {
                 // Fallback: create a simple chat message
-                await (ChatMessage as any).create({
+                await ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                     content: `<div class="wh40k-power-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
@@ -3317,7 +3318,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             if (typeof item.toChat === 'function') {
                 await item.toChat();
             } else {
-                await (ChatMessage as any).create({
+                await ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                     content: `<div class="wh40k-ritual-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
@@ -3363,7 +3364,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             if (typeof item.toChat === 'function') {
                 await item.toChat();
             } else {
-                await (ChatMessage as any).create({
+                await ChatMessage.create({
                     speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                     content: `<div class="wh40k-order-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
@@ -3401,7 +3402,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                 } else {
                     // Simple d100 roll as last resort
                     const roll = await new Roll('1d100').evaluate();
-                    await (ChatMessage as any).create({
+                    await ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                         content: `<div class="wh40k-phenomena-roll"><h3>Psychic Phenomena</h3><p>Roll: ${roll.total}</p></div>`,
                         rolls: [roll],
@@ -3441,7 +3442,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                 } else {
                     // Simple d100 roll as last resort
                     const roll = await new Roll('1d100').evaluate();
-                    await (ChatMessage as any).create({
+                    await ChatMessage.create({
                         speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
                         content: `<div class="wh40k-perils-roll"><h3>Perils of the Warp</h3><p>Roll: ${roll.total}</p></div>`,
                         rolls: [roll],
@@ -3512,7 +3513,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * Override drop item to handle origin path updates.
      * @override
      */
-    async _onDropItem(event: DragEvent, item: any): Promise<any> {
+    async _onDropItem(event: DragEvent, item: WH40KItem): Promise<any> {
         const result = await super._onDropItem(event, item);
 
         // If dropped item is an origin path (trait with origin flag), re-render biography part

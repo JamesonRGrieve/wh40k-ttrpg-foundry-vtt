@@ -2,6 +2,8 @@
 /*  Weapon Modifier Effects Table               */
 /* -------------------------------------------- */
 
+import type { WH40KItem } from '../documents/item.ts';
+
 type AttackSpecialEffect = {
     remove?: string;
 };
@@ -13,7 +15,7 @@ type WeaponModifierEffects = {
     penetrationModifiers?: Record<string, number>;
     attackSpecials?: AttackSpecialEffect[];
     /** Context-dependent attack bonuses → rollData.weaponModifiers */
-    attackBonus?: (rollData: any, item: any) => Record<string, number>;
+    attackBonus?: (rollData: any, item: WH40KItem) => Record<string, number>;
 };
 
 /**

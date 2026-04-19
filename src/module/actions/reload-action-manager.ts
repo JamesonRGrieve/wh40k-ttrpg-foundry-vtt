@@ -348,13 +348,13 @@ export class ReloadActionManager {
 
         const chatData = {
             user: game.user.id,
-            speaker: (ChatMessage as any).getSpeaker({ actor }),
+            speaker: ChatMessage.getSpeaker({ actor }),
             content: html,
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             flavor: `${weapon.name} - Reload`,
         };
 
-        return (ChatMessage as any).create(chatData);
+        return ChatMessage.create(chatData);
     }
 
     /**

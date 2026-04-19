@@ -7,6 +7,8 @@
  * Replaces the monolithic GrantsProcessor with a cleaner architecture.
  */
 
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import type { WH40KItem } from '../documents/item.ts';
 import { createGrant } from '../data/grant/_module.ts';
 
 /**
@@ -81,7 +83,7 @@ export class GrantsManager {
      * @param {number} [options.depth=0] - Current recursion depth
      * @returns {Promise<GrantsApplicationResult>}
      */
-    static async applyItemGrants(item: any, actor: any, options: Record<string, unknown> = {}) {
+    static async applyItemGrants(item: WH40KItem, actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
         const result = {
             success: true,
             appliedState: {},
@@ -272,7 +274,7 @@ export class GrantsManager {
      * @param {boolean} [options.reverseExisting=false] - Reverse all existing grants before applying
      * @returns {Promise<GrantsApplicationResult>}
      */
-    static async applyBatchGrants(items: unknown[], actor: any, options: Record<string, unknown> = {}) {
+    static async applyBatchGrants(items: unknown[], actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
         const result = {
             success: true,
             appliedState: {},
@@ -346,7 +348,7 @@ export class GrantsManager {
      * @param {object} [metadata={}] - Additional metadata
      * @returns {Promise<void>}
      */
-    static async saveAppliedState(actor: any, sourceKey: any, state: any, metadata: any = {}) {
+    static async saveAppliedState(actor: WH40KBaseActor, sourceKey: any, state: any, metadata: any = {}) {
         if (!actor || !sourceKey) return;
 
         const flagData = {
@@ -577,7 +579,7 @@ export class GrantsManager {
      * Reverse characteristic grant.
      * @private
      */
-    static async _reverseCharacteristicGrant(actor: any, applied: any, result: any) {
+    static async _reverseCharacteristicGrant(actor: WH40KBaseActor, applied: any, result: any) {
         const updates = {};
 
         for (const [key, state] of Object.entries(applied || {}) as [string, any][]) {
@@ -596,7 +598,7 @@ export class GrantsManager {
      * Reverse skill grant.
      * @private
      */
-    static async _reverseSkillGrant(actor: any, applied: any, result: any) {
+    static async _reverseSkillGrant(actor: WH40KBaseActor, applied: any, result: any) {
         const idsToDelete = [];
         const itemsToUpdate = [];
 
@@ -626,7 +628,7 @@ export class GrantsManager {
      * Reverse item grant.
      * @private
      */
-    static async _reverseItemGrant(actor: any, applied: any, result: any) {
+    static async _reverseItemGrant(actor: WH40KBaseActor, applied: any, result: any) {
         const idsToDelete = [];
 
         for (const [, itemId] of Object.entries(applied || {}) as [string, any][]) {
@@ -646,7 +648,7 @@ export class GrantsManager {
      * Reverse resource grant.
      * @private
      */
-    static async _reverseResourceGrant(actor: any, applied: any, result: any) {
+    static async _reverseResourceGrant(actor: WH40KBaseActor, applied: any, result: any) {
         const updates = {};
 
         const resourcePaths: Record<string, unknown> = {

@@ -3,6 +3,8 @@
  * Provides contextual action menus throughout the character sheet
  */
 
+import type { WH40KItem } from '../../documents/item.ts';
+
 /**
  * Custom ContextMenu subclass for WH40K RPG styling.
  * Uses Foundry V13's native ContextMenu with fixed positioning.
@@ -372,8 +374,8 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
                 <strong>${(char.label as string) || charKey}</strong>: ${char.total as number}
                 (Bonus: ${char.bonus as number})
             </div>`;
-            await (ChatMessage as any).create({
-                speaker: (ChatMessage as any).getSpeaker({ actor: this.actor }),
+            await ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
                 content,
             });
         }
@@ -408,12 +410,12 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
             // Implement in subclass
         }
 
-        async _duplicateItem(item: any): Promise<void> {
+        async _duplicateItem(item: WH40KItem): Promise<void> {
             await item.clone({ name: `${item.name} (Copy)` }, { save: true });
             ui.notifications.info(`Duplicated ${item.name}`);
         }
 
-        async _deleteItem(item: any): Promise<void> {
+        async _deleteItem(item: WH40KItem): Promise<void> {
             const confirmed = await foundry.applications.api.DialogV2.confirm({
                 window: { title: `Delete ${item.name}?` },
                 content: `<p>Are you sure you want to delete <strong>${item.name}</strong>?</p>`,
@@ -427,15 +429,15 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
             }
         }
 
-        async _weaponAttack(item: any, mode: string): Promise<void> {
+        async _weaponAttack(item: WH40KItem, mode: string): Promise<void> {
             // Implement in subclass
         }
 
-        async _toggleEquipped(item: any): Promise<void> {
+        async _toggleEquipped(item: WH40KItem): Promise<void> {
             await item.update({ 'system.equipped': !item.system.equipped });
         }
 
-        async _toggleActivated(item: any): Promise<void> {
+        async _toggleActivated(item: WH40KItem): Promise<void> {
             await item.update({ 'system.activated': !item.system.activated });
         }
 

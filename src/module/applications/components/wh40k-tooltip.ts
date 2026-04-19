@@ -236,7 +236,7 @@ export class TooltipsWH40K {
      * @returns {Promise<string>}     HTML content.
      * @protected
      */
-    async _buildTooltipContent(data: any, type: string): Promise<string> {
+    async _buildTooltipContent(data: Record<string, unknown>, type: string): Promise<string> {
         switch (type) {
             case 'characteristic':
                 return this._buildCharacteristicTooltip(data);
@@ -262,7 +262,7 @@ export class TooltipsWH40K {
      * @returns {string}     HTML content.
      * @protected
      */
-    _buildCharacteristicTooltip(data: any): string {
+    _buildCharacteristicTooltip(data: Record<string, unknown>): string {
         const { name, label, base = 0, advance = 0, modifier = 0, unnatural = 1, total = 0, bonus = 0, sources = [] } = data;
 
         let html = `
@@ -334,7 +334,7 @@ export class TooltipsWH40K {
      * @returns {string}     HTML content.
      * @protected
      */
-    async _buildSkillTooltip(data: any): Promise<string> {
+    async _buildSkillTooltip(data: Record<string, unknown>): Promise<string> {
         const { name, label, baseValue, basic = false, trainingBonus: dataTB, actorUuid } = data;
         let { characteristic, charValue = 0, trained = false, plus10 = false, plus20 = false, current = 0, bonus: dataBonus } = data;
 
@@ -484,7 +484,7 @@ export class TooltipsWH40K {
      * @returns {string}     HTML content.
      * @protected
      */
-    _buildArmorTooltip(data: any): string {
+    _buildArmorTooltip(data: Record<string, unknown>): string {
         const { location, total = 0, toughnessBonus = 0, traitBonus = 0, armorValue = 0, equipped = [] } = data;
 
         let html = `
@@ -547,7 +547,7 @@ export class TooltipsWH40K {
      * @returns {string}     HTML content.
      * @protected
      */
-    _buildWeaponTooltip(data: any): string {
+    _buildWeaponTooltip(data: Record<string, unknown>): string {
         const { name, damage, penetration = 0, range, rof, qualities = [] } = data;
 
         let html = `
@@ -603,7 +603,7 @@ export class TooltipsWH40K {
      * @returns {string}     HTML content.
      * @protected
      */
-    _buildModifierTooltip(data: any): string {
+    _buildModifierTooltip(data: Record<string, unknown>): string {
         const { title, sources = [] } = data;
 
         let html = `
@@ -633,7 +633,7 @@ export class TooltipsWH40K {
      * @returns {string}     HTML content.
      * @protected
      */
-    _buildQualityTooltip(data: any): string {
+    _buildQualityTooltip(data: Record<string, unknown>): string {
         const { label, description, level = null, hasLevel = false, category = 'other', mechanicalEffect = false, source = null } = data;
 
         let html = `
@@ -700,7 +700,7 @@ export class TooltipsWH40K {
      * @returns {string}     HTML content.
      * @protected
      */
-    _buildGenericTooltip(data: any): string {
+    _buildGenericTooltip(data: Record<string, unknown>): string {
         const { title, content } = data;
         return `
             <div class="wh40k-tooltip__header">

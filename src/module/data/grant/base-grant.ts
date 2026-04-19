@@ -113,7 +113,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @param {boolean} [options.dryRun=false]
      * @returns {Promise<GrantApplicationResult>}
      */
-    async apply(actor, data: any = {}, options: Record<string, unknown> = {}): Promise<any> {
+    async apply(actor, data: Record<string, unknown> = {}, options: Record<string, unknown> = {}): Promise<any> {
         const result = this._initResult();
         if (!actor) {
             result.success = false;

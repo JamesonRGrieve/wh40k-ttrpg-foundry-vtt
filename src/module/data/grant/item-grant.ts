@@ -1,3 +1,4 @@
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import BaseGrantData from './base-grant.ts';
 
 /**
@@ -64,7 +65,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _applyGrant(actor: any, data: any, options: Record<string, unknown>, result: any): Promise<void> {
+    async _applyGrant(actor: WH40KBaseActor, data: Record<string, unknown>, options: Record<string, unknown>, result: any): Promise<void> {
         const items = this.items ?? [];
         if (items.length === 0) {
             result.notifications.push('Item grant has no items to apply');

@@ -90,7 +90,7 @@ export class BasicActionManager {
             rolls: damageRolls,
         };
         applyRollModeWhispers(chatData);
-        await (ChatMessage as any).create(chatData);
+        await ChatMessage.create(chatData);
     }
 
     async _refundResources(event) {
@@ -286,7 +286,7 @@ export class BasicActionManager {
             rollMode: game.settings.get('core', 'rollMode'),
         };
         applyRollModeWhispers(chatData);
-        await (ChatMessage as any).create(chatData);
+        await ChatMessage.create(chatData);
     }
 }
 

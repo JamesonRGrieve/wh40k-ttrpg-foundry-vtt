@@ -133,7 +133,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Array<Object>} Array of preset objects.
      */
     static getPresets(): any {
-        return (game as any).settings.get('wh40k-rpg', this.SETTING_KEY) || [];
+        return game.settings.get('wh40k-rpg', this.SETTING_KEY) || [];
     }
 
     /**
@@ -148,7 +148,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
             id: foundry.utils.randomID(),
             createdAt: Date.now(),
         });
-        await (game as any).settings.set('wh40k-rpg', this.SETTING_KEY, presets);
+        await game.settings.set('wh40k-rpg', this.SETTING_KEY, presets);
     }
 
     /**
@@ -162,7 +162,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
         const index = presets.findIndex((p: any) => p.id === id);
         if (index >= 0) {
             presets[index] = { ...presets[index], ...updates };
-            await (game as any).settings.set('wh40k-rpg', this.SETTING_KEY, presets);
+            await game.settings.set('wh40k-rpg', this.SETTING_KEY, presets);
         }
     }
 
@@ -174,7 +174,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     static async deletePresetById(id: string): Promise<void> {
         const presets = this.getPresets();
         const filtered = presets.filter((p: any) => p.id !== id);
-        await (game as any).settings.set('wh40k-rpg', this.SETTING_KEY, filtered);
+        await game.settings.set('wh40k-rpg', this.SETTING_KEY, filtered);
     }
 
     /**

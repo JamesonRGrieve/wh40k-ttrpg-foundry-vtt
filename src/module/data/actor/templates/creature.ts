@@ -1,3 +1,4 @@
+import type { WH40KItem } from '../../../documents/item.ts';
 import { BaseSystemConfig } from '../../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../../config/game-systems/index.ts';
 import { SkillKeyHelper } from '../../../helpers/skill-key-helper.ts';
@@ -982,7 +983,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {Item} item - The item to process modifiers from
      * @protected
      */
-    _applyItemModifiers(item: any): void {
+    _applyItemModifiers(item: WH40KItem): void {
         const mods = item.system?.modifiers;
         if (!mods) return;
 

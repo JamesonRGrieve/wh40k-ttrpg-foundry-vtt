@@ -6,6 +6,8 @@
  *   await CharacteristicSetupDialog.open(actor);
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
@@ -698,7 +700,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @returns {Promise<boolean>} True if applied, false if cancelled
      * @static
      */
-    static async open(actor: any): Promise<any> {
+    static async open(actor: WH40KBaseActor): Promise<any> {
         if (!actor || (actor.type !== 'acolyte' && actor.type !== 'character')) {
             ui.notifications.error('Characteristic setup is only available for characters.');
             return false;

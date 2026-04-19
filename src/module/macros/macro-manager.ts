@@ -1,6 +1,6 @@
 function getTokenActor(actorId) {
     // Fetch the actor from the current users token or the actor collection.
-    const speaker = (ChatMessage as any).getSpeaker();
+    const speaker = ChatMessage.getSpeaker();
     let actor;
     // @ts-expect-error - dynamic property access
     if (actorId) actor = game.actors.get(actorId);

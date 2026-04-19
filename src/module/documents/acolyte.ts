@@ -8,6 +8,7 @@ import { SimpleSkillData } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { WH40KBaseActor } from './base-actor.ts';
+import type { WH40KItem } from './item.ts';
 
 const SKILL_ALIASES = {
     navigate: 'navigation',
@@ -70,16 +71,16 @@ export class WH40KAcolyte extends WH40KBaseActor {
         return this.system.originPath;
     }
     get originPathItems(): Item[] {
-        return this.items.filter((item: any) => item.isOriginPath);
+        return this.items.filter((item: WH40KItem) => item.isOriginPath);
     }
     get navigatorPowers(): Item[] {
-        return this.items.filter((item: any) => item.isNavigatorPower);
+        return this.items.filter((item: WH40KItem) => item.isNavigatorPower);
     }
     get shipRoles(): Item[] {
-        return this.items.filter((item: any) => item.isShipRole);
+        return this.items.filter((item: WH40KItem) => item.isShipRole);
     }
     get conditions(): Item[] {
-        return this.items.filter((item: any) => item.isCondition);
+        return this.items.filter((item: WH40KItem) => item.isCondition);
     }
 
     /* -------------------------------------------- */
@@ -180,7 +181,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
 
         // Collect from all modifier-providing items
         const modifierItems = (this.items as any).filter(
-            (item: any) =>
+            (item: WH40KItem) =>
                 item.isTalent ||
                 item.isTrait ||
                 item.isCondition ||

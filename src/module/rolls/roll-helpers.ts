@@ -67,7 +67,7 @@ export async function sendActionDataToChat(actionData) {
         chatData.rolls = [actionData.rollData.roll];
     }
     applyRollModeWhispers(chatData);
-    await (ChatMessage as any).create(chatData);
+    await ChatMessage.create(chatData);
 }
 
 export function recursiveUpdate(targetObject, updateObject) {

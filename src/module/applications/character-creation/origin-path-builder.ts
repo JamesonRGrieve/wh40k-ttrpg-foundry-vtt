@@ -9,6 +9,8 @@
  * - Live preview of accumulated bonuses
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
@@ -210,7 +212,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @param {object} options - Additional options
      * @returns {OriginPathBuilder} The builder instance
      */
-    static show(actor: any, options: Record<string, unknown> = {}): any {
+    static show(actor: WH40KBaseActor, options: Record<string, unknown> = {}): any {
         const builder = new OriginPathBuilder(actor, options);
         builder.render(true);
         return builder;
@@ -292,7 +294,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object} - Plain data object for selection storage
      * @private
      */
-    _itemToSelectionData(item: any): any {
+    _itemToSelectionData(item: WH40KItem): any {
         const data = item.toObject ? item.toObject() : foundry.utils.deepClone(item);
         // Store original uuid for reference to compendium item
         data._sourceUuid = item.parent === this.actor ? item.flags?.core?.sourceId || data._sourceUuid || item.uuid : item.uuid || data._sourceUuid;
@@ -1190,7 +1192,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<object>}
      * @private
      */
-    async _prepareSelectedOrigin(item: any): Promise<any> {
+    async _prepareSelectedOrigin(item: WH40KItem): Promise<any> {
         // Handle both Item instances and plain data objects
         const system = this._getSelectionSystem(item);
         const grants = system?.grants || {};
