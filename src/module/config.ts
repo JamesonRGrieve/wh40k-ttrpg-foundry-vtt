@@ -3,7 +3,157 @@
  * Central configuration object for the WH40K RPG RPG system.
  */
 
-export const WH40K: Record<string, any> = {};
+/* -------------------------------------------- */
+/*  Config Type Definitions                     */
+/* -------------------------------------------- */
+
+interface LabelConfig {
+    label: string;
+}
+interface LabelAbbreviationConfig {
+    label: string;
+    abbreviation: string;
+}
+interface LabelModifierConfig {
+    label: string;
+    modifier: number;
+}
+interface LabelDescriptionConfig {
+    label: string;
+    description: string;
+}
+interface LabelIconConfig {
+    label: string;
+    icon: string;
+}
+
+interface MovementTypeConfig {
+    label: string;
+    icon: string;
+    order: number;
+}
+interface BodyLocationConfig {
+    label: string;
+    roll: string;
+    icon: string;
+}
+interface HullTypeConfig {
+    label: string;
+    space: number;
+    speed: number;
+}
+interface OriginPathStepConfig {
+    label: string;
+    index: number;
+}
+interface VehicleTypeConfig {
+    label: string;
+    icon: string;
+}
+interface VehicleSizeConfig {
+    label: string;
+    modifier: number;
+    descriptor: string;
+}
+
+interface WeaponQualityConfig {
+    label: string;
+    description: string;
+    hasLevel: boolean;
+    category?: string;
+    mechanicalEffect?: boolean;
+}
+
+interface CombatActionConfig {
+    key: string;
+    label: string;
+    type: string;
+    description: string;
+    icon: string;
+    subtypes: string[];
+}
+
+interface CraftsmanshipRuleEffect {
+    toHit?: number;
+    damage?: number;
+    qualities?: string[];
+    removeQualities?: string[];
+    agility?: number;
+    firstAttackBonus?: number;
+    armourBonus?: number;
+    weight?: number;
+    overloadRange?: [number, number];
+}
+
+interface CraftsmanshipRules {
+    weapon: {
+        melee: Record<string, CraftsmanshipRuleEffect>;
+        ranged: Record<string, CraftsmanshipRuleEffect>;
+    };
+    armour: Record<string, CraftsmanshipRuleEffect>;
+    gear: Record<string, CraftsmanshipRuleEffect>;
+    forceField: Record<string, CraftsmanshipRuleEffect>;
+}
+
+interface DegreesResult {
+    success: boolean;
+    roll: number;
+    target: number;
+    degrees: number;
+    label: string;
+}
+
+interface CareerConfig {
+    label: string;
+    description?: string;
+}
+
+export interface WH40KSystemConfig {
+    characteristics: Record<string, LabelAbbreviationConfig>;
+    availabilities: Record<string, LabelModifierConfig>;
+    movementTypes: Record<string, MovementTypeConfig>;
+    tokenRulerColors: Record<string, number>;
+    craftsmanships: Record<string, LabelModifierConfig>;
+    craftsmanshipRules: CraftsmanshipRules;
+    gearCategories: Record<string, LabelIconConfig>;
+    damageTypes: Record<string, LabelAbbreviationConfig>;
+    weaponClasses: Record<string, LabelConfig>;
+    weaponTypes: Record<string, LabelConfig>;
+    armourTypes: Record<string, LabelConfig>;
+    armourProperties: Record<string, LabelDescriptionConfig>;
+    bodyLocations: Record<string, BodyLocationConfig>;
+    sizes: Record<number, LabelModifierConfig>;
+    psychicDisciplines: Record<string, LabelConfig>;
+    hullTypes: Record<string, HullTypeConfig>;
+    shipComponentTypes: Record<string, LabelConfig>;
+    originPathSteps: Record<string, OriginPathStepConfig>;
+    careers: Record<string, CareerConfig>;
+    talentCategories: Record<string, LabelConfig>;
+    traitCategories: Record<string, LabelConfig>;
+    actionTypes: Record<string, LabelConfig>;
+    npcTypes: Record<string, LabelConfig>;
+    vehicleTypes: Record<string, VehicleTypeConfig>;
+    vehicleClasses: Record<string, LabelConfig>;
+    vehicleSizes: Record<number, VehicleSizeConfig>;
+    vehicleUpgradeTypes: Record<string, LabelConfig>;
+    vehicleStats: Record<string, LabelAbbreviationConfig>;
+    difficulties: Record<string, LabelModifierConfig>;
+    calculateDegrees: (roll: number, target: number) => DegreesResult;
+    defaultIcons: Record<string, string>;
+    skillIcons: Record<string, string>;
+    getSkillIcon: (skillKey: string) => string;
+    getDefaultIcon: (type: string) => string;
+    weaponQualities: Record<string, WeaponQualityConfig>;
+    getQualityDefinition: (identifier: string) => WeaponQualityConfig | null;
+    getQualityLabel: (identifier: string, level?: number | null) => string;
+    getQualityDescription: (identifier: string) => string;
+    getJamThreshold: (weapon: unknown) => number | null;
+    combatActions: Record<string, CombatActionConfig[]>;
+    advancementTiers: Record<string, OriginPathStepConfig>;
+    tierOrder: string[];
+}
+
+export const WH40K = {} as WH40KSystemConfig;
 
 /* -------------------------------------------- */
 /*  Characteristics                             */
