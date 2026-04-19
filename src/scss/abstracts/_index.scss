@@ -1,9 +1,6 @@
 // ============================================
 // Abstracts Index
 // ============================================
-// Import order matters - variables first, then mixins, then theme
 
-@import 'variables';
-@import 'mixins';
 @import 'gothic-theme'; // Theme-adaptive CSS custom properties
 @import 'unified-components'; // Unified button/input/panel system
