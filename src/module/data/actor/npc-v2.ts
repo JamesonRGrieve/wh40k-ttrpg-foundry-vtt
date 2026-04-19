@@ -1,7 +1,7 @@
 import ActorDataModel from '../abstract/actor-data-model.ts';
 import HordeTemplate from './mixins/horde-template.ts';
 
-const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = (foundry.data as any).fields;
+const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
 
 /**
  * Data model for NPC V2 actors.
@@ -50,8 +50,6 @@ interface NPCV2TrainedSkill {
 }
 
 export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare faction: string;
     declare subfaction: string;

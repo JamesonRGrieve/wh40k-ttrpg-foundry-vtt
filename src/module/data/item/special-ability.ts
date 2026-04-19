@@ -10,8 +10,6 @@ import ModifiersTemplate from '../shared/modifiers-template.ts';
  * @mixes ModifiersTemplate
  */
 export default class SpecialAbilityData extends ItemDataModel.mixin(DescriptionTemplate, ModifiersTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare benefit: string;
@@ -19,7 +17,7 @@ export default class SpecialAbilityData extends ItemDataModel.mixin(DescriptionT
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 

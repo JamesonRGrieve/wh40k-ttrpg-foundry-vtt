@@ -1,8 +1,16 @@
 /**
  * Foundry VTT V14 Type Overrides
  *
- * Extends/patches the V13 community types (@league-of-foundry-developers/foundry-vtt-types)
- * for V14-specific API changes. Remove this file when V14 types are published.
+ * Extends/patches the V13 community types (@league-of-foundry-developers/foundry-vtt-types,
+ * fvtt-types) for V14-specific API changes. Remove this file when V14 types are published.
+ *
+ * All declarations live in this file. The `fvtt-types` package under `node_modules/` is
+ * never modified — v14 shapes are added here as new reference namespaces/classes that
+ * system code imports explicitly, or as `declare global` interface merges where the
+ * upstream types allow.
+ *
+ * Source anchors point into /home/jameson/Documents/foundry-dump/scripts/foundry.mjs
+ * (v14 runtime bundle) so future audits can re-verify each shape.
  */
 
 declare global {
@@ -79,7 +87,32 @@ declare global {
             user?: unknown;
             /** Whether to compute and return only the diff (default: true for document updates) */
             diff?: boolean;
+            /** Last-modified timestamp (set by framework during recursive updates) */
+            modifiedTime?: number;
         }
+
+        /**
+         * V14 signature for DataModel#updateSource(changes, options).
+         * @source foundry.mjs:11342, 11586
+         * The v13 fvtt-types declares `updateSource(changes?, options?)` but the v14 options
+         * bag is richer — use this type when annotating system-side updateSource calls.
+         */
+        type UpdateSourceSignature = (
+            changes?: Record<string, unknown>,
+            options?: UpdateOptions,
+        ) => Record<string, unknown>;
+
+        /**
+         * V14 signature for DataModel.cleanData(source, options, _state).
+         * @source foundry.mjs:13525
+         * v13 fvtt-types: 2 args. v14 runtime: 3 args. System overrides that forward
+         * _state to super.cleanData() must annotate their override with this signature.
+         */
+        type CleanDataSignature = (
+            source?: Record<string, unknown>,
+            options?: CleaningOptions,
+            _state?: UpdateState,
+        ) => Record<string, unknown>;
     }
 
     // =========================================================================
@@ -119,6 +152,103 @@ declare global {
             /** Compendium pack ID */
             pack?: string;
         }
+
+        /**
+         * V14 signature for Document.updateDocuments(updates, operation).
+         * @source foundry.mjs:14743
+         */
+        type UpdateDocumentsSignature = (
+            updates?: Record<string, unknown>[],
+            operation?: UpdateOperation,
+        ) => Promise<InstanceType<typeof foundry.abstract.Document>[]>;
+    }
+
+    // =========================================================================
+    // Document V14 Lifecycle Method Signatures
+    // =========================================================================
+
+    /**
+     * V14 Document lifecycle hooks.
+     * @source foundry.mjs:15122, 15133, 15181, 15192, 15238
+     *
+     * Parameter convention in V14:
+     *   - pre-ops (_preCreate / _preUpdate / _preDelete) receive a User *instance* as `user`
+     *   - post-ops (_onCreate / _onUpdate / _onDelete) receive a userId *string* as `userId`
+     *
+     * The system currently has 5 Document lifecycle overrides (BaseActor, Vehicle, NPC-V2,
+     * Starship, Item) — use these signatures when annotating them.
+     */
+    namespace DocumentV14Lifecycle {
+        type PreCreate<D = Record<string, unknown>> = (
+            data: D,
+            options: Record<string, unknown>,
+            user: unknown,
+        ) => Promise<boolean | void>;
+
+        type PreUpdate<D = Record<string, unknown>> = (
+            changes: D,
+            options: Record<string, unknown>,
+            user: unknown,
+        ) => Promise<boolean | void>;
+
+        type PreDelete = (
+            options: Record<string, unknown>,
+            user: unknown,
+        ) => Promise<boolean | void>;
+
+        type OnCreate<D = Record<string, unknown>> = (
+            data: D,
+            options: Record<string, unknown>,
+            userId: string,
+        ) => void;
+
+        type OnUpdate<D = Record<string, unknown>> = (
+            changed: D,
+            options: Record<string, unknown>,
+            userId: string,
+        ) => void;
+
+        type OnDelete = (
+            options: Record<string, unknown>,
+            userId: string,
+        ) => void;
+
+        type OnCreateDescendantDocuments = (
+            parent: InstanceType<typeof foundry.abstract.Document>,
+            collection: string,
+            documents: InstanceType<typeof foundry.abstract.Document>[],
+            data: Record<string, unknown>[],
+            options: Record<string, unknown>,
+            userId: string,
+        ) => void;
+
+        type OnUpdateDescendantDocuments = (
+            parent: InstanceType<typeof foundry.abstract.Document>,
+            collection: string,
+            documents: InstanceType<typeof foundry.abstract.Document>[],
+            changes: Record<string, unknown>[],
+            options: Record<string, unknown>,
+            userId: string,
+        ) => void;
+
+        type OnDeleteDescendantDocuments = (
+            parent: InstanceType<typeof foundry.abstract.Document>,
+            collection: string,
+            documents: InstanceType<typeof foundry.abstract.Document>[],
+            ids: string[],
+            options: Record<string, unknown>,
+            userId: string,
+        ) => void;
+
+        /**
+         * Static pre-operation hook for bulk creates (used by ItemContainer).
+         * @source foundry.mjs search for `_onCreateOperation`
+         */
+        type OnCreateOperationStatic = (
+            documents: InstanceType<typeof foundry.abstract.Document>[],
+            context: Record<string, unknown>,
+            user: unknown,
+        ) => Promise<void>;
     }
 
     // =========================================================================
@@ -203,26 +333,119 @@ declare global {
         }
     }
 
+    /**
+     * V14 ApplicationV2 / HandlebarsApplicationMixin lifecycle method signatures.
+     * @source foundry.mjs:29048 (_onRender), 30197 (_prepareContext), 31042 (changeTab)
+     *
+     * The 30 sheets in the system each implement some subset of these. Use these
+     * signatures when annotating method overrides; fvtt-types' ApplicationV2 class
+     * already declares the matching prototype stubs, so these exist to document the
+     * v14 shapes and allow call-site typing where the upstream types are too lax.
+     */
+    namespace ApplicationV2Lifecycle {
+        type PrepareContext = (
+            options: ApplicationV2Config.RenderOptions,
+        ) => Promise<Record<string, unknown>>;
+
+        type OnRender = (
+            context: Record<string, unknown>,
+            options: ApplicationV2Config.RenderOptions,
+        ) => Promise<void> | void;
+
+        type RenderHTML = (
+            context: Record<string, unknown>,
+            options: ApplicationV2Config.RenderOptions,
+        ) => Promise<unknown>;
+
+        type ReplaceHTML = (
+            result: unknown,
+            content: HTMLElement,
+            options: ApplicationV2Config.RenderOptions,
+        ) => void;
+
+        type OnSubmitForm = (
+            formConfig: ApplicationV2Config.FormConfiguration,
+            event: SubmitEvent | Event,
+        ) => Promise<void>;
+
+        /**
+         * V14 changeTab signature (HandlebarsApplicationMixin).
+         * @source foundry.mjs:31042
+         */
+        type ChangeTab = (
+            tab: string,
+            group: string,
+            options?: {
+                event?: Event;
+                navElement?: HTMLElement;
+                force?: boolean;
+                updatePosition?: boolean;
+            },
+        ) => void;
+    }
+
     // =========================================================================
     // V14 HandlebarsApplicationMixin Tab Configuration
     // =========================================================================
 
     namespace HandlebarsApplicationV14 {
-        interface TabConfiguration {
+        /**
+         * A single-tab descriptor (one entry inside a TabGroupConfiguration.tabs map).
+         * @source foundry.mjs:32424 (example TABS shape)
+         *
+         * Note: fvtt-types declares `ApplicationV2.TabsConfiguration` (plural) as the
+         * group-level wrapper type. This `TabDescriptor` is the *inner* per-tab shape
+         * that the wrapper's `.tabs` record is keyed against.
+         */
+        interface TabDescriptor {
             tab: string;
             label: string;
             group?: string;
             icon?: string;
             cssClass?: string;
         }
+
+        /**
+         * Group-level tab configuration. V14 `static TABS` is
+         * `Record<groupId, TabGroupConfiguration>`.
+         * @source foundry.mjs:29654, 32424
+         */
+        interface TabGroupConfiguration {
+            initial?: string;
+            tabs: Record<string, TabDescriptor>;
+        }
+
+        /**
+         * The `tabGroups` instance property — tracks the active tab per group.
+         * @source foundry.mjs search for `this.tabGroups`
+         */
+        type TabGroupsState = Record<string, string>;
+
+        /** @deprecated Use `TabDescriptor`. Retained for back-compat with existing imports. */
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface TabConfiguration extends TabDescriptor {}
     }
 
     // =========================================================================
     // FormDataExtended (used by DocumentSheetV2 form handlers)
     // =========================================================================
 
+    /**
+     * @source foundry.mjs:29316 — FormDataExtended constructor (v14)
+     * v14 adds `disabled` and `readonly` boolean options to the constructor.
+     */
     class FormDataExtended extends FormData {
-        constructor(form: HTMLFormElement, options?: { editors?: Record<string, unknown>; dtypes?: Record<string, string> });
+        constructor(
+            form: HTMLFormElement,
+            options?: {
+                editors?: Record<string, unknown>;
+                dtypes?: Record<string, string>;
+                /** v14: whether disabled inputs are included (default: false) */
+                disabled?: boolean;
+                /** v14: whether readonly inputs are included (default: true) */
+                readonly?: boolean;
+            },
+        );
         /** The processed form data as a plain object */
         object: Record<string, unknown>;
         /** Process the form data into a flat object */
@@ -245,13 +468,75 @@ declare global {
     // V14 Data Field Operator Classes
     // =========================================================================
 
+    /**
+     * @source foundry.mjs:1309-1390 — foundry.data.operators classes (v14)
+     * The operators namespace is entirely absent from fvtt-types v13; it is a pure v14
+     * addition used by DataModel.updateSource() to express non-merging updates
+     * (replacements and deletions) without trampling sibling fields.
+     */
     namespace foundry.data.operators {
         class DataFieldOperator {
+            constructor(value: unknown);
+            /** Extract the underlying value if `value` is a DataFieldOperator; otherwise return it unchanged */
             static get(value: unknown): unknown;
+            /** Apply a DataFieldOperator's intent at the target location */
             static set(operator: DataFieldOperator, value: unknown): void;
+            /** Equality comparison honoring operator semantics */
+            static equals(a: unknown, b: unknown): boolean;
         }
-        class ForcedReplacement extends DataFieldOperator {}
+        class ForcedReplacement extends DataFieldOperator {
+            /** Wrap a value so that DataModel merging replaces instead of recursively merging */
+            static create(value: unknown): unknown;
+        }
         class ForcedDeletion extends DataFieldOperator {}
+    }
+
+    // =========================================================================
+    // V14 DataField instance-method signatures (for system field subclasses)
+    // =========================================================================
+
+    /**
+     * V14 signatures for DataField / SchemaField / ObjectField / TypeDataField
+     * instance methods that the system overrides.
+     * @source foundry.mjs:9606, 10035, 10415, 10586, 10898, 11473, 11847, 12217, 12761, 12963
+     *
+     * The 19 system `_cleanData` overrides and the custom `MappingField._cleanType`
+     * in `src/module/data/fields/mapping-field.ts` must adopt the 3-arg form to
+     * participate correctly in partial updates. Use these types when annotating
+     * those overrides.
+     */
+    namespace DataFieldV14 {
+        /**
+         * Generic v14 `_cleanType(value, options, _state)` signature for any field class.
+         * TypeDataField and ObjectField both use this three-arg form in v14.
+         */
+        type CleanType = <V = unknown>(
+            value: V,
+            options?: DataModelV14.CleaningOptions,
+            _state?: DataModelV14.UpdateState,
+        ) => V;
+
+        /**
+         * Generic v14 `initialize(value, model, options)` signature. Kept as a reference
+         * so custom field subclasses can annotate their override consistently.
+         */
+        type Initialize = (
+            value: unknown,
+            model: InstanceType<typeof foundry.abstract.DataModel>,
+            options?: Record<string, unknown>,
+        ) => unknown;
+
+        /**
+         * Static `_cleanData(source, options, _state)` signature on DataModel subclasses
+         * (the pattern the 19 system data templates use). This mirrors
+         * `DataModelV14.CleanDataSignature` but is kept here for discoverability
+         * alongside the field signatures it interacts with.
+         */
+        type StaticCleanData = (
+            source?: Record<string, unknown>,
+            options?: DataModelV14.CleaningOptions,
+            _state?: DataModelV14.UpdateState,
+        ) => Record<string, unknown>;
     }
 
     // =========================================================================
@@ -264,6 +549,31 @@ declare global {
     //
     // V13 signature: static cleanData(source?, options?)
     // V14 signature: static cleanData(source?, options?, _state?)
+    //
+    // See `DataModelV14.CleanDataSignature` / `DataFieldV14.StaticCleanData`
+    // for the concrete function types system code should annotate overrides with.
+    //
+    // V14 partial-update propagation chain (for future maintainers):
+    //   Document.updateDocuments(updates, operation)
+    //     → Document.update(changes, operation)
+    //       → DataModel.updateSource(changes, UpdateOptions)
+    //         → DataModel.cleanData(source, CleaningOptions, UpdateState)
+    //           → Field._cleanType(value, CleaningOptions, UpdateState)
+    //             (TypeDataField uses UpdateState.documentType to resolve polymorphic types)
+
+    // =========================================================================
+    // Runtime Value Access for foundry.data.fields
+    // =========================================================================
+    //
+    // fvtt-types declares foundry.data.fields as a type namespace but not as a
+    // runtime-accessible value. At runtime in Foundry VTT, foundry.data.fields
+    // is an object containing all field constructors (NumberField, StringField,
+    // etc.). This declaration bridges the gap so that
+    //   `const fields = foundry.data.fields;`
+    // compiles without `as any`.
+    namespace foundry.data {
+        const fields: typeof foundry.data.fields;
+    }
 }
 
 export {};

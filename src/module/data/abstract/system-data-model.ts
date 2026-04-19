@@ -7,6 +7,7 @@
  *
  * @see https://github.com/foundryvtt/dnd5e/blob/master/module/data/abstract/system-data-model.mjs
  */
+
 export default class SystemDataModel extends foundry.abstract.TypeDataModel<Record<string, foundry.data.fields.DataField.Any>, any> {
     /**
      * System type that this data model represents (e.g. "acolyte", "npcV2", "vehicle").

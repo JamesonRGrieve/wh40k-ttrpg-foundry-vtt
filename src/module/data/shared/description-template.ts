@@ -5,15 +5,13 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  * @mixin
  */
 export default class DescriptionTemplate extends SystemDataModel {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare description: { value: string; chat: string; summary: string };
     declare source: { book: string; page: string; custom: string };
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             description: new fields.SchemaField({
                 value: new fields.HTMLField({ required: true, initial: '' }),

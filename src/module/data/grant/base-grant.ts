@@ -9,7 +9,6 @@
  * @abstract
  */
 export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -40,7 +39,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
 
     /** @inheritDoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             // Unique identifier for this grant within its parent
             _id: new fields.DocumentIdField({ initial: () => foundry.utils.randomID() }),

@@ -8,8 +8,6 @@ import DescriptionTemplate from '../shared/description-template.ts';
  * @mixes DescriptionTemplate
  */
 export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare descriptionText: string;
@@ -20,7 +18,7 @@ export default class VehicleTraitData extends ItemDataModel.mixin(DescriptionTem
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 

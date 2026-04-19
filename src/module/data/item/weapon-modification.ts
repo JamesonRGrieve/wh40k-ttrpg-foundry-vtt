@@ -10,8 +10,6 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes PhysicalItemTemplate
  */
 export default class WeaponModificationData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare category: string;
@@ -33,7 +31,7 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 

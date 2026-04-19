@@ -1,6 +1,6 @@
 import SystemDataModel from './system-data-model.ts';
 
-const { NumberField } = (foundry.data as any).fields;
+const { NumberField } = foundry.data.fields;
 
 /**
  * Base data model for all Item types in WH40K RPG.
@@ -13,7 +13,6 @@ const { NumberField } = (foundry.data as any).fields;
  * @see SystemDataModel for mixin and template delegation details
  */
 export default class ItemDataModel extends SystemDataModel {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Data Model Configuration                    */
     /* -------------------------------------------- */
