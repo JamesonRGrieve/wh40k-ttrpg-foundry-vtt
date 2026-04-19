@@ -1,0 +1,54 @@
+{{!-- NPC Skills Tab — sparse trained-skills table. Click the cycle pip to toggle
+      proficiency (untrained → trained → +10 → +20 → untrained). Roll button sends
+      a characteristic-linked skill roll to chat. --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+  <div class="wh40k-skills-tab">
+
+    <div class="wh40k-panel wh40k-panel--skills">
+      <div class="wh40k-panel-header">
+        <i class="fa-solid fa-book"></i>
+        <span>Skills</span>
+        <span class="wh40k-count-badge">{{trainedSkillCount}} trained</span>
+      </div>
+      <div class="wh40k-panel-body">
+        <div class="wh40k-skills-table">
+          {{#each basicSkillsList}}
+          <div class="wh40k-skill-row {{#if isTrained}}trained{{else}}untrained{{/if}}">
+            {{#if ../editable}}
+            <button type="button"
+                    class="wh40k-skill-cycle wh40k-skill-cycle--{{levelClass}}"
+                    data-action="cycleSkillLevel"
+                    data-skill="{{key}}"
+                    title="{{levelTooltip}}">
+              {{#if plus20}}<span class="wh40k-cycle-pip wh40k-cycle-pip--plus20">⬤⬤</span>
+              {{else if plus10}}<span class="wh40k-cycle-pip wh40k-cycle-pip--plus10">⬤+</span>
+              {{else if isTrained}}<span class="wh40k-cycle-pip wh40k-cycle-pip--trained">⬤</span>
+              {{else}}<span class="wh40k-cycle-pip wh40k-cycle-pip--untrained">○</span>
+              {{/if}}
+            </button>
+            {{/if}}
+            <button type="button" class="wh40k-skill-roll rollable" data-action="rollSkill" data-skill="{{key}}" title="Roll {{name}} ({{target}})">
+              <i class="fa-solid fa-dice-d20"></i>
+            </button>
+            <span class="wh40k-skill-name">
+              {{name}}
+              {{#if plus20}}<span class="wh40k-skill-badge wh40k-skill-badge--plus20" title="+20">+20</span>
+              {{else if plus10}}<span class="wh40k-skill-badge wh40k-skill-badge--plus10" title="+10">+10</span>
+              {{/if}}
+            </span>
+            <span class="wh40k-skill-char">({{char}})</span>
+            <span class="wh40k-skill-target">{{target}}</span>
+            {{#if ../editable}}
+            {{#if isTrained}}
+            <button type="button" class="wh40k-skill-remove" data-action="removeTrainedSkill" data-skill="{{key}}" title="Remove from trained list"><i class="fa-solid fa-xmark"></i></button>
+            {{/if}}
+            {{/if}}
+            <button type="button" class="wh40k-skill-favorite {{#if isFavorite}}active{{/if}}" data-action="toggleFavoriteSkill" data-skill="{{key}}" title="{{#if isFavorite}}Remove favorite{{else}}Add favorite{{/if}}"><i class="fa-solid fa-star"></i></button>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

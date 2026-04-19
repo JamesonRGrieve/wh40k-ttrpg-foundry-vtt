@@ -7,7 +7,7 @@
 // Variables & Theme Colors
 // ============================================
 
-$npc-accent-primary: #c9a227; // Gold
+$npc-accent-primary: $wh40k-color-gold; // Gold
 $npc-accent-combat: #dc3545; // Red
 $npc-accent-defense: #2196f3; // Blue
 $npc-accent-movement: #4caf50; // Green
@@ -24,7 +24,7 @@ $bp-wide: 1200px;
 // Base Sheet Structure - Sidebar Layout
 // ============================================
 
-.wh40k-rpg.sheet.actor.npc-v2 {
+.wh40k-rpg.sheet.actor.player.npc {
     // ApplicationV2 Layout Foundation
     .window-content {
         display: flex !important;
@@ -112,7 +112,7 @@ $bp-wide: 1200px;
         width: 100px;
         height: 100px;
         border: 2px solid var(--color-border-secondary, #444);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         overflow: hidden;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 
@@ -216,7 +216,7 @@ $bp-wide: 1200px;
         background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
         border: 1px solid var(--color-border-secondary, #444);
         color: var(--color-text-light-primary, #f0f0f0);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         cursor: pointer;
 
         &:hover,
@@ -481,7 +481,7 @@ $bp-wide: 1200px;
         font-weight: 600;
         background: var(--color-bg-option, rgba(0, 0, 0, 0.3));
         border: 1px solid var(--color-border-secondary, #444);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         color: var(--color-text-light-primary, #f0f0f0);
         cursor: pointer;
 
@@ -511,7 +511,7 @@ $bp-wide: 1200px;
             width: 100px;
             height: 100px;
             border: 2px solid var(--color-border-secondary, #444);
-            border-radius: 8px;
+            border-radius: var(--wh40k-radius-lg);
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 
@@ -605,7 +605,7 @@ $bp-wide: 1200px;
                 color: white;
             }
             &.wh40k-threat--legendary {
-                background: linear-gradient(45deg, #8b0000, #c9a227);
+                background: linear-gradient(45deg, #8b0000, $wh40k-color-gold);
                 color: white;
             }
         }
@@ -841,7 +841,7 @@ $bp-wide: 1200px;
                 padding: 0.35rem 0.6rem;
                 background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
                 border: 1px solid var(--color-border-secondary, #444);
-                border-radius: 4px;
+                border-radius: var(--wh40k-radius-md);
                 color: var(--color-text-light-primary, #f0f0f0);
                 font-size: 0.75rem;
                 cursor: pointer;
@@ -890,7 +890,7 @@ $bp-wide: 1200px;
     .wh40k-panel {
         background: var(--color-bg-secondary, #252525);
         border: 1px solid var(--color-border-secondary, #444);
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         overflow: hidden;
         margin-bottom: 0.75rem;
 
@@ -1208,7 +1208,7 @@ $bp-wide: 1200px;
         gap: 0.35rem;
         padding: 0.25rem 0.4rem;
         background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.8rem;
         position: relative;
 
@@ -1234,7 +1234,7 @@ $bp-wide: 1200px;
             justify-content: center;
             background: transparent;
             border: 1px solid var(--color-border-secondary, #444);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             color: var(--color-text-light-secondary, #888);
             cursor: pointer;
             transition: all var(--wh40k-transition-fast);
@@ -1259,7 +1259,7 @@ $bp-wide: 1200px;
             padding: 0 0.25rem;
             font-size: 0.55rem;
             font-weight: 700;
-            border-radius: 2px;
+            border-radius: var(--wh40k-radius-sm);
             line-height: 1.3;
 
             &.wh40k-skill-badge--plus10 {
@@ -1390,7 +1390,7 @@ $bp-wide: 1200px;
         padding: 0.3rem 0.5rem;
         background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
         border: 1px solid var(--color-border-secondary, #444);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.75rem;
         cursor: pointer;
         transition: all var(--wh40k-transition-fast);
@@ -1446,7 +1446,7 @@ $bp-wide: 1200px;
             width: 14px;
             height: 14px;
             object-fit: cover;
-            border-radius: 2px;
+            border-radius: var(--wh40k-radius-sm);
         }
 
         .wh40k-talent-name-mini,
@@ -1512,7 +1512,7 @@ $bp-wide: 1200px;
         overflow-y: auto;
         background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
         border: 1px solid var(--color-border-secondary, #444);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         padding: 0.4rem;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
@@ -1575,7 +1575,7 @@ $bp-wide: 1200px;
             background: var(--color-bg-option, rgba(0, 0, 0, 0.3));
             border: 1px solid var(--color-border-secondary, #444);
             color: var(--color-text-light-primary, #f0f0f0);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
 
             &:focus {
                 border-color: var(--npc-accent-primary);
@@ -1693,7 +1693,7 @@ $bp-wide: 1200px;
         align-items: center;
         justify-content: center;
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         cursor: pointer;
         font-size: 0.9rem;
         transition: all var(--wh40k-transition-fast);
@@ -1727,7 +1727,7 @@ $bp-wide: 1200px;
         flex-direction: column;
         align-items: center;
         padding: 0.25rem 0.5rem;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         background: rgba(0, 0, 0, 0.2);
         min-width: 42px;
 
@@ -1852,7 +1852,7 @@ $bp-wide: 1200px;
         gap: 0.35rem;
         padding: 0.35rem 0.5rem;
         background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         border-left: 3px solid $npc-accent-defense;
         font-size: 0.8rem;
 
@@ -1911,7 +1911,7 @@ $bp-wide: 1200px;
         margin-top: 0.5rem;
         padding: 0.35rem 0.5rem;
         background: rgba(0, 0, 0, 0.15);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.8rem;
 
         .wh40k-armour-mode-label {
@@ -1949,7 +1949,7 @@ $bp-wide: 1200px;
     .wh40k-tb-badge {
         margin-left: auto;
         padding: 0.15rem 0.45rem;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.7rem;
         font-weight: 700;
         background: #{'rgb(from var(--npc-accent-defense) r g b / 0.15)'};
@@ -2173,7 +2173,7 @@ $bp-wide: 1200px;
         border: none;
         background: #{'rgb(from var(--npc-accent-combat) r g b / 0.1)'};
         color: var(--npc-accent-combat);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         cursor: pointer;
         font-size: 0.7rem;
         transition: all var(--wh40k-transition-fast);
@@ -2218,7 +2218,7 @@ $bp-wide: 1200px;
         gap: 0.3rem;
         padding: 0.35rem;
         border: 1px solid #{'rgb(from var(--npc-accent-combat) r g b / 0.3)'};
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         background: #{'rgb(from var(--npc-accent-combat) r g b / 0.1)'};
         color: var(--npc-accent-combat);
         cursor: pointer;
@@ -2273,7 +2273,7 @@ $bp-wide: 1200px;
         background: transparent;
         border: 2px solid transparent;
         color: var(--color-text-light-primary, #f0f0f0);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         &:hover,
         &:focus {
@@ -2294,7 +2294,7 @@ $bp-wide: 1200px;
     .wh40k-wounds-bar {
         height: 8px;
         background: var(--color-bg-primary, #1a1a1a);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         overflow: hidden;
         margin-bottom: 0.75rem;
     }
@@ -2302,7 +2302,7 @@ $bp-wide: 1200px;
     .wh40k-wounds-fill {
         height: 100%;
         background: linear-gradient(90deg, var(--npc-accent-combat), color-mix(in srgb, var(--npc-accent-combat), black 15%));
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         transition: width var(--wh40k-transition-medium);
     }
 
@@ -2331,7 +2331,7 @@ $bp-wide: 1200px;
         padding: 0.35rem;
         font-size: 0.75rem;
         font-weight: 600;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         cursor: pointer;
         transition: all var(--wh40k-transition-fast);
     }
@@ -2369,7 +2369,7 @@ $bp-wide: 1200px;
             background: var(--color-bg-option, rgba(0, 0, 0, 0.3));
             border: 1px solid var(--color-border-secondary, #444);
             color: var(--color-text-light-primary, #f0f0f0);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
 
             &:focus {
                 border-color: var(--npc-accent-primary);
@@ -2446,7 +2446,7 @@ $bp-wide: 1200px;
         text-align: center;
         background: transparent;
         border: 2px solid transparent;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         &:hover,
         &:focus {
@@ -2490,7 +2490,7 @@ $bp-wide: 1200px;
         gap: 0.25rem;
         padding: 0.25rem 0.35rem;
         background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.75rem;
 
         .wh40k-loc-name {
@@ -2544,7 +2544,7 @@ $bp-wide: 1200px;
         align-items: center;
         padding: 0.4rem;
         background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         .wh40k-move-label {
             font-size: 0.6rem;
@@ -2644,7 +2644,7 @@ $bp-wide: 1200px;
             justify-content: center;
             background: #{'rgb(from var(--npc-accent-combat) r g b / 0.15)'};
             border: 1px solid var(--npc-accent-combat);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             color: var(--npc-accent-combat);
             cursor: pointer;
             transition: all var(--wh40k-transition-fast);
@@ -2663,7 +2663,7 @@ $bp-wide: 1200px;
             justify-content: center;
             background: transparent;
             border: 1px solid transparent;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             color: var(--color-text-light-secondary, #888);
             cursor: pointer;
             font-size: 0.8rem;
@@ -2757,13 +2757,13 @@ $bp-wide: 1200px;
         gap: 0.5rem;
         padding: 0.4rem;
         background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
 
         .wh40k-weapon-img {
             width: 32px;
             height: 32px;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
         }
 
         .wh40k-weapon-info {
@@ -2785,7 +2785,7 @@ $bp-wide: 1200px;
         padding: 0.4rem 0.8rem;
         background: transparent;
         border: 1px dashed var(--color-border-secondary, #444);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         color: var(--color-text-light-secondary, #888);
         cursor: pointer;
         font-size: 0.8rem;
@@ -2836,7 +2836,7 @@ $bp-wide: 1200px;
         font-size: 0.75rem;
         background: transparent;
         border: 1px solid var(--color-border-secondary, #444);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         color: var(--color-text-light-primary, #f0f0f0);
         cursor: pointer;
 
@@ -2851,7 +2851,7 @@ $bp-wide: 1200px;
         font-size: 0.75rem;
         background: var(--npc-accent-primary);
         border: 1px solid var(--npc-accent-primary);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         color: #000;
         cursor: pointer;
         font-weight: 600;
@@ -2866,7 +2866,7 @@ $bp-wide: 1200px;
         font-size: 0.75rem;
         background: transparent;
         border: 1px solid var(--npc-accent-combat);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         color: var(--npc-accent-combat);
         cursor: pointer;
 
@@ -2922,7 +2922,7 @@ $bp-wide: 1200px;
             width: 32px;
             height: 32px;
             object-fit: cover;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
         }
 
         .wh40k-ability-name {
@@ -2944,7 +2944,7 @@ $bp-wide: 1200px;
             justify-content: center;
             background: transparent;
             border: 1px solid transparent;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             color: var(--color-text-light-secondary, #888);
             cursor: pointer;
             font-size: 0.75rem;
@@ -2989,7 +2989,7 @@ $bp-wide: 1200px;
             padding: 0.15rem 0.4rem;
             background: rgba(#e91e63, 0.2);
             border: 1px solid #e91e63;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             font-size: 0.7rem;
             font-weight: 600;
             color: #e91e63;
@@ -3077,7 +3077,7 @@ $bp-wide: 1200px;
         padding: 0.15rem 0.4rem;
         background: #{'rgb(from var(--npc-accent-combat) r g b / 0.2)'};
         border: 1px solid var(--npc-accent-combat);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.65rem;
         color: var(--npc-accent-combat);
 
@@ -3115,7 +3115,7 @@ $bp-wide: 1200px;
             background: var(--color-bg-option, rgba(0, 0, 0, 0.3));
             border: 1px solid var(--color-border-secondary, #444);
             color: var(--color-text-light-primary, #f0f0f0);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             font-size: 0.85rem;
 
             &:focus {
@@ -3137,7 +3137,7 @@ $bp-wide: 1200px;
         font-size: 0.7rem;
         font-weight: 600;
     }
-} // End .wh40k-rpg.sheet.actor.npc-v2
+} // End .wh40k-rpg.sheet.actor.player.npc
 
 // ============================================
 // NPC SKILL DIALOG STYLES
@@ -3165,7 +3165,7 @@ $bp-wide: 1200px;
     .wh40k-form-label {
         font-size: 0.8rem;
         font-weight: 600;
-        color: #c9a227;
+        color: $wh40k-color-gold;
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }
@@ -3175,7 +3175,7 @@ $bp-wide: 1200px;
         padding: 0.5rem 0.75rem;
         background: rgba(0, 0, 0, 0.4);
         border: 1px solid rgba(201, 162, 39, 0.3);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         color: #f0f0f0;
         font-size: 0.9rem;
         cursor: pointer;
@@ -3187,7 +3187,7 @@ $bp-wide: 1200px;
         }
 
         &:focus {
-            border-color: #c9a227;
+            border-color: $wh40k-color-gold;
             outline: none;
             box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.2);
         }
@@ -3215,7 +3215,7 @@ $bp-wide: 1200px;
             gap: 0.5rem;
             padding: 0.6rem 1rem;
             border: 1px solid rgba(201, 162, 39, 0.4);
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             background: rgba(201, 162, 39, 0.1);
             color: #f0f0f0;
             font-size: 0.85rem;
@@ -3234,7 +3234,7 @@ $bp-wide: 1200px;
 
             &.default,
             &[data-action='add'] {
-                background: linear-gradient(135deg, #c9a227 0%, #8b6914 100%);
+                background: linear-gradient(135deg, $wh40k-color-gold 0%, #8b6914 100%);
                 border: none;
                 color: #0a0a0f;
                 font-weight: 600;

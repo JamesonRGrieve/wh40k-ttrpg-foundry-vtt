@@ -18,7 +18,7 @@ import {
     OnlyWarSheet,
     DeathwatchSheet,
 } from './applications/actor/game-system-sheets.ts';
-import NPCSheetV2 from './applications/actor/npc-sheet-v2.ts';
+import NPCSheet from './applications/actor/npc-sheet.ts';
 import StarshipSheet from './applications/actor/starship-sheet.ts';
 import VehicleSheet from './applications/actor/vehicle-sheet.ts';
 import * as characterCreation from './applications/character-creation/_module.ts';
@@ -71,6 +71,7 @@ import {
 } from './macros/macro-manager.ts';
 import { WH40K } from './rules/config.ts';
 import { DHTourMain } from './tours/main-tour.ts';
+import { TransactionManager } from './transactions/transaction-manager.ts';
 import { RollTableUtils } from './utils/roll-table-utils.ts';
 import { checkAndMigrateWorld } from './wh40k-rpg-migrations.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
@@ -135,6 +136,7 @@ export class HooksManager {
             savePreset: (actor: any) => npcApplications.CombatPresetDialog.savePreset(actor),
             loadPreset: (actor: any) => npcApplications.CombatPresetDialog.loadPreset(actor),
             openPresetLibrary: () => npcApplications.CombatPresetDialog.showLibrary(),
+            transaction: TransactionManager,
             // Dice/Roll classes
             dice: dice,
             BasicRollWH40K: dice.BasicRollWH40K,
@@ -270,7 +272,7 @@ export class HooksManager {
             makeDefault: false,
             label: 'WH40K.Sheet.PlayerCharacterSidebar',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NPCSheetV2, {
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NPCSheet, {
             types: ['npc'],
             makeDefault: true,
             label: 'WH40K.Sheet.NPC',
@@ -487,12 +489,38 @@ export class HooksManager {
         // Initialize rich tooltip system
         (game as any).wh40k.tooltips = new TooltipsWH40K();
         await (game as any).wh40k.tooltips.initialize();
+        TransactionManager.initialize();
 
         game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
 
         // @ts-expect-error - argument type
         if (!game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.processActiveEffectsDuringCombat)) {
             DHCombatActionManager.disableHooks();
+        }
+
+        // One-time migration: rewrite any persisted sheetClass flag pointing at
+        // the renamed NPCSheetV2 class so existing NPC actor sheets reopen cleanly.
+        await HooksManager._migrateNPCSheetClassFlag();
+    }
+
+    /**
+     * Rewrite `flags.core.sheetClass` for NPC actors that still reference the
+     * old NPCSheetV2 identifier. Runs once per world startup; cheap enough
+     * (only iterates actors whose flag actually points at the old class).
+     */
+    static async _migrateNPCSheetClassFlag() {
+        const OLD_ID = `${SYSTEM_ID}.NPCSheetV2`;
+        const NEW_ID = `${SYSTEM_ID}.NPCSheet`;
+        const updates: Array<{ '_id': string; 'flags.core.sheetClass': string }> = [];
+        for (const actor of (game as any).actors ?? []) {
+            if (actor.type !== 'npc') continue;
+            if (actor.getFlag?.('core', 'sheetClass') === OLD_ID) {
+                updates.push({ '_id': actor.id, 'flags.core.sheetClass': NEW_ID });
+            }
+        }
+        if (updates.length > 0) {
+            await Actor.updateDocuments(updates);
+            (game as any).wh40k?.log?.(`Migrated ${updates.length} NPC sheetClass flag(s) from NPCSheetV2 to NPCSheet.`);
         }
     }
 
@@ -555,7 +583,7 @@ export class HooksManager {
             }
         }
 
-        // Default to NPCSheetV2 for standard NPCs
+        // Default to NPCSheet for standard NPCs
         return null; // Let default handling work
     }
 }
