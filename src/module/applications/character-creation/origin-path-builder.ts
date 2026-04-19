@@ -29,7 +29,6 @@ const DIRECTION = {
 };
 
 export default class OriginPathBuilder extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
     declare render: any;
     declare close: any;
 

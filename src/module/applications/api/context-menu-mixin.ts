@@ -8,7 +8,6 @@
  * Uses Foundry V13's native ContextMenu with fixed positioning.
  */
 export class WH40KContextMenu extends foundry.applications.ux.ContextMenu {
-    [key: string]: any;
     /** @override */
     _setPosition(html: HTMLElement, target: HTMLElement, options: Record<string, unknown> = {}): void {
         html.classList.add('wh40k-context-menu');
@@ -48,7 +47,6 @@ export class WH40KContextMenu extends foundry.applications.ux.ContextMenu {
  */
 export default function ContextMenuMixin<T extends new (...args: any[]) => any>(Base: T) {
     class ContextMenuApplication extends Base {
-        [key: string]: any;
         /* -------------------------------------------- */
         /*  Lifecycle Methods                           */
         /* -------------------------------------------- */

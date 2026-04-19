@@ -14,8 +14,6 @@ const { ApplicationV2 } = foundry.applications.api;
  * from compendium data when the skill selection changes.
  */
 export default class SpecialistSkillDialog extends ApplicationV2Mixin(ApplicationV2) {
-    [key: string]: any;
-
     /**
      * @param {Actor} actor                The owning actor.
      * @param {object} [options={}]        Dialog options.

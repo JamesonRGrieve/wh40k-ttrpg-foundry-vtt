@@ -6,7 +6,6 @@
 const { DialogV2 } = foundry.applications.api;
 
 export default class EffectCreationDialog extends (DialogV2 as any) {
-    [key: string]: any;
     /** @override */
     static DEFAULT_OPTIONS = {
         window: {

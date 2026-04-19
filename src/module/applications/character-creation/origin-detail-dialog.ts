@@ -10,8 +10,6 @@ import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } fr
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class OriginDetailDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
-
     /** @override */
     static DEFAULT_OPTIONS = {
         classes: ['wh40k-rpg', 'origin-detail-dialog'],

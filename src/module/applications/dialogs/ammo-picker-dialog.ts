@@ -14,7 +14,6 @@
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 export default class AmmoPickerDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */

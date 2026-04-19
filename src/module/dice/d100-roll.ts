@@ -7,7 +7,6 @@ import BasicRollWH40K from './basic-roll.ts';
  * @extends BasicRollWH40K
  */
 export default class D100Roll extends BasicRollWH40K {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */

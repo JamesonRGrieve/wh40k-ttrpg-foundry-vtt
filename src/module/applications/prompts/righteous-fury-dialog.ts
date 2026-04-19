@@ -11,7 +11,6 @@ const { ApplicationV2 } = foundry.applications.api;
  * Shows the confirmation roll (d100 vs BS/WS) and handles the result.
  */
 export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV2) {
-    [key: string]: any;
     /**
      * @param {object} options - Dialog options
      * @param {Actor} options.actor - The actor performing the RF

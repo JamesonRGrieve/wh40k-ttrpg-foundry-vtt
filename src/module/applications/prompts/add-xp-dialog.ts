@@ -10,7 +10,6 @@ const { ApplicationV2 } = foundry.applications.api;
  * Dialog for adding or subtracting experience points.
  */
 export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
-    [key: string]: any;
     /**
      * @param {WH40KAcolyte} actor  The actor to modify.
      * @param {object} [options={}]       Dialog options.

@@ -31,7 +31,6 @@ const { ApplicationV2 } = foundry.applications.api;
  * Unified dialog for configuring all roll types.
  */
 export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2) as any) {
-    [key: string]: any;
     declare render: any;
     declare close: any;
     declare position: any;

@@ -18,8 +18,6 @@ import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 const { ApplicationV2 } = foundry.applications.api;
 
 export default class CombatQuickPanel extends ApplicationV2 {
-    [key: string]: any;
-
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */

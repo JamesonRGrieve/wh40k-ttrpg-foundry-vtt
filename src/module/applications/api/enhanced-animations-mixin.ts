@@ -13,7 +13,6 @@
  */
 export default function EnhancedAnimationsMixin<T extends new (...args: any[]) => any>(Base: T) {
     class EnhancedAnimationsApplication extends Base {
-        [key: string]: any;
         /* -------------------------------------------- */
         /*  Configuration                               */
         /* -------------------------------------------- */

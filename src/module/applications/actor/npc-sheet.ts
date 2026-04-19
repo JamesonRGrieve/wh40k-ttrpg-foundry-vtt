@@ -22,7 +22,6 @@ import CharacterSheet from './character-sheet.ts';
  * @extends {CharacterSheet}
  */
 export default class NPCSheet extends (CharacterSheet as any) {
-    [key: string]: any;
     declare actor: WH40KNPCV2;
     declare document: WH40KNPCV2;
     declare element: HTMLElement;
@@ -122,11 +121,6 @@ export default class NPCSheet extends (CharacterSheet as any) {
         tabs: {
             template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
         },
-        overview: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tab-overview.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
         skills: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-skills.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
@@ -157,13 +151,12 @@ export default class NPCSheet extends (CharacterSheet as any) {
     /* -------------------------------------------- */
 
     /**
-     * TABS configuration. Matches the PC's 5 tabs plus a new NPC tab.
-     * Keeping the same tab ids (overview/skills/combat/equipment/biography) preserves
-     * consistent nav ordering between the two sheet types.
+     * TABS — NPCs omit the PC-focused Overview (Fate/XP/Origin dashboard);
+     * Skills opens by default. The final NPC tab carries NPC-only controls
+     * (horde, barter, tags, combat tracker, GM tools).
      * @override
      */
     static TABS = [
-        { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
         { tab: 'skills', label: 'WH40K.Tabs.Skills', group: 'primary', cssClass: 'tab-skills' },
         { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
         { tab: 'equipment', label: 'WH40K.Tabs.Equipment', group: 'primary', cssClass: 'tab-equipment' },
@@ -175,7 +168,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
 
     /** @override */
     tabGroups = {
-        primary: 'overview',
+        primary: 'skills',
     };
 
     /* -------------------------------------------- */
@@ -1664,15 +1657,85 @@ export default class NPCSheet extends (CharacterSheet as any) {
     }
 
     /**
-     * Override to skip acolyte-specific skill preparation.
-     * @param {object} context - The render context.
-     * @protected
+     * Build a PC-compatible skillLists structure from the 21 basic WH40K
+     * skills plus the NPC's sparse `trainedSkills` map. The shared PC skills
+     * panel (templates/actor/panel/skills-panel.hbs) reads
+     * `skillLists.standardColumns` — a 2-array of [key, data] entries with
+     * augmented display fields. We call the inherited `_augmentSkillData` to
+     * attach those fields so every row renders with proper labels, training
+     * indicators, current target, and tooltip data.
+     * @override
      */
     _prepareSkills(context: Record<string, any>): void {
-        // NPCSheet uses sparse skill system
-        // Will implement in later phases
-        context.skills = {};
-        context.trainedSkillsList = [];
+        const actor: any = this.actor;
+        const characteristics = actor.system?.characteristics ?? {};
+        const trainedSkills = actor.system?.trainedSkills ?? {};
+
+        // 21 basic WH40K skills with their governing characteristic short names.
+        const BASIC_SKILLS: Array<[string, string, string]> = [
+            ['acrobatics', 'Acrobatics', 'Ag'],
+            ['athletics', 'Athletics', 'S'],
+            ['awareness', 'Awareness', 'Per'],
+            ['charm', 'Charm', 'Fel'],
+            ['command', 'Command', 'Fel'],
+            ['commerce', 'Commerce', 'Fel'],
+            ['deceive', 'Deceive', 'Fel'],
+            ['dodge', 'Dodge', 'Ag'],
+            ['inquiry', 'Inquiry', 'Fel'],
+            ['interrogation', 'Interrogation', 'WP'],
+            ['intimidate', 'Intimidate', 'S'],
+            ['logic', 'Logic', 'Int'],
+            ['medicae', 'Medicae', 'Int'],
+            ['parry', 'Parry', 'WS'],
+            ['psyniscience', 'Psyniscience', 'Per'],
+            ['scrutiny', 'Scrutiny', 'Per'],
+            ['security', 'Security', 'Int'],
+            ['sleightOfHand', 'Sleight of Hand', 'Ag'],
+            ['stealth', 'Stealth', 'Ag'],
+            ['survival', 'Survival', 'Per'],
+            ['techUse', 'Tech-Use', 'Int'],
+        ];
+
+        const standard: Array<[string, any]> = BASIC_SKILLS.map(([key, label, charShort]) => {
+            const t = trainedSkills[key];
+            const skill: any = {
+                label,
+                characteristic: charShort,
+                trained: !!t?.trained,
+                plus10: !!t?.plus10,
+                plus20: !!t?.plus20,
+                bonus: t?.bonus ?? 0,
+                advanced: false,
+                hidden: false,
+            };
+            // Compute current target (½ char when untrained, full char + training bonus otherwise).
+            const charKey = (this as any)._charShortToKey(charShort);
+            const charTotal = characteristics[charKey]?.total ?? 0;
+            const level = skill.plus20 ? 3 : skill.plus10 ? 2 : skill.trained ? 1 : 0;
+            const trainingBonus = level >= 3 ? 20 : level >= 2 ? 10 : 0;
+            skill.current = level > 0 ? charTotal + trainingBonus + skill.bonus : Math.floor(charTotal / 2) + skill.bonus;
+            // Defer to the parent helper for trainingIndicators, breakdown, tooltipData, isGranted, etc.
+            (this as any)._augmentSkillData(key, skill, characteristics);
+            return [key, skill];
+        });
+
+        // Sort alphabetically by label — matches PC behavior.
+        standard.sort((a, b) => a[1].label.localeCompare(b[1].label, game.i18n.lang));
+
+        const splitIndex = Math.ceil(standard.length / 2);
+        const standardColumns = [standard.slice(0, splitIndex), standard.slice(splitIndex)];
+
+        context.skillLists = {
+            standard,
+            trainedStandard: standard, // NPCs don't have the trained/untrained-advanced split
+            advancedUntrained: [],
+            specialist: [],
+            standardColumns,
+            hasSpecialistEntries: false,
+        };
+        // Back-compat for any older code paths that read these.
+        context.skills = Object.fromEntries(standard);
+        context.trainedSkillsList = standard.filter(([, d]) => d.trainingLevel > 0);
     }
 
     /**

@@ -10,8 +10,6 @@ import BaseRollDialog from './base-roll-dialog.ts';
  */
 // @ts-expect-error - TS2417 static side inheritance
 export default class SimpleRollDialog extends BaseRollDialog {
-    [key: string]: any;
-
     constructor(simpleSkillData = {}, options = {}) {
         super(simpleSkillData, options);
         this.simpleSkillData = simpleSkillData;

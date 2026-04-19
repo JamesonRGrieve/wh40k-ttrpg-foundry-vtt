@@ -12,7 +12,6 @@ import BaseItemSheet from './base-item-sheet.ts';
  * @extends {BaseItemSheet}
  */
 export default class NPCTemplateSheet extends (BaseItemSheet as any) {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Configuration                        */
     /* -------------------------------------------- */

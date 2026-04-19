@@ -6,7 +6,6 @@ import { uuid, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
 export class BasicActionManager {
-    [key: string]: any;
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
     storedRolls = {};
 

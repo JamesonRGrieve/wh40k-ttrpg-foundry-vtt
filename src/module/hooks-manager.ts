@@ -96,7 +96,6 @@ import { WH40KSettings } from './wh40k-rpg-settings.ts';
 export { SYSTEM_ID };
 
 export class HooksManager {
-    [key: string]: any;
     static registerHooks() {
         Hooks.once('init', HooksManager.init);
         Hooks.on('ready', HooksManager.ready);
