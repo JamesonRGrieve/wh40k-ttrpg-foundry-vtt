@@ -1,0 +1,225 @@
+{{!-- NPC Tab — consolidated NPC-only controls.
+      Everything here is unique to NPC actors: horde mechanics, barter/requisition
+      configuration, combat-tracker controls, tag management, faction meta,
+      GM utility tools, stat-block import/export, threat scaling, and the
+      per-sheet quick/tactics notes. --}}
+<section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
+  <div class="wh40k-npc-tab">
+
+    {{!-- ═══ HORDE ═══ --}}
+    <div class="wh40k-panel wh40k-panel--horde">
+      <div class="wh40k-panel-header">
+        <i class="fa-solid fa-users"></i>
+        <span>Horde</span>
+        {{#if editable}}
+        <button class="wh40k-header-btn" type="button" data-action="toggleHordeMode" title="Toggle horde mode">
+          <i class="fa-solid fa-power-off"></i>
+          <span>{{#if horde.enabled}}Enabled{{else}}Disabled{{/if}}</span>
+        </button>
+        {{/if}}
+      </div>
+      {{#if horde.enabled}}
+      <div class="wh40k-panel-body">
+        <div class="wh40k-magnitude-compact">
+          <div class="wh40k-magnitude-header">
+            <i class="fa-solid fa-users"></i>
+            <span>Magnitude {{horde.magnitude}} / {{horde.magnitudeMax}}</span>
+            {{#if horde.destroyed}}<span class="wh40k-horde-destroyed">DESTROYED</span>{{/if}}
+          </div>
+          <div class="wh40k-magnitude-bar-container">
+            <div class="wh40k-magnitude-bar wh40k-magnitude-bar--{{horde.barClass}}" style="width: {{horde.magnitudePercent}}%"></div>
+          </div>
+          <div class="wh40k-magnitude-btns">
+            <button type="button" class="wh40k-mag-btn" data-action="applyMagnitudeDamage" data-amount="1" {{#unless editable}}disabled{{/unless}}>−1</button>
+            <button type="button" class="wh40k-mag-btn" data-action="applyMagnitudeDamage" data-amount="5" {{#unless editable}}disabled{{/unless}}>−5</button>
+            <button type="button" class="wh40k-mag-btn" data-action="restoreMagnitude" data-amount="1" {{#unless editable}}disabled{{/unless}}>+1</button>
+            <button type="button" class="wh40k-mag-btn" data-action="restoreMagnitude" data-amount="5" {{#unless editable}}disabled{{/unless}}>+5</button>
+          </div>
+          <div class="wh40k-horde-stats">
+            <span>Damage ×{{horde.damageMultiplier}}</span>
+            <span>Size +{{horde.sizeModifier}}</span>
+          </div>
+        </div>
+      </div>
+      {{else}}
+      <div class="wh40k-panel-body">
+        <p class="wh40k-empty-state-inline">Enable horde mode to track magnitude as a pool of wounds.</p>
+      </div>
+      {{/if}}
+    </div>
+
+    {{!-- ═══ BARTER / REQUISITION ═══ --}}
+    {{#if isGM}}
+    <div class="wh40k-panel wh40k-panel--barter">
+      <div class="wh40k-panel-header">
+        <i class="fa-solid fa-store"></i>
+        <span>Transaction Source</span>
+        <span class="wh40k-count-badge">{{transactionProfile.mode}}</span>
+      </div>
+      <div class="wh40k-panel-body">
+        <div class="tw-flex tw-flex-wrap tw-gap-2">
+          <button type="button" class="tw-rounded-md tw-border tw-border-slate-600 tw-px-3 tw-py-2 tw-text-xs tw-font-semibold tw-uppercase {{#if (eq transactionProfile.mode "none")}}tw-bg-slate-700 tw-text-white{{else}}tw-bg-transparent tw-text-slate-300{{/if}}" data-action="setTransactionMode" data-mode="none">Disabled</button>
+          <button type="button" class="tw-rounded-md tw-border tw-border-emerald-600 tw-px-3 tw-py-2 tw-text-xs tw-font-semibold tw-uppercase {{#if (eq transactionProfile.mode "barter")}}tw-bg-emerald-700 tw-text-white{{else}}tw-bg-transparent tw-text-emerald-300{{/if}}" data-action="setTransactionMode" data-mode="barter">Barter</button>
+          <button type="button" class="tw-rounded-md tw-border tw-border-cyan-600 tw-px-3 tw-py-2 tw-text-xs tw-font-semibold tw-uppercase {{#if (eq transactionProfile.mode "requisition")}}tw-bg-cyan-700 tw-text-white{{else}}tw-bg-transparent tw-text-cyan-300{{/if}}" data-action="setTransactionMode" data-mode="requisition">Requisition</button>
+        </div>
+        <p class="tw-mt-3 tw-text-xs tw-text-slate-300">Configured sources appear in the player Barter dialog. Barter spends Throne Gelt, while requisition spends Requisition.</p>
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- ═══ COMBAT TRACKER ═══ --}}
+    {{#if isGM}}
+    <div class="wh40k-panel wh40k-panel--combat-tracker">
+      <div class="wh40k-panel-header">
+        <i class="fa-solid fa-swords"></i>
+        <span>Combat Tracker</span>
+      </div>
+      <div class="wh40k-panel-body">
+        {{#if actor.inCombat}}
+        <div class="wh40k-tracker-status wh40k-tracker-status--active">
+          <i class="fa-solid fa-swords"></i>
+          <span>Initiative: {{actor.combatant.initiative}}</span>
+        </div>
+        <div class="wh40k-tracker-nav-actions">
+          <button type="button" class="wh40k-tool-btn" data-action="rerollInitiative" data-tooltip="Reroll Initiative"><i class="fa-solid fa-dice"></i> Reroll</button>
+          <button type="button" class="wh40k-tool-btn wh40k-tool-btn--danger" data-action="removeFromCombat" data-tooltip="Remove from Combat"><i class="fa-solid fa-xmark"></i> Remove</button>
+        </div>
+        {{else}}
+        <button type="button" class="wh40k-combat-add-btn" data-action="addToCombat" data-tooltip="Add to Combat">
+          <i class="fa-solid fa-swords"></i>
+          <span>Add to Combat</span>
+        </button>
+        {{/if}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- ═══ TAGS ═══ --}}
+    <div class="wh40k-panel wh40k-panel--tags">
+      <div class="wh40k-panel-header">
+        <i class="fa-solid fa-tags"></i>
+        <span>Tags</span>
+      </div>
+      <div class="wh40k-panel-body">
+        <div class="wh40k-tags-row">
+          {{#each tags}}
+          <span class="wh40k-tag">
+            {{this}}
+            {{#if ../editable}}
+            <button type="button" class="wh40k-tag-remove" data-action="removeTag" data-tag="{{this}}">×</button>
+            {{/if}}
+          </span>
+          {{else}}
+          <span class="wh40k-tags-empty">No tags</span>
+          {{/each}}
+          {{#if editable}}
+          <button type="button" class="wh40k-tag-add" data-action="addTag" title="Add Tag">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+
+    {{!-- ═══ FACTION META ═══ --}}
+    <div class="wh40k-panel wh40k-panel--meta">
+      <div class="wh40k-panel-header">
+        <i class="fa-solid fa-flag"></i>
+        <span>Faction & Allegiance</span>
+      </div>
+      <div class="wh40k-panel-body">
+        <div class="wh40k-meta-fields">
+          <div class="wh40k-meta-field">
+            <label>Subfaction</label>
+            <input type="text" name="system.subfaction" value="{{source.subfaction}}" placeholder="Subfaction" {{#unless editable}}disabled{{/unless}} />
+          </div>
+          <div class="wh40k-meta-field">
+            <label>Allegiance</label>
+            <input type="text" name="system.allegiance" value="{{source.allegiance}}" placeholder="e.g. Imperium, Chaos, Xenos" {{#unless editable}}disabled{{/unless}} />
+          </div>
+          <div class="wh40k-meta-field">
+            <label>Source Reference</label>
+            <input type="text" name="system.source" value="{{source.source}}" placeholder="e.g. Core p.123" {{#unless editable}}disabled{{/unless}} />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{!-- ═══ GM NOTES (quick notes / tactics) ═══ --}}
+    {{#if isGM}}
+    <div class="wh40k-panel wh40k-panel--notes">
+      <div class="wh40k-panel-header">
+        <i class="fa-solid fa-sticky-note"></i>
+        <span>GM Notes</span>
+        <span class="wh40k-gm-badge"><i class="fa-solid fa-lock"></i></span>
+      </div>
+      <div class="wh40k-panel-body">
+        <div class="wh40k-notes-grid">
+          <div class="wh40k-note-field wh40k-note-field--editable">
+            <label><i class="fa-solid fa-note-sticky"></i> Quick Notes</label>
+            {{#if editable}}
+            <div class="wh40k-editor-mini">
+              {{editor system.quickNotes target="system.quickNotes" button=true editable=editable engine="prosemirror"}}
+            </div>
+            {{else}}
+            <div class="wh40k-note-display">{{{system.quickNotes}}}</div>
+            {{/if}}
+          </div>
+          <div class="wh40k-note-field wh40k-note-field--editable">
+            <label><i class="fa-solid fa-chess"></i> Tactics</label>
+            {{#if editable}}
+            <div class="wh40k-editor-mini">
+              {{editor system.tactics target="system.tactics" button=true editable=editable engine="prosemirror"}}
+            </div>
+            {{else}}
+            <div class="wh40k-note-display">{{{system.tactics}}}</div>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/if}}
+
+    {{!-- ═══ GM TOOLS ═══ --}}
+    {{#if isGM}}
+    <div class="wh40k-panel wh40k-panel--gm-tools">
+      <div class="wh40k-panel-header">
+        <i class="fa-solid fa-toolbox"></i>
+        <span>GM Tools</span>
+      </div>
+      <div class="wh40k-panel-body">
+        <div class="wh40k-gm-tools wh40k-gm-tools--inline">
+          <button class="wh40k-tool-btn" data-action="setupToken" type="button" data-tooltip="Auto-configure prototype token for this NPC">
+            <i class="fa-solid fa-chess-pawn"></i> <span>Configure Token</span>
+          </button>
+          <button class="wh40k-tool-btn" data-action="duplicateNPC" type="button" data-tooltip="Clone this NPC">
+            <i class="fa-solid fa-clone"></i> <span>Clone</span>
+          </button>
+          <button class="wh40k-tool-btn" data-action="scaleToThreat" type="button" data-tooltip="Rescale stats to a different threat level">
+            <i class="fa-solid fa-scale-balanced"></i> <span>Scale to Threat</span>
+          </button>
+          <button class="wh40k-tool-btn" data-action="calculateDifficulty" type="button" data-tooltip="Calculate encounter difficulty against a party">
+            <i class="fa-solid fa-calculator"></i> <span>Calculate Difficulty</span>
+          </button>
+          <button class="wh40k-tool-btn" data-action="exportStatBlock" type="button" data-tooltip="Export stat block as text">
+            <i class="fa-solid fa-file-export"></i> <span>Export Stat Block</span>
+          </button>
+          <button class="wh40k-tool-btn" data-action="importStatBlock" type="button" data-tooltip="Import stat block from text">
+            <i class="fa-solid fa-file-import"></i> <span>Import Stat Block</span>
+          </button>
+          <button class="wh40k-tool-btn" data-action="saveCombatPreset" type="button" data-tooltip="Save current weapons/armour as a combat preset">
+            <i class="fa-solid fa-floppy-disk"></i> <span>Save Preset</span>
+          </button>
+          <button class="wh40k-tool-btn" data-action="loadCombatPreset" type="button" data-tooltip="Load a saved combat preset">
+            <i class="fa-solid fa-folder-open"></i> <span>Load Preset</span>
+          </button>
+          <button class="wh40k-tool-btn wh40k-tool-btn--danger" data-action="deleteNPC" type="button" data-tooltip="Delete this NPC permanently">
+            <i class="fa-solid fa-trash-can"></i> <span>Delete NPC</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    {{/if}}
+
+  </div>
+</section>

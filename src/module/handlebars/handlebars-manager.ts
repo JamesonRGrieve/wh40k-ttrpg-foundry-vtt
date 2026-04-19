@@ -105,11 +105,14 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/panel/ship-upgrades-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/ship-weapons-panel.hbs',
 
-            // NPC V2 sheet templates
-            'systems/wh40k-rpg/templates/actor/npc-v2/navigation.hbs',
-            'systems/wh40k-rpg/templates/actor/npc-v2/tab-overview.hbs',
-            'systems/wh40k-rpg/templates/actor/npc-v2/tab-combat.hbs',
-            'systems/wh40k-rpg/templates/actor/npc-v2/tab-abilities.hbs',
+            // NPC sheet templates
+            'systems/wh40k-rpg/templates/actor/npc/header.hbs',
+            'systems/wh40k-rpg/templates/actor/npc/tab-overview.hbs',
+            'systems/wh40k-rpg/templates/actor/npc/tab-skills.hbs',
+            'systems/wh40k-rpg/templates/actor/npc/tab-combat.hbs',
+            'systems/wh40k-rpg/templates/actor/npc/tab-equipment.hbs',
+            'systems/wh40k-rpg/templates/actor/npc/tab-biography.hbs',
+            'systems/wh40k-rpg/templates/actor/npc/tab-npc.hbs',
 
             // NPC dialogs
             'systems/wh40k-rpg/templates/dialogs/npc-quick-create.hbs',
