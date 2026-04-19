@@ -513,6 +513,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const charLabel = charConfig ? game.i18n.localize(charConfig.label) : charKey;
         const tierLabel = game.i18n.localize(CONFIG.wh40k?.advancementTiers?.[nextCost.tier]?.label ?? nextCost.tier);
 
+        // Confirm before spending
+        const confirmed = await Dialog.confirm({
+            title: game.i18n.localize('WH40K.Advancement.Title'),
+            content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: nextCost.cost, name: `${charLabel} (${tierLabel})` }),
+        });
+        if (!confirmed) return;
+
         // Spend XP
         const result = await spendXP(this.actor, nextCost.cost, `${charLabel} (${tierLabel})`);
         if (!result.success) {
@@ -585,6 +592,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
 
         const displayName = advance.specialization ? `${advance.name} (${advance.specialization})` : advance.name;
+
+        // Confirm before spending
+        const confirmed = await Dialog.confirm({
+            title: game.i18n.localize('WH40K.Advancement.Title'),
+            content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: advance.cost, name: displayName }),
+        });
+        if (!confirmed) return;
 
         // Spend XP
         const result = await spendXP(this.actor, advance.cost, displayName);

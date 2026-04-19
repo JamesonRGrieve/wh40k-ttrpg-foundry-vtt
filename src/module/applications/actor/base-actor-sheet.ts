@@ -1237,9 +1237,10 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             });
         });
 
-        // Inline-edit: dblclick to edit readonly text fields, save button to commit
+        // Inline-edit: dblclick text to edit, save button to commit
         this.element.querySelectorAll<HTMLElement>('[data-inline-edit]').forEach((wrap) => {
             const input = wrap.querySelector<HTMLInputElement>('.wh40k-inline-edit-input');
+            const textEl = wrap.querySelector<HTMLElement>('.wh40k-inline-edit-text');
             const saveBtn = wrap.querySelector<HTMLButtonElement>('[data-inline-edit-save]');
             if (!input || !saveBtn) return;
 
@@ -1254,9 +1255,13 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
                 wrap.classList.remove('is-editing');
             };
 
+            // Double-click on text span or the wrapper enters edit mode
+            if (textEl) textEl.addEventListener('dblclick', enterEdit);
+            wrap.addEventListener('dblclick', enterEdit);
+            // Legacy: dblclick on the input itself (for inline-edits without text span)
             input.addEventListener('dblclick', enterEdit);
+
             input.addEventListener('blur', (event) => {
-                // Delay so a click on save button is processed first
                 window.setTimeout(() => {
                     if (document.activeElement !== input && !wrap.contains(document.activeElement)) {
                         exitEdit();
@@ -1277,6 +1282,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
             saveBtn.addEventListener('click', () => {
                 input.blur();
             });
+
+            // Auto-enter edit mode if data-inline-edit-start is set (blank fields)
+            if (wrap.hasAttribute('data-inline-edit-start')) enterEdit();
         });
 
         // Set up drag handlers for items

@@ -22,6 +22,13 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
             minimizable: false,
             resizable: true,
         },
+        tabs: [
+            {
+                navSelector: '.origin-detail-tabs',
+                contentSelector: '.origin-detail-tab-content',
+                initial: 'grants',
+            },
+        ],
         position: {
             width: 700,
             height: 600,
@@ -37,7 +44,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     static PARTS = {
         content: {
             template: 'systems/wh40k-rpg/templates/character-creation/origin-detail-dialog.hbs',
-            scrollable: [''],
+            scrollable: ['.origin-detail-tab-content'],
         },
     };
 

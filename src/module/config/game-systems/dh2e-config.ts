@@ -11,6 +11,10 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly label = 'WH40K.System.DarkHeresy2e';
     readonly cssClass = 'dark-heresy';
 
+    override get startingXP(): number {
+        return 1000;
+    }
+
     getOriginStepConfig(): OriginStepConfig {
         return {
             coreSteps: [
