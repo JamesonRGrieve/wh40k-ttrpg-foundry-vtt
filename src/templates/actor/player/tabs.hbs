@@ -1,11 +1,10 @@
-{{!-- Acolyte Sheet Tab Navigation --}}
-{{!-- This part renders the tab navigation bar --}}
-<nav class="wh40k-navigation tabs" data-group="primary">
+{{!-- Acolyte Sheet Tab Navigation (Vertical Sidebar) --}}
+<nav class="wh40k-navigation wh40k-sidebar-nav tabs tw-flex tw-flex-col tw-gap-0.5" data-group="primary">
     {{#each tabs}}
-    <a class="item wh40k-nav-item {{#if active}}active{{/if}} {{ cssClass }}" 
-       data-action="tab" 
+    <a class="item wh40k-nav-item {{#if active}}active{{/if}} {{ cssClass }}"
+       data-action="tab"
        data-group="{{ group }}"
-       data-tab="{{ tab }}" 
+       data-tab="{{ tab }}"
        data-tooltip="{{ label }}">
         {{ label }}
     </a>
