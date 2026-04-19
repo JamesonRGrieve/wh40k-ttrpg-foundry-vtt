@@ -4,15 +4,15 @@ input[type='number'],
 textarea,
 select {
     padding: 0;
-    background: $form-input-background;
-    color: $form-input-foreground;
+    background: var(--color-bg-option);
+    color: var(--color-text-primary);
     vertical-align: baseline;
     height: 100%;
 
     &:focus,
     &:active,
     &:hover {
-        background: $form-active;
+        background: rgba(192, 128, 32, 0.15);
         outline: 0;
     }
 }
@@ -34,10 +34,10 @@ textarea[readonly] {
     background-color: unset !important;
     border-color: unset !important;
     cursor: unset !important;
-    color: $form-input-disabled !important;
+    color: var(--color-text-tertiary) !important;
 
     > option {
-        color: $form-input-disabled !important;
+        color: var(--color-text-tertiary) !important;
     }
 }
 
@@ -68,7 +68,7 @@ button {
 
 .wh40k-field,
 .wh40k-textarea {
-    border-bottom: $grid-border;
+    border-bottom: 1px solid var(--color-border-primary);
 
     &:last-child {
         border-bottom: 0;
@@ -117,7 +117,7 @@ button {
         flex-grow: 1;
 
         &.check {
-            background: $form-input-background;
+            background: var(--color-bg-option);
         }
 
         input[type='checkbox'] {

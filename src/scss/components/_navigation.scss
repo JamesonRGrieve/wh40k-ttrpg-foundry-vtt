@@ -39,7 +39,7 @@
 
         label {
             width: auto;
-            margin: $margin-general;
+            margin: 0.5rem;
             cursor: pointer;
 
             input {
@@ -53,14 +53,14 @@
             }
 
             a {
-                padding: $margin-small $margin-general;
-                border: 1px solid $form-input-background;
+                padding: 0.25rem 0.5rem;
+                border: 1px solid var(--color-bg-option);
                 border-radius: 5px;
                 line-height: 1.5;
                 text-transform: uppercase;
 
                 &.active {
-                    background: $form-input-background;
+                    background: var(--color-bg-option);
                     border: 1px solid var(--wh40k-border-medium);
                 }
             }
