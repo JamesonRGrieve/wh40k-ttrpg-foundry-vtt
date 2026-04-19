@@ -4,7 +4,21 @@
 <div class="wh40k-panel wh40k-panel-backpack-split">
     {{!-- Panel Header with Encumbrance Bar --}}
     <div class="wh40k-panel-header">
-        <span class="wh40k-panel-title"><i class="fas fa-boxes"></i> Inventory</span>
+        <div class="tw-flex tw-items-center tw-gap-3">
+            <span class="wh40k-panel-title"><i class="fas fa-boxes"></i> Inventory</span>
+            <button
+                type="button"
+                class="tw-inline-flex tw-items-center tw-gap-2 tw-rounded-md tw-border tw-border-amber-500/60 tw-bg-amber-500/10 tw-px-3 tw-py-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-amber-100 hover:tw-bg-amber-500/20"
+                data-action="openTransactionDialog"
+                title="Request a barter or requisition transaction"
+            >
+                <i class="fas fa-handshake"></i>
+                <span>Barter</span>
+                {{#if transactionSourceCount}}
+                    <span class="tw-rounded-full tw-bg-amber-400 tw-px-2 tw-py-0.5 tw-text-[10px] tw-font-bold tw-text-slate-950">{{transactionSourceCount}}</span>
+                {{/if}}
+            </button>
+        </div>
         <div class="wh40k-encumbrance-display">
             <span class="wh40k-enc-label">Carry:</span>
             <div class="wh40k-encumbrance-bar-container">

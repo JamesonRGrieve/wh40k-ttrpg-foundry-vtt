@@ -69,12 +69,16 @@
                     </div>
 
                     {{!-- Lift & Push --}}
-                    <div class="wh40k-vital-row tw-flex tw-items-center tw-gap-1.5 tw-py-0.5">
-                        <span class="wh40k-vital-icon"><i class="fas fa-dumbbell"></i></span>
-                        <span class="wh40k-vital-label">Lift</span>
-                        <span class="wh40k-vital-value tw-ml-auto">{{system.lifting.lift}} kg</span>
-                        <span class="wh40k-vital-label tw-ml-2">Push</span>
-                        <span class="wh40k-vital-value">{{system.lifting.push}} kg</span>
+                    <div class="wh40k-vital-row tw-flex tw-items-center tw-justify-between tw-py-0.5">
+                        <span class="tw-flex tw-items-center tw-gap-1.5">
+                            <span class="wh40k-vital-icon"><i class="fas fa-dumbbell"></i></span>
+                            <span class="wh40k-vital-label">Lift</span>
+                            <span class="wh40k-vital-value">{{system.lifting.lift}} kg</span>
+                        </span>
+                        <span class="tw-flex tw-items-center tw-gap-1.5">
+                            <span class="wh40k-vital-label">Push</span>
+                            <span class="wh40k-vital-value">{{system.lifting.push}} kg</span>
+                        </span>
                     </div>
 
                     {{!-- Fate Points --}}
@@ -269,19 +273,21 @@
                         </svg>
                     </div>
                     <span>Progression — Rank {{system.rank}}</span>
+                    <div class="wh40k-zone-header-actions tw-flex tw-gap-1 tw-ml-auto">
+                        {{#if isGM}}
+                        <button type="button" class="wh40k-xp-action-btn" data-action="customXP" title="Add XP">
+                            <i class="fas fa-plus"></i> Add XP
+                        </button>
+                        {{/if}}
+                        <button type="button" class="wh40k-xp-action-btn" data-action="openAdvancement" title="Buy Advancements">
+                            <i class="fa-solid fa-arrow-up-big-small"></i> Advance
+                        </button>
+                    </div>
                 </div>
                 <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-flex tw-flex-col tw-gap-1">
                     <div class="wh40k-xp-row">
                         <span class="wh40k-xp-label">Experience</span>
                         <span class="wh40k-xp-value">{{system.experience.available}}/{{system.experience.total}}</span>
-                    </div>
-                    <div class="wh40k-xp-actions">
-                        <button type="button" class="wh40k-xp-action-btn" data-action="customXP" title="Add XP">
-                            <i class="fas fa-plus"></i> Add XP
-                        </button>
-                        <button type="button" class="wh40k-xp-action-btn" data-action="openAdvancement" title="Buy Advancements">
-                            <i class="fa-solid fa-arrow-up-big-small"></i> Advance
-                        </button>
                     </div>
                 </div>
             </div>

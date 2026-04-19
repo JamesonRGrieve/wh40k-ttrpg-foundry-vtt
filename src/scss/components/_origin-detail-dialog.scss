@@ -22,8 +22,10 @@
 
 .origin-detail-content {
     flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
 }
 
 /* -------------------------------------------- */
@@ -111,6 +113,74 @@
 }
 
 /* -------------------------------------------- */
+/*  Tab Navigation                              */
+/* -------------------------------------------- */
+
+.origin-detail-tabs {
+    display: flex;
+    flex-shrink: 0;
+    border-bottom: 2px solid var(--wh40k-border-color);
+    background: var(--wh40k-panel-bg-translucent);
+}
+
+.origin-detail-tab {
+    padding: var(--wh40k-space-sm) var(--wh40k-space-lg);
+    font-family: var(--wh40k-font-display);
+    font-size: var(--wh40k-font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--wh40k-text-muted);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    cursor: pointer;
+    transition: all var(--wh40k-transition-base);
+    text-decoration: none;
+
+    i {
+        margin-right: var(--wh40k-space-xs);
+    }
+
+    &:hover {
+        color: var(--wh40k-gold);
+        background: rgba(212, 175, 55, 0.08);
+    }
+
+    &.active {
+        color: var(--wh40k-gold);
+        border-bottom-color: var(--wh40k-gold);
+        background: rgba(212, 175, 55, 0.12);
+    }
+}
+
+/* -------------------------------------------- */
+/*  Tab Content                                 */
+/* -------------------------------------------- */
+
+.origin-detail-tab-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+
+    .tab {
+        display: none;
+
+        &.active {
+            display: block;
+        }
+    }
+}
+
+.origin-empty-tab {
+    text-align: center;
+    color: var(--wh40k-text-muted);
+    font-style: italic;
+    padding: var(--wh40k-space-xl) 0;
+}
+
+/* -------------------------------------------- */
 /*  Sections                                    */
 /* -------------------------------------------- */
 
@@ -144,9 +214,6 @@
 /* -------------------------------------------- */
 
 .origin-description {
-    min-height: 150px;
-    max-height: 300px;
-    overflow-y: auto;
     background: rgba(0, 0, 0, 0.2);
 
     .description-content {
@@ -215,12 +282,6 @@
 /* -------------------------------------------- */
 /*  Grants Grid                                 */
 /* -------------------------------------------- */
-
-.origin-grants {
-    min-height: 200px;
-    max-height: 400px;
-    overflow-y: auto;
-}
 
 .grants-grid {
     display: grid;
@@ -303,11 +364,11 @@
     }
 
     &.negative {
-        border-color: #e74c3c;
+        border-color: $wh40k-accent-red;
         color: #e57373;
 
         .tag-value {
-            color: #e74c3c;
+            color: $wh40k-accent-red;
         }
     }
 
@@ -327,10 +388,10 @@
 }
 
 .skill-tag {
-    border-color: #3498db;
+    border-color: $wh40k-accent-info;
 
     i {
-        color: #3498db;
+        color: $wh40k-accent-info;
     }
 }
 
@@ -343,18 +404,18 @@
 }
 
 .trait-tag {
-    border-color: #9b59b6;
+    border-color: $wh40k-accent-psychic;
 
     i {
-        color: #9b59b6;
+        color: $wh40k-accent-psychic;
     }
 }
 
 .equipment-tag {
-    border-color: #27ae60;
+    border-color: $wh40k-accent-green;
 
     i {
-        color: #27ae60;
+        color: $wh40k-accent-green;
     }
 }
 
@@ -379,7 +440,7 @@
         text-align: center;
 
         &.fa-heart {
-            color: #e74c3c;
+            color: $wh40k-accent-red;
         }
 
         &.fa-star {
@@ -547,8 +608,8 @@
 
     &.excluded {
         background: rgba(231, 76, 60, 0.2);
-        border-color: #e74c3c;
-        color: #e74c3c;
+        border-color: $wh40k-accent-red;
+        color: $wh40k-accent-red;
     }
 }
 
