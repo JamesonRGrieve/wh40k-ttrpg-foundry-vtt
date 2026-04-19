@@ -17,6 +17,12 @@ import {
     BlackCrusadeSheet,
     OnlyWarSheet,
     DeathwatchSheet,
+    DarkHeresy1NPCSheet,
+    DarkHeresy2NPCSheet,
+    RogueTraderNPCSheet,
+    BlackCrusadeNPCSheet,
+    OnlyWarNPCSheet,
+    DeathwatchNPCSheet,
 } from './applications/actor/game-system-sheets.ts';
 import NPCSheet from './applications/actor/npc-sheet.ts';
 import StarshipSheet from './applications/actor/starship-sheet.ts';
@@ -152,11 +158,28 @@ export class HooksManager {
 
         // Define custom Document classes
         CFG.Actor.documentClass = WH40KActorProxy;
+        // Per (system, kind) document class registrations. The generic proxy
+        // dispatches to the right concrete class based on the actor's `type`.
         CFG.Actor.documentClasses = {
-            character: documents.WH40KAcolyte,
-            npc: documents.WH40KNPCV2,
-            vehicle: documents.WH40KVehicle,
-            starship: documents.WH40KStarship,
+            'dh2-character': documents.WH40KDH2Character,
+            'dh2-npc': documents.WH40KDH2NPC,
+            'dh2-vehicle': documents.WH40KDH2Vehicle,
+            'dh1-character': documents.WH40KDH1Character,
+            'dh1-npc': documents.WH40KDH1NPC,
+            'dh1-vehicle': documents.WH40KDH1Vehicle,
+            'rt-character': documents.WH40KRTCharacter,
+            'rt-npc': documents.WH40KRTNPC,
+            'rt-vehicle': documents.WH40KRTVehicle,
+            'rt-starship': documents.WH40KRTStarship,
+            'bc-character': documents.WH40KBCCharacter,
+            'bc-npc': documents.WH40KBCNPC,
+            'bc-vehicle': documents.WH40KBCVehicle,
+            'ow-character': documents.WH40KOWCharacter,
+            'ow-npc': documents.WH40KOWNPC,
+            'ow-vehicle': documents.WH40KOWVehicle,
+            'dw-character': documents.WH40KDWCharacter,
+            'dw-npc': documents.WH40KDWNPC,
+            'dw-vehicle': documents.WH40KDWVehicle,
         };
         CFG.Item.documentClass = WH40KItem;
         CFG.ActiveEffect.documentClass = documents.WH40KActiveEffect;
@@ -169,13 +192,28 @@ export class HooksManager {
         // Register custom Roll classes for serialization/deserialization
         CFG.Dice.rolls.push(dice.BasicRollWH40K, dice.D100Roll);
 
-        // Register data models for actors
-        // DataModels handle schema validation and data preparation
+        // Register data models for actors — one per (system, kind) type.
+        // DataModels handle schema validation and data preparation.
         CFG.Actor.dataModels = {
-            character: dataModels.CharacterData,
-            npc: dataModels.NPCDataV2,
-            vehicle: dataModels.VehicleData,
-            starship: dataModels.StarshipData,
+            'dh2-character': dataModels.DH2CharacterData,
+            'dh2-npc': dataModels.DH2NPCData,
+            'dh2-vehicle': dataModels.DH2VehicleData,
+            'dh1-character': dataModels.DH1CharacterData,
+            'dh1-npc': dataModels.DH1NPCData,
+            'dh1-vehicle': dataModels.DH1VehicleData,
+            'rt-character': dataModels.RTCharacterData,
+            'rt-npc': dataModels.RTNPCData,
+            'rt-vehicle': dataModels.RTVehicleData,
+            'rt-starship': dataModels.RTStarshipData,
+            'bc-character': dataModels.BCCharacterData,
+            'bc-npc': dataModels.BCNPCData,
+            'bc-vehicle': dataModels.BCVehicleData,
+            'ow-character': dataModels.OWCharacterData,
+            'ow-npc': dataModels.OWNPCData,
+            'ow-vehicle': dataModels.OWVehicleData,
+            'dw-character': dataModels.DWCharacterData,
+            'dw-npc': dataModels.DWNPCData,
+            'dw-vehicle': dataModels.DWVehicleData,
         };
 
         // Register Item data models
@@ -272,9 +310,44 @@ export class HooksManager {
             makeDefault: false,
             label: 'WH40K.Sheet.PlayerCharacterSidebar',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NPCSheet, {
+        // NPC sheet variants — one per game line, mirroring the PC variants
+        // above. Dark Heresy 2e is default for this campaign; the other
+        // systems are selectable per-actor via the Foundry sheet picker.
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2NPCSheet, {
             types: ['npc'],
             makeDefault: true,
+            label: 'WH40K.Sheet.DarkHeresy2NPC',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy1NPCSheet, {
+            types: ['npc'],
+            makeDefault: false,
+            label: 'WH40K.Sheet.DarkHeresy1NPC',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderNPCSheet, {
+            types: ['npc'],
+            makeDefault: false,
+            label: 'WH40K.Sheet.RogueTraderNPC',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BlackCrusadeNPCSheet, {
+            types: ['npc'],
+            makeDefault: false,
+            label: 'WH40K.Sheet.BlackCrusadeNPC',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, OnlyWarNPCSheet, {
+            types: ['npc'],
+            makeDefault: false,
+            label: 'WH40K.Sheet.OnlyWarNPC',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DeathwatchNPCSheet, {
+            types: ['npc'],
+            makeDefault: false,
+            label: 'WH40K.Sheet.DeathwatchNPC',
+        });
+        // Keep the generic NPCSheet registered as a system-agnostic fallback
+        // option (selectable via the sheet picker); not the default.
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NPCSheet, {
+            types: ['npc'],
+            makeDefault: false,
             label: 'WH40K.Sheet.NPC',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheet, {
