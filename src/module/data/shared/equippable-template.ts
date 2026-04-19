@@ -5,8 +5,6 @@ import SystemDataModel from '../abstract/system-data-model.ts';
  * @mixin
  */
 export default class EquippableTemplate extends SystemDataModel {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare equipped: boolean;
     declare inBackpack: boolean;
@@ -15,7 +13,7 @@ export default class EquippableTemplate extends SystemDataModel {
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             equipped: new fields.BooleanField({ required: true, initial: false }),
             inBackpack: new fields.BooleanField({ required: true, initial: false }),

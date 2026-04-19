@@ -12,8 +12,6 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes EquippableTemplate
  */
 export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare protectionRating: number;
@@ -45,7 +43,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 

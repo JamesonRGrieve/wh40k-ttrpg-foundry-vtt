@@ -1,4 +1,4 @@
-const { SchemaField, NumberField, BooleanField, ArrayField, StringField } = (foundry.data as any).fields;
+const { SchemaField, NumberField, BooleanField, ArrayField, StringField } = foundry.data.fields;
 
 /**
  * HordeTemplate mixin for actors that can operate in horde mode.

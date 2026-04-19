@@ -15,8 +15,6 @@ import PhysicalItemTemplate from '../shared/physical-item-template.ts';
  * @mixes ModifiersTemplate
  */
 export default class CyberneticData extends ItemDataModel.mixin(DescriptionTemplate, PhysicalItemTemplate, EquippableTemplate, ModifiersTemplate) {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare identifier: string;
     declare type: string;
@@ -30,7 +28,7 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 

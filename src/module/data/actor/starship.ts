@@ -5,8 +5,6 @@ import ActorDataModel from '../abstract/actor-data-model.ts';
  * Matches template.json "starship" structure.
  */
 export default class StarshipData extends ActorDataModel {
-    [key: string]: any;
-
     // Typed property declarations matching defineSchema()
     declare hullType: string;
     declare hullClass: string;
@@ -67,7 +65,7 @@ export default class StarshipData extends ActorDataModel {
 
     /** @inheritdoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 

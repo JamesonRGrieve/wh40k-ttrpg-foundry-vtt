@@ -7,7 +7,6 @@ import BaseGrantData from './base-grant.ts';
  * @extends BaseGrantData
  */
 export default class SkillGrantData extends (BaseGrantData as any) {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -35,7 +34,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
 
     /** @inheritDoc */
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
-        const fields = (foundry.data as any).fields;
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
