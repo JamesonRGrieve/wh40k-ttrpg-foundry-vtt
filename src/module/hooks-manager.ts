@@ -102,11 +102,40 @@ export class HooksManager {
         Hooks.on('ready', HooksManager.ready);
         Hooks.on('hotbarDrop', HooksManager.hotbarDrop);
         Hooks.on('renderCompendiumDirectory', HooksManager.renderCompendiumDirectory);
+        Hooks.on('renderActorDirectory', HooksManager.renderActorDirectory);
         Hooks.on('getActorSheetClass', HooksManager.getActorSheetClass);
 
         DHTargetedActionManager.initializeHooks();
         DHBasicActionManager.initializeHooks();
         DHCombatActionManager.initializeHooks();
+    }
+
+    /**
+     * Replace the default "Create Actor" behavior with the cascading
+     * WH40KCreateActorDialog so users pick system + kind rather than a
+     * flat type list.
+     */
+    static renderActorDirectory(_app: any, html: any, _data: any) {
+        const root: HTMLElement = html instanceof HTMLElement ? html : html?.[0] ?? html;
+        if (!root) return;
+        const createBtn = root.querySelector(
+            'button.create-document, a.create-document, button[data-action="createEntry"], button[data-action="createFolder"]',
+        ) as HTMLElement | null;
+        // The header "Create Actor" button — Foundry changes the selector
+        // over versions, so match by visible text as a fallback.
+        const headerButton =
+            createBtn ?? (Array.from(root.querySelectorAll('button, a')).find((el) => /create\s+actor/i.test(el.textContent ?? '')) as HTMLElement | undefined);
+        if (!headerButton) return;
+        headerButton.addEventListener(
+            'click',
+            async (event) => {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                const { WH40KCreateActorDialog } = await import('./applications/dialogs/create-actor-dialog.ts');
+                await WH40KCreateActorDialog.open({});
+            },
+            true,
+        ); // capture-phase so we beat Foundry's own handler
     }
 
     static init() {
