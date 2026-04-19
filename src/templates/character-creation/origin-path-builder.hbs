@@ -274,6 +274,12 @@
                             {{#if selectedOrigin.description}}
                                 <div class="selection-description">{{{selectedOrigin.description}}}</div>
                             {{/if}}
+                            {{#if selectedOrigin.requirementsText}}
+                                <div class="selection-requirements">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span>{{selectedOrigin.requirementsText}}</span>
+                                </div>
+                            {{/if}}
                         </div>
                         <div class="selection-actions">
                         <button type="button" class="toolbar-btn" data-action="viewOrigin" data-tooltip="{{localize 'WH40K.OriginPath.ViewDetails'}}">

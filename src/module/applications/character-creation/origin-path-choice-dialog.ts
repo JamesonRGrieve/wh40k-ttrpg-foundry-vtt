@@ -207,7 +207,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                             }
 
                             // Fetch compendium description and stat block for item-type choices
-                            const itemChoiceTypes = new Set(['talent', 'equipment', 'gear', 'trait', 'psychicPower']);
+                            const itemChoiceTypes = new Set(['talent', 'skill', 'equipment', 'gear', 'trait', 'psychicPower']);
                             if (!optDesc && itemChoiceTypes.has(choice.type)) {
                                 const resolved = await this._resolveCompendiumItem(optLabel, optUuid);
                                 if (resolved) {
