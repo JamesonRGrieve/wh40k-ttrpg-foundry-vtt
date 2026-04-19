@@ -121,7 +121,7 @@ export default class VehicleSheet extends BaseActorSheet {
             items: Array.from(this.actor.items),
             limited: this.actor.limited,
             rollableClass: this.isEditable ? 'rollable' : '',
-            isGM: (game as any).user.isGM,
+            isGM: game.user.isGM,
             editable: this.isEditable,
             isVehicle: true,
             isShip: this.actor.system.primaryUse === 'ship',
@@ -286,7 +286,7 @@ export default class VehicleSheet extends BaseActorSheet {
             id: tab.tab,
             tab: tab.tab,
             group: tab.group,
-            label: (game as any).i18n.localize(tab.label),
+            label: game.i18n.localize(tab.label),
             active: this.tabGroups[tab.group] === tab.tab,
             cssClass: tab.cssClass,
         }));

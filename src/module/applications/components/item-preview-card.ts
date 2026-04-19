@@ -10,6 +10,7 @@
  * - Preview content renders below the item row
  */
 
+import type { WH40KItem } from '../../documents/item.ts';
 import QuickActionsBar from './quick-actions-bar.ts';
 
 /**
@@ -68,7 +69,7 @@ export function ItemPreviewMixin(Base) {
          * @param {HTMLElement} itemRow - Item row element
          * @private
          */
-        #openPreview(item: any, itemRow: HTMLElement): void {
+        #openPreview(item: WH40KItem, itemRow: HTMLElement): void {
             // Close any existing preview for this item
             this.#closePreview(item.id);
 
@@ -120,7 +121,7 @@ export function ItemPreviewMixin(Base) {
          * @returns {string} HTML string
          * @private
          */
-        #generatePreviewHTML(item: any): string {
+        #generatePreviewHTML(item: WH40KItem): string {
             const type = item.type;
 
             // Get type-specific content
@@ -183,7 +184,7 @@ export function ItemPreviewMixin(Base) {
          * @returns {string} HTML string
          * @private
          */
-        #generateWeaponPreview(item: any): string {
+        #generateWeaponPreview(item: WH40KItem): string {
             const system = item.system;
             const damage = system.damage || {};
             const stats = system.stats || {};
@@ -227,7 +228,7 @@ export function ItemPreviewMixin(Base) {
          * @returns {string} HTML string
          * @private
          */
-        #generateArmourPreview(item: any): string {
+        #generateArmourPreview(item: WH40KItem): string {
             const system = item.system;
             const locations = system.locations || {};
 
@@ -275,7 +276,7 @@ export function ItemPreviewMixin(Base) {
          * @returns {string} HTML string
          * @private
          */
-        #generateTalentPreview(item: any): string {
+        #generateTalentPreview(item: WH40KItem): string {
             const system = item.system;
 
             let content = '';
@@ -308,7 +309,7 @@ export function ItemPreviewMixin(Base) {
          * @returns {string} HTML string
          * @private
          */
-        #generateTraitPreview(item: any): string {
+        #generateTraitPreview(item: WH40KItem): string {
             const system = item.system;
 
             let content = '';
@@ -330,7 +331,7 @@ export function ItemPreviewMixin(Base) {
          * @returns {string} HTML string
          * @private
          */
-        #generateConditionPreview(item: any): string {
+        #generateConditionPreview(item: WH40KItem): string {
             const system = item.system;
 
             let content = `
@@ -354,7 +355,7 @@ export function ItemPreviewMixin(Base) {
          * @returns {string} HTML string
          * @private
          */
-        #generateGearPreview(item: any): string {
+        #generateGearPreview(item: WH40KItem): string {
             const system = item.system;
 
             let content = '';
@@ -380,7 +381,7 @@ export function ItemPreviewMixin(Base) {
          * @returns {string} HTML string
          * @private
          */
-        #generatePowerPreview(item: any): string {
+        #generatePowerPreview(item: WH40KItem): string {
             const system = item.system;
 
             let content = '';
@@ -410,7 +411,7 @@ export function ItemPreviewMixin(Base) {
          * @returns {string} HTML string
          * @private
          */
-        #generateGenericPreview(item: any): string {
+        #generateGenericPreview(item: WH40KItem): string {
             const system = item.system;
 
             if (system.description) {

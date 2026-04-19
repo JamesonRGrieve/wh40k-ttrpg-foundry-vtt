@@ -322,7 +322,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
                     id: tabConfig.tab,
                     group: tabConfig.group,
                     cssClass: tabConfig.cssClass,
-                    label: (game as any).i18n?.localize?.(tabConfig.label) ?? tabConfig.label,
+                    label: game.i18n?.localize?.(tabConfig.label) ?? tabConfig.label,
                     active: (this as any).tabGroups?.[tabConfig.group] === tabConfig.tab,
                 };
             }
@@ -1236,7 +1236,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      */
     static async #calculateDifficulty(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const { DifficultyCalculatorDialog: DiffCalcDialog } = (game as any).wh40k.applications;
+        const { DifficultyCalculatorDialog: DiffCalcDialog } = game.wh40k.applications;
         await DiffCalcDialog.show((this as any).actor);
     }
 

@@ -349,7 +349,7 @@ export default class D100Roll extends BasicRollWH40K {
             target: charData.total,
             baseTarget: charData.total,
             flavor: `${charData.label || characteristic} Test`,
-            speaker: (ChatMessage as any).getSpeaker({ actor }),
+            speaker: ChatMessage.getSpeaker({ actor }),
             ...options,
         });
     }
@@ -373,7 +373,7 @@ export default class D100Roll extends BasicRollWH40K {
             target: skillData.current,
             baseTarget: skillData.current,
             flavor: `${skillData.label || skill} Test`,
-            speaker: (ChatMessage as any).getSpeaker({ actor }),
+            speaker: ChatMessage.getSpeaker({ actor }),
             ...options,
         });
     }

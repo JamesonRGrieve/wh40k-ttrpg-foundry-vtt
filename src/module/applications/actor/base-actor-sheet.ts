@@ -5,6 +5,7 @@
 
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import CollapsiblePanelMixin from '../api/collapsible-panel-mixin.ts';
 import ContextMenuMixin from '../api/context-menu-mixin.ts';
@@ -661,7 +662,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {object} [parentSkill]  Parent skill for specialist entries
      * @protected
      */
-    _augmentSkillData(key: string, data: any, characteristics: Record<string, unknown>, parentSkill: any = null): void {
+    _augmentSkillData(key: string, data: Record<string, unknown>, characteristics: Record<string, unknown>, parentSkill: any = null): void {
         const charShort = data.characteristic || parentSkill?.characteristic || 'S';
         const charKey = this._charShortToKey(charShort);
         const char = characteristics[charKey];
@@ -2057,7 +2058,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     /* -------------------------------------------- */
 
     /** @override */
-    async _onDropItem(event: DragEvent, item: any): Promise<any> {
+    async _onDropItem(event: DragEvent, item: WH40KItem): Promise<any> {
         if (!this.actor.isOwner) return undefined;
 
         // Check if this item type is supported
@@ -2089,7 +2090,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Promise}
      * @protected
      */
-    _onSortItem(event: DragEvent, item: any): Promise<any> | undefined {
+    _onSortItem(event: DragEvent, item: WH40KItem): Promise<any> | undefined {
         const items = this.actor.items;
         const source = items.get(item.id);
 

@@ -5,6 +5,8 @@
  * has multiple options (e.g., "Choose 1 of 3 talents").
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 import { findSkillUuid } from '../../helpers/skill-uuid-helper.ts';
 import { getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 
@@ -293,7 +295,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * Build a compact stat summary for weapons/armour/gear.
      * @private
      */
-    _buildStatBlock(item: any): string | null {
+    _buildStatBlock(item: WH40KItem): string | null {
         const sys = item.system;
         if (!sys) return null;
         const parts: string[] = [];
@@ -581,7 +583,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {Actor} actor - The character actor
      * @returns {Promise<object|null>} The selected choices or null if cancelled
      */
-    static async show(item: any, actor: any): Promise<any> {
+    static async show(item: WH40KItem, actor: WH40KBaseActor): Promise<any> {
         const dialog = new OriginPathChoiceDialog(item, actor);
 
         // Create promise that will be resolved when user confirms/cancels

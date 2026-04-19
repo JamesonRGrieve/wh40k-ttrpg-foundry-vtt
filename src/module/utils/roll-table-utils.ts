@@ -44,7 +44,7 @@ export class RollTableUtils {
             await table.toMessage(rollResult.results, {
                 roll: rollResult.roll,
                 messageData: {
-                    speaker: (ChatMessage as any).getSpeaker(),
+                    speaker: ChatMessage.getSpeaker(),
                 },
             });
         }

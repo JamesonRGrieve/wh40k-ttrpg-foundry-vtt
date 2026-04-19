@@ -4,6 +4,7 @@
  */
 
 // Import existing RT career registry
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import * as ArchMilitant from '../advancements/arch-militant.ts';
 import * as Astropath from '../advancements/astropath.ts';
 import * as Explorator from '../advancements/explorator.ts';
@@ -64,7 +65,7 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
         return RT_CAREER_REGISTRY;
     }
 
-    resolveCareerKey(actor: any): string | null {
+    resolveCareerKey(actor: WH40KBaseActor): string | null {
         const careerName = actor.system?.originPath?.career;
         return careerName ? getCareerKeyFromName(careerName) : null;
     }

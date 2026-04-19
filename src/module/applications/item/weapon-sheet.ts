@@ -2,6 +2,7 @@
  * @file WeaponSheet - ApplicationV2 sheet for weapon items
  */
 
+import type { WH40KItem } from '../../documents/item.ts';
 import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
@@ -293,7 +294,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    _canAddItem(item: any): boolean {
+    _canAddItem(item: WH40KItem): boolean {
         if (!super._canAddItem(item)) return false;
 
         // Each modification can only be added once
@@ -429,7 +430,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             rolls: [damageRoll],
         };
         applyRollModeWhispers(chatData);
-        await (ChatMessage as any).create(chatData);
+        await ChatMessage.create(chatData);
     }
 
     /* -------------------------------------------- */

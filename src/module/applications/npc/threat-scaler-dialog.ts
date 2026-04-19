@@ -9,6 +9,7 @@
  * - Percentage-based scaling
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import ThreatCalculator from './threat-calculator.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -442,7 +443,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {Actor} actor - The NPC actor to scale.
      * @returns {Promise<boolean>} True if scaling was applied, false otherwise.
      */
-    static async scale(actor: any): Promise<any> {
+    static async scale(actor: WH40KBaseActor): Promise<any> {
         if (!actor || actor.type !== 'npcV2') {
             ui.notifications.warn('Can only scale npcV2 type actors');
             return false;

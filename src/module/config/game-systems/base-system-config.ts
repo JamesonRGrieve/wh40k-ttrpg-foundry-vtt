@@ -3,6 +3,7 @@
  * Each WH40K RPG game line provides a concrete subclass.
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { GameSystemId, SkillRankDef, CharacteristicTierDef, OriginStepConfig, AdvanceCostResult, AdvanceOption } from './types.ts';
 
 export abstract class BaseSystemConfig {
@@ -62,7 +63,7 @@ export abstract class BaseSystemConfig {
      * @param currentTier Number of advances already purchased (0-based)
      * @returns Cost result, or null if maxed
      */
-    abstract getCharacteristicAdvanceCost(actor: any, charKey: string, currentTier: number): AdvanceCostResult | null;
+    abstract getCharacteristicAdvanceCost(actor: WH40KBaseActor, charKey: string, currentTier: number): AdvanceCostResult | null;
 
     /**
      * Compute the XP cost for advancing a skill to its next rank.
@@ -72,7 +73,7 @@ export abstract class BaseSystemConfig {
      * @param context     Optional system-specific context
      * @returns Cost in XP, or null if not advanceable
      */
-    abstract getSkillAdvanceCost(actor: any, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null;
+    abstract getSkillAdvanceCost(actor: WH40KBaseActor, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null;
 
     /**
      * Compute the XP cost for acquiring a talent.
@@ -81,14 +82,14 @@ export abstract class BaseSystemConfig {
      * @param context Optional system-specific context
      * @returns Cost in XP, or null if not available
      */
-    abstract getTalentAdvanceCost(actor: any, talent: any, context?: Record<string, unknown>): number | null;
+    abstract getTalentAdvanceCost(actor: WH40KBaseActor, talent: any, context?: Record<string, unknown>): number | null;
 
     /**
      * Get the list of advances available to a character.
      * Career-based systems return a career-filtered list.
      * Aptitude-based systems return empty (all skills/talents available, costs computed dynamically).
      */
-    abstract getAvailableAdvances(actor: any): AdvanceOption[];
+    abstract getAvailableAdvances(actor: WH40KBaseActor): AdvanceOption[];
 
     // ── Skill Visibility ─────────────────────────────────────────
 

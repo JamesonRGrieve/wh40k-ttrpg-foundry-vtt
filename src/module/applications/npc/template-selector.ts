@@ -258,11 +258,11 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         this.#templates = [];
 
         // Load from world items
-        const worldTemplates = (game as any).items.filter((i: any) => i.type === 'npcTemplate');
+        const worldTemplates = game.items.filter((i: any) => i.type === 'npcTemplate');
         this.#templates.push(...worldTemplates);
 
         // Load from compendiums
-        for (const pack of (game as any).packs) {
+        for (const pack of game.packs) {
             if (pack.documentName !== 'Item') continue;
             if (pack.locked && !pack.visible) continue;
 
