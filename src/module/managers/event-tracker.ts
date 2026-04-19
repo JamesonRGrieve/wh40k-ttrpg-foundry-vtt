@@ -467,14 +467,14 @@ export class EventTracker {
             buttons: {
                 close: { label: 'Close' },
             },
-            render: (html: any) => {
+            render: (html: HTMLElement) => {
                 const $html = html instanceof HTMLElement ? $(html) : html;
                 const rebind = () => {
                     // Event checkboxes
                     $html
                         .find('input[type="checkbox"]')
                         .off('change')
-                        .on('change', async (ev: any) => {
+                        .on('change', async (ev: Event) => {
                             const id = ev.currentTarget.dataset.eventId;
                             const isChecked = ev.currentTarget.checked;
                             await EventTracker.setResolved(id, isChecked);
@@ -485,7 +485,7 @@ export class EventTracker {
                     $html
                         .find('.evt-tab-btn')
                         .off('click')
-                        .on('click', (ev: any) => {
+                        .on('click', (ev: Event) => {
                             const tab = ev.currentTarget.dataset.tab as 'events' | 'npcs';
                             if (!tab || tab === activeTab) return;
                             activeTab = tab;

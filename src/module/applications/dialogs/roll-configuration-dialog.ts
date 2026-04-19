@@ -214,7 +214,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
             selectedDifficulty: this.selectedDifficulty,
 
             // Roll modes - V13: rollModes values are objects with a label property
-            rollModes: Object.entries((CONFIG as any).Dice.rollModes).map(([key, mode]: [string, any]) => ({
+            rollModes: Object.entries(CONFIG.Dice.rollModes).map(([key, mode]: [string, any]) => ({
                 key: key,
                 label: game.i18n.localize(mode.label),
                 selected: key === (this.config.rollMode || game.settings.get('core', 'rollMode')),
@@ -336,7 +336,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): any {
+    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): any {
         const data = foundry.utils.expandObject(formData.object);
 
         // Get final values

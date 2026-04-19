@@ -230,7 +230,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         // Listen for quantity input changes
         const quantityInput = htmlElement.querySelector('[name="quantity"]');
         if (quantityInput) {
-            quantityInput.addEventListener('input', (event: any) => {
+            quantityInput.addEventListener('input', (event: Event) => {
                 const quantity = parseInt((event.target as HTMLInputElement).value, 10) || 1;
                 this.#state.quantity = Math.max(1, quantity);
                 void this.render();

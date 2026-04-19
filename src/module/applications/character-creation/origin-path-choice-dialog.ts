@@ -353,7 +353,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     }
 
     /** @override */
-    _onRender(context: any, options: Record<string, unknown>): void {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         super._onRender(context, options);
 
         // Restore scroll position after re-render
@@ -568,7 +568,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {FormDataExtended} formData - The form data
      * @private
      */
-    static #onSubmit(event: Event, form: HTMLFormElement, formData: any): void {
+    static #onSubmit(event: Event, form: HTMLFormElement, formData: Record<string, unknown>): void {
         // Same as confirm - call directly on instance
         return OriginPathChoiceDialog.#confirm.call(this, event, form);
     }

@@ -123,7 +123,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {HTMLElement} form    The form element.
      * @param {FormDataExtended} formData  The form data.
      */
-    static async #onFormChange(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #onFormChange(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
         const xpAmount = parseInt(formData.object.xpAmount) || 0;
         if (this.xpAmount !== xpAmount) {
             this.xpAmount = xpAmount;

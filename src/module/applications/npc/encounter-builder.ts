@@ -201,7 +201,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     }
 
     /** @override */
-    _onRender(context: any, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
         void super._onRender(context, options);
 
         // Party configuration inputs
@@ -209,14 +209,14 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         const partyLevel = this.element.querySelector('[name="partyLevel"]');
 
         if (partyCount) {
-            partyCount.addEventListener('change', (e: any) => {
+            partyCount.addEventListener('change', (e: Event) => {
                 this.#party.count = parseInt((e.target as HTMLInputElement).value, 10) || 4;
                 void this.render({ parts: ['content'] });
             });
         }
 
         if (partyLevel) {
-            partyLevel.addEventListener('change', (e: any) => {
+            partyLevel.addEventListener('change', (e: Event) => {
                 this.#party.averageLevel = parseInt((e.target as HTMLInputElement).value, 10) || 5;
                 void this.render({ parts: ['content'] });
             });
@@ -375,7 +375,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             title: 'Add NPC',
             content,
             label: 'Add',
-            callback: (html: any) => {
+            callback: (html: HTMLElement) => {
                 const form = html[0].querySelector('form');
                 return {
                     uuid: form.querySelector('[name="uuid"]').value,
@@ -462,7 +462,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             title: 'Save Encounter Template',
             content: '<form><div class="form-group"><label>Template Name</label><input type="text" name="name" placeholder="My Encounter"/></div></form>',
             label: 'Save',
-            callback: (html: any) => html[0].querySelector('[name="name"]').value,
+            callback: (html: HTMLElement) => html[0].querySelector('[name="name"]').value,
             rejectClose: false,
         });
 

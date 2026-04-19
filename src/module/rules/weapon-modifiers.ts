@@ -15,7 +15,7 @@ type WeaponModifierEffects = {
     penetrationModifiers?: Record<string, number>;
     attackSpecials?: AttackSpecialEffect[];
     /** Context-dependent attack bonuses → rollData.weaponModifiers */
-    attackBonus?: (rollData: any, item: WH40KItem) => Record<string, number>;
+    attackBonus?: (rollData: Record<string, unknown>, item: WH40KItem) => Record<string, number>;
 };
 
 /**

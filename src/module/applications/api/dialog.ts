@@ -83,7 +83,7 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
      * Resolve the dialog with a result.
      * @param {any} result  The result to return.
      */
-    resolve(result: any): void {
+    resolve(result: Record<string, unknown>): void {
         this._submitted = true;
         this._resolve?.(result);
     }

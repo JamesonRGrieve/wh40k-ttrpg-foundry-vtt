@@ -163,7 +163,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Handle form submission
      */
-    static async formHandler(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async formHandler(event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
         const data = foundry.utils.expandObject(formData.object) as any;
 
         let effectData = null;
@@ -307,7 +307,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
 
         if (!characteristic || value === 0) return null;
 
-        const charLabel = (CONFIG as any).WH40K?.characteristics?.[characteristic] ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
+        const charLabel = CONFIG.WH40K?.characteristics?.[characteristic] ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
 
         const effectData: any = {
             name: `${charLabel} ${value > 0 ? '+' : ''}${value}`,

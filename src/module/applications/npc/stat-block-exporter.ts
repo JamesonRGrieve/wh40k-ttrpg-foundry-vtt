@@ -330,13 +330,13 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
-    _onRender(context: any, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
         void super._onRender(context, options);
 
         // Handle format toggle
         const formatTabs = this.element.querySelectorAll('[data-format]');
         for (const tab of formatTabs) {
-            tab.addEventListener('click', (e: any) => {
+            tab.addEventListener('click', (e: Event) => {
                 this.#format = (e.currentTarget as HTMLElement).dataset.format;
                 void this.render({ parts: ['content'] });
             });

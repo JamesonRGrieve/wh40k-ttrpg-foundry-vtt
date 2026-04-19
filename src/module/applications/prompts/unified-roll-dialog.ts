@@ -749,7 +749,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
     /*  Form Handler                                 */
     /* -------------------------------------------- */
 
-    static async #onFormSubmit(event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #onFormSubmit(event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
         const data = foundry.utils.expandObject(formData.object);
         // Update roll data fields from form
         if ((this as any).rollData) {

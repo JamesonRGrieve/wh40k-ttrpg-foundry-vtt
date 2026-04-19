@@ -75,7 +75,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async _applyGrant(actor: WH40KBaseActor, data: Record<string, unknown>, options: Record<string, unknown>, result: any): Promise<void> {
+    async _applyGrant(actor: WH40KBaseActor, data: Record<string, unknown>, options: Record<string, unknown>, result: Record<string, unknown>): Promise<void> {
         const choiceOptions = this.options ?? [];
         if (choiceOptions.length === 0) {
             result.notifications.push('Choice grant has no options to apply');

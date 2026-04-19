@@ -115,7 +115,7 @@ export class HooksManager {
      * WH40KCreateActorDialog so users pick system + kind rather than a
      * flat type list.
      */
-    static renderActorDirectory(_app: any, html: any, _data: any) {
+    static renderActorDirectory(_app: Record<string, unknown>, html: HTMLElement, _data: Record<string, unknown>) {
         const root: HTMLElement = html instanceof HTMLElement ? html : html?.[0] ?? html;
         if (!root) return;
         const createBtn = root.querySelector(

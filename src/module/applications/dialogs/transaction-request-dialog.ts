@@ -144,7 +144,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         });
     }
 
-    static #onSubmit(this: TransactionRequestDialog, event: Event, form: HTMLFormElement, formData: any): void {
+    static #onSubmit(this: TransactionRequestDialog, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): void {
         this.quantity = Math.max(1, Number.parseInt(formData.object.quantity || '1', 10) || 1);
         this.influenceBurn = Math.max(0, Number.parseInt(formData.object.influenceBurn || '0', 10) || 0);
         this.sourceId = formData.object.sourceId || this.sourceId;

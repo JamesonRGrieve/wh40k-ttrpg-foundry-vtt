@@ -505,7 +505,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {FormDataExtended} formData - The form data
      * @private
      */
-    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): void {
+    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): void {
         // Same as accept
         return this.#accept.call(this, event, form);
     }
@@ -676,7 +676,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.context.actor }),
             ...(this.rollResult.roll ? { rolls: [this.rollResult.roll] } : {}),
-            sound: (CONFIG as any).sounds.dice,
+            sound: CONFIG.sounds.dice,
         } as any);
     }
 

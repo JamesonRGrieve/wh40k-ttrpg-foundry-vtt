@@ -1506,7 +1506,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     static async #onEditImage(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset.edit ?? 'img';
         const current = foundry.utils.getProperty((this as any).document._source, attr);
-        const fp = new (CONFIG as any).ux.FilePicker({
+        const fp = new CONFIG.ux.FilePicker({
             current,
             type: 'image',
             callback: (path: string) => (this as any).document.update({ [attr]: path }),
@@ -2065,8 +2065,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         if ((this.constructor as any).unsupportedItemTypes.has(item.type)) {
             (ui as any).notifications.warn(
                 game.i18n.format('WH40K.Warning.InvalidItem', {
-                    itemType: game.i18n.localize((CONFIG as any).Item.typeLabels[item.type]),
-                    actorType: game.i18n.localize((CONFIG as any).Actor.typeLabels[this.actor.type]),
+                    itemType: game.i18n.localize(CONFIG.Item.typeLabels[item.type]),
+                    actorType: game.i18n.localize(CONFIG.Actor.typeLabels[this.actor.type]),
                 }),
             );
             return false;

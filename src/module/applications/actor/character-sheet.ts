@@ -249,7 +249,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {Promise}
      * @private
      */
-    async _throttle(key: string, wait: number, func: (...args: any[]) => any, context: any, args: unknown[]): Promise<any> {
+    async _throttle(key: string, wait: number, func: (...args: any[]) => any, context: Record<string, unknown>, args: unknown[]): Promise<any> {
         // Initialize throttle tracking map if it doesn't exist
         if (!this._throttleTimers) this._throttleTimers = new Map();
 
@@ -1643,9 +1643,9 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
 
         // Find the action definition in config
         const allActions = [
-            ...((CONFIG as any).wh40k?.combatActions?.attacks || []),
-            ...((CONFIG as any).wh40k?.combatActions?.movement || []),
-            ...((CONFIG as any).wh40k?.combatActions?.utility || []),
+            ...(CONFIG.wh40k?.combatActions?.attacks || []),
+            ...(CONFIG.wh40k?.combatActions?.movement || []),
+            ...(CONFIG.wh40k?.combatActions?.utility || []),
         ];
 
         const actionConfig = allActions.find((a) => a.key === actionKey);

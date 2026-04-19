@@ -248,7 +248,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     /** @override */
-    _onRender(context: any, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
         void super._onRender(context, options);
 
         // Track input changes
@@ -1078,7 +1078,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static async _onSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async _onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
         if (!this.#parsedData) {
             ui.notifications.error('No valid data to import. Parse input first.');
             return;

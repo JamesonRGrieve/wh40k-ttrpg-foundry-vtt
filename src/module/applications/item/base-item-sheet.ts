@@ -230,7 +230,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @override
      * @protected
      */
-    _prepareSubmitData(event: Event, form: HTMLFormElement, formData: any): Record<string, unknown> {
+    _prepareSubmitData(event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Record<string, unknown> {
         let submitData = super._prepareSubmitData(event, form, formData);
 
         // CRITICAL FIX: Clean img field if present to prevent validation errors
@@ -371,7 +371,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     static async #onEditImage(this: any, event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset.edit ?? 'img';
         const current = foundry.utils.getProperty(this.document._source, attr);
-        const fp = new (CONFIG as any).ux.FilePicker({
+        const fp = new CONFIG.ux.FilePicker({
             current,
             type: 'image',
             callback: (path) => this.document.update({ [attr]: path }),
