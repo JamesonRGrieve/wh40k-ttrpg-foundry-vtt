@@ -107,40 +107,43 @@ export default class NPCSheet extends (CharacterSheet as any) {
 
     /**
      * PARTS for the NPC sheet.
-     * Reuses the PC header + shared tabs.hbs nav, but points each content part at
-     * NPC-specific templates under templates/actor/npc/. Adds a sixth "npc" part
-     * for NPC-only controls (horde, barter, GM tools, etc.).
+     * NPCs reuse the full PC template set (templates/actor/player/*.hbs) — same
+     * header, same tab nav, same panels — and diverge only via {{#if isNPC}}
+     * branches inside those templates for widgets that read PC-only fields
+     * (Fate, Fatigue, Lift/Push, XP, Origin Path, Influence/Requisition/Gelt).
+     * A sixth "npc" part under templates/actor/npc/ holds every NPC-unique
+     * panel (horde, barter, tags, combat tracker, GM tools, etc.).
      * @override
      */
     static PARTS = {
         header: {
-            template: 'systems/wh40k-rpg/templates/actor/npc/header.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/header.hbs',
         },
         tabs: {
             template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
         },
         overview: {
-            template: 'systems/wh40k-rpg/templates/actor/npc/tab-overview.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-overview.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         skills: {
-            template: 'systems/wh40k-rpg/templates/actor/npc/tab-skills.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-skills.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         combat: {
-            template: 'systems/wh40k-rpg/templates/actor/npc/tab-combat.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-combat.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         equipment: {
-            template: 'systems/wh40k-rpg/templates/actor/npc/tab-equipment.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-equipment.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         biography: {
-            template: 'systems/wh40k-rpg/templates/actor/npc/tab-biography.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/tab-biography.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
@@ -181,15 +184,19 @@ export default class NPCSheet extends (CharacterSheet as any) {
 
     /** @inheritDoc */
     async _prepareContext(options: Record<string, any>): Promise<Record<string, any>> {
-        // Call parent to get base ApplicationV2 context setup
+        // Let CharacterSheet populate favoriteSkills, favoriteTalents,
+        // equippedWeapons, loadout data, combat data, and the rest of the PC
+        // fields the shared player/*.hbs templates read.
         const context = await super._prepareContext(options);
 
-        // Add NPC-specific context properties
+        // Flag — every PC template gates PC-only widgets (Fate, Fatigue,
+        // Lift/Push, XP, Origin Path, Influence/Requisition/Gelt) with
+        // {{#unless isNPC}}.
+        context.isNPC = true;
         context.isGM = game.user.isGM;
 
-        // Prepare threat tier for header display
+        // Header + NPC-tab additions
         context.threatTier = this.actor.system.threatTier;
-
         context.npcTypeOptions = {
             troop: 'Troop',
             elite: 'Elite',
@@ -200,7 +207,6 @@ export default class NPCSheet extends (CharacterSheet as any) {
             daemon: 'Daemon',
             xenos: 'Xenos',
         };
-
         context.npcRoleOptions = {
             bruiser: 'Bruiser',
             sniper: 'Sniper',
@@ -209,7 +215,6 @@ export default class NPCSheet extends (CharacterSheet as any) {
             commander: 'Commander',
             specialist: 'Specialist',
         };
-
         context.weaponClassOptions = {
             melee: 'Melee',
             pistol: 'Pistol',
@@ -219,16 +224,10 @@ export default class NPCSheet extends (CharacterSheet as any) {
         };
         context.transactionProfile = TransactionManager.getProfile(this.actor);
 
-        // Prepare characteristics for display
+        // NPC-flavoured preparation on top of the PC context.
         this._prepareCharacteristicsContext(context);
-
-        // Prepare weapons
         this._prepareWeaponsContext(context);
-
-        // Prepare horde data
         this._prepareHordeContext(context);
-
-        // Prepare items (talents, traits)
         await this._prepareItems(context);
 
         return context;
@@ -312,37 +311,31 @@ export default class NPCSheet extends (CharacterSheet as any) {
     /* -------------------------------------------- */
 
     /**
-     * Bypass CharacterSheet's PC-specific part context switch (origin paths,
-     * PC overview dashboard, PC biography enrichment) which expects fields NPCs
-     * don't have. Set the tab metadata directly and dispatch to NPC preparation
-     * helpers, matching the behavior the old standalone NPCSheetV2 had.
+     * Part-context dispatch. Since NPCs reuse the PC templates, we must let
+     * CharacterSheet's switch populate every field those templates read
+     * (favoriteSkills, favoriteTalents, equippedWeapons, tab metadata, etc.).
+     * Then we layer NPC-specific additions on top (sparse skills list, simple
+     * weapons, horde/threat/barter state for the npc tab).
      * @override
      */
-    async _preparePartContext(partId: string, context: Record<string, any>, _options: Record<string, any>): Promise<Record<string, any>> {
-        const partContext = context;
+    async _preparePartContext(partId: string, context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+        const partContext = await super._preparePartContext(partId, context, options);
 
-        // Per-tab metadata for section wrappers (data-tab / data-group / .active class)
-        const tabConfig = (this.constructor as any).TABS.find((t: any) => t.tab === partId);
-        if (tabConfig) {
-            partContext.tab = {
-                id: tabConfig.tab,
-                group: tabConfig.group,
-                cssClass: tabConfig.cssClass,
-                label: (game as any).i18n?.localize?.(tabConfig.label) ?? tabConfig.label,
-                active: (this as any).tabGroups?.[tabConfig.group] === tabConfig.tab,
-            };
+        // The npc tab isn't in CharacterSheet's switch — set tab metadata by hand.
+        if (partId === 'npc') {
+            const tabConfig = (this.constructor as any).TABS.find((t: any) => t.tab === 'npc');
+            if (tabConfig) {
+                partContext.tab = {
+                    id: tabConfig.tab,
+                    group: tabConfig.group,
+                    cssClass: tabConfig.cssClass,
+                    label: (game as any).i18n?.localize?.(tabConfig.label) ?? tabConfig.label,
+                    active: (this as any).tabGroups?.[tabConfig.group] === tabConfig.tab,
+                };
+            }
         }
 
-        // The shared tabs.hbs nav iterates `tabs` for its buttons
-        if (partId === 'tabs') {
-            partContext.tabs = (this.constructor as any).TABS.map((tab: any) => ({
-                ...tab,
-                active: (this as any).tabGroups?.[tab.group] === tab.tab,
-                label: (game as any).i18n?.localize?.(tab.label) ?? tab.label,
-            }));
-        }
-
-        // NPC-specific per-part data preparation
+        // NPC-flavoured data prep (sparse skills, simple weapons, horde, notes).
         switch (partId) {
             case 'overview':
                 this._prepareOverviewContext(partContext);
