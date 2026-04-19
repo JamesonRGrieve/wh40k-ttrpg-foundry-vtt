@@ -6,7 +6,6 @@ import { SYSTEM_ID } from '../constants.ts';
  * Foundry V13's CONFIG.Token.movement.actions system.
  */
 export class TokenDocumentWH40K extends TokenDocument {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Movement                                    */
     /* -------------------------------------------- */

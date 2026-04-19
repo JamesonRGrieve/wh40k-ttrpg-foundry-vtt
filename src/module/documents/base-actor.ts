@@ -7,7 +7,6 @@ import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants
 // globally in types/global.d.ts — do not redeclare here.
 
 export class WH40KBaseActor extends Actor {
-    [key: string]: any;
     declare system: any;
     /* -------------------------------------------- */
     /*  Descendant Document Hooks                   */

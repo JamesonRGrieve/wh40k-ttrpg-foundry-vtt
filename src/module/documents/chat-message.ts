@@ -4,7 +4,6 @@
  * @extends ChatMessage
  */
 export class ChatMessageWH40K extends ChatMessage {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */

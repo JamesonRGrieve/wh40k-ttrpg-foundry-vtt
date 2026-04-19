@@ -20,7 +20,6 @@ const SKILL_ALIASES = {
  * @extends {WH40KBaseActor}
  */
 export class WH40KAcolyte extends WH40KBaseActor {
-    [key: string]: any;
     /* -------------------------------------------- */
     /*  Getters                                     */
     /* -------------------------------------------- */
