@@ -176,16 +176,16 @@
 
     &--roll {
         &:hover {
-            background: rgba(#27ae60, 0.15);
-            border-color: #27ae60;
-            color: #2ecc71;
+            background: #{'rgb(from var(--wh40k-accent-green) r g b / 0.15)'};
+            border-color: var(--wh40k-accent-green);
+            color: var(--wh40k-accent-green-bright);
         }
     }
 
     &--chat {
         &:hover {
-            background: rgba(#3498db, 0.15);
-            border-color: #3498db;
+            background: #{'rgb(from var(--wh40k-accent-info) r g b / 0.15)'};
+            border-color: var(--wh40k-accent-info);
             color: #5dade2;
         }
     }
@@ -205,7 +205,7 @@
 .wh40k-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 4px 10px;
     border-radius: var(--wh40k-radius-sm);
     font-size: 0.72rem;
@@ -221,9 +221,9 @@
     }
 
     &--type {
-        background: rgba(#27ae60, 0.1);
-        border-color: rgba(#27ae60, 0.3);
-        color: #2ecc71;
+        background: #{'rgb(from var(--wh40k-accent-green) r g b / 0.1)'};
+        border-color: #{'rgb(from var(--wh40k-accent-green) r g b / 0.3)'};
+        color: var(--wh40k-accent-green-bright);
     }
 
     &--tier {
@@ -257,8 +257,8 @@
     }
 
     &--cost {
-        background: rgba(#3498db, 0.1);
-        border-color: rgba(#3498db, 0.3);
+        background: #{'rgb(from var(--wh40k-accent-info) r g b / 0.1)'};
+        border-color: #{'rgb(from var(--wh40k-accent-info) r g b / 0.3)'};
         color: #5dade2;
     }
 
@@ -269,8 +269,8 @@
     }
 
     &--rollable {
-        background: rgba(#9b59b6, 0.1);
-        border-color: rgba(#9b59b6, 0.3);
+        background: #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.1)'};
+        border-color: #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.3)'};
         color: #bb8fce;
     }
 }
@@ -318,7 +318,7 @@
     &-tags {
         display: flex;
         flex-wrap: wrap;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
     }
 }
 
@@ -440,7 +440,7 @@
 .wh40k-section-header {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
     margin: 0;
     background: linear-gradient(90deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.12)'} 0%, transparent 100%);
@@ -525,7 +525,7 @@
 .wh40k-ability-name {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     margin: 0 0 var(--wh40k-space-sm) 0;
     font-size: 0.95rem;
     font-weight: 700;
@@ -607,7 +607,7 @@
     }
 
     &--trait {
-        border-left: 3px solid #9b59b6;
+        border-left: 3px solid var(--wh40k-accent-psychic);
     }
 
     &--clickable {
@@ -648,8 +648,8 @@
     }
 
     &--plus20 {
-        background: rgba(#27ae60, 0.15);
-        color: #2ecc71;
+        background: #{'rgb(from var(--wh40k-accent-green) r g b / 0.15)'};
+        color: var(--wh40k-accent-green-bright);
     }
 }
 
@@ -700,7 +700,7 @@
     font-weight: 700;
 
     &.positive {
-        color: #2ecc71;
+        color: var(--wh40k-accent-green-bright);
     }
 
     &.negative {
@@ -805,7 +805,7 @@
 .wh40k-checkbox-label {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     cursor: pointer;
     font-size: 0.88rem;
     color: var(--color-text-primary);
@@ -825,7 +825,7 @@
 .wh40k-rank-controls {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-rank-btn {
@@ -949,7 +949,7 @@
     font-weight: 700;
 
     &.positive {
-        color: #2ecc71;
+        color: var(--wh40k-accent-green-bright);
     }
 
     &.negative {
@@ -1031,7 +1031,7 @@
     font-weight: 700;
 
     &.positive {
-        color: #2ecc71;
+        color: var(--wh40k-accent-green-bright);
     }
 
     &.negative {
@@ -1082,8 +1082,8 @@
     border-radius: 3px;
 
     &.active {
-        background: rgba(#27ae60, 0.15);
-        color: #2ecc71;
+        background: #{'rgb(from var(--wh40k-accent-green) r g b / 0.15)'};
+        color: var(--wh40k-accent-green-bright);
     }
 
     &.disabled {
@@ -1094,7 +1094,7 @@
 
 .wh40k-effect-controls {
     display: flex;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-effect-btn {
@@ -1501,7 +1501,7 @@
     .wh40k-footer-label {
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         font-size: 0.75rem;
         font-weight: 500;
         color: var(--color-text-tertiary);
@@ -1775,7 +1775,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 }
 
 .wh40k-summary-title {

@@ -19,7 +19,7 @@
     position: relative;
     background: var(--wh40k-item-bg);
     border: 2px solid var(--wh40k-item-border);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
     font-family: var(--wh40k-font-ui);
     color: var(--wh40k-item-text);
@@ -42,7 +42,7 @@
 .wh40k-item-card__header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--wh40k-space-md);
     padding: 12px;
     background: linear-gradient(135deg, var(--wh40k-accent-overlay) 0%, transparent 100%);
     border-bottom: 1px solid var(--wh40k-border-color);
@@ -52,7 +52,7 @@
     width: 48px;
     height: 48px;
     border: 2px solid var(--wh40k-item-border);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     object-fit: cover;
     flex-shrink: 0;
     box-shadow: 0 2px 6px var(--wh40k-shadow-medium);
@@ -141,7 +141,7 @@
 .wh40k-item-card__field {
     display: flex;
     align-items: baseline;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 4px 0;
     font-size: 0.9rem;
 }
@@ -167,11 +167,11 @@
 .wh40k-item-card__stats {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 10px;
     margin: 8px 0;
     background: var(--wh40k-panel-bg-translucent);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border: 1px solid var(--wh40k-border-color-light);
 }
 
@@ -207,7 +207,7 @@
     margin: 10px 0;
     padding: 10px;
     background: var(--wh40k-panel-bg);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     border: 1px solid var(--wh40k-border-color-light);
 }
 
@@ -259,7 +259,7 @@
 
 .wh40k-item-card__actions {
     display: flex;
-    gap: 8px;
+    gap: var(--wh40k-space-sm);
     padding: 10px 12px;
     background: var(--wh40k-panel-bg-translucent);
     border-top: 1px solid var(--wh40k-border-color-light);
@@ -273,7 +273,7 @@
     padding: 8px 16px;
     background: var(--wh40k-btn-bg);
     border: 1px solid var(--wh40k-item-border);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-item-border);
     font-size: 0.8rem;
     font-weight: 600;
@@ -492,7 +492,7 @@
 .wh40k-property-tag {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     padding: 4px 8px;
     font-size: 0.7rem;
     font-weight: 600;
@@ -510,34 +510,34 @@
 // Section styling with icons
 .wh40k-item-card__section--effect {
     .wh40k-item-card__section-title {
-        color: #9b59b6;
+        color: var(--wh40k-accent-psychic);
 
         i {
-            color: #9b59b6;
+            color: var(--wh40k-accent-psychic);
         }
     }
 
     .wh40k-item-card__effect-text {
         padding: var(--wh40k-space-sm);
-        background: linear-gradient(135deg, rgba(#9b59b6, 0.08), transparent);
-        border-left: 3px solid rgba(#9b59b6, 0.4);
+        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.08)'}, transparent);
+        border-left: 3px solid #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.4)'};
         border-radius: 0 var(--wh40k-radius-sm) var(--wh40k-radius-sm) 0;
     }
 }
 
 .wh40k-item-card__section--benefit {
     .wh40k-item-card__section-title {
-        color: #27ae60;
+        color: var(--wh40k-accent-green);
 
         i {
-            color: #27ae60;
+            color: var(--wh40k-accent-green);
         }
     }
 
     .wh40k-item-card__benefit-text {
         padding: var(--wh40k-space-sm);
-        background: linear-gradient(135deg, rgba(#27ae60, 0.08), transparent);
-        border-left: 3px solid rgba(#27ae60, 0.4);
+        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-green) r g b / 0.08)'}, transparent);
+        border-left: 3px solid #{'rgb(from var(--wh40k-accent-green) r g b / 0.4)'};
         border-radius: 0 var(--wh40k-radius-sm) var(--wh40k-radius-sm) 0;
     }
 }
@@ -558,7 +558,7 @@
 .wh40k-requirements__label {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
     font-weight: 700;
     color: #e67e22;
 
@@ -611,7 +611,7 @@
     position: relative;
     background: var(--wh40k-movement-bg);
     border: 2px solid var(--wh40k-movement-border);
-    border-radius: 4px;
+    border-radius: var(--wh40k-radius-md);
     overflow: hidden;
     font-family: var(--wh40k-font-ui);
     color: var(--wh40k-movement-text);
@@ -620,7 +620,7 @@
     .wh40k-card-header {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: var(--wh40k-space-md);
         padding: 12px;
         background: linear-gradient(135deg, rgba(138, 122, 106, 0.15) 0%, transparent 100%);
         border-bottom: 1px solid var(--wh40k-border-color);
@@ -672,14 +672,14 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
+        gap: var(--wh40k-space-md);
         margin-bottom: 8px;
     }
 
     .wh40k-movement-value {
         display: flex;
         align-items: baseline;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
 
         .wh40k-movement-distance {
             font-family: var(--wh40k-font-alt);
@@ -702,7 +702,7 @@
         align-items: center;
         gap: 6px;
         padding: 6px 12px;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
@@ -717,7 +717,7 @@
         padding: 8px 12px;
         background: rgba(138, 122, 106, 0.08);
         border-left: 3px solid rgba(138, 122, 106, 0.3);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 0.8rem;
         line-height: 1.5;
         color: var(--wh40k-text-medium);
@@ -726,12 +726,12 @@
     // Movement type specific styling
     &--half {
         .wh40k-card-icon-wrapper i {
-            color: #27ae60;
+            color: var(--wh40k-accent-green);
         }
         .wh40k-movement-type-badge {
-            background: rgba(#27ae60, 0.15);
+            background: #{'rgb(from var(--wh40k-accent-green) r g b / 0.15)'};
             color: #19703e;
-            border: 1px solid rgba(#27ae60, 0.3);
+            border: 1px solid #{'rgb(from var(--wh40k-accent-green) r g b / 0.3)'};
         }
     }
 
