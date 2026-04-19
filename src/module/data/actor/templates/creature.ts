@@ -251,7 +251,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @returns {SchemaField}
      */
     static SkillField(label: string, charShort: string, advanced = false, hasEntries = false): any {
-        const schema: Record<string, any> = {
+        const schema: Record<string, unknown> = {
             label: new StringField({ required: true, initial: label }),
             characteristic: new StringField({ required: true, initial: charShort }),
             advanced: new BooleanField({ required: true, initial: advanced }),
@@ -488,7 +488,7 @@ export default class CreatureTemplate extends CommonTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         CreatureTemplate.#migrateSize(source);
         CreatureTemplate.#migrateWounds(source);
@@ -505,9 +505,9 @@ export default class CreatureTemplate extends CommonTemplate {
      * from origin path items + the advance field (XP purchases).
      * @param {object} source - The source data
      */
-    static #migrateSkillsToAdvance(source: Record<string, any>): void {
+    static #migrateSkillsToAdvance(source: Record<string, unknown>): void {
         if (!source.skills) return;
-        for (const skill of Object.values(source.skills as Record<string, any>)) {
+        for (const skill of Object.values(source.skills as Record<string, unknown>)) {
             // If advance field already exists, skip this skill
             if (skill.advance !== undefined) continue;
 
@@ -537,7 +537,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * Migrate size from string to integer.
      * @param {object} source - The source data
      */
-    static #migrateSize(source: Record<string, any>): void {
+    static #migrateSize(source: Record<string, unknown>): void {
         if (source.size !== undefined && typeof source.size === 'string') {
             const sizeMap = {
                 miniscule: 1,
@@ -562,7 +562,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * Migrate wounds values to integers.
      * @param {object} source - The source data
      */
-    static #migrateWounds(source: Record<string, any>): void {
+    static #migrateWounds(source: Record<string, unknown>): void {
         if (source.wounds) {
             if (source.wounds.max !== undefined) source.wounds.max = this._toInt(source.wounds.max);
             if (source.wounds.value !== undefined) source.wounds.value = this._toInt(source.wounds.value);
@@ -574,7 +574,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * Migrate fatigue values to integers.
      * @param {object} source - The source data
      */
-    static #migrateFatigue(source: Record<string, any>): void {
+    static #migrateFatigue(source: Record<string, unknown>): void {
         if (source.fatigue) {
             if (source.fatigue.max !== undefined) source.fatigue.max = this._toInt(source.fatigue.max);
             if (source.fatigue.value !== undefined) source.fatigue.value = this._toInt(source.fatigue.value);
@@ -585,9 +585,9 @@ export default class CreatureTemplate extends CommonTemplate {
      * Migrate characteristic values to integers.
      * @param {object} source - The source data
      */
-    static #migrateCharacteristics(source: Record<string, any>): void {
+    static #migrateCharacteristics(source: Record<string, unknown>): void {
         if (source.characteristics) {
-            for (const char of Object.values(source.characteristics as Record<string, any>)) {
+            for (const char of Object.values(source.characteristics as Record<string, unknown>)) {
                 if (char.base !== undefined) char.base = this._toInt(char.base);
                 if (char.advance !== undefined) char.advance = this._toInt(char.advance);
                 if (char.modifier !== undefined) char.modifier = this._toInt(char.modifier);
@@ -601,7 +601,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * Migrate fate values to integers.
      * @param {object} source - The source data
      */
-    static #migrateFate(source: Record<string, any>): void {
+    static #migrateFate(source: Record<string, unknown>): void {
         if (source.fate) {
             if (source.fate.max !== undefined) source.fate.max = this._toInt(source.fate.max);
             if (source.fate.value !== undefined) source.fate.value = this._toInt(source.fate.value);
@@ -612,7 +612,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * Migrate psy values to integers.
      * @param {object} source - The source data
      */
-    static #migratePsy(source: Record<string, any>): void {
+    static #migratePsy(source: Record<string, unknown>): void {
         if (source.psy) {
             if (source.psy.rating !== undefined) source.psy.rating = this._toInt(source.psy.rating);
             if (source.psy.sustained !== undefined) source.psy.sustained = this._toInt(source.psy.sustained);
@@ -625,7 +625,7 @@ export default class CreatureTemplate extends CommonTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static _cleanData(source: Record<string, any> | undefined, options: Record<string, unknown> = {}): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown> = {}): void {
         super._cleanData?.(source, options);
         CreatureTemplate.#cleanSize(source);
         CreatureTemplate.#cleanWounds(source);
@@ -638,7 +638,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * Clean size field - ensure it's an integer.
      * @param {object} source - The source data
      */
-    static #cleanSize(source: Record<string, any> | undefined): void {
+    static #cleanSize(source: Record<string, unknown> | undefined): void {
         if (source?.size !== undefined) {
             if (source.size === '' || source.size === null) {
                 delete source.size; // Use schema default
@@ -666,7 +666,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * Clean wounds fields - convert to proper integers.
      * @param {object} source - The source data
      */
-    static #cleanWounds(source: Record<string, any> | undefined): void {
+    static #cleanWounds(source: Record<string, unknown> | undefined): void {
         if (source?.wounds) {
             if (source.wounds.max !== undefined) {
                 source.wounds.max = this._toInt(source.wounds.max, 0);
@@ -684,7 +684,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * Clean fatigue fields.
      * @param {object} source - The source data
      */
-    static #cleanFatigue(source: Record<string, any> | undefined): void {
+    static #cleanFatigue(source: Record<string, unknown> | undefined): void {
         if (source?.fatigue) {
             if (source.fatigue.max !== undefined) {
                 source.fatigue.max = this._toInt(source.fatigue.max, 0);
@@ -699,7 +699,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * Clean fate fields.
      * @param {object} source - The source data
      */
-    static #cleanFate(source: Record<string, any> | undefined): void {
+    static #cleanFate(source: Record<string, unknown> | undefined): void {
         if (source?.fate) {
             if (source.fate.max !== undefined) {
                 source.fate.max = this._toInt(source.fate.max, 0);
@@ -714,7 +714,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * Clean psy fields.
      * @param {object} source - The source data
      */
-    static #cleanPsy(source: Record<string, any> | undefined): void {
+    static #cleanPsy(source: Record<string, unknown> | undefined): void {
         if (source?.psy) {
             if (source.psy.rating !== undefined) {
                 source.psy.rating = this._toInt(source.psy.rating, 0);
@@ -842,7 +842,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @protected
      */
     _prepareCharacteristics(): void {
-        for (const [, char] of Object.entries(this.characteristics as Record<string, any>)) {
+        for (const [, char] of Object.entries(this.characteristics as Record<string, unknown>)) {
             // Calculate total: base + (advance * 5) + modifier
             char.total = char.base + char.advance * 5 + char.modifier;
 
@@ -873,7 +873,7 @@ export default class CreatureTemplate extends CommonTemplate {
         const systemConfig = gameSystem ? SystemConfigRegistry.getOrNull(gameSystem) : null;
         const visibleSkills = systemConfig?.getVisibleSkills() ?? null;
 
-        for (const [key, skill] of Object.entries(this.skills as Record<string, any>)) {
+        for (const [key, skill] of Object.entries(this.skills as Record<string, unknown>)) {
             // Set visibility based on game system
             if (visibleSkills) {
                 skill.hidden = !visibleSkills.has(key);
@@ -1054,7 +1054,7 @@ export default class CreatureTemplate extends CommonTemplate {
         // Collect origin path modifier sources for tooltip transparency
         this._registerOriginPathModifierSources();
 
-        for (const [name, char] of Object.entries(this.characteristics as Record<string, any>)) {
+        for (const [name, char] of Object.entries(this.characteristics as Record<string, unknown>)) {
             const originPathMod = this._getOriginPathCharacteristicModifier(name);
             const itemMod = this._getTotalCharacteristicModifier(name);
             const totalMod = originPathMod + itemMod;
@@ -1103,7 +1103,7 @@ export default class CreatureTemplate extends CommonTemplate {
         // Recalculate skills from updated characteristic totals (which now include item modifiers)
         this._prepareSkills();
 
-        for (const [skillKey, skill] of Object.entries(this.skills as Record<string, any>)) {
+        for (const [skillKey, skill] of Object.entries(this.skills as Record<string, unknown>)) {
             const itemMod = this._getTotalSkillModifier(skillKey);
             if (itemMod !== 0) {
                 skill.itemModifier = itemMod;
@@ -1439,7 +1439,7 @@ export default class CreatureTemplate extends CommonTemplate {
         const data = super.getRollData();
 
         // Add characteristic values and bonuses for formulas
-        for (const [key, char] of Object.entries(this.characteristics as Record<string, any>)) {
+        for (const [key, char] of Object.entries(this.characteristics as Record<string, unknown>)) {
             data[char.short] = char.total;
             data[`${char.short}B`] = char.bonus;
             data[key] = char.total;

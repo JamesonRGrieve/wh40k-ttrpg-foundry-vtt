@@ -64,7 +64,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _applyGrant(actor: any, data: any, options: Record<string, any>, result: any): Promise<void> {
+    async _applyGrant(actor: any, data: any, options: Record<string, unknown>, result: any): Promise<void> {
         const items = this.items ?? [];
         if (items.length === 0) {
             result.notifications.push('Item grant has no items to apply');
@@ -200,7 +200,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    getAutomaticValue(): Record<string, any> | false {
+    getAutomaticValue(): Record<string, unknown> | false {
         if (this.optional) return false;
         if (this.items.some((i) => i.optional)) return false;
         return { selected: this.items.map((i) => i.uuid) };

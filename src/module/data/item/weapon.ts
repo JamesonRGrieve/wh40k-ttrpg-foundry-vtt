@@ -130,7 +130,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         WeaponData.#migrateSpecial(source);
         WeaponData.#migrateClass(source);
@@ -141,7 +141,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Ensure special is an array for SetField compatibility.
      * @param {object} source  The source data
      */
-    static #migrateSpecial(source: Record<string, any>): void {
+    static #migrateSpecial(source: Record<string, unknown>): void {
         if (!Array.isArray(source.special)) {
             source.special = source.special ? Array.from(source.special) : [];
         }
@@ -151,7 +151,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate old class values (chain, power, shock, force) to type field.
      * @param {object} source  The source data
      */
-    static #migrateClass(source: Record<string, any>): void {
+    static #migrateClass(source: Record<string, unknown>): void {
         const techTypeValues = ['chain', 'power', 'shock', 'force'];
         if (source.class && techTypeValues.includes(source.class)) {
             source.type = source.class;
@@ -163,7 +163,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate proficiency -> requiredTraining.
      * @param {object} source  The source data
      */
-    static #migrateProficiency(source: Record<string, any>): void {
+    static #migrateProficiency(source: Record<string, unknown>): void {
         if (source.proficiency !== undefined) {
             source.requiredTraining = source.proficiency;
             delete source.proficiency;
@@ -501,7 +501,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * For ranged weapons only.
      * @type {object}
      */
-    get effectiveRange(): Record<string, any> {
+    get effectiveRange(): Record<string, unknown> {
         if (!this.attack?.range) return null;
 
         const baseRange = this.attack.range.value || 0;
@@ -630,7 +630,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         };
         // Access schema field via index — at runtime, the instance property (schema field)
         // shadows the prototype method, but TS sees the method. Cast through unknown.
-        const reloadTime = (this as Record<string, any>)['reload'] as string;
+        const reloadTime = (this as Record<string, unknown>)['reload'] as string;
         return labels[reloadTime] ?? reloadTime;
     }
 
@@ -641,7 +641,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      */
     get effectiveReloadTime() {
         // Access schema field via index — see reloadLabel comment
-        const baseReload = (this as Record<string, any>)['reload'] as string;
+        const baseReload = (this as Record<string, unknown>)['reload'] as string;
 
         // Check for Customised quality
         if (!this.effectiveSpecial?.has('customised')) {

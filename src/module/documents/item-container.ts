@@ -43,7 +43,7 @@ export class WH40KItemContainer extends Item {
         return await this.setFlag(SYSTEM_ID, DH_CONTAINER_ID, dataArray);
     }
 
-    getNested(): any[] {
+    getNested(): unknown[] {
         // @ts-expect-error - argument type
         return this.getFlag(SYSTEM_ID, DH_CONTAINER_ID) ?? [];
     }
@@ -63,7 +63,7 @@ export class WH40KItemContainer extends Item {
         game.wh40k.log(`Item ${this.name as string} items:`, this.items);
     }
 
-    static async _onCreateOperation(items: any[], context: any, user: any): Promise<any> {
+    static async _onCreateOperation(items: unknown[], context: any, user: any): Promise<any> {
         // Parent is not an item -- ignore
         if (!(context.parent instanceof Item)) return super._onCreateOperation(items, context, user);
         // None of the items being created are containers -- ignore
@@ -122,7 +122,7 @@ export class WH40KItemContainer extends Item {
         }
     }
 
-    async deleteNestedDocuments(ids: string[] = []): Promise<any[]> {
+    async deleteNestedDocuments(ids: string[] = []): Promise<unknown[]> {
         game.wh40k.log(`ItemContainer: ${this.name as string} deleteNestedDocuments`, ids);
         const containedItems = this.getNested();
         const newContained = containedItems.filter((itemData) => !ids.includes(itemData._id));
@@ -131,7 +131,7 @@ export class WH40KItemContainer extends Item {
         return deletedItems;
     }
 
-    async updateNestedDocuments(data: Record<string, unknown> | Record<string, unknown>[]): Promise<any[]> {
+    async updateNestedDocuments(data: Record<string, unknown> | Record<string, unknown>[]): Promise<unknown[]> {
         const contained = this.getNested();
         const dataArray = Array.isArray(data) ? data : [data];
         game.wh40k.log(`ItemContainer: ${this.name as string} updateNestedDocuments`, dataArray);

@@ -80,7 +80,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @type {object|null}
          * @private
          */
-        _draggedItem: Record<string, any> | null = null;
+        _draggedItem: Record<string, unknown> | null = null;
 
         /**
          * Track the drag start position
@@ -679,7 +679,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          */
         async _reorderItems(sourceId: string, targetId: string, clientY: number): Promise<void> {
             // Get all items in order
-            const items: any[] = Array.from(this.document.items);
+            const items: unknown[] = Array.from(this.document.items);
 
             // Find source and target
             const sourceIndex = items.findIndex((i: any) => i.id === sourceId);
@@ -850,7 +850,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @returns {Item[]}  Array of favorite items
          * @public
          */
-        getFavoriteItems(): any[] {
+        getFavoriteItems(): unknown[] {
             const favorites = this.document.getFlag('wh40k-rpg', 'favorites') || [];
             return favorites.map((id) => this.document.items.get(id)).filter((i) => i);
         }

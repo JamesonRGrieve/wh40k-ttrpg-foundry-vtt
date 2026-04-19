@@ -99,21 +99,21 @@ export class WH40KStarship extends WH40KBaseActor {
     /**
      * Get all ship components
      */
-    get shipComponents(): any[] {
+    get shipComponents(): unknown[] {
         return this.items.filter((i) => (i.type as string) === 'shipComponent');
     }
 
     /**
      * Get all ship weapons
      */
-    get shipWeapons(): any[] {
+    get shipWeapons(): unknown[] {
         return this.items.filter((i) => (i.type as string) === 'shipWeapon');
     }
 
     /**
      * Get all ship upgrades
      */
-    get shipUpgrades(): any[] {
+    get shipUpgrades(): unknown[] {
         return this.items.filter((i) => (i.type as string) === 'shipUpgrade');
     }
 

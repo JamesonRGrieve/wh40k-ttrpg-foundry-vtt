@@ -63,7 +63,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         ArmourModificationData.#migrateArmourTypes(source);
         ArmourModificationData.#migrateArmourModifier(source);
@@ -75,7 +75,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         ArmourModificationData.#initializeDefaults(source);
     }
 
-    static #migrateArmourTypes(source: Record<string, any>): void {
+    static #migrateArmourTypes(source: Record<string, unknown>): void {
         if (typeof source.armourTypes === 'string') {
             source.restrictions ??= {};
             source.restrictions.armourTypes = ArmourModificationData.#parseArmourTypes(source.armourTypes);
@@ -83,7 +83,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #migrateArmourModifier(source: Record<string, any>): void {
+    static #migrateArmourModifier(source: Record<string, unknown>): void {
         if (typeof source.armourModifier === 'number') {
             source.modifiers ??= {};
             source.modifiers.armourPoints = source.armourModifier;
@@ -91,7 +91,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #extractAPFromEffect(source: Record<string, any>): void {
+    static #extractAPFromEffect(source: Record<string, unknown>): void {
         if ((!source.modifiers?.armourPoints || source.modifiers.armourPoints === 0) && source.effect) {
             const extracted = ArmourModificationData.#extractAPModifier(source.effect);
             if (extracted > 0) {
@@ -101,7 +101,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #migrateMaxDexBonus(source: Record<string, any>): void {
+    static #migrateMaxDexBonus(source: Record<string, unknown>): void {
         if (typeof source.maxDexBonus === 'number') {
             source.modifiers ??= {};
             source.modifiers.maxAgility = source.maxDexBonus;
@@ -109,7 +109,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #extractAgilityFromEffect(source: Record<string, any>): void {
+    static #extractAgilityFromEffect(source: Record<string, unknown>): void {
         if ((!source.modifiers?.maxAgility || source.modifiers.maxAgility === 0) && source.effect) {
             const extracted = ArmourModificationData.#extractAgilityModifier(source.effect);
             if (extracted !== 0) {
@@ -119,7 +119,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #migrateWeight(source: Record<string, any>): void {
+    static #migrateWeight(source: Record<string, unknown>): void {
         if (typeof source.weight === 'string') {
             source.modifiers ??= {};
             source.modifiers.weight = ArmourModificationData.#parseWeight(source.weight);
@@ -127,7 +127,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #cleanupModifiers(source: Record<string, any>): void {
+    static #cleanupModifiers(source: Record<string, unknown>): void {
         if (source.modifiers?.characteristics) {
             delete source.modifiers.characteristics;
         }
@@ -136,7 +136,7 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         }
     }
 
-    static #initializeDefaults(source: Record<string, any>): void {
+    static #initializeDefaults(source: Record<string, unknown>): void {
         source.addedProperties ??= [];
         source.removedProperties ??= [];
         source.restrictions ??= { armourTypes: ['any'] };

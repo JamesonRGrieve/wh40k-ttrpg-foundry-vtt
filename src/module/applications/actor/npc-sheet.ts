@@ -176,7 +176,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, any>): Promise<Record<string, any>> {
+    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         // Let CharacterSheet populate favoriteSkills, favoriteTalents,
         // equippedWeapons, loadout data, combat data, and the rest of the PC
         // fields the shared player/*.hbs templates read.
@@ -234,7 +234,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareCharacteristicsContext(context: Record<string, any>): void {
+    _prepareCharacteristicsContext(context: Record<string, unknown>): void {
         const chars = context.system.characteristics || {};
         const charArray = [];
 
@@ -267,7 +267,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareWeaponsContext(context: Record<string, any>): void {
+    _prepareWeaponsContext(context: Record<string, unknown>): void {
         // Embedded weapons (from items dragged onto the NPC)
         context.embeddedWeapons = context.items.filter((i) => i.type === 'weapon');
     }
@@ -279,7 +279,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareHordeContext(context: Record<string, any>): void {
+    _prepareHordeContext(context: Record<string, unknown>): void {
         const horde = context.system.horde || {};
         const isHorde = context.system.isHorde;
 
@@ -311,7 +311,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * weapons, horde/threat/barter state for the npc tab).
      * @override
      */
-    async _preparePartContext(partId: string, context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const partContext = await super._preparePartContext(partId, context, options);
 
         // The npc tab isn't in CharacterSheet's switch — set tab metadata by hand.
@@ -360,7 +360,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareOverviewContext(context: Record<string, any>): void {
+    _prepareOverviewContext(context: Record<string, unknown>): void {
         // Ensure items array exists
         if (!context.items) {
             context.items = Array.from(this.actor.items);
@@ -460,7 +460,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareCombatContext(context: Record<string, any>): void {
+    _prepareCombatContext(context: Record<string, unknown>): void {
         const tb = context.system.characteristics?.toughness?.bonus ?? 0;
         context.toughnessBonus = tb;
 
@@ -524,7 +524,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareSkillsContext(context: Record<string, any>): void {
+    _prepareSkillsContext(context: Record<string, unknown>): void {
         // Get trained skills list from data model
         context.trainedSkillsList = context.system.trainedSkillsList || [];
 
@@ -647,7 +647,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareAbilitiesContext(context: Record<string, any>): void {
+    _prepareAbilitiesContext(context: Record<string, unknown>): void {
         // Ensure items array exists
         if (!context.items) {
             context.items = Array.from(this.actor.items);
@@ -685,7 +685,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareNotesContext(context: Record<string, any>): void {
+    _prepareNotesContext(context: Record<string, unknown>): void {
         // Tags
         context.tags = context.system.tags || [];
 
@@ -1159,7 +1159,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
     static async #setupToken(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const npc = (this as any).actor;
-        const updates: Record<string, any> = {};
+        const updates: Record<string, unknown> = {};
 
         // Size-based dimensions
         const sizeMap = {
@@ -1651,7 +1651,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareCharacteristicsHUD(context: Record<string, any>): void {
+    _prepareCharacteristicsHUD(context: Record<string, unknown>): void {
         // NPCSheet uses its own characteristic preparation
         // Skip the parent implementation
     }
@@ -1666,7 +1666,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * indicators, current target, and tooltip data.
      * @override
      */
-    _prepareSkills(context: Record<string, any>): void {
+    _prepareSkills(context: Record<string, unknown>): void {
         const actor: any = this.actor;
         const characteristics = actor.system?.characteristics ?? {};
         const trainedSkills = actor.system?.trainedSkills ?? {};
@@ -1743,7 +1743,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareItems(context: Record<string, any>): void {
+    _prepareItems(context: Record<string, unknown>): void {
         // NPCSheet uses simplified item system
         context.talents = context.items.filter((i) => i.type === 'talent');
         context.traits = context.items.filter((i) => i.type === 'trait');

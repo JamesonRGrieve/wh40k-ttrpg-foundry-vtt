@@ -432,7 +432,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
          * @returns {Document[]}
          * @protected
          */
-        _sortChildren(collection: string, mode: string): any[] {
+        _sortChildren(collection: string, mode: string): unknown[] {
             return [];
         }
 
@@ -445,7 +445,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
          * @returns {Item[]}
          * @protected
          */
-        _sortItems(items: any[], mode: string): any[] {
+        _sortItems(items: unknown[], mode: string): unknown[] {
             return items.sort((a, b) => a.sort - b.sort);
         }
     };

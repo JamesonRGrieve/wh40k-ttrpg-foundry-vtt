@@ -84,7 +84,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * NPCs in the current encounter.
      * @type {Array<{uuid: string, name: string, img: string, threat: number, count: number}>}
      */
-    #npcs: any[] = [];
+    #npcs: unknown[] = [];
 
     /**
      * Party configuration.
@@ -99,7 +99,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Saved templates.
      * @type {Array<{name: string, npcs: Array}>}
      */
-    #templates: any[] = [];
+    #templates: unknown[] = [];
 
     /* -------------------------------------------- */
     /*  Singleton Pattern                           */
@@ -137,7 +137,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         // Calculate encounter metrics
@@ -201,7 +201,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     }
 
     /** @override */
-    _onRender(context: any, options: any): any {
+    _onRender(context: any, options: Record<string, unknown>): any {
         void super._onRender(context, options);
 
         // Party configuration inputs
@@ -515,7 +515,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             combat = await (Combat as any).create({ scene: (game as any).scenes.active?.id } as any);
         }
 
-        const combatants: any[] = [];
+        const combatants: unknown[] = [];
 
         for (const npcEntry of this.#npcs) {
             const actor = await (fromUuid as any)(npcEntry.uuid);

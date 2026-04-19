@@ -39,7 +39,7 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
     // ── Career Lookup (abstract — subclasses provide data) ───────
 
     /** Get the career module registry for this system */
-    abstract getCareerRegistry(): Record<string, any>;
+    abstract getCareerRegistry(): Record<string, unknown>;
 
     /** Resolve the character's career key from actor data */
     abstract resolveCareerKey(actor: any): string | null;

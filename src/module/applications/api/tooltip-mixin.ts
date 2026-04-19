@@ -59,7 +59,7 @@ export default function TooltipMixin<T extends new (...args: any[]) => any>(Base
          * @param {Array} [equipped]    Equipped armor pieces.
          * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
-        prepareArmorTooltip(location: string, armorData: Record<string, unknown>, equipped: any[] = []): string {
+        prepareArmorTooltip(location: string, armorData: Record<string, unknown>, equipped: unknown[] = []): string {
             return prepareArmorTooltipData(location, armorData, equipped);
         }
 
@@ -82,7 +82,7 @@ export default function TooltipMixin<T extends new (...args: any[]) => any>(Base
          * @param {Array} sources   Modifier sources.
          * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
-        prepareModifierTooltip(title: string, sources: any[]): string {
+        prepareModifierTooltip(title: string, sources: unknown[]): string {
             return prepareModifierTooltipData(title, sources);
         }
 

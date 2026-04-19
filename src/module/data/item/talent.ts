@@ -151,7 +151,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         TalentData.#migratePrerequisites(source);
         TalentData.#migrateAptitudes(source);
@@ -162,7 +162,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate flat prerequisites string to structured object.
      * @param {object} source  The source data
      */
-    static #migratePrerequisites(source: Record<string, any>): void {
+    static #migratePrerequisites(source: Record<string, unknown>): void {
         if (typeof source.prerequisites === 'string') {
             source.prerequisites = {
                 text: source.prerequisites,
@@ -177,7 +177,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate flat aptitudes string to array.
      * @param {object} source  The source data
      */
-    static #migrateAptitudes(source: Record<string, any>): void {
+    static #migrateAptitudes(source: Record<string, unknown>): void {
         if (typeof source.aptitudes === 'string' && source.aptitudes) {
             source.aptitudes = source.aptitudes
                 .split(',')
@@ -190,7 +190,7 @@ export default class TalentData extends ItemDataModel.mixin(DescriptionTemplate,
      * Infer hasSpecialization from existing specialization value.
      * @param {object} source  The source data
      */
-    static #migrateSpecialization(source: Record<string, any>): void {
+    static #migrateSpecialization(source: Record<string, unknown>): void {
         if (source.hasSpecialization === undefined && source.specialization) {
             source.hasSpecialization = !!source.specialization.trim();
         }

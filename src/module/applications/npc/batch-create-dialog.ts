@@ -101,7 +101,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {Object} [config] - Initial configuration.
      * @param {Object} [options] - Application options.
      */
-    constructor(config = {}, options: any = {}) {
+    constructor(config = {}, options: Record<string, unknown> = {}) {
         super(options);
         Object.assign(this.#state, config);
     }
@@ -111,7 +111,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         // Get options
@@ -155,7 +155,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
-    _onRender(context: any, options: any): any {
+    _onRender(context: any, options: Record<string, unknown>): any {
         void super._onRender(context, options);
 
         const form = this.element;
@@ -292,7 +292,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 const variance = this.#state.randomizeAmount / 100;
 
                 // Randomize characteristics
-                for (const char of Object.values(systemData.characteristics) as any[]) {
+                for (const char of Object.values(systemData.characteristics) as unknown[]) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
                     char.total = char.base + char.modifier;
@@ -353,7 +353,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: any = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<any> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
         if (!this.#submitted && this.#resolve) {
@@ -432,7 +432,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
             if (randomize) {
                 const variance = (randomizeAmount as number) / 100;
-                for (const char of Object.values(systemData.characteristics) as any[]) {
+                for (const char of Object.values(systemData.characteristics) as unknown[]) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
                     char.total = char.base + char.modifier;

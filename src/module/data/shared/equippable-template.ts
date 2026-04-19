@@ -31,7 +31,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         // Ensure boolean fields are proper booleans
         if (source.equipped !== undefined && typeof source.equipped !== 'boolean') {

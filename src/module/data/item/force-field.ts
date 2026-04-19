@@ -32,7 +32,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         // Migrate old overloadThreshold field to overloadMin/overloadMax
         if (source.overloadThreshold !== undefined && source.overloadMin === undefined) {
@@ -162,7 +162,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Get effective overload range (including craftsmanship).
      * @type {object}
      */
-    get effectiveOverloadRange(): Record<string, any> {
+    get effectiveOverloadRange(): Record<string, unknown> {
         const craftMods = this.craftsmanshipModifiers;
 
         // If item has explicit overload values, use those

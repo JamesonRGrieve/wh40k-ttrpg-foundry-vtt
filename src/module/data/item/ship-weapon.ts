@@ -84,7 +84,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         ShipWeaponData.#migratePowerUsage(source);
         ShipWeaponData.#migrateSpaceUsage(source);
@@ -96,35 +96,35 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         ShipWeaponData.#initializeSpecial(source);
     }
 
-    static #migratePowerUsage(source: Record<string, any>): void {
+    static #migratePowerUsage(source: Record<string, unknown>): void {
         if ('powerUsage' in source && source.power === undefined) {
             source.power = source.powerUsage;
             delete source.powerUsage;
         }
     }
 
-    static #migrateSpaceUsage(source: Record<string, any>): void {
+    static #migrateSpaceUsage(source: Record<string, unknown>): void {
         if ('spaceUsage' in source && source.space === undefined) {
             source.space = source.spaceUsage;
             delete source.spaceUsage;
         }
     }
 
-    static #migrateSpCost(source: Record<string, any>): void {
+    static #migrateSpCost(source: Record<string, unknown>): void {
         if ('spCost' in source && source.shipPoints === undefined) {
             source.shipPoints = source.spCost;
             delete source.spCost;
         }
     }
 
-    static #migrateCritRating(source: Record<string, any>): void {
+    static #migrateCritRating(source: Record<string, unknown>): void {
         if ('critRating' in source && source.crit === undefined) {
             source.crit = source.critRating;
             delete source.critRating;
         }
     }
 
-    static #migrateType(source: Record<string, any>): void {
+    static #migrateType(source: Record<string, unknown>): void {
         if ('type' in source) {
             if (!source.weaponType) {
                 const typeMap = {
@@ -145,7 +145,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         }
     }
 
-    static #migrateNumericFields(source: Record<string, any>): void {
+    static #migrateNumericFields(source: Record<string, unknown>): void {
         const numericFields = ['power', 'space', 'shipPoints', 'crit', 'strength'];
         for (const field of numericFields) {
             if (source[field] === '-' || source[field] === null || source[field] === undefined) {
@@ -157,7 +157,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         }
     }
 
-    static #migrateHullType(source: Record<string, any>): void {
+    static #migrateHullType(source: Record<string, unknown>): void {
         if (typeof source.hullType === 'string') {
             const types = source.hullType
                 .toLowerCase()
@@ -169,7 +169,7 @@ export default class ShipWeaponData extends ItemDataModel.mixin(DescriptionTempl
         }
     }
 
-    static #initializeSpecial(source: Record<string, any>): void {
+    static #initializeSpecial(source: Record<string, unknown>): void {
         if (!source.special) {
             source.special = [];
         }

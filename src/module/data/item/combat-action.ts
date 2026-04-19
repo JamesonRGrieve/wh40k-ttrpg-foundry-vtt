@@ -64,7 +64,7 @@ export default class CombatActionData extends ItemDataModel.mixin(DescriptionTem
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         // Ensure subtypes is an array for SetField compatibility
         if (!Array.isArray(source.subtypes)) {

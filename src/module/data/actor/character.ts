@@ -310,13 +310,13 @@ export default class CharacterData extends CreatureTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         // Handle old characteristic field names or other character-specific migrations
     }
 
     /** @inheritDoc */
-    static _cleanData(source: Record<string, any> | undefined, options: Record<string, unknown> = {}): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown> = {}): void {
         super._cleanData?.(source, options);
         CharacterData.#cleanExperience(source);
         CharacterData.#cleanMentalState(source);
@@ -327,7 +327,7 @@ export default class CharacterData extends CreatureTemplate {
      * Clean experience fields.
      * @param {object} source - The source data
      */
-    static #cleanExperience(source: Record<string, any> | undefined): void {
+    static #cleanExperience(source: Record<string, unknown> | undefined): void {
         if (source?.experience) {
             if (source.experience.used !== undefined) {
                 source.experience.used = this._toInt(source.experience.used);
@@ -360,7 +360,7 @@ export default class CharacterData extends CreatureTemplate {
      * Clean mental state fields.
      * @param {object} source - The source data
      */
-    static #cleanMentalState(source: Record<string, any> | undefined): void {
+    static #cleanMentalState(source: Record<string, unknown> | undefined): void {
         if (source?.insanity !== undefined) {
             source.insanity = this._toInt(source.insanity);
         }
@@ -379,7 +379,7 @@ export default class CharacterData extends CreatureTemplate {
      * Clean Rogue Trader / WH40K fields.
      * @param {object} source - The source data
      */
-    static #cleanRogueTrader(source: Record<string, any> | undefined): void {
+    static #cleanRogueTrader(source: Record<string, unknown> | undefined): void {
         const rt = source?.rogueTrader;
         if (!rt) return;
 

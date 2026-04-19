@@ -240,7 +240,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {object} context - The render context.
      * @protected
      */
-    _prepareItems(context: Record<string, any>): void {
+    _prepareItems(context: Record<string, unknown>): void {
         const weapons = [];
         const vehicleTraits = [];
         const vehicleUpgrades = [];

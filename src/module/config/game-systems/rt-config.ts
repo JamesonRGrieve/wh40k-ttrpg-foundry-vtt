@@ -16,7 +16,7 @@ import * as WH40K from '../advancements/wh40k-rpg.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { OriginStepConfig } from './types.ts';
 
-const RT_CAREER_REGISTRY: Record<string, any> = {
+const RT_CAREER_REGISTRY: Record<string, unknown> = {
     rogueTrader: WH40K,
     archMilitant: ArchMilitant,
     astropath: Astropath,
@@ -60,7 +60,7 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
         };
     }
 
-    getCareerRegistry(): Record<string, any> {
+    getCareerRegistry(): Record<string, unknown> {
         return RT_CAREER_REGISTRY;
     }
 

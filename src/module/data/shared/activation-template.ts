@@ -66,7 +66,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         ActivationTemplate.#migrateUses(source);
     }
@@ -75,7 +75,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * Migrate legacy uses formats.
      * @param {object} source  The source data
      */
-    static #migrateUses(source: Record<string, any>): void {
+    static #migrateUses(source: Record<string, unknown>): void {
         if (!source.uses) return;
         // Convert string values to numbers
         if (typeof source.uses.value === 'string') {

@@ -96,7 +96,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @param {Actor} actor - The character actor
      * @param {object} options - Application options
      */
-    constructor(actor, options: Record<string, any> = {}) {
+    constructor(actor, options: Record<string, unknown> = {}) {
         super(options);
         this.actor = actor;
         this.gameSystem = options.gameSystem || 'rt';
@@ -353,7 +353,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Load from all configured packs for this game system
         const packNames = this.systemConfig.packs;
         const optionalStepIndex = this.systemConfig.optionalStep?.stepIndex;
-        const allOriginPaths: any[] = [];
+        const allOriginPaths: unknown[] = [];
 
         for (const packName of packNames) {
             // Try fully qualified ID first, then metadata.name fallback
@@ -385,7 +385,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         await this._loadOrigins();
 
         const currentStep = this.currentStep;
@@ -664,8 +664,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Includes the current preview when it would replace the active step.
      * @private
      */
-    _getSelectionsForDerivedCalculations(): any[] {
-        const entries: any[] = [];
+    _getSelectionsForDerivedCalculations(): unknown[] {
+        const entries: unknown[] = [];
 
         for (const step of this.orderedSteps) {
             const selection = this.selections.get(step.step);
@@ -891,7 +891,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     /** @override */
-    async _onRender(context: any, options: any): Promise<void> {
+    async _onRender(context: any, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
         this._restoreScrollPosition();
         if (!this.showCharacteristics) return;
@@ -1168,7 +1168,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             .filter(Boolean);
     }
 
-    _dedupeOriginsByIdentity(origins: any[]): any[] {
+    _dedupeOriginsByIdentity(origins: unknown[]): unknown[] {
         const seen = new Set<string>();
         return origins.filter((origin) => {
             const key = [
@@ -1360,7 +1360,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTalentsWithTooltips(talents: any[]): Promise<any[]> {
+    async _prepareTalentsWithTooltips(talents: unknown[]): Promise<unknown[]> {
         const prepared = [];
         for (const talent of talents) {
             let tooltipText = talent.name;
@@ -1400,7 +1400,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTraitsWithTooltips(traits: any[]): Promise<any[]> {
+    async _prepareTraitsWithTooltips(traits: unknown[]): Promise<unknown[]> {
         const prepared = [];
         for (const trait of traits) {
             let tooltipText = trait.name;
@@ -1666,13 +1666,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         // Convert maps to arrays (preserving UUIDs)
         preview.skills = await Promise.all(
-            Array.from(skillMap.values()).map(async (skill: Record<string, any>) => ({
+            Array.from(skillMap.values()).map(async (skill: Record<string, unknown>) => ({
                 ...skill,
                 tooltipData: await this._prepareGrantTooltipData(skill.name, skill.uuid || null),
             })),
         );
         preview.talents = await Promise.all(
-            Array.from(talentMap.values()).map(async (talent: Record<string, any>) => ({
+            Array.from(talentMap.values()).map(async (talent: Record<string, unknown>) => ({
                 ...talent,
                 tooltipData: await this._prepareGrantTooltipData(talent.name, talent.uuid || null),
             })),
@@ -1719,7 +1719,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<void>}
      * @private
      */
-    async _addTalentModifiers(uuid: string, charTotals: Record<string, number>, skillMap: Record<string, any>): Promise<void> {
+    async _addTalentModifiers(uuid: string, charTotals: Record<string, number>, skillMap: Record<string, unknown>): Promise<void> {
         try {
             const talent = (await fromUuid(uuid)) as any;
             if (!talent) return;
@@ -2734,7 +2734,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const charAssignments = (this as any)._charAssignments;
             const hasCharRolls = charRolls.some((r) => r > 0) && CHARS.some((k) => charAssignments[k] !== null);
             if (hasCharRolls) {
-                const charUpdate: Record<string, any> = {
+                const charUpdate: Record<string, unknown> = {
                     'system.characterGeneration.rolls': charRolls,
                     'system.characterGeneration.assignments': charAssignments,
                     'system.characterGeneration.customBases.enabled': (this as any)._charAdvancedMode,
@@ -2751,7 +2751,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
 
             // Apply divination, thrones, and influence
-            const resourceUpdate: Record<string, any> = {};
+            const resourceUpdate: Record<string, unknown> = {};
             if ((this as any)._divination) resourceUpdate['system.originPath.divination'] = (this as any)._divination;
             if ((this as any)._thronesRolled) resourceUpdate['system.throneGelt'] = (this as any)._thronesRolled;
             if ((this as any)._influenceRolled) resourceUpdate['system.influence'] = (this as any)._influenceRolled;

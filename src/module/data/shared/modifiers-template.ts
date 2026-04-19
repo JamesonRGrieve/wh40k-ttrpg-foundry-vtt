@@ -254,7 +254,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         ModifiersTemplate.#migrateModifiers(source);
     }
@@ -263,7 +263,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * Migrate legacy modifier formats.
      * @param {object} source  The source data
      */
-    static #migrateModifiers(source: Record<string, any>): void {
+    static #migrateModifiers(source: Record<string, unknown>): void {
         if (!source.modifiers) return;
 
         // Ensure nested objects exist
@@ -411,7 +411,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * Get situational modifiers as a structured list.
      * @type {object}
      */
-    get situationalModifiers(): Record<string, any> {
+    get situationalModifiers(): Record<string, unknown> {
         const situational = (this.modifiers as any).situational || {};
         return {
             characteristics: situational.characteristics || [],

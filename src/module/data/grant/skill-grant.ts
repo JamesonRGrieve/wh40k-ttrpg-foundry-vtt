@@ -68,7 +68,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _applyGrant(actor: any, data: any, options: Record<string, any>, result: any): Promise<void> {
+    async _applyGrant(actor: any, data: any, options: Record<string, unknown>, result: any): Promise<void> {
         const selectedSkills = data.selected ?? this.skills.map((s) => this._getSkillKey(s));
         const updates = {};
 
@@ -342,7 +342,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    getAutomaticValue(): Record<string, any> | false {
+    getAutomaticValue(): Record<string, unknown> | false {
         if (this.optional) return false;
         if (this.skills.some((s) => s.optional)) return false;
         return { selected: this.skills.map((s) => this._getSkillKey(s)) };

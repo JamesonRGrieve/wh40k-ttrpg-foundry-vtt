@@ -77,7 +77,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {object} options - Additional options
      * @param {string} [options.careerKey] - Career key for advancement options
      */
-    constructor(actor, options: any = {}) {
+    constructor(actor, options: Record<string, unknown> = {}) {
         super(options);
         this.actor = actor;
         this.careerKey = options.careerKey ?? 'rogueTrader';
@@ -116,7 +116,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         // Get system config early — determines career-based vs aptitude-based flow
@@ -256,7 +256,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {Array} advances - Array of advancement definitions
      * @returns {Array}
      */
-    #prepareAdvances(advances: any[]): any {
+    #prepareAdvances(advances: unknown[]): any {
         const available = getAvailableXP(this.actor);
 
         return advances.map((advance, index) => {
@@ -301,14 +301,14 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * Prepare skill advances for aptitude-based systems (DH2e, BC, OW).
      * Lists all visible skills with their current rank, next cost, and aptitude match count.
      */
-    #prepareAptitudeSkills(systemConfig: any): any[] {
+    #prepareAptitudeSkills(systemConfig: any): unknown[] {
         const available = getAvailableXP(this.actor);
         const actorSkills = this.actor.system.skills ?? {};
         const visibleSkills = systemConfig.getVisibleSkills?.() ?? new Set<string>();
         const skillConfigs = CONFIG.wh40k?.skills ?? {};
         const ranks = systemConfig.getSkillRanks();
 
-        const result: any[] = [];
+        const result: unknown[] = [];
 
         for (const skillKey of visibleSkills) {
             const config = skillConfigs[skillKey];
@@ -348,9 +348,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * Prepare talent advances for aptitude-based systems (DH2e, BC, OW).
      * Lists actor's existing talents that can be ranked up, plus a note about browsing compendiums.
      */
-    #prepareAptitudeTalents(systemConfig: any): any[] {
+    #prepareAptitudeTalents(systemConfig: any): unknown[] {
         const available = getAvailableXP(this.actor);
-        const result: any[] = [];
+        const result: unknown[] = [];
 
         // List existing talents that are stackable (can be ranked up)
         for (const item of this.actor.items) {

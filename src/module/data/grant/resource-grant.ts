@@ -83,7 +83,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _applyGrant(actor: any, data: any, options: Record<string, any>, result: any): Promise<void> {
+    async _applyGrant(actor: any, data: any, options: Record<string, unknown>, result: any): Promise<void> {
         const updates = {};
         const selectedResources = data.selected ?? this.resources.map((r) => r.type);
         const rolledValues = data.rolledValues ?? {};
@@ -183,7 +183,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    getAutomaticValue(): Record<string, any> | false {
+    getAutomaticValue(): Record<string, unknown> | false {
         // Resources with formulas typically need user confirmation
         // Only auto-apply if all are flat values
         if (this.optional) return false;

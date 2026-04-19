@@ -39,7 +39,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         ArmourData.#migrateArmourPoints(source);
         ArmourData.#migrateCoverage(source);
@@ -53,7 +53,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate `ap` → `armourPoints`.
      * @param {object} source  The source data
      */
-    static #migrateArmourPoints(source: Record<string, any>): void {
+    static #migrateArmourPoints(source: Record<string, unknown>): void {
         if (source.ap !== undefined && !ArmourData.#hasCustomArmourPoints(source)) {
             const parsed = ArmourData.#parseLegacyAP(source);
             if (parsed?.pointsByLocation) {
@@ -87,7 +87,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate `locations` → `coverage`.
      * @param {object} source  The source data
      */
-    static #migrateCoverage(source: Record<string, any>): void {
+    static #migrateCoverage(source: Record<string, unknown>): void {
         if (typeof source.locations === 'string' && !source.coverage) {
             const parsed = ArmourData.#parseLegacyLocations(source);
             if (parsed?.size) {
@@ -100,7 +100,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Migrate `maxAg` string → `maxAgility` number.
      * @param {object} source  The source data
      */
-    static #migrateMaxAgility(source: Record<string, any>): void {
+    static #migrateMaxAgility(source: Record<string, unknown>): void {
         if (source.maxAg !== undefined && source.maxAgility === undefined) {
             if (source.maxAg === '-' || source.maxAg === '' || source.maxAg === null) {
                 source.maxAgility = null;
@@ -115,7 +115,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Clean weight (remove "kg" suffix).
      * @param {object} source  The source data
      */
-    static #migrateWeight(source: Record<string, any>): void {
+    static #migrateWeight(source: Record<string, unknown>): void {
         if (typeof source.weight === 'string') {
             const cleaned = parseFloat(source.weight.replace(/[^\d.]/g, ''));
             if (!isNaN(cleaned)) source.weight = cleaned;
@@ -126,7 +126,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Ensure properties exists.
      * @param {object} source  The source data
      */
-    static #migrateProperties(source: Record<string, any>): void {
+    static #migrateProperties(source: Record<string, unknown>): void {
         if (!source.properties) {
             source.properties = [];
         }
@@ -136,7 +136,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * Convert arrays to Sets for V13.
      * @param {object} source  The source data
      */
-    static #migrateCollections(source: Record<string, any>): void {
+    static #migrateCollections(source: Record<string, unknown>): void {
         if (Array.isArray(source.coverage)) {
             source.coverage = new Set(source.coverage);
         }
@@ -169,7 +169,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} data  The data to validate
      * @protected
      */
-    static _validateJoint(data: Record<string, any>): void {
+    static _validateJoint(data: Record<string, unknown>): void {
         super._validateJoint?.(data);
 
         // Validate AP values (0-20 reasonable range)
@@ -404,7 +404,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source Source data to check
      * @returns {boolean}
      */
-    static #hasCustomArmourPoints(source: Record<string, any>): boolean {
+    static #hasCustomArmourPoints(source: Record<string, unknown>): boolean {
         return Object.values(source.armourPoints ?? {}).some((value) => Number(value) > 0);
     }
 
@@ -417,7 +417,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source Source data
      * @returns {Set|null}
      */
-    static #parseLegacyLocations(source: Record<string, any>): Set<string> | null {
+    static #parseLegacyLocations(source: Record<string, unknown>): Set<string> | null {
         const rawLocations = source.locations;
         if (!rawLocations || typeof rawLocations !== 'string') return null;
 
@@ -490,7 +490,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source Source data
      * @returns {object|null}
      */
-    static #parseLegacyAP(source: Record<string, any>): any {
+    static #parseLegacyAP(source: Record<string, unknown>): any {
         const rawAp = source.ap;
         if (rawAp === null || rawAp === undefined) return null;
 

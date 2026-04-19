@@ -30,10 +30,10 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     declare element: HTMLElement;
     declare position: { top: number; left: number; width: number; height: number };
     declare isEditable: boolean;
-    declare _powersFilter: Record<string, any>;
+    declare _powersFilter: Record<string, unknown>;
     declare _equipmentFilter: { search: string; type: string; status: string };
     declare _skillsFilter: { search: string; characteristic: string; training: string };
-    declare _traitsFilter: Record<string, any>;
+    declare _traitsFilter: Record<string, unknown>;
     declare render: (options?: Record<string, unknown> | boolean) => any;
 
     /**
@@ -248,7 +248,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {Promise}
      * @private
      */
-    async _throttle(key: string, wait: number, func: (...args: any[]) => any, context: any, args: any[]): Promise<any> {
+    async _throttle(key: string, wait: number, func: (...args: any[]) => any, context: any, args: unknown[]): Promise<any> {
         // Initialize throttle tracking map if it doesn't exist
         if (!this._throttleTimers) this._throttleTimers = new Map();
 
@@ -276,7 +276,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {object} options                 Notification options.
      * @private
      */
-    _notify(type: 'info' | 'warning' | 'error', message: string, options: Record<string, any> = {}): void {
+    _notify(type: 'info' | 'warning' | 'error', message: string, options: Record<string, unknown> = {}): void {
         const toast = (foundry.applications?.api as any)?.Toast;
         if (toast && typeof toast[type] === 'function') {
             toast[type](message, options);
@@ -311,7 +311,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, any>): Promise<Record<string, any>> {
+    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Edit mode state
@@ -369,7 +369,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @override
      * @protected
      */
-    async _preparePartContext(partId: string, context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const partContext = await super._preparePartContext(partId, context, options);
 
         switch (partId) {
@@ -404,7 +404,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {Promise<object>}
      * @protected
      */
-    async _prepareTabPartContext(partId: string, context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    async _prepareTabPartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         // Find the tab configuration
         const tabConfig = (this.constructor as any).TABS.find((t) => t.tab === partId);
         if (tabConfig) {
@@ -449,7 +449,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {Promise<object>}
      * @protected
      */
-    async _prepareBiographyContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    async _prepareBiographyContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const ctx = context;
         // First prepare the standard tab context
         await this._prepareTabPartContext('biography', ctx, options);
@@ -483,7 +483,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    async _prepareHeaderContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    async _prepareHeaderContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         // Build dynamic origin path select options from compendium packs
         const gameSystem = (this as any)._gameSystemId || this.actor.system?.gameSystem || 'rt';
         const originOptions = await this._getOriginPathOptions(gameSystem);
@@ -545,7 +545,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    _prepareTabsContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
+    _prepareTabsContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         // Tabs use the static TABS configuration
         context.tabs = (this.constructor as any).TABS.map((tab) => ({
             ...tab,
@@ -558,7 +558,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    _onFirstRender(context: Record<string, any>, options: Record<string, any>): void {
+    _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         super._onFirstRender(context, options);
 
         // Ensure initial tab is active
@@ -586,7 +586,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    _prepareBodyContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
+    _prepareBodyContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         // All tab data is already prepared in _prepareContext
         return context;
     }
@@ -598,7 +598,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {object} context  Context being prepared.
      * @protected
      */
-    _prepareCharacteristicHUD(context: Record<string, any>): void {
+    _prepareCharacteristicHUD(context: Record<string, unknown>): void {
         const hudCharacteristics = context.actor?.characteristics ?? {};
         const modifierSources = context.system?.modifierSources?.characteristics ?? {};
 
@@ -841,7 +841,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object} Categorized items
      * @protected
      */
-    _getCategorizedItems(): Record<string, any[]> {
+    _getCategorizedItems(): Record<string, unknown[]> {
         const categories = {
             all: [],
             allCarried: [], // Items on person or in backpack (not ship)
@@ -900,7 +900,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {object} categorized  Categorized items.
      * @protected
      */
-    _prepareLoadoutData(context: Record<string, any>, categorized: Record<string, any[]>): void {
+    _prepareLoadoutData(context: Record<string, unknown>, categorized: Record<string, unknown[]>): void {
         // Add all items to context for the Backpack panel
         context.allItems = categorized.all;
         context.allCarriedItems = categorized.allCarried; // Personal/backpack items
@@ -941,7 +941,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @param {object} categorized  Categorized items.
      * @protected
      */
-    _prepareCombatData(context: Record<string, any>, categorized: Record<string, any[]>): void {
+    _prepareCombatData(context: Record<string, unknown>, categorized: Record<string, unknown[]>): void {
         const weapons = categorized.weapons;
         const system = context.system ?? this.actor.system ?? {};
 
@@ -1150,7 +1150,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    _prepareOverviewContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
+    _prepareOverviewContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         // Add Active Effects data
         context.effects = this.actor.effects.map((effect) => ({
             id: effect.id,
@@ -1174,7 +1174,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {Promise<object>}
      * @protected
      */
-    async _prepareOverviewDashboardContext(context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
+    async _prepareOverviewDashboardContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const ctx = context;
         // First prepare standard tab context
         await this._prepareTabPartContext('overview', ctx, options);
@@ -1325,7 +1325,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    _prepareCombatTabContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
+    _prepareCombatTabContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         // Combat data already prepared in _prepareCombatData
         return context;
     }
@@ -1339,7 +1339,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    _prepareEquipmentContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
+    _prepareEquipmentContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         // Equipment data already prepared in _prepareLoadoutData
         context.transactionSourceCount = TransactionManager.listSourcesForBuyer(this.actor).length;
         return context;
@@ -1354,7 +1354,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    _prepareAbilitiesContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
+    _prepareAbilitiesContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         // Talents and traits already prepared in _prepareItems
         return context;
     }
@@ -1368,7 +1368,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    _prepareNotesContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
+    _prepareNotesContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         return context;
     }
 
@@ -1381,7 +1381,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {object}
      * @protected
      */
-    _prepareEffectsContext(context: Record<string, any>, options: Record<string, any>): Record<string, any> {
+    _prepareEffectsContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         return context;
     }
 
@@ -3394,7 +3394,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                     (await game.packs
                         .get('wh40k-rpg.wh40k-rolltables-psychic')
                         ?.getDocuments()
-                        .then((docs: any[]) => docs.find((d: any) => d.name.includes('Phenomena'))));
+                        .then((docs: unknown[]) => docs.find((d: any) => d.name.includes('Phenomena'))));
 
                 if (table) {
                     await table.draw();
@@ -3434,7 +3434,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                     (await game.packs
                         .get('wh40k-rpg.wh40k-rolltables-psychic')
                         ?.getDocuments()
-                        .then((docs: any[]) => docs.find((d: any) => d.name.includes('Perils'))));
+                        .then((docs: unknown[]) => docs.find((d: any) => d.name.includes('Perils'))));
 
                 if (table) {
                     await table.draw();

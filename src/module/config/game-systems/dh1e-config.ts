@@ -16,7 +16,7 @@ export class DH1eSystemConfig extends CareerBasedSystemConfig {
         return { coreSteps: [], optionalStep: null, packs: [] };
     }
 
-    getCareerRegistry(): Record<string, any> {
+    getCareerRegistry(): Record<string, unknown> {
         // DH1e career tables TBD
         return {};
     }

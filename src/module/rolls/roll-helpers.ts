@@ -47,7 +47,7 @@ export async function roll1d100() {
  * Apply whisper recipients to a chatData object based on the current rollMode.
  * Mutates chatData in place.
  */
-export function applyRollModeWhispers(chatData: Record<string, any>): void {
+export function applyRollModeWhispers(chatData: Record<string, unknown>): void {
     const rollMode = chatData.rollMode;
     if (['gmroll', 'blindroll'].includes(rollMode)) {
         chatData.whisper = ChatMessage.getWhisperRecipients('GM');
@@ -58,7 +58,7 @@ export function applyRollModeWhispers(chatData: Record<string, any>): void {
 
 export async function sendActionDataToChat(actionData) {
     const html = await foundry.applications.handlebars.renderTemplate(actionData.template, actionData);
-    const chatData: Record<string, any> = {
+    const chatData: Record<string, unknown> = {
         user: game.user.id,
         rollMode: game.settings.get('core', 'rollMode'),
         content: html,

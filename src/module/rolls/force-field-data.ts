@@ -54,7 +54,7 @@ export class ForceFieldData {
         }
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/force-field-roll-chat.hbs', this);
-        const chatData: Record<string, any> = {
+        const chatData: Record<string, unknown> = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,

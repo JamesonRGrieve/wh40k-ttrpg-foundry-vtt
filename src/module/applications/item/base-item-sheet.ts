@@ -24,7 +24,7 @@ const { ItemSheetV2 } = foundry.applications.sheets;
  * - StatBreakdownMixin (stat calculation breakdowns)
  */
 export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any)))) {
-    constructor(options: any = {}) {
+    constructor(options: Record<string, unknown> = {}) {
         // @ts-expect-error Foundry V2 constructor accepts options
         super(options);
     }

@@ -77,7 +77,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Migrate legacy pack data to V13 schema.
      * @param {object} source  Candidate source data
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         ShipUpgradeData.#migrateSpCost(source);
         ShipUpgradeData.#migrateEffects(source);
@@ -90,7 +90,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Rename spCost → shipPoints.
      * @param {object} source  The source data
      */
-    static #migrateSpCost(source: Record<string, any>): void {
+    static #migrateSpCost(source: Record<string, unknown>): void {
         if ('spCost' in source && source.shipPoints === undefined) {
             source.shipPoints = source.spCost;
             delete source.spCost;
@@ -101,7 +101,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Rename effects → effect.
      * @param {object} source  The source data
      */
-    static #migrateEffects(source: Record<string, any>): void {
+    static #migrateEffects(source: Record<string, unknown>): void {
         if ('effects' in source && !source.effect) {
             source.effect = source.effects;
             delete source.effects;
@@ -112,7 +112,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Parse shipAvailability → notes.
      * @param {object} source  The source data
      */
-    static #migrateShipAvailability(source: Record<string, any>): void {
+    static #migrateShipAvailability(source: Record<string, unknown>): void {
         if ('shipAvailability' in source) {
             if (!source.notes) {
                 source.notes = `Ship Availability: ${source.shipAvailability}`;
@@ -125,7 +125,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Add missing modifiers fields.
      * @param {object} source  The source data
      */
-    static #migrateModifiers(source: Record<string, any>): void {
+    static #migrateModifiers(source: Record<string, unknown>): void {
         if (source.modifiers && typeof source.modifiers === 'object') {
             const defaults = {
                 speed: 0,
@@ -146,7 +146,7 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
      * Initialize missing fields with defaults.
      * @param {object} source  The source data
      */
-    static #initializeDefaults(source: Record<string, any>): void {
+    static #initializeDefaults(source: Record<string, unknown>): void {
         source.power ??= 0;
         source.space ??= 0;
         source.availability ??= 'common';
