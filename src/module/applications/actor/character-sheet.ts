@@ -168,9 +168,11 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     static PARTS = {
         header: {
             template: 'systems/wh40k-rpg/templates/actor/player/header.hbs',
+            container: { classes: ['wh40k-sidebar'], id: 'sidebar' },
         },
         tabs: {
             template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
+            container: { classes: ['wh40k-sidebar'], id: 'sidebar' },
         },
         overview: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-overview.hbs',
@@ -187,7 +189,6 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
-        // talents tab removed — talents/traits moved to overview, specialist skills to skills tab
         equipment: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-equipment.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
