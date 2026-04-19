@@ -1,22 +1,27 @@
 /**
- * @file NPCSheetV2 - NPC actor sheet for V2 NPC data model
- * Phases 0-4: Complete NPC sheet with quick create and threat scaling
+ * @file NPCSheet - NPC actor sheet.
+ * Extends the PC CharacterSheet so NPCs render in the same horizontal-tab layout;
+ * overrides PARTS to point at NPC-specific tab templates under templates/actor/npc/
+ * and adds a sixth "NPC" tab containing all NPC-unique controls
+ * (horde, barter/transactions, tags, combat tracker, faction, GM tools, stat-block I/O).
  */
 
 import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
+import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
 import StatBlockParser from '../npc/stat-block-parser.ts';
 import NPCThreatScalerDialog from '../npc/threat-scaler-dialog.ts';
-import BaseActorSheet from './base-actor-sheet.ts';
+import CharacterSheet from './character-sheet.ts';
 
 /**
- * Actor sheet for npcV2 type actors.
- * Uses ApplicationV2 PARTS system with simplified NPC-focused UI.
+ * Actor sheet for npc type actors.
+ * Inherits the PC layout (horizontal tabs, shared tabs.hbs nav) and supplies
+ * NPC-specific tab templates plus a dedicated NPC tab.
  *
- * @extends {BaseActorSheet}
+ * @extends {CharacterSheet}
  */
-export default class NPCSheetV2 extends (BaseActorSheet as any) {
+export default class NPCSheet extends (CharacterSheet as any) {
     [key: string]: any;
     declare actor: WH40KNPCV2;
     declare document: WH40KNPCV2;
@@ -35,84 +40,112 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['wh40k-rpg', 'sheet', 'actor', 'npc-v2'],
+        ...(CharacterSheet as any).DEFAULT_OPTIONS,
+        classes: ['wh40k-rpg', 'sheet', 'actor', 'player', 'npc'],
         position: {
-            width: 900,
-            height: 700,
+            width: 1050,
+            height: 800,
         },
         actions: {
+            ...((CharacterSheet as any).DEFAULT_OPTIONS?.actions ?? {}),
+            // NPC-specific actions (later keys override parent where they collide)
             // Horde actions
-            toggleHordeMode: NPCSheetV2.#toggleHordeMode,
-            applyMagnitudeDamage: NPCSheetV2.#applyMagnitudeDamage,
-            restoreMagnitude: NPCSheetV2.#restoreMagnitude,
+            toggleHordeMode: NPCSheet.#toggleHordeMode,
+            applyMagnitudeDamage: NPCSheet.#applyMagnitudeDamage,
+            restoreMagnitude: NPCSheet.#restoreMagnitude,
             // Roll actions (rollCharacteristic & rollSkill kept for NPC-specific roll paths)
-            rollCharacteristic: NPCSheetV2.#rollCharacteristic,
-            rollSkill: NPCSheetV2.#rollSkill,
-            rollInitiative: NPCSheetV2.#rollInitiative,
+            rollCharacteristic: NPCSheet.#rollCharacteristic,
+            rollSkill: NPCSheet.#rollSkill,
+            rollInitiative: NPCSheet.#rollInitiative,
             // Weapon actions
-            reloadWeapon: NPCSheetV2.#reloadWeapon,
+            reloadWeapon: NPCSheet.#reloadWeapon,
             // Armour actions
-            toggleArmourMode: NPCSheetV2.#toggleArmourMode,
+            toggleArmourMode: NPCSheet.#toggleArmourMode,
             // Skill actions
-            addTrainedSkill: NPCSheetV2.#addTrainedSkill,
-            removeTrainedSkill: NPCSheetV2.#removeTrainedSkill,
-            toggleFavoriteSkill: NPCSheetV2.#toggleFavoriteSkill,
-            setSkillLevel: NPCSheetV2.#setSkillLevel,
-            cycleSkillLevel: NPCSheetV2.#cycleSkillLevel,
+            addTrainedSkill: NPCSheet.#addTrainedSkill,
+            removeTrainedSkill: NPCSheet.#removeTrainedSkill,
+            toggleFavoriteSkill: NPCSheet.#toggleFavoriteSkill,
+            setSkillLevel: NPCSheet.#setSkillLevel,
+            cycleSkillLevel: NPCSheet.#cycleSkillLevel,
             // Ability actions
-            pinAbility: NPCSheetV2.#pinAbility,
-            unpinAbility: NPCSheetV2.#unpinAbility,
-            toggleFavoriteTalent: NPCSheetV2.#toggleFavoriteTalent,
+            pinAbility: NPCSheet.#pinAbility,
+            unpinAbility: NPCSheet.#unpinAbility,
+            toggleFavoriteTalent: NPCSheet.#toggleFavoriteTalent,
             // GM utility actions
-            setupToken: NPCSheetV2.#setupToken,
-            duplicateNPC: NPCSheetV2.#duplicateNPC,
-            scaleToThreat: NPCSheetV2.#scaleToThreat,
-            exportStatBlock: NPCSheetV2.#exportStatBlock,
-            importStatBlock: NPCSheetV2.#importStatBlock,
-            calculateDifficulty: NPCSheetV2.#calculateDifficulty,
-            saveCombatPreset: NPCSheetV2.#saveCombatPreset,
-            loadCombatPreset: NPCSheetV2.#loadCombatPreset,
-            deleteNPC: NPCSheetV2.#deleteNPC,
-            editImage: NPCSheetV2.#editImage,
-            applyDamage: NPCSheetV2.#applyDamage,
-            healWounds: NPCSheetV2.#healWounds,
-            applyCustomDamage: NPCSheetV2.#applyCustomDamage,
-            healCustomWounds: NPCSheetV2.#healCustomWounds,
+            setupToken: NPCSheet.#setupToken,
+            duplicateNPC: NPCSheet.#duplicateNPC,
+            scaleToThreat: NPCSheet.#scaleToThreat,
+            exportStatBlock: NPCSheet.#exportStatBlock,
+            importStatBlock: NPCSheet.#importStatBlock,
+            calculateDifficulty: NPCSheet.#calculateDifficulty,
+            saveCombatPreset: NPCSheet.#saveCombatPreset,
+            loadCombatPreset: NPCSheet.#loadCombatPreset,
+            deleteNPC: NPCSheet.#deleteNPC,
+            editImage: NPCSheet.#editImage,
+            applyDamage: NPCSheet.#applyDamage,
+            healWounds: NPCSheet.#healWounds,
+            applyCustomDamage: NPCSheet.#applyCustomDamage,
+            healCustomWounds: NPCSheet.#healCustomWounds,
             // Combat tracker actions
-            rerollInitiative: NPCSheetV2.#rerollInitiative,
-            addToCombat: NPCSheetV2.#addToCombat,
-            removeFromCombat: NPCSheetV2.#removeFromCombat,
-            removeItem: NPCSheetV2.#removeItem,
+            rerollInitiative: NPCSheet.#rerollInitiative,
+            addToCombat: NPCSheet.#addToCombat,
+            removeFromCombat: NPCSheet.#removeFromCombat,
+            removeItem: NPCSheet.#removeItem,
             // Tag actions
-            addTag: NPCSheetV2.#addTag,
-            removeTag: NPCSheetV2.#removeTag,
+            addTag: NPCSheet.#addTag,
+            removeTag: NPCSheet.#removeTag,
             // UI actions
-            toggleEditSection: NPCSheetV2.#toggleEditSection,
-            toggleEditMode: NPCSheetV2.#toggleEditMode,
-            toggleGMTools: NPCSheetV2.#toggleGMTools,
-            toggleAbilityDesc: NPCSheetV2.#toggleAbilityDesc,
+            toggleEditSection: NPCSheet.#toggleEditSection,
+            toggleEditMode: NPCSheet.#toggleEditMode,
+            toggleGMTools: NPCSheet.#toggleGMTools,
+            toggleAbilityDesc: NPCSheet.#toggleAbilityDesc,
+            setTransactionMode: NPCSheet.#setTransactionMode,
         },
     };
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /**
+     * PARTS for the NPC sheet.
+     * Reuses the PC header + shared tabs.hbs nav, but points each content part at
+     * NPC-specific templates under templates/actor/npc/. Adds a sixth "npc" part
+     * for NPC-only controls (horde, barter, GM tools, etc.).
+     * @override
+     */
     static PARTS = {
-        navigation: {
-            template: 'systems/wh40k-rpg/templates/actor/npc-v2/navigation.hbs',
+        header: {
+            template: 'systems/wh40k-rpg/templates/actor/npc/header.hbs',
+        },
+        tabs: {
+            template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
         },
         overview: {
-            template: 'systems/wh40k-rpg/templates/actor/npc-v2/tab-overview.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/npc/tab-overview.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+            scrollable: [''],
+        },
+        skills: {
+            template: 'systems/wh40k-rpg/templates/actor/npc/tab-skills.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
         combat: {
-            template: 'systems/wh40k-rpg/templates/actor/npc-v2/tab-combat.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/npc/tab-combat.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
-        abilities: {
-            template: 'systems/wh40k-rpg/templates/actor/npc-v2/tab-abilities.hbs',
+        equipment: {
+            template: 'systems/wh40k-rpg/templates/actor/npc/tab-equipment.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+            scrollable: [''],
+        },
+        biography: {
+            template: 'systems/wh40k-rpg/templates/actor/npc/tab-biography.hbs',
+            container: { classes: ['wh40k-body'], id: 'tab-body' },
+            scrollable: [''],
+        },
+        npc: {
+            template: 'systems/wh40k-rpg/templates/actor/npc/tab-npc.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
             scrollable: [''],
         },
@@ -120,11 +153,19 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
 
     /* -------------------------------------------- */
 
-    /** @override */
+    /**
+     * TABS configuration. Matches the PC's 5 tabs plus a new NPC tab.
+     * Keeping the same tab ids (overview/skills/combat/equipment/biography) preserves
+     * consistent nav ordering between the two sheet types.
+     * @override
+     */
     static TABS = [
-        { tab: 'overview', label: 'WH40K.NPC.Interaction', icon: 'fa-solid fa-hand-pointer', group: 'primary', cssClass: 'tab-overview' },
-        { tab: 'combat', label: 'WH40K.Tabs.Combat', icon: 'fa-solid fa-swords', group: 'primary', cssClass: 'tab-combat' },
-        { tab: 'abilities', label: 'WH40K.Tabs.Abilities', icon: 'fa-solid fa-stars', group: 'primary', cssClass: 'tab-abilities' },
+        { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
+        { tab: 'skills', label: 'WH40K.Tabs.Skills', group: 'primary', cssClass: 'tab-skills' },
+        { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
+        { tab: 'equipment', label: 'WH40K.Tabs.Equipment', group: 'primary', cssClass: 'tab-equipment' },
+        { tab: 'biography', label: 'WH40K.Tabs.Biography', group: 'primary', cssClass: 'tab-biography' },
+        { tab: 'npc', label: 'WH40K.Tabs.NPC', group: 'primary', cssClass: 'tab-npc' },
     ];
 
     /* -------------------------------------------- */
@@ -176,6 +217,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
             heavy: 'Heavy',
             thrown: 'Thrown',
         };
+        context.transactionProfile = TransactionManager.getProfile(this.actor);
 
         // Prepare characteristics for display
         this._prepareCharacteristicsContext(context);
@@ -269,24 +311,55 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
 
     /* -------------------------------------------- */
 
-    /** @inheritDoc */
-    async _preparePartContext(partId: string, context: Record<string, any>, options: Record<string, any>): Promise<Record<string, any>> {
-        const partContext = await super._preparePartContext(partId, context, options);
+    /**
+     * Bypass CharacterSheet's PC-specific part context switch (origin paths,
+     * PC overview dashboard, PC biography enrichment) which expects fields NPCs
+     * don't have. Set the tab metadata directly and dispatch to NPC preparation
+     * helpers, matching the behavior the old standalone NPCSheetV2 had.
+     * @override
+     */
+    async _preparePartContext(partId: string, context: Record<string, any>, _options: Record<string, any>): Promise<Record<string, any>> {
+        const partContext = context;
 
-        // Prepare tab-specific context
+        // Per-tab metadata for section wrappers (data-tab / data-group / .active class)
+        const tabConfig = (this.constructor as any).TABS.find((t: any) => t.tab === partId);
+        if (tabConfig) {
+            partContext.tab = {
+                id: tabConfig.tab,
+                group: tabConfig.group,
+                cssClass: tabConfig.cssClass,
+                label: (game as any).i18n?.localize?.(tabConfig.label) ?? tabConfig.label,
+                active: (this as any).tabGroups?.[tabConfig.group] === tabConfig.tab,
+            };
+        }
+
+        // The shared tabs.hbs nav iterates `tabs` for its buttons
+        if (partId === 'tabs') {
+            partContext.tabs = (this.constructor as any).TABS.map((tab: any) => ({
+                ...tab,
+                active: (this as any).tabGroups?.[tab.group] === tab.tab,
+                label: (game as any).i18n?.localize?.(tab.label) ?? tab.label,
+            }));
+        }
+
+        // NPC-specific per-part data preparation
         switch (partId) {
-            case 'navigation':
-                break;
             case 'overview':
                 this._prepareOverviewContext(partContext);
-                this._prepareSkillsContext(partContext);
                 this._prepareAbilitiesContext(partContext);
-                this._prepareNotesContext(partContext);
+                break;
+            case 'skills':
+                this._prepareSkillsContext(partContext);
                 break;
             case 'combat':
+            case 'equipment':
                 this._prepareCombatContext(partContext);
                 break;
-            case 'abilities':
+            case 'biography':
+                this._prepareNotesContext(partContext);
+                break;
+            case 'npc':
+                this._prepareNotesContext(partContext);
                 this._prepareAbilitiesContext(partContext);
                 break;
         }
@@ -1416,6 +1489,19 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
         if (icon) icon.classList.toggle('fa-rotate-180');
     }
 
+    /**
+     * Configure the actor as a barter or requisition source.
+     * @param {PointerEvent} event - The triggering event.
+     * @param {HTMLElement} target - The target element.
+     */
+    static async #setTransactionMode(event: Event, target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        const mode = (target.dataset.mode as 'none' | 'barter' | 'requisition' | undefined) ?? 'none';
+        await TransactionManager.setMode((this as any).actor, mode);
+        (ui.notifications as any).info(`${(this as any).actor.name} source mode set to ${mode}.`);
+        await (this as any).render(false);
+    }
+
     /* -------------------------------------------- */
 
     /**
@@ -1580,7 +1666,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @protected
      */
     _prepareCharacteristicsHUD(context: Record<string, any>): void {
-        // NPCSheetV2 uses its own characteristic preparation
+        // NPCSheet uses its own characteristic preparation
         // Skip the parent implementation
     }
 
@@ -1590,7 +1676,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @protected
      */
     _prepareSkills(context: Record<string, any>): void {
-        // NPCSheetV2 uses sparse skill system
+        // NPCSheet uses sparse skill system
         // Will implement in later phases
         context.skills = {};
         context.trainedSkillsList = [];
@@ -1602,7 +1688,7 @@ export default class NPCSheetV2 extends (BaseActorSheet as any) {
      * @protected
      */
     _prepareItems(context: Record<string, any>): void {
-        // NPCSheetV2 uses simplified item system
+        // NPCSheet uses simplified item system
         context.talents = context.items.filter((i) => i.type === 'talent');
         context.traits = context.items.filter((i) => i.type === 'trait');
     }
