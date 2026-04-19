@@ -8,7 +8,7 @@
  */
 export function registerCustomEnrichers() {
     // Register enricher patterns
-    (CONFIG as any).TextEditor.enrichers.push(
+    CONFIG.TextEditor.enrichers.push(
         {
             // [[/characteristic ws]], [[/characteristic weaponSkill]]
             pattern: /\[\[\/characteristic (?<config>[^\]]+)]](?:{(?<label>[^}]+)})?/gi,

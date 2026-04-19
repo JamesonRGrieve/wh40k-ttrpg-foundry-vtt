@@ -274,7 +274,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: any, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
         void super._onRender(context, options);
         this.#activateListeners();
     }

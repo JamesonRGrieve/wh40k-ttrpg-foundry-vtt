@@ -103,7 +103,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         // Add armour-specific filters if filtering armour
         const hasArmour = (context.results as unknown[]).some((r: any) => r.type === 'armour');
         if (hasArmour) {
-            context.armourTypes = (CONFIG as any).WH40K?.armourTypes || {};
+            context.armourTypes = CONFIG.WH40K?.armourTypes || {};
             context.hasArmourFilters = true;
         }
 
@@ -111,7 +111,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         const hasArmourMods = (context.results as unknown[]).some((r: any) => r.type === 'armourModification');
         if (hasArmourMods) {
             context.hasArmourModFilters = true;
-            context.armourTypesForMods = (CONFIG as any).WH40K?.armourTypes || {};
+            context.armourTypesForMods = CONFIG.WH40K?.armourTypes || {};
         }
 
         return context;
@@ -380,8 +380,8 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      * @returns {object}       Prepared quality data
      */
     _prepareQualityData(system: any): Record<string, unknown> {
-        // Access (CONFIG as any).wh40k (set during init hook)
-        const rtConfig = (CONFIG as any)?.rt;
+        // Access CONFIG.wh40k (set during init hook)
+        const rtConfig = CONFIG?.rt;
 
         if (!rtConfig) {
             console.warn('WH40K | CONFIG.wh40k not available in compendium browser');

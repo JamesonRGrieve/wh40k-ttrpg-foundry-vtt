@@ -893,7 +893,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     /** @override */
-    async _onRender(context: any, options: Record<string, unknown>): Promise<void> {
+    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
         this._restoreScrollPosition();
         if (!this.showCharacteristics) return;

@@ -121,7 +121,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {HTMLFormElement} form  The form element.
      * @param {FormDataExtended} formData  The form data.
      */
-    static async #onFormSubmit(this: any, event: Event, form: HTMLFormElement, formData: any): Promise<void> {
+    static async #onFormSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
         const data = foundry.utils.expandObject(formData.object);
         this._updateRollData(data);
 
@@ -137,7 +137,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {object} formData  The expanded form data.
      * @protected
      */
-    _updateRollData(formData: any): void {
+    _updateRollData(formData: Record<string, unknown>): void {
         foundry.utils.mergeObject(this.rollData, formData, { recursive: true });
     }
 

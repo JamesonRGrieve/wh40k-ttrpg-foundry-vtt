@@ -57,13 +57,13 @@ export class WH40KItemContainer extends Item {
         game.wh40k.log(`Convert ${this.name as string} Nested`, this.hasNested());
         this.items = new foundry.utils.Collection();
         for (const nestedData of this.getNested()) {
-            const item = new (CONFIG as any).Item.documentClass(nestedData, { parent: this });
+            const item = new CONFIG.Item.documentClass(nestedData, { parent: this });
             await this.items.set(nestedData._id, item);
         }
         game.wh40k.log(`Item ${this.name as string} items:`, this.items);
     }
 
-    static async _onCreateOperation(items: unknown[], context: any, user: any): Promise<any> {
+    static async _onCreateOperation(items: unknown[], context: Record<string, unknown>, user: Record<string, unknown>): Promise<any> {
         // Parent is not an item -- ignore
         if (!(context.parent instanceof Item)) return super._onCreateOperation(items, context, user);
         // None of the items being created are containers -- ignore
@@ -114,7 +114,7 @@ export class WH40KItemContainer extends Item {
             for (const itemData of dataArray) {
                 let clone = JSON.parse(JSON.stringify(itemData));
                 clone._id = foundry.utils.randomID();
-                clone = new (CONFIG as any).Item.documentClass(clone, { parent: this }).toJSON();
+                clone = new CONFIG.Item.documentClass(clone, { parent: this }).toJSON();
                 currentItems.push(clone);
             }
 
@@ -168,7 +168,7 @@ export class WH40KItemContainer extends Item {
         this.items = new foundry.utils.Collection();
         containedItems.forEach((idata) => {
             if (!oldItems?.has(idata._id)) {
-                const theItem = new (CONFIG as any).Item.documentClass(idata, { parent: this });
+                const theItem = new CONFIG.Item.documentClass(idata, { parent: this });
                 this.items.set(idata._id, theItem);
             } else {
                 // Reuse existing item instance and update its data
