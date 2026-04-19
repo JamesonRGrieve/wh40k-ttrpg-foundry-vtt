@@ -6,17 +6,17 @@
 .wh40k-skill-sheet {
     // Header customization with skill-specific accent
     .wh40k-item-header {
-        background: linear-gradient(135deg, rgba(#2980b9, 0.1) 0%, rgba(#3498db, 0.08) 100%);
+        background: linear-gradient(135deg, rgba(#2980b9, 0.1) 0%, #{'rgb(from var(--wh40k-accent-info) r g b / 0.08)'} 100%);
         border-bottom: 2px solid rgba(#2980b9, 0.3);
     }
 
     .wh40k-meta-badge--skill {
-        background: linear-gradient(135deg, rgba(#2980b9, 0.15), rgba(#3498db, 0.12));
+        background: linear-gradient(135deg, rgba(#2980b9, 0.15), #{'rgb(from var(--wh40k-accent-info) r g b / 0.12)'});
         border-color: rgba(#2980b9, 0.4);
-        color: #3498db;
+        color: var(--wh40k-accent-info);
 
         i {
-            color: #3498db;
+            color: var(--wh40k-accent-info);
         }
     }
 
@@ -24,7 +24,7 @@
     .wh40k-skill-type-badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         padding: 4px 10px;
         border-radius: var(--wh40k-radius-sm);
         font-size: var(--wh40k-font-size-xs);
@@ -34,12 +34,12 @@
         border: 1px solid transparent;
 
         &--basic {
-            background: linear-gradient(135deg, rgba(#27ae60, 0.15), rgba(#27ae60, 0.08));
-            border-color: rgba(#27ae60, 0.4);
-            color: #27ae60;
+            background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-green) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-green) r g b / 0.08)'});
+            border-color: #{'rgb(from var(--wh40k-accent-green) r g b / 0.4)'};
+            color: var(--wh40k-accent-green);
 
             i {
-                color: #27ae60;
+                color: var(--wh40k-accent-green);
             }
         }
 
@@ -54,12 +54,16 @@
         }
 
         &--specialist {
-            background: linear-gradient(135deg, rgba(#9b59b6, 0.15), rgba(#9b59b6, 0.08));
-            border-color: rgba(#9b59b6, 0.4);
-            color: #9b59b6;
+            background: linear-gradient(
+                135deg,
+                #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.15)'},
+                #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.08)'}
+            );
+            border-color: #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.4)'};
+            color: var(--wh40k-accent-psychic);
 
             i {
-                color: #9b59b6;
+                color: var(--wh40k-accent-psychic);
             }
         }
     }
@@ -68,7 +72,7 @@
     .wh40k-char-badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         padding: 4px 10px;
         border-radius: var(--wh40k-radius-sm);
         font-size: var(--wh40k-font-size-xs);
@@ -87,7 +91,7 @@
     .wh40k-descriptor-badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         padding: 3px 8px;
         border-radius: var(--wh40k-radius-sm);
         font-size: var(--wh40k-font-size-2xs);
@@ -129,7 +133,7 @@
         letter-spacing: 1px;
 
         i {
-            color: #3498db;
+            color: var(--wh40k-accent-info);
         }
     }
 
@@ -146,7 +150,7 @@
     .wh40k-property {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
 
         label {
             font-size: var(--wh40k-font-size-xs);
@@ -170,8 +174,8 @@
                 transition: all var(--wh40k-transition-base);
 
                 &:hover {
-                    border-color: rgba(#3498db, 0.4);
-                    background: rgba(#3498db, 0.05);
+                    border-color: #{'rgb(from var(--wh40k-accent-info) r g b / 0.4)'};
+                    background: #{'rgb(from var(--wh40k-accent-info) r g b / 0.05)'};
                 }
             }
         }
@@ -188,8 +192,8 @@
 
             &:focus {
                 outline: none;
-                border-color: #3498db;
-                box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
+                border-color: var(--wh40k-accent-info);
+                box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-info) r g b / 0.2)'};
             }
         }
     }
@@ -218,9 +222,9 @@
 
 // Descriptor Panel
 .wh40k-skill-descriptor {
-    background: linear-gradient(135deg, rgba(#3498db, 0.08) 0%, rgba(#2980b9, 0.05) 100%);
-    border: 1px solid rgba(#3498db, 0.2);
-    border-left: 3px solid #3498db;
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-info) r g b / 0.08)'} 0%, rgba(#2980b9, 0.05) 100%);
+    border: 1px solid #{'rgb(from var(--wh40k-accent-info) r g b / 0.2)'};
+    border-left: 3px solid var(--wh40k-accent-info);
     border-radius: 0 var(--wh40k-radius-md) var(--wh40k-radius-md) 0;
     padding: var(--wh40k-space-md);
 
@@ -232,12 +236,12 @@
         font-family: var(--wh40k-font-heading);
         font-size: var(--wh40k-font-size-sm);
         font-weight: 600;
-        color: #3498db;
+        color: var(--wh40k-accent-info);
         text-transform: uppercase;
         letter-spacing: 0.5px;
 
         i {
-            color: #3498db;
+            color: var(--wh40k-accent-info);
         }
     }
 
@@ -271,7 +275,7 @@
         letter-spacing: 1px;
 
         i {
-            color: #27ae60;
+            color: var(--wh40k-accent-green);
         }
     }
 
@@ -290,7 +294,7 @@
 
             &:focus {
                 outline: none;
-                border-color: rgba(#27ae60, 0.4);
+                border-color: #{'rgb(from var(--wh40k-accent-green) r g b / 0.4)'};
             }
 
             p {
@@ -313,7 +317,7 @@
             }
 
             em {
-                color: rgba(#3498db, 0.9);
+                color: #{'rgb(from var(--wh40k-accent-info) r g b / 0.9)'};
             }
         }
     }
@@ -410,11 +414,11 @@
                     font-family: var(--wh40k-font-ui);
 
                     &.positive {
-                        color: #27ae60;
+                        color: var(--wh40k-accent-green);
                     }
 
                     &.negative {
-                        color: #e74c3c;
+                        color: var(--wh40k-accent-red);
                     }
 
                     &.neutral {
@@ -437,9 +441,9 @@
 
 // Special Rules Panel (optional)
 .wh40k-skill-special-rules {
-    background: linear-gradient(135deg, rgba(#9b59b6, 0.08) 0%, rgba(#8e44ad, 0.05) 100%);
-    border: 1px solid rgba(#9b59b6, 0.2);
-    border-left: 3px solid #9b59b6;
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.08)'} 0%, rgba(#8e44ad, 0.05) 100%);
+    border: 1px solid #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.2)'};
+    border-left: 3px solid var(--wh40k-accent-psychic);
     border-radius: 0 var(--wh40k-radius-md) var(--wh40k-radius-md) 0;
     padding: var(--wh40k-space-md);
 
@@ -451,12 +455,12 @@
         font-family: var(--wh40k-font-heading);
         font-size: var(--wh40k-font-size-sm);
         font-weight: 600;
-        color: #9b59b6;
+        color: var(--wh40k-accent-psychic);
         text-transform: uppercase;
         letter-spacing: 0.5px;
 
         i {
-            color: #9b59b6;
+            color: var(--wh40k-accent-psychic);
         }
     }
 
@@ -474,7 +478,7 @@
 
             &:focus {
                 outline: none;
-                border-color: rgba(#9b59b6, 0.4);
+                border-color: #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.4)'};
             }
         }
     }
@@ -501,7 +505,7 @@
         letter-spacing: 1px;
 
         i {
-            color: #9b59b6;
+            color: var(--wh40k-accent-psychic);
         }
     }
 
@@ -515,12 +519,16 @@
             align-items: center;
             gap: 6px;
             padding: 6px 12px;
-            background: linear-gradient(135deg, rgba(#9b59b6, 0.15), rgba(#9b59b6, 0.08));
-            border: 1px solid rgba(#9b59b6, 0.3);
+            background: linear-gradient(
+                135deg,
+                #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.15)'},
+                #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.08)'}
+            );
+            border: 1px solid #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.3)'};
             border-radius: var(--wh40k-radius-sm);
             font-size: var(--wh40k-font-size-sm);
             font-weight: 500;
-            color: #9b59b6;
+            color: var(--wh40k-accent-psychic);
 
             i {
                 font-size: var(--wh40k-font-size-xs);
@@ -540,8 +548,8 @@
 
         &:focus {
             outline: none;
-            border-color: #9b59b6;
-            box-shadow: 0 0 0 2px rgba(#9b59b6, 0.2);
+            border-color: var(--wh40k-accent-psychic);
+            box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.2)'};
         }
 
         &::placeholder {
@@ -589,7 +597,7 @@
     .wh40k-config-field {
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
 
         label {
             font-size: var(--wh40k-font-size-2xs);
