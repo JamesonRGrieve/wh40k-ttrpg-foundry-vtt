@@ -6,17 +6,21 @@
 .wh40k-origin-path-sheet {
     // Header customization
     .wh40k-item-header {
-        background: linear-gradient(135deg, rgba(#3498db, 0.1) 0%, rgba(#9b59b6, 0.08) 100%);
-        border-bottom: 2px solid rgba(#3498db, 0.3);
+        background: linear-gradient(
+            135deg,
+            #{'rgb(from var(--wh40k-accent-info) r g b / 0.1)'} 0%,
+            #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.08)'} 100%
+        );
+        border-bottom: 2px solid #{'rgb(from var(--wh40k-accent-info) r g b / 0.3)'};
     }
 
     .wh40k-meta-badge--origin {
-        background: linear-gradient(135deg, rgba(#3498db, 0.15), rgba(#9b59b6, 0.12));
-        border-color: rgba(#3498db, 0.4);
-        color: #3498db;
+        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-info) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.12)'});
+        border-color: #{'rgb(from var(--wh40k-accent-info) r g b / 0.4)'};
+        color: var(--wh40k-accent-info);
 
         i {
-            color: #3498db;
+            color: var(--wh40k-accent-info);
         }
     }
 
@@ -24,22 +28,22 @@
     .wh40k-meta-select {
         padding: 4px 8px;
         background: rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(#3498db, 0.3);
-        border-radius: 4px;
+        border: 1px solid #{'rgb(from var(--wh40k-accent-info) r g b / 0.3)'};
+        border-radius: var(--wh40k-radius-md);
         color: var(--color-text-primary);
         font-size: 0.75rem;
         cursor: pointer;
         transition: all var(--wh40k-transition-base);
 
         &:hover {
-            border-color: #3498db;
-            background: rgba(#3498db, 0.1);
+            border-color: var(--wh40k-accent-info);
+            background: #{'rgb(from var(--wh40k-accent-info) r g b / 0.1)'};
         }
 
         &:focus {
             outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
+            border-color: var(--wh40k-accent-info);
+            box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-info) r g b / 0.2)'};
         }
     }
 
@@ -60,14 +64,14 @@
             padding: 4px;
             text-align: center;
             background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(#3498db, 0.3);
-            border-radius: 4px;
+            border: 1px solid #{'rgb(from var(--wh40k-accent-info) r g b / 0.3)'};
+            border-radius: var(--wh40k-radius-md);
             color: var(--color-text-primary);
 
             &:focus {
                 outline: none;
-                border-color: #3498db;
-                box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
+                border-color: var(--wh40k-accent-info);
+                box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-info) r g b / 0.2)'};
             }
         }
     }
@@ -80,13 +84,17 @@
         align-items: center;
         gap: var(--wh40k-space-sm);
         padding: var(--wh40k-space-sm) var(--wh40k-space-md);
-        background: linear-gradient(135deg, rgba(#27ae60, 0.12) 0%, rgba(#27ae60, 0.05) 100%);
-        border-left: 3px solid #27ae60;
+        background: linear-gradient(
+            135deg,
+            #{'rgb(from var(--wh40k-accent-green) r g b / 0.12)'} 0%,
+            #{'rgb(from var(--wh40k-accent-green) r g b / 0.05)'} 100%
+        );
+        border-left: 3px solid var(--wh40k-accent-green);
         border-radius: 0 4px 4px 0;
         margin-bottom: var(--wh40k-space-md);
 
         i {
-            color: #27ae60;
+            color: var(--wh40k-accent-green);
         }
     }
 }
@@ -125,7 +133,7 @@
 .wh40k-field {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 
     label {
         font-size: 0.7rem;
@@ -146,8 +154,8 @@
 
         &:focus {
             outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 2px rgba(#3498db, 0.2);
+            border-color: var(--wh40k-accent-info);
+            box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-info) r g b / 0.2)'};
         }
     }
 
@@ -191,15 +199,15 @@
     align-items: center;
     justify-content: space-between;
     padding: var(--wh40k-space-sm);
-    background: linear-gradient(90deg, rgba(#27ae60, 0.08) 0%, transparent 100%);
-    border-left: 3px solid rgba(#27ae60, 0.4);
+    background: linear-gradient(90deg, #{'rgb(from var(--wh40k-accent-green) r g b / 0.08)'} 0%, transparent 100%);
+    border-left: 3px solid #{'rgb(from var(--wh40k-accent-green) r g b / 0.4)'};
     border-radius: 0 4px 4px 0;
     font-size: 0.8rem;
     transition: all var(--wh40k-transition-base);
 
     &:hover {
-        background: linear-gradient(90deg, rgba(#27ae60, 0.15) 0%, transparent 100%);
-        border-left-color: #27ae60;
+        background: linear-gradient(90deg, #{'rgb(from var(--wh40k-accent-green) r g b / 0.15)'} 0%, transparent 100%);
+        border-left-color: var(--wh40k-accent-green);
     }
 
     .wh40k-grant-name {
@@ -209,7 +217,7 @@
 
     .wh40k-grant-value {
         font-weight: 700;
-        color: #27ae60;
+        color: var(--wh40k-accent-green);
         font-family: var(--wh40k-font-alt);
     }
 }
@@ -217,7 +225,7 @@
 // Add/Remove buttons for arrays
 .wh40k-grant-controls {
     display: flex;
-    gap: 4px;
+    gap: var(--wh40k-space-xs);
 
     button {
         padding: 4px 8px;
@@ -234,13 +242,13 @@
 
         &:hover {
             background: rgba(0, 0, 0, 0.3);
-            border-color: #3498db;
-            color: #3498db;
+            border-color: var(--wh40k-accent-info);
+            color: var(--wh40k-accent-info);
         }
 
         &.wh40k-btn-remove:hover {
-            border-color: #e74c3c;
-            color: #e74c3c;
+            border-color: var(--wh40k-accent-red);
+            color: var(--wh40k-accent-red);
         }
     }
 }
@@ -284,8 +292,8 @@
 // Special effect box
 .wh40k-effect-text {
     padding: var(--wh40k-space-md);
-    background: linear-gradient(135deg, rgba(#9b59b6, 0.08) 0%, rgba(#8e44ad, 0.05) 100%);
-    border-left: 3px solid #9b59b6;
+    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.08)'} 0%, rgba(#8e44ad, 0.05) 100%);
+    border-left: 3px solid var(--wh40k-accent-psychic);
     border-radius: 0 4px 4px 0;
     font-size: 0.85rem;
     line-height: 1.6;
