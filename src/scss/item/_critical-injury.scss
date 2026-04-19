@@ -23,7 +23,7 @@
         width: 64px;
         height: 64px;
         border: 2px solid #{'rgb(from var(--wh40k-accent-red) r g b / 0.3)'};
-        border-radius: 8px;
+        border-radius: var(--wh40k-radius-lg);
         object-fit: cover;
         cursor: pointer;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -53,7 +53,7 @@
         width: 100%;
         padding: var(--wh40k-space-xs) var(--wh40k-space-sm);
         border: 1px solid transparent;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 16px;
         font-weight: 600;
         background: transparent;
@@ -86,18 +86,18 @@
     .wh40k-badge {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--wh40k-space-xs);
         padding: 2px 8px;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 11px;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
 
         &--severity-minor {
-            background: rgba(#2ecc71, 0.2);
+            background: #{'rgb(from var(--wh40k-accent-green-bright) r g b / 0.2)'};
             color: #1b7943;
-            border: 1px solid rgba(#2ecc71, 0.3);
+            border: 1px solid #{'rgb(from var(--wh40k-accent-green-bright) r g b / 0.3)'};
         }
 
         &--severity-moderate {
@@ -107,9 +107,9 @@
         }
 
         &--severity-severe {
-            background: rgba(#e74c3c, 0.2);
+            background: #{'rgb(from var(--wh40k-accent-red) r g b / 0.2)'};
             color: #bf2718;
-            border: 1px solid rgba(#e74c3c, 0.3);
+            border: 1px solid #{'rgb(from var(--wh40k-accent-red) r g b / 0.3)'};
         }
 
         &--severity-fatal {
@@ -120,9 +120,9 @@
         }
 
         &--permanent {
-            background: rgba(#9b59b6, 0.2);
+            background: #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.2)'};
             color: #713b87;
-            border: 1px solid rgba(#9b59b6, 0.3);
+            border: 1px solid #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.3)'};
         }
     }
 
@@ -160,7 +160,7 @@
         &__input {
             padding: 6px 10px;
             border: 1px solid #d4c5a6;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             font-size: 14px;
             background: #fff;
 
@@ -174,7 +174,7 @@
         &__textarea {
             padding: 8px 10px;
             border: 1px solid #d4c5a6;
-            border-radius: 4px;
+            border-radius: var(--wh40k-radius-md);
             font-size: 14px;
             font-family: inherit;
             background: #fff;
@@ -235,8 +235,8 @@
         align-items: center;
         gap: var(--wh40k-space-md);
         padding: var(--wh40k-space-md);
-        background: linear-gradient(135deg, rgba(#e74c3c, 0.15) 0%, rgba(#e74c3c, 0.05) 100%);
-        border-bottom: 2px solid rgba(#e74c3c, 0.2);
+        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-red) r g b / 0.15)'} 0%, #{'rgb(from var(--wh40k-accent-red) r g b / 0.05)'} 100%);
+        border-bottom: 2px solid #{'rgb(from var(--wh40k-accent-red) r g b / 0.2)'};
     }
 
     // Damage type specific themes
@@ -246,8 +246,8 @@
     }
 
     &--rending .wh40k-card-header {
-        background: linear-gradient(135deg, rgba(#e74c3c, 0.2) 0%, rgba(#e74c3c, 0.1) 100%);
-        border-bottom-color: rgba(#e74c3c, 0.3);
+        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-red) r g b / 0.2)'} 0%, #{'rgb(from var(--wh40k-accent-red) r g b / 0.1)'} 100%);
+        border-bottom-color: #{'rgb(from var(--wh40k-accent-red) r g b / 0.3)'};
     }
 
     &--explosive .wh40k-card-header {
@@ -256,15 +256,15 @@
     }
 
     &--energy .wh40k-card-header {
-        background: linear-gradient(135deg, rgba(#3498db, 0.2) 0%, rgba(#3498db, 0.1) 100%);
-        border-bottom-color: rgba(#3498db, 0.3);
+        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-info) r g b / 0.2)'} 0%, #{'rgb(from var(--wh40k-accent-info) r g b / 0.1)'} 100%);
+        border-bottom-color: #{'rgb(from var(--wh40k-accent-info) r g b / 0.3)'};
     }
 
     .wh40k-card-icon {
         width: 48px;
         height: 48px;
         object-fit: cover;
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         border: 2px solid rgba(0, 0, 0, 0.1);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
@@ -297,7 +297,7 @@
         margin-bottom: var(--wh40k-space-md);
         padding: var(--wh40k-space-sm);
         background: rgba(0, 0, 0, 0.03);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         border-left: 3px solid var(--wh40k-accent-red);
 
         .wh40k-meta-item {
@@ -317,7 +317,7 @@
         padding: var(--wh40k-space-md);
         background: rgba(#fef5e7, 0.5);
         border-left: 3px solid var(--wh40k-accent-red);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         line-height: 1.6;
 
         p {
@@ -338,7 +338,7 @@
         margin-top: var(--wh40k-space-md);
         padding: var(--wh40k-space-sm);
         background: rgba(0, 0, 0, 0.03);
-        border-radius: 4px;
+        border-radius: var(--wh40k-radius-md);
         font-size: 13px;
         line-height: 1.5;
 
