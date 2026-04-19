@@ -498,10 +498,10 @@
 // This must come LAST to override all other styles
 
 .wh40k-rpg.sheet.actor {
-    // Window content should not scroll - children will
+    // Window content: sidebar left, body right
     .window-content {
         display: flex !important;
-        flex-direction: column !important;
+        flex-direction: row !important;
         overflow: hidden !important;
         height: 100% !important;
     }
@@ -538,15 +538,86 @@
     }
 
     // ============================================
-    // HEADER LAYOUT - Complete Rebuild
+    // SIDEBAR + BODY LAYOUT
     // ============================================
 
-    // Header container - auto height, overflow for HUD dropdowns
+    .wh40k-sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 160px !important;
+        min-width: 160px !important;
+        max-width: 160px !important;
+        flex-shrink: 0 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        background: rgba(0, 0, 0, 0.15) !important;
+        border-right: 1px solid rgba(120, 46, 34, 0.3) !important;
+        gap: 0 !important;
+        padding: 0 !important;
+    }
+
+    .wh40k-sidebar-header {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 8px !important;
+        flex-shrink: 0 !important;
+    }
+
+    // Portrait in sidebar — fill width
+    .wh40k-sidebar-header .wh40k-portrait-container {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 11 / 15 !important;
+        border-radius: 6px !important;
+        overflow: hidden !important;
+        border: 2px solid var(--wh40k-border-color, #4a3728) !important;
+    }
+
+    .wh40k-sidebar-header .wh40k-portrait {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    // Origin grid in sidebar
+    .wh40k-sidebar-header .wh40k-origin-grid {
+        width: 100% !important;
+    }
+
+    // Sidebar nav
+    .wh40k-sidebar-nav {
+        padding: 4px !important;
+        flex: 1 1 auto !important;
+
+        .wh40k-nav-item {
+            display: block !important;
+            padding: 6px 8px !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            text-transform: uppercase !important;
+            font-size: 0.7em !important;
+            text-align: left !important;
+            white-space: nowrap !important;
+            transition: background-color 0.2s !important;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.1) !important;
+            }
+
+            &.active {
+                background: rgba(196, 135, 29, 0.3) !important;
+                border-left: 3px solid #c4871d !important;
+            }
+        }
+    }
+
+    // Header — no longer needs fixed positioning or special overflow
     .wh40k-character-header,
     .wh40k-header {
         flex: 0 0 auto !important;
         overflow: visible !important;
-        z-index: 10 !important;
     }
 
     // Main header layout - two columns
@@ -663,38 +734,7 @@
         overflow: visible !important;
     }
 
-    // Navigation bar (tabs) - horizontal strip
-    nav.wh40k-navigation {
-        display: flex !important;
-        flex-wrap: wrap !important;
-        gap: var(--wh40k-space-xs) !important;
-        padding: 8px !important;
-        background: rgba(0, 0, 0, 0.2) !important;
-        flex: 0 0 auto !important;
-    }
-
-    nav.wh40k-navigation .wh40k-nav-item {
-        padding: 6px 12px !important;
-        border-radius: var(--wh40k-radius-md) !important;
-        cursor: pointer !important;
-        transition: background-color 0.2s !important;
-        text-transform: uppercase !important;
-        font-size: 0.85em !important;
-    }
-
-    nav.wh40k-navigation {
-        display: flex !important;
-        align-items: center !important;
-    }
-
-    nav.wh40k-navigation .wh40k-nav-item:hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-    }
-
-    nav.wh40k-navigation .wh40k-nav-item.active {
-        background: rgba(196, 135, 29, 0.3) !important;
-        border-bottom: 2px solid #c4871d !important;
-    }
+    // Navigation — now in sidebar, styles defined in .wh40k-sidebar-nav above
 
     // Utility menu button in tabs
     nav.wh40k-navigation .wh40k-utility-menu-btn {
@@ -762,14 +802,16 @@
         grid-column: auto !important;
     }
 
-    // The body scrolls and takes remaining space
+    // The body takes remaining space beside the sidebar and scrolls
     .wh40k-body,
     #tab-body {
+        display: flex !important;
+        flex-direction: column !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
         min-height: 0 !important;
+        min-width: 0 !important;
         flex: 1 1 auto !important;
-        grid-column: auto !important;
     }
 
     // Tabs should be block/flex, not 6-column grid
