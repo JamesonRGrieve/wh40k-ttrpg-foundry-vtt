@@ -3,33 +3,8 @@ import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
 import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants.ts';
 
-interface WH40KCharacteristic {
-    base?: number;
-    starting?: number;
-    advance?: number;
-    advances?: number;
-    modifier?: number;
-    unnatural?: number;
-    total?: number;
-    bonus?: number;
-    short?: string;
-    label?: string;
-    [key: string]: any;
-}
-
-interface WH40KModifierEntry {
-    source: string;
-    value: number;
-    uuid?: string;
-    icon?: string;
-}
-
-interface WH40KStatBreakdown {
-    label: string;
-    base: number;
-    modifiers: WH40KModifierEntry[];
-    total: number;
-}
+// WH40KCharacteristic, WH40KModifierEntry, WH40KStatBreakdown are declared
+// globally in types/global.d.ts — do not redeclare here.
 
 export class WH40KBaseActor extends Actor {
     [key: string]: any;
