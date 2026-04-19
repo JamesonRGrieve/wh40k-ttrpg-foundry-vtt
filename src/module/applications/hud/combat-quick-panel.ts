@@ -13,6 +13,8 @@
  * - Gothic 40K themed
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
@@ -390,7 +392,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {Actor} actor  Updated actor
      * @private
      */
-    _onActorUpdate(actor: any): void {
+    _onActorUpdate(actor: WH40KBaseActor): void {
         if (actor.id === this.actor.id) {
             void this.render(false);
         }
@@ -403,7 +405,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {Item} item  Updated item
      * @private
      */
-    _onItemUpdate(item: any): void {
+    _onItemUpdate(item: WH40KItem): void {
         if (item.actor?.id === this.actor.id) {
             void this.render(false);
         }
@@ -732,7 +734,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @returns {CombatQuickPanel}  The panel instance
      * @static
      */
-    static show(actor: any): Promise<any> {
+    static show(actor: WH40KBaseActor): Promise<any> {
         // Check if panel already exists
         const existing = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
 
@@ -754,7 +756,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {Actor} actor  The actor
      * @static
      */
-    static close(actor: any): void {
+    static close(actor: WH40KBaseActor): void {
         const panel = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
 
         if (panel) void panel.close();
@@ -767,7 +769,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {Actor} actor  The actor
      * @static
      */
-    static toggle(actor: any): void {
+    static toggle(actor: WH40KBaseActor): void {
         const panel = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
 
         if (panel) {

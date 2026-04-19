@@ -15,6 +15,8 @@
  * This is the visual layer - for core API, see drag-drop-api-mixin.mjs
  */
 
+import type { WH40KItem } from '../../documents/item.ts';
+
 /**
  * Mixin that adds enhanced drag-drop with visual feedback
  * @param {typeof ApplicationV2} Base  The base class being mixed
@@ -246,7 +248,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @returns {HTMLElement}    The ghost element
          * @private
          */
-        _createDragGhost(item: any, event: DragEvent): HTMLElement {
+        _createDragGhost(item: WH40KItem, event: DragEvent): HTMLElement {
             const ghost = document.createElement('div');
             ghost.className = 'wh40k-drag-ghost';
 
@@ -281,7 +283,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @returns {boolean}  True if item can be split
          * @private
          */
-        _canSplitItem(item: any): boolean {
+        _canSplitItem(item: WH40KItem): boolean {
             const quantity = item.system.quantity;
             if (!quantity || quantity <= 1) return false;
 
@@ -298,7 +300,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @returns {Promise<{quantity: number}|null>}  Split result or null if cancelled
          * @private
          */
-        _showSplitDialog(item: any): Promise<{ quantity: number } | null> {
+        _showSplitDialog(item: WH40KItem): Promise<{ quantity: number } | null> {
             const quantity = item.system.quantity || 1;
 
             return (foundry.applications.api as any).DialogV2.prompt({
@@ -335,7 +337,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @param {Item} item  The dragged item
          * @private
          */
-        _highlightValidDropZones(item: any): void {
+        _highlightValidDropZones(item: WH40KItem): void {
             const dropZones = this.element.querySelectorAll('[data-drop-zone]');
 
             dropZones.forEach((zone) => {
@@ -533,7 +535,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @param {string} slot  The equipment slot
          * @private
          */
-        async _handleEquipmentDrop(item: any, slot: string): Promise<void> {
+        async _handleEquipmentDrop(item: WH40KItem, slot: string): Promise<void> {
             // Check if item belongs to this actor
             if (item.actor?.id !== this.document.id) {
                 ui.notifications.warn('Cannot equip items from other actors');
@@ -566,7 +568,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @returns {boolean}  True if valid
          * @private
          */
-        _validateEquipmentSlot(item: any, slot: string): boolean {
+        _validateEquipmentSlot(item: WH40KItem, slot: string): boolean {
             // Weapons can go in weapon slots
             if (slot === 'primary-weapon' || slot === 'secondary-weapon') {
                 return item.type === 'weapon';
@@ -588,7 +590,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @param {DragEvent} event  The drop event
          * @private
          */
-        async _handleGeneralDrop(item: any, event: DragEvent): Promise<void> {
+        async _handleGeneralDrop(item: WH40KItem, event: DragEvent): Promise<void> {
             // Check if this is a split operation
             if (this._splitResult) {
                 await this._handleSplitDrop(item, this._splitResult.quantity);
@@ -617,7 +619,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @param {number} quantity  Quantity to split
          * @private
          */
-        async _handleSplitDrop(item: any, quantity: number): Promise<void> {
+        async _handleSplitDrop(item: WH40KItem, quantity: number): Promise<void> {
             const remaining = (item.system.quantity || 1) - quantity;
 
             if (remaining <= 0) {
@@ -736,7 +738,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @param {Item} item  The item to favorite
          * @private
          */
-        async _addToFavorites(item: any): Promise<void> {
+        async _addToFavorites(item: WH40KItem): Promise<void> {
             const favorites = this.document.getFlag('wh40k-rpg', 'favorites') || [];
 
             if (favorites.includes(item.id)) {
@@ -806,7 +808,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @param {Item} item  The item being equipped
          * @private
          */
-        _animateSnapToSlot(item: any): void {
+        _animateSnapToSlot(item: WH40KItem): void {
             // Find the item element
             const itemEl = this.element.querySelector(`[data-item-id="${item.id}"]`);
             if (!itemEl) return;

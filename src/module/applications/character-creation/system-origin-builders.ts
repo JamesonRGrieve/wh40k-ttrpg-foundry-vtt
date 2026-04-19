@@ -11,11 +11,12 @@
  * per-system subclass here, overriding _prepareSteps or _submitStep.
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import OriginPathBuilder from './origin-path-builder.ts';
 
 function make(gameSystem: string, className: string) {
     const cls = class extends (OriginPathBuilder as any) {
-        constructor(actor: any, options: Record<string, unknown> = {}) {
+        constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
             super(actor, { ...options, gameSystem });
         }
     };

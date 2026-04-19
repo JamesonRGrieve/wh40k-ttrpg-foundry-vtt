@@ -7,6 +7,7 @@
  * alignment matches the character's, costs are reduced. Opposed alignments cost more.
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
 import type { OriginStepConfig, ChaosAlignment } from './types.ts';
 
@@ -102,7 +103,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
     /**
      * Get the character's current Chaos alignment.
      */
-    getCharacterAlignment(actor: any): ChaosAlignment {
+    getCharacterAlignment(actor: WH40KBaseActor): ChaosAlignment {
         return actor.system?.chaosAlignment ?? 'unaligned';
     }
 
@@ -135,7 +136,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
 
     // ── Cost Overrides ───────────────────────────────────────────
 
-    override getSkillAdvanceCost(actor: any, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
+    override getSkillAdvanceCost(actor: WH40KBaseActor, skillKey: string, currentRank: number, context?: Record<string, unknown>): number | null {
         const baseCost = super.getSkillAdvanceCost(actor, skillKey, currentRank, context);
         if (baseCost == null) return null;
 
@@ -146,7 +147,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         return Math.ceil(baseCost * modifier);
     }
 
-    override getTalentAdvanceCost(actor: any, talent: any, context?: Record<string, unknown>): number | null {
+    override getTalentAdvanceCost(actor: WH40KBaseActor, talent: any, context?: Record<string, unknown>): number | null {
         const baseCost = super.getTalentAdvanceCost(actor, talent, context);
         if (baseCost == null) return null;
 

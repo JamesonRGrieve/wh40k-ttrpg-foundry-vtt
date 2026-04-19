@@ -1,5 +1,6 @@
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
+import type { WH40KItem } from './item.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
 import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants.ts';
 
@@ -101,7 +102,7 @@ export class WH40KBaseActor extends Actor {
         }
     }
 
-    async _preCreate(data: any, options: Record<string, unknown>, user: any): Promise<void> {
+    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: any): Promise<void> {
         await (super._preCreate as any)(data, options, user);
         const initData = {
             'token.bar1': { attribute: 'wounds' },
@@ -661,7 +662,7 @@ export class WH40KBaseActor extends Actor {
      * @returns {string} Font Awesome icon class
      * @private
      */
-    #getItemIcon(item: any): string {
+    #getItemIcon(item: WH40KItem): string {
         const iconMap = {
             talent: 'fa-solid fa-star',
             trait: 'fa-solid fa-dna',

@@ -1,3 +1,5 @@
+import type { WH40KBaseActor } from './base-actor.ts';
+
 /**
  * Extended ActiveEffect document for WH40K RPG system.
  * Integrates with the existing modifier system and provides proper effect application.
@@ -117,7 +119,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @returns {number}              The applied value
      * @private
      */
-    _applyCharacteristicChange(actor: any, change: any): number | null {
+    _applyCharacteristicChange(actor: WH40KBaseActor, change: any): number | null {
         const path = change.key;
         const charKey = path.split('.')[2]; // e.g., "strength" from "system.characteristics.strength.modifier"
 
@@ -135,7 +137,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @returns {number}              The applied value
      * @private
      */
-    _applySkillChange(actor: any, change: any): number | null {
+    _applySkillChange(actor: WH40KBaseActor, change: any): number | null {
         const path = change.key;
         const skillKey = path.split('.')[2]; // e.g., "acrobatics"
 
@@ -153,7 +155,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @returns {number}              The applied value
      * @private
      */
-    _applyCombatChange(actor: any, change: any): number {
+    _applyCombatChange(actor: WH40KBaseActor, change: any): number {
         const path = change.key;
         const current = foundry.utils.getProperty(actor, path) ?? 0;
         // @ts-expect-error - argument type
@@ -167,7 +169,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @returns {number}              The applied value
      * @private
      */
-    _applyMovementChange(actor: any, change: any): number {
+    _applyMovementChange(actor: WH40KBaseActor, change: any): number {
         const path = change.key;
         const current = foundry.utils.getProperty(actor, path) ?? 0;
         // @ts-expect-error - argument type

@@ -180,7 +180,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
             // Difficulty
             difficulty,
-            difficultyLabel: (game as any).i18n.localize(difficulty.label),
+            difficultyLabel: game.i18n.localize(difficulty.label),
             difficultyColor: difficulty.color,
             threatRatio: ratio.toFixed(1),
 
@@ -196,7 +196,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
             hasTemplates: this.#templates.length > 0,
 
             // Combat availability
-            hasCombat: (game as any).combat !== null,
+            hasCombat: game.combat !== null,
         };
     }
 
@@ -266,13 +266,13 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {Object} data - Drop data.
      * @private
      */
-    async _handleActorDrop(data: any): Promise<void> {
+    async _handleActorDrop(data: Record<string, unknown>): Promise<void> {
         let actor;
 
         if (data.uuid) {
             actor = await (fromUuid as any)(data.uuid);
         } else if (data.id) {
-            actor = (game as any).actors.get(data.id);
+            actor = game.actors.get(data.id);
         }
 
         if (!actor) {
@@ -332,10 +332,10 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     _getActionAdvantage(partyActions: number, enemyActions: number): any {
         const diff = enemyActions - partyActions;
 
-        if (diff <= -2) return { text: (game as any).i18n.localize('WH40K.NPC.Encounter.PartyAdvantage'), color: '#4ade80' };
-        if (diff <= 0) return { text: (game as any).i18n.localize('WH40K.NPC.Encounter.Balanced'), color: '#facc15' };
-        if (diff <= 2) return { text: (game as any).i18n.localize('WH40K.NPC.Encounter.EnemyAdvantage'), color: '#fb923c' };
-        return { text: (game as any).i18n.localize('WH40K.NPC.Encounter.EnemyOverwhelming'), color: '#ef4444' };
+        if (diff <= -2) return { text: game.i18n.localize('WH40K.NPC.Encounter.PartyAdvantage'), color: '#4ade80' };
+        if (diff <= 0) return { text: game.i18n.localize('WH40K.NPC.Encounter.Balanced'), color: '#facc15' };
+        if (diff <= 2) return { text: game.i18n.localize('WH40K.NPC.Encounter.EnemyAdvantage'), color: '#fb923c' };
+        return { text: game.i18n.localize('WH40K.NPC.Encounter.EnemyOverwhelming'), color: '#ef4444' };
     }
 
     /* -------------------------------------------- */
@@ -349,7 +349,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      */
     static async #addNPC(this: any, event: Event, target: HTMLElement): Promise<void> {
         // Show a simple actor picker
-        const actors = (game as any).actors.filter((a: any) => a.type === 'npc' || a.type === 'npcV2');
+        const actors = game.actors.filter((a: any) => a.type === 'npc' || a.type === 'npcV2');
 
         if (actors.length === 0) {
             ui.notifications.warn('No NPC actors found in the world.');
@@ -510,9 +510,9 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         }
 
         // Ensure combat exists
-        let combat = (game as any).combat;
+        let combat = game.combat;
         if (!combat) {
-            combat = await (Combat as any).create({ scene: (game as any).scenes.active?.id } as any);
+            combat = await (Combat as any).create({ scene: game.scenes.active?.id } as any);
         }
 
         const combatants: unknown[] = [];
@@ -538,7 +538,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         await combat.createEmbeddedDocuments('Combatant', combatants);
 
-        ui.notifications.info((game as any).i18n.format('WH40K.NPC.Encounter.Deployed', { count: combatants.length }));
+        ui.notifications.info(game.i18n.format('WH40K.NPC.Encounter.Deployed', { count: combatants.length }));
     }
 
     /**

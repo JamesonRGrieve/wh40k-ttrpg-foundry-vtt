@@ -3,6 +3,7 @@
  * Career/specialty-based advancement with 3 skill ranks.
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
 import type { OriginStepConfig } from './types.ts';
 
@@ -27,7 +28,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
         return {};
     }
 
-    resolveCareerKey(actor: any): string | null {
+    resolveCareerKey(actor: WH40KBaseActor): string | null {
         return actor.system?.originPath?.speciality ?? null;
     }
 }

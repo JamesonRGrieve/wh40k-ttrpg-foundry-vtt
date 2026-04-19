@@ -150,7 +150,7 @@ export default class BasicRollWH40K extends Roll {
         ChatMessage.applyRollMode(chatData, rollMode);
 
         // Create the chat message
-        const message = await (ChatMessage as any).create(chatData);
+        const message = await ChatMessage.create(chatData);
 
         // Fire post-message hook
         Hooks.callAll('wh40k-rpg.postRollPost', message, roll, config);
@@ -167,7 +167,7 @@ export default class BasicRollWH40K extends Roll {
      */
     static async _prepareChatData(roll, config) {
         // Get speaker data
-        const speaker = config.speaker || (ChatMessage as any).getSpeaker({ actor: config.actor });
+        const speaker = config.speaker || ChatMessage.getSpeaker({ actor: config.actor });
 
         // Render the chat template - V13: use namespaced renderTemplate
         const templateData = await this._prepareTemplateData(roll, config);

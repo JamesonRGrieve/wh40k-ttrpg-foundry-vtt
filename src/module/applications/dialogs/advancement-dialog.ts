@@ -5,6 +5,7 @@
  * Supports characteristic advances, skills, and talents based on career.
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { getCareerAdvancements, getNextCharacteristicCost, getCareerKeyFromName, TIER_ORDER } from '../../config/advancements/index.ts';
 import type { BaseSystemConfig } from '../../config/game-systems/base-system-config.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
@@ -105,7 +106,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {object} options - Options
      * @returns {AdvancementDialog}
      */
-    static open(actor: any, options: Record<string, unknown> = {}): any {
+    static open(actor: WH40KBaseActor, options: Record<string, unknown> = {}): any {
         const dialog = new this(actor, options);
         void dialog.render(true);
         return dialog;

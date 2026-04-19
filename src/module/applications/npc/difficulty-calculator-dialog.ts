@@ -94,7 +94,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         const context: any = await super._prepareContext(options);
 
         // Get party info
-        const party = (game as any).users.filter((u: any) => u.active && u.character);
+        const party = game.users.filter((u: any) => u.active && u.character);
         const partySize = party.length;
 
         // Calculate average party rank

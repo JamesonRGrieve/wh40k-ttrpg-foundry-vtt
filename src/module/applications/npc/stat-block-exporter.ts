@@ -8,6 +8,8 @@
  * - Copy to clipboard functionality
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
@@ -85,7 +87,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     get title() {
-        return (game as any).i18n.format('WH40K.NPC.Export.Title', { name: this.#actor?.name || 'NPC' });
+        return game.i18n.format('WH40K.NPC.Export.Title', { name: this.#actor?.name || 'NPC' });
     }
 
     /* -------------------------------------------- */
@@ -97,7 +99,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {Actor} actor - The actor to export.
      * @returns {string} Formatted text stat block.
      */
-    static toText(actor: any): string {
+    static toText(actor: WH40KBaseActor): string {
         const sys = actor.system;
         const lines = [];
 
@@ -263,7 +265,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {boolean} [options.prettyPrint=true] - Pretty print JSON.
      * @returns {string} JSON string.
      */
-    static toJSON(actor: any, options: Record<string, unknown> = {}): any {
+    static toJSON(actor: WH40KBaseActor, options: Record<string, unknown> = {}): any {
         const { includeItems = true, prettyPrint = true } = options;
 
         const exportData = {
@@ -355,10 +357,10 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
         try {
             await navigator.clipboard.writeText(content);
-            ui.notifications.info((game as any).i18n.localize('WH40K.NPC.Export.CopiedToClipboard'));
+            ui.notifications.info(game.i18n.localize('WH40K.NPC.Export.CopiedToClipboard'));
         } catch (err) {
             console.error('Failed to copy to clipboard:', err);
-            ui.notifications.error((game as any).i18n.localize('WH40K.NPC.Export.CopyFailed'));
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.Export.CopyFailed'));
         }
     }
 
@@ -372,7 +374,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         const filename = `${this.#actor.name.slugify()}.json`;
 
         StatBlockExporter._downloadFile(content, filename, 'application/json');
-        ui.notifications.info((game as any).i18n.format('WH40K.NPC.Export.Downloaded', { filename }));
+        ui.notifications.info(game.i18n.format('WH40K.NPC.Export.Downloaded', { filename }));
     }
 
     /**
@@ -385,7 +387,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
         const filename = `${this.#actor.name.slugify()}.txt`;
 
         StatBlockExporter._downloadFile(content, filename, 'text/plain');
-        ui.notifications.info((game as any).i18n.format('WH40K.NPC.Export.Downloaded', { filename }));
+        ui.notifications.info(game.i18n.format('WH40K.NPC.Export.Downloaded', { filename }));
     }
 
     /**
@@ -430,7 +432,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {Actor} actor - The actor to export.
      * @returns {StatBlockExporter} The exporter instance.
      */
-    static show(actor: any): any {
+    static show(actor: WH40KBaseActor): any {
         const exporter = new this(actor);
         void exporter.render(true);
         return exporter;
@@ -442,15 +444,15 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {string} [format="text"] - Export format ("text" or "json").
      * @returns {Promise<void>}
      */
-    static async quickExport(actor: any, format: any = 'text'): Promise<void> {
+    static async quickExport(actor: WH40KBaseActor, format: any = 'text'): Promise<void> {
         const content = format === 'json' ? this.toJSON(actor) : this.toText(actor);
 
         try {
             await navigator.clipboard.writeText(content);
-            ui.notifications.info((game as any).i18n.localize('WH40K.NPC.Export.CopiedToClipboard'));
+            ui.notifications.info(game.i18n.localize('WH40K.NPC.Export.CopiedToClipboard'));
         } catch (err) {
             console.error('Failed to copy to clipboard:', err);
-            ui.notifications.error((game as any).i18n.localize('WH40K.NPC.Export.CopyFailed'));
+            ui.notifications.error(game.i18n.localize('WH40K.NPC.Export.CopyFailed'));
         }
     }
 }

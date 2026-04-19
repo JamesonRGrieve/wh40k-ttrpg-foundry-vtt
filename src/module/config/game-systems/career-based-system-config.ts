@@ -8,6 +8,7 @@
  * Characteristic tiers: Simple / Intermediate / Trained / Expert (4 tiers).
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { BaseSystemConfig } from './base-system-config.ts';
 import type { SkillRankDef, CharacteristicTierDef, AdvanceCostResult, AdvanceOption } from './types.ts';
 
@@ -42,11 +43,11 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
     abstract getCareerRegistry(): Record<string, unknown>;
 
     /** Resolve the character's career key from actor data */
-    abstract resolveCareerKey(actor: any): string | null;
+    abstract resolveCareerKey(actor: WH40KBaseActor): string | null;
 
     // ── Cost Implementations ─────────────────────────────────────
 
-    getCharacteristicAdvanceCost(actor: any, charKey: string, currentTier: number): AdvanceCostResult | null {
+    getCharacteristicAdvanceCost(actor: WH40KBaseActor, charKey: string, currentTier: number): AdvanceCostResult | null {
         const tiers = this.characteristicTierOrder;
         if (currentTier >= tiers.length) return null;
 
@@ -61,18 +62,18 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         return { cost, tier: tierKey };
     }
 
-    getSkillAdvanceCost(_actor: any, _skillKey: string, _currentRank: number): number | null {
+    getSkillAdvanceCost(_actor: WH40KBaseActor, _skillKey: string, _currentRank: number): number | null {
         // Career-based: cost is embedded in the AdvanceOption from the career table.
         // The advancement dialog reads cost from the advance entry directly.
         return null;
     }
 
-    getTalentAdvanceCost(_actor: any, _talent: any): number | null {
+    getTalentAdvanceCost(_actor: WH40KBaseActor, _talent: any): number | null {
         // Same: cost is in the career advance entry.
         return null;
     }
 
-    getAvailableAdvances(actor: any): AdvanceOption[] {
+    getAvailableAdvances(actor: WH40KBaseActor): AdvanceOption[] {
         const careerKey = this.resolveCareerKey(actor);
         if (!careerKey) return [];
 

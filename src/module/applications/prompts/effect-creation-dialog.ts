@@ -3,6 +3,8 @@
  * Streamlined, thematic dialog for creating Active Effects in WH40K RPG
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+
 const { DialogV2 } = foundry.applications.api;
 
 export default class EffectCreationDialog extends (DialogV2 as any) {
@@ -48,7 +50,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
      * @param {Actor} actor     The target actor
      * @returns {Promise<ActiveEffect|null>}
      */
-    static async show(actor: any): Promise<any> {
+    static async show(actor: WH40KBaseActor): Promise<any> {
         return new Promise((resolve) => {
             new this({ actor, resolve }).render(true);
         });
@@ -204,7 +206,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create condition effect data
      */
-    static _createConditionData(data: any): any {
+    static _createConditionData(data: Record<string, unknown>): any {
         const conditionId = data.conditionId;
 
         // Use the helper function
@@ -299,7 +301,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create characteristic modifier data
      */
-    static _createCharacteristicData(data: any): any {
+    static _createCharacteristicData(data: Record<string, unknown>): any {
         const characteristic = data.characteristic;
         const value = parseInt(data.modifierValue) || 0;
 
@@ -342,7 +344,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create skill modifier data
      */
-    static _createSkillData(data: any): any {
+    static _createSkillData(data: Record<string, unknown>): any {
         const skill = data.skill;
         const value = parseInt(data.modifierValue) || 0;
 
@@ -385,7 +387,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create combat modifier data
      */
-    static _createCombatData(data: any): any {
+    static _createCombatData(data: Record<string, unknown>): any {
         const combatType = data.combatType;
         const value = parseInt(data.modifierValue) || 0;
 
@@ -428,7 +430,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create custom effect data
      */
-    static _createCustomData(data: any): any {
+    static _createCustomData(data: Record<string, unknown>): any {
         const name = data.customName?.trim();
 
         if (!name) return null;

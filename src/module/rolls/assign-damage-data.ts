@@ -121,7 +121,7 @@ export class AssignDamageData {
             content: html,
         };
         applyRollModeWhispers(chatData);
-        await (ChatMessage as any).create(chatData);
+        await ChatMessage.create(chatData);
     }
 
     /**

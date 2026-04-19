@@ -1,3 +1,5 @@
+import type { WH40KItem } from '../documents/item.ts';
+
 type SupportedLineKey = 'dh1' | 'dh2' | 'rt' | 'dw' | 'bc' | 'ow';
 
 const LINE_KEY_MAP: Record<string, SupportedLineKey> = {
@@ -87,13 +89,13 @@ export function materializeItemVariants(source: Record<string, unknown>, lineKey
     return source;
 }
 
-export function getMaterializedItemSource(item: any): Record<string, unknown> {
+export function getMaterializedItemSource(item: WH40KItem): Record<string, unknown> {
     const source = deepClone(item?.system?._source ?? item?.system ?? {});
     const lineKey = inferActiveGameLine(source, item);
     return materializeItemVariants(source, lineKey);
 }
 
-export function remapSubmitDataToVariantPaths(item: any, submitData: Record<string, unknown>): Record<string, unknown> {
+export function remapSubmitDataToVariantPaths(item: WH40KItem, submitData: Record<string, unknown>): Record<string, unknown> {
     const systemSource = item?.system?._source;
     if (!isPlainObject(systemSource)) return submitData;
 

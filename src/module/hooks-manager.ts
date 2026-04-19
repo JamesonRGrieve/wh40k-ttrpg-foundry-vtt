@@ -1,3 +1,4 @@
+import type { WH40KBaseActor } from './documents/base-actor.ts';
 // Import data models
 
 // Import dice/roll classes
@@ -142,9 +143,9 @@ export class HooksManager {
 
         const CFG = CONFIG as any;
         const consolePrefix = 'WH40K RPG | ';
-        (game as any).wh40k = {
+        game.wh40k = {
             debug: false,
-            log: (s: any, o?: any) => ((game as any).wh40k.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
+            log: (s: any, o?: any) => (game.wh40k.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
             warn: (s: any, o?: any) => console.warn(`${consolePrefix}${s}`, o),
             error: (s: any, o?: any) => console.error(`${consolePrefix}${s}`, o),
             rollItemMacro,
@@ -153,8 +154,8 @@ export class HooksManager {
             // Roll table utilities
             rollTable: RollTableUtils,
             // Convenience methods for common roll tables
-            rollPsychicPhenomena: (actor: any, mod: any) => RollTableUtils.rollPsychicPhenomena(actor, mod),
-            rollPerilsOfTheWarp: (actor: any) => RollTableUtils.rollPerilsOfTheWarp(actor),
+            rollPsychicPhenomena: (actor: WH40KBaseActor, mod: any) => RollTableUtils.rollPsychicPhenomena(actor, mod),
+            rollPerilsOfTheWarp: (actor: WH40KBaseActor) => RollTableUtils.rollPerilsOfTheWarp(actor),
             rollFearEffects: (fear: any, dof: any) => RollTableUtils.rollFearEffects(fear, dof),
             rollMutation: () => RollTableUtils.rollMutation(),
             rollMalignancy: () => RollTableUtils.rollMalignancy(),
@@ -163,7 +164,7 @@ export class HooksManager {
             openCompendiumBrowser: (options: Record<string, unknown>) => RTCompendiumBrowser.open(options),
             // Character creation
             OriginPathBuilder: characterCreation.OriginPathBuilder,
-            openOriginPathBuilder: (actor: any, options?: Record<string, unknown>) => characterCreation.OriginPathBuilder.show(actor, options),
+            openOriginPathBuilder: (actor: WH40KBaseActor, options?: Record<string, unknown>) => characterCreation.OriginPathBuilder.show(actor, options),
             // NPC utilities
             npc: npcApplications,
             applications: npcApplications, // Alias for shorter access
@@ -171,15 +172,15 @@ export class HooksManager {
             quickCreateNPC: (config: any) => npcApplications.NPCQuickCreateDialog.create(config),
             batchCreateNPCs: (config: any) => npcApplications.BatchCreateDialog.open(config),
             openEncounterBuilder: () => npcApplications.EncounterBuilder.show(),
-            exportStatBlock: (actor: any, format: any) => npcApplications.StatBlockExporter.quickExport(actor, format),
+            exportStatBlock: (actor: WH40KBaseActor, format: any) => npcApplications.StatBlockExporter.quickExport(actor, format),
             importStatBlock: (input: any) => npcApplications.StatBlockParser.open(input),
             openTemplateSelector: (options: Record<string, unknown>) => npcApplications.TemplateSelector.open(options),
             // Phase 7: QoL Features
             DifficultyCalculatorDialog: npcApplications.DifficultyCalculatorDialog,
-            calculateDifficulty: (actor: any) => npcApplications.DifficultyCalculatorDialog.show(actor),
+            calculateDifficulty: (actor: WH40KBaseActor) => npcApplications.DifficultyCalculatorDialog.show(actor),
             CombatPresetDialog: npcApplications.CombatPresetDialog,
-            savePreset: (actor: any) => npcApplications.CombatPresetDialog.savePreset(actor),
-            loadPreset: (actor: any) => npcApplications.CombatPresetDialog.loadPreset(actor),
+            savePreset: (actor: WH40KBaseActor) => npcApplications.CombatPresetDialog.savePreset(actor),
+            loadPreset: (actor: WH40KBaseActor) => npcApplications.CombatPresetDialog.loadPreset(actor),
             openPresetLibrary: () => npcApplications.CombatPresetDialog.showLibrary(),
             transaction: TransactionManager,
             // Dice/Roll classes
@@ -684,8 +685,8 @@ export class HooksManager {
         await checkAndMigrateWorld();
 
         // Initialize rich tooltip system
-        (game as any).wh40k.tooltips = new TooltipsWH40K();
-        await (game as any).wh40k.tooltips.initialize();
+        game.wh40k.tooltips = new TooltipsWH40K();
+        await game.wh40k.tooltips.initialize();
         TransactionManager.initialize();
 
         game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
@@ -711,7 +712,7 @@ export class HooksManager {
         const OLD_ID = `${SYSTEM_ID}.NPCSheetV2`;
         const NEW_ID = `${SYSTEM_ID}.NPCSheet`;
         const updates: Array<{ '_id': string; 'flags.core.sheetClass': string }> = [];
-        for (const actor of (game as any).actors ?? []) {
+        for (const actor of game.actors ?? []) {
             if (actor.type !== 'npc') continue;
             if (actor.getFlag?.('core', 'sheetClass') === OLD_ID) {
                 updates.push({ '_id': actor.id, 'flags.core.sheetClass': NEW_ID });
@@ -719,7 +720,7 @@ export class HooksManager {
         }
         if (updates.length > 0) {
             await Actor.updateDocuments(updates);
-            (game as any).wh40k?.log?.(`Migrated ${updates.length} NPC sheetClass flag(s) from NPCSheetV2 to NPCSheet.`);
+            game.wh40k?.log?.(`Migrated ${updates.length} NPC sheetClass flag(s) from NPCSheetV2 to NPCSheet.`);
         }
     }
 
@@ -758,7 +759,7 @@ export class HooksManager {
         if (!(game.user as any)?.isGM) return;
 
         const LEGACY = new Set(['character', 'npc', 'vehicle', 'starship']);
-        const targets = Array.from((game as any).actors ?? []).filter((a: any) => LEGACY.has(a.type));
+        const targets = Array.from(game.actors ?? []).filter((a: any) => LEGACY.has(a.type));
         if (!targets.length) {
             await (game.settings as any).set(SYSTEM_ID, SETTING_DONE, true);
             return;
@@ -780,7 +781,7 @@ export class HooksManager {
             actors: targets.map((a: any) => a.toObject()),
         };
         await (game.settings as any).set(SYSTEM_ID, SETTING_BACKUP, backup);
-        (game as any).wh40k?.log?.(`Backed up ${backup.actors.length} legacy actor(s) to world setting ${SYSTEM_ID}.${SETTING_BACKUP} before migration.`);
+        game.wh40k?.log?.(`Backed up ${backup.actors.length} legacy actor(s) to world setting ${SYSTEM_ID}.${SETTING_BACKUP} before migration.`);
 
         let migrated = 0;
         const failed: Array<{ id: string; name: string; error: string }> = [];
@@ -818,12 +819,12 @@ export class HooksManager {
                 }
                 migrated++;
             } catch (err) {
-                (game as any).wh40k?.error?.(`Migration error for ${name} (${id}):`, err);
+                game.wh40k?.error?.(`Migration error for ${name} (${id}):`, err);
                 failed.push({ id, name, error: String(err) });
             }
         }
 
-        (game as any).wh40k?.log?.(
+        game.wh40k?.log?.(
             `Actor-type migration: ${migrated}/${targets.length} retyped successfully` +
                 (failed.length ? `, ${failed.length} failed (see console). Backup available in world setting ${SYSTEM_ID}.${SETTING_BACKUP}.` : '.'),
         );
@@ -835,7 +836,7 @@ export class HooksManager {
     }
 
     static hotbarDrop(bar, data, slot) {
-        (game as any).wh40k.log('Hotbar Drop:', data);
+        game.wh40k.log('Hotbar Drop:', data);
         switch (data.type) {
             case 'characteristic':
                 void createCharacteristicMacro(data, slot);

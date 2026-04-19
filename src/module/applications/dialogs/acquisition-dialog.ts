@@ -1,3 +1,6 @@
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { WH40KItem } from '../../documents/item.ts';
+
 /**
  * @file AcquisitionDialog - Profit Factor test dialog for acquiring items
  * ApplicationV2 dialog for WH40K RPG acquisition tests
@@ -351,7 +354,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {object} data  Acquisition data
      * @private
      */
-    async _logAcquisition(data: any): Promise<void> {
+    async _logAcquisition(data: Record<string, unknown>): Promise<void> {
         const history = this.actor.getFlag('wh40k-rpg', 'acquisitionHistory') || [];
         history.push(data);
 
@@ -368,7 +371,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {object} data  Message data
      * @private
      */
-    async _createAcquisitionMessage(data: any): Promise<any> {
+    async _createAcquisitionMessage(data: Record<string, unknown>): Promise<any> {
         const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/acquisition-test.hbs', {
             actor: this.actor,
             item: data.item,
@@ -422,7 +425,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<object|null>}  Result or null
      * @static
      */
-    static async show(actor: any, item: any = null): Promise<any> {
+    static async show(actor: WH40KBaseActor, item: WH40KItem = null): Promise<any> {
         const dialog = new AcquisitionDialog(actor, { item });
         void dialog.render(true);
         return dialog.wait();

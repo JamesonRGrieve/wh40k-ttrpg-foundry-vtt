@@ -9,6 +9,8 @@
  * In sheets: context.quickActions = QuickActionsBar.getActionsForItem(item);
  */
 
+import type { WH40KItem } from '../../documents/item.ts';
+
 export default class QuickActionsBar {
     /**
      * Get action definitions for an item
@@ -18,7 +20,7 @@ export default class QuickActionsBar {
      * @param {boolean} options.inSheet - Rendering in item sheet (vs character sheet)
      * @returns {Object[]} Array of action definitions
      */
-    static getActionsForItem(item: any, { compact: boolean = false, inSheet: any = false } = {}): any {
+    static getActionsForItem(item: WH40KItem, { compact: boolean = false, inSheet: any = false } = {}): any {
         const actions = [];
         const type = item.type;
 
