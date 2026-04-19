@@ -446,7 +446,51 @@
             "RogueTraderNPC": "Rogue Trader NPC",
             "BlackCrusadeNPC": "Black Crusade NPC",
             "OnlyWarNPC": "Only War NPC",
-            "DeathwatchNPC": "Deathwatch NPC"
+            "DeathwatchNPC": "Deathwatch NPC",
+            "DarkHeresy1Vehicle": "Dark Heresy 1e Vehicle",
+            "DarkHeresy2Vehicle": "Dark Heresy 2e Vehicle",
+            "RogueTraderVehicle": "Rogue Trader Vehicle",
+            "BlackCrusadeVehicle": "Black Crusade Vehicle",
+            "OnlyWarVehicle": "Only War Vehicle",
+            "DeathwatchVehicle": "Deathwatch Vehicle",
+            "RogueTraderStarship": "Rogue Trader Starship"
+        },
+        "TYPES": {
+            "Actor": {
+                "dh2-character": "Dark Heresy 2e Character",
+                "dh2-npc": "Dark Heresy 2e NPC",
+                "dh2-vehicle": "Dark Heresy 2e Vehicle",
+                "dh1-character": "Dark Heresy 1e Character",
+                "dh1-npc": "Dark Heresy 1e NPC",
+                "dh1-vehicle": "Dark Heresy 1e Vehicle",
+                "rt-character": "Rogue Trader Character",
+                "rt-npc": "Rogue Trader NPC",
+                "rt-vehicle": "Rogue Trader Vehicle",
+                "rt-starship": "Rogue Trader Starship",
+                "bc-character": "Black Crusade Character",
+                "bc-npc": "Black Crusade NPC",
+                "bc-vehicle": "Black Crusade Vehicle",
+                "ow-character": "Only War Character",
+                "ow-npc": "Only War NPC",
+                "ow-vehicle": "Only War Vehicle",
+                "dw-character": "Deathwatch Character",
+                "dw-npc": "Deathwatch NPC",
+                "dw-vehicle": "Deathwatch Vehicle"
+            }
+        },
+        "CreateActor": {
+            "Title": "Create Actor",
+            "SystemLabel": "Game System",
+            "KindLabel": "Kind",
+            "NameLabel": "Name",
+            "CreateButton": "Create",
+            "CancelButton": "Cancel",
+            "Kinds": {
+                "character": "Player Character",
+                "npc": "NPC",
+                "vehicle": "Vehicle",
+                "starship": "Starship"
+            }
         },
         "TalentCategory": {
             "General": "General",

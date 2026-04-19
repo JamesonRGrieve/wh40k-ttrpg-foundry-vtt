@@ -11,18 +11,29 @@ import { DHCombatActionManager } from './actions/combat-action-manager.ts';
 import { DHTargetedActionManager } from './actions/targeted-action-manager.ts';
 import CharacterSheetSidebar from './applications/actor/character-sheet-sidebar.ts';
 import {
-    DarkHeresy1Sheet,
-    DarkHeresy2Sheet,
-    RogueTraderSheet,
-    BlackCrusadeSheet,
-    OnlyWarSheet,
-    DeathwatchSheet,
+    // Player sheets (default for {system}-character)
+    DarkHeresy1PlayerSheet,
+    DarkHeresy2PlayerSheet,
+    RogueTraderPlayerSheet,
+    BlackCrusadePlayerSheet,
+    OnlyWarPlayerSheet,
+    DeathwatchPlayerSheet,
+    // NPC sheets (default for {system}-npc)
     DarkHeresy1NPCSheet,
     DarkHeresy2NPCSheet,
     RogueTraderNPCSheet,
     BlackCrusadeNPCSheet,
     OnlyWarNPCSheet,
     DeathwatchNPCSheet,
+    // Vehicle sheets (default for {system}-vehicle)
+    DarkHeresy1VehicleSheet,
+    DarkHeresy2VehicleSheet,
+    RogueTraderVehicleSheet,
+    BlackCrusadeVehicleSheet,
+    OnlyWarVehicleSheet,
+    DeathwatchVehicleSheet,
+    // Starship sheet (default for rt-starship)
+    RogueTraderStarshipSheet,
 } from './applications/actor/game-system-sheets.ts';
 import NPCSheet from './applications/actor/npc-sheet.ts';
 import StarshipSheet from './applications/actor/starship-sheet.ts';
@@ -275,89 +286,138 @@ export class HooksManager {
 
         // Unregister core V1 actor sheet and register V2 actor sheets
         DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.appv1.sheets.ActorSheet);
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2Sheet, {
-            types: ['character'],
+
+        // Per-type sheet registration. Each of the 19 concrete actor types
+        // gets exactly one default sheet — the factory-generated system
+        // variant matching its system + kind. The sidebar/generic fallbacks
+        // register against each of that kind's new types as selectable alt
+        // options (makeDefault:false) so GMs can still switch if needed.
+        const playerTypeIds = ['dh2-character', 'dh1-character', 'rt-character', 'bc-character', 'ow-character', 'dw-character'];
+        const npcTypeIds = ['dh2-npc', 'dh1-npc', 'rt-npc', 'bc-npc', 'ow-npc', 'dw-npc'];
+        const vehicleTypeIds = ['dh2-vehicle', 'dh1-vehicle', 'rt-vehicle', 'bc-vehicle', 'ow-vehicle', 'dw-vehicle'];
+        const starshipTypeIds = ['rt-starship'];
+
+        // --- Per-system default PC sheets ---
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2PlayerSheet, {
+            types: ['dh2-character'],
             makeDefault: true,
             label: 'WH40K.Sheet.DarkHeresy2',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy1Sheet, {
-            types: ['character'],
-            makeDefault: false,
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy1PlayerSheet, {
+            types: ['dh1-character'],
+            makeDefault: true,
             label: 'WH40K.Sheet.DarkHeresy1',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderSheet, {
-            types: ['character'],
-            makeDefault: false,
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderPlayerSheet, {
+            types: ['rt-character'],
+            makeDefault: true,
             label: 'WH40K.Sheet.RogueTrader',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BlackCrusadeSheet, {
-            types: ['character'],
-            makeDefault: false,
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BlackCrusadePlayerSheet, {
+            types: ['bc-character'],
+            makeDefault: true,
             label: 'WH40K.Sheet.BlackCrusade',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, OnlyWarSheet, {
-            types: ['character'],
-            makeDefault: false,
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, OnlyWarPlayerSheet, {
+            types: ['ow-character'],
+            makeDefault: true,
             label: 'WH40K.Sheet.OnlyWar',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DeathwatchSheet, {
-            types: ['character'],
-            makeDefault: false,
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DeathwatchPlayerSheet, {
+            types: ['dw-character'],
+            makeDefault: true,
             label: 'WH40K.Sheet.Deathwatch',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, CharacterSheetSidebar, {
-            types: ['character'],
+            types: playerTypeIds,
             makeDefault: false,
             label: 'WH40K.Sheet.PlayerCharacterSidebar',
         });
-        // NPC sheet variants — one per game line, mirroring the PC variants
-        // above. Dark Heresy 2e is default for this campaign; the other
-        // systems are selectable per-actor via the Foundry sheet picker.
+
+        // --- Per-system default NPC sheets ---
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2NPCSheet, {
-            types: ['npc'],
+            types: ['dh2-npc'],
             makeDefault: true,
             label: 'WH40K.Sheet.DarkHeresy2NPC',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy1NPCSheet, {
-            types: ['npc'],
-            makeDefault: false,
+            types: ['dh1-npc'],
+            makeDefault: true,
             label: 'WH40K.Sheet.DarkHeresy1NPC',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderNPCSheet, {
-            types: ['npc'],
-            makeDefault: false,
+            types: ['rt-npc'],
+            makeDefault: true,
             label: 'WH40K.Sheet.RogueTraderNPC',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BlackCrusadeNPCSheet, {
-            types: ['npc'],
-            makeDefault: false,
+            types: ['bc-npc'],
+            makeDefault: true,
             label: 'WH40K.Sheet.BlackCrusadeNPC',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, OnlyWarNPCSheet, {
-            types: ['npc'],
-            makeDefault: false,
+            types: ['ow-npc'],
+            makeDefault: true,
             label: 'WH40K.Sheet.OnlyWarNPC',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DeathwatchNPCSheet, {
-            types: ['npc'],
-            makeDefault: false,
+            types: ['dw-npc'],
+            makeDefault: true,
             label: 'WH40K.Sheet.DeathwatchNPC',
         });
-        // Keep the generic NPCSheet registered as a system-agnostic fallback
-        // option (selectable via the sheet picker); not the default.
+        // Generic NPCSheet — selectable fallback on all NPC types.
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NPCSheet, {
-            types: ['npc'],
+            types: npcTypeIds,
             makeDefault: false,
             label: 'WH40K.Sheet.NPC',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheet, {
-            types: ['vehicle'],
+
+        // --- Per-system default Vehicle sheets ---
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2VehicleSheet, {
+            types: ['dh2-vehicle'],
             makeDefault: true,
+            label: 'WH40K.Sheet.DarkHeresy2Vehicle',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy1VehicleSheet, {
+            types: ['dh1-vehicle'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.DarkHeresy1Vehicle',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderVehicleSheet, {
+            types: ['rt-vehicle'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.RogueTraderVehicle',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, BlackCrusadeVehicleSheet, {
+            types: ['bc-vehicle'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.BlackCrusadeVehicle',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, OnlyWarVehicleSheet, {
+            types: ['ow-vehicle'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.OnlyWarVehicle',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DeathwatchVehicleSheet, {
+            types: ['dw-vehicle'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.DeathwatchVehicle',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheet, {
+            types: vehicleTypeIds,
+            makeDefault: false,
             label: 'WH40K.Sheet.Vehicle',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, StarshipSheet, {
-            types: ['starship'],
+
+        // --- Starship (RT only for now) ---
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderStarshipSheet, {
+            types: ['rt-starship'],
             makeDefault: true,
+            label: 'WH40K.Sheet.RogueTraderStarship',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, StarshipSheet, {
+            types: starshipTypeIds,
+            makeDefault: false,
             label: 'WH40K.Sheet.Starship',
         });
 
