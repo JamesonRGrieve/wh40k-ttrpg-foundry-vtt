@@ -3,8 +3,6 @@ import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import { WH40KItemContainer } from './item-container.ts';
 
 export class WH40KItem extends WH40KItemContainer {
-    [key: string]: any;
-
     static #pruneUndefined(value: any): any {
         if (Array.isArray(value)) {
             return value.map((entry) => this.#pruneUndefined(entry));
