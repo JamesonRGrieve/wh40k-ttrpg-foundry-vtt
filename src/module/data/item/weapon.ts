@@ -30,6 +30,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         uuid: string;
         name: string;
         modifiers: { damage: number; penetration: number; range: number };
+        clipModifier: number;
         addedQualities: Set<string>;
         removedQualities: Set<string>;
     };
@@ -114,6 +115,8 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
                         },
                         { required: false },
                     ),
+                    // Cached clip size modifier from loaded ammo
+                    clipModifier: new fields.NumberField({ required: false, initial: 0, integer: true }),
                     // Cached qualities
                     addedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
                     removedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: false, initial: () => new Set() }),
@@ -729,7 +732,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         props.unshift(`${this.classLabel} (${this.typeLabel})`);
 
         if (this.usesAmmo) {
-            props.push(`Clip: ${this.clip.value}/${this.clip.max}`);
+            props.push(`Clip: ${this.clip.value}/${this.effectiveClipMax}`);
             props.push(`Reload: ${this.reloadLabel}`);
         }
 
@@ -812,12 +815,22 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
+     * Get effective clip max, accounting for loaded ammo's clip modifier.
+     * @type {number}
+     */
+    get effectiveClipMax(): number {
+        const base = this.clip.max;
+        const ammoMod = this.loadedAmmo?.clipModifier ?? 0;
+        return Math.max(1, base + ammoMod);
+    }
+
+    /**
      * Get ammunition percentage for visual display.
      * @type {number}
      */
     get ammoPercentage(): number {
         if (!this.usesAmmo || this.clip.max === 0) return 100;
-        return Math.round((this.clip.value / this.clip.max) * 100);
+        return Math.round((this.clip.value / this.effectiveClipMax) * 100);
     }
 
     /**
@@ -873,7 +886,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         }
         parts.push(`${this.damageLabel}`);
         parts.push(`Pen: ${this.damage.penetration}`);
-        if (this.usesAmmo) parts.push(`Clip: ${this.clip.max}`);
+        if (this.usesAmmo) parts.push(`Clip: ${this.effectiveClipMax}`);
         return parts.join(' | ');
     }
 
@@ -972,16 +985,12 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
-     * Simple reload (legacy method for backward compatibility).
-     * Reloads to max without validation.
-     * @param {number} [amount]   Amount to reload (defaults to full).
-     * @returns {Promise<Item>}
-     * @deprecated Use reload() instead for full action economy support
+     * Simple reload (legacy method).
+     * @deprecated Use reload() instead for inventory tracking and action economy
      */
-    reloadSimple(amount = null): any {
-        if (!this.usesAmmo) return this.parent;
-        const newValue = amount ?? this.clip.max;
-        return this.parent?.update({ 'system.clip.value': Math.min(newValue, this.clip.max) });
+    reloadSimple(): any {
+        console.warn('wh40k-rpg | reloadSimple() is deprecated, use reload() instead');
+        return this.reload({ skipValidation: true });
     }
 
     /**
@@ -995,7 +1004,16 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             return this.parent;
         }
 
+        const actor = this.parent?.actor;
+
+        // Eject current ammo first (return remaining rounds to inventory)
+        if (this.clip.value > 0 && this.hasLoadedAmmo && actor) {
+            await this._returnRoundsToInventory(actor, this.clip.value);
+        }
+
         // Cache ammunition modifiers
+        const clipMod = ammoItem.system.clipModifier ?? 0;
+        const effectiveMax = Math.max(1, this.clip.max + clipMod);
         const loadedAmmoData = {
             uuid: ammoItem.uuid,
             name: ammoItem.name,
@@ -1004,16 +1022,23 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
                 penetration: ammoItem.system.modifiers?.penetration ?? 0,
                 range: ammoItem.system.modifiers?.range ?? 0,
             },
+            clipModifier: clipMod,
             addedQualities: ammoItem.system.addedQualities || new Set(),
             removedQualities: ammoItem.system.removedQualities || new Set(),
         };
 
+        // Deduct rounds from inventory
+        const roundsToLoad = actor ? Math.min(effectiveMax, ammoItem.system.quantity) : effectiveMax;
+        if (actor && ammoItem.system.quantity !== undefined) {
+            await ammoItem.update({ 'system.quantity': ammoItem.system.quantity - roundsToLoad });
+        }
+
         await this.parent?.update({
             'system.loadedAmmo': loadedAmmoData,
-            'system.clip.value': this.clip.max, // Reload on ammo change
+            'system.clip.value': roundsToLoad,
         });
 
-        (ui.notifications as any).info(`${ammoItem.name} loaded into ${this.parent.name}`);
+        (ui.notifications as any).info(`${ammoItem.name} loaded into ${this.parent.name} (${roundsToLoad} rounds)`);
         return this.parent;
     }
 
@@ -1027,18 +1052,61 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             return this.parent;
         }
 
+        // Return remaining rounds to inventory
+        const actor = this.parent?.actor;
+        if (this.clip.value > 0 && actor) {
+            await this._returnRoundsToInventory(actor, this.clip.value);
+        }
+
         await this.parent?.update({
             'system.loadedAmmo': {
                 uuid: '',
                 name: '',
                 modifiers: { damage: 0, penetration: 0, range: 0 },
+                clipModifier: 0,
                 addedQualities: new Set(),
                 removedQualities: new Set(),
             },
-            'system.clip.value': 0, // Empty clip on eject
+            'system.clip.value': 0,
         });
 
         (ui.notifications as any).info(`Ammunition ejected from ${this.parent.name}`);
         return this.parent;
+    }
+
+    /**
+     * Return remaining rounds to the actor's inventory.
+     * Finds the ammo item by UUID, then by name as fallback.
+     * @param {Actor} actor - The owning actor
+     * @param {number} rounds - Number of rounds to return
+     * @returns {Promise<void>}
+     * @private
+     */
+    async _returnRoundsToInventory(actor, rounds: number): Promise<void> {
+        if (rounds <= 0 || !this.loadedAmmo?.uuid) return;
+
+        // Try to find the ammo item by UUID first
+        let ammoItem = actor.items.find((i) => i.uuid === this.loadedAmmo.uuid);
+
+        // Fallback: find by name and type
+        if (!ammoItem) {
+            ammoItem = actor.items.find((i) => i.type === 'ammunition' && i.name === this.loadedAmmo.name);
+        }
+
+        if (ammoItem) {
+            await ammoItem.update({ 'system.quantity': ammoItem.system.quantity + rounds });
+        } else {
+            // Last resort: create a new ammo item with the returned rounds
+            try {
+                const sourceItem = (await fromUuid(this.loadedAmmo.uuid)) as any;
+                if (sourceItem) {
+                    const itemData = sourceItem.toObject();
+                    itemData.system.quantity = rounds;
+                    await actor.createEmbeddedDocuments('Item', [itemData]);
+                }
+            } catch (e) {
+                console.warn(`wh40k-rpg | Could not return ${rounds} rounds of ${this.loadedAmmo.name} to inventory`);
+            }
+        }
     }
 }

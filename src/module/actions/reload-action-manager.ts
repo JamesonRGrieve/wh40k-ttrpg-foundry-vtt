@@ -3,7 +3,7 @@
  * Integrates with WH40KVTT-7jh Combat Actions System
  */
 
-import { ConfirmationDialog } from '../applications/dialogs/_module.ts';
+import { AmmoPickerDialog, ConfirmationDialog } from '../applications/dialogs/_module.ts';
 
 /**
  * Manager for weapon reload actions.
@@ -42,6 +42,7 @@ export class ReloadActionManager {
         }
 
         const system = weapon.system;
+        const actor = weapon.actor;
 
         // Check if weapon uses ammo
         if (!system.usesAmmo) {
@@ -53,12 +54,24 @@ export class ReloadActionManager {
         }
 
         // Check if already fully loaded (unless forced)
-        if (!force && system.clip.value >= system.clip.max) {
+        const effectiveMax = system.effectiveClipMax;
+        if (!force && system.clip.value >= effectiveMax) {
             return {
                 success: false,
-                message: `${weapon.name} is already fully loaded (${system.clip.max}/${system.clip.max})`,
+                message: `${weapon.name} is already fully loaded (${effectiveMax}/${effectiveMax})`,
                 actionsSpent: { half: 0, full: 0 },
             };
+        }
+
+        // Check that actor has spare ammunition
+        if (actor) {
+            if (!this.hasSpareAmmunition(actor, weapon)) {
+                return {
+                    success: false,
+                    message: `No compatible ammunition available for ${weapon.name}`,
+                    actionsSpent: { half: 0, full: 0 },
+                };
+            }
         }
 
         // Calculate effective reload time (accounting for Customised quality)
@@ -83,8 +96,8 @@ export class ReloadActionManager {
         }
 
         // Check action economy (only in combat if not skipped)
-        if (!skipValidation && weapon.actor) {
-            const canAfford = await this.validateActionEconomy(weapon.actor, reloadCost);
+        if (!skipValidation && actor) {
+            const canAfford = await this.validateActionEconomy(actor, reloadCost);
             if (!canAfford.success) {
                 return {
                     success: false,
@@ -94,28 +107,104 @@ export class ReloadActionManager {
             }
         }
 
-        // Perform the reload
+        // --- Inventory-aware reload ---
         const previousValue = system.clip.value;
-        await weapon.update({ 'system.clip.value': system.clip.max });
 
-        // Calculate rounds loaded
-        const roundsLoaded = system.clip.max - previousValue;
+        if (actor) {
+            // Step 1: Return remaining rounds to inventory
+            if (previousValue > 0 && system.hasLoadedAmmo) {
+                await system._returnRoundsToInventory(actor, previousValue);
+            }
 
-        // Build success message
-        let message = `${weapon.name} reloaded (${previousValue} → ${system.clip.max})`;
-        if (roundsLoaded > 0) {
-            message += ` [+${roundsLoaded} rounds]`;
+            // Step 2: Select ammo type
+            const spareAmmo = this.findSpareAmmunition(actor, weapon);
+            if (spareAmmo.length === 0) {
+                // Edge case: ammo was returned but nothing available (shouldn't happen, but guard)
+                return {
+                    success: false,
+                    message: `No compatible ammunition available for ${weapon.name}`,
+                    actionsSpent: { half: 0, full: 0 },
+                };
+            }
+
+            const selectedAmmo = await AmmoPickerDialog.pick({
+                ammoItems: spareAmmo,
+                currentAmmoUuid: system.loadedAmmo?.uuid,
+                weaponName: weapon.name,
+                clipMax: effectiveMax,
+            });
+
+            if (!selectedAmmo) {
+                // User cancelled — restore the rounds we returned
+                if (previousValue > 0 && system.hasLoadedAmmo) {
+                    // Re-deduct the rounds we just returned (reverse the return)
+                    const prevAmmoItem =
+                        actor.items.find((i) => i.uuid === system.loadedAmmo.uuid) ||
+                        actor.items.find((i) => i.type === 'ammunition' && i.name === system.loadedAmmo.name);
+                    if (prevAmmoItem) {
+                        await prevAmmoItem.update({ 'system.quantity': prevAmmoItem.system.quantity - previousValue });
+                    }
+                }
+                return {
+                    success: false,
+                    message: 'Reload cancelled',
+                    actionsSpent: { half: 0, full: 0 },
+                };
+            }
+
+            // Step 3: Calculate and load rounds
+            const clipMod = selectedAmmo.system.clipModifier ?? 0;
+            const newEffectiveMax = Math.max(1, system.clip.max + clipMod);
+            const roundsToLoad = Math.min(newEffectiveMax, selectedAmmo.system.quantity);
+
+            // Deduct rounds from inventory
+            await selectedAmmo.update({ 'system.quantity': selectedAmmo.system.quantity - roundsToLoad });
+
+            // Update weapon — set loadedAmmo reference if different type
+            const isSameAmmo = selectedAmmo.uuid === system.loadedAmmo?.uuid;
+            const updateData: Record<string, any> = { 'system.clip.value': roundsToLoad };
+
+            if (!isSameAmmo) {
+                updateData['system.loadedAmmo'] = {
+                    uuid: selectedAmmo.uuid,
+                    name: selectedAmmo.name,
+                    modifiers: {
+                        damage: selectedAmmo.system.modifiers?.damage ?? 0,
+                        penetration: selectedAmmo.system.modifiers?.penetration ?? 0,
+                        range: selectedAmmo.system.modifiers?.range ?? 0,
+                    },
+                    clipModifier: clipMod,
+                    addedQualities: selectedAmmo.system.addedQualities || new Set(),
+                    removedQualities: selectedAmmo.system.removedQualities || new Set(),
+                };
+            }
+
+            await weapon.update(updateData);
+
+            // Build success message
+            let message = `${weapon.name} reloaded with ${selectedAmmo.name} (${previousValue} → ${roundsToLoad})`;
+            if (roundsToLoad < newEffectiveMax) {
+                message += ` [partial — only ${roundsToLoad} rounds available]`;
+            }
+            message += ` — ${reloadCost.label}`;
+
+            if (this.hasCustomisedQuality(weapon) && effectiveReloadTime !== system.reload) {
+                message += ` (Customised: ${system.reload} → ${effectiveReloadTime})`;
+            }
+
+            return {
+                success: true,
+                message,
+                actionsSpent: reloadCost,
+            };
         }
-        message += ` - ${reloadCost.label}`;
 
-        // Show Customised bonus if applicable
-        if (this.hasCustomisedQuality(weapon) && effectiveReloadTime !== system.reload) {
-            message += ` (Customised: ${system.reload} → ${effectiveReloadTime})`;
-        }
+        // Fallback for unowned weapons (no actor) — simple reload without inventory
+        await weapon.update({ 'system.clip.value': effectiveMax });
 
         return {
             success: true,
-            message,
+            message: `${weapon.name} reloaded (${previousValue} → ${effectiveMax}) — ${reloadCost.label}`,
             actionsSpent: reloadCost,
         };
     }
@@ -252,7 +341,7 @@ export class ReloadActionManager {
             baseReloadTime: weapon.system.reload,
             hasCustomised: this.hasCustomisedQuality(weapon),
             clipCurrent: weapon.system.clip.value,
-            clipMax: weapon.system.clip.max,
+            clipMax: weapon.system.effectiveClipMax,
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/reload-action-chat.hbs', templateData);
@@ -269,32 +358,46 @@ export class ReloadActionManager {
     }
 
     /**
-     * Check for spare magazines in actor inventory.
+     * Find compatible ammunition in actor inventory.
+     * Matches by weapon type against ammo's weaponTypes set.
      * @param {Actor} actor - The actor
      * @param {Item} weapon - The weapon
-     * @returns {Array<Item>} - Array of compatible ammunition items
+     * @returns {Array<Item>} - Array of compatible ammunition items with quantity > 0, sorted with currently loaded type first
      */
     static findSpareAmmunition(actor, weapon) {
         if (!actor || !weapon) return [];
 
-        const ammoType = weapon.system.clip.type;
-        if (!ammoType) return [];
+        const weaponType = weapon.system.type;
+        const currentAmmoUuid = weapon.system.loadedAmmo?.uuid;
 
-        // Find ammunition items in inventory matching the weapon's clip type
-        return actor.items.filter((item) => {
-            return item.type === 'ammunition' && item.system.ammunitionType === ammoType;
+        // Find ammunition items compatible with this weapon type that have rounds available
+        const compatible = actor.items.filter((item) => {
+            if (item.type !== 'ammunition') return false;
+            if (item.system.quantity <= 0) return false;
+            const ammoWeaponTypes = item.system.weaponTypes;
+            // Universal ammo (empty weaponTypes set) is compatible with all weapons
+            if (!ammoWeaponTypes || ammoWeaponTypes.size === 0) return true;
+            return ammoWeaponTypes.has(weaponType);
         });
+
+        // Sort: currently loaded type first, then alphabetical
+        compatible.sort((a, b) => {
+            if (a.uuid === currentAmmoUuid) return -1;
+            if (b.uuid === currentAmmoUuid) return 1;
+            return a.name.localeCompare(b.name);
+        });
+
+        return compatible;
     }
 
     /**
-     * Check if actor has spare ammunition available.
+     * Check if actor has spare ammunition available for a weapon.
      * @param {Actor} actor - The actor
      * @param {Item} weapon - The weapon
      * @returns {boolean}
      */
     static hasSpareAmmunition(actor, weapon) {
-        const spareAmmo = this.findSpareAmmunition(actor, weapon);
-        return spareAmmo.length > 0 && spareAmmo.some((ammo) => ammo.system.quantity > 0);
+        return this.findSpareAmmunition(actor, weapon).length > 0;
     }
 }
 

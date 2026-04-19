@@ -213,7 +213,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      */
     static TABS = [
         { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
-        { tab: 'skills', label: 'WH40K.Tabs.Skills', group: 'primary', cssClass: 'tab-skills' },
+        { tab: 'skills', label: 'WH40K.Tabs.Statistics', group: 'primary', cssClass: 'tab-skills' },
         // talents tab removed — content moved to overview and skills tabs
         { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
         { tab: 'equipment', label: 'WH40K.Tabs.Equipment', group: 'primary', cssClass: 'tab-equipment' },
@@ -222,6 +222,12 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     ];
 
     /* -------------------------------------------- */
+
+    /** @override */
+    get title(): string {
+        const base = `${this.document.type === 'character' ? 'Player Character' : this.document.type}: ${this.document.name}`;
+        return `${base} — Drag and Drop from Compendium to Add`;
+    }
 
     /** @override */
     tabGroups = {
@@ -1008,7 +1014,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         // Add ammo percentage to weapons
         [context.primaryWeapon, context.secondaryWeapon, context.sidearm].filter(Boolean).forEach((w) => {
             if (w.system?.clip?.max) {
-                w.ammoPercent = Math.round((w.system.clip.value / w.system.clip.max) * 100);
+                w.ammoPercent = w.system.ammoPercentage ?? Math.round((w.system.clip.value / w.system.effectiveClipMax) * 100);
             }
         });
 
