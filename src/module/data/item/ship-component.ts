@@ -135,7 +135,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         ShipComponentData.#migratePowerUsage(source);
         ShipComponentData.#migrateSpaceUsage(source);
@@ -148,7 +148,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Handle legacy powerUsage field.
      * @param {object} source  The source data
      */
-    static #migratePowerUsage(source: Record<string, any>): void {
+    static #migratePowerUsage(source: Record<string, unknown>): void {
         if ('powerUsage' in source && !source.power) {
             const usage = source.powerUsage;
             source.power = {
@@ -163,7 +163,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Handle legacy spaceUsage field.
      * @param {object} source  The source data
      */
-    static #migrateSpaceUsage(source: Record<string, any>): void {
+    static #migrateSpaceUsage(source: Record<string, unknown>): void {
         if ('spaceUsage' in source && source.space === undefined) {
             source.space = source.spaceUsage;
             delete source.spaceUsage;
@@ -174,7 +174,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Handle legacy spCost field.
      * @param {object} source  The source data
      */
-    static #migrateSpCost(source: Record<string, any>): void {
+    static #migrateSpCost(source: Record<string, unknown>): void {
         if ('spCost' in source && source.shipPoints === undefined) {
             source.shipPoints = source.spCost;
             delete source.spCost;
@@ -185,7 +185,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Handle legacy type field.
      * @param {object} source  The source data
      */
-    static #migrateType(source: Record<string, any>): void {
+    static #migrateType(source: Record<string, unknown>): void {
         if ('type' in source && !source.componentType) {
             let type = source.type.replace(/^\(es\.\)\s*/, '').toLowerCase();
             type = type.replace(/\s+/g, '-');
@@ -202,7 +202,7 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
      * Parse hullType string to array.
      * @param {object} source  The source data
      */
-    static #migrateHullType(source: Record<string, any>): void {
+    static #migrateHullType(source: Record<string, unknown>): void {
         if (typeof source.hullType === 'string') {
             const types = source.hullType
                 .toLowerCase()

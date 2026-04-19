@@ -28,7 +28,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         DescriptionTemplate.#migrateDescription(source);
         DescriptionTemplate.#migrateSource(source);
@@ -38,7 +38,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * Migrate flat description string to object structure.
      * @param {object} source  The source data
      */
-    static #migrateDescription(source: Record<string, any>): void {
+    static #migrateDescription(source: Record<string, unknown>): void {
         if (typeof source.description === 'string') {
             source.description = {
                 value: source.description,
@@ -58,7 +58,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * Migrate flat source string to object structure.
      * @param {object} source  The source data
      */
-    static #migrateSource(source: Record<string, any>): void {
+    static #migrateSource(source: Record<string, unknown>): void {
         if (typeof source.source === 'string') {
             source.source = {
                 book: '',

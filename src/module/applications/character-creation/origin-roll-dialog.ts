@@ -60,7 +60,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {Item} context.originItem - The origin item being rolled for
      * @param {object} [options={}] - Additional options
      */
-    constructor(rollType, formula, context, options: any = {}) {
+    constructor(rollType, formula, context, options: Record<string, unknown> = {}) {
         super(options);
 
         /**
@@ -114,7 +114,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         context.rollType = this.rollType;

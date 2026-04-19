@@ -22,7 +22,7 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
         };
     }
 
-    getCareerRegistry(): Record<string, any> {
+    getCareerRegistry(): Record<string, unknown> {
         // DW specialty advance tables TBD
         return {};
     }

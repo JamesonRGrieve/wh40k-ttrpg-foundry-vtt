@@ -53,7 +53,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
          * @type {object}
          * @private
          */
-        _whatIfImpacts: any[] | Record<string, unknown> = {};
+        _whatIfImpacts: unknown[] | Record<string, unknown> = {};
 
         /* -------------------------------------------- */
         /*  Rendering                                   */

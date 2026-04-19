@@ -103,7 +103,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {boolean} [config.isHorde] - Default horde mode.
      * @param {Object} [options] - Application options.
      */
-    constructor(config: any = {}, options: any = {}) {
+    constructor(config: any = {}, options: Record<string, unknown> = {}) {
         super(options);
         this.#state = {
             name: config.name ?? 'New NPC',
@@ -121,7 +121,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         // Get available options
@@ -134,7 +134,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         const tier = ThreatCalculator.getTier(this.#state.threatLevel);
 
         // Prepare characteristics for display
-        const characteristics = Object.entries(previewData.characteristics as Record<string, any>).map(([key, char]) => ({
+        const characteristics = Object.entries(previewData.characteristics as Record<string, unknown>).map(([key, char]) => ({
             key,
             label: char.label,
             short: char.short,
@@ -143,7 +143,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         }));
 
         // Prepare skills for display
-        const skills = Object.entries(previewData.trainedSkills as Record<string, any>).map(([key, skill]) => {
+        const skills = Object.entries(previewData.trainedSkills as Record<string, unknown>).map(([key, skill]) => {
             let level = '';
             if (skill.plus20) level = '+20';
             else if (skill.plus10) level = '+10';
@@ -224,7 +224,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: any, options: any): any {
+    _onRender(context: any, options: Record<string, unknown>): any {
         void super._onRender(context, options);
 
         // Add live update listeners
@@ -387,7 +387,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: any = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<any> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
@@ -451,7 +451,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
             if (randomize) {
                 // Randomize characteristics slightly (±5)
-                for (const char of Object.values(systemData.characteristics) as any[]) {
+                for (const char of Object.values(systemData.characteristics) as unknown[]) {
                     const variance = Math.floor(Math.random() * 11) - 5;
                     char.base = Math.max(10, Math.min(99, char.base + variance));
                     char.total = char.base + char.modifier;

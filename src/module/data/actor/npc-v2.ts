@@ -429,7 +429,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Get effective stats with custom overrides applied.
      * @type {Object}
      */
-    get effectiveStats(): Record<string, any> {
+    get effectiveStats(): Record<string, unknown> {
         const stats = {
             characteristics: {},
             skills: {},
@@ -493,7 +493,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Get the list of trained skills as an array for display.
      * @type {Array<Object>}
      */
-    get trainedSkillsList(): Array<Record<string, any>> {
+    get trainedSkillsList(): Array<Record<string, unknown>> {
         const list = [];
         for (const [key, skill] of Object.entries(this.trainedSkills)) {
             list.push({
@@ -661,7 +661,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {Object} updates - Properties to update
      * @returns {Promise<Actor>}
      */
-    updateSkill(name: string, updates: Record<string, any>): any {
+    updateSkill(name: string, updates: Record<string, unknown>): any {
         const skills = foundry.utils.deepClone(this.trainedSkills);
         if (!skills[name]) return this.parent;
 
@@ -688,7 +688,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {Object} data - Weapon data
      * @returns {Promise<Actor>}
      */
-    addSimpleWeapon(data: Record<string, any> = {}): any {
+    addSimpleWeapon(data: Record<string, unknown> = {}): any {
         const weapons = foundry.utils.deepClone(this.weapons.simple || []);
         weapons.push({
             name: data.name || 'New Weapon',
@@ -987,7 +987,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
     }
 
     /** @inheritDoc */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         NPCDataV2.#migrateSize(source);
         NPCDataV2.#migrateWounds(source);
@@ -998,7 +998,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Migrate size to integer.
      * @param {object} source - The source data
      */
-    static #migrateSize(source: Record<string, any>): void {
+    static #migrateSize(source: Record<string, unknown>): void {
         if (source.size !== undefined) {
             source.size = this._toInt(source.size, 4);
             if (source.size < 1) source.size = 1;
@@ -1010,7 +1010,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Migrate wounds values to integers.
      * @param {object} source - The source data
      */
-    static #migrateWounds(source: Record<string, any>): void {
+    static #migrateWounds(source: Record<string, unknown>): void {
         if (source.wounds) {
             if (source.wounds.max !== undefined) {
                 source.wounds.max = this._toInt(source.wounds.max, 10);
@@ -1028,7 +1028,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * Migrate threat level to integer.
      * @param {object} source - The source data
      */
-    static #migrateThreatLevel(source: Record<string, any>): void {
+    static #migrateThreatLevel(source: Record<string, unknown>): void {
         if (source.threatLevel !== undefined) {
             source.threatLevel = this._toInt(source.threatLevel, 5);
         }

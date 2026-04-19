@@ -77,7 +77,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _preCreate(data: any, options: any, user: any): Promise<void> {
+    async _preCreate(data: any, options: Record<string, unknown>, user: any): Promise<void> {
         await (super._preCreate as any)(data, options, user);
 
         // Configure token defaults for NPC V2
@@ -254,7 +254,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {boolean} [options.ignoreToughness=false] - Whether to ignore toughness bonus.
      * @returns {Promise<Actor>}
      */
-    async applyDamage(amount, location = 'body', options: any = {}): Promise<any> {
+    async applyDamage(amount, location = 'body', options: Record<string, unknown> = {}): Promise<any> {
         const { ignoreArmour = false, ignoreToughness = false } = options;
 
         // Mark actor as hit this round (for Good armour bonus tracking)
@@ -386,7 +386,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {boolean} [options.randomize] - Whether to randomize stats slightly.
      * @returns {Promise<Actor>} The created duplicate.
      */
-    duplicate(options: any = {}): any {
+    duplicate(options: Record<string, unknown> = {}): any {
         const data = this.toObject() as any;
 
         // Modify name

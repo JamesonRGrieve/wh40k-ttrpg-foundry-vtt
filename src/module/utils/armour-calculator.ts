@@ -121,7 +121,7 @@ function parseLegacyAP(rawAp: string | number | null | undefined): LegacyAPResul
  * @param {string} location - Body location key
  * @returns {number} AP value for that location
  */
-function getArmourAPForLocation(armourSystem: Record<string, any>, location: string): number {
+function getArmourAPForLocation(armourSystem: Record<string, unknown>, location: string): number {
     // Try modern getEffectiveAPForLocation method first (includes craftsmanship)
     if (armourSystem && typeof armourSystem.getEffectiveAPForLocation === 'function') {
         return armourSystem.getEffectiveAPForLocation(location);

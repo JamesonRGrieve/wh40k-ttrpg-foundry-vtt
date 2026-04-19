@@ -98,17 +98,17 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         context.filters = this._filters;
         context.results = await this._getFilteredResults();
         context.groupByOptions = this._getGroupByOptions();
-        context.groupedResults = this._groupResults(context.results as any[]);
+        context.groupedResults = this._groupResults(context.results as unknown[]);
 
         // Add armour-specific filters if filtering armour
-        const hasArmour = (context.results as any[]).some((r: any) => r.type === 'armour');
+        const hasArmour = (context.results as unknown[]).some((r: any) => r.type === 'armour');
         if (hasArmour) {
             context.armourTypes = (CONFIG as any).WH40K?.armourTypes || {};
             context.hasArmourFilters = true;
         }
 
         // Add armour modification filters if filtering armour mods
-        const hasArmourMods = (context.results as any[]).some((r: any) => r.type === 'armourModification');
+        const hasArmourMods = (context.results as unknown[]).some((r: any) => r.type === 'armourModification');
         if (hasArmourMods) {
             context.hasArmourModFilters = true;
             context.armourTypesForMods = (CONFIG as any).WH40K?.armourTypes || {};
@@ -449,7 +449,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         ];
     }
 
-    _groupResults(results: any[]): any {
+    _groupResults(results: unknown[]): any {
         const groups = new Map();
         for (const entry of results) {
             const label = this._getGroupLabel(entry);

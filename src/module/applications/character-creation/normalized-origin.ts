@@ -28,18 +28,18 @@ export interface NormalizedChoiceOption {
     label: string;
     description: string | null;
     uuid: string | null;
-    grants: Record<string, any> | null;
+    grants: Record<string, unknown> | null;
     /** Optional specialization sub-choices (e.g. weapon groups for Weapon Training) */
     specializations: string[] | null;
 }
 
 export interface NormalizedGrants {
-    skills: any[];
-    talents: any[];
-    traits: any[];
-    equipment: any[];
+    skills: unknown[];
+    talents: unknown[];
+    traits: unknown[];
+    equipment: unknown[];
     aptitudes: string[];
-    specialAbilities: any[];
+    specialAbilities: unknown[];
     choices: NormalizedChoice[];
     woundsFormula: string | null;
     fateFormula: string | null;

@@ -70,8 +70,8 @@ export interface PrimarySheetMixinAPI extends DragDropMixinAPI {
     _onChangeSheetMode(event: Event): Promise<void>;
     _onClickAction(event: Event, target: HTMLElement): void;
     _showDocument(event: Event, target: HTMLElement): Promise<any>;
-    _sortChildren(collection: string, mode: string): any[];
-    _sortItems(items: any[], mode: string): any[];
+    _sortChildren(collection: string, mode: string): unknown[];
+    _sortItems(items: unknown[], mode: string): unknown[];
 }
 
 /* -------------------------------------------- */
@@ -80,9 +80,9 @@ export interface PrimarySheetMixinAPI extends DragDropMixinAPI {
 export interface TooltipMixinAPI {
     prepareCharacteristicTooltip(key: string, characteristic: Record<string, unknown>, modifierSources?: Record<string, unknown>): string;
     prepareSkillTooltip(key: string, skill: Record<string, unknown>, characteristics: Record<string, unknown>): string;
-    prepareArmorTooltip(location: string, armorData: Record<string, unknown>, equipped?: any[]): string;
+    prepareArmorTooltip(location: string, armorData: Record<string, unknown>, equipped?: unknown[]): string;
     prepareWeaponTooltip(weapon: Record<string, unknown>): string;
-    prepareModifierTooltip(title: string, sources: any[]): string;
+    prepareModifierTooltip(title: string, sources: unknown[]): string;
     prepareQualityTooltip(identifier: string, level?: number | null): string;
 }
 
@@ -128,7 +128,7 @@ export interface EnhancedAnimationsMixinAPI {
 
     _captureAnimationState(): void;
     _setupMutationObserver(): void;
-    animateCounter(element: HTMLElement, fromValue: number, toValue: number, options?: Record<string, any>): void;
+    animateCounter(element: HTMLElement, fromValue: number, toValue: number, options?: Record<string, unknown>): void;
     animateWoundsChange(oldValue: number, newValue: number): void;
     _animateWoundsBar(barElement: HTMLElement, fromPercent: number, toPercent: number): void;
     animateCharacteristicChange(charKey: string, oldValue: number, newValue: number): void;
@@ -192,7 +192,7 @@ export interface ContextMenuMixinAPI {
 
 /** API surface added by EnhancedDragDropMixin (drag-drop-visual-mixin) */
 export interface EnhancedDragDropMixinAPI {
-    _draggedItem: Record<string, any> | null;
+    _draggedItem: Record<string, unknown> | null;
     _dragStartPos: { x: number; y: number } | null;
     _splitResult: { quantity: number } | null;
 
@@ -222,7 +222,7 @@ export interface EnhancedDragDropMixinAPI {
     _animateSnapToSlot(item: any): void;
     removeFromFavorites(itemId: string): Promise<void>;
     clearFavorites(): Promise<void>;
-    getFavoriteItems(): any[];
+    getFavoriteItems(): unknown[];
 }
 
 /* -------------------------------------------- */
@@ -232,7 +232,7 @@ export interface WhatIfMixinAPI {
     _whatIfActive: boolean;
     _whatIfChanges: Record<string, unknown>;
     _whatIfPreview: any;
-    _whatIfImpacts: any[] | Record<string, unknown>;
+    _whatIfImpacts: unknown[] | Record<string, unknown>;
 
     enterWhatIfMode(): Promise<void>;
     previewChange(path: string, value: any): Promise<void>;
@@ -325,7 +325,7 @@ export interface BaseActorSheetMixins
     /** Tab group tracking (group name -> active tab ID). */
     tabGroups: Record<string, string>;
     /** The application's options. */
-    options: Record<string, any>;
+    options: Record<string, unknown>;
 
     /** Render the application. */
     render(options?: Record<string, unknown> | boolean): any;

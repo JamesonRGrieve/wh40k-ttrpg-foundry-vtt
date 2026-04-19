@@ -75,7 +75,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context = await super._prepareContext(options);
 
         context.actor = this.actor;

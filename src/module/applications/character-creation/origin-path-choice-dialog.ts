@@ -154,7 +154,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context = await super._prepareContext(options);
 
         context.item = this.item;
@@ -351,7 +351,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     }
 
     /** @override */
-    _onRender(context: any, options: any): void {
+    _onRender(context: any, options: Record<string, unknown>): void {
         super._onRender(context, options);
 
         // Restore scroll position after re-render

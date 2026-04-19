@@ -15,7 +15,7 @@ import OriginPathBuilder from './origin-path-builder.ts';
 
 function make(gameSystem: string, className: string) {
     const cls = class extends (OriginPathBuilder as any) {
-        constructor(actor: any, options: Record<string, any> = {}) {
+        constructor(actor: any, options: Record<string, unknown> = {}) {
             super(actor, { ...options, gameSystem });
         }
     };

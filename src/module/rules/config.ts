@@ -1,6 +1,6 @@
 import { WH40K as WH40K_BASE } from '../config.ts';
 
-export const WH40K: Record<string, any> = {};
+export const WH40K: Record<string, unknown> = {};
 
 // Merge the comprehensive config from config.mjs
 Object.assign(WH40K, WH40K_BASE);

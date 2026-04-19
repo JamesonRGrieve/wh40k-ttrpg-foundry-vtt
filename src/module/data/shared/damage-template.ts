@@ -28,7 +28,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         DamageTemplate.#migrateSpecial(source);
     }
@@ -37,7 +37,7 @@ export default class DamageTemplate extends SystemDataModel {
      * Migrate special from Array to Set.
      * @param {object} source  The source data
      */
-    static #migrateSpecial(source: Record<string, any>): void {
+    static #migrateSpecial(source: Record<string, unknown>): void {
         if (source.special && Array.isArray(source.special)) {
             source.special = new Set(source.special);
         }

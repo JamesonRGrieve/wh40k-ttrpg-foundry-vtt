@@ -121,7 +121,7 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
          * @param {Object} breakdown - Breakdown data
          * @private
          */
-        #createPopover(anchor: HTMLElement, breakdown: Record<string, any>): void {
+        #createPopover(anchor: HTMLElement, breakdown: Record<string, unknown>): void {
             // Create popover element
             const popover = document.createElement('div');
             popover.className = 'wh40k-stat-breakdown-popover';

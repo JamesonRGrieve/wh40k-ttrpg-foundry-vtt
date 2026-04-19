@@ -24,7 +24,7 @@ export const GRANT_MODE = {
  * Context object for grant processing
  */
 class GrantContext {
-    constructor(actor, options: any = {}) {
+    constructor(actor, options: Record<string, unknown> = {}) {
         this.actor = actor;
         this.mode = options.mode || GRANT_MODE.IMMEDIATE;
         this.depth = options.depth || 0;
@@ -67,7 +67,7 @@ export class GrantsProcessor {
      * @param {WH40KItem} options.sourceItem - Item granting this (for nested grants)
      * @returns {Promise<object>} Result object with grants processed
      */
-    static async processGrants(item, actor, options: Record<string, any> = {}) {
+    static async processGrants(item, actor, options: Record<string, unknown> = {}) {
         if (!item || !actor) {
             console.warn('GrantsProcessor: Missing item or actor');
             return null;
@@ -123,7 +123,7 @@ export class GrantsProcessor {
      * @param {object} options - Application options
      * @returns {Promise<void>}
      */
-    static async applyGrants(actor, result, options: Record<string, any> = {}) {
+    static async applyGrants(actor, result, options: Record<string, unknown> = {}) {
         if (!actor || !result) return;
 
         const updates = {};

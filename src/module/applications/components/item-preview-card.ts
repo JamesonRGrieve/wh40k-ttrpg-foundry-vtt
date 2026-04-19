@@ -426,7 +426,7 @@ export function ItemPreviewMixin(Base) {
          * @returns {string} HTML string
          * @private
          */
-        #generateQualitiesHTML(qualities: any[]): string {
+        #generateQualitiesHTML(qualities: unknown[]): string {
             if (!qualities) return '';
 
             let qualitiesArray = [];

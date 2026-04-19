@@ -54,7 +54,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     #config: {
-        ammoItems: any[];
+        ammoItems: unknown[];
         currentAmmoUuid: string;
         weaponName: string;
         clipMax: number;
@@ -67,7 +67,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /*  Construction                                */
     /* -------------------------------------------- */
 
-    constructor(config: { ammoItems: any[]; currentAmmoUuid?: string; weaponName: string; clipMax: number }, options = {}) {
+    constructor(config: { ammoItems: unknown[]; currentAmmoUuid?: string; weaponName: string; clipMax: number }, options = {}) {
         super(options);
         this.#config = {
             ammoItems: config.ammoItems || [],
@@ -178,7 +178,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
      * @param {number} config.clipMax - Effective clip max for display
      * @returns {Promise<Item|null>} Selected ammo item, or null if cancelled
      */
-    static async pick(config: { ammoItems: any[]; currentAmmoUuid?: string; weaponName: string; clipMax: number }): Promise<any> {
+    static async pick(config: { ammoItems: unknown[]; currentAmmoUuid?: string; weaponName: string; clipMax: number }): Promise<any> {
         // Auto-select if only one type available
         if (config.ammoItems.length === 1) {
             return config.ammoItems[0];

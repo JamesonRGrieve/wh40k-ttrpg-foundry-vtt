@@ -45,7 +45,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         WeaponQualityData.#migrateRating(source);
         WeaponQualityData.#migrateModifiersAndEffect(source);
@@ -53,7 +53,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
         WeaponQualityData.#migrateIdentifier(source);
     }
 
-    static #migrateRating(source: Record<string, any>): void {
+    static #migrateRating(source: Record<string, unknown>): void {
         if ('rating' in source) {
             source.hasLevel = source.rating > 0;
             source.level = source.rating > 0 ? source.rating : null;
@@ -61,7 +61,7 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
         }
     }
 
-    static #migrateModifiersAndEffect(source: Record<string, any>): void {
+    static #migrateModifiersAndEffect(source: Record<string, unknown>): void {
         if ('modifiers' in source || 'specialEffect' in source) {
             const notesParts = [];
             if (source.modifiers) {
@@ -83,13 +83,13 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
         }
     }
 
-    static #migrateEffect(source: Record<string, any>): void {
+    static #migrateEffect(source: Record<string, unknown>): void {
         if (typeof source.effect === 'number') {
             source.effect = `<p>Effect ${source.effect}</p>`;
         }
     }
 
-    static #migrateIdentifier(source: Record<string, any>): void {
+    static #migrateIdentifier(source: Record<string, unknown>): void {
         if (!source.identifier && source.name) {
             source.identifier = source.name
                 .toLowerCase()
