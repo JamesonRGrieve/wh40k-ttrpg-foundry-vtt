@@ -1,90 +1,16 @@
-%row {
-    display: grid;
-    grid-column: 1 / -1;
-}
-
-%cell {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    text-align: center;
-    overflow: hidden;
-
-    &:first-child {
-        text-align: left;
-        font-weight: bolder;
-        margin-block: auto;
-    }
-
-    &:not(:first-child) {
-        text-align: center;
-        margin-block: auto;
-    }
-
-    label,
-    span {
-        padding: 1px;
-    }
-
-    span:empty {
-        display: none;
-    }
-
-    select,
-    input[type='text'],
-    input[type='number'] {
-        height: 100%;
-        text-align: center !important;
-    }
-}
-
-%cell--head {
-    &:first-child {
-        text-align: left;
-    }
-
-    &:not(:first-child) {
-        text-align: center;
-    }
-}
-
-%description {
-    @extend %cell;
-    grid-column: 1 / -1;
-}
-
-%grid-row {
+// Shared grid row styles (grouped selector replaces %grid-row placeholder)
+.rt-field,
+.rt-textarea {
     display: grid;
     border-bottom: 1px solid var(--color-border-primary);
 }
 
-%grid-row--unknown {
-    @extend %grid-row;
-    background-color: rgba(255, 0, 0, 0.1);
-}
-
-%grid-row--inverted {
-    @extend %grid-row;
-    border-bottom: 0;
-    border-top: 1px solid var(--color-border-primary);
-}
-
-%grid-row-head {
-    @extend %grid-row;
-    // font-weight: bold;
-
-    &:first-child {
-        text-align: left;
-    }
-
-    &:not(:first-child) {
-        text-align: center;
-    }
-}
-
-%grid-cell {
+// Shared grid cell styles (grouped selector replaces %grid-cell placeholder)
+.rt-field__span,
+.rt-field__header,
+.rt-field__input,
+.rt-textarea__header,
+.rt-textarea__input {
     border-right: 1px solid var(--color-border-primary) !important;
     overflow: hidden;
 
@@ -105,20 +31,4 @@
         text-align: center;
         text-align-last: center !important;
     }
-}
-
-%grid-cell--last {
-    @extend %grid-cell;
-    border-right: 0;
-}
-
-%grid-cell--highlight {
-    font-weight: bold;
-}
-
-%grid-cell--description {
-    border-top: 1px dotted var(--color-border-secondary);
-    grid-column: 1 / -1;
-    font-size: 0.95em;
-    font-style: italic;
 }
