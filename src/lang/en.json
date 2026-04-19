@@ -272,6 +272,7 @@
             "Combat": "Combat",
             "Abilities": "Abilities",
             "Skills": "Skills",
+            "Statistics": "Statistics",
             "Talents": "Talents",
             "Powers": "Powers",
             "Equipment": "Equipment",
@@ -281,7 +282,8 @@
             "Main": "Main",
             "Gear": "Gear",
             "Advances": "Advances",
-            "Ship": "Ship & Role"
+            "Ship": "Ship & Role",
+            "NPC": "NPC"
         },
         "Combat": {
             "Title": "Combat",
@@ -438,7 +440,13 @@
             "RogueTrader": "Rogue Trader Sheet",
             "BlackCrusade": "Black Crusade Sheet",
             "OnlyWar": "Only War Sheet",
-            "Deathwatch": "Deathwatch Sheet"
+            "Deathwatch": "Deathwatch Sheet",
+            "DarkHeresy1NPC": "Dark Heresy 1e NPC",
+            "DarkHeresy2NPC": "Dark Heresy 2e NPC",
+            "RogueTraderNPC": "Rogue Trader NPC",
+            "BlackCrusadeNPC": "Black Crusade NPC",
+            "OnlyWarNPC": "Only War NPC",
+            "DeathwatchNPC": "Deathwatch NPC"
         },
         "TalentCategory": {
             "General": "General",

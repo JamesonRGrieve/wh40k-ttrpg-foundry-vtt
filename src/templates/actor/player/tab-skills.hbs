@@ -1,6 +1,48 @@
-{{!-- Acolyte Sheet Skills Tab --}}
-{{!-- This part renders the Skills tab content with base skills, advanced untrained, and specialist skills --}}
+{{!-- Acolyte Sheet Statistics Tab --}}
+{{!-- Characteristics HUD + Skills + Specialist Skills + Talents + Traits --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
+    {{!-- Characteristics Panel --}}
+    <div class="wh40k-panel">
+        <div class="wh40k-panel-header">
+            <span class="wh40k-panel-title"><i class="fas fa-chart-bar"></i> Characteristics</span>
+        </div>
+        <div class="wh40k-panel-body">
+            <div class="wh40k-characteristics-hud tw-flex tw-flex-wrap tw-justify-center tw-gap-2">
+                {{#each actor.characteristics as |characteristic name|}}
+                    {{#unless (eq name "influence")}}
+                    <div class="wh40k-char-hud-item {{#if (gt this.modifier 0)}}wh40k-char-buffed{{/if}}{{#if (lt this.modifier 0)}}wh40k-char-debuffed{{/if}}"
+                         data-characteristic="{{name}}"
+                         data-advance="{{this.advance}}"
+                         style="--advance-progress: {{divide this.advance 5}};">
+                        <button
+                            class="wh40k-char-hud-name roll-characteristic actor-drag"
+                            type="button"
+                            data-action="roll"
+                            data-roll-type="characteristic"
+                            data-roll-target="{{name}}"
+                            data-item-type="characteristic"
+                            data-item-id="{{name}}"
+                            data-characteristic="{{name}}"
+                            title="{{this.label}}"
+                        >{{this.short}}</button>
+                        <div class="wh40k-char-hud-circle" title="{{this.label}}">
+                            <span class="wh40k-char-hud-mod">{{this.bonus}}</span>
+                            <span class="wh40k-char-hud-mod-label">MOD</span>
+                        </div>
+                        {{#if ../inEditMode}}
+                        <div class="wh40k-char-hud-base wh40k-char-hud-base--edit">
+                            <input type="number" class="wh40k-char-direct-input wh40k-char-inline-input" data-characteristic="{{name}}" data-field="base" data-dtype="Number" value="{{this.base}}" title="Base {{this.label}}" />
+                        </div>
+                        {{else}}
+                        <div class="wh40k-char-hud-base">Total {{this.total}}</div>
+                        {{/if}}
+                    </div>
+                    {{/unless}}
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
     <div class="wh40k-panel">
         <div class="wh40k-panel-header">
             <span class="wh40k-panel-title"><i class="fas fa-book"></i> Skills</span>
