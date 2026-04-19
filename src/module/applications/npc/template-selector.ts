@@ -61,7 +61,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * Available templates (cached).
      * @type {Array<Item>}
      */
-    #templates: any[] = [];
+    #templates: unknown[] = [];
 
     /**
      * Current filter settings.
@@ -285,7 +285,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @returns {Array<Item>}
      * @private
      */
-    _filterTemplates(): any[] {
+    _filterTemplates(): unknown[] {
         return this.#templates.filter((t: any) => {
             // Category filter
             if (this.#filters.category && t.system.category !== this.#filters.category) {
@@ -368,7 +368,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
             if (actor) {
                 // Create embedded traits and talents
-                const itemsToCreate: any[] = [];
+                const itemsToCreate: unknown[] = [];
 
                 for (const trait of template.system.traits || []) {
                     if (trait.uuid) {
@@ -465,7 +465,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @param {string} [options.faction] - Initial faction filter.
      * @returns {Promise<Actor|null>} Created actor or null.
      */
-    static async open(options: Record<string, any> = {}): Promise<any> {
+    static async open(options: Record<string, unknown> = {}): Promise<any> {
         const selector = new this();
 
         if (options.category) selector.#filters.category = options.category;

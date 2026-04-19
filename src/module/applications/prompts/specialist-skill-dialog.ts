@@ -19,7 +19,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
      * @param {object} [options={}]        Dialog options.
      * @param {string} [options.preSelectedSkillKey]  Skill key to pre-select.
      */
-    constructor(actor: any, options: Record<string, any> = {}) {
+    constructor(actor: any, options: Record<string, unknown> = {}) {
         // @ts-expect-error - argument count
         super(options);
         this.actorDoc = actor;

@@ -18,7 +18,14 @@ export class WH40KBaseActor extends Actor {
      * Also processes talent grants for newly added talents.
      * @override
      */
-    _onCreateDescendantDocuments(parent: any, collection: string, documents: any[], data: any[], options: any, userId: string): void {
+    _onCreateDescendantDocuments(
+        parent: any,
+        collection: string,
+        documents: unknown[],
+        data: unknown[],
+        options: Record<string, unknown>,
+        userId: string,
+    ): void {
         (super._onCreateDescendantDocuments as any)(parent, collection, documents, data, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
@@ -41,7 +48,14 @@ export class WH40KBaseActor extends Actor {
      * Triggers recalculation of item-based data.
      * @override
      */
-    _onUpdateDescendantDocuments(parent: any, collection: string, documents: any[], changes: any[], options: any, userId: string): void {
+    _onUpdateDescendantDocuments(
+        parent: any,
+        collection: string,
+        documents: unknown[],
+        changes: unknown[],
+        options: Record<string, unknown>,
+        userId: string,
+    ): void {
         (super._onUpdateDescendantDocuments as any)(parent, collection, documents, changes, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
@@ -54,7 +68,7 @@ export class WH40KBaseActor extends Actor {
      * Also handles removal of granted items when a talent is deleted.
      * @override
      */
-    _onDeleteDescendantDocuments(parent: any, collection: string, documents: any[], ids: string[], options: any, userId: string): void {
+    _onDeleteDescendantDocuments(parent: any, collection: string, documents: unknown[], ids: string[], options: Record<string, unknown>, userId: string): void {
         // Process talent removal BEFORE deletion to access the talent's data
         if (collection === 'items' && game.user.id === userId) {
             for (const item of documents) {
@@ -87,7 +101,7 @@ export class WH40KBaseActor extends Actor {
         }
     }
 
-    async _preCreate(data: any, options: any, user: any): Promise<void> {
+    async _preCreate(data: any, options: Record<string, unknown>, user: any): Promise<void> {
         await (super._preCreate as any)(data, options, user);
         const initData = {
             'token.bar1': { attribute: 'wounds' },
@@ -542,7 +556,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectCharacteristicModifiers(charKey: string, modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as any[]) {
+        for (const item of [...this.items] as unknown[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.characteristics) continue;
 
@@ -565,7 +579,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectSkillModifiers(skillKey: string, modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as any[]) {
+        for (const item of [...this.items] as unknown[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.skills) continue;
 
@@ -587,7 +601,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectWoundsModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as any[]) {
+        for (const item of [...this.items] as unknown[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.other) continue;
 
@@ -609,7 +623,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectInitiativeModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as any[]) {
+        for (const item of [...this.items] as unknown[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.other) continue;
 

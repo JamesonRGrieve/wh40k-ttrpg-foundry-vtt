@@ -128,7 +128,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @param {Actor} actor - The actor to configure
      * @param {object} [options] - Application options
      */
-    constructor(actor, options: any = {}) {
+    constructor(actor, options: Record<string, unknown> = {}) {
         super(options);
         this.#actor = actor;
         this.#initializeState();
@@ -174,7 +174,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         // Ensure rolls array is initialized
@@ -272,7 +272,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: any, options: any): any {
+    _onRender(context: any, options: Record<string, unknown>): any {
         void super._onRender(context, options);
         this.#activateListeners();
     }
@@ -668,7 +668,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: any = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<any> {
         if (!this.#applied && this.#resolve) {
             this.#resolve(false);
         }

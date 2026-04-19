@@ -31,7 +31,7 @@ export class WH40KItem extends WH40KItemContainer {
      * @returns {object} The cleaned data
      * @override
      */
-    static cleanData(source: any = {}, options: any = {}, _state: any = {}) {
+    static cleanData(source: any = {}, options: Record<string, unknown> = {}, _state: any = {}) {
         // Remove explicit undefined values before schema validation runs.
         // Foundry treats `undefined` differently from an omitted field during updates.
         this.#pruneUndefined(source);

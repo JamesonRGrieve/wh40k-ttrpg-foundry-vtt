@@ -64,7 +64,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _applyGrant(actor: any, data: any, options: Record<string, any>, result: any): Promise<void> {
+    async _applyGrant(actor: any, data: any, options: Record<string, unknown>, result: any): Promise<void> {
         const selectedChars = data.selected ?? this.characteristics.map((c) => c.key);
         const updates = {};
 
@@ -130,7 +130,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    getAutomaticValue(): Record<string, any> | false {
+    getAutomaticValue(): Record<string, unknown> | false {
         if (this.optional) return false;
         if (this.characteristics.some((c) => c.optional)) return false;
         return { selected: this.characteristics.map((c) => c.key) };

@@ -49,7 +49,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     declare hasFrame: boolean;
     declare id: string;
     declare tabGroups: Record<string, string>;
-    declare options: Record<string, any>;
+    declare options: Record<string, unknown>;
 
     // EnhancedAnimationsMixin
     declare _previousState: any;
@@ -67,14 +67,14 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     declare animateXPGain: (oldXP: number, newXP: number) => void;
     declare animateCharacteristicChange: (charKey: string, oldValue: number, newValue: number) => void;
     declare animateCharacteristicBonus: (charKey: string, oldBonus: number, newBonus: number) => void;
-    declare animateCounter: (element: HTMLElement, fromValue: number, toValue: number, options?: Record<string, any>) => void;
+    declare animateCounter: (element: HTMLElement, fromValue: number, toValue: number, options?: Record<string, unknown>) => void;
 
     // TooltipMixin
     declare prepareCharacteristicTooltip: (key: string, characteristic: Record<string, unknown>, modifierSources?: Record<string, unknown>) => string;
     declare prepareSkillTooltip: (key: string, skill: Record<string, unknown>, characteristics: Record<string, unknown>) => string;
-    declare prepareArmorTooltip: (location: string, armorData: Record<string, unknown>, equipped?: any[]) => string;
+    declare prepareArmorTooltip: (location: string, armorData: Record<string, unknown>, equipped?: unknown[]) => string;
     declare prepareWeaponTooltip: (weapon: Record<string, unknown>) => string;
-    declare prepareModifierTooltip: (title: string, sources: any[]) => string;
+    declare prepareModifierTooltip: (title: string, sources: unknown[]) => string;
     declare prepareQualityTooltip: (identifier: string, level?: number | null) => string;
 
     // PrimarySheetMixin
@@ -95,7 +95,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     declare _whatIfActive: boolean;
     declare _whatIfChanges: Record<string, unknown>;
     declare _whatIfPreview: any;
-    declare _whatIfImpacts: any[] | Record<string, unknown>;
+    declare _whatIfImpacts: unknown[] | Record<string, unknown>;
     declare enterWhatIfMode: () => Promise<void>;
     declare commitWhatIfChanges: () => Promise<void>;
     declare cancelWhatIfChanges: () => Promise<void>;
@@ -105,12 +105,12 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     declare getWhatIfState: () => { active: boolean; changes: Record<string, unknown>; impacts: any; changeCount: number };
 
     // EnhancedDragDropMixin
-    declare _draggedItem: Record<string, any> | null;
+    declare _draggedItem: Record<string, unknown> | null;
     declare _dragStartPos: { x: number; y: number } | null;
     declare _splitResult: { quantity: number } | null;
     declare removeFromFavorites: (itemId: string) => Promise<void>;
     declare clearFavorites: () => Promise<void>;
-    declare getFavoriteItems: () => any[];
+    declare getFavoriteItems: () => unknown[];
 
     // ActiveModifiersMixin
     declare prepareActiveModifiers: () => any;
@@ -119,7 +119,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     declare _updateListener: ((document: any, changes: any, options: any, userId: string) => void) | null;
     declare _clickOutsideHandler: ((event: Event) => void) | null;
     declare _resizeObserver: ResizeObserver | null;
-    declare _traitsFilter: Record<string, any>;
+    declare _traitsFilter: Record<string, unknown>;
 
     // Foundry base methods
     declare render: (options?: Record<string, unknown> | boolean) => any;
@@ -661,7 +661,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {object} [parentSkill]  Parent skill for specialist entries
      * @protected
      */
-    _augmentSkillData(key: string, data: any, characteristics: Record<string, any>, parentSkill: any = null): void {
+    _augmentSkillData(key: string, data: any, characteristics: Record<string, unknown>, parentSkill: any = null): void {
         const charShort = data.characteristic || parentSkill?.characteristic || 'S';
         const charKey = this._charShortToKey(charShort);
         const char = characteristics[charKey];
@@ -927,7 +927,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Object[]} Array of tier groups
      * @protected
      */
-    _groupTalentsByTier(talents: any[]): Record<string, unknown>[] {
+    _groupTalentsByTier(talents: unknown[]): Record<string, unknown>[] {
         const groups = {};
 
         for (const talent of talents) {
@@ -941,7 +941,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Convert to sorted array
-        return (Object.values(groups) as Record<string, any>[]).sort((a, b) => a.tier - b.tier);
+        return (Object.values(groups) as Record<string, unknown>[]).sort((a, b) => a.tier - b.tier);
     }
 
     /**
@@ -950,7 +950,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {string[]} Sorted unique categories
      * @protected
      */
-    _getTalentCategories(talents: any[]): string[] {
+    _getTalentCategories(talents: unknown[]): string[] {
         const categories = new Set<string>();
         for (const talent of talents) {
             if (talent.system.category) {
@@ -982,7 +982,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @protected
      */
     _prepareTraitsContext(context: Record<string, unknown>): Record<string, unknown> {
-        const traits = (context.items as any[]).filter((i: any) => i.type === 'trait');
+        const traits = (context.items as unknown[]).filter((i: any) => i.type === 'trait');
 
         // Apply filters if present
         let filteredTraits = traits;
@@ -1026,7 +1026,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Object[]} Array of category groups
      * @protected
      */
-    _groupTraitsByCategory(traits: any[]): Record<string, unknown>[] {
+    _groupTraitsByCategory(traits: unknown[]): Record<string, unknown>[] {
         const groups = {
             creature: { category: 'creature', categoryLabel: 'Creature', traits: [] },
             character: { category: 'character', categoryLabel: 'Character', traits: [] },
@@ -1055,7 +1055,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Array<Object>} Category options
      * @protected
      */
-    _getTraitCategories(traits: any[]): Record<string, unknown>[] {
+    _getTraitCategories(traits: unknown[]): Record<string, unknown>[] {
         const categories = new Set<string>();
         for (const trait of traits) {
             categories.add(trait.system.category || 'general');
@@ -1130,8 +1130,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {object} context  Context being prepared.
      * @protected
      */
-    _prepareItems(context: Record<string, any>): void {
-        const itemsByType: Record<string, any[]> = {};
+    _prepareItems(context: Record<string, unknown>): void {
+        const itemsByType: Record<string, unknown[]> = {};
 
         for (const item of this.actor.items) {
             const type = item.type;
@@ -1739,7 +1739,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     static async #itemCreate(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const itemType = target.dataset.type ?? 'gear';
-        const data: Record<string, any> = {
+        const data: Record<string, unknown> = {
             name: `New ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`,
             type: itemType,
         };
@@ -2111,7 +2111,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         // Perform the sort
         const sortUpdates = foundry.utils.performIntegerSort(source, { target, siblings });
         const updateData = sortUpdates.map((u: any) => {
-            const update = u.update as Record<string, any>;
+            const update = u.update as Record<string, unknown>;
             update._id = u.target._id;
             return update;
         });

@@ -22,7 +22,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @param {object} simpleSkillData  The skill data.
      * @param {object} [options={}]     Dialog options.
      */
-    constructor(simpleSkillData: any = {}, options: any = {}) {
+    constructor(simpleSkillData: any = {}, options: Record<string, unknown> = {}) {
         // @ts-expect-error Foundry V2 constructor accepts options
         super(options);
         this.simpleSkillData = simpleSkillData;
@@ -218,7 +218,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context = await super._prepareContext(options);
         const rollData = this.simpleSkillData.rollData;
 
@@ -263,7 +263,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: any, options: any): Promise<void> {
+    async _onRender(context: any, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
         setupNumberInputAutoSelect(this.element);

@@ -52,7 +52,7 @@ export default function HordeTemplate(Base: any): any {
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        static _migrateData(source: Record<string, any>): void {
+        static _migrateData(source: Record<string, unknown>): void {
             super._migrateData?.(source);
             // Ensure horde object exists
             source.horde ??= {

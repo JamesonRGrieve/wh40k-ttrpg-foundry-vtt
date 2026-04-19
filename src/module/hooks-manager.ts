@@ -160,7 +160,7 @@ export class HooksManager {
             rollMalignancy: () => RollTableUtils.rollMalignancy(),
             showRollTableDialog: () => RollTableUtils.showRollTableDialog(),
             // Compendium browser
-            openCompendiumBrowser: (options: any) => RTCompendiumBrowser.open(options),
+            openCompendiumBrowser: (options: Record<string, unknown>) => RTCompendiumBrowser.open(options),
             // Character creation
             OriginPathBuilder: characterCreation.OriginPathBuilder,
             openOriginPathBuilder: (actor: any, options?: Record<string, unknown>) => characterCreation.OriginPathBuilder.show(actor, options),
@@ -173,7 +173,7 @@ export class HooksManager {
             openEncounterBuilder: () => npcApplications.EncounterBuilder.show(),
             exportStatBlock: (actor: any, format: any) => npcApplications.StatBlockExporter.quickExport(actor, format),
             importStatBlock: (input: any) => npcApplications.StatBlockParser.open(input),
-            openTemplateSelector: (options: any) => npcApplications.TemplateSelector.open(options),
+            openTemplateSelector: (options: Record<string, unknown>) => npcApplications.TemplateSelector.open(options),
             // Phase 7: QoL Features
             DifficultyCalculatorDialog: npcApplications.DifficultyCalculatorDialog,
             calculateDifficulty: (actor: any) => npcApplications.DifficultyCalculatorDialog.show(actor),

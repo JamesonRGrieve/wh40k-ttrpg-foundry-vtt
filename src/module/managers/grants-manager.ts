@@ -81,7 +81,7 @@ export class GrantsManager {
      * @param {number} [options.depth=0] - Current recursion depth
      * @returns {Promise<GrantsApplicationResult>}
      */
-    static async applyItemGrants(item: any, actor: any, options: Record<string, any> = {}) {
+    static async applyItemGrants(item: any, actor: any, options: Record<string, unknown> = {}) {
         const result = {
             success: true,
             appliedState: {},
@@ -272,7 +272,7 @@ export class GrantsManager {
      * @param {boolean} [options.reverseExisting=false] - Reverse all existing grants before applying
      * @returns {Promise<GrantsApplicationResult>}
      */
-    static async applyBatchGrants(items: any[], actor: any, options: Record<string, any> = {}) {
+    static async applyBatchGrants(items: unknown[], actor: any, options: Record<string, unknown> = {}) {
         const result = {
             success: true,
             appliedState: {},
@@ -649,7 +649,7 @@ export class GrantsManager {
     static async _reverseResourceGrant(actor: any, applied: any, result: any) {
         const updates = {};
 
-        const resourcePaths: Record<string, any> = {
+        const resourcePaths: Record<string, unknown> = {
             wounds: { value: 'system.wounds.value', max: 'system.wounds.max' },
             fate: { value: 'system.fatePoints.value', max: 'system.fatePoints.max' },
             corruption: { value: 'system.corruption.value' },

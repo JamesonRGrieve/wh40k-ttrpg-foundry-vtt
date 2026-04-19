@@ -93,7 +93,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context: any = await super._prepareContext(options);
         const system = this.item.system;
 
@@ -195,7 +195,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _onRender(context: any, options: any): Promise<void> {
+    async _onRender(context: any, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
 
         // Set up drag-and-drop visual feedback
@@ -421,7 +421,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
         const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
-        const chatData: Record<string, any> = {
+        const chatData: Record<string, unknown> = {
             user: game.user.id,
             speaker: ChatMessage.getSpeaker({ actor }),
             rollMode: game.settings.get('core', 'rollMode'),

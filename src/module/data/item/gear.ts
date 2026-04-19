@@ -113,7 +113,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         GearData.#migrateCategory(source);
         GearData.#migrateAvailability(source);
@@ -127,7 +127,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Migrate old pack format: type → category.
      * @param {object} source  The source data
      */
-    static #migrateCategory(source: Record<string, any>): void {
+    static #migrateCategory(source: Record<string, unknown>): void {
         if (source.type && !source.category) {
             source.category = GearData.#TYPE_TO_CATEGORY[source.type] || 'general';
             delete source.type;
@@ -138,7 +138,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Migrate old pack format: effects (availability enum) → availability.
      * @param {object} source  The source data
      */
-    static #migrateAvailability(source: Record<string, any>): void {
+    static #migrateAvailability(source: Record<string, unknown>): void {
         if (source.effects && !source.availability) {
             source.availability = GearData.#NORMALIZE_AVAILABILITY[source.effects] || 'average';
         }
@@ -148,7 +148,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Migrate old pack format: charges → uses.
      * @param {object} source  The source data
      */
-    static #migrateCharges(source: Record<string, any>): void {
+    static #migrateCharges(source: Record<string, unknown>): void {
         if (source.charges && !source.uses) {
             source.uses = {
                 value: parseInt(source.charges.value) || 0,
@@ -162,7 +162,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Migrate weight string → number.
      * @param {object} source  The source data
      */
-    static #migrateWeight(source: Record<string, any>): void {
+    static #migrateWeight(source: Record<string, unknown>): void {
         if (typeof source.weight === 'string') {
             source.weight = GearData.#parseWeight(source.weight);
         }
@@ -172,7 +172,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Migrate old pack format: build description from scattered fields.
      * @param {object} source  The source data
      */
-    static #migrateDescription(source: Record<string, any>): void {
+    static #migrateDescription(source: Record<string, unknown>): void {
         if (source.availability && String(source.availability).length > 50) {
             const parts = [];
             parts.push(`<p>${source.availability}</p>`);
@@ -192,7 +192,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Migrate old pack format: parse cost from notes.
      * @param {object} source  The source data
      */
-    static #migrateCost(source: Record<string, any>): void {
+    static #migrateCost(source: Record<string, unknown>): void {
         if (source.notes && !source.cost?.value) {
             const costMatch = String(source.notes).match(/(\d+(?:,\d+)?)\s*T(?:hrone)?/i);
             if (costMatch) {
@@ -264,7 +264,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, any> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
         // Ensure uses values are integers
         if (source?.uses) {

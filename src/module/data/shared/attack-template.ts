@@ -32,7 +32,7 @@ export default class AttackTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         AttackTemplate.#migrateRateOfFire(source);
     }
@@ -41,9 +41,9 @@ export default class AttackTemplate extends SystemDataModel {
      * Migrate legacy rate of fire formats.
      * @param {object} source  The source data
      */
-    static #migrateRateOfFire(source: Record<string, any>): void {
+    static #migrateRateOfFire(source: Record<string, unknown>): void {
         if (!source.attack?.rateOfFire) return;
-        const normalizeRateOfFire = (attack: Record<string, any>) => {
+        const normalizeRateOfFire = (attack: Record<string, unknown>) => {
             const rof = attack?.rateOfFire;
             if (!rof) return;
             if (typeof rof.semi === 'string') rof.semi = Number(rof.semi) || 0;
@@ -52,7 +52,7 @@ export default class AttackTemplate extends SystemDataModel {
 
         if (isLineVariantContainer(source.attack)) {
             for (const branch of Object.values(source.attack)) {
-                if (branch && typeof branch === 'object') normalizeRateOfFire(branch as Record<string, any>);
+                if (branch && typeof branch === 'object') normalizeRateOfFire(branch as Record<string, unknown>);
             }
             return;
         }

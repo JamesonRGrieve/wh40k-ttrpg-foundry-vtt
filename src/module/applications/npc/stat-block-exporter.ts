@@ -305,7 +305,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context: any = await super._prepareContext(options);
 
         // Generate export content based on format
@@ -328,7 +328,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
-    _onRender(context: any, options: any): any {
+    _onRender(context: any, options: Record<string, unknown>): any {
         void super._onRender(context, options);
 
         // Handle format toggle

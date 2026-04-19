@@ -113,7 +113,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @param {boolean} [options.dryRun=false]
      * @returns {Promise<GrantApplicationResult>}
      */
-    async apply(actor, data: any = {}, options: any = {}): Promise<any> {
+    async apply(actor, data: any = {}, options: Record<string, unknown> = {}): Promise<any> {
         const result = this._initResult();
         if (!actor) {
             result.success = false;
@@ -168,7 +168,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @param {object} options
      * @protected
      */
-    async _applyUpdates(actor, updates: Record<string, any>, options: any): Promise<void> {
+    async _applyUpdates(actor, updates: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         if (!options.dryRun && Object.keys(updates).length > 0) {
             await actor.update(updates);
         }
@@ -178,7 +178,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * Check if this grant can be automatically applied without user interaction.
      * @returns {object|false} Data to auto-apply, or false if user input needed
      */
-    getAutomaticValue(): Record<string, any> | false {
+    getAutomaticValue(): Record<string, unknown> | false {
         if (this.optional) return false;
         return {};
     }

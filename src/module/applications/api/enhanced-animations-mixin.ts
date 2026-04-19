@@ -121,7 +121,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
          * @param {Object} options          Animation options
          * @returns {Promise<void>}
          */
-        animateCounter(element: HTMLElement, fromValue: number, toValue: number, options: Record<string, any> = {}): void {
+        animateCounter(element: HTMLElement, fromValue: number, toValue: number, options: Record<string, unknown> = {}): void {
             if (!element || fromValue === toValue) return;
             if (this._shouldSkipAnimation()) return;
 

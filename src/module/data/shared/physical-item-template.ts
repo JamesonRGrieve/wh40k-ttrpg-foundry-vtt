@@ -114,7 +114,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         PhysicalItemTemplate.#migrateWeight(source);
         PhysicalItemTemplate.#migrateCost(source);
@@ -124,7 +124,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * Migrate legacy weight formats.
      * @param {object} source  The source data
      */
-    static #migrateWeight(source: Record<string, any>): void {
+    static #migrateWeight(source: Record<string, unknown>): void {
         // Convert string weight to number
         if (typeof source.weight === 'string') {
             const num = Number(source.weight);
@@ -136,7 +136,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      * Migrate legacy cost formats.
      * @param {object} source  The source data
      */
-    static #migrateCost(source: Record<string, any>): void {
+    static #migrateCost(source: Record<string, unknown>): void {
         const emptyCost = PhysicalItemTemplate.#emptyCost();
         const normalizeNullableNumber = (value: unknown): number | null => {
             if (value === null || value === undefined || value === '') return null;
@@ -199,7 +199,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
         };
     }
 
-    static #emptyCost(): Record<string, any> {
+    static #emptyCost(): Record<string, unknown> {
         return {
             dh1: {
                 throneGelt: null,

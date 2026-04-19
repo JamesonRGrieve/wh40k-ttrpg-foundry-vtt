@@ -211,7 +211,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context: any = await super._prepareContext(options);
         const parsedData = this.#parsedData;
         const previewSkills = parsedData?.system?.trainedSkills ? Object.values(parsedData.system.trainedSkills) : [];
@@ -248,7 +248,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     /** @override */
-    _onRender(context: any, options: any): any {
+    _onRender(context: any, options: Record<string, unknown>): any {
         void super._onRender(context, options);
 
         // Track input changes
@@ -760,7 +760,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return result;
     }
 
-    static _applyTraitAdjustments(systemData: any, traits: any[]): void {
+    static _applyTraitAdjustments(systemData: any, traits: unknown[]): void {
         if (!traits || traits.length === 0) return;
         const sizeMap = {
             tiny: 1,
@@ -1163,7 +1163,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: any = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<any> {
         if (!this.#submitted && this.#resolve) {
             this.#resolve(null);
         }

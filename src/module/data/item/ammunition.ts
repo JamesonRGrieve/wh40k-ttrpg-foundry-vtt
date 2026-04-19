@@ -74,7 +74,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         // Legacy field cleanup
         delete source.usedWith;

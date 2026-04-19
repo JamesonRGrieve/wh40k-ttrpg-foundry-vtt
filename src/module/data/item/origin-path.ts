@@ -33,11 +33,11 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
         aptitudes: string[];
         equipment: Array<{ name: string; quantity: number; uuid: string }>;
         specialAbilities: Array<{ name: string; description: string }>;
-        choices: Array<{ type: string; label: string; name?: string; options: Record<string, any>[]; count: number; xpCost: number }>;
+        choices: Array<{ type: string; label: string; name?: string; options: Record<string, unknown>[]; count: number; xpCost: number }>;
     };
     declare effectText: string;
     declare notes: string;
-    declare selectedChoices: Record<string, any>;
+    declare selectedChoices: Record<string, unknown>;
     declare activeModifiers: Array<{ source: string; type: string; key: string; value: number; itemUuid: string }>;
     declare homebrew: { throneGelt: string; thrones: string };
     declare rollResults: {
@@ -528,7 +528,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, any>): void {
+    static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         OriginPathData.#migratePositions(source);
         OriginPathData.#migrateNavigation(source);
@@ -540,7 +540,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Convert old position + positions to single positions array.
      * @param {object} source  The source data
      */
-    static #migratePositions(source: Record<string, any>): void {
+    static #migratePositions(source: Record<string, unknown>): void {
         if (source.position !== undefined && source.positions !== undefined) {
             const oldPosition = source.position;
             const oldPositions = source.positions || [];
@@ -557,7 +557,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Remove old navigation field.
      * @param {object} source  The source data
      */
-    static #migrateNavigation(source: Record<string, any>): void {
+    static #migrateNavigation(source: Record<string, unknown>): void {
         delete source.navigation;
     }
 
@@ -565,7 +565,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Warn about legacy wounds/fate fields if formulas are missing.
      * @param {object} source  The source data
      */
-    static #migrateWoundsAndFate(source: Record<string, any>): void {
+    static #migrateWoundsAndFate(source: Record<string, unknown>): void {
         const grants = source.grants || {};
         if (grants.wounds && !grants.woundsFormula) {
             console.debug(`Origin Path "${source.identifier || '?'}" uses legacy grants.wounds field. Consider adding a woundsFormula instead.`);
@@ -579,7 +579,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * Migrate effectText to description.
      * @param {object} source  The source data
      */
-    static #migrateEffectText(source: Record<string, any>): void {
+    static #migrateEffectText(source: Record<string, unknown>): void {
         if (source.effectText && !source.description?.value) {
             source.description = source.description || {};
             source.description.value = `<p>${source.effectText.replace(/\n/g, '<br>')}</p>`;
@@ -596,7 +596,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, any> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
         // Ensure numeric fields are properly typed
         if (source?.grants) {

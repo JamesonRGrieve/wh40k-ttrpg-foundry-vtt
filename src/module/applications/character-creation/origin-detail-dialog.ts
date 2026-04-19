@@ -54,7 +54,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @param {boolean} [options.allowSelection=true] - Whether to show the confirm button
      * @param {boolean} [options.isSelected=false] - Whether this origin is already selected
      */
-    constructor(origin, options: any = {}) {
+    constructor(origin, options: Record<string, unknown> = {}) {
         super(options);
 
         /**
@@ -95,7 +95,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: any): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<any> {
         const context: any = await super._prepareContext(options);
         const system = this.origin.system;
         const grants = system?.grants || {};
@@ -198,7 +198,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTalents(talents: any[]): Promise<any> {
+    async _prepareTalents(talents: unknown[]): Promise<any> {
         const prepared = [];
         for (const talent of talents) {
             let item = null;
@@ -226,7 +226,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTraits(traits: any[]): Promise<any> {
+    async _prepareTraits(traits: unknown[]): Promise<any> {
         const prepared = [];
         for (const trait of traits) {
             let item = null;
@@ -337,7 +337,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     }
 
     /** @override */
-    async close(options: any = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<any> {
         // Resolve with cancelled if not already resolved
         if (this._resolvePromise) {
             this._resolvePromise({ selected: false, origin: null });

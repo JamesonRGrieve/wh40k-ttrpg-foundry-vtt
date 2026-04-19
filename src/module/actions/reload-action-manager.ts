@@ -162,7 +162,7 @@ export class ReloadActionManager {
 
             // Update weapon — set loadedAmmo reference if different type
             const isSameAmmo = selectedAmmo.uuid === system.loadedAmmo?.uuid;
-            const updateData: Record<string, any> = { 'system.clip.value': roundsToLoad };
+            const updateData: Record<string, unknown> = { 'system.clip.value': roundsToLoad };
 
             if (!isSameAmmo) {
                 updateData['system.loadedAmmo'] = {
