@@ -113,7 +113,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @param {boolean} [options.dryRun=false]
      * @returns {Promise<GrantApplicationResult>}
      */
-    async apply(actor, data: Record<string, unknown> = {}, options: Record<string, unknown> = {}): Promise<any> {
+    async apply(actor, data: Record<string, unknown> = {}, options: Record<string, unknown> = {}): Promise<unknown> {
         const result = this._initResult();
         if (!actor) {
             result.success = false;
@@ -147,7 +147,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @abstract
      */
     // eslint-disable-next-line @typescript-eslint/require-await
-    async reverse(actor, appliedState): Promise<any> {
+    async reverse(actor, appliedState): Promise<unknown> {
         throw new Error(`${this.constructor.name} must implement reverse()`);
     }
 
@@ -157,7 +157,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @param {object} restoreData - Data returned from reverse()
      * @returns {Promise<GrantApplicationResult>}
      */
-    async restore(actor, restoreData): Promise<any> {
+    async restore(actor, restoreData): Promise<unknown> {
         return this.apply(actor, restoreData, { restore: true });
     }
 
@@ -188,7 +188,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @returns {Promise<GrantSummary>}
      */
     // eslint-disable-next-line @typescript-eslint/require-await
-    async getSummary(): Promise<any> {
+    async getSummary(): Promise<unknown> {
         return {
             type: (this.constructor as any).TYPE,
             label: this.displayLabel,
@@ -239,7 +239,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @returns {Promise<Item|null>}
      * @protected
      */
-    async _fetchItem(uuid): Promise<any> {
+    async _fetchItem(uuid): Promise<unknown> {
         if (!uuid) return null;
         try {
             return await fromUuid(uuid);

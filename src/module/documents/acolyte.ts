@@ -464,7 +464,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} characteristic - The characteristic key
      * @returns {Promise<D100Roll|null>} The evaluated roll
      */
-    async rollCharacteristicCheck(characteristic: string): Promise<any> {
+    async rollCharacteristicCheck(characteristic: string): Promise<unknown> {
         const char = this.getCharacteristicFuzzy(characteristic);
         if (!char) {
             game.wh40k.error('Unable to perform characteristic test. Could not find provided characteristic.', characteristic);
@@ -486,7 +486,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {number} targetNumber - The target number
      * @returns {Promise<D100Roll>} The evaluated roll
      */
-    async rollCheck(targetNumber: number): Promise<any> {
+    async rollCheck(targetNumber: number): Promise<unknown> {
         const roll = await D100Roll.evaluate({
             actor: this,
             target: targetNumber,
@@ -502,7 +502,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {string} characteristic - The characteristic to test
      * @returns {Promise<Object>} The opposed test result
      */
-    async opposedCharacteristicTest(targetActor: Actor | null, characteristic: string): Promise<any> {
+    async opposedCharacteristicTest(targetActor: Actor | null, characteristic: string): Promise<unknown> {
         const sourceRoll = await this.rollCharacteristicCheck(characteristic);
         const targetRoll = targetActor ? await (targetActor as any).rollCharacteristicCheck(characteristic) : null;
         return this.opposedTest(sourceRoll, targetRoll);

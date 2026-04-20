@@ -94,8 +94,8 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
-        const context: any = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+        const context: unknown = await super._prepareContext(options);
         const system = this.item.system;
 
         // Add CONFIG reference for templates - ensure dropdown options are available
@@ -638,7 +638,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         const mod = this.item.system.modifications[index];
         if (!mod) return;
 
-        const modItem: any = await fromUuid(mod.uuid);
+        const modItem: unknown = await fromUuid(mod.uuid);
         if (!modItem) {
             ui.notifications.error(`Modification "${mod.name}" not found. It may have been deleted.`);
             return;
@@ -685,7 +685,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @returns {Promise<boolean>}
      * @private
      */
-    async _onDropModification(modItem: any): Promise<any> {
+    async _onDropModification(modItem: any): Promise<unknown> {
         // Validate
         if (!this._canAddModification(modItem)) {
             return false;
@@ -871,7 +871,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @returns {Promise<boolean>}
      * @private
      */
-    async _onDropAmmunition(ammoItem: any): Promise<any> {
+    async _onDropAmmunition(ammoItem: any): Promise<unknown> {
         // Validate ammunition compatibility
         if (!this._canLoadAmmunition(ammoItem)) {
             return false;
@@ -913,7 +913,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _onDrop(event: Event): Promise<any> {
+    async _onDrop(event: Event): Promise<unknown> {
         event.preventDefault();
 
         let data;
@@ -925,7 +925,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         if (data.type !== 'Item') return false;
 
-        const droppedItem: any = await fromUuid(data.uuid);
+        const droppedItem: unknown = await fromUuid(data.uuid);
         if (!droppedItem) return false;
 
         // Handle weaponModification drops

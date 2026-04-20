@@ -186,7 +186,7 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
      * Post this skill to chat.
      * @returns {Promise<ChatMessage|null>}
      */
-    async toChat(): Promise<any> {
+    async toChat(): Promise<unknown> {
         const messageData = {
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             speaker: ChatMessage.getSpeaker(),

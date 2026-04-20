@@ -50,7 +50,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
      * @param {Actor} actor     The target actor
      * @returns {Promise<ActiveEffect|null>}
      */
-    static async show(actor: WH40KBaseActor): Promise<any> {
+    static async show(actor: WH40KBaseActor): Promise<unknown> {
         return new Promise((resolve) => {
             new this({ actor, resolve }).render(true);
         });
@@ -77,7 +77,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
         const context = await super._prepareContext(options);
 
         context.actor = this.actor;
@@ -309,7 +309,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
 
         const charLabel = CONFIG.WH40K?.characteristics?.[characteristic] ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
 
-        const effectData: any = {
+        const effectData: unknown = {
             name: `${charLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/upgrade.svg',
             changes: [
@@ -352,7 +352,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
 
         const skillLabel = skill.charAt(0).toUpperCase() + skill.slice(1);
 
-        const effectData: any = {
+        const effectData: unknown = {
             name: `${skillLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/upgrade.svg',
             changes: [
@@ -395,7 +395,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
 
         const typeLabel = combatType.charAt(0).toUpperCase() + combatType.slice(1);
 
-        const effectData: any = {
+        const effectData: unknown = {
             name: `${typeLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/combat.svg',
             changes: [

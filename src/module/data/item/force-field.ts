@@ -266,7 +266,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {object} [options] - Roll options
      * @returns {Promise<object>} - Result object with { isProtected: boolean, overloaded: boolean, roll: Roll }
      */
-    async rollProtection(options = {}): Promise<any> {
+    async rollProtection(options = {}): Promise<unknown> {
         if (!this.isProtecting) {
             return { isProtected: false, overloaded: false, roll: null, inactive: true };
         }

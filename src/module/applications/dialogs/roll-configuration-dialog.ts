@@ -143,7 +143,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         // @ts-expect-error - argument type
-        const context: any = await super._prepareContext(options);
+        const context: unknown = await super._prepareContext(options);
 
         // Calculate the difficulty modifier
         const difficultyPreset = (this.constructor as any).DIFFICULTY_PRESETS.find((p: any) => p.key === this.selectedDifficulty) || { value: 0 };
@@ -383,7 +383,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * Show the dialog and wait for result
      * @returns {Promise<Object|null>} The configuration result, or null if cancelled
      */
-    async wait(): Promise<any> {
+    async wait(): Promise<unknown> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             void this.render(true);
@@ -410,7 +410,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {Object} config - Roll configuration
      * @returns {Promise<Object|null>} Configuration result or null if cancelled
      */
-    static async configure(config: Record<string, unknown> = {}): Promise<any> {
+    static async configure(config: Record<string, unknown> = {}): Promise<unknown> {
         const dialog = new this(config);
         return dialog.wait();
     }

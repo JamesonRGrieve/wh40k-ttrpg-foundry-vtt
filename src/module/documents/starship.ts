@@ -1,7 +1,7 @@
 import { WH40KBaseActor } from './base-actor.ts';
 
 export class WH40KStarship extends WH40KBaseActor {
-    async _preCreate(data, options, user): Promise<any> {
+    async _preCreate(data, options, user): Promise<unknown> {
         await super._preCreate(data, options, user);
         const initData = {
             'token.bar1': { attribute: 'hullIntegrity' },
@@ -166,7 +166,7 @@ export class WH40KStarship extends WH40KBaseActor {
     /**
      * Roll ship initiative (1d10 + Detection Bonus)
      */
-    async rollInitiative(): Promise<any> {
+    async rollInitiative(): Promise<unknown> {
         const roll = await new Roll(`1d10 + ${this.detectionBonus}`).evaluate();
 
         const content = `

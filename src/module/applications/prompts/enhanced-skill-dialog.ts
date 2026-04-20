@@ -218,7 +218,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
         const context = await super._prepareContext(options);
         const rollData = this.simpleSkillData.rollData;
 

@@ -90,8 +90,8 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
-        const context: any = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+        const context: unknown = await super._prepareContext(options);
 
         // Get party info
         const party = game.users.filter((u: any) => u.active && u.character);

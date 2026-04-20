@@ -134,8 +134,8 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
-        const context: any = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+        const context: unknown = await super._prepareContext(options);
 
         // Actor data
         context.actor = this.actor;
@@ -734,7 +734,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @returns {CombatQuickPanel}  The panel instance
      * @static
      */
-    static show(actor: WH40KBaseActor): Promise<any> {
+    static show(actor: WH40KBaseActor): Promise<unknown> {
         // Check if panel already exists
         const existing = Object.values(ui.windows).find((app) => app instanceof CombatQuickPanel && app.actor.id === actor.id);
 

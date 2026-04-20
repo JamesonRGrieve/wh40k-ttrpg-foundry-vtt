@@ -89,7 +89,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * updated with a ForcedReplacement operator." Routed through the parent
      * Actor's updateEmbeddedDocuments with diff:false so name/type stay intact.
      */
-    private async _applyForcedSystemUpdate(patch: Record<string, unknown>): Promise<any> {
+    private async _applyForcedSystemUpdate(patch: Record<string, unknown>): Promise<unknown> {
         const item = this.parent as any;
         if (!item) return;
 

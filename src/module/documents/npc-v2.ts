@@ -223,7 +223,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {string} [flavor] - Optional flavor text.
      * @returns {Promise<Roll>}
      */
-    async rollSkill(skillName, flavor): Promise<any> {
+    async rollSkill(skillName, flavor): Promise<unknown> {
         const target = this.system.getSkillTarget(skillName);
         const skill = this.system.trainedSkills[skillName];
         const skillLabel = skill?.name || skillName;
@@ -254,7 +254,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {boolean} [options.ignoreToughness=false] - Whether to ignore toughness bonus.
      * @returns {Promise<Actor>}
      */
-    async applyDamage(amount, location = 'body', options: Record<string, unknown> = {}): Promise<any> {
+    async applyDamage(amount, location = 'body', options: Record<string, unknown> = {}): Promise<unknown> {
         const { ignoreArmour = false, ignoreToughness = false } = options;
 
         // Mark actor as hit this round (for Good armour bonus tracking)

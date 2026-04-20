@@ -176,8 +176,8 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
-        const context: any = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+        const context: unknown = await super._prepareContext(options);
 
         // Ensure rolls array is initialized
         if (!Array.isArray(this.#rolls) || this.#rolls.length !== 9) {
@@ -670,7 +670,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (!this.#applied && this.#resolve) {
             this.#resolve(false);
         }
@@ -685,7 +685,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * Wait for dialog to complete.
      * @returns {Promise<boolean>} True if applied, false if cancelled
      */
-    async wait(): Promise<any> {
+    async wait(): Promise<unknown> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             void this.render(true);
@@ -700,7 +700,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @returns {Promise<boolean>} True if applied, false if cancelled
      * @static
      */
-    static async open(actor: WH40KBaseActor): Promise<any> {
+    static async open(actor: WH40KBaseActor): Promise<unknown> {
         if (!actor || (actor.type !== 'acolyte' && actor.type !== 'character')) {
             ui.notifications.error('Characteristic setup is only available for characters.');
             return false;

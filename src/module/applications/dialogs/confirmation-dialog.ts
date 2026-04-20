@@ -212,7 +212,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
      *   // Perform deletion
      * }
      */
-    static async confirm(config: Record<string, unknown> = {}): Promise<any> {
+    static async confirm(config: Record<string, unknown> = {}): Promise<unknown> {
         const dialog = new this(config);
         return dialog.wait();
     }

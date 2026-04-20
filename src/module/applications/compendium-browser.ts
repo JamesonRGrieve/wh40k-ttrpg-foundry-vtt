@@ -153,7 +153,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     /*  Data Methods                                */
     /* -------------------------------------------- */
 
-    async _getSources(): Promise<any> {
+    async _getSources(): Promise<unknown> {
         const sources = new Set();
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
 
@@ -168,7 +168,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         return Array.from(sources).sort();
     }
 
-    async _getCategories(): Promise<any> {
+    async _getCategories(): Promise<unknown> {
         const categories = new Set();
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg' && p.documentName === 'Item');
 
@@ -183,7 +183,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         return Array.from(categories).sort();
     }
 
-    async _getFilteredResults(): Promise<any> {
+    async _getFilteredResults(): Promise<unknown> {
         const results = [];
         const packs = game.packs.filter((p: any) => p.metadata.system === 'wh40k-rpg');
 
@@ -219,7 +219,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
                 const sourceLabel = this._getEntrySource(e);
                 const categoryLabel = this._getEntryCategory(e);
 
-                const result: any = {
+                const result: unknown = {
                     ...e,
                     pack: pack.metadata.label,
                     packId: pack.metadata.id,

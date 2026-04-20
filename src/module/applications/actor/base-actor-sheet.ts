@@ -2058,7 +2058,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     /* -------------------------------------------- */
 
     /** @override */
-    async _onDropItem(event: DragEvent, item: WH40KItem): Promise<any> {
+    async _onDropItem(event: DragEvent, item: WH40KItem): Promise<unknown> {
         if (!this.actor.isOwner) return undefined;
 
         // Check if this item type is supported
@@ -2090,7 +2090,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Promise}
      * @protected
      */
-    _onSortItem(event: DragEvent, item: WH40KItem): Promise<any> | undefined {
+    _onSortItem(event: DragEvent, item: WH40KItem): Promise<unknown> | undefined {
         const items = this.actor.items;
         const source = items.get(item.id);
 

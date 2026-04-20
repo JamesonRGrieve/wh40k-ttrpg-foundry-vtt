@@ -452,7 +452,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Consume one use.
      * @returns {Promise<Item>}
      */
-    async consume(): Promise<any> {
+    async consume(): Promise<unknown> {
         if (!this.hasLimitedUses) {
             ui.notifications.warn(game.i18n.localize('WH40K.Gear.NoConsumableUses'));
             return this.parent;
@@ -481,7 +481,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Reset uses to maximum.
      * @returns {Promise<Item>}
      */
-    async resetUses(): Promise<any> {
+    async resetUses(): Promise<unknown> {
         if (!this.hasLimitedUses) return this.parent;
 
         await this.parent?.update({ 'system.uses.value': this.uses.max });

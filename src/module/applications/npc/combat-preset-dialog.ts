@@ -254,7 +254,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         // @ts-expect-error - argument type
-        const context: any = await super._prepareContext(options);
+        const context: unknown = await super._prepareContext(options);
 
         context.mode = this.#state.mode;
         context.npc = this.#state.npc

@@ -119,8 +119,8 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
-        const context: any = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+        const context: unknown = await super._prepareContext(options);
 
         // Profit Factor
         const pf = this.actor.system.rogueTrader?.profitFactor || { current: 0, starting: 0 };
@@ -371,7 +371,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {object} data  Message data
      * @private
      */
-    async _createAcquisitionMessage(data: Record<string, unknown>): Promise<any> {
+    async _createAcquisitionMessage(data: Record<string, unknown>): Promise<unknown> {
         const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/acquisition-test.hbs', {
             actor: this.actor,
             item: data.item,
@@ -398,7 +398,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * Wait for dialog to complete
      * @returns {Promise<object|null>}  Result or null if cancelled
      */
-    async wait(): Promise<any> {
+    async wait(): Promise<unknown> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
         });
@@ -407,7 +407,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (this.#resolve && !options._skipResolve) {
             this.#resolve(null);
         }
@@ -425,7 +425,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<object|null>}  Result or null
      * @static
      */
-    static async show(actor: WH40KBaseActor, item: WH40KItem = null): Promise<any> {
+    static async show(actor: WH40KBaseActor, item: WH40KItem = null): Promise<unknown> {
         const dialog = new AcquisitionDialog(actor, { item });
         void dialog.render(true);
         return dialog.wait();

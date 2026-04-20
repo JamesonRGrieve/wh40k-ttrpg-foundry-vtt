@@ -156,7 +156,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
         const context = await super._prepareContext(options);
 
         context.item = this.item;
@@ -258,7 +258,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * Resolve a compendium item by UUID or name search.
      * @private
      */
-    async _resolveCompendiumItem(name: string, uuid?: string | null): Promise<any> {
+    async _resolveCompendiumItem(name: string, uuid?: string | null): Promise<unknown> {
         if (uuid) {
             try {
                 const item = await fromUuid(uuid);
@@ -583,7 +583,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {Actor} actor - The character actor
      * @returns {Promise<object|null>} The selected choices or null if cancelled
      */
-    static async show(item: WH40KItem, actor: WH40KBaseActor): Promise<any> {
+    static async show(item: WH40KItem, actor: WH40KBaseActor): Promise<unknown> {
         const dialog = new OriginPathChoiceDialog(item, actor);
 
         // Create promise that will be resolved when user confirms/cancels
