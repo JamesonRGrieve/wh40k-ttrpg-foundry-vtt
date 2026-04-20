@@ -105,8 +105,18 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
 
     /** @override */
     get title() {
-        const typeLabel = this.rollType === 'wounds' ? 'Wounds' : 'Fate Points';
+        const typeLabel = this.rollType === 'wounds' ? 'Wounds' : this.rollType === 'thrones' ? 'Throne Gelt' : 'Fate Points';
         return `Roll Starting ${typeLabel}`;
+    }
+
+    /**
+     * Label for the current roll type (used in templates and chat cards).
+     * @private
+     */
+    _getRollTypeLabel(): string {
+        if (this.rollType === 'wounds') return 'Wounds';
+        if (this.rollType === 'thrones') return 'Throne Gelt';
+        return 'Fate Points';
     }
 
     /* -------------------------------------------- */
@@ -118,7 +128,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         const context: unknown = await super._prepareContext(options);
 
         context.rollType = this.rollType;
-        context.rollTypeLabel = this.rollType === 'wounds' ? 'Wounds' : 'Fate Points';
+        context.rollTypeLabel = this._getRollTypeLabel();
         context.formula = this.formula;
         context.description = this._getDescription();
         context.originName = this.context.originItem.name;
@@ -151,6 +161,8 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             return 'Roll to determine your starting Wounds. This represents your ability to withstand damage.';
         } else if (this.rollType === 'fate') {
             return 'Roll to determine your starting Fate Points. Fate Points allow you to avoid death and re-roll critical tests.';
+        } else if (this.rollType === 'thrones') {
+            return 'Roll to determine your starting Throne Gelt — your initial monetary funds.';
         }
         return '';
     }
@@ -189,7 +201,14 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
                 this.rollResult = await this._rollWounds();
             } else if (this.rollType === 'fate') {
                 this.rollResult = await this._rollFate();
+            } else if (this.rollType === 'thrones') {
+                this.rollResult = await this._rollThrones();
+            } else {
+                ui.notifications.error(`Unsupported roll type: ${this.rollType}`);
+                return;
             }
+
+            if (!this.rollResult) return;
 
             // Add to history
             this.rollHistory.push({
@@ -268,6 +287,8 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
         } else if (rollType === 'fate') {
             // For fate, handle the conditional formula
             await this._handleManualFate();
+        } else if (rollType === 'thrones') {
+            await this._handleManualThrones();
         }
     }
 
@@ -615,6 +636,128 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     }
 
     /**
+     * Roll throne gelt using the formula (standard dice formula like "2d10" or "1d10+5").
+     * @returns {Promise<object>}
+     * @private
+     */
+    async _rollThrones(): Promise<unknown> {
+        const formula = this.formula;
+
+        // Plain number formula — fixed value
+        if (/^\d+$/.test(formula.trim())) {
+            const total = parseInt(formula.trim());
+            return {
+                type: 'thrones',
+                formula: formula,
+                rolled: total,
+                total: total,
+                breakdown: `${total}₮ (fixed)`,
+                timestamp: Date.now(),
+            };
+        }
+
+        const roll = new Roll(formula);
+        await roll.evaluate();
+
+        const diceTerms = roll.terms.filter((t) => t instanceof foundry.dice.terms.Die);
+        let breakdown = formula;
+        if (diceTerms.length > 0) {
+            const termsCopy = [...diceTerms];
+            breakdown = formula.replace(/(\d+)d(\d+)/g, (match) => {
+                const term = termsCopy.shift();
+                if (term) {
+                    const results = term.results.map((r) => r.result).join('+');
+                    return `[${results}]`;
+                }
+                return match;
+            });
+        }
+        breakdown += ` = ${roll.total}₮`;
+
+        return {
+            type: 'thrones',
+            formula: formula,
+            rolled: roll.total,
+            total: roll.total,
+            breakdown: breakdown,
+            roll: roll,
+            timestamp: Date.now(),
+        };
+    }
+
+    /**
+     * Handle manual throne gelt input — prompt for dice result, apply formula arithmetic.
+     * @private
+     */
+    async _handleManualThrones(): Promise<void> {
+        const formula = this.formula;
+
+        // Plain number formula — no dice
+        if (/^\d+$/.test(formula.trim())) {
+            const total = parseInt(formula.trim());
+            this.rollResult = {
+                type: 'thrones',
+                formula: formula,
+                rolled: total,
+                total: total,
+                breakdown: `${total}₮ (fixed)`,
+                manual: true,
+                timestamp: Date.now(),
+            };
+            this.rollHistory.push({ timestamp: Date.now(), result: total, breakdown: `${total}₮ (fixed)` });
+            await this.render();
+            return;
+        }
+
+        // Prompt for the dice result
+        const diceValue = await Dialog.prompt({
+            title: 'Manual Throne Gelt Roll',
+            content: `
+                <form>
+                    <div class="form-group">
+                        <label>Roll <code>${formula}</code> and enter the dice total:</label>
+                        <input type="number" name="value" min="0" value="" autofocus />
+                        <p class="hint">Enter the sum of your dice rolls only — static bonuses in the formula will be added automatically.</p>
+                    </div>
+                </form>
+            `,
+            callback: (html) => {
+                const form = html[0]?.querySelector?.('form') || html.querySelector?.('form');
+                return parseInt(form?.querySelector?.('[name="value"]')?.value);
+            },
+            rejectClose: false,
+        });
+
+        if (!diceValue && diceValue !== 0) return;
+        if (isNaN(diceValue)) return;
+
+        // Sum static bonuses from formula (strip dice terms)
+        const withoutDice = formula.replace(/\d+d\d+/gi, '0');
+        let staticTotal = 0;
+        const staticMatches = withoutDice.match(/[+-]?\s*\d+/g);
+        if (staticMatches) {
+            for (const n of staticMatches) {
+                staticTotal += parseInt(n.replace(/\s+/g, ''));
+            }
+        }
+
+        const total = diceValue + staticTotal;
+        const breakdown = staticTotal === 0 ? `[${diceValue}] = ${total}₮` : `[${diceValue}] + ${staticTotal} = ${total}₮`;
+
+        this.rollResult = {
+            type: 'thrones',
+            formula: formula,
+            rolled: total,
+            total: total,
+            breakdown: breakdown,
+            manual: true,
+            timestamp: Date.now(),
+        };
+        this.rollHistory.push({ timestamp: Date.now(), result: total, breakdown });
+        await this.render();
+    }
+
+    /**
      * Format wounds roll breakdown for display.
      * @param {string} originalFormula - Original formula
      * @param {number} tb - Toughness bonus
@@ -663,7 +806,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             origin: this.context.originItem.name,
             originImg: this.context.originItem.img,
             rollType: this.rollType,
-            rollTypeLabel: this.rollType === 'wounds' ? 'Wounds' : 'Fate Points',
+            rollTypeLabel: this._getRollTypeLabel(),
             formula: this.formula,
             result: this.rollResult.total,
             breakdown: this.rollResult.breakdown,

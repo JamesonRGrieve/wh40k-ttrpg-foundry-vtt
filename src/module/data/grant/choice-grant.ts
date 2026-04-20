@@ -133,7 +133,10 @@ export default class ChoiceGrantData extends BaseGrantData {
 
                 const grantResults = result.applied.grantResults;
                 const grantResult = await this._applySubGrant(actor, grantConfig, data, options);
-                grantResults[`${optionLabel}:${i}`] = grantResult.applied;
+                grantResults[`${optionLabel}:${i}`] = {
+                    type: grantConfig.type,
+                    applied: grantResult.applied,
+                };
                 result.notifications.push(...grantResult.notifications);
                 result.errors.push(...grantResult.errors);
             }
@@ -149,7 +152,7 @@ export default class ChoiceGrantData extends BaseGrantData {
         };
 
         // Reverse each applied grant in reverse order
-        for (const [grantKey, grantApplied] of Object.entries(appliedState.grantResults ?? {})) {
+        for (const [grantKey, grantEntry] of Object.entries(appliedState.grantResults ?? {})) {
             const [optionLabel, indexStr] = grantKey.split(':');
             const index = parseInt(indexStr);
 
@@ -159,6 +162,9 @@ export default class ChoiceGrantData extends BaseGrantData {
             const grantConfig = option.grants[index];
             const GrantClass = ctor.GRANT_TYPES[grantConfig.type];
             if (!GrantClass) continue;
+
+            // New shape: { type, applied }. Legacy shape: raw applied data.
+            const grantApplied = (grantEntry as Record<string, unknown>)?.applied ?? grantEntry;
 
             const grant = new GrantClass(grantConfig);
             const reverseData = await grant.reverse(actor, grantApplied);

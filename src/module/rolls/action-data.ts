@@ -4,13 +4,6 @@ import { getHitLocationForRoll } from '../rules/hit-locations.ts';
 import { Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
 import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
 import { getDegree, getOpposedDegrees, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
-
-import { DHBasicActionManager } from '../actions/basic-action-manager.ts';
-import { refundAmmo, useAmmo } from '../rules/ammo.ts';
-import { getHitLocationForRoll } from '../rules/hit-locations.ts';
-import { Hit, PsychicDamageData, scatterDirection, WeaponDamageData } from './damage-data.ts';
-import { PsychicRollData, RollData, WeaponRollData } from './roll-data.ts';
-import { getDegree, getOpposedDegrees, roll1d100, sendActionDataToChat, uuid } from './roll-helpers.ts';
 import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 export class ActionData {

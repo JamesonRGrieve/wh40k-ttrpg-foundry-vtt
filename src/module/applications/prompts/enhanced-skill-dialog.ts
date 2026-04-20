@@ -42,11 +42,6 @@ interface EnhancedSkillDialogData {
  * Enhanced dialog for configuring skill or characteristic rolls.
  */
 export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV2) {
-    declare simpleSkillData: EnhancedSkillDialogData;
-    declare _selectedDifficulty: number;
-    declare _commonModifiers: Record<string, boolean>;
-    declare _customModifier: number;
-
     /**
      * @param {EnhancedSkillDialogData} simpleSkillData  The skill data.
      * @param {ApplicationV2Config.DefaultOptions} [options={}]     Dialog options.

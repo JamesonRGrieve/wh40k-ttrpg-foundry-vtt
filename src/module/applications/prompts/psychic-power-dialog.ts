@@ -64,34 +64,6 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     }
 
     /* -------------------------------------------- */
-    /*  Properties                                  */
-    /* -------------------------------------------- */
-
-    /**
-     * The psychic action data.
-     * @type {PsychicActionData}
-     */
-    psychicAttackData;
-
-    /* -------------------------------------------- */
-    /*  Event Listeners                             */
-    /* -------------------------------------------- */
-
-    /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
-        await super._onRender(context, options);
-
-        // Set up power selection listeners
-        this.element.querySelectorAll('.power-select').forEach((el) => {
-            el.addEventListener('change', this._onPowerSelectChange.bind(this));
-        });
-
-        // Set up button listeners
-        this.element.querySelector('#power-roll')?.addEventListener('click', this._onPowerRoll.bind(this));
-        this.element.querySelector('#power-cancel')?.addEventListener('click', this._onPowerCancel.bind(this));
-    }
-
-    /* -------------------------------------------- */
 
     /**
      * Handle power selection change.
