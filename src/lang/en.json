@@ -403,6 +403,7 @@
             }
         },
         "Sheet": {
+            "ResetWindowSize": "Reset Window Size",
             "Acolyte": "Character Sheet",
             "AcolyteSidebar": "Character Sheet (Sidebar)",
             "PlayerCharacter": "Player Character Sheet",
