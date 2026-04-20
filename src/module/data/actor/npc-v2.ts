@@ -721,7 +721,7 @@ export default class NPCDataV2 extends (HordeTemplate(ActorDataModel) as any) {
      * @param {number} index - The simple weapon index to promote
      * @returns {Promise<Item|null>} The created weapon item, or null on failure
      */
-    async promoteSimpleWeapon(index: number): Promise<any> {
+    async promoteSimpleWeapon(index: number): Promise<unknown> {
         const weapons = this.weapons.simple || [];
         const weapon = weapons[index];
         if (!weapon) return null;

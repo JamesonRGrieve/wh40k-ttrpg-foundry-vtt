@@ -133,7 +133,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState): Promise<any> {
+    async reverse(actor, appliedState): Promise<unknown> {
         const restoreData = { resources: {} };
         const updates = {};
 
@@ -160,7 +160,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async restore(actor, restoreData): Promise<any> {
+    async restore(actor, restoreData): Promise<unknown> {
         const result = this._initResult();
         const updates = {};
 
@@ -199,7 +199,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async getSummary(): Promise<any> {
+    async getSummary(): Promise<unknown> {
         const summary = await super.getSummary();
         summary.icon = (this.constructor as any).ICON;
 
@@ -228,7 +228,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
      * @returns {Promise<number>}
      * @private
      */
-    async _evaluateFormula(formula, actor): Promise<any> {
+    async _evaluateFormula(formula, actor): Promise<unknown> {
         if (!formula) return 0;
 
         // Trim and normalize
@@ -290,7 +290,7 @@ export default class ResourceGrantData extends (BaseGrantData as any) {
      * @returns {Promise<number>}
      * @private
      */
-    async _evaluateLookupTable(formula): Promise<any> {
+    async _evaluateLookupTable(formula): Promise<unknown> {
         // Parse entries: "(1-4|=2),(5-7|=3),(8-10|=4)"
         const entries = [];
         const entryPattern = /\((\d+)-(\d+)\|=(\d+)\)/g;

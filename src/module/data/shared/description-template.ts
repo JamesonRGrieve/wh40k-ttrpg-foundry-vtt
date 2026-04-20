@@ -142,7 +142,7 @@ export default class DescriptionTemplate extends SystemDataModel {
      * Get the enriched description for display.
      * @returns {Promise<string>}
      */
-    async getEnrichedDescription(): Promise<any> {
+    async getEnrichedDescription(): Promise<unknown> {
         return TextEditor.enrichHTML(this.description.value, {
             secrets: this.parent?.isOwner,
             rollData: this.parent?.getRollData() ?? {},

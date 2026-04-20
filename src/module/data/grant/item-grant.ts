@@ -157,7 +157,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState): Promise<any> {
+    async reverse(actor, appliedState): Promise<unknown> {
         const restoreData = { items: [] };
         const idsToDelete = [];
 
@@ -182,7 +182,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async restore(actor, restoreData): Promise<any> {
+    async restore(actor, restoreData): Promise<unknown> {
         const result = this._initResult();
         if (!restoreData?.items?.length) return result;
 
@@ -308,7 +308,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
      * @returns {Promise<Item|null>}
      * @private
      */
-    async _findItemByName(name, specialization = ''): Promise<any> {
+    async _findItemByName(name, specialization = ''): Promise<unknown> {
         if (!name) return null;
 
         const nameLower = name.toLowerCase();

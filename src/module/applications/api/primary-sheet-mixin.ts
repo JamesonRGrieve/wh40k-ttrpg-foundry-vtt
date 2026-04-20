@@ -366,7 +366,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
          * @param {HTMLElement} target  Button that was clicked.
          * @returns {any}               Return `false` to prevent default behavior.
          */
-        async _deleteDocument(event: Event, target: HTMLElement): Promise<any> {}
+        async _deleteDocument(event: Event, target: HTMLElement): Promise<unknown> {}
 
         /* -------------------------------------------- */
 
@@ -419,7 +419,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
          * @param {HTMLElement} target  Button that was clicked.
          * @returns {any}               Return `false` to prevent default behavior.
          */
-        async _showDocument(event: Event, target: HTMLElement): Promise<any> {}
+        async _showDocument(event: Event, target: HTMLElement): Promise<unknown> {}
 
         /* -------------------------------------------- */
         /*  Sorting                                     */

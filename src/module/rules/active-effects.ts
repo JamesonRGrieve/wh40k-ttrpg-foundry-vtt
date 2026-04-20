@@ -13,7 +13,7 @@ export async function handleBleeding(actor) {
 }
 
 export async function handleOnFire(actor) {
-    const context: any = {
+    const context: unknown = {
         template: 'systems/wh40k-rpg/templates/chat/burning-chat.hbs',
         actor: actor,
         roll: await roll1d100(),

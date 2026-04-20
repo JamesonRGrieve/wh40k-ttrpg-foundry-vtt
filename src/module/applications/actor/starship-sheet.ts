@@ -91,7 +91,7 @@ export default class StarshipSheet extends BaseActorSheet {
 
     /** @inheritDoc */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context: any = await super._prepareContext(options);
+        const context: unknown = await super._prepareContext(options);
         context.dh = CONFIG.wh40k || WH40K;
 
         // Prepare ship-specific data

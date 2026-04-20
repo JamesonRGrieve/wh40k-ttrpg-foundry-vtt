@@ -46,7 +46,7 @@ export class WH40KCreateActorDialog {
      * Open the dialog. Resolves when the actor is created (or the user cancels).
      * Returns the created actor, or null if cancelled.
      */
-    static async open(opts: CreateActorOptions = {}): Promise<any> {
+    static async open(opts: CreateActorOptions = {}): Promise<unknown> {
         const initialSystem = opts.initialSystem ?? 'dh2';
         const initialKind = AVAILABILITY[initialSystem][0];
 
@@ -94,7 +94,7 @@ export class WH40KCreateActorDialog {
                             const nameInput = (form.querySelector('[name="name"]') as HTMLInputElement).value.trim();
                             const type = `${system}-${kind}`;
                             const name = nameInput || `New ${SYSTEM_LABELS[system]} ${KIND_LABELS[kind]}`;
-                            const data: any = { name, type };
+                            const data: unknown = { name, type };
                             if (opts.folder) data.folder = opts.folder;
                             const actor = await (Actor as any).create(data);
                             resolve(actor ?? null);

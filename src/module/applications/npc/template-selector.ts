@@ -116,7 +116,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         // @ts-expect-error - argument type
-        const context: any = await super._prepareContext(options);
+        const context: unknown = await super._prepareContext(options);
 
         // Load templates if not cached
         if (this.#templates.length === 0) {
@@ -127,7 +127,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         const filteredTemplates = this._filterTemplates();
 
         // Get selected template details
-        let selectedTemplate: any = null;
+        let selectedTemplate: unknown = null;
         let preview = null;
         if (this.#selectedUuid) {
             selectedTemplate = this.#templates.find((t: any) => t.uuid === this.#selectedUuid);
@@ -451,7 +451,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * Wait for selection.
      * @returns {Promise<Actor|null>} Created actor or null.
      */
-    async wait(): Promise<any> {
+    async wait(): Promise<unknown> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             void this.render(true);
@@ -465,7 +465,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @param {string} [options.faction] - Initial faction filter.
      * @returns {Promise<Actor|null>} Created actor or null.
      */
-    static async open(options: Record<string, unknown> = {}): Promise<any> {
+    static async open(options: Record<string, unknown> = {}): Promise<unknown> {
         const selector = new this();
 
         if (options.category) selector.#filters.category = options.category;

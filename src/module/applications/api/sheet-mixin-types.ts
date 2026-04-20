@@ -67,10 +67,10 @@ export interface PrimarySheetMixinAPI extends DragDropMixinAPI {
     animateValueChange(element: HTMLElement, oldValue: number, newValue: number): void;
     _addDocument(event: Event, target: HTMLElement): void;
     changeTab(tab: string, group: string, options: Record<string, unknown>): void;
-    _deleteDocument(event: Event, target: HTMLElement): Promise<any>;
+    _deleteDocument(event: Event, target: HTMLElement): Promise<unknown>;
     _onChangeSheetMode(event: Event): Promise<void>;
     _onClickAction(event: Event, target: HTMLElement): void;
-    _showDocument(event: Event, target: HTMLElement): Promise<any>;
+    _showDocument(event: Event, target: HTMLElement): Promise<unknown>;
     _sortChildren(collection: string, mode: string): unknown[];
     _sortItems(items: unknown[], mode: string): unknown[];
 }

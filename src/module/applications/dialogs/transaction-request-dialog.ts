@@ -191,7 +191,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         });
     }
 
-    async close(options: Record<string, unknown> = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (this.#resolve && !options._skipResolve) {
             this.#resolve(null);
         }

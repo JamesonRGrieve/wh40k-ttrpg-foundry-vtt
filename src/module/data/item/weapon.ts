@@ -962,7 +962,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {boolean} options.force - Force reload even if already full
      * @returns {Promise<{success: boolean, message: string, actionsSpent: object}>}
      */
-    async reload(options = {}): Promise<any> {
+    async reload(options = {}): Promise<unknown> {
         // Dynamic import to avoid circular dependency
         const { ReloadActionManager } = await import('../../actions/reload-action-manager.ts');
         return ReloadActionManager.reloadWeapon(this.parent, options);
@@ -982,7 +982,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {Item} ammoItem - The ammunition item to load
      * @returns {Promise<Item>} - The updated weapon
      */
-    async loadAmmo(ammoItem): Promise<any> {
+    async loadAmmo(ammoItem): Promise<unknown> {
         if (!ammoItem || ammoItem.type !== 'ammunition') {
             ui.notifications.warn('Invalid ammunition item');
             return this.parent;
@@ -1030,7 +1030,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Eject loaded ammunition from the weapon.
      * @returns {Promise<Item>} - The updated weapon
      */
-    async ejectAmmo(): Promise<any> {
+    async ejectAmmo(): Promise<unknown> {
         if (!this.hasLoadedAmmo) {
             ui.notifications.warn('No ammunition loaded');
             return this.parent;

@@ -345,7 +345,7 @@ export class WH40KItem extends WH40KItemContainer {
      * This unlocks and loads nested items dynamically from the adjacent compendium.
      * I tried to find another way to do this but couldn't find anything online - I made my own hack.
      */
-    async _determineNestedItems(): Promise<any> {
+    async _determineNestedItems(): Promise<unknown> {
         // Already has items just skip
         if ((this.items && this.items.size > 0) || this.hasNested()) return;
 
@@ -361,7 +361,7 @@ export class WH40KItem extends WH40KItemContainer {
         }
     }
 
-    async _updateSpecialsFromPack(pack, data): Promise<any> {
+    async _updateSpecialsFromPack(pack, data): Promise<unknown> {
         const compendium = game.packs.find((p) => p.collection === pack);
         if (!compendium) return;
         await compendium.configure({ locked: false });
@@ -372,14 +372,14 @@ export class WH40KItem extends WH40KItemContainer {
         await compendium.configure({ locked: true });
     }
 
-    async _getAttackSpecials(specialData): Promise<any> {
+    async _getAttackSpecials(specialData): Promise<unknown> {
         const attackSpecialPack = game.packs.find((p) => p.collection === 'wh40k-rpg.attack-specials');
         if (!attackSpecialPack) return [];
         const index = await attackSpecialPack.getIndex({ fields: ['name', 'img', 'type', 'system'] });
         const specials = [];
         for (const special of Object.keys(specialData)) {
             const specialName = capitalize(special);
-            const attackSpecial: any = index.find((n) => n.name === specialName);
+            const attackSpecial: unknown = index.find((n) => n.name === specialName);
             if (attackSpecial) {
                 if (attackSpecial.system.hasLevel) {
                     attackSpecial.system.level = specialData[special];
@@ -467,7 +467,7 @@ export class WH40KItem extends WH40KItemContainer {
 
         const html = await foundry.applications.handlebars.renderTemplate(template, cardData);
 
-        const chatData: any = {
+        const chatData: unknown = {
             user: game.user.id,
             content: html,
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -501,7 +501,7 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Perform the default action for this item
      */
-    async performAction(): Promise<any> {
+    async performAction(): Promise<unknown> {
         if (this.isWeapon) {
             // Weapon attack - handled by the actor sheet
             return (this.actor as any)?.rollWeaponAction?.(this) || this.sendToChat();
@@ -529,7 +529,7 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Roll a talent that has a rollable action
      */
-    async rollTalent(): Promise<any> {
+    async rollTalent(): Promise<unknown> {
         if (!this.actor) {
             return this.sendToChat();
         }
@@ -581,7 +581,7 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Roll a navigator power
      */
-    async rollNavigatorPower(): Promise<any> {
+    async rollNavigatorPower(): Promise<unknown> {
         if (!this.actor) {
             return this.sendToChat();
         }
@@ -624,7 +624,7 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Roll a ship order
      */
-    async rollOrder(): Promise<any> {
+    async rollOrder(): Promise<unknown> {
         if (!this.actor) {
             return this.sendToChat();
         }
@@ -662,7 +662,7 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Roll a ritual
      */
-    async rollRitual(): Promise<any> {
+    async rollRitual(): Promise<unknown> {
         if (!this.actor) {
             return this.sendToChat();
         }
@@ -707,13 +707,13 @@ export class WH40KItem extends WH40KItemContainer {
             return;
         }
 
-        const updates: any = {};
+        const updates: unknown = {};
         const itemsToAdd = [];
         const modifiers = this.system.modifiers || {};
 
         // Apply characteristic modifiers
         if (modifiers.characteristics) {
-            const characteristics: any = {};
+            const characteristics: unknown = {};
             for (const [key, value] of Object.entries(modifiers.characteristics)) {
                 if (value !== 0) {
                     const currentBonus = actor.system.characteristics?.[key]?.advance || 0;

@@ -299,7 +299,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState): Promise<any> {
+    async reverse(actor, appliedState): Promise<unknown> {
         const restoreData = { skills: [] };
         const updates = {};
 
@@ -350,7 +350,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async getSummary(): Promise<any> {
+    async getSummary(): Promise<unknown> {
         const summary = await super.getSummary();
         summary.icon = (this.constructor as any).ICON;
 

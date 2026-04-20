@@ -111,8 +111,8 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
-        const context: any = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+        const context: unknown = await super._prepareContext(options);
 
         // Get options
         const roles = ThreatCalculator.getRoles();
@@ -224,7 +224,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {FormDataExtended} formData
      */
     static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
-        const data: any = foundry.utils.expandObject(formData.object);
+        const data: unknown = foundry.utils.expandObject(formData.object);
 
         // Update state from form
         this.#state.namePattern = data.namePattern || 'NPC {n}';
@@ -267,7 +267,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<Array<Actor>>}
      * @private
      */
-    async _createNPCs(): Promise<any> {
+    async _createNPCs(): Promise<unknown> {
         const actors = [];
 
         // Generate base data
@@ -305,7 +305,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 systemData.wounds.value = systemData.wounds.max;
             }
 
-            const actorData: any = {
+            const actorData: unknown = {
                 name,
                 type: 'npcV2',
                 img: 'icons/svg/mystery-man.svg',
@@ -353,7 +353,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
         if (!this.#submitted && this.#resolve) {

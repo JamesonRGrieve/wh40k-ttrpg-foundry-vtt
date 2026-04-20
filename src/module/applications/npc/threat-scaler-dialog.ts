@@ -130,8 +130,8 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
-        const context: any = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+        const context: unknown = await super._prepareContext(options);
 
         const currentThreat = this.#actor.system.threatLevel;
         const newThreat = this.#state.newThreatLevel;
@@ -335,7 +335,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {FormDataExtended} formData - The form data.
      */
     static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
-        const data: any = foundry.utils.expandObject(formData.object);
+        const data: unknown = foundry.utils.expandObject(formData.object);
 
         // Update state from form
         this.#state.newThreatLevel = parseInt(data.newThreatLevel, 10);
@@ -366,7 +366,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         });
 
         // Prepare update object with system prefix
-        const actorUpdates: any = {};
+        const actorUpdates: unknown = {};
         for (const [key, value] of Object.entries(updates)) {
             actorUpdates[`system.${key}`] = value;
         }
@@ -407,7 +407,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<unknown> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
@@ -443,7 +443,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
      * @param {Actor} actor - The NPC actor to scale.
      * @returns {Promise<boolean>} True if scaling was applied, false otherwise.
      */
-    static async scale(actor: WH40KBaseActor): Promise<any> {
+    static async scale(actor: WH40KBaseActor): Promise<unknown> {
         if (!actor || actor.type !== 'npcV2') {
             ui.notifications.warn('Can only scale npcV2 type actors');
             return false;
