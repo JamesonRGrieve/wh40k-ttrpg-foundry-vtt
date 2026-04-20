@@ -51,7 +51,7 @@ export default class ItemGrantData extends BaseGrantData {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -191,8 +191,11 @@ export default class ItemGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    override async reverse(actor: WH40KBaseActor, appliedState: Record<string, string>): Promise<any> {
-        const restoreData: { items: Array<{ uuid: string; data: any }> } = { items: [] };
+    override async reverse(
+        actor: WH40KBaseActor,
+        appliedState: Record<string, string>,
+    ): Promise<{ items: Array<{ uuid: string; data: Record<string, unknown> }> }> {
+        const restoreData: { items: Array<{ uuid: string; data: Record<string, unknown> }> } = { items: [] };
         const idsToDelete: string[] = [];
 
         for (const [uuid, itemId] of Object.entries(appliedState)) {
@@ -216,9 +219,12 @@ export default class ItemGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    override async restore(actor: WH40KBaseActor, restoreData: any): Promise<GrantApplicationResult> {
+    override async restore(
+        actor: WH40KBaseActor,
+        restoreData: { items: Array<{ uuid: string; data: Record<string, unknown> }> },
+    ): Promise<GrantApplicationResult> {
         const result = this._initResult();
-        const items: Array<{ uuid: string; data: any }> = restoreData?.items ?? [];
+        const items = restoreData?.items ?? [];
         if (items.length === 0) return result;
 
         const created = (await actor.createEmbeddedDocuments(
@@ -304,7 +310,8 @@ export default class ItemGrantData extends BaseGrantData {
                 i.type === sourceItem.type &&
                 i.name === sourceItem.name &&
                 // For talents/traits, also check specialization
-                (i.type !== 'talent' || (i.system as any)?.specialization === (sourceItem.system as any)?.specialization),
+                (i.type !== 'talent' ||
+                    (i.system as { specialization?: string })?.specialization === (sourceItem.system as { specialization?: string })?.specialization),
         );
     }
 
@@ -312,11 +319,11 @@ export default class ItemGrantData extends BaseGrantData {
      * Create item data for granting.
      * @param {WH40KItem} sourceItem
      * @param {string} uuid
-     * @param {object} overrides
-     * @returns {object}
+     * @param {Record<string, unknown>} overrides
+     * @returns {Record<string, unknown>}
      * @private
      */
-    _createItemData(sourceItem: WH40KItem, uuid: string, overrides: Record<string, any> = {}): Record<string, any> {
+    _createItemData(sourceItem: WH40KItem, uuid: string, overrides: Record<string, unknown> = {}): Record<string, unknown> {
         const itemData = sourceItem.toObject();
 
         // Apply overrides
@@ -325,7 +332,7 @@ export default class ItemGrantData extends BaseGrantData {
         }
 
         // Set grant flags
-        itemData.flags = foundry.utils.mergeObject(itemData.flags ?? {}, this._createGrantFlags(uuid));
+        itemData.flags = foundry.utils.mergeObject((itemData.flags ?? {}) as Record<string, unknown>, this._createGrantFlags(uuid));
 
         // Generate new ID
         itemData._id = foundry.utils.randomID();
@@ -341,7 +348,7 @@ export default class ItemGrantData extends BaseGrantData {
      * @returns {Promise<WH40KItem|null>}
      * @private
      */
-    async _findItemByName(name: string, specialization = ''): Promise<unknown> {
+    async _findItemByName(name: string, specialization = ''): Promise<WH40KItem | null> {
         if (!name) return null;
 
         const nameLower = name.toLowerCase();
@@ -362,7 +369,7 @@ export default class ItemGrantData extends BaseGrantData {
             });
 
             if (match) {
-                return pack.getDocument(match._id);
+                return (await pack.getDocument(match._id)) as WH40KItem | null;
             }
         }
 

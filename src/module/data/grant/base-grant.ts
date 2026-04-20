@@ -79,7 +79,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField> {
         const fields = foundry.data.fields;
         return {
             // Unique identifier for this grant within its parent
@@ -88,9 +88,9 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
             // Grant type identifier
             type: new fields.StringField({
                 required: true,
-                initial: (this as any).TYPE,
-                validate: (v) => v === (this as any).TYPE,
-                validationError: `Type must be "${(this as any).TYPE}"`,
+                initial: () => (this as typeof BaseGrantData).TYPE,
+                validate: (v: string) => v === (this as typeof BaseGrantData).TYPE,
+                validationError: `Type must be "${(this as typeof BaseGrantData).TYPE}"`,
             }),
 
             // Optional flag - can player skip this grant?
@@ -113,7 +113,7 @@ export default class BaseGrantData extends foundry.abstract.DataModel<Record<str
      * @type {WH40KItem|null}
      */
     get item(): WH40KItem | null {
-        return (this.parent as any)?.parent ?? null;
+        return (this.parent as { parent: WH40KItem })?.parent ?? null;
     }
 
     /**

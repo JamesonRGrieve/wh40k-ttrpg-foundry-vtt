@@ -24,25 +24,100 @@ import {
 } from '../../rules/attack-options.ts';
 import { RANGE_BRACKETS, calculateTokenDistance } from '../../utils/range-calculator.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
+import type { ActionData } from '../../rolls/action-data.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
 /**
  * Unified dialog for configuring all roll types.
  */
-export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2) as any) {
-    declare render: unknown;
-    declare close: unknown;
-    declare position: unknown;
+
+interface UnifiedRollDialogContext extends Record<string, unknown> {
+    rollData: Record<string, unknown>;
+    actorName: string;
+    actorImg: string;
+    rollName: string;
+    rollSubtitle: string;
+    baseTarget: number;
+    finalTarget: number;
+    targetColorClass: string;
+    targetBreakdownTooltip: string;
+    previousTarget: number | null;
+    difficulty: { key: string; label: string; modifier: number; icon: string; description: string; default?: boolean };
+    difficultyMod: number;
+    situationalMod: number;
+    customMod: number;
+    modifierAggregate: number;
+    difficultyPicker: Array<{
+        key: string;
+        label: string;
+        modifier: number;
+        icon: string;
+        description: string;
+        default?: boolean;
+        index: number;
+        isCurrent: boolean;
+        modifierLabel: string;
+    }>;
+    difficultyPickerOpen: boolean;
+    situationalModifiers: Array<{ key: string; source: string; value: number; label: string; active: boolean; toggleKey: string; valueLabel: string }>;
+    hasSituationalModifiers: boolean;
+    showCustomModifier: boolean;
+    rollResult: { success: boolean; dos: number; dof: number; total: number } | null;
+    manualRollTens: number | null;
+    manualRollUnits: number | null;
+    singleRollValue: number | null;
+    diceInputMode: 'two-dice' | 'single';
+    isTwoDice: boolean;
+    hasManualRoll: boolean;
+    manualRollTotal: number | null;
+    contextExpanded: boolean;
+    isWeapon: boolean;
+    isPsychic: boolean;
+    isForceField: boolean;
+    isSimple: boolean;
+    hasContextPanel: boolean;
+    baseChar: string;
+}
+
+/**
+ * Unified dialog for configuring all roll types.
+ */
+export default class UnifiedRollDialog extends ApplicationV2Mixin(ApplicationV2) {
+    declare actionData: ActionData;
+    declare _selectedDifficultyIndex: number;
+    declare _situationalModifiers: Record<string, boolean>;
+    declare _customModifier: number;
+    declare _manualRollTens: number | null;
+    declare _manualRollUnits: number | null;
+    declare _diceInputMode: 'two-dice' | 'single';
+    declare _singleRollValue: number | null;
+    declare _rollResult: { success: boolean; dos: number; dof: number; total: number } | null;
+    declare _difficultyPickerOpen: boolean;
+    declare _showCustomModifier: boolean;
+    declare _contextExpanded: boolean;
+    declare _previousTarget: number | null;
+    declare _selectedRangeBracket: string | null;
+    declare _attackModeKey: string;
+    declare _aimModeKey: string;
+    declare _activeCombatSituationals: Set<string>;
+    declare _sizeModifierKey: string | null;
+    declare _specialOptionsExpanded: boolean;
+    declare _sizeExpanded: boolean;
+    declare _rangeExpanded: boolean;
+    declare _situationalExpanded: boolean;
+    declare _initialized: boolean;
+    declare _cachedSituationalModifiers: Array<{ key: string; source: string; value: number; label: string }> | null;
+    declare _pickerOutsideHandler: ((e: PointerEvent) => void) | null;
 
     /**
      * @param {ActionData} actionData  Any ActionData subclass (SimpleSkillData, WeaponActionData, etc.)
      * @param {object} [options={}]    Dialog options.
      */
-    constructor(actionData, options = {}) {
-        super(options as any);
+    constructor(actionData: ActionData, options: Partial<ApplicationV2Config.DefaultOptions> = {}) {
+        super(options);
         this.actionData = actionData;
-        this._selectedDifficultyIndex = (this.constructor as any).DIFFICULTIES.findIndex((d) => d.default);
+        this._selectedDifficultyIndex = UnifiedRollDialog.DIFFICULTIES.findIndex((d) => d.default);
         this._situationalModifiers = {};
         this._customModifier = 0;
         this._manualRollTens = null;
@@ -65,6 +140,9 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
         this._sizeExpanded = false;
         this._rangeExpanded = false;
         this._situationalExpanded = false;
+        this._initialized = false;
+        this._cachedSituationalModifiers = null;
+        this._pickerOutsideHandler = null;
     }
 
     /* -------------------------------------------- */
@@ -162,12 +240,6 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
     /* -------------------------------------------- */
     /*  Properties                                   */
     /* -------------------------------------------- */
-
-    /** @type {ActionData} */
-    actionData;
-
-    /** Whether the roll data has been initialized */
-    _initialized = false;
 
     /**
      * Detect the roll type from the action data.

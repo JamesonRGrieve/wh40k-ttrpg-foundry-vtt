@@ -11,14 +11,30 @@
  * - Popover shows breakdown with clickable source items
  */
 
+type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+
+interface ModifierEntry {
+    value: number;
+    uuid?: string;
+    icon?: string;
+    source: string;
+}
+
+interface BreakdownData {
+    label: string;
+    base: number;
+    modifiers: ModifierEntry[];
+    total: number;
+}
+
 /**
  * Mixin for stat breakdown popover functionality
- * @param {*} Base - The base class to extend
- * @returns {*} Extended class with stat breakdown support
+ * @template {ApplicationV2} T
+ * @param {T} Base - The base class to extend
+ * @returns {any} Extended class with stat breakdown support
  */
-export default function StatBreakdownMixin<T extends new (...args: any[]) => any>(Base: T) {
-    // eslint-disable-next-line @typescript-eslint/no-shadow -- class must match function name for private field access
-    return class StatBreakdownMixin extends Base {
+export default function StatBreakdownMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+    return class StatBreakdownApplication extends Base {
         /**
          * Currently open breakdown popover
          * @type {HTMLElement|null}
@@ -30,14 +46,12 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
          * Add stat breakdown action handlers
          * @override
          */
-        static DEFAULT_OPTIONS = {
-            // @ts-expect-error - TS2339
-            ...super.DEFAULT_OPTIONS,
+        static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+            ...Base.DEFAULT_OPTIONS,
             actions: {
-                // @ts-expect-error - TS2339
-                ...super.DEFAULT_OPTIONS.actions,
-                showStatBreakdown: StatBreakdownMixin.#showStatBreakdown,
-                viewBreakdownSource: StatBreakdownMixin.#viewBreakdownSource,
+                ...(Base.DEFAULT_OPTIONS as any).actions,
+                showStatBreakdown: (StatBreakdownApplication as any).#showStatBreakdown,
+                viewBreakdownSource: (StatBreakdownApplication as any).#viewBreakdownSource,
             },
         };
 
@@ -47,12 +61,12 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
 
         /**
          * Show stat breakdown popover
-         * @this {StatBreakdownMixin}
-         * @param {PointerEvent} event - Triggering event
+         * @this {StatBreakdownApplication}
+         * @param {Event} event - Triggering event
          * @param {HTMLElement} target - Action target
          * @private
          */
-        static #showStatBreakdown(event: Event, target: HTMLElement): void {
+        static #showStatBreakdown(this: StatBreakdownApplication, event: Event, target: HTMLElement): void {
             event.preventDefault();
             event.stopPropagation();
 
@@ -63,18 +77,15 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
             }
 
             // Close existing popover if any
-            // @ts-expect-error - dynamic property
             if (this.#activePopover) {
-                // @ts-expect-error - dynamic property
                 this.#closePopover();
             }
 
             // Get breakdown data from document
-            let breakdown;
-            // @ts-expect-error - dynamic property
-            if (typeof this.document.getStatBreakdown === 'function') {
-                // @ts-expect-error - dynamic property
-                breakdown = this.document.getStatBreakdown(statKey);
+            const doc = (this as any).document;
+            let breakdown: BreakdownData | undefined;
+            if (typeof doc.getStatBreakdown === 'function') {
+                breakdown = doc.getStatBreakdown(statKey);
             } else {
                 console.warn(`Document does not implement getStatBreakdown for ${statKey}`);
                 return;
@@ -86,14 +97,13 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
             }
 
             // Create and show popover
-            // @ts-expect-error - dynamic property
             this.#createPopover(target, breakdown);
         }
 
         /**
          * View a breakdown source item
-         * @this {StatBreakdownMixin}
-         * @param {PointerEvent} event - Triggering event
+         * @this {StatBreakdownApplication}
+         * @param {Event} event - Triggering event
          * @param {HTMLElement} target - Action target
          * @private
          */
@@ -104,10 +114,9 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
             const uuid = target.dataset.sourceUuid;
             if (!uuid) return;
 
-            // Fetch and render the item
             const item = await fromUuid(uuid);
-            if (item) {
-                item.sheet.render(true);
+            if (item && 'sheet' in item && item.sheet) {
+                (item.sheet as any).render(true);
             }
         }
 
@@ -118,53 +127,39 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
         /**
          * Create and display a stat breakdown popover
          * @param {HTMLElement} anchor - Element to anchor popover to
-         * @param {Object} breakdown - Breakdown data
+         * @param {BreakdownData} breakdown - Breakdown data
          * @private
          */
-        #createPopover(anchor: HTMLElement, breakdown: Record<string, unknown>): void {
-            // Create popover element
+        #createPopover(anchor: HTMLElement, breakdown: BreakdownData): void {
             const popover = document.createElement('div');
             popover.className = 'wh40k-stat-breakdown-popover';
 
-            // Build popover content
-            // @ts-expect-error - argument type
             const html = this.#buildPopoverHTML(breakdown);
             popover.innerHTML = html;
 
-            // Position popover
             this.#positionPopover(popover, anchor);
 
-            // Add to DOM
             document.body.appendChild(popover);
             this.#activePopover = popover;
 
-            // Add event listeners
             popover.addEventListener('click', (event) => event.stopPropagation());
 
-            // Close on click outside
             setTimeout(() => {
                 document.addEventListener('click', this.#handleOutsideClick.bind(this), { once: true });
             }, 0);
 
-            // Close on Escape
             document.addEventListener('keydown', this.#handleEscape.bind(this), { once: true });
 
-            // Attach action handlers for source items
             this.#attachPopoverListeners(popover);
         }
 
         /**
          * Build popover HTML content
-         * @param {Object} breakdown - Breakdown data
+         * @param {BreakdownData} breakdown - Breakdown data
          * @returns {string} HTML string
          * @private
          */
-        #buildPopoverHTML(breakdown: {
-            label: string;
-            base: number;
-            modifiers: Array<{ value: number; uuid?: string; icon?: string; source: string }>;
-            total: number;
-        }): string {
+        #buildPopoverHTML(breakdown: BreakdownData): string {
             const { label, base, modifiers, total } = breakdown;
 
             let html = `
@@ -181,7 +176,6 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
                     </div>
             `;
 
-            // Add modifiers
             if (modifiers && modifiers.length > 0) {
                 html += '<div class="wh40k-stat-breakdown-modifiers">';
                 for (const modifier of modifiers) {
@@ -204,7 +198,6 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
                 html += '</div>';
             }
 
-            // Add total
             html += `
                     <div class="wh40k-stat-breakdown-row wh40k-stat-breakdown-row--total">
                         <span class="wh40k-stat-breakdown-source">Total</span>
@@ -229,7 +222,6 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
             let top = anchorRect.bottom + 5;
             let left = anchorRect.left;
 
-            // Keep popover in viewport
             if (left + popoverRect.width > window.innerWidth) {
                 left = window.innerWidth - popoverRect.width - 10;
             }
@@ -248,17 +240,15 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
          * @private
          */
         #attachPopoverListeners(popover: HTMLElement): void {
-            // Close button
             const closeBtn = popover.querySelector('[data-action="closeBreakdown"]');
             if (closeBtn) {
                 closeBtn.addEventListener('click', () => this.#closePopover());
             }
 
-            // Source item links
             const sourceLinks = popover.querySelectorAll('[data-action="viewBreakdownSource"]');
             for (const link of sourceLinks) {
                 link.addEventListener('click', (event) => {
-                    StatBreakdownMixin.#viewBreakdownSource.call(this, event, link);
+                    (this.constructor as any).#viewBreakdownSource.call(this, event, link);
                 });
             }
         }
@@ -280,8 +270,7 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
          * @private
          */
         #handleOutsideClick(event: Event): void {
-            // @ts-expect-error - type mismatch
-            if (this.#activePopover && !this.#activePopover.contains(event.target)) {
+            if (this.#activePopover && !this.#activePopover.contains(event.target as Node)) {
                 this.#closePopover();
             }
         }
@@ -305,7 +294,7 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
         /**
          * @override
          */
-        close(options: Record<string, unknown> = {}): Promise<void> {
+        async close(options: Record<string, unknown> = {}): Promise<void> {
             this.#closePopover();
             return super.close(options);
         }

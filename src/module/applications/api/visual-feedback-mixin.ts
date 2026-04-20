@@ -3,15 +3,18 @@
  * Adds animated feedback when actor values are updated
  */
 
+type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { VisualFeedbackMixinAPI } from './sheet-mixin-types.js';
+
 /**
  * Mixin to add visual feedback capabilities to ApplicationV2 sheets.
  * @template {ApplicationV2} T
- * @param {typeof T} Base   Application class being extended.
- * @returns {typeof VisualFeedbackApplication}
+ * @param {T} Base   Application class being extended.
+ * @returns {any}
  * @mixin
  */
-export default function VisualFeedbackMixin<T extends new (...args: any[]) => any>(Base: T) {
-    class VisualFeedbackApplication extends Base {
+export default function VisualFeedbackMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+    return class VisualFeedbackApplication extends Base implements VisualFeedbackMixinAPI {
         /* -------------------------------------------- */
         /*  Change Tracking                             */
         /* -------------------------------------------- */
@@ -25,23 +28,15 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
 
         /* -------------------------------------------- */
 
-        /**
-         * Track the last form submission time to prevent animation spam.
-         * @type {number}
-         * @protected
-         */
-        _lastSubmitTime: number = 0;
+        declare document: any;
 
         /* -------------------------------------------- */
         /*  Form Submission Override                    */
         /* -------------------------------------------- */
 
         /** @override */
-        // @ts-expect-error - return type
-        _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+        _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> | void {
             super._onRender(context, options);
-
-            // Store current values for change detection
             this._captureCurrentValues();
         }
 
@@ -77,10 +72,7 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
             const element = this._findFieldElement(fieldName);
             if (!element) return;
 
-            // Determine animation type
             const animationClass = this._getAnimationClass(fieldName, oldValue, newValue);
-
-            // Apply animation
             this._applyAnimation(element, animationClass);
         }
 
@@ -93,25 +85,21 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
          * @protected
          */
         _findFieldElement(fieldName: string): HTMLElement | null {
-            // Try direct name match
             let element = this.element.querySelector(`[name="${fieldName}"]`);
-            if (element) return element;
+            if (element) return element as HTMLElement;
 
-            // Try data attribute match
             const dataAttr = fieldName.replace(/^system\./, '').replace(/\./g, '-');
             element = this.element.querySelector(`[data-field="${dataAttr}"]`);
-            if (element) return element;
+            if (element) return element as HTMLElement;
 
-            // Try finding parent container
             element = this.element.querySelector(`[data-stat="${dataAttr}"]`);
-            if (element) return element;
+            if (element) return element as HTMLElement;
 
-            // Try common patterns
             const patterns = [`.stat-${dataAttr}`, `.${dataAttr}-value`, `#${dataAttr}`, `[data-tooltip*="${dataAttr}"]`];
 
             for (const pattern of patterns) {
                 element = this.element.querySelector(pattern);
-                if (element) return element;
+                if (element) return element as HTMLElement;
             }
 
             return null;
@@ -128,7 +116,6 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
          * @protected
          */
         _getAnimationClass(fieldName: string, oldValue: number | string, newValue: number | string): string {
-            // Special animations for specific fields
             if (fieldName.includes('wounds') && fieldName.includes('value')) {
                 return Number(newValue) > Number(oldValue) ? 'stat-heal' : 'stat-damage';
             }
@@ -137,13 +124,11 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
                 return 'stat-advancement';
             }
 
-            // Numeric comparison for increase/decrease
             if (typeof oldValue === 'number' && typeof newValue === 'number') {
                 if (newValue > oldValue) return 'stat-increase';
                 if (newValue < oldValue) return 'stat-decrease';
             }
 
-            // Default flash for any change
             return 'flash-update';
         }
 
@@ -156,7 +141,6 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
          * @protected
          */
         _applyAnimation(element: HTMLElement, animationClass: string): void {
-            // Remove existing animation classes
             const animationClasses = [
                 'stat-increase',
                 'stat-decrease',
@@ -169,13 +153,10 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
             ];
             element.classList.remove(...animationClasses);
 
-            // Force reflow to restart animation
             void element.offsetWidth;
 
-            // Add new animation class
             element.classList.add(animationClass);
 
-            // Remove class after animation completes
             setTimeout(() => {
                 element.classList.remove(animationClass);
             }, 1000);
@@ -219,18 +200,15 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
                 const elapsed = Date.now() - start;
                 const progress = Math.min(elapsed / duration, 1);
 
-                // Ease-out animation
                 const eased = 1 - Math.pow(1 - progress, 3);
                 const current = Math.round(fromValue + difference * eased);
 
-                // @ts-expect-error - type assignment
-                element.textContent = current;
+                element.textContent = current.toString();
 
                 if (progress < 1) {
                     requestAnimationFrame(animate);
                 } else {
-                    // @ts-expect-error - type assignment
-                    element.textContent = toValue;
+                    element.textContent = toValue.toString();
                 }
             };
 
@@ -263,7 +241,6 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
                 box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             `;
 
-            // Position above element
             const rect = element.getBoundingClientRect();
             tooltip.style.left = `${rect.left + rect.width / 2}px`;
             tooltip.style.top = `${rect.top - 30}px`;
@@ -271,7 +248,6 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
 
             document.body.appendChild(tooltip);
 
-            // Animate in
             tooltip.style.opacity = '0';
             tooltip.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
             requestAnimationFrame(() => {
@@ -279,7 +255,6 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
                 tooltip.style.transform = 'translateX(-50%) translateY(-5px)';
             });
 
-            // Remove after delay
             setTimeout(() => {
                 tooltip.style.opacity = '0';
                 tooltip.style.transform = 'translateX(-50%) translateY(-10px)';
@@ -291,11 +266,6 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
         /*  Public API                                  */
         /* -------------------------------------------- */
 
-        /**
-         * Manually trigger a stat change animation.
-         * @param {string} fieldName    Field identifier
-         * @param {string} animationType    Animation type ("increase", "decrease", "heal", "damage", etc.)
-         */
         animateStatChange(fieldName: string, animationType: string = 'flash'): void {
             const element = this._findFieldElement(fieldName);
             if (!element) return;
@@ -314,26 +284,17 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => an
             this._applyAnimation(element, animationClass);
         }
 
-        /* -------------------------------------------- */
-
-        /**
-         * Detect and animate all changes from a document update.
-         * @param {object} changes      The changes object from update
-         */
         visualizeChanges(changes: Record<string, unknown>): void {
             const flattened = foundry.utils.flattenObject(changes);
 
             Object.entries(flattened).forEach(([key, newValue]) => {
                 const oldValue = this._previousValues.get(key);
                 if (oldValue !== undefined && oldValue !== newValue) {
-                    this._flashStatChange(key, oldValue, newValue);
+                    this._flashStatChange(key, oldValue, newValue as number | string);
                 }
             });
 
-            // Update stored values
             this._captureCurrentValues();
         }
-    }
-
-    return VisualFeedbackApplication;
+    };
 }

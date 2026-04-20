@@ -7,18 +7,27 @@ import ApplicationV2Mixin from './application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
+interface DialogButton {
+    label: string;
+    class?: string;
+    callback?: (...args: any[]) => any;
+    default?: boolean;
+}
+
 /**
  * Base dialog class for creating WH40K dialogs.
  */
 export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
+    _resolve?: (value: any) => void;
+    _reject?: (reason?: any) => void;
+    _submitted?: boolean;
+
     /** @override */
     static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         tag: 'dialog',
         classes: ['wh40k-rpg', 'dialog', 'standard-form'],
         window: {
             contentTag: 'form',
-            // @ts-expect-error - extended property
-            contentClasses: ['standard-form'],
             minimizable: false,
         },
         position: {
@@ -46,10 +55,11 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        context.content = this.options.content ?? '';
-        context.buttons = this.options.buttons?.map((button) => ({
+        const appOptions = this.options as { content?: string; buttons?: DialogButton[] };
+        context.content = appOptions.content ?? '';
+        context.buttons = appOptions.buttons?.map((button) => ({
             ...button,
             cssClass: button.class,
         }));
@@ -81,7 +91,7 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
 
     /**
      * Resolve the dialog with a result.
-     * @param {any} result  The result to return.
+     * @param {Record<string, unknown>} result  The result to return.
      */
     resolve(result: Record<string, unknown>): void {
         this._submitted = true;
@@ -124,14 +134,13 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
         content,
         label = 'OK',
         callback,
-    }: { title?: string; content?: string; label?: string; callback?: (...args: any[]) => any } = {}): Promise<unknown> {
-        // @ts-expect-error - DialogV2 argument type
+    }: { title?: string; content?: string; label?: string; callback?: (dialog: HTMLElement) => any } = {}): Promise<unknown> {
         return foundry.applications.api.DialogV2.prompt({
             window: { title },
             content,
             ok: {
                 label,
-                callback: (event, button, dialog) => callback?.(dialog),
+                callback: (event: SubmitEvent, button: HTMLButtonElement, dialog: HTMLElement) => callback?.(dialog),
             },
             rejectClose: false,
         });

@@ -46,7 +46,7 @@ export class WH40KCreateActorDialog {
      * Open the dialog. Resolves when the actor is created (or the user cancels).
      * Returns the created actor, or null if cancelled.
      */
-    static async open(opts: CreateActorOptions = {}): Promise<unknown> {
+    static async open(opts: CreateActorOptions = {}): Promise<Actor | null> {
         const initialSystem = opts.initialSystem ?? 'dh2';
         const initialKind = AVAILABILITY[initialSystem][0];
 
@@ -88,15 +88,15 @@ export class WH40KCreateActorDialog {
                         icon: 'fa-solid fa-plus',
                         default: true,
                         callback: async (_event: Event, button: HTMLElement) => {
-                            const form = button.form as HTMLFormElement;
+                            const form = button.closest('form') as HTMLFormElement;
                             const system = (form.querySelector('[name="system"]') as HTMLSelectElement).value;
                             const kind = (form.querySelector('[name="kind"]') as HTMLSelectElement).value;
                             const nameInput = (form.querySelector('[name="name"]') as HTMLInputElement).value.trim();
                             const type = `${system}-${kind}`;
                             const name = nameInput || `New ${SYSTEM_LABELS[system]} ${KIND_LABELS[kind]}`;
-                            const data: unknown = { name, type };
+                            const data: Record<string, unknown> = { name, type };
                             if (opts.folder) data.folder = opts.folder;
-                            const actor = await (Actor as any).create(data);
+                            const actor = await Actor.create(data);
                             resolve(actor ?? null);
                         },
                     },
@@ -109,10 +109,9 @@ export class WH40KCreateActorDialog {
                 ],
                 rejectClose: false,
             });
-            // Wire the cascading behavior: when system changes, repopulate kind select.
+
             const afterRender = () => {
-                const root = (dialog as any).element as HTMLElement | undefined;
-                if (!root) return;
+                const root = dialog.element;
                 const sysSel = root.querySelector('[name="system"]') as HTMLSelectElement | null;
                 const kindSel = root.querySelector('[name="kind"]') as HTMLSelectElement | null;
                 if (!sysSel || !kindSel) return;
@@ -124,13 +123,13 @@ export class WH40KCreateActorDialog {
                         .filter((k) => allowed.includes(k))
                         .map((k) => `<option value="${k}" ${k === current ? 'selected' : ''}>${KIND_LABELS[k]}</option>`)
                         .join('');
-                    // If previous kind no longer valid, default to first.
                     if (!allowed.includes(current)) {
                         kindSel.value = allowed[0];
                     }
                 });
             };
-            void (dialog as any).render(true).then(afterRender);
+
+            void dialog.render(true).then(afterRender);
         });
     }
 }

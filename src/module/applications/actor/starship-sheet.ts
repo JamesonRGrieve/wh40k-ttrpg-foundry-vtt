@@ -17,10 +17,12 @@ export default class StarshipSheet extends BaseActorSheet {
     declare document: WH40KStarship;
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+        ...BaseActorSheet.DEFAULT_OPTIONS,
         actions: {
-            fireShipWeapon: StarshipSheet.#fireShipWeapon,
-            rollInitiative: StarshipSheet.#rollInitiative,
+            ...BaseActorSheet.DEFAULT_OPTIONS.actions,
+            fireShipWeapon: (StarshipSheet as any).#fireShipWeapon,
+            rollInitiative: (StarshipSheet as any).#rollInitiative,
         },
         classes: ['starship'],
         position: {
@@ -33,7 +35,8 @@ export default class StarshipSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+        ...BaseActorSheet.PARTS,
         header: {
             template: 'systems/wh40k-rpg/templates/actor/starship/header.hbs',
         },
@@ -43,27 +46,22 @@ export default class StarshipSheet extends BaseActorSheet {
         stats: {
             template: 'systems/wh40k-rpg/templates/actor/starship/tab-stats.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
         },
         components: {
             template: 'systems/wh40k-rpg/templates/actor/starship/tab-components.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
         },
         weapons: {
             template: 'systems/wh40k-rpg/templates/actor/starship/tab-weapons.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
         },
         crew: {
             template: 'systems/wh40k-rpg/templates/actor/starship/tab-crew.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
         },
         history: {
             template: 'systems/wh40k-rpg/templates/actor/starship/tab-history.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
         },
     };
 
@@ -90,9 +88,9 @@ export default class StarshipSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context: unknown = await super._prepareContext(options);
-        context.dh = CONFIG.wh40k || WH40K;
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        const context = await super._prepareContext(options);
+        (context as any).dh = CONFIG.wh40k || WH40K;
 
         // Prepare ship-specific data
         this._prepareShipData(context);
@@ -111,37 +109,37 @@ export default class StarshipSheet extends BaseActorSheet {
         const items = this.actor.items;
 
         // Get ship components grouped by type
-        context.shipComponents = items.filter((item: WH40KItem) => item.type === 'shipComponent');
-        context.shipWeapons = items.filter((item: WH40KItem) => item.type === 'shipWeapon');
-        context.shipUpgrades = items.filter((item: WH40KItem) => item.type === 'shipUpgrade');
-        context.shipRoles = items.filter((item: WH40KItem) => item.type === 'shipRole');
+        (context as any).shipComponents = items.filter((item: WH40KItem) => item.type === 'shipComponent');
+        (context as any).shipWeapons = items.filter((item: WH40KItem) => item.type === 'shipWeapon');
+        (context as any).shipUpgrades = items.filter((item: WH40KItem) => item.type === 'shipUpgrade');
+        (context as any).shipRoles = items.filter((item: WH40KItem) => item.type === 'shipRole');
 
         // Calculate power and space usage (use DataModel fields)
-        context.powerGenerated = 0;
-        context.powerUsed = 0;
-        context.spaceUsed = 0;
+        (context as any).powerGenerated = 0;
+        (context as any).powerUsed = 0;
+        (context as any).spaceUsed = 0;
 
-        for (const component of context.shipComponents) {
-            if (component.system.condition === 'functional') {
-                context.powerGenerated += component.system.power?.generated || 0;
-                context.powerUsed += component.system.power?.used || 0;
-                context.spaceUsed += component.system.space || 0;
+        for (const component of (context as any).shipComponents) {
+            if ((component.system as any).condition === 'functional') {
+                (context as any).powerGenerated += (component.system as any).power?.generated || 0;
+                (context as any).powerUsed += (component.system as any).power?.used || 0;
+                (context as any).spaceUsed += (component.system as any).space || 0;
             }
         }
 
-        for (const weapon of context.shipWeapons) {
-            context.powerUsed += weapon.system.power || 0;
-            context.spaceUsed += weapon.system.space || 0;
+        for (const weapon of (context as any).shipWeapons) {
+            (context as any).powerUsed += (weapon.system as any).power || 0;
+            (context as any).spaceUsed += (weapon.system as any).space || 0;
         }
 
-        for (const upgrade of context.shipUpgrades) {
-            context.powerGenerated += upgrade.system.power?.generated || 0;
-            context.powerUsed += upgrade.system.power?.used || 0;
-            context.spaceUsed += upgrade.system.space || 0;
+        for (const upgrade of (context as any).shipUpgrades) {
+            (context as any).powerGenerated += (upgrade.system as any).power?.generated || 0;
+            (context as any).powerUsed += (upgrade.system as any).power?.used || 0;
+            (context as any).spaceUsed += (upgrade.system as any).space || 0;
         }
 
-        context.powerAvailable = context.powerGenerated - context.powerUsed;
-        context.spaceAvailable = (this.actor.system.space?.total || 0) - context.spaceUsed;
+        (context as any).powerAvailable = (context as any).powerGenerated - (context as any).powerUsed;
+        (context as any).spaceAvailable = ((this.actor.system as any).space?.total || 0) - (context as any).spaceUsed;
     }
 
     /* -------------------------------------------- */
@@ -156,7 +154,7 @@ export default class StarshipSheet extends BaseActorSheet {
         // Add tab metadata for tab parts
         if (['stats', 'components', 'weapons', 'crew', 'history'].includes(partId)) {
             const tabConfig = (this.constructor as any).TABS.find((t: any) => t.tab === partId);
-            partContext.tab = {
+            (partContext as any).tab = {
                 id: partId,
                 group: tabConfig?.group || 'primary',
                 active: this.tabGroups.primary === partId,
@@ -185,7 +183,7 @@ export default class StarshipSheet extends BaseActorSheet {
         const cardData = {
             actor: this.actor,
             weapon: weapon,
-            crewRating: this.actor.system.crew?.crewRating || 30,
+            crewRating: (this.actor.system as any).crew?.crewRating || 30,
         };
 
         const html = await (foundry as any).applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);

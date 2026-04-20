@@ -9,7 +9,7 @@
 // =========================================================================
 
 /** Characteristic data structure */
-interface WH40KCharacteristic {
+export interface WH40KCharacteristic {
     label: string;
     short: string;
     base: number;
@@ -23,7 +23,7 @@ interface WH40KCharacteristic {
 }
 
 /** Skill data structure */
-interface WH40KSkill {
+export interface WH40KSkill {
     label?: string;
     characteristic: string;
     advanced: boolean;
@@ -39,7 +39,7 @@ interface WH40KSkill {
 }
 
 /** Skill entry for specialist skills */
-interface WH40KSkillEntry {
+export interface WH40KSkillEntry {
     name: string;
     slug: string;
     characteristic: string;
@@ -55,14 +55,14 @@ interface WH40KSkillEntry {
 }
 
 /** Wounds data structure */
-interface WH40KWounds {
+export interface WH40KWounds {
     value: number;
     max: number;
     critical: number;
 }
 
 /** Fate data structure */
-interface WH40KFate {
+export interface WH40KFate {
     value: number;
     max: number;
     total?: number;
@@ -70,14 +70,14 @@ interface WH40KFate {
 }
 
 /** Initiative data structure */
-interface WH40KInitiative {
+export interface WH40KInitiative {
     base: number;
     bonus: number;
     characteristic?: string;
 }
 
 /** Movement data structure */
-interface WH40KMovement {
+export interface WH40KMovement {
     half: number;
     full: number;
     charge: number;
@@ -85,7 +85,7 @@ interface WH40KMovement {
 }
 
 /** Modifier breakdown entry */
-interface WH40KModifierEntry {
+export interface WH40KModifierEntry {
     source: string;
     value: number;
     uuid?: string;
@@ -93,7 +93,7 @@ interface WH40KModifierEntry {
 }
 
 /** Stat breakdown result */
-interface WH40KStatBreakdown {
+export interface WH40KStatBreakdown {
     label: string;
     base: number;
     modifiers: WH40KModifierEntry[];
@@ -101,28 +101,28 @@ interface WH40KStatBreakdown {
 }
 
 /** Description object structure */
-interface WH40KDescription {
+export interface WH40KDescription {
     value: string;
     chat: string;
     summary: string;
 }
 
 /** Source reference structure */
-interface WH40KSourceReference {
+export interface WH40KSourceReference {
     book: string;
     page: string;
     custom: string;
 }
 
 /** Roll configuration for talents */
-interface WH40KRollConfig {
+export interface WH40KRollConfig {
     characteristic?: string;
     modifier?: number;
     description?: string;
 }
 
 /** Item modifiers structure */
-interface WH40KItemModifiers {
+export interface WH40KItemModifiers {
     characteristics?: Record<string, number>;
     skills?: Record<string, number>;
     other?: Array<{ key: string; value: number }>;
@@ -132,7 +132,7 @@ interface WH40KItemModifiers {
 }
 
 /** Armour location data */
-interface WH40KArmourLocation {
+export interface WH40KArmourLocation {
     value: number;
     total: number;
     toughnessBonus: number;
@@ -160,7 +160,7 @@ interface TooltipsWH40K {
 // WH40K System Namespace on Game
 // =========================================================================
 
-interface WH40KGameSystem {
+export interface WH40KGameSystem {
     debug: boolean;
     log: (s: string, o?: unknown) => void;
     warn: (s: string, o?: unknown) => void;
@@ -293,8 +293,17 @@ declare global {
     let TextEditor: any;
     let fromUuid: (uuid: string) => Promise<any>;
     let renderTemplate: (template: string, data: Record<string, unknown>) => Promise<string>;
+    let Hit: any;
+    let AssignDamageData: any;
 
-interface WH40KBaseActorDocument extends Actor {
+    // Extend CONFIG with wh40k system config (both cases used in codebase)
+    namespace CONFIG {
+        let wh40k: import('../config.ts').WH40KSystemConfig;
+        let WH40K: import('../config.ts').WH40KSystemConfig;
+    }
+}
+
+export interface WH40KBaseActorDocument extends Actor {
     system: import('../data/abstract/actor-data-model.ts').default;
     items: foundry.utils.Collection<WH40KItem>;
     characteristics: Record<string, WH40KCharacteristic>;
@@ -312,7 +321,7 @@ interface WH40KBaseActorDocument extends Actor {
     updateSource(data: Record<string, any>): void;
 }
 
-interface WH40KItemDocument extends Item {
+export interface WH40KItemDocument extends Item {
     system: import('../data/abstract/item-data-model.ts').default;
     actor: WH40KBaseActorDocument | null;
     isOriginPath: boolean;
@@ -333,18 +342,8 @@ interface WH40KItemDocument extends Item {
     sendToChat(): Promise<void>;
 }
 
-    let Hit: any;
-    let AssignDamageData: any;
-
-    // Extend CONFIG with wh40k system config (both cases used in codebase)
-    namespace CONFIG {
-        let wh40k: import('../config.ts').WH40KSystemConfig;
-        let WH40K: import('../config.ts').WH40KSystemConfig;
-    }
-}
-
 /** Extended render context for WH40K application sheets */
-interface WH40KRenderContext extends Record<string, unknown> {
+export interface WH40KRenderContext extends Record<string, unknown> {
     tabs?: Record<string, unknown>;
 }
 

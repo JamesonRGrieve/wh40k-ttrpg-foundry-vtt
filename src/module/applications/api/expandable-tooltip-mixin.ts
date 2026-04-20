@@ -13,14 +13,16 @@
  * @mixin
  */
 
+type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+
 /**
  * Mixin for expandable tooltip functionality
- * @param {*} Base - The base class to extend
- * @returns {*} Extended class with expandable tooltip support
+ * @template {ApplicationV2} T
+ * @param {T} Base - The base class to extend
+ * @returns {any} Extended class with expandable tooltip support
  */
-export default function ExpandableTooltipMixin<T extends new (...args: any[]) => any>(Base: T) {
-    // eslint-disable-next-line @typescript-eslint/no-shadow -- class must match function name for private field access
-    return class ExpandableTooltipMixin extends Base {
+export default function ExpandableTooltipMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+    return class ExpandableTooltipApplication extends Base {
         /**
          * Storage for currently open expandable panels
          * @type {Set<string>}
@@ -32,13 +34,11 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
          * Add expandable tooltip action handlers
          * @override
          */
-        static DEFAULT_OPTIONS = {
-            // @ts-expect-error - TS2339
-            ...super.DEFAULT_OPTIONS,
+        static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+            ...Base.DEFAULT_OPTIONS,
             actions: {
-                // @ts-expect-error - TS2339
-                ...super.DEFAULT_OPTIONS.actions,
-                toggleExpandable: ExpandableTooltipMixin.#toggleExpandable,
+                ...(Base.DEFAULT_OPTIONS as any).actions,
+                toggleExpandable: ExpandableTooltipApplication.#toggleExpandable,
             },
         };
 
@@ -48,12 +48,12 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
 
         /**
          * Toggle an expandable panel
-         * @this {ExpandableTooltipMixin}
-         * @param {PointerEvent} event - Triggering event
+         * @this {ExpandableTooltipApplication}
+         * @param {Event} event - Triggering event
          * @param {HTMLElement} target - Action target
          * @private
          */
-        static #toggleExpandable(event: Event, target: HTMLElement): void {
+        static #toggleExpandable(this: ExpandableTooltipApplication, event: Event, target: HTMLElement): void {
             event.preventDefault();
             event.stopPropagation();
 
@@ -64,12 +64,9 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
             }
 
             // Toggle the panel state
-            // @ts-expect-error - dynamic property
             if (this.#openPanels.has(panelId)) {
-                // @ts-expect-error - dynamic property
                 this.#closePanel(panelId);
             } else {
-                // @ts-expect-error - dynamic property
                 this.#openPanel(panelId);
             }
         }
@@ -96,7 +93,7 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
                 this.#openPanels.add(panelId);
 
                 // Enrich content if needed
-                void this.#enrichPanelContent(panel);
+                void this.#enrichPanelContent(panel as HTMLElement);
             }
         }
 
@@ -136,16 +133,14 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
          * @private
          */
         async #enrichPanelContent(panel: HTMLElement): Promise<void> {
-            // Check if content needs enriching
             const unenriched = panel.querySelectorAll('[data-enrich="true"]');
             if (unenriched.length === 0) return;
 
             for (const element of unenriched) {
                 const content = element.innerHTML;
                 const enriched = await TextEditor.enrichHTML(content, {
-                    // @ts-expect-error - extended property
                     async: true,
-                    relativeTo: this.document,
+                    relativeTo: (this as any).document,
                 });
                 element.innerHTML = enriched;
                 element.removeAttribute('data-enrich');
@@ -159,11 +154,11 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
         /**
          * @override
          */
-        _attachPartListeners(partId: string, htmlElement: HTMLElement, options: Record<string, unknown>): void {
+        _attachPartListeners(partId: string, htmlElement: HTMLElement, options: ApplicationV2Config.RenderOptions): void {
             super._attachPartListeners(partId, htmlElement, options);
 
             // Close panels on Escape key
-            htmlElement.addEventListener('keydown', (event) => {
+            htmlElement.addEventListener('keydown', (event: KeyboardEvent) => {
                 if (event.key === 'Escape' && this.#openPanels.size > 0) {
                     event.preventDefault();
                     this.#closeAllPanels();
@@ -171,9 +166,9 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
             });
 
             // Close panels when clicking outside
-            htmlElement.addEventListener('click', (event) => {
-                // Don't close if clicking on trigger or inside panel
-                const clickedExpandable = (event.target as HTMLElement).closest('.wh40k-expandable, .wh40k-expansion-panel');
+            htmlElement.addEventListener('click', (event: MouseEvent) => {
+                const target = event.target as HTMLElement;
+                const clickedExpandable = target.closest('.wh40k-expandable, .wh40k-expansion-panel');
                 if (!clickedExpandable && this.#openPanels.size > 0) {
                     this.#closeAllPanels();
                 }

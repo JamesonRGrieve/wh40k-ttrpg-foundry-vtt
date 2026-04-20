@@ -11,10 +11,9 @@ import CharacterSheet from './character-sheet.ts';
  */
 export default class CharacterSheetSidebar extends CharacterSheet {
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         ...CharacterSheet.DEFAULT_OPTIONS,
         classes: ['player', 'sidebar-nav'],
-        // Tab configuration for sidebar layout
         tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
     };
 
@@ -25,10 +24,8 @@ export default class CharacterSheetSidebar extends CharacterSheet {
      * The tabs part goes into a sidebar container with the tab body.
      * @override
      */
-    static PARTS = {
-        header: {
-            template: 'systems/wh40k-rpg/templates/actor/player/header.hbs',
-        },
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+        ...CharacterSheet.PARTS,
         tabs: {
             template: 'systems/wh40k-rpg/templates/actor/player/tabs-sidebar.hbs',
             container: { classes: ['wh40k-main-layout'], id: 'main' },
@@ -36,42 +33,34 @@ export default class CharacterSheetSidebar extends CharacterSheet {
         overview: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-overview.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
-            scrollable: [''],
         },
         combat: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-combat.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
-            scrollable: [''],
         },
         skills: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-skills.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
-            scrollable: [''],
         },
         talents: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-talents.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
-            scrollable: [''],
         },
         equipment: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-equipment.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
-            scrollable: [''],
         },
         powers: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-powers.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
-            scrollable: [''],
         },
         dynasty: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-dynasty.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
-            scrollable: [''],
         },
         biography: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-biography.hbs',
             container: { classes: ['wh40k-main-layout', 'wh40k-body'], id: 'main' },
-            scrollable: [''],
         },
     };
 }

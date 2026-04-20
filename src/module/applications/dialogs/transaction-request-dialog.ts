@@ -1,4 +1,6 @@
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -35,14 +37,14 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         },
     };
 
-    actor = null;
-    sourceId = '';
-    itemId = '';
-    quantity = 1;
-    influenceBurn = 0;
-    #resolve = null;
+    actor: WH40KBaseActor;
+    sourceId: string = '';
+    itemId: string = '';
+    quantity: number = 1;
+    influenceBurn: number = 0;
+    #resolve: ((value: boolean | null) => void) | null = null;
 
-    constructor(actor, options: Record<string, unknown> = {}) {
+    constructor(actor: WH40KBaseActor, options: ApplicationV2Config.DefaultOptions = {}) {
         super(options);
         this.actor = actor;
 
@@ -58,7 +60,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         return 'Barter';
     }
 
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
         const sources = TransactionManager.listSourcesForBuyer(this.actor);
         const selectedSource = sources.find((source) => source.id === this.sourceId) ?? sources[0] ?? null;
@@ -74,7 +76,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
             this.itemId = selectedItem.id;
         }
 
-        let quote = null;
+        let quote: any = null;
         if (selectedSource && selectedItem) {
             try {
                 quote = TransactionManager.prepareQuote({
@@ -105,8 +107,8 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
                 name: item.name,
                 img: item.img,
                 type: item.type,
-                quantity: item.system?.quantity ?? 1,
-                cost: item.system?.cost?.value ?? 0,
+                quantity: (item.system as any)?.quantity ?? 1,
+                cost: (item.system as any)?.cost?.value ?? 0,
                 selected: item.id === selectedItem?.id,
             })),
             selectedItem,
@@ -118,7 +120,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         };
     }
 
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         super._onRender(context, options);
 
         const sourceSelect = this.element.querySelector('[name="sourceId"]') as HTMLSelectElement | null;
@@ -144,13 +146,13 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         });
     }
 
-    static #onSubmit(this: TransactionRequestDialog, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): void {
-        this.quantity = Math.max(1, Number.parseInt(formData.object.quantity || '1', 10) || 1);
-        this.influenceBurn = Math.max(0, Number.parseInt(formData.object.influenceBurn || '0', 10) || 0);
-        this.sourceId = formData.object.sourceId || this.sourceId;
+    static #onSubmit(this: TransactionRequestDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): void {
+        this.quantity = Math.max(1, Number.parseInt((formData.object.quantity as string) || '1', 10) || 1);
+        this.influenceBurn = Math.max(0, Number.parseInt((formData.object.influenceBurn as string) || '0', 10) || 0);
+        this.sourceId = (formData.object.sourceId as string) || this.sourceId;
     }
 
-    static async #selectItem(this: TransactionRequestDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #selectItem(this: TransactionRequestDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
         const itemId = target.dataset.itemId;
         if (!itemId) return;
@@ -160,7 +162,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         await this.render(false);
     }
 
-    static async #requestApproval(this: TransactionRequestDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #requestApproval(this: TransactionRequestDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         try {
@@ -198,7 +200,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         return super.close(options);
     }
 
-    static async show(actor: Actor): Promise<boolean | null> {
+    static async show(actor: WH40KBaseActor): Promise<boolean | null> {
         const dialog = new TransactionRequestDialog(actor);
         return dialog.wait();
     }

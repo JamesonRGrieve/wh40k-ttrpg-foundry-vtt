@@ -8,12 +8,12 @@ const { HandlebarsApplicationMixin } = foundry.applications.api;
 /**
  * Mixin method for ApplicationV2-based WH40K RPG applications.
  * @template {ApplicationV2} T
- * @param {typeof T} Base   Application class being extended.
+ * @param {T} Base   Application class being extended.
  * @returns {typeof BaseApplicationWH40K}
  * @mixin
  */
-export default function ApplicationV2Mixin<T extends new (...args: any[]) => any>(Base: T) {
-    class BaseApplicationWH40K extends HandlebarsApplicationMixin(Base as any) {
+export default function ApplicationV2Mixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+    class BaseApplicationWH40K extends HandlebarsApplicationMixin(Base) {
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             actions: {
@@ -28,7 +28,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
         /* -------------------------------------------- */
 
         /**
-         * @type {Record<string, HandlebarsTemplatePart>}
+         * @type {Record<string, ApplicationV2Config.PartConfiguration>}
          */
         static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {};
 
@@ -53,7 +53,8 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
          * @type {string}
          */
         get subtitle(): string {
-            return game.i18n.localize((this as any).options?.window?.subtitle ?? '');
+            const options = this.options as { window?: { subtitle?: string } };
+            return game.i18n.localize(options?.window?.subtitle ?? '');
         }
 
         /* -------------------------------------------- */
@@ -61,18 +62,18 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        _configureRenderOptions(options: Record<string, unknown>): void {
+        _configureRenderOptions(options: ApplicationV2Config.RenderOptions): void {
             super._configureRenderOptions(options);
             if (options.isFirstRender && this.hasFrame) {
                 options.window ||= {};
-                (options.window as any).subtitle ||= this.subtitle;
+                options.window.subtitle ||= this.subtitle;
             }
         }
 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+        _onFirstRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
             super._onFirstRender(context, options);
             this._renderContainers(context, options);
         }
@@ -80,7 +81,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             const context = await super._prepareContext(options);
             context.CONFIG = CONFIG.wh40k;
             return context;
@@ -89,7 +90,11 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        async _preparePartContext(
+            partId: string,
+            context: Record<string, unknown>,
+            options: ApplicationV2Config.RenderOptions,
+        ): Promise<Record<string, unknown>> {
             return { ...(await super._preparePartContext(partId, context, options)) };
         }
 
@@ -101,10 +106,10 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
          * @param {object} options  Render options.
          * @protected
          */
-        _renderContainers(context: Record<string, unknown>, options: Record<string, unknown>): void {
-            const containerElements = Array.from(this.element.querySelectorAll('[data-container-id]'));
-            const containers = Object.fromEntries(containerElements.map((el) => [(el as HTMLElement).dataset.containerId, el]));
-            for (const [part, config] of Object.entries((this.constructor as any).PARTS) as [string, any][]) {
+        _renderContainers(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+            const containerElements = Array.from(this.element.querySelectorAll('[data-container-id]')) as HTMLElement[];
+            const containers = Object.fromEntries(containerElements.map((el) => [el.dataset.containerId, el]));
+            for (const [part, config] of Object.entries((this.constructor as typeof BaseApplicationWH40K).PARTS)) {
                 if (!config.container?.id) continue;
                 const element = this.element.querySelector(`[data-application-part="${part}"]`);
                 if (!element) continue;
@@ -116,19 +121,20 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
                     container = containers[config.container.id] = div;
                     element.replaceWith(div);
                 }
-                if (element.parentElement !== container) (container as HTMLElement).append(element);
+                if (element.parentElement !== container) container.append(element);
             }
         }
 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        _replaceHTML(result: Record<string, HTMLElement>, content: HTMLElement, options: Record<string, unknown>): void {
+        _replaceHTML(result: Record<string, HTMLElement>, content: HTMLElement, options: ApplicationV2Config.RenderOptions): void {
             for (const part of Object.values(result)) {
                 for (const element of part.querySelectorAll('[data-expand-id]')) {
-                    element
-                        .querySelector('.collapsible')
-                        ?.classList.toggle('collapsed', !this.#expandedSections.get((element as HTMLElement).dataset.expandId));
+                    const expandId = (element as HTMLElement).dataset.expandId;
+                    if (expandId) {
+                        element.querySelector('.collapsible')?.classList.toggle('collapsed', !this.#expandedSections.get(expandId));
+                    }
                 }
             }
             super._replaceHTML(result, content, options);
@@ -137,23 +143,24 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        _updateFrame(options: Record<string, unknown>): void {
+        _updateFrame(options: ApplicationV2Config.RenderOptions): void {
             super._updateFrame(options);
-            if (options.window && 'subtitle' in (options.window as object)) {
-                const subtitle = this.element.querySelector('.window-header > .window-subtitle');
-                if (subtitle) subtitle.innerText = (options as any).window.subtitle;
+            if (options.window?.subtitle) {
+                const subtitle = this.element.querySelector('.window-header > .window-subtitle') as HTMLElement | null;
+                if (subtitle) subtitle.innerText = options.window.subtitle;
             }
         }
 
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void | Promise<void> {
+        _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void | Promise<void> {
             super._onRender(context, options);
 
             // Add special styling for multi-select tags
             this.element.querySelectorAll('multi-select').forEach((select) => {
-                if (select.disabled) return;
+                const multiSelect = select as HTMLInputElement;
+                if (multiSelect.disabled) return;
                 select.querySelectorAll('.tag').forEach((tag) => {
                     tag.classList.add('remove');
                     tag.querySelector(':scope > span')?.classList.add('remove');
@@ -169,8 +176,9 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
         _disableFields(): void {
             const selector = `.window-content :is(${['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON'].join(', ')}):not(.always-interactive)`;
             for (const element of this.element.querySelectorAll(selector)) {
-                if (element.tagName === 'TEXTAREA') element.readOnly = true;
-                else element.disabled = true;
+                if (element instanceof HTMLTextAreaElement) element.readOnly = true;
+                else if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement || element instanceof HTMLButtonElement)
+                    element.disabled = true;
             }
         }
 
@@ -188,10 +196,10 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => any
             const collapsible = target.closest('.collapsible');
             if (!collapsible || (event.target as HTMLElement).closest('.collapsible-content')) return;
             collapsible.classList.toggle('collapsed');
-            this.#expandedSections.set(
-                (target.closest('[data-expand-id]') as HTMLElement | null)?.dataset.expandId,
-                !collapsible.classList.contains('collapsed'),
-            );
+            const expandId = (target.closest('[data-expand-id]') as HTMLElement | null)?.dataset.expandId;
+            if (expandId) {
+                this.#expandedSections.set(expandId, !collapsible.classList.contains('collapsed'));
+            }
         }
     }
     return BaseApplicationWH40K;

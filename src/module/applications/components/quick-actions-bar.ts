@@ -1,28 +1,26 @@
 /**
  * @file QuickActionsBar - Unified action bar component for items
- *
- * Provides standardized quick actions for items across character sheets
- * and item sheets. Context-sensitive based on item type and state.
- *
- * Usage:
- * In templates: {{> quick-actions-bar.hbs item=item compact=true}}
- * In sheets: context.quickActions = QuickActionsBar.getActionsForItem(item);
  */
 
 import type { WH40KItem } from '../../documents/item.ts';
 
+interface QuickAction {
+    id: string;
+    icon: string;
+    label: string;
+    action: string;
+    dataset: Record<string, string | number>;
+    variant: 'primary' | 'secondary' | 'danger';
+}
+
 export default class QuickActionsBar {
     /**
      * Get action definitions for an item
-     * @param {Item} item - The item to generate actions for
-     * @param {Object} options - Configuration options
-     * @param {boolean} options.compact - Use compact mode (icons only)
-     * @param {boolean} options.inSheet - Rendering in item sheet (vs character sheet)
-     * @returns {Object[]} Array of action definitions
      */
-    static getActionsForItem(item: WH40KItem, { compact = false, inSheet = false }: { compact?: boolean; inSheet?: boolean } = {}): Record<string, unknown>[] {
-        const actions = [];
+    static getActionsForItem(item: WH40KItem, { compact = false, inSheet = false }: { compact?: boolean; inSheet?: boolean } = {}): QuickAction[] {
+        const actions: QuickAction[] = [];
         const type = item.type;
+        const system = item.system as Record<string, unknown>;
 
         // Type-specific actions
         switch (type) {
@@ -35,7 +33,7 @@ export default class QuickActionsBar {
                 break;
 
             case 'armour': {
-                const isEquipped = item.system.equipped;
+                const isEquipped = system.equipped as boolean;
                 actions.push(
                     this.#createAction(
                         'equip',
@@ -49,20 +47,20 @@ export default class QuickActionsBar {
             }
 
             case 'talent':
-                if (item.system.isRollable) {
+                if (system.isRollable) {
                     actions.push(this.#createAction('roll', 'fa-solid fa-dice-d20', 'Roll', 'itemRoll', { itemId: item.id }));
                 }
                 actions.push(this.#createAction('favorite', 'fa-solid fa-star', 'Favorite', 'toggleFavorite', { itemId: item.id }));
                 break;
 
             case 'trait':
-                if (item.system.rollable) {
+                if (system.rollable) {
                     actions.push(this.#createAction('roll', 'fa-solid fa-dice-d20', 'Roll', 'itemRoll', { itemId: item.id }));
                 }
                 break;
 
             case 'gear':
-                if (item.system.consumable) {
+                if (system.consumable) {
                     actions.push(
                         this.#createAction('use', 'fa-solid fa-flask', 'Use', 'useItem', { itemId: item.id }),
                         this.#createAction('adjust', 'fa-solid fa-sliders', 'Adjust', 'adjustQuantity', { itemId: item.id }),
@@ -104,17 +102,14 @@ export default class QuickActionsBar {
         }
 
         // Universal actions (available on most items)
-        // @ts-expect-error - missing name
         if (!inSheet) {
             actions.push(this.#createAction('chat', 'fa-solid fa-comment', 'Post to Chat', 'postToChat', { itemId: item.id }));
         }
 
-        // @ts-expect-error - missing name
         if (inSheet && item.isOwner) {
             actions.push(this.#createAction('edit', 'fa-solid fa-pen-to-square', 'Edit', 'editItem', { itemId: item.id }));
         }
 
-        // @ts-expect-error - missing name
         if (!inSheet && item.isOwner) {
             actions.push(this.#createAction('delete', 'fa-solid fa-trash', 'Delete', 'deleteItem', { itemId: item.id }, 'danger'));
         }
@@ -124,23 +119,15 @@ export default class QuickActionsBar {
 
     /**
      * Create an action definition
-     * @param {string} id - Action identifier
-     * @param {string} icon - Font Awesome icon class
-     * @param {string} label - Action label
-     * @param {string} action - Action handler name
-     * @param {Object} dataset - Data attributes
-     * @param {string} variant - Button variant (primary, secondary, danger)
-     * @returns {Object} Action definition
-     * @private
      */
     static #createAction(
         id: string,
         icon: string,
         label: string,
         action: string,
-        dataset: Record<string, unknown> = {},
-        variant: string = 'primary',
-    ): Record<string, unknown> {
+        dataset: Record<string, string | number> = {},
+        variant: 'primary' | 'secondary' | 'danger' = 'primary',
+    ): QuickAction {
         return {
             id,
             icon,
@@ -153,16 +140,12 @@ export default class QuickActionsBar {
 
     /**
      * Render actions as HTML
-     * @param {Object[]} actions - Action definitions
-     * @param {boolean} compact - Compact mode (icons only)
-     * @returns {string} HTML string
      */
-    static renderActions(actions: Record<string, unknown>[], compact: boolean = false): string {
+    static renderActions(actions: QuickAction[], compact: boolean = false): string {
         return actions
             .map((action) => {
                 const dataAttrs = Object.entries(action.dataset)
-                    .map(([key, value]) => `data-${key}="${value as string}"`)
-
+                    .map(([key, value]) => `data-${key}="${value}"`)
                     .join(' ');
 
                 const classList = ['wh40k-quick-action', `wh40k-quick-action--${action.variant}`, compact ? 'wh40k-quick-action--compact' : ''].join(' ');

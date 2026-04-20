@@ -4,6 +4,14 @@
  */
 
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KAcolyte } from '../../documents/acolyte.ts';
+import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { WH40KCharacteristic, WH40KSkill } from '../../types/global.d.ts';
+
+type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+
+type ActorType = WH40KAcolyte | WH40KNPCV2 | WH40KBaseActor;
 
 /**
  * Custom ContextMenu subclass for WH40K RPG styling.
@@ -13,7 +21,7 @@ export class WH40KContextMenu extends foundry.applications.ux.ContextMenu {
     /** @override */
     _setPosition(html: HTMLElement, target: HTMLElement, options: Record<string, unknown> = {}): void {
         html.classList.add('wh40k-context-menu');
-        return this._setFixedPosition(html, target, options);
+        return (this as any)._setFixedPosition(html, target, options);
     }
 
     /**
@@ -43,19 +51,20 @@ export class WH40KContextMenu extends foundry.applications.ux.ContextMenu {
  * Mixin to add context menu capabilities to ApplicationV2 sheets.
  * Uses Foundry V13's native ContextMenu for better accessibility and keyboard navigation.
  * @template {ApplicationV2} T
- * @param {typeof T} Base   Application class being extended.
- * @returns {typeof ContextMenuApplication}
+ * @param {T} Base   Application class being extended.
+ * @returns {any}
  * @mixin
  */
-export default function ContextMenuMixin<T extends new (...args: any[]) => any>(Base: T) {
+export default function ContextMenuMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
     class ContextMenuApplication extends Base {
+        declare actor: ActorType;
+
         /* -------------------------------------------- */
         /*  Lifecycle Methods                           */
         /* -------------------------------------------- */
 
         /** @override */
-        // @ts-expect-error - return type
-        _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+        _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> | void {
             super._onRender(context, options);
 
             // Setup context menus on first render
@@ -76,19 +85,19 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
         _createContextMenus(): void {
             // Characteristics context menu
             new WH40KContextMenu(this.element, '[data-characteristic]', [], {
-                onOpen: (target) => this._getCharacteristicContextOptions(target),
+                onOpen: (target: HTMLElement) => this._getCharacteristicContextOptions(target),
                 jQuery: false,
             });
 
             // Skills context menu
             new WH40KContextMenu(this.element, '[data-skill]', [], {
-                onOpen: (target) => this._getSkillContextOptions(target),
+                onOpen: (target: HTMLElement) => this._getSkillContextOptions(target),
                 jQuery: false,
             });
 
             // Items context menu
             new WH40KContextMenu(this.element, '[data-item-id]', [], {
-                onOpen: (target) => this._getItemContextOptions(target),
+                onOpen: (target: HTMLElement) => this._getItemContextOptions(target),
                 jQuery: false,
             });
 
@@ -117,11 +126,12 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
         /**
          * Get context menu options for a characteristic.
          * @param {HTMLElement} target  Element that was right-clicked
-         * @returns {ContextMenuEntry[]}
+         * @returns {any[]}
          * @protected
          */
-        _getCharacteristicContextOptions(target: HTMLElement): Record<string, unknown>[] {
+        _getCharacteristicContextOptions(target: HTMLElement): any[] {
             const charKey = target.dataset.characteristic;
+            if (!charKey) return [];
             const char = this.actor.characteristics?.[charKey];
             if (!char) return [];
 
@@ -165,11 +175,12 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
         /**
          * Get context menu options for a skill.
          * @param {HTMLElement} target  Element that was right-clicked
-         * @returns {ContextMenuEntry[]}
+         * @returns {any[]}
          * @protected
          */
-        _getSkillContextOptions(target: HTMLElement): Record<string, unknown>[] {
+        _getSkillContextOptions(target: HTMLElement): any[] {
             const skillKey = target.dataset.skill;
+            if (!skillKey) return [];
             const skill = this.actor.skills?.[skillKey];
             if (!skill) return [];
 
@@ -225,11 +236,12 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
         /**
          * Get context menu options for an item.
          * @param {HTMLElement} target  Element that was right-clicked
-         * @returns {ContextMenuEntry[]}
+         * @returns {any[]}
          * @protected
          */
-        _getItemContextOptions(target: HTMLElement): Record<string, unknown>[] {
+        _getItemContextOptions(target: HTMLElement): any[] {
             const itemId = target.dataset.itemId;
+            if (!itemId) return [];
             const item = this.actor.items.get(itemId);
             if (!item) return [];
 
@@ -237,6 +249,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
 
             // Weapon-specific options
             if (item.type === 'weapon') {
+                const system = item.system as any;
                 options.push(
                     {
                         name: 'Standard Attack',
@@ -250,7 +263,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
                     },
                 );
 
-                if (item.system.rateOfFire?.includes('S')) {
+                if (system.rateOfFire?.includes('S')) {
                     options.push({
                         name: 'Semi-Auto Burst',
                         icon: '<i class="fas fa-redo"></i>',
@@ -258,7 +271,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
                     });
                 }
 
-                if (item.system.rateOfFire?.includes('–') || item.system.rateOfFire?.includes('/-')) {
+                if (system.rateOfFire?.includes('–') || system.rateOfFire?.includes('/-')) {
                     options.push({
                         name: 'Full-Auto Burst',
                         icon: '<i class="fas fa-fire"></i>',
@@ -269,18 +282,20 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
 
             // Equip/Unequip for applicable items
             if (['weapon', 'armour', 'gear'].includes(item.type)) {
+                const system = item.system as any;
                 options.push({
-                    name: item.system.equipped ? 'Unequip' : 'Equip',
-                    icon: `<i class="fas ${item.system.equipped ? 'fa-times-circle' : 'fa-check-circle'}"></i>`,
+                    name: system.equipped ? 'Unequip' : 'Equip',
+                    icon: `<i class="fas ${system.equipped ? 'fa-times-circle' : 'fa-check-circle'}"></i>`,
                     callback: () => this._toggleEquipped(item),
                 });
             }
 
             // Activate/Deactivate for force fields, etc.
-            if (item.system.activated !== undefined) {
+            const system = item.system as any;
+            if (system.activated !== undefined) {
                 options.push({
-                    name: item.system.activated ? 'Deactivate' : 'Activate',
-                    icon: `<i class="fas ${item.system.activated ? 'fa-power-off' : 'fa-bolt'}"></i>`,
+                    name: system.activated ? 'Deactivate' : 'Activate',
+                    icon: `<i class="fas ${system.activated ? 'fa-power-off' : 'fa-bolt'}"></i>`,
                     callback: () => this._toggleActivated(item),
                 });
             }
@@ -290,7 +305,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
                 {
                     name: 'Edit Item',
                     icon: '<i class="fas fa-edit"></i>',
-                    callback: () => item.sheet.render(true),
+                    callback: () => item.sheet?.render(true),
                 },
                 {
                     name: 'Duplicate',
@@ -311,10 +326,10 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
 
         /**
          * Get context menu options for fate points.
-         * @returns {ContextMenuEntry[]}
+         * @returns {any[]}
          * @protected
          */
-        _getFatePointContextOptions(): Record<string, unknown>[] {
+        _getFatePointContextOptions(): any[] {
             return [
                 {
                     name: 'Spend for Re-roll',
@@ -350,65 +365,49 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
         /* -------------------------------------------- */
 
         async _onCharacteristicRoll(charKey: string): Promise<void> {
-            // Implement in subclass or delegate to actor
-            if (this.actor.rollCharacteristic) {
-                await this.actor.rollCharacteristic(charKey);
+            if ('rollCharacteristic' in this.actor && typeof (this.actor as any).rollCharacteristic === 'function') {
+                await (this.actor as any).rollCharacteristic(charKey);
             }
         }
 
-        async _onCharacteristicRollWithModifier(charKey: string): Promise<void> {
-            // Implement in subclass
-        }
+        async _onCharacteristicRollWithModifier(charKey: string): Promise<void> {}
 
-        async _showModifierSources(charKey: string): Promise<void> {
-            // Implement in subclass
-        }
+        async _showModifierSources(charKey: string): Promise<void> {}
 
-        async _onAdvanceCharacteristic(charKey: string): Promise<void> {
-            // Implement in subclass
-        }
+        async _onAdvanceCharacteristic(charKey: string): Promise<void> {}
 
-        async _postCharacteristicToChat(charKey: string, char: Record<string, unknown>): Promise<void> {
-            // Create a simple chat message with characteristic info
+        async _postCharacteristicToChat(charKey: string, char: WH40KCharacteristic): Promise<void> {
             const content = `<div class="wh40k-char-chat">
-                <strong>${(char.label as string) || charKey}</strong>: ${char.total as number}
-                (Bonus: ${char.bonus as number})
+                <strong>${char.label || charKey}</strong>: ${char.total}
+                (Bonus: ${char.bonus})
             </div>`;
             await ChatMessage.create({
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                speaker: ChatMessage.getSpeaker({ actor: this.actor as Actor }),
                 content,
             });
         }
 
         async _onEditCharacteristic(charKey: string): Promise<void> {
-            // Call the static method with a fake target that has the data
             const fakeTarget = document.createElement('div');
             fakeTarget.dataset.characteristic = charKey;
             await (this.constructor as any).actions.editCharacteristic.call(this, null, fakeTarget);
         }
 
         async _onSkillRoll(skillKey: string): Promise<void> {
-            // Implement in subclass or delegate to actor
-            if (this.actor.rollSkill) {
-                await this.actor.rollSkill(skillKey);
+            if ('rollSkill' in this.actor && typeof (this.actor as any).rollSkill === 'function') {
+                await (this.actor as any).rollSkill(skillKey);
             }
         }
 
-        async _onSkillRollWithModifier(skillKey: string): Promise<void> {
-            // Implement in subclass
+        async _onSkillRollWithModifier(skillKey: string): Promise<void> {}
+
+        async _toggleSkillTraining(skillKey: string, level: string): Promise<void> {}
+
+        _showGoverningCharacteristic(skillKey: string, skill: WH40KSkill): void {
+            ui.notifications.info(`${skill.label || skillKey} is governed by ${skill.characteristic}`);
         }
 
-        async _toggleSkillTraining(skillKey: string, level: string): Promise<void> {
-            // Implement in subclass
-        }
-
-        _showGoverningCharacteristic(skillKey: string, skill: Record<string, unknown>): void {
-            ui.notifications.info(`${(skill.label as string) || skillKey} is governed by ${skill.characteristic as string}`);
-        }
-
-        async _addSkillSpecialization(skillKey: string): Promise<void> {
-            // Implement in subclass
-        }
+        async _addSkillSpecialization(skillKey: string): Promise<void> {}
 
         async _duplicateItem(item: WH40KItem): Promise<void> {
             await item.clone({ name: `${item.name} (Copy)` }, { save: true });
@@ -429,21 +428,17 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
             }
         }
 
-        async _weaponAttack(item: WH40KItem, mode: string): Promise<void> {
-            // Implement in subclass
-        }
+        async _weaponAttack(item: WH40KItem, mode: string): Promise<void> {}
 
         async _toggleEquipped(item: WH40KItem): Promise<void> {
-            await item.update({ 'system.equipped': !item.system.equipped });
+            await item.update({ 'system.equipped': !(item.system as any).equipped });
         }
 
         async _toggleActivated(item: WH40KItem): Promise<void> {
-            await item.update({ 'system.activated': !item.system.activated });
+            await item.update({ 'system.activated': !(item.system as any).activated });
         }
 
-        async _spendFate(purpose: string): Promise<void> {
-            // Implement in subclass
-        }
+        async _spendFate(purpose: string): Promise<void> {}
 
         async _burnFatePoint(): Promise<void> {
             const confirmed = await foundry.applications.api.DialogV2.confirm({
@@ -454,8 +449,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => any>(
             });
 
             if (confirmed) {
-                // Implement burning fate point
-                const currentTotal = this.actor.system.fate?.total ?? 0;
+                const currentTotal = (this.actor.system as any).fate?.total ?? 0;
                 if (currentTotal > 0) {
                     await this.actor.update({ 'system.fate.total': currentTotal - 1 });
                     ui.notifications.warn('Fate Point burned! Maximum reduced permanently.');
