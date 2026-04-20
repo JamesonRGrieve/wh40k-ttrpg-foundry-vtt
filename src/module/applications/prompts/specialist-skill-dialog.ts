@@ -210,6 +210,28 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         await (this.actorDoc as any).addSpecialitySkill(skillKey, speciality);
         await this.close();
     }
+
+    /* -------------------------------------------- */
+    /*  Action Handlers                             */
+    /* -------------------------------------------- */
+
+    /**
+     * Handle the "Add" action button.
+     * @private
+     */
+    static async #onAdd(this: SpecialistSkillDialog, event: Event, _target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        await this._addSpecialization();
+    }
+
+    /**
+     * Handle the "Cancel" action button.
+     * @private
+     */
+    static async #onCancel(this: SpecialistSkillDialog, event: Event, _target: HTMLElement): Promise<void> {
+        event.preventDefault();
+        await this.close();
+    }
 }
 
 /* -------------------------------------------- */

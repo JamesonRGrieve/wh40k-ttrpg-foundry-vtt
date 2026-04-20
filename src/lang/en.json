@@ -24,6 +24,7 @@
             "journalEntry": "Journal Entry",
             "malignancy": "Malignancy",
             "mentalDisorder": "Mental Disorder",
+            "miscellaneous": "Miscellaneous",
             "mutation": "Mutation",
             "navigatorPower": "Navigator Power",
             "npcTemplate": "NPC Template",
@@ -1008,7 +1009,18 @@
             "GrandCruiser": "Grand Cruiser"
         },
         "Availability": {
-            "Label": "Availability"
+            "Label": "Availability",
+            "Ubiquitous": "Ubiquitous",
+            "Abundant": "Abundant",
+            "Plentiful": "Plentiful",
+            "Common": "Common",
+            "Average": "Average",
+            "Scarce": "Scarce",
+            "Rare": "Rare",
+            "VeryRare": "Very Rare",
+            "ExtremelyRare": "Extremely Rare",
+            "NearUnique": "Near Unique",
+            "Unique": "Unique"
         },
         "Item": {
             "Properties": "Item Properties"

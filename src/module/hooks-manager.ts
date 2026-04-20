@@ -57,7 +57,6 @@ import {
     ForceFieldSheet,
     CriticalInjurySheet,
     ConditionSheet,
-    CombatActionSheet,
     StorageLocationSheet,
     PeerEnemySheet,
     JournalEntryItemSheet,
@@ -101,9 +100,15 @@ export class HooksManager {
         Hooks.once('init', () => HooksManager.init());
         Hooks.on('ready', () => HooksManager.ready());
         Hooks.on('hotbarDrop', (bar: Hotbar, data: Record<string, unknown>, slot: number) => HooksManager.hotbarDrop(bar, data, slot));
-        Hooks.on('renderCompendiumDirectory', (app: CompendiumDirectory, html: JQuery, data: Record<string, unknown>) => HooksManager.renderCompendiumDirectory(app, html, data));
-        Hooks.on('renderActorDirectory', (app: ActorDirectory, html: JQuery, data: Record<string, unknown>) => HooksManager.renderActorDirectory(app, html, data));
-        Hooks.on('getActorSheetClass', (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) => HooksManager.getActorSheetClass(actor, sheetData));
+        Hooks.on('renderCompendiumDirectory', (app: CompendiumDirectory, html: JQuery, data: Record<string, unknown>) =>
+            HooksManager.renderCompendiumDirectory(app, html, data),
+        );
+        Hooks.on('renderActorDirectory', (app: ActorDirectory, html: JQuery, data: Record<string, unknown>) =>
+            HooksManager.renderActorDirectory(app, html, data),
+        );
+        Hooks.on('getActorSheetClass', (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
+            HooksManager.getActorSheetClass(actor, sheetData),
+        );
 
         DHTargetedActionManager.initializeHooks();
         DHBasicActionManager.initializeHooks();
@@ -290,7 +295,6 @@ export class HooksManager {
             aptitude: dataModels.AptitudeData,
             peer: dataModels.PeerEnemyData,
             enemy: dataModels.PeerEnemyData,
-            combatAction: dataModels.CombatActionData,
             condition: dataModels.ConditionData,
             // Powers
             psychicPower: dataModels.PsychicPowerData,
@@ -310,6 +314,7 @@ export class HooksManager {
             weaponQuality: dataModels.WeaponQualityData,
             attackSpecial: dataModels.AttackSpecialData,
             // Misc
+            miscellaneous: dataModels.GearData,
             specialAbility: dataModels.SpecialAbilityData,
             criticalInjury: dataModels.CriticalInjuryData,
             mutation: dataModels.MutationData,
@@ -528,9 +533,9 @@ export class HooksManager {
             label: 'WH40K.Sheet.Trait',
         });
 
-        // Gear sheet (consumables, drugs, tools, gear)
+        // Gear sheet (consumables, drugs, tools, gear, miscellaneous quest items)
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, GearSheet, {
-            types: ['gear', 'consumable', 'drug', 'tool'],
+            types: ['gear', 'consumable', 'drug', 'tool', 'miscellaneous'],
             makeDefault: true,
             label: 'WH40K.Sheet.Gear',
         });
@@ -582,13 +587,6 @@ export class HooksManager {
             types: ['condition'],
             makeDefault: true,
             label: 'WH40K.Sheet.Condition',
-        });
-
-        // Combat Action sheet
-        DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, CombatActionSheet, {
-            types: ['combatAction'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.CombatAction',
         });
 
         // Storage Location sheet
@@ -869,12 +867,12 @@ export class HooksManager {
         browserBtn.className = 'wh40k-compendium-browser-btn';
         browserBtn.title = 'Open Compendium Browser';
         browserBtn.innerHTML = '<i class="fas fa-search"></i> Compendium Browser';
-        
+
         browserBtn.addEventListener('click', (event) => {
             event.preventDefault();
             void RTCompendiumBrowser.open();
         });
-        
+
         const actions = header.querySelector('.header-actions');
         if (actions) actions.prepend(browserBtn);
     }

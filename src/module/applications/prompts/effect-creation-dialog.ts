@@ -230,7 +230,7 @@ export default class EffectCreationDialog extends DialogV2 {
         const conditions: Record<string, any> = {
             stunned: {
                 name: 'Stunned',
-                icon: 'systems/wh40k-rpg/assets/icons/conditions/stunned.webp',
+                icon: 'icons/svg/daze.svg',
                 changes: [
                     { key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
                     { key: 'system.combat.attack', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
@@ -239,13 +239,13 @@ export default class EffectCreationDialog extends DialogV2 {
             },
             prone: {
                 name: 'Prone',
-                icon: 'systems/wh40k-rpg/assets/icons/conditions/prone.webp',
+                icon: 'icons/svg/falling.svg',
                 changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
                 flags: { 'wh40k-rpg': { nature: 'harmful' } },
             },
             blinded: {
                 name: 'Blinded',
-                icon: 'systems/wh40k-rpg/assets/icons/conditions/blinded.webp',
+                icon: 'icons/svg/blind.svg',
                 changes: [
                     { key: 'system.characteristics.ballisticSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
                     { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -30 },
@@ -254,13 +254,13 @@ export default class EffectCreationDialog extends DialogV2 {
             },
             deafened: {
                 name: 'Deafened',
-                icon: 'systems/wh40k-rpg/assets/icons/conditions/deafened.webp',
+                icon: 'icons/svg/sound-off.svg',
                 changes: [{ key: 'system.characteristics.perception.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 }],
                 flags: { 'wh40k-rpg': { nature: 'harmful' } },
             },
             grappled: {
                 name: 'Grappled',
-                icon: 'systems/wh40k-rpg/assets/icons/conditions/grappled.webp',
+                icon: 'icons/svg/net.svg',
                 changes: [
                     { key: 'system.characteristics.weaponSkill.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
                     { key: 'system.characteristics.agility.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -20 },
@@ -269,19 +269,19 @@ export default class EffectCreationDialog extends DialogV2 {
             },
             bleeding: {
                 name: 'Bleeding',
-                icon: 'systems/wh40k-rpg/assets/icons/conditions/bleeding.webp',
+                icon: 'icons/svg/blood.svg',
                 changes: [],
                 flags: { 'wh40k-rpg': { nature: 'harmful', requiresProcessing: true } },
             },
             onFire: {
                 name: 'On Fire',
-                icon: 'systems/wh40k-rpg/assets/icons/conditions/on-fire.webp',
+                icon: 'icons/svg/fire.svg',
                 changes: [],
                 flags: { 'wh40k-rpg': { nature: 'harmful', requiresProcessing: true } },
             },
             inspired: {
                 name: 'Inspired',
-                icon: 'systems/wh40k-rpg/assets/icons/conditions/inspired.webp',
+                icon: 'icons/svg/upgrade.svg',
                 changes: [
                     { key: 'system.characteristics.willpower.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
                     { key: 'system.characteristics.fellowship.modifier', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 },
@@ -290,7 +290,7 @@ export default class EffectCreationDialog extends DialogV2 {
             },
             blessed: {
                 name: 'Blessed',
-                icon: 'systems/wh40k-rpg/assets/icons/conditions/blessed.webp',
+                icon: 'icons/svg/angel.svg',
                 changes: [{ key: 'system.combat.defense', mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: 10 }],
                 flags: { 'wh40k-rpg': { nature: 'beneficial' } },
             },

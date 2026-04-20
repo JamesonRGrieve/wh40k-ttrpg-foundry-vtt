@@ -102,7 +102,6 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
             shipWeapon: 'icons/svg/cannon.svg',
             condition: 'icons/svg/daze.svg',
             criticalInjury: 'icons/svg/blood.svg',
-            combatAction: 'icons/svg/combat.svg',
             originPath: 'icons/svg/direction.svg',
             order: 'icons/svg/pawprint.svg',
             ritual: 'icons/svg/book.svg',

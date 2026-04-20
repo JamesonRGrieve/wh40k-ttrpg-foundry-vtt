@@ -563,13 +563,23 @@ export class GrantsManager {
                 // Choice grants contain nested grants, reverse them
                 if (applied.grantResults) {
                     for (const [key, nestedState] of Object.entries(applied.grantResults) as [string, any][]) {
-                        await this._reverseGrant(actor, key, { type: nestedState.type || 'unknown', applied: nestedState });
+                        // New shape: { type, applied }. Legacy: raw applied data with no type.
+                        const nestedType = nestedState?.type ?? 'unknown';
+                        const nestedApplied = nestedState?.applied ?? nestedState;
+                        if (nestedType === 'unknown') {
+                            console.warn(
+                                `GrantsManager: Skipping reverse of nested grant '${key}' — type missing from stored state (likely a pre-fix legacy record):`,
+                                nestedState,
+                            );
+                            continue;
+                        }
+                        await this._reverseGrant(actor, key, { type: nestedType, applied: nestedApplied });
                     }
                 }
                 break;
 
             default:
-                console.warn(`GrantsManager: Unknown grant type to reverse: ${type}`);
+                console.warn(`GrantsManager: Unknown grant type to reverse: ${type} (grantId=${grantId})`);
         }
 
         return result;
@@ -714,8 +724,9 @@ export class GrantsManager {
      * @param {object} [modifiers] - Optional modifiers object from item.system.modifiers
      * @returns {object[]} Array of grant configurations
      */
-    static migrateOldGrants(oldGrants, modifiers = null, options: { skipSkills?: boolean } = {}) {
+    static migrateOldGrants(oldGrants, modifiers = null, options: { skipSkills?: boolean; replaceResources?: boolean } = {}) {
         const newGrants = [];
+        const replaceResources = options.replaceResources === true;
 
         // NOTE: Characteristic modifiers from origin paths are applied via ModifiersTemplate
         // during prepareEmbeddedData, not as grants. We only migrate characteristics if
@@ -747,6 +758,7 @@ export class GrantsManager {
                     {
                         type: 'wounds',
                         formula: oldGrants.woundsFormula || String(oldGrants.wounds),
+                        additive: !replaceResources,
                     },
                 ],
             });
@@ -761,6 +773,7 @@ export class GrantsManager {
                     {
                         type: 'fate',
                         formula: oldGrants.fateFormula || String(oldGrants.fateThreshold),
+                        additive: !replaceResources,
                     },
                 ],
             });
@@ -878,7 +891,12 @@ export class GrantsManager {
         // during _prepareSkills(), NOT as grants. Skip skills for origin paths.
         const isOriginPath = item.type === 'originPath';
         if (item.system?.grants) {
-            return this.migrateOldGrants(item.system.grants, null, { skipSkills: isOriginPath });
+            return this.migrateOldGrants(item.system.grants, null, {
+                skipSkills: isOriginPath,
+                // Origin path wounds/fate are always applied (no override checkbox). Reapplying
+                // an origin path must replace existing values, not accumulate them.
+                replaceResources: isOriginPath,
+            });
         }
 
         return [];

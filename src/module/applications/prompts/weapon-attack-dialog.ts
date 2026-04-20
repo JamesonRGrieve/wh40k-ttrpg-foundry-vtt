@@ -64,34 +64,6 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     }
 
     /* -------------------------------------------- */
-    /*  Properties                                  */
-    /* -------------------------------------------- */
-
-    /**
-     * The weapon action data.
-     * @type {WeaponActionData}
-     */
-    weaponAttackData;
-
-    /* -------------------------------------------- */
-    /*  Event Listeners                             */
-    /* -------------------------------------------- */
-
-    /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
-        await super._onRender(context, options);
-
-        // Set up weapon selection listeners
-        this.element.querySelectorAll('.weapon-select').forEach((el) => {
-            el.addEventListener('change', this._onWeaponSelectChange.bind(this));
-        });
-
-        // Set up button listeners
-        this.element.querySelector('#attack-roll')?.addEventListener('click', this._onAttackRoll.bind(this));
-        this.element.querySelector('#attack-cancel')?.addEventListener('click', this._onAttackCancel.bind(this));
-    }
-
-    /* -------------------------------------------- */
 
     /**
      * Handle weapon selection change.

@@ -10,7 +10,6 @@ export { default as AmmoSheet } from './ammo-sheet.ts';
 export { default as ArmourSheet } from './armour-sheet.ts';
 export { default as ArmourModSheet } from './armour-mod-sheet.ts';
 export { default as AttackSpecialSheet } from './attack-special-sheet.ts';
-export { default as CombatActionSheet } from './combat-action-sheet.ts';
 export { default as ConditionSheet } from './condition-sheet.ts';
 export { default as CriticalInjurySheet } from './critical-injury-sheet.ts';
 export { default as CyberneticSheet } from './cybernetic-sheet.ts';
