@@ -6,44 +6,152 @@
     <div class="wh40k-panel-body">
         <div class="wh40k-armour-silhouette">
             {{! Head (centered at top) }}
-            <div class="wh40k-armour-box wh40k-box-head" data-location="head" data-roll-min="1" data-roll-max="10" title="Head - Roll: 01-10">
+            <div class="wh40k-armour-box wh40k-box-head"
+                 data-location="head"
+                 data-roll-min="1"
+                 data-roll-max="10"
+                 data-wh40k-tooltip="armor"
+                 data-wh40k-tooltip-data="{{armourDisplay.head.tooltipData}}"
+                 title="Head - Roll: 01-10">
                 <span class="wh40k-box-label">Head</span>
-                <span class="wh40k-box-ap">{{system.armour.head.total}}</span>
+                <span class="wh40k-box-ap">{{armourDisplay.head.total}}</span>
+                <div class="wh40k-armour-box-icons tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-min-h-6 tw-mt-1">
+                    {{#each armourDisplay.head.items as |item|}}
+                    <button type="button"
+                            class="wh40k-armour-box-icon tw-h-6 tw-w-6 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20"
+                            data-wh40k-tooltip="generic"
+                            data-wh40k-tooltip-data="{{item.tooltipData}}"
+                            data-item-id="{{item.id}}"
+                            title="{{item.name}}">
+                        <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+                    </button>
+                    {{/each}}
+                </div>
                 <span class="wh40k-box-range">01-10</span>
             </div>
 
             {{! Right Arm (left side of screen, character's right) }}
-            <div class="wh40k-armour-box wh40k-box-right-arm" data-location="rightArm" data-roll-min="11" data-roll-max="20" title="Right Arm - Roll: 11-20">
+            <div class="wh40k-armour-box wh40k-box-right-arm"
+                 data-location="rightArm"
+                 data-roll-min="11"
+                 data-roll-max="20"
+                 data-wh40k-tooltip="armor"
+                 data-wh40k-tooltip-data="{{armourDisplay.rightArm.tooltipData}}"
+                 title="Right Arm - Roll: 11-20">
                 <span class="wh40k-box-label">R.Arm</span>
-                <span class="wh40k-box-ap">{{system.armour.rightArm.total}}</span>
+                <span class="wh40k-box-ap">{{armourDisplay.rightArm.total}}</span>
+                <div class="wh40k-armour-box-icons tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-min-h-6 tw-mt-1">
+                    {{#each armourDisplay.rightArm.items as |item|}}
+                    <button type="button"
+                            class="wh40k-armour-box-icon tw-h-6 tw-w-6 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20"
+                            data-wh40k-tooltip="generic"
+                            data-wh40k-tooltip-data="{{item.tooltipData}}"
+                            data-item-id="{{item.id}}"
+                            title="{{item.name}}">
+                        <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+                    </button>
+                    {{/each}}
+                </div>
                 <span class="wh40k-box-range">11-20</span>
             </div>
 
             {{! Left Arm (right side of screen, character's left) }}
-            <div class="wh40k-armour-box wh40k-box-left-arm" data-location="leftArm" data-roll-min="21" data-roll-max="30" title="Left Arm - Roll: 21-30">
+            <div class="wh40k-armour-box wh40k-box-left-arm"
+                 data-location="leftArm"
+                 data-roll-min="21"
+                 data-roll-max="30"
+                 data-wh40k-tooltip="armor"
+                 data-wh40k-tooltip-data="{{armourDisplay.leftArm.tooltipData}}"
+                 title="Left Arm - Roll: 21-30">
                 <span class="wh40k-box-label">L.Arm</span>
-                <span class="wh40k-box-ap">{{system.armour.leftArm.total}}</span>
+                <span class="wh40k-box-ap">{{armourDisplay.leftArm.total}}</span>
+                <div class="wh40k-armour-box-icons tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-min-h-6 tw-mt-1">
+                    {{#each armourDisplay.leftArm.items as |item|}}
+                    <button type="button"
+                            class="wh40k-armour-box-icon tw-h-6 tw-w-6 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20"
+                            data-wh40k-tooltip="generic"
+                            data-wh40k-tooltip-data="{{item.tooltipData}}"
+                            data-item-id="{{item.id}}"
+                            title="{{item.name}}">
+                        <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+                    </button>
+                    {{/each}}
+                </div>
                 <span class="wh40k-box-range">21-30</span>
             </div>
 
             {{! Body (center, largest box) }}
-            <div class="wh40k-armour-box wh40k-box-body" data-location="body" data-roll-min="31" data-roll-max="70" title="Body - Roll: 31-70">
+            <div class="wh40k-armour-box wh40k-box-body"
+                 data-location="body"
+                 data-roll-min="31"
+                 data-roll-max="70"
+                 data-wh40k-tooltip="armor"
+                 data-wh40k-tooltip-data="{{armourDisplay.body.tooltipData}}"
+                 title="Body - Roll: 31-70">
                 <span class="wh40k-box-label">Body</span>
-                <span class="wh40k-box-ap">{{system.armour.body.total}}</span>
+                <span class="wh40k-box-ap">{{armourDisplay.body.total}}</span>
+                <div class="wh40k-armour-box-icons tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-min-h-6 tw-mt-1">
+                    {{#each armourDisplay.body.items as |item|}}
+                    <button type="button"
+                            class="wh40k-armour-box-icon tw-h-6 tw-w-6 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20"
+                            data-wh40k-tooltip="generic"
+                            data-wh40k-tooltip-data="{{item.tooltipData}}"
+                            data-item-id="{{item.id}}"
+                            title="{{item.name}}">
+                        <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+                    </button>
+                    {{/each}}
+                </div>
                 <span class="wh40k-box-range">31-70</span>
             </div>
 
             {{! Right Leg (left side of screen, character's right) }}
-            <div class="wh40k-armour-box wh40k-box-right-leg" data-location="rightLeg" data-roll-min="71" data-roll-max="85" title="Right Leg - Roll: 71-85">
+            <div class="wh40k-armour-box wh40k-box-right-leg"
+                 data-location="rightLeg"
+                 data-roll-min="71"
+                 data-roll-max="85"
+                 data-wh40k-tooltip="armor"
+                 data-wh40k-tooltip-data="{{armourDisplay.rightLeg.tooltipData}}"
+                 title="Right Leg - Roll: 71-85">
                 <span class="wh40k-box-label">R.Leg</span>
-                <span class="wh40k-box-ap">{{system.armour.rightLeg.total}}</span>
+                <span class="wh40k-box-ap">{{armourDisplay.rightLeg.total}}</span>
+                <div class="wh40k-armour-box-icons tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-min-h-6 tw-mt-1">
+                    {{#each armourDisplay.rightLeg.items as |item|}}
+                    <button type="button"
+                            class="wh40k-armour-box-icon tw-h-6 tw-w-6 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20"
+                            data-wh40k-tooltip="generic"
+                            data-wh40k-tooltip-data="{{item.tooltipData}}"
+                            data-item-id="{{item.id}}"
+                            title="{{item.name}}">
+                        <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+                    </button>
+                    {{/each}}
+                </div>
                 <span class="wh40k-box-range">71-85</span>
             </div>
 
             {{! Left Leg (right side of screen, character's left) }}
-            <div class="wh40k-armour-box wh40k-box-left-leg" data-location="leftLeg" data-roll-min="86" data-roll-max="100" title="Left Leg - Roll: 86-00">
+            <div class="wh40k-armour-box wh40k-box-left-leg"
+                 data-location="leftLeg"
+                 data-roll-min="86"
+                 data-roll-max="100"
+                 data-wh40k-tooltip="armor"
+                 data-wh40k-tooltip-data="{{armourDisplay.leftLeg.tooltipData}}"
+                 title="Left Leg - Roll: 86-00">
                 <span class="wh40k-box-label">L.Leg</span>
-                <span class="wh40k-box-ap">{{system.armour.leftLeg.total}}</span>
+                <span class="wh40k-box-ap">{{armourDisplay.leftLeg.total}}</span>
+                <div class="wh40k-armour-box-icons tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-min-h-6 tw-mt-1">
+                    {{#each armourDisplay.leftLeg.items as |item|}}
+                    <button type="button"
+                            class="wh40k-armour-box-icon tw-h-6 tw-w-6 tw-overflow-hidden tw-rounded tw-border tw-border-[var(--wh40k-border-color)] tw-bg-black/20"
+                            data-wh40k-tooltip="generic"
+                            data-wh40k-tooltip-data="{{item.tooltipData}}"
+                            data-item-id="{{item.id}}"
+                            title="{{item.name}}">
+                        <img src="{{item.img}}" alt="{{item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
+                    </button>
+                    {{/each}}
+                </div>
                 <span class="wh40k-box-range">86-00</span>
             </div>
         </div>

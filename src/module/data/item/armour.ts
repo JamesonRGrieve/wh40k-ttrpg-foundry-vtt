@@ -88,11 +88,19 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source  The source data
      */
     static #migrateCoverage(source: Record<string, unknown>): void {
-        if (typeof source.locations === 'string' && !source.coverage) {
+        if (ArmourData.#hasCoverage(source)) return;
+
+        if (typeof source.locations === 'string') {
             const parsed = ArmourData.#parseLegacyLocations(source);
             if (parsed?.size) {
                 source.coverage = Array.from(parsed);
+                return;
             }
+        }
+
+        const inferredCoverage = ArmourData.#inferCoverageFromArmourPoints(source.armourPoints as Record<string, unknown> | undefined);
+        if (inferredCoverage.size) {
+            source.coverage = Array.from(inferredCoverage);
         }
     }
 
@@ -143,6 +151,24 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         if (Array.isArray(source.properties)) {
             source.properties = new Set(source.properties);
         }
+    }
+
+    static #hasCoverage(source: Record<string, unknown>): boolean {
+        const { coverage } = source;
+        if (coverage instanceof Set) return coverage.size > 0;
+        if (Array.isArray(coverage)) return coverage.length > 0;
+        if (!coverage || typeof coverage !== 'object') return false;
+        return Object.values(coverage).some((value) => Boolean(value));
+    }
+
+    static #inferCoverageFromArmourPoints(armourPoints: Record<string, unknown> | undefined): Set<string> {
+        if (!armourPoints || typeof armourPoints !== 'object') return new Set();
+
+        return new Set(
+            Object.entries(armourPoints)
+                .filter(([, value]) => typeof value === 'number' && value > 0)
+                .map(([location]) => location),
+        );
     }
 
     /* -------------------------------------------- */
@@ -199,6 +225,10 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             coverage = new Set(Object.keys(coverageValue).filter((k) => (coverageValue as Record<string, unknown>)[k]));
         } else {
             coverage = new Set();
+        }
+
+        if (coverage.size === 0) {
+            coverage = ArmourData.#inferCoverageFromArmourPoints(armourPoints);
         }
         if (coverage.size === 0) {
             throw new Error('Armour must cover at least one location');
