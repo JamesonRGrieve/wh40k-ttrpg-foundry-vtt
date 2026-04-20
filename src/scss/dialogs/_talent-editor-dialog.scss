@@ -10,9 +10,9 @@
 
 .talent-editor-dialog {
     --ted-accent: var(--wh40k-accent-talents);
-    --ted-accent-light: #{color-mix(in srgb, var(--wh40k-accent-talents), white 15%)};
-    --ted-accent-bg: #{rgb(from var(--wh40k-accent-talents) r g b / 0.1)};
-    --ted-accent-border: #{rgb(from var(--wh40k-accent-talents) r g b / 0.3)};
+    --ted-accent-light: color-mix(in srgb, var(--wh40k-accent-talents), white 15%);
+    --ted-accent-bg: rgb(from var(--wh40k-accent-talents) r g b / 0.1);
+    --ted-accent-border: rgb(from var(--wh40k-accent-talents) r g b / 0.3);
 
     font-family: var(--wh40k-font-body);
     color: var(--color-text-primary);
@@ -20,9 +20,9 @@
 
 .ted-container {
     --ted-accent: var(--wh40k-accent-talents);
-    --ted-accent-light: #{color-mix(in srgb, var(--wh40k-accent-talents), white 15%)};
-    --ted-accent-bg: #{rgb(from var(--wh40k-accent-talents) r g b / 0.1)};
-    --ted-accent-border: #{rgb(from var(--wh40k-accent-talents) r g b / 0.3)};
+    --ted-accent-light: color-mix(in srgb, var(--wh40k-accent-talents), white 15%);
+    --ted-accent-bg: rgb(from var(--wh40k-accent-talents) r g b / 0.1);
+    --ted-accent-border: rgb(from var(--wh40k-accent-talents) r g b / 0.3);
 
     display: flex;
     flex-direction: column;

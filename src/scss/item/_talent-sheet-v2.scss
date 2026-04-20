@@ -10,9 +10,9 @@
 
 .wh40k-talent-sheet-v2 {
     --talent-accent: var(--wh40k-accent-talents);
-    --talent-accent-light: #{color-mix(in srgb, var(--wh40k-accent-talents), white 15%)};
-    --talent-accent-bg: #{rgb(from var(--wh40k-accent-talents) r g b / 0.1)};
-    --talent-accent-border: #{rgb(from var(--wh40k-accent-talents) r g b / 0.3)};
+    --talent-accent-light: color-mix(in srgb, var(--wh40k-accent-talents), white 15%);
+    --talent-accent-bg: rgb(from var(--wh40k-accent-talents) r g b / 0.1);
+    --talent-accent-border: rgb(from var(--wh40k-accent-talents) r g b / 0.3);
 
     // Tier colors
     --tier-1-color: #5ba86d;

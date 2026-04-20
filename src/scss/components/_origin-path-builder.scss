@@ -1121,7 +1121,8 @@
             gap: var(--wh40k-space-xs);
         }
 
-        .roll-btn {
+        .roll-btn,
+        .manual-btn {
             display: flex;
             align-items: center;
             gap: var(--wh40k-space-xs);
@@ -1142,7 +1143,6 @@
         }
 
         .manual-btn {
-            @extend .roll-btn;
             padding-inline: var(--wh40k-space-sm);
         }
     }
