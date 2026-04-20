@@ -4,19 +4,17 @@
 
 import BaseRollDialog from './base-roll-dialog.ts';
 
-interface PsychicPowerDialogOptions {}
-
 /**
  * Dialog for configuring psychic power uses.
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class PsychicPowerDialog extends BaseRollDialog {
+    declare psychicAttackData: Record<string, any>;
+
     /**
-     * @param {PsychicActionData} psychicActionData  The psychic action data.
-     * @param {PsychicPowerDialogOptions} [options={}]                  Dialog options.
+     * @param {Record<string, any>} psychicActionData  The psychic action data.
+     * @param {ApplicationV2Config.DefaultOptions} [options={}]                  Dialog options.
      */
-    constructor(psychicActionData: any = {}, options: PsychicPowerDialogOptions = {}) {
-        // @ts-expect-error - dynamic property
+    constructor(psychicActionData: Record<string, any> = {}, options: ApplicationV2Config.DefaultOptions = {}) {
         super(psychicActionData.rollData, options);
         this.psychicAttackData = psychicActionData;
     }
@@ -24,10 +22,12 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+        ...BaseRollDialog.DEFAULT_OPTIONS,
         classes: ['psychic-power'],
         actions: {
-            selectPower: PsychicPowerDialog.#onSelectPower,
+            ...BaseRollDialog.DEFAULT_OPTIONS.actions,
+            selectPower: PsychicPowerDialog.#onSelectPower as unknown as ApplicationV2Config.DefaultOptions['actions'],
         },
         window: {
             title: 'Psychic Power',
@@ -37,12 +37,31 @@ export default class PsychicPowerDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/psychic-power-roll-prompt.hbs',
-            scrollable: [''],
+            classes: [],
+            scrollable: [],
         },
     };
+
+    /* -------------------------------------------- */
+    /*  Event Listeners                             */
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        await super._onRender(context, options);
+
+        // Set up power selection listeners
+        this.element.querySelectorAll('.power-select').forEach((el) => {
+            el.addEventListener('change', this._onPowerSelectChange.bind(this) as EventListener);
+        });
+
+        // Set up button listeners
+        this.element.querySelector('#power-roll')?.addEventListener('click', this._onPowerRoll.bind(this) as EventListener);
+        this.element.querySelector('#power-cancel')?.addEventListener('click', this._onPowerCancel.bind(this) as EventListener);
+    }
 
     /* -------------------------------------------- */
     /*  Properties                                  */
@@ -80,9 +99,9 @@ export default class PsychicPowerDialog extends BaseRollDialog {
      * @protected
      */
     async _onPowerSelectChange(event: Event): Promise<void> {
-        this.rollData.selectPower((event.target as HTMLInputElement).name);
-        await this.rollData.update();
-        this.render();
+        this.rollData.selectPower?.((event.target as HTMLInputElement).name);
+        await this.rollData.update?.();
+        void this.render();
     }
 
     /* -------------------------------------------- */
@@ -115,15 +134,11 @@ export default class PsychicPowerDialog extends BaseRollDialog {
 
     /**
      * Handle power selection via action.
-     * @this {PsychicPowerDialog}
-     * @param {Event} event         Triggering event.
-     * @param {HTMLElement} target  Element that triggered the action.
      */
     static async #onSelectPower(this: PsychicPowerDialog, event: Event, target: HTMLElement): Promise<void> {
-        // @ts-expect-error - TS2339
-        this.rollData.selectPower(target.name);
-        await this.rollData.update();
-        this.render();
+        (this.rollData as any).selectPower?.(target.getAttribute('name'));
+        await this.rollData.update?.();
+        void this.render();
     }
 
     /* -------------------------------------------- */
@@ -132,8 +147,8 @@ export default class PsychicPowerDialog extends BaseRollDialog {
 
     /** @override */
     async _performRoll(): Promise<void> {
-        await this.rollData.finalize();
-        await this.psychicAttackData.performActionAndSendToChat();
+        await this.rollData.finalize?.();
+        await this.psychicAttackData.performActionAndSendToChat?.();
         await this.close();
     }
 }

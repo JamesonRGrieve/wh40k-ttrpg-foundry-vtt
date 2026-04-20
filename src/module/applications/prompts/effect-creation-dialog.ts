@@ -8,13 +8,28 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 const { DialogV2 } = foundry.applications.api;
 
 interface EffectCreationDialogOptions {
-  actor?: any;
-  resolve?: Function;
+    actor: WH40KBaseActor;
+    resolve: (value: ActiveEffect | null) => void;
 }
 
-export default class EffectCreationDialog extends (DialogV2 as any) {
+interface EffectCreationData extends Record<string, unknown> {
+    effectType: 'condition' | 'characteristic' | 'skill' | 'combat' | 'custom';
+    conditionId?: string;
+    characteristic?: string;
+    skill?: string;
+    combatType?: string;
+    customName?: string;
+    modifierValue?: string;
+    duration?: { rounds: string };
+}
+
+export default class EffectCreationDialog extends DialogV2 {
+    declare actor: WH40KBaseActor;
+    declare resolve: (value: ActiveEffect | null) => void;
+    declare selectedCategory: string;
+
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         window: {
             title: 'WH40K.ActiveEffect.CreateEffect',
             icon: 'fas fa-sparkles',
@@ -22,10 +37,10 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
         },
         position: {
             width: 520,
-            height: 'auto' as const,
+            height: 'auto',
         },
         form: {
-            handler: EffectCreationDialog.formHandler,
+            handler: EffectCreationDialog.formHandler as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: true,
         },
@@ -39,45 +54,42 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
                 label: 'Create Effect',
                 icon: 'fas fa-check',
                 default: true,
+                type: 'submit',
             },
             {
                 action: 'cancel',
                 label: 'Cancel',
                 icon: 'fas fa-times',
+                type: 'button',
             },
         ],
     };
 
     /* -------------------------------------------- */
 
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
+        form: {
+            template: 'systems/wh40k-rpg/templates/dialogs/effect-creation-dialog.hbs',
+        },
+    };
+
     /**
      * Create and render the dialog
-     * @param {Actor} actor     The target actor
+     * @param {WH40KBaseActor} actor     The target actor
      * @returns {Promise<ActiveEffect|null>}
      */
-    static async show(actor: WH40KBaseActor): Promise<unknown> {
+    static async show(actor: WH40KBaseActor): Promise<ActiveEffect | null> {
         return new Promise((resolve) => {
             new this({ actor, resolve }).render(true);
         });
     }
 
-    /* -------------------------------------------- */
-
-    constructor(options: EffectCreationDialogOptions = {}) {
+    constructor(options: EffectCreationDialogOptions) {
         super(options);
         this.actor = options.actor;
         this.resolve = options.resolve;
-        this.selectedCategory = 'custom'; // custom, condition, characteristic, skill, combat
+        this.selectedCategory = 'custom';
     }
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static PARTS = {
-        form: {
-            template: 'systems/wh40k-rpg/templates/dialogs/effect-creation-dialog.hbs',
-        },
-    };
 
     /* -------------------------------------------- */
 
@@ -141,9 +153,9 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Handle category selection
      */
-    static _onSelectCategory(this: typeof EffectCreationDialog, event: Event, target: HTMLElement): void {
-        (this as any).selectedCategory = target.dataset.category;
-        (this as any).render();
+    static _onSelectCategory(this: EffectCreationDialog, event: Event, target: HTMLElement): void {
+        this.selectedCategory = target.dataset.category ?? 'custom';
+        void this.render();
     }
 
     /* -------------------------------------------- */
@@ -151,16 +163,16 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Handle quick condition selection
      */
-    static _onSelectCondition(this: typeof EffectCreationDialog, event: Event, target: HTMLElement): void {
+    static _onSelectCondition(this: EffectCreationDialog, event: Event, target: HTMLElement): void {
         const conditionId = target.dataset.conditionId;
+        if (!conditionId) return;
 
-        // Set form values for the selected condition
-        const form = (this as any).element.querySelector('form');
-        form.querySelector("[name='effectType']").value = 'condition';
-        form.querySelector("[name='conditionId']").value = conditionId;
-
-        // Auto-submit
-        (this as any).submit();
+        const form = this.element.querySelector('form') as HTMLFormElement | null;
+        if (form) {
+            (form.elements.namedItem('effectType') as HTMLInputElement).value = 'condition';
+            (form.elements.namedItem('conditionId') as HTMLInputElement).value = conditionId;
+            void this.submit();
+        }
     }
 
     /* -------------------------------------------- */
@@ -168,42 +180,42 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Handle form submission
      */
-    static async formHandler(this: typeof EffectCreationDialog, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object) as any;
+    static async formHandler(this: EffectCreationDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+        const data = formData.object as unknown as EffectCreationData;
 
-        let effectData = null;
+        let effectData: Record<string, unknown> | null = null;
 
         // Handle based on effect type
         switch (data.effectType) {
             case 'condition':
-                effectData = await (this as any)._createConditionData(data);
+                effectData = this._createConditionData(data);
                 break;
 
             case 'characteristic':
-                effectData = await (this as any)._createCharacteristicData(data);
+                effectData = this._createCharacteristicData(data);
                 break;
 
             case 'skill':
-                effectData = await (this as any)._createSkillData(data);
+                effectData = this._createSkillData(data);
                 break;
 
             case 'combat':
-                effectData = await (this as any)._createCombatData(data);
+                effectData = this._createCombatData(data);
                 break;
 
             case 'custom':
-                effectData = await (this as any)._createCustomData(data);
+                effectData = this._createCustomData(data);
                 break;
         }
 
         if (!effectData) {
             ui.notifications.warn('WH40K.ActiveEffect.InvalidData');
-            return (this as any).resolve(null);
+            return this.resolve(null);
         }
 
         // Create the effect
-        const effects = await (this as any).options.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
-        return (this as any).resolve(effects[0]);
+        const effects = await this.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+        return this.resolve(effects[0] as ActiveEffect);
     }
 
     /* -------------------------------------------- */
@@ -211,11 +223,11 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create condition effect data
      */
-    static _createConditionData(data: Record<string, unknown>): Record<string, unknown> | null {
+    static _createConditionData(data: EffectCreationData): Record<string, unknown> | null {
         const conditionId = data.conditionId;
+        if (!conditionId) return null;
 
-        // Use the helper function
-        const conditions = {
+        const conditions: Record<string, any> = {
             stunned: {
                 name: 'Stunned',
                 icon: 'systems/wh40k-rpg/assets/icons/conditions/stunned.webp',
@@ -287,12 +299,12 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
         const conditionData = conditions[conditionId];
         if (!conditionData) return null;
 
-        // Add duration if specified
         const effectData = foundry.utils.deepClone(conditionData);
-        if (data.duration?.rounds > 0) {
+        const rounds = parseInt(data.duration?.rounds ?? '0');
+        if (rounds > 0) {
             const combat = game.combat;
             effectData.duration = {
-                rounds: parseInt(data.duration.rounds),
+                rounds,
                 startRound: combat?.round ?? 0,
                 startTurn: combat?.turn ?? 0,
             };
@@ -306,15 +318,15 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create characteristic modifier data
      */
-    static _createCharacteristicData(data: Record<string, unknown>): Record<string, unknown> | null {
+    static _createCharacteristicData(data: EffectCreationData): Record<string, unknown> | null {
         const characteristic = data.characteristic;
-        const value = parseInt(data.modifierValue) || 0;
+        const value = parseInt(data.modifierValue ?? '0') || 0;
 
         if (!characteristic || value === 0) return null;
 
-        const charLabel = CONFIG.WH40K?.characteristics?.[characteristic] ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
+        const charLabel = (CONFIG as any).WH40K?.characteristics?.[characteristic]?.label ?? characteristic.charAt(0).toUpperCase() + characteristic.slice(1);
 
-        const effectData: unknown = {
+        const effectData: Record<string, any> = {
             name: `${charLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/upgrade.svg',
             changes: [
@@ -331,11 +343,11 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
             },
         };
 
-        // Add duration if specified
-        if (data.duration?.rounds > 0) {
+        const rounds = parseInt(data.duration?.rounds ?? '0');
+        if (rounds > 0) {
             const combat = game.combat;
             effectData.duration = {
-                rounds: parseInt(data.duration.rounds),
+                rounds,
                 startRound: combat?.round ?? 0,
                 startTurn: combat?.turn ?? 0,
             };
@@ -349,15 +361,15 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create skill modifier data
      */
-    static _createSkillData(data: Record<string, unknown>): Record<string, unknown> | null {
+    static _createSkillData(data: EffectCreationData): Record<string, unknown> | null {
         const skill = data.skill;
-        const value = parseInt(data.modifierValue) || 0;
+        const value = parseInt(data.modifierValue ?? '0') || 0;
 
         if (!skill || value === 0) return null;
 
         const skillLabel = skill.charAt(0).toUpperCase() + skill.slice(1);
 
-        const effectData: unknown = {
+        const effectData: Record<string, any> = {
             name: `${skillLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/upgrade.svg',
             changes: [
@@ -374,11 +386,11 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
             },
         };
 
-        // Add duration
-        if (data.duration?.rounds > 0) {
+        const rounds = parseInt(data.duration?.rounds ?? '0');
+        if (rounds > 0) {
             const combat = game.combat;
             effectData.duration = {
-                rounds: parseInt(data.duration.rounds),
+                rounds,
                 startRound: combat?.round ?? 0,
                 startTurn: combat?.turn ?? 0,
             };
@@ -392,15 +404,15 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create combat modifier data
      */
-    static _createCombatData(data: Record<string, unknown>): Record<string, unknown> | null {
+    static _createCombatData(data: EffectCreationData): Record<string, unknown> | null {
         const combatType = data.combatType;
-        const value = parseInt(data.modifierValue) || 0;
+        const value = parseInt(data.modifierValue ?? '0') || 0;
 
         if (!combatType || value === 0) return null;
 
         const typeLabel = combatType.charAt(0).toUpperCase() + combatType.slice(1);
 
-        const effectData: unknown = {
+        const effectData: Record<string, any> = {
             name: `${typeLabel} ${value > 0 ? '+' : ''}${value}`,
             icon: 'icons/svg/combat.svg',
             changes: [
@@ -417,11 +429,11 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
             },
         };
 
-        // Add duration
-        if (data.duration?.rounds > 0) {
+        const rounds = parseInt(data.duration?.rounds ?? '0');
+        if (rounds > 0) {
             const combat = game.combat;
             effectData.duration = {
-                rounds: parseInt(data.duration.rounds),
+                rounds,
                 startRound: combat?.round ?? 0,
                 startTurn: combat?.turn ?? 0,
             };
@@ -435,7 +447,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create custom effect data
      */
-    static _createCustomData(data: Record<string, unknown>): Record<string, unknown> | null {
+    static _createCustomData(data: EffectCreationData): Record<string, unknown> | null {
         const name = data.customName?.trim();
 
         if (!name) return null;
@@ -443,7 +455,6 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
         return {
             name: name,
             icon: 'icons/svg/aura.svg',
-            origin: this.options.actor.uuid,
             disabled: false,
         };
     }

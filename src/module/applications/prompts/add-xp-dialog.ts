@@ -20,12 +20,12 @@ interface AddXPContext extends Record<string, unknown> {
  * Dialog for adding or subtracting experience points.
  */
 export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
-    actor: WH40KAcolyte;
-    xpAmount: number;
+    declare actor: WH40KAcolyte;
+    declare xpAmount: number;
 
     /**
      * @param {WH40KAcolyte} actor  The actor to modify.
-     * @param {AddXPDialogOptions} [options={}]       Dialog options.
+     * @param {ApplicationV2Config.DefaultOptions} [options={}]       Dialog options.
      */
     constructor(actor: WH40KAcolyte, options: ApplicationV2Config.DefaultOptions = {}) {
         super(options);
@@ -36,15 +36,15 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'add-xp-dialog', 'standard-form'],
         actions: {
-            apply: AddXPDialog.#onApply,
-            cancel: AddXPDialog.#onCancel,
+            apply: AddXPDialog.#onApply as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            cancel: AddXPDialog.#onCancel as unknown as ApplicationV2Config.DefaultOptions['actions'],
         },
         form: {
-            handler: AddXPDialog.#onFormChange,
+            handler: AddXPDialog.#onFormChange as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: true,
             closeOnSubmit: false,
         },
@@ -61,10 +61,11 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/add-xp-prompt.hbs',
-            scrollable: [''],
+            classes: [],
+            scrollable: [],
         },
     };
 
@@ -74,7 +75,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
 
     /** @inheritDoc */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AddXPContext> {
-        const context = await super._prepareContext(options);
+        const context = (await super._prepareContext(options)) as AddXPContext;
         const currentTotal = (this.actor.system as any)?.experience?.total ?? 0;
         const newTotal = Math.max(0, currentTotal + this.xpAmount);
 
@@ -86,7 +87,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
             newTotal,
             isAddition: this.xpAmount >= 0,
             absAmount: Math.abs(this.xpAmount),
-        } as AddXPContext;
+        };
     }
 
     /* -------------------------------------------- */

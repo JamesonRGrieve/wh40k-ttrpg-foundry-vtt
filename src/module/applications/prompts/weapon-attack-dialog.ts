@@ -4,19 +4,17 @@
 
 import BaseRollDialog from './base-roll-dialog.ts';
 
-interface WeaponAttackDialogOptions {}
-
 /**
  * Dialog for configuring weapon attacks.
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class WeaponAttackDialog extends BaseRollDialog {
+    declare weaponAttackData: Record<string, any>;
+
     /**
-     * @param {WeaponActionData} weaponActionData  The weapon action data.
-     * @param {WeaponAttackDialogOptions} [options={}]                Dialog options.
+     * @param {Record<string, any>} weaponActionData  The weapon action data.
+     * @param {ApplicationV2Config.DefaultOptions} [options={}]                Dialog options.
      */
-    constructor(weaponActionData: any = {}, options: WeaponAttackDialogOptions = {}) {
-        // @ts-expect-error - dynamic property
+    constructor(weaponActionData: Record<string, any> = {}, options: ApplicationV2Config.DefaultOptions = {}) {
         super(weaponActionData.rollData, options);
         this.weaponAttackData = weaponActionData;
     }
@@ -24,10 +22,12 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+        ...BaseRollDialog.DEFAULT_OPTIONS,
         classes: ['weapon-attack'],
         actions: {
-            selectWeapon: WeaponAttackDialog.#onSelectWeapon,
+            ...BaseRollDialog.DEFAULT_OPTIONS.actions,
+            selectWeapon: WeaponAttackDialog.#onSelectWeapon as unknown as ApplicationV2Config.DefaultOptions['actions'],
         },
         window: {
             title: 'Weapon Attack',
@@ -37,12 +37,31 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/weapon-roll-prompt.hbs',
-            scrollable: [''],
+            classes: [],
+            scrollable: [],
         },
     };
+
+    /* -------------------------------------------- */
+    /*  Event Listeners                             */
+    /* -------------------------------------------- */
+
+    /** @inheritDoc */
+    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+        await super._onRender(context, options);
+
+        // Set up weapon selection listeners
+        this.element.querySelectorAll('.weapon-select').forEach((el) => {
+            el.addEventListener('change', this._onWeaponSelectChange.bind(this) as EventListener);
+        });
+
+        // Set up button listeners
+        this.element.querySelector('#attack-roll')?.addEventListener('click', this._onAttackRoll.bind(this) as EventListener);
+        this.element.querySelector('#attack-cancel')?.addEventListener('click', this._onAttackCancel.bind(this) as EventListener);
+    }
 
     /* -------------------------------------------- */
     /*  Properties                                  */
@@ -76,21 +95,17 @@ export default class WeaponAttackDialog extends BaseRollDialog {
 
     /**
      * Handle weapon selection change.
-     * @param {Event} event  The change event.
-     * @protected
      */
     async _onWeaponSelectChange(event: Event): Promise<void> {
-        this.rollData.selectWeapon((event.target as HTMLInputElement).name);
-        await this.rollData.update();
-        this.render();
+        this.rollData.selectWeapon?.((event.target as HTMLInputElement).name);
+        await this.rollData.update?.();
+        void this.render();
     }
 
     /* -------------------------------------------- */
 
     /**
      * Handle attack roll button click.
-     * @param {Event} event  The click event.
-     * @protected
      */
     async _onAttackRoll(event: Event): Promise<void> {
         event.preventDefault();
@@ -101,8 +116,6 @@ export default class WeaponAttackDialog extends BaseRollDialog {
 
     /**
      * Handle attack cancel button click.
-     * @param {Event} event  The click event.
-     * @protected
      */
     async _onAttackCancel(event: Event): Promise<void> {
         event.preventDefault();
@@ -115,15 +128,11 @@ export default class WeaponAttackDialog extends BaseRollDialog {
 
     /**
      * Handle weapon selection via action.
-     * @this {WeaponAttackDialog}
-     * @param {Event} event         Triggering event.
-     * @param {HTMLElement} target  Element that triggered the action.
      */
     static async #onSelectWeapon(this: WeaponAttackDialog, event: Event, target: HTMLElement): Promise<void> {
-        // @ts-expect-error - TS2339
-        this.rollData.selectWeapon(target.name);
-        await this.rollData.update();
-        this.render();
+        (this.rollData as any).selectWeapon?.(target.getAttribute('name'));
+        await this.rollData.update?.();
+        void this.render();
     }
 
     /* -------------------------------------------- */
@@ -132,7 +141,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
 
     /** @override */
     _validateRoll(): boolean {
-        if (this.rollData.fireRate === 0) {
+        if ((this.rollData.fireRate as number) === 0) {
             ui.notifications.warn('Not enough ammo to perform action. Do you need to reload?');
             return false;
         }
@@ -145,8 +154,8 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     async _performRoll(): Promise<void> {
         if (!this._validateRoll()) return;
 
-        await this.rollData.finalize();
-        await this.weaponAttackData.performActionAndSendToChat();
+        await this.rollData.finalize?.();
+        await this.weaponAttackData.performActionAndSendToChat?.();
         await this.close();
     }
 }

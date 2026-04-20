@@ -986,6 +986,20 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     this.render();
                 });
             }
+            // Bind row and checkbox clicks directly. The data-action on the row already
+            // triggers toggleEquipmentItem for clicks on row body, but clicks on the checkbox
+            // input need to be intercepted before the browser's default toggle stomps our state.
+            html.querySelectorAll('.equip-row').forEach((row) => {
+                const rowEl = row as HTMLElement;
+                const uuid = rowEl.dataset.uuid;
+                const checkbox = rowEl.querySelector('.equip-check') as HTMLInputElement | null;
+                if (!checkbox || !uuid) return;
+                checkbox.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this._toggleEquipmentByUuid(uuid);
+                });
+            });
             return;
         }
 
@@ -1255,7 +1269,17 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 game.packs.find((p: any) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
             if (!pack) continue;
 
-            const index = await (pack as any).getIndex({ fields: ['system.availability', 'system.identifier', 'type'] });
+            const index = await (pack as any).getIndex({
+                fields: [
+                    'system.availability',
+                    'system.identifier',
+                    'system.clip.max',
+                    'system.weaponTypes',
+                    'system.cost.dh2.homebrew.requisition',
+                    'system.cost.dh2.homebrew.throneGelt',
+                    'type',
+                ],
+            });
             for (const entry of index) {
                 const availability = (entry.system as any)?.availability;
                 if (!availability) continue;
@@ -1263,15 +1287,21 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 if (modifier === null) continue;
                 if (modifier < scarceModifier) continue;
                 if (entry.name?.startsWith('! Default')) continue;
+                const homebrewCost = (entry.system as any)?.cost?.dh2?.homebrew;
                 loaded.push({
                     uuid: `Compendium.${(pack as any).metadata.id}.${entry._id}`,
                     id: entry._id,
                     name: entry.name,
                     img: entry.img,
                     type: entry.type,
+                    identifier: (entry.system as any)?.identifier ?? null,
+                    clipMax: (entry.system as any)?.clip?.max ?? null,
+                    weaponTypes: (entry.system as any)?.weaponTypes ?? [],
                     availability,
                     availabilityLabel: game.i18n.localize(availabilityConfig[availability]?.label || availability),
                     availabilityOrder: modifier,
+                    requisition: homebrewCost?.requisition ?? null,
+                    throneGelt: homebrewCost?.throneGelt ?? null,
                 });
             }
         }
@@ -1285,11 +1315,73 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._equipmentLoaded = true;
     }
 
+    /**
+     * Enumerate all weapons the acolyte has or will have access to: those granted via the
+     * chosen origin paths (resolved by name against the equipment catalog), plus any weapons
+     * the user has already ticked in the Equip Acolyte table. Used to filter the ammunition
+     * list so the player only sees ammo compatible with a weapon they actually own.
+     * @private
+     */
+    _getAvailableWeaponsForAmmo(): Array<{ identifier: string; clipMax: number; name: string; source: 'granted' | 'selected' }> {
+        const result: Array<{ identifier: string; clipMax: number; name: string; source: 'granted' | 'selected' }> = [];
+        const weaponCatalog = this.equipmentItems.filter((item) => item.type === 'weapon');
+
+        // Origin-granted weapons: resolve grants.equipment entries against the equipment catalog by name.
+        const grantedNames = new Set<string>();
+        for (const [, selection] of this.selections) {
+            const system = this._getSelectionSystem(selection);
+            const grants = (system.grants as any) || {};
+            for (const entry of (grants.equipment || []) as any[]) {
+                const name = entry?.name;
+                if (name) grantedNames.add(String(name));
+            }
+        }
+        for (const name of grantedNames) {
+            const weapon = weaponCatalog.find((w) => String(w.name) === name);
+            if (!weapon || !weapon.identifier || typeof weapon.clipMax !== 'number') continue;
+            result.push({
+                identifier: String(weapon.identifier),
+                clipMax: Number(weapon.clipMax),
+                name: String(weapon.name),
+                source: 'granted',
+            });
+        }
+
+        // User-selected weapons from the Equip Acolyte table.
+        for (const entry of this.equipmentSelections.values()) {
+            if (entry.type !== 'weapon') continue;
+            const identifier = (entry as any).identifier;
+            const clipMax = (entry as any).clipMax;
+            if (!identifier || typeof clipMax !== 'number') continue;
+            result.push({
+                identifier: String(identifier),
+                clipMax: Number(clipMax),
+                name: String(entry.name),
+                source: 'selected',
+            });
+        }
+
+        return result;
+    }
+
     _prepareEquipmentContext(): Record<string, unknown> {
         const maxSelections = this._getInfluenceBonus();
         const filter = this._equipmentFilter;
         const search = filter.search.trim().toLowerCase();
         const typeFilter = filter.type;
+
+        const availableWeapons = this._getAvailableWeaponsForAmmo();
+        const availableWeaponIdentifiers = new Set(availableWeapons.map((w) => w.identifier));
+
+        // Prune any selected ammo that no longer has a compatible weapon — otherwise the row
+        // is hidden from the table but still counts against the 3-item cap.
+        for (const [uuid, entry] of Array.from(this.equipmentSelections.entries())) {
+            if (entry.type !== 'ammunition') continue;
+            const types = Array.isArray((entry as any).weaponTypes) ? ((entry as any).weaponTypes as string[]) : [];
+            if (!types.some((id) => availableWeaponIdentifiers.has(id))) {
+                this.equipmentSelections.delete(uuid);
+            }
+        }
 
         const allTypes = new Set<string>();
         for (const item of this.equipmentItems) allTypes.add(String(item.type));
@@ -1297,6 +1389,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const filtered = this.equipmentItems.filter((item) => {
             if (typeFilter !== 'all' && item.type !== typeFilter) return false;
             if (search && !String(item.name).toLowerCase().includes(search)) return false;
+            // Hide ammunition rows unless at least one compatible weapon is granted or picked.
+            if (item.type === 'ammunition') {
+                const types = Array.isArray((item as any).weaponTypes) ? ((item as any).weaponTypes as string[]) : [];
+                if (!types.some((id) => availableWeaponIdentifiers.has(id))) return false;
+            }
             return true;
         });
 
@@ -1333,6 +1430,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             items,
             selectedItems,
             totalAvailable: this.equipmentItems.length,
+            isHomebrew: WH40KSettings.isHomebrew(),
         };
     }
 
@@ -2318,11 +2416,41 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
         if (!origin) return;
 
-        // Store as plain data object (not Item instance)
-        this.previewedOrigin = this._itemToSelectionData(origin as any);
+        // If this origin is already the confirmed selection for its step, reuse the stored
+        // selection data so previously made choices and rolls stay populated when the user
+        // re-clicks the card. Otherwise the preview would load fresh compendium data.
+        const confirmed = this._findConfirmedSelectionMatching(origin);
+        this.previewedOrigin = confirmed ?? this._itemToSelectionData(origin as any);
 
         // Re-render to show in selection panel
         this.render();
+    }
+
+    /**
+     * Return the confirmed selection (from this.selections or lineageSelection) that corresponds
+     * to the given compendium origin, or null if no confirmed selection matches.
+     * @private
+     */
+    _findConfirmedSelectionMatching(origin: NormalizedOrigin): NormalizedOrigin | null {
+        const matches = (candidate: NormalizedOrigin | null): boolean => {
+            if (!candidate) return false;
+            const candidateUuid = (candidate as any)._sourceUuid || candidate.uuid;
+            if (candidateUuid && (candidateUuid === origin.uuid || candidateUuid === origin.id)) return true;
+            const candidateIdentifier = (candidate.system as any)?.identifier;
+            const originIdentifier = (origin.system as any)?.identifier;
+            if (candidateIdentifier && originIdentifier && candidateIdentifier === originIdentifier) {
+                const candidateStep = (candidate.system as any)?.step;
+                const originStep = (origin.system as any)?.step;
+                if (!candidateStep || !originStep || candidateStep === originStep) return true;
+            }
+            return false;
+        };
+
+        for (const [, selection] of this.selections) {
+            if (matches(selection)) return selection;
+        }
+        if (matches(this.lineageSelection)) return this.lineageSelection;
+        return null;
     }
 
     /**
@@ -2733,7 +2861,14 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static #toggleEquipmentItem(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
         const uuid = target.dataset.uuid;
         if (!uuid) return;
+        this._toggleEquipmentByUuid(uuid);
+    }
 
+    /**
+     * Core toggle logic for an Equip Acolyte selection, reused by both the row-level
+     * data-action handler and the checkbox click listener bound in _onRender.
+     */
+    _toggleEquipmentByUuid(uuid: string): void {
         if (this.equipmentSelections.has(uuid)) {
             this.equipmentSelections.delete(uuid);
             this.render();
@@ -2759,6 +2894,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             type: item.type,
             availability: item.availability,
             availabilityLabel: item.availabilityLabel,
+            requisition: (item as any).requisition ?? null,
+            throneGelt: (item as any).throneGelt ?? null,
+            identifier: (item as any).identifier ?? null,
+            clipMax: (item as any).clipMax ?? null,
+            weaponTypes: Array.isArray((item as any).weaponTypes) ? [...((item as any).weaponTypes as string[])] : [],
         });
         this.render();
     }
@@ -3269,6 +3409,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _applyEquipmentSelections(): Promise<void> {
+        const availableWeapons = this._getAvailableWeaponsForAmmo();
         const creations: Record<string, unknown>[] = [];
         for (const entry of this.equipmentSelections.values()) {
             const uuid = entry.uuid as string;
@@ -3279,6 +3420,20 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             itemData.flags ??= {};
             itemData.flags.core ??= {};
             itemData.flags.core.sourceId = uuid;
+
+            if (entry.type === 'ammunition') {
+                // Size user-picked ammo to one clip of the primary ranged weapon that supports it.
+                // Prefer origin-granted weapons over weapons the player also picked.
+                const types = Array.isArray((entry as any).weaponTypes) ? ((entry as any).weaponTypes as string[]) : [];
+                const compatible =
+                    availableWeapons.find((w) => types.includes(w.identifier) && w.source === 'granted') ??
+                    availableWeapons.find((w) => types.includes(w.identifier));
+                if (compatible && compatible.clipMax > 0) {
+                    itemData.system = itemData.system || {};
+                    itemData.system.quantity = compatible.clipMax;
+                }
+            }
+
             creations.push(itemData);
 
             if (entry.type === 'weapon') {

@@ -73,19 +73,22 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             if (!document) return;
 
             this._previousState = {
-                wounds: document.system.wounds?.value,
-                woundsMax: document.system.wounds?.max,
-                characteristics: {},
-                experience: document.system.experience?.total,
-                fatigue: document.system.fatigue?.value,
+                wounds: (document.system as any).wounds?.value as number | undefined,
+                woundsMax: (document.system as any).wounds?.max as number | undefined,
+                characteristics: {} as Record<string, { total: number; bonus: number }>,
+                experience: (document.system as any).experience?.total as number | undefined,
+                fatigue: (document.system as any).fatigue?.value as number | undefined,
             };
 
             // Capture characteristic bonuses
-            for (const [key, char] of Object.entries(document.system.characteristics || {})) {
-                this._previousState.characteristics[key] = {
-                    total: (char as any).total,
-                    bonus: (char as any).bonus,
-                };
+            const chars = (document.system as any).characteristics as Record<string, { total: number; bonus: number }> | undefined;
+            if (chars) {
+                for (const [key, char] of Object.entries(chars)) {
+                    this._previousState.characteristics[key] = {
+                        total: char.total,
+                        bonus: char.bonus,
+                    };
+                }
             }
         }
 
@@ -187,22 +190,23 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             if (this._shouldSkipAnimation()) return;
 
             // Animate the counter
-            const woundsDisplay = this.element.querySelector('.wh40k-wounds-current') as HTMLElement | null;
+            const woundsDisplay = this.element.querySelector<HTMLElement>('.wh40k-wounds-current');
             if (woundsDisplay) {
                 this.animateCounter(woundsDisplay, oldValue, newValue);
             }
 
             // Animate the wounds bar
-            const woundsBar = this.element.querySelector('.wh40k-wounds-bar') as HTMLElement | null;
+            const woundsBar = this.element.querySelector<HTMLElement>('.wh40k-wounds-bar');
             if (woundsBar) {
-                const max = (this as any).document.system.wounds?.max || 1;
+                const doc = (this as any).document;
+                const max = (doc.system as any).wounds?.max ?? 1;
                 const oldPercent = (oldValue / max) * 100;
                 const newPercent = (newValue / max) * 100;
                 this._animateWoundsBar(woundsBar, oldPercent, newPercent);
             }
 
             // Add visual feedback class
-            const woundsValue = this.element.querySelector('.wh40k-wounds-value') as HTMLElement | null;
+            const woundsValue = this.element.querySelector<HTMLElement>('.wh40k-wounds-value');
             if (woundsValue) {
                 const animClass = newValue > oldValue ? 'stat-heal' : 'stat-damage';
                 this._flashElement(woundsValue, animClass, 800);

@@ -1,15 +1,18 @@
-/**
- * @file DifficultyCalculatorDialog - Calculate encounter difficulty vs party
- * Phase 7: QoL Features
- *
- * Provides:
- * - Party composition analysis (size, average rank, total threat)
- * - NPC threat calculation with quantity multiplier
- * - Difficulty rating (Trivial → Apocalyptic)
- * - Visual indicators for encounter balance
- */
+import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+interface DialogState {
+    npc: WH40KNPCV2 | null;
+    quantity: number;
+}
+
+interface DifficultyRating {
+    key: string;
+    label: string;
+    color: string;
+    description: string;
+}
 
 /**
  * Dialog for calculating encounter difficulty against the party.
@@ -20,9 +23,9 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 export default class DifficultyCalculatorDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     /**
      * Internal state for the dialog.
-     * @type {Object}
+     * @type {DialogState}
      */
-    #state: Record<string, unknown> = {
+    #state: DialogState = {
         npc: null,
         quantity: 1,
     };
@@ -62,10 +65,10 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
 
     /**
      * Create a new DifficultyCalculatorDialog.
-     * @param {WH40KNPC} npc - The NPC actor to calculate difficulty for.
-     * @param {Object} options - Application options.
+     * @param {WH40KNPCV2} npc - The NPC actor to calculate difficulty for.
+     * @param {Record<string, unknown>} options - Application options.
      */
-    constructor(npc, options = {}) {
+    constructor(npc: WH40KNPCV2, options: Record<string, unknown> = {}) {
         super(options);
         this.#state.npc = npc;
     }
@@ -76,10 +79,10 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
 
     /**
      * Show the difficulty calculator for an NPC.
-     * @param {WH40KNPC} npc - The NPC actor.
-     * @returns {Promise<DifficultyCalculatorDialog>}
+     * @param {WH40KNPCV2} npc - The NPC actor.
+     * @returns {DifficultyCalculatorDialog}
      */
-    static show(npc: unknown): unknown {
+    static show(npc: WH40KNPCV2): DifficultyCalculatorDialog {
         const dialog = new DifficultyCalculatorDialog(npc);
         void dialog.render(true);
         return dialog;
@@ -90,17 +93,17 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const context: unknown = await super._prepareContext(options);
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        const context = await super._prepareContext(options);
 
         // Get party info
-        const party = game.users.filter((u: { active: boolean; character: unknown }) => u.active && u.character);
+        const party = game.users.filter((u) => u.active && u.character) as any[];
         const partySize = party.length;
 
         // Calculate average party rank
         let totalRank = 0;
         for (const user of party) {
-            const rank = user.character?.system?.rank ?? 1;
+            const rank = (user.character?.system as any)?.rank ?? 1;
             totalRank += rank;
         }
         const partyLevel = partySize > 0 ? Math.round(totalRank / partySize) : 1;
@@ -110,7 +113,9 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
 
         // NPC threat
         const npc = this.#state.npc;
-        const npcThreat = npc.system.threatLevel;
+        if (!npc) return context;
+
+        const npcThreat = (npc.system as any).threatLevel;
         const quantity = this.#state.quantity;
         const totalThreat = npcThreat * quantity;
 
@@ -122,8 +127,8 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
             name: npc.name,
             img: npc.img,
             threatLevel: npcThreat,
-            type: npc.system.type,
-            isHorde: npc.system.horde?.enabled ?? false,
+            type: (npc.system as any).type,
+            isHorde: (npc.system as any).horde?.enabled ?? false,
         };
         context.partySize = partySize;
         context.partyLevel = partyLevel;
@@ -134,9 +139,9 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         context.difficulty = difficulty;
 
         // Add party members list
-        context.partyMembers = party.map((u: Record<string, unknown>) => ({
+        context.partyMembers = party.map((u) => ({
             name: u.character?.name ?? u.name,
-            rank: u.character?.system?.rank ?? 1,
+            rank: (u.character?.system as any)?.rank ?? 1,
             img: u.character?.img ?? u.avatar,
         }));
 
@@ -150,10 +155,10 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
     /**
      * Get difficulty rating from threat ratio.
      * @param {number} ratio - Threat ratio (NPC threat / Party threat).
-     * @returns {Object} Difficulty object with key, label, color, description.
+     * @returns {DifficultyRating} Difficulty object with key, label, color, description.
      * @private
      */
-    _getDifficultyRating(ratio: number): Record<string, unknown> {
+    _getDifficultyRating(ratio: number): DifficultyRating {
         if (ratio < 0.25) {
             return {
                 key: 'trivial',
@@ -208,12 +213,14 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
 
     /**
      * Handle updating the quantity.
-     * @param {PointerEvent} event - The triggering event.
-     * @param {HTMLElement} target - The target element.
+     * @param {DifficultyCalculatorDialog} this
+     * @param {PointerEvent} event
+     * @param {HTMLElement} target
      */
-    static #updateQuantity(this: any, event: Event, target: HTMLElement): void {
+    static #updateQuantity(this: DifficultyCalculatorDialog, event: PointerEvent, target: HTMLElement): void {
         event.preventDefault();
-        const input = target.closest('form').querySelector('[name="quantity"]') as HTMLInputElement;
+        const input = target.closest('form')?.querySelector('[name="quantity"]') as HTMLInputElement | null;
+        if (!input) return;
         const quantity = parseInt(input.value, 10) || 1;
         this.#state.quantity = Math.max(1, quantity);
         this.render();
@@ -224,7 +231,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
     /* -------------------------------------------- */
 
     /** @override */
-    _attachPartListeners(partId: string, htmlElement: HTMLElement, options: Record<string, unknown>): void {
+    _attachPartListeners(partId: string, htmlElement: HTMLElement, options: ApplicationV2Config.RenderOptions): void {
         super._attachPartListeners(partId, htmlElement, options);
 
         // Listen for quantity input changes

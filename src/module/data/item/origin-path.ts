@@ -43,6 +43,7 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     declare rollResults: {
         wounds: { formula: string; rolled: number; breakdown: string; timestamp: number };
         fate: { formula: string; rolled: number; breakdown: string; timestamp: number };
+        thrones: { formula: string; rolled: number; breakdown: string; timestamp: number };
     };
 
     /** @inheritdoc */
@@ -252,6 +253,12 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                     timestamp: new fields.NumberField({ required: false, initial: null }),
                 }),
                 fate: new fields.SchemaField({
+                    formula: new fields.StringField({ required: false, blank: true }),
+                    rolled: new fields.NumberField({ required: false, initial: null }),
+                    breakdown: new fields.StringField({ required: false, blank: true }),
+                    timestamp: new fields.NumberField({ required: false, initial: null }),
+                }),
+                thrones: new fields.SchemaField({
                     formula: new fields.StringField({ required: false, blank: true }),
                     rolled: new fields.NumberField({ required: false, initial: null }),
                     breakdown: new fields.StringField({ required: false, blank: true }),

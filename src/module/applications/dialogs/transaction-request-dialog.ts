@@ -4,24 +4,37 @@ import type { WH40KItem } from '../../documents/item.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+interface TransactionRequestContext extends Record<string, unknown> {
+    buyer: WH40KBaseActor;
+    hasSources: boolean;
+    sources: Array<{ id: string; name: string; modeLabel: string; selected: boolean }>;
+    selectedSource: Actor | null;
+    items: Array<{ id: string; name: string; img: string | null; type: string; quantity: number; cost: number; selected: boolean }>;
+    selectedItem: WH40KItem | null;
+    quantity: number;
+    influenceBurn: number;
+    quote: unknown;
+    isBarter: boolean;
+    isRequisition: boolean;
+}
+
 export default class TransactionRequestDialog extends HandlebarsApplicationMixin(ApplicationV2) {
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         id: 'transaction-request-dialog-{id}',
         classes: ['wh40k-rpg', 'transaction-request-dialog'],
         tag: 'form',
         window: {
             title: 'Barter',
             icon: 'fa-solid fa-handshake',
-            minimizable: false,
             resizable: true,
             contentClasses: ['standard-form'],
         },
         position: {
             width: 720,
-            height: 'auto' as const,
+            height: 'auto',
         },
         form: {
-            handler: TransactionRequestDialog.#onSubmit,
+            handler: TransactionRequestDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: false,
         },
@@ -31,17 +44,17 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         },
     };
 
-    static PARTS = {
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/dialogs/transaction-request-dialog.hbs',
         },
     };
 
-    actor: WH40KBaseActor;
-    sourceId: string = '';
-    itemId: string = '';
-    quantity: number = 1;
-    influenceBurn: number = 0;
+    declare actor: WH40KBaseActor;
+    declare sourceId: string;
+    declare itemId: string;
+    declare quantity: number;
+    declare influenceBurn: number;
     #resolve: ((value: boolean | null) => void) | null = null;
 
     constructor(actor: WH40KBaseActor, options: ApplicationV2Config.DefaultOptions = {}) {
@@ -60,8 +73,8 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
         return 'Barter';
     }
 
-    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<TransactionRequestContext> {
+        const context = (await super._prepareContext(options)) as TransactionRequestContext;
         const sources = TransactionManager.listSourcesForBuyer(this.actor);
         const selectedSource = sources.find((source) => source.id === this.sourceId) ?? sources[0] ?? null;
 
@@ -76,7 +89,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
             this.itemId = selectedItem.id;
         }
 
-        let quote: any = null;
+        let quote: unknown = null;
         if (selectedSource && selectedItem) {
             try {
                 quote = TransactionManager.prepareQuote({
@@ -105,7 +118,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
             items: items.map((item) => ({
                 id: item.id,
                 name: item.name,
-                img: item.img,
+                img: item.img ?? null,
                 type: item.type,
                 quantity: (item.system as any)?.quantity ?? 1,
                 cost: (item.system as any)?.cost?.value ?? 0,
@@ -115,12 +128,12 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
             quantity: this.quantity,
             influenceBurn: this.influenceBurn,
             quote,
-            isBarter: quote?.mode === 'barter',
-            isRequisition: quote?.mode === 'requisition',
+            isBarter: (quote as any)?.mode === 'barter',
+            isRequisition: (quote as any)?.mode === 'requisition',
         };
     }
 
-    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
+    _onRender(context: TransactionRequestContext, options: ApplicationV2Config.RenderOptions): void {
         super._onRender(context, options);
 
         const sourceSelect = this.element.querySelector('[name="sourceId"]') as HTMLSelectElement | null;
@@ -147,9 +160,10 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
     }
 
     static #onSubmit(this: TransactionRequestDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): void {
-        this.quantity = Math.max(1, Number.parseInt((formData.object.quantity as string) || '1', 10) || 1);
-        this.influenceBurn = Math.max(0, Number.parseInt((formData.object.influenceBurn as string) || '0', 10) || 0);
-        this.sourceId = (formData.object.sourceId as string) || this.sourceId;
+        const data = formData.object;
+        this.quantity = Math.max(1, Number.parseInt((data.quantity as string) || '1', 10) || 1);
+        this.influenceBurn = Math.max(0, Number.parseInt((data.influenceBurn as string) || '0', 10) || 0);
+        this.sourceId = (data.sourceId as string) || this.sourceId;
     }
 
     static async #selectItem(this: TransactionRequestDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
