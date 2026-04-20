@@ -25,8 +25,9 @@
     }
 
     form {
-        display: flex !important;
-        flex-direction: row !important;
+        display: grid !important;
+        grid-template-columns: minmax(180px, 220px) minmax(0, 1fr) !important;
+        grid-template-rows: auto 1fr !important;
         flex: 1 1 auto !important;
         min-height: 0 !important;
         overflow: hidden !important;
@@ -35,8 +36,38 @@
         width: 100% !important;
     }
 
+    .wh40k-character-header {
+        grid-column: 1;
+        grid-row: 1;
+        min-width: 0;
+        margin: 0;
+        border-right: 2px solid var(--npc-accent-primary);
+        border-bottom: 1px solid var(--color-border-secondary, #444);
+        border-radius: 0;
+    }
+
+    .wh40k-navigation {
+        grid-column: 1;
+        grid-row: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        margin: 0;
+        padding: 0.75rem;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: var(--color-bg-secondary, #252525);
+        border-right: 2px solid var(--npc-accent-primary);
+    }
+
+    .wh40k-navigation .wh40k-nav-item {
+        margin: 0;
+    }
+
     // Main content area (tabs)
     .wh40k-body {
+        grid-column: 2;
+        grid-row: 1 / span 2;
         flex: 1 1 auto !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
@@ -52,6 +83,19 @@
                 display: block;
             }
         }
+    }
+
+    .wh40k-npc-sidebar-header {
+        background: var(--color-bg-secondary, #252525);
+    }
+
+    .wh40k-npc-sidebar-header .wh40k-header-name-line,
+    .wh40k-npc-sidebar-header .wh40k-header-row {
+        width: 100%;
+    }
+
+    .wh40k-npc-origin-grid {
+        max-width: 160px;
     }
 
     // ============================================

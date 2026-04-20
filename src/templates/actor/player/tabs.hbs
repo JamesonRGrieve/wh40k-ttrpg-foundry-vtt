@@ -2,7 +2,7 @@
 {{!-- This part renders the tab navigation bar --}}
 <nav class="wh40k-navigation tabs" data-group="primary">
     {{#each tabs}}
-    <a class="item wh40k-nav-item {{#if active}}active{{/if}} {{ cssClass }}" 
+    <a class="item wh40k-nav-item {{#if @root.isNPC}}wh40k-npc-nav-item tw-flex tw-items-center tw-justify-start tw-rounded-md tw-px-3 tw-py-2 tw-text-sm{{/if}} {{#if active}}active{{/if}} {{ cssClass }}" 
        data-action="tab" 
        data-group="{{ group }}"
        data-tab="{{ tab }}" 

@@ -155,11 +155,11 @@
                                     </div>
                                     {{/each}}
                                 </div>
-                                {{/if}}
-                                <div class="wh40k-dropzone wh40k-dropzone--compact" data-action="itemCreate" data-type="criticalInjury">
-                                    <i class="fas fa-band-aid wh40k-dropzone-icon"></i>
-                                    <span class="wh40k-dropzone-text">Drop injuries here</span>
+                                {{else}}
+                                <div class="tw-text-xs tw-text-[var(--wh40k-text-muted)] tw-px-1 tw-py-1.5">
+                                    <span>No critical injuries</span>
                                 </div>
+                                {{/if}}
                             </div>
                         </div>
 
