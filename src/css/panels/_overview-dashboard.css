@@ -1,9 +1,9 @@
-// ============================================
-// Overview Dashboard - Ultra-Dense At-a-Glance Layout
-// ============================================
-// New dashboard design for Overview tab - all critical info visible without scrolling
+/* ============================================ */
+/* Overview Dashboard - Ultra-Dense At-a-Glance Layout */
+/* ============================================ */
+/* New dashboard design for Overview tab - all critical info visible without scrolling */
 
-// Grid template columns use CSS vars; layout handled by Tailwind in template
+/* Grid template columns use CSS vars; layout handled by Tailwind in template */
 .wh40k-dashboard-row {
     &.wh40k-dashboard-row--top {
         grid-template-columns: repeat(var(--wh40k-columns, 3), 1fr);
@@ -42,7 +42,7 @@
     }
 }
 
-// Zone Subsection
+/* Zone Subsection */
 .wh40k-zone-subsection {
     padding: 6px 8px;
     background: rgba(0, 0, 0, 0.05);
@@ -50,11 +50,11 @@
     margin-top: auto;
 }
 
-// ============================================
-// Zone 1: Vitals
-// ============================================
+/* ============================================ */
+/* Zone 1: Vitals */
+/* ============================================ */
 
-// Zone accent colors — pre-generated (replaces @each loop + wh40k-zone-accent mixin)
+/* Zone accent colors — pre-generated (replaces @each loop + wh40k-zone-accent mixin) */
 .wh40k-zone-vitals {
     border-left: 3px solid var(--wh40k-accent-combat);
     .wh40k-zone-header {
@@ -137,7 +137,7 @@
     }
 }
 
-// Effects zone has an extra --wide modifier
+/* Effects zone has an extra --wide modifier */
 .wh40k-zone-effects--wide {
     grid-column: span 2;
 }
@@ -284,7 +284,7 @@
     border-radius: 3px;
 }
 
-// Fatigue Bolts Inline
+/* Fatigue Bolts Inline */
 .wh40k-fatigue-bolts-inline {
     display: flex;
     gap: 2px;
@@ -327,7 +327,7 @@
     }
 }
 
-// Fate Stars Inline
+/* Fate Stars Inline */
 .wh40k-fate-stars-inline {
     display: flex;
     gap: 2px;
@@ -349,17 +349,17 @@
     transition: all var(--wh40k-transition-fast);
 
     &.wh40k-fate-pip--filled {
-        color: var(--wh40k-accent-info) !important; // Blue instead of gold
+        color: var(--wh40k-accent-info) !important; /* Blue instead of gold */
         text-shadow: 0 0 4px rgb(from var(--wh40k-accent-info) r g b / 0.5);
     }
 
     &:hover {
         transform: scale(1.2);
-        color: var(--wh40k-accent-info); // Blue instead of gold
+        color: var(--wh40k-accent-info); /* Blue instead of gold */
     }
 }
 
-// Critical Pips Inline
+/* Critical Pips Inline */
 .wh40k-critical-pips-inline {
     display: flex;
     gap: 2px;
@@ -391,7 +391,7 @@
     }
 }
 
-// Mental State Rows — 3-col grid: label left | controls centered | stamp right
+/* Mental State Rows — 3-col grid: label left | controls centered | stamp right */
 .wh40k-mental-row {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -464,7 +464,7 @@
     white-space: nowrap;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
-    // Corruption & Insanity degree badges — pre-generated (replaces @each + wh40k-degree-badge-style)
+    /* Corruption & Insanity degree badges — pre-generated (replaces @each + wh40k-degree-badge-style) */
     &.wh40k-degree-pure {
         background: rgb(from var(--wh40k-degree-pure) r g b / 0.2);
         border: 1px solid var(--wh40k-degree-pure);
@@ -527,11 +527,11 @@
     }
 }
 
-// ============================================
-// Zone 2: Characteristics
-// ============================================
+/* ============================================ */
+/* Zone 2: Characteristics */
+/* ============================================ */
 
-// .wh40k-zone-characteristics removed — dead CSS (no template reference)
+/* .wh40k-zone-characteristics removed — dead CSS (no template reference) */
 
 .wh40k-char-grid-compact {
     display: grid;
@@ -604,11 +604,11 @@
     }
 }
 
-// ============================================
-// Zone 3: Key Skills
-// ============================================
+/* ============================================ */
+/* Zone 3: Key Skills */
+/* ============================================ */
 
-// .wh40k-zone-skills accent generated via @each above
+/* .wh40k-zone-skills accent generated via @each above */
 
 .wh40k-skill-list-compact {
     display: flex;
@@ -695,11 +695,11 @@
     }
 }
 
-// ============================================
-// Zone 3: Favorite Talents
-// ============================================
+/* ============================================ */
+/* Zone 3: Favorite Talents */
+/* ============================================ */
 
-// .wh40k-zone-talents accent generated via @each above
+/* .wh40k-zone-talents accent generated via @each above */
 
 .wh40k-talent-list-compact {
     display: flex;
@@ -768,11 +768,11 @@
     }
 }
 
-// ============================================
-// Zone 4: Movement & Load
-// ============================================
+/* ============================================ */
+/* Zone 4: Movement & Load */
+/* ============================================ */
 
-// .wh40k-zone-movement accent generated via @each above
+/* .wh40k-zone-movement accent generated via @each above */
 
 .wh40k-movement-compact {
     display: flex;
@@ -861,11 +861,11 @@
     transition: width var(--wh40k-transition-medium);
 }
 
-// ============================================
-// Zone 5: Quick Combat
-// ============================================
+/* ============================================ */
+/* Zone 5: Quick Combat */
+/* ============================================ */
 
-// .wh40k-zone-combat removed — dead CSS (no template reference)
+/* .wh40k-zone-combat removed — dead CSS (no template reference) */
 
 .wh40k-combat-weapon {
     display: flex;
@@ -1037,13 +1037,13 @@
     }
 }
 
-// ============================================
-// Zone 6: Progression
-// ============================================
+/* ============================================ */
+/* Zone 6: Progression */
+/* ============================================ */
 
-// .wh40k-zone-progression accent generated via @each above
+/* .wh40k-zone-progression accent generated via @each above */
 
-// XP ring in progression header
+/* XP ring in progression header */
 .wh40k-xp-ring-header {
     position: relative;
     width: 20px;
@@ -1095,11 +1095,11 @@
     color: var(--wh40k-accent-gold);
 }
 
-// ============================================
-// Zone 7: Dynasty
-// ============================================
+/* ============================================ */
+/* Zone 7: Dynasty */
+/* ============================================ */
 
-// .wh40k-zone-dynasty removed — dead CSS (no template reference)
+/* .wh40k-zone-dynasty removed — dead CSS (no template reference) */
 
 .wh40k-dynasty-row {
     display: flex;
@@ -1145,11 +1145,11 @@
     white-space: nowrap;
 }
 
-// ============================================
-// Zone 5: Equipped Weapons
-// ============================================
+/* ============================================ */
+/* Zone 5: Equipped Weapons */
+/* ============================================ */
 
-// .wh40k-zone-weapons accent generated via @each above
+/* .wh40k-zone-weapons accent generated via @each above */
 
 .wh40k-ew-list {
     display: flex;
@@ -1227,9 +1227,9 @@
     font-style: italic;
 }
 
-// ============================================
-// Zone 6: Progression (XP actions)
-// ============================================
+/* ============================================ */
+/* Zone 6: Progression (XP actions) */
+/* ============================================ */
 
 .wh40k-xp-actions {
     display: flex;
@@ -1262,11 +1262,11 @@
     }
 }
 
-// ============================================
-// Zone 6: Armour (overview inline silhouette)
-// ============================================
+/* ============================================ */
+/* Zone 6: Armour (overview inline silhouette) */
+/* ============================================ */
 
-// .wh40k-zone-armour accent generated via @each above
+/* .wh40k-zone-armour accent generated via @each above */
 
 .wh40k-ov-armour-silhouette {
     display: grid;
@@ -1349,17 +1349,17 @@
     justify-self: start;
 }
 
-// ============================================
-// Zone: Resources (DH2e)
-// ============================================
+/* ============================================ */
+/* Zone: Resources (DH2e) */
+/* ============================================ */
 
-// .wh40k-zone-resources accent generated via @each above
+/* .wh40k-zone-resources accent generated via @each above */
 
-// ============================================
-// Zone 8: Active Effects Preview
-// ============================================
+/* ============================================ */
+/* Zone 8: Active Effects Preview */
+/* ============================================ */
 
-// .wh40k-zone-effects accent generated via @each above
+/* .wh40k-zone-effects accent generated via @each above */
 
 .wh40k-effects-preview {
     display: flex;
@@ -1459,9 +1459,9 @@
     font-style: italic;
 }
 
-// ============================================
-// Status Tab Grid (moved from overview)
-// ============================================
+/* ============================================ */
+/* Status Tab Grid (moved from overview) */
+/* ============================================ */
 
 .wh40k-status-grid {
     display: grid;
@@ -1472,7 +1472,7 @@
     overflow-y: auto;
     overflow-x: hidden;
 
-    // Custom scrollbar styling
+    /* Custom scrollbar styling */
     &::-webkit-scrollbar {
         width: 6px;
     }
@@ -1491,11 +1491,11 @@
     }
 }
 
-// ============================================
-// Responsive Adjustments
-// ============================================
-// These work with the --wh40k-columns CSS variable set by ResizeObserver
-// Fallback media queries for non-JS environments
+/* ============================================ */
+/* Responsive Adjustments */
+/* ============================================ */
+/* These work with the --wh40k-columns CSS variable set by ResizeObserver */
+/* Fallback media queries for non-JS environments */
 
 @media (max-width: 700px) {
     .wh40k-dashboard-row {

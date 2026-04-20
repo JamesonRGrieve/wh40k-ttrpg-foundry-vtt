@@ -1,14 +1,14 @@
-// ============================================
-// WOUNDS PANEL V2 - Modern Redesign
-// ============================================
-// Complete overhaul with pip system, interactive controls, and visual feedback
+/* ============================================ */
+/* WOUNDS PANEL V2 - Modern Redesign */
+/* ============================================ */
+/* Complete overhaul with pip system, interactive controls, and visual feedback */
 
 .wh40k-wounds-panel-v2 {
-    // Base panel styling inherits from wh40k-panel
+    /* Base panel styling inherits from wh40k-panel */
 
-    // ============================================
-    // Main Display Area
-    // ============================================
+    /* ============================================ */
+    /* Main Display Area */
+    /* ============================================ */
 
     .wh40k-wounds-display {
         display: flex;
@@ -24,7 +24,7 @@
         padding: var(--wh40k-space-sm) 0;
     }
 
-    // +/- Control Buttons
+    /* +/- Control Buttons */
     .wh40k-wounds-btn {
         width: 36px;
         height: 36px;
@@ -74,7 +74,7 @@
         }
     }
 
-    // Current/Max Value Display
+    /* Current/Max Value Display */
     .wh40k-wounds-value {
         display: flex;
         align-items: baseline;
@@ -102,9 +102,9 @@
         font-weight: 600;
     }
 
-    // ============================================
-    // Progress Bar with Gradient
-    // ============================================
+    /* ============================================ */
+    /* Progress Bar with Gradient */
+    /* ============================================ */
 
     .wh40k-wounds-bar-container {
         display: flex;
@@ -157,7 +157,7 @@
         box-shadow: 0 0 10px rgba(182, 58, 43, 0.3);
         width: var(--wounds-percent, 100%);
 
-        // Dynamic gradient based on percentage
+        /* Dynamic gradient based on percentage */
         background: linear-gradient(90deg, #4a8f5c 0%, #7fa65c 25%, #c4871d 50%, #d85545 75%, #b63a2b 100%);
         background-size: 400% 100%;
         background-position: calc((100 - var(--wounds-percent, 100)) * 1%) 0%;
@@ -172,9 +172,9 @@
         font-family: var(--wh40k-font-alt);
     }
 
-    // ============================================
-    // Alert Messages
-    // ============================================
+    /* ============================================ */
+    /* Alert Messages */
+    /* ============================================ */
 
     .wh40k-wounds-alert {
         display: flex;
@@ -206,7 +206,7 @@
         border: 2px solid rgba(196, 135, 29, 0.5);
     }
 
-    // Red pulse animation for critical wounds
+    /* Red pulse animation for critical wounds */
     @keyframes pulse-red {
         0%,
         100% {
@@ -217,7 +217,7 @@
         }
     }
 
-    // Panel state modifiers
+    /* Panel state modifiers */
     &.wh40k-wounds-critical {
         .wh40k-panel-header {
             background: var(--wh40k-wounds-bg);
@@ -246,9 +246,9 @@
         }
     }
 
-    // ============================================
-    // Critical Damage Pip System
-    // ============================================
+    /* ============================================ */
+    /* Critical Damage Pip System */
+    /* ============================================ */
 
     .wh40k-wounds-critical-section {
         margin-top: var(--wh40k-space-md);
@@ -341,9 +341,9 @@
         }
     }
 
-    // ============================================
-    // Edit Mode Sections
-    // ============================================
+    /* ============================================ */
+    /* Edit Mode Sections */
+    /* ============================================ */
 
     .wh40k-wounds-edit-section {
         padding: var(--wh40k-space-md);
@@ -415,9 +415,9 @@
         }
     }
 
-    // ============================================
-    // Critical Controls (Edit Mode)
-    // ============================================
+    /* ============================================ */
+    /* Critical Controls (Edit Mode) */
+    /* ============================================ */
 
     .wh40k-critical-controls {
         display: flex;
@@ -478,7 +478,7 @@
         }
     }
 
-    // Edit mode pips with level numbers
+    /* Edit mode pips with level numbers */
     .wh40k-critical-pips-edit {
         .wh40k-pip-inner {
             font-size: 0.65rem;
@@ -495,9 +495,9 @@
         }
     }
 
-    // ============================================
-    // Critical Injuries List
-    // ============================================
+    /* ============================================ */
+    /* Critical Injuries List */
+    /* ============================================ */
 
     .wh40k-add-btn-small {
         width: 24px;

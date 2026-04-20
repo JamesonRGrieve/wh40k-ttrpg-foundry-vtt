@@ -1,10 +1,10 @@
-// ============================================
-// Origin Path Item Sheet Styles
-// ============================================
-// Styles for homeworld, birthright, career, etc. selection items
+/* ============================================ */
+/* Origin Path Item Sheet Styles */
+/* ============================================ */
+/* Styles for homeworld, birthright, career, etc. selection items */
 
 .wh40k-origin-path-sheet {
-    // Header customization
+    /* Header customization */
     .wh40k-item-header {
         background: linear-gradient(135deg, rgb(from var(--wh40k-accent-info) r g b / 0.1) 0%, rgb(from var(--wh40k-accent-psychic) r g b / 0.08) 100%);
         border-bottom: 2px solid rgb(from var(--wh40k-accent-info) r g b / 0.3);
@@ -20,7 +20,7 @@
         }
     }
 
-    // Meta controls
+    /* Meta controls */
     .wh40k-meta-select {
         padding: 4px 8px;
         background: rgba(0, 0, 0, 0.2);
@@ -73,7 +73,7 @@
     }
 }
 
-// Grants section
+/* Grants section */
 .wh40k-grants-section {
     .wh40k-section-title {
         display: flex;
@@ -108,7 +108,7 @@
     }
 }
 
-// Field grid layouts
+/* Field grid layouts */
 .wh40k-field-grid {
     display: grid;
     gap: var(--wh40k-space-sm);
@@ -176,7 +176,7 @@
     }
 }
 
-// Grants list
+/* Grants list */
 .wh40k-grants-list {
     list-style: none;
     padding: 0;
@@ -214,7 +214,7 @@
     }
 }
 
-// Add/Remove buttons for arrays
+/* Add/Remove buttons for arrays */
 .wh40k-grant-controls {
     display: flex;
     gap: var(--wh40k-space-xs);
@@ -245,7 +245,7 @@
     }
 }
 
-// Requirements section
+/* Requirements section */
 .wh40k-requirements-section {
     padding: var(--wh40k-space-md);
     background: linear-gradient(135deg, rgb(from #e67e22 r g b / 0.08) 0%, rgb(from #d35400 r g b / 0.05) 100%);
@@ -272,7 +272,7 @@
     }
 }
 
-// Empty states
+/* Empty states */
 .wh40k-empty {
     padding: var(--wh40k-space-md);
     text-align: center;
@@ -281,7 +281,7 @@
     font-style: italic;
 }
 
-// Special effect box
+/* Special effect box */
 .wh40k-effect-text {
     padding: var(--wh40k-space-md);
     background: linear-gradient(135deg, rgb(from var(--wh40k-accent-psychic) r g b / 0.08) 0%, rgb(from #8e44ad r g b / 0.05) 100%);

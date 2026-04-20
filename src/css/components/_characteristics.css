@@ -1,9 +1,9 @@
 .wh40k-wrapper {
-    // ============================================
-    // SIMPLIFIED CHARACTERISTICS LAYOUT
-    // ============================================
+    /* ============================================ */
+    /* SIMPLIFIED CHARACTERISTICS LAYOUT */
+    /* ============================================ */
 
-    // Characteristic Setup Button (in panel header)
+    /* Characteristic Setup Button (in panel header) */
     .wh40k-char-setup-btn {
         display: inline-flex;
         align-items: center;
@@ -31,7 +31,7 @@
         }
     }
 
-    // Make panel header flex to support button
+    /* Make panel header flex to support button */
     .wh40k-char-panel .wh40k-panel-header {
         display: flex;
         align-items: center;
@@ -105,7 +105,7 @@
         }
     }
 
-    // MOD is now the big number (multiplier/bonus)
+    /* MOD is now the big number (multiplier/bonus) */
     .wh40k-char-mod-value {
         font-size: 2.1em;
         font-weight: bold;
@@ -137,7 +137,7 @@
         }
     }
 
-    // Keep old classes for backwards compatibility
+    /* Keep old classes for backwards compatibility */
     .wh40k-char-value {
         font-size: 2em;
         font-weight: bold;
@@ -170,7 +170,7 @@
         text-align: center;
     }
 
-    // Unnatural dropdown styling
+    /* Unnatural dropdown styling */
     .wh40k-unnatural-select {
         background: linear-gradient(135deg, rgba(75, 0, 130, 0.15), rgba(75, 0, 130, 0.1));
         border: 1px solid rgba(75, 0, 130, 0.3);
@@ -183,7 +183,7 @@
         }
     }
 
-    // Advanced details collapsible section
+    /* Advanced details collapsible section */
     .wh40k-char-details {
         margin-top: 1rem;
         border: 1px solid rgba(36, 107, 131, 0.2);
@@ -222,7 +222,7 @@
         }
     }
 
-    // Responsive adjustment for smaller screens
+    /* Responsive adjustment for smaller screens */
     @media (max-width: 1400px) {
         .wh40k-char-row-container {
             grid-template-columns: repeat(5, 1fr);

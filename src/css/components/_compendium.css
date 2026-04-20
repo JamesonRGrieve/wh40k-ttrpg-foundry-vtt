@@ -146,7 +146,7 @@
             color: var(--wh40k-text-muted);
             font-style: italic;
 
-            // Truncate to 3 lines max
+            /* Truncate to 3 lines max */
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
@@ -154,7 +154,7 @@
         }
     }
 
-    // Dark theme support
+    /* Dark theme support */
     body.theme-dark {
         .item-stats--quality {
             .stat-badge--level {

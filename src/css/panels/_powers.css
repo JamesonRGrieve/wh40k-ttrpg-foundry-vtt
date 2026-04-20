@@ -1,20 +1,20 @@
-// Powers Tab Layout
-// ============================================
+/* Powers Tab Layout */
+/* ============================================ */
 
 .wh40k-tab-powers {
-    // Override the base .wh40k-tab grid display
+    /* Override the base .wh40k-tab grid display */
     &.active {
         display: block !important;
     }
     padding: var(--wh40k-space-md);
 }
 
-// ============================================
-// Equipment Tab Layout
-// ============================================
+/* ============================================ */
+/* Equipment Tab Layout */
+/* ============================================ */
 
 .wh40k-tab-equipment {
-    // Override the base .wh40k-tab grid display
+    /* Override the base .wh40k-tab grid display */
     &.active {
         display: block !important;
     }
@@ -125,4 +125,4 @@
     }
 }
 
-// ============================================
+/* ============================================ */

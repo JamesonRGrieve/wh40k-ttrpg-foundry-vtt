@@ -9,7 +9,6 @@ const merge = require("merge-stream");
 const clean = require("gulp-clean");
 const postcssImport = require('postcss-import');
 const postcssNested = require('postcss-nested');
-const postcssScss = require('postcss-scss');
 const fs = require("fs");
 const path = require("path");
 const zip = require("gulp-zip");
@@ -221,7 +220,7 @@ function compileCss() {
       tailwindcss,
       autoprefixer({ cascade: false }),
       cssnano({ preset: 'default' }),
-    ], { syntax: postcssScss }))
+    ]))
     .pipe(gulp.dest(BUILD_DIR + "/css"))
 }
 
@@ -233,7 +232,7 @@ function compileCssWatch() {
       postcssNested,
       tailwindcss,
       autoprefixer({ cascade: false }),
-    ], { syntax: postcssScss }))
+    ]))
     .pipe(gulp.dest(BUILD_DIR + "/css"))
 }
 const css = gulp.series(compileCss);

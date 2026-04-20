@@ -1,6 +1,6 @@
-// ============================================
-// Talents & Traits Panels - Compact Table Style
-// ============================================
+/* ============================================ */
+/* Talents & Traits Panels - Compact Table Style */
+/* ============================================ */
 
 .wh40k-panel-talents-table,
 .wh40k-panel-traits-table {
@@ -17,13 +17,13 @@
     }
 }
 
-// Table Containers
+/* Table Containers */
 .wh40k-talents-table,
 .wh40k-traits-table {
     @apply tw-flex tw-flex-col;
     gap: 2px;
 
-    // Dropzone styling when empty or dragging
+    /* Dropzone styling when empty or dragging */
     &[data-drop-zone] {
         position: relative;
         transition: all var(--wh40k-transition-medium);
@@ -45,11 +45,11 @@
     }
 }
 
-// ============================================
-// Talent Panel (wh40k-tp_) - Compact with Overlay Actions
-// ============================================
-// Modern design: Actions overlay the row on hover, giving
-// maximum space to talent names when not interacting
+/* ============================================ */
+/* Talent Panel (wh40k-tp_) - Compact with Overlay Actions */
+/* ============================================ */
+/* Modern design: Actions overlay the row on hover, giving */
+/* maximum space to talent names when not interacting */
 
 .wh40k-tp_row {
     @apply tw-relative tw-flex tw-items-center;
@@ -61,7 +61,7 @@
     border-radius: var(--wh40k-radius-md);
     min-height: 28px;
     transition: border-color 0.15s ease;
-    // Explicitly prevent dragging
+    /* Explicitly prevent dragging */
     -webkit-user-drag: none;
     user-select: none;
 
@@ -137,7 +137,7 @@
     font-weight: 700;
 }
 
-// Overlay actions - positioned absolute over the meta area
+/* Overlay actions - positioned absolute over the meta area */
 .wh40k-tp_actions {
     @apply tw-absolute tw-flex tw-items-center;
     right: 6px;
@@ -177,7 +177,7 @@
     }
 }
 
-// Trait rows - keep existing styling with drag support
+/* Trait rows - keep existing styling with drag support */
 .wh40k-trait-row {
     @apply tw-flex tw-items-center tw-gap-2 tw-overflow-hidden;
     padding: 6px var(--wh40k-space-sm);
@@ -209,7 +209,7 @@
     }
 }
 
-// Shared row components (used by traits)
+/* Shared row components (used by traits) */
 .wh40k-row-icon {
     @apply tw-w-7 tw-h-7 tw-shrink-0;
     border: 1px solid var(--wh40k-border-color-light);
@@ -225,7 +225,7 @@
     text-align: center;
 }
 
-// Trait row main content
+/* Trait row main content */
 .wh40k-trait-row .wh40k-row-main {
     @apply tw-flex-1 tw-flex tw-flex-col tw-min-w-0 tw-overflow-hidden;
     gap: 2px;
@@ -261,7 +261,7 @@
     }
 }
 
-// Trait row actions (keep visible, not hover-reveal)
+/* Trait row actions (keep visible, not hover-reveal) */
 .wh40k-trait-row .wh40k-row-actions {
     @apply tw-flex tw-items-center tw-ml-auto tw-shrink-0;
     gap: 2px;
@@ -292,7 +292,7 @@
     }
 }
 
-// Level Stepper (for traits)
+/* Level Stepper (for traits) */
 .wh40k-level-stepper {
     @apply tw-flex tw-items-center tw-gap-1 tw-shrink-0;
     padding: 2px 6px;
@@ -325,7 +325,7 @@
     text-align: center;
 }
 
-// Expanded Details View
+/* Expanded Details View */
 .wh40k-row-expanded {
     padding: var(--wh40k-space-sm);
     padding-top: 0;
@@ -395,7 +395,7 @@
     }
 }
 
-// Trait Grouping
+/* Trait Grouping */
 .wh40k-traits-grouped {
     @apply tw-flex tw-flex-col tw-gap-3;
 }
@@ -417,7 +417,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--wh40k-text-secondary);
-    position: sticky; // Make headers sticky during scroll
+    position: sticky; /* Make headers sticky during scroll */
     top: 0;
     z-index: 2;
 
@@ -442,7 +442,7 @@
     text-align: center;
 }
 
-// Category Color Variations
+/* Category Color Variations */
 .wh40k-group-header.wh40k-trait-creature {
     border-left-color: #c0504d;
 }
@@ -459,7 +459,7 @@
     border-left-color: #4bacc6;
 }
 
-// Badge Styles
+/* Badge Styles */
 .wh40k-badge-aptitude {
     display: inline-block;
     padding: 2px 6px;
@@ -472,7 +472,7 @@
     text-transform: capitalize;
 }
 
-// Empty State
+/* Empty State */
 .wh40k-empty-state {
     text-align: center;
     padding: var(--wh40k-space-lg);
@@ -490,60 +490,58 @@
     }
 }
 
-// Dropzone
-// ============================================
-// DROP ZONES
-// ============================================
-// NOTE: Core .wh40k-dropzone definitions are in _unified-components.scss
-// No overrides needed here - using unified styles
+/* Dropzone */
+/* ============================================ */
+/* DROP ZONES */
+/* ============================================ */
+/* NOTE: Core .wh40k-dropzone definitions are in _unified-components.scss */
+/* No overrides needed here - using unified styles */
 
-// ============================================
-// Responsive Improvements
-// ============================================
+/* ============================================ */
+/* Responsive Improvements */
+/* ============================================ */
 
-// Ensure proper layout on narrower sheets
+/* Ensure proper layout on narrower sheets */
 @media (max-width: 800px) {
     .wh40k-talent-row,
     .wh40k-trait-row {
-        flex-wrap: nowrap; // Never wrap to multiple lines
+        flex-wrap: nowrap; /* Never wrap to multiple lines */
 
         .wh40k-row-main {
-            min-width: 150px; // Ensure some minimum space for name
+            min-width: 150px; /* Ensure some minimum space for name */
         }
 
         .wh40k-row-meta {
-            font-size: 0.65rem; // Slightly smaller on narrow
+            font-size: 0.65rem; /* Slightly smaller on narrow */
         }
     }
 
     .wh40k-action-btn {
-        padding: 3px 4px; // Tighter padding
+        padding: 3px 4px; /* Tighter padding */
         font-size: 0.75rem;
     }
 }
 
-// Extra narrow - hide meta items if needed
+/* Extra narrow - hide meta items if needed */
 @media (max-width: 600px) {
     .wh40k-row-meta {
-        display: none; // Hide metadata on very narrow
+        display: none; /* Hide metadata on very narrow */
     }
 }
 
-// ============================================
-// Layout Fixes & Improvements Summary
-// ============================================
-//
-// 1. Added min-height to rows for consistency
-// 2. Added overflow: hidden to wh40k-row-main
-// 3. Added width: 100% to wh40k-row-name for ellipsis
-// 4. Added empty state styling for tables
-// 5. Improved meta item wrapping with white-space: nowrap
-// 6. Made group headers sticky for better navigation
-// 7. Added responsive breakpoints for narrow sheets
-// 8. Ensured all flex items have proper min-width: 0
-// 9. Added line-height controls to prevent extra space
-// 10. Improved z-index stacking for groups
-//
-// All changes maintain Imperial Gothic theme and
-// follow the dnd5e V13 architecture pattern.
-// ============================================
+/* ============================================ */
+/* Layout Fixes & Improvements Summary */
+/* ============================================ */
+/* 1. Added min-height to rows for consistency */
+/* 2. Added overflow: hidden to wh40k-row-main */
+/* 3. Added width: 100% to wh40k-row-name for ellipsis */
+/* 4. Added empty state styling for tables */
+/* 5. Improved meta item wrapping with white-space: nowrap */
+/* 6. Made group headers sticky for better navigation */
+/* 7. Added responsive breakpoints for narrow sheets */
+/* 8. Ensured all flex items have proper min-width: 0 */
+/* 9. Added line-height controls to prevent extra space */
+/* 10. Improved z-index stacking for groups */
+/* All changes maintain Imperial Gothic theme and */
+/* follow the dnd5e V13 architecture pattern. */
+/* ============================================ */

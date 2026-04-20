@@ -1,11 +1,11 @@
-// ============================================
-// Layout Utilities
-// ============================================
-// Reusable grid and column patterns
+/* ============================================ */
+/* Layout Utilities */
+/* ============================================ */
+/* Reusable grid and column patterns */
 
-// ============================================
-// Tab Grid Layouts (replaces wh40k-overview-grid, wh40k-combat-grid, etc.)
-// ============================================
+/* ============================================ */
+/* Tab Grid Layouts (replaces wh40k-overview-grid, wh40k-combat-grid, etc.) */
+/* ============================================ */
 
 .wh40k-tab-grid {
     display: grid;
@@ -29,9 +29,9 @@
     }
 }
 
-// ============================================
-// Tab Column (replaces wh40k-overview-col, wh40k-combat-col, etc.)
-// ============================================
+/* ============================================ */
+/* Tab Column (replaces wh40k-overview-col, wh40k-combat-col, etc.) */
+/* ============================================ */
 
 .wh40k-tab-col {
     display: flex;
@@ -47,16 +47,16 @@
     }
 }
 
-// ============================================
-// Full Width Row (for spanning grid)
-// ============================================
+/* ============================================ */
+/* Full Width Row (for spanning grid) */
+/* ============================================ */
 
 .wh40k-full-width {
     grid-column: 1 / -1;
 }
 
-// Flex, spacing, and text utilities removed — use Tailwind tw-* classes instead
-// .wh40k-text-muted retained (used in item-skill-sheet-modern.hbs, vehicle-upgrades-panel.hbs)
+/* Flex, spacing, and text utilities removed — use Tailwind tw-* classes instead */
+/* .wh40k-text-muted retained (used in item-skill-sheet-modern.hbs, vehicle-upgrades-panel.hbs) */
 
 .wh40k-text-muted {
     color: var(--color-text-tertiary);

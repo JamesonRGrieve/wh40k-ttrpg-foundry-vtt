@@ -1,20 +1,20 @@
-// ============================================
-// FATE PANEL V2 - Blue Stars, Celestial Theme
-// ============================================
-// Complete redesign with star pips, spending menu, and sparkle animations
+/* ============================================ */
+/* FATE PANEL V2 - Blue Stars, Celestial Theme */
+/* ============================================ */
+/* Complete redesign with star pips, spending menu, and sparkle animations */
 
 .wh40k-fate-panel-v2 {
-    // Base panel styling inherits from wh40k-panel
+    /* Base panel styling inherits from wh40k-panel */
 
-    // Celestial blue theme
+    /* Celestial blue theme */
     .wh40k-panel-header {
         background: linear-gradient(180deg, var(--wh40k-fate-bg) 0%, transparent 100%);
         border-bottom: 2px solid var(--wh40k-fate-border);
     }
 
-    // ============================================
-    // Main Display Area
-    // ============================================
+    /* ============================================ */
+    /* Main Display Area */
+    /* ============================================ */
 
     .wh40k-fate-display {
         display: flex;
@@ -23,7 +23,7 @@
         align-items: center;
     }
 
-    // Tracker with +/- buttons (mirrors fatigue tracker)
+    /* Tracker with +/- buttons (mirrors fatigue tracker) */
     .wh40k-fate-tracker {
         display: flex;
         align-items: center;
@@ -81,9 +81,9 @@
         color: var(--wh40k-text-muted);
     }
 
-    // ============================================
-    // Blue Star Pips
-    // ============================================
+    /* ============================================ */
+    /* Blue Star Pips */
+    /* ============================================ */
 
     .wh40k-fate-pips {
         display: flex;
@@ -127,7 +127,7 @@
         }
     }
 
-    // Filled star (available fate)
+    /* Filled star (available fate) */
     .wh40k-fate-pip--filled {
         i {
             color: var(--wh40k-fate-secondary);
@@ -141,7 +141,7 @@
         }
     }
 
-    // Gentle glow animation for filled stars
+    /* Gentle glow animation for filled stars */
     @keyframes gentle-glow {
         0%,
         100% {
@@ -152,7 +152,7 @@
         }
     }
 
-    // Sparkle effect when gaining fate (triggered via JS)
+    /* Sparkle effect when gaining fate (triggered via JS) */
     @keyframes sparkle {
         0% {
             transform: scale(0.5) rotate(0deg);
@@ -172,7 +172,7 @@
         animation: sparkle 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
-    // Fade effect when spending fate (triggered via JS)
+    /* Fade effect when spending fate (triggered via JS) */
     @keyframes fade-spend {
         0% {
             transform: scale(1);
@@ -192,7 +192,7 @@
         animation: fade-spend 0.5s ease-out forwards;
     }
 
-    // Empty state
+    /* Empty state */
     .wh40k-fate-none {
         display: flex;
         flex-direction: column;
@@ -213,9 +213,9 @@
         }
     }
 
-    // ============================================
-    // Spending Menu
-    // ============================================
+    /* ============================================ */
+    /* Spending Menu */
+    /* ============================================ */
 
     .wh40k-fate-actions {
         width: 100%;
@@ -333,7 +333,7 @@
         }
     }
 
-    // Burn fate option (dangerous action)
+    /* Burn fate option (dangerous action) */
     .wh40k-fate-option--burn {
         color: var(--wh40k-wounds-secondary);
         border-top: 2px solid var(--wh40k-wounds-bg);
@@ -348,9 +348,9 @@
         }
     }
 
-    // ============================================
-    // Edit Mode Sections
-    // ============================================
+    /* ============================================ */
+    /* Edit Mode Sections */
+    /* ============================================ */
 
     .wh40k-fate-edit-section {
         padding: var(--wh40k-space-md);
@@ -427,9 +427,9 @@
         }
     }
 
-    // ============================================
-    // Quick Actions
-    // ============================================
+    /* ============================================ */
+    /* Quick Actions */
+    /* ============================================ */
 
     .wh40k-fate-quick-actions {
         display: flex;
@@ -497,9 +497,9 @@
         }
     }
 
-    // ============================================
-    // Edit Mode Star Pips (with numbers)
-    // ============================================
+    /* ============================================ */
+    /* Edit Mode Star Pips (with numbers) */
+    /* ============================================ */
 
     .wh40k-fate-pips-edit {
         .wh40k-fate-pip {
@@ -530,9 +530,9 @@
         }
     }
 
-    // ============================================
-    // Info Box
-    // ============================================
+    /* ============================================ */
+    /* Info Box */
+    /* ============================================ */
 
     .wh40k-fate-info-box {
         display: flex;

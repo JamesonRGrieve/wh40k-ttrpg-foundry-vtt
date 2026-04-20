@@ -11,7 +11,7 @@
     .what-if-mode {
         position: relative;
 
-        // Overlay to indicate preview mode
+        /* Overlay to indicate preview mode */
         &::before {
             content: '';
             position: absolute;
@@ -156,7 +156,7 @@
     .what-if-preview {
         position: relative;
 
-        // Highlight changed element
+        /* Highlight changed element */
         &::after {
             content: '';
             position: absolute;
@@ -198,7 +198,7 @@
         animation: badge-appear 0.3s ease-out;
         pointer-events: none;
 
-        // Positive change (increase)
+        /* Positive change (increase) */
         &.positive {
             background: linear-gradient(135deg, #4caf50, #8bc34a);
             color: white;
@@ -209,7 +209,7 @@
             }
         }
 
-        // Negative change (decrease)
+        /* Negative change (decrease) */
         &.negative {
             background: linear-gradient(135deg, #f44336, #e91e63);
             color: white;

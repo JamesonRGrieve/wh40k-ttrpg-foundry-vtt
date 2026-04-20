@@ -1,14 +1,14 @@
 .wh40k-wrapper {
-    // ============================================
-    // ROGUE TRADER CHARACTER SHEET STYLES
-    // ============================================
+    /* ============================================ */
+    /* ROGUE TRADER CHARACTER SHEET STYLES */
+    /* ============================================ */
 
-    // Theme-adaptive styles using CSS custom properties
+    /* Theme-adaptive styles using CSS custom properties */
 
     .wh40k-rpg.sheet.actor .window-content {
         background: var(--wh40k-sheet-bg) !important;
         background-color: var(--wh40k-sheet-bg-alt) !important;
-        // ApplicationV2: ensure window-content uses flex to allow child scrolling
+        /* ApplicationV2: ensure window-content uses flex to allow child scrolling */
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -86,10 +86,10 @@
             gap: 10px;
             overflow: hidden;
             transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease, margin 0.3s ease;
-            max-height: 1000px; // Large enough for any expanded content
+            max-height: 1000px; /* Large enough for any expanded content */
             opacity: 1;
 
-            // When hidden via hideIfNot helper
+            /* When hidden via hideIfNot helper */
             &[style*='display:none'] {
                 max-height: 0;
                 opacity: 0;
@@ -122,7 +122,7 @@
             transform: rotate(180deg);
         }
 
-        // Corruption/Insanity header alignment + full-width toggle
+        /* Corruption/Insanity header alignment + full-width toggle */
         .wh40k-panel-header-toggle {
             cursor: pointer;
             display: flex;
@@ -157,11 +157,11 @@
             white-space: nowrap;
         }
 
-        // ============================================
-        // Overview Panel Tints
-        // ============================================
+        /* ============================================ */
+        /* Overview Panel Tints */
+        /* ============================================ */
 
-        // Panel tints — pre-generated (replaces @include wh40k-panel-tint)
+        /* Panel tints — pre-generated (replaces @include wh40k-panel-tint) */
         .wh40k-wounds-panel {
             border-left: 3px solid rgba(139, 0, 0, 0.75);
             .wh40k-panel-header {
@@ -251,7 +251,7 @@
         }
     }
 
-    // Character Header - Support both dh- and wh40k- prefixes
+    /* Character Header - Support both dh- and wh40k- prefixes */
     .wh40k-character-header {
         grid-column: span 6;
         position: relative;
@@ -267,7 +267,7 @@
             padding: 8px 12px 6px;
         }
 
-        // Single column layout (when HUD is commented out)
+        /* Single column layout (when HUD is commented out) */
         .wh40k-header-single-column {
             display: flex !important;
             flex-direction: column !important;
@@ -277,7 +277,7 @@
         }
     }
 
-    // Support both class naming conventions
+    /* Support both class naming conventions */
     .wh40k-wrapper {
         width: 100%;
         height: 100%;
@@ -320,9 +320,9 @@
         }
     }
 
-    // ============================================
-    // Purity Seal Status Pip (Header)
-    // ============================================
+    /* ============================================ */
+    /* Purity Seal Status Pip (Header) */
+    /* ============================================ */
 
     .wh40k-header-seal {
         display: flex;
@@ -369,7 +369,7 @@
         }
     }
 
-    // Cracked seal state (60+ corruption)
+    /* Cracked seal state (60+ corruption) */
     .wh40k-purity-seal-pip.wh40k-seal-cracked {
         background: linear-gradient(135deg, rgba(255, 140, 0, 0.2) 0%, rgba(184, 134, 11, 0.15) 100%);
         border-color: var(--wh40k-fatigue-primary, #ff8c00);
@@ -387,7 +387,7 @@
         }
     }
 
-    // Burning seal state (90+ corruption)
+    /* Burning seal state (90+ corruption) */
     .wh40k-purity-seal-pip.wh40k-seal-burning {
         background: linear-gradient(135deg, rgba(139, 0, 0, 0.3) 0%, rgba(139, 0, 0, 0.2) 100%);
         border-color: var(--wh40k-corruption-primary, #8b0000);
@@ -441,7 +441,7 @@
         }
     }
 
-    // Generic drag-over highlight for any panel drop zone
+    /* Generic drag-over highlight for any panel drop zone */
     [data-drop-zone].wh40k-drag-over {
         outline: 2px dashed var(--wh40k-gold, var(--wh40k-color-gold));
         outline-offset: -2px;
@@ -494,7 +494,7 @@
         box-shadow: inset 0 1px 0 var(--wh40k-text-shadow), 0 2px 6px var(--wh40k-shadow-soft);
         transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
 
-        // Advancement progress indicator - border fill based on advance level
+        /* Advancement progress indicator - border fill based on advance level */
         &::before {
             content: '';
             position: absolute;
@@ -516,13 +516,13 @@
             z-index: 1;
         }
 
-        // Buff state (positive modifier)
+        /* Buff state (positive modifier) */
         &.wh40k-char-buffed {
             border-color: rgba(74, 222, 128, 0.6);
             box-shadow: inset 0 1px 0 var(--wh40k-text-shadow), 0 2px 6px var(--wh40k-shadow-soft), 0 0 8px rgba(74, 222, 128, 0.3);
         }
 
-        // Debuff state (negative modifier)
+        /* Debuff state (negative modifier) */
         &.wh40k-char-debuffed {
             border-color: rgba(239, 68, 68, 0.6);
             box-shadow: inset 0 1px 0 var(--wh40k-text-shadow), 0 2px 6px var(--wh40k-shadow-soft), 0 0 8px rgba(239, 68, 68, 0.3);
@@ -557,13 +557,13 @@
             transform: scale(0.95);
         }
 
-        // Rolling animation class - added via JS on click
+        /* Rolling animation class - added via JS on click */
         &.rolling {
             animation: wh40k-char-roll 0.4s ease-out;
         }
     }
 
-    // Rolling animation keyframes
+    /* Rolling animation keyframes */
     @keyframes wh40k-char-roll {
         0% {
             transform: scale(1);
@@ -597,13 +597,13 @@
         text-shadow: 0 1px 0 var(--wh40k-text-shadow);
         transition: color 0.3s ease, text-shadow 0.3s ease;
 
-        // Value change animation class - added via JS on update
+        /* Value change animation class - added via JS on update */
         &.value-changed {
             animation: wh40k-value-flash 0.5s ease-out;
         }
     }
 
-    // Value change flash animation
+    /* Value change flash animation */
     @keyframes wh40k-value-flash {
         0% {
             color: var(--wh40k-text-dark);
@@ -623,7 +623,7 @@
         @apply tw-text-[0.65em] tw-uppercase tw-tracking-[0.1em] tw-text-center tw-min-w-[50px] tw-h-[22px] tw-flex tw-items-center tw-justify-center tw-transition-colors tw-duration-300;
         color: var(--wh40k-text-muted);
 
-        // Value change animation for total
+        /* Value change animation for total */
         &.value-changed {
             animation: wh40k-total-flash 0.5s ease-out;
         }
@@ -673,7 +673,7 @@
         top: calc(100% + 6px);
         left: 50%;
         transform: translateX(-50%);
-        display: none; // Hidden by default
+        display: none; /* Hidden by default */
         gap: 6px;
         padding: 8px;
         width: 170px;
@@ -683,13 +683,13 @@
         box-shadow: 0 6px 16px var(--wh40k-shadow-medium);
         z-index: 20;
 
-        // Show when expanded
+        /* Show when expanded */
         &.expanded {
             display: grid;
         }
     }
 
-    // Drop zone in header fills remaining space
+    /* Drop zone in header fills remaining space */
     .wh40k-hud-stack > .wh40k-dropzone {
         @apply tw-w-full tw-box-border tw-m-0;
         flex: 1 1 0%;
@@ -753,7 +753,7 @@
         color: var(--wh40k-text-muted);
     }
 
-    // Responsive sizing for characteristics HUD
+    /* Responsive sizing for characteristics HUD */
     @media (max-width: 1200px) {
         .wh40k-characteristics-hud {
             gap: var(--wh40k-space-xs);
@@ -821,7 +821,7 @@
         }
     }
 
-    // Accessibility - reduced motion
+    /* Accessibility - reduced motion */
     @media (prefers-reduced-motion: reduce) {
         .wh40k-char-hud-item,
         .wh40k-char-hud-name,

@@ -1,7 +1,7 @@
 .wh40k-wrapper {
-    // ============================================
-    // SKILLS TAB LIST LAYOUT
-    // ============================================
+    /* ============================================ */
+    /* SKILLS TAB LIST LAYOUT */
+    /* ============================================ */
 
     .wh40k-skills-panel .wh40k-skills-split {
         padding: 14px 10px 10px;
@@ -177,7 +177,7 @@
         }
     }
 
-    // Divination — sizing in Tailwind
+    /* Divination — sizing in Tailwind */
     .wh40k-divination {
         color: var(--wh40k-text-muted);
     }
@@ -266,7 +266,7 @@
         }
     }
 
-    // Origin builder btn — sizing/position in Tailwind, visual only here
+    /* Origin builder btn — sizing/position in Tailwind, visual only here */
     .wh40k-origin-builder-btn {
         color: var(--wh40k-gold, var(--wh40k-color-gold));
 
@@ -291,7 +291,7 @@
         }
     }
 
-    // Header info — layout in Tailwind
+    /* Header info — layout in Tailwind */
 
     .wh40k-quick-status-gothic {
         grid-column: 3;
@@ -306,7 +306,7 @@
         min-width: 0;
     }
 
-    // Header layout for single column (no HUD)
+    /* Header layout for single column (no HUD) */
     .wh40k-header-single-column {
         display: flex;
         flex-direction: column;
@@ -321,7 +321,7 @@
         max-width: 240px;
     }
 
-    // Optional: Header HUD section
+    /* Optional: Header HUD section */
     .wh40k-header-hud {
         margin-top: 8px;
         padding-top: 12px;

@@ -1,12 +1,12 @@
-// ============================================
-// Item Sheet Shared Components
-// ============================================
-// Reusable UI components used across all item sheets
+/* ============================================ */
+/* Item Sheet Shared Components */
+/* ============================================ */
+/* Reusable UI components used across all item sheets */
 
-// ────────────────────────────────────────────
-// Badge Component
-// ────────────────────────────────────────────
-// Meta badges for type, category, tier, etc.
+/* ──────────────────────────────────────────── */
+/* Badge Component */
+/* ──────────────────────────────────────────── */
+/* Meta badges for type, category, tier, etc. */
 
 .wh40k-badge-row {
     display: flex;
@@ -31,7 +31,7 @@
         font-size: 0.9em;
     }
 
-    // Type-specific colors
+    /* Type-specific colors */
     &--weapon {
         --wh40k-badge-bg: rgba(239, 68, 68, 0.2);
         border-color: rgba(239, 68, 68, 0.3);
@@ -62,7 +62,7 @@
         color: #f9a8d4;
     }
 
-    // Status colors
+    /* Status colors */
     &--beneficial {
         --wh40k-badge-bg: rgba(34, 197, 94, 0.2);
         border-color: rgba(34, 197, 94, 0.3);
@@ -82,10 +82,10 @@
     }
 }
 
-// ────────────────────────────────────────────
-// Expandable Component
-// ────────────────────────────────────────────
-// Click-to-expand content panel
+/* ──────────────────────────────────────────── */
+/* Expandable Component */
+/* ──────────────────────────────────────────── */
+/* Click-to-expand content panel */
 
 .wh40k-expandable {
     cursor: pointer;
@@ -97,7 +97,7 @@
     transition: opacity var(--wh40k-transition-base);
 
     &::after {
-        content: '\f05a'; // info-circle
+        content: '\f05a'; /* info-circle */
         font-family: 'Font Awesome 6 Pro', 'Font Awesome 6 Free';
         font-weight: 900;
         margin-left: 4px;
@@ -110,7 +110,7 @@
     }
 
     &--expanded::after {
-        content: '\f057'; // times-circle
+        content: '\f057'; /* times-circle */
         opacity: 1;
     }
 }
@@ -141,9 +141,9 @@
     }
 }
 
-// ────────────────────────────────────────────
-// Button Component
-// ────────────────────────────────────────────
+/* ──────────────────────────────────────────── */
+/* Button Component */
+/* ──────────────────────────────────────────── */
 
 .wh40k-btn {
     display: inline-flex;
@@ -178,7 +178,7 @@
         cursor: not-allowed;
     }
 
-    // Variants
+    /* Variants */
     &--primary {
         background: var(--color-accent, #3b82f6);
         border-color: rgba(59, 130, 246, 0.5);
@@ -219,9 +219,9 @@
     }
 }
 
-// ────────────────────────────────────────────
-// Empty State Component
-// ────────────────────────────────────────────
+/* ──────────────────────────────────────────── */
+/* Empty State Component */
+/* ──────────────────────────────────────────── */
 
 .wh40k-empty-state {
     display: flex;
@@ -252,9 +252,9 @@
     }
 }
 
-// ────────────────────────────────────────────
-// Tag List Component
-// ────────────────────────────────────────────
+/* ──────────────────────────────────────────── */
+/* Tag List Component */
+/* ──────────────────────────────────────────── */
 
 .wh40k-tag-list {
     display: flex;
@@ -303,9 +303,9 @@
     }
 }
 
-// ────────────────────────────────────────────
-// Property Tags (for armour, weapon, etc.)
-// ────────────────────────────────────────────
+/* ──────────────────────────────────────────── */
+/* Property Tags (for armour, weapon, etc.) */
+/* ──────────────────────────────────────────── */
 
 .wh40k-property-tags {
     display: flex;

@@ -10,7 +10,7 @@
         gap: 0.75rem;
     }
 
-    // Form groups
+    /* Form groups */
     .form-group {
         margin-bottom: 0;
 
@@ -60,14 +60,14 @@
         }
     }
 
-    // Row of form groups
+    /* Row of form groups */
     .form-group-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
     }
 
-    // Slider group
+    /* Slider group */
     .slider-group {
         .slider-with-value {
             display: flex;
@@ -95,7 +95,7 @@
         }
     }
 
-    // Options fieldset
+    /* Options fieldset */
     .batch-options {
         border: 1px solid var(--color-border-light-tertiary);
         border-radius: var(--wh40k-radius-md);
@@ -117,7 +117,7 @@
         }
     }
 
-    // Preview
+    /* Preview */
     .batch-preview {
         background: var(--color-bg-option);
         border: 1px solid var(--color-border-light-tertiary);
@@ -147,7 +147,7 @@
         }
     }
 
-    // Footer
+    /* Footer */
     .sheet-footer {
         padding-top: 0.75rem;
         border-top: 1px solid var(--color-border-light-tertiary);

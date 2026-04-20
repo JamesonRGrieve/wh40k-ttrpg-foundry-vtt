@@ -1,12 +1,12 @@
-// ============================================
-// Rogue Trader Weapon Sheet & Card Styles
-// ============================================
-// Modern, information-dense weapon display system
-// Uses theme-aware CSS custom properties
+/* ============================================ */
+/* Rogue Trader Weapon Sheet & Card Styles */
+/* ============================================ */
+/* Modern, information-dense weapon display system */
+/* Uses theme-aware CSS custom properties */
 
-// ============================================
-// WEAPON SHEET V3 - Modern Single-Page Redesign
-// ============================================
+/* ============================================ */
+/* WEAPON SHEET V3 - Modern Single-Page Redesign */
+/* ============================================ */
 
 .wh40k-weapon-sheet-v3 {
     display: flex;
@@ -18,7 +18,7 @@
     font-size: 0.875rem;
     overflow: hidden;
 
-    // Enable container queries for responsive layout
+    /* Enable container queries for responsive layout */
     .window-content {
         container-type: inline-size;
     }
@@ -31,7 +31,7 @@
         overflow: hidden;
     }
 
-    // ── Sticky Header Container ──────────────────────────────────────────
+    /* ── Sticky Header Container ────────────────────────────────────────── */
     .wh40k-weapon-sticky-header {
         position: sticky;
         top: 0;
@@ -43,7 +43,7 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     }
 
-    // ── Header ───────────────────────────────────────────────────────────
+    /* ── Header ─────────────────────────────────────────────────────────── */
     .wh40k-weapon-header {
         display: grid;
         grid-template-columns: 48px 1fr auto;
@@ -207,7 +207,7 @@
         }
     }
 
-    // ── Color-Coded Stat Cards ───────────────────────────────────────────
+    /* ── Color-Coded Stat Cards ─────────────────────────────────────────── */
     .wh40k-weapon-stats {
         display: flex;
         flex-wrap: wrap;
@@ -215,9 +215,9 @@
         padding: 10px 12px 12px;
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // ICONIC STAT MOSAIC - Modern Glassmorphism Design
-    // ═══════════════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════════════════════ */
+    /* ICONIC STAT MOSAIC - Modern Glassmorphism Design */
+    /* ═══════════════════════════════════════════════════════════════════════ */
 
     .wh40k-weapon-mosaic {
         display: grid;
@@ -227,7 +227,7 @@
         gap: var(--wh40k-space-sm);
         padding: 12px;
 
-        // Adjust column count based on container width
+        /* Adjust column count based on container width */
         @container (max-width: 300px) {
             grid-template-columns: repeat(2, 1fr);
         }
@@ -260,7 +260,7 @@
         grid-row: span 1;
         min-height: 60px;
 
-        // Base sizes for 1x1 square
+        /* Base sizes for 1x1 square */
         .wh40k-iconic-stat__shape {
             font-size: 1.2rem;
             margin-bottom: 4px;
@@ -276,7 +276,7 @@
             text-transform: uppercase;
         }
 
-        // Size variants with responsive adjustments
+        /* Size variants with responsive adjustments */
         &--large {
             grid-column: span 2;
             grid-row: span 2;
@@ -296,7 +296,7 @@
                 font-size: 0.7rem;
             }
 
-            // Shrink to 2x1 on medium containers
+            /* Shrink to 2x1 on medium containers */
             @container (max-width: 520px) {
                 grid-row: span 1;
                 aspect-ratio: 2 / 1;
@@ -311,7 +311,7 @@
                 }
             }
 
-            // Shrink to 1x1 on narrow containers
+            /* Shrink to 1x1 on narrow containers */
             @container (max-width: 380px) {
                 grid-column: span 1;
                 grid-row: span 1;
@@ -346,7 +346,7 @@
                 font-size: 0.6rem;
             }
 
-            // Expand to 2x1 when there's enough space (wide containers)
+            /* Expand to 2x1 when there's enough space (wide containers) */
             @container (min-width: 550px) {
                 grid-column: span 2;
                 aspect-ratio: 2 / 1;
@@ -363,7 +363,7 @@
         }
 
         &--small {
-            // Already 1x1, just smaller text
+            /* Already 1x1, just smaller text */
             .wh40k-iconic-stat__shape {
                 font-size: 1rem;
                 margin-bottom: 3px;
@@ -392,7 +392,7 @@
             }
         }
 
-        // Hover effects
+        /* Hover effects */
         &:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
@@ -402,7 +402,7 @@
             }
         }
 
-        // Shape container
+        /* Shape container */
         &__shape {
             position: relative;
             z-index: 2;
@@ -412,7 +412,7 @@
             transition: transform 0.3s ease, filter 0.3s ease;
         }
 
-        // Content
+        /* Content */
         &__content {
             position: relative;
             z-index: 2;
@@ -453,7 +453,7 @@
             color: rgba(202, 210, 222, 0.6);
         }
 
-        // Glow effect (animated on hover)
+        /* Glow effect (animated on hover) */
         &__glow {
             position: absolute;
             inset: 0;
@@ -464,7 +464,7 @@
             z-index: 0;
         }
 
-        // Progress bar for clip
+        /* Progress bar for clip */
         &__progress {
             position: absolute;
             bottom: 0;
@@ -486,7 +486,7 @@
             }
         }
 
-        // Qualities container
+        /* Qualities container */
         &__qualities {
             display: flex;
             flex-wrap: wrap;
@@ -494,11 +494,11 @@
             flex: 1;
         }
 
-        // ═══════════════════════════════════════════════════════════════════
-        // STAT TYPE VARIANTS - Colors, Borders, Glows
-        // ═══════════════════════════════════════════════════════════════════
+        /* ═══════════════════════════════════════════════════════════════════ */
+        /* STAT TYPE VARIANTS - Colors, Borders, Glows */
+        /* ═══════════════════════════════════════════════════════════════════ */
 
-        // Damage - Red/Crimson
+        /* Damage - Red/Crimson */
         &--damage {
             border-color: rgba(182, 62, 46, 0.4);
             background: linear-gradient(145deg, rgba(182, 62, 46, 0.15), rgba(12, 16, 24, 0.7));
@@ -527,7 +527,7 @@
             }
         }
 
-        // Penetration - Gold
+        /* Penetration - Gold */
         &--pen {
             border-color: rgba(212, 175, 55, 0.4);
             background: linear-gradient(145deg, rgba(212, 175, 55, 0.12), rgba(12, 16, 24, 0.7));
@@ -556,7 +556,7 @@
             }
         }
 
-        // To Hit - Green
+        /* To Hit - Green */
         &--tohit {
             border-color: rgba(74, 132, 72, 0.4);
             background: linear-gradient(145deg, rgba(74, 132, 72, 0.12), rgba(12, 16, 24, 0.7));
@@ -580,7 +580,7 @@
             }
         }
 
-        // Range - Blue
+        /* Range - Blue */
         &--range {
             border-color: rgba(58, 93, 132, 0.4);
             background: linear-gradient(145deg, rgba(58, 93, 132, 0.15), rgba(12, 16, 24, 0.7));
@@ -608,7 +608,7 @@
             }
         }
 
-        // Rate of Fire - Bronze/Orange
+        /* Rate of Fire - Bronze/Orange */
         &--rof {
             border-color: rgba(143, 76, 38, 0.4);
             background: linear-gradient(145deg, rgba(143, 76, 38, 0.15), rgba(12, 16, 24, 0.7));
@@ -633,7 +633,7 @@
             }
         }
 
-        // Clip/Ammo - Dynamic based on status
+        /* Clip/Ammo - Dynamic based on status */
         &--clip {
             border-color: rgba(74, 132, 72, 0.4);
             background: linear-gradient(145deg, rgba(74, 132, 72, 0.1), rgba(12, 16, 24, 0.7));
@@ -679,7 +679,7 @@
             }
         }
 
-        // Weight - Neutral/Gray
+        /* Weight - Neutral/Gray */
         &--weight {
             border-color: rgba(148, 160, 178, 0.3);
             background: linear-gradient(145deg, rgba(148, 160, 178, 0.08), rgba(12, 16, 24, 0.7));
@@ -694,7 +694,7 @@
             }
         }
 
-        // Qualities - Blue accent (individual cards)
+        /* Qualities - Blue accent (individual cards) */
         &--quality {
             grid-column: span 1;
             border-color: rgba(58, 93, 132, 0.4);
@@ -739,7 +739,7 @@
             }
         }
 
-        // Qualities - wide bar (legacy, kept for backwards compatibility)
+        /* Qualities - wide bar (legacy, kept for backwards compatibility) */
         &--qualities {
             border-color: rgba(58, 93, 132, 0.3);
             background: linear-gradient(145deg, rgba(58, 93, 132, 0.1), rgba(12, 16, 24, 0.6));
@@ -749,7 +749,7 @@
             }
         }
 
-        // Modified indicator
+        /* Modified indicator */
         &--modified {
             &::before {
                 content: '★';
@@ -764,7 +764,7 @@
         }
     }
 
-    // Quality chip (inside mosaic)
+    /* Quality chip (inside mosaic) */
     .wh40k-quality-chip {
         display: inline-flex;
         align-items: center;
@@ -790,9 +790,9 @@
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // ANIMATIONS
-    // ═══════════════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════════════════════ */
+    /* ANIMATIONS */
+    /* ═══════════════════════════════════════════════════════════════════════ */
 
     @keyframes burst-pulse {
         0%,
@@ -871,11 +871,11 @@
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // MICRO-INTERACTIONS & POLISH
-    // ═══════════════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════════════════════ */
+    /* MICRO-INTERACTIONS & POLISH */
+    /* ═══════════════════════════════════════════════════════════════════════ */
 
-    // Section expand/collapse animation
+    /* Section expand/collapse animation */
     .wh40k-section__body {
         animation: slide-in-up 0.3s ease-out;
 
@@ -884,12 +884,12 @@
         }
     }
 
-    // Value change highlight (add .wh40k-value-changed class via JS when value updates)
+    /* Value change highlight (add .wh40k-value-changed class via JS when value updates) */
     .wh40k-value-changed {
         animation: value-change-highlight 0.6s ease-out;
     }
 
-    // Interactive elements hover lift
+    /* Interactive elements hover lift */
     .wh40k-quality-chip,
     .wh40k-mod-chip,
     .wh40k-meta-badge {
@@ -904,7 +904,7 @@
         }
     }
 
-    // Section header hover effect
+    /* Section header hover effect */
     .wh40k-section__header {
         transition: all var(--wh40k-transition-base);
 
@@ -921,12 +921,12 @@
         }
     }
 
-    // Edit toggle button glow when active
+    /* Edit toggle button glow when active */
     .wh40k-edit-toggle.active {
         animation: glow-pulse 2s ease-in-out infinite;
     }
 
-    // FAB expand animation
+    /* FAB expand animation */
     .wh40k-fab-container {
         .wh40k-fab-actions {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -956,7 +956,7 @@
         }
     }
 
-    // Form field focus ripple effect
+    /* Form field focus ripple effect */
     .wh40k-float-field {
         &::after {
             content: '';
@@ -974,9 +974,9 @@
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // BODY TOGGLE BUTTON
-    // ═══════════════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════════════════════ */
+    /* BODY TOGGLE BUTTON */
+    /* ═══════════════════════════════════════════════════════════════════════ */
 
     .wh40k-body-toggle {
         display: flex;
@@ -1009,9 +1009,9 @@
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // TOGGLE SWITCH COMPONENT
-    // ═══════════════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════════════════════ */
+    /* TOGGLE SWITCH COMPONENT */
+    /* ═══════════════════════════════════════════════════════════════════════ */
 
     .wh40k-toggle-row {
         display: flex;
@@ -1092,7 +1092,7 @@
         }
     }
 
-    // Equipped toggle animation
+    /* Equipped toggle animation */
     .wh40k-toggle-equipped {
         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -1101,7 +1101,7 @@
         }
     }
 
-    // Image hover zoom
+    /* Image hover zoom */
     .wh40k-item-image {
         overflow: hidden;
 
@@ -1114,17 +1114,17 @@
         }
     }
 
-    // Loaded ammo card entrance
+    /* Loaded ammo card entrance */
     .wh40k-loaded-ammo-card {
         animation: slide-in-up 0.4s ease-out;
     }
 
-    // Modification chip enter animation
+    /* Modification chip enter animation */
     .wh40k-mod-chip {
         animation: slide-in-up 0.3s ease-out;
     }
 
-    // Quality chip stagger animation (use nth-child for stagger effect)
+    /* Quality chip stagger animation (use nth-child for stagger effect) */
     .wh40k-iconic-stat__qualities {
         .wh40k-quality-chip {
             animation: slide-in-up 0.3s ease-out backwards;
@@ -1232,7 +1232,7 @@
             transition: width var(--wh40k-transition-medium);
         }
 
-        // Color coding
+        /* Color coding */
         &--damage {
             border-color: rgba(182, 62, 46, 0.3);
             .wh40k-stat-card__icon {
@@ -1314,12 +1314,12 @@
         }
     }
 
-    // ── Scrollable Body ──────────────────────────────────────────────────
+    /* ── Scrollable Body ────────────────────────────────────────────────── */
     .wh40k-weapon-body {
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
-        padding: 10px 12px 60px; // Extra bottom padding for FAB
+        padding: 10px 12px 60px; /* Extra bottom padding for FAB */
         transition: all var(--wh40k-transition-medium);
 
         &.collapsed {
@@ -1344,7 +1344,7 @@
         }
     }
 
-    // ── Qualities Bar (Inline Pills) ─────────────────────────────────────
+    /* ── Qualities Bar (Inline Pills) ───────────────────────────────────── */
     .wh40k-qualities-bar {
         display: flex;
         flex-wrap: wrap;
@@ -1404,7 +1404,7 @@
         }
     }
 
-    // ── Loaded Ammo Card ─────────────────────────────────────────────────
+    /* ── Loaded Ammo Card ───────────────────────────────────────────────── */
     .wh40k-loaded-ammo-card {
         margin-bottom: 10px;
         padding: 8px 12px;
@@ -1458,7 +1458,7 @@
         }
     }
 
-    // ── Inline Modification Chips ────────────────────────────────────────
+    /* ── Inline Modification Chips ──────────────────────────────────────── */
     .wh40k-mods-inline {
         display: flex;
         flex-wrap: wrap;
@@ -1507,7 +1507,7 @@
         }
     }
 
-    // ── Collapsible Sections ─────────────────────────────────────────────
+    /* ── Collapsible Sections ───────────────────────────────────────────── */
     .wh40k-section {
         margin-bottom: 8px;
         background: rgba(12, 16, 24, 0.5);
@@ -1629,7 +1629,7 @@
                         }
                     }
 
-                    // Style the ProseMirror toolbar
+                    /* Style the ProseMirror toolbar */
                     .editor-menu {
                         background: rgba(12, 16, 24, 0.8);
                         border: 1px solid rgba(212, 175, 55, 0.2);
@@ -1663,7 +1663,7 @@
             }
         }
 
-        // Collapsed state
+        /* Collapsed state */
         &__header:has(~ .wh40k-section__body.collapsed) {
             border-bottom: none;
 
@@ -1673,7 +1673,7 @@
         }
     }
 
-    // ── Form Fields ──────────────────────────────────────────────────────
+    /* ── Form Fields ────────────────────────────────────────────────────── */
     .wh40k-form-grid {
         display: grid;
         gap: var(--wh40k-space-sm);
@@ -1782,16 +1782,16 @@
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // FLOATING LABEL INPUTS - Material Design Inspired
-    // ═══════════════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════════════════════ */
+    /* FLOATING LABEL INPUTS - Material Design Inspired */
+    /* ═══════════════════════════════════════════════════════════════════════ */
 
     .wh40k-float-field {
         position: relative;
         display: flex;
         flex-direction: column;
 
-        // The input/select field
+        /* The input/select field */
         input,
         select {
             width: 100%;
@@ -1820,7 +1820,7 @@
         input[type='number'] {
             text-align: center;
 
-            // Hide spinner arrows for cleaner look
+            /* Hide spinner arrows for cleaner look */
             &::-webkit-outer-spin-button,
             &::-webkit-inner-spin-button {
                 -webkit-appearance: none;
@@ -1829,7 +1829,7 @@
             -moz-appearance: textfield;
         }
 
-        // The floating label
+        /* The floating label */
         label {
             position: absolute;
             left: 12px;
@@ -1844,7 +1844,7 @@
             z-index: 1;
         }
 
-        // Animated underline bar
+        /* Animated underline bar */
         &__bar {
             position: absolute;
             bottom: 0;
@@ -1857,12 +1857,12 @@
             transform: translateX(-50%);
         }
 
-        // Label floats up when input is focused or has value
+        /* Label floats up when input is focused or has value */
+        /* Last selector: for selects that always have a value */
         input:focus ~ label,
         input:not(:placeholder-shown) ~ label,
         select:focus ~ label,
         select:not([value='']) ~ label,
-        // For selects that always have a value
         select ~ label {
             top: 8px;
             transform: translateY(0) scale(0.75);
@@ -1871,19 +1871,19 @@
             letter-spacing: 0.02em;
         }
 
-        // When not focused but has value, use muted color
+        /* When not focused but has value, use muted color */
         input:not(:focus):not(:placeholder-shown) ~ label,
         select:not(:focus) ~ label {
             color: rgba(202, 210, 222, 0.7);
         }
 
-        // Animate the bar on focus
+        /* Animate the bar on focus */
         input:focus ~ .wh40k-float-field__bar,
         select:focus ~ .wh40k-float-field__bar {
             width: calc(100% - 2px);
         }
 
-        // Narrow variant for small number inputs
+        /* Narrow variant for small number inputs */
         &--narrow {
             max-width: 100px;
 
@@ -1896,7 +1896,7 @@
             }
         }
 
-        // Select variant with custom arrow
+        /* Select variant with custom arrow */
         &--select {
             select {
                 appearance: none;
@@ -1910,7 +1910,7 @@
                 }
             }
 
-            // Custom dropdown arrow
+            /* Custom dropdown arrow */
             .wh40k-float-field__arrow {
                 position: absolute;
                 right: 12px;
@@ -1932,7 +1932,7 @@
             }
         }
 
-        // Filled state visual feedback
+        /* Filled state visual feedback */
         &--filled {
             input,
             select {
@@ -1941,7 +1941,7 @@
             }
         }
 
-        // Error state
+        /* Error state */
         &--error {
             input,
             select {
@@ -1958,7 +1958,7 @@
             }
         }
 
-        // Success state
+        /* Success state */
         &--success {
             input,
             select {
@@ -1982,7 +1982,7 @@
         margin-top: 8px;
     }
 
-    // ── Ammo Dropzone ────────────────────────────────────────────────────
+    /* ── Ammo Dropzone ──────────────────────────────────────────────────── */
     .wh40k-ammo-dropzone {
         display: flex;
         flex-direction: column;
@@ -2024,7 +2024,7 @@
         }
     }
 
-    // ── Modification Cards (Edit Mode) ───────────────────────────────────
+    /* ── Modification Cards (Edit Mode) ─────────────────────────────────── */
     .wh40k-mods-list {
         display: flex;
         flex-direction: column;
@@ -2098,7 +2098,7 @@
         color: rgba(178, 208, 234, 0.9);
     }
 
-    // ── Empty State ──────────────────────────────────────────────────────
+    /* ── Empty State ────────────────────────────────────────────────────── */
     .wh40k-empty-state {
         display: flex;
         flex-direction: column;
@@ -2127,7 +2127,7 @@
         }
     }
 
-    // ── FAB (Floating Action Button) ─────────────────────────────────────
+    /* ── FAB (Floating Action Button) ───────────────────────────────────── */
     .wh40k-fab-container {
         position: absolute;
         bottom: 16px;
@@ -2241,7 +2241,7 @@
         }
     }
 
-    // ── Button Utilities ─────────────────────────────────────────────────
+    /* ── Button Utilities ───────────────────────────────────────────────── */
     .wh40k-btn {
         display: inline-flex;
         align-items: center;
@@ -2286,9 +2286,9 @@
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // ACTION CARDS - Clickable stat cards for rolling and actions
-    // ═══════════════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════════════════════ */
+    /* ACTION CARDS - Clickable stat cards for rolling and actions */
+    /* ═══════════════════════════════════════════════════════════════════════ */
 
     .wh40k-iconic-stat--action {
         cursor: pointer;
@@ -2377,9 +2377,9 @@
         filter: grayscale(0.5);
     }
 
-    // ═══════════════════════════════════════════════════════════════════════
-    // READONLY INPUT STYLES - For view mode form fields
-    // ═══════════════════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════════════════════ */
+    /* READONLY INPUT STYLES - For view mode form fields */
+    /* ═══════════════════════════════════════════════════════════════════════ */
 
     .wh40k-input--readonly {
         background: rgba(0, 0, 0, 0.15) !important;
@@ -2410,9 +2410,9 @@
     }
 }
 
-// ============================================
-// WEAPON SHEET BASE (Legacy V2)
-// ============================================
+/* ============================================ */
+/* WEAPON SHEET BASE (Legacy V2) */
+/* ============================================ */
 
 .wh40k-weapon-sheet,
 .wh40k-weapon-sheet-v2 {
@@ -2434,9 +2434,9 @@
     }
 }
 
-// ============================================
-// HEADER
-// ============================================
+/* ============================================ */
+/* HEADER */
+/* ============================================ */
 
 .wh40k-weapon-header {
     display: grid;
@@ -2478,9 +2478,9 @@
     gap: var(--wh40k-space-sm);
 }
 
-// ============================================
-// WEAPON BADGES
-// ============================================
+/* ============================================ */
+/* WEAPON BADGES */
+/* ============================================ */
 
 .wh40k-meta-badge--weapon {
     background: linear-gradient(135deg, rgba(143, 76, 38, 0.35), rgba(143, 76, 38, 0.2));
@@ -2535,9 +2535,9 @@
     color: rgba(207, 216, 228, 0.9);
 }
 
-// ============================================
-// EQUIPPED TOGGLE
-// ============================================
+/* ============================================ */
+/* EQUIPPED TOGGLE */
+/* ============================================ */
 
 .wh40k-toggle-equipped {
     display: flex;
@@ -2584,9 +2584,9 @@
     }
 }
 
-// ============================================
-// EDIT TOGGLE BUTTON
-// ============================================
+/* ============================================ */
+/* EDIT TOGGLE BUTTON */
+/* ============================================ */
 
 .wh40k-edit-toggle {
     display: flex;
@@ -2625,9 +2625,9 @@
     }
 }
 
-// ============================================
-// STAT BAR
-// ============================================
+/* ============================================ */
+/* STAT BAR */
+/* ============================================ */
 
 .wh40k-weapon-stats {
     display: flex;
@@ -2712,7 +2712,7 @@
         transition: width var(--wh40k-transition-medium);
     }
 
-    // Stat variants
+    /* Stat variants */
     &--damage {
         .wh40k-weapon-stat__icon {
             color: var(--wh40k-red-bright);
@@ -2753,9 +2753,9 @@
     }
 }
 
-// ============================================
-// QUALITIES BAR
-// ============================================
+/* ============================================ */
+/* QUALITIES BAR */
+/* ============================================ */
 
 .wh40k-weapon-qualities {
     display: flex;
@@ -2836,9 +2836,9 @@
     gap: 6px;
 }
 
-// ============================================
-// TAB NAVIGATION
-// ============================================
+/* ============================================ */
+/* TAB NAVIGATION */
+/* ============================================ */
 
 .wh40k-weapon-tabs {
     display: flex;
@@ -2883,16 +2883,16 @@
     }
 }
 
-// ============================================
-// TAB CONTENT
-// ============================================
+/* ============================================ */
+/* TAB CONTENT */
+/* ============================================ */
 
 .wh40k-weapon-content {
     flex: 1;
     overflow-y: auto;
     padding: 12px;
 
-    // Scrollbar styling
+    /* Scrollbar styling */
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -2919,9 +2919,9 @@
     }
 }
 
-// ============================================
-// WEAPON ACTIONS (ROLL BUTTONS)
-// ============================================
+/* ============================================ */
+/* WEAPON ACTIONS (ROLL BUTTONS) */
+/* ============================================ */
 
 .wh40k-weapon-actions {
     display: flex;
@@ -2976,9 +2976,9 @@
     }
 }
 
-// ============================================
-// EDIT NOTICE
-// ============================================
+/* ============================================ */
+/* EDIT NOTICE */
+/* ============================================ */
 
 .wh40k-edit-notice {
     display: flex;
@@ -2998,9 +2998,9 @@
     }
 }
 
-// ============================================
-// SECTIONS
-// ============================================
+/* ============================================ */
+/* SECTIONS */
+/* ============================================ */
 
 .wh40k-weapon-section {
     background: rgba(12, 16, 24, 0.55);
@@ -3089,9 +3089,9 @@
     }
 }
 
-// ============================================
-// FORM FIELDS
-// ============================================
+/* ============================================ */
+/* FORM FIELDS */
+/* ============================================ */
 
 .wh40k-field-row {
     display: flex;
@@ -3195,9 +3195,9 @@
     }
 }
 
-// ============================================
-// AMMO DISPLAY
-// ============================================
+/* ============================================ */
+/* AMMO DISPLAY */
+/* ============================================ */
 
 .wh40k-ammo-display {
     display: flex;
@@ -3256,9 +3256,9 @@
     }
 }
 
-// ============================================
-// CRAFTSMANSHIP EFFECTS
-// ============================================
+/* ============================================ */
+/* CRAFTSMANSHIP EFFECTS */
+/* ============================================ */
 
 .wh40k-craftsmanship-effects {
     display: flex;
@@ -3300,9 +3300,9 @@
     }
 }
 
-// ============================================
-// QUALITIES GRID
-// ============================================
+/* ============================================ */
+/* QUALITIES GRID */
+/* ============================================ */
 
 .wh40k-qualities-grid {
     display: flex;
@@ -3341,9 +3341,9 @@
     }
 }
 
-// ============================================
-// MODIFICATIONS LIST
-// ============================================
+/* ============================================ */
+/* MODIFICATIONS LIST */
+/* ============================================ */
 
 .wh40k-mods-list {
     display: flex;
@@ -3371,9 +3371,9 @@
     }
 }
 
-// ============================================
-// MODIFICATION CARDS (Enhanced for Properties Tab)
-// ============================================
+/* ============================================ */
+/* MODIFICATION CARDS (Enhanced for Properties Tab) */
+/* ============================================ */
 
 .wh40k-mod-card {
     background: rgba(0, 0, 0, 0.3);
@@ -3460,9 +3460,9 @@
     }
 }
 
-// ============================================
-// MODIFICATIONS BANNER (Overview Tab)
-// ============================================
+/* ============================================ */
+/* MODIFICATIONS BANNER (Overview Tab) */
+/* ============================================ */
 
 .wh40k-modifications-banner {
     background: linear-gradient(135deg, rgba(58, 93, 132, 0.25), rgba(58, 93, 132, 0.1));
@@ -3502,9 +3502,9 @@
     cursor: help;
 }
 
-// ============================================
-// MODIFIED STAT INDICATOR
-// ============================================
+/* ============================================ */
+/* MODIFIED STAT INDICATOR */
+/* ============================================ */
 
 .wh40k-weapon-stat {
     &--modified {
@@ -3539,9 +3539,9 @@
     }
 }
 
-// ============================================
-// EMPTY STATE FOR MODS
-// ============================================
+/* ============================================ */
+/* EMPTY STATE FOR MODS */
+/* ============================================ */
 
 .wh40k-empty-state--mods {
     text-align: center;
@@ -3572,9 +3572,9 @@
     }
 }
 
-// ============================================
-// PROSE EDITOR
-// ============================================
+/* ============================================ */
+/* PROSE EDITOR */
+/* ============================================ */
 
 .wh40k-prose-editor {
     .prosemirror {
@@ -3586,9 +3586,9 @@
     }
 }
 
-// ============================================
-// EMPTY MESSAGE
-// ============================================
+/* ============================================ */
+/* EMPTY MESSAGE */
+/* ============================================ */
 
 .wh40k-empty-message {
     margin: 0;
@@ -3598,9 +3598,9 @@
     color: var(--wh40k-text-muted);
 }
 
-// ============================================
-// BUTTONS
-// ============================================
+/* ============================================ */
+/* BUTTONS */
+/* ============================================ */
 
 .wh40k-btn {
     display: inline-flex;
@@ -3653,9 +3653,9 @@
     }
 }
 
-// ============================================
-// WEAPON CHAT CARD
-// ============================================
+/* ============================================ */
+/* WEAPON CHAT CARD */
+/* ============================================ */
 
 .wh40k-weapon-card {
     background: var(--wh40k-panel-bg-solid);
@@ -3891,9 +3891,9 @@
     }
 }
 
-// ============================================
-// MODIFICATION DROPZONE ENHANCEMENTS
-// ============================================
+/* ============================================ */
+/* MODIFICATION DROPZONE ENHANCEMENTS */
+/* ============================================ */
 
 .wh40k-mod-dropzone {
     position: relative;
@@ -3909,7 +3909,7 @@
         pointer-events: none;
     }
 
-    // Drag-over state
+    /* Drag-over state */
     &.drag-over {
         background: rgba(212, 175, 55, 0.08);
         box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.15);
@@ -3925,7 +3925,7 @@
         }
     }
 
-    // Invalid drop
+    /* Invalid drop */
     &.drag-invalid {
         background: rgba(182, 62, 46, 0.08);
 
@@ -4047,9 +4047,9 @@
     }
 }
 
-// ============================================
-// MODIFICATION CATEGORY ICONS
-// ============================================
+/* ============================================ */
+/* MODIFICATION CATEGORY ICONS */
+/* ============================================ */
 
 .wh40k-mod-category-icon {
     display: inline-flex;
@@ -4069,7 +4069,7 @@
         font-size: 0.8rem;
     }
 
-    // Category-specific colors
+    /* Category-specific colors */
     [data-category='sight'] & {
         background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(212, 175, 55, 0.12));
         border-color: rgba(212, 175, 55, 0.35);
@@ -4095,7 +4095,7 @@
     }
 }
 
-// Active modification list dropzone highlighting
+/* Active modification list dropzone highlighting */
 .wh40k-mods-list[data-drop-zone='modifications'] {
     position: relative;
     transition: all var(--wh40k-transition-medium);

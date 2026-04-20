@@ -1,6 +1,6 @@
-// ============================================
-// Weapons Full Width Panel
-// ============================================
+/* ============================================ */
+/* Weapons Full Width Panel */
+/* ============================================ */
 
 .wh40k-weapons-fullwidth {
     margin-top: var(--wh40k-space-md);
@@ -10,17 +10,17 @@
     }
 }
 
-// ============================================
-// Skills Panel with T/+10/+20 Buttons (Specialist Style)
-// ============================================
+/* ============================================ */
+/* Skills Panel with T/+10/+20 Buttons (Specialist Style) */
+/* ============================================ */
 
 .wh40k-skills-panel {
     font-family: var(--wh40k-font-alt);
 }
 
-// Two-column skill layout
+/* Two-column skill layout */
 .wh40k-skills-columns {
-    // Grid columns defined inline via Tailwind tw-grid-cols-2
+    /* Grid columns defined inline via Tailwind tw-grid-cols-2 */
 }
 
 .wh40k-skill-row {
@@ -143,7 +143,7 @@
     }
 }
 
-// Skills use the same wh40k-train-btn styling as specialist panel
+/* Skills use the same wh40k-train-btn styling as specialist panel */
 .wh40k-skill-row .wh40k-train-btn {
     background: rgba(255, 255, 255, 0.35);
     border: 1px solid rgba(120, 46, 34, 0.35);
@@ -201,7 +201,7 @@
     }
 }
 
-// No Results Message
+/* No Results Message */
 .wh40k-skills-columns .wh40k-no-results {
     position: absolute;
     top: 50%;
@@ -227,11 +227,11 @@
     }
 }
 
-// ============================================
-// Advanced Skills Visual Distinction
-// ============================================
+/* ============================================ */
+/* Advanced Skills Visual Distinction */
+/* ============================================ */
 
-// Untrained advanced skill: greyed-out italic firebrick
+/* Untrained advanced skill: greyed-out italic firebrick */
 .wh40k-skill-row--advanced[data-training-level='0'] {
     opacity: 0.55;
     padding-top: 2px !important;
@@ -269,7 +269,7 @@
     }
 }
 
-// Untrained advanced skills section (compact 4-column grid)
+/* Untrained advanced skills section (compact 4-column grid) */
 .wh40k-advanced-untrained-section {
     margin-top: 8px;
     padding-top: 8px;
@@ -287,7 +287,7 @@
     text-align: center;
 }
 
-// Untrained grid layout now in Tailwind (tw-grid tw-grid-cols-4 tw-gap-0.5)
+/* Untrained grid layout now in Tailwind (tw-grid tw-grid-cols-4 tw-gap-0.5) */
 
 .wh40k-skill-row--compact {
     font-size: 0.8em;
@@ -320,7 +320,7 @@
     }
 }
 
-// Trained advanced skill: blue standard text
+/* Trained advanced skill: blue standard text */
 .wh40k-skill-row--advanced:not([data-training-level='0']) {
     .wh40k-skill-name {
         color: #3a6fbf;
@@ -336,7 +336,7 @@
     }
 }
 
-// Favorite skill button
+/* Favorite skill button */
 .wh40k-skill-favorite {
     background: none;
     border: none;
@@ -360,7 +360,7 @@
     }
 }
 
-// Locked advanced skill styling
+/* Locked advanced skill styling */
 .wh40k-skill-row--locked {
     opacity: 0.5;
     position: relative;
@@ -373,7 +373,7 @@
         cursor: help;
 
         &::after {
-            content: '\f023'; // fa-lock
+            content: '\f023'; /* fa-lock */
             font-family: 'Font Awesome 5 Free';
             font-weight: 900;
             margin-left: 6px;
@@ -390,7 +390,7 @@
     }
 }
 
-// Future: grey out if actor lacks appropriate talent/trait
+/* Future: grey out if actor lacks appropriate talent/trait */
 .wh40k-skill-row--unavailable {
     opacity: 0.5;
     filter: grayscale(0.5);

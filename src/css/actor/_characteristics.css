@@ -1,7 +1,7 @@
 .wh40k-wrapper {
-    // ============================================
-    // ORIGIN PATH STYLES
-    // ============================================
+    /* ============================================ */
+    /* ORIGIN PATH STYLES */
+    /* ============================================ */
 
     .wh40k-origin-description {
         text-align: center;
@@ -139,7 +139,7 @@
         font-style: italic;
     }
 
-    // Effects List
+    /* Effects List */
     .wh40k-effects-list {
         display: grid;
         grid-template-columns: repeat(2, 1fr);

@@ -18,7 +18,7 @@
         max-height: 85vh;
         overflow-y: auto;
 
-        // Header
+        /* Header */
         .wh40k-scaler-header {
             border-bottom: 2px solid var(--color-border-secondary);
             padding-bottom: var(--wh40k-space-md);
@@ -66,7 +66,7 @@
             letter-spacing: 0.5px;
         }
 
-        // Slider Section
+        /* Slider Section */
         .wh40k-scaler-slider-section {
             label {
                 display: block;
@@ -91,22 +91,19 @@
             appearance: none;
             border-radius: 6px;
             outline: none;
+            /* Gradient stops: 1-5 Minor, 6-10 Standard, 11-15 Tough, 16-20 Elite, 21-30 Boss */
             background: linear-gradient(
                 to right,
                 #4caf50 0%,
                 #4caf50 16.7%,
-                // Threat 1-5 (Minor)
                 #2196f3 16.7%,
                 #2196f3 33.3%,
-                // Threat 6-10 (Standard)
                 #ff9800 33.3%,
                 #ff9800 50%,
-                // Threat 11-15 (Tough)
                 #f44336 50%,
                 #f44336 66.7%,
-                // Threat 16-20 (Elite)
                 #9c27b0 66.7%,
-                #9c27b0 100% // Threat 21-30 (Boss)
+                #9c27b0 100%
             );
 
             &::-webkit-slider-thumb {
@@ -233,7 +230,7 @@
             }
         }
 
-        // Scaling Options
+        /* Scaling Options */
         .wh40k-scaler-options {
             h4 {
                 margin: 0 0 var(--wh40k-space-sm) 0;
@@ -278,7 +275,7 @@
             }
         }
 
-        // Preview Section
+        /* Preview Section */
         .wh40k-scaler-preview {
             h4 {
                 margin: 0 0 var(--wh40k-space-md) 0;
@@ -497,7 +494,7 @@
             text-align: center;
         }
 
-        // Footer
+        /* Footer */
         .wh40k-scaler-footer {
             display: flex;
             justify-content: flex-end;

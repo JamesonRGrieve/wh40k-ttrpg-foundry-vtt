@@ -15,7 +15,7 @@
             flex-direction: column;
             gap: 0.75rem;
 
-            // Opacity levels
+            /* Opacity levels */
             &.opacity-high {
                 opacity: 0.9;
             }
@@ -27,7 +27,7 @@
             }
         }
 
-        // Sections
+        /* Sections */
         .combat-panel-section {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--wh40k-bronze, #cd7f32);
@@ -43,7 +43,7 @@
             }
         }
 
-        // Vitals
+        /* Vitals */
         .vital-row {
             display: flex;
             align-items: center;
@@ -88,7 +88,7 @@
             }
         }
 
-        // Weapon
+        /* Weapon */
         .weapon-info {
             display: flex;
             gap: 0.5rem;
@@ -116,7 +116,7 @@
             }
         }
 
-        // Attack buttons
+        /* Attack buttons */
         .attack-buttons {
             display: flex;
             gap: 0.5rem;
@@ -137,7 +137,7 @@
             }
         }
 
-        // Reaction/action buttons
+        /* Reaction/action buttons */
         .reaction-buttons,
         .quick-actions {
             display: flex;

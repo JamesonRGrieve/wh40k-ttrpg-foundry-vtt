@@ -1,6 +1,6 @@
-// ============================================
-// Item Header Section
-// ============================================
+/* ============================================ */
+/* Item Header Section */
+/* ============================================ */
 
 .wh40k-item-header {
     display: grid;
@@ -11,7 +11,7 @@
     border-bottom: 2px solid var(--wh40k-gold-dark);
     flex-shrink: 0;
 
-    // Compact variant for smaller sheets
+    /* Compact variant for smaller sheets */
     &--compact {
         grid-template-columns: 50px 1fr;
         padding: var(--wh40k-space-sm) var(--wh40k-space-md);
@@ -19,7 +19,7 @@
     }
 }
 
-// Item Image
+/* Item Image */
 .wh40k-item-image {
     width: 80px;
     height: 80px;
@@ -42,14 +42,14 @@
         box-shadow: var(--wh40k-shadow-lg), 0 0 20px rgba(212, 175, 55, 0.5);
     }
 
-    // Small variant for compact sheets
+    /* Small variant for compact sheets */
     &--sm {
         width: 50px;
         height: 50px;
     }
 }
 
-// Item Title Block
+/* Item Title Block */
 .wh40k-item-title {
     display: flex;
     flex-direction: column;
@@ -100,7 +100,7 @@
     }
 }
 
-// Item Metadata Badges
+/* Item Metadata Badges */
 .wh40k-item-meta {
     display: flex;
     flex-wrap: wrap;

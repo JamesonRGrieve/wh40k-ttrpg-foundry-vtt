@@ -1,8 +1,8 @@
 .wh40k-wrapper {
-    // ============================================
-    // Quick Actions Bar Component
-    // ============================================
-    // Standardized action buttons for items across all sheets
+    /* ============================================ */
+    /* Quick Actions Bar Component */
+    /* ============================================ */
+    /* Standardized action buttons for items across all sheets */
 
     .wh40k-quick-actions-bar {
         display: flex;
@@ -12,7 +12,7 @@
         background: var(--wh40k-item-panel-bg);
         border-top: 1px solid var(--wh40k-item-panel-border);
 
-        // Compact mode (icons only, smaller spacing)
+        /* Compact mode (icons only, smaller spacing) */
         &--compact {
             gap: var(--wh40k-item-spacing-xs);
             padding: var(--wh40k-item-spacing-xs);
@@ -67,9 +67,9 @@
             outline-offset: 1px;
         }
 
-        // ----------------------------------------
-        // Variant: Primary (main actions)
-        // ----------------------------------------
+        /* ---------------------------------------- */
+        /* Variant: Primary (main actions) */
+        /* ---------------------------------------- */
         &--primary {
             background: linear-gradient(135deg, var(--wh40k-gold) 0%, var(--wh40k-gold-dark) 100%);
             border-color: var(--wh40k-gold-dark);
@@ -83,9 +83,9 @@
             }
         }
 
-        // ----------------------------------------
-        // Variant: Secondary (supporting actions)
-        // ----------------------------------------
+        /* ---------------------------------------- */
+        /* Variant: Secondary (supporting actions) */
+        /* ---------------------------------------- */
         &--secondary {
             background: rgba(100, 100, 120, 0.25);
             border-color: rgba(100, 100, 120, 0.4);
@@ -98,9 +98,9 @@
             }
         }
 
-        // ----------------------------------------
-        // Variant: Danger (destructive actions)
-        // ----------------------------------------
+        /* ---------------------------------------- */
+        /* Variant: Danger (destructive actions) */
+        /* ---------------------------------------- */
         &--danger {
             background: rgba(239, 68, 68, 0.2);
             border-color: rgba(239, 68, 68, 0.3);
@@ -114,9 +114,9 @@
             }
         }
 
-        // ----------------------------------------
-        // Compact size
-        // ----------------------------------------
+        /* ---------------------------------------- */
+        /* Compact size */
+        /* ---------------------------------------- */
         &--compact {
             padding: 4px 8px;
             font-size: var(--wh40k-item-font-size-xs);
@@ -124,10 +124,10 @@
         }
     }
 
-    // ============================================
-    // Quick Actions in Character Sheet Context
-    // ============================================
-    // Slightly different styling when used in character sheet item lists
+    /* ============================================ */
+    /* Quick Actions in Character Sheet Context */
+    /* ============================================ */
+    /* Slightly different styling when used in character sheet item lists */
 
     .wh40k-item-list {
         .wh40k-quick-actions-bar {
@@ -144,9 +144,9 @@
         }
     }
 
-    // ============================================
-    // Keyboard Navigation Support
-    // ============================================
+    /* ============================================ */
+    /* Keyboard Navigation Support */
+    /* ============================================ */
 
     .wh40k-quick-actions-bar:focus-within {
         .wh40k-quick-action:focus {

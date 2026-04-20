@@ -1,11 +1,11 @@
-// ============================================
-// Vehicle Sheet V2 Styles
-// ============================================
-// Phase 6: Dedicated sheet for vehicle/ship NPCs
-// Based on NPC V2 pattern but optimized for vehicles
+/* ============================================ */
+/* Vehicle Sheet V2 Styles */
+/* ============================================ */
+/* Phase 6: Dedicated sheet for vehicle/ship NPCs */
+/* Based on NPC V2 pattern but optimized for vehicles */
 
 .wh40k-rpg.sheet.actor.vehicle-v2 {
-    // ApplicationV2 Layout Structure
+    /* ApplicationV2 Layout Structure */
     .window-content {
         display: flex !important;
         flex-direction: column !important;
@@ -40,7 +40,7 @@
         min-height: 0 !important;
     }
 
-    // === HEADER ===
+    /* === HEADER === */
     .wh40k-vehicle-v2-header {
         display: grid;
         grid-template-columns: auto 1fr auto;
@@ -54,7 +54,7 @@
         }
     }
 
-    // Portrait
+    /* Portrait */
     .wh40k-portrait-container {
         width: 100px;
         height: 100px;
@@ -75,7 +75,7 @@
         }
     }
 
-    // Identity Section
+    /* Identity Section */
     .wh40k-vehicle-v2-identity {
         display: flex;
         flex-direction: column;
@@ -138,7 +138,7 @@
         }
     }
 
-    // Quick Stats
+    /* Quick Stats */
     .wh40k-vehicle-v2-quick-stats {
         display: flex;
         flex-direction: column;
@@ -187,7 +187,7 @@
         color: var(--wh40k-text-muted, #888);
     }
 
-    // === PANELS ===
+    /* === PANELS === */
     .wh40k-vehicle-v2-panel {
         background: var(--wh40k-panel-bg, rgba(40, 35, 30, 0.7));
         border: 1px solid var(--wh40k-border-color, #444);
@@ -210,7 +210,7 @@
         }
     }
 
-    // === TABS ===
+    /* === TABS === */
     .wh40k-vehicle-v2-tabs {
         display: flex;
         gap: 0.25rem;
@@ -240,7 +240,7 @@
         }
     }
 
-    // === TAB CONTENT ===
+    /* === TAB CONTENT === */
     .tab {
         display: none;
 
@@ -249,7 +249,7 @@
         }
     }
 
-    // === VEHICLE STATS ===
+    /* === VEHICLE STATS === */
     .wh40k-vehicle-v2-stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -296,7 +296,7 @@
         text-align: center;
     }
 
-    // === WEAPONS ===
+    /* === WEAPONS === */
     .wh40k-vehicle-v2-weapons-list {
         display: flex;
         flex-direction: column;
@@ -334,7 +334,7 @@
         color: var(--wh40k-text-muted, #888);
     }
 
-    // === CREW ===
+    /* === CREW === */
     .wh40k-vehicle-v2-crew-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -381,7 +381,7 @@
         }
     }
 
-    // === COMPONENTS ===
+    /* === COMPONENTS === */
     .wh40k-vehicle-v2-items-list {
         display: flex;
         flex-direction: column;
@@ -413,7 +413,7 @@
         margin-top: 0.5rem;
     }
 
-    // === TRAITS ===
+    /* === TRAITS === */
     .wh40k-vehicle-v2-traits-list {
         display: flex;
         flex-direction: column;
@@ -437,7 +437,7 @@
         }
     }
 
-    // === EMPTY STATES ===
+    /* === EMPTY STATES === */
     .wh40k-vehicle-v2-empty {
         padding: 2rem;
         text-align: center;
@@ -445,7 +445,7 @@
         font-style: italic;
     }
 
-    // === EDITOR CONTENT ===
+    /* === EDITOR CONTENT === */
     .editor-content {
         min-height: 100px;
         padding: 0.75rem;

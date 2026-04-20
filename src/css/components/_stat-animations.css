@@ -342,7 +342,7 @@
     .value-counter {
         display: inline-block;
         transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        font-variant-numeric: tabular-nums; // Monospaced numbers for smooth counting
+        font-variant-numeric: tabular-nums; /* Monospaced numbers for smooth counting */
 
         &.counting-up {
             animation: count-up 0.5s ease-out;

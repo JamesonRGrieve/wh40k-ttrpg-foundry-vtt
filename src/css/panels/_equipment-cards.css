@@ -1,7 +1,7 @@
-// ============================================
-// MODERN EQUIPMENT TABLE (INLINE/DENSE)
-// ============================================
-// Sleek, modern, single-line layout for equipment items
+/* ============================================ */
+/* MODERN EQUIPMENT TABLE (INLINE/DENSE) */
+/* ============================================ */
+/* Sleek, modern, single-line layout for equipment items */
 
 .wh40k-equipment-table {
     margin-bottom: var(--wh40k-space-sm);
@@ -26,7 +26,7 @@
     }
 }
 
-// Row State Variants
+/* Row State Variants */
 .wh40k-equip-equipped {
     border-left: 3px solid var(--wh40k-success-primary);
     background: var(--wh40k-success-bg);
@@ -52,7 +52,7 @@
     border-left: 3px solid var(--wh40k-text-subtle);
 }
 
-// Icon (Small)
+/* Icon (Small) */
 .wh40k-equip-icon {
     @apply tw-w-7 tw-h-7 tw-shrink-0;
     border-radius: var(--wh40k-radius-md);
@@ -60,7 +60,7 @@
     border: 1px solid var(--wh40k-border-color-light);
 }
 
-// Name Button
+/* Name Button */
 .wh40k-equip-name {
     @apply tw-flex-1 tw-min-w-0 tw-text-left tw-cursor-pointer tw-truncate tw-font-semibold;
     font-size: 0.85rem;
@@ -75,7 +75,7 @@
     }
 }
 
-// Meta Info (Type, Location, etc.)
+/* Meta Info (Type, Location, etc.) */
 .wh40k-equip-meta {
     font-size: 0.7rem;
     color: var(--wh40k-text-muted);
@@ -84,7 +84,7 @@
     flex-shrink: 0;
 }
 
-// Status Badge (Active, Offline, etc.)
+/* Status Badge (Active, Offline, etc.) */
 .wh40k-equip-status {
     font-size: 0.7rem;
     font-weight: 600;
@@ -111,7 +111,7 @@
     }
 }
 
-// Stat Display (AP, Weight, etc.)
+/* Stat Display (AP, Weight, etc.) */
 .wh40k-equip-stat {
     font-size: 0.75rem;
     color: var(--wh40k-text-dark);
@@ -129,9 +129,9 @@
     }
 }
 
-// Actions Container
+/* Actions Container */
 
-// Action Buttons (Small & Stylistic)
+/* Action Buttons (Small & Stylistic) */
 .wh40k-equip-btn {
     width: 24px;
     height: 24px;
@@ -162,7 +162,7 @@
     }
 }
 
-// Toggle Button (Equip/Activate)
+/* Toggle Button (Equip/Activate) */
 .wh40k-equip-toggle {
     .fa-check-circle {
         color: var(--wh40k-success-primary);
@@ -177,7 +177,7 @@
     }
 }
 
-// Danger Button
+/* Danger Button */
 .wh40k-equip-danger {
     color: var(--wh40k-danger-primary);
 
@@ -187,7 +187,7 @@
     }
 }
 
-// Add Item Button (Compact)
+/* Add Item Button (Compact) */
 .wh40k-add-item-btn {
     width: 100%;
     padding: var(--wh40k-space-sm);
@@ -217,11 +217,11 @@
     }
 }
 
-// ============================================
-// EQUIPMENT CARDS (LEGACY - KEEP FOR CARDS VIEW)
-// ============================================
+/* ============================================ */
+/* EQUIPMENT CARDS (LEGACY - KEEP FOR CARDS VIEW) */
+/* ============================================ */
 
-// Item Count Badge in Header
+/* Item Count Badge in Header */
 .wh40k-item-count {
     display: inline-flex;
     align-items: center;
@@ -238,12 +238,12 @@
     flex-shrink: 0;
 }
 
-// Equipment List Container
+/* Equipment List Container */
 .wh40k-equipment-list {
     @apply tw-flex tw-flex-col tw-gap-2 tw-mb-2;
 }
 
-// Equipment Card
+/* Equipment Card */
 .wh40k-equipment-card {
     background: var(--wh40k-panel-bg-solid);
     border: 1px solid var(--wh40k-border-color-light);
@@ -264,7 +264,7 @@
     }
 }
 
-// Card States
+/* Card States */
 .wh40k-card-equipped {
     border-left: 4px solid var(--wh40k-success-primary);
     background: var(--wh40k-success-bg);
@@ -309,7 +309,7 @@
     }
 }
 
-// Card Header (Icon, Name, Action Button)
+/* Card Header (Icon, Name, Action Button) */
 .wh40k-card-header {
     @apply tw-flex tw-items-center tw-gap-2 tw-mb-1;
 }
@@ -348,7 +348,7 @@
     }
 }
 
-// Card Action Button (Equip/Activate)
+/* Card Action Button (Equip/Activate) */
 .wh40k-card-action {
     width: 32px;
     height: 32px;
@@ -366,7 +366,7 @@
     position: relative;
     overflow: hidden;
 
-    // Ripple effect
+    /* Ripple effect */
     &::before {
         content: '';
         position: absolute;
@@ -415,7 +415,7 @@
     }
 }
 
-// Status Badges
+/* Status Badges */
 .wh40k-status-badge {
     display: inline-flex;
     align-items: center;
@@ -444,7 +444,7 @@
     color: var(--wh40k-danger-primary);
 }
 
-// Card Description
+/* Card Description */
 .wh40k-card-description {
     font-size: 0.75rem;
     color: var(--wh40k-text-medium);
@@ -456,7 +456,7 @@
     font-style: italic;
 }
 
-// Card Stats (Badges for AP, Weight, etc.)
+/* Card Stats (Badges for AP, Weight, etc.) */
 .wh40k-card-stats {
     @apply tw-flex tw-flex-wrap tw-mb-1;
     gap: 6px;
@@ -485,7 +485,7 @@
     font-weight: 700;
 }
 
-// Special stat badges
+/* Special stat badges */
 .wh40k-badge-ap {
     border-color: var(--wh40k-danger-border);
     background: var(--wh40k-danger-bg);
@@ -504,7 +504,7 @@
     }
 }
 
-// Card Actions Row
+/* Card Actions Row */
 .wh40k-card-actions {
     @apply tw-flex tw-gap-1 tw-pt-1;
     border-top: 1px solid var(--wh40k-border-color-light);
@@ -527,7 +527,7 @@
     position: relative;
     overflow: hidden;
 
-    // Ripple effect
+    /* Ripple effect */
     &::before {
         content: '';
         position: absolute;
@@ -576,7 +576,7 @@
     }
 }
 
-// Add Item Button
+/* Add Item Button */
 .wh40k-add-item-btn {
     width: 100%;
     padding: var(--wh40k-space-md);
@@ -606,9 +606,9 @@
     }
 }
 
-// ============================================
-// Drag & Drop States
-// ============================================
+/* ============================================ */
+/* Drag & Drop States */
+/* ============================================ */
 
 .wh40k-equipment-card.dragging {
     opacity: 0.5;
@@ -620,9 +620,9 @@
     border-radius: var(--wh40k-radius-lg);
 }
 
-// ============================================
-// Responsive Adjustments
-// ============================================
+/* ============================================ */
+/* Responsive Adjustments */
+/* ============================================ */
 
 @media (max-width: 768px) {
     .wh40k-card-stats {

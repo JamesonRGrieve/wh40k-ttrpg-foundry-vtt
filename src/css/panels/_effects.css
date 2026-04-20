@@ -26,11 +26,11 @@
 }
 
 .wh40k-effects-list {
-    // Layout: tw-flex tw-flex-col tw-gap-2 tw-mb-3
+    /* Layout: tw-flex tw-flex-col tw-gap-2 tw-mb-3 */
 }
 
 .wh40k-effect-card {
-    // Spacing: tw-p-2
+    /* Spacing: tw-p-2 */
     background: var(--wh40k-bg-paper-light);
     border: 1px solid var(--wh40k-border-light);
     border-left: 3px solid var(--wh40k-accent-gold);
@@ -60,11 +60,11 @@
 }
 
 .wh40k-effect-card-header {
-    // Layout: tw-flex tw-items-center tw-gap-2
+    /* Layout: tw-flex tw-items-center tw-gap-2 */
 }
 
 .wh40k-effect-icon {
-    // Size: tw-w-9 tw-h-9 tw-shrink-0
+    /* Size: tw-w-9 tw-h-9 tw-shrink-0 */
     border-radius: var(--wh40k-radius-md);
     border: 1px solid var(--wh40k-border-medium);
     object-fit: cover;
@@ -72,17 +72,17 @@
 }
 
 .wh40k-effect-info {
-    // Layout: tw-flex-1 tw-min-w-0
+    /* Layout: tw-flex-1 tw-min-w-0 */
 }
 
 .wh40k-effect-name {
-    // Layout: tw-font-semibold tw-truncate tw-mb-0.5
+    /* Layout: tw-font-semibold tw-truncate tw-mb-0.5 */
     font-size: 0.9rem;
     color: var(--color-text-primary);
 }
 
 .wh40k-effect-source {
-    // Layout: tw-flex tw-items-center tw-gap-1
+    /* Layout: tw-flex tw-items-center tw-gap-1 */
     font-size: 0.75rem;
     color: var(--wh40k-text-muted);
     font-style: italic;
@@ -93,11 +93,11 @@
 }
 
 .wh40k-effect-controls {
-    // Layout: tw-flex tw-items-center tw-gap-1 tw-shrink-0
+    /* Layout: tw-flex tw-items-center tw-gap-1 tw-shrink-0 */
 }
 
 .wh40k-effect-btn {
-    // Layout: tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-cursor-pointer
+    /* Layout: tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-cursor-pointer */
     background: transparent;
     border: 1px solid var(--wh40k-border-medium);
     border-radius: var(--wh40k-radius-md);
@@ -140,12 +140,12 @@
 }
 
 .wh40k-effect-changes {
-    // Layout: tw-flex tw-flex-col tw-gap-1 tw-mt-2 tw-pt-2
+    /* Layout: tw-flex tw-flex-col tw-gap-1 tw-mt-2 tw-pt-2 */
     border-top: 1px solid var(--wh40k-border-light);
 }
 
 .wh40k-effect-change {
-    // Layout: tw-flex tw-items-center tw-gap-1 tw-py-1 tw-px-2
+    /* Layout: tw-flex tw-items-center tw-gap-1 tw-py-1 tw-px-2 */
     background: rgba(0, 0, 0, 0.03);
     border-radius: var(--wh40k-radius-md);
     font-size: 0.75rem;
@@ -168,7 +168,7 @@
 }
 
 .wh40k-empty-state {
-    // Layout: tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-center
+    /* Layout: tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-center */
     padding: var(--wh40k-space-xl) var(--wh40k-space-md);
     color: var(--wh40k-text-muted);
 

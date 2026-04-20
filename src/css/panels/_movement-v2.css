@@ -1,7 +1,7 @@
-// ============================================
-// MOVEMENT PANEL - Modern Dynamic Design
-// ============================================
-// Sleek, game-like UI with gauges and animations
+/* ============================================ */
+/* MOVEMENT PANEL - Modern Dynamic Design */
+/* ============================================ */
+/* Sleek, game-like UI with gauges and animations */
 
 .wh40k-panel-movement-full {
     .wh40k-panel-header {
@@ -24,9 +24,9 @@
     }
 }
 
-// ============================================
-// Speed Hero Section - Gauge Display
-// ============================================
+/* ============================================ */
+/* Speed Hero Section - Gauge Display */
+/* ============================================ */
 .wh40k-speed-hero {
     display: flex;
     align-items: center;
@@ -37,7 +37,7 @@
     border: 1px solid rgb(from var(--wh40k-accent-info) r g b / 0.2);
 }
 
-// Circular Gauge
+/* Circular Gauge */
 .wh40k-speed-gauge {
     position: relative;
     width: 110px;
@@ -62,12 +62,12 @@
     stroke: url(#speedGradient);
     stroke-width: 8;
     stroke-linecap: round;
-    stroke-dasharray: 327; // 2 * PI * 52
+    stroke-dasharray: 327; /* 2 * PI * 52 */
     stroke-dashoffset: calc(327 - (327 * min(var(--gauge-percent), 30) / 30));
     transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     filter: drop-shadow(0 0 6px rgb(from var(--wh40k-accent-info) r g b / 0.6));
 
-    // Fallback gradient via stops
+    /* Fallback gradient via stops */
     stroke: var(--wh40k-accent-info);
 }
 
@@ -107,7 +107,7 @@
     margin-top: 2px;
 }
 
-// Speed Tiers (Stacked Bars)
+/* Speed Tiers (Stacked Bars) */
 .wh40k-speed-tiers {
     @apply tw-flex-1 tw-flex tw-flex-col;
     gap: 6px;
@@ -175,9 +175,9 @@
     letter-spacing: 0.5px;
 }
 
-// ============================================
-// Physical Grid - Athletics & Carrying
-// ============================================
+/* ============================================ */
+/* Physical Grid - Athletics & Carrying */
+/* ============================================ */
 .wh40k-physical-grid {
     @apply tw-grid tw-grid-cols-2 tw-gap-3;
 }
@@ -226,7 +226,7 @@
     border-top: 3px solid var(--wh40k-accent-green);
 }
 
-// Athletics Metrics
+/* Athletics Metrics */
 .wh40k-metric-row {
     @apply tw-flex tw-gap-2 tw-mb-2;
 }
@@ -269,7 +269,7 @@
     letter-spacing: 0.5px;
 }
 
-// Carrying Metrics
+/* Carrying Metrics */
 .wh40k-carry-metrics {
     @apply tw-flex tw-justify-between tw-gap-1 tw-mb-3;
 }
@@ -310,7 +310,7 @@
     margin-top: 2px;
 }
 
-// Encumbrance Display
+/* Encumbrance Display */
 .wh40k-encumbrance-display {
     padding: var(--wh40k-space-sm);
     background: rgb(from #000 r g b / 0.3);
@@ -408,9 +408,9 @@
     }
 }
 
-// ============================================
-// Responsive
-// ============================================
+/* ============================================ */
+/* Responsive */
+/* ============================================ */
 @media (max-width: 600px) {
     .wh40k-speed-hero {
         flex-direction: column;
@@ -421,20 +421,20 @@
     }
 }
 
-// ============================================
-// Compact Movement Panel (Combat Tab)
-// ============================================
+/* ============================================ */
+/* Compact Movement Panel (Combat Tab) */
+/* ============================================ */
 .wh40k-panel-movement-compact {
     .wh40k-panel-body {
-        padding: var(--wh40k-space-xs); // Reduced for compactness
+        padding: var(--wh40k-space-xs); /* Reduced for compactness */
     }
 }
 
-// Modern compact grid layout (4 columns)
+/* Modern compact grid layout (4 columns) */
 .wh40k-movement-modern-compact {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); // 4 columns for compact horizontal layout
-    gap: var(--wh40k-space-xs); // Tighter gap
+    grid-template-columns: repeat(4, 1fr); /* 4 columns for compact horizontal layout */
+    gap: var(--wh40k-space-xs); /* Tighter gap */
 }
 
 .wh40k-move-modern-cell {
@@ -443,8 +443,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 6px 8px; // More compact padding
-    min-height: 40px; // Reduced from auto for consistent height
+    padding: 6px 8px; /* More compact padding */
+    min-height: 40px; /* Reduced from auto for consistent height */
     background: linear-gradient(135deg, rgb(from var(--wh40k-accent-gold) r g b / 0.04) 0%, rgb(from var(--wh40k-accent-gold) r g b / 0.01) 100%);
     border: 1px solid rgb(from var(--wh40k-border-light) r g b / 0.5);
     border-radius: var(--wh40k-radius-sm);
@@ -459,7 +459,7 @@
 }
 
 .wh40k-move-modern-icon {
-    font-size: 1rem; // Slightly larger for better visibility
+    font-size: 1rem; /* Slightly larger for better visibility */
     color: rgb(from var(--wh40k-accent-gold) r g b / 0.6);
     margin-bottom: 2px;
 
@@ -478,7 +478,7 @@
 }
 
 .wh40k-move-modern-label {
-    font-size: 0.5rem; // Smaller label
+    font-size: 0.5rem; /* Smaller label */
     font-weight: 600;
     color: var(--wh40k-text-muted);
     text-transform: uppercase;
@@ -487,7 +487,7 @@
 }
 
 .wh40k-move-modern-value {
-    font-size: 1.1rem; // Slightly larger value for readability
+    font-size: 1.1rem; /* Slightly larger value for readability */
     font-weight: 700;
     color: var(--wh40k-text-primary);
     font-family: var(--wh40k-font-alt);
@@ -500,7 +500,7 @@
     }
 }
 
-// Background progress bar
+/* Background progress bar */
 .wh40k-move-modern-bar {
     position: absolute;
     bottom: 0;
@@ -512,7 +512,7 @@
     transition: width var(--wh40k-transition-medium);
 }
 
-// Movement type specific colors
+/* Movement type specific colors */
 .wh40k-move-half .wh40k-move-modern-bar {
     background: linear-gradient(90deg, rgb(from #95a5a6 r g b / 0.4), rgb(from #7f8c8d r g b / 0.6));
 }
@@ -526,7 +526,7 @@
     background: linear-gradient(90deg, rgb(from var(--wh40k-accent-red) r g b / 0.4), rgb(from #c0392b r g b / 0.6));
 }
 
-// Legacy compact styles (kept for backwards compatibility)
+/* Legacy compact styles (kept for backwards compatibility) */
 .wh40k-movement-grid-compact {
     @apply tw-grid tw-grid-cols-2 tw-gap-1;
 }

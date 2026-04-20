@@ -1,7 +1,7 @@
 .wh40k-wrapper {
-    // Enriched Content Styling
-    // ============================================
-    // Styles for inline enriched content (characteristics, skills, modifiers, etc.)
+    /* Enriched Content Styling */
+    /* ============================================ */
+    /* Styles for inline enriched content (characteristics, skills, modifiers, etc.) */
 
     .wh40k-enricher {
         display: inline-flex;
@@ -26,7 +26,7 @@
         }
     }
 
-    // Characteristic enricher
+    /* Characteristic enricher */
     .wh40k-enricher-characteristic {
         background: rgb(from var(--wh40k-accent-gold) r g b / 0.15);
         border: 1px solid rgb(from var(--wh40k-accent-gold) r g b / 0.3);
@@ -43,7 +43,7 @@
         }
     }
 
-    // Skill enricher
+    /* Skill enricher */
     .wh40k-enricher-skill {
         background: rgb(from var(--wh40k-accent-skills) r g b / 0.15);
         border: 1px solid rgb(from var(--wh40k-accent-skills) r g b / 0.3);
@@ -60,7 +60,7 @@
         }
     }
 
-    // Modifier enricher
+    /* Modifier enricher */
     .wh40k-enricher-modifier {
         cursor: default;
 
@@ -97,7 +97,7 @@
         }
     }
 
-    // Armor enricher
+    /* Armor enricher */
     .wh40k-enricher-armor {
         background: rgb(from var(--wh40k-accent-combat) r g b / 0.15);
         border: 1px solid rgb(from var(--wh40k-accent-combat) r g b / 0.3);
@@ -115,7 +115,7 @@
         }
     }
 
-    // Quality enricher (weapon qualities)
+    /* Quality enricher (weapon qualities) */
     .wh40k-enricher-quality {
         background: rgba(239, 68, 68, 0.15);
         border: 1px solid rgba(239, 68, 68, 0.3);
@@ -132,7 +132,7 @@
         }
     }
 
-    // Property enricher (armour properties)
+    /* Property enricher (armour properties) */
     .wh40k-enricher-property {
         background: rgba(59, 130, 246, 0.15);
         border: 1px solid rgba(59, 130, 246, 0.3);
@@ -149,7 +149,7 @@
         }
     }
 
-    // Condition enricher
+    /* Condition enricher */
     .wh40k-enricher-condition {
         background: rgba(245, 158, 11, 0.15);
         border: 1px solid rgba(245, 158, 11, 0.3);
@@ -166,7 +166,7 @@
         }
     }
 
-    // Error enricher
+    /* Error enricher */
     .wh40k-enricher-error {
         background: rgb(from var(--wh40k-accent-combat) r g b / 0.2);
         border: 1px dashed var(--wh40k-accent-combat);
@@ -182,7 +182,7 @@
         }
     }
 
-    // Enricher tooltips
+    /* Enricher tooltips */
     .wh40k-enricher[data-tooltip] {
         position: relative;
 
@@ -210,26 +210,26 @@
         }
     }
 
-    // Context within ProseMirror editor
+    /* Context within ProseMirror editor */
     .ProseMirror {
         .wh40k-enricher {
-            // Ensure enrichers display properly in rich text
+            /* Ensure enrichers display properly in rich text */
             vertical-align: baseline;
         }
     }
 
-    // Context within chat messages
+    /* Context within chat messages */
     .chat-message {
         .wh40k-enricher {
-            // Slightly smaller in chat
+            /* Slightly smaller in chat */
             font-size: 0.85em;
         }
     }
 
-    // Context within item descriptions
+    /* Context within item descriptions */
     .item-description {
         .wh40k-enricher {
-            // Keep consistent with description text
+            /* Keep consistent with description text */
             font-size: 1em;
         }
     }

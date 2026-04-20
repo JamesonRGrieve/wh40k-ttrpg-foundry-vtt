@@ -1,9 +1,9 @@
-// ============================================
-// Combat Tab Layout
-// ============================================
+/* ============================================ */
+/* Combat Tab Layout */
+/* ============================================ */
 
 .wh40k-tab-combat {
-    // Override the base .wh40k-tab grid display
+    /* Override the base .wh40k-tab grid display */
     &.active {
         display: block !important;
     }
@@ -22,9 +22,9 @@
     border-top: 1px solid rgb(from var(--wh40k-accent-combat) r g b / 0.2);
 }
 
-// ============================================
-// Specialist Skills Panel (Light Theme)
-// ============================================
+/* ============================================ */
+/* Specialist Skills Panel (Light Theme) */
+/* ============================================ */
 
 .wh40k-specialist-panel {
     @apply tw-flex tw-flex-col tw-gap-2;
@@ -159,7 +159,7 @@
         }
     }
 
-    // Training indicators - use talents accent color
+    /* Training indicators - use talents accent color */
     .wh40k-spec-training.wh40k-training-display {
         display: flex;
         gap: 2px;
@@ -239,13 +239,13 @@
     }
 }
 
-// ============================================
-// Advanced Skill Group Visual Distinction
-// All specialist skills are advanced, so keep styling subtle
-// ============================================
+/* ============================================ */
+/* Advanced Skill Group Visual Distinction */
+/* All specialist skills are advanced, so keep styling subtle */
+/* ============================================ */
 
 .wh40k-specialist-group--advanced {
-    // Subtle left border accent
+    /* Subtle left border accent */
     border-left: 2px solid rgb(from var(--wh40k-accent-talents) r g b / 0.5);
 
     .wh40k-specialist-header {

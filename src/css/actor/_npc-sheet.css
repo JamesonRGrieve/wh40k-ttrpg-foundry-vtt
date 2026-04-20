@@ -1,11 +1,11 @@
-// ============================================
-// NPC Sheet V2 Styles - Modern Redesign
-// ============================================
-// Vertical navigation, GM-focused, clean layout
+/* ============================================ */
+/* NPC Sheet V2 Styles - Modern Redesign */
+/* ============================================ */
+/* Vertical navigation, GM-focused, clean layout */
 
-// ============================================
-// Base Sheet Structure - Sidebar Layout
-// ============================================
+/* ============================================ */
+/* Base Sheet Structure - Sidebar Layout */
+/* ============================================ */
 
 .wh40k-rpg.sheet.actor.player.npc {
     --npc-accent-combat: #dc3545;
@@ -15,7 +15,7 @@
     --npc-accent-abilities: #ff9800;
     --npc-accent-notes: #607d8b;
 
-    // ApplicationV2 Layout Foundation
+    /* ApplicationV2 Layout Foundation */
     .window-content {
         display: flex !important;
         flex-direction: row !important;
@@ -64,7 +64,7 @@
         margin: 0;
     }
 
-    // Main content area (tabs)
+    /* Main content area (tabs) */
     .wh40k-body {
         grid-column: 2;
         grid-row: 1 / span 2;
@@ -75,7 +75,7 @@
         min-width: 0 !important;
         padding: 0.75rem;
 
-        // Tab visibility control
+        /* Tab visibility control */
         .tab {
             display: none;
 
@@ -98,9 +98,9 @@
         max-width: 160px;
     }
 
-    // ============================================
-    // SIDEBAR - Vertical Navigation & Identity
-    // ============================================
+    /* ============================================ */
+    /* SIDEBAR - Vertical Navigation & Identity */
+    /* ============================================ */
 
     .wh40k-npc-v2-sidebar {
         flex: 0 0 180px;
@@ -116,7 +116,7 @@
         overflow-x: hidden;
         resize: horizontal;
 
-        // Responsive: Collapse on narrow viewports
+        /* Responsive: Collapse on narrow viewports */
         @media (max-width: 600px) {
             flex: 0 0 60px;
             min-width: 60px;
@@ -131,7 +131,7 @@
         }
     }
 
-    // Identity Section (Portrait + Name + Meta)
+    /* Identity Section (Portrait + Name + Meta) */
     .wh40k-npc-identity {
         display: flex;
         flex-direction: column;
@@ -260,7 +260,7 @@
         }
     }
 
-    // Vertical Navigation
+    /* Vertical Navigation */
     .wh40k-vertical-nav {
         display: flex;
         flex-direction: column;
@@ -318,7 +318,7 @@
         text-overflow: ellipsis;
         transition: opacity var(--wh40k-transition-base);
 
-        // Hide on very narrow sidebars
+        /* Hide on very narrow sidebars */
         @media (max-width: 600px) {
             opacity: 0;
             width: 0;
@@ -326,7 +326,7 @@
         }
     }
 
-    // Show label on hover for collapsed nav
+    /* Show label on hover for collapsed nav */
     @media (max-width: 600px) {
         .wh40k-nav-item:hover .wh40k-nav-label {
             opacity: 1;
@@ -342,7 +342,7 @@
         }
     }
 
-    // Edit Mode Toggle
+    /* Edit Mode Toggle */
     .wh40k-edit-toggle {
         display: flex;
         align-items: center;
@@ -377,9 +377,9 @@
         }
     }
 
-    // GM Tools (collapsible)
+    /* GM Tools (collapsible) */
     .wh40k-gm-tools-wrapper {
-        margin-top: auto; // Push to bottom of sidebar
+        margin-top: auto; /* Push to bottom of sidebar */
     }
 
     .wh40k-gm-tools-toggle {
@@ -458,7 +458,7 @@
         }
     }
 
-    // Magnitude Compact (for hordes)
+    /* Magnitude Compact (for hordes) */
     .wh40k-magnitude-compact {
         padding: 0.5rem;
         background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
@@ -535,7 +535,7 @@
             align-items: flex-start;
         }
 
-        // Portrait
+        /* Portrait */
         .wh40k-portrait-section {
             flex: 0 0 100px;
         }
@@ -579,7 +579,7 @@
             }
         }
 
-        // Identity Section
+        /* Identity Section */
         .wh40k-identity-section {
             flex: 1 1 auto;
             min-width: 0;
@@ -644,7 +644,7 @@
             }
         }
 
-        // Meta Row
+        /* Meta Row */
         .wh40k-meta-row {
             display: flex;
             flex-wrap: wrap;
@@ -681,7 +681,7 @@
             }
         }
 
-        // Vitals Row
+        /* Vitals Row */
         .wh40k-vitals-row {
             display: flex;
             flex-wrap: wrap;
@@ -814,7 +814,7 @@
             }
         }
 
-        // Wounds Bar
+        /* Wounds Bar */
         .wh40k-wounds-bar {
             width: 100%;
             height: 6px;
@@ -831,7 +831,7 @@
             }
         }
 
-        // Defense display
+        /* Defense display */
         .wh40k-defense-display {
             display: flex;
             align-items: center;
@@ -859,7 +859,7 @@
             }
         }
 
-        // GM Toolbar
+        /* GM Toolbar */
         .wh40k-gm-toolbar {
             display: flex;
             flex-wrap: wrap;
@@ -917,9 +917,9 @@
         }
     }
 
-    // ============================================
-    // PANEL - Base Component
-    // ============================================
+    /* ============================================ */
+    /* PANEL - Base Component */
+    /* ============================================ */
 
     .wh40k-panel {
         background: var(--color-bg-secondary, #252525);
@@ -991,14 +991,14 @@
             font-weight: 700;
         }
 
-        // Panel accent variants
+        /* Panel accent variants */
         &.wh40k-panel--combat {
             .wh40k-panel-header > i:first-child {
                 color: var(--npc-accent-combat);
             }
         }
         &.wh40k-panel--armour {
-            // Armour panel needs more width for 6 location fields
+            /* Armour panel needs more width for 6 location fields */
             min-width: 220px;
 
             .wh40k-panel-header > i:first-child {
@@ -1057,9 +1057,9 @@
         }
     }
 
-    // ============================================
-    // INTERACTION TAB (formerly Overview)
-    // ============================================
+    /* ============================================ */
+    /* INTERACTION TAB (formerly Overview) */
+    /* ============================================ */
 
     .wh40k-interaction-tab {
         display: flex;
@@ -1067,16 +1067,16 @@
         gap: 0.75rem;
     }
 
-    // 2-Column Grid Layout
+    /* 2-Column Grid Layout */
     .wh40k-interaction-grid {
         display: grid;
         grid-template-columns: minmax(320px, 400px) 1fr;
-        grid-template-rows: auto 1fr; // Changed: second row takes remaining space
+        grid-template-rows: auto 1fr; /* Changed: second row takes remaining space */
         gap: 0.75rem;
-        align-items: stretch; // Changed: stretch to fill space
+        align-items: stretch; /* Changed: stretch to fill space */
     }
 
-    // Grid positioning
+    /* Grid positioning */
     .wh40k-grid-char-dial {
         grid-column: 1;
         grid-row: 1;
@@ -1091,8 +1091,8 @@
 
     .wh40k-grid-skills {
         grid-column: 2;
-        grid-row: 1 / 3; // Span both rows
-        min-height: 400px; // Ensure minimum height to prevent collapse
+        grid-row: 1 / 3; /* Span both rows */
+        min-height: 400px; /* Ensure minimum height to prevent collapse */
         display: flex;
         flex-direction: column;
 
@@ -1105,16 +1105,16 @@
 
         .wh40k-skills-table {
             flex: 1;
-            min-height: 0; // Allow flex shrinking
+            min-height: 0; /* Allow flex shrinking */
         }
     }
 
-    // Characteristics Quick Dial - 3x3 Grid
+    /* Characteristics Quick Dial - 3x3 Grid */
     .wh40k-char-dial {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 0.5rem;
-        aspect-ratio: 1 / 1; // Make it square
+        aspect-ratio: 1 / 1; /* Make it square */
     }
 
     .wh40k-char-cell {
@@ -1207,16 +1207,16 @@
         }
     }
 
-    // Skills Table - Dense Layout
+    /* Skills Table - Dense Layout */
     .wh40k-skills-table {
         display: flex;
         flex-direction: column;
         gap: 0.15rem;
-        max-height: 600px; // Increased from 350px to better utilize 2-row span
+        max-height: 600px; /* Increased from 350px to better utilize 2-row span */
         overflow-y: auto;
         padding-right: 0.25rem;
 
-        // Custom scrollbar for skills list
+        /* Custom scrollbar for skills list */
         &::-webkit-scrollbar {
             width: 6px;
         }
@@ -1249,7 +1249,7 @@
         &.trained {
             background: rgb(from var(--npc-accent-skills) r g b / 0.1);
             border-left: 3px solid var(--npc-accent-skills);
-            padding-left: calc(0.4rem + 3px); // Adjust for border
+            padding-left: calc(0.4rem + 3px); /* Adjust for border */
         }
 
         &.untrained {
@@ -1364,7 +1364,7 @@
         }
     }
 
-    // Proficiency Cycle Button (DnD5e-inspired)
+    /* Proficiency Cycle Button (DnD5e-inspired) */
     .wh40k-skill-cycle {
         width: 22px;
         height: 22px;
@@ -1407,7 +1407,7 @@
         }
     }
 
-    // Talent/Trait Chips
+    /* Talent/Trait Chips */
     .wh40k-talent-chips,
     .wh40k-trait-chips {
         display: flex;
@@ -1448,7 +1448,7 @@
         }
     }
 
-    // Compact Talent/Trait Chips for Grid Layout
+    /* Compact Talent/Trait Chips for Grid Layout */
     .wh40k-talent-chips-compact,
     .wh40k-trait-chips-compact {
         display: flex;
@@ -1498,7 +1498,7 @@
         }
     }
 
-    // Notes Section
+    /* Notes Section */
     .wh40k-notes-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1526,7 +1526,7 @@
             }
         }
 
-        // Editable note fields have hover-reveal edit hint
+        /* Editable note fields have hover-reveal edit hint */
         &.wh40k-note-field--editable {
             .wh40k-edit-hint {
                 opacity: 0;
@@ -1560,7 +1560,7 @@
         }
     }
 
-    // Editable panels with hover-reveal edit hint
+    /* Editable panels with hover-reveal edit hint */
     .wh40k-panel--editable {
         .wh40k-panel-header .wh40k-edit-hint {
             opacity: 0;
@@ -1574,7 +1574,7 @@
         }
     }
 
-    // Editor wrapper styling
+    /* Editor wrapper styling */
     .wh40k-editor-wrapper {
         min-height: 60px;
 
@@ -1676,9 +1676,9 @@
         }
     }
 
-    // ============================================
-    // COMBAT TAB
-    // ============================================
+    /* ============================================ */
+    /* COMBAT TAB */
+    /* ============================================ */
 
     .wh40k-combat-tab {
         display: flex;
@@ -1686,7 +1686,7 @@
         gap: 0.75rem;
     }
 
-    // ── Combat Topbar: Wounds + Movement Cards ──
+    /* ── Combat Topbar: Wounds + Movement Cards ── */
     .wh40k-combat-topbar {
         display: flex;
         align-items: stretch;
@@ -1799,7 +1799,7 @@
         }
     }
 
-    // ── Movement Cards ──
+    /* ── Movement Cards ── */
     .wh40k-movement-cards {
         display: flex;
         gap: 0.4rem;
@@ -1865,14 +1865,14 @@
         }
     }
 
-    // ── 2-Column Combat Main Layout ──
+    /* ── 2-Column Combat Main Layout ── */
     .wh40k-combat-main {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 0.75rem;
     }
 
-    // ── Hit Locations Grid ──
+    /* ── Hit Locations Grid ── */
     .wh40k-hit-locations-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1992,7 +1992,7 @@
         letter-spacing: 0.03em;
     }
 
-    // ── Actions Grid (Dodge/Parry/Init + Weapon Rows) ──
+    /* ── Actions Grid (Dodge/Parry/Init + Weapon Rows) ── */
     .wh40k-actions-grid {
         display: flex;
         flex-direction: column;
@@ -2055,7 +2055,7 @@
             font-style: italic;
         }
 
-        // Color variants
+        /* Color variants */
         &--dodge {
             border-color: rgb(from var(--npc-accent-defense) r g b / 0.3);
             .wh40k-action-btn-value {
@@ -2123,7 +2123,7 @@
         }
     }
 
-    // ── Inventory Table ──
+    /* ── Inventory Table ── */
     .wh40k-inventory-table {
         width: 100%;
         border-collapse: collapse;
@@ -2217,7 +2217,7 @@
         }
     }
 
-    // ── Combat Tracker in Nav ──
+    /* ── Combat Tracker in Nav ── */
     .wh40k-combat-tracker-nav {
         padding: 0.5rem;
         background: rgba(0, 0, 0, 0.15);
@@ -2264,14 +2264,14 @@
         }
     }
 
-    // ── Inventory Panel ──
+    /* ── Inventory Panel ── */
     .wh40k-panel--inventory {
         .wh40k-panel-header > i:first-child {
             color: var(--npc-accent-abilities);
         }
     }
 
-    // Legacy selectors preserved
+    /* Legacy selectors preserved */
     .wh40k-combat-grid {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
@@ -2418,7 +2418,7 @@
         }
     }
 
-    // Combat Stats
+    /* Combat Stats */
     .wh40k-combat-stats {
         display: flex;
         gap: 0.35rem;
@@ -2459,7 +2459,7 @@
         }
     }
 
-    // Armour Panel
+    /* Armour Panel */
     .wh40k-armour-simple {
         text-align: center;
     }
@@ -2512,7 +2512,7 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 0.35rem;
 
-        // On narrow panels, stack to single column
+        /* On narrow panels, stack to single column */
         @media (max-width: 240px) {
             grid-template-columns: 1fr;
         }
@@ -2565,7 +2565,7 @@
         }
     }
 
-    // Movement Grid
+    /* Movement Grid */
     .wh40k-movement-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -2610,9 +2610,9 @@
         }
     }
 
-    // ============================================
-    // WEAPONS - Combat Tab
-    // ============================================
+    /* ============================================ */
+    /* WEAPONS - Combat Tab */
+    /* ============================================ */
 
     .wh40k-weapons-list {
         display: flex;
@@ -2830,7 +2830,7 @@
         }
     }
 
-    // Combat Tracker
+    /* Combat Tracker */
     .wh40k-tracker-content {
         display: flex;
         flex-wrap: wrap;
@@ -2909,9 +2909,9 @@
         }
     }
 
-    // ============================================
-    // ABILITIES TAB
-    // ============================================
+    /* ============================================ */
+    /* ABILITIES TAB */
+    /* ============================================ */
 
     .wh40k-abilities-tab {
         display: flex;
@@ -3058,9 +3058,9 @@
         }
     }
 
-    // ============================================
-    // EMPTY STATES
-    // ============================================
+    /* ============================================ */
+    /* EMPTY STATES */
+    /* ============================================ */
 
     .wh40k-empty-state {
         display: flex;
@@ -3102,9 +3102,9 @@
         }
     }
 
-    // ============================================
-    // GM BADGE
-    // ============================================
+    /* ============================================ */
+    /* GM BADGE */
+    /* ============================================ */
 
     .wh40k-gm-badge {
         margin-left: auto;
@@ -3120,9 +3120,9 @@
         }
     }
 
-    // ============================================
-    // PERSONALITY PANEL
-    // ============================================
+    /* ============================================ */
+    /* PERSONALITY PANEL */
+    /* ============================================ */
 
     .wh40k-personality-grid {
         display: grid;
@@ -3159,9 +3159,9 @@
         }
     }
 
-    // ============================================
-    // COUNT BADGE
-    // ============================================
+    /* ============================================ */
+    /* COUNT BADGE */
+    /* ============================================ */
 
     .wh40k-count-badge {
         margin-left: auto;
@@ -3171,12 +3171,12 @@
         font-size: 0.7rem;
         font-weight: 600;
     }
-} // End .wh40k-rpg.sheet.actor.player.npc
+} /* End .wh40k-rpg.sheet.actor.player.npc */
 
-// ============================================
-// NPC SKILL DIALOG STYLES
-// ============================================
-// Standalone dialog window for adding trained skills
+/* ============================================ */
+/* NPC SKILL DIALOG STYLES */
+/* ============================================ */
+/* Standalone dialog window for adding trained skills */
 
 .wh40k-dialog-skill {
     .window-content {
@@ -3233,7 +3233,7 @@
         }
     }
 
-    // Dialog buttons styling
+    /* Dialog buttons styling */
     .dialog-buttons {
         display: flex;
         gap: 0.75rem;

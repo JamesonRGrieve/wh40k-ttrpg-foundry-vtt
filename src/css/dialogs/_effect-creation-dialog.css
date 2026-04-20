@@ -341,6 +341,6 @@
 /* Dialog specific overrides */
 .wh40k-effect-creation-dialog {
     .dialog-buttons {
-        display: none; // Hide default Foundry dialog buttons
+        display: none; /* Hide default Foundry dialog buttons */
     }
 }

@@ -1,12 +1,12 @@
-// ============================================
-// Rogue Trader Prompts/Dialogs - Modern Design System
-// ============================================
-// Sleek, immersive dialogs for the 41st millennium
-// Inspired by cogitator interfaces and Imperial data-slates
+/* ============================================ */
+/* Rogue Trader Prompts/Dialogs - Modern Design System */
+/* ============================================ */
+/* Sleek, immersive dialogs for the 41st millennium */
+/* Inspired by cogitator interfaces and Imperial data-slates */
 
-// ============================================
-// Dialog Window Overrides (Foundry container)
-// ============================================
+/* ============================================ */
+/* Dialog Window Overrides (Foundry container) */
+/* ============================================ */
 
 .app.dialog:has(.wh40k-prompt) {
     background: linear-gradient(180deg, #0d0d12 0%, #1a1a24 100%);
@@ -15,7 +15,7 @@
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 80px rgba(201, 162, 39, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
     overflow: hidden;
 
-    // Window header styling
+    /* Window header styling */
     .window-header {
         background: linear-gradient(180deg, rgba(201, 162, 39, 0.15) 0%, rgba(201, 162, 39, 0.05) 100%);
         border-bottom: 1px solid rgba(201, 162, 39, 0.3);
@@ -39,21 +39,21 @@
         }
     }
 
-    // Window content - remove scrollbar issues
+    /* Window content - remove scrollbar issues */
     .window-content {
         background: transparent;
         padding: 0;
         overflow: visible;
     }
 
-    // Dialog content wrapper
+    /* Dialog content wrapper */
     .dialog-content {
         padding: 0;
         overflow: visible;
         max-height: none;
     }
 
-    // Dialog buttons at bottom
+    /* Dialog buttons at bottom */
     .dialog-buttons {
         display: flex;
         gap: 10px;
@@ -84,7 +84,7 @@
                 font-size: 18px;
             }
 
-            // Primary/Roll button
+            /* Primary/Roll button */
             &.default,
             &[data-button='roll'] {
                 background: linear-gradient(135deg, var(--wh40k-color-gold) 0%, #8b6914 100%);
@@ -103,7 +103,7 @@
                 }
             }
 
-            // Cancel button
+            /* Cancel button */
             &[data-button='cancel'] {
                 background: rgba(255, 255, 255, 0.05);
                 color: rgba(255, 255, 255, 0.7);
@@ -119,9 +119,9 @@
     }
 }
 
-// ============================================
-// Base Prompt Container
-// ============================================
+/* ============================================ */
+/* Base Prompt Container */
+/* ============================================ */
 
 .wh40k-prompt {
     --wh40k-bg-primary: #0d0d12;
@@ -149,7 +149,7 @@
         box-sizing: border-box;
     }
 
-    // Scanline effect overlay
+    /* Scanline effect overlay */
     &::before {
         content: '';
         position: absolute;
@@ -163,9 +163,9 @@
     }
 }
 
-// ============================================
-// Prompt Panel - Main content sections
-// ============================================
+/* ============================================ */
+/* Prompt Panel - Main content sections */
+/* ============================================ */
 
 .wh40k-prompt__panel {
     position: relative;
@@ -176,7 +176,7 @@
     border-radius: 6px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
-    // Accent line on left
+    /* Accent line on left */
     &::before {
         content: '';
         position: absolute;
@@ -193,9 +193,9 @@
     }
 }
 
-// ============================================
-// Prompt Header - Title area with icon
-// ============================================
+/* ============================================ */
+/* Prompt Header - Title area with icon */
+/* ============================================ */
 
 .wh40k-prompt__header {
     display: flex;
@@ -244,9 +244,9 @@
     text-overflow: ellipsis;
 }
 
-// ============================================
-// Section Headers - Within panels
-// ============================================
+/* ============================================ */
+/* Section Headers - Within panels */
+/* ============================================ */
 
 .wh40k-prompt__section {
     margin-bottom: 12px;
@@ -277,9 +277,9 @@
     }
 }
 
-// ============================================
-// Form Fields - Key-value pairs
-// ============================================
+/* ============================================ */
+/* Form Fields - Key-value pairs */
+/* ============================================ */
 
 .wh40k-prompt__field {
     display: grid;
@@ -309,7 +309,7 @@
     font-variant-numeric: tabular-nums;
 }
 
-// Text & Number Inputs
+/* Text & Number Inputs */
 .wh40k-prompt__input {
     padding: 10px 14px;
     background: rgba(0, 0, 0, 0.3);
@@ -358,7 +358,7 @@
     }
 }
 
-// Select Dropdowns
+/* Select Dropdowns */
 .wh40k-prompt__select {
     width: 100%;
     min-height: 40px;
@@ -389,7 +389,7 @@
         box-shadow: 0 0 0 3px var(--wh40k-glow-gold);
     }
 
-    // Ensure placeholder option has distinct styling
+    /* Ensure placeholder option has distinct styling */
     option[value=''] {
         color: #888;
         font-style: italic;
@@ -403,9 +403,9 @@
     }
 }
 
-// ============================================
-// Checkbox Field (inline layout)
-// ============================================
+/* ============================================ */
+/* Checkbox Field (inline layout) */
+/* ============================================ */
 
 .wh40k-prompt__checkbox-field {
     display: flex;
@@ -428,9 +428,9 @@
     }
 }
 
-// ============================================
-// Weapon/Power Selection List
-// ============================================
+/* ============================================ */
+/* Weapon/Power Selection List */
+/* ============================================ */
 
 .wh40k-prompt__weapon-list {
     display: flex;
@@ -512,9 +512,9 @@
     background: rgba(0, 0, 0, 0.3);
 }
 
-// ============================================
-// Range/Distance Info Display
-// ============================================
+/* ============================================ */
+/* Range/Distance Info Display */
+/* ============================================ */
 
 .wh40k-prompt__range-info {
     display: flex;
@@ -553,7 +553,7 @@
     }
 }
 
-// Range modifier hints (Gyro-Stabilised, etc.)
+/* Range modifier hints (Gyro-Stabilised, etc.) */
 .wh40k-prompt__hint {
     display: flex;
     align-items: center;
@@ -571,7 +571,7 @@
         color: rgba(96, 165, 250, 0.8);
     }
 
-    // Melta-specific styling (fire theme)
+    /* Melta-specific styling (fire theme) */
     &--melta {
         background: rgba(251, 146, 60, 0.1);
         border-left-color: rgba(251, 146, 60, 0.6);
@@ -594,9 +594,9 @@
     }
 }
 
-// ============================================
-// Prompt Buttons Container (deprecated - use dialog buttons)
-// ============================================
+/* ============================================ */
+/* Prompt Buttons Container (deprecated - use dialog buttons) */
+/* ============================================ */
 
 .wh40k-prompt__buttons {
     display: flex;
@@ -657,9 +657,9 @@
     }
 }
 
-// ============================================
-// Attack Prompt Variant
-// ============================================
+/* ============================================ */
+/* Attack Prompt Variant */
+/* ============================================ */
 
 .wh40k-prompt--attack {
     .wh40k-prompt__panel:first-child::before {
@@ -667,9 +667,9 @@
     }
 }
 
-// ============================================
-// Damage Prompt Variant
-// ============================================
+/* ============================================ */
+/* Damage Prompt Variant */
+/* ============================================ */
 
 .wh40k-prompt--damage {
     .wh40k-prompt__panel::before {
@@ -677,9 +677,9 @@
     }
 }
 
-// ============================================
-// Psychic Prompt Variant
-// ============================================
+/* ============================================ */
+/* Psychic Prompt Variant */
+/* ============================================ */
 
 .wh40k-prompt--psychic {
     .wh40k-prompt__panel::before {
@@ -687,9 +687,9 @@
     }
 }
 
-// ============================================
-// Grid Layouts
-// ============================================
+/* ============================================ */
+/* Grid Layouts */
+/* ============================================ */
 
 .wh40k-prompt__grid {
     display: grid;
@@ -704,9 +704,9 @@
     }
 }
 
-// ============================================
-// Info Box
-// ============================================
+/* ============================================ */
+/* Info Box */
+/* ============================================ */
 
 .wh40k-prompt__info {
     display: flex;
@@ -734,9 +734,9 @@
     }
 }
 
-// ============================================
-// Warning Box
-// ============================================
+/* ============================================ */
+/* Warning Box */
+/* ============================================ */
 
 .wh40k-prompt__warning {
     display: flex;
@@ -764,9 +764,9 @@
     }
 }
 
-// ============================================
-// Stat Display (for showing calculated values)
-// ============================================
+/* ============================================ */
+/* Stat Display (for showing calculated values) */
+/* ============================================ */
 
 .wh40k-prompt__stat {
     display: flex;
@@ -797,9 +797,9 @@
     }
 }
 
-// ============================================
-// Divider
-// ============================================
+/* ============================================ */
+/* Divider */
+/* ============================================ */
 
 .wh40k-prompt__divider {
     height: 1px;
@@ -807,9 +807,9 @@
     margin: 16px 0;
 }
 
-// ============================================
-// Target Number Display (prominent)
-// ============================================
+/* ============================================ */
+/* Target Number Display (prominent) */
+/* ============================================ */
 
 .wh40k-prompt__target {
     display: flex;
@@ -844,9 +844,9 @@
     }
 }
 
-// ============================================
-// Roll Configuration Dialog
-// ============================================
+/* ============================================ */
+/* Roll Configuration Dialog */
+/* ============================================ */
 
 .roll-configuration-dialog {
     .window-content {
@@ -1062,9 +1062,9 @@
     }
 }
 
-// ============================================
-// Situational Modifiers Section
-// ============================================
+/* ============================================ */
+/* Situational Modifiers Section */
+/* ============================================ */
 
 .roll-config-situational {
     margin-bottom: 12px;
@@ -1190,7 +1190,7 @@
     }
 }
 
-// Permanent Modifiers Section
+/* Permanent Modifiers Section */
 .roll-config-permanent {
     margin-top: 16px;
 }
@@ -1293,12 +1293,12 @@
     }
 }
 
-// ============================================
-// Add XP Dialog Styles
-// ============================================
+/* ============================================ */
+/* Add XP Dialog Styles */
+/* ============================================ */
 
 .add-xp-dialog {
-    // Dialog-level overrides
+    /* Dialog-level overrides */
     .window-content {
         padding: 0;
     }
@@ -1558,15 +1558,15 @@
     }
 }
 
-// ============================================
-// Specialist Skill Dialog - Simplified Layout
-// ============================================
+/* ============================================ */
+/* Specialist Skill Dialog - Simplified Layout */
+/* ============================================ */
 
 .wh40k-specialist-prompt {
     padding: 0;
 
     &::before {
-        display: none; // Remove scanline overlay
+        display: none; /* Remove scanline overlay */
     }
 }
 

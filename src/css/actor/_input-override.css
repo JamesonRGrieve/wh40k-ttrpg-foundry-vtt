@@ -1,11 +1,11 @@
 .wh40k-wrapper {
-    // ============================================
-    // Global Input Field Styling Override
-    // ============================================
-    // Uses theme-aware CSS custom properties
+    /* ============================================ */
+    /* Global Input Field Styling Override */
+    /* ============================================ */
+    /* Uses theme-aware CSS custom properties */
 
     .wh40k-sheet {
-        // Base input styling
+        /* Base input styling */
         input[type='text'],
         input[type='number'],
         input[type='email'],
@@ -34,7 +34,7 @@
             }
         }
 
-        // Specific overrides for common classes
+        /* Specific overrides for common classes */
         .wh40k-field__input,
         .wh40k-header__input {
             background: var(--wh40k-input-bg);
@@ -47,7 +47,7 @@
             }
         }
 
-        // Settings inputs
+        /* Settings inputs */
         .wh40k-settings__input {
             background: var(--wh40k-input-bg);
             border: 1px solid var(--wh40k-border-color-light);
@@ -58,7 +58,7 @@
             }
         }
 
-        // Table inputs
+        /* Table inputs */
         .table-cell input,
         .wh40k-table input {
             background: var(--wh40k-input-bg);
@@ -71,7 +71,7 @@
         }
     }
 
-    // Characteristics inputs
+    /* Characteristics inputs */
     .wh40k-char-hud-field {
         input,
         select {
@@ -87,7 +87,7 @@
         }
     }
 
-    // Combat inputs
+    /* Combat inputs */
     .wh40k-combat-input,
     .wh40k-stat-input {
         background: var(--wh40k-input-bg);
@@ -99,7 +99,7 @@
         }
     }
 
-    // Abilities tab inputs
+    /* Abilities tab inputs */
     .wh40k-ability-input {
         background: var(--wh40k-input-bg);
         border: 1px solid var(--wh40k-border-color-light);
@@ -110,7 +110,7 @@
         }
     }
 
-    // Grid inputs
+    /* Grid inputs */
     .wh40k-grid input {
         background: var(--wh40k-input-bg);
         border: 1px solid var(--wh40k-border-color-light);
@@ -121,7 +121,7 @@
         }
     }
 
-    // Active state styling
+    /* Active state styling */
     .active-state,
     .form-active {
         background: rgba(192, 128, 32, 0.15) !important;
