@@ -32,7 +32,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      * @private
      */
     static get _schemaTemplateFields(): Set<string> {
-        const fieldNames = Object.freeze(new Set(this._schemaTemplates.map((t) => t.schema.keys()).flat()));
+        const fieldNames = Object.freeze(new Set(this._schemaTemplates.map((t) => Array.from((t.schema as any).keys())).flat()));
         Object.defineProperty(this, '_schemaTemplateFields', {
             value: fieldNames,
             writable: false,
@@ -143,7 +143,7 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
      */
     static _cleanData(source?: Record<string, unknown>, options?: Record<string, unknown>): void {
         for (const template of this._schemaTemplates) {
-            template._cleanData?.(source, options);
+            (template as any)._cleanData?.(source, options);
         }
     }
 
@@ -152,14 +152,14 @@ export default class SystemDataModel extends foundry.abstract.TypeDataModel<Reco
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static *_initializationOrder(): Generator<[string, foundry.data.fields.DataField.Any]> {
+    static *_initializationOrder(): Generator<[string, foundry.data.fields.DataField.Any], void, unknown> {
         for (const template of this._schemaTemplates) {
-            for (const entry of template._initializationOrder()) {
-                entry[1] = this.schema.get(entry[0]);
+            for (const entry of (template as any)._initializationOrder()) {
+                entry[1] = (this.schema as any).get(entry[0]);
                 yield entry;
             }
         }
-        for (const entry of this.schema.entries()) {
+        for (const entry of (this.schema as any).entries()) {
             if (this._schemaTemplateFields.has(entry[0])) continue;
             yield entry;
         }
