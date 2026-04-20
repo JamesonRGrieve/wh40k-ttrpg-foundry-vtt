@@ -12,33 +12,31 @@
 
 import type { WH40KItem } from '../../documents/item.ts';
 import QuickActionsBar from './quick-actions-bar.ts';
+import type { default as WeaponDataModel } from '../../data/item/weapon.ts';
+import type { default as ArmourDataModel } from '../../data/item/armour.ts';
+import type { WH40KItemModifiers } from '../../types/global.d.ts';
 
 /**
  * Mixin that adds item preview card functionality to actor sheets
- * @param {typeof Application} Base - Base class to extend
- * @returns {typeof Application} Extended class
  */
-export function ItemPreviewMixin(Base) {
+export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.ActorSheet>(Base: TBase) {
     return class extends Base {
         /** @override */
         static DEFAULT_OPTIONS = {
+            ...Base.DEFAULT_OPTIONS,
             actions: {
-                ...super.DEFAULT_OPTIONS?.actions,
+                ...Base.DEFAULT_OPTIONS.actions,
                 toggleItemPreview: this.#toggleItemPreview,
             },
         };
 
         /**
          * Track open preview cards
-         * @type {Set<string>}
          */
-        #openPreviews = new Set();
+        #openPreviews = new Set<string>();
 
         /**
          * Toggle an item preview card
-         * @this {Application}
-         * @param {PointerEvent} event - Triggering event
-         * @param {HTMLElement} target - Action target
          */
         static #toggleItemPreview(this: any, event: Event, target: HTMLElement): void {
             const itemId = target.dataset.itemId;
@@ -48,7 +46,7 @@ export function ItemPreviewMixin(Base) {
             if (!item) return;
 
             // Find the item row
-            const itemRow = this.element.querySelector(`[data-item-id="${itemId}"]`);
+            const itemRow = this.element.querySelector(`[data-item-id="${itemId}"]`) as HTMLElement | null;
             if (!itemRow) return;
 
             // Check if preview is already open
@@ -59,15 +57,12 @@ export function ItemPreviewMixin(Base) {
                 this.#closePreview(itemId);
             } else {
                 // Open preview
-                this.#openPreview(item, itemRow);
+                this.#openPreview(item as WH40KItem, itemRow);
             }
         }
 
         /**
          * Open an item preview card
-         * @param {Item} item - Item to preview
-         * @param {HTMLElement} itemRow - Item row element
-         * @private
          */
         #openPreview(item: WH40KItem, itemRow: HTMLElement): void {
             // Close any existing preview for this item
@@ -102,8 +97,6 @@ export function ItemPreviewMixin(Base) {
 
         /**
          * Close an item preview card
-         * @param {string} itemId - Item ID
-         * @private
          */
         #closePreview(itemId: string): void {
             const preview = this.element.querySelector(`[data-preview-id="${itemId}"]`);
@@ -117,9 +110,6 @@ export function ItemPreviewMixin(Base) {
 
         /**
          * Generate HTML for item preview
-         * @param {Item} item - Item to preview
-         * @returns {string} HTML string
-         * @private
          */
         #generatePreviewHTML(item: WH40KItem): string {
             const type = item.type;
@@ -180,14 +170,11 @@ export function ItemPreviewMixin(Base) {
 
         /**
          * Generate weapon preview
-         * @param {Item} item - Weapon item
-         * @returns {string} HTML string
-         * @private
          */
         #generateWeaponPreview(item: WH40KItem): string {
-            const system = item.system;
-            const damage = system.damage || {};
-            const stats = system.stats || {};
+            const sys = item.system as WeaponDataModel;
+            const damage = sys.damage;
+            const stats = sys.stats;
 
             return `
                 <div class="wh40k-weapon-preview-stats">
@@ -214,25 +201,22 @@ export function ItemPreviewMixin(Base) {
                     <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
                         <i class="fa-solid fa-box tw-text-[var(--wh40k-stat-neutral)]"></i>
                         <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Clip</span>
-                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${system.clip?.current || 0}/${
-                system.clip?.max || 0
+                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${sys.clip?.current || 0}/${
+                sys.clip?.max || 0
             }</span>
                     </div>
                 </div>
-                ${this.#generateQualitiesHTML(system.qualities)}
-                ${system.description ? `<div class="wh40k-item-preview-description">${system.description}</div>` : ''}
+                ${this.#generateQualitiesHTML(sys.qualities)}
+                ${sys.description ? `<div class="wh40k-item-preview-description">${sys.description}</div>` : ''}
             `;
         }
 
         /**
          * Generate armour preview
-         * @param {Item} item - Armour item
-         * @returns {string} HTML string
-         * @private
          */
         #generateArmourPreview(item: WH40KItem): string {
-            const system = item.system;
-            const locations = system.locations || {};
+            const sys = item.system as ArmourDataModel;
+            const locations = sys.locations;
 
             return `
                 <div class="wh40k-armour-preview-locations">
@@ -267,39 +251,36 @@ export function ItemPreviewMixin(Base) {
                             : ''
                     }
                 </div>
-                ${this.#generateQualitiesHTML(system.properties)}
-                ${system.description ? `<div class="wh40k-item-preview-description">${system.description}</div>` : ''}
+                ${this.#generateQualitiesHTML(Array.from(sys.properties))}
+                ${sys.description ? `<div class="wh40k-item-preview-description">${sys.description}</div>` : ''}
             `;
         }
 
         /**
          * Generate talent preview
-         * @param {Item} item - Talent item
-         * @returns {string} HTML string
-         * @private
          */
         #generateTalentPreview(item: WH40KItem): string {
-            const system = item.system;
+            const sys = item.system as any;
 
             let content = '';
 
             // Prerequisites
-            if (system.prerequisites?.text) {
+            if (sys.prerequisites?.text) {
                 content += `
                     <div class="wh40k-item-preview-prereqs">
-                        <strong>Prerequisites:</strong> ${system.prerequisites.text}
+                        <strong>Prerequisites:</strong> ${sys.prerequisites.text}
                     </div>
                 `;
             }
 
             // Benefit
-            if (system.benefit) {
-                content += `<div class="wh40k-item-preview-benefit">${system.benefit}</div>`;
+            if (sys.benefit) {
+                content += `<div class="wh40k-item-preview-benefit">${sys.benefit}</div>`;
             }
 
             // Modifiers
-            if (system.modifiers) {
-                content += this.#generateModifiersHTML(system.modifiers);
+            if (sys.modifiers) {
+                content += this.#generateModifiersHTML(sys.modifiers);
             }
 
             return content;
@@ -307,21 +288,18 @@ export function ItemPreviewMixin(Base) {
 
         /**
          * Generate trait preview
-         * @param {Item} item - Trait item
-         * @returns {string} HTML string
-         * @private
          */
         #generateTraitPreview(item: WH40KItem): string {
-            const system = item.system;
+            const sys = item.system as any;
 
             let content = '';
 
-            if (system.level) {
-                content += `<div class="wh40k-trait-level"><strong>Level:</strong> ${system.level}</div>`;
+            if (sys.level) {
+                content += `<div class="wh40k-trait-level"><strong>Level:</strong> ${sys.level}</div>`;
             }
 
-            if (system.description) {
-                content += `<div class="wh40k-item-preview-description">${system.description}</div>`;
+            if (sys.description) {
+                content += `<div class="wh40k-item-preview-description">${sys.description}</div>`;
             }
 
             return content;
@@ -329,23 +307,20 @@ export function ItemPreviewMixin(Base) {
 
         /**
          * Generate condition preview
-         * @param {Item} item - Condition item
-         * @returns {string} HTML string
-         * @private
          */
         #generateConditionPreview(item: WH40KItem): string {
-            const system = item.system;
+            const sys = item.system as any;
 
             let content = `
                 <div class="wh40k-condition-preview-meta">
-                    ${system.nature ? `<span class="wh40k-badge wh40k-badge--${system.nature}">${system.nature}</span>` : ''}
-                    ${system.duration ? `<span class="wh40k-badge">Duration: ${system.duration}</span>` : ''}
-                    ${system.stacks > 1 ? `<span class="wh40k-badge">×${system.stacks}</span>` : ''}
+                    ${sys.nature ? `<span class="wh40k-badge wh40k-badge--${sys.nature}">${sys.nature}</span>` : ''}
+                    ${sys.duration ? `<span class="wh40k-badge">Duration: ${sys.duration}</span>` : ''}
+                    ${sys.stacks > 1 ? `<span class="wh40k-badge">×${sys.stacks}</span>` : ''}
                 </div>
             `;
 
-            if (system.description) {
-                content += `<div class="wh40k-item-preview-description">${system.description}</div>`;
+            if (sys.description) {
+                content += `<div class="wh40k-item-preview-description">${sys.description}</div>`;
             }
 
             return content;
@@ -353,25 +328,22 @@ export function ItemPreviewMixin(Base) {
 
         /**
          * Generate gear preview
-         * @param {Item} item - Gear item
-         * @returns {string} HTML string
-         * @private
          */
         #generateGearPreview(item: WH40KItem): string {
-            const system = item.system;
+            const sys = item.system as any;
 
             let content = '';
 
-            if (system.quantity) {
-                content += `<div class="wh40k-gear-quantity"><strong>Quantity:</strong> ${system.quantity}</div>`;
+            if (sys.quantity) {
+                content += `<div class="wh40k-gear-quantity"><strong>Quantity:</strong> ${sys.quantity}</div>`;
             }
 
-            if (system.uses) {
-                content += `<div class="wh40k-gear-uses"><strong>Uses:</strong> ${system.uses.current}/${system.uses.max}</div>`;
+            if (sys.uses) {
+                content += `<div class="wh40k-gear-uses"><strong>Uses:</strong> ${sys.uses.current}/${sys.uses.max}</div>`;
             }
 
-            if (system.description) {
-                content += `<div class="wh40k-item-preview-description">${system.description}</div>`;
+            if (sys.description) {
+                content += `<div class="wh40k-item-preview-description">${sys.description}</div>`;
             }
 
             return content;
@@ -379,29 +351,26 @@ export function ItemPreviewMixin(Base) {
 
         /**
          * Generate power preview
-         * @param {Item} item - Power item
-         * @returns {string} HTML string
-         * @private
          */
         #generatePowerPreview(item: WH40KItem): string {
-            const system = item.system;
+            const sys = item.system as any;
 
             let content = '';
 
-            if (system.cost) {
-                content += `<div class="wh40k-power-cost"><strong>Cost:</strong> ${system.cost}</div>`;
+            if (sys.cost) {
+                content += `<div class="wh40k-power-cost"><strong>Cost:</strong> ${sys.cost}</div>`;
             }
 
-            if (system.range) {
-                content += `<div class="wh40k-power-range"><strong>Range:</strong> ${system.range}</div>`;
+            if (sys.range) {
+                content += `<div class="wh40k-power-range"><strong>Range:</strong> ${sys.range}</div>`;
             }
 
-            if (system.sustained !== undefined) {
-                content += `<div class="wh40k-power-sustained"><strong>Sustained:</strong> ${system.sustained ? 'Yes' : 'No'}</div>`;
+            if (sys.sustained !== undefined) {
+                content += `<div class="wh40k-power-sustained"><strong>Sustained:</strong> ${sys.sustained ? 'Yes' : 'No'}</div>`;
             }
 
-            if (system.description) {
-                content += `<div class="wh40k-item-preview-description">${system.description}</div>`;
+            if (sys.description) {
+                content += `<div class="wh40k-item-preview-description">${sys.description}</div>`;
             }
 
             return content;
@@ -409,15 +378,12 @@ export function ItemPreviewMixin(Base) {
 
         /**
          * Generate generic preview
-         * @param {Item} item - Item
-         * @returns {string} HTML string
-         * @private
          */
         #generateGenericPreview(item: WH40KItem): string {
-            const system = item.system;
+            const sys = item.system as any;
 
-            if (system.description) {
-                return `<div class="wh40k-item-preview-description">${system.description}</div>`;
+            if (sys.description) {
+                return `<div class="wh40k-item-preview-description">${sys.description}</div>`;
             }
 
             return '<div class="wh40k-item-preview-empty">No additional details available.</div>';
@@ -425,9 +391,6 @@ export function ItemPreviewMixin(Base) {
 
         /**
          * Generate HTML for qualities/properties tags
-         * @param {Array|Object} qualities - Qualities array or object
-         * @returns {string} HTML string
-         * @private
          */
         #generateQualitiesHTML(qualities: unknown[]): string {
             if (!qualities) return '';
@@ -437,7 +400,7 @@ export function ItemPreviewMixin(Base) {
                 qualitiesArray = qualities;
             } else if (typeof qualities === 'object') {
                 qualitiesArray = Object.entries(qualities)
-                    .filter(([key, value]) => value)
+                    .filter(([_, value]) => value)
                     .map(([key]) => key);
             }
 
@@ -445,7 +408,7 @@ export function ItemPreviewMixin(Base) {
 
             const tagsHTML = qualitiesArray
                 .map((q) => {
-                    const name = typeof q === 'string' ? q : q.name || q;
+                    const name = typeof q === 'string' ? q : (q as any).name || q;
                     return `<span class="wh40k-badge">${name}</span>`;
                 })
                 .join('');
@@ -459,11 +422,8 @@ export function ItemPreviewMixin(Base) {
 
         /**
          * Generate HTML for modifiers
-         * @param {Object} modifiers - Modifiers object
-         * @returns {string} HTML string
-         * @private
          */
-        #generateModifiersHTML(modifiers: any): string {
+        #generateModifiersHTML(modifiers: WH40KItemModifiers): string {
             if (!modifiers) return '';
 
             let content = '<div class="wh40k-item-preview-modifiers"><strong>Modifiers:</strong><ul>';
@@ -486,12 +446,9 @@ export function ItemPreviewMixin(Base) {
                 }
             }
 
-            if (modifiers.combat) {
-                for (const [type, value] of Object.entries(modifiers.combat)) {
-                    if (value) {
-                        const numVal = Number(value);
-                        content += `<li>${type}: ${numVal > 0 ? '+' : ''}${numVal}</li>`;
-                    }
+            if (modifiers.other && modifiers.other.length > 0) {
+                for (const mod of modifiers.other) {
+                    content += `<li>${mod.key}: ${mod.value > 0 ? '+' : ''}${mod.value}</li>`;
                 }
             }
 

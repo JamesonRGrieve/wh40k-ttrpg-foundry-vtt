@@ -42,7 +42,7 @@ interface SystemSheetConfig {
  */
 function makeSystemVariant(baseCls: any, className: string, cfg: SystemSheetConfig) {
     const cls = class extends baseCls {
-        static DEFAULT_OPTIONS = {
+        static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             ...baseCls.DEFAULT_OPTIONS,
             classes: [...(baseCls.DEFAULT_OPTIONS?.classes ?? []), cfg.cssClass],
         };
@@ -56,7 +56,7 @@ function makeSystemVariant(baseCls: any, className: string, cfg: SystemSheetConf
     cls.prototype._getSkillTrainingConfig = function () {
         return skillRanks;
     };
-    cls.prototype._gameSystemId = cfg.gameSystemId;
+    (cls.prototype as any)._gameSystemId = cfg.gameSystemId;
     Object.defineProperty(cls, 'name', { value: className });
     return cls;
 }

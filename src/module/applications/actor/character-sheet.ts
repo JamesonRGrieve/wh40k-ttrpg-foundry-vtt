@@ -44,7 +44,6 @@ export default class CharacterSheet extends BaseActorSheet {
     declare _skillsFilter: { search: string; characteristic: string; training: string };
     declare _traitsFilter: Record<string, unknown>;
     declare render: (options?: Record<string, unknown> | boolean) => any;
-    declare _notify: (type: string, message: string, options?: Record<string, unknown>) => void;
 
     /**
      * Whether the sheet is in edit mode (showing inline stat fields).
@@ -321,7 +320,7 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: DeepPartial<ApplicationConfiguration>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Edit mode state
@@ -1085,8 +1084,8 @@ export default class CharacterSheet extends BaseActorSheet {
                         typeof itemSystem?.getEffectiveAPForLocation === 'function'
                             ? Number(itemSystem.getEffectiveAPForLocation(locationConfig.key) ?? 0)
                             : typeof itemSystem?.getAPForLocation === 'function'
-                              ? Number(itemSystem.getAPForLocation(locationConfig.key) ?? 0)
-                              : Number(itemSystem?.armourPoints?.[locationConfig.key] ?? 0);
+                            ? Number(itemSystem.getAPForLocation(locationConfig.key) ?? 0)
+                            : Number(itemSystem?.armourPoints?.[locationConfig.key] ?? 0);
                     if (ap <= 0) return null;
 
                     return {

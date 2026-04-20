@@ -9,6 +9,7 @@ import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 import type { WH40KItem } from './item.ts';
+import type { WH40KItemDocument } from '../types/global.d.ts';
 
 const SKILL_ALIASES = {
     navigate: 'navigation',

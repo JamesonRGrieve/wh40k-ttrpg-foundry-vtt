@@ -1,5 +1,5 @@
 import ActorDataModel from '../abstract/actor-data-model.ts';
-import HordeTemplate from './mixins/horde-template.ts';
+import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
 

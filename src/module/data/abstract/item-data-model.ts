@@ -58,19 +58,24 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} [options={}]   Additional options
      * @protected
      */
-    static override _cleanData(source?: Record<string, unknown>, options?: Record<string, unknown>): void {
+    static override _cleanData(source?: Record<string, unknown>, options?: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
-        ItemDataModel.#cleanNumericFields(source, (this.schema as any)?.fields ?? {});
+        ItemDataModel.#cleanNumericFields(source, this.schema.fields as Record<string, foundry.data.fields.DataField.Any>);
     }
 
     /**
      * Recursively clean numeric fields in source data.
      * Coerces numeric string values to proper numbers for NumberFields.
      * @param {object} source - The source data object
-     * @param {object} fields - The schema fields to check
+     * @param {Record<string, foundry.data.fields.DataField.Any>} fields - The schema fields to check
      */
-    static #cleanNumericFields(source: Record<string, unknown> | undefined, fields: Record<string, unknown>): void {
-        if (!source || typeof source !== 'object') return;
+    static #cleanNumericFields(
+        source: Record<string, unknown> | undefined,
+        fields: Record<string, foundry.data.fields.DataField.Any>,
+        processed = new Set<object>(),
+    ): void {
+        if (!source || typeof source !== 'object' || processed.has(source)) return;
+        processed.add(source);
 
         for (const [key, field] of Object.entries(fields)) {
             if (!(key in source)) continue;
@@ -82,13 +87,13 @@ export default class ItemDataModel extends SystemDataModel {
                 if (typeof value === 'string') {
                     const num = Number(value);
                     if (!Number.isNaN(num)) {
-                        source[key] = (field as any).integer ? Math.floor(num) : num;
+                        source[key] = (field as foundry.data.fields.NumberField).integer ? Math.floor(num) : num;
                     }
                 }
             }
             // Handle SchemaField - recurse into nested fields
-            else if ((field as any)?.fields && typeof value === 'object' && value !== null) {
-                ItemDataModel.#cleanNumericFields(value as Record<string, unknown>, (field as any).fields);
+            else if (field instanceof foundry.data.fields.SchemaField && typeof value === 'object' && value !== null) {
+                ItemDataModel.#cleanNumericFields(value as Record<string, unknown>, field.fields, processed);
             }
         }
     }
@@ -263,9 +268,9 @@ export default class ItemDataModel extends SystemDataModel {
      * @returns {object}
      */
     override getRollData({ deterministic = false } = {}): Record<string, unknown> {
-        const actorRollData = (this.parent as any).actor?.getRollData({ deterministic }) ?? {};
-        const data = { ...actorRollData, item: { ...this } };
-        return data;
+        const actor = (this.parent as WH40KItem).actor;
+        const actorRollData = actor?.getRollData({ deterministic }) ?? {};
+        return { ...actorRollData, item: this.toObject() };
     }
 
     /* -------------------------------------------- */
@@ -290,8 +295,14 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} htmlOptions   Options passed to enrichHTML.
      * @returns {Promise<object>}
      */
+    /**
+     * Generate chat data for this item.
+     * @param {object} htmlOptions   Options passed to enrichHTML.
+     * @returns {Promise<object>}
+     */
     async getChatData(htmlOptions: Record<string, unknown> = {}): Promise<Record<string, unknown>> {
-        const descValue = typeof this.description === 'string' ? this.description : (this.description as any)?.value ?? '';
+        const description = this.description;
+        const descValue = typeof description === 'string' ? description : (description as { value: string })?.value ?? '';
         const data = {
             description: await TextEditor.enrichHTML(descValue, {
                 ...htmlOptions,

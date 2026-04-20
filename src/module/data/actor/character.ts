@@ -40,33 +40,10 @@ interface BackgroundAbility {
 }
 
 /** Shape of a character generation assignments object. */
-interface CharacterGenerationAssignments {
-    weaponSkill: number | null;
-    ballisticSkill: number | null;
-    strength: number | null;
-    toughness: number | null;
-    agility: number | null;
-    intelligence: number | null;
-    perception: number | null;
-    willpower: number | null;
-    fellowship: number | null;
-    [key: string]: number | null;
-}
+type CharacterGenerationAssignments = Record<string, number | null>;
 
 /** Shape of custom base values for non-human races. */
-interface CharacterGenerationCustomBases {
-    enabled: boolean;
-    weaponSkill: number;
-    ballisticSkill: number;
-    strength: number;
-    toughness: number;
-    agility: number;
-    intelligence: number;
-    perception: number;
-    willpower: number;
-    fellowship: number;
-    [key: string]: number | boolean;
-}
+type CharacterGenerationCustomBases = Record<string, number | boolean>;
 
 export default class CharacterData extends CreatureTemplate {
     // Typed property declarations matching defineSchema()
@@ -158,147 +135,148 @@ export default class CharacterData extends CreatureTemplate {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField> {
+        const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
 
-            rank: new NumberField({ required: true, initial: 1, min: 1, integer: true }),
-            mutations: new StringField({ required: false, blank: true }),
+            rank: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
+            mutations: new fields.StringField({ required: false, blank: true }),
 
             // ===== GAME SYSTEM =====
-            gameSystem: new StringField({
+            gameSystem: new fields.StringField({
                 required: true,
                 initial: 'rt',
                 choices: ['rt', 'dh1e', 'dh2e', 'bc', 'ow', 'dw'],
             }),
 
             // ===== CHARACTER BIOGRAPHY =====
-            bio: new SchemaField({
-                playerName: new StringField({ required: false, blank: true }),
-                gender: new StringField({ required: false, blank: true }),
-                age: new StringField({ required: false, blank: true }),
-                build: new StringField({ required: false, blank: true }),
-                complexion: new StringField({ required: false, blank: true }),
-                hair: new StringField({ required: false, blank: true }),
-                eyes: new StringField({ required: false, blank: true }),
-                quirks: new StringField({ required: false, blank: true }),
-                superstition: new StringField({ required: false, blank: true }),
-                mementos: new StringField({ required: false, blank: true }),
-                notes: new HTMLField({ required: false, blank: true }),
+            bio: new fields.SchemaField({
+                playerName: new fields.StringField({ required: false, blank: true }),
+                gender: new fields.StringField({ required: false, blank: true }),
+                age: new fields.StringField({ required: false, blank: true }),
+                build: new fields.StringField({ required: false, blank: true }),
+                complexion: new fields.StringField({ required: false, blank: true }),
+                hair: new fields.StringField({ required: false, blank: true }),
+                eyes: new fields.StringField({ required: false, blank: true }),
+                quirks: new fields.StringField({ required: false, blank: true }),
+                superstition: new fields.StringField({ required: false, blank: true }),
+                mementos: new fields.StringField({ required: false, blank: true }),
+                notes: new fields.HTMLField({ required: false, blank: true }),
             }),
 
             // ===== ORIGIN PATH =====
-            originPath: new SchemaField({
-                homeWorld: new StringField({ required: false, blank: true }),
-                birthright: new StringField({ required: false, blank: true }),
-                lureOfTheVoid: new StringField({ required: false, blank: true }),
-                trialsAndTravails: new StringField({ required: false, blank: true }),
-                motivation: new StringField({ required: false, blank: true }),
-                career: new StringField({ required: false, blank: true }),
+            originPath: new fields.SchemaField({
+                homeWorld: new fields.StringField({ required: false, blank: true }),
+                birthright: new fields.StringField({ required: false, blank: true }),
+                lureOfTheVoid: new fields.StringField({ required: false, blank: true }),
+                trialsAndTravails: new fields.StringField({ required: false, blank: true }),
+                motivation: new fields.StringField({ required: false, blank: true }),
+                career: new fields.StringField({ required: false, blank: true }),
                 // DH2e-specific fields
-                background: new StringField({ required: false, blank: true }),
-                role: new StringField({ required: false, blank: true }),
-                elite: new StringField({ required: false, blank: true }),
-                divination: new StringField({ required: false, blank: true }),
+                background: new fields.StringField({ required: false, blank: true }),
+                role: new fields.StringField({ required: false, blank: true }),
+                elite: new fields.StringField({ required: false, blank: true }),
+                divination: new fields.StringField({ required: false, blank: true }),
                 // Black Crusade fields
-                race: new StringField({ required: false, blank: true }),
-                archetype: new StringField({ required: false, blank: true }),
-                pride: new StringField({ required: false, blank: true }),
-                disgrace: new StringField({ required: false, blank: true }),
+                race: new fields.StringField({ required: false, blank: true }),
+                archetype: new fields.StringField({ required: false, blank: true }),
+                pride: new fields.StringField({ required: false, blank: true }),
+                disgrace: new fields.StringField({ required: false, blank: true }),
                 // Only War / Deathwatch fields
-                regiment: new StringField({ required: false, blank: true }),
-                speciality: new StringField({ required: false, blank: true }),
-                chapter: new StringField({ required: false, blank: true }),
+                regiment: new fields.StringField({ required: false, blank: true }),
+                speciality: new fields.StringField({ required: false, blank: true }),
+                chapter: new fields.StringField({ required: false, blank: true }),
             }),
 
             // ===== EXPERIENCE =====
-            experience: new SchemaField({
-                used: new NumberField({ required: true, initial: 4500, min: 0, integer: true }),
-                total: new NumberField({ required: true, initial: 5000, min: 0, integer: true }),
-                available: new NumberField({ required: true, initial: 0, integer: true }), // Derived
+            experience: new fields.SchemaField({
+                used: new fields.NumberField({ required: true, initial: 4500, min: 0, integer: true }),
+                total: new fields.NumberField({ required: true, initial: 5000, min: 0, integer: true }),
+                available: new fields.NumberField({ required: true, initial: 0, integer: true }), // Derived
             }),
 
             // ===== ROGUE TRADER / WH40K FIELDS =====
-            rogueTrader: new SchemaField({
-                profitFactor: new SchemaField({
-                    current: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                    starting: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                    modifier: new NumberField({ required: true, initial: 0, integer: true }),
-                    misfortunes: new StringField({ required: false, blank: true }),
+            rogueTrader: new fields.SchemaField({
+                profitFactor: new fields.SchemaField({
+                    current: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                    starting: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                    modifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                    misfortunes: new fields.StringField({ required: false, blank: true }),
                 }),
-                endeavour: new SchemaField({
-                    name: new StringField({ required: false, blank: true }),
-                    achievementCurrent: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                    achievementRequired: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-                    reward: new NumberField({ required: true, initial: 0, integer: true }),
-                    notes: new StringField({ required: false, blank: true }),
+                endeavour: new fields.SchemaField({
+                    name: new fields.StringField({ required: false, blank: true }),
+                    achievementCurrent: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                    achievementRequired: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                    reward: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                    notes: new fields.StringField({ required: false, blank: true }),
                 }),
-                acquisitions: new ArrayField(
-                    new SchemaField({
-                        name: new StringField({ required: false, blank: true }),
-                        availability: new StringField({ required: false, blank: true }),
-                        modifier: new NumberField({ required: true, initial: 0, integer: true }),
-                        notes: new StringField({ required: false, blank: true }),
-                        acquired: new BooleanField({ required: true, initial: false }),
+                acquisitions: new fields.ArrayField(
+                    new fields.SchemaField({
+                        name: new fields.StringField({ required: false, blank: true }),
+                        availability: new fields.StringField({ required: false, blank: true }),
+                        modifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                        notes: new fields.StringField({ required: false, blank: true }),
+                        acquired: new fields.BooleanField({ required: true, initial: false }),
                     }),
                     { required: true, initial: [] },
                 ),
             }),
 
             // ===== DH2e RESOURCES =====
-            influence: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-            requisition: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
-            throneGelt: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            influence: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            requisition: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            throneGelt: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
             // ===== MENTAL STATE =====
-            insanity: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            insanity: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             // insanityBonus: new NumberField({ required: true, initial: 0, min: 0, integer: true }), // Derived
-            corruption: new NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            corruption: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             // corruptionBonus: new NumberField({ required: true, initial: 0, min: 0, integer: true }), // Derived
 
             // ===== APTITUDES (DH2e/BC/OW) =====
             // Collected at runtime from origin path items during prepareEmbeddedData.
             // Used by aptitude-based systems for XP cost calculation.
-            aptitudes: new ArrayField(new StringField({ required: true }), { required: true, initial: [] }),
+            aptitudes: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
             // ===== BLACK CRUSADE =====
-            chaosAlignment: new StringField({
+            chaosAlignment: new fields.StringField({
                 required: true,
                 initial: 'unaligned',
                 choices: ['unaligned', 'khorne', 'nurgle', 'slaanesh', 'tzeentch'],
             }),
 
             // Effects computed from origin path items - populated during prepareEmbeddedData
-            backgroundEffects: new SchemaField({
-                abilities: new ArrayField(
-                    new SchemaField({
-                        source: new StringField({ required: false }),
-                        name: new StringField({ required: false }),
-                        benefit: new StringField({ required: false }),
+            backgroundEffects: new fields.SchemaField({
+                abilities: new fields.ArrayField(
+                    new fields.SchemaField({
+                        source: new fields.StringField({ required: false }),
+                        name: new fields.StringField({ required: false }),
+                        benefit: new fields.StringField({ required: false }),
                     }),
                     { required: true, initial: [] },
                 ),
-                originPath: new ObjectField({ required: true, initial: {} }),
+                originPath: new fields.ObjectField({ required: true, initial: {} }),
             }),
 
             // ===== CHARACTER GENERATION =====
-            characterGeneration: new SchemaField({
+            characterGeneration: new fields.SchemaField({
                 // Track raw dice rolls (2D20 summed for each characteristic)
-                rolls: new ArrayField(new NumberField({ required: true, initial: 0, integer: true, min: 0, max: 40 }), { initial: [] }),
+                rolls: new fields.ArrayField(new fields.NumberField({ required: true, initial: 0, integer: true, min: 0, max: 40 }), { initial: [] }),
                 // Maps characteristic key to roll index (0-8), or null if unassigned
-                assignments: new SchemaField(
+                assignments: new fields.SchemaField(
                     Object.fromEntries(
                         GENERATION_CHARACTERISTICS.map((key) => [
                             key,
-                            new NumberField({ required: false, nullable: true, initial: null, integer: true, min: 0, max: 8 }),
+                            new fields.NumberField({ required: false, nullable: true, initial: null, integer: true, min: 0, max: 8 }),
                         ]),
                     ),
                 ),
                 // Custom base values (for non-human races)
-                customBases: new SchemaField({
-                    enabled: new BooleanField({ initial: false }),
+                customBases: new fields.SchemaField({
+                    enabled: new fields.BooleanField({ initial: false }),
                     ...Object.fromEntries(
-                        GENERATION_CHARACTERISTICS.map((key) => [key, new NumberField({ required: true, initial: 25, integer: true, min: 0 })]),
+                        GENERATION_CHARACTERISTICS.map((key) => [key, new fields.NumberField({ required: true, initial: 25, integer: true, min: 0 })]),
                     ),
                 }),
             }),
@@ -316,7 +294,7 @@ export default class CharacterData extends CreatureTemplate {
     }
 
     /** @inheritDoc */
-    static _cleanData(source: Record<string, unknown> | undefined, options: Record<string, unknown> = {}): void {
+    static override _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions = {}): void {
         super._cleanData?.(source, options);
         CharacterData.#cleanExperience(source);
         CharacterData.#cleanMentalState(source);
@@ -325,81 +303,59 @@ export default class CharacterData extends CreatureTemplate {
 
     /**
      * Clean experience fields.
-     * @param {object} source - The source data
+     * @param {Record<string, unknown>} source - The source data
      */
     static #cleanExperience(source: Record<string, unknown> | undefined): void {
-        if (source?.experience) {
-            if (source.experience.used !== undefined) {
-                source.experience.used = this._toInt(source.experience.used);
-            }
-            if (source.experience.total !== undefined) {
-                source.experience.total = this._toInt(source.experience.total);
-            }
-            if (source.experience.available !== undefined) {
-                source.experience.available = this._toInt(source.experience.available);
-            }
-            if (source.experience.spentCharacteristics !== undefined) {
-                source.experience.spentCharacteristics = this._toInt(source.experience.spentCharacteristics);
-            }
-            if (source.experience.spentSkills !== undefined) {
-                source.experience.spentSkills = this._toInt(source.experience.spentSkills);
-            }
-            if (source.experience.spentTalents !== undefined) {
-                source.experience.spentTalents = this._toInt(source.experience.spentTalents);
-            }
-            if (source.experience.spentPsychicPowers !== undefined) {
-                source.experience.spentPsychicPowers = this._toInt(source.experience.spentPsychicPowers);
-            }
-            if (source.experience.calculatedTotal !== undefined) {
-                source.experience.calculatedTotal = this._toInt(source.experience.calculatedTotal);
+        if (!source || !source.experience || typeof source.experience !== 'object') return;
+        const experience = source.experience as Record<string, unknown>;
+
+        const fields = ['used', 'total', 'available', 'spentCharacteristics', 'spentSkills', 'spentTalents', 'spentPsychicPowers', 'calculatedTotal'];
+        for (const field of fields) {
+            if (typeof experience[field] === 'string') {
+                experience[field] = Number(experience[field]);
             }
         }
     }
 
     /**
      * Clean mental state fields.
-     * @param {object} source - The source data
+     * @param {Record<string, unknown>} source - The source data
      */
     static #cleanMentalState(source: Record<string, unknown> | undefined): void {
-        if (source?.insanity !== undefined) {
-            source.insanity = this._toInt(source.insanity);
-        }
-        if (source?.corruption !== undefined) {
-            source.corruption = this._toInt(source.corruption);
-        }
-        if (source?.insanityBonus !== undefined) {
-            source.insanityBonus = this._toInt(source.insanityBonus);
-        }
-        if (source?.corruptionBonus !== undefined) {
-            source.corruptionBonus = this._toInt(source.corruptionBonus);
+        if (!source) return;
+        const fields = ['insanity', 'corruption', 'insanityBonus', 'corruptionBonus'];
+        for (const field of fields) {
+            if (typeof source[field] === 'string') {
+                source[field] = Number(source[field]);
+            }
         }
     }
 
     /**
      * Clean Rogue Trader / WH40K fields.
-     * @param {object} source - The source data
+     * @param {Record<string, unknown>} source - The source data
      */
     static #cleanRogueTrader(source: Record<string, unknown> | undefined): void {
-        const rt = source?.rogueTrader;
+        const rt = source?.rogueTrader as Record<string, unknown> | undefined;
         if (!rt) return;
 
-        const pf = rt.profitFactor;
+        const pf = rt.profitFactor as Record<string, unknown> | undefined;
         if (pf) {
-            if (pf.current !== undefined) pf.current = this._toInt(pf.current);
-            if (pf.starting !== undefined) pf.starting = this._toInt(pf.starting);
-            if (pf.modifier !== undefined) pf.modifier = this._toInt(pf.modifier);
+            for (const field of ['current', 'starting', 'modifier']) {
+                if (typeof pf[field] === 'string') pf[field] = Number(pf[field]);
+            }
         }
 
-        const endeavour = rt.endeavour;
+        const endeavour = rt.endeavour as Record<string, unknown> | undefined;
         if (endeavour) {
-            if (endeavour.achievementCurrent !== undefined) endeavour.achievementCurrent = this._toInt(endeavour.achievementCurrent);
-            if (endeavour.achievementRequired !== undefined) endeavour.achievementRequired = this._toInt(endeavour.achievementRequired);
-            if (endeavour.reward !== undefined) endeavour.reward = this._toInt(endeavour.reward);
+            for (const field of ['achievementCurrent', 'achievementRequired', 'reward']) {
+                if (typeof endeavour[field] === 'string') endeavour[field] = Number(endeavour[field]);
+            }
         }
 
         if (Array.isArray(rt.acquisitions)) {
-            for (const acquisition of rt.acquisitions) {
-                if (acquisition?.modifier !== undefined) acquisition.modifier = this._toInt(acquisition.modifier);
+            for (const acquisition of rt.acquisitions as Array<Record<string, unknown>>) {
+                if (typeof acquisition.modifier === 'string') acquisition.modifier = Number(acquisition.modifier);
             }
         }
     }

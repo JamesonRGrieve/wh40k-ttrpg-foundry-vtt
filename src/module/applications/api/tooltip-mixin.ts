@@ -3,6 +3,7 @@
  * Works with TooltipsWH40K system for rich tooltip display
  */
 
+type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
 import {
     prepareCharacteristicTooltipData,
     prepareSkillTooltipData,
@@ -11,16 +12,20 @@ import {
     prepareModifierTooltipData,
     prepareQualityTooltipData,
 } from '../components/wh40k-tooltip.ts';
+import type { TooltipMixinAPI } from './sheet-mixin-types.js';
 
 /**
  * Mixin to add rich tooltip data preparation helpers to sheets.
  * The actual tooltip display is handled by the global TooltipsWH40K instance.
- * @param {typeof ApplicationV2} Base  The base class being mixed.
- * @returns {typeof TooltipSheet}
+ * @template {ApplicationV2} T
+ * @param {T} Base  The base class being mixed.
+ * @returns {any}
  * @mixin
  */
-export default function TooltipMixin<T extends new (...args: any[]) => any>(Base: T) {
-    return class TooltipSheet extends Base {
+export default function TooltipMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+    return class TooltipSheet extends Base implements TooltipMixinAPI {
+        declare document: any;
+
         /* -------------------------------------------- */
         /*  Tooltip Data Preparation Helpers            */
         /* -------------------------------------------- */
@@ -28,8 +33,8 @@ export default function TooltipMixin<T extends new (...args: any[]) => any>(Base
         /**
          * Prepare characteristic tooltip data.
          * @param {string} key              Characteristic key.
-         * @param {object} characteristic   Characteristic data.
-         * @param {object} [modifierSources]  Modifier sources.
+         * @param {Record<string, unknown>} characteristic   Characteristic data.
+         * @param {Record<string, unknown>} [modifierSources]  Modifier sources.
          * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareCharacteristicTooltip(key: string, characteristic: Record<string, unknown>, modifierSources: Record<string, unknown> = {}): string {
@@ -41,8 +46,8 @@ export default function TooltipMixin<T extends new (...args: any[]) => any>(Base
         /**
          * Prepare skill tooltip data.
          * @param {string} key            Skill key.
-         * @param {object} skill          Skill data.
-         * @param {object} characteristics  Character characteristics.
+         * @param {Record<string, unknown>} skill          Skill data.
+         * @param {Record<string, unknown>} characteristics  Character characteristics.
          * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareSkillTooltip(key: string, skill: Record<string, unknown>, characteristics: Record<string, unknown>): string {
@@ -55,8 +60,8 @@ export default function TooltipMixin<T extends new (...args: any[]) => any>(Base
         /**
          * Prepare armor tooltip data.
          * @param {string} location     Armor location.
-         * @param {object} armorData    Armor data for this location.
-         * @param {Array} [equipped]    Equipped armor pieces.
+         * @param {Record<string, unknown>} armorData    Armor data for this location.
+         * @param {unknown[]} [equipped]    Equipped armor pieces.
          * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareArmorTooltip(location: string, armorData: Record<string, unknown>, equipped: unknown[] = []): string {
@@ -67,7 +72,7 @@ export default function TooltipMixin<T extends new (...args: any[]) => any>(Base
 
         /**
          * Prepare weapon tooltip data.
-         * @param {object} weapon  Weapon item.
+         * @param {Record<string, unknown>} weapon  Weapon item.
          * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareWeaponTooltip(weapon: Record<string, unknown>): string {
@@ -79,7 +84,7 @@ export default function TooltipMixin<T extends new (...args: any[]) => any>(Base
         /**
          * Prepare modifier sources tooltip data.
          * @param {string} title    Tooltip title.
-         * @param {Array} sources   Modifier sources.
+         * @param {unknown[]} sources   Modifier sources.
          * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareModifierTooltip(title: string, sources: unknown[]): string {
@@ -91,7 +96,7 @@ export default function TooltipMixin<T extends new (...args: any[]) => any>(Base
         /**
          * Prepare weapon quality tooltip data.
          * @param {string} identifier  Quality identifier (e.g., "tearing", "blast-5").
-         * @param {number} [level]     Optional quality level.
+         * @param {number|null} [level]     Optional quality level.
          * @returns {string}  JSON string for data-wh40k-tooltip-data attribute.
          */
         prepareQualityTooltip(identifier: string, level: number | null = null): string {

@@ -2,22 +2,32 @@
  * @file AddXPDialog - V2 dialog for adding/subtracting XP
  */
 
+import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
-interface AddXPDialogOptions {}
+interface AddXPContext extends Record<string, unknown> {
+    actor: WH40KAcolyte;
+    currentTotal: number;
+    xpAmount: number;
+    newTotal: number;
+    isAddition: boolean;
+    absAmount: number;
+}
 
 /**
  * Dialog for adding or subtracting experience points.
  */
 export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
+    actor: WH40KAcolyte;
+    xpAmount: number;
+
     /**
      * @param {WH40KAcolyte} actor  The actor to modify.
      * @param {AddXPDialogOptions} [options={}]       Dialog options.
      */
-    constructor(actor: any, options: AddXPDialogOptions = {}) {
-        // @ts-expect-error - argument count
+    constructor(actor: WH40KAcolyte, options: ApplicationV2Config.DefaultOptions = {}) {
         super(options);
         this.actor = actor;
         this.xpAmount = 0;
@@ -59,29 +69,13 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
     };
 
     /* -------------------------------------------- */
-    /*  Properties                                  */
-    /* -------------------------------------------- */
-
-    /**
-     * The actor being modified.
-     * @type {WH40KAcolyte}
-     */
-    actor;
-
-    /**
-     * The XP amount to add/subtract.
-     * @type {number}
-     */
-    xpAmount;
-
-    /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AddXPContext> {
         const context = await super._prepareContext(options);
-        const currentTotal = this.actor.system?.experience?.total ?? 0;
+        const currentTotal = (this.actor.system as any)?.experience?.total ?? 0;
         const newTotal = Math.max(0, currentTotal + this.xpAmount);
 
         return {
@@ -92,24 +86,22 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
             newTotal,
             isAddition: this.xpAmount >= 0,
             absAmount: Math.abs(this.xpAmount),
-        };
+        } as AddXPContext;
     }
 
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    async _onRender(context: AddXPContext, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
-        // Auto-select and focus the input field
-        const input = this.element.querySelector('input[name="xpAmount"]');
+        const input = this.element.querySelector('input[name="xpAmount"]') as HTMLInputElement | null;
         if (input) {
             input.focus();
             input.select();
 
-            // Auto-select on focus for easy editing
             input.addEventListener('focus', (event) => {
-                event.target.select();
+                (event.target as HTMLInputElement).select();
             });
         }
     }
@@ -118,15 +110,8 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
     /*  Action Handlers                             */
     /* -------------------------------------------- */
 
-    /**
-     * Handle form changes to update preview.
-     * @this {AddXPDialog}
-     * @param {Event} event         Triggering change event.
-     * @param {HTMLElement} form    The form element.
-     * @param {FormDataExtended} formData  The form data.
-     */
-    static async #onFormChange(this: AddXPDialog, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
-        const xpAmount = parseInt((formData as any).object.xpAmount) || 0;
+    static async #onFormChange(this: AddXPDialog, event: Event, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+        const xpAmount = parseInt(formData.object.xpAmount as string) || 0;
         if (this.xpAmount !== xpAmount) {
             this.xpAmount = xpAmount;
             await this.render();
@@ -135,13 +120,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
 
     /* -------------------------------------------- */
 
-    /**
-     * Handle apply button click.
-     * @this {AddXPDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #onApply(this: AddXPDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onApply(this: AddXPDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         if (this.xpAmount === 0) {
@@ -149,7 +128,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
             return;
         }
 
-        const currentTotal = this.actor.system?.experience?.total ?? 0;
+        const currentTotal = (this.actor.system as any)?.experience?.total ?? 0;
         const newTotal = Math.max(0, currentTotal + this.xpAmount);
 
         await this.actor.update({ 'system.experience.total': newTotal });
@@ -162,13 +141,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
 
     /* -------------------------------------------- */
 
-    /**
-     * Handle cancel button click.
-     * @this {AddXPDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #onCancel(this: AddXPDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: AddXPDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
         await this.close();
     }
@@ -178,11 +151,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
 /*  Helper Function                             */
 /* -------------------------------------------- */
 
-/**
- * Open an add XP dialog.
- * @param {WH40KAcolyte} actor  The actor to modify.
- */
-export function openAddXPDialog(actor) {
+export function openAddXPDialog(actor: WH40KAcolyte): void {
     const dialog = new AddXPDialog(actor);
-    dialog.render(true);
+    void dialog.render(true);
 }

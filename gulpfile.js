@@ -200,10 +200,48 @@ async function compilePacks() {
 /*  Compile TypeScript
 /* ----------------------------------------- */
 
+// Structural errors that must fail the build. Everything else (implicit any,
+// assignability, missing property, etc.) is treated as a warning so the loose
+// fvtt-types baseline doesn't block builds. TS1xxx (syntax) is also fatal via
+// the regex below.
+const FATAL_TS_CODES = new Set([
+  'TS2300', // duplicate identifier
+  'TS2304', // cannot find name
+  'TS2305', // module has no exported member (agent deleted the export)
+  'TS2307', // cannot find module
+  'TS2393', // duplicate function implementation
+  'TS2395', // export conflict
+  'TS2440', // import conflicts with local declaration
+  'TS2451', // cannot redeclare block-scoped variable
+  'TS2484', // export conflict
+  'TS2614', // module has no default export (imported as default but isn't)
+  'TS2664', // invalid module name in augmentation
+]);
+
 function compileTypeScript(done) {
-  exec('pnpm exec tsc', (err, stdout, stderr) => {
-    if (stdout) console.log(stdout);
-    if (stderr) console.error(stderr);
+  exec('pnpm exec tsc --pretty false', (err, stdout, stderr) => {
+    const out = (stdout || '') + (stderr || '');
+    const diags = out.split('\n').filter((l) => /error TS\d+/.test(l));
+    const fatal = diags.filter((l) => {
+      const m = l.match(/error (TS\d+)/);
+      if (!m) return false;
+      const code = m[1];
+      // Structural errors always fatal
+      if (/^TS1\d{3}$/.test(code) || FATAL_TS_CODES.has(code)) return true;
+      // Private-field reference errors ("Property '#foo' does not exist") are
+      // runtime-fatal: JS class parsers reject any class that references an
+      // undeclared private. TypeScript reports these as TS2339 — the rest of
+      // TS2339 is noisy, so gate specifically on the #-prefix.
+      if (code === 'TS2339' && /Property '#/.test(l)) return true;
+      return false;
+    });
+    if (diags.length) {
+      console.log(`[tsc] ${diags.length} diagnostic(s), ${fatal.length} fatal`);
+    }
+    if (fatal.length) {
+      fatal.forEach((l) => console.error(l));
+      return done(new Error(`tsc fatal errors: ${fatal.length}`));
+    }
     done();
   });
 }

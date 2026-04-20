@@ -3,12 +3,12 @@
  */
 
 import BaseItemSheet from './base-item-sheet.ts';
+import type AmmunitionData from '../../data/item/ammunition.ts';
 
 /**
  * Sheet for ammunition items.
  * Displays modifiers with stat bar and weapon compatibility.
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class AmmoSheet extends BaseItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
@@ -47,7 +47,7 @@ export default class AmmoSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups = {
+    tabGroups: Record<string, string> = {
         primary: 'modifiers',
     };
 
@@ -56,15 +56,15 @@ export default class AmmoSheet extends BaseItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         // Add CONFIG reference for templates
         context.CONFIG = CONFIG;
 
         // Add helper for Set checking
-        context.setIncludes = (value, set) => set && set.has(value);
-        context.setToArray = (set) => Array.from(set || []);
+        context.setIncludes = (value: string, set: Set<string>) => set && set.has(value);
+        context.setToArray = (set: Set<string>) => Array.from(set || []);
 
         return context;
     }
@@ -75,18 +75,17 @@ export default class AmmoSheet extends BaseItemSheet {
 
     /**
      * Add a quality to added or removed list.
-     * @param {Event} event   The triggering event
-     * @param {HTMLElement} target The target element
      */
-    static async #addQuality(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #addQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
         const type = target.dataset.type; // 'added' or 'removed'
-        const input = this.element.querySelector(`[name="new-${type}-quality"]`);
+        const input = this.element.querySelector(`[name="new-${type}-quality"]`) as HTMLInputElement | null;
         const quality = input?.value?.trim();
 
         if (!quality) return;
 
         const field = type === 'added' ? 'addedQualities' : 'removedQualities';
-        const qualities = new Set(this.item.system[field] || []);
+        const sys = this.item.system as AmmunitionData;
+        const qualities = new Set((sys[field] as string[]) || []);
         qualities.add(quality);
 
         await this.item.update({ [`system.${field}`]: Array.from(qualities) });
@@ -97,26 +96,24 @@ export default class AmmoSheet extends BaseItemSheet {
 
     /**
      * Remove a quality from the added list.
-     * @param {Event} event   The triggering event
-     * @param {HTMLElement} target The target element
      */
-    static async #removeAddedQuality(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeAddedQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
         const quality = target.dataset.quality;
-        const qualities = new Set(this.item.system.addedQualities || []);
-        qualities.delete(quality);
+        const sys = this.item.system as AmmunitionData;
+        const qualities = new Set((sys.addedQualities as string[]) || []);
+        if (quality) qualities.delete(quality);
 
         await this.item.update({ 'system.addedQualities': Array.from(qualities) });
     }
 
     /**
      * Remove a quality from the removed list.
-     * @param {Event} event   The triggering event
-     * @param {HTMLElement} target The target element
      */
-    static async #removeRemovedQuality(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeRemovedQuality(this: AmmoSheet, event: Event, target: HTMLElement): Promise<void> {
         const quality = target.dataset.quality;
-        const qualities = new Set(this.item.system.removedQualities || []);
-        qualities.delete(quality);
+        const sys = this.item.system as AmmunitionData;
+        const qualities = new Set((sys.removedQualities as string[]) || []);
+        if (quality) qualities.delete(quality);
 
         await this.item.update({ 'system.removedQualities': Array.from(qualities) });
     }
