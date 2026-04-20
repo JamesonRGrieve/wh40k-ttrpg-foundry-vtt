@@ -3,6 +3,7 @@ import IdentifierField from '../fields/identifier-field.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
+import { bodyLocationsSchema } from '../shared/body-locations.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
@@ -257,35 +258,48 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Armour classification
-            type: new fields.ObjectField({ required: true, initial: 'flak' }),
-
-            // Armour points per location
-            armourPoints: new fields.ObjectField({
+            type: new fields.StringField({
                 required: true,
-                initial: {
-                    head: 0,
-                    leftArm: 0,
-                    rightArm: 0,
-                    body: 0,
-                    leftLeg: 0,
-                    rightLeg: 0,
-                },
+                initial: 'flak',
+                choices: [
+                    'flak',
+                    'mesh',
+                    'carapace',
+                    'power',
+                    'light-power',
+                    'storm-trooper',
+                    'feudal-world',
+                    'primitive',
+                    'xenos',
+                    'void',
+                    'enforcer',
+                    'hostile-environment',
+                ],
             }),
 
+            // Armour points per location
+            armourPoints: bodyLocationsSchema(),
+
             // Coverage - which locations does this cover?
-            coverage: new fields.ObjectField({ required: true, initial: ['body'] }),
+            coverage: new fields.SetField(
+                new fields.StringField({
+                    required: true,
+                    choices: ['head', 'leftArm', 'rightArm', 'body', 'leftLeg', 'rightLeg', 'all'],
+                }),
+                { required: true, initial: ['body'] },
+            ),
 
             // Maximum agility bonus while wearing
-            maxAgility: new fields.ObjectField({ required: false, nullable: true, initial: null }),
+            maxAgility: new fields.NumberField({ required: false, nullable: true, min: 0 }),
 
             // Special properties
-            properties: new fields.ObjectField({ required: true, initial: [] }),
+            properties: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
             // Primitive armour flag
-            primitive: new fields.ObjectField({ required: true, initial: false }),
+            primitive: new fields.BooleanField({ required: true, initial: false }),
 
             // Notes
-            notes: new fields.ObjectField({ required: false, initial: '' }),
+            notes: new fields.StringField({ required: false, blank: true }),
 
             // Modifications
             modifications: new fields.ArrayField(
@@ -302,7 +316,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             ),
 
             // Number of modification slots
-            modificationSlots: new fields.ObjectField({ required: true, initial: 2 }),
+            modificationSlots: new fields.NumberField({ required: true, initial: 2, min: 0, max: 10, integer: true }),
         };
     }
 

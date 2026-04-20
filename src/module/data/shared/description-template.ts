@@ -14,8 +14,16 @@ export default class DescriptionTemplate extends SystemDataModel {
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
-            description: new fields.ObjectField({ required: true, initial: DescriptionTemplate.#emptyDescription() }),
-            source: new fields.ObjectField({ required: true, initial: DescriptionTemplate.#emptySource() }),
+            description: new fields.SchemaField({
+                value: new fields.HTMLField({ required: true, initial: '' }),
+                chat: new fields.HTMLField({ required: false, initial: '' }),
+                summary: new fields.StringField({ required: false, blank: true, initial: '' }),
+            }),
+            source: new fields.SchemaField({
+                book: new fields.StringField({ required: false, blank: true, initial: '' }),
+                page: new fields.StringField({ required: false, blank: true, initial: '' }),
+                custom: new fields.StringField({ required: false, blank: true, initial: '' }),
+            }),
         };
     }
 

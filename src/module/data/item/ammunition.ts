@@ -34,34 +34,35 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // What weapon types can use this ammo
-            weaponTypes: new fields.ObjectField({ required: true, initial: [] }),
+            weaponTypes: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
             // Ammo modifiers (applied to weapon when loaded)
-            modifiers: new fields.ObjectField({
-                required: true,
-                initial: {
-                    damage: 0,
-                    penetration: 0,
-                    range: 0,
-                    rateOfFire: { single: 0, semi: 0, full: 0 },
-                },
+            modifiers: new fields.SchemaField({
+                damage: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                penetration: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                range: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                rateOfFire: new fields.SchemaField({
+                    single: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                    semi: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                    full: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                }),
             }),
 
             // Special qualities added by this ammo
-            addedQualities: new fields.ObjectField({ required: true, initial: [] }),
+            addedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
             // Qualities removed by this ammo
-            removedQualities: new fields.ObjectField({ required: true, initial: [] }),
+            removedQualities: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
             // Clip size modifier
-            clipModifier: new fields.ObjectField({ required: true, initial: 0 }),
+            clipModifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
 
             // Effect description
-            effect: new fields.ObjectField({ required: false, initial: '' }),
+            effect: new fields.HTMLField({ required: false, blank: true }),
 
             // Notes & source
-            notes: new fields.ObjectField({ required: false, initial: '' }),
-            source: new fields.ObjectField({ required: false, initial: '' }),
+            notes: new fields.StringField({ required: false, blank: true }),
+            source: new fields.StringField({ required: false, blank: true }),
         };
     }
 

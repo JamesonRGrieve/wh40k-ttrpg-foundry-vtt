@@ -19,7 +19,29 @@ export default class AttackTemplate extends SystemDataModel {
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
-            attack: new fields.ObjectField({ required: true, initial: AttackTemplate.#emptyAttack() }),
+            attack: new fields.SchemaField({
+                type: new fields.StringField({
+                    required: true,
+                    initial: 'melee',
+                    choices: ['melee', 'ranged', 'thrown', 'psychic'],
+                }),
+                characteristic: new fields.StringField({
+                    required: true,
+                    initial: 'weaponSkill',
+                    choices: ['weaponSkill', 'ballisticSkill', 'willpower', 'perception'],
+                }),
+                modifier: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                range: new fields.SchemaField({
+                    value: new fields.NumberField({ required: false, initial: 0, min: 0 }),
+                    units: new fields.StringField({ required: false, initial: 'm' }),
+                    special: new fields.StringField({ required: false, blank: true }),
+                }),
+                rateOfFire: new fields.SchemaField({
+                    single: new fields.BooleanField({ required: true, initial: true }),
+                    semi: new fields.NumberField({ required: true, initial: 0, min: 0 }),
+                    full: new fields.NumberField({ required: true, initial: 0, min: 0 }),
+                }),
+            }),
         };
     }
 

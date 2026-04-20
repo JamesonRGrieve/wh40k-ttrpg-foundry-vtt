@@ -57,17 +57,49 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Weapon classification (usage pattern only)
-            class: new fields.ObjectField({ required: true, initial: 'melee' }),
+            class: new fields.StringField({
+                required: true,
+                initial: 'melee',
+                choices: ['melee', 'pistol', 'basic', 'heavy', 'thrown', 'exotic'],
+            }),
 
-            type: new fields.ObjectField({ required: true, initial: 'primitive' }),
+            type: new fields.StringField({
+                required: true,
+                initial: 'primitive',
+                choices: [
+                    'primitive',
+                    'las',
+                    'solid-projectile',
+                    'bolt',
+                    'melta',
+                    'plasma',
+                    'flame',
+                    'launcher',
+                    'explosive',
+                    'power',
+                    'chain',
+                    'shock',
+                    'force',
+                    'exotic',
+                    'xenos',
+                ],
+            }),
 
             // Weapon properties
-            twoHanded: new fields.ObjectField({ required: true, initial: false }),
-            melee: new fields.ObjectField({ required: true, initial: false }),
+            twoHanded: new fields.BooleanField({ required: true, initial: false }),
+            melee: new fields.BooleanField({ required: true, initial: false }),
 
             // Ammunition
-            clip: new fields.ObjectField({ required: true, initial: { max: 0, value: 0, type: '' } }),
-            reload: new fields.ObjectField({ required: true, initial: '-' }),
+            clip: new fields.SchemaField({
+                max: new fields.NumberField({ required: true, initial: 0, min: 0 }),
+                value: new fields.NumberField({ required: true, initial: 0, min: 0 }),
+                type: new fields.StringField({ required: false, blank: true }),
+            }),
+            reload: new fields.StringField({
+                required: true,
+                initial: '-',
+                choices: ['-', 'free', 'half', 'full', '2-full', '3-full'],
+            }),
 
             // Loaded ammunition (reference to ammunition item)
             loadedAmmo: new fields.SchemaField(
@@ -115,10 +147,10 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
             ),
 
             // Required training (for future talent integration)
-            requiredTraining: new fields.ObjectField({ required: false, initial: '' }),
+            requiredTraining: new fields.StringField({ required: false, blank: true }),
 
             // Notes
-            notes: new fields.ObjectField({ required: false, initial: '' }),
+            notes: new fields.StringField({ required: false, blank: true }),
         };
     }
 
