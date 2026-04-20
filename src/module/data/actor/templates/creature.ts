@@ -897,8 +897,10 @@ export default class CreatureTemplate extends CommonTemplate {
             skill.plus20 = effectiveRank >= 3;
             skill.plus30 = effectiveRank >= 4;
 
-            // Base value: full characteristic if rank >= 1, half if untrained
-            const baseValue = effectiveRank > 0 ? charTotal : Math.floor(charTotal / 2);
+            // Base value: full characteristic if rank >= 1.
+            // Untrained uses flat -20 in DH2e (Known/Trained/Experienced/Veteran ladder);
+            // half characteristic for career-based systems.
+            const baseValue = effectiveRank > 0 ? charTotal : gameSystem === 'dh2e' ? charTotal - 20 : Math.floor(charTotal / 2);
 
             // Training bonus: rank 2 = +10, rank 3 = +20, rank 4 = +30
             const trainingBonus = effectiveRank >= 4 ? 30 : effectiveRank >= 3 ? 20 : effectiveRank >= 2 ? 10 : 0;
@@ -922,7 +924,8 @@ export default class CreatureTemplate extends CommonTemplate {
                     entry.plus20 = entryEffectiveRank >= 3;
                     entry.plus30 = entryEffectiveRank >= 4;
 
-                    const entryBaseValue = entryEffectiveRank > 0 ? entryCharTotal : Math.floor(entryCharTotal / 2);
+                    const entryBaseValue =
+                        entryEffectiveRank > 0 ? entryCharTotal : gameSystem === 'dh2e' ? entryCharTotal - 20 : Math.floor(entryCharTotal / 2);
                     const entryTrainingBonus = entryEffectiveRank >= 4 ? 30 : entryEffectiveRank >= 3 ? 20 : entryEffectiveRank >= 2 ? 10 : 0;
                     entry.current = entryBaseValue + entryTrainingBonus + (entry.bonus || 0);
                 }
