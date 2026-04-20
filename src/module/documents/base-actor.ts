@@ -61,6 +61,20 @@ export class WH40KBaseActor extends Actor {
         }
     }
 
+    /**
+     * Called when items are created, updated, or deleted.
+     * Triggers recalculation of item-based data via prepareEmbeddedData.
+     */
+    _onItemsChanged(): void {
+        const system = this.system as any;
+        if (typeof system?._initializeModifierTracking === 'function') {
+            system._initializeModifierTracking();
+        }
+        if (typeof system?.prepareEmbeddedData === 'function') {
+            system.prepareEmbeddedData();
+        }
+    }
+
     async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: unknown): Promise<void> {
         await super._preCreate(data as any, options, user);
         const initData: Record<string, any> = {
