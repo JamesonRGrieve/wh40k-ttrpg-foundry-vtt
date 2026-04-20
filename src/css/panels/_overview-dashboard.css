@@ -1491,12 +1491,6 @@
     }
 }
 
-.wh40k-status-col {
-    display: flex;
-    flex-direction: column;
-    gap: var(--wh40k-space-md);
-}
-
 // ============================================
 // Responsive Adjustments
 // ============================================

@@ -1,22 +1,3 @@
-// Biography Tab Layout
-// ============================================
-
-.wh40k-tab-bio {
-    // Override the base .wh40k-tab grid display
-    &.active {
-        display: block !important;
-    }
-    padding: var(--wh40k-space-md);
-    overflow: hidden;
-    min-width: 0;
-    max-width: 100%;
-}
-
-// Identity Grid
-.wh40k-identity-grid {
-    // Layout: tw-grid tw-grid-cols-2 tw-gap-2
-}
-
 // Origin Path
 .wh40k-origin-path {
     @apply tw-flex tw-flex-col tw-gap-1;

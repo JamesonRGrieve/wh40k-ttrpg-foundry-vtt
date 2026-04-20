@@ -3,7 +3,7 @@
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
 <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-w-full">
     {{!-- Left Column: Identity & Origin --}}
-    <div class="wh40k-bio-col tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
+    <div class="wh40k-bio-col tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
         {{!-- Identity Panel --}}
         <div class="wh40k-panel">
             <div class="wh40k-panel-header">
@@ -87,7 +87,7 @@
     {{!-- End of Left Column --}}
         
         {{!-- Right Column: Journal/Notes --}}
-        <div class="wh40k-bio-col tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
+        <div class="wh40k-bio-col tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{!-- Character Notes / Journal --}}
             <div class="wh40k-panel wh40k-panel-journal">
                 <div class="wh40k-panel-header">
