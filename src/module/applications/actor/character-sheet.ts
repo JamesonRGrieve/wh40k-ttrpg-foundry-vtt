@@ -12,6 +12,7 @@ import type { WH40KItem } from '../../documents/item.ts';
 import { AssignDamageData } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import AcquisitionDialog from '../dialogs/acquisition-dialog.ts';
 import AdvancementDialog from '../dialogs/advancement-dialog.ts';
 import CharacteristicSetupDialog from '../dialogs/characteristic-setup-dialog.ts';
@@ -326,6 +327,16 @@ export default class CharacterSheet extends BaseActorSheet {
         // Edit mode state
         context.inEditMode = this.inEditMode;
         context.isGM = game.user?.isGM ?? false;
+
+        // Ruleset state (DH2e only) — controls Throne Gelt visibility
+        const activeGameSystem = (this as any)._gameSystemId || this.actor.system?.gameSystem || 'rt';
+        const isDH2 = activeGameSystem === 'dh2e';
+        const ruleset = WH40KSettings.getRuleset();
+        context.ruleset = ruleset;
+        context.isDH2 = isDH2;
+        context.isHomebrew = isDH2 && ruleset === 'homebrew';
+        context.isRaw = isDH2 && ruleset === 'raw';
+        context.hideThroneGelt = context.isRaw;
 
         // WH40K-specific configuration
         context.dh = CONFIG.wh40k || WH40K;

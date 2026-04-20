@@ -442,7 +442,7 @@
                     <span>Resources</span>
                 </div>
                 <div class="wh40k-zone-content tw-p-2 tw-flex-1 tw-w-full">
-                    <div class="tw-grid tw-grid-cols-3 tw-gap-2 tw-w-full">
+                    <div class="tw-grid {{#if hideThroneGelt}}tw-grid-cols-2{{else}}tw-grid-cols-3{{/if}} tw-gap-2 tw-w-full">
                         <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                             <span class="wh40k-vital-label tw-text-xs" data-tooltip="Social and political pull — calling in favours, securing audiences, persuading officials. Not bought with coin.">Influence</span>
                             <div class="tw-flex tw-items-center tw-gap-1">
@@ -467,6 +467,7 @@
                                 </button>
                             </div>
                         </div>
+                        {{#unless hideThroneGelt}}
                         <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
                             <span class="wh40k-vital-label tw-text-xs" data-tooltip="Hard currency for street-level transactions — food, lodging, bribes, and black market purchases.">Throne Gelt</span>
                             <div class="tw-flex tw-items-center tw-gap-1">
@@ -479,6 +480,7 @@
                                 </button>
                             </div>
                         </div>
+                        {{/unless}}
                     </div>
                 </div>
             </div>
