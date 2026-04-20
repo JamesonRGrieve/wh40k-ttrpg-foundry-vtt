@@ -152,6 +152,14 @@ import type * as characterCreation from '../applications/character-creation/_mod
 // WH40K System Namespace on Game
 // =========================================================================
 
+interface TooltipsWH40K {
+    initialize(): Promise<void>;
+}
+
+// =========================================================================
+// WH40K System Namespace on Game
+// =========================================================================
+
 interface WH40KGameSystem {
     debug: boolean;
     log: (s: string, o?: unknown) => void;
@@ -185,11 +193,11 @@ interface WH40KGameSystem {
     savePreset: (actor: WH40KBaseActor) => Promise<unknown>;
     loadPreset: (actor: WH40KBaseActor) => Promise<unknown>;
     openPresetLibrary: () => Promise<unknown>;
-    transaction: typeof TransactionManager;
+    transaction: TransactionManager;
     dice: typeof dice;
     BasicRollWH40K: typeof dice.BasicRollWH40K;
     D100Roll: typeof dice.D100Roll;
-    tooltips?: unknown;
+    tooltips: TooltipsWH40K;
 }
 
 // =========================================================================
@@ -205,10 +213,128 @@ declare global {
         setup: true;
     }
 
+    interface Notifications {
+        info: (message: string, options?: Record<string, unknown>) => void;
+        warn: (message: string, options?: Record<string, unknown>) => void;
+        error: (message: string, options?: Record<string, unknown>) => void;
+    }
+
+    interface SceneControlTool {
+        name: string;
+        title: string;
+        icon: string;
+        visible: boolean;
+        onClick: () => void | Promise<void>;
+        button?: boolean;
+        toggle?: boolean;
+        active?: boolean;
+        order?: number;
+    }
+
+    interface SceneControl {
+        name: string;
+        title: string;
+        layer: string;
+        icon: string;
+        visible: boolean;
+        tools: Record<string, SceneControlTool>;
+        activeTool: string;
+    }
+
+    interface ClientSettings {
+        get(module: string, key: string): any;
+        set(module: string, key: string, value: any): Promise<any>;
+        register(module: string, key: string, data: any): void;
+        settings: Map<string, any>;
+    }
+
+    interface UI {
+        notifications: Notifications;
+        sidebar: any;
+        chat: any;
+        combat: any;
+        compendium: any;
+        controls: any;
+        players: any;
+        settings: any;
+        tables: any;
+        tours: any;
+        nav: any;
+        bubbles: any;
+        broadcaster: any;
+        menu: any;
+        activeWindow: any;
+        windows: Record<number, any>;
+    }
+
     // Augment ReadyGame to include wh40k
     interface ReadyGame {
         wh40k: WH40KGameSystem;
+        actors: any;
+        items: any;
+        users: any;
+        scenes: any;
+        packs: any;
+        settings: ClientSettings;
+        userId: string;
+        user: any;
+        tours: any;
     }
+
+    let game: ReadyGame;
+    let canvas: Canvas;
+    let ui: UI;
+    let CONFIG: any;
+    let Hooks: any;
+    let Actor: any;
+    let Item: any;
+    let ChatMessage: any;
+    let Roll: any;
+    let TextEditor: any;
+    let fromUuid: (uuid: string) => Promise<any>;
+    let renderTemplate: (template: string, data: Record<string, unknown>) => Promise<string>;
+
+interface WH40KBaseActorDocument extends Actor {
+    system: import('../data/abstract/actor-data-model.ts').default;
+    items: foundry.utils.Collection<WH40KItem>;
+    characteristics: Record<string, WH40KCharacteristic>;
+    skills: Record<string, WH40KSkill>;
+    initiative: WH40KInitiative;
+    wounds: WH40KWounds;
+    movement: WH40KMovement;
+    rollCharacteristicCheck(characteristic: string): Promise<any>;
+    rollWeaponAction(item: WH40KItem): Promise<any>;
+    rollPsychicPower(item: WH40KItem): Promise<any>;
+    _onItemsChanged(): void;
+    getFlag(scope: string, key: string): any;
+    setFlag(scope: string, key: string, value: any): Promise<any>;
+    update(data: Record<string, any>, options?: Record<string, any>): Promise<any>;
+    updateSource(data: Record<string, any>): void;
+}
+
+interface WH40KItemDocument extends Item {
+    system: import('../data/abstract/item-data-model.ts').default;
+    actor: WH40KBaseActorDocument | null;
+    isOriginPath: boolean;
+    isNavigatorPower: boolean;
+    isShipRole: boolean;
+    isCondition: boolean;
+    isTalent: boolean;
+    isTrait: boolean;
+    isAptitude: boolean;
+    isMentalDisorder: boolean;
+    isMalignancy: boolean;
+    isMutation: boolean;
+    isSpecialAbility: boolean;
+    flags: Record<string, any>;
+    getFlag(scope: string, key: string): any;
+    setFlag(scope: string, key: string, value: any): Promise<any>;
+    update(data: Record<string, any>, options?: Record<string, any>): Promise<any>;
+    sendToChat(): Promise<void>;
+}
+
+    let Hit: any;
+    let AssignDamageData: any;
 
     // Extend CONFIG with wh40k system config (both cases used in codebase)
     namespace CONFIG {

@@ -4,6 +4,8 @@
 
 import BaseRollDialog from './base-roll-dialog.ts';
 
+interface WeaponAttackDialogOptions {}
+
 /**
  * Dialog for configuring weapon attacks.
  */
@@ -11,9 +13,9 @@ import BaseRollDialog from './base-roll-dialog.ts';
 export default class WeaponAttackDialog extends BaseRollDialog {
     /**
      * @param {WeaponActionData} weaponActionData  The weapon action data.
-     * @param {object} [options={}]                Dialog options.
+     * @param {WeaponAttackDialogOptions} [options={}]                Dialog options.
      */
-    constructor(weaponActionData = {}, options = {}) {
+    constructor(weaponActionData: any = {}, options: WeaponAttackDialogOptions = {}) {
         // @ts-expect-error - dynamic property
         super(weaponActionData.rollData, options);
         this.weaponAttackData = weaponActionData;
@@ -117,7 +119,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
      * @param {Event} event         Triggering event.
      * @param {HTMLElement} target  Element that triggered the action.
      */
-    static async #onSelectWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onSelectWeapon(this: WeaponAttackDialog, event: Event, target: HTMLElement): Promise<void> {
         // @ts-expect-error - TS2339
         this.rollData.selectWeapon(target.name);
         await this.rollData.update();
