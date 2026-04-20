@@ -133,21 +133,7 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
     declare source: string;
 
     // From HordeTemplate mixin
-    declare horde: {
-        enabled: boolean;
-        magnitude: {
-            max: number;
-            current: number;
-        };
-        magnitudeLog: Array<{
-            amount: number;
-            source: string;
-            timestamp: number;
-        }>;
-        traits: string[];
-        damageMultiplier: number;
-        sizeModifier: number;
-    };
+    declare horde: HordeData;
 
     /* -------------------------------------------- */
     /*  Model Configuration                         */
@@ -429,10 +415,10 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
      * Get effective stats with custom overrides applied.
      * @type {Object}
      */
-    get effectiveStats(): Record<string, unknown> {
-        const stats = {
-            characteristics: {},
-            skills: {},
+    get effectiveStats(): Record<string, any> {
+        const stats: Record<string, any> = {
+            characteristics: {} as Record<string, number>,
+            skills: {} as Record<string, number>,
             combat: {
                 initiative: this.initiative.bonus,
                 dodge: this.getSkillTarget('dodge'),
@@ -493,8 +479,8 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
      * Get the list of trained skills as an array for display.
      * @type {Array<Object>}
      */
-    get trainedSkillsList(): Array<Record<string, unknown>> {
-        const list = [];
+    get trainedSkillsList(): Array<Record<string, any>> {
+        const list: Array<Record<string, any>> = [];
         for (const [key, skill] of Object.entries(this.trainedSkills)) {
             list.push({
                 key,
@@ -507,7 +493,7 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
                 target: this.getSkillTarget(key),
             });
         }
-        return list.sort((a, b) => a.name.localeCompare(b.name));
+        return list.sort((a, b) => (a.name as string).localeCompare(b.name as string));
     }
 
     /* -------------------------------------------- */
