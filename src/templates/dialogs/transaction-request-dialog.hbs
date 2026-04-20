@@ -1,0 +1,107 @@
+<div class="wh40k-transaction-dialog tw-flex tw-flex-col tw-gap-4">
+    {{#if hasSources}}
+        <div class="tw-grid tw-gap-2">
+            <label for="transaction-source">Source</label>
+            <select id="transaction-source" name="sourceId" class="tw-rounded-md tw-border tw-border-slate-600 tw-bg-slate-950 tw-px-3 tw-py-2 tw-text-sm tw-text-slate-100">
+                {{#each sources}}
+                    <option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}} ({{modeLabel}})</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <div class="wh40k-panel tw-overflow-hidden">
+            <div class="wh40k-panel-header">
+                <span class="wh40k-panel-title">
+                    <i class="fa-solid fa-store"></i>
+                    Available Items
+                </span>
+            </div>
+            <div class="wh40k-panel-body">
+                {{#if items.length}}
+                    <div class="tw-grid tw-gap-2">
+                        {{#each items}}
+                            <button
+                                type="button"
+                                class="tw-flex tw-items-center tw-justify-between tw-rounded-md tw-border tw-px-3 tw-py-3 tw-text-left {{#if selected}}tw-border-amber-500 tw-bg-amber-500/10{{else}}tw-border-slate-700 tw-bg-slate-900/70 hover:tw-border-slate-500{{/if}}"
+                                data-action="selectItem"
+                                data-item-id="{{id}}"
+                            >
+                                <span class="tw-flex tw-flex-col tw-gap-1">
+                                    <span class="tw-font-semibold tw-text-slate-100">{{name}}</span>
+                                    <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-text-slate-400">{{type}}</span>
+                                </span>
+                                <span class="tw-text-right tw-text-sm tw-text-slate-200">Qty {{quantity}} | Cost {{cost}}</span>
+                            </button>
+                        {{/each}}
+                    </div>
+                {{else}}
+                    <p class="tw-text-sm tw-text-slate-300">No inventory is available from this source.</p>
+                {{/if}}
+            </div>
+        </div>
+
+        {{#if selectedItem}}
+            <div class="tw-grid tw-gap-4 md:tw-grid-cols-2">
+                <div class="tw-grid tw-gap-2">
+                    <label for="transaction-quantity">Quantity</label>
+                    <input id="transaction-quantity" type="number" min="1" name="quantity" value="{{quantity}}" class="tw-rounded-md tw-border tw-border-slate-600 tw-bg-slate-950 tw-px-3 tw-py-2 tw-text-sm tw-text-slate-100" />
+                </div>
+
+                {{#if isBarter}}
+                    <div class="tw-grid tw-gap-2">
+                        <label for="transaction-influence">Burn Influence on completion</label>
+                        <input id="transaction-influence" type="number" min="0" name="influenceBurn" value="{{influenceBurn}}" class="tw-rounded-md tw-border tw-border-slate-600 tw-bg-slate-950 tw-px-3 tw-py-2 tw-text-sm tw-text-slate-100" />
+                        <p class="tw-text-xs tw-text-slate-400">Influence only decreases if the GM approves and the barter completes.</p>
+                    </div>
+                {{/if}}
+            </div>
+
+            {{#if quote}}
+                <div class="wh40k-panel">
+                    <div class="wh40k-panel-header">
+                        <span class="wh40k-panel-title">
+                            <i class="fa-solid fa-receipt"></i>
+                            Transaction Quote
+                        </span>
+                    </div>
+                    <div class="wh40k-panel-body">
+                        <div class="tw-grid tw-gap-2 tw-text-sm tw-text-slate-100">
+                            <p><strong>Mode:</strong> {{#if isBarter}}Barter{{else}}Requisition{{/if}}</p>
+                            <p><strong>Base cost:</strong> {{quote.baseCost}} {{quote.resourceLabel}}</p>
+                        </div>
+                        {{#if quote.adjustments.length}}
+                            <ul class="tw-my-3 tw-list-disc tw-pl-5 tw-text-sm tw-text-slate-200">
+                                {{#each quote.adjustments}}
+                                    <li>{{label}}: {{#if (gte value 0)}}+{{/if}}{{value}}</li>
+                                {{/each}}
+                            </ul>
+                        {{/if}}
+                        <div class="tw-grid tw-gap-2 tw-text-sm tw-text-slate-100">
+                            <p><strong>Final cost:</strong> {{quote.finalCost}} {{quote.resourceLabel}}</p>
+                            <p><strong>Available:</strong> {{quote.availableResource}} {{quote.resourceLabel}}</p>
+                            <p><strong>Remaining after transaction:</strong> {{quote.remainingResource}} {{quote.resourceLabel}}</p>
+                        </div>
+                        {{#if isBarter}}
+                            <p class="tw-mt-2 tw-text-sm tw-text-slate-100"><strong>Remaining Influence after completion:</strong> {{quote.remainingInfluence}}</p>
+                        {{/if}}
+                        {{#unless quote.stockAvailable}}
+                            <p class="tw-mt-2 tw-text-sm tw-text-amber-300">The selected quantity is not currently available.</p>
+                        {{/unless}}
+                        {{#unless quote.canAfford}}
+                            <p class="tw-mt-2 tw-text-sm tw-text-amber-300">The buyer cannot currently afford this transaction.</p>
+                        {{/unless}}
+                    </div>
+                </div>
+            {{/if}}
+
+            <footer class="tw-flex tw-justify-end">
+                <button type="button" class="tw-inline-flex tw-items-center tw-gap-2 tw-rounded-md tw-bg-amber-600 tw-px-4 tw-py-2 tw-font-semibold tw-text-slate-950 hover:tw-bg-amber-500" data-action="requestApproval">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Send To GM For Approval</span>
+                </button>
+            </footer>
+        {{/if}}
+    {{else}}
+        <p class="tw-text-sm tw-text-slate-300">No barter or requisition sources are configured for this player.</p>
+    {{/if}}
+</div>
