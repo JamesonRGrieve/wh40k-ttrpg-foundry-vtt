@@ -112,6 +112,7 @@ export abstract class BaseSystemConfig {
         const labels: Record<string, string> = {};
         const allSteps = [...config.coreSteps];
         if (config.optionalStep) allSteps.push(config.optionalStep);
+        if (config.equipmentStep) allSteps.push(config.equipmentStep);
 
         for (const step of allSteps) {
             const key = `WH40K.OriginPath.Short.${step.key}`;
