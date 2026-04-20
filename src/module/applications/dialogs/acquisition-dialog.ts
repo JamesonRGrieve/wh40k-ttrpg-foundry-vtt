@@ -185,7 +185,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @returns {number}  Modifier value
      * @private
      */
-    _getAvailabilityModifier(availability: string): any {
+    _getAvailabilityModifier(availability: string): number {
         const modifiers = {
             'Abundant': 30,
             'Plentiful': 20,
@@ -198,7 +198,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             'Near Unique': -50,
             'Unique': -60,
         };
-        return (modifiers as any)[availability] || 0;
+        return modifiers[availability as keyof typeof modifiers] || 0;
     }
 
     /* -------------------------------------------- */
@@ -209,14 +209,14 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @returns {number}  Modifier value
      * @private
      */
-    _getCraftsmanshipModifier(craftsmanship: string): any {
+    _getCraftsmanshipModifier(craftsmanship: string): number {
         const modifiers = {
             Poor: 10,
             Common: 0,
             Good: -10,
             Best: -20,
         };
-        return (modifiers as any)[craftsmanship] || 0;
+        return modifiers[craftsmanship as keyof typeof modifiers] || 0;
     }
 
     /* -------------------------------------------- */
@@ -226,7 +226,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @returns {Array}  Recent acquisitions
      * @private
      */
-    _getRecentAcquisitions(): any {
+    _getRecentAcquisitions(): unknown[] {
         const history = this.actor.getFlag('wh40k-rpg', 'acquisitionHistory') || [];
         return history.slice(-5).reverse(); // Last 5, most recent first
     }
@@ -387,7 +387,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             content,
             flavor: 'Profit Factor Acquisition Test',
             rolls: [data.roll],
-        } as any);
+        } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */

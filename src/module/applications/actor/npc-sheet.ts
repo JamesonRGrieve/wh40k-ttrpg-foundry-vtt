@@ -740,7 +740,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
         const weapon = (this as any).actor.items.get(itemId);
         if (!weapon) return;
         const { ReloadActionManager } = await import('../../actions/reload-action-manager.ts');
-        const result = await ReloadActionManager.reloadWeapon(weapon, { skipValidation: (event as any).shiftKey });
+        const result = await ReloadActionManager.reloadWeapon(weapon, { skipValidation: (event as MouseEvent).shiftKey });
         if (result.success) {
             ui.notifications.info(result.message);
             await ReloadActionManager.sendReloadToChat((this as any).actor, weapon, result);
@@ -1309,7 +1309,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
     static async #importStatBlock(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
-        await StatBlockParser.open({ actor: (this as any).actor } as any);
+        await StatBlockParser.open({ actor: (this as any).actor } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */

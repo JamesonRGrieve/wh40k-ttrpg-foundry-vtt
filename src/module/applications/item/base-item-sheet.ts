@@ -201,7 +201,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
      * @returns {object[]}
      * @protected
      */
-    _getTabs(): any {
+    _getTabs(): Record<string, Record<string, unknown>> {
         const tabs = {};
         for (const { tab, group, label, condition } of (this.constructor as any).TABS) {
             if (condition && !condition(this.document)) continue;

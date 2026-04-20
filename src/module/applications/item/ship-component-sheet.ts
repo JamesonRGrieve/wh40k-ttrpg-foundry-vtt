@@ -73,7 +73,7 @@ export default class ShipComponentSheet extends BaseItemSheet {
      * Get component type choices for dropdown.
      * @returns {object} Choices object
      */
-    _getComponentTypeChoices(): any {
+    _getComponentTypeChoices(): Record<string, string> {
         return {
             essential: game.i18n.localize('WH40K.ShipComponent.Type.Essential'),
             supplemental: game.i18n.localize('WH40K.ShipComponent.Type.Supplemental'),
@@ -97,7 +97,7 @@ export default class ShipComponentSheet extends BaseItemSheet {
      * Get hull type choices for multi-select.
      * @returns {object} Choices object
      */
-    _getHullTypeChoices(): any {
+    _getHullTypeChoices(): Record<string, string> {
         return {
             'all': game.i18n.localize('WH40K.HullType.All'),
             'transport': game.i18n.localize('WH40K.HullType.Transport'),
@@ -114,7 +114,7 @@ export default class ShipComponentSheet extends BaseItemSheet {
      * Get availability choices for dropdown.
      * @returns {object} Choices object
      */
-    _getAvailabilityChoices(): any {
+    _getAvailabilityChoices(): Record<string, string> {
         return {
             'ubiquitous': game.i18n.localize('WH40K.Availability.Ubiquitous'),
             'abundant': game.i18n.localize('WH40K.Availability.Abundant'),
@@ -134,7 +134,7 @@ export default class ShipComponentSheet extends BaseItemSheet {
      * Get condition choices for dropdown.
      * @returns {object} Choices object
      */
-    _getConditionChoices(): any {
+    _getConditionChoices(): Record<string, string> {
         return {
             functional: game.i18n.localize('WH40K.ShipComponent.Condition.Functional'),
             damaged: game.i18n.localize('WH40K.ShipComponent.Condition.Damaged'),

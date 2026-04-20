@@ -449,7 +449,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         ];
     }
 
-    _groupResults(results: unknown[]): any {
+    _groupResults(results: unknown[]): { label: string; items: unknown[] }[] {
         const groups = new Map();
         for (const entry of results) {
             const label = this._getGroupLabel(entry);
@@ -633,7 +633,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
 
     _onDragStart(event: Event): void {
         const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
-        (event as any).dataTransfer.setData(
+        (event as DragEvent).dataTransfer.setData(
             'text/plain',
             JSON.stringify({
                 type: 'Item',
@@ -678,7 +678,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      * @param {object} options  Options to pass to the browser.
      * @returns {RTCompendiumBrowser}
      */
-    static open(options: Record<string, unknown> = {}): any {
+    static open(options: Record<string, unknown> = {}): RTCompendiumBrowser {
         return new RTCompendiumBrowser(options).render(true);
     }
 }

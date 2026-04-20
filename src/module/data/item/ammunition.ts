@@ -115,7 +115,7 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
         this.source =
             (resolveLineVariant(this.source as unknown, lineKey) as { book: string; page: string; custom: string }) ??
-            ({ book: '', page: '', custom: '' } as any);
+            ({ book: '', page: '', custom: '' } as Record<string, string>);
     }
 
     /* -------------------------------------------- */

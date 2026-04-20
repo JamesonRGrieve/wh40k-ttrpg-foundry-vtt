@@ -958,7 +958,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         const chars = (this.actor as any).characteristics ?? {};
 
         // Dodge target: Ag + Dodge training
-        const dodgeSkill = skills.dodge ?? ({} as any);
+        const dodgeSkill = skills.dodge ?? ({} as Record<string, unknown>);
         let dodgeBase = chars.agility?.total ?? 30;
         if (dodgeSkill.plus20) dodgeBase += 20;
         else if (dodgeSkill.plus10) dodgeBase += 10;
@@ -966,7 +966,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         context.dodgeTarget = dodgeBase;
 
         // Parry target: WS + Parry training
-        const parrySkill = skills.parry ?? ({} as any);
+        const parrySkill = skills.parry ?? ({} as Record<string, unknown>);
         let parryBase = chars.weaponSkill?.total ?? 30;
         if (parrySkill.plus20) parryBase += 20;
         else if (parrySkill.plus10) parryBase += 10;
@@ -1572,7 +1572,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
                         type: 'initiative',
                     },
                 },
-            } as any);
+            } as Record<string, unknown>);
         } catch (error) {
             (this as any)._notify('error', `Initiative roll failed: ${error.message}`, {
                 duration: 5000,
@@ -2636,7 +2636,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
     /* -------------------------------------------- */
 
     /** @override */
-    _createCustomContextMenus(): any {
+    _createCustomContextMenus(): void {
         super._createCustomContextMenus();
 
         // Note: Utility menu is now handled via action instead of context menu
@@ -2860,7 +2860,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         else if (skill.trained) level = 1;
 
         // Cycle: shift-click goes backwards
-        if ((event as any).shiftKey) {
+        if ((event as MouseEvent).shiftKey) {
             level = level <= 0 ? maxLevel : level - 1;
         } else {
             level = level >= maxLevel ? 0 : level + 1;
@@ -2911,7 +2911,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
         else if (entry.trained) level = 1;
 
         // Cycle
-        if ((event as any).shiftKey) {
+        if ((event as MouseEvent).shiftKey) {
             level = level <= 0 ? maxLevel : level - 1;
         } else {
             level = level >= maxLevel ? 0 : level + 1;

@@ -70,7 +70,7 @@ export default class ShipUpgradeSheet extends BaseItemSheet {
      * Get availability choices for dropdown.
      * @returns {object} Choices object
      */
-    _getAvailabilityChoices(): any {
+    _getAvailabilityChoices(): Record<string, string> {
         return {
             'ubiquitous': game.i18n.localize('WH40K.Availability.Ubiquitous'),
             'abundant': game.i18n.localize('WH40K.Availability.Abundant'),

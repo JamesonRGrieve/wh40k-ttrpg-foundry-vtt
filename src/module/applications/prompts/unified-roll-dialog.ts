@@ -31,9 +31,9 @@ const { ApplicationV2 } = foundry.applications.api;
  * Unified dialog for configuring all roll types.
  */
 export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2) as any) {
-    declare render: any;
-    declare close: any;
-    declare position: any;
+    declare render: unknown;
+    declare close: unknown;
+    declare position: unknown;
 
     /**
      * @param {ActionData} actionData  Any ActionData subclass (SimpleSkillData, WeaponActionData, etc.)
@@ -479,7 +479,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
     /*  Context Helpers                              */
     /* -------------------------------------------- */
 
-    _getWeaponContext(): any {
+    _getWeaponContext(): Record<string, unknown> {
         const rd = this.rollData;
 
         // Apply range bracket override if user selected one
@@ -634,14 +634,14 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
      * @param {WeaponRollData} rd
      * @returns {string} Size key (e.g. "4" for Average)
      */
-    _getDefaultSizeKey(rd: any): any {
+    _getDefaultSizeKey(rd: Record<string, unknown>): string {
         if (rd.targetActor?.system?.size) {
             return String(rd.targetActor.system.size);
         }
         return '4'; // Average
     }
 
-    _getPsychicContext(): any {
+    _getPsychicContext(): Record<string, unknown> {
         const rd = this.rollData;
         return {
             psychicPowers: rd.psychicPowers || [],
@@ -658,7 +658,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
         };
     }
 
-    _getForceFieldContext(): any {
+    _getForceFieldContext(): Record<string, unknown> {
         const rd = this.rollData;
         return {
             forceField: rd.forceField,
@@ -670,7 +670,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
     /*  Helper Methods                               */
     /* -------------------------------------------- */
 
-    _collectSituationalModifiers(): any {
+    _collectSituationalModifiers(): unknown[] {
         const actor = this.rollData.sourceActor || this.rollData.actor;
         if (!actor?.getSituationalModifiers) return [];
         const rd = this.rollData;
@@ -679,7 +679,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
         return actor.getSituationalModifiers(type, key);
     }
 
-    _calculateSituationalModifiers(): any {
+    _calculateSituationalModifiers(): number {
         let total = 0;
         for (const mod of this._cachedSituationalModifiers || []) {
             const toggleKey = `${mod.key}_${mod.source}`;
@@ -692,7 +692,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
      * Calculate sum of active combat situational card modifiers.
      * @returns {number}
      */
-    _calculateCombatSituationalModifiers(): any {
+    _calculateCombatSituationalModifiers(): number {
         if (this._activeCombatSituationals.size === 0) return 0;
         const isRanged = !!this.rollData.weapon?.isRanged;
         const situationals = getSituationalModifiers(isRanged);
@@ -705,7 +705,7 @@ export default class UnifiedRollDialog extends (ApplicationV2Mixin(ApplicationV2
         return total;
     }
 
-    _stepDifficulty(direction: number): any {
+    _stepDifficulty(direction: number): void {
         const newIndex = this._selectedDifficultyIndex + direction;
         if (newIndex < 0 || newIndex >= (this.constructor as any).DIFFICULTIES.length) return;
         this._selectedDifficultyIndex = newIndex;

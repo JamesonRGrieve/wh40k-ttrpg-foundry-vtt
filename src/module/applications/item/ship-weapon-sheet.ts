@@ -68,7 +68,7 @@ export default class ShipWeaponSheet extends BaseItemSheet {
      * Get weapon type choices for dropdown.
      * @returns {object} Choices object
      */
-    _getWeaponTypeChoices(): any {
+    _getWeaponTypeChoices(): Record<string, string> {
         return {
             'macrobattery': game.i18n.localize('WH40K.ShipWeapon.Type.Macrobattery'),
             'lance': game.i18n.localize('WH40K.ShipWeapon.Type.Lance'),
@@ -84,7 +84,7 @@ export default class ShipWeaponSheet extends BaseItemSheet {
      * Get location choices for dropdown.
      * @returns {object} Choices object
      */
-    _getLocationChoices(): any {
+    _getLocationChoices(): Record<string, string> {
         return {
             prow: game.i18n.localize('WH40K.ShipLocation.Prow'),
             dorsal: game.i18n.localize('WH40K.ShipLocation.Dorsal'),
@@ -98,7 +98,7 @@ export default class ShipWeaponSheet extends BaseItemSheet {
      * Get hull type choices for multi-select.
      * @returns {object} Choices object
      */
-    _getHullTypeChoices(): any {
+    _getHullTypeChoices(): Record<string, string> {
         return {
             'all': game.i18n.localize('WH40K.HullType.All'),
             'transport': game.i18n.localize('WH40K.HullType.Transport'),
@@ -115,7 +115,7 @@ export default class ShipWeaponSheet extends BaseItemSheet {
      * Get availability choices for dropdown.
      * @returns {object} Choices object
      */
-    _getAvailabilityChoices(): any {
+    _getAvailabilityChoices(): Record<string, string> {
         return {
             'ubiquitous': game.i18n.localize('WH40K.Availability.Ubiquitous'),
             'abundant': game.i18n.localize('WH40K.Availability.Abundant'),

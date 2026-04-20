@@ -87,7 +87,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @returns {Object}
      * @private
      */
-    _getAvailableProperties(): any {
+    _getAvailableProperties(): Record<string, { label: string }> {
         const props = {};
         const available = ['sealed', 'auto-stabilized', 'hexagrammic', 'blessed', 'camouflage', 'lightweight', 'reinforced', 'agility-bonus', 'strength-bonus'];
 

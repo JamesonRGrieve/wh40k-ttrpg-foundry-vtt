@@ -106,7 +106,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {object} options - Options
      * @returns {AdvancementDialog}
      */
-    static open(actor: WH40KBaseActor, options: Record<string, unknown> = {}): any {
+    static open(actor: WH40KBaseActor, options: Record<string, unknown> = {}): AdvancementDialog {
         const dialog = new this(actor, options);
         void dialog.render(true);
         return dialog;
@@ -203,7 +203,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {BaseSystemConfig|null} systemConfig - System config (for all systems)
      * @returns {Array}
      */
-    #prepareCharacteristics(career: any, systemConfig: BaseSystemConfig | null): any {
+    #prepareCharacteristics(career: unknown, systemConfig: BaseSystemConfig | null): Record<string, unknown>[] {
         const characteristics = this.actor.system.characteristics ?? {};
         const available = getAvailableXP(this.actor);
 
@@ -257,7 +257,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
      * @param {Array} advances - Array of advancement definitions
      * @returns {Array}
      */
-    #prepareAdvances(advances: unknown[]): any {
+    #prepareAdvances(advances: unknown[]): Record<string, unknown>[] {
         const available = getAvailableXP(this.actor);
 
         return advances.map((advance, index) => {

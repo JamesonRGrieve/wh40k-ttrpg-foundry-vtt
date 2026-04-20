@@ -149,7 +149,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {object} Vehicle stats object.
      * @protected
      */
-    _prepareVehicleStats(context: Record<string, unknown>): any {
+    _prepareVehicleStats(context: Record<string, unknown>): Record<string, unknown> {
         const sys = context.system as any;
 
         return {
@@ -178,7 +178,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {object} Crew stats object.
      * @protected
      */
-    _prepareCrewStats(context: Record<string, unknown>): any {
+    _prepareCrewStats(context: Record<string, unknown>): Record<string, unknown> {
         const sys = context.system as any;
 
         return {
@@ -212,7 +212,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @returns {Array} Characteristics array.
      * @protected
      */
-    _prepareCharacteristics(context: Record<string, unknown>): any {
+    _prepareCharacteristics(context: Record<string, unknown>): Record<string, unknown>[] {
         const chars = (context.system as any).characteristics || {};
         const charArray = [];
 

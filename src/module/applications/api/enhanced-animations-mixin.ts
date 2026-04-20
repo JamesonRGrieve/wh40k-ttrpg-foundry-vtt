@@ -448,7 +448,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
         /* -------------------------------------------- */
 
         /** @override */
-        close(options: Record<string, unknown>): any {
+        close(options: Record<string, unknown>): unknown {
             // Clean up
             if (this._mutationObserver) {
                 this._mutationObserver.disconnect();

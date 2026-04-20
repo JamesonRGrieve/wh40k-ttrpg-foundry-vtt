@@ -756,7 +756,7 @@ export class HooksManager {
 
         const done = (game.settings as any).get(SYSTEM_ID, SETTING_DONE) as boolean | undefined;
         if (done) return;
-        if (!(game.user as any)?.isGM) return;
+        if (!game.user?.isGM) return;
 
         const LEGACY = new Set(['character', 'npc', 'vehicle', 'starship']);
         const targets = Array.from(game.actors ?? []).filter((a: { type: string }) => LEGACY.has(a.type));
