@@ -172,10 +172,15 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     static _validateJoint(data: Record<string, unknown>): void {
         super._validateJoint?.(data);
 
+        const lineKey = inferActiveGameLine(data);
+        const armourPoints = resolveLineVariant(data.armourPoints as Record<string, unknown>, lineKey) as Record<string, number> | undefined;
+        const coverageValue = resolveLineVariant(data.coverage as Record<string, unknown>, lineKey);
+        const maxAgility = resolveLineVariant(data.maxAgility as Record<string, unknown>, lineKey) as number | null | undefined;
+
         // Validate AP values (0-20 reasonable range)
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         for (const loc of locations) {
-            const ap = data.armourPoints?.[loc];
+            const ap = armourPoints?.[loc];
             if (ap !== undefined && (ap < 0 || ap > 20)) {
                 throw new Error(`Armour point value for ${loc} must be between 0 and 20`);
             }
@@ -186,12 +191,12 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         // (current homologated shape). Reject anything else silently — a
         // malformed coverage shouldn't crash actor load.
         let coverage: Set<string>;
-        if (data.coverage instanceof Set) {
-            coverage = data.coverage;
-        } else if (Array.isArray(data.coverage)) {
-            coverage = new Set(data.coverage);
-        } else if (data.coverage && typeof data.coverage === 'object') {
-            coverage = new Set(Object.keys(data.coverage).filter((k) => (data.coverage as any)[k]));
+        if (coverageValue instanceof Set) {
+            coverage = coverageValue;
+        } else if (Array.isArray(coverageValue)) {
+            coverage = new Set(coverageValue);
+        } else if (coverageValue && typeof coverageValue === 'object') {
+            coverage = new Set(Object.keys(coverageValue).filter((k) => (coverageValue as Record<string, unknown>)[k]));
         } else {
             coverage = new Set();
         }
@@ -200,8 +205,8 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         }
 
         // Validate maxAgility
-        if (data.maxAgility !== null && data.maxAgility !== undefined) {
-            if (data.maxAgility < 0 || data.maxAgility > 100) {
+        if (maxAgility !== null && maxAgility !== undefined) {
+            if (maxAgility < 0 || maxAgility > 100) {
                 throw new Error('Max Agility must be between 0 and 100');
             }
         }
@@ -241,7 +246,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             coverage: new fields.ObjectField({ required: true, initial: ['body'] }),
 
             // Maximum agility bonus while wearing
-            maxAgility: new fields.ObjectField({ required: false, initial: null }),
+            maxAgility: new fields.ObjectField({ required: false, nullable: true, initial: null }),
 
             // Special properties
             properties: new fields.ObjectField({ required: true, initial: [] }),
