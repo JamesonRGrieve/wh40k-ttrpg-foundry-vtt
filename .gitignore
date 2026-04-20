@@ -9,7 +9,7 @@ src/module/foundry-core
 
 ## Build Output
 node_modules
-css
+/css
 build
 archive
 dist

@@ -1,0 +1,481 @@
+.wh40k-wrapper {
+    // ============================================
+    // GOTHIC QUICK STATUS DISPLAY
+    // ============================================
+
+    .wh40k-quick-status-gothic {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: var(--wh40k-space-xs);
+        padding: 8px 6px 6px;
+        max-width: none;
+        white-space: nowrap;
+        align-self: center;
+        margin-top: -4px;
+        background: linear-gradient(180deg, rgba(245, 245, 245, 0.95), rgba(228, 228, 228, 0.95));
+        border: 1px solid rgba(120, 120, 120, 0.2);
+        border-radius: 6px;
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .wh40k-quick-status-gothic .wh40k-degree-label,
+    .wh40k-quick-status-gothic .wh40k-degree-modifier {
+        color: #666;
+        text-shadow: none;
+    }
+
+    .wh40k-status-panel {
+        flex: 0 0 auto;
+        width: 78px;
+        height: 64px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(240, 240, 240, 0.96));
+        border: 1px solid rgba(120, 120, 120, 0.25);
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+    }
+
+    .wh40k-status-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 2px 6px;
+        background: linear-gradient(180deg, rgba(248, 248, 248, 1), rgba(235, 235, 235, 1));
+        border-bottom: 1px solid rgba(120, 120, 120, 0.2);
+    }
+
+    .wh40k-status-icon {
+        font-size: 12px;
+        color: #666;
+        text-shadow: none;
+    }
+
+    .wh40k-status-title {
+        font-size: 0.6em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: #555;
+        text-shadow: none;
+    }
+
+    .wh40k-status-body {
+        padding: 4px 6px 6px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+        min-height: 36px;
+        justify-content: center;
+    }
+
+    .wh40k-hud-value {
+        font-size: 1.1em;
+        font-weight: 700;
+        color: #2a1a0a;
+        display: flex;
+        align-items: baseline;
+        gap: 2px;
+    }
+
+    .wh40k-hud-divider {
+        font-size: 0.8em;
+        color: #777;
+        font-weight: 600;
+    }
+
+    .wh40k-hud-sub {
+        font-size: 0.6em;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #666;
+    }
+
+    .wh40k-status-row {
+        display: flex;
+        align-items: center;
+        gap: var(--wh40k-space-xs);
+    }
+
+    .wh40k-status-input {
+        width: 30px;
+    }
+
+    .wh40k-status-sub {
+        font-size: 0.65em;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    .wh40k-gothic-input {
+        width: 32px;
+        height: 24px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(120, 120, 120, 0.35);
+        border-radius: var(--wh40k-radius-md);
+        color: #333;
+        font-family: var(--wh40k-font-alt);
+        font-size: 1em;
+        font-weight: bold;
+        text-shadow: none;
+
+        &:focus {
+            outline: none;
+            border-color: rgba(120, 120, 120, 0.6);
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+        }
+
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        -moz-appearance: textfield;
+    }
+
+    .wh40k-arrow-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 12px;
+        background: linear-gradient(180deg, rgba(245, 245, 245, 1), rgba(228, 228, 228, 1));
+        border: 1px solid rgba(120, 120, 120, 0.3);
+        border-radius: 3px;
+        color: #666;
+        font-size: 8px;
+        cursor: pointer;
+        transition: all var(--wh40k-transition-fast);
+        padding: 0;
+        line-height: 1;
+
+        &:hover {
+            background: linear-gradient(180deg, rgba(235, 235, 235, 1), rgba(215, 215, 215, 1));
+            color: #333;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+        }
+
+        &:active {
+            transform: scale(0.95);
+        }
+    }
+
+    .wh40k-arrow-up {
+        color: #666;
+        &:hover {
+            color: #333;
+        }
+    }
+
+    .wh40k-arrow-down {
+        color: #666;
+        &:hover {
+            color: #333;
+        }
+    }
+
+    // Wounds Display
+    .wh40k-wounds-panel {
+        .wh40k-status-header {
+            border-left: 3px solid #b8b8b8;
+        }
+    }
+
+    .wh40k-wounds-display {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .wh40k-wounds-current {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+    }
+
+    .wh40k-wounds-separator {
+        color: #a89070;
+        font-size: 0.8em;
+        text-transform: lowercase;
+    }
+
+    .wh40k-max-wounds {
+        width: 32px;
+        opacity: 0.8;
+    }
+
+    // Critical Damage Display
+    .wh40k-crit-panel {
+        .wh40k-status-header {
+            border-left: 3px solid #b8b8b8;
+        }
+    }
+
+    .wh40k-crit-display {
+        display: flex;
+        align-items: center;
+        gap: var(--wh40k-space-xs);
+    }
+
+    .wh40k-crit-value {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #444;
+        text-shadow: none;
+        min-width: 20px;
+        text-align: center;
+    }
+
+    .wh40k-crit-separator {
+        color: #a89070;
+        font-size: 0.9em;
+    }
+
+    .wh40k-crit-max {
+        color: #888;
+        font-size: 0.9em;
+    }
+
+    // Fate Display
+    .wh40k-fate-panel {
+        .wh40k-status-header {
+            border-left: 3px solid #b8b8b8;
+        }
+    }
+
+    .wh40k-move-panel {
+        width: 88px;
+
+        .wh40k-status-header {
+            border-left: 3px solid #b8b8b8;
+        }
+    }
+
+    .wh40k-move-body {
+        gap: var(--wh40k-space-xs);
+        align-items: center;
+    }
+
+    .wh40k-move-line {
+        font-size: 0.7em;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #4a3728;
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        padding: 1px 4px;
+        border-radius: var(--wh40k-radius-md);
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(74, 55, 40, 0.15);
+        text-align: center;
+    }
+
+    .wh40k-fate-display {
+        display: flex;
+        align-items: center;
+        gap: var(--wh40k-space-xs);
+
+        .wh40k-gothic-input {
+            width: 28px;
+        }
+    }
+
+    .wh40k-fate-separator {
+        color: #a89070;
+        font-size: 0.9em;
+    }
+
+    // Corruption Display
+    .wh40k-corruption-panel {
+        .wh40k-status-header {
+            border-left: 3px solid #b8b8b8;
+        }
+    }
+
+    .wh40k-corruptiontable--border {
+        .table-row--head {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .table-cell--span2 {
+            white-space: nowrap;
+        }
+    }
+
+    .wh40k-corruption-display,
+    .wh40k-insanity-display {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--wh40k-space-xs);
+    }
+
+    .wh40k-points-row {
+        display: flex;
+        align-items: center;
+        gap: var(--wh40k-space-xs);
+    }
+
+    .wh40k-points-input {
+        width: 40px;
+    }
+
+    .wh40k-degree-display {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+    }
+
+    .wh40k-degree-label {
+        font-size: 0.7em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #d4c4a8;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .wh40k-degree-modifier {
+        font-size: 0.65em;
+        color: #a89070;
+    }
+
+    // Insanity Display
+    .wh40k-insanity-panel {
+        .wh40k-status-header {
+            border-left: 3px solid #b8b8b8;
+        }
+    }
+
+    // Corruption Degree Classes
+    .degree-pure {
+        .wh40k-degree-label {
+            color: #90ee90;
+        }
+    }
+
+    .degree-tainted {
+        .wh40k-degree-label {
+            color: #98fb98;
+        }
+    }
+
+    .degree-soiled {
+        .wh40k-degree-label {
+            color: #ffff00;
+        }
+        .wh40k-degree-modifier {
+            color: #ffd700;
+        }
+    }
+
+    .degree-debased {
+        .wh40k-degree-label {
+            color: #ffa500;
+        }
+        .wh40k-degree-modifier {
+            color: #ff8c00;
+        }
+    }
+
+    .degree-profane {
+        .wh40k-degree-label {
+            color: #ff6347;
+        }
+        .wh40k-degree-modifier {
+            color: #ff4500;
+        }
+    }
+
+    .degree-damned {
+        .wh40k-degree-label {
+            color: #8b0000;
+            text-shadow: 0 0 8px rgba(139, 0, 0, 0.8);
+        }
+        .wh40k-degree-modifier {
+            color: #dc143c;
+        }
+
+        &.wh40k-status-panel,
+        &.wh40k-degree-field {
+            background: linear-gradient(180deg, rgba(60, 20, 20, 0.9), rgba(40, 10, 10, 0.95));
+        }
+    }
+
+    // Insanity Degree Classes
+    .degree-stable {
+        .wh40k-degree-label {
+            color: #87ceeb;
+        }
+    }
+
+    .degree-unsettled {
+        .wh40k-degree-label {
+            color: #90ee90;
+        }
+        .wh40k-degree-modifier {
+            color: #98fb98;
+        }
+    }
+
+    .degree-disturbed {
+        .wh40k-degree-label {
+            color: #ffff00;
+        }
+    }
+
+    .degree-unhinged {
+        .wh40k-degree-label {
+            color: #ffa500;
+        }
+        .wh40k-degree-modifier {
+            color: #ff8c00;
+        }
+    }
+
+    .degree-deranged {
+        .wh40k-degree-label {
+            color: #ff6347;
+        }
+        .wh40k-degree-modifier {
+            color: #ff4500;
+        }
+    }
+
+    .degree-terminally-insane {
+        .wh40k-degree-label {
+            color: #9400d3;
+            text-shadow: 0 0 8px rgba(148, 0, 211, 0.8);
+        }
+        .wh40k-degree-modifier {
+            color: #ba55d3;
+        }
+
+        &.wh40k-status-panel,
+        &.wh40k-degree-field {
+            background: linear-gradient(180deg, rgba(40, 20, 60, 0.9), rgba(25, 10, 40, 0.95));
+        }
+    }
+
+    .wh40k-quick-status-gothic .wh40k-status-panel.degree-damned,
+    .wh40k-quick-status-gothic .wh40k-status-panel.degree-terminally-insane {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(242, 242, 242, 0.95));
+    }
+}
