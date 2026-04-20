@@ -561,60 +561,59 @@
                                 </div>
                             </div>
                         {{/if}}
-                    </div>
-                {{/if}}
-
-                {{#if selectedOrigin.resources.showThrones}}
-                    <div class="selection-section rolls-section">
-                        <h4 class="section-title">
-                            <i class="fa-solid fa-coins"></i>
-                            Starting Resources
-                        </h4>
-                        <div class="roll-item {{#if selectedOrigin.resources.thronesRolled}}has-value{{/if}}">
-                            <div class="roll-info">
-                                <div class="roll-label">
-                                    <i class="fa-solid fa-coins"></i> Throne Gelt
-                                </div>
-                                {{#if selectedOrigin.resources.thronesRolled}}
-                                    <div class="roll-result">{{selectedOrigin.resources.thronesRolled}}</div>
-                                {{else}}
-                                    <div class="roll-formula">{{selectedOrigin.resources.thronesFormula}}</div>
-                                {{/if}}
-                            </div>
-                            <div class="roll-actions">
-                                <button type="button" class="roll-btn" data-action="rollThrones">
-                                    <i class="fa-solid fa-dice"></i>
-                                    {{#if selectedOrigin.resources.thronesRolled}}Reroll{{else}}Roll{{/if}}
-                                </button>
-                                <button type="button" class="manual-btn" data-action="manualThrones">
-                                    <i class="fa-solid fa-keyboard"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        {{#if selectedOrigin.resources.showInfluence}}
-                            <div class="roll-item {{#if selectedOrigin.resources.influenceRolled}}has-value{{/if}}">
+                        {{#if selectedOrigin.rolls.thrones}}
+                            <div class="roll-item {{#if selectedOrigin.rolls.thrones.hasValue}}has-value{{/if}}">
                                 <div class="roll-info">
                                     <div class="roll-label">
-                                        <i class="fa-solid fa-user-tie"></i> Influence
+                                        <i class="fa-solid fa-coins"></i> Throne Gelt
                                     </div>
-                                    {{#if selectedOrigin.resources.influenceRolled}}
-                                        <div class="roll-result">{{selectedOrigin.resources.influenceRolled}}</div>
+                                    {{#if selectedOrigin.rolls.thrones.hasValue}}
+                                        <div class="roll-result">{{selectedOrigin.rolls.thrones.value}} <span class="roll-breakdown">({{selectedOrigin.rolls.thrones.breakdown}})</span></div>
                                     {{else}}
-                                        <div class="roll-formula">1d5 + Fel Bonus + {{selectedOrigin.resources.influenceMod}}</div>
+                                        <div class="roll-formula">{{selectedOrigin.rolls.thrones.formula}}</div>
                                     {{/if}}
                                 </div>
                                 <div class="roll-actions">
-                                    <button type="button" class="roll-btn" data-action="rollInfluence">
+                                    <button type="button" class="roll-btn" data-action="rollStat" data-stat-type="thrones" data-tooltip="{{localize 'WH40K.OriginPath.RollTooltip'}}">
                                         <i class="fa-solid fa-dice"></i>
-                                        {{#if selectedOrigin.resources.influenceRolled}}Reroll{{else}}Roll{{/if}}
+                                        {{#if selectedOrigin.rolls.thrones.hasValue}}{{localize "WH40K.OriginPath.Reroll"}}{{else}}{{localize "WH40K.Roll.Roll"}}{{/if}}
                                     </button>
-                                    <button type="button" class="manual-btn" data-action="manualInfluence">
+                                    <button type="button" class="manual-btn" data-action="manualStat" data-stat-type="thrones" data-tooltip="{{localize 'WH40K.OriginPath.ManualTooltip'}}">
                                         <i class="fa-solid fa-keyboard"></i>
                                     </button>
                                 </div>
                             </div>
                         {{/if}}
+                    </div>
+                {{/if}}
+
+                {{#if selectedOrigin.resources.showInfluence}}
+                    <div class="selection-section rolls-section">
+                        <h4 class="section-title">
+                            <i class="fa-solid fa-user-tie"></i>
+                            Starting Resources
+                        </h4>
+                        <div class="roll-item {{#if selectedOrigin.resources.influenceRolled}}has-value{{/if}}">
+                            <div class="roll-info">
+                                <div class="roll-label">
+                                    <i class="fa-solid fa-user-tie"></i> Influence
+                                </div>
+                                {{#if selectedOrigin.resources.influenceRolled}}
+                                    <div class="roll-result">{{selectedOrigin.resources.influenceRolled}}</div>
+                                {{else}}
+                                    <div class="roll-formula">1d5 + Fel Bonus + {{selectedOrigin.resources.influenceMod}}</div>
+                                {{/if}}
+                            </div>
+                            <div class="roll-actions">
+                                <button type="button" class="roll-btn" data-action="rollInfluence">
+                                    <i class="fa-solid fa-dice"></i>
+                                    {{#if selectedOrigin.resources.influenceRolled}}Reroll{{else}}Roll{{/if}}
+                                </button>
+                                <button type="button" class="manual-btn" data-action="manualInfluence">
+                                    <i class="fa-solid fa-keyboard"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 {{/if}}
 
