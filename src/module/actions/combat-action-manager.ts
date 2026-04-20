@@ -1,29 +1,29 @@
 import { handleBleeding, handleOnFire } from '../rules/active-effects.ts';
 
 export class CombatActionManager {
-    combatTurnHook;
-    combatRoundHook;
+    combatTurnHook: number | undefined;
+    combatRoundHook: number | undefined;
 
-    initializeHooks() {
+    initializeHooks(): void {
         // Initialize Combat Hooks
-        this.combatTurnHook = Hooks.on('combatTurn', async (combat, data) => await this.updateCombat(combat, data));
-        this.combatRoundHook = Hooks.on('combatRound', async (combat, data) => await this.updateCombat(combat, data));
+        this.combatTurnHook = Hooks.on('combatTurn', async (combat: Combat, data: Record<string, unknown>) => await this.updateCombat(combat, data));
+        this.combatRoundHook = Hooks.on('combatRound', async (combat: Combat, data: Record<string, unknown>) => await this.updateCombat(combat, data));
     }
 
-    disableHooks() {
+    disableHooks(): void {
         game.wh40k.log('Disabling Hooks', { cth: this.combatTurnHook, crh: this.combatRoundHook });
-        Hooks.off('combatTurn', this.combatTurnHook);
-        Hooks.off('combatRound', this.combatRoundHook);
+        if (this.combatTurnHook !== undefined) Hooks.off('combatTurn', this.combatTurnHook);
+        if (this.combatRoundHook !== undefined) Hooks.off('combatRound', this.combatRoundHook);
     }
 
-    updateCombat(combat, data) {
+    updateCombat(combat: Combat, data: Record<string, unknown>): void {
         // Only Run on the first GM -- so it will only run once
         if (game.userId === this.getFirstGM()) {
             game.wh40k.log('updateCombat - this should only be running on first GM');
             void this.processCombatActiveEffects(combat, data);
 
             // Reset first attack flags for all combatants at start of new round
-            if (data.round !== data.previous?.round) {
+            if (data.round !== (data.previous as Record<string, unknown> | undefined)?.round) {
                 void this.resetFirstAttackFlags(combat);
             }
         }
@@ -34,7 +34,7 @@ export class CombatActionManager {
      * This enables Good armour's +1 AP bonus on first attack.
      * @param {Combat} combat - The combat encounter
      */
-    async resetFirstAttackFlags(combat) {
+    async resetFirstAttackFlags(combat: Combat): Promise<void> {
         for (const combatant of combat.combatants) {
             if (combatant.actor) {
                 await combatant.actor.unsetFlag('wh40k-rpg', 'hitThisRound');
@@ -42,8 +42,10 @@ export class CombatActionManager {
         }
     }
 
-    async processCombatActiveEffects(combat, data) {
-        const currentCombatant = combat.turns[data.turn];
+    async processCombatActiveEffects(combat: Combat, data: Record<string, unknown>): Promise<void> {
+        const turn = typeof data.turn === 'number' ? data.turn : combat.turn;
+        if (turn === null) return;
+        const currentCombatant = combat.turns[turn];
         game.wh40k.log('processCombatActiveEffects', currentCombatant);
 
         if (currentCombatant) {
@@ -51,9 +53,9 @@ export class CombatActionManager {
             if (currentCombatant.actor && currentCombatant.actor.effects) {
                 for (const effect of currentCombatant.actor.effects.contents) {
                     // On Fire!
-                    if (effect.label === 'Burning') {
+                    if (effect.name === 'Burning') {
                         await handleOnFire(currentCombatant.actor);
-                    } else if (effect.label === 'Bleeding') {
+                    } else if (effect.name === 'Bleeding') {
                         await handleBleeding(currentCombatant.actor);
                     }
                 }
@@ -61,8 +63,7 @@ export class CombatActionManager {
         }
     }
 
-    getFirstGM() {
-        // @ts-expect-error - dynamic property access
+    getFirstGM(): string | undefined {
         for (const user of game.users.contents) {
             if (user.active && user.isGM) return user.id;
         }

@@ -7,25 +7,35 @@ import { DHTargetedActionManager } from './targeted-action-manager.ts';
 
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
-    storedRolls = {};
+    storedRolls: Record<string, any> = {};
 
     initializeHooks() {
         // Add show/hide support for chat messages
-        Hooks.on('renderChatMessageHTML', (message, html, context) => {
+        Hooks.on('renderChatMessageHTML', (message: ChatMessage, html: HTMLElement, context: Record<string, unknown>) => {
             game.wh40k.log('renderChatMessageHTML', { message, html, context });
-            html.querySelectorAll('.roll-control__hide-control').forEach((el) =>
-                el.addEventListener('click', async (ev) => await this._toggleExpandChatMessage(ev)),
+            html.querySelectorAll('.roll-control__hide-control').forEach((el: Element) =>
+                el.addEventListener('click', async (ev: Event) => await this._toggleExpandChatMessage(ev)),
             );
-            html.querySelectorAll('.roll-control__refund').forEach((el) => el.addEventListener('click', async (ev) => await this._refundResources(ev)));
-            html.querySelectorAll('.roll-control__fate-reroll').forEach((el) => el.addEventListener('click', async (ev) => await this._fateReroll(ev)));
-            html.querySelectorAll('.roll-control__assign-damage').forEach((el) => el.addEventListener('click', async (ev) => await this._assignDamage(ev)));
-            html.querySelectorAll('.roll-control__roll-damage').forEach((el) => el.addEventListener('click', async (ev) => await this._rollDamage(ev)));
-            html.querySelectorAll('.roll-control__apply-damage').forEach((el) => el.addEventListener('click', async (ev) => await this._applyDamage(ev)));
+            html.querySelectorAll('.roll-control__refund').forEach((el: Element) =>
+                el.addEventListener('click', async (ev: Event) => await this._refundResources(ev)),
+            );
+            html.querySelectorAll('.roll-control__fate-reroll').forEach((el: Element) =>
+                el.addEventListener('click', async (ev: Event) => await this._fateReroll(ev)),
+            );
+            html.querySelectorAll('.roll-control__assign-damage').forEach((el: Element) =>
+                el.addEventListener('click', async (ev: Event) => await this._assignDamage(ev)),
+            );
+            html.querySelectorAll('.roll-control__roll-damage').forEach((el: Element) =>
+                el.addEventListener('click', async (ev: Event) => await this._rollDamage(ev)),
+            );
+            html.querySelectorAll('.roll-control__apply-damage').forEach((el: Element) =>
+                el.addEventListener('click', async (ev: Event) => await this._applyDamage(ev)),
+            );
         });
 
         // Initialize Scene Control Buttons
-        Hooks.on('getSceneControlButtons', (controls) => {
-            const bar = controls.token;
+        Hooks.on('getSceneControlButtons', (controls: any[]) => {
+            const bar = controls.find((c) => c.name === 'token');
             if (!bar) return;
             const toolOrder = Object.keys(bar.tools).length;
             bar.tools.assignDamage = {
@@ -40,24 +50,24 @@ export class BasicActionManager {
         });
     }
 
-    _toggleExpandChatMessage(event) {
+    _toggleExpandChatMessage(event: any) {
         game.wh40k.log('roll-control-toggle');
         event.preventDefault();
-        const displayToggle = event.currentTarget;
+        const displayToggle = event.currentTarget as HTMLElement;
         const span = displayToggle.querySelector('span');
         if (span) {
             span.classList.toggle('active');
         }
         const target = displayToggle.dataset.toggle;
-        const targetEl = document.getElementById(target);
+        const targetEl = target ? document.getElementById(target) : null;
         if (targetEl) {
             targetEl.style.display = targetEl.style.display === 'none' ? '' : 'none';
         }
     }
 
-    async _rollDamage(event) {
+    async _rollDamage(event: any) {
         event.preventDefault();
-        const btn = event.currentTarget;
+        const btn = event.currentTarget as HTMLButtonElement;
         const rollId = btn.dataset.rollId;
         const actionData = this.getActionData(rollId);
         if (!actionData) {
@@ -67,13 +77,14 @@ export class BasicActionManager {
 
         // Disable button to prevent double-rolling
         btn.disabled = true;
-        btn.querySelector('span:last-child').textContent = 'Rolled';
+        const statusSpan = btn.querySelector('span:last-child');
+        if (statusSpan) statusSpan.textContent = 'Rolled';
 
         // Calculate hits (deferred from attack roll)
         await actionData.calculateHits();
 
         // Build template data
-        const damageRolls = actionData.damageData.hits.map((h) => h.damageRoll).filter((r) => r);
+        const damageRolls = actionData.damageData.hits.map((h: any) => h.damageRoll).filter((r: any) => r);
         const templateData = {
             weaponName: actionData.rollData.name,
             hits: actionData.damageData.hits,
@@ -82,7 +93,7 @@ export class BasicActionManager {
         };
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
-        const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
+        const html = await (foundry.applications.handlebars as any).renderTemplate(template, templateData);
         const chatData: Record<string, unknown> = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),
@@ -93,9 +104,9 @@ export class BasicActionManager {
         await ChatMessage.create(chatData);
     }
 
-    async _refundResources(event) {
+    async _refundResources(event: any) {
         event.preventDefault();
-        const div = event.currentTarget;
+        const div = event.currentTarget as HTMLElement;
         const rollId = div.dataset.rollId;
         const actionData = this.getActionData(rollId);
 
@@ -104,7 +115,7 @@ export class BasicActionManager {
             return;
         }
 
-        const confirmed = await ConfirmationDialog.confirm({
+        const confirmed = await (ConfirmationDialog as any).confirm({
             title: 'Confirm Refund',
             content: 'Are you sure you would like to refund ammo, fate, etc for this action?',
             confirmLabel: 'Refund',
@@ -117,9 +128,9 @@ export class BasicActionManager {
         }
     }
 
-    async _fateReroll(event) {
+    async _fateReroll(event: any) {
         event.preventDefault();
-        const div = event.currentTarget;
+        const div = event.currentTarget as HTMLElement;
         const rollId = div.dataset.rollId;
         const actionData = this.getActionData(rollId);
 
@@ -133,7 +144,7 @@ export class BasicActionManager {
             return;
         }
 
-        const confirmed = await ConfirmationDialog.confirm({
+        const confirmed = await (ConfirmationDialog as any).confirm({
             title: 'Confirm Re-Roll',
             content: 'Are you sure you would like to use a fate point to re-roll action?',
             confirmLabel: 'Re-Roll',
@@ -154,9 +165,9 @@ export class BasicActionManager {
         }
     }
 
-    async _assignDamage(event) {
+    async _assignDamage(event: any) {
         event.preventDefault();
-        const div = event.currentTarget;
+        const div = event.currentTarget as HTMLElement;
 
         const location = div.dataset.location;
         const totalDamage = div.dataset.totalDamage;
@@ -166,17 +177,17 @@ export class BasicActionManager {
 
         const hitData = new Hit();
         hitData.location = location;
-        hitData.totalDamage = totalDamage;
-        hitData.totalPenetration = totalPenetration;
-        hitData.totalFatigue = totalFatigue;
+        (hitData as any).totalDamage = totalDamage;
+        (hitData as any).totalPenetration = totalPenetration;
+        (hitData as any).totalFatigue = totalFatigue;
         hitData.damageType = damageType;
 
         const targetUuid = div.dataset.targetUuid;
 
-        let targetActor;
+        let targetActor: any;
         if (targetUuid) {
             targetActor = await fromUuid(targetUuid);
-            if (targetActor.actor !== undefined) {
+            if (targetActor?.actor !== undefined) {
                 targetActor = targetActor.actor;
             }
         } else {
@@ -195,9 +206,9 @@ export class BasicActionManager {
         await prepareAssignDamageRoll(assignData);
     }
 
-    async _applyDamage(event) {
+    async _applyDamage(event: any) {
         event.preventDefault();
-        const div = event.currentTarget;
+        const div = event.currentTarget as HTMLElement;
         const targetUuid = div.dataset.uuid;
         const damageType = div.dataset.type;
         const ignoreArmour = div.dataset.ignoreArmour;
@@ -207,7 +218,7 @@ export class BasicActionManager {
         const fatigue = div.dataset.fatigue;
 
         // @ts-expect-error - dynamic property access
-        const actor = (await fromUuid(targetUuid)).actor;
+        const actor = (await fromUuid(targetUuid))?.actor;
         if (!actor) {
             ui.notifications.warn(`Cannot determine actor to assign hit.`);
             return;
@@ -252,9 +263,9 @@ export class BasicActionManager {
 
     async assignDamageTool() {
         // @ts-expect-error - argument count
-        const sourceToken = DHTargetedActionManager.getSourceToken();
+        const sourceToken = (DHTargetedActionManager as any).getSourceToken();
         // @ts-expect-error - missing name
-        const sourceActorData = sourceToken ? sourceToken.actor : source;
+        const sourceActorData = sourceToken ? sourceToken.actor : (globalThis as any).source;
         if (!sourceActorData) return;
 
         const hitData = new Hit();
@@ -262,11 +273,12 @@ export class BasicActionManager {
         await prepareAssignDamageRoll(assignData);
     }
 
-    getActionData(id) {
+    getActionData(id: string | undefined): any {
+        if (!id) return null;
         return this.storedRolls[id];
     }
 
-    storeActionData(actionData) {
+    storeActionData(actionData: any) {
         // Store roll data for fate re-rolls and ammo refunds during session
         // Note: Rolls persist for entire session, consider adding cleanup on combat end if memory becomes an issue
         this.storedRolls[actionData.id] = actionData;
@@ -278,8 +290,8 @@ export class BasicActionManager {
      * @param data
      * @returns {Promise<void>}
      */
-    async sendItemVocalizeChat(data) {
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
+    async sendItemVocalizeChat(data: any) {
+        const html = await (foundry.applications.handlebars as any).renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
         const chatData: Record<string, unknown> = {
             user: game.user.id,
             content: html,
