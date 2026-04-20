@@ -20,7 +20,6 @@ export { default as OriginPathData } from './origin-path.ts';
 export { default as ConditionData } from './condition.ts';
 export { default as AptitudeData } from './aptitude.ts';
 export { default as PeerEnemyData } from './peer-enemy.ts';
-export { default as CombatActionData } from './combat-action.ts';
 
 // Powers
 export { default as PsychicPowerData } from './psychic-power.ts';

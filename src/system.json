@@ -74,9 +74,6 @@
             "backpack": {
                 "htmlFields": ["description.value"]
             },
-            "combatAction": {
-                "htmlFields": ["description.value"]
-            },
             "consumable": {
                 "htmlFields": ["description.value"]
             },
@@ -105,6 +102,9 @@
                 "htmlFields": ["description.value"]
             },
             "mentalDisorder": {
+                "htmlFields": ["description.value"]
+            },
+            "miscellaneous": {
                 "htmlFields": ["description.value"]
             },
             "mutation": {
@@ -2603,7 +2603,7 @@
         },
         {
             "name": "rt-core-rolltables-psychic",
-            "label": "Core Rulebook Psychic Phenomena Tables",
+            "label": "Rogue Trader Psychic Phenomena Tables",
             "path": "packs/rogue-trader/rt-core-rolltables-psychic",
             "system": "wh40k-rpg",
             "type": "RollTable",

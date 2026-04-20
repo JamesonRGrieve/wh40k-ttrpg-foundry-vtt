@@ -57,7 +57,6 @@ import type {
     ConditionData,
     AptitudeData,
     PeerEnemyData,
-    CombatActionData,
     PsychicPowerData,
     NavigatorPowerData,
     RitualData,
@@ -132,7 +131,6 @@ declare module 'fvtt-types/configuration' {
             aptitude: typeof AptitudeData;
             peer: typeof PeerEnemyData;
             enemy: typeof PeerEnemyData;
-            combatAction: typeof CombatActionData;
             condition: typeof ConditionData;
             psychicPower: typeof PsychicPowerData;
             navigatorPower: typeof NavigatorPowerData;

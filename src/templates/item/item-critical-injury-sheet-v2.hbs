@@ -150,14 +150,16 @@
               {{#if item.system.isConsolidated}}
                 {{!-- Consolidated format: Show all severity levels for editing --}}
                 {{#each item.system.availableSeverities as |sev|}}
-                  <div class="wh40k-severity-effect-editor">
-                    <label><strong>Severity {{sev}}:</strong></label>
-                    {{editor (lookup item.system.effects sev).text target=(concat "system.effects." sev ".text") button=true editable=editable engine="prosemirror"}}
-                    <label>
-                      <input type="checkbox" name="system.effects.{{sev}}.permanent" {{checked (lookup item.system.effects sev).permanent}} />
-                      <span>Permanent</span>
-                    </label>
-                  </div>
+                  {{#with (lookup ../item.system.effects sev) as |effect|}}
+                    <div class="wh40k-severity-effect-editor">
+                      <label><strong>Severity {{sev}}:</strong></label>
+                      {{editor effect.text target=(concat "system.effects." sev ".text") button=true editable=../editable engine="prosemirror"}}
+                      <label>
+                        <input type="checkbox" name="system.effects.{{sev}}.permanent" {{checked effect.permanent}} />
+                        <span>Permanent</span>
+                      </label>
+                    </div>
+                  {{/with}}
                 {{/each}}
               {{else}}
                 {{!-- Legacy format: Single effect editor --}}

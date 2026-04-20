@@ -284,6 +284,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         this._refreshPathPositions();
 
+        // Restore builder-specific state from actor flags — things that don't live on
+        // individual origin items (equipment selections, characteristic generation input).
+        this._restoreBuilderFlagState();
+
         // Set current step to first incomplete based on direction
         const steps = this.orderedSteps;
         for (let i = 0; i < steps.length; i++) {
@@ -292,6 +296,56 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 break;
             }
         }
+    }
+
+    /**
+     * Flag scope + key for serialized builder state (equipment picks, char gen inputs).
+     */
+    static FLAG_SCOPE = 'wh40k-rpg';
+    static BUILDER_STATE_FLAG = 'originPathBuilderState';
+
+    /**
+     * Restore in-memory builder state from actor flags so equipment picks and
+     * characteristic rolls survive across builder re-opens.
+     * @private
+     */
+    _restoreBuilderFlagState(): void {
+        const state = this.actor.getFlag(OriginPathBuilder.FLAG_SCOPE, OriginPathBuilder.BUILDER_STATE_FLAG) as Record<string, unknown> | undefined;
+        if (!state) return;
+
+        const equipment = (state.equipmentSelections as Record<string, unknown>) || {};
+        for (const [uuid, entry] of Object.entries(equipment)) {
+            this.equipmentSelections.set(uuid, entry as any);
+        }
+
+        if (state.charRolls && Array.isArray(state.charRolls)) this._charRolls = state.charRolls as number[];
+        if (state.charAssignments) this._charAssignments = { ...(state.charAssignments as Record<string, number | null>) };
+        if (state.charAdvancedMode !== undefined) this._charAdvancedMode = !!state.charAdvancedMode;
+        if (state.charCustomBases) this._charCustomBases = { ...(state.charCustomBases as Record<string, number>) };
+        if (typeof state.divination === 'string') this._divination = state.divination;
+        if (typeof state.influenceRolled === 'number') this._influenceRolled = state.influenceRolled;
+    }
+
+    /**
+     * Persist builder state (equipment picks, characteristic rolls) to actor flags
+     * so a later builder open can re-hydrate these inputs.
+     * @private
+     */
+    async _persistBuilderFlagState(): Promise<void> {
+        const equipmentSelections: Record<string, unknown> = {};
+        for (const [uuid, entry] of this.equipmentSelections) {
+            equipmentSelections[uuid] = entry;
+        }
+        const payload = {
+            equipmentSelections,
+            charRolls: this._charRolls,
+            charAssignments: this._charAssignments,
+            charAdvancedMode: this._charAdvancedMode,
+            charCustomBases: this._charCustomBases,
+            divination: this._divination,
+            influenceRolled: this._influenceRolled,
+        };
+        await this.actor.setFlag(OriginPathBuilder.FLAG_SCOPE, OriginPathBuilder.BUILDER_STATE_FLAG, payload);
     }
 
     /**
@@ -1281,6 +1335,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 ],
             });
             for (const entry of index) {
+                // Cybernetics enter play via grants, not equipment selection.
+                if (entry.type === 'cybernetic') continue;
                 const availability = (entry.system as any)?.availability;
                 if (!availability) continue;
                 const modifier = availabilityConfig[availability]?.modifier ?? null;
@@ -1845,7 +1901,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Collect base talents with UUIDs
             if (grants.talents) {
                 for (const talent of grants.talents) {
-                    const talentName = talent.name || talent;
+                    const baseName = talent.name || talent;
+                    const talentName = talent.specialization ? `${baseName} (${talent.specialization})` : baseName;
                     if (!talentMap.has(talentName)) {
                         talentMap.set(talentName, {
                             name: talentName,
@@ -1921,7 +1978,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                         // Choice talents with UUIDs
                         if (choiceGrants.talents) {
                             for (const talent of choiceGrants.talents) {
-                                const talentName = talent.name || talent;
+                                const baseName = talent.name || talent;
+                                const talentName = talent.specialization ? `${baseName} (${talent.specialization})` : baseName;
                                 if (!talentMap.has(talentName)) {
                                     talentMap.set(talentName, {
                                         name: talentName,
@@ -3259,6 +3317,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (this.systemConfig.equipmentStep && this.equipmentSelections.size > 0) {
                 await this._applyEquipmentSelections();
             }
+
+            // Snapshot builder-specific state (equipment picks, characteristic rolls) so a later
+            // builder open can re-hydrate the UI to what was last committed.
+            await this._persistBuilderFlagState();
 
             // Success
             ui.notifications.info(game.i18n.localize('WH40K.OriginPath.CommitSuccess'));

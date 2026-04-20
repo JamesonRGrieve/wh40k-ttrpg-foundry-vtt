@@ -69,6 +69,11 @@ export default class ResourceGrantData extends BaseGrantData {
                     formula: new fields.StringField({ required: true }),
                     // Is this optional?
                     optional: new fields.BooleanField({ initial: false }),
+                    // When true (default), the rolled value is added to current max/value.
+                    // When false (origin path wounds/fate/core stats), the rolled value
+                    // replaces the current max/value so re-applying an origin doesn't
+                    // accumulate stacking bonuses.
+                    additive: new fields.BooleanField({ initial: true }),
                 }),
                 { required: true, initial: [] },
             ),
@@ -91,7 +96,7 @@ export default class ResourceGrantData extends BaseGrantData {
         const rolledValues = data.rolledValues ?? {};
 
         for (const resourceConfig of this.resources) {
-            const { type, formula, optional: resOptional } = resourceConfig;
+            const { type, formula, optional: resOptional, additive } = resourceConfig;
 
             const resourceDef = ctor.RESOURCES[type];
             if (!resourceDef) {
@@ -109,25 +114,32 @@ export default class ResourceGrantData extends BaseGrantData {
 
             const currentValue = foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0;
             let currentMax = null;
-
-            updates[resourceDef.valuePath] = Number(currentValue) + value;
-
             if (resourceDef.affectsMax && resourceDef.maxPath) {
                 currentMax = foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0;
-                updates[resourceDef.maxPath] = Number(currentMax) + value;
+            }
+
+            const isAdditive = additive !== false;
+            const newValue = isAdditive ? Number(currentValue) + value : value;
+            const newMax = currentMax !== null ? (isAdditive ? Number(currentMax) + value : value) : null;
+
+            updates[resourceDef.valuePath] = newValue;
+            if (resourceDef.affectsMax && resourceDef.maxPath) {
+                updates[resourceDef.maxPath] = newMax;
             }
 
             result.applied[type] = {
                 formula,
                 rolledValue: value,
+                additive: isAdditive,
                 previousValue: currentValue,
                 previousMax: currentMax,
-                newValue: Number(currentValue) + value,
-                newMax: currentMax !== null ? Number(currentMax) + value : null,
+                newValue,
+                newMax,
             };
 
             const label = game.i18n.localize(resourceDef.label);
-            result.notifications.push(`${label} ${value > 0 ? '+' : ''}${value}`);
+            const prefix = isAdditive ? (value > 0 ? '+' : '') : '=';
+            result.notifications.push(`${label} ${prefix}${value}`);
         }
 
         await this._applyUpdates(actor, updates, options);
@@ -143,12 +155,20 @@ export default class ResourceGrantData extends BaseGrantData {
             const resourceDef = ctor.RESOURCES[type];
             if (!resourceDef) continue;
 
-            const currentValue = (foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0) as number;
-            updates[resourceDef.valuePath] = currentValue - state.rolledValue;
+            if (state.additive === false) {
+                // Replace grants restore the captured previousValue/previousMax exactly.
+                updates[resourceDef.valuePath] = state.previousValue ?? 0;
+                if (resourceDef.affectsMax && resourceDef.maxPath && state.previousMax !== undefined && state.previousMax !== null) {
+                    updates[resourceDef.maxPath] = state.previousMax;
+                }
+            } else {
+                const currentValue = (foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0) as number;
+                updates[resourceDef.valuePath] = currentValue - state.rolledValue;
 
-            if (resourceDef.affectsMax && resourceDef.maxPath) {
-                const currentMax = (foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0) as number;
-                updates[resourceDef.maxPath] = currentMax - state.rolledValue;
+                if (resourceDef.affectsMax && resourceDef.maxPath) {
+                    const currentMax = (foundry.utils.getProperty(actor, resourceDef.maxPath) ?? 0) as number;
+                    updates[resourceDef.maxPath] = currentMax - state.rolledValue;
+                }
             }
 
             restoreData.resources[type] = state;

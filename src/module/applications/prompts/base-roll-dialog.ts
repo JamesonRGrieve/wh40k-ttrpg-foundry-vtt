@@ -7,12 +7,6 @@ const { ApplicationV2 } = foundry.applications.api;
  * Provides common functionality for weapon, psychic, force field, and other roll dialogs.
  */
 export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
-    declare rollData: Record<string, unknown> & {
-        initialize?: () => void;
-        update?: () => Promise<void>;
-    };
-    declare initialized: boolean;
-
     /**
      * @param {Record<string, unknown>} rollData     The roll data to configure.
      * @param {ApplicationV2Config.DefaultOptions} [options={}] Dialog options.
