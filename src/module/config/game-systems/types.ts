@@ -47,6 +47,10 @@ export interface OriginStepConfig {
     coreSteps: OriginStepDef[];
     optionalStep: OriginStepDef | null;
     packs: string[];
+    /** Optional "Equip Acolyte" step (DH2e Stage 4) for selecting starting gear. */
+    equipmentStep?: OriginStepDef | null;
+    /** Compendium packs to browse for the equipment step (Item packs). */
+    equipmentPacks?: string[];
 }
 
 /** Result of computing an advancement cost */

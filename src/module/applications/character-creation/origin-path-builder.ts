@@ -42,11 +42,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     declare direction: string;
     declare showLineage: boolean;
     declare showCharacteristics: boolean;
+    declare showEquipment: boolean;
     declare selections: Map<string, NormalizedOrigin>;
     declare previewedOrigin: NormalizedOrigin | null;
     declare lineageSelection: NormalizedOrigin | null;
     declare allOrigins: NormalizedOrigin[];
     declare lineageOrigins: NormalizedOrigin[];
+    declare equipmentItems: Array<Record<string, unknown>>;
+    declare equipmentSelections: Map<string, Record<string, unknown>>;
+    declare _equipmentLoaded: boolean;
+    declare _equipmentFilter: { search: string; type: string };
     declare _charRolls: number[];
     declare _charAssignments: Record<string, number | null>;
     declare _charCustomBases: Record<string, number>;
@@ -923,6 +928,29 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
         await super._onRender(context, options);
         this._restoreScrollPosition();
+
+        if (this.showEquipment) {
+            const html = this.element;
+            if (!html) return;
+            const search = html.querySelector('.equip-search') as HTMLInputElement | null;
+            if (search) {
+                search.addEventListener('input', (e) => {
+                    this._equipmentFilter.search = (e.currentTarget as HTMLInputElement).value || '';
+                    this._saveScrollPosition();
+                    this.render();
+                });
+            }
+            const typeSelect = html.querySelector('.equip-type-filter') as HTMLSelectElement | null;
+            if (typeSelect) {
+                typeSelect.addEventListener('change', (e) => {
+                    this._equipmentFilter.type = (e.currentTarget as HTMLSelectElement).value || 'all';
+                    this._saveScrollPosition();
+                    this.render();
+                });
+            }
+            return;
+        }
+
         if (!this.showCharacteristics) return;
 
         const html = this.element;
@@ -2579,6 +2607,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static #goToLineage(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
         this.showLineage = true;
         this.showCharacteristics = false;
+        this.showEquipment = false;
         this._clearPreviewedOrigin();
         this.render();
     }
@@ -2590,6 +2619,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this.lineageSelection = null;
         this.showLineage = false;
         this.showCharacteristics = true;
+        this.showEquipment = false;
         this._clearPreviewedOrigin();
         this.render();
     }
@@ -2600,7 +2630,67 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static #goToCharacteristics(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
         this.showLineage = false;
         this.showCharacteristics = true;
+        this.showEquipment = false;
         this._clearPreviewedOrigin();
+        this.render();
+    }
+
+    /**
+     * Navigate to the Equip Acolyte step.
+     */
+    static async #goToEquipment(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+        if (this.guidedMode && !this._hasAssignedCharacteristics()) {
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.EquipmentNeedsCharacteristics'));
+            return;
+        }
+        this.showLineage = false;
+        this.showCharacteristics = false;
+        this.showEquipment = true;
+        this._clearPreviewedOrigin();
+        this.render();
+    }
+
+    /**
+     * Toggle selection of an Armoury item for the Equip Acolyte step.
+     */
+    static #toggleEquipmentItem(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+        const uuid = target.dataset.uuid;
+        if (!uuid) return;
+
+        if (this.equipmentSelections.has(uuid)) {
+            this.equipmentSelections.delete(uuid);
+            this.render();
+            return;
+        }
+
+        const max = this._getInfluenceBonus();
+        if (max <= 0) {
+            ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.EquipmentNoInfluence'));
+            return;
+        }
+        if (this.equipmentSelections.size >= max) {
+            ui.notifications.warn(game.i18n.format('WH40K.OriginPath.EquipmentLimitReached', { max }));
+            return;
+        }
+
+        const item = this.equipmentItems.find((entry) => entry.uuid === uuid);
+        if (!item) return;
+        this.equipmentSelections.set(uuid, {
+            uuid: item.uuid,
+            name: item.name,
+            img: item.img,
+            type: item.type,
+            availability: item.availability,
+            availabilityLabel: item.availabilityLabel,
+        });
+        this.render();
+    }
+
+    /**
+     * Clear all Equip Acolyte selections.
+     */
+    static #clearEquipment(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+        this.equipmentSelections.clear();
         this.render();
     }
 
@@ -2974,5 +3064,74 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
         }
         return values;
+    }
+
+    /**
+     * Create embedded items on the actor for the Equip Acolyte selections.
+     * Per DH2e core pg 80, each acquired weapon comes with two clips of standard ammunition.
+     * @private
+     */
+    async _applyEquipmentSelections(): Promise<void> {
+        const creations: Record<string, unknown>[] = [];
+        for (const entry of this.equipmentSelections.values()) {
+            const uuid = entry.uuid as string;
+            const source = await fromUuid(uuid);
+            if (!source) continue;
+            const itemData = (source as any).toObject ? (source as any).toObject() : foundry.utils.deepClone(source);
+            delete itemData._id;
+            itemData.flags ??= {};
+            itemData.flags.core ??= {};
+            itemData.flags.core.sourceId = uuid;
+            creations.push(itemData);
+
+            if (entry.type === 'weapon') {
+                const ammoData = await this._resolveStandardAmmoItem(source as any);
+                if (ammoData) {
+                    const cloneA = foundry.utils.deepClone(ammoData);
+                    const cloneB = foundry.utils.deepClone(ammoData);
+                    delete cloneA._id;
+                    delete cloneB._id;
+                    creations.push(cloneA, cloneB);
+                }
+            }
+        }
+
+        if (creations.length > 0) {
+            await this.actor.createEmbeddedDocuments('Item', creations);
+        }
+    }
+
+    /**
+     * Resolve a standard ammunition item for a given weapon, matching by weaponTypes.
+     * @private
+     */
+    async _resolveStandardAmmoItem(weapon: WH40KItem): Promise<Record<string, unknown> | null> {
+        const packNames = (this.systemConfig.equipmentPacks as string[]) || [];
+        const weaponIdentifier = (weapon.system as any)?.identifier;
+        if (!weaponIdentifier) return null;
+
+        for (const packName of packNames) {
+            if (!packName.includes('ammo')) continue;
+            const pack =
+                game.packs.get(`wh40k-rpg.${packName}`) ??
+                game.packs.find((p: any) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
+            if (!pack) continue;
+
+            const index = await (pack as any).getIndex({ fields: ['system.weaponTypes', 'system.identifier', 'name', 'type'] });
+            const match = index.find((entry: any) => {
+                if (entry.type !== 'ammunition') return false;
+                const types = (entry.system as any)?.weaponTypes || [];
+                return Array.isArray(types) && types.includes(weaponIdentifier);
+            });
+            if (!match) continue;
+            const doc = await (pack as any).getDocument(match._id);
+            if (!doc) continue;
+            const data = (doc as any).toObject ? (doc as any).toObject() : foundry.utils.deepClone(doc);
+            data.flags ??= {};
+            data.flags.core ??= {};
+            data.flags.core.sourceId = `Compendium.${(pack as any).metadata.id}.${match._id}`;
+            return data;
+        }
+        return null;
     }
 }

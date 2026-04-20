@@ -622,6 +622,20 @@
             "RoleDesc": "Your specialised function within the warband",
             "EliteDesc": "An optional elite advance that further defines your character",
             "CharacteristicsDesc": "Roll or enter your characteristic values",
+            "Equipment": "Equip Acolyte",
+            "EquipmentDesc": "Select starting gear from the Armoury up to your Influence bonus. Each pick must be Scarce (-10) or better.",
+            "EquipmentTitle": "Equip Acolyte",
+            "EquipmentRuleHint": "Per DH2e core pg 80: select up to your starting Influence bonus in items of Scarce (-10) or better Availability. All weapons come with two clips of standard ammunition.",
+            "EquipmentSelectedLabel": "selected",
+            "EquipmentSelectedHeader": "Your Selections",
+            "EquipmentClearAll": "Clear all selections",
+            "EquipmentRemove": "Click to remove",
+            "EquipmentNoneAvailable": "No items match the current filters.",
+            "EquipmentSearchPlaceholder": "Search Armoury...",
+            "EquipmentTypeAll": "All Types",
+            "EquipmentLimitReached": "Selection limit reached ({max}).",
+            "EquipmentNoInfluence": "Roll or enter starting Influence before selecting equipment.",
+            "EquipmentNeedsCharacteristics": "Assign characteristics before equipping your Acolyte.",
             "Characteristics": "Characteristics",
             "StepHomeWorld": "Home World",
             "StepBirthright": "Birthright",
@@ -684,7 +698,8 @@
                 "disgrace": "Disg",
                 "regiment": "Reg",
                 "speciality": "Spec",
-                "chapter": "Chapter"
+                "chapter": "Chapter",
+                "equipment": "Equip"
             }
         },
         "ChoiceType": {
