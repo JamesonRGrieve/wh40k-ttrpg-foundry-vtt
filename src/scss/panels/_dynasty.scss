@@ -12,7 +12,7 @@
 // Profit Factor Panel
 .wh40k-panel-profit {
     .wh40k-panel-header {
-        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-dynasty) r g b / 0.15)'} 0%, transparent 100%);
+        background: linear-gradient(180deg, rgb(from var(--wh40k-accent-dynasty) r g b / 0.15) 0%, transparent 100%);
     }
 }
 
@@ -42,7 +42,7 @@
     padding: var(--wh40k-space-sm);
     border: 2px solid var(--wh40k-accent-dynasty);
     border-radius: 6px;
-    background: #{'rgb(from var(--wh40k-accent-dynasty) r g b / 0.08)'};
+    background: rgb(from var(--wh40k-accent-dynasty) r g b / 0.08);
     font-family: var(--wh40k-font-alt);
     font-size: 2rem;
     font-weight: 700;
@@ -51,7 +51,7 @@
 
     &:focus {
         outline: none;
-        background: #{'rgb(from var(--wh40k-accent-dynasty) r g b / 0.15)'};
+        background: rgb(from var(--wh40k-accent-dynasty) r g b / 0.15);
     }
 }
 
@@ -99,8 +99,8 @@
 }
 
 .wh40k-xp-available {
-    background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.1)'};
-    border-color: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.3)'};
+    background: rgb(from var(--wh40k-accent-gold) r g b / 0.1);
+    border-color: rgb(from var(--wh40k-accent-gold) r g b / 0.3);
 
     .wh40k-xp-value {
         font-family: var(--wh40k-font-alt);

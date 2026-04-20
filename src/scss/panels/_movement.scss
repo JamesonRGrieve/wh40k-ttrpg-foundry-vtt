@@ -129,8 +129,8 @@
     &.active,
     &[data-action='setMovementMode']:active {
         border-color: var(--wh40k-accent-gold);
-        box-shadow: 0 0 6px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.4)'};
-        background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.08)'};
+        box-shadow: 0 0 6px rgb(from var(--wh40k-accent-gold) r g b / 0.4);
+        background: rgb(from var(--wh40k-accent-gold) r g b / 0.08);
     }
 
     i {
@@ -297,7 +297,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-accent-gold);
-        box-shadow: 0 0 0 3px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.15)'};
+        box-shadow: 0 0 0 3px rgb(from var(--wh40k-accent-gold) r g b / 0.15);
     }
 }
 
@@ -343,7 +343,7 @@
     }
 
     &[data-action='setMovementMode']:active {
-        background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.15)'};
+        background: rgb(from var(--wh40k-accent-gold) r g b / 0.15);
     }
 }
 
@@ -441,7 +441,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.15)'} 0%, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.05)'} 100%);
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-gold) r g b / 0.15) 0%, rgb(from var(--wh40k-accent-gold) r g b / 0.05) 100%);
     color: var(--wh40k-accent-gold);
     font-size: 0.9rem;
     flex-shrink: 0;
@@ -486,8 +486,8 @@
     top: 0;
     bottom: 0;
     width: var(--move-percent, 50%);
-    background: linear-gradient(90deg, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.08)'} 0%, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.02)'} 100%);
-    border-right: 2px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'};
+    background: linear-gradient(90deg, rgb(from var(--wh40k-accent-gold) r g b / 0.08) 0%, rgb(from var(--wh40k-accent-gold) r g b / 0.02) 100%);
+    border-right: 2px solid rgb(from var(--wh40k-accent-gold) r g b / 0.2);
     z-index: 1;
     transition: width var(--wh40k-transition-medium);
 }
@@ -496,24 +496,24 @@
 .wh40k-move-half .wh40k-move-modern-icon {
     background: linear-gradient(
         135deg,
-        #{'rgb(from var(--wh40k-accent-green-bright) r g b / 0.15)'} 0%,
-        #{'rgb(from var(--wh40k-accent-green-bright) r g b / 0.05)'} 100%
+        rgb(from var(--wh40k-accent-green-bright) r g b / 0.15) 0%,
+        rgb(from var(--wh40k-accent-green-bright) r g b / 0.05) 100%
     );
     color: var(--wh40k-accent-green);
 }
 
 .wh40k-move-full .wh40k-move-modern-icon {
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-info) r g b / 0.15)'} 0%, #{'rgb(from var(--wh40k-accent-info) r g b / 0.05)'} 100%);
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-info) r g b / 0.15) 0%, rgb(from var(--wh40k-accent-info) r g b / 0.05) 100%);
     color: #2980b9;
 }
 
 .wh40k-move-charge .wh40k-move-modern-icon {
-    background: linear-gradient(135deg, rgba(#f39c12, 0.15) 0%, rgba(#f39c12, 0.05) 100%);
+    background: linear-gradient(135deg, rgb(from #f39c12 r g b / 0.15) 0%, rgb(from #f39c12 r g b / 0.05) 100%);
     color: #e67e22;
 }
 
 .wh40k-move-run .wh40k-move-modern-icon {
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-red) r g b / 0.15)'} 0%, #{'rgb(from var(--wh40k-accent-red) r g b / 0.05)'} 100%);
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-red) r g b / 0.15) 0%, rgb(from var(--wh40k-accent-red) r g b / 0.05) 100%);
     color: #c0392b;
 }
 

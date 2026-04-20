@@ -1,16 +1,6 @@
-$h1-size: 12pt;
-$h2-size: 11pt;
-$h3-size: 10pt;
-
-$font-general-medium: 10pt;
-$font-alt-medium: 8pt;
-
-$font-family-general: 'IM Fell DW Pica', serif;
-$font-family-alt: 'Lusitana', serif;
-
 * {
-    font-family: $font-family-general;
-    font-size: $font-general-medium;
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 10pt;
 
     .fas {
         font-family: 'Font Awesome 6 Pro' !important;
@@ -36,19 +26,19 @@ h2,
 h3 {
     margin: 0;
     padding: 0;
-    font-family: $font-family-general;
+    font-family: 'IM Fell DW Pica', serif;
 }
 
 h1 {
-    font-size: $h1-size;
+    font-size: 12pt;
 }
 
 h2 {
-    font-size: $h2-size;
+    font-size: 11pt;
 }
 
 h3 {
-    font-size: $h3-size;
+    font-size: 10pt;
 }
 
 .mt-5 {

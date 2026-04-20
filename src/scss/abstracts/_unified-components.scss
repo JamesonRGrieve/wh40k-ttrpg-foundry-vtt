@@ -234,19 +234,19 @@
         color: var(--wh40k-gold);
 
         &:hover:not(:disabled) {
-            background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+            background: rgb(from var(--wh40k-color-gold) r g b / 0.15);
             color: var(--wh40k-gold-bright);
         }
     }
 
     // Bordered variant (for header buttons)
     &--bordered {
-        background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'};
-        border: 1px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.4)'};
+        background: rgb(from var(--wh40k-accent-gold) r g b / 0.2);
+        border: 1px solid rgb(from var(--wh40k-accent-gold) r g b / 0.4);
         color: var(--wh40k-accent-gold);
 
         &:hover:not(:disabled) {
-            background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.3)'};
+            background: rgb(from var(--wh40k-accent-gold) r g b / 0.3);
             border-color: var(--wh40k-accent-gold);
             transform: scale(1.1);
         }
@@ -355,7 +355,7 @@
         outline: none;
         border-color: var(--wh40k-gold);
         background: var(--wh40k-input-bg-focus);
-        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+        box-shadow: 0 0 0 2px rgb(from var(--wh40k-color-gold) r g b / 0.15);
     }
 
     &:disabled,
@@ -567,7 +567,7 @@
     align-items: center !important;
     gap: var(--wh40k-space-sm);
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
-    background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.15)'} 0%, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.05)'} 100%);
+    background: linear-gradient(180deg, rgb(from var(--wh40k-accent-gold) r g b / 0.15) 0%, rgb(from var(--wh40k-accent-gold) r g b / 0.05) 100%);
     border-bottom: 1px solid var(--wh40k-border-color-light);
     transition: box-shadow 0.2s ease, background 0.2s ease;
     width: 100% !important;
@@ -614,7 +614,7 @@
     user-select: none;
 
     &:hover {
-        background: linear-gradient(180deg, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'} 0%, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.08)'} 100%);
+        background: linear-gradient(180deg, rgb(from var(--wh40k-accent-gold) r g b / 0.2) 0%, rgb(from var(--wh40k-accent-gold) r g b / 0.08) 100%);
     }
 }
 
@@ -718,7 +718,7 @@
 }
 
 .wh40k-vital-critical {
-    background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.08)'};
+    background: rgb(from var(--wh40k-accent-combat) r g b / 0.08);
     box-sizing: border-box;
 
     &::before {
@@ -822,7 +822,7 @@
 
     &:hover {
         border-color: var(--wh40k-accent-gold);
-        background-color: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.05)'};
+        background-color: rgb(from var(--wh40k-accent-gold) r g b / 0.05);
     }
 
     // Compact variant when items exist
@@ -844,8 +844,8 @@
     // Active drag-over state
     &--active {
         border-color: var(--wh40k-accent-gold);
-        background-color: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.1)'};
-        box-shadow: inset 0 0 10px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'};
+        background-color: rgb(from var(--wh40k-accent-gold) r g b / 0.1);
+        box-shadow: inset 0 0 10px rgb(from var(--wh40k-accent-gold) r g b / 0.2);
     }
 }
 
@@ -874,18 +874,18 @@
 // Small variant (for inline use)
 .wh40k-dropzone-small {
     @apply tw-flex tw-items-center tw-justify-center tw-gap-1 tw-py-1 tw-px-2 tw-mt-2 tw-rounded-sm tw-cursor-pointer tw-transition-all tw-text-[0.8rem];
-    background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.05)'};
-    border: 1px dashed #{'rgb(from var(--wh40k-accent-gold) r g b / 0.25)'};
+    background: rgb(from var(--wh40k-accent-gold) r g b / 0.05);
+    border: 1px dashed rgb(from var(--wh40k-accent-gold) r g b / 0.25);
     color: var(--wh40k-text-muted);
 
     i {
         font-size: 0.85rem;
-        color: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.6)'};
+        color: rgb(from var(--wh40k-accent-gold) r g b / 0.6);
     }
 
     &:hover {
-        background: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.1)'};
-        border-color: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.4)'};
+        background: rgb(from var(--wh40k-accent-gold) r g b / 0.1);
+        border-color: rgb(from var(--wh40k-accent-gold) r g b / 0.4);
         color: var(--color-text-secondary);
 
         i {
@@ -903,7 +903,7 @@
     align-items: center;
     gap: var(--wh40k-space-xs);
     padding: 6px var(--wh40k-space-sm);
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.08)'} 0%, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.03)'} 100%);
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-gold) r g b / 0.08) 0%, rgb(from var(--wh40k-accent-gold) r g b / 0.03) 100%);
     border-left: 3px solid var(--wh40k-accent-gold);
     border-radius: 0 var(--wh40k-radius-sm) var(--wh40k-radius-sm) 0;
     margin-bottom: var(--wh40k-space-sm);

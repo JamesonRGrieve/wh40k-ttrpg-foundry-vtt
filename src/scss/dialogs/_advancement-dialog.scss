@@ -5,20 +5,14 @@
 // Uses .wh40k-adv prefix for all classes
 
 // ============================================
-// Variables
-// ============================================
-$adv-card-bg: rgba(40, 35, 28, 0.8);
-$adv-card-border: rgba(120, 100, 80, 0.4);
-$adv-card-hover-border: var(--wh40k-color-gold);
-$adv-purchased-glow: rgba(45, 80, 22, 0.6);
-$adv-blocked-opacity: 0.5;
-$adv-transition-fast: 150ms ease;
-$adv-transition-normal: 250ms ease;
-
-// ============================================
 // Main Container
 // ============================================
 .advancement-dialog {
+    --adv-card-bg: rgba(40, 35, 28, 0.8);
+    --adv-card-border: rgba(120, 100, 80, 0.4);
+    --adv-transition-fast: 150ms ease;
+    --adv-transition-normal: 250ms ease;
+
     background: var(--color-bg-secondary);
 
     .window-content {
@@ -123,7 +117,7 @@ $adv-transition-normal: 250ms ease;
     padding: 3rem 2rem;
     text-align: center;
     flex: 1;
-    animation: fadeIn $adv-transition-normal;
+    animation: fadeIn var(--adv-transition-normal);
 }
 
 .wh40k-adv__blocked-icon {
@@ -184,7 +178,7 @@ $adv-transition-normal: 250ms ease;
     display: flex;
     gap: 0;
     background: rgba(30, 25, 20, 0.8);
-    border-bottom: 1px solid $adv-card-border;
+    border-bottom: 1px solid var(--adv-card-border);
 }
 
 .wh40k-adv__tab {
@@ -201,7 +195,7 @@ $adv-transition-normal: 250ms ease;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    transition: all $adv-transition-fast;
+    transition: all var(--adv-transition-fast);
 
     &:hover {
         background: rgba(255, 255, 255, 0.05);
@@ -234,7 +228,7 @@ $adv-transition-normal: 250ms ease;
 }
 
 .wh40k-adv__panel {
-    animation: fadeIn $adv-transition-normal;
+    animation: fadeIn var(--adv-transition-normal);
 }
 
 @keyframes fadeIn {
@@ -258,18 +252,18 @@ $adv-transition-normal: 250ms ease;
 }
 
 .wh40k-adv__char-card {
-    background: $adv-card-bg;
-    border: 1px solid $adv-card-border;
+    background: var(--adv-card-bg);
+    border: 1px solid var(--adv-card-border);
     border-radius: var(--wh40k-radius-lg);
     padding: 0.75rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.4rem;
-    transition: all $adv-transition-fast;
+    transition: all var(--adv-transition-fast);
 
     &:hover:not(&--maxed) {
-        border-color: $adv-card-hover-border;
+        border-color: var(--wh40k-color-gold);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
@@ -287,10 +281,10 @@ $adv-transition-normal: 250ms ease;
 
 @keyframes purchasePulse {
     0% {
-        box-shadow: 0 0 0 0 $adv-purchased-glow;
+        box-shadow: 0 0 0 0 rgba(45, 80, 22, 0.6);
     }
     50% {
-        box-shadow: 0 0 20px 10px $adv-purchased-glow;
+        box-shadow: 0 0 20px 10px rgba(45, 80, 22, 0.6);
     }
     100% {
         box-shadow: 0 0 0 0 transparent;
@@ -337,8 +331,8 @@ $adv-transition-normal: 250ms ease;
     height: 10px;
     border-radius: 50%;
     background: rgba(0, 0, 0, 0.4);
-    border: 1px solid $adv-card-border;
-    transition: all $adv-transition-fast;
+    border: 1px solid var(--adv-card-border);
+    transition: all var(--adv-transition-fast);
 
     &--purchased {
         background: var(--wh40k-color-gold);
@@ -376,7 +370,7 @@ $adv-transition-normal: 250ms ease;
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    transition: all $adv-transition-fast;
+    transition: all var(--adv-transition-fast);
 
     &:hover {
         background: linear-gradient(135deg, rgba(201, 162, 39, 0.35), rgba(139, 112, 21, 0.45));
@@ -441,13 +435,13 @@ $adv-transition-normal: 250ms ease;
     justify-content: space-between;
     align-items: center;
     padding: 0.6rem 0.8rem;
-    background: $adv-card-bg;
-    border: 1px solid $adv-card-border;
+    background: var(--adv-card-bg);
+    border: 1px solid var(--adv-card-border);
     border-radius: 6px;
-    transition: all $adv-transition-fast;
+    transition: all var(--adv-transition-fast);
 
     &:hover:not(&--owned):not(&--blocked) {
-        border-color: $adv-card-hover-border;
+        border-color: var(--wh40k-color-gold);
         background: rgba(50, 45, 35, 0.9);
     }
 
@@ -458,7 +452,7 @@ $adv-transition-normal: 250ms ease;
     }
 
     &--blocked {
-        opacity: $adv-blocked-opacity;
+        opacity: 0.5;
 
         .wh40k-adv__advance-name {
             color: var(--color-text-secondary);
@@ -499,7 +493,7 @@ $adv-transition-normal: 250ms ease;
     border-radius: 3px;
     color: var(--color-text-secondary);
     cursor: pointer;
-    transition: all $adv-transition-fast;
+    transition: all var(--adv-transition-fast);
 
     i {
         font-size: 0.7rem;
@@ -548,7 +542,7 @@ $adv-transition-normal: 250ms ease;
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all $adv-transition-fast;
+    transition: all var(--adv-transition-fast);
 
     &:hover {
         background: linear-gradient(135deg, rgba(201, 162, 39, 0.35), rgba(139, 112, 21, 0.45));

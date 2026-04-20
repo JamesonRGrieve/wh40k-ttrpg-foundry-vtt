@@ -4,26 +4,17 @@
 // Vertical navigation, GM-focused, clean layout
 
 // ============================================
-// Variables & Theme Colors
-// ============================================
-
-$npc-accent-combat: #dc3545; // Red
-$npc-accent-defense: #2196f3; // Blue
-$npc-accent-movement: #4caf50; // Green
-$npc-accent-skills: #9c27b0; // Purple
-$npc-accent-abilities: #ff9800; // Orange
-$npc-accent-notes: #607d8b; // Blue Grey
-
-// Responsive breakpoints
-$bp-narrow: 600px;
-$bp-medium: 900px;
-$bp-wide: 1200px;
-
-// ============================================
 // Base Sheet Structure - Sidebar Layout
 // ============================================
 
 .wh40k-rpg.sheet.actor.player.npc {
+    --npc-accent-combat: #dc3545;
+    --npc-accent-defense: #2196f3;
+    --npc-accent-movement: #4caf50;
+    --npc-accent-skills: #9c27b0;
+    --npc-accent-abilities: #ff9800;
+    --npc-accent-notes: #607d8b;
+
     // ApplicationV2 Layout Foundation
     .window-content {
         display: flex !important;
@@ -82,7 +73,7 @@ $bp-wide: 1200px;
         resize: horizontal;
 
         // Responsive: Collapse on narrow viewports
-        @media (max-width: $bp-narrow) {
+        @media (max-width: 600px) {
             flex: 0 0 60px;
             min-width: 60px;
 
@@ -169,7 +160,7 @@ $bp-wide: 1200px;
         align-items: center;
         gap: 0.15rem;
         padding: 0.4rem 0.6rem;
-        background: linear-gradient(135deg, #{'rgb(from var(--npc-accent-combat) r g b / 0.2)'}, rgba(0, 0, 0, 0.3));
+        background: linear-gradient(135deg, rgb(from var(--npc-accent-combat) r g b / 0.2), rgba(0, 0, 0, 0.3));
         border: 1px solid var(--npc-accent-combat);
         border-radius: 6px;
         width: 100%;
@@ -265,7 +256,7 @@ $bp-wide: 1200px;
         }
 
         &.active {
-            background: #{'rgb(from var(--npc-accent-primary) r g b / 0.15)'};
+            background: rgb(from var(--npc-accent-primary) r g b / 0.15);
             color: var(--npc-accent-primary);
             border-color: var(--npc-accent-primary);
             font-weight: 600;
@@ -284,7 +275,7 @@ $bp-wide: 1200px;
         transition: opacity var(--wh40k-transition-base);
 
         // Hide on very narrow sidebars
-        @media (max-width: $bp-narrow) {
+        @media (max-width: 600px) {
             opacity: 0;
             width: 0;
             overflow: hidden;
@@ -292,7 +283,7 @@ $bp-wide: 1200px;
     }
 
     // Show label on hover for collapsed nav
-    @media (max-width: $bp-narrow) {
+    @media (max-width: 600px) {
         .wh40k-nav-item:hover .wh40k-nav-label {
             opacity: 1;
             width: auto;
@@ -332,7 +323,7 @@ $bp-wide: 1200px;
         }
 
         &.active {
-            background: #{'rgb(from var(--npc-accent-primary) r g b / 0.15)'};
+            background: rgb(from var(--npc-accent-primary) r g b / 0.15);
             border-color: var(--npc-accent-primary);
             color: var(--npc-accent-primary);
         }
@@ -416,7 +407,7 @@ $bp-wide: 1200px;
 
         &.wh40k-tool-btn--edit {
             &.active {
-                background: #{'rgb(from var(--npc-accent-primary) r g b / 0.2)'};
+                background: rgb(from var(--npc-accent-primary) r g b / 0.2);
                 border-color: var(--npc-accent-primary);
                 color: var(--npc-accent-primary);
             }
@@ -458,7 +449,7 @@ $bp-wide: 1200px;
         transition: width var(--wh40k-transition-medium);
 
         &--high {
-            background: $npc-accent-movement;
+            background: var(--npc-accent-movement);
         }
         &--medium {
             background: var(--npc-accent-primary);
@@ -820,7 +811,7 @@ $bp-wide: 1200px;
             .defense-total {
                 font-size: 1.2rem;
                 font-weight: 700;
-                color: $npc-accent-defense;
+                color: var(--npc-accent-defense);
             }
         }
 
@@ -933,7 +924,7 @@ $bp-wide: 1200px;
 
                 &.active {
                     color: var(--npc-accent-primary);
-                    background: #{'rgb(from var(--npc-accent-primary) r g b / 0.15)'};
+                    background: rgb(from var(--npc-accent-primary) r g b / 0.15);
                 }
             }
 
@@ -967,12 +958,12 @@ $bp-wide: 1200px;
             min-width: 220px;
 
             .wh40k-panel-header > i:first-child {
-                color: $npc-accent-defense;
+                color: var(--npc-accent-defense);
             }
         }
         &.wh40k-panel--movement {
             .wh40k-panel-header > i:first-child {
-                color: $npc-accent-movement;
+                color: var(--npc-accent-movement);
             }
         }
         &.wh40k-panel--weapons {
@@ -992,12 +983,12 @@ $bp-wide: 1200px;
         }
         &.wh40k-panel--talents {
             .wh40k-panel-header > i:first-child {
-                color: $npc-accent-abilities;
+                color: var(--npc-accent-abilities);
             }
         }
         &.wh40k-panel--traits {
             .wh40k-panel-header > i:first-child {
-                color: $npc-accent-skills;
+                color: var(--npc-accent-skills);
             }
         }
         &.wh40k-panel--powers {
@@ -1007,17 +998,17 @@ $bp-wide: 1200px;
         }
         &.wh40k-panel--special {
             .wh40k-panel-header > i:first-child {
-                color: $npc-accent-abilities;
+                color: var(--npc-accent-abilities);
             }
         }
         &.wh40k-panel--skills {
             .wh40k-panel-header > i:first-child {
-                color: $npc-accent-skills;
+                color: var(--npc-accent-skills);
             }
         }
         &.wh40k-panel--notes {
             .wh40k-panel-header > i:first-child {
-                color: $npc-accent-notes;
+                color: var(--npc-accent-notes);
             }
         }
     }
@@ -1192,11 +1183,11 @@ $bp-wide: 1200px;
         }
 
         &::-webkit-scrollbar-thumb {
-            background: #{'rgb(from var(--npc-accent-skills) r g b / 0.3)'};
+            background: rgb(from var(--npc-accent-skills) r g b / 0.3);
             border-radius: 3px;
 
             &:hover {
-                background: #{'rgb(from var(--npc-accent-skills) r g b / 0.5)'};
+                background: rgb(from var(--npc-accent-skills) r g b / 0.5);
             }
         }
     }
@@ -1212,8 +1203,8 @@ $bp-wide: 1200px;
         position: relative;
 
         &.trained {
-            background: #{'rgb(from var(--npc-accent-skills) r g b / 0.1)'};
-            border-left: 3px solid $npc-accent-skills;
+            background: rgb(from var(--npc-accent-skills) r g b / 0.1);
+            border-left: 3px solid var(--npc-accent-skills);
             padding-left: calc(0.4rem + 3px); // Adjust for border
         }
 
@@ -1241,7 +1232,7 @@ $bp-wide: 1200px;
             &:hover {
                 border-color: var(--npc-accent-primary);
                 color: var(--npc-accent-primary);
-                background: #{'rgb(from var(--npc-accent-primary) r g b / 0.1)'};
+                background: rgb(from var(--npc-accent-primary) r g b / 0.1);
             }
         }
 
@@ -1262,12 +1253,12 @@ $bp-wide: 1200px;
             line-height: 1.3;
 
             &.wh40k-skill-badge--plus10 {
-                background: #{'rgb(from var(--npc-accent-skills) r g b / 0.3)'};
-                color: $npc-accent-skills;
+                background: rgb(from var(--npc-accent-skills) r g b / 0.3);
+                color: var(--npc-accent-skills);
             }
 
             &.wh40k-skill-badge--plus20 {
-                background: #{'rgb(from var(--npc-accent-primary) r g b / 0.3)'};
+                background: rgb(from var(--npc-accent-primary) r g b / 0.3);
                 color: var(--npc-accent-primary);
             }
         }
@@ -1302,14 +1293,14 @@ $bp-wide: 1200px;
             padding: 0;
 
             &:hover:not(:disabled) {
-                border-color: $npc-accent-skills;
-                color: $npc-accent-skills;
+                border-color: var(--npc-accent-skills);
+                color: var(--npc-accent-skills);
             }
 
             &.active {
-                background: #{'rgb(from var(--npc-accent-skills) r g b / 0.3)'};
-                border-color: $npc-accent-skills;
-                color: $npc-accent-skills;
+                background: rgb(from var(--npc-accent-skills) r g b / 0.3);
+                border-color: var(--npc-accent-skills);
+                color: var(--npc-accent-skills);
             }
 
             &:disabled {
@@ -1323,7 +1314,7 @@ $bp-wide: 1200px;
                 &:hover {
                     border-color: var(--npc-accent-combat);
                     color: var(--npc-accent-combat);
-                    background: #{'rgb(from var(--npc-accent-combat) r g b / 0.1)'};
+                    background: rgb(from var(--npc-accent-combat) r g b / 0.1);
                 }
             }
         }
@@ -1345,7 +1336,7 @@ $bp-wide: 1200px;
         transition: all var(--wh40k-transition-fast);
 
         &:hover {
-            background: #{'rgb(from var(--npc-accent-skills) r g b / 0.15)'};
+            background: rgb(from var(--npc-accent-skills) r g b / 0.15);
         }
 
         .wh40k-cycle-pip {
@@ -1358,11 +1349,11 @@ $bp-wide: 1200px;
         }
 
         &.wh40k-skill-cycle--trained .wh40k-cycle-pip {
-            color: $npc-accent-skills;
+            color: var(--npc-accent-skills);
         }
 
         &.wh40k-skill-cycle--plus10 .wh40k-cycle-pip {
-            color: $npc-accent-skills;
+            color: var(--npc-accent-skills);
             font-weight: 700;
         }
 
@@ -1395,7 +1386,7 @@ $bp-wide: 1200px;
         transition: all var(--wh40k-transition-fast);
 
         &:hover {
-            border-color: $npc-accent-abilities;
+            border-color: var(--npc-accent-abilities);
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
@@ -1409,7 +1400,7 @@ $bp-wide: 1200px;
 
     .wh40k-trait-chip {
         &:hover {
-            border-color: $npc-accent-skills;
+            border-color: var(--npc-accent-skills);
         }
     }
 
@@ -1436,7 +1427,7 @@ $bp-wide: 1200px;
         transition: all var(--wh40k-transition-fast);
 
         &:hover {
-            border-color: $npc-accent-abilities;
+            border-color: var(--npc-accent-abilities);
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
         }
 
@@ -1459,7 +1450,7 @@ $bp-wide: 1200px;
 
     .wh40k-trait-chip-mini {
         &:hover {
-            border-color: $npc-accent-skills;
+            border-color: var(--npc-accent-skills);
         }
     }
 
@@ -1470,7 +1461,7 @@ $bp-wide: 1200px;
         gap: 0.75rem;
         margin-bottom: 0.75rem;
 
-        @media (max-width: $bp-narrow) {
+        @media (max-width: 600px) {
             grid-template-columns: 1fr;
         }
     }
@@ -1516,12 +1507,12 @@ $bp-wide: 1200px;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
         &:hover {
-            border-color: #{'rgb(from var(--npc-accent-primary) r g b / 0.5)'};
+            border-color: rgb(from var(--npc-accent-primary) r g b / 0.5);
         }
 
         &:focus-within {
             border-color: var(--npc-accent-primary);
-            box-shadow: 0 0 0 1px #{'rgb(from var(--npc-accent-primary) r g b / 0.3)'} inset;
+            box-shadow: 0 0 0 1px rgb(from var(--npc-accent-primary) r g b / 0.3) inset;
         }
     }
 
@@ -1595,8 +1586,8 @@ $bp-wide: 1200px;
         align-items: center;
         gap: 0.25rem;
         padding: 0.2rem 0.5rem;
-        background: #{'rgb(from var(--npc-accent-notes) r g b / 0.2)'};
-        border: 1px solid $npc-accent-notes;
+        background: rgb(from var(--npc-accent-notes) r g b / 0.2);
+        border: 1px solid var(--npc-accent-notes);
         border-radius: 12px;
         font-size: 0.7rem;
         color: var(--color-text-light-primary, #f0f0f0);
@@ -1699,18 +1690,18 @@ $bp-wide: 1200px;
         padding: 0;
 
         &.wh40k-arrow-up {
-            background: #{'rgb(from var(--npc-accent-movement) r g b / 0.15)'};
-            color: $npc-accent-movement;
+            background: rgb(from var(--npc-accent-movement) r g b / 0.15);
+            color: var(--npc-accent-movement);
             &:hover {
-                background: #{'rgb(from var(--npc-accent-movement) r g b / 0.3)'};
+                background: rgb(from var(--npc-accent-movement) r g b / 0.3);
             }
         }
 
         &.wh40k-arrow-down {
-            background: #{'rgb(from var(--npc-accent-combat) r g b / 0.15)'};
+            background: rgb(from var(--npc-accent-combat) r g b / 0.15);
             color: var(--npc-accent-combat);
             &:hover {
-                background: #{'rgb(from var(--npc-accent-combat) r g b / 0.3)'};
+                background: rgb(from var(--npc-accent-combat) r g b / 0.3);
             }
         }
     }
@@ -1817,7 +1808,7 @@ $bp-wide: 1200px;
         }
 
         &--half i {
-            color: $npc-accent-movement;
+            color: var(--npc-accent-movement);
         }
         &--full i {
             color: #66bb6a;
@@ -1852,7 +1843,7 @@ $bp-wide: 1200px;
         padding: 0.35rem 0.5rem;
         background: var(--color-bg-tertiary, rgba(30, 30, 30, 0.9));
         border-radius: var(--wh40k-radius-md);
-        border-left: 3px solid $npc-accent-defense;
+        border-left: 3px solid var(--npc-accent-defense);
         font-size: 0.8rem;
 
         .wh40k-loc-range {
@@ -1869,7 +1860,7 @@ $bp-wide: 1200px;
 
         .wh40k-loc-ap {
             font-weight: 700;
-            color: $npc-accent-defense;
+            color: var(--npc-accent-defense);
             min-width: 20px;
             text-align: center;
         }
@@ -1883,9 +1874,9 @@ $bp-wide: 1200px;
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--color-border-secondary, #444);
             border-radius: 3px;
-            color: $npc-accent-defense;
+            color: var(--npc-accent-defense);
             &:focus {
-                border-color: $npc-accent-defense;
+                border-color: var(--npc-accent-defense);
                 outline: none;
             }
         }
@@ -1926,22 +1917,22 @@ $bp-wide: 1200px;
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--color-border-secondary, #444);
             border-radius: 3px;
-            color: $npc-accent-defense;
+            color: var(--npc-accent-defense);
             &:focus {
-                border-color: $npc-accent-defense;
+                border-color: var(--npc-accent-defense);
                 outline: none;
             }
         }
 
         .wh40k-armour-total-value {
             font-weight: 700;
-            color: $npc-accent-defense;
+            color: var(--npc-accent-defense);
         }
     }
 
     .wh40k-panel--armour-locs {
         .wh40k-panel-header > i:first-child {
-            color: $npc-accent-defense;
+            color: var(--npc-accent-defense);
         }
     }
 
@@ -1951,9 +1942,9 @@ $bp-wide: 1200px;
         border-radius: var(--wh40k-radius-md);
         font-size: 0.7rem;
         font-weight: 700;
-        background: #{'rgb(from var(--npc-accent-defense) r g b / 0.15)'};
-        color: $npc-accent-defense;
-        border: 1px solid #{'rgb(from var(--npc-accent-defense) r g b / 0.3)'};
+        background: rgb(from var(--npc-accent-defense) r g b / 0.15);
+        color: var(--npc-accent-defense);
+        border: 1px solid rgb(from var(--npc-accent-defense) r g b / 0.3);
         letter-spacing: 0.03em;
     }
 
@@ -2022,68 +2013,68 @@ $bp-wide: 1200px;
 
         // Color variants
         &--dodge {
-            border-color: #{'rgb(from var(--npc-accent-defense) r g b / 0.3)'};
+            border-color: rgb(from var(--npc-accent-defense) r g b / 0.3);
             .wh40k-action-btn-value {
-                color: $npc-accent-defense;
+                color: var(--npc-accent-defense);
             }
             &:hover {
-                background: #{'rgb(from var(--npc-accent-defense) r g b / 0.15)'};
-                border-color: $npc-accent-defense;
+                background: rgb(from var(--npc-accent-defense) r g b / 0.15);
+                border-color: var(--npc-accent-defense);
             }
         }
 
         &--parry {
-            border-color: #{'rgb(from var(--npc-accent-skills) r g b / 0.3)'};
+            border-color: rgb(from var(--npc-accent-skills) r g b / 0.3);
             .wh40k-action-btn-value {
-                color: $npc-accent-skills;
+                color: var(--npc-accent-skills);
             }
             &:hover {
-                background: #{'rgb(from var(--npc-accent-skills) r g b / 0.15)'};
-                border-color: $npc-accent-skills;
+                background: rgb(from var(--npc-accent-skills) r g b / 0.15);
+                border-color: var(--npc-accent-skills);
             }
         }
 
         &--init {
-            border-color: #{'rgb(from var(--npc-accent-primary) r g b / 0.3)'};
+            border-color: rgb(from var(--npc-accent-primary) r g b / 0.3);
             .wh40k-action-btn-value {
                 color: var(--npc-accent-primary);
             }
             &:hover {
-                background: #{'rgb(from var(--npc-accent-primary) r g b / 0.15)'};
+                background: rgb(from var(--npc-accent-primary) r g b / 0.15);
                 border-color: var(--npc-accent-primary);
             }
         }
 
         &--attack {
-            border-color: #{'rgb(from var(--npc-accent-combat) r g b / 0.3)'};
+            border-color: rgb(from var(--npc-accent-combat) r g b / 0.3);
             .wh40k-action-btn-value {
                 color: var(--npc-accent-combat);
             }
             &:hover {
-                background: #{'rgb(from var(--npc-accent-combat) r g b / 0.15)'};
+                background: rgb(from var(--npc-accent-combat) r g b / 0.15);
                 border-color: var(--npc-accent-combat);
             }
         }
 
         &--reload {
-            border-color: #{'rgb(from var(--npc-accent-abilities) r g b / 0.3)'};
+            border-color: rgb(from var(--npc-accent-abilities) r g b / 0.3);
             .wh40k-action-btn-value {
-                color: $npc-accent-abilities;
+                color: var(--npc-accent-abilities);
             }
             &:hover {
-                background: #{'rgb(from var(--npc-accent-abilities) r g b / 0.15)'};
-                border-color: $npc-accent-abilities;
+                background: rgb(from var(--npc-accent-abilities) r g b / 0.15);
+                border-color: var(--npc-accent-abilities);
             }
         }
 
         &--ammo {
-            border-color: #{'rgb(from var(--npc-accent-movement) r g b / 0.3)'};
+            border-color: rgb(from var(--npc-accent-movement) r g b / 0.3);
             .wh40k-action-btn-value {
-                color: $npc-accent-movement;
+                color: var(--npc-accent-movement);
             }
             &:hover {
-                background: #{'rgb(from var(--npc-accent-movement) r g b / 0.15)'};
-                border-color: $npc-accent-movement;
+                background: rgb(from var(--npc-accent-movement) r g b / 0.15);
+                border-color: var(--npc-accent-movement);
             }
         }
     }
@@ -2170,7 +2161,7 @@ $bp-wide: 1200px;
         align-items: center;
         justify-content: center;
         border: none;
-        background: #{'rgb(from var(--npc-accent-combat) r g b / 0.1)'};
+        background: rgb(from var(--npc-accent-combat) r g b / 0.1);
         color: var(--npc-accent-combat);
         border-radius: var(--wh40k-radius-md);
         cursor: pointer;
@@ -2178,7 +2169,7 @@ $bp-wide: 1200px;
         transition: all var(--wh40k-transition-fast);
         padding: 0;
         &:hover {
-            background: #{'rgb(from var(--npc-accent-combat) r g b / 0.3)'};
+            background: rgb(from var(--npc-accent-combat) r g b / 0.3);
         }
     }
 
@@ -2216,15 +2207,15 @@ $bp-wide: 1200px;
         justify-content: center;
         gap: 0.3rem;
         padding: 0.35rem;
-        border: 1px solid #{'rgb(from var(--npc-accent-combat) r g b / 0.3)'};
+        border: 1px solid rgb(from var(--npc-accent-combat) r g b / 0.3);
         border-radius: var(--wh40k-radius-md);
-        background: #{'rgb(from var(--npc-accent-combat) r g b / 0.1)'};
+        background: rgb(from var(--npc-accent-combat) r g b / 0.1);
         color: var(--npc-accent-combat);
         cursor: pointer;
         font-size: 0.7rem;
         transition: all var(--wh40k-transition-fast);
         &:hover {
-            background: #{'rgb(from var(--npc-accent-combat) r g b / 0.2)'};
+            background: rgb(from var(--npc-accent-combat) r g b / 0.2);
             border-color: var(--npc-accent-combat);
         }
     }
@@ -2232,7 +2223,7 @@ $bp-wide: 1200px;
     // ── Inventory Panel ──
     .wh40k-panel--inventory {
         .wh40k-panel-header > i:first-child {
-            color: $npc-accent-abilities;
+            color: var(--npc-accent-abilities);
         }
     }
 
@@ -2336,22 +2327,22 @@ $bp-wide: 1200px;
     }
 
     .wh40k-btn-damage {
-        background: #{'rgb(from var(--npc-accent-combat) r g b / 0.15)'};
+        background: rgb(from var(--npc-accent-combat) r g b / 0.15);
         border: 1px solid var(--npc-accent-combat);
         color: var(--npc-accent-combat);
 
         &:hover {
-            background: #{'rgb(from var(--npc-accent-combat) r g b / 0.3)'};
+            background: rgb(from var(--npc-accent-combat) r g b / 0.3);
         }
     }
 
     .wh40k-btn-heal {
-        background: #{'rgb(from var(--npc-accent-movement) r g b / 0.15)'};
-        border: 1px solid $npc-accent-movement;
-        color: $npc-accent-movement;
+        background: rgb(from var(--npc-accent-movement) r g b / 0.15);
+        border: 1px solid var(--npc-accent-movement);
+        color: var(--npc-accent-movement);
 
         &:hover {
-            background: #{'rgb(from var(--npc-accent-movement) r g b / 0.3)'};
+            background: rgb(from var(--npc-accent-movement) r g b / 0.3);
         }
     }
 
@@ -2437,7 +2428,7 @@ $bp-wide: 1200px;
     .wh40k-armour-value {
         font-size: 2rem;
         font-weight: 700;
-        color: $npc-accent-defense;
+        color: var(--npc-accent-defense);
     }
 
     .wh40k-armour-input {
@@ -2449,7 +2440,7 @@ $bp-wide: 1200px;
 
         &:hover,
         &:focus {
-            border-color: $npc-accent-defense;
+            border-color: var(--npc-accent-defense);
             outline: none;
         }
     }
@@ -2468,7 +2459,7 @@ $bp-wide: 1200px;
         border-top: 1px dashed var(--color-border-secondary, #444);
 
         strong {
-            color: $npc-accent-defense;
+            color: var(--npc-accent-defense);
         }
     }
 
@@ -2511,7 +2502,7 @@ $bp-wide: 1200px;
             border-radius: 3px;
 
             &:focus {
-                border-color: $npc-accent-defense;
+                border-color: var(--npc-accent-defense);
                 outline: none;
             }
         }
@@ -2524,7 +2515,7 @@ $bp-wide: 1200px;
 
         .wh40k-loc-dr {
             font-size: 0.65rem;
-            color: $npc-accent-defense;
+            color: var(--npc-accent-defense);
             font-weight: 600;
             white-space: nowrap;
         }
@@ -2569,7 +2560,7 @@ $bp-wide: 1200px;
 
             &:hover,
             &:focus {
-                border-color: $npc-accent-movement;
+                border-color: var(--npc-accent-movement);
                 outline: none;
             }
         }
@@ -2641,7 +2632,7 @@ $bp-wide: 1200px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #{'rgb(from var(--npc-accent-combat) r g b / 0.15)'};
+            background: rgb(from var(--npc-accent-combat) r g b / 0.15);
             border: 1px solid var(--npc-accent-combat);
             border-radius: var(--wh40k-radius-md);
             color: var(--npc-accent-combat);
@@ -2649,7 +2640,7 @@ $bp-wide: 1200px;
             transition: all var(--wh40k-transition-fast);
 
             &:hover {
-                background: #{'rgb(from var(--npc-accent-combat) r g b / 0.3)'};
+                background: rgb(from var(--npc-accent-combat) r g b / 0.3);
                 transform: scale(1.05);
             }
         }
@@ -2811,7 +2802,7 @@ $bp-wide: 1200px;
         font-weight: 600;
 
         &.wh40k-status--active {
-            color: $npc-accent-movement;
+            color: var(--npc-accent-movement);
         }
         &.wh40k-status--inactive {
             color: var(--color-text-light-secondary, #888);
@@ -2870,7 +2861,7 @@ $bp-wide: 1200px;
         cursor: pointer;
 
         &:hover {
-            background: #{'rgb(from var(--npc-accent-combat) r g b / 0.2)'};
+            background: rgb(from var(--npc-accent-combat) r g b / 0.2);
         }
     }
 
@@ -2905,7 +2896,7 @@ $bp-wide: 1200px;
             border-left: 3px solid var(--npc-accent-primary);
         }
         &.trait {
-            border-left: 3px solid $npc-accent-skills;
+            border-left: 3px solid var(--npc-accent-skills);
         }
         &.power {
             border-left: 3px solid #e91e63;
@@ -2986,7 +2977,7 @@ $bp-wide: 1200px;
 
         .wh40k-psy-badge {
             padding: 0.15rem 0.4rem;
-            background: rgba(#e91e63, 0.2);
+            background: rgb(from #e91e63 r g b / 0.2);
             border: 1px solid #e91e63;
             border-radius: var(--wh40k-radius-md);
             font-size: 0.7rem;
@@ -3002,7 +2993,7 @@ $bp-wide: 1200px;
 
         &.drag-over {
             border-color: var(--npc-accent-primary);
-            background: #{'rgb(from var(--npc-accent-primary) r g b / 0.1)'};
+            background: rgb(from var(--npc-accent-primary) r g b / 0.1);
         }
     }
 
@@ -3074,7 +3065,7 @@ $bp-wide: 1200px;
     .wh40k-gm-badge {
         margin-left: auto;
         padding: 0.15rem 0.4rem;
-        background: #{'rgb(from var(--npc-accent-combat) r g b / 0.2)'};
+        background: rgb(from var(--npc-accent-combat) r g b / 0.2);
         border: 1px solid var(--npc-accent-combat);
         border-radius: var(--wh40k-radius-md);
         font-size: 0.65rem;
@@ -3094,7 +3085,7 @@ $bp-wide: 1200px;
         grid-template-columns: repeat(2, 1fr);
         gap: 0.5rem;
 
-        @media (max-width: $bp-narrow) {
+        @media (max-width: 600px) {
             grid-template-columns: 1fr;
         }
     }
