@@ -1,0 +1,55 @@
+/* ============================================
+   Modern Item Sheet Styles Index
+   ============================================
+   Organized by category for maintainability */
+
+/* ────────────────────────────────────────────
+   PHASE 1: Shared Architecture (NEW)
+   ────────────────────────────────────────────
+   These provide the foundation for all item sheets */
+
+@import './_item-shared-base.css'; /* Shared base styles, variables, wrappers */
+@import './_item-shared-components.css'; /* Shared components (pills, badges, buttons) */
+
+/* ────────────────────────────────────────────
+   Core Item Sheet Components (LEGACY)
+   ──────────────────────────────────────────── */
+
+@import './_base.css'; /* Base container, scrollbars */
+@import './_header.css'; /* Header section */
+@import './_stats.css'; /* Quick stats bar */
+@import './_tabs.css'; /* Tab navigation */
+@import './_item-tabs.css'; /* Shared tab system for modern item sheets */
+@import './_forms.css'; /* Form fields, panels */
+@import './_content.css'; /* Description, damage display */
+@import './_buttons.css'; /* Action buttons */
+@import './_tables.css'; /* Tables, animations */
+@import './_tags.css'; /* Tier badges, tags, stat badges */
+@import './_compact.css'; /* Compact sheet variants */
+@import './_misc.css'; /* Prose fields, compendium browser */
+@import './_sheets.css'; /* New RT item sheet design system */
+
+/* Item Type Specific Styles */
+@import './_weapon.css'; /* Weapon sheet & chat card */
+@import './_weapon-quality-sheet.css'; /* Weapon quality sheet V2 */
+@import './_armour-v2.css'; /* Armour sheet V2 */
+@import './_armour-modification.css'; /* Armour modification sheet */
+@import './_gear-v2.css'; /* Gear sheet V2 */
+@import './_cybernetic-v2.css'; /* Cybernetic sheet V2 */
+@import './_force-field-v2.css'; /* Force field sheet V2 */
+@import './_talent-sheet.css'; /* Talent sheet legacy (backup) */
+@import './_talent-sheet-v2.css'; /* Talent sheet V2 complete redesign */
+@import './_trait-sheet.css'; /* Trait sheet modern redesign */
+@import './_skill.css'; /* Skill sheet */
+@import './_condition.css'; /* Condition sheet & chat card */
+@import './_critical-injury.css'; /* Critical injury sheet & chat card */
+@import './_origin-path-modern.css'; /* Origin path modern tabbed redesign */
+
+/* Legacy/Deprecated (keep for backwards compatibility) */
+@import './_talents.css'; /* Talent/trait legacy styles */
+@import './_talent-trait-modern.css'; /* Talent/trait legacy tabbed */
+@import './_origin-path.css'; /* Origin path legacy styles */
+@import './_actor-styles.css'; /* Modern actor sheet integration */
+
+/* NPC Templates (Phase 7) */
+@import './_npc-template-sheet.css'; /* NPC template item sheet */

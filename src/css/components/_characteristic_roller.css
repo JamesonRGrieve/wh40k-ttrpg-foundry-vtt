@@ -1,0 +1,42 @@
+.wh40k-wrapper {
+    // ============================================
+    // Characteristic Roller Panel
+    // ============================================
+
+    .wh40k-char-roller {
+        //noinspection CssUnknownTarget
+        &__wrapper {
+            background: url('../images/inqu_watermark.png') bottom/50% no-repeat, url('../images/40k_back.png') center/cover;
+        }
+
+        &__row {
+            display: flex;
+            justify-content: space-between;
+            max-height: 8rem;
+        }
+
+        &__block {
+            flex-grow: 0;
+            flex-basis: 30%;
+            text-align: center;
+        }
+
+        &__display {
+            border: 1px solid var(--color-border-primary);
+            font-family: var(--wh40k-font-body);
+            font-size: 14pt;
+            font-weight: bold;
+            line-height: 3.5rem;
+            display: inline-block;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 5pt;
+            background-color: rgb(from var(--form-button-background) r g b / 0.125);
+            cursor: pointer;
+
+            &:hover {
+                color: red;
+            }
+        }
+    }
+}

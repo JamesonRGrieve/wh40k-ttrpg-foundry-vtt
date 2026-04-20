@@ -1,0 +1,78 @@
+.wh40k-wrapper {
+    .wh40k-body .tab {
+        display: none;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .wh40k-body .tab.active {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-gap: 0;
+        opacity: 1;
+        transform: translateY(0);
+        animation: fadeSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes fadeSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .rt {
+        &-body {
+            grid-column: span 6;
+        }
+
+        &-navigation {
+            // from .wh40k-panel
+            background: var(--wh40k-panel-bg);
+            border: 1px solid var(--wh40k-border-color-light);
+            border-radius: var(--wh40k-radius-lg);
+            overflow: hidden;
+            margin-bottom: var(--wh40k-space-md);
+            box-shadow: 0 2px 8px var(--wh40k-shadow-soft);
+            position: relative;
+            grid-column: span 6;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+
+            label {
+                width: auto;
+                margin: 0.5rem;
+                cursor: pointer;
+
+                input {
+                    display: none;
+                }
+            }
+
+            &__item {
+                &-left {
+                    margin-right: auto !important;
+                }
+
+                a {
+                    padding: 0.25rem 0.5rem;
+                    border: 1px solid var(--color-bg-option);
+                    border-radius: 5px;
+                    line-height: 1.5;
+                    text-transform: uppercase;
+
+                    &.active {
+                        background: var(--color-bg-option);
+                        border: 1px solid var(--wh40k-border-medium);
+                    }
+                }
+            }
+        }
+    }
+}

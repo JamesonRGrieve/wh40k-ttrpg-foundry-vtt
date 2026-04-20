@@ -1,0 +1,206 @@
+.wh40k-wrapper {
+    // ============================================
+    // ORIGIN PATH STYLES
+    // ============================================
+
+    .wh40k-origin-description {
+        text-align: center;
+        font-style: italic;
+        color: var(--wh40k-text-muted);
+        margin: 5px 0 15px;
+        font-size: 0.9em;
+    }
+
+    .wh40k-origin-path-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .wh40k-origin-step {
+        background: var(--wh40k-panel-bg);
+        border: 2px solid var(--wh40k-border-color-light);
+        border-radius: 6px;
+        overflow: hidden;
+        transition: all var(--wh40k-transition-base);
+
+        &:hover {
+            border-color: var(--wh40k-border-color);
+            box-shadow: 0 2px 8px var(--wh40k-shadow-soft);
+        }
+
+        &.wh40k-origin-step--filled {
+            border-color: var(--wh40k-border-color-strong);
+            background: var(--wh40k-panel-bg-solid);
+        }
+    }
+
+    .wh40k-origin-step-header {
+        display: flex;
+        align-items: center;
+        gap: var(--wh40k-space-sm);
+        padding: 8px 10px;
+        background: var(--wh40k-accent-overlay);
+        border-bottom: 1px solid var(--wh40k-border-color-light);
+    }
+
+    .wh40k-origin-step-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        background: var(--wh40k-gold);
+        color: #fff;
+        border-radius: 50%;
+        font-size: 0.75em;
+        font-weight: bold;
+    }
+
+    .wh40k-origin-step-label {
+        font-weight: bold;
+        color: var(--wh40k-text-medium);
+        text-transform: uppercase;
+        font-size: 0.85em;
+    }
+
+    .wh40k-origin-step-content {
+        padding: 10px;
+        min-height: 60px;
+    }
+
+    .wh40k-origin-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .wh40k-origin-item-img {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--wh40k-radius-md);
+        border: 1px solid var(--wh40k-border-color-light);
+    }
+
+    .wh40k-origin-item-info {
+        flex: 1;
+    }
+
+    .wh40k-origin-item-name {
+        font-weight: bold;
+        color: var(--wh40k-text-dark);
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+            color: var(--wh40k-gold);
+        }
+    }
+
+    .wh40k-origin-item-delete {
+        opacity: 0.5;
+        cursor: pointer;
+
+        &:hover {
+            opacity: 1;
+            color: var(--wh40k-red-bright);
+        }
+
+        .material-icons {
+            font-size: 18px;
+        }
+    }
+
+    .wh40k-origin-dropzone {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 50px;
+        border: 2px dashed var(--wh40k-border-color);
+        border-radius: var(--wh40k-radius-md);
+        color: var(--wh40k-text-muted);
+        transition: all var(--wh40k-transition-base);
+
+        &:hover {
+            border-color: var(--wh40k-border-color-strong);
+            background: var(--wh40k-panel-bg-translucent);
+        }
+    }
+
+    .wh40k-dropzone-icon {
+        font-size: 24px;
+        margin-bottom: 3px;
+    }
+
+    .wh40k-dropzone-text {
+        font-size: 0.8em;
+        font-style: italic;
+    }
+
+    // Effects List
+    .wh40k-effects-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .wh40k-effect-card {
+        background: var(--wh40k-panel-bg);
+        border: 1px solid var(--wh40k-border-color-light);
+        border-radius: var(--wh40k-radius-md);
+        overflow: hidden;
+    }
+
+    .wh40k-effect-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 10px;
+        background: var(--wh40k-accent-overlay);
+        border-bottom: 1px solid var(--wh40k-border-color-light);
+    }
+
+    .wh40k-effect-source {
+        font-size: 0.75em;
+        text-transform: uppercase;
+        color: var(--wh40k-text-muted);
+    }
+
+    .wh40k-effect-name {
+        font-weight: bold;
+        color: var(--wh40k-text-medium);
+        font-size: 0.9em;
+    }
+
+    .wh40k-effect-body {
+        padding: 8px 10px;
+    }
+
+    .wh40k-effect-benefit {
+        font-size: 0.85em;
+        line-height: 1.4;
+        color: var(--wh40k-text-dark);
+        margin: 0;
+        max-height: 80px;
+        overflow-y: auto;
+    }
+
+    .wh40k-origin-empty {
+        text-align: center;
+        padding: 30px;
+        color: var(--wh40k-text-muted);
+
+        .wh40k-empty-icon {
+            font-size: 48px;
+            opacity: 0.3;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-style: italic;
+            margin: 0;
+        }
+    }
+}

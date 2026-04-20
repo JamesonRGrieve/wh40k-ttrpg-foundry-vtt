@@ -7,7 +7,9 @@ const through2 = require("through2");
 const yaml = require("js-yaml");
 const merge = require("merge-stream");
 const clean = require("gulp-clean");
-const sass = require('gulp-sass')(require('sass'));
+const postcssImport = require('postcss-import');
+const postcssNested = require('postcss-nested');
+const postcssScss = require('postcss-scss');
 const fs = require("fs");
 const path = require("path");
 const zip = require("gulp-zip");
@@ -20,7 +22,7 @@ if (!util.isDate) {
 }
 
 const SYSTEM = JSON.parse(fs.readFileSync("src/system.json"));
-const SYSTEM_SCSS = ["src/scss/**/*.scss"];
+const SYSTEM_CSS = ["src/css/wh40k-rpg.css"];
 const STATIC_FILES = [
   "src/icons/**/*",
   "src/module/**/*",
@@ -205,44 +207,33 @@ function compileTypeScript(done) {
 }
 
 /* ----------------------------------------- */
-/*  Compile Sass
+/*  Compile CSS (PostCSS pipeline)
 /* ----------------------------------------- */
 
-function compileScss() {
-  // Configure options for sass output. For example, 'expanded' or 'nested'
-  let options = {
-    outputStyle: 'expanded'
-  };
-  return gulp.src(SYSTEM_SCSS)
-    .pipe(
-      sass(options)
-        // No error handler — sass errors crash the build with non-zero exit
-    )
+function compileCss() {
+  return gulp.src(SYSTEM_CSS)
     .pipe(postcss([
+      postcssImport,
+      postcssNested,
       tailwindcss,
       autoprefixer({ cascade: false }),
       cssnano({ preset: 'default' }),
-    ]))
+    ], { syntax: postcssScss }))
     .pipe(gulp.dest(BUILD_DIR + "/css"))
 }
 
 // Watch-safe variant that logs errors without crashing
-function compileScssWatch() {
-  let options = {
-    outputStyle: 'expanded'
-  };
-  return gulp.src(SYSTEM_SCSS)
-    .pipe(
-      sass(options)
-        .on('error', sass.logError)
-    )
+function compileCssWatch() {
+  return gulp.src(SYSTEM_CSS)
     .pipe(postcss([
+      postcssImport,
+      postcssNested,
       tailwindcss,
       autoprefixer({ cascade: false }),
-    ]))
+    ], { syntax: postcssScss }))
     .pipe(gulp.dest(BUILD_DIR + "/css"))
 }
-const css = gulp.series(compileScss);
+const css = gulp.series(compileCss);
 
 /* ----------------------------------------- */
 /*  Copy Static
@@ -262,8 +253,8 @@ function cleanBuild() {
 
 function watchUpdates() {
   gulp.watch('src/module/**/*.ts', gulp.series(compileTypeScript));
-  gulp.watch(SYSTEM_SCSS, gulp.series(compileScssWatch));
-  return gulp.watch(STATIC_FILES, gulp.series(cleanBuild, compileScssWatch, compilePacks, copyFiles));
+  gulp.watch('src/css/**/*.css', gulp.series(compileCssWatch));
+  return gulp.watch(STATIC_FILES, gulp.series(cleanBuild, compileCssWatch, compilePacks, copyFiles));
 }
 
 function watchCopy() {
@@ -281,8 +272,8 @@ function createArchive() {
 /* ----------------------------------------- */
 
 exports.clean = gulp.series(cleanBuild);
-exports.scss = gulp.series(compileScss);
+exports.css = gulp.series(compileCss);
 exports.packs = gulp.series(compilePacks);
 exports.copy = gulp.series(copyFiles, watchCopy);
-exports.build = gulp.series(cleanBuild, compileScss, compileTypeScript, copyFiles, compilePacks, createArchive);
-exports.default = gulp.series(cleanBuild, compileScss, compileTypeScript, copyFiles, compilePacks, watchUpdates);
+exports.build = gulp.series(cleanBuild, compileCss, compileTypeScript, copyFiles, compilePacks, createArchive);
+exports.default = gulp.series(cleanBuild, compileCss, compileTypeScript, copyFiles, compilePacks, watchUpdates);
