@@ -165,18 +165,28 @@ export default class CharacterSheet extends BaseActorSheet {
             width: 1050,
             height: 800,
         },
-        window: {
-            controls: [
-                {
-                    icon: 'fa-solid fa-expand',
-                    label: 'WH40K.Sheet.ResetWindowSize',
-                    action: 'resetWindowSize',
-                },
-            ],
-        },
         // Tab configuration - uses ApplicationV2 tab handling
         tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
     };
+
+    /**
+     * Add a "Reset Window Size" entry to the window header menu.
+     * Returned once per sheet instance — avoids the duplication that happens
+     * when a control is declared in DEFAULT_OPTIONS.window.controls and
+     * subclasses spread this class's DEFAULT_OPTIONS.
+     * @override
+     */
+    _getHeaderControls() {
+        const controls = super._getHeaderControls();
+        if (!controls.some((c: { action?: string }) => c.action === 'resetWindowSize')) {
+            controls.push({
+                icon: 'fa-solid fa-expand',
+                label: 'WH40K.Sheet.ResetWindowSize',
+                action: 'resetWindowSize',
+            });
+        }
+        return controls;
+    }
 
     /* -------------------------------------------- */
 
