@@ -15,17 +15,17 @@
     - dataset: object of data attributes (optional)
 --}}
 
-<div class="wh40k-stat-bar">
+<div class="wh40k-stat-bar tw-flex tw-flex-wrap tw-gap-2 tw-border-b tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-3 tw-py-2">
   {{#each stats}}
-  <div class="wh40k-stat-pill {{#if this.modifier}}wh40k-stat-pill--{{this.modifier}}{{/if}} {{#if this.rollable}}wh40k-stat-pill--rollable{{/if}}"
+  <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm tw-transition-all {{#if this.rollable}}tw-cursor-pointer hover:tw--translate-y-px hover:tw-border-[rgba(59,130,246,0.4)] hover:tw-bg-[rgba(59,130,246,0.2)] hover:tw-shadow-[var(--wh40k-item-panel-shadow)]{{/if}}"
        {{#if this.action}}data-action="{{this.action}}"{{/if}}
        {{#if this.dataset}}{{#each this.dataset as |value key|}}data-{{key}}="{{value}}"{{/each}}{{/if}}>
     {{#if this.icon}}
-    <i class="{{this.icon}} wh40k-stat-pill__icon"></i>
+    <i class="{{this.icon}} wh40k-stat-pill__icon tw-text-base {{#if (eq this.modifier "positive")}}tw-text-[var(--wh40k-stat-positive)]{{else if (eq this.modifier "negative")}}tw-text-[var(--wh40k-stat-negative)]{{else}}tw-text-[var(--wh40k-stat-neutral)]{{/if}}"></i>
     {{/if}}
-    <span class="wh40k-stat-pill__value">{{this.value}}</span>
+    <span class="wh40k-stat-pill__value tw-font-semibold {{#if (eq this.modifier "positive")}}tw-text-[var(--wh40k-stat-positive)]{{else if (eq this.modifier "negative")}}tw-text-[var(--wh40k-stat-negative)]{{else}}tw-text-[var(--color-text-primary)]{{/if}}">{{this.value}}</span>
     {{#if this.label}}
-    <span class="wh40k-stat-pill__label">{{this.label}}</span>
+    <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">{{this.label}}</span>
     {{/if}}
   </div>
   {{/each}}

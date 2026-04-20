@@ -2,13 +2,13 @@
      ProseMirror editor for item description with formatting toolbar
      Used in all item sheets
 }}
-<div class="wh40k-description-panel">
-    <header class="wh40k-panel-header">
+<div class="wh40k-description-panel tw-flex tw-flex-col">
+    <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-2">
         <i class="fas fa-scroll"></i>
         <span>{{localize "WH40K.Description"}}</span>
     </header>
 
-    <div class="wh40k-panel-body">
+    <div class="wh40k-panel-body tw-flex-1">
         {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
     </div>
 </div>
