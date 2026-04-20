@@ -1,10 +1,10 @@
-// ============================================
-// Skill Item Sheet Styles
-// ============================================
-// Imperial Gothic themed skill sheet with proper visual hierarchy
+/* ============================================ */
+/* Skill Item Sheet Styles */
+/* ============================================ */
+/* Imperial Gothic themed skill sheet with proper visual hierarchy */
 
 .wh40k-skill-sheet {
-    // Header customization with skill-specific accent
+    /* Header customization with skill-specific accent */
     .wh40k-item-header {
         background: linear-gradient(135deg, rgb(from #2980b9 r g b / 0.1) 0%, rgb(from var(--wh40k-accent-info) r g b / 0.08) 100%);
         border-bottom: 2px solid rgb(from #2980b9 r g b / 0.3);
@@ -20,7 +20,7 @@
         }
     }
 
-    // Skill type badges
+    /* Skill type badges */
     .wh40k-skill-type-badge {
         display: inline-flex;
         align-items: center;
@@ -64,7 +64,7 @@
         }
     }
 
-    // Characteristic badge
+    /* Characteristic badge */
     .wh40k-char-badge {
         display: inline-flex;
         align-items: center;
@@ -83,7 +83,7 @@
         }
     }
 
-    // Descriptor badge (optional tag)
+    /* Descriptor badge (optional tag) */
     .wh40k-descriptor-badge {
         display: inline-flex;
         align-items: center;
@@ -99,7 +99,7 @@
         color: #95a5a6;
     }
 
-    // Header badges row
+    /* Header badges row */
     .wh40k-skill-badges {
         display: flex;
         flex-wrap: wrap;
@@ -108,7 +108,7 @@
     }
 }
 
-// Properties Panel
+/* Properties Panel */
 .wh40k-skill-properties {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -194,7 +194,7 @@
         }
     }
 
-    // Aptitudes list (special styling)
+    /* Aptitudes list (special styling) */
     .wh40k-aptitudes-list {
         display: flex;
         flex-wrap: wrap;
@@ -216,7 +216,7 @@
     }
 }
 
-// Descriptor Panel
+/* Descriptor Panel */
 .wh40k-skill-descriptor {
     background: linear-gradient(135deg, rgb(from var(--wh40k-accent-info) r g b / 0.08) 0%, rgb(from #2980b9 r g b / 0.05) 100%);
     border: 1px solid rgb(from var(--wh40k-accent-info) r g b / 0.2);
@@ -250,7 +250,7 @@
     }
 }
 
-// Uses & Rules Panel
+/* Uses & Rules Panel */
 .wh40k-skill-uses {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -280,7 +280,7 @@
         line-height: 1.6;
         color: var(--wh40k-text-light);
 
-        // ProseMirror editor styling
+        /* ProseMirror editor styling */
         .ProseMirror {
             min-height: 150px;
             padding: var(--wh40k-space-sm);
@@ -319,7 +319,7 @@
     }
 }
 
-// Difficulty Examples Table
+/* Difficulty Examples Table */
 .wh40k-skill-difficulties {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -425,7 +425,7 @@
         }
     }
 
-    // Empty state
+    /* Empty state */
     .wh40k-difficulties-empty {
         padding: var(--wh40k-space-lg);
         text-align: center;
@@ -435,7 +435,7 @@
     }
 }
 
-// Special Rules Panel (optional)
+/* Special Rules Panel (optional) */
 .wh40k-skill-special-rules {
     background: linear-gradient(135deg, rgb(from var(--wh40k-accent-psychic) r g b / 0.08) 0%, rgb(from #8e44ad r g b / 0.05) 100%);
     border: 1px solid rgb(from var(--wh40k-accent-psychic) r g b / 0.2);
@@ -480,7 +480,7 @@
     }
 }
 
-// Specializations Panel (for specialist skills)
+/* Specializations Panel (for specialist skills) */
 .wh40k-skill-specializations {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -551,7 +551,7 @@
     }
 }
 
-// Roll Config Panel (advanced settings)
+/* Roll Config Panel (advanced settings) */
 .wh40k-skill-roll-config {
     background: rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -624,7 +624,7 @@
     }
 }
 
-// Body layout spacing
+/* Body layout spacing */
 .wh40k-skill-sheet .wh40k-item-body {
     display: flex;
     flex-direction: column;

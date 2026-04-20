@@ -1,17 +1,17 @@
-// ============================================
-// Rogue Trader Roll Cards - Modern Design System
-// ============================================
-// Dramatic, immersive chat cards for the grim darkness of the 41st millennium
-// Uses theme-aware CSS custom properties for light/dark mode support
+/* ============================================ */
+/* Rogue Trader Roll Cards - Modern Design System */
+/* ============================================ */
+/* Dramatic, immersive chat cards for the grim darkness of the 41st millennium */
+/* Uses theme-aware CSS custom properties for light/dark mode support */
 
-// ============================================
-// Base Chat Container
-// ============================================
-// Apply theme variables to Foundry chat messages
+/* ============================================ */
+/* Base Chat Container */
+/* ============================================ */
+/* Apply theme variables to Foundry chat messages */
 
 #chat-log .message.flexcol,
 .wh40k-chat {
-    // These local vars inherit from global theme vars
+    /* These local vars inherit from global theme vars */
     --wh40k-card-bg: var(--wh40k-panel-bg-solid);
     --wh40k-card-border: var(--wh40k-gold);
     --wh40k-card-text: var(--wh40k-text-dark);
@@ -31,15 +31,15 @@
     }
 }
 
-// ============================================
-// Global Chat Message Dark Mode Override
-// ============================================
-// Foundry chat messages need explicit dark theme styling
-// because they're rendered outside .wh40k-wrapper context
+/* ============================================ */
+/* Global Chat Message Dark Mode Override */
+/* ============================================ */
+/* Foundry chat messages need explicit dark theme styling */
+/* because they're rendered outside .wh40k-wrapper context */
 
-// Target Foundry's chat log container
+/* Target Foundry's chat log container */
 #chat-log {
-    // Dark mode for all messages
+    /* Dark mode for all messages */
     body.theme-dark & {
         .message {
             background: var(--wh40k-panel-bg-solid) !important;
@@ -95,7 +95,7 @@
                     color: var(--wh40k-text-medium) !important;
                 }
 
-                // Tables in chat
+                /* Tables in chat */
                 table {
                     background: transparent !important;
 
@@ -113,9 +113,9 @@
     }
 }
 
-// ============================================
-// Roll Card - The Main Component
-// ============================================
+/* ============================================ */
+/* Roll Card - The Main Component */
+/* ============================================ */
 
 .wh40k-roll-card {
     position: relative;
@@ -125,7 +125,7 @@
     overflow: hidden;
     box-shadow: 0 4px 12px var(--wh40k-shadow-medium), inset 0 1px 0 var(--wh40k-accent-overlay);
 
-    // Decorative corner accents
+    /* Decorative corner accents */
     &::before,
     &::after {
         content: '';
@@ -151,9 +151,9 @@
     }
 }
 
-// ============================================
-// Card Header
-// ============================================
+/* ============================================ */
+/* Card Header */
+/* ============================================ */
 
 .wh40k-roll-card__header {
     position: relative;
@@ -188,17 +188,17 @@
     }
 }
 
-// ============================================
-// Card Body
-// ============================================
+/* ============================================ */
+/* Card Body */
+/* ============================================ */
 
 .wh40k-roll-card__body {
     padding: 12px 16px;
 }
 
-// ============================================
-// Divider with Imperial Gothic Styling
-// ============================================
+/* ============================================ */
+/* Divider with Imperial Gothic Styling */
+/* ============================================ */
 
 .wh40k-roll-card__divider {
     height: 1px;
@@ -241,9 +241,9 @@
     }
 }
 
-// ============================================
-// Stat Rows
-// ============================================
+/* ============================================ */
+/* Stat Rows */
+/* ============================================ */
 
 .wh40k-roll-card__row {
     display: flex;
@@ -277,9 +277,9 @@
     }
 }
 
-// ============================================
-// Target Number Display
-// ============================================
+/* ============================================ */
+/* Target Number Display */
+/* ============================================ */
 
 .wh40k-roll-card__target {
     display: flex;
@@ -304,9 +304,9 @@
     }
 }
 
-// ============================================
-// Result Display - The Star of the Show
-// ============================================
+/* ============================================ */
+/* Result Display - The Star of the Show */
+/* ============================================ */
 
 .wh40k-roll-card__result {
     position: relative;
@@ -365,9 +365,9 @@
     text-shadow: 0 2px 8px var(--wh40k-shadow-medium);
 }
 
-// ============================================
-// Degrees Display
-// ============================================
+/* ============================================ */
+/* Degrees Display */
+/* ============================================ */
 
 .wh40k-roll-card__degrees {
     display: flex;
@@ -404,9 +404,9 @@
     }
 }
 
-// ============================================
-// Notice/Info Banners
-// ============================================
+/* ============================================ */
+/* Notice/Info Banners */
+/* ============================================ */
 
 .wh40k-roll-card__notice {
     display: flex;
@@ -432,9 +432,9 @@
     }
 }
 
-// ============================================
-// Damage Display
-// ============================================
+/* ============================================ */
+/* Damage Display */
+/* ============================================ */
 
 .wh40k-roll-card__damage {
     padding: 12px;
@@ -486,9 +486,9 @@
     }
 }
 
-// ============================================
-// Hit Display (for multi-hit attacks)
-// ============================================
+/* ============================================ */
+/* Hit Display (for multi-hit attacks) */
+/* ============================================ */
 
 .wh40k-roll-card__hit {
     margin: 12px 0;
@@ -525,9 +525,9 @@
     }
 }
 
-// ============================================
-// Righteous Fury
-// ============================================
+/* ============================================ */
+/* Righteous Fury */
+/* ============================================ */
 
 .wh40k-roll-card__fury {
     margin: 8px 0;
@@ -584,13 +584,13 @@
         font-style: italic;
     }
 
-    // Confirmed RF - dramatic glow animation
+    /* Confirmed RF - dramatic glow animation */
     &--confirmed {
         animation: fury-glow 1.5s ease-in-out infinite alternate;
         border-color: var(--wh40k-gold-bright);
     }
 
-    // Not confirmed - subdued appearance
+    /* Not confirmed - subdued appearance */
     &--not-confirmed {
         background: var(--wh40k-panel-bg);
         border-color: var(--wh40k-text-muted);
@@ -611,9 +611,9 @@
     }
 }
 
-// ============================================
-// Action Controls
-// ============================================
+/* ============================================ */
+/* Action Controls */
+/* ============================================ */
 
 .wh40k-roll-card__controls {
     display: flex;
@@ -735,9 +735,9 @@
     }
 }
 
-// ============================================
-// Text/Effect Display
-// ============================================
+/* ============================================ */
+/* Text/Effect Display */
+/* ============================================ */
 
 .wh40k-roll-card__text {
     padding: 8px 12px;
@@ -778,9 +778,9 @@
     }
 }
 
-// ============================================
-// Collapsible Damage Section
-// ============================================
+/* ============================================ */
+/* Collapsible Damage Section */
+/* ============================================ */
 
 .wh40k-roll-card__collapse {
     margin-top: 8px;
@@ -790,17 +790,17 @@
     }
 }
 
-// ============================================
-// Dice Roll Visual (hidden by default)
-// ============================================
+/* ============================================ */
+/* Dice Roll Visual (hidden by default) */
+/* ============================================ */
 
 .wh40k-roll-card__dice {
     display: none;
 }
 
-// ============================================
-// Degree Badge (injected by ChatMessageRT)
-// ============================================
+/* ============================================ */
+/* Degree Badge (injected by ChatMessageRT) */
+/* ============================================ */
 
 .wh40k-degree-badge {
     display: inline-flex;
@@ -828,9 +828,9 @@
     }
 }
 
-// ============================================
-// Message Portrait (injected by ChatMessageRT)
-// ============================================
+/* ============================================ */
+/* Message Portrait (injected by ChatMessageRT) */
+/* ============================================ */
 
 .wh40k-message-portrait {
     width: 28px;
@@ -842,9 +842,9 @@
     box-shadow: 0 2px 4px var(--wh40k-shadow-medium);
 }
 
-// ============================================
-// Dice Tooltip Enhancements (D100Roll)
-// ============================================
+/* ============================================ */
+/* Dice Tooltip Enhancements (D100Roll) */
+/* ============================================ */
 
 .wh40k-dice-summary {
     margin-top: 8px;
@@ -888,9 +888,9 @@
     font-style: italic;
 }
 
-// ============================================
-// Manual Roll Badge
-// ============================================
+/* ============================================ */
+/* Manual Roll Badge */
+/* ============================================ */
 
 .wh40k-roll-card__manual-badge {
     display: inline-flex;
@@ -912,7 +912,7 @@
     }
 }
 
-// Target-only card (no roll result)
+/* Target-only card (no roll result) */
 .wh40k-roll-card__target-only {
     text-align: center;
     padding: 8px 12px;
@@ -925,9 +925,9 @@
     color: var(--wh40k-card-muted);
 }
 
-// ============================================
-// Weapon Qualities Display
-// ============================================
+/* ============================================ */
+/* Weapon Qualities Display */
+/* ============================================ */
 
 .wh40k-roll-card__qualities {
     margin-bottom: 16px;
@@ -976,7 +976,7 @@
         transform: translateY(-1px);
     }
 
-    // Dark theme support
+    /* Dark theme support */
     body.theme-dark & {
         background: rgba(75, 192, 115, 0.2);
         border-color: rgba(75, 192, 115, 0.4);

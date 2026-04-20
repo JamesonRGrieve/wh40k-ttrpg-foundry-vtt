@@ -1,7 +1,7 @@
 .wh40k-wrapper {
-    // ============================================
-    // END GOTHIC QUICK STATUS DISPLAY
-    // ============================================
+    /* ============================================ */
+    /* END GOTHIC QUICK STATUS DISPLAY */
+    /* ============================================ */
 
     .wh40k-quick-stats {
         display: grid;
@@ -97,11 +97,11 @@
         font-size: 1.1em;
     }
 
-    // Navigation
+    /* Navigation */
     .wh40k-main-layout {
         display: grid;
         grid-template-columns: 160px minmax(0, 1fr);
-        grid-template-rows: minmax(0, 1fr); // minmax(0, 1fr) allows shrinking
+        grid-template-rows: minmax(0, 1fr); /* minmax(0, 1fr) allows shrinking */
         gap: var(--wh40k-space-md);
         align-items: stretch;
         grid-column: 1 / -1;
@@ -127,11 +127,11 @@
         overflow-y: auto;
         overflow-x: hidden;
         padding: 0 12px 12px 0;
-        grid-column: auto; // Override the span 6 from dh-body
-        align-self: stretch; // Ensure it fills the grid row
+        grid-column: auto; /* Override the span 6 from dh-body */
+        align-self: stretch; /* Ensure it fills the grid row */
 
-        // Override legacy 6-column grid from _navigation.scss
-        // Tabs need to be flex containers to allow scroll chain
+        /* Override legacy 6-column grid from _navigation.scss */
+        /* Tabs need to be flex containers to allow scroll chain */
         .tab {
             display: none;
         }
@@ -161,7 +161,7 @@
         top: 12px;
         align-self: start;
 
-        // Hide any panel headers that might show in navigation
+        /* Hide any panel headers that might show in navigation */
         .wh40k-panel__header,
         h1 {
             display: none;
@@ -249,7 +249,7 @@
         }
     }
 
-    // Tab Content
+    /* Tab Content */
     .wh40k-body {
         padding: 8px;
         width: 100%;

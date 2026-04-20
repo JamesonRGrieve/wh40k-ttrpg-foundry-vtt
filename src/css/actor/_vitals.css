@@ -1,6 +1,6 @@
-// ============================================
-// VITALS PANELS (Wounds, Fatigue, Fate)
-// ============================================
+/* ============================================ */
+/* VITALS PANELS (Wounds, Fatigue, Fate) */
+/* ============================================ */
 
 .wh40k-vitals-panel {
     position: relative;
@@ -170,7 +170,7 @@
         border-radius: 999px;
     }
 
-    // Default progress gradient (wounds/health)
+    /* Default progress gradient (wounds/health) */
     &::-webkit-progress-value {
         border-radius: 999px;
         background: linear-gradient(90deg, rgba(139, 0, 0, 0.85), rgba(200, 70, 40, 0.85));
@@ -276,7 +276,7 @@
     color: var(--wh40k-text-subtle);
 }
 
-// Panel-specific vitals theming — pre-generated
+/* Panel-specific vitals theming — pre-generated */
 .wh40k-wounds-panel {
     .wh40k-vitals-progress {
         &::-webkit-progress-value {
@@ -402,7 +402,7 @@
     }
 }
 
-// Degree Field Styling
+/* Degree Field Styling */
 .wh40k-degree-field {
     background: var(--wh40k-shadow-soft);
     border-radius: 6px;
@@ -428,7 +428,7 @@
     color: var(--wh40k-text-muted);
 }
 
-// Critical Damage Bar
+/* Critical Damage Bar */
 .wh40k-crit-tracker {
     grid-column: span 2;
 }
@@ -496,9 +496,9 @@
     max-width: 50px;
 }
 
-// ============================================
-// FATIGUE STYLES
-// ============================================
+/* ============================================ */
+/* FATIGUE STYLES */
+/* ============================================ */
 
 .wh40k-fatigue-max {
     font-size: 1.2em;

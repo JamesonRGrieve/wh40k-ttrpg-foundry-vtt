@@ -449,7 +449,7 @@
         }
 
         .wh40k-panel-shortcut {
-            display: none; // Hide keyboard shortcuts on mobile
+            display: none; /* Hide keyboard shortcuts on mobile */
         }
     }
 }

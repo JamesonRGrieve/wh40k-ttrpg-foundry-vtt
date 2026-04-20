@@ -1,24 +1,24 @@
-// ============================================
-// Foundry VTT Chat Message Dark Mode Overrides
-// ============================================
-// These styles must be extremely specific to override Foundry's default styles
-// Applied globally to #chat-log for all systems
+/* ============================================ */
+/* Foundry VTT Chat Message Dark Mode Overrides */
+/* ============================================ */
+/* These styles must be extremely specific to override Foundry's default styles */
+/* Applied globally to #chat-log for all systems */
 
 /* ========================================
    DARK MODE CHAT MESSAGES - GLOBAL OVERRIDE
    ======================================== */
 
-// Use body.theme-dark to ensure these only apply in dark mode
+/* Use body.theme-dark to ensure these only apply in dark mode */
 body.theme-dark {
-    // Target the chat log container
+    /* Target the chat log container */
     #chat-log {
-        // Override message background
+        /* Override message background */
         .message {
             background-color: var(--wh40k-panel-bg-solid) !important;
             border-color: var(--wh40k-border-color) !important;
             box-shadow: 0 2px 4px var(--wh40k-shadow-medium) !important;
 
-            // Message header (sender name, timestamp)
+            /* Message header (sender name, timestamp) */
             .message-header {
                 background: var(--wh40k-panel-bg) !important;
                 border-bottom: 1px solid var(--wh40k-border-color) !important;
@@ -38,12 +38,12 @@ body.theme-dark {
                 }
             }
 
-            // Message content area
+            /* Message content area */
             .message-content {
                 background: transparent !important;
                 color: var(--wh40k-text-dark) !important;
 
-                // All text elements
+                /* All text elements */
                 p,
                 span,
                 div,
@@ -54,7 +54,7 @@ body.theme-dark {
                     color: var(--wh40k-text-dark) !important;
                 }
 
-                // Links
+                /* Links */
                 a {
                     color: var(--wh40k-gold) !important;
 
@@ -63,7 +63,7 @@ body.theme-dark {
                     }
                 }
 
-                // Emphasis
+                /* Emphasis */
                 strong,
                 b {
                     color: var(--wh40k-text-dark) !important;
@@ -75,7 +75,7 @@ body.theme-dark {
                     color: var(--wh40k-text-medium) !important;
                 }
 
-                // Headings
+                /* Headings */
                 h1,
                 h2,
                 h3,
@@ -85,7 +85,7 @@ body.theme-dark {
                     color: var(--wh40k-text-dark) !important;
                 }
 
-                // Tables
+                /* Tables */
                 table {
                     background: transparent !important;
                     border-color: var(--wh40k-border-color) !important;
@@ -103,7 +103,7 @@ body.theme-dark {
                     }
                 }
 
-                // Code blocks
+                /* Code blocks */
                 code,
                 pre {
                     background: var(--wh40k-panel-bg) !important;
@@ -112,14 +112,14 @@ body.theme-dark {
                 }
             }
 
-            // Flavor text (whispers, etc.)
+            /* Flavor text (whispers, etc.) */
             .flavor-text {
                 color: var(--wh40k-text-muted) !important;
                 background: var(--wh40k-panel-bg) !important;
             }
         }
 
-        // Whisper messages (GM only)
+        /* Whisper messages (GM only) */
         .message.whisper {
             background: rgba(106, 90, 74, 0.3) !important;
             border-color: var(--wh40k-bio-border) !important;
@@ -129,14 +129,14 @@ body.theme-dark {
             }
         }
 
-        // Blind messages (hidden from players)
+        /* Blind messages (hidden from players) */
         .message.blind {
             background: rgba(74, 55, 40, 0.3) !important;
             border-color: var(--wh40k-border-color-strong) !important;
         }
     }
 
-    // Chat form (message input area)
+    /* Chat form (message input area) */
     #chat-form {
         background: var(--wh40k-panel-bg-solid) !important;
         border-color: var(--wh40k-border-color) !important;
@@ -169,10 +169,10 @@ body.theme-dark {
    ROGUE TRADER SPECIFIC CHAT CARDS
    ======================================== */
 
-// These cards work in both light and dark mode via CSS vars
+/* These cards work in both light and dark mode via CSS vars */
 body.theme-dark {
     #chat-log {
-        // Hit location / Initiative cards
+        /* Hit location / Initiative cards */
         .wh40k-hit-location-result {
             background: var(--wh40k-panel-bg-solid) !important;
             border-color: var(--wh40k-border-color) !important;
@@ -200,13 +200,13 @@ body.theme-dark {
             }
         }
 
-        // Roll cards
+        /* Roll cards */
         .wh40k-roll-card {
             background: var(--wh40k-panel-bg-solid) !important;
             border-color: var(--wh40k-gold) !important;
         }
 
-        // Item cards
+        /* Item cards */
         .wh40k-item-card {
             background: var(--wh40k-panel-bg-solid) !important;
             border-color: var(--wh40k-bronze) !important;

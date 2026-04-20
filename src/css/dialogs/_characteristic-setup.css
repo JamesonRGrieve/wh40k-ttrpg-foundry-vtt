@@ -4,9 +4,9 @@
  * Matches the existing teal/bronze characteristic HUD aesthetic.
  */
 
-// ============================================
-// Dialog Container
-// ============================================
+/* ============================================ */
+/* Dialog Container */
+/* ============================================ */
 .characteristic-setup-dialog {
     --csd-primary: rgba(36, 107, 131, 1);
     --csd-primary-light: rgba(36, 107, 131, 0.3);
@@ -29,9 +29,9 @@
     padding: 1rem;
 }
 
-// ============================================
-// Instructions
-// ============================================
+/* ============================================ */
+/* Instructions */
+/* ============================================ */
 .csd-instructions {
     text-align: center;
     color: var(--csd-bone);
@@ -47,9 +47,9 @@
     }
 }
 
-// ============================================
-// Section Headers
-// ============================================
+/* ============================================ */
+/* Section Headers */
+/* ============================================ */
 .csd-section {
     background: rgba(255, 255, 255, 0.03);
     border-radius: var(--wh40k-radius-lg);
@@ -120,9 +120,9 @@
     gap: 0.5rem;
 }
 
-// ============================================
-// Rolls Bank
-// ============================================
+/* ============================================ */
+/* Rolls Bank */
+/* ============================================ */
 .csd-rolls-container {
     display: flex;
     flex-wrap: wrap;
@@ -296,9 +296,9 @@
     }
 }
 
-// ============================================
-// Characteristics Grid
-// ============================================
+/* ============================================ */
+/* Characteristics Grid */
+/* ============================================ */
 .csd-char-grid {
     display: flex;
     flex-direction: column;
@@ -335,7 +335,7 @@
         background: linear-gradient(135deg, rgb(from var(--csd-success) r g b / 0.1), rgb(from var(--csd-primary) r g b / 0.05));
     }
 
-    // Drop states
+    /* Drop states */
     &.drop-valid {
         border-color: var(--csd-gold);
         background: linear-gradient(135deg, rgb(from var(--csd-gold) r g b / 0.15), rgb(from var(--csd-gold) r g b / 0.05));
@@ -347,7 +347,7 @@
         border-style: solid;
     }
 
-    // Snap animation
+    /* Snap animation */
     &.snap-to-slot {
         animation: csd-snap 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
@@ -571,9 +571,9 @@
     }
 }
 
-// ============================================
-// Footer Actions
-// ============================================
+/* ============================================ */
+/* Footer Actions */
+/* ============================================ */
 .csd-footer {
     display: flex;
     justify-content: flex-end;
@@ -627,9 +627,9 @@
     white-space: nowrap;
 }
 
-// ============================================
-// Drag Active State (whole dialog)
-// ============================================
+/* ============================================ */
+/* Drag Active State (whole dialog) */
+/* ============================================ */
 .characteristic-setup-dialog.drag-active {
     .csd-char-slot:not(.has-roll) {
         animation: csd-pulse-border 1.5s ease-in-out infinite;
@@ -646,9 +646,9 @@
     }
 }
 
-// ============================================
-// Accessibility - Reduced Motion
-// ============================================
+/* ============================================ */
+/* Accessibility - Reduced Motion */
+/* ============================================ */
 @media (prefers-reduced-motion: reduce) {
     .csd-roll-chip,
     .csd-char-slot,

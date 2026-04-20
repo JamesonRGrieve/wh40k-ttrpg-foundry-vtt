@@ -250,7 +250,7 @@
                 border-radius: 50%;
             }
 
-            // Hide before when image is present
+            /* Hide before when image is present */
             .step-icon-img ~ &::before {
                 display: none;
             }
@@ -260,7 +260,7 @@
         }
     }
 
-    // When complete AND has image, hide the checkmark overlay
+    /* When complete AND has image, hide the checkmark overlay */
     &.complete .step-number:has(.step-icon-img)::before {
         display: none;
     }
@@ -716,14 +716,14 @@
         color: var(--wh40k-text-muted);
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin-bottom: 4px; // Reduced from xs
+        margin-bottom: 4px; /* Reduced from xs */
     }
 
     .category-items {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--wh40k-space-xs); // Reduced from xs for tighter packing
-        max-height: 150px; // Scrollable with max height
+        gap: var(--wh40k-space-xs); /* Reduced from xs for tighter packing */
+        max-height: 150px; /* Scrollable with max height */
         overflow-y: auto;
         overflow-x: hidden;
     }
@@ -814,7 +814,7 @@
     }
 }
 
-// Grant item for characteristic bonuses (simpler style)
+/* Grant item for characteristic bonuses (simpler style) */
 .grant-item {
     display: inline-flex;
     align-items: center;

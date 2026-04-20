@@ -259,7 +259,7 @@
     overflow-x: hidden;
     min-height: 0;
 
-    // Custom scrollbar
+    /* Custom scrollbar */
     &::-webkit-scrollbar {
         width: 6px;
     }
@@ -413,7 +413,7 @@
     cursor: default;
 }
 
-// Column sizing - using fixed pixel widths for consistency
+/* Column sizing - using fixed pixel widths for consistency */
 .wh40k-col-icon {
     width: 32px;
     max-width: 32px;
@@ -445,7 +445,7 @@
     text-align: center;
 }
 
-// Inventory row action button
+/* Inventory row action button */
 .wh40k-inv-btn {
     padding: 2px 6px;
     background: transparent;
@@ -467,7 +467,7 @@
     }
 }
 
-// Cell content
+/* Cell content */
 .wh40k-item-icon {
     width: 24px;
     height: 24px;

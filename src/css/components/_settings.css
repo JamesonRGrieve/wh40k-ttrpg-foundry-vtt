@@ -187,7 +187,7 @@
             }
 
             &__label--add {
-                // from .wh40k-material
+                /* from .wh40k-material */
                 font-family: 'Material Icons';
                 font-weight: normal;
                 font-style: normal;
@@ -278,7 +278,7 @@
 
             &__controlwrap {
                 span.wh40k-current_level {
-                    //noinspection CssUnknownTarget
+                    /* noinspection CssUnknownTarget */
                     &--1,
                     &--2,
                     &--3,
@@ -294,7 +294,7 @@
                     }
                 }
 
-                //noinspection CssUnknownTarget
+                /* noinspection CssUnknownTarget */
                 button[type='action'] {
                     background: url('../images/fail.png') no-repeat center/100% 100%;
                     color: #fff;

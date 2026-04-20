@@ -1,9 +1,9 @@
-// ============================================
-// Attack Option Cards - Weapon Panel
-// Card-based selectable options for attack dialog
-// ============================================
+/* ============================================ */
+/* Attack Option Cards - Weapon Panel */
+/* Card-based selectable options for attack dialog */
+/* ============================================ */
 
-// ── Card Group Container ─────────────────────
+/* ── Card Group Container ───────────────────── */
 
 .urd-card-group {
     display: flex;
@@ -58,7 +58,7 @@
     transition: transform var(--wh40k-transition-fast);
 }
 
-// Inline summary shown when section is collapsed
+/* Inline summary shown when section is collapsed */
 .urd-card-group__summary {
     margin-left: auto;
     display: flex;
@@ -111,7 +111,7 @@
     }
 }
 
-// ── Cards Grid Container ─────────────────────
+/* ── Cards Grid Container ───────────────────── */
 
 .urd-card-group__cards {
     display: grid;
@@ -167,7 +167,7 @@
     }
 }
 
-// ── Individual Card ──────────────────────────
+/* ── Individual Card ────────────────────────── */
 
 .urd-card {
     display: flex;
@@ -201,7 +201,7 @@
         box-shadow: none;
     }
 
-    // ── Selected state ──
+    /* ── Selected state ── */
     &--selected {
         border-color: var(--wh40k-color-gold);
         background: rgb(from var(--wh40k-color-gold) r g b / 0.1);
@@ -219,7 +219,7 @@
         }
     }
 
-    // ── Active toggle state (multi-select) ──
+    /* ── Active toggle state (multi-select) ── */
     &--active {
         border-color: var(--wh40k-color-gold);
         background: rgb(from var(--wh40k-color-gold) r g b / 0.1);
@@ -236,7 +236,7 @@
         }
     }
 
-    // ── Disabled state ──
+    /* ── Disabled state ── */
     &--disabled {
         opacity: 0.35;
         cursor: not-allowed;
@@ -244,7 +244,7 @@
     }
 }
 
-// ── Card Sub-elements ────────────────────────
+/* ── Card Sub-elements ──────────────────────── */
 
 .urd-card__icon {
     font-size: var(--wh40k-font-size-xs);
@@ -291,7 +291,7 @@
     }
 }
 
-// ── Animations ───────────────────────────────
+/* ── Animations ─────────────────────────────── */
 
 @keyframes urd-card-select {
     0% {
@@ -310,7 +310,7 @@
     animation: urd-card-select 200ms ease;
 }
 
-// ── Reduced motion ───────────────────────────
+/* ── Reduced motion ─────────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
     .urd-card {

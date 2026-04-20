@@ -1,7 +1,7 @@
-// ============================================
-// Armour Display Panel - Character Silhouette Layout
-// Uses CSS custom properties from _gothic-theme.scss
-// ============================================
+/* ============================================ */
+/* Armour Display Panel - Character Silhouette Layout */
+/* Uses CSS custom properties from _gothic-theme.scss */
+/* ============================================ */
 
 .wh40k-armour-panel {
     flex: 1 1 auto !important;
@@ -51,35 +51,34 @@
     }
 }
 
-// ============================================
-// Character Silhouette Grid Layout
-// ============================================
-// Uses CSS Grid to position boxes in a human body shape:
-//
-//        [HEAD]
-//  [R.ARM][BODY][L.ARM]  (upper body + arms)
-//       [BODY]           (body extends down)
-//     [R.LEG][L.LEG]     (longer legs)
+/* ============================================ */
+/* Character Silhouette Grid Layout */
+/* ============================================ */
+/* Uses CSS Grid to position boxes in a human body shape: */
+/* [HEAD] */
+/* [R.ARM][BODY][L.ARM]  (upper body + arms) */
+/* [BODY]           (body extends down) */
+/* [R.LEG][L.LEG]     (longer legs) */
 
 .wh40k-armour-silhouette {
-    display: grid !important; // Force grid display
+    display: grid !important; /* Force grid display */
     visibility: visible !important;
-    grid-template-columns: 80px 1fr 80px; // Arms on sides, body center
+    grid-template-columns: 80px 1fr 80px; /* Arms on sides, body center */
     grid-template-rows: auto auto auto;
     grid-template-areas:
         '.       head      .'
         'rarm    body      larm'
-        'rleg    body      lleg'; // Legs positioned at bottom, body spans
+        'rleg    body      lleg'; /* Legs positioned at bottom, body spans */
     gap: var(--wh40k-space-xs);
     padding: var(--wh40k-space-xs, 4px);
     width: 100%;
     max-width: 300px;
-    margin: 0 auto; // Center the silhouette
+    margin: 0 auto; /* Center the silhouette */
 }
 
-// Base box styling shared by all locations
+/* Base box styling shared by all locations */
 .wh40k-armour-box {
-    display: flex !important; // Force display
+    display: flex !important; /* Force display */
     visibility: visible !important;
     flex-direction: column;
     align-items: center;
@@ -111,7 +110,7 @@
     }
 }
 
-// Location label (top text)
+/* Location label (top text) */
 .wh40k-box-label {
     font-size: 0.6rem;
     font-weight: 700;
@@ -123,7 +122,7 @@
     white-space: nowrap;
 }
 
-// AP value (center, large circular badge)
+/* AP value (center, large circular badge) */
 .wh40k-box-ap {
     width: 38px;
     height: 38px;
@@ -142,7 +141,7 @@
     transition: all var(--wh40k-transition-normal, 0.2s ease);
 }
 
-// Roll range (bottom badge)
+/* Roll range (bottom badge) */
 .wh40k-box-range {
     font-size: 0.55rem;
     font-weight: 700;
@@ -174,9 +173,9 @@
     }
 }
 
-// ============================================
-// Grid Area Positioning
-// ============================================
+/* ============================================ */
+/* Grid Area Positioning */
+/* ============================================ */
 
 .wh40k-box-head {
     grid-area: head;
@@ -187,7 +186,7 @@
 
 .wh40k-box-body {
     grid-area: body;
-    grid-row: 2 / 3; // Spans rows 2-3 (arms and legs row)
+    grid-row: 2 / 3; /* Spans rows 2-3 (arms and legs row) */
     min-height: 140px;
     align-self: stretch;
 
@@ -201,7 +200,7 @@
 .wh40k-box-right-arm {
     grid-area: rarm;
     justify-self: end;
-    align-self: center; // Center vertically with body
+    align-self: center; /* Center vertically with body */
     min-height: 80px;
     min-width: 60px;
 }
@@ -209,32 +208,32 @@
 .wh40k-box-left-arm {
     grid-area: larm;
     justify-self: start;
-    align-self: center; // Center vertically with body
+    align-self: center; /* Center vertically with body */
     min-height: 80px;
     min-width: 60px;
 }
 
 .wh40k-box-right-leg {
     grid-area: rleg;
-    justify-self: end; // Align with body edge
+    justify-self: end; /* Align with body edge */
     align-self: start;
-    min-height: 120px; // Taller legs
+    min-height: 120px; /* Taller legs */
     min-width: 65px;
     margin-right: -40px;
 }
 
 .wh40k-box-left-leg {
     grid-area: lleg;
-    justify-self: start; // Align with body edge
+    justify-self: start; /* Align with body edge */
     align-self: start;
-    min-height: 120px; // Taller legs
+    min-height: 120px; /* Taller legs */
     min-width: 65px;
     margin-left: -40px;
 }
 
-// ============================================
-// Hit Location Highlight Animation
-// ============================================
+/* ============================================ */
+/* Hit Location Highlight Animation */
+/* ============================================ */
 
 .wh40k-hit-location-highlight {
     animation: hitLocationPulse 0.5s ease-in-out 4;
@@ -254,9 +253,9 @@
     }
 }
 
-// ============================================
-// Hit Location Chat Message Styles
-// ============================================
+/* ============================================ */
+/* Hit Location Chat Message Styles */
+/* ============================================ */
 
 .wh40k-hit-location-result {
     padding: 12px;

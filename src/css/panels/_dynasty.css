@@ -1,15 +1,15 @@
-// Dynasty Tab Layout
-// ============================================
+/* Dynasty Tab Layout */
+/* ============================================ */
 
 .wh40k-tab-dynasty {
-    // Override the base .wh40k-tab grid display
+    /* Override the base .wh40k-tab grid display */
     &.active {
         display: block !important;
     }
     padding: var(--wh40k-space-md);
 }
 
-// Profit Factor Panel
+/* Profit Factor Panel */
 .wh40k-panel-profit {
     .wh40k-panel-header {
         background: linear-gradient(180deg, rgb(from var(--wh40k-accent-dynasty) r g b / 0.15) 0%, transparent 100%);
@@ -69,7 +69,7 @@
     margin-top: var(--wh40k-space-sm);
 }
 
-// XP Display
+/* XP Display */
 .wh40k-xp-display {
     display: flex;
     gap: var(--wh40k-space-md);
@@ -110,7 +110,7 @@
     }
 }
 
-// Endeavour Tracker
+/* Endeavour Tracker */
 .wh40k-endeavour-fields {
     display: flex;
     flex-direction: column;
@@ -131,4 +131,4 @@
     }
 }
 
-// ============================================
+/* ============================================ */

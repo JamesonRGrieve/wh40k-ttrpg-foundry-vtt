@@ -1,7 +1,7 @@
 .wh40k-wrapper {
-    // ============================================
-    // SHIP & DYNASTY STYLES
-    // ============================================
+    /* ============================================ */
+    /* SHIP & DYNASTY STYLES */
+    /* ============================================ */
 
     .wh40k-profit-factor-display {
         display: grid;
@@ -22,9 +22,9 @@
         text-align: center;
     }
 
-    // ============================================
-    // ITEM DISPLAY STYLES
-    // ============================================
+    /* ============================================ */
+    /* ITEM DISPLAY STYLES */
+    /* ============================================ */
 
     .wh40k-item-button {
         display: flex;
@@ -53,7 +53,7 @@
         color: #666;
     }
 
-    // Biography Grid
+    /* Biography Grid */
     .wh40k-bio-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -61,9 +61,9 @@
         width: 100%;
     }
 
-    // ============================================
-    // CHARACTERISTIC MODIFIERS
-    // ============================================
+    /* ============================================ */
+    /* CHARACTERISTIC MODIFIERS */
+    /* ============================================ */
 
     .wh40k-char-bonus {
         background-color: rgba(0, 128, 0, 0.15) !important;
@@ -73,9 +73,9 @@
         background-color: rgba(139, 0, 0, 0.15) !important;
     }
 
-    // ============================================
-    // CHARACTERISTICS PANEL (ABILITIES TAB)
-    // ============================================
+    /* ============================================ */
+    /* CHARACTERISTICS PANEL (ABILITIES TAB) */
+    /* ============================================ */
 
     .wh40k-char-panel {
         .wh40k-panel__header {
@@ -206,9 +206,9 @@
         font-weight: bold;
     }
 
-    // ============================================
-    // SHIP ROLE STYLES
-    // ============================================
+    /* ============================================ */
+    /* SHIP ROLE STYLES */
+    /* ============================================ */
 
     .wh40k-panel-ship-roles {
         .wh40k-panel-header {
@@ -481,7 +481,7 @@
         }
     }
 
-    // Legacy styles (keep for backward compatibility)
+    /* Legacy styles (keep for backward compatibility) */
     .wh40k-ship-role-details {
         margin-top: 10px;
         padding: 10px;
@@ -503,11 +503,11 @@
         }
     }
 
-    // ============================================
-    // STARSHIP SHEET ENHANCEMENTS
-    // ============================================
+    /* ============================================ */
+    /* STARSHIP SHEET ENHANCEMENTS */
+    /* ============================================ */
 
-    // Initiative Box
+    /* Initiative Box */
     .wh40k-ship-initiative-box {
         display: flex;
         align-items: center;
@@ -560,7 +560,7 @@
         border: 1px solid rgba(30, 60, 90, 0.2);
     }
 
-    // Resource Status Indicators
+    /* Resource Status Indicators */
     .wh40k-resource-status {
         display: flex;
         align-items: center;
@@ -635,7 +635,7 @@
         margin: 12px 0;
     }
 
-    // Ship Initiative Roll Chat Message
+    /* Ship Initiative Roll Chat Message */
     .wh40k-ship-initiative-roll {
         padding: 12px;
         background: linear-gradient(135deg, rgba(30, 60, 90, 0.1) 0%, rgba(40, 80, 120, 0.15) 100%);

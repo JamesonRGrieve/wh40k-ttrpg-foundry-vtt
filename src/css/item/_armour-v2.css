@@ -1,12 +1,12 @@
-// ============================================
-// Rogue Trader Armour Sheet Styles - V2
-// ============================================
-// Modern, information-dense armour display matching weapon sheet pattern
-// Uses theme-aware CSS custom properties
+/* ============================================ */
+/* Rogue Trader Armour Sheet Styles - V2 */
+/* ============================================ */
+/* Modern, information-dense armour display matching weapon sheet pattern */
+/* Uses theme-aware CSS custom properties */
 
-// ============================================
-// ARMOUR SHEET BASE
-// ============================================
+/* ============================================ */
+/* ARMOUR SHEET BASE */
+/* ============================================ */
 
 .wh40k-armour-sheet {
     display: flex;
@@ -27,9 +27,9 @@
     }
 }
 
-// ============================================
-// HEADER
-// ============================================
+/* ============================================ */
+/* HEADER */
+/* ============================================ */
 
 .wh40k-armour-header {
     display: flex;
@@ -130,9 +130,9 @@
     }
 }
 
-// ============================================
-// ACTION BUTTONS
-// ============================================
+/* ============================================ */
+/* ACTION BUTTONS */
+/* ============================================ */
 
 .wh40k-armour-sheet .wh40k-action-btn {
     display: flex;
@@ -166,9 +166,9 @@
     }
 }
 
-// ============================================
-// ARMOUR BADGES
-// ============================================
+/* ============================================ */
+/* ARMOUR BADGES */
+/* ============================================ */
 
 .wh40k-armour-badge {
     display: inline-flex;
@@ -187,14 +187,14 @@
         font-size: 0.65rem;
     }
 
-    // Type badges
+    /* Type badges */
     &--type {
         background: rgba(201, 162, 39, 0.2);
         border-color: rgba(201, 162, 39, 0.4);
         color: var(--wh40k-color-gold);
     }
 
-    // Protection level
+    /* Protection level */
     &--protection {
         background: rgba(46, 204, 113, 0.2);
         border-color: rgba(46, 204, 113, 0.4);
@@ -202,7 +202,7 @@
         font-family: 'Courier New', monospace;
     }
 
-    // Craftsmanship
+    /* Craftsmanship */
     &--craft {
         background: rgba(139, 105, 20, 0.2);
         border-color: rgba(139, 105, 20, 0.4);
@@ -218,7 +218,7 @@
         }
     }
 
-    // Agility
+    /* Agility */
     &--agility {
         background: rgba(52, 152, 219, 0.2);
         border-color: rgba(52, 152, 219, 0.4);
@@ -226,9 +226,9 @@
     }
 }
 
-// ============================================
-// STATS BAR (matching weapon pattern)
-// ============================================
+/* ============================================ */
+/* STATS BAR (matching weapon pattern) */
+/* ============================================ */
 
 .wh40k-armour-stats {
     display: flex;
@@ -278,7 +278,7 @@
         color: var(--wh40k-color-gold);
     }
 
-    // Stat variants
+    /* Stat variants */
     &--ap {
         .wh40k-armour-stat__icon {
             color: var(--wh40k-color-gold);
@@ -308,9 +308,9 @@
     }
 }
 
-// ============================================
-// TAB NAVIGATION (matching weapon pattern)
-// ============================================
+/* ============================================ */
+/* TAB NAVIGATION (matching weapon pattern) */
+/* ============================================ */
 
 .wh40k-armour-tabs {
     display: flex;
@@ -350,9 +350,9 @@
     }
 }
 
-// ============================================
-// TAB CONTENT
-// ============================================
+/* ============================================ */
+/* TAB CONTENT */
+/* ============================================ */
 
 .wh40k-armour-content {
     flex: 1;
@@ -379,9 +379,9 @@
     }
 }
 
-// ============================================
-// SECTIONS (matching weapon pattern)
-// ============================================
+/* ============================================ */
+/* SECTIONS (matching weapon pattern) */
+/* ============================================ */
 
 .wh40k-armour-section {
     background: rgba(255, 255, 255, 0.03);
@@ -476,9 +476,9 @@
     }
 }
 
-// ============================================
-// AP GRID
-// ============================================
+/* ============================================ */
+/* AP GRID */
+/* ============================================ */
 
 .wh40k-armour-ap-grid {
     display: grid;
@@ -526,12 +526,12 @@
     }
 }
 
-// Remove obsolete coverage toggle grid styles
-// (Coverage now inferred from non-zero AP values)
+/* Remove obsolete coverage toggle grid styles */
+/* (Coverage now inferred from non-zero AP values) */
 
-// ============================================
-// FIELD GRID (2-column layout for base properties)
-// ============================================
+/* ============================================ */
+/* FIELD GRID (2-column layout for base properties) */
+/* ============================================ */
 
 .wh40k-field-grid {
     display: grid;
@@ -592,9 +592,9 @@
     }
 }
 
-// ============================================
-// VIEW MODE PROPERTIES DISPLAY
-// ============================================
+/* ============================================ */
+/* VIEW MODE PROPERTIES DISPLAY */
+/* ============================================ */
 
 .wh40k-props-display {
     display: flex;
@@ -638,16 +638,16 @@
     text-transform: capitalize;
 }
 
-// Property descriptions section (consolidated)
+/* Property descriptions section (consolidated) */
 .wh40k-property-descriptions {
     margin-top: 12px;
     padding-top: 12px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-// ============================================
-// PROPERTY TAGS
-// ============================================
+/* ============================================ */
+/* PROPERTY TAGS */
+/* ============================================ */
 
 .wh40k-property-tags {
     display: flex;
@@ -715,9 +715,9 @@
     }
 }
 
-// ============================================
-// PROPERTY DETAILS
-// ============================================
+/* ============================================ */
+/* PROPERTY DETAILS */
+/* ============================================ */
 
 .wh40k-property-detail {
     padding: 8px 0;
@@ -749,9 +749,9 @@
     }
 }
 
-// ============================================
-// MODIFICATIONS
-// ============================================
+/* ============================================ */
+/* MODIFICATIONS */
+/* ============================================ */
 
 .wh40k-mod-slots {
     display: flex;
@@ -829,9 +829,9 @@
     }
 }
 
-// ============================================
-// EMPTY STATES
-// ============================================
+/* ============================================ */
+/* EMPTY STATES */
+/* ============================================ */
 
 .wh40k-armour-sheet .wh40k-empty-state {
     display: flex;
@@ -872,9 +872,9 @@
     padding: 8px 0;
 }
 
-// ============================================
-// BUTTONS
-// ============================================
+/* ============================================ */
+/* BUTTONS */
+/* ============================================ */
 
 .wh40k-armour-sheet .wh40k-btn {
     display: inline-flex;
@@ -930,9 +930,9 @@
     }
 }
 
-// ============================================
-// TOGGLE EQUIPPED
-// ============================================
+/* ============================================ */
+/* TOGGLE EQUIPPED */
+/* ============================================ */
 
 .wh40k-armour-sheet .wh40k-toggle-equipped {
     display: flex;

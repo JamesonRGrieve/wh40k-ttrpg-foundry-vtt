@@ -1,11 +1,11 @@
-// ============================================
-// Talent & Trait Item Sheets - Modern Tabbed Design
-// ============================================
-// Following weapon sheet patterns with tabs and modern layout
+/* ============================================ */
+/* Talent & Trait Item Sheets - Modern Tabbed Design */
+/* ============================================ */
+/* Following weapon sheet patterns with tabs and modern layout */
 
-// ============================================
-// Shared Base Styles
-// ============================================
+/* ============================================ */
+/* Shared Base Styles */
+/* ============================================ */
 
 .wh40k-talent-sheet,
 .wh40k-trait-sheet {
@@ -21,9 +21,9 @@
     }
 }
 
-// ============================================
-// HEADER - Compact identity with badges
-// ============================================
+/* ============================================ */
+/* HEADER - Compact identity with badges */
+/* ============================================ */
 
 .wh40k-talent-header,
 .wh40k-trait-header {
@@ -120,9 +120,9 @@
     align-items: center;
 }
 
-// ============================================
-// BADGES
-// ============================================
+/* ============================================ */
+/* BADGES */
+/* ============================================ */
 
 .wh40k-talent-badge,
 .wh40k-trait-badge {
@@ -144,7 +144,7 @@
     }
 }
 
-// Talent Specific Badges
+/* Talent Specific Badges */
 .wh40k-talent-badge--tier {
     background: linear-gradient(135deg, rgb(from var(--wh40k-accent-talents) r g b / 0.15), rgb(from var(--wh40k-accent-talents) r g b / 0.05));
     border-color: rgb(from var(--wh40k-accent-talents) r g b / 0.3);
@@ -193,7 +193,7 @@
     color: #f39c12;
 }
 
-// Trait Specific Badges
+/* Trait Specific Badges */
 .wh40k-trait-badge--category {
     background: linear-gradient(135deg, rgb(from var(--wh40k-accent-combat) r g b / 0.15), rgb(from var(--wh40k-accent-combat) r g b / 0.05));
     border-color: rgb(from var(--wh40k-accent-combat) r g b / 0.3);
@@ -212,9 +212,9 @@
     color: #c39bd3;
 }
 
-// ============================================
-// TAB NAVIGATION
-// ============================================
+/* ============================================ */
+/* TAB NAVIGATION */
+/* ============================================ */
 
 .wh40k-talent-tabs,
 .wh40k-trait-tabs {
@@ -260,9 +260,9 @@
     }
 }
 
-// ============================================
-// TAB CONTENT BODY
-// ============================================
+/* ============================================ */
+/* TAB CONTENT BODY */
+/* ============================================ */
 
 .wh40k-talent-body,
 .wh40k-trait-body {
@@ -271,7 +271,7 @@
     overflow-x: hidden;
     position: relative;
 
-    // Custom scrollbar
+    /* Custom scrollbar */
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -300,9 +300,9 @@
     }
 }
 
-// ============================================
-// SECTIONS
-// ============================================
+/* ============================================ */
+/* SECTIONS */
+/* ============================================ */
 
 .wh40k-talent-section,
 .wh40k-trait-section {
@@ -333,9 +333,9 @@
     }
 }
 
-// ============================================
-// PROPERTIES GRID
-// ============================================
+/* ============================================ */
+/* PROPERTIES GRID */
+/* ============================================ */
 
 .wh40k-properties-grid {
     display: grid;
@@ -422,9 +422,9 @@
     margin-left: 4px;
 }
 
-// ============================================
-// APTITUDES DISPLAY
-// ============================================
+/* ============================================ */
+/* APTITUDES DISPLAY */
+/* ============================================ */
 
 .wh40k-aptitudes-display {
     display: flex;
@@ -444,9 +444,9 @@
     color: var(--wh40k-color-gold);
 }
 
-// ============================================
-// REQUIREMENTS DISPLAY
-// ============================================
+/* ============================================ */
+/* REQUIREMENTS DISPLAY */
+/* ============================================ */
 
 .wh40k-requirements-display {
     padding: var(--wh40k-space-sm);
@@ -468,9 +468,9 @@
     }
 }
 
-// ============================================
-// PREREQUISITES DISPLAY
-// ============================================
+/* ============================================ */
+/* PREREQUISITES DISPLAY */
+/* ============================================ */
 
 .wh40k-prerequisites-display {
     padding: var(--wh40k-space-md);
@@ -486,9 +486,9 @@
     line-height: 1.5;
 }
 
-// ============================================
-// MODIFIERS DISPLAY
-// ============================================
+/* ============================================ */
+/* MODIFIERS DISPLAY */
+/* ============================================ */
 
 .wh40k-modifiers-display {
     display: flex;
@@ -552,9 +552,9 @@
     }
 }
 
-// ============================================
-// EDITOR CONTAINER
-// ============================================
+/* ============================================ */
+/* EDITOR CONTAINER */
+/* ============================================ */
 
 .wh40k-editor-container {
     background: var(--color-bg-option);
@@ -567,9 +567,9 @@
     }
 }
 
-// ============================================
-// EMPTY STATE
-// ============================================
+/* ============================================ */
+/* EMPTY STATE */
+/* ============================================ */
 
 .wh40k-empty-state {
     display: flex;

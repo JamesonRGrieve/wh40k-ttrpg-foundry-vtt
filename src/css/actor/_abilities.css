@@ -1,7 +1,7 @@
 .wh40k-wrapper {
-    // ============================================
-    // COMBAT CONTROLS + INITIATIVE
-    // ============================================
+    /* ============================================ */
+    /* COMBAT CONTROLS + INITIATIVE */
+    /* ============================================ */
 
     .wh40k-combat-controls .wh40k-panel-body {
         padding: 12px;
@@ -70,9 +70,9 @@
         padding: 6px 8px;
     }
 
-    // ============================================
-    // ABILITIES TAB STYLES
-    // ============================================
+    /* ============================================ */
+    /* ABILITIES TAB STYLES */
+    /* ============================================ */
 
     .wh40k-tab[data-tab='abilities'] {
         .wh40k-panel {
@@ -81,7 +81,7 @@
             border-bottom-color: rgba(24, 80, 96, 0.5);
         }
 
-        // Improve characteristics table
+        /* Improve characteristics table */
         .wh40k-chartable {
             padding: 8px;
 
@@ -115,7 +115,7 @@
         }
     }
 
-    // Talents and Traits panels - positioned and styled better
+    /* Talents and Traits panels - positioned and styled better */
     .wh40k-talenttable--border,
     .wh40k-traittable--border {
         .table-row {
@@ -140,9 +140,9 @@
         }
     }
 
-    // ============================================
-    // POWERS TAB STYLES
-    // ============================================
+    /* ============================================ */
+    /* POWERS TAB STYLES */
+    /* ============================================ */
 
     .wh40k-tab[data-tab='powers'] {
         .wh40k-panel {

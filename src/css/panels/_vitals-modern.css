@@ -1,18 +1,18 @@
-// ============================================
-// MODERN VITALS PANELS - Overview Tab
-// ============================================
-// Clean, sleek design matching Combat Tab style
-// Uses Foundry color system for theme adaptation
-// NOTE: Uses unified component system from _unified-components.scss
+/* ============================================ */
+/* MODERN VITALS PANELS - Overview Tab */
+/* ============================================ */
+/* Clean, sleek design matching Combat Tab style */
+/* Uses Foundry color system for theme adaptation */
+/* NOTE: Uses unified component system from _unified-components.scss */
 
-// Vital Display Container
+/* Vital Display Container */
 .wh40k-vital-display {
     display: flex;
     flex-direction: column;
     gap: var(--wh40k-space-sm);
 }
 
-// Vital Tracker (Number Display with +/- buttons)
+/* Vital Tracker (Number Display with +/- buttons) */
 .wh40k-vital-tracker {
     display: flex;
     align-items: center;
@@ -21,10 +21,10 @@
     padding: var(--wh40k-space-xs) 0;
 }
 
-// Vital button extends the unified control button
-// NOTE: Use .wh40k-btn-control for new code; this maintains backwards compatibility
+/* Vital button extends the unified control button */
+/* NOTE: Use .wh40k-btn-control for new code; this maintains backwards compatibility */
 .wh40k-vital-btn {
-    // from .wh40k-btn-control (base + control specifics)
+    /* from .wh40k-btn-control (base + control specifics) */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -75,7 +75,7 @@
     }
 
     &.wh40k-btn-minus {
-        // from .wh40k-btn-control--minus
+        /* from .wh40k-btn-control--minus */
         color: var(--wh40k-accent-combat);
 
         &:hover:not(:disabled) {
@@ -85,7 +85,7 @@
     }
 
     &.wh40k-btn-plus {
-        // from .wh40k-btn-control--plus
+        /* from .wh40k-btn-control--plus */
         color: var(--wh40k-color-success);
 
         &:hover:not(:disabled) {
@@ -118,7 +118,7 @@
     text-align: center;
 }
 
-// Vital Progress Bar
+/* Vital Progress Bar */
 .wh40k-vital-bar {
     height: 8px;
     background: var(--color-bg-tertiary);
@@ -133,7 +133,7 @@
     transition: width var(--wh40k-transition-medium);
 }
 
-// Vital-specific bar colors
+/* Vital-specific bar colors */
 .wh40k-wounds-fill {
     background: linear-gradient(90deg, var(--wh40k-accent-combat), color-mix(in srgb, var(--wh40k-accent-combat), white 15%));
 }
@@ -150,12 +150,12 @@
     background: linear-gradient(90deg, #6e499b, #9573bd);
 }
 
-// Fate value special styling
+/* Fate value special styling */
 .wh40k-fate-value {
     color: var(--wh40k-accent-gold) !important;
 }
 
-// Warning Messages
+/* Warning Messages */
 .wh40k-vital-warning {
     display: flex;
     align-items: center;
@@ -184,7 +184,7 @@
     border: 1px solid rgb(from var(--wh40k-color-gold) r g b / 0.3);
 }
 
-// Modifier Display (for Corruption/Insanity)
+/* Modifier Display (for Corruption/Insanity) */
 .wh40k-vital-modifier {
     font-size: 0.75rem;
     color: var(--color-text-tertiary);
@@ -193,9 +193,9 @@
     padding-top: 2px;
 }
 
-// ============================================
-// Edit Mode Styles
-// ============================================
+/* ============================================ */
+/* Edit Mode Styles */
+/* ============================================ */
 
 .wh40k-vital-expand-btn {
     width: 24px;
@@ -248,10 +248,10 @@
     gap: var(--wh40k-space-xs);
 }
 
-// Vital input extends the unified numeric input
-// NOTE: Use .wh40k-input-numeric--styled for new code; this maintains backwards compatibility
+/* Vital input extends the unified numeric input */
+/* NOTE: Use .wh40k-input-numeric--styled for new code; this maintains backwards compatibility */
 .wh40k-vital-input {
-    // from .wh40k-input-numeric (base input + numeric specifics)
+    /* from .wh40k-input-numeric (base input + numeric specifics) */
     padding: 4px 8px;
     background: var(--wh40k-input-bg);
     border: 1px solid var(--color-border-secondary);
@@ -284,15 +284,15 @@
         font-style: italic;
     }
 
-    width: 100%; // Full width within grid cell
-    min-width: 50px; // Minimum readable size
-    max-width: 150px; // Don't get too wide
+    width: 100%; /* Full width within grid cell */
+    min-width: 50px; /* Minimum readable size */
+    max-width: 150px; /* Don't get too wide */
     height: 36px;
     font-size: 1rem;
     font-weight: 600;
 }
 
-// Auto-calculation badge
+/* Auto-calculation badge */
 .wh40k-auto-badge {
     font-size: var(--wh40k-text-micro, 0.65rem);
     font-weight: 700;
@@ -304,7 +304,7 @@
     letter-spacing: 0.05em;
 }
 
-// Info message
+/* Info message */
 .wh40k-vital-info {
     display: flex;
     align-items: center;
@@ -322,7 +322,7 @@
     }
 }
 
-// Subsections (Critical, Injuries, etc.)
+/* Subsections (Critical, Injuries, etc.) */
 .wh40k-vital-subsection {
     margin-top: var(--wh40k-space-md);
     padding-top: var(--wh40k-space-sm);
@@ -349,7 +349,7 @@
     color: var(--color-text-tertiary);
 }
 
-// Empty state
+/* Empty state */
 .wh40k-vital-empty {
     display: flex;
     flex-direction: column;
@@ -373,9 +373,9 @@
     }
 }
 
-// ============================================
-// Panel Details Override
-// ============================================
+/* ============================================ */
+/* Panel Details Override */
+/* ============================================ */
 
 .wh40k-vitals-panel .wh40k-panel-details {
     margin-top: var(--wh40k-space-md);
@@ -385,9 +385,9 @@
     border: 1px solid var(--color-border-tertiary);
 }
 
-// ============================================
-// Exhausted State
-// ============================================
+/* ============================================ */
+/* Exhausted State */
+/* ============================================ */
 
 .wh40k-exhausted {
     .wh40k-panel-header {
@@ -399,9 +399,9 @@
     }
 }
 
-// ============================================
-// Checkbox Field
-// ============================================
+/* ============================================ */
+/* Checkbox Field */
+/* ============================================ */
 
 .wh40k-checkbox-field {
     display: flex;
@@ -441,12 +441,12 @@
     user-select: none;
 }
 
-// ============================================
-// BUTTON FEEDBACK ANIMATIONS
-// ============================================
-// Satisfying interactions for +/- buttons
+/* ============================================ */
+/* BUTTON FEEDBACK ANIMATIONS */
+/* ============================================ */
+/* Satisfying interactions for +/- buttons */
 
-// Button Press Animation (scale down and bounce back)
+/* Button Press Animation (scale down and bounce back) */
 .wh40k-btn-pressed {
     animation: btn-press 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
@@ -463,7 +463,7 @@
     }
 }
 
-// Button Shake Animation (when hitting limits)
+/* Button Shake Animation (when hitting limits) */
 .wh40k-btn-shake {
     animation: btn-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
@@ -488,7 +488,7 @@
     }
 }
 
-// Number Roll Animation (smooth number change)
+/* Number Roll Animation (smooth number change) */
 .wh40k-number-roll {
     animation: number-roll 0.3s ease-out;
 }
@@ -508,7 +508,7 @@
     }
 }
 
-// Ensure progress bars have smooth transitions
+/* Ensure progress bars have smooth transitions */
 .wh40k-vital-bar-fill,
 .wh40k-wounds-bar-fill,
 .wh40k-fatigue-bar-fill,

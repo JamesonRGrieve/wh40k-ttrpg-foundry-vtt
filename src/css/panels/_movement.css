@@ -1,6 +1,6 @@
-// ============================================
-// Affliction Lists (Malignancies, Mutations, Disorders)
-// ============================================
+/* ============================================ */
+/* Affliction Lists (Malignancies, Mutations, Disorders) */
+/* ============================================ */
 
 .wh40k-affliction-section {
     margin-top: var(--wh40k-space-sm);
@@ -85,9 +85,9 @@
     }
 }
 
-// ============================================
-// Movement Panel - Modern Design
-// ============================================
+/* ============================================ */
+/* Movement Panel - Modern Design */
+/* ============================================ */
 
 .wh40k-movement-panel {
     .wh40k-panel-header {
@@ -97,9 +97,9 @@
     }
 }
 
-// ============================================
-// Mobility Panel - Clean Design
-// ============================================
+/* ============================================ */
+/* Mobility Panel - Clean Design */
+/* ============================================ */
 
 .wh40k-panel-mobility {
     .wh40k-panel-body {
@@ -167,7 +167,7 @@
     color: var(--wh40k-text-muted);
 }
 
-// Speed-specific colors
+/* Speed-specific colors */
 .wh40k-speed-half i {
     color: var(--wh40k-accent-green);
 }
@@ -181,7 +181,7 @@
     color: #c0392b;
 }
 
-// Expanded details sections
+/* Expanded details sections */
 .wh40k-mobility-section {
     margin-bottom: var(--wh40k-space-md);
     padding: var(--wh40k-space-sm);
@@ -362,7 +362,7 @@
     color: var(--color-text-primary);
 }
 
-// Legacy movement grid (fallback)
+/* Legacy movement grid (fallback) */
 .wh40k-move-cell {
     @apply tw-flex tw-flex-col tw-items-center tw-p-1;
     background: var(--wh40k-bg-paper-light);
@@ -404,9 +404,9 @@
     color: var(--color-text-primary);
 }
 
-// ============================================
-// Modern Compact Movement Panel (Combat Tab)
-// ============================================
+/* ============================================ */
+/* Modern Compact Movement Panel (Combat Tab) */
+/* ============================================ */
 
 .wh40k-movement-modern-compact {
     display: flex;
@@ -492,7 +492,7 @@
     transition: width var(--wh40k-transition-medium);
 }
 
-// Specific movement type styling
+/* Specific movement type styling */
 .wh40k-move-half .wh40k-move-modern-icon {
     background: linear-gradient(
         135deg,
@@ -517,9 +517,9 @@
     color: #c0392b;
 }
 
-// ============================================
-// Dense Movement Grid (Overview Tab Full Panel)
-// ============================================
+/* ============================================ */
+/* Dense Movement Grid (Overview Tab Full Panel) */
+/* ============================================ */
 
 .wh40k-movement-dense-grid {
     display: grid;
@@ -568,7 +568,7 @@
     line-height: 1;
 }
 
-// Size select field
+/* Size select field */
 .wh40k-size-select-wrapper {
     .wh40k-size-select-inline {
         width: 100%;
@@ -588,7 +588,7 @@
     }
 }
 
-// Encumbrance status
+/* Encumbrance status */
 .wh40k-enc-compact {
     .wh40k-enc-over {
         color: var(--wh40k-accent-red);
@@ -596,9 +596,9 @@
     }
 }
 
-// ============================================
-// Token HUD Movement Buttons
-// ============================================
+/* ============================================ */
+/* Token HUD Movement Buttons */
+/* ============================================ */
 .wh40k-token-movement {
     display: flex;
     gap: var(--wh40k-space-xs);

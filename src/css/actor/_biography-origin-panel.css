@@ -1,12 +1,12 @@
-// ============================================
-// BIOGRAPHY TAB - ORIGIN PANEL MODERN DESIGN
-// ============================================
-// Sleek, compact redesign of the origin path panel
-// Features: visual step indicators, clean selections list, collapsible bonuses
+/* ============================================ */
+/* BIOGRAPHY TAB - ORIGIN PANEL MODERN DESIGN */
+/* ============================================ */
+/* Sleek, compact redesign of the origin path panel */
+/* Features: visual step indicators, clean selections list, collapsible bonuses */
 
-// ----------------------------------------
-// ORIGIN PANEL BASE
-// ----------------------------------------
+/* ---------------------------------------- */
+/* ORIGIN PANEL BASE */
+/* ---------------------------------------- */
 .wh40k-origin-panel-modern {
     .wh40k-panel-header {
         display: flex;
@@ -66,9 +66,9 @@
     }
 }
 
-// ----------------------------------------
-// VISUAL STEP INDICATORS
-// ----------------------------------------
+/* ---------------------------------------- */
+/* VISUAL STEP INDICATORS */
+/* ---------------------------------------- */
 .wh40k-origin-steps-visual {
     display: flex;
     align-items: center;
@@ -158,7 +158,7 @@
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
     margin: 0 2px;
     align-self: center;
-    margin-bottom: 20px; // Offset by half the label height to align with circles
+    margin-bottom: 20px; /* Offset by half the label height to align with circles */
     border-radius: var(--wh40k-radius-sm);
 
     &.wh40k-active {
@@ -166,9 +166,9 @@
     }
 }
 
-// ----------------------------------------
-// ORIGIN PATH BUILDER BUTTON (PROMINENT CTA)
-// ----------------------------------------
+/* ---------------------------------------- */
+/* ORIGIN PATH BUILDER BUTTON (PROMINENT CTA) */
+/* ---------------------------------------- */
 .wh40k-origin-builder-cta {
     margin-top: var(--wh40k-space-md);
     padding: 0 var(--wh40k-space-sm);
@@ -262,9 +262,9 @@
     }
 }
 
-// ----------------------------------------
-// EMPTY STATE MESSAGE
-// ----------------------------------------
+/* ---------------------------------------- */
+/* EMPTY STATE MESSAGE */
+/* ---------------------------------------- */
 .wh40k-origin-empty-state {
     padding: var(--wh40k-space-xl);
     text-align: center;
@@ -280,9 +280,9 @@
     }
 }
 
-// ----------------------------------------
-// ACCUMULATED BONUSES (COLLAPSIBLE)
-// ----------------------------------------
+/* ---------------------------------------- */
+/* ACCUMULATED BONUSES (COLLAPSIBLE) */
+/* ---------------------------------------- */
 .wh40k-origin-bonuses-modern {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     padding-top: var(--wh40k-space-md);
@@ -350,7 +350,7 @@
     transition: all var(--wh40k-transition-base);
 }
 
-// Bonus group styling
+/* Bonus group styling */
 .wh40k-bonus-group {
     display: flex;
     flex-direction: column;
@@ -374,9 +374,9 @@
     }
 }
 
-// ----------------------------------------
-// CHARACTERISTIC CHIPS
-// ----------------------------------------
+/* ---------------------------------------- */
+/* CHARACTERISTIC CHIPS */
+/* ---------------------------------------- */
 .wh40k-bonus-chips {
     display: flex;
     flex-wrap: wrap;
@@ -416,9 +416,9 @@
     }
 }
 
-// ----------------------------------------
-// BONUS TAGS (Skills, Talents, Traits)
-// ----------------------------------------
+/* ---------------------------------------- */
+/* BONUS TAGS (Skills, Talents, Traits) */
+/* ---------------------------------------- */
 .wh40k-bonus-tags {
     display: flex;
     flex-wrap: wrap;
@@ -458,9 +458,9 @@
     }
 }
 
-// ----------------------------------------
-// RESPONSIVE ADJUSTMENTS
-// ----------------------------------------
+/* ---------------------------------------- */
+/* RESPONSIVE ADJUSTMENTS */
+/* ---------------------------------------- */
 @media (max-width: 900px) {
     .wh40k-origin-steps-visual {
         padding: var(--wh40k-space-md) var(--wh40k-space-xs);

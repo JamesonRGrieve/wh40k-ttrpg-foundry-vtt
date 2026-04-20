@@ -1,12 +1,12 @@
-// ============================================
-// Talent Sheet V2 - Complete Redesign
-// ============================================
-// Modern translucent gothic styling with Font Awesome 6 Pro icons
-// Following origin-path-modern.scss patterns
+/* ============================================ */
+/* Talent Sheet V2 - Complete Redesign */
+/* ============================================ */
+/* Modern translucent gothic styling with Font Awesome 6 Pro icons */
+/* Following origin-path-modern.scss patterns */
 
-// ============================================
-// CSS Variables
-// ============================================
+/* ============================================ */
+/* CSS Variables */
+/* ============================================ */
 
 .wh40k-talent-sheet-v2 {
     --talent-accent: var(--wh40k-accent-talents);
@@ -14,7 +14,7 @@
     --talent-accent-bg: rgb(from var(--wh40k-accent-talents) r g b / 0.1);
     --talent-accent-border: rgb(from var(--wh40k-accent-talents) r g b / 0.3);
 
-    // Tier colors
+    /* Tier colors */
     --tier-1-color: #5ba86d;
     --tier-1-bg: rgba(91, 168, 109, 0.15);
     --tier-1-border: rgba(91, 168, 109, 0.4);
@@ -28,9 +28,9 @@
     --tier-3-border: rgba(176, 91, 160, 0.4);
 }
 
-// ============================================
-// Base Layout
-// ============================================
+/* ============================================ */
+/* Base Layout */
+/* ============================================ */
 
 .wh40k-talent-sheet-v2 {
     display: flex;
@@ -48,9 +48,9 @@
     }
 }
 
-// ============================================
-// HEADER
-// ============================================
+/* ============================================ */
+/* HEADER */
+/* ============================================ */
 
 .wh40k-talent-header {
     display: flex;
@@ -62,7 +62,7 @@
     flex-shrink: 0;
 }
 
-// Portrait
+/* Portrait */
 .wh40k-talent-portrait {
     position: relative;
     width: 80px;
@@ -106,7 +106,7 @@
     }
 }
 
-// Title section
+/* Title section */
 .wh40k-talent-title {
     flex: 1;
     display: flex;
@@ -123,7 +123,7 @@
     font-family: var(--wh40k-font-display);
     color: var(--color-text-primary);
 
-    // Input variant
+    /* Input variant */
     &[type='text'] {
         background: transparent;
         border: none;
@@ -142,7 +142,7 @@
     }
 }
 
-// Action buttons
+/* Action buttons */
 .wh40k-talent-actions {
     display: flex;
     gap: 6px;
@@ -191,9 +191,9 @@
     }
 }
 
-// ============================================
-// BADGES
-// ============================================
+/* ============================================ */
+/* BADGES */
+/* ============================================ */
 
 .wh40k-talent-badges {
     display: flex;
@@ -275,9 +275,9 @@
     }
 }
 
-// ============================================
-// QUICK STATS BAR
-// ============================================
+/* ============================================ */
+/* QUICK STATS BAR */
+/* ============================================ */
 
 .wh40k-talent-quickstats {
     display: flex;
@@ -334,9 +334,9 @@
     color: var(--wh40k-color-gold);
 }
 
-// ============================================
-// TAB NAVIGATION
-// ============================================
+/* ============================================ */
+/* TAB NAVIGATION */
+/* ============================================ */
 
 .wh40k-talent-tabs {
     display: flex;
@@ -381,9 +381,9 @@
     }
 }
 
-// ============================================
-// TAB CONTENT
-// ============================================
+/* ============================================ */
+/* TAB CONTENT */
+/* ============================================ */
 
 .wh40k-talent-content {
     flex: 1;
@@ -402,7 +402,7 @@
         display: block;
     }
 
-    // Custom scrollbar
+    /* Custom scrollbar */
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -421,9 +421,9 @@
     }
 }
 
-// ============================================
-// SECTIONS
-// ============================================
+/* ============================================ */
+/* SECTIONS */
+/* ============================================ */
 
 .wh40k-section {
     margin-bottom: var(--wh40k-space-lg);
@@ -462,9 +462,9 @@
     padding: var(--wh40k-space-md);
 }
 
-// ============================================
-// BENEFIT / DESCRIPTION TEXT
-// ============================================
+/* ============================================ */
+/* BENEFIT / DESCRIPTION TEXT */
+/* ============================================ */
 
 .wh40k-benefit-text,
 .wh40k-description-content,
@@ -504,9 +504,9 @@
     }
 }
 
-// ============================================
-// ABILITIES LIST
-// ============================================
+/* ============================================ */
+/* ABILITIES LIST */
+/* ============================================ */
 
 .wh40k-abilities-list {
     display: flex;
@@ -551,9 +551,9 @@
     }
 }
 
-// ============================================
-// GRANTS GRID
-// ============================================
+/* ============================================ */
+/* GRANTS GRID */
+/* ============================================ */
 
 .wh40k-grants-grid {
     display: flex;
@@ -562,7 +562,7 @@
 }
 
 .wh40k-grants-category {
-    // Category container
+    /* Category container */
 }
 
 .wh40k-grants-category-header {
@@ -658,9 +658,9 @@
     opacity: 0.5;
 }
 
-// ============================================
-// SITUATIONAL MODIFIERS
-// ============================================
+/* ============================================ */
+/* SITUATIONAL MODIFIERS */
+/* ============================================ */
 
 .wh40k-situational-list {
     display: flex;
@@ -716,9 +716,9 @@
     color: var(--color-text-tertiary);
 }
 
-// ============================================
-// PROPERTIES GRID
-// ============================================
+/* ============================================ */
+/* PROPERTIES GRID */
+/* ============================================ */
 
 .wh40k-properties-grid {
     display: grid;
@@ -736,7 +736,7 @@
     gap: 6px;
 
     &--checkbox {
-        // No changes needed
+        /* No changes needed */
     }
 }
 
@@ -848,9 +848,9 @@
     }
 }
 
-// ============================================
-// APTITUDES DISPLAY
-// ============================================
+/* ============================================ */
+/* APTITUDES DISPLAY */
+/* ============================================ */
 
 .wh40k-aptitudes-display {
     display: flex;
@@ -858,9 +858,9 @@
     gap: 6px;
 }
 
-// ============================================
-// SPECIALIZATION
-// ============================================
+/* ============================================ */
+/* SPECIALIZATION */
+/* ============================================ */
 
 .wh40k-specialization-badge {
     display: inline-flex;
@@ -874,9 +874,9 @@
     color: var(--talent-accent-light);
 }
 
-// ============================================
-// PREREQUISITES DISPLAY
-// ============================================
+/* ============================================ */
+/* PREREQUISITES DISPLAY */
+/* ============================================ */
 
 .wh40k-prerequisites-display {
     display: flex;
@@ -916,9 +916,9 @@
     color: color-mix(in srgb, var(--wh40k-accent-combat), white 15%);
 }
 
-// ============================================
-// ROLL CONFIG DISPLAY
-// ============================================
+/* ============================================ */
+/* ROLL CONFIG DISPLAY */
+/* ============================================ */
 
 .wh40k-roll-config-display {
     display: flex;
@@ -965,9 +965,9 @@
     color: var(--color-text-tertiary);
 }
 
-// ============================================
-// MODIFIERS GRID
-// ============================================
+/* ============================================ */
+/* MODIFIERS GRID */
+/* ============================================ */
 
 .wh40k-modifiers-grid {
     display: grid;
@@ -1039,9 +1039,9 @@
     }
 }
 
-// ============================================
-// EFFECTS LIST
-// ============================================
+/* ============================================ */
+/* EFFECTS LIST */
+/* ============================================ */
 
 .wh40k-effects-list {
     display: flex;
@@ -1144,9 +1144,9 @@
     }
 }
 
-// ============================================
-// EDITOR CONTAINER
-// ============================================
+/* ============================================ */
+/* EDITOR CONTAINER */
+/* ============================================ */
 
 .wh40k-editor-container {
     background: var(--color-bg-secondary);
@@ -1160,9 +1160,9 @@
     }
 }
 
-// ============================================
-// SOURCE DISPLAY
-// ============================================
+/* ============================================ */
+/* SOURCE DISPLAY */
+/* ============================================ */
 
 .wh40k-source-display {
     display: flex;
@@ -1177,9 +1177,9 @@
     }
 }
 
-// ============================================
-// EMPTY STATE
-// ============================================
+/* ============================================ */
+/* EMPTY STATE */
+/* ============================================ */
 
 .wh40k-empty-state {
     display: flex;
@@ -1216,9 +1216,9 @@
     }
 }
 
-// ============================================
-// HINTS
-// ============================================
+/* ============================================ */
+/* HINTS */
+/* ============================================ */
 
 .wh40k-hint {
     font-size: 0.7rem;
@@ -1248,9 +1248,9 @@
     }
 }
 
-// ============================================
-// RADIO BUTTON TOGGLE (Passive/Active)
-// ============================================
+/* ============================================ */
+/* RADIO BUTTON TOGGLE (Passive/Active) */
+/* ============================================ */
 
 .wh40k-property--radio {
     .wh40k-radio-group {
@@ -1299,7 +1299,7 @@
             }
         }
 
-        // Selected state
+        /* Selected state */
         &:has(input:checked) {
             background: rgba(var(--talent-accent), 0.3);
             background: var(--talent-accent-bg);
@@ -1317,9 +1317,9 @@
     }
 }
 
-// ============================================
-// INLINE CHECKBOX (Has Specialization)
-// ============================================
+/* ============================================ */
+/* INLINE CHECKBOX (Has Specialization) */
+/* ============================================ */
 
 .wh40k-specialization-edit {
     .wh40k-checkbox-inline {
@@ -1357,9 +1357,9 @@
     }
 }
 
-// ============================================
-// HEADER EDIT BUTTONS
-// ============================================
+/* ============================================ */
+/* HEADER EDIT BUTTONS */
+/* ============================================ */
 
 .wh40k-header-btn {
     display: inline-flex;
@@ -1387,13 +1387,13 @@
         color: var(--talent-accent-light);
     }
 
-    // Hidden by default, shows on section hover
+    /* Hidden by default, shows on section hover */
     &--hover {
         opacity: 0;
         transition: opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
     }
 
-    // Done button (green checkmark)
+    /* Done button (green checkmark) */
     &--done {
         background: rgb(from var(--wh40k-color-success) r g b / 0.15);
         border-color: rgb(from var(--wh40k-color-success) r g b / 0.4);
@@ -1407,24 +1407,24 @@
     }
 }
 
-// ============================================
-// EDITABLE SECTIONS (Hover to reveal edit button)
-// ============================================
+/* ============================================ */
+/* EDITABLE SECTIONS (Hover to reveal edit button) */
+/* ============================================ */
 
 .wh40k-section--editable {
-    // Show edit button on hover
+    /* Show edit button on hover */
     &:hover .wh40k-header-btn--hover {
         opacity: 1;
     }
 
-    // Editing state - subtle highlight
+    /* Editing state - subtle highlight */
     &.wh40k-section--editing {
         border-color: var(--talent-accent-border);
         box-shadow: 0 0 0 1px var(--talent-accent-border) inset;
     }
 }
 
-// Clickable empty states
+/* Clickable empty states */
 .wh40k-empty-state--clickable {
     cursor: pointer;
     transition: all var(--wh40k-transition-base);
@@ -1440,9 +1440,9 @@
     }
 }
 
-// ============================================
-// ADD DATA BUTTONS (in empty states)
-// ============================================
+/* ============================================ */
+/* ADD DATA BUTTONS (in empty states) */
+/* ============================================ */
 
 .wh40k-btn-add-data {
     display: inline-flex;
@@ -1471,9 +1471,9 @@
     }
 }
 
-// ============================================
-// FOOTER (Source Reference)
-// ============================================
+/* ============================================ */
+/* FOOTER (Source Reference) */
+/* ============================================ */
 
 .wh40k-talent-footer {
     flex-shrink: 0;
@@ -1555,9 +1555,9 @@
     }
 }
 
-// ============================================
-// EFFECTS BANNER (Modern Compact Design)
-// ============================================
+/* ============================================ */
+/* EFFECTS BANNER (Modern Compact Design) */
+/* ============================================ */
 
 .wh40k-effects-banner {
     display: flex;
@@ -1672,13 +1672,13 @@
         font-weight: 600;
         color: var(--color-text-primary);
 
-        // Hide empty count badges (e.g., when only special abilities exist)
+        /* Hide empty count badges (e.g., when only special abilities exist) */
         &:empty {
             display: none;
         }
     }
 
-    // Variant colors
+    /* Variant colors */
     &--modifiers {
         border-color: rgb(from var(--wh40k-accent-talents) r g b / 0.4);
 
@@ -1719,9 +1719,9 @@
     }
 }
 
-// ============================================
-// LEGACY EFFECTS SUMMARY (kept for backwards compat)
-// ============================================
+/* ============================================ */
+/* LEGACY EFFECTS SUMMARY (kept for backwards compat) */
+/* ============================================ */
 
 .wh40k-effects-summary {
     display: grid;
@@ -1795,17 +1795,17 @@
     line-height: 1.4;
 }
 
-// ============================================
-// EFFECTS TAB DYNAMIC ORDERING
-// ============================================
+/* ============================================ */
+/* EFFECTS TAB DYNAMIC ORDERING */
+/* ============================================ */
 
 .wh40k-talent-panel--effects {
     display: flex;
     flex-direction: column;
 
     .wh40k-section--effects {
-        // Order is set inline via style attribute from template
-        // Sections with data will have lower order values (0, 1, 2)
-        // Empty sections will have higher order values
+        /* Order is set inline via style attribute from template */
+        /* Sections with data will have lower order values (0, 1, 2) */
+        /* Empty sections will have higher order values */
     }
 }

@@ -4,9 +4,9 @@
  * Applied to Foundry's #tooltip element when .wh40k-tooltip class is added
  */
 
-// When Foundry's tooltip gets the .wh40k-tooltip class, apply our styling
+/* When Foundry's tooltip gets the .wh40k-tooltip class, apply our styling */
 #tooltip.wh40k-tooltip {
-    // Override Foundry's default tooltip styling
+    /* Override Foundry's default tooltip styling */
     min-width: 250px;
     max-width: 350px;
     padding: 0;
@@ -18,7 +18,7 @@
     font-family: var(--wh40k-font-body, 'Garamond', serif);
     font-size: 0.9rem;
 
-    // Parchment texture overlay
+    /* Parchment texture overlay */
     &::before {
         content: '';
         position: absolute;

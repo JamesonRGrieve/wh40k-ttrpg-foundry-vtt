@@ -1,10 +1,10 @@
 .wh40k-wrapper {
-    // Rogue Trader Skills Styling
-    // Improved layout and readability for skills panels
+    /* Rogue Trader Skills Styling */
+    /* Improved layout and readability for skills panels */
 
-    // Grid layout values (inlined from former SCSS variables)
+    /* Grid layout values (inlined from former SCSS variables) */
 
-    // Skills panel layout adjustments
+    /* Skills panel layout adjustments */
     .wh40k-skills-panel,
     .wh40k-specialist-skills-panel {
         .wh40k-panel__header {
@@ -18,7 +18,7 @@
         }
     }
 
-    // Skills table header
+    /* Skills table header */
     .wh40k-skills-header {
         background: linear-gradient(180deg, rgba(250, 248, 244, 0.98), rgba(235, 232, 226, 0.95)) !important;
         font-weight: 600;
@@ -39,7 +39,7 @@
         }
     }
 
-    // Skill row styling
+    /* Skill row styling */
     .wh40k-skill-row,
     .wh40k-specialist-row {
         border-bottom: none;
@@ -60,7 +60,7 @@
         background: rgba(255, 255, 255, 0.5);
     }
 
-    // Skill name column
+    /* Skill name column */
     .wh40k-skill-name {
         text-align: left !important;
 
@@ -91,7 +91,7 @@
         }
     }
 
-    // Characteristic dropdown
+    /* Characteristic dropdown */
     .wh40k-skill-char {
         text-align: center;
 
@@ -111,7 +111,7 @@
         }
     }
 
-    // Training selector
+    /* Training selector */
     .wh40k-skill-training {
         text-align: center !important;
     }
@@ -156,7 +156,7 @@
         }
     }
 
-    // Bonus input
+    /* Bonus input */
     .wh40k-skill-bonus {
         text-align: center;
 
@@ -176,7 +176,7 @@
         }
     }
 
-    // Total value display
+    /* Total value display */
     .wh40k-skill-total {
         text-align: center !important;
         font-weight: bold;
@@ -196,7 +196,7 @@
         }
     }
 
-    // Specialist skills specific styling
+    /* Specialist skills specific styling */
     .wh40k-specialist-group {
         background: rgba(36, 107, 131, 0.25);
         border-top: 2px solid rgba(36, 107, 131, 0.4);
@@ -252,7 +252,7 @@
         }
     }
 
-    // Specialist name field
+    /* Specialist name field */
     .wh40k-specialist-name {
         display: flex !important;
         gap: 0.5rem;
@@ -283,7 +283,7 @@
         }
     }
 
-    // Empty state message
+    /* Empty state message */
     .wh40k-no-specializations {
         background: rgba(0, 0, 0, 0.02);
 
@@ -304,7 +304,7 @@
         }
     }
 
-    // Update the grid layout for skill tables
+    /* Update the grid layout for skill tables */
     .wh40k-skilltable--border {
         .table-row--head,
         .table-row,
@@ -324,7 +324,7 @@
         }
     }
 
-    // Responsive adjustments for smaller screens
+    /* Responsive adjustments for smaller screens */
     @media (max-width: 1200px) {
         .wh40k-skills-panel,
         .wh40k-specialist-skills-panel {
@@ -346,7 +346,7 @@
         }
     }
 
-    // Additional polish
+    /* Additional polish */
     .wh40k-skills-panel .wh40k-table--border,
     .wh40k-specialist-skills-panel .wh40k-table--border {
         border: 1px solid rgba(36, 107, 131, 0.3);
@@ -354,11 +354,11 @@
         overflow: hidden;
     }
 
-    // ============================================
-    // LORE SKILLS SPECIAL STYLING
-    // ============================================
-    // These styles highlight Common Lore, Forbidden Lore, and Scholastic Lore
-    // skills with distinct but subtle colors
+    /* ============================================ */
+    /* LORE SKILLS SPECIAL STYLING */
+    /* ============================================ */
+    /* These styles highlight Common Lore, Forbidden Lore, and Scholastic Lore */
+    /* skills with distinct but subtle colors */
 
     .wh40k-specialist-panel .wh40k-specialist-group {
         --wh40k-spec-a: rgba(36, 107, 131, 0.22);
@@ -452,7 +452,7 @@
     }
 
     .wh40k-specialist-group {
-        // Common Lore - Subtle bronze/amber theme (knowledge of common topics)
+        /* Common Lore - Subtle bronze/amber theme (knowledge of common topics) */
         &[data-skill='commonLore'],
         &.spec_skills_commonLore {
             background: linear-gradient(135deg, rgba(139, 116, 88, 0.15), rgba(139, 116, 88, 0.08));
@@ -472,7 +472,7 @@
             }
         }
 
-        // Forbidden Lore - Dark crimson theme (dangerous knowledge)
+        /* Forbidden Lore - Dark crimson theme (dangerous knowledge) */
         &[data-skill='forbiddenLore'],
         &.spec_skills_forbiddenLore {
             background: linear-gradient(135deg, rgba(92, 0, 0, 0.18), rgba(60, 0, 40, 0.12));
@@ -492,7 +492,7 @@
             }
         }
 
-        // Scholastic Lore - Deep blue theme (academic knowledge)
+        /* Scholastic Lore - Deep blue theme (academic knowledge) */
         &[data-skill='scholasticLore'],
         &.spec_skills_scholasticLore {
             background: linear-gradient(135deg, rgba(25, 25, 112, 0.15), rgba(0, 0, 128, 0.1));
@@ -513,7 +513,7 @@
         }
     }
 
-    // Lore specialization rows styling
+    /* Lore specialization rows styling */
     .wh40k-specialist-block {
         &.spec_skills_commonLore {
             .wh40k-specialist-row {

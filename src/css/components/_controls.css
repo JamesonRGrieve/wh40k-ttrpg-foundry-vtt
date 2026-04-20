@@ -1,9 +1,9 @@
 .wh40k-wrapper {
-    // ============================================
-    // Control Buttons and Material Icons
-    // ============================================
+    /* ============================================ */
+    /* Control Buttons and Material Icons */
+    /* ============================================ */
 
-    // Material Icons base class
+    /* Material Icons base class */
     .wh40k-material {
         font-family: 'Material Icons';
         font-weight: normal;
@@ -20,7 +20,7 @@
         -webkit-font-smoothing: antialiased;
     }
 
-    // Control button styles
+    /* Control button styles */
     .wh40k-control-button {
         cursor: pointer;
 
@@ -54,7 +54,7 @@
         &__span {
             padding-top: 3px;
             padding-left: 2px;
-            // from .wh40k-material
+            /* from .wh40k-material */
             font-family: 'Material Icons';
             font-weight: normal;
             font-style: normal;
@@ -94,9 +94,9 @@
         }
     }
 
-    // Vocalise Button
+    /* Vocalise Button */
     button.wh40k-vocalise[type='roll'] {
-        // from .wh40k-material
+        /* from .wh40k-material */
         font-family: 'Material Icons';
         font-weight: normal;
         font-style: normal;

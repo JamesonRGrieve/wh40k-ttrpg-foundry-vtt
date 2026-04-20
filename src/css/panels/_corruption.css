@@ -1,6 +1,6 @@
-// ============================================
-// Panel Type Variants (Colored Left Borders)
-// ============================================
+/* ============================================ */
+/* Panel Type Variants (Colored Left Borders) */
+/* ============================================ */
 
 .wh40k-panel-vitality {
     border-left-color: var(--wh40k-accent-combat);
@@ -26,9 +26,9 @@
     }
 }
 
-// ============================================
-// Corruption/Insanity Panels
-// ============================================
+/* ============================================ */
+/* Corruption/Insanity Panels */
+/* ============================================ */
 
 .wh40k-panel-corruption {
     .wh40k-panel-header {
@@ -88,7 +88,7 @@
     }
 }
 
-// Degree Badges with proper colors
+/* Degree Badges with proper colors */
 .wh40k-degree-badge {
     padding: 4px 10px;
     border-radius: var(--wh40k-radius-md);
@@ -99,7 +99,7 @@
     white-space: nowrap;
     flex-shrink: 0;
 
-    // Corruption degrees — pre-generated (replaces @include wh40k-degree-badge-style)
+    /* Corruption degrees — pre-generated (replaces @include wh40k-degree-badge-style) */
     &.degree-pure {
         background: rgb(from var(--wh40k-degree-pure) r g b / 0.15);
         border: 2px solid var(--wh40k-degree-pure);
@@ -131,7 +131,7 @@
         color: #a92626;
     }
 
-    // Insanity degrees
+    /* Insanity degrees */
     &.degree-stable {
         background: rgb(from var(--wh40k-degree-stable) r g b / 0.15);
         border: 2px solid var(--wh40k-degree-stable);

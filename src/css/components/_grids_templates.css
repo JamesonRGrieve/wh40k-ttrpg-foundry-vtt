@@ -1,12 +1,12 @@
 .wh40k-wrapper {
-    // Shared grid row styles (grouped selector replaces %grid-row placeholder)
+    /* Shared grid row styles (grouped selector replaces %grid-row placeholder) */
     .rt-field,
     .rt-textarea {
         display: grid;
         border-bottom: 1px solid var(--color-border-primary);
     }
 
-    // Shared grid cell styles (grouped selector replaces %grid-cell placeholder)
+    /* Shared grid cell styles (grouped selector replaces %grid-cell placeholder) */
     .rt-field__span,
     .rt-field__header,
     .rt-field__input,

@@ -1,15 +1,15 @@
-// ============================================
-// Rogue Trader Item Cards - Modern Design System
-// ============================================
-// Elegant item displays for the grim darkness of the 41st millennium
-// Uses theme-aware CSS custom properties for light/dark mode support
+/* ============================================ */
+/* Rogue Trader Item Cards - Modern Design System */
+/* ============================================ */
+/* Elegant item displays for the grim darkness of the 41st millennium */
+/* Uses theme-aware CSS custom properties for light/dark mode support */
 
-// ============================================
-// Item Card Base
-// ============================================
+/* ============================================ */
+/* Item Card Base */
+/* ============================================ */
 
 .wh40k-item-card {
-    // Local vars inherit from global theme vars
+    /* Local vars inherit from global theme vars */
     --wh40k-item-bg: var(--wh40k-panel-bg-solid);
     --wh40k-item-border: var(--wh40k-bronze);
     --wh40k-item-text: var(--wh40k-text-dark);
@@ -25,7 +25,7 @@
     color: var(--wh40k-item-text);
     box-shadow: 0 4px 12px var(--wh40k-shadow-medium);
 
-    // Parchment texture overlay
+    /* Parchment texture overlay */
     &::before {
         content: '';
         position: absolute;
@@ -35,9 +35,9 @@
     }
 }
 
-// ============================================
-// Item Header
-// ============================================
+/* ============================================ */
+/* Item Header */
+/* ============================================ */
 
 .wh40k-item-card__header {
     display: flex;
@@ -81,17 +81,17 @@
     margin-top: 2px;
 }
 
-// ============================================
-// Item Body
-// ============================================
+/* ============================================ */
+/* Item Body */
+/* ============================================ */
 
 .wh40k-item-card__body {
     padding: 12px;
 }
 
-// ============================================
-// Divider
-// ============================================
+/* ============================================ */
+/* Divider */
+/* ============================================ */
 
 .wh40k-item-card__divider {
     height: 1px;
@@ -134,9 +134,9 @@
     }
 }
 
-// ============================================
-// Field Display
-// ============================================
+/* ============================================ */
+/* Field Display */
+/* ============================================ */
 
 .wh40k-item-card__field {
     display: flex;
@@ -160,9 +160,9 @@
     color: var(--wh40k-item-text);
 }
 
-// ============================================
-// Stats Grid (for weapons, armor, etc.)
-// ============================================
+/* ============================================ */
+/* Stats Grid (for weapons, armor, etc.) */
+/* ============================================ */
 
 .wh40k-item-card__stats {
     display: grid;
@@ -199,9 +199,9 @@
     color: var(--wh40k-item-text);
 }
 
-// ============================================
-// Section (Effect, Benefit, Description)
-// ============================================
+/* ============================================ */
+/* Section (Effect, Benefit, Description) */
+/* ============================================ */
 
 .wh40k-item-card__section {
     margin: 10px 0;
@@ -237,9 +237,9 @@
     }
 }
 
-// ============================================
-// Footer
-// ============================================
+/* ============================================ */
+/* Footer */
+/* ============================================ */
 
 .wh40k-item-card__footer {
     padding: 8px 12px;
@@ -253,9 +253,9 @@
     color: var(--wh40k-item-muted);
 }
 
-// ============================================
-// Action Buttons
-// ============================================
+/* ============================================ */
+/* Action Buttons */
+/* ============================================ */
 
 .wh40k-item-card__actions {
     display: flex;
@@ -336,7 +336,7 @@
         }
     }
 
-    // Font Awesome icon support
+    /* Font Awesome icon support */
     i.fas,
     i.far,
     i.fab {
@@ -344,11 +344,11 @@
     }
 }
 
-// ============================================
-// Special Item Type Variants
-// ============================================
+/* ============================================ */
+/* Special Item Type Variants */
+/* ============================================ */
 
-// Weapon Card
+/* Weapon Card */
 .wh40k-item-card--weapon {
     .wh40k-item-card__header {
         background: linear-gradient(135deg, var(--wh40k-wounds-bg) 0%, transparent 100%);
@@ -356,7 +356,7 @@
     }
 }
 
-// Armour Card
+/* Armour Card */
 .wh40k-item-card--armour {
     .wh40k-item-card__header {
         background: linear-gradient(135deg, var(--wh40k-skills-bg) 0%, transparent 100%);
@@ -364,7 +364,7 @@
     }
 }
 
-// Talent Card
+/* Talent Card */
 .wh40k-item-card--talent {
     .wh40k-item-card__header {
         background: linear-gradient(135deg, var(--wh40k-talents-bg) 0%, transparent 100%);
@@ -372,7 +372,7 @@
     }
 }
 
-// Psychic Power Card
+/* Psychic Power Card */
 .wh40k-item-card--power {
     .wh40k-item-card__header {
         background: linear-gradient(135deg, var(--wh40k-powers-bg) 0%, transparent 100%);
@@ -380,7 +380,7 @@
     }
 }
 
-// Ship Component Card
+/* Ship Component Card */
 .wh40k-item-card--component {
     .wh40k-item-card__header {
         background: linear-gradient(135deg, var(--wh40k-equipment-bg) 0%, transparent 100%);
@@ -388,9 +388,9 @@
     }
 }
 
-// ============================================
-// Properties/Qualities Tags
-// ============================================
+/* ============================================ */
+/* Properties/Qualities Tags */
+/* ============================================ */
 
 .wh40k-item-card__properties {
     display: flex;
@@ -413,16 +413,16 @@
     color: var(--wh40k-item-border);
 }
 
-// ============================================
-// Vocalize Card Enhancements
-// ============================================
+/* ============================================ */
+/* Vocalize Card Enhancements */
+/* ============================================ */
 
 .wh40k-item-card--vocalize {
-    // Slightly different styling for vocalized items
+    /* Slightly different styling for vocalized items */
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-// Placeholder image icon
+/* Placeholder image icon */
 .wh40k-item-card__image--placeholder {
     display: flex;
     align-items: center;
@@ -436,7 +436,7 @@
     }
 }
 
-// Meta information in header
+/* Meta information in header */
 .wh40k-item-card__meta {
     display: flex;
     align-items: center;
@@ -455,7 +455,7 @@
     color: var(--wh40k-border-color);
 }
 
-// Quick stats row
+/* Quick stats row */
 .wh40k-item-card__quick-stats {
     display: flex;
     gap: var(--wh40k-space-md);
@@ -488,7 +488,7 @@
     font-family: var(--wh40k-font-alt);
 }
 
-// Property tags in vocalize
+/* Property tags in vocalize */
 .wh40k-property-tag {
     display: inline-flex;
     align-items: center;
@@ -507,7 +507,7 @@
     }
 }
 
-// Section styling with icons
+/* Section styling with icons */
 .wh40k-item-card__section--effect {
     .wh40k-item-card__section-title {
         color: var(--wh40k-accent-psychic);
@@ -542,7 +542,7 @@
     }
 }
 
-// Requirements bar
+/* Requirements bar */
 .wh40k-item-card__requirements {
     display: flex;
     align-items: center;
@@ -571,7 +571,7 @@
     color: var(--wh40k-text-secondary);
 }
 
-// Footer with icon
+/* Footer with icon */
 .wh40k-item-card__footer {
     display: flex;
     align-items: center;
@@ -584,7 +584,7 @@
     }
 }
 
-// "View Details" button styling
+/* "View Details" button styling */
 .wh40k-item-card__btn--sheet {
     flex: 1;
     justify-content: center;
@@ -599,9 +599,9 @@
     }
 }
 
-// ============================================
-// Movement Chat Card
-// ============================================
+/* ============================================ */
+/* Movement Chat Card */
+/* ============================================ */
 
 .wh40k-movement-card {
     --wh40k-movement-bg: var(--wh40k-panel-bg-solid);
@@ -723,7 +723,7 @@
         color: var(--wh40k-text-medium);
     }
 
-    // Movement type specific styling
+    /* Movement type specific styling */
     &--half {
         .wh40k-card-icon-wrapper i {
             color: var(--wh40k-accent-green);

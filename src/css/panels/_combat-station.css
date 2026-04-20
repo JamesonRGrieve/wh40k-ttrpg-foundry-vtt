@@ -1,19 +1,19 @@
-// ============================================
-// COMBAT TAB - Clean Combat Interface
-// ============================================
+/* ============================================ */
+/* COMBAT TAB - Clean Combat Interface */
+/* ============================================ */
 
-// Layout (flex, gap, padding) now in Tailwind utilities on the template element
+/* Layout (flex, gap, padding) now in Tailwind utilities on the template element */
 .wh40k-combat-tab {
     container-type: inline-size;
     flex: 1 1 auto;
     min-height: 0;
 }
 
-// ============================================
-// COMBAT GRID LAYOUT
-// ============================================
-// Grid layout rules now in Tailwind utilities on template elements.
-// Container queries remain here since Tailwind can't express @container.
+/* ============================================ */
+/* COMBAT GRID LAYOUT */
+/* ============================================ */
+/* Grid layout rules now in Tailwind utilities on template elements. */
+/* Container queries remain here since Tailwind can't express @container. */
 
 @container (max-width: 700px) {
     .wh40k-combat-layout {
@@ -31,7 +31,7 @@
     }
 }
 
-// Actions column on the right
+/* Actions column on the right */
 .wh40k-combat-layout > * {
     min-width: 0;
 }
@@ -58,13 +58,13 @@
     }
 }
 
-// ============================================
-// SMALL HEADER BUTTONS
-// ============================================
-// NOTE: Use .wh40k-btn-icon--bordered for new code; this maintains backwards compatibility
+/* ============================================ */
+/* SMALL HEADER BUTTONS */
+/* ============================================ */
+/* NOTE: Use .wh40k-btn-icon--bordered for new code; this maintains backwards compatibility */
 
 .wh40k-header-btn {
-    // from .wh40k-btn-icon (base + icon specifics)
+    /* from .wh40k-btn-icon (base + icon specifics) */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -109,12 +109,12 @@
     }
 }
 
-// Panel header layout is now defined in _core.scss with complete styling
-// No override needed here - using the base styles
+/* Panel header layout is now defined in _core.scss with complete styling */
+/* No override needed here - using the base styles */
 
-// ============================================
-// VITALS HUD - Modern Status Display
-// ============================================
+/* ============================================ */
+/* VITALS HUD - Modern Status Display */
+/* ============================================ */
 
 .wh40k-vitals-hud {
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.05) 100%);
@@ -149,13 +149,13 @@
     }
 }
 
-// ============================================
-// VITAL STAT CARD - ADDITIONAL STYLES
-// ============================================
-// NOTE: Core .wh40k-vital-stat definition is in _unified-components.scss
-// Only combat-specific extensions live here
+/* ============================================ */
+/* VITAL STAT CARD - ADDITIONAL STYLES */
+/* ============================================ */
+/* NOTE: Core .wh40k-vital-stat definition is in _unified-components.scss */
+/* Only combat-specific extensions live here */
 
-// Clickable area (label + chevron only)
+/* Clickable area (label + chevron only) */
 .wh40k-vital-header-clickable {
     display: flex;
     align-items: center;
@@ -190,9 +190,9 @@
     flex-shrink: 0;
 }
 
-// NOTE: Use .wh40k-btn-control--compact for new code; this maintains backwards compatibility
+/* NOTE: Use .wh40k-btn-control--compact for new code; this maintains backwards compatibility */
 .wh40k-vital-ctrl-btn {
-    // from .wh40k-btn-control (base + control specifics)
+    /* from .wh40k-btn-control (base + control specifics) */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -239,9 +239,9 @@
     }
 }
 
-// ============================================
-// PROGRESS BAR
-// ============================================
+/* ============================================ */
+/* PROGRESS BAR */
+/* ============================================ */
 
 .wh40k-vital-bar-wrapper {
     display: flex;
@@ -311,9 +311,9 @@
     font-variant-numeric: tabular-nums;
 }
 
-// ============================================
-// ALERT MESSAGES
-// ============================================
+/* ============================================ */
+/* ALERT MESSAGES */
+/* ============================================ */
 
 .wh40k-vital-alert {
     display: flex;
@@ -352,13 +352,13 @@
     --vital-color: #c08020;
 }
 
-// ============================================
-// FATIGUE BOLTS DISPLAY
-// ============================================
+/* ============================================ */
+/* FATIGUE BOLTS DISPLAY */
+/* ============================================ */
 
 .wh40k-fatigue-pip {
     font-size: 1.2rem;
-    color: rgb(from #c08020 r g b / 0.25); // Unfilled: faded amber
+    color: rgb(from #c08020 r g b / 0.25); /* Unfilled: faded amber */
     transition: all var(--wh40k-transition-base);
     cursor: pointer;
     background: none;
@@ -375,7 +375,7 @@
     }
 
     &.wh40k-fatigue-pip--filled {
-        color: #c08020; // Filled: solid amber
+        color: #c08020; /* Filled: solid amber */
         text-shadow: 0 0 6px rgb(from #c08020 r g b / 0.5);
         animation: bolt-glow-combat 2s ease-in-out infinite;
     }
@@ -391,13 +391,13 @@
     }
 }
 
-// ============================================
-// FATE STARS DISPLAY
-// ============================================
+/* ============================================ */
+/* FATE STARS DISPLAY */
+/* ============================================ */
 
 .wh40k-fate-pip {
     font-size: 1.2rem;
-    color: rgb(from var(--wh40k-accent-info) r g b / 0.25); // Unfilled: faded blue
+    color: rgb(from var(--wh40k-accent-info) r g b / 0.25); /* Unfilled: faded blue */
     transition: all var(--wh40k-transition-base);
     cursor: pointer;
     background: none;
@@ -413,7 +413,7 @@
     }
 
     &.wh40k-fate-pip--active {
-        color: var(--wh40k-accent-info); // Filled: solid blue
+        color: var(--wh40k-accent-info); /* Filled: solid blue */
         text-shadow: 0 0 8px rgb(from var(--wh40k-accent-info) r g b / 0.5), 0 0 4px rgb(from var(--wh40k-accent-info) r g b / 0.3);
         animation: star-glow 2s ease-in-out infinite;
     }
@@ -431,9 +431,9 @@
     }
 }
 
-// ============================================
-// MOBILITY SPEEDS (Compact Vitals Version)
-// ============================================
+/* ============================================ */
+/* MOBILITY SPEEDS (Compact Vitals Version) */
+/* ============================================ */
 
 .wh40k-vital-mobility {
     .wh40k-vital-stat-body {
@@ -441,9 +441,9 @@
     }
 }
 
-// ============================================
-// MOBILITY SPEEDS - Inline Compact Layout
-// ============================================
+/* ============================================ */
+/* MOBILITY SPEEDS - Inline Compact Layout */
+/* ============================================ */
 
 .wh40k-mobility-speeds-inline {
     display: flex;
@@ -501,7 +501,7 @@
     }
 }
 
-// Speed-specific icon colors
+/* Speed-specific icon colors */
 .wh40k-speed-half i {
     color: var(--wh40k-accent-green);
 }
@@ -515,9 +515,9 @@
     color: #c0392b;
 }
 
-// ============================================
-// ACTIVE EFFECTS - Compact Vitals Version
-// ============================================
+/* ============================================ */
+/* ACTIVE EFFECTS - Compact Vitals Version */
+/* ============================================ */
 
 .wh40k-vital-effects {
     .wh40k-effects-count {
@@ -653,9 +653,9 @@
     }
 }
 
-// ============================================
-// VITAL EDIT SECTIONS (Expandable)
-// ============================================
+/* ============================================ */
+/* VITAL EDIT SECTIONS (Expandable) */
+/* ============================================ */
 
 .wh40k-vital-edit-section {
     display: flex;
@@ -668,9 +668,9 @@
     border-radius: var(--wh40k-radius-md);
 }
 
-// ============================================
-// CRITICAL DAMAGE PIPS (Compact for Combat Tab)
-// ============================================
+/* ============================================ */
+/* CRITICAL DAMAGE PIPS (Compact for Combat Tab) */
+/* ============================================ */
 
 .wh40k-vital-critical-inline {
     display: flex;
@@ -734,9 +734,9 @@
     }
 }
 
-// ============================================
-// VITAL EDIT FIELDS
-// ============================================
+/* ============================================ */
+/* VITAL EDIT FIELDS */
+/* ============================================ */
 
 .wh40k-vital-edit-field {
     display: flex;
@@ -800,9 +800,9 @@
     }
 }
 
-// ============================================
-// PANEL ICON COLORS
-// ============================================
+/* ============================================ */
+/* PANEL ICON COLORS */
+/* ============================================ */
 
 .wh40k-panel-reactions .wh40k-panel-header i {
     color: var(--wh40k-accent-skills);
@@ -826,11 +826,11 @@
     color: var(--wh40k-accent-powers);
 }
 
-// ============================================
-// COMBAT ACTIONS PANEL
-// ============================================
+/* ============================================ */
+/* COMBAT ACTIONS PANEL */
+/* ============================================ */
 
-// Action groups
+/* Action groups */
 .wh40k-combat-actions-group {
     display: flex;
     flex-direction: column;
@@ -865,7 +865,7 @@
     color: var(--wh40k-text-secondary);
 }
 
-// Action button grid
+/* Action button grid */
 .wh40k-combat-actions-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
@@ -873,7 +873,7 @@
     gap: 6px;
 }
 
-// Action button
+/* Action button */
 .wh40k-combat-action-btn {
     display: flex;
     flex-direction: column;
@@ -890,7 +890,7 @@
     position: relative;
     overflow: hidden;
 
-    // Accent strip
+    /* Accent strip */
     &::before {
         content: '';
         position: absolute;
@@ -958,7 +958,7 @@
     border: 1px solid rgba(var(--action-color-rgb, 201, 162, 39), 0.3);
 }
 
-// Action type colors
+/* Action type colors */
 .wh40k-combat-action-attack {
     --action-color: var(--wh40k-accent-combat);
     --action-color-rgb: 168, 32, 32;
@@ -979,7 +979,7 @@
     --action-color-rgb: 160, 120, 24;
 }
 
-// Info box
+/* Info box */
 .wh40k-combat-actions-info {
     display: flex;
     align-items: flex-start;
@@ -1006,9 +1006,9 @@
     }
 }
 
-// ============================================
-// INJURIES PANEL
-// ============================================
+/* ============================================ */
+/* INJURIES PANEL */
+/* ============================================ */
 
 .wh40k-panel-injuries {
     .wh40k-panel-header {
@@ -1074,9 +1074,9 @@
     text-align: center;
 }
 
-// ============================================
-// FORCE FIELD
-// ============================================
+/* ============================================ */
+/* FORCE FIELD */
+/* ============================================ */
 
 .wh40k-panel-forcefield {
     margin-top: var(--wh40k-space-xs);
@@ -1112,9 +1112,9 @@
     color: var(--wh40k-text-muted);
 }
 
-// ============================================
-// ARSENAL/WEAPONS TABLE
-// ============================================
+/* ============================================ */
+/* ARSENAL/WEAPONS TABLE */
+/* ============================================ */
 
 .wh40k-panel-arsenal {
     display: flex;
@@ -1122,7 +1122,7 @@
     min-height: 0;
 
     .wh40k-panel-header {
-        order: -1; // Force header to top
+        order: -1; /* Force header to top */
         flex-shrink: 0;
     }
 
@@ -1134,7 +1134,7 @@
     }
 }
 
-// Weapons grid (Tailwind-driven layout, SCSS for theming only)
+/* Weapons grid (Tailwind-driven layout, SCSS for theming only) */
 .wh40k-weapon-grid-header {
     background: rgb(from var(--wh40k-accent-combat) r g b / 0.08);
     border-bottom: 2px solid rgb(from var(--wh40k-accent-combat) r g b / 0.2);
@@ -1165,15 +1165,15 @@
     align-items: center;
 }
 
-// ============================================
-// DROP ZONES
-// ============================================
-// NOTE: Core .wh40k-dropzone definitions are in _unified-components.scss
-// No overrides needed here - using unified styles
+/* ============================================ */
+/* DROP ZONES */
+/* ============================================ */
+/* NOTE: Core .wh40k-dropzone definitions are in _unified-components.scss */
+/* No overrides needed here - using unified styles */
 
-// ============================================
-// COMBAT ACTIONS FAVORITES
-// ============================================
+/* ============================================ */
+/* COMBAT ACTIONS FAVORITES */
+/* ============================================ */
 
 .wh40k-actions-favorites {
     display: flex;

@@ -1,12 +1,12 @@
-// ============================================
-// Unified Roll Dialog - Modern Roll Interface
-// ============================================
-// Three-zone layout: Hero Target, Config, Dice Input
-// Uses existing design tokens from _dialogs.scss
+/* ============================================ */
+/* Unified Roll Dialog - Modern Roll Interface */
+/* ============================================ */
+/* Three-zone layout: Hero Target, Config, Dice Input */
+/* Uses existing design tokens from _dialogs.scss */
 
-// ============================================
-// Dialog Container Override
-// ============================================
+/* ============================================ */
+/* Dialog Container Override */
+/* ============================================ */
 
 .unified-roll-dialog {
     .window-content {
@@ -18,9 +18,9 @@
     }
 }
 
-// ============================================
-// Header Zone
-// ============================================
+/* ============================================ */
+/* Header Zone */
+/* ============================================ */
 
 .urd-header {
     display: flex;
@@ -73,9 +73,9 @@
     }
 }
 
-// ============================================
-// Hero Target Display
-// ============================================
+/* ============================================ */
+/* Hero Target Display */
+/* ============================================ */
 
 .urd-target {
     display: flex;
@@ -104,7 +104,7 @@
         font-variant-numeric: tabular-nums;
         transition: color 0.5s ease, text-shadow 0.5s ease;
 
-        // Dynamic colors based on success chance
+        /* Dynamic colors based on success chance */
         &--dire {
             color: #dc2626;
             text-shadow: 0 0 20px rgba(220, 38, 38, 0.5), 0 2px 8px rgba(0, 0, 0, 0.6);
@@ -169,7 +169,7 @@
     }
 }
 
-// Target pulse animation
+/* Target pulse animation */
 .urd-target__number.urd-target-increase {
     animation: urd-target-pulse-green 0.4s ease;
 }
@@ -198,9 +198,9 @@
     }
 }
 
-// ============================================
-// Difficulty Picker Dropdown
-// ============================================
+/* ============================================ */
+/* Difficulty Picker Dropdown */
+/* ============================================ */
 
 .urd-difficulty-picker {
     position: relative;
@@ -323,9 +323,9 @@
     }
 }
 
-// ============================================
-// Modifiers Section
-// ============================================
+/* ============================================ */
+/* Modifiers Section */
+/* ============================================ */
 
 .urd-modifiers {
     border-top: 1px solid rgba(255, 255, 255, 0.06);
@@ -503,9 +503,9 @@
     }
 }
 
-// ============================================
-// Context Panel (Weapon/Psychic/ForceField)
-// ============================================
+/* ============================================ */
+/* Context Panel (Weapon/Psychic/ForceField) */
+/* ============================================ */
 
 .urd-context {
     border-top: 1px solid rgba(255, 255, 255, 0.06);
@@ -554,7 +554,7 @@
     }
 }
 
-// Panel field layout (shared across weapon/psychic/force-field)
+/* Panel field layout (shared across weapon/psychic/force-field) */
 .urd-panel {
     &__section {
         margin-bottom: 12px;
@@ -646,9 +646,9 @@
     }
 }
 
-// ============================================
-// Dice Input Zone
-// ============================================
+/* ============================================ */
+/* Dice Input Zone */
+/* ============================================ */
 
 .urd-dice {
     padding: 16px 20px;
@@ -684,7 +684,7 @@
         }
     }
 
-    // Two-dice layout
+    /* Two-dice layout */
     &__two-dice {
         display: flex;
         align-items: center;
@@ -764,7 +764,7 @@
         color: #3a3a3a;
     }
 
-    // Single number input
+    /* Single number input */
     &__single {
         display: flex;
         justify-content: center;
@@ -803,7 +803,7 @@
         }
     }
 
-    // Instant result feedback
+    /* Instant result feedback */
     &__result {
         margin-top: 12px;
         padding: 10px 16px;
@@ -871,7 +871,7 @@
     }
 }
 
-// Result reveal animation
+/* Result reveal animation */
 @keyframes urd-result-reveal {
     0% {
         opacity: 0;
@@ -883,7 +883,7 @@
     }
 }
 
-// Die land animation
+/* Die land animation */
 @keyframes urd-die-land {
     0% {
         transform: rotate(-3deg) scale(1.05);
@@ -900,9 +900,9 @@
     animation: urd-die-land 0.25s ease;
 }
 
-// ============================================
-// Footer Buttons
-// ============================================
+/* ============================================ */
+/* Footer Buttons */
+/* ============================================ */
 
 .urd-footer {
     display: flex;
@@ -972,9 +972,9 @@
     }
 }
 
-// ============================================
-// Range Bracket Selection
-// ============================================
+/* ============================================ */
+/* Range Bracket Selection */
+/* ============================================ */
 
 .urd-range {
     &__header {
@@ -1090,9 +1090,9 @@
     }
 }
 
-// ============================================
-// Accessibility: Reduced Motion
-// ============================================
+/* ============================================ */
+/* Accessibility: Reduced Motion */
+/* ============================================ */
 
 @media (prefers-reduced-motion: reduce) {
     .urd-target__number,

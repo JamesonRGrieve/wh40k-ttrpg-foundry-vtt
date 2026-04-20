@@ -69,7 +69,7 @@
     /*  Dragging State                              */
     /* -------------------------------------------- */
 
-    // Element being dragged
+    /* Element being dragged */
     [data-item-id].dragging {
         opacity: 0.4;
         cursor: grabbing !important;
@@ -77,7 +77,7 @@
         transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
-    // Sheet in drag-active state
+    /* Sheet in drag-active state */
     .wh40k-rpg.sheet.drag-active {
         .inventory-list,
         .item-list {
@@ -95,7 +95,7 @@
         position: relative;
         transition: all var(--wh40k-transition-medium);
 
-        // Valid drop zone
+        /* Valid drop zone */
         &.drop-valid {
             border: 2px dashed var(--wh40k-gold);
             background: rgba(212, 175, 55, 0.1);
@@ -126,7 +126,7 @@
             }
         }
 
-        // Invalid drop zone
+        /* Invalid drop zone */
         &.drop-invalid {
             border: 2px dashed var(--color-negative, #dc143c);
             background: rgba(220, 20, 60, 0.1);
@@ -147,7 +147,7 @@
             }
         }
 
-        // Hover state (when dragging over)
+        /* Hover state (when dragging over) */
         &.drop-hover {
             background: rgba(212, 175, 55, 0.2);
             border-style: solid;
@@ -504,7 +504,7 @@
     /* -------------------------------------------- */
 
     @media (hover: none) and (pointer: coarse) {
-        // Increase touch targets
+        /* Increase touch targets */
         [data-drop-zone] {
             min-height: 100px;
         }
@@ -520,11 +520,11 @@
                 width: 24px;
                 height: 24px;
                 font-size: 0.8rem;
-                opacity: 1; // Always show on touch devices
+                opacity: 1; /* Always show on touch devices */
             }
         }
 
-        // Show drop zone labels always on touch
+        /* Show drop zone labels always on touch */
         [data-drop-zone].drop-valid::after {
             opacity: 1;
         }
