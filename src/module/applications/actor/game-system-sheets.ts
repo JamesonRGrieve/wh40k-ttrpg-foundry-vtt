@@ -48,7 +48,7 @@ function makeSystemVariant(baseCls: any, className: string, cfg: SystemSheetConf
         };
         static PARTS = {
             ...baseCls.PARTS,
-            header: { template: HEADER + cfg.headerFile },
+            header: { ...baseCls.PARTS.header, template: HEADER + cfg.headerFile },
         };
     };
     const systemConfig = SystemConfigRegistry.get(cfg.gameSystemId);
