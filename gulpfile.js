@@ -288,7 +288,7 @@ function copyFiles() {
 /* ----------------------------------------- */
 
 function cleanBuild() {
-  return gulp.src(`${BUILD_DIR}`, { allowEmpty: true }, { read: false }).pipe(clean({force: true}));
+  return gulp.src(`${BUILD_DIR}`, { allowEmpty: true, read: false }).pipe(clean({force: true}));
 }
 
 function watchUpdates() {

@@ -1,4 +1,5 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
+import FormulaField from '../fields/formula-field.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
@@ -14,8 +15,18 @@ export default class DamageTemplate extends SystemDataModel {
     static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
-            damage: new fields.ObjectField({ required: true, initial: DamageTemplate.#emptyDamage() }),
-            special: new fields.ObjectField({ required: true, initial: [] }),
+            damage: new fields.SchemaField({
+                // @ts-expect-error - argument count
+                formula: new FormulaField({ required: true, blank: true, initial: '' }),
+                type: new fields.StringField({
+                    required: true,
+                    initial: 'impact',
+                    choices: ['impact', 'rending', 'explosive', 'energy', 'fire', 'shock', 'cold', 'toxic'],
+                }),
+                bonus: new fields.NumberField({ required: true, initial: 0, integer: true }),
+                penetration: new fields.NumberField({ required: true, initial: 0, integer: true, min: 0 }),
+            }),
+            special: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: [] }),
         };
     }
 

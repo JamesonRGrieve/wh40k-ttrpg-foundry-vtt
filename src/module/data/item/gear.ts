@@ -32,22 +32,43 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Gear category
-            category: new fields.ObjectField({ required: true, initial: 'general' }),
+            category: new fields.StringField({
+                required: true,
+                initial: 'general',
+                choices: [
+                    'general',
+                    'tools',
+                    'drugs',
+                    'consumable',
+                    'clothing',
+                    'survival',
+                    'communications',
+                    'detection',
+                    'medical',
+                    'tech',
+                    'religious',
+                    'luxury',
+                    'contraband',
+                ],
+            }),
 
             // Is this consumable?
-            consumable: new fields.ObjectField({ required: true, initial: false }),
+            consumable: new fields.BooleanField({ required: true, initial: false }),
 
             // Uses/charges (for consumables)
-            uses: new fields.ObjectField({ required: true, initial: { value: 0, max: 0 } }),
+            uses: new fields.SchemaField({
+                value: new fields.NumberField({ required: true, nullable: false, initial: 0, min: 0, integer: true }),
+                max: new fields.NumberField({ required: true, nullable: false, initial: 0, min: 0, integer: true }),
+            }),
 
             // Effect when used
-            effect: new fields.ObjectField({ required: false, initial: '' }),
+            effect: new fields.HTMLField({ required: false, blank: true }),
 
             // Duration of effect (for drugs, etc.)
-            duration: new fields.ObjectField({ required: false, initial: '' }),
+            duration: new fields.StringField({ required: false, blank: true }),
 
             // Notes
-            notes: new fields.ObjectField({ required: false, initial: '' }),
+            notes: new fields.StringField({ required: false, blank: true }),
         };
     }
 

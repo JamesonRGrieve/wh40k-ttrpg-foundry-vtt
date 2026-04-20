@@ -1,5 +1,6 @@
 import ItemDataModel from '../abstract/item-data-model.ts';
 import IdentifierField from '../fields/identifier-field.ts';
+import { bodyLocationsSchema } from '../shared/body-locations.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import ModifiersTemplate from '../shared/modifiers-template.ts';
@@ -36,36 +37,40 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Cybernetic type
-            type: new fields.ObjectField({ required: true, initial: 'replacement' }),
-
-            // Body location(s) affected
-            locations: new fields.ObjectField({ required: true, initial: [] }),
-
-            // Provides armour points?
-            hasArmourPoints: new fields.ObjectField({ required: true, initial: false }),
-            armourPoints: new fields.ObjectField({
+            type: new fields.StringField({
                 required: true,
-                initial: {
-                    head: 0,
-                    leftArm: 0,
-                    rightArm: 0,
-                    body: 0,
-                    leftLeg: 0,
-                    rightLeg: 0,
-                },
+                initial: 'replacement',
+                choices: ['replacement', 'implant', 'augmetic', 'bionic', 'mechadendrite', 'integrated-weapon'],
             }),
 
+            // Body location(s) affected
+            locations: new fields.SetField(
+                new fields.StringField({
+                    required: true,
+                    choices: ['head', 'eyes', 'ears', 'mouth', 'brain', 'leftArm', 'rightArm', 'body', 'organs', 'leftLeg', 'rightLeg', 'spine', 'internal'],
+                }),
+                { required: true, initial: [] },
+            ),
+
+            // Provides armour points?
+            hasArmourPoints: new fields.BooleanField({ required: true, initial: false }),
+            armourPoints: bodyLocationsSchema(),
+
             // Effect description
-            effect: new fields.ObjectField({ required: true, initial: '' }),
+            effect: new fields.HTMLField({ required: true, blank: true }),
 
             // Drawbacks
-            drawbacks: new fields.ObjectField({ required: false, initial: '' }),
+            drawbacks: new fields.HTMLField({ required: false, blank: true }),
 
             // Installation requirements
-            installation: new fields.ObjectField({ required: true, initial: { surgery: '', difficulty: '', recoveryTime: '' } }),
+            installation: new fields.SchemaField({
+                surgery: new fields.StringField({ required: false, blank: true }),
+                difficulty: new fields.StringField({ required: false, blank: true }),
+                recoveryTime: new fields.StringField({ required: false, blank: true }),
+            }),
 
             // Notes
-            notes: new fields.ObjectField({ required: false, initial: '' }),
+            notes: new fields.StringField({ required: false, blank: true }),
         };
     }
 
