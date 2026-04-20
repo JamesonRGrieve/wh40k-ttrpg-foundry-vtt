@@ -31,7 +31,14 @@
     }
 
     &-navigation {
-        @extend .wh40k-panel;
+        // from .wh40k-panel
+        background: var(--wh40k-panel-bg);
+        border: 1px solid var(--wh40k-border-color-light);
+        border-radius: var(--wh40k-radius-lg);
+        overflow: hidden;
+        margin-bottom: var(--wh40k-space-md);
+        box-shadow: 0 2px 8px var(--wh40k-shadow-soft);
+        position: relative;
         grid-column: span 6;
         display: flex;
         align-items: center;

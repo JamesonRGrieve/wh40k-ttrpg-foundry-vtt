@@ -64,7 +64,21 @@
 // NOTE: Use .wh40k-btn-icon--bordered for new code; this maintains backwards compatibility
 
 .wh40k-header-btn {
-    @extend .wh40k-btn-icon;
+    // from .wh40k-btn-icon (base + icon specifics)
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--wh40k-space-xs);
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    transition: all var(--wh40k-transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+    width: 22px;
+    height: 22px;
+    border-radius: var(--wh40k-radius-sm);
     background: rgb(from var(--wh40k-accent-gold) r g b / 0.2);
     border: 1px solid rgb(from var(--wh40k-accent-gold) r g b / 0.4);
     color: var(--wh40k-accent-gold);
@@ -75,8 +89,23 @@
         transform: scale(1.1);
     }
 
+    &:active:not(:disabled) {
+        transform: scale(0.95);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--wh40k-gold);
+        outline-offset: 1px;
+    }
+
     i {
         font-size: 0.65rem;
+        line-height: 1;
     }
 }
 
@@ -163,7 +192,21 @@
 
 // NOTE: Use .wh40k-btn-control--compact for new code; this maintains backwards compatibility
 .wh40k-vital-ctrl-btn {
-    @extend .wh40k-btn-control;
+    // from .wh40k-btn-control (base + control specifics)
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--wh40k-space-xs);
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    transition: all var(--wh40k-transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+    font-family: inherit;
+    font-weight: 700;
+    border-radius: 6px;
     width: 22px;
     height: 22px;
     font-size: 0.7rem;
@@ -176,8 +219,23 @@
         border-color: var(--vital-color, var(--wh40k-border-medium));
     }
 
+    &:active:not(:disabled) {
+        transform: scale(0.95);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--wh40k-gold);
+        outline-offset: 1px;
+    }
+
     i {
         font-size: 0.65rem;
+        line-height: 1;
     }
 }
 

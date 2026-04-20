@@ -53,7 +53,20 @@
     &__span {
         padding-top: 3px;
         padding-left: 2px;
-        @extend .wh40k-material;
+        // from .wh40k-material
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 12px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-grid;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
         opacity: 0.5;
     }
 }
@@ -82,7 +95,20 @@ button[type='roll'] {
 
 // Vocalise Button
 button.wh40k-vocalise[type='roll'] {
-    @extend .wh40k-material;
+    // from .wh40k-material
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-grid;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
     opacity: 0.5;
     text-align: center;
     padding-top: 3px;

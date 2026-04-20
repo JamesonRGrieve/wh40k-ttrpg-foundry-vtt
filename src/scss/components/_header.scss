@@ -41,57 +41,63 @@
         padding: 0 1.5em 0.5em;
     }
 
-    &__item-wrapper {
+    &__item-wrapper,
+    &__item-wrapper--age,
+    &__item-wrapper--gender,
+    &__item-wrapper--build,
+    &__item-wrapper--complexion,
+    &__item-wrapper--hair,
+    &__item-wrapper--span-2,
+    &__item-wrapper--homeworld,
+    &__item-wrapper--birthright,
+    &__item-wrapper--careerpath,
+    &__item-wrapper--divination,
+    &__item-wrapper--elite,
+    &__item-wrapper--span-3,
+    &__item-wrapper--quirks,
+    &__item-wrapper--3-span-2,
+    &__item-wrapper--span-4,
+    &__item-wrapper--mementos,
+    &__item-wrapper--superstition,
+    &__item-wrapper--notes,
+    &__item-wrapper--text-area {
         display: flex;
         flex-flow: row nowrap;
         align-items: baseline;
         min-width: 0;
         border-bottom: 1px solid var(--color-border-primary);
+    }
 
-        &--age,
-        &--gender,
-        &--build,
-        &--complexion,
-        &--hair {
-            @extend .wh40k-header__item-wrapper;
-        }
+    &__item-wrapper--span-2,
+    &__item-wrapper--homeworld,
+    &__item-wrapper--birthright,
+    &__item-wrapper--careerpath,
+    &__item-wrapper--divination,
+    &__item-wrapper--elite {
+        grid-column: span 2;
+    }
 
-        &--span-2,
-        &--homeworld,
-        &--birthright,
-        &--careerpath,
-        &--divination,
-        &--elite {
-            @extend .wh40k-header__item-wrapper;
-            grid-column: span 2;
-        }
+    &__item-wrapper--span-3,
+    &__item-wrapper--quirks {
+        grid-column: span 3;
+    }
 
-        &--span-3,
-        &--quirks {
-            @extend .wh40k-header__item-wrapper;
-            grid-column: span 3;
-        }
+    &__item-wrapper--3-span-2 {
+        grid-column: 3 / span 2;
+    }
 
-        &--3-span-2 {
-            @extend .wh40k-header__item-wrapper;
-            grid-column: 3 / span 2;
-        }
+    &__item-wrapper--span-4,
+    &__item-wrapper--mementos,
+    &__item-wrapper--superstition,
+    &__item-wrapper--notes {
+        grid-column: span 4;
+    }
 
-        &--span-4,
-        &--mementos,
-        &--superstition,
-        &--notes {
-            @extend .wh40k-header__item-wrapper;
-            grid-column: span 4;
-        }
-
-        &--text-area {
-            @extend .wh40k-header__item-wrapper;
-            grid-column: span 4;
-            grid-row: span 2;
-            min-height: 150px;
-            border-bottom: 0;
-        }
+    &__item-wrapper--text-area {
+        grid-column: span 4;
+        grid-row: span 2;
+        min-height: 150px;
+        border-bottom: 0;
     }
 
     &__title {
