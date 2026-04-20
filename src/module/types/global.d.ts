@@ -139,6 +139,15 @@ interface WH40KArmourLocation {
     traitBonus: number;
 }
 
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
+import type { WH40KItem } from '../documents/item.ts';
+import type { RTCompendiumBrowser } from '../applications/compendium-browser.ts';
+import type { TransactionManager } from '../transactions/transaction-manager.ts';
+import type { RollTableUtils } from '../utils/roll-table-utils.ts';
+import type * as dice from '../dice/_module.ts';
+import type * as npcApplications from '../applications/npc/_module.ts';
+import type * as characterCreation from '../applications/character-creation/_module.ts';
+
 // =========================================================================
 // WH40K System Namespace on Game
 // =========================================================================
@@ -148,37 +157,38 @@ interface WH40KGameSystem {
     log: (s: string, o?: unknown) => void;
     warn: (s: string, o?: unknown) => void;
     error: (s: string, o?: unknown) => void;
-    rollItemMacro: (...args: unknown[]) => unknown;
-    rollSkillMacro: (...args: unknown[]) => unknown;
-    rollCharacteristicMacro: (...args: unknown[]) => unknown;
-    rollTable: unknown;
-    rollPsychicPhenomena: (actor: unknown, mod?: unknown) => unknown;
-    rollPerilsOfTheWarp: (actor: unknown) => unknown;
-    rollFearEffects: (fear: unknown, dof: unknown) => unknown;
-    rollMutation: () => unknown;
-    rollMalignancy: () => unknown;
-    showRollTableDialog: () => unknown;
-    openCompendiumBrowser: (options?: unknown) => unknown;
-    OriginPathBuilder: unknown;
-    openOriginPathBuilder: (actor: unknown, options?: Record<string, unknown>) => unknown;
-    npc: unknown;
-    applications: unknown;
-    ThreatCalculator: unknown;
-    quickCreateNPC: (config?: unknown) => unknown;
-    batchCreateNPCs: (config?: unknown) => unknown;
-    openEncounterBuilder: () => unknown;
-    exportStatBlock: (actor: unknown, format?: unknown) => unknown;
-    importStatBlock: (input?: unknown) => unknown;
-    openTemplateSelector: (options?: unknown) => unknown;
-    DifficultyCalculatorDialog: unknown;
-    calculateDifficulty: (actor: unknown) => unknown;
-    CombatPresetDialog: unknown;
-    savePreset: (actor: unknown) => unknown;
-    loadPreset: (actor: unknown) => unknown;
-    openPresetLibrary: () => unknown;
-    dice: unknown;
-    BasicRollWH40K: unknown;
-    D100Roll: unknown;
+    rollItemMacro: (data: Record<string, unknown>, slot: number) => Promise<unknown>;
+    rollSkillMacro: (data: Record<string, unknown>, slot: number) => Promise<unknown>;
+    rollCharacteristicMacro: (data: Record<string, unknown>, slot: number) => Promise<unknown>;
+    rollTable: typeof RollTableUtils;
+    rollPsychicPhenomena: (actor: WH40KBaseActor, mod?: unknown) => Promise<unknown>;
+    rollPerilsOfTheWarp: (actor: WH40KBaseActor) => Promise<unknown>;
+    rollFearEffects: (fear: unknown, dof: unknown) => Promise<unknown>;
+    rollMutation: () => Promise<unknown>;
+    rollMalignancy: () => Promise<unknown>;
+    showRollTableDialog: () => Promise<unknown>;
+    openCompendiumBrowser: (options?: Record<string, unknown>) => Promise<RTCompendiumBrowser>;
+    OriginPathBuilder: typeof characterCreation.OriginPathBuilder;
+    openOriginPathBuilder: (actor: WH40KBaseActor, options?: Record<string, unknown>) => Promise<unknown>;
+    npc: typeof npcApplications;
+    applications: typeof npcApplications;
+    ThreatCalculator: typeof npcApplications.ThreatCalculator;
+    quickCreateNPC: (config?: unknown) => Promise<unknown>;
+    batchCreateNPCs: (config?: unknown) => Promise<unknown>;
+    openEncounterBuilder: () => Promise<unknown>;
+    exportStatBlock: (actor: WH40KBaseActor, format?: unknown) => Promise<unknown>;
+    importStatBlock: (input?: unknown) => Promise<unknown>;
+    openTemplateSelector: (options?: Record<string, unknown>) => Promise<unknown>;
+    DifficultyCalculatorDialog: typeof npcApplications.DifficultyCalculatorDialog;
+    calculateDifficulty: (actor: WH40KBaseActor) => Promise<unknown>;
+    CombatPresetDialog: typeof npcApplications.CombatPresetDialog;
+    savePreset: (actor: WH40KBaseActor) => Promise<unknown>;
+    loadPreset: (actor: WH40KBaseActor) => Promise<unknown>;
+    openPresetLibrary: () => Promise<unknown>;
+    transaction: typeof TransactionManager;
+    dice: typeof dice;
+    BasicRollWH40K: typeof dice.BasicRollWH40K;
+    D100Roll: typeof dice.D100Roll;
     tooltips?: unknown;
 }
 
