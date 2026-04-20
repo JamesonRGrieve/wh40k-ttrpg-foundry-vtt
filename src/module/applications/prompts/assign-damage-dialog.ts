@@ -7,13 +7,15 @@ import BaseRollDialog from './base-roll-dialog.ts';
 /**
  * Dialog for assigning damage to a target.
  */
+interface AssignDamageDialogOptions extends ApplicationOptions {}
+
 // @ts-expect-error - TS2417 static side inheritance
 export default class AssignDamageDialog extends BaseRollDialog {
     /**
      * @param {object} assignDamageData  The damage assignment data.
-     * @param {object} [options={}]      Dialog options.
+     * @param {AssignDamageDialogOptions} [options={}]      Dialog options.
      */
-    constructor(assignDamageData = {}, options = {}) {
+    constructor(assignDamageData = {}, options: AssignDamageDialogOptions = {}) {
         super(assignDamageData, options);
     }
 

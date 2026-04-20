@@ -2,7 +2,7 @@ import { capitalize } from '../handlebars/handlebars-helpers.ts';
 import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import { WH40KItemContainer } from './item-container.ts';
 
-export class WH40KItem extends WH40KItemContainer {
+export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
     static #pruneUndefined(value: unknown): unknown {
         if (Array.isArray(value)) {
             return value.map((entry) => this.#pruneUndefined(entry));
@@ -103,7 +103,7 @@ export class WH40KItem extends WH40KItemContainer {
         };
 
         // Return type-specific icon or generic mystery-man fallback
-        return (defaultIcons as any)[type] || 'icons/svg/mystery-man.svg';
+        return (defaultIcons as Record<string, string>)[type] || 'icons/svg/mystery-man.svg';
     }
 
     /** Helper to get the item type as a plain string for comparison. */

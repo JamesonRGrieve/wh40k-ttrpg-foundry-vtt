@@ -562,6 +562,36 @@ declare global {
     //             (TypeDataField uses UpdateState.documentType to resolve polymorphic types)
 
     // =========================================================================
+    // foundry.applications Namespace
+    // =========================================================================
+
+    namespace foundry.applications.handlebars {
+        /**
+         * Render a Handlebars template.
+         * @param template The path to the template file
+         * @param data The data to render the template with
+         * @returns The rendered HTML string
+         */
+        function renderTemplate(template: string, data: Record<string, unknown>): Promise<string>;
+    }
+
+    namespace foundry.applications.apps {
+        class DocumentSheetConfig {
+            static registerSheet(documentClass: any, scope: string, sheetClass: any, options?: Record<string, any>): void;
+            static unregisterSheet(documentClass: any, scope: string, sheetClass: any): void;
+        }
+    }
+
+    // =========================================================================
+    // foundry.appv1 Namespace
+    // =========================================================================
+
+    namespace foundry.appv1.sheets {
+        class ActorSheet {}
+        class ItemSheet {}
+    }
+
+    // =========================================================================
     // Runtime Value Access for foundry.data.fields
     // =========================================================================
     //

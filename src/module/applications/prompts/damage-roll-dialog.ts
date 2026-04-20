@@ -9,9 +9,11 @@ import BaseRollDialog from './base-roll-dialog.ts';
 /**
  * Dialog for configuring damage rolls.
  */
+interface DamageRollDialogOptions extends ApplicationOptions {}
+
 // @ts-expect-error - TS2417 static side inheritance
 export default class DamageRollDialog extends BaseRollDialog {
-    constructor(rollData = {}, options = {}) {
+    constructor(rollData = {}, options: DamageRollDialogOptions = {}) {
         super(rollData, options);
     }
 
