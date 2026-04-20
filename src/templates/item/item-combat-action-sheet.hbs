@@ -8,27 +8,27 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Combat action identity
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-item-header">
-      <div class="wh40k-item-header__image" data-action="editImage" data-edit="img">
-        <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="wh40k-item-header__overlay">
-          <i class="fas fa-edit"></i>
+    <header class="wh40k-item-header tw-grid tw-grid-cols-[80px_minmax(0,1fr)] tw-gap-4 tw-border-b-2 tw-border-[var(--wh40k-gold-dark)] tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-px-4 tw-py-3 tw-shrink-0">
+      <div class="wh40k-item-header__image tw-group tw-relative tw-h-20 tw-w-20 tw-cursor-pointer tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105 hover:tw-shadow-[var(--wh40k-shadow-lg),0_0_20px_rgba(212,175,55,0.5)]" data-action="editImage" data-edit="img">
+        <img class="tw-h-full tw-w-full tw-object-cover" src="{{item.img}}" alt="{{item.name}}" />
+        <div class="wh40k-item-header__overlay tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/45 tw-text-[var(--wh40k-gold)] tw-opacity-0 tw-transition-opacity group-hover:tw-opacity-100">
+          <i class="fas fa-edit tw-text-lg"></i>
         </div>
       </div>
       
-      <div class="wh40k-item-header__info">
-        <input type="text" class="wh40k-item-header__name" name="name" value="{{item.name}}" placeholder="Action Name" />
+      <div class="wh40k-item-header__info tw-flex tw-min-w-0 tw-flex-col tw-justify-center tw-gap-1">
+        <input type="text" class="wh40k-item-header__name tw-w-full tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-font-display tw-text-xl tw-text-[var(--wh40k-gold)] tw-shadow-[0_1px_2px_var(--wh40k-text-shadow)] placeholder:tw-text-[var(--wh40k-text-muted)] focus:tw-rounded-sm focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-outline-none" name="name" value="{{item.name}}" placeholder="Action Name" />
         
-        <div class="wh40k-item-header__meta">
+        <div class="wh40k-item-header__meta tw-mt-1 tw-flex tw-flex-wrap tw-items-center tw-gap-1">
           {{!-- Action Type Badge --}}
-          <span class="wh40k-badge wh40k-badge--action-type">
+          <span class="wh40k-badge wh40k-badge--action-type tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium">
             <i class="fas fa-clock"></i>
             {{item.system.actionTypeLabel}}
           </span>
           
           {{!-- Attack Modifier Badge --}}
           {{#if (ne item.system.attackModifier 0)}}
-          <span class="wh40k-badge {{#if (gt item.system.attackModifier 0)}}wh40k-badge--positive{{else}}wh40k-badge--negative{{/if}}">
+          <span class="wh40k-badge tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium {{#if (gt item.system.attackModifier 0)}}wh40k-badge--positive tw-bg-[rgba(34,197,94,0.15)] tw-text-[#86efac]{{else}}wh40k-badge--negative tw-bg-[rgba(248,113,113,0.15)] tw-text-[#fca5a5]{{/if}}">
             <i class="fas fa-crosshairs"></i>
             Attack {{item.system.attackModifierLabel}}
           </span>
