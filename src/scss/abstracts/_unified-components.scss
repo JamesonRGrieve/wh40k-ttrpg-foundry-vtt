@@ -928,27 +928,225 @@
 // Map old classes to new unified classes for backwards compatibility
 // These can be removed once all templates are updated
 
-// Button aliases
+// Button aliases — properties duplicated from their target classes above
 .wh40k-vital-btn {
-    @extend .wh40k-btn-control;
+    // from .wh40k-btn-control (inherits base button styles via shared selector above)
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--wh40k-space-xs);
+    padding: 0;
+    margin: 0;
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 6px;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--wh40k-transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+
+    &:hover:not(:disabled) {
+        background: var(--wh40k-btn-bg-hover);
+        border-color: var(--color-border-highlight);
+        transform: scale(1.08);
+        box-shadow: 0 2px 6px var(--wh40k-shadow-soft);
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.95);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--wh40k-gold);
+        outline-offset: 1px;
+    }
+
+    i,
+    .fas,
+    .far,
+    .fa {
+        line-height: 1;
+    }
 }
-.wh40k-vital-btn-compact {
-    @extend .wh40k-btn-control--compact;
-}
+
+.wh40k-vital-btn-compact,
 .wh40k-vital-ctrl-btn {
-    @extend .wh40k-btn-control--compact;
+    // from .wh40k-btn-control--compact
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--wh40k-space-xs);
+    padding: 0;
+    margin: 0;
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--wh40k-radius-md);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--wh40k-transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+    width: 24px;
+    height: 24px;
+    font-size: 0.85rem;
+
+    &:hover:not(:disabled) {
+        background: var(--wh40k-btn-bg-hover);
+        border-color: var(--color-border-highlight);
+        transform: scale(1.08);
+        box-shadow: 0 2px 6px var(--wh40k-shadow-soft);
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.95);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--wh40k-gold);
+        outline-offset: 1px;
+    }
+
+    i,
+    .fas,
+    .far,
+    .fa {
+        line-height: 1;
+    }
 }
+
 .wh40k-btn-minus {
-    @extend .wh40k-btn-control--minus;
+    // from .wh40k-btn-control--minus
+    color: var(--wh40k-accent-combat);
+
+    &:hover:not(:disabled) {
+        border-color: var(--wh40k-accent-combat);
+        background: var(--wh40k-wounds-bg);
+    }
 }
+
 .wh40k-btn-plus {
-    @extend .wh40k-btn-control--plus;
+    // from .wh40k-btn-control--plus
+    color: var(--wh40k-color-success);
+
+    &:hover:not(:disabled) {
+        border-color: var(--wh40k-color-success);
+        background: var(--wh40k-success-bg);
+    }
 }
+
 .wh40k-header-btn {
-    @extend .wh40k-btn-icon--bordered;
+    // from .wh40k-btn-icon--bordered
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--wh40k-space-xs);
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    transition: all var(--wh40k-transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+    width: 22px;
+    height: 22px;
+    border-radius: var(--wh40k-radius-sm);
+    background: rgb(from var(--wh40k-accent-gold) r g b / 0.2);
+    border: 1px solid rgb(from var(--wh40k-accent-gold) r g b / 0.4);
+    color: var(--wh40k-accent-gold);
+
+    &:hover:not(:disabled) {
+        background: rgb(from var(--wh40k-accent-gold) r g b / 0.3);
+        border-color: var(--wh40k-accent-gold);
+        transform: scale(1.1);
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.95);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--wh40k-gold);
+        outline-offset: 1px;
+    }
+
+    i,
+    .fas,
+    .far,
+    .fa {
+        line-height: 1;
+    }
 }
+
 .wh40k-add-btn-small {
-    @extend .wh40k-btn-icon--add;
+    // from .wh40k-btn-icon--add
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--wh40k-space-xs);
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    transition: all var(--wh40k-transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+    width: 22px;
+    height: 22px;
+    background: transparent;
+    border: none;
+    border-radius: var(--wh40k-radius-sm);
+    color: var(--wh40k-success-secondary);
+
+    &:hover:not(:disabled) {
+        background: var(--wh40k-success-bg);
+        color: var(--wh40k-success-primary);
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.95);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--wh40k-gold);
+        outline-offset: 1px;
+    }
+
+    i,
+    .fas,
+    .far,
+    .fa {
+        line-height: 1;
+    }
 }
 
 // Note: These aliases ensure existing templates work while migration happens

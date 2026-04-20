@@ -24,14 +24,74 @@
 // Vital button extends the unified control button
 // NOTE: Use .wh40k-btn-control for new code; this maintains backwards compatibility
 .wh40k-vital-btn {
-    @extend .wh40k-btn-control;
+    // from .wh40k-btn-control (base + control specifics)
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--wh40k-space-xs);
+    padding: 0;
+    margin: 0;
+    background: var(--wh40k-btn-bg);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 6px;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--wh40k-transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+
+    &:hover:not(:disabled) {
+        background: var(--wh40k-btn-bg-hover);
+        border-color: var(--color-border-highlight);
+        transform: scale(1.08);
+        box-shadow: 0 2px 6px var(--wh40k-shadow-soft);
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.95);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--wh40k-gold);
+        outline-offset: 1px;
+    }
+
+    i,
+    .fas,
+    .far,
+    .fa {
+        line-height: 1;
+    }
 
     &.wh40k-btn-minus {
-        @extend .wh40k-btn-control--minus;
+        // from .wh40k-btn-control--minus
+        color: var(--wh40k-accent-combat);
+
+        &:hover:not(:disabled) {
+            border-color: var(--wh40k-accent-combat);
+            background: var(--wh40k-wounds-bg);
+        }
     }
 
     &.wh40k-btn-plus {
-        @extend .wh40k-btn-control--plus;
+        // from .wh40k-btn-control--plus
+        color: var(--wh40k-color-success);
+
+        &:hover:not(:disabled) {
+            border-color: var(--wh40k-color-success);
+            background: var(--wh40k-success-bg);
+        }
     }
 }
 
@@ -191,7 +251,39 @@
 // Vital input extends the unified numeric input
 // NOTE: Use .wh40k-input-numeric--styled for new code; this maintains backwards compatibility
 .wh40k-vital-input {
-    @extend .wh40k-input-numeric;
+    // from .wh40k-input-numeric (base input + numeric specifics)
+    padding: 4px 8px;
+    background: var(--wh40k-input-bg);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--wh40k-radius-sm);
+    color: var(--color-text-primary);
+    font-family: var(--wh40k-font-numeric);
+    transition: all var(--wh40k-transition-fast);
+    text-align: center;
+
+    &:hover:not(:disabled):not(:read-only) {
+        border-color: var(--color-border-highlight);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: var(--wh40k-gold);
+        background: var(--wh40k-input-bg-focus);
+        box-shadow: 0 0 0 2px rgb(from var(--wh40k-color-gold) r g b / 0.15);
+    }
+
+    &:disabled,
+    &:read-only {
+        background: var(--wh40k-panel-bg);
+        color: var(--color-text-tertiary);
+        cursor: not-allowed;
+    }
+
+    &::placeholder {
+        color: var(--color-text-tertiary);
+        font-style: italic;
+    }
+
     width: 100%; // Full width within grid cell
     min-width: 50px; // Minimum readable size
     max-width: 150px; // Don't get too wide
