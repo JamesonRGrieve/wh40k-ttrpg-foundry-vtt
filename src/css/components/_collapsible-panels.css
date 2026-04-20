@@ -1,0 +1,455 @@
+.wh40k-wrapper {
+    /**
+     * Collapsible Panel Styles
+     * Enhanced collapsible panels with smooth animations and Gothic 40K theming
+     */
+
+    /* -------------------------------------------- */
+    /*  Panel Structure                             */
+    /* -------------------------------------------- */
+
+    .wh40k-collapsible-panel {
+        border: 2px solid var(--color-border-dark, #3e3e3e);
+        border-radius: var(--wh40k-radius-md);
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.2) 100%);
+        overflow: hidden;
+        transition: all var(--wh40k-transition-medium);
+
+        &:hover {
+            border-color: var(--wh40k-bronze, #cd7f32);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Panel Header                                */
+    /* -------------------------------------------- */
+
+    .wh40k-panel-header-collapsible {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        background: linear-gradient(90deg, var(--wh40k-iron, #3e3e3e) 0%, var(--wh40k-bronze, #cd7f32) 100%);
+        border-bottom: 2px solid var(--wh40k-gold, var(--wh40k-color-gold));
+        cursor: pointer;
+        user-select: none;
+        transition: all var(--wh40k-transition-base);
+
+        &:hover {
+            background: linear-gradient(90deg, var(--wh40k-bronze, #cd7f32) 0%, var(--wh40k-gold, var(--wh40k-color-gold)) 100%);
+            transform: translateX(2px);
+        }
+
+        &:active {
+            transform: translateX(0);
+        }
+    }
+
+    .wh40k-panel-title {
+        display: flex;
+        align-items: center;
+        gap: var(--wh40k-space-sm);
+        font-family: var(--wh40k-font-header, 'Caslon Antique', serif);
+        font-size: 1.1em;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--wh40k-bone, #e8dcc8);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+
+        i {
+            font-size: 0.9em;
+            color: var(--wh40k-gold, var(--wh40k-color-gold));
+        }
+    }
+
+    .wh40k-panel-toggle-icon {
+        font-size: 1.2em;
+        color: var(--wh40k-bone, #e8dcc8);
+        transition: transform var(--wh40k-transition-medium);
+
+        .collapsed & {
+            transform: rotate(-90deg);
+        }
+    }
+
+    .wh40k-panel-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        font-size: 0.75em;
+        font-weight: bold;
+        color: var(--wh40k-gold, var(--wh40k-color-gold));
+    }
+
+    /* -------------------------------------------- */
+    /*  Panel Content                               */
+    /* -------------------------------------------- */
+
+    .wh40k-panel-content {
+        max-height: 2000px;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+        opacity: 1;
+
+        .collapsed & {
+            max-height: 0 !important;
+            opacity: 0;
+        }
+    }
+
+    .wh40k-panel-body {
+        padding: 12px;
+    }
+
+    /* -------------------------------------------- */
+    /*  Panel Presets Bar                           */
+    /* -------------------------------------------- */
+
+    .wh40k-panel-presets {
+        display: flex;
+        gap: var(--wh40k-space-xs);
+        padding: 8px;
+        background: rgba(0, 0, 0, 0.3);
+        border-bottom: 1px solid var(--color-border-dark, #3e3e3e);
+        flex-wrap: wrap;
+    }
+
+    .wh40k-preset-btn {
+        display: flex;
+        align-items: center;
+        gap: var(--wh40k-space-xs);
+        padding: 4px 8px;
+        border: 1px solid var(--wh40k-bronze, #cd7f32);
+        border-radius: 3px;
+        background: linear-gradient(135deg, rgba(62, 62, 62, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+        color: var(--wh40k-bone, #e8dcc8);
+        font-size: 0.85em;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--wh40k-transition-base);
+
+        i {
+            font-size: 0.9em;
+            color: var(--wh40k-gold, var(--wh40k-color-gold));
+        }
+
+        &:hover {
+            background: linear-gradient(135deg, var(--wh40k-bronze, #cd7f32) 0%, var(--wh40k-iron, #3e3e3e) 100%);
+            border-color: var(--wh40k-gold, var(--wh40k-color-gold));
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Keyboard Shortcut Hints                     */
+    /* -------------------------------------------- */
+
+    .wh40k-panel-shortcut {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 18px;
+        padding: 0 4px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+        background: rgba(0, 0, 0, 0.4);
+        font-size: 0.7em;
+        font-family: monospace;
+        color: rgba(255, 255, 255, 0.7);
+        margin-left: auto;
+    }
+
+    /* -------------------------------------------- */
+    /*  Panel States                                */
+    /* -------------------------------------------- */
+
+    /* Collapsed state */
+    .wh40k-collapsible-panel.collapsed {
+        .wh40k-panel-content {
+            max-height: 0;
+            padding: 0;
+            border-top: none;
+        }
+
+        .wh40k-panel-toggle-icon {
+            transform: rotate(-90deg);
+        }
+    }
+
+    /* Disabled state */
+    .wh40k-collapsible-panel.disabled {
+        opacity: 0.6;
+        pointer-events: none;
+
+        .wh40k-panel-header-collapsible {
+            cursor: not-allowed;
+        }
+    }
+
+    /* Loading state */
+    .wh40k-collapsible-panel.loading {
+        .wh40k-panel-header-collapsible::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-left: 8px;
+            border: 2px solid var(--wh40k-gold, var(--wh40k-color-gold));
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: panel-spin 0.8s linear infinite;
+        }
+    }
+
+    @keyframes panel-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Panel Variants                              */
+    /* -------------------------------------------- */
+
+    /* Compact variant */
+    .wh40k-collapsible-panel.compact {
+        .wh40k-panel-header-collapsible {
+            padding: 6px 10px;
+        }
+
+        .wh40k-panel-title {
+            font-size: 0.95em;
+        }
+
+        .wh40k-panel-body {
+            padding: 8px;
+        }
+    }
+
+    /* Highlighted variant (important panels) */
+    .wh40k-collapsible-panel.highlighted {
+        border-color: var(--wh40k-gold, var(--wh40k-color-gold));
+        box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+
+        .wh40k-panel-header-collapsible {
+            background: linear-gradient(90deg, var(--wh40k-bronze, #cd7f32) 0%, var(--wh40k-gold, var(--wh40k-color-gold)) 100%);
+        }
+    }
+
+    /* Warning variant */
+    .wh40k-collapsible-panel.warning {
+        border-color: #ff9800;
+
+        .wh40k-panel-header-collapsible {
+            background: linear-gradient(90deg, rgba(255, 152, 0, 0.3) 0%, rgba(139, 0, 0, 0.3) 100%);
+        }
+
+        .wh40k-panel-title i {
+            color: #ff9800;
+            animation: pulse-warning 2s infinite;
+        }
+    }
+
+    @keyframes pulse-warning {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    /* Danger variant */
+    .wh40k-collapsible-panel.danger {
+        border-color: #dc143c;
+
+        .wh40k-panel-header-collapsible {
+            background: linear-gradient(90deg, rgba(139, 0, 0, 0.5) 0%, rgba(75, 0, 0, 0.5) 100%);
+        }
+
+        .wh40k-panel-title i {
+            color: #dc143c;
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Nested Panels                               */
+    /* -------------------------------------------- */
+
+    .wh40k-collapsible-panel .wh40k-collapsible-panel {
+        margin: 8px 0;
+        border-width: 1px;
+
+        .wh40k-panel-header-collapsible {
+            padding: 6px 10px;
+            font-size: 0.9em;
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Panel Animations                            */
+    /* -------------------------------------------- */
+
+    /* Slide in from top on first render */
+    @keyframes panel-slide-in {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .wh40k-collapsible-panel {
+        animation: panel-slide-in 0.3s ease-out;
+    }
+
+    /* Stagger animation for multiple panels */
+    .wh40k-collapsible-panel:nth-child(1) {
+        animation-delay: 0.05s;
+    }
+    .wh40k-collapsible-panel:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+    .wh40k-collapsible-panel:nth-child(3) {
+        animation-delay: 0.15s;
+    }
+    .wh40k-collapsible-panel:nth-child(4) {
+        animation-delay: 0.2s;
+    }
+    .wh40k-collapsible-panel:nth-child(5) {
+        animation-delay: 0.25s;
+    }
+    .wh40k-collapsible-panel:nth-child(6) {
+        animation-delay: 0.3s;
+    }
+    .wh40k-collapsible-panel:nth-child(7) {
+        animation-delay: 0.35s;
+    }
+    .wh40k-collapsible-panel:nth-child(8) {
+        animation-delay: 0.4s;
+    }
+    .wh40k-collapsible-panel:nth-child(9) {
+        animation-delay: 0.45s;
+    }
+
+    /* -------------------------------------------- */
+    /*  Gothic 40K Theme Enhancements               */
+    /* -------------------------------------------- */
+
+    /* Rivets decoration */
+    .wh40k-panel-header-collapsible::before,
+    .wh40k-panel-header-collapsible::after {
+        content: '•';
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 8px;
+        color: var(--wh40k-iron, #3e3e3e);
+        opacity: 0.6;
+    }
+
+    .wh40k-panel-header-collapsible::before {
+        left: 4px;
+    }
+
+    .wh40k-panel-header-collapsible::after {
+        right: 4px;
+    }
+
+    /* Aquila ornament (for important panels) */
+    .wh40k-collapsible-panel.important .wh40k-panel-title::before {
+        content: '⚜';
+        margin-right: 4px;
+        color: var(--wh40k-gold, var(--wh40k-color-gold));
+        text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+    }
+
+    /* Parchment texture background */
+    .wh40k-panel-body {
+        background: linear-gradient(rgba(244, 234, 213, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(244, 234, 213, 0.02) 1px, transparent 1px);
+        background-size: 20px 20px;
+    }
+
+    /* -------------------------------------------- */
+    /*  Accessibility & Reduced Motion              */
+    /* -------------------------------------------- */
+
+    @media (prefers-reduced-motion: reduce) {
+        .wh40k-collapsible-panel,
+        .wh40k-panel-content,
+        .wh40k-panel-toggle-icon,
+        .wh40k-panel-header-collapsible,
+        .wh40k-preset-btn {
+            animation: none !important;
+            transition: none !important;
+        }
+
+        .wh40k-panel-toggle-icon {
+            .collapsed & {
+                transform: none;
+            }
+        }
+    }
+
+    /* High contrast mode */
+    @media (prefers-contrast: high) {
+        .wh40k-collapsible-panel {
+            border-width: 3px;
+        }
+
+        .wh40k-panel-header-collapsible {
+            border-bottom-width: 3px;
+        }
+    }
+
+    /* -------------------------------------------- */
+    /*  Focus States for Keyboard Navigation        */
+    /* -------------------------------------------- */
+
+    .wh40k-panel-header-collapsible:focus {
+        outline: 2px solid var(--wh40k-gold, var(--wh40k-color-gold));
+        outline-offset: 2px;
+    }
+
+    .wh40k-preset-btn:focus {
+        outline: 2px solid var(--wh40k-gold, var(--wh40k-color-gold));
+        outline-offset: 1px;
+    }
+
+    /* -------------------------------------------- */
+    /*  Mobile Responsiveness                       */
+    /* -------------------------------------------- */
+
+    @media (max-width: 768px) {
+        .wh40k-panel-presets {
+            flex-direction: column;
+        }
+
+        .wh40k-preset-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .wh40k-panel-shortcut {
+            display: none; // Hide keyboard shortcuts on mobile
+        }
+    }
+}
