@@ -11,7 +11,7 @@
         gap: 1rem;
     }
 
-    // Header with party config
+    /* Header with party config */
     .encounter-header {
         background: var(--color-bg-option);
         padding: 0.75rem;
@@ -55,7 +55,7 @@
         }
     }
 
-    // Main content grid
+    /* Main content grid */
     .encounter-main {
         flex: 1;
         display: grid;
@@ -65,7 +65,7 @@
         overflow: hidden;
     }
 
-    // NPC list section
+    /* NPC list section */
     .npc-list-section {
         display: flex;
         flex-direction: column;
@@ -102,7 +102,7 @@
             }
         }
 
-        // Drop zone
+        /* Drop zone */
         .encounter-drop-zone {
             padding: 1rem;
             border: 2px dashed var(--color-border-light-tertiary);
@@ -125,7 +125,7 @@
             }
         }
 
-        // Empty message
+        /* Empty message */
         .empty-message {
             text-align: center;
             color: var(--color-text-light-6);
@@ -133,7 +133,7 @@
             padding: 1rem;
         }
 
-        // NPC table
+        /* NPC table */
         .npc-table {
             flex: 1;
             overflow: auto;
@@ -256,7 +256,7 @@
         }
     }
 
-    // Metrics sidebar
+    /* Metrics sidebar */
     .encounter-metrics {
         display: flex;
         flex-direction: column;
@@ -390,7 +390,7 @@
         }
     }
 
-    // Footer
+    /* Footer */
     .encounter-footer {
         display: flex;
         gap: 0.5rem;

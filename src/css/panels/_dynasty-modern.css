@@ -1,10 +1,10 @@
-// ============================================
-// Modern Dynasty Tab Components
-// ============================================
-// Acquisitions, Experience, Profit Factor modernization
+/* ============================================ */
+/* Modern Dynasty Tab Components */
+/* ============================================ */
+/* Acquisitions, Experience, Profit Factor modernization */
 
-// Biography Panel Form Fields Grid
-// ============================================
+/* Biography Panel Form Fields Grid */
+/* ============================================ */
 .wh40k-biography-panel {
     .wh40k-panel-header {
         background: linear-gradient(180deg, rgba(123, 90, 166, 0.15) 0%, transparent 100%);
@@ -87,8 +87,8 @@
     }
 }
 
-// Acquisitions Card System
-// ============================================
+/* Acquisitions Card System */
+/* ============================================ */
 .wh40k-acquisitions-list {
     display: flex;
     flex-direction: column;
@@ -287,8 +287,8 @@
     opacity: 1;
 }
 
-// Experience Panel
-// ============================================
+/* Experience Panel */
+/* ============================================ */
 .wh40k-experience-panel {
     .wh40k-panel-header {
         background: linear-gradient(180deg, rgba(192, 128, 32, 0.15) 0%, transparent 100%);
@@ -383,8 +383,8 @@
     }
 }
 
-// Profit Factor Panel
-// ============================================
+/* Profit Factor Panel */
+/* ============================================ */
 .wh40k-profit-panel {
     .wh40k-panel-header {
         background: linear-gradient(180deg, rgba(60, 140, 208, 0.15) 0%, transparent 100%);
@@ -488,8 +488,8 @@
     }
 }
 
-// Psychic Powers Card System
-// ============================================
+/* Psychic Powers Card System */
+/* ============================================ */
 .wh40k-psychic-powers-panel {
     .wh40k-panel-header {
         background: linear-gradient(180deg, rgba(123, 90, 166, 0.15) 0%, transparent 100%);
@@ -645,8 +645,8 @@
     line-height: 1.5;
 }
 
-// Panel Header Flex Layout
-// ============================================
+/* Panel Header Flex Layout */
+/* ============================================ */
 .wh40k-panel-header-flex {
     display: flex;
     align-items: center;
@@ -688,9 +688,9 @@
     }
 }
 
-// ============================================
-// Profit Factor V2 - Visual Wealth Gauge
-// ============================================
+/* ============================================ */
+/* Profit Factor V2 - Visual Wealth Gauge */
+/* ============================================ */
 
 .wh40k-panel-profit-v2 {
     --pf-tier-poor: #8b4513;
@@ -723,7 +723,7 @@
     }
 }
 
-// Hero PF display with large value
+/* Hero PF display with large value */
 .wh40k-pf-hero {
     display: flex;
     flex-direction: column;
@@ -794,7 +794,7 @@
     }
 }
 
-// Visual wealth gauge
+/* Visual wealth gauge */
 .wh40k-pf-gauge {
     margin-bottom: 16px;
 }
@@ -878,7 +878,7 @@
     }
 }
 
-// PF Breakdown section
+/* PF Breakdown section */
 .wh40k-pf-breakdown {
     background: var(--color-bg-option);
     border: 1px solid var(--color-border-secondary);
@@ -943,7 +943,7 @@
     font-weight: 600;
 }
 
-// Misfortunes section
+/* Misfortunes section */
 .wh40k-pf-misfortunes {
     margin-bottom: 12px;
 
@@ -974,7 +974,7 @@
     }
 }
 
-// Acquisition reference quick guide
+/* Acquisition reference quick guide */
 .wh40k-pf-acquisition-ref {
     background: linear-gradient(135deg, rgb(from var(--wh40k-accent-dynasty) r g b / 0.08) 0%, transparent 100%);
     border: 1px solid rgb(from var(--wh40k-accent-dynasty) r g b / 0.2);

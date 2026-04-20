@@ -1,9 +1,9 @@
-// ============================================
-// Overview Tab Vitals Panels - Themed Colors
-// ============================================
-// Compact, color-coded vital panels for easy identification
+/* ============================================ */
+/* Overview Tab Vitals Panels - Themed Colors */
+/* ============================================ */
+/* Compact, color-coded vital panels for easy identification */
 
-// Panel Theme Colors
+/* Panel Theme Colors */
 .wh40k-wounds-panel-v2 {
     border-left: 3px solid var(--wh40k-accent-combat);
 
@@ -76,7 +76,7 @@
     }
 }
 
-// Compact Tracker Style (for all vitals)
+/* Compact Tracker Style (for all vitals) */
 .wh40k-vital-tracker-compact {
     display: flex;
     align-items: center;
@@ -85,10 +85,10 @@
     padding: var(--wh40k-space-sm) 0;
 }
 
-// NOTE: .wh40k-vital-btn-compact is now aliased from .wh40k-btn-control--compact in _unified-components.scss
-// Keep this for any additional overrides specific to vital buttons
+/* NOTE: .wh40k-vital-btn-compact is now aliased from .wh40k-btn-control--compact in _unified-components.scss */
+/* Keep this for any additional overrides specific to vital buttons */
 .wh40k-vital-btn-compact {
-    // from .wh40k-btn-control (base + control specifics)
+    /* from .wh40k-btn-control (base + control specifics) */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -162,7 +162,7 @@
     }
 }
 
-// Compact progress bar
+/* Compact progress bar */
 .wh40k-vital-bar-compact {
     height: 6px;
     background: var(--color-bg-tertiary);
@@ -177,7 +177,7 @@
     }
 }
 
-// Compact auto-calc badge
+/* Compact auto-calc badge */
 .wh40k-auto-badge-compact {
     display: inline-flex;
     align-items: center;
@@ -196,10 +196,10 @@
     }
 }
 
-// Quick action button (for fatigue clear, fate restore, etc.)
-// NOTE: Use .wh40k-btn-quick for new code; this maintains backwards compatibility
+/* Quick action button (for fatigue clear, fate restore, etc.) */
+/* NOTE: Use .wh40k-btn-quick for new code; this maintains backwards compatibility */
 .wh40k-quick-action-btn {
-    // from .wh40k-btn-quick (base + quick specifics)
+    /* from .wh40k-btn-quick (base + quick specifics) */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -251,9 +251,9 @@
     }
 }
 
-// ============================================
-// Experience Panel (Compact)
-// ============================================
+/* ============================================ */
+/* Experience Panel (Compact) */
+/* ============================================ */
 
 .wh40k-experience-panel {
     .wh40k-panel-body {
@@ -354,9 +354,9 @@
     }
 }
 
-// ============================================
-// Fate Panel (Compact)
-// ============================================
+/* ============================================ */
+/* Fate Panel (Compact) */
+/* ============================================ */
 
 .wh40k-fate-display-compact {
     display: flex;
@@ -377,9 +377,9 @@
     width: 100%;
 }
 
-// ============================================
-// Overview Tab Layout Fix
-// ============================================
+/* ============================================ */
+/* Overview Tab Layout Fix */
+/* ============================================ */
 
 .wh40k-overview-grid {
     display: grid;
@@ -387,10 +387,10 @@
     gap: var(--wh40k-space-md);
     padding: var(--wh40k-space-md);
     height: 100%;
-    overflow-y: auto; // Only the grid scrolls
+    overflow-y: auto; /* Only the grid scrolls */
     overflow-x: hidden;
 
-    // Custom scrollbar styling
+    /* Custom scrollbar styling */
     &::-webkit-scrollbar {
         width: 6px;
     }
@@ -413,5 +413,5 @@
     display: flex;
     flex-direction: column;
     gap: var(--wh40k-space-md);
-    // No overflow - columns don't scroll individually
+    /* No overflow - columns don't scroll individually */
 }

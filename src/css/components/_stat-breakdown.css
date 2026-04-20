@@ -1,8 +1,8 @@
 .wh40k-wrapper {
-    // ============================================
-    // Stat Breakdown Popover
-    // ============================================
-    // Displays detailed stat calculation breakdowns
+    /* ============================================ */
+    /* Stat Breakdown Popover */
+    /* ============================================ */
+    /* Displays detailed stat calculation breakdowns */
 
     .wh40k-stat-breakdown-popover {
         position: fixed;
@@ -153,10 +153,10 @@
         margin: 4px 0;
     }
 
-    // ============================================
-    // Trigger Elements
-    // ============================================
-    // Style for elements that can show breakdowns
+    /* ============================================ */
+    /* Trigger Elements */
+    /* ============================================ */
+    /* Style for elements that can show breakdowns */
 
     .wh40k-stat-breakdown-btn {
         display: inline-flex;
@@ -229,7 +229,7 @@
         }
     }
 
-    // Make stat values clickable
+    /* Make stat values clickable */
     .wh40k-stat-clickable {
         cursor: pointer;
         transition: all var(--wh40k-transition-base);

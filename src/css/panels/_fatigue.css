@@ -1,14 +1,14 @@
-// ============================================
-// FATIGUE PANEL V2 - Modern Redesign
-// ============================================
-// Complete overhaul with auto-calc transparency, manual override, and rest button
+/* ============================================ */
+/* FATIGUE PANEL V2 - Modern Redesign */
+/* ============================================ */
+/* Complete overhaul with auto-calc transparency, manual override, and rest button */
 
 .wh40k-fatigue-panel-v2 {
-    // Base panel styling inherits from wh40k-panel
+    /* Base panel styling inherits from wh40k-panel */
 
-    // ============================================
-    // Main Display Area
-    // ============================================
+    /* ============================================ */
+    /* Main Display Area */
+    /* ============================================ */
 
     .wh40k-fatigue-display {
         display: flex;
@@ -24,7 +24,7 @@
         padding: var(--wh40k-space-sm) 0;
     }
 
-    // +/- Control Buttons
+    /* +/- Control Buttons */
     .wh40k-fatigue-btn {
         width: 36px;
         height: 36px;
@@ -74,7 +74,7 @@
         }
     }
 
-    // Current/Max Value Display
+    /* Current/Max Value Display */
     .wh40k-fatigue-value {
         display: flex;
         align-items: baseline;
@@ -102,9 +102,9 @@
         font-weight: 600;
     }
 
-    // ============================================
-    // Auto-Calc Badge
-    // ============================================
+    /* ============================================ */
+    /* Auto-Calc Badge */
+    /* ============================================ */
 
     .wh40k-fatigue-auto-badge {
         display: flex;
@@ -125,9 +125,9 @@
         }
     }
 
-    // ============================================
-    // Progress Bar with Blue → Orange Gradient
-    // ============================================
+    /* ============================================ */
+    /* Progress Bar with Blue → Orange Gradient */
+    /* ============================================ */
 
     .wh40k-fatigue-bar-container {
         display: flex;
@@ -172,7 +172,7 @@
             border-radius: var(--wh40k-radius-sm);
             border: 1px solid var(--wh40k-border-color-light);
         }
-        // Fatigue uses skills-themed threshold colors
+        /* Fatigue uses skills-themed threshold colors */
         .wh40k-threshold-line {
             background: var(--wh40k-skills-border);
         }
@@ -202,9 +202,9 @@
         font-family: var(--wh40k-font-alt);
     }
 
-    // ============================================
-    // Alert Messages
-    // ============================================
+    /* ============================================ */
+    /* Alert Messages */
+    /* ============================================ */
 
     .wh40k-fatigue-alert {
         display: flex;
@@ -247,7 +247,7 @@
         }
     }
 
-    // Panel state modifier for exhausted
+    /* Panel state modifier for exhausted */
     &.wh40k-exhausted {
         .wh40k-panel-header {
             background: var(--wh40k-fatigue-bg);
@@ -270,9 +270,9 @@
         }
     }
 
-    // ============================================
-    // Quick Action Buttons
-    // ============================================
+    /* ============================================ */
+    /* Quick Action Buttons */
+    /* ============================================ */
 
     .wh40k-fatigue-actions {
         display: flex;
@@ -341,9 +341,9 @@
         }
     }
 
-    // ============================================
-    // Edit Mode Sections
-    // ============================================
+    /* ============================================ */
+    /* Edit Mode Sections */
+    /* ============================================ */
 
     .wh40k-fatigue-edit-section {
         padding: var(--wh40k-space-md);
@@ -373,9 +373,9 @@
         gap: 6px;
     }
 
-    // ============================================
-    // Auto/Manual Mode Toggle
-    // ============================================
+    /* ============================================ */
+    /* Auto/Manual Mode Toggle */
+    /* ============================================ */
 
     .wh40k-mode-toggle {
         display: grid;
@@ -462,9 +462,9 @@
         }
     }
 
-    // ============================================
-    // Value Editor
-    // ============================================
+    /* ============================================ */
+    /* Value Editor */
+    /* ============================================ */
 
     .wh40k-fatigue-edit-grid {
         display: grid;
@@ -535,9 +535,9 @@
         }
     }
 
-    // ============================================
-    // Info Box
-    // ============================================
+    /* ============================================ */
+    /* Info Box */
+    /* ============================================ */
 
     .wh40k-fatigue-info-box {
         display: flex;

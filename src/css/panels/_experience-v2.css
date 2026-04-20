@@ -1,11 +1,11 @@
-// ============================================
-// EXPERIENCE PANEL V2 - Compact, Clean Design
-// ============================================
+/* ============================================ */
+/* EXPERIENCE PANEL V2 - Compact, Clean Design */
+/* ============================================ */
 
 .wh40k-experience-panel-v2 {
-    // ============================================
-    // Compact Inline XP Display
-    // ============================================
+    /* ============================================ */
+    /* Compact Inline XP Display */
+    /* ============================================ */
 
     .wh40k-xp-compact-display {
         display: flex;
@@ -46,7 +46,7 @@
         line-height: 1;
     }
 
-    // Available XP Box (highlighted)
+    /* Available XP Box (highlighted) */
     .wh40k-xp-available-box {
         display: flex;
         flex-direction: column;
@@ -75,7 +75,7 @@
         color: var(--color-text-dark-secondary);
     }
 
-    // Separators
+    /* Separators */
     .wh40k-xp-separator {
         font-size: 1.2rem;
         font-weight: 300;
@@ -83,7 +83,7 @@
         flex-shrink: 0;
     }
 
-    // Inline stats (Spent/Total)
+    /* Inline stats (Spent/Total) */
     .wh40k-xp-inline-stat {
         display: flex;
         align-items: baseline;
@@ -169,9 +169,9 @@
         }
     }
 
-    // ============================================
-    // Edit Section (Expandable)
-    // ============================================
+    /* ============================================ */
+    /* Edit Section (Expandable) */
+    /* ============================================ */
 
     .wh40k-xp-edit-section {
         padding: var(--wh40k-space-md);
@@ -243,9 +243,9 @@
         }
     }
 
-    // ============================================
-    // Info Section
-    // ============================================
+    /* ============================================ */
+    /* Info Section */
+    /* ============================================ */
 
     .wh40k-xp-info-section {
         margin-top: var(--wh40k-space-sm);

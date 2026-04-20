@@ -7,7 +7,7 @@
             border: none !important;
         }
 
-        //noinspection CssUnknownTarget
+        /* noinspection CssUnknownTarget */
         &__logo {
             background: url('../images/aquilla.png') no-repeat right;
             -webkit-background-size: contain;
@@ -106,7 +106,7 @@
             margin: auto;
             padding: 0.25rem;
             font-size: 12pt;
-            //font-weight: bold;
+            /* font-weight: bold; */
             text-align: center;
             text-transform: uppercase;
         }
@@ -115,7 +115,7 @@
             flex-shrink: 0;
             margin: auto;
             font-size: 11pt;
-            //font-weight: bold;
+            /* font-weight: bold; */
             text-align: center;
             text-transform: uppercase;
             margin-bottom: -7px;

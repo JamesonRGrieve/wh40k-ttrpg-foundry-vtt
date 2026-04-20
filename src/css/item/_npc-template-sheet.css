@@ -4,7 +4,7 @@
  */
 
 .npc-template-sheet {
-    // Header styling
+    /* Header styling */
     .npc-template-header {
         display: flex;
         gap: 1rem;
@@ -92,7 +92,7 @@
         }
     }
 
-    // Tab content
+    /* Tab content */
     .tab-content {
         display: none;
         padding: 1rem;
@@ -102,7 +102,7 @@
         }
     }
 
-    // Basics Tab
+    /* Basics Tab */
     .tab-basics {
         .tags-container {
             display: flex;
@@ -184,7 +184,7 @@
         }
     }
 
-    // Characteristics Tab
+    /* Characteristics Tab */
     .tab-characteristics {
         .characteristics-grid {
             display: grid;
@@ -291,7 +291,7 @@
         }
     }
 
-    // Equipment Tab
+    /* Equipment Tab */
     .tab-equipment {
         .weapons-list {
             .weapon-header,
@@ -371,7 +371,7 @@
         }
     }
 
-    // Abilities Tab
+    /* Abilities Tab */
     .tab-abilities {
         .abilities-list {
             display: flex;
@@ -413,7 +413,7 @@
         }
     }
 
-    // Preview Tab
+    /* Preview Tab */
     .tab-preview {
         .preview-controls {
             .preview-threat-control {
@@ -563,7 +563,7 @@
         }
     }
 
-    // Empty states
+    /* Empty states */
     .empty-message {
         text-align: center;
         color: var(--wh40k-text-muted);
@@ -572,7 +572,7 @@
     }
 }
 
-// Template Selector Dialog
+/* Template Selector Dialog */
 .template-selector-dialog {
     .template-filters {
         padding: 1rem;

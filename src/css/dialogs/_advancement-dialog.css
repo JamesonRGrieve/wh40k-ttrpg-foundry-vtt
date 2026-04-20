@@ -1,12 +1,12 @@
-// ============================================
-// Advancement Dialog Styles
-// ============================================
-// Modern, sleek interface for character advancement purchases
-// Uses .wh40k-adv prefix for all classes
+/* ============================================ */
+/* Advancement Dialog Styles */
+/* ============================================ */
+/* Modern, sleek interface for character advancement purchases */
+/* Uses .wh40k-adv prefix for all classes */
 
-// ============================================
-// Main Container
-// ============================================
+/* ============================================ */
+/* Main Container */
+/* ============================================ */
 .advancement-dialog {
     --adv-card-bg: rgba(40, 35, 28, 0.8);
     --adv-card-border: rgba(120, 100, 80, 0.4);
@@ -29,9 +29,9 @@
     font-family: var(--wh40k-font-ui);
 }
 
-// ============================================
-// Header with XP Display
-// ============================================
+/* ============================================ */
+/* Header with XP Display */
+/* ============================================ */
 .wh40k-adv__header {
     padding: 1rem 1.25rem;
     background: linear-gradient(135deg, rgba(30, 25, 20, 0.95), rgba(40, 35, 28, 0.9));
@@ -105,9 +105,9 @@
     font-size: 0.8rem;
 }
 
-// ============================================
-// No Career Blocked State
-// ============================================
+/* ============================================ */
+/* No Career Blocked State */
+/* ============================================ */
 .wh40k-adv__blocked-state {
     display: flex;
     background: var(--wh40k-panel-bg);
@@ -171,9 +171,9 @@
     }
 }
 
-// ============================================
-// Tab Navigation
-// ============================================
+/* ============================================ */
+/* Tab Navigation */
+/* ============================================ */
 .wh40k-adv__tabs {
     display: flex;
     gap: 0;
@@ -217,9 +217,9 @@
     }
 }
 
-// ============================================
-// Content Area
-// ============================================
+/* ============================================ */
+/* Content Area */
+/* ============================================ */
 .wh40k-adv__content {
     background: var(--wh40k-panel-bg);
     flex: 1;
@@ -242,9 +242,9 @@
     }
 }
 
-// ============================================
-// Characteristic Cards Grid
-// ============================================
+/* ============================================ */
+/* Characteristic Cards Grid */
+/* ============================================ */
 .wh40k-adv__char-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -319,7 +319,7 @@
     letter-spacing: 0.5px;
 }
 
-// Tier Progress Dots
+/* Tier Progress Dots */
 .wh40k-adv__char-tiers {
     display: flex;
     gap: 6px;
@@ -356,7 +356,7 @@
     }
 }
 
-// Purchase Button
+/* Purchase Button */
 .wh40k-adv__char-btn {
     width: 100%;
     padding: 0.4rem 0.6rem;
@@ -421,9 +421,9 @@
     }
 }
 
-// ============================================
-// Skills & Talents List
-// ============================================
+/* ============================================ */
+/* Skills & Talents List */
+/* ============================================ */
 .wh40k-adv__advance-list {
     display: flex;
     flex-direction: column;
@@ -588,9 +588,9 @@
     font-weight: 500;
 }
 
-// ============================================
-// Empty State
-// ============================================
+/* ============================================ */
+/* Empty State */
+/* ============================================ */
 .wh40k-adv__empty {
     display: flex;
     flex-direction: column;
@@ -611,9 +611,9 @@
     }
 }
 
-// ============================================
-// Reduced Motion
-// ============================================
+/* ============================================ */
+/* Reduced Motion */
+/* ============================================ */
 @media (prefers-reduced-motion: reduce) {
     .wh40k-adv__xp-fill::after {
         animation: none;

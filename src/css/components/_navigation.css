@@ -32,7 +32,7 @@
         }
 
         &-navigation {
-            // from .wh40k-panel
+            /* from .wh40k-panel */
             background: var(--wh40k-panel-bg);
             border: 1px solid var(--wh40k-border-color-light);
             border-radius: var(--wh40k-radius-lg);

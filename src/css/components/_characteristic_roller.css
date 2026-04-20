@@ -1,10 +1,10 @@
 .wh40k-wrapper {
-    // ============================================
-    // Characteristic Roller Panel
-    // ============================================
+    /* ============================================ */
+    /* Characteristic Roller Panel */
+    /* ============================================ */
 
     .wh40k-char-roller {
-        //noinspection CssUnknownTarget
+        /* noinspection CssUnknownTarget */
         &__wrapper {
             background: url('../images/inqu_watermark.png') bottom/50% no-repeat, url('../images/40k_back.png') center/cover;
         }

@@ -1,11 +1,11 @@
-// ============================================
-// Origin Path Item Sheet - Modern Tabbed Design
-// ============================================
-// Character creation lifepath sheet following modern patterns
+/* ============================================ */
+/* Origin Path Item Sheet - Modern Tabbed Design */
+/* ============================================ */
+/* Character creation lifepath sheet following modern patterns */
 
-// ============================================
-// Base Layout
-// ============================================
+/* ============================================ */
+/* Base Layout */
+/* ============================================ */
 
 .wh40k-origin-sheet {
     display: flex;
@@ -20,9 +20,9 @@
     }
 }
 
-// ============================================
-// HEADER - Step identity with configuration
-// ============================================
+/* ============================================ */
+/* HEADER - Step identity with configuration */
+/* ============================================ */
 
 .wh40k-origin-header {
     display: flex;
@@ -118,9 +118,9 @@
     margin-top: var(--wh40k-space-xs);
 }
 
-// ============================================
-// CONFIGURATION FIELDS (in header)
-// ============================================
+/* ============================================ */
+/* CONFIGURATION FIELDS (in header) */
+/* ============================================ */
 
 .wh40k-config-field {
     display: flex;
@@ -158,9 +158,9 @@
     text-align: center;
 }
 
-// ============================================
-// BADGES - Step and Index
-// ============================================
+/* ============================================ */
+/* BADGES - Step and Index */
+/* ============================================ */
 
 .wh40k-origin-badge {
     display: inline-flex;
@@ -181,7 +181,7 @@
     }
 }
 
-// Step-specific colors (matching step index)
+/* Step-specific colors (matching step index) */
 .wh40k-origin-badge--step {
     background: linear-gradient(135deg, rgb(from var(--wh40k-color-gold) r g b / 0.15), rgb(from var(--wh40k-color-gold) r g b / 0.05));
     border-color: rgb(from var(--wh40k-color-gold) r g b / 0.3);
@@ -189,42 +189,42 @@
 }
 
 .wh40k-origin-badge--step0 {
-    // Home World - Green/Earth tones
+    /* Home World - Green/Earth tones */
     background: linear-gradient(135deg, rgb(from #4a7c59 r g b / 0.15), rgb(from #4a7c59 r g b / 0.05));
     border-color: rgb(from #4a7c59 r g b / 0.3);
     color: #5ba86d;
 }
 
 .wh40k-origin-badge--step1 {
-    // Birthright - Blue/Noble
+    /* Birthright - Blue/Noble */
     background: linear-gradient(135deg, rgb(from #4a6a7c r g b / 0.15), rgb(from #4a6a7c r g b / 0.05));
     border-color: rgb(from #4a6a7c r g b / 0.3);
     color: #5b8aa8;
 }
 
 .wh40k-origin-badge--step2 {
-    // Lure - Purple/Mysterious
+    /* Lure - Purple/Mysterious */
     background: linear-gradient(135deg, rgb(from #6a4a7c r g b / 0.15), rgb(from #6a4a7c r g b / 0.05));
     border-color: rgb(from #6a4a7c r g b / 0.3);
     color: #8a5ba8;
 }
 
 .wh40k-origin-badge--step3 {
-    // Trials - Red/Danger
+    /* Trials - Red/Danger */
     background: linear-gradient(135deg, rgb(from #7c4a4a r g b / 0.15), rgb(from #7c4a4a r g b / 0.05));
     border-color: rgb(from #7c4a4a r g b / 0.3);
     color: #a85b5b;
 }
 
 .wh40k-origin-badge--step4 {
-    // Motivation - Orange/Ambition
+    /* Motivation - Orange/Ambition */
     background: linear-gradient(135deg, rgb(from #7c6a4a r g b / 0.15), rgb(from #7c6a4a r g b / 0.05));
     border-color: rgb(from #7c6a4a r g b / 0.3);
     color: #a88a5b;
 }
 
 .wh40k-origin-badge--step5 {
-    // Career - Gold/Achievement
+    /* Career - Gold/Achievement */
     background: linear-gradient(135deg, rgb(from var(--wh40k-color-gold) r g b / 0.2), rgb(from var(--wh40k-color-gold) r g b / 0.1));
     border-color: rgb(from var(--wh40k-color-gold) r g b / 0.4);
     color: color-mix(in srgb, var(--wh40k-color-gold), white 10%);
@@ -236,9 +236,9 @@
     color: var(--wh40k-accent-skills);
 }
 
-// ============================================
-// TAB NAVIGATION
-// ============================================
+/* ============================================ */
+/* TAB NAVIGATION */
+/* ============================================ */
 
 .wh40k-origin-tabs {
     display: flex;
@@ -282,13 +282,13 @@
     }
 }
 
-// ============================================
-// TAB CONTENT BODY
-// ============================================
+/* ============================================ */
+/* TAB CONTENT BODY */
+/* ============================================ */
 
 .wh40k-origin-content {
     flex: 1;
-    overflow: hidden; // Let panels handle their own scrolling
+    overflow: hidden; /* Let panels handle their own scrolling */
     position: relative;
     display: flex;
     flex-direction: column;
@@ -306,7 +306,7 @@
         flex-direction: column;
     }
 
-    // Custom scrollbar
+    /* Custom scrollbar */
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -325,9 +325,9 @@
     }
 }
 
-// ============================================
-// SECTIONS
-// ============================================
+/* ============================================ */
+/* SECTIONS */
+/* ============================================ */
 
 .wh40k-origin-section {
     margin-bottom: var(--wh40k-space-lg);
@@ -357,9 +357,9 @@
     }
 }
 
-// ============================================
-// CHARACTERISTICS GRID
-// ============================================
+/* ============================================ */
+/* CHARACTERISTICS GRID */
+/* ============================================ */
 
 .wh40k-characteristics-grid {
     display: grid;
@@ -408,9 +408,9 @@
     }
 }
 
-// ============================================
-// BONUSES GRID
-// ============================================
+/* ============================================ */
+/* BONUSES GRID */
+/* ============================================ */
 
 .wh40k-bonuses-grid {
     display: grid;
@@ -479,9 +479,9 @@
     }
 }
 
-// ============================================
-// GRANTS LIST (Skills, Talents, Traits)
-// ============================================
+/* ============================================ */
+/* GRANTS LIST (Skills, Talents, Traits) */
+/* ============================================ */
 
 .wh40k-grants-list {
     display: flex;
@@ -536,7 +536,7 @@
     font-size: 1rem;
 }
 
-// Grant badges for skill training levels
+/* Grant badges for skill training levels */
 .wh40k-grant-badge {
     padding: 3px 8px;
     border-radius: var(--wh40k-radius-sm);
@@ -563,9 +563,9 @@
     }
 }
 
-// ============================================
-// APTITUDES DISPLAY
-// ============================================
+/* ============================================ */
+/* APTITUDES DISPLAY */
+/* ============================================ */
 
 .wh40k-aptitudes-display {
     display: flex;
@@ -585,9 +585,9 @@
     color: var(--wh40k-color-gold);
 }
 
-// ============================================
-// ABILITY CARDS (Special Abilities)
-// ============================================
+/* ============================================ */
+/* ABILITY CARDS (Special Abilities) */
+/* ============================================ */
 
 .wh40k-ability-card {
     padding: var(--wh40k-space-md);
@@ -623,9 +623,9 @@
     }
 }
 
-// ============================================
-// REQUIREMENTS DISPLAY
-// ============================================
+/* ============================================ */
+/* REQUIREMENTS DISPLAY */
+/* ============================================ */
 
 .wh40k-requirement-display {
     padding: var(--wh40k-space-md);
@@ -687,9 +687,9 @@
     }
 }
 
-// ============================================
-// CHOICES DISPLAY
-// ============================================
+/* ============================================ */
+/* CHOICES DISPLAY */
+/* ============================================ */
 
 .wh40k-choice-info {
     display: flex;
@@ -765,9 +765,9 @@
     }
 }
 
-// ============================================
-// PROPERTIES (used in Description tab)
-// ============================================
+/* ============================================ */
+/* PROPERTIES (used in Description tab) */
+/* ============================================ */
 
 .wh40k-property {
     display: flex;
@@ -811,9 +811,9 @@
     font-family: inherit;
 }
 
-// ============================================
-// EDITOR CONTAINER (Description section)
-// ============================================
+/* ============================================ */
+/* EDITOR CONTAINER (Description section) */
+/* ============================================ */
 
 .wh40k-editor-container {
     background: var(--color-bg-option);
@@ -821,27 +821,27 @@
     border-radius: var(--wh40k-radius-md);
     padding: var(--wh40k-space-sm);
     min-height: 200px;
-    max-height: 500px; // Constrain height
-    max-width: 100%; // Prevent horizontal overflow
+    max-height: 500px; /* Constrain height */
+    max-width: 100%; /* Prevent horizontal overflow */
     overflow-y: auto;
-    overflow-x: hidden; // Prevent horizontal scroll
+    overflow-x: hidden; /* Prevent horizontal scroll */
 
     .editor {
         min-height: 180px;
         max-height: 480px;
-        max-width: 100%; // Constrain editor width
+        max-width: 100%; /* Constrain editor width */
         overflow-wrap: break-word;
         word-wrap: break-word;
     }
 
-    // Prevent ProseMirror from expanding too wide
+    /* Prevent ProseMirror from expanding too wide */
     .ProseMirror {
         max-width: 100%;
         overflow-wrap: break-word;
         word-wrap: break-word;
     }
 
-    // Custom scrollbar
+    /* Custom scrollbar */
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -860,9 +860,9 @@
     }
 }
 
-// ============================================
-// EMPTY STATE
-// ============================================
+/* ============================================ */
+/* EMPTY STATE */
+/* ============================================ */
 
 .wh40k-empty-state {
     display: flex;

@@ -1,6 +1,6 @@
-// Core Panel Component (Specialist Style)
-// ============================================
-// Single source of truth for panel styling across all tabs
+/* Core Panel Component (Specialist Style) */
+/* ============================================ */
+/* Single source of truth for panel styling across all tabs */
 
 .wh40k-panel {
     background: var(--wh40k-panel-bg);
@@ -27,7 +27,7 @@
         z-index: 1;
     }
 
-    // Accent color modifiers (use CSS custom properties for icon/accent colors)
+    /* Accent color modifiers (use CSS custom properties for icon/accent colors) */
     &--wounds {
         --panel-accent: var(--wh40k-accent-combat);
     }
@@ -68,7 +68,7 @@
         --panel-accent: var(--wh40k-color-gold);
     }
 
-    // Apply accent color to header icon when modifier is present
+    /* Apply accent color to header icon when modifier is present */
     &[class*='--'] .wh40k-panel-header .wh40k-panel-title i {
         color: var(--panel-accent, var(--wh40k-accent-gold));
     }
@@ -109,7 +109,7 @@
         }
     }
 
-    // Ensure buttons don't break layout
+    /* Ensure buttons don't break layout */
     > button,
     > label,
     > .wh40k-control-button,
@@ -121,7 +121,7 @@
     }
 }
 
-// Clickable panel header for expand/collapse
+/* Clickable panel header for expand/collapse */
 .wh40k-panel-header--clickable {
     cursor: pointer;
     user-select: none;
@@ -135,7 +135,7 @@
     }
 }
 
-// Chevron indicator for collapsible panels
+/* Chevron indicator for collapsible panels */
 .wh40k-panel-chevron {
     font-size: 0.75rem;
     color: var(--wh40k-text-muted);
@@ -157,13 +157,13 @@
     background: var(--wh40k-panel-body-bg);
 }
 
-// Expandable details section within panel body
+/* Expandable details section within panel body */
 .wh40k-panel-details {
     margin-top: var(--wh40k-space-md);
     padding-top: var(--wh40k-space-md);
     border-top: 1px solid rgb(from var(--wh40k-border-light) r g b / 0.5);
 
-    // Collapsed state - hide the details
+    /* Collapsed state - hide the details */
     &--collapsed {
         display: none;
     }
@@ -201,4 +201,4 @@
     animation-delay: 0.12s;
 }
 
-// ============================================
+/* ============================================ */

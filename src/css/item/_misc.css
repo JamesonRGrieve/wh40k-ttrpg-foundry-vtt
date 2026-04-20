@@ -1,6 +1,6 @@
-// ============================================
-// Compendium Browser Styles
-// ============================================
+/* ============================================ */
+/* Compendium Browser Styles */
+/* ============================================ */
 
 .wh40k-compendium-browser-btn {
     background: linear-gradient(135deg, var(--wh40k-gold-dark) 0%, var(--wh40k-gold) 100%);

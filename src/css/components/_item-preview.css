@@ -15,37 +15,37 @@
     &--open {
         display: block;
         opacity: 1;
-        max-height: 1000px; // Large enough for content
+        max-height: 1000px; /* Large enough for content */
         margin: 8px 0;
         padding: 12px;
     }
 
-    // Background and border
+    /* Background and border */
     background: var(--wh40k-panel-bg, rgba(0, 0, 0, 0.3));
     border: 1px solid var(--wh40k-panel-border, rgba(255, 255, 255, 0.1));
     border-radius: var(--wh40k-radius-md);
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
 
-    // Type-specific styling
+    /* Type-specific styling */
     &--weapon {
-        border-left: 3px solid rgba(239, 68, 68, 0.5); // Red for weapons
+        border-left: 3px solid rgba(239, 68, 68, 0.5); /* Red for weapons */
     }
 
     &--armour {
-        border-left: 3px solid rgba(59, 130, 246, 0.5); // Blue for armour
+        border-left: 3px solid rgba(59, 130, 246, 0.5); /* Blue for armour */
     }
 
     &--talent {
-        border-left: 3px solid rgba(168, 85, 247, 0.5); // Purple for talents
+        border-left: 3px solid rgba(168, 85, 247, 0.5); /* Purple for talents */
     }
 
     &--condition {
-        border-left: 3px solid rgba(245, 158, 11, 0.5); // Amber for conditions
+        border-left: 3px solid rgba(245, 158, 11, 0.5); /* Amber for conditions */
     }
 
     &--psychicPower,
     &--navigatorPower {
-        border-left: 3px solid rgba(139, 92, 246, 0.5); // Violet for powers
+        border-left: 3px solid rgba(139, 92, 246, 0.5); /* Violet for powers */
     }
 }
 

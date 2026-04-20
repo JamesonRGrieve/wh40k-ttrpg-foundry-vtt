@@ -1,11 +1,11 @@
-// ============================================
-// Modern Item Sheet Styles
-// ============================================
-// Uses theme-adaptive CSS custom properties from gothic-theme.scss
+/* ============================================ */
+/* Modern Item Sheet Styles */
+/* ============================================ */
+/* Uses theme-adaptive CSS custom properties from gothic-theme.scss */
 
-// ============================================
-// Base Window Content - Transparent for item sheets
-// ============================================
+/* ============================================ */
+/* Base Window Content - Transparent for item sheets */
+/* ============================================ */
 
 .wh40k-rpg.sheet.item .window-content {
     background: transparent;
@@ -13,9 +13,9 @@
     overflow: hidden;
 }
 
-// ============================================
-// Base Item Sheet Container
-// ============================================
+/* ============================================ */
+/* Base Item Sheet Container */
+/* ============================================ */
 
 .wh40k-item-sheet {
     display: flex;
@@ -27,7 +27,7 @@
     font-size: var(--wh40k-font-size-base);
     overflow: hidden;
 
-    // Form should fill container
+    /* Form should fill container */
     form {
         display: flex;
         flex-direction: column;
@@ -36,7 +36,7 @@
         overflow: hidden;
     }
 
-    // Modern scrollbar
+    /* Modern scrollbar */
     &::-webkit-scrollbar,
     .wh40k-tab-content::-webkit-scrollbar {
         width: 8px;
@@ -57,7 +57,7 @@
         }
     }
 
-    // All boxes use border-box
+    /* All boxes use border-box */
     * {
         box-sizing: border-box;
     }

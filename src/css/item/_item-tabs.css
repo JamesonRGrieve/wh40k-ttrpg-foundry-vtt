@@ -1,12 +1,12 @@
-// ============================================
-// Shared Item Tab System
-// ============================================
-// Universal tab styling for all modern item sheets
-// Based on weapon sheet tab pattern
+/* ============================================ */
+/* Shared Item Tab System */
+/* ============================================ */
+/* Universal tab styling for all modern item sheets */
+/* Based on weapon sheet tab pattern */
 
-// ============================================
-// TAB NAVIGATION BAR
-// ============================================
+/* ============================================ */
+/* TAB NAVIGATION BAR */
+/* ============================================ */
 
 .wh40k-talent-tabs,
 .wh40k-trait-tabs,
@@ -45,12 +45,12 @@
     }
 
     &.active {
-        // Color variants handled by parent sheet classes
+        /* Color variants handled by parent sheet classes */
         border-bottom-color: currentColor;
     }
 }
 
-// Item type specific active states
+/* Item type specific active states */
 .wh40k-talent-tab.active {
     color: var(--wh40k-talents-primary);
     background: var(--wh40k-talents-bg);
@@ -66,9 +66,9 @@
     background: var(--wh40k-dynasty-bg);
 }
 
-// ============================================
-// TAB CONTENT CONTAINER
-// ============================================
+/* ============================================ */
+/* TAB CONTENT CONTAINER */
+/* ============================================ */
 
 .wh40k-talent-content,
 .wh40k-trait-content,
@@ -78,7 +78,7 @@
     padding: 12px;
     min-height: 0;
 
-    // Scrollbar styling
+    /* Scrollbar styling */
     &::-webkit-scrollbar {
         width: 8px;
     }
@@ -97,9 +97,9 @@
     }
 }
 
-// ============================================
-// TAB PANELS
-// ============================================
+/* ============================================ */
+/* TAB PANELS */
+/* ============================================ */
 
 .wh40k-talent-panel,
 .wh40k-trait-panel,

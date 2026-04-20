@@ -1,6 +1,6 @@
-// ============================================
-// Cybernetic Item Sheet Styles
-// ============================================
+/* ============================================ */
+/* Cybernetic Item Sheet Styles */
+/* ============================================ */
 
 /* -------------------------------------------- */
 /*  Main Sheet Container                        */
@@ -13,7 +13,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    min-height: 0; // Critical for flex scrolling
+    min-height: 0; /* Critical for flex scrolling */
     background: var(--wh40k-bg-dark, #1a1a1a);
     color: var(--wh40k-text-primary, #e8e6e3);
 
@@ -21,7 +21,7 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        min-height: 0; // Critical for flex scrolling
+        min-height: 0; /* Critical for flex scrolling */
         gap: 0;
     }
 }
@@ -31,7 +31,7 @@
 /* -------------------------------------------- */
 
 .wh40k-cybernetic-header {
-    flex-shrink: 0; // Don't allow header to shrink
+    flex-shrink: 0; /* Don't allow header to shrink */
     display: grid;
     grid-template-columns: 64px 1fr auto;
     gap: 1rem;
@@ -134,21 +134,21 @@
         opacity: 0.8;
     }
 
-    // Type badge
+    /* Type badge */
     &--type {
         background: rgb(from var(--cyber-primary) r g b / 0.25);
         border-color: rgb(from var(--cyber-primary) r g b / 0.5);
         color: var(--cyber-primary);
     }
 
-    // Location badge
+    /* Location badge */
     &--location {
         background: rgb(from var(--cyber-secondary) r g b / 0.25);
         border-color: rgb(from var(--cyber-secondary) r g b / 0.5);
         color: color-mix(in srgb, var(--cyber-secondary), white 20%);
     }
 
-    // Craftsmanship
+    /* Craftsmanship */
     &--poor {
         color: #95a5a6;
         border-color: rgb(from #95a5a6 r g b / 0.4);
@@ -173,13 +173,13 @@
 /* -------------------------------------------- */
 
 .wh40k-cybernetic-content {
-    flex: 1; // Take remaining space
-    min-height: 0; // Critical for flex scrolling
-    overflow-y: auto; // Enable vertical scrolling
-    overflow-x: hidden; // Prevent horizontal scrolling
+    flex: 1; /* Take remaining space */
+    min-height: 0; /* Critical for flex scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
     padding: 0.75rem;
 
-    // Custom scrollbar styling
+    /* Custom scrollbar styling */
     &::-webkit-scrollbar {
         width: 8px;
     }

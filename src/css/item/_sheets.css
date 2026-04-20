@@ -1,12 +1,12 @@
-// ============================================
-// Rogue Trader Item Sheets - Additional Styles
-// ============================================
-// This file provides additional styles for item sheets
-// Main styles are in _base.scss, _header.scss, _tabs.scss, etc.
+/* ============================================ */
+/* Rogue Trader Item Sheets - Additional Styles */
+/* ============================================ */
+/* This file provides additional styles for item sheets */
+/* Main styles are in _base.scss, _header.scss, _tabs.scss, etc. */
 
-// ============================================
-// Modification Row (for weapon/armour mods)
-// ============================================
+/* ============================================ */
+/* Modification Row (for weapon/armour mods) */
+/* ============================================ */
 
 .wh40k-mod-row {
     display: flex;
@@ -41,9 +41,9 @@
     }
 }
 
-// ============================================
-// Armour Diagram Layout
-// ============================================
+/* ============================================ */
+/* Armour Diagram Layout */
+/* ============================================ */
 
 .wh40k-armour-diagram {
     display: flex;
@@ -51,9 +51,9 @@
     gap: var(--wh40k-space-md);
 }
 
-// ============================================
-// Active Effects Panel (alternate style)
-// ============================================
+/* ============================================ */
+/* Active Effects Panel (alternate style) */
+/* ============================================ */
 
 .wh40k-item-sheet__panel {
     padding: var(--wh40k-space-md);
@@ -115,9 +115,9 @@
     }
 }
 
-// ============================================
-// Effects List
-// ============================================
+/* ============================================ */
+/* Effects List */
+/* ============================================ */
 
 .wh40k-item-sheet__effects-list {
     display: flex;
@@ -196,9 +196,9 @@
     gap: var(--wh40k-space-xs);
 }
 
-// ============================================
-// Empty State
-// ============================================
+/* ============================================ */
+/* Empty State */
+/* ============================================ */
 
 .wh40k-item-sheet__empty {
     display: flex;

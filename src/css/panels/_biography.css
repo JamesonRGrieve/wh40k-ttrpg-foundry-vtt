@@ -1,4 +1,4 @@
-// Origin Path
+/* Origin Path */
 .wh40k-origin-path {
     @apply tw-flex tw-flex-col tw-gap-1;
 }
@@ -110,9 +110,9 @@
     padding: 2px 0;
 }
 
-// Journal Entries Section - Modern Design
+/* Journal Entries Section - Modern Design */
 .wh40k-journal-entries-section {
-    margin-top: var(--wh40k-space-md); // Consistent spacing
+    margin-top: var(--wh40k-space-md); /* Consistent spacing */
 }
 
 .wh40k-section-header {
@@ -250,7 +250,7 @@
     line-height: 1.4;
 }
 
-// Connections
+/* Connections */
 .wh40k-connections-section {
     margin-bottom: var(--wh40k-space-sm);
 
@@ -277,7 +277,7 @@
     border-radius: 3px;
 }
 
-// Journal Panel
+/* Journal Panel */
 .wh40k-panel-journal {
     @apply tw-flex-1 tw-flex tw-flex-col;
 
@@ -304,7 +304,7 @@
     }
 }
 
-// ProseMirror Editor Integration
+/* ProseMirror Editor Integration */
 .wh40k-prose-editor {
     flex: 1;
     min-height: 250px;
@@ -322,7 +322,7 @@
         box-shadow: 0 0 0 2px rgb(from var(--wh40k-accent-bio) r g b / 0.1);
     }
 
-    // ProseMirror content styling
+    /* ProseMirror content styling */
     .ProseMirror {
         padding: var(--wh40k-space-sm);
         min-height: 100%;
@@ -398,7 +398,7 @@
             }
         }
 
-        // Tables
+        /* Tables */
         table {
             border-collapse: collapse;
             width: 100%;
@@ -417,7 +417,7 @@
             }
         }
 
-        // Links
+        /* Links */
         a {
             color: var(--wh40k-accent-bio);
             text-decoration: underline;
@@ -427,7 +427,7 @@
             }
         }
 
-        // Images
+        /* Images */
         img {
             max-width: 100%;
             height: auto;
@@ -435,7 +435,7 @@
             margin: var(--wh40k-space-sm) 0;
         }
 
-        // Horizontal rule
+        /* Horizontal rule */
         hr {
             margin: var(--wh40k-space-md) 0;
             border: none;
@@ -444,7 +444,7 @@
     }
 }
 
-// Read-only prose content (for non-editable view)
+/* Read-only prose content (for non-editable view) */
 .wh40k-prose-content {
     padding: var(--wh40k-space-sm);
     background: var(--wh40k-bg-input);
@@ -497,7 +497,7 @@
         border-color: var(--wh40k-accent-bio);
     }
 
-    // Rich text styling
+    /* Rich text styling */
     p {
         margin: 0 0 var(--wh40k-space-sm) 0;
     }
@@ -513,9 +513,9 @@
     }
 }
 
-// ============================================
-// Form Field Components
-// ============================================
+/* ============================================ */
+/* Form Field Components */
+/* ============================================ */
 
 .wh40k-field-row {
     @apply tw-flex tw-flex-col tw-gap-1;

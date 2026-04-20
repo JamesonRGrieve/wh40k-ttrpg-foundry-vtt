@@ -18,7 +18,7 @@
         max-height: 80vh;
         overflow-y: auto;
 
-        // NPC Info Panel
+        /* NPC Info Panel */
         .wh40k-panel--npc-info {
             .wh40k-panel-header {
                 display: flex;
@@ -66,7 +66,7 @@
             }
         }
 
-        // Quantity Panel
+        /* Quantity Panel */
         .wh40k-panel--quantity {
             padding: var(--wh40k-space-md);
 
@@ -102,7 +102,7 @@
             }
         }
 
-        // Party Panel
+        /* Party Panel */
         .wh40k-panel--party {
             .wh40k-panel-header {
                 display: flex;
@@ -205,7 +205,7 @@
             }
         }
 
-        // Threat Analysis Panel
+        /* Threat Analysis Panel */
         .wh40k-panel--threat-analysis {
             .wh40k-panel-header {
                 display: flex;

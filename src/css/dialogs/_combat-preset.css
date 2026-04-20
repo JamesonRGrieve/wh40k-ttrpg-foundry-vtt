@@ -10,7 +10,7 @@
         gap: var(--wh40k-space-lg);
         padding: var(--wh40k-space-md);
 
-        // Save Mode
+        /* Save Mode */
         .wh40k-panel--save-preset {
             .wh40k-panel-header {
                 display: flex;
@@ -110,7 +110,7 @@
             }
         }
 
-        // Load Mode
+        /* Load Mode */
         .wh40k-panel--load-preset {
             .wh40k-panel-header {
                 display: flex;
@@ -148,7 +148,7 @@
                 max-height: 400px;
                 overflow-y: auto;
                 margin-bottom: var(--wh40k-space-md);
-                padding: 2px; // Prevent box-shadow clip
+                padding: 2px; /* Prevent box-shadow clip */
             }
 
             .wh40k-preset-item {
@@ -212,7 +212,7 @@
             }
         }
 
-        // Library Mode
+        /* Library Mode */
         .wh40k-panel--preset-library {
             .wh40k-panel-header {
                 display: flex;
@@ -303,7 +303,7 @@
             }
         }
 
-        // Common Elements
+        /* Common Elements */
         .wh40k-badge {
             padding: 4px 12px;
             border-radius: var(--wh40k-radius-md);
