@@ -4,6 +4,7 @@
  */
 
 import WH40K from '../../config.ts';
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.ts';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
@@ -153,6 +154,9 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         // Get parent context first
         const parentContext = await super._prepareContext(options);
 
+        // Ruleset state (RAW vs Homebrew)
+        const ruleset = WH40KSettings.getRuleset();
+
         // Build our context
         const context: Record<string, unknown> = {
             item: this.item,
@@ -164,6 +168,10 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
             effects: this.item.getEmbeddedCollection('ActiveEffect').contents,
             flags: this.item.flags,
             dh: CONFIG.wh40k || WH40K,
+            ruleset,
+            isHomebrew: ruleset === 'homebrew',
+            isRaw: ruleset === 'raw',
+            hideThroneGelt: ruleset === 'raw',
             isEditable: this.isEditable,
             editable: this.isEditable, // Alias for template compatibility with {{editor}} helper
             owner: this.item.isOwner, // Required for {{editor}} helper
