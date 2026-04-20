@@ -53,13 +53,13 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     declare options: Record<string, unknown>;
 
     // EnhancedAnimationsMixin
-    declare _previousState: any;
+    declare _previousState: unknown;
     declare _mutationObserver: MutationObserver | null;
     declare _runningAnimations: Map<string, number>;
     declare _animationConfig: BaseActorSheetMixins['_animationConfig'];
 
     // VisualFeedbackMixin
-    declare _previousValues: Map<string, any>;
+    declare _previousValues: Map<string, unknown>;
     declare _lastSubmitTime: number;
     declare visualizeChanges: (changes: Record<string, unknown>) => void;
 
@@ -95,15 +95,15 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     // WhatIfMixin
     declare _whatIfActive: boolean;
     declare _whatIfChanges: Record<string, unknown>;
-    declare _whatIfPreview: any;
+    declare _whatIfPreview: unknown;
     declare _whatIfImpacts: unknown[] | Record<string, unknown>;
     declare enterWhatIfMode: () => Promise<void>;
     declare commitWhatIfChanges: () => Promise<void>;
     declare cancelWhatIfChanges: () => Promise<void>;
     declare exitWhatIfMode: () => Promise<void>;
-    declare previewChange: (path: string, value: any) => Promise<void>;
+    declare previewChange: (path: string, value: unknown) => Promise<void>;
     declare isWhatIfActive: () => boolean;
-    declare getWhatIfState: () => { active: boolean; changes: Record<string, unknown>; impacts: any; changeCount: number };
+    declare getWhatIfState: () => { active: boolean; changes: Record<string, unknown>; impacts: unknown; changeCount: number };
 
     // EnhancedDragDropMixin
     declare _draggedItem: Record<string, unknown> | null;

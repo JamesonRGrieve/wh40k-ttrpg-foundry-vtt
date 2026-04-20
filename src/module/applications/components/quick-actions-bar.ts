@@ -20,7 +20,7 @@ export default class QuickActionsBar {
      * @param {boolean} options.inSheet - Rendering in item sheet (vs character sheet)
      * @returns {Object[]} Array of action definitions
      */
-    static getActionsForItem(item: WH40KItem, { compact: boolean = false, inSheet: any = false } = {}): any {
+    static getActionsForItem(item: WH40KItem, { compact: boolean = false, inSheet: boolean = false } = {}): Record<string, unknown>[] {
         const actions = [];
         const type = item.type;
 
@@ -133,7 +133,14 @@ export default class QuickActionsBar {
      * @returns {Object} Action definition
      * @private
      */
-    static #createAction(id: string, icon: any, label: string, action: any, dataset: Record<string, unknown> = {}, variant: any = 'primary'): any {
+    static #createAction(
+        id: string,
+        icon: string,
+        label: string,
+        action: string,
+        dataset: Record<string, unknown> = {},
+        variant: string = 'primary',
+    ): Record<string, unknown> {
         return {
             id,
             icon,
@@ -150,7 +157,7 @@ export default class QuickActionsBar {
      * @param {boolean} compact - Compact mode (icons only)
      * @returns {string} HTML string
      */
-    static renderActions(actions: any, compact: boolean = false): any {
+    static renderActions(actions: Record<string, unknown>[], compact: boolean = false): string {
         return actions
             .map((action) => {
                 const dataAttrs = Object.entries(action.dataset)

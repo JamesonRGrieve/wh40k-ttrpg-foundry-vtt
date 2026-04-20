@@ -512,7 +512,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         // Ensure combat exists
         let combat = game.combat;
         if (!combat) {
-            combat = await (Combat as any).create({ scene: game.scenes.active?.id } as any);
+            combat = await (Combat as any).create({ scene: game.scenes.active?.id } as Record<string, unknown>);
         }
 
         const combatants: unknown[] = [];

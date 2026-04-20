@@ -85,7 +85,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {number|null} level
      * @returns {string}
      */
-    prepareQualityTooltip(identifier: any, level: any = null): any {
+    prepareQualityTooltip(identifier: string, level: number | null = null): string {
         return prepareQualityTooltipData(identifier, level);
     }
 
@@ -262,10 +262,10 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @returns {object|null} - The drag data or null
      * @private
      */
-    _getDragData(event: Event): any {
+    _getDragData(event: Event): Record<string, unknown> | null {
         try {
             // Check if dataTransfer has the data
-            const types = (event as any).dataTransfer?.types || [];
+            const types = (event as DragEvent).dataTransfer?.types || [];
             if (!types.includes('text/plain')) return null;
 
             // For dragenter, we can't access the data due to browser security
@@ -320,7 +320,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @returns {string[]} - Array of effect descriptions
      * @private
      */
-    _getModificationEffects(mod: any): any {
+    _getModificationEffects(mod: Record<string, unknown>): string[] {
         const effects = [];
         const m = mod.cachedModifiers || {};
 
@@ -568,7 +568,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         const actor = this.item.actor;
 
         // Perform reload with validation
-        const skipValidation = (event as any).shiftKey; // Hold Shift to skip validation
+        const skipValidation = (event as MouseEvent).shiftKey; // Hold Shift to skip validation
         const result = await ReloadActionManager.reloadWeapon(this.item, {
             skipValidation,
         });
@@ -918,7 +918,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         let data;
         try {
-            data = JSON.parse((event as any).dataTransfer.getData('text/plain'));
+            data = JSON.parse((event as DragEvent).dataTransfer.getData('text/plain'));
         } catch {
             return false;
         }

@@ -126,7 +126,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @returns {object} Tab configuration object.
      * @protected
      */
-    _getTabs(): any {
+    _getTabs(): Record<string, Record<string, unknown>> {
         const tabs = super._getTabs();
 
         // Add icons from TABS definition

@@ -162,7 +162,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @returns {string}
      * @private
      */
-    _expandWoundsFormula(formula: string, tb: number): any {
+    _expandWoundsFormula(formula: string, tb: number): string {
         // Replace "TB" with actual value for display
         // e.g., "2xTB+1d5+2" becomes "2×4+1d5+2"
         return formula.replace(/(\d+)xTB/gi, (match, multiplier) => {
@@ -677,7 +677,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
             speaker: ChatMessage.getSpeaker({ actor: this.context.actor }),
             ...(this.rollResult.roll ? { rolls: [this.rollResult.roll] } : {}),
             sound: CONFIG.sounds.dice,
-        } as any);
+        } as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */
