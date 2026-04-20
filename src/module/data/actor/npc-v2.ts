@@ -46,6 +46,7 @@ interface NPCV2TrainedSkill {
     trained: boolean;
     plus10: boolean;
     plus20: boolean;
+    plus30?: boolean;
     bonus: number;
 }
 
@@ -584,17 +585,20 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
         const char = this.getCharacteristic(charKey);
         if (!char) return 0;
 
+        const gameSystem = (this.constructor as any).gameSystem;
         let target = char.total;
 
         // Apply training bonuses
         if (skill) {
-            if (skill.trained) target += 0; // Trained: no penalty (baseline)
+            if (skill.trained) target += 0; // Known/Trained baseline: no bonus
             if (skill.plus10) target += 10;
-            if (skill.plus20) target += 10; // +20 is cumulative with +10
+            if (skill.plus20) target += 10; // cumulative: plus10 + plus20 = +20
+            if (skill.plus30) target += 10; // cumulative: plus10 + plus20 + plus30 = +30 (DH2e Veteran)
             target += skill.bonus || 0;
         } else {
-            // Untrained skill: use half the characteristic value
-            target = Math.floor(char.total / 2);
+            // Untrained: flat -20 in DH2e (Known/Trained/Experienced/Veteran ladder),
+            // half characteristic for career-based systems.
+            target = gameSystem === 'dh2e' ? char.total - 20 : Math.floor(char.total / 2);
         }
 
         // Apply custom override if enabled
