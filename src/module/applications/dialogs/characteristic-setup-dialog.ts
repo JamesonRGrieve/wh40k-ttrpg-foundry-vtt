@@ -264,7 +264,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @returns {string|null} - Characteristic key or null
      * @private
      */
-    #getAssignedCharacteristic(index: number): any {
+    #getAssignedCharacteristic(index: number): string | null {
         for (const [key, assignedIndex] of Object.entries(this.#assignments)) {
             if (assignedIndex === index) return key;
         }
@@ -274,7 +274,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
         this.#activateListeners();
     }
@@ -400,7 +400,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @param {HTMLInputElement} input
      * @private
      */
-    #saveRollInput(input: any): void {
+    #saveRollInput(input: HTMLInputElement): void {
         const index = parseInt(input.dataset.rollIndex);
         let value = parseInt(input.value);
 
@@ -419,7 +419,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @param {HTMLInputElement} input
      * @private
      */
-    #cancelRollInput(input: any): void {
+    #cancelRollInput(_input: HTMLInputElement): void {
         void this.render();
     }
 

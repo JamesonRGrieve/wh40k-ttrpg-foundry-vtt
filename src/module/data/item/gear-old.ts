@@ -138,7 +138,7 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
      * Consume one use.
      * @returns {Promise<Item>}
      */
-    consume(): any {
+    consume(): unknown {
         if (!this.hasLimitedUses) return this.parent;
         const newValue = Math.max(0, (this.uses.value ?? 0) - 1);
         return this.parent?.update({ 'system.uses.value': newValue });

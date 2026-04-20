@@ -112,7 +112,7 @@ export class TooltipsWH40K {
      * @param {string} skillKey  The skill key (e.g., "acrobatics", "commonLore").
      * @returns {object|null}    Skill description data or null.
      */
-    getSkillDescription(skillKey: string): any {
+    getSkillDescription(skillKey: string): unknown {
         // Try direct lookup first
         const normalizedKey = skillKey.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
         return this.#skillDescriptions.get(normalizedKey) || null;
@@ -209,7 +209,7 @@ export class TooltipsWH40K {
      * @param {Document} doc  The linked document.
      * @protected
      */
-    async _onHoverContentLink(doc: any): Promise<void> {
+    async _onHoverContentLink(doc: unknown): Promise<void> {
         // Check if document has a richTooltip method
         const result = await (doc.richTooltip?.() ?? doc.system?.richTooltip?.() ?? {});
         const { content, classes } = result;
@@ -463,7 +463,7 @@ export class TooltipsWH40K {
                     <span class="${level === 0 ? 'active' : ''}">Untrained</span>
                     ${skillRanks
                         .map(
-                            (rank: any, i: number) =>
+                            (rank: { tooltip: string }, i: number) =>
                                 `<i class="fas fa-arrow-right"></i><span class="${level === i + 1 ? 'active' : ''}">${rank.tooltip}</span>`,
                         )
                         .join('')}

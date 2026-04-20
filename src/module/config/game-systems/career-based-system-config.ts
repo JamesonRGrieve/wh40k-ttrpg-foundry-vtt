@@ -68,7 +68,7 @@ export abstract class CareerBasedSystemConfig extends BaseSystemConfig {
         return null;
     }
 
-    getTalentAdvanceCost(_actor: WH40KBaseActor, _talent: any): number | null {
+    getTalentAdvanceCost(_actor: WH40KBaseActor, _talent: unknown): number | null {
         // Same: cost is in the career advance entry.
         return null;
     }

@@ -22,7 +22,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
      * Internal state for the dialog.
      * @type {Object}
      */
-    #state: any = {
+    #state: Record<string, unknown> = {
         npc: null,
         quantity: 1,
     };
@@ -79,7 +79,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
      * @param {WH40KNPC} npc - The NPC actor.
      * @returns {Promise<DifficultyCalculatorDialog>}
      */
-    static show(npc: any): any {
+    static show(npc: unknown): unknown {
         const dialog = new DifficultyCalculatorDialog(npc);
         void dialog.render(true);
         return dialog;
@@ -94,7 +94,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         const context: unknown = await super._prepareContext(options);
 
         // Get party info
-        const party = game.users.filter((u: any) => u.active && u.character);
+        const party = game.users.filter((u: { active: boolean; character: unknown }) => u.active && u.character);
         const partySize = party.length;
 
         // Calculate average party rank
@@ -134,7 +134,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
         context.difficulty = difficulty;
 
         // Add party members list
-        context.partyMembers = party.map((u: any) => ({
+        context.partyMembers = party.map((u: Record<string, unknown>) => ({
             name: u.character?.name ?? u.name,
             rank: u.character?.system?.rank ?? 1,
             img: u.character?.img ?? u.avatar,
@@ -153,7 +153,7 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
      * @returns {Object} Difficulty object with key, label, color, description.
      * @private
      */
-    _getDifficultyRating(ratio: number): any {
+    _getDifficultyRating(ratio: number): Record<string, unknown> {
         if (ratio < 0.25) {
             return {
                 key: 'trivial',

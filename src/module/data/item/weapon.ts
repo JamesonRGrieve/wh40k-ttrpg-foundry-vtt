@@ -948,7 +948,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {number} [shots=1]   Number of shots to fire.
      * @returns {Promise<Item>}
      */
-    fire(shots = 1): any {
+    fire(shots = 1): unknown {
         if (!this.usesAmmo) return this.parent;
         const newValue = Math.max(0, this.clip.value - shots);
         return this.parent?.update({ 'system.clip.value': newValue });
@@ -972,7 +972,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * Simple reload (legacy method).
      * @deprecated Use reload() instead for inventory tracking and action economy
      */
-    reloadSimple(): any {
+    reloadSimple(): unknown {
         console.warn('wh40k-rpg | reloadSimple() is deprecated, use reload() instead');
         return this.reload({ skipValidation: true });
     }
@@ -1082,7 +1082,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         } else {
             // Last resort: create a new ammo item with the returned rounds
             try {
-                const sourceItem = (await fromUuid(this.loadedAmmo.uuid)) as any;
+                const sourceItem = await fromUuid(this.loadedAmmo.uuid);
                 if (sourceItem) {
                     const itemData = sourceItem.toObject();
                     itemData.system.quantity = rounds;

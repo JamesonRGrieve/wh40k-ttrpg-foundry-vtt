@@ -1,5 +1,13 @@
 import type { WH40KBaseActor } from './base-actor.ts';
 
+/** Shape of an ActiveEffect change entry used throughout this class. */
+interface EffectChange {
+    key: string;
+    value: string | number;
+    mode: number;
+    priority?: number;
+}
+
 /**
  * Extended ActiveEffect document for WH40K RPG system.
  * Integrates with the existing modifier system and provides proper effect application.
@@ -84,7 +92,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @returns {*}                     The resulting applied value
      * @override
      */
-    apply(target: any, change: any): any {
+    apply(target: unknown, change: EffectChange): unknown {
         // Handle WH40K RPG-specific change keys
         const key = change.key;
 
@@ -119,7 +127,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @returns {number}              The applied value
      * @private
      */
-    _applyCharacteristicChange(actor: WH40KBaseActor, change: any): number | null {
+    _applyCharacteristicChange(actor: WH40KBaseActor, change: EffectChange): number | null {
         const path = change.key;
         const charKey = path.split('.')[2]; // e.g., "strength" from "system.characteristics.strength.modifier"
 
@@ -137,7 +145,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @returns {number}              The applied value
      * @private
      */
-    _applySkillChange(actor: WH40KBaseActor, change: any): number | null {
+    _applySkillChange(actor: WH40KBaseActor, change: EffectChange): number | null {
         const path = change.key;
         const skillKey = path.split('.')[2]; // e.g., "acrobatics"
 
@@ -155,7 +163,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @returns {number}              The applied value
      * @private
      */
-    _applyCombatChange(actor: WH40KBaseActor, change: any): number {
+    _applyCombatChange(actor: WH40KBaseActor, change: EffectChange): number {
         const path = change.key;
         const current = foundry.utils.getProperty(actor, path) ?? 0;
         // @ts-expect-error - argument type
@@ -169,7 +177,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @returns {number}              The applied value
      * @private
      */
-    _applyMovementChange(actor: WH40KBaseActor, change: any): number {
+    _applyMovementChange(actor: WH40KBaseActor, change: EffectChange): number {
         const path = change.key;
         const current = foundry.utils.getProperty(actor, path) ?? 0;
         // @ts-expect-error - argument type
@@ -183,7 +191,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @returns {number}              The new value
      * @private
      */
-    _applyChangeValue(current: number, change: any): number {
+    _applyChangeValue(current: number, change: EffectChange): number {
         const modes = CONST.ACTIVE_EFFECT_MODES;
         const value = Number(change.value);
 
@@ -267,7 +275,7 @@ export class WH40KActiveEffect extends ActiveEffect {
      * @returns {string}        Formatted value
      * @private
      */
-    _formatChangeValue(change: any): string {
+    _formatChangeValue(change: EffectChange): string {
         const value = Number(change.value);
         const modes = CONST.ACTIVE_EFFECT_MODES;
 

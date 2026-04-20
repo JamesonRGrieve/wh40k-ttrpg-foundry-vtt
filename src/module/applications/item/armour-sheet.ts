@@ -216,7 +216,7 @@ export default class ArmourSheet extends ContainerItemSheet {
         if (!mod?.uuid) return;
 
         try {
-            const item = (await fromUuid(mod.uuid)) as any;
+            const item = await fromUuid(mod.uuid);
             if (item) item.sheet.render(true);
         } catch (err) {
             console.error('Failed to open modification:', err);

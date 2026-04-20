@@ -213,7 +213,7 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
         const form = this.element;
@@ -244,16 +244,16 @@ export default class NPCThreatScalerDialog extends HandlebarsApplicationMixin(Ap
         const tabs = form.querySelectorAll('.wh40k-preview-tab');
         const sections = form.querySelectorAll('.wh40k-preview-section');
 
-        tabs.forEach((tab: any) => {
+        tabs.forEach((tab: Element) => {
             tab.addEventListener('click', () => {
-                const targetTab = tab.dataset.tab;
+                const targetTab = (tab as HTMLElement).dataset.tab;
 
                 // Update active tab
-                tabs.forEach((t: any) => t.classList.remove('active'));
+                tabs.forEach((t: Element) => t.classList.remove('active'));
                 tab.classList.add('active');
 
                 // Update active section
-                sections.forEach((s: any) => {
+                sections.forEach((s: Element) => {
                     if (s.dataset.section === targetTab) {
                         s.classList.add('active');
                     } else {

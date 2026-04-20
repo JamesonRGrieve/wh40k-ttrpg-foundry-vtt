@@ -90,7 +90,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Party configuration.
      * @type {{count: number, averageLevel: number}}
      */
-    #party: any = {
+    #party: Record<string, unknown> = {
         count: 4,
         averageLevel: 5,
     };
@@ -109,7 +109,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Singleton instance.
      * @type {EncounterBuilder|null}
      */
-    static #instance: any = null;
+    static #instance: unknown = null;
 
     /**
      * Get or create the singleton instance.
@@ -126,7 +126,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Show the encounter builder.
      * @returns {EncounterBuilder}
      */
-    static show(): any {
+    static show(): unknown {
         const instance = this.instance;
         instance.render(true);
         return instance;
@@ -201,7 +201,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
         // Party configuration inputs
@@ -234,16 +234,16 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         const dropZone = this.element.querySelector('.encounter-drop-zone');
         if (!dropZone) return;
 
-        dropZone.addEventListener('dragover', (e: any) => {
+        dropZone.addEventListener('dragover', (e: DragEvent) => {
             e.preventDefault();
             dropZone.classList.add('drag-over');
         });
 
-        dropZone.addEventListener('dragleave', (e: any) => {
+        dropZone.addEventListener('dragleave', (_e: DragEvent) => {
             dropZone.classList.remove('drag-over');
         });
 
-        dropZone.addEventListener('drop', (e: any) => {
+        dropZone.addEventListener('drop', (e: DragEvent) => {
             e.preventDefault();
             dropZone.classList.remove('drag-over');
 
@@ -313,7 +313,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @returns {Object} Difficulty rating.
      * @private
      */
-    _getDifficulty(ratio: number): any {
+    _getDifficulty(ratio: number): Record<string, unknown> {
         for (const [key, rating] of Object.entries(EncounterBuilder.DIFFICULTY_RATINGS)) {
             if (ratio <= rating.maxRatio) {
                 return { key, ...rating };
@@ -329,7 +329,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @returns {Object} Advantage info.
      * @private
      */
-    _getActionAdvantage(partyActions: number, enemyActions: number): any {
+    _getActionAdvantage(partyActions: number, enemyActions: number): Record<string, unknown> {
         const diff = enemyActions - partyActions;
 
         if (diff <= -2) return { text: game.i18n.localize('WH40K.NPC.Encounter.PartyAdvantage'), color: '#4ade80' };
@@ -349,14 +349,14 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      */
     static async #addNPC(this: any, event: Event, target: HTMLElement): Promise<void> {
         // Show a simple actor picker
-        const actors = game.actors.filter((a: any) => a.type === 'npc' || a.type === 'npcV2');
+        const actors = game.actors.filter((a: { type: string }) => a.type === 'npc' || a.type === 'npcV2');
 
         if (actors.length === 0) {
             ui.notifications.warn('No NPC actors found in the world.');
             return;
         }
 
-        const options = actors.map((a: any) => `<option value="${a.uuid}">${a.name}</option>`).join('');
+        const options = actors.map((a: { uuid: string; name: string }) => `<option value="${a.uuid}">${a.name}</option>`).join('');
 
         const content = `
       <form>
@@ -390,7 +390,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
         const actor = await (fromUuid as any)(result.uuid);
         if (!actor) return;
 
-        const existing = this.#npcs.find((n: any) => n.uuid === result.uuid);
+        const existing = this.#npcs.find((n: { uuid: string }) => n.uuid === result.uuid);
         if (existing) {
             existing.count += result.count;
         } else {
@@ -565,7 +565,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * @param {Actor|string} actorOrUuid - Actor or UUID.
      * @param {number} [count=1] - Number to add.
      */
-    async addNPC(actorOrUuid: any, count: number = 1): Promise<void> {
+    async addNPC(actorOrUuid: unknown, count: number = 1): Promise<void> {
         let actor;
         let uuid;
 
@@ -579,7 +579,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
         if (!actor) return;
 
-        const existing = this.#npcs.find((n: any) => n.uuid === uuid);
+        const existing = this.#npcs.find((n: { uuid: string }) => n.uuid === uuid);
         if (existing) {
             existing.count += count;
         } else {
@@ -615,7 +615,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
      * Get current encounter data.
      * @returns {Object} Encounter data.
      */
-    getData(): any {
+    getData(): Record<string, unknown> {
         return {
             npcs: foundry.utils.deepClone(this.#npcs),
             party: foundry.utils.deepClone(this.#party),

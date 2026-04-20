@@ -679,7 +679,7 @@ export class GrantsProcessor {
         // Try UUID first
         if (equipGrant.uuid) {
             try {
-                doc = (await fromUuid(equipGrant.uuid)) as any;
+                doc = await fromUuid(equipGrant.uuid);
                 if (!doc) {
                     console.warn(`Could not find equipment with UUID: ${equipGrant.uuid}`);
                 }

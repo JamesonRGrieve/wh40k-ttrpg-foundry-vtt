@@ -473,7 +473,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const data = TextEditor.getDragEventData(event) as any;
             if (!data?.uuid) return;
 
-            const item = (await fromUuid(data.uuid)) as any;
+            const item = await fromUuid(data.uuid);
             if (!item) return;
 
             // Get zone type and slot
@@ -684,8 +684,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const items: unknown[] = Array.from(this.document.items);
 
             // Find source and target
-            const sourceIndex = items.findIndex((i: any) => i.id === sourceId);
-            const targetIndex = items.findIndex((i: any) => i.id === targetId);
+            const sourceIndex = items.findIndex((i: { id: string }) => i.id === sourceId);
+            const targetIndex = items.findIndex((i: { id: string }) => i.id === targetId);
 
             if (sourceIndex === -1 || targetIndex === -1) return;
 
@@ -722,7 +722,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const data = TextEditor.getDragEventData(event) as any;
             if (!data?.uuid) return;
 
-            const item = (await fromUuid(data.uuid)) as any;
+            const item = await fromUuid(data.uuid);
             if (!item || item.actor?.id !== this.document.id) return;
 
             // Add to favorites

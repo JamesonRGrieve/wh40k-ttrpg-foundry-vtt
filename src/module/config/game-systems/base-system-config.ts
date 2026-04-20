@@ -82,7 +82,7 @@ export abstract class BaseSystemConfig {
      * @param context Optional system-specific context
      * @returns Cost in XP, or null if not available
      */
-    abstract getTalentAdvanceCost(actor: WH40KBaseActor, talent: any, context?: Record<string, unknown>): number | null;
+    abstract getTalentAdvanceCost(actor: WH40KBaseActor, talent: unknown, context?: Record<string, unknown>): number | null;
 
     /**
      * Get the list of advances available to a character.

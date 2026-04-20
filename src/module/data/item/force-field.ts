@@ -185,7 +185,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {number} roll - The d100 protection roll
      * @returns {boolean}
      */
-    checksOverload(roll): any {
+    checksOverload(roll): boolean {
         const range = this.effectiveOverloadRange;
         return roll >= range.min && roll <= range.max;
     }
@@ -240,7 +240,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Toggle activation state.
      * @returns {Promise<Item>}
      */
-    toggleActivated(): any {
+    toggleActivated(): unknown {
         return this.parent?.update({ 'system.activated': !this.activated });
     }
 
@@ -249,7 +249,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * @param {boolean} overloaded
      * @returns {Promise<Item>}
      */
-    setOverloaded(overloaded): any {
+    setOverloaded(overloaded): unknown {
         return this.parent?.update({ 'system.overloaded': overloaded });
     }
 
@@ -257,7 +257,7 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
      * Recover from overload.
      * @returns {Promise<Item>}
      */
-    recover(): any {
+    recover(): unknown {
         return this.parent?.update({ 'system.overloaded': false });
     }
 

@@ -1370,7 +1370,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             if (talent.uuid) {
                 try {
-                    const item = (await fromUuid(talent.uuid)) as any;
+                    const item = await fromUuid(talent.uuid);
                     if (item) {
                         hasItem = true;
                         const desc = item.system?.description?.value;
@@ -1410,7 +1410,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
             if (trait.uuid) {
                 try {
-                    const item = (await fromUuid(trait.uuid)) as any;
+                    const item = await fromUuid(trait.uuid);
                     if (item) {
                         hasItem = true;
                         const desc = item.system?.description?.value;
@@ -1445,7 +1445,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         if (uuid) {
             try {
-                const item = (await fromUuid(uuid)) as any;
+                const item = await fromUuid(uuid);
                 const itemDescription = item?.system?.description?.value;
                 if (itemDescription) description = itemDescription;
             } catch {
@@ -1723,7 +1723,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     async _addTalentModifiers(uuid: string, charTotals: Record<string, number>, skillMap: Record<string, unknown>): Promise<void> {
         try {
-            const talent = (await fromUuid(uuid)) as any;
+            const talent = await fromUuid(uuid);
             if (!talent) return;
 
             const talentSystem = talent.system;
@@ -1945,7 +1945,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     (this as any).selections.clear();
 
                     for (const [step, selData] of Object.entries(data.selections)) {
-                        const origin = (await fromUuid((selData as any).uuid)) as any;
+                        const origin = await fromUuid((selData as any).uuid);
                         if (origin) {
                             // Store as plain data object (not Item instance)
                             const originData = (this as any)._itemToSelectionData(origin);
@@ -2632,7 +2632,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (!uuid) return;
 
         try {
-            const item = (await fromUuid(uuid)) as any;
+            const item = await fromUuid(uuid);
             if (item?.sheet) {
                 item.sheet.render(true);
             }

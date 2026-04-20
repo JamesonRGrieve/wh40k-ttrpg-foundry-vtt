@@ -7,7 +7,7 @@ import BaseGrantData from './base-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class CharacteristicGrantData extends (BaseGrantData as any) {
+export default class CharacteristicGrantData extends BaseGrantData {
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -157,7 +157,7 @@ export default class CharacteristicGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    validateGrant(): any {
+    validateGrant(): string[] {
         const errors = super.validateGrant();
 
         const characteristics = this.characteristics ?? [];

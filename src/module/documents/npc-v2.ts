@@ -102,13 +102,13 @@ export class WH40KNPCV2 extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     hasTalent(talent: string): boolean {
-        return !!(this.items as any).filter((i: any) => i.type === 'talent').find((t: any) => t.name === talent);
+        return !!(this.items as any).filter((i: { type: string }) => i.type === 'talent').find((t: { name: string }) => t.name === talent);
     }
 
     hasTalentFuzzyWords(words: string[]): boolean {
         return !!(this.items as any)
-            .filter((i: any) => i.type === 'talent')
-            .find((t: any) => {
+            .filter((i: { type: string }) => i.type === 'talent')
+            .find((t: { name: string }) => {
                 for (const word of words) {
                     if (!t.name.includes(word)) return false;
                 }
@@ -293,7 +293,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {number} amount - Amount of wounds to heal.
      * @returns {Promise<Actor>}
      */
-    healWounds(amount): any {
+    healWounds(amount): unknown {
         const newWounds = Math.min(this.system.wounds.max, this.system.wounds.value + amount);
         return (this as any).update({ 'system.wounds.value': newWounds });
     }
@@ -307,7 +307,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {number} newThreatLevel - The new threat level (1-30).
      * @returns {Promise<Actor>}
      */
-    scaleToThreat(newThreatLevel): any {
+    scaleToThreat(newThreatLevel): unknown {
         const currentThreat = this.threatLevel;
         const diff = newThreatLevel - currentThreat;
 
@@ -366,7 +366,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * Disables horde mode and adjusts stats.
      * @returns {Promise<Actor>}
      */
-    convertToSingleEnemy(): any {
+    convertToSingleEnemy(): unknown {
         if (!this.isHordeMode) return this;
 
         return (this as any).update({
@@ -386,7 +386,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {boolean} [options.randomize] - Whether to randomize stats slightly.
      * @returns {Promise<Actor>} The created duplicate.
      */
-    duplicate(options: Record<string, unknown> = {}): any {
+    duplicate(options: Record<string, unknown> = {}): unknown {
         const data = this.toObject() as any;
 
         // Modify name
@@ -459,8 +459,8 @@ export class WH40KNPCV2 extends WH40KBaseActor {
         }
 
         // Talents & Traits
-        const talents = (this.items as any).filter((i: any) => i.type === 'talent');
-        const traits = (this.items as any).filter((i: any) => i.type === 'trait');
+        const talents = (this.items as any).filter((i: { type: string }) => i.type === 'talent');
+        const traits = (this.items as any).filter((i: { type: string }) => i.type === 'trait');
 
         if (talents.length > 0) {
             block += `--- Talents ---\n`;
@@ -493,7 +493,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {string} [source] - Source of the damage.
      * @returns {Promise<Actor>}
      */
-    applyMagnitudeDamage(amount, source = ''): any {
+    applyMagnitudeDamage(amount, source = ''): unknown {
         if (typeof this.system.applyMagnitudeDamage === 'function') {
             return this.system.applyMagnitudeDamage(amount, source);
         }
@@ -507,7 +507,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {string} [source] - Source of the restoration.
      * @returns {Promise<Actor>}
      */
-    restoreMagnitude(amount, source = ''): any {
+    restoreMagnitude(amount, source = ''): unknown {
         if (typeof this.system.restoreMagnitude === 'function') {
             return this.system.restoreMagnitude(amount, source);
         }
@@ -519,7 +519,7 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * Delegates to the data model.
      * @returns {Promise<Actor>}
      */
-    toggleHordeMode(): any {
+    toggleHordeMode(): unknown {
         if (typeof this.system.toggleHordeMode === 'function') {
             return this.system.toggleHordeMode();
         }

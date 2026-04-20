@@ -12,7 +12,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * Get the actor associated with this message's speaker
      * @type {Actor|null}
      */
-    get speakerActor(): any {
+    get speakerActor(): unknown {
         return ChatMessage.getSpeakerActor(this.speaker);
     }
 
@@ -38,7 +38,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * Get the item UUID if this is an item card
      * @type {string|null}
      */
-    get itemUuid(): any {
+    get itemUuid(): unknown {
         // @ts-expect-error - argument type
         return this.getFlag('wh40k-rpg', 'item.uuid') ?? null;
     }
@@ -51,7 +51,7 @@ export class ChatMessageWH40K extends ChatMessage {
      * Calculate degrees of success or failure for a d100 roll
      * @returns {{success: boolean, degrees: number}|null}
      */
-    calculateDegrees(): any {
+    calculateDegrees(): { success: boolean; degrees: number } | null {
         if (!this.isRoll || !this.rolls?.length) return null;
 
         const roll = this.rolls[0];

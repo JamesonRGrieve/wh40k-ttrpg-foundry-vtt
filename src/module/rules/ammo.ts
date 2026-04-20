@@ -4,7 +4,7 @@
 
 type AttackSpecialEffect = {
     remove?: string;
-    add?: { name: string; level: any };
+    add?: { name: string; level: unknown };
 };
 
 type HitEffect = {

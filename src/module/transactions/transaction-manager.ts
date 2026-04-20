@@ -307,7 +307,7 @@ export class TransactionManager {
         return (game.users as any).activeGM ?? game.users.contents.find((user) => user.isGM && user.active);
     }
 
-    static async #onSocketMessage(payload: any): Promise<void> {
+    static async #onSocketMessage(payload: Record<string, unknown>): Promise<void> {
         if (!payload || payload.scope !== 'transactions') return;
 
         if (payload.action === REQUEST_APPROVAL && payload.targetUserId === game.user.id && game.user.isGM) {

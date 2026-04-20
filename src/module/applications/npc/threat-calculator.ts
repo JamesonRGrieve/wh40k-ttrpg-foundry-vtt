@@ -199,7 +199,7 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level (1-30).
      * @returns {Object} The tier configuration.
      */
-    static getTier(threatLevel: number): any {
+    static getTier(threatLevel: number): unknown {
         for (const tier of Object.values(this.THREAT_TIERS)) {
             if (threatLevel >= tier.minThreat && threatLevel <= tier.maxThreat) {
                 return tier;
@@ -214,7 +214,7 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {string} The tier name.
      */
-    static getTierName(threatLevel: number): any {
+    static getTierName(threatLevel: number): string {
         return this.getTier(threatLevel).name;
     }
 
@@ -223,7 +223,7 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {Object} Object with label and color.
      */
-    static getTierInfo(threatLevel: number): any {
+    static getTierInfo(threatLevel: number): Record<string, unknown> {
         const tier = this.getTier(threatLevel);
         const colors = {
             Minor: '#4caf50',
@@ -248,7 +248,7 @@ export default class ThreatCalculator {
      * @param {string} role - The NPC role (bruiser, sniper, etc.).
      * @returns {Object} Characteristics object ready for NPC system data.
      */
-    static generateCharacteristics(threatLevel: number, role: string = 'specialist'): any {
+    static generateCharacteristics(threatLevel: number, role: string = 'specialist'): Record<string, unknown> {
         const tier = this.getTier(threatLevel);
         const profile = this.ROLE_PROFILES[role] || this.ROLE_PROFILES.specialist;
 
@@ -338,7 +338,7 @@ export default class ThreatCalculator {
      * @param {string} type - The NPC type (troop, elite, etc.).
      * @returns {Object} Wounds object for NPC system data.
      */
-    static generateWounds(threatLevel: number, type: string = 'troop'): any {
+    static generateWounds(threatLevel: number, type: string = 'troop'): Record<string, unknown> {
         const tier = this.getTier(threatLevel);
 
         // Base wounds from tier
@@ -376,7 +376,7 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {Object} Trained skills object for NPC system data.
      */
-    static generateSkills(role: string, threatLevel: number): any {
+    static generateSkills(role: string, threatLevel: number): Record<string, unknown> {
         const profile = this.ROLE_PROFILES[role] || this.ROLE_PROFILES.specialist;
         const tier = this.getTier(threatLevel);
 
@@ -468,7 +468,7 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {Object} Weapons object for NPC system data.
      */
-    static generateWeapons(preset: any, threatLevel: number): any {
+    static generateWeapons(preset: unknown, threatLevel: number): unknown[] {
         const equipment = this.EQUIPMENT_PRESETS[preset] || this.EQUIPMENT_PRESETS.mixed;
 
         // Scale weapon damage based on threat
@@ -493,7 +493,7 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {Object} Armour object for NPC system data.
      */
-    static generateArmour(preset: any, threatLevel: number): any {
+    static generateArmour(preset: unknown, threatLevel: number): Record<string, unknown> {
         const equipment = this.EQUIPMENT_PRESETS[preset] || this.EQUIPMENT_PRESETS.mixed;
 
         // Scale armour based on threat
@@ -519,7 +519,7 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {Object} Movement object for NPC system data.
      */
-    static generateMovement(threatLevel: number): any {
+    static generateMovement(threatLevel: number): Record<string, unknown> {
         // Base movement increases slightly with threat
         const base = 3 + Math.floor(threatLevel / 10);
 
@@ -537,7 +537,7 @@ export default class ThreatCalculator {
      * @param {number} threatLevel - The threat level.
      * @returns {Object} Horde object for NPC system data.
      */
-    static generateHorde(isHorde: boolean, threatLevel: number): any {
+    static generateHorde(isHorde: boolean, threatLevel: number): Record<string, unknown> {
         if (!isHorde) {
             return {
                 enabled: false,
@@ -583,7 +583,7 @@ export default class ThreatCalculator {
      * @param {boolean} [config.isHorde] - Whether this is a horde.
      * @returns {Object} Complete system data object.
      */
-    static generateNPCData(config: Record<string, unknown>): any {
+    static generateNPCData(config: Record<string, unknown>): Record<string, unknown> {
         const { threatLevel = 5, role = 'specialist', type = 'troop', preset = 'mixed', faction = '', isHorde = false } = config;
 
         const actualType = isHorde ? 'horde' : type;
@@ -655,7 +655,7 @@ export default class ThreatCalculator {
      * @param {boolean} options.scaleArmour - Scale armour values.
      * @returns {Object} Updated system data with scaled values.
      */
-    static scaleToThreat(currentData: any, currentThreat: any, newThreat: any, options: Record<string, unknown> = {}): any {
+    static scaleToThreat(currentData: unknown, currentThreat: unknown, newThreat: unknown, options: Record<string, unknown> = {}): Record<string, unknown> {
         const { scaleCharacteristics = true, scaleWounds = true, scaleSkills = true, scaleWeapons = true, scaleArmour = true } = options;
 
         // Calculate scaling factor (5% per threat level difference)
@@ -738,7 +738,7 @@ export default class ThreatCalculator {
      * @param {Object} options - Scaling options.
      * @returns {Object} Preview object with current and new values.
      */
-    static previewScaling(currentData: any, currentThreat: any, newThreat: any, options: Record<string, unknown> = {}): any {
+    static previewScaling(currentData: unknown, currentThreat: unknown, newThreat: unknown, options: Record<string, unknown> = {}): Record<string, unknown> {
         const updates = this.scaleToThreat(currentData, currentThreat, newThreat, options);
 
         const preview = {
@@ -789,7 +789,7 @@ export default class ThreatCalculator {
      * @returns {string} Scaled damage string.
      * @private
      */
-    static _scaleDamage(damage: any, bonus: number): any {
+    static _scaleDamage(damage: unknown, bonus: number): unknown {
         if (bonus === 0) return damage;
 
         // Parse existing damage string
@@ -809,7 +809,7 @@ export default class ThreatCalculator {
      * Get all available roles.
      * @returns {Array<{key: string, name: string, description: string}>}
      */
-    static getRoles(): any {
+    static getRoles(): Record<string, unknown> {
         return Object.entries(this.ROLE_PROFILES).map(([key, profile]) => ({
             key,
             name: profile.name,
@@ -821,7 +821,7 @@ export default class ThreatCalculator {
      * Get all available equipment presets.
      * @returns {Array<{key: string, name: string, description: string}>}
      */
-    static getPresets(): any {
+    static getPresets(): Record<string, unknown> {
         return Object.entries(this.EQUIPMENT_PRESETS).map(([key, preset]) => ({
             key,
             name: preset.name,
@@ -833,7 +833,7 @@ export default class ThreatCalculator {
      * Get all NPC types.
      * @returns {Array<{key: string, name: string}>}
      */
-    static getTypes(): any {
+    static getTypes(): Record<string, unknown> {
         return [
             { key: 'troop', name: 'Troop' },
             { key: 'elite', name: 'Elite' },

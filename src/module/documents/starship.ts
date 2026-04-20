@@ -84,7 +84,7 @@ export class WH40KStarship extends WH40KBaseActor {
      * Is the ship crippled (below half hull)?
      * @type {boolean}
      */
-    get isCrippled(): any {
+    get isCrippled(): boolean {
         return this.hullIntegrity.value <= Math.floor(this.hullIntegrity.max / 2);
     }
 

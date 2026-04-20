@@ -8,7 +8,7 @@
  *
  * @abstract
  */
-export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
+export default class BaseGrantData extends foundry.abstract.DataModel<Record<string, foundry.data.fields.DataField.Any>, any> {
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -99,7 +99,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * Initialise a blank result object. Override to customise the `applied` shape.
      * @returns {GrantApplicationResult}
      */
-    _initResult(): any {
+    _initResult(): Record<string, unknown> {
         return { success: true, applied: {}, notifications: [], errors: [] };
     }
 
@@ -206,7 +206,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * Note: Named validateGrant to avoid collision with Foundry's DataModel.validate()
      * @returns {string[]} Array of validation error messages
      */
-    validateGrant(): any {
+    validateGrant(): string[] {
         return [];
     }
 
@@ -220,7 +220,7 @@ export default class BaseGrantData extends (foundry.abstract.DataModel as any) {
      * @returns {object}
      * @protected
      */
-    _createGrantFlags(sourceUuid): any {
+    _createGrantFlags(sourceUuid): Record<string, unknown> {
         return {
             'wh40k-rpg': {
                 sourceId: sourceUuid,

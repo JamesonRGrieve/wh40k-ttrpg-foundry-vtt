@@ -331,7 +331,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * Roll weapon damage
      * @param {Item} weapon - The weapon item
      */
-    async rollWeaponDamage(weapon: any): Promise<void> {
+    async rollWeaponDamage(weapon: WH40KItem): Promise<void> {
         if (!weapon.system.equipped) {
             ui.notifications.warn('Actor must have weapon equipped!');
             return;
@@ -372,7 +372,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * Roll psychic power damage
      * @param {Item} power - The psychic power item
      */
-    async rollPsychicPowerDamage(power: any): Promise<void> {
+    async rollPsychicPowerDamage(power: WH40KItem): Promise<void> {
         await prepareDamageRoll({
             psychicPower: true,
             pr: this.psy.currentRating,
@@ -514,7 +514,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
      * @param {D100Roll} rollCheckTarget - The target actor's roll
      * @returns {Object} The opposed test result
      */
-    opposedTest(rollCheckSource: any, rollCheckTarget: any): any {
+    opposedTest(rollCheckSource: unknown, rollCheckTarget: unknown): unknown {
         if (!rollCheckSource) return null;
 
         if (rollCheckTarget) {
@@ -543,7 +543,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /*  Skill Helpers                               */
     /* -------------------------------------------- */
 
-    getSkillFuzzy(skillName: string): any {
+    getSkillFuzzy(skillName: string): unknown {
         const resolvedSkillName = this._resolveSkillName(skillName);
         const skill = this.skills[resolvedSkillName];
         if (skill) return skill;
@@ -556,7 +556,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         return undefined;
     }
 
-    _findSpecialistSkill(skill: any, specialityName: string | number): any {
+    _findSpecialistSkill(skill: Record<string, unknown>, specialityName: string | number): unknown {
         if (!Array.isArray(skill?.entries)) return undefined;
         if (Number.isInteger(specialityName)) return skill.entries[specialityName];
 
@@ -583,13 +583,13 @@ export class WH40KAcolyte extends WH40KBaseActor {
     /* -------------------------------------------- */
 
     hasTalent(talent: string): boolean {
-        return !!(this.items as any).filter((i: any) => i.type === 'talent').find((t: any) => t.name === talent);
+        return !!(this.items as any).filter((i: { type: string }) => i.type === 'talent').find((t: { name: string }) => t.name === talent);
     }
 
     hasTalentFuzzyWords(words: string[]): boolean {
         return !!(this.items as any)
-            .filter((i: any) => i.type === 'talent')
-            .find((t: any) => {
+            .filter((i: { type: string }) => i.type === 'talent')
+            .find((t: { name: string }) => {
                 for (const word of words) {
                     if (!t.name.includes(word)) return false;
                 }
