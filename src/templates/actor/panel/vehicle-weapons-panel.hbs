@@ -24,7 +24,7 @@
                         </div>
                         <div class="table-cell">{{weapon.system.class}}</div>
                         <div class="table-cell">{{weapon.system.range}}</div>
-                        <div class="table-cell">{{weapon.system.damage}}</div>
+                        <div class="table-cell">{{#if weapon.system.damageLabel}}{{weapon.system.damageLabel}}{{else}}{{weapon.system.damage.formula}}{{#if weapon.system.damage.bonus}}+{{weapon.system.damage.bonus}}{{/if}}{{/if}}</div>
                         <div class="table-cell--last">
                             <button class="wh40k-control-button" data-action="rollWeapon" data-item-id="{{weapon.id}}" title="Roll Attack">
                                 <i class="fas fa-dice-d20"></i>

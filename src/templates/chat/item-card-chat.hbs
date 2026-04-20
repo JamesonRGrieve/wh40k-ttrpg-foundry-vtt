@@ -55,11 +55,11 @@
                     </div>
                     <div class="wh40k-item-card__stat">
                         <span class="wh40k-item-card__stat-name">Damage</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.damage}} {{item.system.damageType}}</span>
+                        <span class="wh40k-item-card__stat-value">{{#if item.system.damageLabel}}{{item.system.damageLabel}}{{else}}{{item.system.damage.formula}}{{#if item.system.damage.bonus}}+{{item.system.damage.bonus}}{{/if}} {{item.system.damage.type}}{{/if}}</span>
                     </div>
                     <div class="wh40k-item-card__stat">
                         <span class="wh40k-item-card__stat-name">Pen</span>
-                        <span class="wh40k-item-card__stat-value">{{item.system.penetration}}</span>
+                        <span class="wh40k-item-card__stat-value">{{#if item.system.damage.penetration}}{{item.system.damage.penetration}}{{else}}{{item.system.penetration}}{{/if}}</span>
                     </div>
                     {{#if item.system.range}}
                         <div class="wh40k-item-card__stat">
