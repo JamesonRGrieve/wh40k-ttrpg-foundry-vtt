@@ -18,13 +18,13 @@
             <span class="wh40k-hdr-paren">)</span>
         </div>
         {{!-- Portrait + Origin Path Icons side by side --}}
-        <div class="wh40k-header-topline tw-grid tw-grid-cols-header-topline tw-gap-2.5 tw-items-center">
+        <div class="wh40k-header-topline tw-grid tw-grid-cols-header-topline tw-items-center tw-gap-2.5">
             <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-shrink-0">
-                <div class="wh40k-portrait-container tw-relative tw-shrink-0 tw-cursor-pointer">
+                <div class="wh40k-portrait-container tw-relative tw-aspect-[11/15] tw-w-44 tw-shrink-0 tw-cursor-pointer tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium,rgba(0,0,0,0.2))] tw-transition-all hover:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)]">
                     <i class="fa-solid fa-dice-d20 wh40k-origin-builder-btn tw-absolute tw-text-2xl tw-top-2 tw-left-2 tw-z-10 tw-cursor-pointer tw-opacity-60 tw-transition-all hover:tw-opacity-100 hover:tw-drop-shadow-[0_0_8px_rgba(212,175,55,0.9)] {{#unless originPathComplete}}pulse{{/unless}}"
                        data-action="openOriginPathBuilder"
                        data-tooltip="{{localize 'WH40K.Utility.SetupOriginPath'}}"></i>
-                    <img class="wh40k-portrait tw-w-44 tw-h-60 tw-object-cover" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+                    <img class="wh40k-portrait tw-h-full tw-w-full tw-object-cover tw-bg-[rgba(0,0,0,0.25)]" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
                 </div>
                 {{#if system.originPath.divination}}
                 <p class="wh40k-divination tw-italic tw-opacity-50">{{system.originPath.divination}}</p>
