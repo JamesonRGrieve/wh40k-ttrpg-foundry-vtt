@@ -20,7 +20,7 @@ export default class QuickActionsBar {
      * @param {boolean} options.inSheet - Rendering in item sheet (vs character sheet)
      * @returns {Object[]} Array of action definitions
      */
-    static getActionsForItem(item: WH40KItem, { compact: boolean = false, inSheet: boolean = false } = {}): Record<string, unknown>[] {
+    static getActionsForItem(item: WH40KItem, { compact = false, inSheet = false }: { compact?: boolean; inSheet?: boolean } = {}): Record<string, unknown>[] {
         const actions = [];
         const type = item.type;
 

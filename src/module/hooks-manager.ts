@@ -339,8 +339,13 @@ export class HooksManager {
         const starshipTypeIds = ['rt-starship'];
 
         // --- Per-system default PC sheets ---
+        // DH2 covers both the new dh2-character type and the legacy
+        // `character` type (used by actors that predate the type split).
+        // Foundry's DocumentSheetConfig keys registrations by class, so
+        // legacy and new types must share the same call to avoid the second
+        // registration silently overwriting the first.
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2PlayerSheet, {
-            types: ['dh2-character'],
+            types: ['dh2-character', 'character'],
             makeDefault: true,
             label: 'WH40K.Sheet.DarkHeresy2',
         });
@@ -376,8 +381,9 @@ export class HooksManager {
         });
 
         // --- Per-system default NPC sheets ---
+        // Also covers the legacy `npc` type (see PC sheet comment above).
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2NPCSheet, {
-            types: ['dh2-npc'],
+            types: ['dh2-npc', 'npc'],
             makeDefault: true,
             label: 'WH40K.Sheet.DarkHeresy2NPC',
         });
