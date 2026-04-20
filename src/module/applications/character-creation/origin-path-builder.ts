@@ -387,7 +387,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
         await this._loadOrigins();
 
         const currentStep = this.currentStep;
@@ -1192,7 +1192,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<object>}
      * @private
      */
-    async _prepareSelectedOrigin(item: WH40KItem): Promise<any> {
+    async _prepareSelectedOrigin(item: WH40KItem): Promise<unknown> {
         // Handle both Item instances and plain data objects
         const system = this._getSelectionSystem(item);
         const grants = system?.grants || {};
@@ -1245,7 +1245,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         // Prepare rolls with manual input support
-        const rolls: any = {};
+        const rolls: unknown = {};
         const rollResults = system?.rollResults || {};
 
         if (grants.woundsFormula) {
@@ -1484,7 +1484,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
-    async _calculatePreview(): Promise<any> {
+    async _calculatePreview(): Promise<unknown> {
         const preview = {
             characteristics: [],
             skills: [],
@@ -2240,7 +2240,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (selection) {
             // For plain data objects, we need to get the original item from compendium
             const uuid = selection.uuid || selection._sourceUuid;
-            let originItem: any = uuid ? await fromUuid(uuid) : null;
+            let originItem: unknown = uuid ? await fromUuid(uuid) : null;
 
             // If we can't find the original, create a temporary display item
             if (!originItem) {
@@ -2822,7 +2822,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _buildRolledValues(): any {
-        const values: any = {};
+        const values: unknown = {};
         for (const [, selection] of this.selections) {
             const rollResults = selection.system?.rollResults || {};
             if (rollResults.wounds?.rolled != null) {

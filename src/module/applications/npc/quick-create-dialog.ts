@@ -121,8 +121,8 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
-        const context: any = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+        const context: unknown = await super._prepareContext(options);
 
         // Get available options
         const roles = ThreatCalculator.getRoles();
@@ -320,7 +320,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {FormDataExtended} formData - The form data.
      */
     static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
-        const data: any = foundry.utils.expandObject(formData.object);
+        const data: unknown = foundry.utils.expandObject(formData.object);
 
         // Update state from form
         this.#state.name = data.name || 'New NPC';
@@ -387,7 +387,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<unknown> {
         // Clear any pending render
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
@@ -407,7 +407,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * Wait for the dialog to complete.
      * @returns {Promise<Actor|null>} The created actor, or null if cancelled.
      */
-    async wait(): Promise<any> {
+    async wait(): Promise<unknown> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             void this.render(true);
@@ -423,7 +423,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {Object} [config] - Initial configuration.
      * @returns {Promise<Actor|null>} The created actor, or null if cancelled.
      */
-    static async create(config: Record<string, unknown> = {}): Promise<any> {
+    static async create(config: Record<string, unknown> = {}): Promise<unknown> {
         const dialog = new this(config);
         return dialog.wait();
     }
@@ -437,7 +437,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {Object} config.baseConfig - Base NPC configuration.
      * @returns {Promise<Array<Actor>>} Array of created actors.
      */
-    static async createBatch(config: Record<string, unknown>): Promise<any> {
+    static async createBatch(config: Record<string, unknown>): Promise<unknown> {
         const { count = 1, namePattern = 'NPC {n}', randomize = false, baseConfig = {} } = config;
 
         const actors = [];

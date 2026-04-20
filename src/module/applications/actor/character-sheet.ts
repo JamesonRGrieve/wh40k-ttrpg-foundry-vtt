@@ -249,7 +249,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * @returns {Promise}
      * @private
      */
-    async _throttle(key: string, wait: number, func: (...args: any[]) => any, context: Record<string, unknown>, args: unknown[]): Promise<any> {
+    async _throttle(key: string, wait: number, func: (...args: any[]) => any, context: Record<string, unknown>, args: unknown[]): Promise<unknown> {
         // Initialize throttle tracking map if it doesn't exist
         if (!this._throttleTimers) this._throttleTimers = new Map();
 
@@ -3513,7 +3513,7 @@ export default class CharacterSheet extends (BaseActorSheet as any) {
      * Override drop item to handle origin path updates.
      * @override
      */
-    async _onDropItem(event: DragEvent, item: WH40KItem): Promise<any> {
+    async _onDropItem(event: DragEvent, item: WH40KItem): Promise<unknown> {
         const result = await super._onDropItem(event, item);
 
         // If dropped item is an origin path (trait with origin flag), re-render biography part

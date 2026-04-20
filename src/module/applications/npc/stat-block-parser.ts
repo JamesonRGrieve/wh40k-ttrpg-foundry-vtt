@@ -211,8 +211,8 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
-        const context: any = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+        const context: unknown = await super._prepareContext(options);
         const parsedData = this.#parsedData;
         const previewSkills = parsedData?.system?.trainedSkills ? Object.values(parsedData.system.trainedSkills) : [];
         const previewTalents = parsedData?.items?.filter((item) => item.type === 'talent') ?? [];
@@ -598,7 +598,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         const namedMatches = [...input.matchAll(this.PATTERNS.movementNamed)];
         if (namedMatches.length > 0) {
-            const movement: any = {};
+            const movement: unknown = {};
             for (const match of namedMatches) {
                 movement[match[1].toLowerCase()] = parseInt(match[2], 10);
             }
@@ -1086,7 +1086,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
 
         try {
             if (this.#targetActor) {
-                const updateData: any = {
+                const updateData: unknown = {
                     system: this.#parsedData.system,
                 };
                 if (this.#parsedData.name && this.#parsedData.name !== 'Imported NPC') {
@@ -1163,7 +1163,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<unknown> {
         if (!this.#submitted && this.#resolve) {
             this.#resolve(null);
         }
@@ -1178,7 +1178,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * Wait for import completion.
      * @returns {Promise<Actor|null>} Created actor or null.
      */
-    async wait(): Promise<any> {
+    async wait(): Promise<unknown> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             void this.render(true);
@@ -1190,7 +1190,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} [initialInput=""] - Optional initial input.
      * @returns {Promise<Actor|null>} Created actor or null.
      */
-    static async open(initialInput: any = ''): Promise<any> {
+    static async open(initialInput: any = ''): Promise<unknown> {
         let input = initialInput;
         let options = {};
         if (typeof initialInput === 'object' && initialInput !== null) {

@@ -114,8 +114,8 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
-        const context: any = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+        const context: unknown = await super._prepareContext(options);
 
         context.rollType = this.rollType;
         context.rollTypeLabel = this.rollType === 'wounds' ? 'Wounds' : 'Fate Points';
@@ -519,7 +519,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @returns {Promise<object>}
      * @private
      */
-    async _rollWounds(): Promise<any> {
+    async _rollWounds(): Promise<unknown> {
         const actor = this.context.actor;
         const formula = this.formula;
 
@@ -557,7 +557,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @returns {Promise<object>}
      * @private
      */
-    async _rollFate(): Promise<any> {
+    async _rollFate(): Promise<unknown> {
         const formula = this.formula;
 
         // Plain number formula (e.g. "3") — no roll needed, fixed value
@@ -656,7 +656,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @returns {Promise<ChatMessage>}
      * @private
      */
-    async _postRollToChat(): Promise<any> {
+    async _postRollToChat(): Promise<unknown> {
         const templateData = {
             actor: this.context.actor.name,
             actorImg: this.context.actor.img,
@@ -691,7 +691,7 @@ export default class OriginRollDialog extends HandlebarsApplicationMixin(Applica
      * @param {object} context - Context object with actor and originItem
      * @returns {Promise<object|null>} Roll result or null if cancelled
      */
-    static async show(rollType: any, formula: string, context: Record<string, unknown>): Promise<any> {
+    static async show(rollType: any, formula: string, context: Record<string, unknown>): Promise<unknown> {
         const dialog = new OriginRollDialog(rollType, formula, context);
 
         // Create promise that will be resolved when user accepts/cancels

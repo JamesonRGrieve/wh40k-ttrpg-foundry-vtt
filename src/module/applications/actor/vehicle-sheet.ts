@@ -112,7 +112,7 @@ export default class VehicleSheet extends BaseActorSheet {
 
     /** @inheritDoc */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context: any = {
+        const context: unknown = {
             actor: this.actor,
             system: this.actor.system,
             source: this.isEditable ? this.actor.system._source : this.actor.system,

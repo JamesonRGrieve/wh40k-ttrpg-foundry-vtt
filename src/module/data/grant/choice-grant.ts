@@ -141,7 +141,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState): Promise<any> {
+    async reverse(actor, appliedState): Promise<unknown> {
         const restoreData = {
             selectedOptions: appliedState.selectedOptions ?? [],
             grantResults: {},

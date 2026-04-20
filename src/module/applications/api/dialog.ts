@@ -60,9 +60,9 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
 
     /**
      * Wait for the dialog to be submitted or closed.
-     * @returns {Promise<any>}
+     * @returns {Promise<unknown>}
      */
-    async wait(): Promise<any> {
+    async wait(): Promise<unknown> {
         return new Promise((resolve, reject) => {
             this._resolve = resolve;
             this._reject = reject;
@@ -117,14 +117,14 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
      * @param {string} options.content      Dialog content HTML.
      * @param {string} [options.label]      Submit button label.
      * @param {Function} options.callback   Callback when submitted.
-     * @returns {Promise<any>}
+     * @returns {Promise<unknown>}
      */
     static async prompt({
         title,
         content,
         label = 'OK',
         callback,
-    }: { title?: string; content?: string; label?: string; callback?: (...args: any[]) => any } = {}): Promise<any> {
+    }: { title?: string; content?: string; label?: string; callback?: (...args: any[]) => any } = {}): Promise<unknown> {
         // @ts-expect-error - DialogV2 argument type
         return foundry.applications.api.DialogV2.prompt({
             window: { title },

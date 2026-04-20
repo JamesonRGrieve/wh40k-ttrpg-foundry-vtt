@@ -95,8 +95,8 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
-        const context: any = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+        const context: unknown = await super._prepareContext(options);
         const system = this.origin.system;
         const grants = system?.grants || {};
         const modifiers = system?.modifiers?.characteristics || {};
@@ -198,7 +198,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTalents(talents: unknown[]): Promise<any> {
+    async _prepareTalents(talents: unknown[]): Promise<unknown> {
         const prepared = [];
         for (const talent of talents) {
             let item = null;
@@ -226,7 +226,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTraits(traits: unknown[]): Promise<any> {
+    async _prepareTraits(traits: unknown[]): Promise<unknown> {
         const prepared = [];
         for (const trait of traits) {
             let item = null;
@@ -324,7 +324,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
      * @param {object} [options={}] - Additional options
      * @returns {Promise<{selected: boolean, origin: Item|null}>}
      */
-    static async show(origin: any, options: Record<string, unknown> = {}): Promise<any> {
+    static async show(origin: any, options: Record<string, unknown> = {}): Promise<unknown> {
         const dialog = new OriginDetailDialog(origin, options);
 
         const result = new Promise((resolve) => {
@@ -337,7 +337,7 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     }
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<any> {
+    async close(options: Record<string, unknown> = {}): Promise<unknown> {
         // Resolve with cancelled if not already resolved
         if (this._resolvePromise) {
             this._resolvePromise({ selected: false, origin: null });

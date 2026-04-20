@@ -161,7 +161,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /*  Public API                                  */
     /* -------------------------------------------- */
 
-    async wait(): Promise<any> {
+    async wait(): Promise<unknown> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             void this.render(true);
@@ -178,7 +178,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
      * @param {number} config.clipMax - Effective clip max for display
      * @returns {Promise<Item|null>} Selected ammo item, or null if cancelled
      */
-    static async pick(config: { ammoItems: unknown[]; currentAmmoUuid?: string; weaponName: string; clipMax: number }): Promise<any> {
+    static async pick(config: { ammoItems: unknown[]; currentAmmoUuid?: string; weaponName: string; clipMax: number }): Promise<unknown> {
         // Auto-select if only one type available
         if (config.ammoItems.length === 1) {
             return config.ammoItems[0];

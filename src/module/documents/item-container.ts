@@ -11,7 +11,7 @@ export class WH40KItemContainer extends Item {
         return this.parent;
     }
 
-    async update(data: Record<string, unknown> = {}, options: Record<string, unknown> = {}): Promise<any> {
+    async update(data: Record<string, unknown> = {}, options: Record<string, unknown> = {}): Promise<unknown> {
         data._id = this.id;
         if (this.isNestedItem()) {
             // @ts-expect-error - property access
@@ -36,7 +36,7 @@ export class WH40KItemContainer extends Item {
         this.flags[SYSTEM_ID][DH_CONTAINER_ID] = dataArray;
     }
 
-    async setNested(data: Record<string, unknown> | Record<string, unknown>[]): Promise<any> {
+    async setNested(data: Record<string, unknown> | Record<string, unknown>[]): Promise<unknown> {
         // Make array if not
         const dataArray = Array.isArray(data) ? data : [data];
         // @ts-expect-error - argument type
@@ -63,7 +63,7 @@ export class WH40KItemContainer extends Item {
         game.wh40k.log(`Item ${this.name as string} items:`, this.items);
     }
 
-    static async _onCreateOperation(items: unknown[], context: Record<string, unknown>, user: Record<string, unknown>): Promise<any> {
+    static async _onCreateOperation(items: unknown[], context: Record<string, unknown>, user: Record<string, unknown>): Promise<unknown> {
         // Parent is not an item -- ignore
         if (!(context.parent instanceof Item)) return super._onCreateOperation(items, context, user);
         // None of the items being created are containers -- ignore

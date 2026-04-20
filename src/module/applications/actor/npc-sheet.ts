@@ -1667,7 +1667,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      * @override
      */
     _prepareSkills(context: Record<string, unknown>): void {
-        const actor: any = this.actor;
+        const actor: unknown = this.actor;
         const characteristics = actor.system?.characteristics ?? {};
         const trainedSkills = actor.system?.trainedSkills ?? {};
 
@@ -1698,7 +1698,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
 
         const standard: Array<[string, any]> = BASIC_SKILLS.map(([key, label, charShort]) => {
             const t = trainedSkills[key];
-            const skill: any = {
+            const skill: unknown = {
                 label,
                 characteristic: charShort,
                 trained: !!t?.trained,

@@ -117,8 +117,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
-        const context: any = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+        const context: unknown = await super._prepareContext(options);
 
         // Get system config early — determines career-based vs aptitude-based flow
         const systemConfig = SystemConfigRegistry.getOrNull(this.actor.system?.gameSystem);
@@ -126,7 +126,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         context.usesAptitudes = systemConfig?.usesAptitudes ?? false;
         context.usesCareerTables = systemConfig?.usesCareerTables ?? true;
 
-        let career: any = null;
+        let career: unknown = null;
 
         if (systemConfig?.usesCareerTables || !systemConfig) {
             // Career-based systems (RT, DH1e, DW): require a career selection

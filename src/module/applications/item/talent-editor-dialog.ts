@@ -95,7 +95,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
 
     /** @override */
     // eslint-disable-next-line @typescript-eslint/require-await
-    async _prepareContext(options: Record<string, unknown>): Promise<any> {
+    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
         const system = this.item.system;
 
         // Prepare characteristic options
@@ -558,17 +558,17 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @param {FormDataExtended} formData - The form data
      */
     static async #formHandler(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
-        const data: any = foundry.utils.expandObject(formData.object);
+        const data: unknown = foundry.utils.expandObject(formData.object);
 
         // Process the form data into the proper structure
-        const updateData: any = {};
+        const updateData: unknown = {};
 
         // Process prerequisites
         if (data.prerequisites) {
             updateData['system.prerequisites.text'] = data.prerequisites.text || '';
 
             // Convert characteristics array back to object
-            const charReqs: any = {};
+            const charReqs: unknown = {};
             if (data.prerequisites.characteristics) {
                 for (const entry of Object.values(data.prerequisites.characteristics) as unknown[]) {
                     if (entry.key && entry.value) {
@@ -600,7 +600,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
         // Process modifiers
         if (data.modifiers) {
             // Characteristics
-            const charMods: any = {};
+            const charMods: unknown = {};
             if (data.modifiers.characteristics) {
                 for (const entry of Object.values(data.modifiers.characteristics) as unknown[]) {
                     if (entry.key) {
@@ -611,7 +611,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
             updateData['system.modifiers.characteristics'] = charMods;
 
             // Skills
-            const skillMods: any = {};
+            const skillMods: unknown = {};
             if (data.modifiers.skills) {
                 for (const entry of Object.values(data.modifiers.skills) as unknown[]) {
                     if (entry.key) {
