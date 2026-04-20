@@ -1,25 +1,25 @@
 {{!-- Item Header - Physical Item Style
      Header for physical items with image + name + class/type/craftsmanship badges + equipped toggle
 --}}
-<header class="wh40k-item-header wh40k-item-header--physical">
-  <div class="wh40k-item-header__image" data-action="editImage" data-edit="img">
-    <img src="{{item.img}}" alt="{{item.name}}" />
-    <div class="wh40k-item-header__image-overlay">
-      <i class="fas fa-edit"></i>
+<header class="wh40k-item-header wh40k-item-header--physical tw-grid tw-grid-cols-[80px_minmax(0,1fr)_auto] tw-gap-4 tw-border-b-2 tw-border-[var(--wh40k-gold-dark)] tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-px-4 tw-py-3 tw-shrink-0">
+  <div class="wh40k-item-header__image tw-group tw-relative tw-h-20 tw-w-20 tw-cursor-pointer tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105 hover:tw-shadow-[var(--wh40k-shadow-lg),0_0_20px_rgba(212,175,55,0.5)]" data-action="editImage" data-edit="img">
+    <img class="tw-h-full tw-w-full tw-object-cover" src="{{item.img}}" alt="{{item.name}}" />
+    <div class="wh40k-item-header__image-overlay tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/45 tw-text-[var(--wh40k-gold)] tw-opacity-0 tw-transition-opacity group-hover:tw-opacity-100">
+      <i class="fas fa-edit tw-text-lg"></i>
     </div>
   </div>
   
-  <div class="wh40k-item-header__info">
+  <div class="wh40k-item-header__info tw-flex tw-min-w-0 tw-flex-col tw-justify-center tw-gap-1">
     <input type="text" 
-           class="wh40k-item-header__name" 
+           class="wh40k-item-header__name tw-w-full tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-font-display tw-text-xl tw-text-[var(--wh40k-gold)] tw-shadow-[0_1px_2px_var(--wh40k-text-shadow)] placeholder:tw-text-[var(--wh40k-text-muted)] focus:tw-rounded-sm focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-outline-none" 
            name="name" 
            value="{{item.name}}" 
            placeholder="{{localize 'WH40K.Item.NamePlaceholder'}}" />
     
-    <div class="wh40k-item-header__meta">
+    <div class="wh40k-item-header__meta tw-mt-1 tw-flex tw-flex-wrap tw-items-center tw-gap-1">
       {{!-- Item Class Badge (for weapons) --}}
       {{#if system.class}}
-      <span class="wh40k-badge wh40k-badge--class" title="{{system.classLabel}}">
+      <span class="wh40k-badge wh40k-badge--class tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{system.classLabel}}">
         <i class="fas {{system.classIcon}}"></i>
         {{system.classLabel}}
       </span>
@@ -27,14 +27,14 @@
       
       {{!-- Item Type Badge --}}
       {{#if system.type}}
-      <span class="wh40k-badge wh40k-badge--type" title="{{system.typeLabel}}">
+      <span class="wh40k-badge wh40k-badge--type tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{system.typeLabel}}">
         {{system.typeLabel}}
       </span>
       {{/if}}
       
       {{!-- Craftsmanship Badge (if not Common) --}}
       {{#if (and system.craftsmanship (ne system.craftsmanship "common"))}}
-      <span class="wh40k-badge wh40k-badge--craft wh40k-badge--{{system.craftsmanship}}" 
+      <span class="wh40k-badge wh40k-badge--craft wh40k-badge--{{system.craftsmanship}} tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" 
             title="{{system.craftsmanshipLabel}}">
         <i class="fas fa-hammer"></i>
         {{system.craftsmanshipLabel}}
@@ -43,7 +43,7 @@
       
       {{!-- Two-Handed Indicator (for weapons) --}}
       {{#if system.twoHanded}}
-      <span class="wh40k-badge wh40k-badge--hands" title="Two-Handed">
+      <span class="wh40k-badge wh40k-badge--hands tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="Two-Handed">
         <i class="fas fa-hands"></i>
       </span>
       {{/if}}
@@ -52,7 +52,7 @@
   
   {{!-- Equipped Toggle (for equippable items) --}}
   {{#if system.equipped}}
-  <div class="wh40k-item-header__equipped">
+  <div class="wh40k-item-header__equipped tw-flex tw-items-center tw-justify-end">
     <label class="wh40k-toggle-equipped" title="Toggle Equipped">
       <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
       <span class="wh40k-toggle-equipped__indicator">

@@ -237,11 +237,11 @@
           </div>
           <div class="wh40k-ammo-section__body">
             {{#if item.system.addedQualities.size}}
-            <div class="wh40k-quality-tags">
+            <div class="wh40k-quality-tags tw-flex tw-flex-wrap tw-items-center tw-gap-1">
               {{#each (setToArray item.system.addedQualities) as |quality|}}
-              <div class="wh40k-quality-tag wh40k-quality-tag--added">
-                <span class="wh40k-quality-tag__label">{{quality}}</span>
-                <button type="button" class="wh40k-quality-tag__remove" 
+              <div class="wh40k-quality-tag wh40k-quality-tag--added tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-border tw-border-[rgba(34,197,94,0.35)] tw-bg-[rgba(34,197,94,0.15)] tw-px-2.5 tw-py-1 tw-text-sm tw-text-[#86efac]">
+                <span class="wh40k-quality-tag__label tw-font-medium">{{quality}}</span>
+                <button type="button" class="wh40k-quality-tag__remove tw--mr-1 tw-ml-0.5 tw-inline-flex tw-h-4 tw-w-4 tw-items-center tw-justify-center tw-border-0 tw-bg-transparent tw-p-0 tw-text-inherit tw-opacity-60 tw-transition-all hover:tw-scale-110 hover:tw-text-[var(--wh40k-stat-negative)] hover:tw-opacity-100" 
                         data-action="removeAddedQuality" data-quality="{{quality}}"
                         title="Remove quality">
                   <i class="fas fa-times"></i>
@@ -274,11 +274,11 @@
           </div>
           <div class="wh40k-ammo-section__body">
             {{#if item.system.removedQualities.size}}
-            <div class="wh40k-quality-tags">
+            <div class="wh40k-quality-tags tw-flex tw-flex-wrap tw-items-center tw-gap-1">
               {{#each (setToArray item.system.removedQualities) as |quality|}}
-              <div class="wh40k-quality-tag wh40k-quality-tag--removed">
-                <span class="wh40k-quality-tag__label">{{quality}}</span>
-                <button type="button" class="wh40k-quality-tag__remove" 
+              <div class="wh40k-quality-tag wh40k-quality-tag--removed tw-inline-flex tw-items-center tw-gap-1 tw-rounded-full tw-border tw-border-[rgba(248,113,113,0.35)] tw-bg-[rgba(248,113,113,0.15)] tw-px-2.5 tw-py-1 tw-text-sm tw-text-[#fca5a5]">
+                <span class="wh40k-quality-tag__label tw-font-medium">{{quality}}</span>
+                <button type="button" class="wh40k-quality-tag__remove tw--mr-1 tw-ml-0.5 tw-inline-flex tw-h-4 tw-w-4 tw-items-center tw-justify-center tw-border-0 tw-bg-transparent tw-p-0 tw-text-inherit tw-opacity-60 tw-transition-all hover:tw-scale-110 hover:tw-text-[var(--wh40k-stat-negative)] hover:tw-opacity-100" 
                         data-action="removeRemovedQuality" data-quality="{{quality}}"
                         title="Remove quality">
                   <i class="fas fa-times"></i>
