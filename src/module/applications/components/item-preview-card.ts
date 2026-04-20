@@ -191,30 +191,32 @@ export function ItemPreviewMixin(Base) {
 
             return `
                 <div class="wh40k-weapon-preview-stats">
-                    <div class="wh40k-stat-pill">
-                        <i class="fa-solid fa-burst"></i>
-                        <span class="wh40k-stat-pill__label">Damage</span>
-                        <span class="wh40k-stat-pill__value">${damage.formula || 'N/A'}</span>
+                    <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
+                        <i class="fa-solid fa-burst tw-text-[var(--wh40k-stat-neutral)]"></i>
+                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Damage</span>
+                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${damage.formula || 'N/A'}</span>
                     </div>
-                    <div class="wh40k-stat-pill">
-                        <i class="fa-solid fa-shield"></i>
-                        <span class="wh40k-stat-pill__label">Pen</span>
-                        <span class="wh40k-stat-pill__value">${stats.penetration || 0}</span>
+                    <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
+                        <i class="fa-solid fa-shield tw-text-[var(--wh40k-stat-neutral)]"></i>
+                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Pen</span>
+                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${stats.penetration || 0}</span>
                     </div>
-                    <div class="wh40k-stat-pill">
-                        <i class="fa-solid fa-bullseye"></i>
-                        <span class="wh40k-stat-pill__label">Range</span>
-                        <span class="wh40k-stat-pill__value">${stats.range || 'N/A'}</span>
+                    <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
+                        <i class="fa-solid fa-bullseye tw-text-[var(--wh40k-stat-neutral)]"></i>
+                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Range</span>
+                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${stats.range || 'N/A'}</span>
                     </div>
-                    <div class="wh40k-stat-pill">
-                        <i class="fa-solid fa-gauge-high"></i>
-                        <span class="wh40k-stat-pill__label">RoF</span>
-                        <span class="wh40k-stat-pill__value">${stats.rof || 'N/A'}</span>
+                    <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
+                        <i class="fa-solid fa-gauge-high tw-text-[var(--wh40k-stat-neutral)]"></i>
+                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">RoF</span>
+                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${stats.rof || 'N/A'}</span>
                     </div>
-                    <div class="wh40k-stat-pill">
-                        <i class="fa-solid fa-box"></i>
-                        <span class="wh40k-stat-pill__label">Clip</span>
-                        <span class="wh40k-stat-pill__value">${system.clip?.current || 0}/${system.clip?.max || 0}</span>
+                    <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
+                        <i class="fa-solid fa-box tw-text-[var(--wh40k-stat-neutral)]"></i>
+                        <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Clip</span>
+                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${system.clip?.current || 0}/${
+                system.clip?.max || 0
+            }</span>
                     </div>
                 </div>
                 ${this.#generateQualitiesHTML(system.qualities)}
