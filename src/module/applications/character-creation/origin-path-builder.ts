@@ -1181,6 +1181,21 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             selection: null,
         });
 
+        if (this.systemConfig.equipmentStep) {
+            steps.push({
+                index: steps.length,
+                key: this.systemConfig.equipmentStep.key,
+                step: this.systemConfig.equipmentStep.step,
+                label: this._getLocalizedStepLabel(this.systemConfig.equipmentStep.key),
+                shortLabel: this._getShortLabel(this.systemConfig.equipmentStep.key),
+                icon: this.systemConfig.equipmentStep.icon,
+                isActive: this.showEquipment,
+                isComplete: this.equipmentSelections.size > 0,
+                isDisabled: this.guidedMode && !this._hasAssignedCharacteristics(),
+                selection: null,
+            });
+        }
+
         return steps;
     }
 
@@ -2585,21 +2600,22 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (!formula) return;
 
         // Show a simple input dialog
-        const result = await Dialog.prompt({
-            title: game.i18n.localize(`WH40K.OriginPath.Enter${statType.charAt(0).toUpperCase() + statType.slice(1)}`),
+        const result = await foundry.applications.api.DialogV2.prompt({
+            window: {
+                title: game.i18n.localize(`WH40K.OriginPath.Enter${statType.charAt(0).toUpperCase() + statType.slice(1)}`),
+            },
             content: `
-                <form>
-                    <div class="form-group">
-                        <label>${game.i18n.localize('WH40K.OriginPath.ManualValue')}</label>
-                        <input type="number" name="value" value="" min="1" autofocus />
-                        <p class="notes">${game.i18n.localize('WH40K.OriginPath.FormulaHint')}: ${formula}</p>
-                    </div>
-                </form>
+                <div class="form-group">
+                    <label>${game.i18n.localize('WH40K.OriginPath.ManualValue')}</label>
+                    <input type="number" name="value" value="" min="1" autofocus />
+                    <p class="notes">${game.i18n.localize('WH40K.OriginPath.FormulaHint')}: ${formula}</p>
+                </div>
             `,
-            callback: (html) => {
-                const form = html[0]?.querySelector('form') || html.querySelector?.('form');
-                const val = (form as any)?.value?.value || form?.querySelector('[name=value]')?.value;
-                return parseInt(val) || null;
+            ok: {
+                callback: (_event: Event, button: HTMLButtonElement) => {
+                    const input = button.form?.elements.namedItem('value') as HTMLInputElement | null;
+                    return parseInt(input?.value ?? '') || null;
+                },
             },
             rejectClose: false,
         });
