@@ -7,6 +7,8 @@ import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/applicati
 
 const { ApplicationV2 } = foundry.applications.api;
 
+interface BaseRollDialogOptions {}
+
 /**
  * Base dialog class for roll prompts.
  * Provides common functionality for weapon, psychic, force field, and other roll dialogs.
@@ -14,9 +16,9 @@ const { ApplicationV2 } = foundry.applications.api;
 export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     /**
      * @param {object} rollData     The roll data to configure.
-     * @param {object} [options={}] Dialog options.
+     * @param {BaseRollDialogOptions} [options={}] Dialog options.
      */
-    constructor(rollData = {}, options = {}) {
+    constructor(rollData: any = {}, options: BaseRollDialogOptions = {}) {
         // @ts-expect-error - argument count
         super(options);
         this.rollData = rollData;
@@ -121,8 +123,8 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {HTMLFormElement} form  The form element.
      * @param {FormDataExtended} formData  The form data.
      */
-    static async #onFormSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
-        const data = foundry.utils.expandObject(formData.object);
+    static async #onFormSubmit(this: BaseRollDialog, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
+        const data = foundry.utils.expandObject((formData as any).object);
         this._updateRollData(data);
 
         if (this.rollData.update) {
@@ -151,7 +153,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onRoll(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onRoll(this: BaseRollDialog, event: Event, target: HTMLElement): Promise<void> {
         await this._performRoll();
     }
 
@@ -163,7 +165,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: BaseRollDialog, event: Event, target: HTMLElement): Promise<void> {
         await this.close();
     }
 

@@ -6,15 +6,17 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
+interface AddXPDialogOptions {}
+
 /**
  * Dialog for adding or subtracting experience points.
  */
 export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
     /**
      * @param {WH40KAcolyte} actor  The actor to modify.
-     * @param {object} [options={}]       Dialog options.
+     * @param {AddXPDialogOptions} [options={}]       Dialog options.
      */
-    constructor(actor, options = {}) {
+    constructor(actor: any, options: AddXPDialogOptions = {}) {
         // @ts-expect-error - argument count
         super(options);
         this.actor = actor;
@@ -123,8 +125,8 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {HTMLElement} form    The form element.
      * @param {FormDataExtended} formData  The form data.
      */
-    static async #onFormChange(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
-        const xpAmount = parseInt(formData.object.xpAmount) || 0;
+    static async #onFormChange(this: AddXPDialog, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
+        const xpAmount = parseInt((formData as any).object.xpAmount) || 0;
         if (this.xpAmount !== xpAmount) {
             this.xpAmount = xpAmount;
             await this.render();
@@ -139,7 +141,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onApply(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onApply(this: AddXPDialog, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         if (this.xpAmount === 0) {
@@ -166,7 +168,7 @@ export default class AddXPDialog extends ApplicationV2Mixin(ApplicationV2) {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: AddXPDialog, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         await this.close();
     }

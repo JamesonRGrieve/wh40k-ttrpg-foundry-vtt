@@ -1,3 +1,5 @@
+import type { WH40KBaseActor } from '../documents/base-actor.ts';
+
 /**
  * Roll Table Utilities for WH40K RPG
  * Provides integration with Foundry VTT's RollTable system for:
@@ -16,20 +18,18 @@ export class RollTableUtils {
      * @param {string} tableName - The name of the roll table
      * @param {object} options - Options for the roll
      * @param {boolean} options.displayChat - Whether to display in chat (default: true)
-     * @param {Roll} options.roll - Optional pre-rolled Roll object
-     * @returns {Promise<TableResult>} The table result
+     * @param {Roll} [options.roll] - Optional pre-rolled Roll object
+     * @returns {Promise<TableResult | null>} The table result
      */
-    static async rollTable(tableName, options = {}) {
-        // @ts-expect-error - dynamic property
+    static async rollTable(tableName: string, options: Record<string, any> = {}) {
         const { displayChat = true, roll = null } = options;
 
         // Find the table in world tables first, then compendiums
-        // @ts-expect-error - dynamic property access
-        let table = game.tables.getName(tableName);
+        let table = game.tables.getName(tableName) as RollTable;
 
         if (!table) {
             // Search in compendium packs
-            table = await this.findTableInCompendiums(tableName);
+            table = (await this.findTableInCompendiums(tableName)) as RollTable;
         }
 
         if (!table) {
@@ -38,7 +38,7 @@ export class RollTableUtils {
         }
 
         // Roll on the table
-        const rollResult = await table.roll({ roll });
+        const rollResult = await table.roll({ roll: roll as Roll | undefined });
 
         if (displayChat) {
             await table.toMessage(rollResult.results, {
@@ -57,7 +57,7 @@ export class RollTableUtils {
      * @param {string} tableName - The name of the table to find
      * @returns {Promise<RollTable|null>} The found table or null
      */
-    static async findTableInCompendiums(tableName) {
+    static async findTableInCompendiums(tableName: string) {
         for (const pack of game.packs) {
             if (pack.documentName !== 'RollTable') continue;
 
@@ -73,11 +73,11 @@ export class RollTableUtils {
 
     /**
      * Roll on the Psychic Phenomena table.
-     * @param {Actor} actor - The actor rolling
+     * @param {WH40KBaseActor} actor - The actor rolling
      * @param {number} modifier - Modifier to the roll (e.g., from Psy Rating)
-     * @returns {Promise<TableResult>}
+     * @returns {Promise<TableResult | null>}
      */
-    static async rollPsychicPhenomena(actor, modifier = 0) {
+    static async rollPsychicPhenomena(actor: WH40KBaseActor, modifier = 0) {
         const roll = new Roll(`1d100 + ${modifier}`);
         await roll.evaluate();
 
@@ -96,10 +96,10 @@ export class RollTableUtils {
 
     /**
      * Roll on the Perils of the Warp table.
-     * @param {Actor} actor - The actor rolling
-     * @returns {Promise<TableResult>}
+     * @param {WH40KBaseActor} actor - The actor rolling
+     * @returns {Promise<TableResult | null>}
      */
-    static async rollPerilsOfTheWarp(actor) {
+    static async rollPerilsOfTheWarp(actor: WH40KBaseActor) {
         return await this.rollTable('Perils of the Warp', { displayChat: true });
     }
 

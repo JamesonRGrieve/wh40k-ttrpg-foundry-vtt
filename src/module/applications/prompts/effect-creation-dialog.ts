@@ -7,6 +7,11 @@ import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 
 const { DialogV2 } = foundry.applications.api;
 
+interface EffectCreationDialogOptions {
+  actor?: any;
+  resolve?: Function;
+}
+
 export default class EffectCreationDialog extends (DialogV2 as any) {
     /** @override */
     static DEFAULT_OPTIONS = {
@@ -58,7 +63,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
 
     /* -------------------------------------------- */
 
-    constructor(options: Record<string, unknown> = {}) {
+    constructor(options: EffectCreationDialogOptions = {}) {
         super(options);
         this.actor = options.actor;
         this.resolve = options.resolve;
@@ -136,9 +141,9 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Handle category selection
      */
-    static _onSelectCategory(event: Event, target: HTMLElement): void {
-        this.selectedCategory = target.dataset.category;
-        this.render();
+    static _onSelectCategory(this: typeof EffectCreationDialog, event: Event, target: HTMLElement): void {
+        (this as any).selectedCategory = target.dataset.category;
+        (this as any).render();
     }
 
     /* -------------------------------------------- */
@@ -146,16 +151,16 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Handle quick condition selection
      */
-    static _onSelectCondition(event: Event, target: HTMLElement): void {
+    static _onSelectCondition(this: typeof EffectCreationDialog, event: Event, target: HTMLElement): void {
         const conditionId = target.dataset.conditionId;
 
         // Set form values for the selected condition
-        const form = this.element.querySelector('form');
+        const form = (this as any).element.querySelector('form');
         form.querySelector("[name='effectType']").value = 'condition';
         form.querySelector("[name='conditionId']").value = conditionId;
 
         // Auto-submit
-        this.submit();
+        (this as any).submit();
     }
 
     /* -------------------------------------------- */
@@ -163,7 +168,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Handle form submission
      */
-    static async formHandler(event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
+    static async formHandler(this: typeof EffectCreationDialog, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
         const data = foundry.utils.expandObject(formData.object) as any;
 
         let effectData = null;
@@ -171,34 +176,34 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
         // Handle based on effect type
         switch (data.effectType) {
             case 'condition':
-                effectData = await this._createConditionData(data);
+                effectData = await (this as any)._createConditionData(data);
                 break;
 
             case 'characteristic':
-                effectData = await this._createCharacteristicData(data);
+                effectData = await (this as any)._createCharacteristicData(data);
                 break;
 
             case 'skill':
-                effectData = await this._createSkillData(data);
+                effectData = await (this as any)._createSkillData(data);
                 break;
 
             case 'combat':
-                effectData = await this._createCombatData(data);
+                effectData = await (this as any)._createCombatData(data);
                 break;
 
             case 'custom':
-                effectData = await this._createCustomData(data);
+                effectData = await (this as any)._createCustomData(data);
                 break;
         }
 
         if (!effectData) {
             ui.notifications.warn('WH40K.ActiveEffect.InvalidData');
-            return this.resolve(null);
+            return (this as any).resolve(null);
         }
 
         // Create the effect
-        const effects = await this.options.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
-        return this.resolve(effects[0]);
+        const effects = await (this as any).options.actor.createEmbeddedDocuments('ActiveEffect', [effectData]);
+        return (this as any).resolve(effects[0]);
     }
 
     /* -------------------------------------------- */

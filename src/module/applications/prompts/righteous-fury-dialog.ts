@@ -6,22 +6,25 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
+interface RighteousFuryDialogOptions {
+  actor?: Actor;
+  characteristic?: string;
+  target?: number;
+  weaponName?: string;
+  isMelee?: boolean;
+  onConfirm?: Function;
+  onFail?: Function;
+}
+
 /**
  * Dialog for confirming Righteous Fury triggers.
  * Shows the confirmation roll (d100 vs BS/WS) and handles the result.
  */
 export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV2) {
     /**
-     * @param {object} options - Dialog options
-     * @param {Actor} options.actor - The actor performing the RF
-     * @param {string} options.characteristic - The characteristic to test (WS or BS)
-     * @param {number} options.target - The target number for confirmation
-     * @param {string} options.weaponName - Name of the weapon
-     * @param {boolean} options.isMelee - Is this a melee weapon?
-     * @param {Function} options.onConfirm - Callback for successful confirmation
-     * @param {Function} options.onFail - Callback for failed confirmation
+     * @param {RighteousFuryDialogOptions} options - Dialog options
      */
-    constructor(options: Record<string, unknown> = {}) {
+    constructor(options: RighteousFuryDialogOptions = {}) {
         // @ts-expect-error - argument count
         super(options);
         this.actor = options.actor;
@@ -160,7 +163,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Event} event - Triggering click event
      * @param {HTMLElement} target - Button that was clicked
      */
-    static async #onRoll(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onRoll(this: RighteousFuryDialog, event: Event, target: HTMLElement): Promise<void> {
         // Create confirmation roll (d100)
         this.confirmationRoll = new Roll('1d100', {});
         await this.confirmationRoll.evaluate();
@@ -185,7 +188,7 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      * @param {Event} event - Triggering click event
      * @param {HTMLElement} target - Button that was clicked
      */
-    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: RighteousFuryDialog, event: Event, target: HTMLElement): Promise<void> {
         if (this.confirmationRoll && this.success && this.onConfirm) {
             await this.onConfirm();
         } else if (this.confirmationRoll && !this.success && this.onFail) {
