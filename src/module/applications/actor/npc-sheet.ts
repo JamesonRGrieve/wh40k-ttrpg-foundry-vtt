@@ -117,9 +117,11 @@ export default class NPCSheet extends (CharacterSheet as any) {
     static PARTS = {
         header: {
             template: 'systems/wh40k-rpg/templates/actor/player/header.hbs',
+            container: { classes: ['wh40k-sidebar'], id: 'sidebar' },
         },
         tabs: {
             template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
+            container: { classes: ['wh40k-sidebar'], id: 'sidebar' },
         },
         skills: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-skills.hbs',
