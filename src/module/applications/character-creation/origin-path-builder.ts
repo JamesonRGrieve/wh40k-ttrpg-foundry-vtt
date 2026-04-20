@@ -12,6 +12,7 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import WH40K from '../../config.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
@@ -141,11 +142,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this.direction = DIRECTION.FORWARD; // Forward or backward
         this.showLineage = false; // Whether we're on the optional step
         this.showCharacteristics = false; // Whether we're on the characteristics step
+        this.showEquipment = false; // Whether we're on the Equip Acolyte step
         this.selections = new Map(); // step -> Item (confirmed selections)
         this.previewedOrigin = null; // Currently previewed origin (unconfirmed)
         this.lineageSelection = null; // Separate storage for optional step
         this.allOrigins = []; // All origins from compendium (excluding optional)
         this.lineageOrigins = []; // Optional step origins
+        this.equipmentItems = []; // Armoury items loaded for the Equip Acolyte step
+        this.equipmentSelections = new Map(); // uuid -> compact item data
+        this._equipmentLoaded = false;
+        this._equipmentFilter = { search: '', type: 'all' };
 
         // Characteristic generation state
         this._charRolls = Array(9).fill(0);
@@ -862,6 +868,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Sum per-origin throne gelt rolls (homeworld + background, each with its own formula, results ADDED).
+     * @private
+     */
+    _getTotalThronesRolled(): number {
+        let total = 0;
+        for (const [, selection] of this.selections) {
+            const rolled = (selection.system as any)?.rollResults?.thrones?.rolled;
+            if (typeof rolled === 'number') total += rolled;
+        }
+        return total;
+    }
+
+    /**
      * Get the currently available influence modifier.
      * @private
      */
@@ -1204,6 +1223,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     _getInfluenceBonus(): number {
+        // Homebrew grants 3 starting Armoury acquisitions regardless of Influence; RAW uses the DH2e core pg 80 rule (floor(Influence/10)).
+        if (this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew()) return 3;
         const rolled = this._influenceRolled || 0;
         const stored = Number((this.actor.system as any)?.influence || 0);
         const influence = rolled > 0 ? rolled : stored;
@@ -1216,12 +1237,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     async _loadEquipmentItems(): Promise<void> {
         if (this._equipmentLoaded) return;
-        this._equipmentLoaded = true;
 
         const packNames = (this.systemConfig.equipmentPacks as string[]) || [];
-        if (packNames.length === 0) return;
+        if (packNames.length === 0) {
+            this._equipmentLoaded = true;
+            return;
+        }
 
-        const availabilityConfig = (CONFIG as any)?.WH40K?.availabilities || {};
+        const availabilityConfig =
+            ((CONFIG as any)?.wh40k?.availabilities as Record<string, { label: string; modifier: number }>) || WH40K.availabilities || {};
         const scarceModifier = availabilityConfig.scarce?.modifier ?? 0;
         const loaded: Array<Record<string, unknown>> = [];
 
@@ -1258,6 +1282,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return String(a.name).localeCompare(String(b.name));
         });
         this.equipmentItems = loaded;
+        this._equipmentLoaded = true;
     }
 
     _prepareEquipmentContext(): Record<string, unknown> {
@@ -1469,6 +1494,20 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             };
         }
 
+        // Per-origin throne gelt roll (homebrew only, homeworld and background steps each roll their own formula).
+        const thronesFormulaForItem = this._getSelectionThronesFormula(item);
+        const thronesEligibleStep = (item.system as any)?.step === 'homeWorld' || (item.system as any)?.step === 'background';
+        const thronesAllowedByRuleset = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
+        if (thronesFormulaForItem && thronesEligibleStep && thronesAllowedByRuleset) {
+            const hasRolled = rollResults.thrones?.rolled !== undefined && rollResults.thrones?.rolled !== null;
+            rolls.thrones = {
+                formula: thronesFormulaForItem,
+                hasValue: hasRolled,
+                value: rollResults.thrones?.rolled,
+                breakdown: rollResults.thrones?.breakdown || '',
+            };
+        }
+
         const skills = [];
         for (const skill of (grants.skills || []) as any[]) {
             const displayName = skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name;
@@ -1497,10 +1536,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             isConfirmed = selection?.id === itemId;
         }
 
-        const hideThroneGelt = this.gameSystem === 'dh2e' && WH40KSettings.getRuleset() === 'raw';
-        const showThrones = !hideThroneGelt && !!this._getContextualThronesFormula();
-        const showInfluence = currentStep.key === 'background';
-        const thronesFormula = this._getContextualThronesFormula();
+        const isDH2Homebrew = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
+        // Influence is RAW-only: in homebrew it's not rolled at creation, so hide the block entirely.
+        const showInfluence = currentStep.key === 'background' && !isDH2Homebrew;
         const influenceMod = this._getContextualInfluenceMod();
 
         return {
@@ -1528,9 +1566,6 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 hasEquipment: (grants.equipment || []).length > 0,
             },
             resources: {
-                showThrones,
-                thronesFormula,
-                thronesRolled: this._thronesRolled || null,
                 showInfluence,
                 influenceMod,
                 influenceRolled: this._influenceRolled || null,
@@ -2543,7 +2578,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const system = this._getSelectionSystem(selection);
         const grants = system?.grants || {};
-        const formula = statType === 'wounds' ? grants.woundsFormula : grants.fateFormula;
+        let formula: string | undefined;
+        if (statType === 'wounds') formula = grants.woundsFormula;
+        else if (statType === 'fate') formula = grants.fateFormula;
+        else if (statType === 'thrones') formula = this._getSelectionThronesFormula(selection);
 
         if (!formula) return;
 
@@ -2595,7 +2633,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const system = this._getSelectionSystem(selection);
         const grants = system?.grants || {};
-        const formula = statType === 'wounds' ? grants.woundsFormula : grants.fateFormula;
+        let formula: string | undefined;
+        if (statType === 'wounds') formula = grants.woundsFormula;
+        else if (statType === 'fate') formula = grants.fateFormula;
+        else if (statType === 'thrones') formula = this._getSelectionThronesFormula(selection);
 
         if (!formula) return;
 
@@ -2925,13 +2966,42 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        // Confirm
-        const confirmed = await Dialog.confirm({
-            title: game.i18n.localize('WH40K.OriginPath.CommitToCharacter'),
-            content: game.i18n.localize('WH40K.OriginPath.ConfirmCommit'),
-        });
+        // Confirm — offer reset options. Base stats are always overridden.
+        const resetChoices = (await foundry.applications.api.DialogV2.prompt({
+            window: { title: game.i18n.localize('WH40K.OriginPath.CommitToCharacter') },
+            content: `
+                <p>${game.i18n.localize('WH40K.OriginPath.ConfirmCommit')}</p>
+                <p class="notes"><em>${game.i18n.localize('WH40K.OriginPath.ResetBaseStatsNote')}</em></p>
+                <div class="form-group"><label><input type="checkbox" name="resetInventory" checked /> ${game.i18n.localize(
+                    'WH40K.OriginPath.ResetInventory',
+                )}</label></div>
+                <div class="form-group"><label><input type="checkbox" name="resetExperience" checked /> ${game.i18n.localize(
+                    'WH40K.OriginPath.ResetExperience',
+                )}</label></div>
+                <div class="form-group"><label><input type="checkbox" name="resetInjuries" checked /> ${game.i18n.localize(
+                    'WH40K.OriginPath.ResetInjuries',
+                )}</label></div>
+                <div class="form-group"><label><input type="checkbox" name="resetCurrency" checked /> ${game.i18n.localize(
+                    'WH40K.OriginPath.ResetCurrency',
+                )}</label></div>
+            `,
+            ok: {
+                label: game.i18n.localize('WH40K.OriginPath.CommitToCharacter'),
+                callback: (_event: Event, button: HTMLButtonElement) => {
+                    const form = button.form;
+                    const read = (name: string) => (form?.elements.namedItem(name) as HTMLInputElement | null)?.checked ?? false;
+                    return {
+                        resetInventory: read('resetInventory'),
+                        resetExperience: read('resetExperience'),
+                        resetInjuries: read('resetInjuries'),
+                        resetCurrency: read('resetCurrency'),
+                    };
+                },
+            },
+            rejectClose: false,
+        })) as { resetInventory: boolean; resetExperience: boolean; resetInjuries: boolean; resetCurrency: boolean } | null;
 
-        if (!confirmed) return;
+        if (!resetChoices) return;
 
         try {
             // Build array of origin items from selections
@@ -2955,6 +3025,20 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (existingOriginItems.length > 0) {
                 const idsToDelete = existingOriginItems.map((i) => i.id);
                 await this.actor.deleteEmbeddedDocuments('Item', idsToDelete);
+            }
+
+            // Optional resets requested from the commit confirmation dialog
+            if (resetChoices.resetInventory) {
+                await this._resetInventoryItems();
+            }
+            if (resetChoices.resetInjuries) {
+                await this._resetInjuriesAndEffects();
+            }
+            if (resetChoices.resetExperience) {
+                await this._resetExperienceAndAdvancements();
+            }
+            if (resetChoices.resetCurrency) {
+                await this._resetCurrencyResources();
             }
 
             // Use GrantsManager to apply all grants in batch
@@ -3024,7 +3108,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Apply divination, thrones, and influence
             const resourceUpdate: Record<string, unknown> = {};
             if (this._divination) resourceUpdate['system.originPath.divination'] = this._divination;
-            if (this._thronesRolled) resourceUpdate['system.throneGelt'] = this._thronesRolled;
+            const thronesTotal = this._getTotalThronesRolled();
+            if (thronesTotal > 0) resourceUpdate['system.throneGelt'] = thronesTotal;
             if (this._influenceRolled) resourceUpdate['system.influence'] = this._influenceRolled;
             if (Object.keys(resourceUpdate).length > 0) {
                 await this.actor.update(resourceUpdate);
@@ -3033,22 +3118,6 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Equip Acolyte: create the selected Armoury items on the actor (plus 2 clips for weapons)
             if (this.systemConfig.equipmentStep && this.equipmentSelections.size > 0) {
                 await this._applyEquipmentSelections();
-            }
-
-            // Offer to reset XP to system starting value
-            const systemConfig = this.systemConfig;
-            const startingXP = systemConfig?.startingXP ?? 0;
-            if (startingXP > 0) {
-                const resetXP = await Dialog.confirm({
-                    title: 'Reset Experience',
-                    content: `<p>Reset experience to the starting value for this game system?</p><p><strong>${startingXP} XP</strong> will be set as both total and available.</p>`,
-                });
-                if (resetXP) {
-                    await this.actor.update({
-                        'system.experience.total': startingXP,
-                        'system.experience.used': 0,
-                    });
-                }
             }
 
             // Success
@@ -3107,6 +3176,91 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
         }
         return values;
+    }
+
+    /** Item types considered "inventory" — wiped on a Reset Inventory commit. */
+    static INVENTORY_ITEM_TYPES = new Set([
+        'weapon',
+        'armour',
+        'armourModification',
+        'ammunition',
+        'consumable',
+        'cybernetic',
+        'drug',
+        'forceField',
+        'gear',
+        'tool',
+        'backpack',
+        'weaponModification',
+    ]);
+
+    /** Item types considered "injuries/conditions" — wiped on a Reset Injuries and Effects commit. */
+    static INJURY_ITEM_TYPES = new Set(['criticalInjury', 'mentalDisorder', 'malignancy', 'mutation']);
+
+    /**
+     * Delete all inventory-category items from the actor. Grants from the origin path
+     * re-add anything tracked via grants; Equip Acolyte selections are applied after this.
+     * @private
+     */
+    async _resetInventoryItems(): Promise<void> {
+        const inventoryIds = this.actor.items.filter((i) => OriginPathBuilder.INVENTORY_ITEM_TYPES.has(i.type as string)).map((i) => i.id as string);
+        if (inventoryIds.length > 0) {
+            await this.actor.deleteEmbeddedDocuments('Item', inventoryIds);
+        }
+    }
+
+    /**
+     * Delete all ActiveEffects and injury/condition items from the actor.
+     * @private
+     */
+    async _resetInjuriesAndEffects(): Promise<void> {
+        const injuryIds = this.actor.items.filter((i) => OriginPathBuilder.INJURY_ITEM_TYPES.has(i.type as string)).map((i) => i.id as string);
+        if (injuryIds.length > 0) {
+            await this.actor.deleteEmbeddedDocuments('Item', injuryIds);
+        }
+        const effectIds = (this.actor as any).effects?.map((e: any) => e.id) ?? [];
+        if (effectIds.length > 0) {
+            await this.actor.deleteEmbeddedDocuments('ActiveEffect', effectIds);
+        }
+    }
+
+    /**
+     * Reset XP to the system's starting value and zero out all characteristic/skill advances.
+     * @private
+     */
+    async _resetExperienceAndAdvancements(): Promise<void> {
+        const startingXP = (this.systemConfig?.startingXP as number) ?? 0;
+        const update: Record<string, unknown> = {
+            'system.experience.total': startingXP,
+            'system.experience.used': 0,
+        };
+        const CHARS = OriginPathBuilder.GENERATION_CHARACTERISTICS;
+        for (const key of CHARS) {
+            update[`system.characteristics.${key}.advance`] = 0;
+        }
+        const skills = (this.actor.system as any)?.skills || {};
+        for (const skillKey of Object.keys(skills)) {
+            update[`system.skills.${skillKey}.advance`] = 0;
+            const entries = skills[skillKey]?.entries;
+            if (Array.isArray(entries)) {
+                const resetEntries = entries.map((entry: any) => ({ ...entry, advance: 0 }));
+                update[`system.skills.${skillKey}.entries`] = resetEntries;
+            }
+        }
+        await this.actor.update(update);
+    }
+
+    /**
+     * Reset the character's influence, requisition, and throne gelt totals to zero.
+     * The commit path then applies any values rolled on origins after this reset.
+     * @private
+     */
+    async _resetCurrencyResources(): Promise<void> {
+        await this.actor.update({
+            'system.influence': 0,
+            'system.requisition': 0,
+            'system.throneGelt': 0,
+        });
     }
 
     /**
