@@ -22,12 +22,8 @@
 
 .wh40k-panel-powers {
     .wh40k-panel-header {
-        background: linear-gradient(
-            135deg,
-            #{'rgb(from var(--wh40k-accent-powers) r g b / 0.15)'} 0%,
-            #{'rgb(from var(--wh40k-accent-powers) r g b / 0.05)'} 100%
-        );
-        border-bottom: 2px solid #{'rgb(from var(--wh40k-accent-powers) r g b / 0.3)'};
+        background: linear-gradient(135deg, rgb(from var(--wh40k-accent-powers) r g b / 0.15) 0%, rgb(from var(--wh40k-accent-powers) r g b / 0.05) 100%);
+        border-bottom: 2px solid rgb(from var(--wh40k-accent-powers) r g b / 0.3);
 
         .wh40k-panel-title {
             color: var(--wh40k-text-dark);
@@ -39,7 +35,7 @@
     }
 
     .wh40k-count-badge {
-        background: #{'rgb(from var(--wh40k-accent-powers) r g b / 0.2)'};
+        background: rgb(from var(--wh40k-accent-powers) r g b / 0.2);
         color: var(--wh40k-accent-powers);
         padding: 2px 8px;
         border-radius: 10px;
@@ -54,8 +50,8 @@
 
 .wh40k-panel-psy-rating {
     .wh40k-panel-header {
-        background: linear-gradient(135deg, rgba(#7c3aed, 0.2) 0%, rgba(#7c3aed, 0.08) 100%);
-        border-bottom: 2px solid rgba(#7c3aed, 0.4);
+        background: linear-gradient(135deg, rgb(from #7c3aed r g b / 0.2) 0%, rgb(from #7c3aed r g b / 0.08) 100%);
+        border-bottom: 2px solid rgb(from #7c3aed r g b / 0.4);
 
         i {
             color: #7c3aed;
@@ -84,8 +80,8 @@
     flex-direction: column;
     align-items: center;
     padding: var(--wh40k-space-md);
-    background: linear-gradient(135deg, rgba(#7c3aed, 0.25) 0%, rgba(#7c3aed, 0.1) 100%);
-    border: 2px solid rgba(#7c3aed, 0.5);
+    background: linear-gradient(135deg, rgb(from #7c3aed r g b / 0.25) 0%, rgb(from #7c3aed r g b / 0.1) 100%);
+    border: 2px solid rgb(from #7c3aed r g b / 0.5);
     border-radius: 50%;
     width: 80px;
     height: 80px;
@@ -144,7 +140,7 @@
     &:focus {
         outline: none;
         border-color: #7c3aed;
-        box-shadow: 0 0 0 2px rgba(#7c3aed, 0.2);
+        box-shadow: 0 0 0 2px rgb(from #7c3aed r g b / 0.2);
     }
 }
 
@@ -161,7 +157,7 @@
     &:focus {
         outline: none;
         border-color: #7c3aed;
-        box-shadow: 0 0 0 2px rgba(#7c3aed, 0.2);
+        box-shadow: 0 0 0 2px rgb(from #7c3aed r g b / 0.2);
     }
 }
 
@@ -205,7 +201,7 @@
     &:focus {
         outline: none;
         border-color: #7c3aed;
-        box-shadow: 0 0 0 2px rgba(#7c3aed, 0.2);
+        box-shadow: 0 0 0 2px rgb(from #7c3aed r g b / 0.2);
     }
 }
 
@@ -269,15 +265,15 @@
     }
 
     &:hover {
-        background: rgba(#7c3aed, 0.1);
-        border-color: rgba(#7c3aed, 0.4);
+        background: rgb(from #7c3aed r g b / 0.1);
+        border-color: rgb(from #7c3aed r g b / 0.4);
         color: #7c3aed;
     }
 
     &.wh40k-btn-danger {
         &:hover {
-            background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.1)'};
-            border-color: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.4)'};
+            background: rgb(from var(--wh40k-accent-combat) r g b / 0.1);
+            border-color: rgb(from var(--wh40k-accent-combat) r g b / 0.4);
             color: var(--wh40k-accent-combat);
         }
     }
@@ -369,12 +365,8 @@
         transition: all var(--wh40k-transition-medium);
 
         &.drop-valid {
-            background: linear-gradient(
-                135deg,
-                #{'rgb(from var(--wh40k-accent-powers) r g b / 0.08)'} 0%,
-                #{'rgb(from var(--wh40k-accent-powers) r g b / 0.02)'} 100%
-            );
-            border: 2px dashed #{'rgb(from var(--wh40k-accent-powers) r g b / 0.5)'};
+            background: linear-gradient(135deg, rgb(from var(--wh40k-accent-powers) r g b / 0.08) 0%, rgb(from var(--wh40k-accent-powers) r g b / 0.02) 100%);
+            border: 2px dashed rgb(from var(--wh40k-accent-powers) r g b / 0.5);
             border-radius: 6px;
             padding: var(--wh40k-space-sm);
         }
@@ -431,7 +423,7 @@
     align-items: center;
     gap: var(--wh40k-space-sm);
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-powers) r g b / 0.08)'} 0%, transparent 100%);
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-powers) r g b / 0.08) 0%, transparent 100%);
 }
 
 .wh40k-power-icon {
@@ -483,7 +475,7 @@
     align-items: center;
     gap: 3px;
     padding: 2px 6px;
-    background: #{'rgb(from var(--wh40k-accent-powers) r g b / 0.15)'};
+    background: rgb(from var(--wh40k-accent-powers) r g b / 0.15);
     border-radius: 3px;
     font-size: 0.7rem;
     font-weight: 600;
@@ -497,85 +489,85 @@
 
 // Discipline colors
 .wh40k-disc-telepathy {
-    background: rgba(#8b5cf6, 0.2);
+    background: rgb(from #8b5cf6 r g b / 0.2);
     color: #8b5cf6;
 }
 .wh40k-disc-telekinesis {
-    background: rgba(#06b6d4, 0.2);
+    background: rgb(from #06b6d4 r g b / 0.2);
     color: #06b6d4;
 }
 .wh40k-disc-divination {
-    background: rgba(#f59e0b, 0.2);
+    background: rgb(from #f59e0b r g b / 0.2);
     color: #f59e0b;
 }
 .wh40k-disc-pyromancy {
-    background: rgba(#ef4444, 0.2);
+    background: rgb(from #ef4444 r g b / 0.2);
     color: #ef4444;
 }
 .wh40k-disc-biomancy {
-    background: rgba(#22c55e, 0.2);
+    background: rgb(from #22c55e r g b / 0.2);
     color: #22c55e;
 }
 .wh40k-disc-daemonology {
-    background: rgba(#dc2626, 0.2);
+    background: rgb(from #dc2626 r g b / 0.2);
     color: #dc2626;
 }
 .wh40k-disc-malefic {
-    background: rgba(#7c2d12, 0.2);
+    background: rgb(from #7c2d12 r g b / 0.2);
     color: #7c2d12;
 }
 .wh40k-disc-sanctic {
-    background: rgba(#eab308, 0.2);
+    background: rgb(from #eab308 r g b / 0.2);
     color: #eab308;
 }
 
 // Navigator type
 .wh40k-type-navigator {
-    background: rgba(#0891b2, 0.2);
+    background: rgb(from #0891b2 r g b / 0.2);
     color: #0891b2;
 }
 
 // Ritual types
 .wh40k-type-prayer {
-    background: rgba(#d97706, 0.2);
+    background: rgb(from #d97706 r g b / 0.2);
     color: #d97706;
 }
 .wh40k-type-rite {
-    background: rgba(#7c3aed, 0.2);
+    background: rgb(from #7c3aed r g b / 0.2);
     color: #7c3aed;
 }
 .wh40k-type-invocation {
-    background: rgba(#dc2626, 0.2);
+    background: rgb(from #dc2626 r g b / 0.2);
     color: #dc2626;
 }
 .wh40k-type-ceremony {
-    background: rgba(#0284c7, 0.2);
+    background: rgb(from #0284c7 r g b / 0.2);
     color: #0284c7;
 }
 .wh40k-type-tech-rite {
-    background: rgba(#64748b, 0.2);
+    background: rgb(from #64748b r g b / 0.2);
     color: #64748b;
 }
 
 // Order categories
 .wh40k-cat-combat {
-    background: rgba(#ef4444, 0.2);
+    background: rgb(from #ef4444 r g b / 0.2);
     color: #ef4444;
 }
 .wh40k-cat-maneuver {
-    background: rgba(#3b82f6, 0.2);
+    background: rgb(from #3b82f6 r g b / 0.2);
     color: #3b82f6;
 }
 .wh40k-cat-command {
-    background: rgba(#f59e0b, 0.2);
+    background: rgb(from #f59e0b r g b / 0.2);
     color: #f59e0b;
 }
 .wh40k-cat-support {
-    background: rgba(#22c55e, 0.2);
+    background: rgb(from #22c55e r g b / 0.2);
     color: #22c55e;
 }
 .wh40k-cat-special {
-    background: rgba(#8b5cf6, 0.2);
+    background: rgb(from #8b5cf6 r g b / 0.2);
     color: #8b5cf6;
 }
 
@@ -638,20 +630,20 @@
     }
 
     &.wh40k-btn-roll:hover {
-        background: #{'rgb(from var(--wh40k-accent-powers) r g b / 0.15)'};
-        border-color: #{'rgb(from var(--wh40k-accent-powers) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-accent-powers) r g b / 0.15);
+        border-color: rgb(from var(--wh40k-accent-powers) r g b / 0.3);
         color: var(--wh40k-accent-powers);
     }
 
     &.wh40k-btn-damage:hover {
-        background: rgba(#ef4444, 0.15);
-        border-color: rgba(#ef4444, 0.3);
+        background: rgb(from #ef4444 r g b / 0.15);
+        border-color: rgb(from #ef4444 r g b / 0.3);
         color: #ef4444;
     }
 
     &.wh40k-btn-chat:hover {
-        background: rgba(#3b82f6, 0.15);
-        border-color: rgba(#3b82f6, 0.3);
+        background: rgb(from #3b82f6 r g b / 0.15);
+        border-color: rgb(from #3b82f6 r g b / 0.3);
         color: #3b82f6;
     }
 
@@ -727,21 +719,21 @@
 }
 
 .wh40k-level-novice {
-    background: rgba(#22c55e, 0.15);
+    background: rgb(from #22c55e r g b / 0.15);
     color: #22c55e;
-    border: 1px solid rgba(#22c55e, 0.3);
+    border: 1px solid rgb(from #22c55e r g b / 0.3);
 }
 
 .wh40k-level-adept {
-    background: rgba(#3b82f6, 0.15);
+    background: rgb(from #3b82f6 r g b / 0.15);
     color: #3b82f6;
-    border: 1px solid rgba(#3b82f6, 0.3);
+    border: 1px solid rgb(from #3b82f6 r g b / 0.3);
 }
 
 .wh40k-level-master {
-    background: rgba(#f59e0b, 0.15);
+    background: rgb(from #f59e0b r g b / 0.15);
     color: #f59e0b;
-    border: 1px solid rgba(#f59e0b, 0.3);
+    border: 1px solid rgb(from #f59e0b r g b / 0.3);
 }
 
 // ============================================
@@ -868,8 +860,8 @@
     }
 
     &.wh40k-btn-danger:hover {
-        background: rgba(#ef4444, 0.1);
-        border-color: rgba(#ef4444, 0.3);
+        background: rgb(from #ef4444 r g b / 0.1);
+        border-color: rgb(from #ef4444 r g b / 0.3);
         color: #ef4444;
     }
 }
@@ -907,26 +899,26 @@
 .wh40k-panel-powers .wh40k-dropzone {
     background: repeating-linear-gradient(
         45deg,
-        #{'rgb(from var(--wh40k-accent-powers) r g b / 0.03)'},
-        #{'rgb(from var(--wh40k-accent-powers) r g b / 0.03)'} 10px,
-        #{'rgb(from var(--wh40k-accent-powers) r g b / 0.08)'} 10px,
-        #{'rgb(from var(--wh40k-accent-powers) r g b / 0.08)'} 20px
+        rgb(from var(--wh40k-accent-powers) r g b / 0.03),
+        rgb(from var(--wh40k-accent-powers) r g b / 0.03) 10px,
+        rgb(from var(--wh40k-accent-powers) r g b / 0.08) 10px,
+        rgb(from var(--wh40k-accent-powers) r g b / 0.08) 20px
     );
-    border: 2px dashed #{'rgb(from var(--wh40k-accent-powers) r g b / 0.3)'};
+    border: 2px dashed rgb(from var(--wh40k-accent-powers) r g b / 0.3);
 
     &:hover {
         background: repeating-linear-gradient(
             45deg,
-            #{'rgb(from var(--wh40k-accent-powers) r g b / 0.08)'},
-            #{'rgb(from var(--wh40k-accent-powers) r g b / 0.08)'} 10px,
-            #{'rgb(from var(--wh40k-accent-powers) r g b / 0.15)'} 10px,
-            #{'rgb(from var(--wh40k-accent-powers) r g b / 0.15)'} 20px
+            rgb(from var(--wh40k-accent-powers) r g b / 0.08),
+            rgb(from var(--wh40k-accent-powers) r g b / 0.08) 10px,
+            rgb(from var(--wh40k-accent-powers) r g b / 0.15) 10px,
+            rgb(from var(--wh40k-accent-powers) r g b / 0.15) 20px
         );
-        border-color: #{'rgb(from var(--wh40k-accent-powers) r g b / 0.5)'};
+        border-color: rgb(from var(--wh40k-accent-powers) r g b / 0.5);
     }
 
     .wh40k-dropzone-icon {
-        color: #{'rgb(from var(--wh40k-accent-powers) r g b / 0.5)'};
+        color: rgb(from var(--wh40k-accent-powers) r g b / 0.5);
     }
 
     &:hover .wh40k-dropzone-icon {
@@ -939,8 +931,8 @@
 // ============================================
 
 .wh40k-panel-psychic-powers .wh40k-panel-header {
-    background: linear-gradient(135deg, rgba(#8b5cf6, 0.15) 0%, rgba(#8b5cf6, 0.05) 100%);
-    border-bottom-color: rgba(#8b5cf6, 0.3);
+    background: linear-gradient(135deg, rgb(from #8b5cf6 r g b / 0.15) 0%, rgb(from #8b5cf6 r g b / 0.05) 100%);
+    border-bottom-color: rgb(from #8b5cf6 r g b / 0.3);
 
     i {
         color: #8b5cf6;
@@ -948,8 +940,8 @@
 }
 
 .wh40k-panel-navigator-powers .wh40k-panel-header {
-    background: linear-gradient(135deg, rgba(#0891b2, 0.15) 0%, rgba(#0891b2, 0.05) 100%);
-    border-bottom-color: rgba(#0891b2, 0.3);
+    background: linear-gradient(135deg, rgb(from #0891b2 r g b / 0.15) 0%, rgb(from #0891b2 r g b / 0.05) 100%);
+    border-bottom-color: rgb(from #0891b2 r g b / 0.3);
 
     i {
         color: #0891b2;
@@ -957,8 +949,8 @@
 }
 
 .wh40k-panel-rituals .wh40k-panel-header {
-    background: linear-gradient(135deg, rgba(#d97706, 0.15) 0%, rgba(#d97706, 0.05) 100%);
-    border-bottom-color: rgba(#d97706, 0.3);
+    background: linear-gradient(135deg, rgb(from #d97706 r g b / 0.15) 0%, rgb(from #d97706 r g b / 0.05) 100%);
+    border-bottom-color: rgb(from #d97706 r g b / 0.3);
 
     i {
         color: #d97706;
@@ -966,8 +958,8 @@
 }
 
 .wh40k-panel-orders .wh40k-panel-header {
-    background: linear-gradient(135deg, rgba(#0284c7, 0.15) 0%, rgba(#0284c7, 0.05) 100%);
-    border-bottom-color: rgba(#0284c7, 0.3);
+    background: linear-gradient(135deg, rgb(from #0284c7 r g b / 0.15) 0%, rgb(from #0284c7 r g b / 0.05) 100%);
+    border-bottom-color: rgb(from #0284c7 r g b / 0.3);
 
     i {
         color: #0284c7;

@@ -7,7 +7,7 @@
 
 .wh40k-controls {
     button {
-        background: #{'rgb(from var(--form-button-background) r g b / 0.125)'};
+        background: rgb(from var(--form-button-background) r g b / 0.125);
         text-align: center;
     }
 }
@@ -40,13 +40,13 @@
         border-bottom: 1px solid var(--color-border-primary);
 
         &.wh40k-panel__header {
-            font-size: $h1-size;
+            font-size: 12pt;
             font-weight: normal;
             text-align: center;
             text-transform: uppercase;
 
             .wh40k-trait-toggle__span {
-                font-size: $h1-size;
+                font-size: 12pt;
                 font-weight: normal;
                 text-align: center;
                 text-transform: uppercase;

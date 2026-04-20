@@ -26,7 +26,7 @@
     padding: var(--wh40k-space-sm);
     background: rgba(0, 0, 0, 0.3);
     border-radius: var(--wh40k-radius-lg);
-    border: 1px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'};
+    border: 1px solid rgb(from var(--wh40k-accent-gold) r g b / 0.2);
 }
 
 .wh40k-category-btn {
@@ -57,16 +57,16 @@
 
     &:hover {
         background: rgba(255, 255, 255, 0.1);
-        border-color: #{'rgb(from var(--wh40k-accent-gold) r g b / 0.5)'};
+        border-color: rgb(from var(--wh40k-accent-gold) r g b / 0.5);
         color: var(--wh40k-accent-gold);
         transform: translateY(-2px);
     }
 
     &.active {
-        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.3)'} 0%, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'} 100%);
+        background: linear-gradient(135deg, rgb(from var(--wh40k-accent-gold) r g b / 0.3) 0%, rgb(from var(--wh40k-accent-gold) r g b / 0.2) 100%);
         border-color: var(--wh40k-accent-gold);
         color: var(--wh40k-accent-gold);
-        box-shadow: 0 0 12px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.4)'};
+        box-shadow: 0 0 12px rgb(from var(--wh40k-accent-gold) r g b / 0.4);
     }
 }
 
@@ -86,7 +86,7 @@
     align-items: center;
     gap: var(--wh40k-space-sm);
     padding-bottom: var(--wh40k-space-sm);
-    border-bottom: 2px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.3)'};
+    border-bottom: 2px solid rgb(from var(--wh40k-accent-gold) r g b / 0.3);
     color: var(--wh40k-accent-gold);
     font-size: 1rem;
     font-weight: 700;
@@ -193,7 +193,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-accent-gold);
-        box-shadow: 0 0 8px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.3)'};
+        box-shadow: 0 0 8px rgb(from var(--wh40k-accent-gold) r g b / 0.3);
     }
 
     &::placeholder {
@@ -289,7 +289,7 @@
     padding: var(--wh40k-space-md);
     margin-top: var(--wh40k-space-lg);
     background: rgba(0, 0, 0, 0.3);
-    border-top: 1px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.3)'};
+    border-top: 1px solid rgb(from var(--wh40k-accent-gold) r g b / 0.3);
     border-radius: 0 0 8px 8px;
 }
 
@@ -322,7 +322,7 @@
 
     &:hover {
         background: linear-gradient(135deg, color-mix(in srgb, var(--wh40k-accent-gold), white 10%) 0%, var(--wh40k-accent-gold) 100%);
-        box-shadow: 0 4px 12px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.6)'};
+        box-shadow: 0 4px 12px rgb(from var(--wh40k-accent-gold) r g b / 0.6);
     }
 }
 

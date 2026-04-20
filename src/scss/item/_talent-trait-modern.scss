@@ -49,7 +49,7 @@
 
     &:hover {
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 12px #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+        box-shadow: 0 0 12px rgb(from var(--wh40k-color-gold) r g b / 0.3);
 
         .wh40k-talent-header__image-overlay,
         .wh40k-trait-header__image-overlay {
@@ -146,69 +146,69 @@
 
 // Talent Specific Badges
 .wh40k-talent-badge--tier {
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-talents) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-talents) r g b / 0.05)'});
-    border-color: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-talents) r g b / 0.15), rgb(from var(--wh40k-accent-talents) r g b / 0.05));
+    border-color: rgb(from var(--wh40k-accent-talents) r g b / 0.3);
     color: var(--wh40k-accent-talents);
 }
 
 .wh40k-talent-badge--tier1 {
-    background: linear-gradient(135deg, rgba(#4a7c59, 0.15), rgba(#4a7c59, 0.05));
-    border-color: rgba(#4a7c59, 0.3);
+    background: linear-gradient(135deg, rgb(from #4a7c59 r g b / 0.15), rgb(from #4a7c59 r g b / 0.05));
+    border-color: rgb(from #4a7c59 r g b / 0.3);
     color: #5ba86d;
 }
 
 .wh40k-talent-badge--tier2 {
-    background: linear-gradient(135deg, rgba(#7a6c4a, 0.15), rgba(#7a6c4a, 0.05));
-    border-color: rgba(#7a6c4a, 0.3);
+    background: linear-gradient(135deg, rgb(from #7a6c4a r g b / 0.15), rgb(from #7a6c4a r g b / 0.05));
+    border-color: rgb(from #7a6c4a r g b / 0.3);
     color: #a89150;
 }
 
 .wh40k-talent-badge--tier3 {
-    background: linear-gradient(135deg, rgba(#8b4a7c, 0.15), rgba(#8b4a7c, 0.05));
-    border-color: rgba(#8b4a7c, 0.3);
+    background: linear-gradient(135deg, rgb(from #8b4a7c r g b / 0.15), rgb(from #8b4a7c r g b / 0.05));
+    border-color: rgb(from #8b4a7c r g b / 0.3);
     color: #b05ba0;
 }
 
 .wh40k-talent-badge--category {
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'});
-    border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-color-gold) r g b / 0.15), rgb(from var(--wh40k-color-gold) r g b / 0.05));
+    border-color: rgb(from var(--wh40k-color-gold) r g b / 0.3);
     color: var(--wh40k-color-gold);
 }
 
 .wh40k-talent-badge--cost {
-    background: linear-gradient(135deg, rgba(#2a7a9a, 0.15), rgba(#2a7a9a, 0.05));
-    border-color: rgba(#2a7a9a, 0.3);
+    background: linear-gradient(135deg, rgb(from #2a7a9a r g b / 0.15), rgb(from #2a7a9a r g b / 0.05));
+    border-color: rgb(from #2a7a9a r g b / 0.3);
     color: #3da5d9;
 }
 
 .wh40k-talent-badge--passive {
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-green) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-green) r g b / 0.05)'});
-    border-color: #{'rgb(from var(--wh40k-accent-green) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-green) r g b / 0.15), rgb(from var(--wh40k-accent-green) r g b / 0.05));
+    border-color: rgb(from var(--wh40k-accent-green) r g b / 0.3);
     color: var(--wh40k-accent-green-bright);
 }
 
 .wh40k-talent-badge--stackable {
-    background: linear-gradient(135deg, rgba(#e67e22, 0.15), rgba(#e67e22, 0.05));
-    border-color: rgba(#e67e22, 0.3);
+    background: linear-gradient(135deg, rgb(from #e67e22 r g b / 0.15), rgb(from #e67e22 r g b / 0.05));
+    border-color: rgb(from #e67e22 r g b / 0.3);
     color: #f39c12;
 }
 
 // Trait Specific Badges
 .wh40k-trait-badge--category {
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-combat) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-combat) r g b / 0.05)'});
-    border-color: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-combat) r g b / 0.15), rgb(from var(--wh40k-accent-combat) r g b / 0.05));
+    border-color: rgb(from var(--wh40k-accent-combat) r g b / 0.3);
     color: color-mix(in srgb, var(--wh40k-accent-combat), white 15%);
 }
 
 .wh40k-trait-badge--level {
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'});
-    border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-color-gold) r g b / 0.15), rgb(from var(--wh40k-color-gold) r g b / 0.05));
+    border-color: rgb(from var(--wh40k-color-gold) r g b / 0.3);
     color: var(--wh40k-color-gold);
 }
 
 .wh40k-trait-badge--variable {
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.05)'});
-    border-color: #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-psychic) r g b / 0.15), rgb(from var(--wh40k-accent-psychic) r g b / 0.05));
+    border-color: rgb(from var(--wh40k-accent-psychic) r g b / 0.3);
     color: #c39bd3;
 }
 
@@ -250,13 +250,13 @@
 
     &:hover {
         color: var(--color-text-primary);
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.05);
     }
 
     &.active {
         color: var(--wh40k-color-gold);
         border-bottom-color: var(--wh40k-color-gold);
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.08)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.08);
     }
 }
 
@@ -401,7 +401,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+        box-shadow: 0 0 0 2px rgb(from var(--wh40k-color-gold) r g b / 0.15);
     }
 
     &::placeholder {
@@ -436,8 +436,8 @@
     display: inline-flex;
     align-items: center;
     padding: 4px 10px;
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'});
-    border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-color-gold) r g b / 0.15), rgb(from var(--wh40k-color-gold) r g b / 0.05));
+    border: 1px solid rgb(from var(--wh40k-color-gold) r g b / 0.3);
     border-radius: var(--wh40k-radius-sm);
     font-size: 0.75rem;
     font-weight: 600;
@@ -450,8 +450,8 @@
 
 .wh40k-requirements-display {
     padding: var(--wh40k-space-sm);
-    background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.05)'};
-    border: 1px solid #{'rgb(from var(--wh40k-accent-combat) r g b / 0.2)'};
+    background: rgb(from var(--wh40k-accent-combat) r g b / 0.05);
+    border: 1px solid rgb(from var(--wh40k-accent-combat) r g b / 0.2);
     border-radius: var(--wh40k-radius-sm);
 }
 

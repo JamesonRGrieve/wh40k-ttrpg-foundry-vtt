@@ -6,17 +6,13 @@
 .wh40k-origin-path-sheet {
     // Header customization
     .wh40k-item-header {
-        background: linear-gradient(
-            135deg,
-            #{'rgb(from var(--wh40k-accent-info) r g b / 0.1)'} 0%,
-            #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.08)'} 100%
-        );
-        border-bottom: 2px solid #{'rgb(from var(--wh40k-accent-info) r g b / 0.3)'};
+        background: linear-gradient(135deg, rgb(from var(--wh40k-accent-info) r g b / 0.1) 0%, rgb(from var(--wh40k-accent-psychic) r g b / 0.08) 100%);
+        border-bottom: 2px solid rgb(from var(--wh40k-accent-info) r g b / 0.3);
     }
 
     .wh40k-meta-badge--origin {
-        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-info) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.12)'});
-        border-color: #{'rgb(from var(--wh40k-accent-info) r g b / 0.4)'};
+        background: linear-gradient(135deg, rgb(from var(--wh40k-accent-info) r g b / 0.15), rgb(from var(--wh40k-accent-psychic) r g b / 0.12));
+        border-color: rgb(from var(--wh40k-accent-info) r g b / 0.4);
         color: var(--wh40k-accent-info);
 
         i {
@@ -28,7 +24,7 @@
     .wh40k-meta-select {
         padding: 4px 8px;
         background: rgba(0, 0, 0, 0.2);
-        border: 1px solid #{'rgb(from var(--wh40k-accent-info) r g b / 0.3)'};
+        border: 1px solid rgb(from var(--wh40k-accent-info) r g b / 0.3);
         border-radius: var(--wh40k-radius-md);
         color: var(--color-text-primary);
         font-size: 0.75rem;
@@ -37,13 +33,13 @@
 
         &:hover {
             border-color: var(--wh40k-accent-info);
-            background: #{'rgb(from var(--wh40k-accent-info) r g b / 0.1)'};
+            background: rgb(from var(--wh40k-accent-info) r g b / 0.1);
         }
 
         &:focus {
             outline: none;
             border-color: var(--wh40k-accent-info);
-            box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-info) r g b / 0.2)'};
+            box-shadow: 0 0 0 2px rgb(from var(--wh40k-accent-info) r g b / 0.2);
         }
     }
 
@@ -64,14 +60,14 @@
             padding: 4px;
             text-align: center;
             background: rgba(0, 0, 0, 0.2);
-            border: 1px solid #{'rgb(from var(--wh40k-accent-info) r g b / 0.3)'};
+            border: 1px solid rgb(from var(--wh40k-accent-info) r g b / 0.3);
             border-radius: var(--wh40k-radius-md);
             color: var(--color-text-primary);
 
             &:focus {
                 outline: none;
                 border-color: var(--wh40k-accent-info);
-                box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-info) r g b / 0.2)'};
+                box-shadow: 0 0 0 2px rgb(from var(--wh40k-accent-info) r g b / 0.2);
             }
         }
     }
@@ -84,11 +80,7 @@
         align-items: center;
         gap: var(--wh40k-space-sm);
         padding: var(--wh40k-space-sm) var(--wh40k-space-md);
-        background: linear-gradient(
-            135deg,
-            #{'rgb(from var(--wh40k-accent-green) r g b / 0.12)'} 0%,
-            #{'rgb(from var(--wh40k-accent-green) r g b / 0.05)'} 100%
-        );
+        background: linear-gradient(135deg, rgb(from var(--wh40k-accent-green) r g b / 0.12) 0%, rgb(from var(--wh40k-accent-green) r g b / 0.05) 100%);
         border-left: 3px solid var(--wh40k-accent-green);
         border-radius: 0 4px 4px 0;
         margin-bottom: var(--wh40k-space-md);
@@ -155,7 +147,7 @@
         &:focus {
             outline: none;
             border-color: var(--wh40k-accent-info);
-            box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-accent-info) r g b / 0.2)'};
+            box-shadow: 0 0 0 2px rgb(from var(--wh40k-accent-info) r g b / 0.2);
         }
     }
 
@@ -199,14 +191,14 @@
     align-items: center;
     justify-content: space-between;
     padding: var(--wh40k-space-sm);
-    background: linear-gradient(90deg, #{'rgb(from var(--wh40k-accent-green) r g b / 0.08)'} 0%, transparent 100%);
-    border-left: 3px solid #{'rgb(from var(--wh40k-accent-green) r g b / 0.4)'};
+    background: linear-gradient(90deg, rgb(from var(--wh40k-accent-green) r g b / 0.08) 0%, transparent 100%);
+    border-left: 3px solid rgb(from var(--wh40k-accent-green) r g b / 0.4);
     border-radius: 0 4px 4px 0;
     font-size: 0.8rem;
     transition: all var(--wh40k-transition-base);
 
     &:hover {
-        background: linear-gradient(90deg, #{'rgb(from var(--wh40k-accent-green) r g b / 0.15)'} 0%, transparent 100%);
+        background: linear-gradient(90deg, rgb(from var(--wh40k-accent-green) r g b / 0.15) 0%, transparent 100%);
         border-left-color: var(--wh40k-accent-green);
     }
 
@@ -256,8 +248,8 @@
 // Requirements section
 .wh40k-requirements-section {
     padding: var(--wh40k-space-md);
-    background: linear-gradient(135deg, rgba(#e67e22, 0.08) 0%, rgba(#d35400, 0.05) 100%);
-    border: 1px solid rgba(#e67e22, 0.3);
+    background: linear-gradient(135deg, rgb(from #e67e22 r g b / 0.08) 0%, rgb(from #d35400 r g b / 0.05) 100%);
+    border: 1px solid rgb(from #e67e22 r g b / 0.3);
     border-radius: var(--wh40k-radius-md);
     margin-bottom: var(--wh40k-space-md);
 
@@ -292,7 +284,7 @@
 // Special effect box
 .wh40k-effect-text {
     padding: var(--wh40k-space-md);
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.08)'} 0%, rgba(#8e44ad, 0.05) 100%);
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-psychic) r g b / 0.08) 0%, rgb(from #8e44ad r g b / 0.05) 100%);
     border-left: 3px solid var(--wh40k-accent-psychic);
     border-radius: 0 4px 4px 0;
     font-size: 0.85rem;

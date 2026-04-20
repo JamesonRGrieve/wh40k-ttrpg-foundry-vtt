@@ -30,7 +30,7 @@
         width: 3.5rem;
         height: 3.5rem;
         border-radius: 5pt;
-        background-color: #{'rgb(from var(--form-button-background) r g b / 0.125)'};
+        background-color: rgb(from var(--form-button-background) r g b / 0.125);
         cursor: pointer;
 
         &:hover {
