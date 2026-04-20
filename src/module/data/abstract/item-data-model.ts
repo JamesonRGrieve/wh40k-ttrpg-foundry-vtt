@@ -1,3 +1,4 @@
+import type { WH40KItem } from '../../documents/item.ts';
 import SystemDataModel from './system-data-model.ts';
 import { isLineVariantContainer } from '../../utils/item-variant-utils.ts';
 
@@ -27,7 +28,7 @@ export default class ItemDataModel extends SystemDataModel {
      * Metadata describing this item data model.
      * @type {ItemDataModelMetadata}
      */
-    static metadata: Record<string, unknown> = Object.freeze(
+    static override metadata: Record<string, unknown> = Object.freeze(
         foundry.utils.mergeObject(
             super.metadata,
             {
@@ -42,7 +43,7 @@ export default class ItemDataModel extends SystemDataModel {
     /**
      * @inheritdoc
      */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         return this.mergeSchema(super.defineSchema(), {});
     }
 
@@ -57,9 +58,9 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} [options={}]   Additional options
      * @protected
      */
-    static _cleanData(this: any, source?: Record<string, unknown>, options?: Record<string, unknown>): void {
+    static override _cleanData(source?: Record<string, unknown>, options?: Record<string, unknown>): void {
         super._cleanData?.(source, options);
-        ItemDataModel.#cleanNumericFields(source, this.schema?.fields ?? {});
+        ItemDataModel.#cleanNumericFields(source, (this.schema as any)?.fields ?? {});
     }
 
     /**
@@ -103,7 +104,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {object} source  The source data
      * @protected
      */
-    static _migrateData(source: Record<string, unknown>): void {
+    static override _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
         ItemDataModel.#migrateImg(source);
         ItemDataModel.#migrateDescription(source);
@@ -196,18 +197,18 @@ export default class ItemDataModel extends SystemDataModel {
 
     /**
      * The Item document that contains this data model.
-     * @type {Item}
+     * @type {WH40KItem}
      */
-    get item(): unknown {
-        return this.parent;
+    get item(): WH40KItem {
+        return this.parent as WH40KItem;
     }
 
     /**
      * The Actor that owns this item, if any.
      * @type {Actor|null}
      */
-    get actor(): unknown {
-        return this.parent?.actor ?? null;
+    get actor(): any {
+        return (this.parent as any)?.actor ?? null;
     }
 
     /**
@@ -215,7 +216,7 @@ export default class ItemDataModel extends SystemDataModel {
      * @type {string}
      */
     get typeLabel(): string {
-        return game.i18n.localize(CONFIG.Item.typeLabels[this.parent.type]);
+        return game.i18n.localize(CONFIG.Item.typeLabels[(this.parent as any).type]);
     }
 
     /**
@@ -227,7 +228,7 @@ export default class ItemDataModel extends SystemDataModel {
     }
 
     /** @override */
-    get embeddedDescriptionKeyPath(): string {
+    override get embeddedDescriptionKeyPath(): string {
         return 'description.value';
     }
 
@@ -236,12 +237,12 @@ export default class ItemDataModel extends SystemDataModel {
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    prepareBaseData(): void {
+    override prepareBaseData(): void {
         super.prepareBaseData();
     }
 
     /** @inheritdoc */
-    prepareDerivedData(): void {
+    override prepareDerivedData(): void {
         super.prepareDerivedData();
     }
 
@@ -261,8 +262,8 @@ export default class ItemDataModel extends SystemDataModel {
      * @param {boolean} [options.deterministic]  Force deterministic values for die terms.
      * @returns {object}
      */
-    getRollData({ deterministic = false } = {}): Record<string, unknown> {
-        const actorRollData = this.parent.actor?.getRollData({ deterministic }) ?? {};
+    override getRollData({ deterministic = false } = {}): Record<string, unknown> {
+        const actorRollData = (this.parent as any).actor?.getRollData({ deterministic }) ?? {};
         const data = { ...actorRollData, item: { ...this } };
         return data;
     }
