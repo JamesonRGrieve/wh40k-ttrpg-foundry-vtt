@@ -986,7 +986,7 @@ After running script, manually verify:
 
 ```bash
 # After migration, rebuild compendiums
-npm run build
+pnpm build
 
 # Launch Foundry, open world
 # Open Compendiums → RT Items (Weapons)
@@ -1020,7 +1020,7 @@ describe('Weapon Pack Data Integrity', () => {
 # If something goes wrong, restore from backup:
 rm -rf src/packs/rt-items-weapons/_source/*
 cp -r backups/weapons-{timestamp}/* src/packs/rt-items-weapons/_source/
-npm run build
+pnpm build
 ```
 
 ### Git Rollback

@@ -71,10 +71,10 @@
 
 ## Build & Deploy
 - Build commands (from `package.json`):
-  - `npm run build` (full build via Gulp)
-  - `npm run scss` (SCSS only)
-  - `npm run packs` (compendium packs)
-  - `npm run watch` (watch mode)
+  - `pnpm build` (full build via Gulp)
+  - `pnpm scss` (SCSS only)
+  - `pnpm packs` (compendium packs)
+  - `pnpm watch` (watch mode)
 - Output locations:
   - `dist/` is used as a build output target per project docs.
   - `gulpfile.js` copies compiled assets to the Foundry data path configured in `BUILD_DIR`.

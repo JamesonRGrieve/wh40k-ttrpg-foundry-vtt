@@ -148,7 +148,7 @@ ChatGPT → Homebrew
 **Foundry load test**:
 
 ```bash
-npm run build
+pnpm build
 # Launch Foundry
 # Open Compendiums → RT Items (Weapons)
 # Verify all weapons load without errors
@@ -160,7 +160,7 @@ npm run build
 # Restore from backup
 rm -rf src/packs/rt-items-weapons/_source/*
 cp -r backups/weapons-{timestamp}/* src/packs/rt-items-weapons/_source/
-npm run build
+pnpm build
 ```
 
 ## Success Criteria

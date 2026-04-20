@@ -1,0 +1,4 @@
+onlyBuiltDependencies:
+  - '@league-of-foundry-developers/foundry-vtt-types'
+  - classic-level
+  - unrs-resolver
