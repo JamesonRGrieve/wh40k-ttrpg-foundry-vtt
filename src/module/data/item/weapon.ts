@@ -5,6 +5,7 @@ import DamageTemplate from '../shared/damage-template.ts';
 import DescriptionTemplate from '../shared/description-template.ts';
 import EquippableTemplate from '../shared/equippable-template.ts';
 import PhysicalItemTemplate from '../shared/physical-item-template.ts';
+import { capitalize } from '../../handlebars/handlebars-helpers.ts';
 import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
@@ -682,7 +683,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
      * @type {string}
      */
     get classLabel(): string {
-        return game.i18n.localize(`WH40K.WeaponClass.${this.class.capitalize()}`);
+        return game.i18n.localize(`WH40K.WeaponClass.${capitalize(this.class)}`);
     }
 
     /**
@@ -693,7 +694,7 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         return game.i18n.localize(
             `WH40K.WeaponType.${this.type
                 .split('-')
-                .map((s) => s.capitalize())
+                .map((s) => capitalize(s))
                 .join('')}`,
         );
     }

@@ -158,6 +158,22 @@
     margin-top: var(--wh40k-space-xs, 4px);
 }
 
+.wh40k-armour-box-icons {
+    width: 100%;
+    max-width: 100%;
+}
+
+.wh40k-armour-box-icon {
+    flex: 0 0 auto;
+    box-shadow: 0 1px 2px var(--wh40k-shadow-soft, rgba(0, 0, 0, 0.2));
+    transition: transform var(--wh40k-transition-fast, 0.15s ease), border-color var(--wh40k-transition-fast, 0.15s ease);
+
+    &:hover {
+        transform: translateY(-1px);
+        border-color: var(--wh40k-gold, #d4af37);
+    }
+}
+
 // ============================================
 // Grid Area Positioning
 // ============================================

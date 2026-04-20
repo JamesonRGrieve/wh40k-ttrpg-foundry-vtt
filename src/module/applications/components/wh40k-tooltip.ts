@@ -878,7 +878,7 @@ export function prepareArmorTooltipData(location, armorData, equipped = []) {
         equipped: equipped.map((item) => ({
             name: item.name,
             img: item.img,
-            ap: item.system?.armour?.[location] || 0,
+            ap: item.ap || item.system?.armour?.[location] || 0,
         })),
     };
 

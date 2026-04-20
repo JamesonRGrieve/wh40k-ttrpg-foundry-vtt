@@ -180,9 +180,6 @@
                         <span>No active effects</span>
                     </div>
                     {{/if}}
-                    <button type="button" class="wh40k-effect-create-btn" data-action="createEffect" title="Create Effect">
-                        <i class="fas fa-plus"></i> New Effect
-                    </button>
                 </div>
             </div>
         </div>
@@ -343,7 +340,7 @@
                             <div class="wh40k-ew-info">
                                 <span class="wh40k-ew-name">{{weapon.name}}</span>
                                 <span class="wh40k-ew-meta">
-                                    <span class="wh40k-ew-class">{{weapon.system.class}}</span>
+                                    <span class="wh40k-ew-class">{{weapon.system.classLabel}}</span>
                                     {{#if weapon.system.rangeLabel}}<span class="wh40k-ew-range">{{weapon.system.rangeLabel}}</span>{{/if}}
                                 </span>
                             </div>
