@@ -17,17 +17,6 @@
     }
 }
 
-// Ensure the skills-tab talents/traits grid actually stretches its items
-.wh40k-talents-col {
-    width: 100%;
-    align-self: stretch;
-
-    > .wh40k-panel {
-        width: 100%;
-        box-sizing: border-box;
-    }
-}
-
 // Table Containers
 .wh40k-talents-table,
 .wh40k-traits-table {

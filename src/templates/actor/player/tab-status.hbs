@@ -5,7 +5,7 @@
     {{!-- Two Column Layout --}}
     <div class="tw-grid tw-grid-cols-[repeat(var(--wh40k-columns,2),1fr)] tw-gap-3 tw-w-full">
         {{!-- Left Column --}}
-        <div class="wh40k-status-col tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
+        <div class="wh40k-status-col tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{!-- Wounds Panel V2 --}}
             {{> systems/wh40k-rpg/templates/actor/panel/wounds-panel-v2.hbs}}
 
@@ -20,7 +20,7 @@
         </div>
 
         {{!-- Right Column --}}
-        <div class="wh40k-status-col tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
+        <div class="wh40k-status-col tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{!-- Experience Panel V2 --}}
             {{> systems/wh40k-rpg/templates/actor/panel/experience-panel-v2.hbs}}
 
