@@ -19,7 +19,7 @@ export class RollData {
     difficulties: Record<string, string> = rollDifficulties();
     aims: Record<string, string> = aimModifiers();
     locations: Record<string, string> = hitDropdown();
-    lasModes: string[] = (WH40K.combat as any).las_fire_modes;
+    lasModes: string[] = WH40K.combat.las_fire_modes as string[];
 
     // Chat Controls
     ignoreModifiers: boolean = false;
@@ -36,8 +36,8 @@ export class RollData {
     rangeName: string = '';
     rangeBonus: number = 0;
 
-    combatActionInformation: Record<string, any> = {};
-    actions: Record<string, any> = {};
+    combatActionInformation: Record<string, unknown> = {};
+    actions: Record<string, unknown> = {};
     action: string = '';
 
     baseTarget: number = 0;
@@ -62,7 +62,7 @@ export class RollData {
     hasEyeOfVengeanceAvailable: boolean = false;
     eyeOfVengeance: boolean = false;
 
-    attackSpecials: any[] = [];
+    attackSpecials: { name: string }[] = [];
     roll: Roll | null = null;
     render: string | null = null;
     previousRolls: Roll[] = [];
@@ -130,12 +130,12 @@ export class RollData {
         const modifiers: Record<string, number> = {};
         for (const m of Object.keys(this.modifiers)) {
             try {
-                const value = typeof this.modifiers[m] === 'string' ? Number.parseInt(this.modifiers[m]) : this.modifiers[m];
+                const value = this.modifiers[m];
                 if (value !== 0) {
                     modifiers[m.toUpperCase()] = value;
                 }
             } catch (err) {
-                (game as any).wh40k.error('Error while calculate roll data modifiers:', err);
+                game.wh40k.error('Error while calculate roll data modifiers:', err as string);
             }
         }
         return modifiers;
@@ -145,7 +145,7 @@ export class RollData {
         return !!this.attackSpecials.find((s) => s.name === special);
     }
 
-    getAttackSpecial(special: string): any {
+    getAttackSpecial(special: string): { name: string } | undefined {
         return this.attackSpecials.find((s) => s.name === special);
     }
 
@@ -191,7 +191,7 @@ export class WeaponRollData extends RollData {
     declare weapon: WH40KItem;
     weaponSelect: boolean = false;
 
-    weaponModifications: any[] = [];
+    weaponModifications: { name: string }[] = [];
     isCalledShot: boolean = false;
     calledShotLocation: string | undefined;
     usesAmmo: boolean = false;
@@ -221,7 +221,7 @@ export class WeaponRollData extends RollData {
         return !!this.weaponModifications.find((s) => s.name === special);
     }
 
-    getWeaponModification(special: string): any {
+    getWeaponModification(special: string): { name: string } | undefined {
         return this.weaponModifications.find((s) => s.name === special);
     }
 
@@ -233,7 +233,7 @@ export class WeaponRollData extends RollData {
 
         // Check weapon training
         if (this.sourceActor) {
-            const trainingModifier = getWeaponTrainingModifier(this.sourceActor, this.weapon);
+            const trainingModifier = getWeaponTrainingModifier(this.sourceActor as WH40KBaseActor, this.weapon);
             if (trainingModifier !== 0) {
                 this.modifiers['weapon-training'] = trainingModifier;
             }
@@ -293,12 +293,12 @@ export class WeaponRollData extends RollData {
                 const size = Number.parseInt(targetActorSystem.size.toString());
                 this.modifiers['target-size'] = (size - 4) * 10;
             } catch {
-                ui.notifications?.warn('Target size is not a number. Unexpected error.');
+                ui.notifications.warn('Target size is not a number. Unexpected error.');
             }
         }
 
         // Talents
-        const sourceActor = this.sourceActor as WH40KBaseActorDocument;
+        const sourceActor = this.sourceActor as WH40KBaseActorDocument | null;
         const sourceActorSystem = sourceActor?.system as { fate?: { value: number } };
         if (sourceActor && sourceActor.hasTalent('Eye of Vengeance') && sourceActorSystem.fate && sourceActorSystem.fate.value > 0) {
             this.hasEyeOfVengeanceAvailable = true;
@@ -311,11 +311,11 @@ export class WeaponRollData extends RollData {
 
     selectWeapon(weaponName: string): void {
         // Unselect All
-        this.weapons.filter((weapon) => weapon.id !== weaponName).forEach((weapon) => ((weapon as any).isSelected = false));
+        this.weapons.filter((weapon) => weapon.id !== weaponName).forEach((weapon) => ((weapon as { isSelected?: boolean }).isSelected = false));
         const found = this.weapons.find((weapon) => weapon.id === weaponName);
         if (found) {
             this.weapon = found;
-            (this.weapon as any).isSelected = true;
+            (this.weapon as { isSelected?: boolean }).isSelected = true;
         }
     }
 

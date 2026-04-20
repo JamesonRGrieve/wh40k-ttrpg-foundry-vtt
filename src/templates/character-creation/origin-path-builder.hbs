@@ -113,83 +113,84 @@
 
             {{#if showEquipment}}
             {{!-- Equip Acolyte — DH2e Stage 4 --}}
-            <div class="equip-panel">
-                <div class="equip-summary">
+            <div class="tw-flex tw-flex-col tw-gap-3 tw-p-3">
+                <div class="tw-flex tw-flex-col tw-gap-1 tw-p-2 tw-border tw-border-white/10 tw-rounded">
                     {{#if equipment.hasInfluence}}
-                        <div class="equip-counter {{#if equipment.atLimit}}at-limit{{/if}}">
+                        <div class="tw-flex tw-items-center tw-gap-1.5 tw-font-semibold {{#if equipment.atLimit}}tw-text-amber-400{{/if}}">
                             <i class="fa-solid fa-hashtag"></i>
                             <span>{{equipment.selectedCount}} / {{equipment.maxSelections}} {{localize "WH40K.OriginPath.EquipmentSelectedLabel"}}</span>
                         </div>
                     {{else}}
-                        <div class="equip-counter warning">
+                        <div class="tw-flex tw-items-center tw-gap-1.5 tw-font-semibold tw-text-amber-400">
                             <i class="fa-solid fa-triangle-exclamation"></i>
                             <span>{{localize "WH40K.OriginPath.EquipmentNoInfluence"}}</span>
                         </div>
                     {{/if}}
-                    <div class="equip-hint">{{localize "WH40K.OriginPath.EquipmentRuleHint"}}</div>
-                </div>
-
-                {{#if equipment.selectedItems.length}}
-                <div class="equip-selected">
-                    <div class="equip-selected-header">
-                        <h3><i class="fa-solid fa-check-circle"></i> {{localize "WH40K.OriginPath.EquipmentSelectedHeader"}}</h3>
-                        <button type="button" class="toolbar-btn" data-action="clearEquipment" data-tooltip="{{localize 'WH40K.OriginPath.EquipmentClearAll'}}">
-                            <i class="fa-solid fa-rotate-left"></i>
-                        </button>
-                    </div>
-                    <div class="equip-selected-grid">
-                        {{#each equipment.selectedItems as |item|}}
-                            <div class="equip-selected-card" data-action="toggleEquipmentItem" data-uuid="{{item.uuid}}" data-tooltip="{{localize 'WH40K.OriginPath.EquipmentRemove'}}">
-                                <img src="{{item.img}}" alt="{{item.name}}" class="equip-selected-img" />
-                                <div class="equip-selected-info">
-                                    <div class="equip-selected-name">{{item.name}}</div>
-                                    <div class="equip-selected-meta">
-                                        <span class="equip-type-badge">{{item.type}}</span>
-                                        <span class="equip-availability-badge">{{item.availabilityLabel}}</span>
-                                    </div>
-                                </div>
-                                <i class="fa-solid fa-xmark equip-remove-icon"></i>
-                            </div>
-                        {{/each}}
-                    </div>
-                </div>
-                {{/if}}
-
-                <div class="equip-filters">
-                    <div class="equip-filter-row">
-                        <input type="search" class="equip-search" placeholder="{{localize 'WH40K.OriginPath.EquipmentSearchPlaceholder'}}" value="{{equipment.search}}" />
-                        <select class="equip-type-filter">
-                            {{#each equipment.typeOptions as |option|}}
-                                <option value="{{option.value}}" {{#if (eq option.value ../equipment.typeFilter)}}selected{{/if}}>{{option.label}}</option>
+                    {{#if equipment.selectedItems.length}}
+                        <ul class="tw-list-disc tw-pl-5 tw-m-0 tw-mt-1 tw-text-sm tw-leading-snug">
+                            {{#each equipment.selectedItems as |item|}}
+                                <li>{{item.name}}</li>
                             {{/each}}
-                        </select>
-                    </div>
+                        </ul>
+                    {{/if}}
+                    <div class="tw-text-sm tw-italic tw-opacity-75">{{localize "WH40K.OriginPath.EquipmentRuleHint"}}</div>
                 </div>
 
-                <div class="equip-items-grid">
-                    {{#each equipment.items as |item|}}
-                        <div class="equip-item-card {{#if item.isSelected}}selected{{/if}} {{#if item.isDisabled}}disabled{{/if}}"
-                             data-action="toggleEquipmentItem"
-                             data-uuid="{{item.uuid}}"
-                             data-tooltip="{{item.name}} — {{item.availabilityLabel}}">
-                            {{#if item.isSelected}}
-                                <div class="selection-indicator">
-                                    <i class="fa-solid fa-check-circle"></i>
-                                </div>
-                            {{/if}}
-                            <img src="{{item.img}}" alt="{{item.name}}" class="equip-item-img" />
-                            <div class="equip-item-body">
-                                <div class="equip-item-name">{{item.name}}</div>
-                                <div class="equip-item-meta">
-                                    <span class="equip-type-badge">{{item.type}}</span>
-                                    <span class="equip-availability-badge">{{item.availabilityLabel}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    {{else}}
-                        <p class="no-origins">{{localize "WH40K.OriginPath.EquipmentNoneAvailable"}}</p>
-                    {{/each}}
+                <div class="tw-flex tw-items-center tw-gap-2">
+                    <input type="search" class="equip-search tw-flex-1 tw-px-2 tw-py-1 tw-text-sm"
+                           placeholder="{{localize 'WH40K.OriginPath.EquipmentSearchPlaceholder'}}" value="{{equipment.search}}" />
+                    <select class="equip-type-filter tw-basis-44 tw-px-2 tw-py-1 tw-text-sm">
+                        {{#each equipment.typeOptions as |option|}}
+                            <option value="{{option.value}}" {{#if (eq option.value ../equipment.typeFilter)}}selected{{/if}}>{{option.label}}</option>
+                        {{/each}}
+                    </select>
+                    <button type="button" class="toolbar-btn" data-action="clearEquipment" data-tooltip="{{localize 'WH40K.OriginPath.EquipmentClearAll'}}">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>{{localize "WH40K.OriginPath.EquipmentClearAll"}}</span>
+                    </button>
                 </div>
+
+                <table class="tw-w-full tw-border-collapse tw-text-sm">
+                    <thead>
+                        <tr class="tw-text-xs tw-uppercase tw-opacity-75 tw-border-b tw-border-white/15">
+                            <th class="tw-w-8 tw-text-center tw-px-2 tw-py-1"></th>
+                            <th class="tw-w-6 tw-px-2 tw-py-1"></th>
+                            <th class="tw-text-left tw-px-2 tw-py-1">{{localize "WH40K.OriginPath.EquipmentColName"}}</th>
+                            <th class="tw-text-left tw-px-2 tw-py-1 tw-w-32">{{localize "WH40K.OriginPath.EquipmentColType"}}</th>
+                            <th class="tw-text-left tw-px-2 tw-py-1 tw-w-28">{{localize "WH40K.OriginPath.EquipmentColAvailability"}}</th>
+                            {{#if equipment.isHomebrew}}
+                                <th class="tw-text-right tw-px-2 tw-py-1 tw-w-16">{{localize "WH40K.OriginPath.EquipmentColRequisition"}}</th>
+                                <th class="tw-text-right tw-px-2 tw-py-1 tw-w-24">{{localize "WH40K.OriginPath.EquipmentColThroneGelt"}}</th>
+                            {{/if}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each equipment.items as |item|}}
+                            <tr class="equip-row tw-border-b tw-border-white/5 tw-cursor-pointer hover:tw-bg-white/5 {{#if item.isSelected}}tw-bg-amber-400/10{{/if}} {{#if item.isDisabled}}tw-opacity-40 tw-cursor-not-allowed{{/if}}"
+                                data-action="toggleEquipmentItem"
+                                data-uuid="{{item.uuid}}">
+                                <td class="tw-w-8 tw-text-center tw-px-2 tw-py-1">
+                                    <input type="checkbox"
+                                           class="equip-check tw-pointer-events-none"
+                                           {{#if item.isSelected}}checked{{/if}}
+                                           {{#if item.isDisabled}}disabled{{/if}} />
+                                </td>
+                                <td class="tw-w-6 tw-px-2 tw-py-1">
+                                    <img src="{{item.img}}" alt="{{item.name}}" width="16" height="16" class="tw-w-4 tw-h-4 tw-max-w-[16px] tw-max-h-[16px] tw-object-contain tw-block" />
+                                </td>
+                                <td class="tw-px-2 tw-py-1 tw-font-medium">{{item.name}}</td>
+                                <td class="tw-px-2 tw-py-1 tw-capitalize tw-opacity-85">{{item.type}}</td>
+                                <td class="tw-px-2 tw-py-1 tw-opacity-85">{{item.availabilityLabel}}</td>
+                                {{#if ../equipment.isHomebrew}}
+                                    <td class="tw-px-2 tw-py-1 tw-text-right tw-tabular-nums tw-opacity-90">{{#if item.requisition}}{{item.requisition}}{{else}}—{{/if}}</td>
+                                    <td class="tw-px-2 tw-py-1 tw-text-right tw-tabular-nums tw-opacity-90">{{#if item.throneGelt}}{{item.throneGelt}}₮{{else}}—{{/if}}</td>
+                                {{/if}}
+                            </tr>
+                        {{else}}
+                            <tr><td colspan="{{#if equipment.isHomebrew}}7{{else}}5{{/if}}" class="tw-text-center tw-py-3 tw-italic tw-opacity-70">{{localize "WH40K.OriginPath.EquipmentNoneAvailable"}}</td></tr>
+                        {{/each}}
+                    </tbody>
+                </table>
             </div>
             {{else if showCharacteristics}}
             {{!-- Characteristic Setup (embedded) --}}

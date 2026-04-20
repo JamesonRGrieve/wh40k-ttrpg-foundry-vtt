@@ -75,7 +75,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
 
     #actor: WH40KBaseActor;
     #rolls: number[] = [];
-    #assignments: Partial<Record<CharacteristicKey, number>> = {};
+    #assignments: Partial<Record<CharacteristicKey, number | null>> = {};
     #customBases: Partial<Record<CharacteristicKey, number>> = {};
     #advancedMode = false;
     #resolve: ((value: boolean) => void) | null = null;
@@ -276,7 +276,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
             this.#saveRollInput(event.currentTarget as HTMLInputElement);
         } else if (event.key === 'Escape') {
             event.preventDefault();
-            this.render();
+            void this.render();
         }
     }
 
@@ -405,7 +405,10 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     /* -------------------------------------------- */
 
     static async #onApply(this: CharacteristicSetupDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
-        const allAssigned = GENERATION_CHARACTERISTICS.every((key) => this.#assignments[key] !== null && this.#rolls[this.#assignments[key]!] > 0);
+        const allAssigned = GENERATION_CHARACTERISTICS.every((key) => {
+            const index = this.#assignments[key];
+            return index !== null && index !== undefined && this.#rolls[index] > 0;
+        });
 
         if (!allAssigned) {
             ui.notifications.warn(game.i18n.localize('WH40K.CharacteristicSetup.NotAllAssigned'));
@@ -419,13 +422,14 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         };
 
         for (const key of GENERATION_CHARACTERISTICS) {
-            updateData[`system.characterGeneration.customBases.${key}`] = this.#customBases[key];
+            updateData[`system.characterGeneration.customBases.${key}`] = this.#customBases[key] ?? DEFAULT_BASE;
         }
 
         for (const key of GENERATION_CHARACTERISTICS) {
             const rollIndex = this.#assignments[key];
-            const rollValue = this.#rolls[rollIndex!];
-            const base = this.#advancedMode ? this.#customBases[key]! : DEFAULT_BASE;
+            if (rollIndex === null || rollIndex === undefined) continue;
+            const rollValue = this.#rolls[rollIndex];
+            const base = this.#advancedMode ? this.#customBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
             const total = base + rollValue;
             updateData[`system.characteristics.${key}.base`] = total;
         }
@@ -443,12 +447,12 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         for (const key of GENERATION_CHARACTERISTICS) {
             this.#assignments[key] = null;
         }
-        this.render();
+        void this.render();
     }
 
     static async #onToggleAdvanced(this: CharacteristicSetupDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         this.#advancedMode = !this.#advancedMode;
-        this.render();
+        void this.render();
     }
 
     /* -------------------------------------------- */

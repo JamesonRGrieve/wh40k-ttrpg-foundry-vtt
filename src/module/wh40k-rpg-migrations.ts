@@ -1,8 +1,44 @@
 import { SYSTEM_ID } from './constants.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
+const DEAD_ICON_REMAPS: Record<string, string> = {
+    'icons/svg/backpack.svg': 'modules/game-icons-net-font/svg/backpack.svg',
+    'icons/svg/alien.svg': 'modules/game-icons-net-font/svg/alien-bug.svg',
+    'icons/svg/astronaut.svg': 'modules/game-icons-net-font/svg/astronaut-helmet.svg',
+    'icons/svg/brain.svg': 'modules/game-icons-net-font/svg/brain.svg',
+    'icons/svg/car.svg': 'modules/game-icons-net-font/svg/jeep.svg',
+    'icons/svg/cogwheel.svg': 'modules/game-icons-net-font/svg/gears.svg',
+    'icons/svg/connected.svg': 'modules/game-icons-net-font/svg/network-bars.svg',
+    'icons/svg/crowd.svg': 'modules/game-icons-net-font/svg/conversation.svg',
+    'icons/svg/crown.svg': 'modules/game-icons-net-font/svg/crown.svg',
+    'icons/svg/dagger.svg': 'modules/game-icons-net-font/svg/daggers.svg',
+    'icons/svg/dice.svg': 'modules/game-icons-net-font/svg/dice-twenty-faces-twenty.svg',
+    'icons/svg/eagle.svg': 'modules/game-icons-net-font/svg/eagle-emblem.svg',
+    'icons/svg/energy-weapon.svg': 'modules/game-icons-net-font/svg/laser-gun.svg',
+    'icons/svg/eye-horror.svg': 'modules/game-icons-net-font/svg/evil-eyes.svg',
+    'icons/svg/gear.svg': 'modules/game-icons-net-font/svg/gears.svg',
+    'icons/svg/gears.svg': 'modules/game-icons-net-font/svg/gears.svg',
+    'icons/svg/helm.svg': 'modules/game-icons-net-font/svg/crested-helmet.svg',
+    'icons/svg/hidden.svg': 'modules/game-icons-net-font/svg/hidden.svg',
+    'icons/svg/holy-symbol.svg': 'modules/game-icons-net-font/svg/holy-symbol.svg',
+    'icons/svg/horror.svg': 'modules/game-icons-net-font/svg/evil-eyes.svg',
+    'icons/svg/masked.svg': 'modules/game-icons-net-font/svg/android-mask.svg',
+    'icons/svg/network.svg': 'modules/game-icons-net-font/svg/network-bars.svg',
+    'icons/svg/planet.svg': 'modules/game-icons-net-font/svg/ringed-planet.svg',
+    'icons/svg/shield-alt.svg': 'modules/game-icons-net-font/svg/shield.svg',
+    'icons/svg/ship.svg': 'modules/game-icons-net-font/svg/spaceship.svg',
+    'icons/svg/stone.svg': 'modules/game-icons-net-font/svg/rune-stone.svg',
+    'icons/svg/sword-cross.svg': 'modules/game-icons-net-font/svg/crossed-swords.svg',
+    'icons/svg/throne.svg': 'modules/game-icons-net-font/svg/stone-throne.svg',
+    'icons/svg/ammo.svg': 'modules/game-icons-net-font/svg/bullets.svg',
+    'icons/svg/compass.svg': 'modules/game-icons-net-font/svg/compass.svg',
+    'icons/svg/crew.svg': 'modules/game-icons-net-font/svg/conversation.svg',
+    'icons/svg/energy.svg': 'modules/game-icons-net-font/svg/lightning-electron.svg',
+    'icons/svg/scroll.svg': 'modules/game-icons-net-font/svg/scroll-unfurled.svg',
+};
+
 export async function checkAndMigrateWorld() {
-    const worldVersion = 185;
+    const worldVersion = 186;
 
     // @ts-expect-error - argument type
     const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
@@ -158,6 +194,13 @@ export async function checkAndMigrateWorld() {
                 await item.update(updateData);
             }
         }
+
+        if (version < 186) {
+            const replacement = DEAD_ICON_REMAPS[item.img];
+            if (replacement) {
+                await item.update({ img: replacement });
+            }
+        }
     }
 
     async function migrateActorData(actor, version) {
@@ -268,6 +311,21 @@ export async function checkAndMigrateWorld() {
                     'flags.wh40k-rpg.-=equipmentViewMode': null,
                     'flags.wh40k-rpg.-=equipmentPresets': null,
                 });
+            }
+        }
+
+        // Repoint dead icons/svg/*.svg paths (v186)
+        // @ts-expect-error - operator type
+        if (currentVersion < 186) {
+            const actorReplacement = DEAD_ICON_REMAPS[actor.img];
+            if (actorReplacement) {
+                await actor.update({ img: actorReplacement });
+            }
+            for (const item of actor.items) {
+                const itemReplacement = DEAD_ICON_REMAPS[item.img];
+                if (itemReplacement) {
+                    await item.update({ img: itemReplacement });
+                }
             }
         }
     }

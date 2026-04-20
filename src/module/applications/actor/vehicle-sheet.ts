@@ -81,7 +81,7 @@ export default class VehicleSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [
+    static TABS: HandlebarsApplicationV14.TabDescriptor[] = [
         { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
         { tab: 'combat', label: 'WH40K.Tabs.Combat', group: 'primary', cssClass: 'tab-combat' },
         { tab: 'crew', label: 'WH40K.Vehicle.Crew', group: 'primary', cssClass: 'tab-crew' },
@@ -92,7 +92,7 @@ export default class VehicleSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups = {
+    tabGroups: HandlebarsApplicationV14.TabGroupsState = {
         primary: 'overview',
     };
 
@@ -109,15 +109,15 @@ export default class VehicleSheet extends BaseActorSheet {
         };
 
         // Vehicle-specific context
-        (context as any).vehicleStats = this._prepareVehicleStats(context);
-        (context as any).crewStats = this._prepareCrewStats(context);
-        (context as any).characteristicsArray = this._prepareCharacteristics(context);
+        context.vehicleStats = this._prepareVehicleStats(context);
+        context.crewStats = this._prepareCrewStats(context);
+        context.characteristicsArray = this._prepareCharacteristics(context);
 
         // Categorize items
         await this._prepareItems(context);
 
         // Prepare tabs
-        (context as any).tabs = this._prepareTabs();
+        context.tabs = this._prepareTabs();
 
         return context;
     }
@@ -248,11 +248,11 @@ export default class VehicleSheet extends BaseActorSheet {
             }
         }
 
-        (context as any).weapons = weapons;
-        (context as any).vehicleTraits = vehicleTraits;
-        (context as any).vehicleUpgrades = vehicleUpgrades;
-        (context as any).components = components;
-        (context as any).otherItems = other;
+        context.weapons = weapons;
+        context.vehicleTraits = vehicleTraits;
+        context.vehicleUpgrades = vehicleUpgrades;
+        context.components = components;
+        context.otherItems = other;
     }
 
     /* -------------------------------------------- */
@@ -263,12 +263,12 @@ export default class VehicleSheet extends BaseActorSheet {
      * @protected
      */
     _prepareTabs(): Record<string, unknown>[] {
-        return (this.constructor as any).TABS.map((tab: any) => ({
+        return (this.constructor as any).TABS.map((tab: HandlebarsApplicationV14.TabDescriptor) => ({
             id: tab.tab,
             tab: tab.tab,
             group: tab.group,
             label: game.i18n.localize(tab.label),
-            active: this.tabGroups[tab.group] === tab.tab,
+            active: this.tabGroups[tab.group ?? 'primary'] === tab.tab,
             cssClass: tab.cssClass,
         }));
     }
@@ -282,11 +282,11 @@ export default class VehicleSheet extends BaseActorSheet {
         // Add tab metadata for all tab parts
         const tabParts = ['overview', 'combat', 'crew', 'components', 'notes'];
         if (tabParts.includes(partId)) {
-            const tabConfig = (this.constructor as any).TABS.find((t: any) => t.tab === partId);
-            (partContext as any).tab = {
+            const tabConfig = (this.constructor as any).TABS.find((t: HandlebarsApplicationV14.TabDescriptor) => t.tab === partId);
+            partContext.tab = {
                 id: partId,
                 group: tabConfig?.group || 'primary',
-                active: this.tabGroups.primary === partId,
+                active: this.tabGroups[tabConfig?.group || 'primary'] === partId,
                 cssClass: tabConfig?.cssClass || '',
             };
         }

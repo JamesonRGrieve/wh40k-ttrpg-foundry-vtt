@@ -68,7 +68,7 @@ export default class StarshipSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [
+    static TABS: HandlebarsApplicationV14.TabDescriptor[] = [
         { tab: 'stats', label: 'WH40K.Starship.Tabs.Stats', group: 'primary', cssClass: 'tab-stats' },
         { tab: 'components', label: 'WH40K.Starship.Tabs.Components', group: 'primary', cssClass: 'tab-components' },
         { tab: 'weapons', label: 'WH40K.Starship.Tabs.Weapons', group: 'primary', cssClass: 'tab-weapons' },
@@ -79,7 +79,7 @@ export default class StarshipSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups = {
+    tabGroups: HandlebarsApplicationV14.TabGroupsState = {
         primary: 'stats',
     };
 
@@ -90,7 +90,7 @@ export default class StarshipSheet extends BaseActorSheet {
     /** @inheritDoc */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        (context as any).dh = CONFIG.wh40k || WH40K;
+        context.dh = CONFIG.wh40k || WH40K;
 
         // Prepare ship-specific data
         this._prepareShipData(context);
@@ -109,37 +109,43 @@ export default class StarshipSheet extends BaseActorSheet {
         const items = this.actor.items;
 
         // Get ship components grouped by type
-        (context as any).shipComponents = items.filter((item: WH40KItem) => item.type === 'shipComponent');
-        (context as any).shipWeapons = items.filter((item: WH40KItem) => item.type === 'shipWeapon');
-        (context as any).shipUpgrades = items.filter((item: WH40KItem) => item.type === 'shipUpgrade');
-        (context as any).shipRoles = items.filter((item: WH40KItem) => item.type === 'shipRole');
+        context.shipComponents = items.filter((item: WH40KItem) => item.type === 'shipComponent');
+        context.shipWeapons = items.filter((item: WH40KItem) => item.type === 'shipWeapon');
+        context.shipUpgrades = items.filter((item: WH40KItem) => item.type === 'shipUpgrade');
+        context.shipRoles = items.filter((item: WH40KItem) => item.type === 'shipRole');
 
         // Calculate power and space usage (use DataModel fields)
-        (context as any).powerGenerated = 0;
-        (context as any).powerUsed = 0;
-        (context as any).spaceUsed = 0;
+        let powerGenerated = 0;
+        let powerUsed = 0;
+        let spaceUsed = 0;
 
-        for (const component of (context as any).shipComponents) {
-            if ((component.system as any).condition === 'functional') {
-                (context as any).powerGenerated += (component.system as any).power?.generated || 0;
-                (context as any).powerUsed += (component.system as any).power?.used || 0;
-                (context as any).spaceUsed += (component.system as any).space || 0;
+        for (const component of context.shipComponents as WH40KItem[]) {
+            const sys = component.system as any;
+            if (sys.condition === 'functional') {
+                powerGenerated += sys.power?.generated || 0;
+                powerUsed += sys.power?.used || 0;
+                spaceUsed += sys.space || 0;
             }
         }
 
-        for (const weapon of (context as any).shipWeapons) {
-            (context as any).powerUsed += (weapon.system as any).power || 0;
-            (context as any).spaceUsed += (weapon.system as any).space || 0;
+        for (const weapon of context.shipWeapons as WH40KItem[]) {
+            const sys = weapon.system as any;
+            powerUsed += sys.power || 0;
+            spaceUsed += sys.space || 0;
         }
 
-        for (const upgrade of (context as any).shipUpgrades) {
-            (context as any).powerGenerated += (upgrade.system as any).power?.generated || 0;
-            (context as any).powerUsed += (upgrade.system as any).power?.used || 0;
-            (context as any).spaceUsed += (upgrade.system as any).space || 0;
+        for (const upgrade of context.shipUpgrades as WH40KItem[]) {
+            const sys = upgrade.system as any;
+            powerGenerated += sys.power?.generated || 0;
+            powerUsed += sys.power?.used || 0;
+            spaceUsed += sys.space || 0;
         }
 
-        (context as any).powerAvailable = (context as any).powerGenerated - (context as any).powerUsed;
-        (context as any).spaceAvailable = ((this.actor.system as any).space?.total || 0) - (context as any).spaceUsed;
+        context.powerGenerated = powerGenerated;
+        context.powerUsed = powerUsed;
+        context.spaceUsed = spaceUsed;
+        context.powerAvailable = powerGenerated - powerUsed;
+        context.spaceAvailable = ((this.actor.system as any).space?.total || 0) - spaceUsed;
     }
 
     /* -------------------------------------------- */
@@ -148,16 +154,17 @@ export default class StarshipSheet extends BaseActorSheet {
      * Prepare context for specific parts.
      * @inheritDoc
      */
-    async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const partContext = await super._preparePartContext(partId, context, options);
 
         // Add tab metadata for tab parts
-        if (['stats', 'components', 'weapons', 'crew', 'history'].includes(partId)) {
-            const tabConfig = (this.constructor as any).TABS.find((t: any) => t.tab === partId);
-            (partContext as any).tab = {
+        const tabParts = ['stats', 'components', 'weapons', 'crew', 'history'];
+        if (tabParts.includes(partId)) {
+            const tabConfig = (this.constructor as any).TABS.find((t: HandlebarsApplicationV14.TabDescriptor) => t.tab === partId);
+            partContext.tab = {
                 id: partId,
                 group: tabConfig?.group || 'primary',
-                active: this.tabGroups.primary === partId,
+                active: this.tabGroups[tabConfig?.group || 'primary'] === partId,
                 cssClass: tabConfig?.cssClass || '',
             };
         }

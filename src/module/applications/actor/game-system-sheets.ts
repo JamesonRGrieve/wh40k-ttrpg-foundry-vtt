@@ -53,7 +53,7 @@ function makeSystemVariant(baseCls: any, className: string, cfg: SystemSheetConf
     };
     const systemConfig = SystemConfigRegistry.get(cfg.gameSystemId);
     const skillRanks = systemConfig.getSkillRanks();
-    cls.prototype._getSkillTrainingConfig = function () {
+    (cls.prototype as any)._getSkillTrainingConfig = function () {
         return skillRanks;
     };
     (cls.prototype as any)._gameSystemId = cfg.gameSystemId;

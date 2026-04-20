@@ -107,17 +107,17 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
          * @protected
          */
         _renderContainers(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
-            const containerElements = Array.from(this.element.querySelectorAll('[data-container-id]')) as HTMLElement[];
-            const containers = Object.fromEntries(containerElements.map((el) => [el.dataset.containerId, el]));
+            const containerElements = Array.from(this.element.querySelectorAll<HTMLElement>('[data-container-id]'));
+            const containers: Record<string, HTMLElement> = Object.fromEntries(containerElements.map((el) => [el.dataset.containerId!, el]));
             for (const [part, config] of Object.entries((this.constructor as typeof BaseApplicationWH40K).PARTS)) {
                 if (!config.container?.id) continue;
-                const element = this.element.querySelector(`[data-application-part="${part}"]`);
+                const element = this.element.querySelector<HTMLElement>(`[data-application-part="${part}"]`);
                 if (!element) continue;
                 let container = containers[config.container.id];
                 if (!container) {
                     const div = document.createElement('div');
                     div.dataset.containerId = config.container.id;
-                    div.classList.add(...(config.container.classes ?? []));
+                    if (config.container.classes) div.classList.add(...config.container.classes);
                     container = containers[config.container.id] = div;
                     element.replaceWith(div);
                 }
@@ -130,8 +130,8 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
         /** @inheritDoc */
         _replaceHTML(result: Record<string, HTMLElement>, content: HTMLElement, options: ApplicationV2Config.RenderOptions): void {
             for (const part of Object.values(result)) {
-                for (const element of part.querySelectorAll('[data-expand-id]')) {
-                    const expandId = (element as HTMLElement).dataset.expandId;
+                for (const element of part.querySelectorAll<HTMLElement>('[data-expand-id]')) {
+                    const expandId = element.dataset.expandId;
                     if (expandId) {
                         element.querySelector('.collapsible')?.classList.toggle('collapsed', !this.#expandedSections.get(expandId));
                     }
@@ -158,14 +158,14 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
             super._onRender(context, options);
 
             // Add special styling for multi-select tags
-            this.element.querySelectorAll('multi-select').forEach((select) => {
+            for (const select of this.element.querySelectorAll('multi-select')) {
                 const multiSelect = select as HTMLInputElement;
-                if (multiSelect.disabled) return;
-                select.querySelectorAll('.tag').forEach((tag) => {
+                if (multiSelect.disabled) continue;
+                for (const tag of select.querySelectorAll('.tag')) {
                     tag.classList.add('remove');
                     tag.querySelector(':scope > span')?.classList.add('remove');
-                });
-            });
+                }
+            }
         }
 
         /* -------------------------------------------- */
@@ -175,7 +175,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
          */
         _disableFields(): void {
             const selector = `.window-content :is(${['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON'].join(', ')}):not(.always-interactive)`;
-            for (const element of this.element.querySelectorAll(selector)) {
+            for (const element of this.element.querySelectorAll<HTMLElement>(selector)) {
                 if (element instanceof HTMLTextAreaElement) element.readOnly = true;
                 else if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement || element instanceof HTMLButtonElement)
                     element.disabled = true;

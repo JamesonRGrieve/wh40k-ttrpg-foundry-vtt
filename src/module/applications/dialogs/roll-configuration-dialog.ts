@@ -12,42 +12,60 @@
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+interface DifficultyPreset {
+    key: string;
+    label: string;
+    value: number;
+}
+
+interface RollConfig extends Record<string, unknown> {
+    actor?: Actor | null;
+    target?: number;
+    flavor?: string;
+    difficulty?: string;
+    customModifier?: number;
+    permanentModifiers?: Array<{ uuid?: string; value: number }>;
+    situationalModifiers?: Array<{ value: number }>;
+    rollMode?: string;
+    name?: string;
+    modifiers?: Record<string, number>;
+}
+
 export default class RollConfigurationDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         id: 'roll-configuration-{id}',
         classes: ['wh40k-rpg', 'roll-configuration-dialog'],
         tag: 'form',
         window: {
             title: 'WH40K.Roll.ConfigureRoll',
             icon: 'fa-solid fa-dice-d20',
-            minimizable: false,
             resizable: false,
         },
         position: {
             width: 400,
-            height: 'auto' as const,
+            height: 'auto',
         },
         form: {
-            handler: this.#onSubmit,
+            handler: RollConfigurationDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: true,
         },
         actions: {
-            toggleSituational: this.#toggleSituational,
-            cancel: this.#cancel,
-            viewModifierSource: this.#viewModifierSource,
+            toggleSituational: RollConfigurationDialog.#toggleSituational,
+            cancel: RollConfigurationDialog.#cancel,
+            viewModifierSource: RollConfigurationDialog.#viewModifierSource,
         },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/dialogs/roll-configuration.hbs',
         },
@@ -57,11 +75,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /*  Static Properties                           */
     /* -------------------------------------------- */
 
-    /**
-     * Standard difficulty modifiers for WH40K RPG
-     * @type {Array<{label: string, value: number, key: string}>}
-     */
-    static DIFFICULTY_PRESETS = [
+    static DIFFICULTY_PRESETS: DifficultyPreset[] = [
         { key: 'trivial', label: 'WH40K.Difficulty.Trivial', value: 60 },
         { key: 'elementary', label: 'WH40K.Difficulty.Elementary', value: 50 },
         { key: 'easy', label: 'WH40K.Difficulty.Easy', value: 40 },
@@ -81,40 +95,11 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /*  Instance Properties                         */
     /* -------------------------------------------- */
 
-    /**
-     * The actor making the roll
-     * @type {Actor|null}
-     */
-    actor: unknown = null;
-
-    /**
-     * Roll configuration data
-     * @type {Object}
-     */
-    config: Record<string, unknown> = {};
-
-    /**
-     * Selected difficulty key
-     * @type {string}
-     */
-    selectedDifficulty: string = 'difficult';
-
-    /**
-     * Custom modifier value
-     * @type {number}
-     */
-    customModifier: number = 0;
-
-    /**
-     * Active situational modifiers (those checked by the user)
-     * @type {Set<string>}
-     */
-    activeSituationalModifiers: Set<string> = new Set();
-
-    /**
-     * Promise resolver for async result
-     * @type {Function|null}
-     */
+    declare actor: Actor | null;
+    declare config: RollConfig;
+    declare selectedDifficulty: string;
+    declare customModifier: number;
+    declare activeSituationalModifiers: Set<string>;
     #resolve: ((value: unknown) => void) | null = null;
 
     /* -------------------------------------------- */
@@ -122,18 +107,16 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     /* -------------------------------------------- */
 
     /**
-     * @param {Object} config - Roll configuration
-     * @param {Actor} [config.actor] - The actor making the roll
-     * @param {number} [config.target] - Base target number
-     * @param {string} [config.flavor] - Roll flavor/name
+     * @param {RollConfig} config - Roll configuration
      * @param {Object} [options] - Application options
      */
-    constructor(config: Record<string, unknown> = {}, options = {}) {
+    constructor(config: RollConfig = {}, options: ApplicationV2Config.DefaultOptions = {}) {
         super(options);
         this.config = foundry.utils.deepClone(config);
         this.actor = config.actor || null;
         this.selectedDifficulty = config.difficulty || 'difficult';
         this.customModifier = config.customModifier || 0;
+        this.activeSituationalModifiers = new Set();
     }
 
     /* -------------------------------------------- */
@@ -332,38 +315,30 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
     /**
      * Handle form submission
-     * @param {Event} event
+     * @param {SubmitEvent} event
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): void {
-        const data = foundry.utils.expandObject(formData.object);
+    static #onSubmit(this: RollConfigurationDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): void {
+        const data = formData.object;
 
-        // Get final values
-        // @ts-expect-error - TS2339
-        const difficultyPreset = this.constructor.DIFFICULTY_PRESETS.find((p: { key: string }) => p.key === data.difficulty) || { value: 0 };
-
-        // Calculate situational modifier total
+        const difficultyPreset = RollConfigurationDialog.DIFFICULTY_PRESETS.find((p) => p.key === data.difficulty) || { value: 0 };
         const situationalTotal = this._calculateSituationalTotal();
+        const customModifier = parseInt(data.customModifier as string) || 0;
 
-        const result = {
+        const result: RollConfig = {
             ...this.config,
-            // @ts-expect-error - TS2339
-            difficulty: data.difficulty,
+            difficulty: data.difficulty as string,
             difficultyModifier: difficultyPreset.value,
-            // @ts-expect-error - TS2339
-            customModifier: parseInt(data.customModifier) || 0,
+            customModifier: customModifier,
             situationalModifier: situationalTotal,
-            // @ts-expect-error - TS2339
-            rollMode: data.rollMode,
-            // @ts-expect-error - TS2339
-            target: (this.config.target || 0) + difficultyPreset.value + (parseInt(data.customModifier) || 0) + situationalTotal,
-            baseTarget: this.config.target || 0,
+            rollMode: data.rollMode as string,
+            target: (this.config.target ?? 0) + difficultyPreset.value + customModifier + situationalTotal,
+            baseTarget: this.config.target ?? 0,
             modifiers: {
-                ...this.config.modifiers,
+                ...(this.config.modifiers ?? {}),
                 difficulty: difficultyPreset.value,
-                // @ts-expect-error - TS2339
-                custom: parseInt(data.customModifier) || 0,
+                custom: customModifier,
                 situational: situationalTotal,
             },
         };
@@ -371,8 +346,6 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         if (this.#resolve) {
             this.#resolve(result);
         }
-
-        return result;
     }
 
     /* -------------------------------------------- */

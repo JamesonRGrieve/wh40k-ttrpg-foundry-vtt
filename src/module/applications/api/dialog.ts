@@ -10,7 +10,7 @@ const { ApplicationV2 } = foundry.applications.api;
 interface DialogButton {
     label: string;
     class?: string;
-    callback?: (...args: any[]) => any;
+    callback?: (event: SubmitEvent, button: HTMLButtonElement, dialog: HTMLElement) => unknown;
     default?: boolean;
 }
 
@@ -18,8 +18,8 @@ interface DialogButton {
  * Base dialog class for creating WH40K dialogs.
  */
 export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
-    _resolve?: (value: any) => void;
-    _reject?: (reason?: any) => void;
+    _resolve?: (value: unknown) => void;
+    _reject?: (reason?: unknown) => void;
     _submitted?: boolean;
 
     /** @override */
@@ -91,9 +91,9 @@ export default class DialogWH40K extends ApplicationV2Mixin(ApplicationV2) {
 
     /**
      * Resolve the dialog with a result.
-     * @param {Record<string, unknown>} result  The result to return.
+     * @param {unknown} result  The result to return.
      */
-    resolve(result: Record<string, unknown>): void {
+    resolve(result: unknown): void {
         this._submitted = true;
         this._resolve?.(result);
     }

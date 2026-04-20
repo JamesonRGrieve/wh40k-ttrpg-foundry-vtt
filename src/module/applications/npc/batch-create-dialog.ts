@@ -1,17 +1,22 @@
-/**
- * @file BatchCreateDialog - Create multiple NPCs at once
- * Phase 6: Advanced GM Tools
- *
- * Provides:
- * - Create X identical NPCs from configuration
- * - Name pattern support ({n} for numbering)
- * - Random stat variation option
- * - Folder organization option
- */
-
 import ThreatCalculator from './threat-calculator.ts';
+import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+interface BatchState {
+    namePattern: string;
+    count: number;
+    threatLevel: number;
+    role: string;
+    type: string;
+    preset: string;
+    faction: string;
+    isHorde: boolean;
+    randomize: boolean;
+    randomizeAmount: number;
+    folder: string;
+    openSheets: boolean;
+}
 
 /**
  * Dialog for creating multiple NPCs at once.
@@ -64,9 +69,9 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Form state.
-     * @type {Object}
+     * @type {BatchState}
      */
-    #state = {
+    #state: BatchState = {
         namePattern: 'NPC {n}',
         count: 3,
         threatLevel: 5,
@@ -83,9 +88,9 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Promise resolver.
-     * @type {Function|null}
+     * @type {((value: WH40KNPCV2[]) => void) | null}
      */
-    #resolve = null;
+    #resolve: ((value: WH40KNPCV2[]) => void) | null = null;
 
     /**
      * Whether submitted.
@@ -93,15 +98,21 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      */
     #submitted = false;
 
+    /**
+     * Render timeout.
+     * @type {ReturnType<typeof setTimeout> | null}
+     */
+    _renderTimeout: ReturnType<typeof setTimeout> | null = null;
+
     /* -------------------------------------------- */
     /*  Constructor                                 */
     /* -------------------------------------------- */
 
     /**
-     * @param {Object} [config] - Initial configuration.
-     * @param {Object} [options] - Application options.
+     * @param {Partial<BatchState>} [config] - Initial configuration.
+     * @param {Record<string, unknown>} [options] - Application options.
      */
-    constructor(config = {}, options: Record<string, unknown> = {}) {
+    constructor(config: Partial<BatchState> = {}, options: Record<string, unknown> = {}) {
         super(options);
         Object.assign(this.#state, config);
     }
@@ -111,8 +122,8 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const context: unknown = await super._prepareContext(options);
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        const context = await super._prepareContext(options);
 
         // Get options
         const roles = ThreatCalculator.getRoles();
@@ -141,10 +152,10 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             ...context,
             state: this.#state,
 
-            roles: roles.map((r) => ({ ...r, selected: r.key === this.#state.role })),
-            presets: presets.map((p) => ({ ...p, selected: p.key === this.#state.preset })),
-            types: types.map((t) => ({ ...t, selected: t.key === this.#state.type })),
-            folders: folders.map((f) => ({ ...f, selected: f.id === this.#state.folder })),
+            roles: roles.map((r: any) => ({ ...r, selected: r.key === this.#state.role })),
+            presets: presets.map((p: any) => ({ ...p, selected: p.key === this.#state.preset })),
+            types: types.map((t: any) => ({ ...t, selected: t.key === this.#state.type })),
+            folders: folders.map((f: any) => ({ ...f, selected: f.id === this.#state.folder })),
 
             tierName: tier.name,
             previewNames,
@@ -157,13 +168,13 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
         const form = this.element;
 
         // Bind live update handlers
-        const fields = [
+        const fields: { name: keyof BatchState; type: string }[] = [
             { name: 'namePattern', type: 'string' },
             { name: 'count', type: 'number' },
             { name: 'threatLevel', type: 'number' },
@@ -184,22 +195,22 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
             el.addEventListener(field.type === 'boolean' ? 'change' : 'input', () => {
                 if (field.type === 'boolean') {
-                    this.#state[field.name] = (el as any).checked;
+                    (this.#state as any)[field.name] = (el as HTMLInputElement).checked;
                 } else if (field.type === 'number') {
-                    this.#state[field.name] = parseInt((el as any).value, 10) || 0;
+                    (this.#state as any)[field.name] = parseInt((el as HTMLInputElement).value, 10) || 0;
                 } else {
-                    this.#state[field.name] = (el as any).value;
+                    (this.#state as any)[field.name] = (el as HTMLInputElement).value;
                 }
                 this._debounceRender();
             });
         }
 
         // Update threat value display
-        const threatSlider = form.querySelector('[name="threatLevel"]');
+        const threatSlider = form.querySelector('[name="threatLevel"]') as HTMLInputElement;
         const threatValue = form.querySelector('.threat-value');
         if (threatSlider && threatValue) {
             threatSlider.addEventListener('input', () => {
-                threatValue.textContent = (threatSlider as any).value;
+                threatValue.textContent = threatSlider.value;
             });
         }
     }
@@ -221,24 +232,30 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Handle form submission.
-     * @param {Event} event
+     * @param {BatchCreateDialog} this
+     * @param {SubmitEvent} event
      * @param {HTMLFormElement} form
-     * @param {FormDataExtended} formData
+     * @param {foundry.applications.api.FormDataExtended} formData
      */
-    static async #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
-        const data: unknown = foundry.utils.expandObject(formData.object);
+    static async #onSubmit(
+        this: BatchCreateDialog,
+        event: SubmitEvent,
+        form: HTMLFormElement,
+        formData: foundry.applications.api.FormDataExtended,
+    ): Promise<void> {
+        const data = foundry.utils.expandObject(formData.object) as Partial<BatchState>;
 
         // Update state from form
         this.#state.namePattern = data.namePattern || 'NPC {n}';
-        this.#state.count = Math.max(1, Math.min(100, parseInt(data.count, 10) || 1));
-        this.#state.threatLevel = parseInt(data.threatLevel, 10) || 5;
+        this.#state.count = Math.max(1, Math.min(100, parseInt(String(data.count), 10) || 1));
+        this.#state.threatLevel = parseInt(String(data.threatLevel), 10) || 5;
         this.#state.role = data.role || 'specialist';
         this.#state.type = data.type || 'troop';
         this.#state.preset = data.preset || 'mixed';
         this.#state.faction = data.faction || '';
         this.#state.isHorde = data.isHorde === true || data.isHorde === 'true';
         this.#state.randomize = data.randomize === true || data.randomize === 'true';
-        this.#state.randomizeAmount = parseInt(data.randomizeAmount, 10) || 10;
+        this.#state.randomizeAmount = parseInt(String(data.randomizeAmount), 10) || 10;
         this.#state.folder = data.folder || '';
         this.#state.openSheets = data.openSheets === true || data.openSheets === 'true';
 
@@ -246,13 +263,13 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         const actors = await this._createNPCs();
 
         if (actors.length > 0) {
-            ui.notifications.info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: actors.length }));
+            ui.notifications.info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: String(actors.length) }));
 
             // Open sheets if requested (only first 5 to avoid overwhelming)
             if (this.#state.openSheets) {
                 const toOpen = actors.slice(0, 5);
                 for (const actor of toOpen) {
-                    actor.sheet.render(true);
+                    actor.sheet?.render(true);
                 }
             }
 
@@ -266,11 +283,11 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Create the NPCs based on current state.
-     * @returns {Promise<Array<Actor>>}
+     * @returns {Promise<WH40KNPCV2[]>}
      * @private
      */
-    async _createNPCs(): Promise<unknown> {
-        const actors = [];
+    async _createNPCs(): Promise<WH40KNPCV2[]> {
+        const actors: WH40KNPCV2[] = [];
 
         // Generate base data
         const baseConfig = {
@@ -294,7 +311,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 const variance = this.#state.randomizeAmount / 100;
 
                 // Randomize characteristics
-                for (const char of Object.values(systemData.characteristics) as unknown[]) {
+                for (const char of Object.values(systemData.characteristics as Record<string, any>)) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
                     char.total = char.base + char.modifier;
@@ -307,7 +324,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 systemData.wounds.value = systemData.wounds.max;
             }
 
-            const actorData: unknown = {
+            const actorData: any = {
                 name,
                 type: 'npcV2',
                 img: 'icons/svg/mystery-man.svg',
@@ -320,7 +337,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             }
 
             try {
-                const actor = await Actor.create(actorData);
+                const actor = (await Actor.create(actorData)) as WH40KNPCV2 | undefined;
                 if (actor) actors.push(actor);
             } catch (err) {
                 console.error(`Failed to create NPC "${name}":`, err);
@@ -335,7 +352,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: BatchCreateDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         this.#submitted = false;
         if (this.#resolve) this.#resolve([]);
         await this.close();
@@ -346,7 +363,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #onUpdatePreview(this: any, event: Event, target: HTMLElement): void {
+    static #onUpdatePreview(this: BatchCreateDialog, event: PointerEvent, target: HTMLElement): void {
         this.render({ parts: ['form'] });
     }
 
@@ -355,7 +372,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async close(options: Record<string, unknown> = {}): Promise<unknown> {
+    async close(options: Record<string, unknown> = {}): Promise<void> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
         if (!this.#submitted && this.#resolve) {
@@ -371,9 +388,9 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Wait for dialog completion.
-     * @returns {Promise<Array<Actor>>} Created actors.
+     * @returns {Promise<WH40KNPCV2[]>} Created actors.
      */
-    async wait(): Promise<void> {
+    async wait(): Promise<WH40KNPCV2[]> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             void this.render(true);
@@ -382,28 +399,20 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Open the batch create dialog.
-     * @param {Object} [config] - Initial configuration.
-     * @returns {Promise<Array<Actor>>} Created actors.
+     * @param {Partial<BatchState>} [config] - Initial configuration.
+     * @returns {Promise<WH40KNPCV2[]>} Created actors.
      */
-    static async open(config: Record<string, unknown> = {}): Promise<void> {
+    static async open(config: Partial<BatchState> = {}): Promise<WH40KNPCV2[]> {
         const dialog = new this(config);
         return dialog.wait();
     }
 
     /**
      * Quick batch create without dialog.
-     * @param {Object} config - Configuration.
-     * @param {string} config.namePattern - Name pattern with {n} placeholder.
-     * @param {number} config.count - Number to create.
-     * @param {number} [config.threatLevel=5] - Threat level.
-     * @param {string} [config.role="specialist"] - NPC role.
-     * @param {string} [config.type="troop"] - NPC type.
-     * @param {string} [config.preset="mixed"] - Equipment preset.
-     * @param {boolean} [config.randomize=false] - Randomize stats.
-     * @param {string} [config.folder] - Folder ID.
-     * @returns {Promise<Array<Actor>>} Created actors.
+     * @param {Record<string, unknown>} config - Configuration.
+     * @returns {Promise<WH40KNPCV2[]>} Created actors.
      */
-    static async quickCreate(config: Record<string, unknown>): Promise<void> {
+    static async quickCreate(config: Record<string, unknown>): Promise<WH40KNPCV2[]> {
         const {
             namePattern = 'NPC {n}',
             count = 1,
@@ -418,7 +427,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             folder = '',
         } = config;
 
-        const actors = [];
+        const actors: WH40KNPCV2[] = [];
         const baseData = ThreatCalculator.generateNPCData({
             threatLevel,
             role,
@@ -434,7 +443,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
             if (randomize) {
                 const variance = (randomizeAmount as number) / 100;
-                for (const char of Object.values(systemData.characteristics) as unknown[]) {
+                for (const char of Object.values(systemData.characteristics as Record<string, any>)) {
                     const delta = Math.floor((Math.random() * 2 - 1) * char.base * variance);
                     char.base = Math.max(10, Math.min(99, char.base + delta));
                     char.total = char.base + char.modifier;
@@ -442,7 +451,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 }
             }
 
-            const actorData = {
+            const actorData: any = {
                 name,
                 type: 'npcV2',
                 img: 'icons/svg/mystery-man.svg',
@@ -450,7 +459,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 folder: folder || undefined,
             };
 
-            const actor = await Actor.create(actorData as any);
+            const actor = (await Actor.create(actorData)) as WH40KNPCV2 | undefined;
             if (actor) actors.push(actor);
         }
 
@@ -458,6 +467,6 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             ui.notifications.info(game.i18n.format('WH40K.NPC.BatchCreate.Success', { count: String(actors.length) }));
         }
 
-        return actors as any;
+        return actors;
     }
 }

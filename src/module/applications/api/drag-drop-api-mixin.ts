@@ -69,7 +69,7 @@ export default function DragDropMixin<T extends new (...args: any[]) => Applicat
          * @protected
          */
         _dropBehavior(event: DragEvent): string {
-            const data = TextEditor.getDragEventData(event);
+            const data = TextEditor.getDragEventData(event) as Record<string, unknown>;
             const allowed = this._allowedDropBehaviors(event, data);
             if (event.shiftKey && allowed.has('copy')) return 'copy';
             if (event.altKey && allowed.has('link')) return 'link';

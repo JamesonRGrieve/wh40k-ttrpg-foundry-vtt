@@ -126,13 +126,13 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
         /**
          * Get context menu options for a characteristic.
          * @param {HTMLElement} target  Element that was right-clicked
-         * @returns {any[]}
+         * @returns {foundry.applications.ux.ContextMenu.Entry[]}
          * @protected
          */
-        _getCharacteristicContextOptions(target: HTMLElement): any[] {
+        _getCharacteristicContextOptions(target: HTMLElement): foundry.applications.ux.ContextMenu.Entry[] {
             const charKey = target.dataset.characteristic;
             if (!charKey) return [];
-            const char = this.actor.characteristics?.[charKey];
+            const char = (this.actor as any).characteristics?.[charKey] as WH40KCharacteristic | undefined;
             if (!char) return [];
 
             return [
@@ -175,16 +175,16 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
         /**
          * Get context menu options for a skill.
          * @param {HTMLElement} target  Element that was right-clicked
-         * @returns {any[]}
+         * @returns {foundry.applications.ux.ContextMenu.Entry[]}
          * @protected
          */
-        _getSkillContextOptions(target: HTMLElement): any[] {
+        _getSkillContextOptions(target: HTMLElement): foundry.applications.ux.ContextMenu.Entry[] {
             const skillKey = target.dataset.skill;
             if (!skillKey) return [];
-            const skill = this.actor.skills?.[skillKey];
+            const skill = (this.actor as any).skills?.[skillKey] as WH40KSkill | undefined;
             if (!skill) return [];
 
-            const options = [
+            const options: foundry.applications.ux.ContextMenu.Entry[] = [
                 {
                     name: `Roll ${skill.label || skillKey} Test`,
                     icon: '<i class="fas fa-dice-d20"></i>',
@@ -236,16 +236,16 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
         /**
          * Get context menu options for an item.
          * @param {HTMLElement} target  Element that was right-clicked
-         * @returns {any[]}
+         * @returns {foundry.applications.ux.ContextMenu.Entry[]}
          * @protected
          */
-        _getItemContextOptions(target: HTMLElement): any[] {
+        _getItemContextOptions(target: HTMLElement): foundry.applications.ux.ContextMenu.Entry[] {
             const itemId = target.dataset.itemId;
             if (!itemId) return [];
             const item = this.actor.items.get(itemId);
             if (!item) return [];
 
-            const options = [];
+            const options: foundry.applications.ux.ContextMenu.Entry[] = [];
 
             // Weapon-specific options
             if (item.type === 'weapon') {
@@ -326,10 +326,10 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
 
         /**
          * Get context menu options for fate points.
-         * @returns {any[]}
+         * @returns {foundry.applications.ux.ContextMenu.Entry[]}
          * @protected
          */
-        _getFatePointContextOptions(): any[] {
+        _getFatePointContextOptions(): foundry.applications.ux.ContextMenu.Entry[] {
             return [
                 {
                     name: 'Spend for Re-roll',

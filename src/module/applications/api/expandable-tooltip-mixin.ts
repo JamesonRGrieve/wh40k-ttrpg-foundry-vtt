@@ -133,14 +133,14 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
          * @private
          */
         async #enrichPanelContent(panel: HTMLElement): Promise<void> {
-            const unenriched = panel.querySelectorAll('[data-enrich="true"]');
+            const unenriched = panel.querySelectorAll<HTMLElement>('[data-enrich="true"]');
             if (unenriched.length === 0) return;
 
             for (const element of unenriched) {
                 const content = element.innerHTML;
                 const enriched = await TextEditor.enrichHTML(content, {
                     async: true,
-                    relativeTo: (this as any).document,
+                    relativeTo: (this as any).document as foundry.abstract.Document,
                 });
                 element.innerHTML = enriched;
                 element.removeAttribute('data-enrich');

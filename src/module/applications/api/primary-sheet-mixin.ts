@@ -112,20 +112,22 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
          */
         _renderModeToggle(): void {
             const header = this.element.querySelector('.window-header');
-            const toggle = header?.querySelector('.mode-slider') as HTMLInputElement | null;
-            if ((this as any).isEditable && !toggle) {
-                const newToggle = document.createElement('slide-toggle') as any;
-                newToggle.checked = this._mode === (this.constructor as any).MODES.EDIT;
+            const toggle = header?.querySelector<HTMLInputElement>('.mode-slider');
+            const isEditable = (this as any).isEditable as boolean;
+
+            if (isEditable && !toggle) {
+                const newToggle = document.createElement('slide-toggle');
+                (newToggle as any).checked = this._mode === (this.constructor as typeof PrimarySheetWH40K).MODES.EDIT;
                 newToggle.classList.add('mode-slider');
                 newToggle.dataset.tooltip = 'WH40K.SheetModeEdit';
                 newToggle.setAttribute('aria-label', game.i18n.localize('WH40K.SheetModeEdit'));
-                newToggle.addEventListener('change', this._onChangeSheetMode.bind(this));
+                newToggle.addEventListener('change', this._onChangeSheetMode.bind(this) as EventListener);
                 newToggle.addEventListener('dblclick', (event: Event) => event.stopPropagation());
                 newToggle.addEventListener('pointerdown', (event: Event) => event.stopPropagation());
                 header?.prepend(newToggle);
-            } else if ((this as any).isEditable && toggle) {
-                toggle.checked = this._mode === (this.constructor as any).MODES.EDIT;
-            } else if (!(this as any).isEditable && toggle) {
+            } else if (isEditable && toggle) {
+                (toggle as any).checked = this._mode === (this.constructor as typeof PrimarySheetWH40K).MODES.EDIT;
+            } else if (!isEditable && toggle) {
                 toggle.remove();
             }
         }
@@ -224,20 +226,20 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
             const tabsConfig = (this.options as any).tabs ?? [];
             for (const config of tabsConfig) {
                 const { navSelector, contentSelector, initial } = config;
-                const nav = this.element.querySelector(navSelector) as HTMLElement | null;
-                const content = this.element.querySelector(contentSelector) as HTMLElement | null;
+                const nav = this.element.querySelector<HTMLElement>(navSelector);
+                const content = this.element.querySelector<HTMLElement>(contentSelector);
                 if (!nav || !content) continue;
 
                 const group = nav.dataset.group || 'primary';
                 const activeTab = (this as any).tabGroups?.[group] ?? initial;
 
-                nav.querySelectorAll('[data-tab]').forEach((tabLink) => {
+                for (const tabLink of nav.querySelectorAll<HTMLElement>('[data-tab]')) {
                     tabLink.addEventListener('click', (event) => {
                         event.preventDefault();
-                        const tab = (tabLink as HTMLElement).dataset.tab;
+                        const tab = tabLink.dataset.tab;
                         if (tab) this._activateTab(tab, group, nav, content);
                     });
-                });
+                }
 
                 if (activeTab) {
                     this._activateTab(activeTab, group, nav, content);
@@ -256,16 +258,16 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
         _activateTab(tab: string, group: string, nav: HTMLElement, content: HTMLElement): void {
             if ((this as any).tabGroups) (this as any).tabGroups[group] = tab;
 
-            nav.querySelectorAll('[data-tab]').forEach((link) => {
-                const isActive = (link as HTMLElement).dataset.tab === tab;
+            for (const link of nav.querySelectorAll<HTMLElement>('[data-tab]')) {
+                const isActive = link.dataset.tab === tab;
                 link.classList.toggle('active', isActive);
                 link.closest('.wh40k-navigation__item, .wh40k-nav-item')?.classList.toggle('active', isActive);
-            });
+            }
 
-            content.querySelectorAll(':scope > [data-tab]').forEach((tabContent) => {
-                const isActive = (tabContent as HTMLElement).dataset.tab === tab;
+            for (const tabContent of content.querySelectorAll<HTMLElement>(':scope > [data-tab]')) {
+                const isActive = tabContent.dataset.tab === tab;
                 tabContent.classList.toggle('active', isActive);
-            });
+            }
 
             this.element.className = this.element.className.replace(/\btab-\w+/g, '');
             this.element.classList.add(`tab-${tab}`);
