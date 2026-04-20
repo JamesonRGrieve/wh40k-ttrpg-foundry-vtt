@@ -1,11 +1,11 @@
 {{!-- Acolyte Sheet Tab Navigation --}}
 {{!-- This part renders the tab navigation bar --}}
-<nav class="wh40k-navigation tabs" data-group="primary">
+<nav class="wh40k-navigation tabs {{#if @root.isNPC}}!tw-grid !tw-grid-cols-2 !tw-gap-1.5 !tw-m-0 !tw-p-3 !tw-shrink-0 !tw-grow-0 !tw-basis-auto !tw-bg-transparent{{/if}}" data-group="primary">
     {{#each tabs}}
-    <a class="item wh40k-nav-item {{#if @root.isNPC}}wh40k-npc-nav-item tw-flex tw-items-center tw-justify-start tw-rounded-md tw-px-3 tw-py-2 tw-text-sm{{/if}} {{#if active}}active{{/if}} {{ cssClass }}" 
-       data-action="tab" 
+    <a class="item wh40k-nav-item {{#if @root.isNPC}}wh40k-npc-nav-item tw-flex tw-items-center tw-justify-center tw-text-center tw-rounded-md tw-px-1 tw-py-1.5 tw-text-sm{{/if}} {{#if active}}active{{/if}} {{ cssClass }}"
+       data-action="tab"
        data-group="{{ group }}"
-       data-tab="{{ tab }}" 
+       data-tab="{{ tab }}"
        data-tooltip="{{ label }}">
         {{ label }}
     </a>
