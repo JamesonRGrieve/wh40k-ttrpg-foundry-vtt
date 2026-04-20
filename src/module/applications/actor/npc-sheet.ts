@@ -117,11 +117,43 @@ export default class NPCSheet extends (CharacterSheet as any) {
     static PARTS = {
         header: {
             template: 'systems/wh40k-rpg/templates/actor/player/header.hbs',
-            container: { classes: ['wh40k-sidebar'], id: 'sidebar' },
+            container: {
+                classes: [
+                    'wh40k-sidebar',
+                    'tw-flex',
+                    'tw-flex-col',
+                    'tw-h-full',
+                    'tw-min-h-0',
+                    'tw-min-w-0',
+                    'tw-overflow-y-auto',
+                    'tw-overflow-x-hidden',
+                    'tw-bg-[var(--color-bg-secondary,#252525)]',
+                    'tw-border-r-2',
+                    'tw-border-solid',
+                    'tw-border-[var(--npc-accent-primary)]',
+                ],
+                id: 'sidebar',
+            },
         },
         tabs: {
             template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
-            container: { classes: ['wh40k-sidebar'], id: 'sidebar' },
+            container: {
+                classes: [
+                    'wh40k-sidebar',
+                    'tw-flex',
+                    'tw-flex-col',
+                    'tw-h-full',
+                    'tw-min-h-0',
+                    'tw-min-w-0',
+                    'tw-overflow-y-auto',
+                    'tw-overflow-x-hidden',
+                    'tw-bg-[var(--color-bg-secondary,#252525)]',
+                    'tw-border-r-2',
+                    'tw-border-solid',
+                    'tw-border-[var(--npc-accent-primary)]',
+                ],
+                id: 'sidebar',
+            },
         },
         skills: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-skills.hbs',

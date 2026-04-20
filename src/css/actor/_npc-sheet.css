@@ -36,38 +36,9 @@
         width: 100% !important;
     }
 
-    .wh40k-sidebar {
-        display: flex !important;
-        flex-direction: column !important;
-        min-width: 0 !important;
-        min-height: 0 !important;
-        height: 100% !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        background: var(--color-bg-secondary, #252525);
-        border-right: 2px solid var(--npc-accent-primary);
-    }
-
-    .wh40k-character-header {
-        flex: 0 0 auto;
-        min-width: 0;
-        margin: 0;
-        border-right: 0;
-        border-bottom: 1px solid var(--color-border-secondary, #444);
-        border-radius: 0;
-    }
-
-    .wh40k-sidebar nav.wh40k-navigation {
-        flex: 0 0 auto !important;
-        display: flex !important;
-        flex-direction: column !important;
-        flex-wrap: nowrap !important;
-        gap: 0.35rem !important;
-        margin: 0 !important;
-        padding: 0.75rem !important;
-        background: transparent !important;
-        border-right: 0 !important;
-    }
+    /* Sidebar + nav + header styling lives in Tailwind utilities on
+     * their templates / PARTS container classes. Form grid stays here
+     * because the form element itself isn't reachable from Tailwind. */
 
     .wh40k-navigation .wh40k-nav-item {
         margin: 0;
