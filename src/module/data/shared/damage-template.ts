@@ -157,7 +157,7 @@ export default class DamageTemplate extends SystemDataModel {
      * @param {string} quality   The quality to check.
      * @returns {boolean}
      */
-    hasSpecial(quality): any {
+    hasSpecial(quality): boolean {
         return this.special?.has(quality.toLowerCase()) ?? false;
     }
 }

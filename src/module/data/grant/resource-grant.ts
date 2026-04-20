@@ -8,7 +8,7 @@ import BaseGrantData from './base-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class ResourceGrantData extends (BaseGrantData as any) {
+export default class ResourceGrantData extends BaseGrantData {
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */

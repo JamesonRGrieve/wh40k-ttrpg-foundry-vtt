@@ -235,7 +235,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @returns {object}  Reaction data
      * @private
      */
-    _prepareReactions(): any {
+    _prepareReactions(): Record<string, unknown> {
         const dodge = this.actor.system.skills?.dodge;
         const parry = this.actor.system.skills?.parry;
 
@@ -261,7 +261,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @returns {Array}  Quick actions
      * @private
      */
-    _prepareQuickActions(): any {
+    _prepareQuickActions(): unknown[] {
         const actions = [];
 
         // Reload (if weapon needs it)
@@ -307,7 +307,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @returns {string}  CSS class
      * @private
      */
-    _getOpacityClass(): any {
+    _getOpacityClass(): string {
         const levels = ['opacity-full', 'opacity-high', 'opacity-medium', 'opacity-low'];
         return levels[this.opacityLevel] || levels[0];
     }
@@ -315,7 +315,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
         // Apply saved position

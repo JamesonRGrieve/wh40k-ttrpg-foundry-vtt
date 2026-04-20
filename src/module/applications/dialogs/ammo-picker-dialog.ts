@@ -60,7 +60,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
         clipMax: number;
     };
 
-    #resolve: ((value: any) => void) | null = null;
+    #resolve: ((value: unknown) => void) | null = null;
     #resolved = false;
 
     /* -------------------------------------------- */

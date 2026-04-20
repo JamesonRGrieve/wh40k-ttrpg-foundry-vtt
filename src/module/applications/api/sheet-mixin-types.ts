@@ -232,25 +232,25 @@ export interface EnhancedDragDropMixinAPI {
 export interface WhatIfMixinAPI {
     _whatIfActive: boolean;
     _whatIfChanges: Record<string, unknown>;
-    _whatIfPreview: any;
+    _whatIfPreview: unknown;
     _whatIfImpacts: unknown[] | Record<string, unknown>;
 
     enterWhatIfMode(): Promise<void>;
-    previewChange(path: string, value: any): Promise<void>;
+    previewChange(path: string, value: unknown): Promise<void>;
     _updatePreview(): void;
     _calculateImpacts(): void;
     commitWhatIfChanges(): Promise<void>;
     cancelWhatIfChanges(): Promise<void>;
     exitWhatIfMode(): Promise<void>;
-    _applyChange(path: string, value: any): Promise<void>;
-    getWhatIfState(): { active: boolean; changes: Record<string, unknown>; impacts: any; changeCount: number };
+    _applyChange(path: string, value: unknown): Promise<void>;
+    getWhatIfState(): { active: boolean; changes: Record<string, unknown>; impacts: unknown; changeCount: number };
     isWhatIfActive(): boolean;
     _renderWhatIfOverlay(): void;
     _createWhatIfToolbar(): HTMLElement;
     _updateComparisonDisplays(): void;
-    _compareCharacteristics(current: any, preview: any): void;
-    _compareSkills(current: any, preview: any): void;
-    _compareDerivedStats(current: any, preview: any): void;
+    _compareCharacteristics(current: Record<string, unknown>, preview: Record<string, unknown>): void;
+    _compareSkills(current: Record<string, unknown>, preview: Record<string, unknown>): void;
+    _compareDerivedStats(current: Record<string, unknown>, preview: Record<string, unknown>): void;
     _showComparison(selector: string, data: { current: number; preview: number; type: string }): void;
 }
 

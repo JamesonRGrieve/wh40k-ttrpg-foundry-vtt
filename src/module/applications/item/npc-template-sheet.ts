@@ -495,7 +495,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
 
                 for (const trait of this.item.system.traits || []) {
                     if (trait.uuid) {
-                        const item = (await fromUuid(trait.uuid)) as any;
+                        const item = await fromUuid(trait.uuid);
                         if (item) {
                             itemsToCreate.push({
                                 name: item.name,
@@ -509,7 +509,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
 
                 for (const talent of this.item.system.talents || []) {
                     if (talent.uuid) {
-                        const item = (await fromUuid(talent.uuid)) as any;
+                        const item = await fromUuid(talent.uuid);
                         if (item) {
                             itemsToCreate.push({
                                 name: item.name,

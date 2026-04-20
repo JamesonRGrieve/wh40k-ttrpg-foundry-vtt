@@ -142,7 +142,7 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         return this.getSkillCostTable()[matches]?.[currentRank] ?? null;
     }
 
-    getTalentAdvanceCost(actor: WH40KBaseActor, talent: any, context?: Record<string, unknown>): number | null {
+    getTalentAdvanceCost(actor: WH40KBaseActor, talent: unknown, context?: Record<string, unknown>): number | null {
         const charAptitudes = this.getCharacterAptitudes(actor);
         const advAptitudes = (context?.advanceAptitudes as string[]) ?? talent.system?.aptitudes ?? [];
         const matches = this.countMatchingAptitudes(charAptitudes, advAptitudes);

@@ -103,7 +103,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {boolean} [config.isHorde] - Default horde mode.
      * @param {Object} [options] - Application options.
      */
-    constructor(config: any = {}, options: Record<string, unknown> = {}) {
+    constructor(config: Record<string, unknown> = {}, options: Record<string, unknown> = {}) {
         super(options);
         this.#state = {
             name: config.name ?? 'New NPC',
@@ -224,7 +224,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /* -------------------------------------------- */
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
         // Add live update listeners

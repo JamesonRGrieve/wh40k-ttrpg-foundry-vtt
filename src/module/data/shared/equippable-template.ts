@@ -123,7 +123,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Toggle the equipped state.
      * @returns {Promise<Item>}
      */
-    toggleEquipped(): any {
+    toggleEquipped(): unknown {
         return this._applyForcedSystemUpdate({ equipped: !this.equipped });
     }
 
@@ -133,7 +133,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Move to backpack.
      * @returns {Promise<Item>}
      */
-    stowInBackpack(): any {
+    stowInBackpack(): unknown {
         return this._applyForcedSystemUpdate({
             equipped: false,
             inBackpack: true,
@@ -146,7 +146,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Remove from backpack.
      * @returns {Promise<Item>}
      */
-    removeFromBackpack(): any {
+    removeFromBackpack(): unknown {
         return this._applyForcedSystemUpdate({ inBackpack: false });
     }
 
@@ -156,7 +156,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Move to ship storage.
      * @returns {Promise<Item>}
      */
-    stowInShipStorage(): any {
+    stowInShipStorage(): unknown {
         return this._applyForcedSystemUpdate({
             equipped: false,
             inBackpack: false,
@@ -170,7 +170,7 @@ export default class EquippableTemplate extends SystemDataModel {
      * Remove from ship storage.
      * @returns {Promise<Item>}
      */
-    removeFromShipStorage(): any {
+    removeFromShipStorage(): unknown {
         return this._applyForcedSystemUpdate({ inShipStorage: false });
     }
 }

@@ -169,7 +169,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * Consume a use.
      * @returns {Promise<Item>}
      */
-    consumeUse(): any {
+    consumeUse(): unknown {
         if (!this.hasLimitedUses) return this.parent;
         const newValue = Math.max(0, (this.uses.value ?? 0) - 1);
         return this.parent?.update({ 'system.uses.value': newValue });
@@ -182,7 +182,7 @@ export default class ActivationTemplate extends SystemDataModel {
      * @param {number} [amount=1]   Number of uses to recover.
      * @returns {Promise<Item>}
      */
-    recoverUses(amount = 1): any {
+    recoverUses(amount = 1): unknown {
         if (!this.hasLimitedUses) return this.parent;
         const max = this.uses.max ?? 0;
         const newValue = Math.min(max, (this.uses.value ?? 0) + amount);

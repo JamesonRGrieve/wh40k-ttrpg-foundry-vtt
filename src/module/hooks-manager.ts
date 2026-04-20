@@ -145,18 +145,18 @@ export class HooksManager {
         const consolePrefix = 'WH40K RPG | ';
         game.wh40k = {
             debug: false,
-            log: (s: any, o?: any) => (game.wh40k.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
-            warn: (s: any, o?: any) => console.warn(`${consolePrefix}${s}`, o),
-            error: (s: any, o?: any) => console.error(`${consolePrefix}${s}`, o),
+            log: (s: unknown, o?: unknown) => (game.wh40k.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
+            warn: (s: unknown, o?: unknown) => console.warn(`${consolePrefix}${s}`, o),
+            error: (s: unknown, o?: unknown) => console.error(`${consolePrefix}${s}`, o),
             rollItemMacro,
             rollSkillMacro,
             rollCharacteristicMacro,
             // Roll table utilities
             rollTable: RollTableUtils,
             // Convenience methods for common roll tables
-            rollPsychicPhenomena: (actor: WH40KBaseActor, mod: any) => RollTableUtils.rollPsychicPhenomena(actor, mod),
+            rollPsychicPhenomena: (actor: WH40KBaseActor, mod: unknown) => RollTableUtils.rollPsychicPhenomena(actor, mod),
             rollPerilsOfTheWarp: (actor: WH40KBaseActor) => RollTableUtils.rollPerilsOfTheWarp(actor),
-            rollFearEffects: (fear: any, dof: any) => RollTableUtils.rollFearEffects(fear, dof),
+            rollFearEffects: (fear: unknown, dof: unknown) => RollTableUtils.rollFearEffects(fear, dof),
             rollMutation: () => RollTableUtils.rollMutation(),
             rollMalignancy: () => RollTableUtils.rollMalignancy(),
             showRollTableDialog: () => RollTableUtils.showRollTableDialog(),
@@ -169,11 +169,11 @@ export class HooksManager {
             npc: npcApplications,
             applications: npcApplications, // Alias for shorter access
             ThreatCalculator: npcApplications.ThreatCalculator,
-            quickCreateNPC: (config: any) => npcApplications.NPCQuickCreateDialog.create(config),
-            batchCreateNPCs: (config: any) => npcApplications.BatchCreateDialog.open(config),
+            quickCreateNPC: (config: unknown) => npcApplications.NPCQuickCreateDialog.create(config),
+            batchCreateNPCs: (config: unknown) => npcApplications.BatchCreateDialog.open(config),
             openEncounterBuilder: () => npcApplications.EncounterBuilder.show(),
-            exportStatBlock: (actor: WH40KBaseActor, format: any) => npcApplications.StatBlockExporter.quickExport(actor, format),
-            importStatBlock: (input: any) => npcApplications.StatBlockParser.open(input),
+            exportStatBlock: (actor: WH40KBaseActor, format: unknown) => npcApplications.StatBlockExporter.quickExport(actor, format),
+            importStatBlock: (input: unknown) => npcApplications.StatBlockParser.open(input),
             openTemplateSelector: (options: Record<string, unknown>) => npcApplications.TemplateSelector.open(options),
             // Phase 7: QoL Features
             DifficultyCalculatorDialog: npcApplications.DifficultyCalculatorDialog,
@@ -676,8 +676,8 @@ export class HooksManager {
         // Register movement actions and Token HUD hooks (after settings are available)
         documents.TokenDocumentWH40K.registerMovementActions();
         documents.TokenDocumentWH40K.registerHUDListeners();
-        CFG.Token.movement.costAggregator = (results: any, distance: any, segment: any) => {
-            return Math.max(...results.map((i: any) => i.cost));
+        CFG.Token.movement.costAggregator = (results: unknown[], distance: unknown, segment: unknown) => {
+            return Math.max(...results.map((i: { cost: number }) => i.cost));
         };
     }
 
@@ -739,7 +739,7 @@ export class HooksManager {
     static async _migrateLegacyActorTypes() {
         const SETTING_DONE = 'migration-actor-types-v1-complete';
         const SETTING_BACKUP = 'migration-actor-types-v1-backup';
-        const register = (key: string, type: any, def: any) => {
+        const register = (key: string, type: unknown, def: unknown) => {
             // @ts-expect-error - setting argument typing
             if (!(game.settings as any).settings.has(`${SYSTEM_ID}.${key}`)) {
                 (game.settings as any).register(SYSTEM_ID, key, {
@@ -759,13 +759,13 @@ export class HooksManager {
         if (!(game.user as any)?.isGM) return;
 
         const LEGACY = new Set(['character', 'npc', 'vehicle', 'starship']);
-        const targets = Array.from(game.actors ?? []).filter((a: any) => LEGACY.has(a.type));
+        const targets = Array.from(game.actors ?? []).filter((a: { type: string }) => LEGACY.has(a.type));
         if (!targets.length) {
             await (game.settings as any).set(SYSTEM_ID, SETTING_DONE, true);
             return;
         }
 
-        const inferSystem = (a: any): string => {
+        const inferSystem = (a: Record<string, unknown>): string => {
             const raw = a.system?.gameSystem;
             if (!raw || typeof raw !== 'string') return 'dh2';
             return raw === 'dh2e' ? 'dh2' : raw === 'dh1e' ? 'dh1' : raw;
@@ -778,7 +778,7 @@ export class HooksManager {
         //   // iterate backup.actors and re-create any missing ones manually.
         const backup = {
             timestamp: new Date().toISOString(),
-            actors: targets.map((a: any) => a.toObject()),
+            actors: targets.map((a: { toObject: () => unknown }) => a.toObject()),
         };
         await (game.settings as any).set(SYSTEM_ID, SETTING_BACKUP, backup);
         game.wh40k?.log?.(`Backed up ${backup.actors.length} legacy actor(s) to world setting ${SYSTEM_ID}.${SETTING_BACKUP} before migration.`);

@@ -551,7 +551,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         if (!uuid) return;
 
         try {
-            const item = (await fromUuid(uuid)) as any;
+            const item = await fromUuid(uuid);
             if (item) {
                 item.sheet.render(true);
             }

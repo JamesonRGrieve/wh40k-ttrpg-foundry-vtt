@@ -70,7 +70,7 @@ export interface NormalizedOrigin {
     hasChoices: boolean;
     gameSystem: string;
     /** Raw system data preserved for compatibility */
-    system: any;
+    system: Record<string, unknown>;
 }
 
 /* -------------------------------------------- */
@@ -93,12 +93,12 @@ function stripHtml(html: string): string {
 /**
  * Normalize a single choice entry.
  */
-export function normalizeChoice(raw: any): NormalizedChoice {
+export function normalizeChoice(raw: Record<string, unknown>): NormalizedChoice {
     return {
         label: raw.label || raw.name || '',
         type: raw.type || '',
         count: raw.count || 1,
-        options: (raw.options || []).map((opt: any) => {
+        options: (raw.options || []).map((opt: unknown) => {
             if (typeof opt === 'string') {
                 return { value: opt, label: opt, description: null, uuid: null, grants: null, specializations: null };
             }
@@ -117,7 +117,7 @@ export function normalizeChoice(raw: any): NormalizedChoice {
 /**
  * Normalize grants from raw origin data.
  */
-function normalizeGrants(raw: any): NormalizedGrants {
+function normalizeGrants(raw: unknown): NormalizedGrants {
     const grants = raw || {};
     return {
         skills: grants.skills || [],
@@ -137,7 +137,7 @@ function normalizeGrants(raw: any): NormalizedGrants {
  *
  * Priority: uuid (always unique for compendium items) > _id > id > synthetic
  */
-function resolveId(doc: any): string {
+function resolveId(doc: Record<string, unknown>): string {
     if (doc.uuid) return doc.uuid;
     if (doc._id) return doc._id;
     if (doc.id) return doc.id;
@@ -149,7 +149,7 @@ function resolveId(doc: any): string {
  * Resolve positions array from raw origin data.
  * Handles three legacy field names and ensures a sorted array.
  */
-function resolvePositions(system: any): number[] {
+function resolvePositions(system: Record<string, unknown>): number[] {
     const raw = system?.pathPositions ?? system?.allPositions ?? system?.positions;
     if (Array.isArray(raw) && raw.length > 0) {
         return [...raw].sort((a, b) => a - b);
@@ -161,7 +161,7 @@ function resolvePositions(system: any): number[] {
  * Transform a raw Foundry compendium document into a NormalizedOrigin.
  * Call once per document during _loadOrigins().
  */
-export function normalizeOrigin(doc: any): NormalizedOrigin {
+export function normalizeOrigin(doc: Record<string, unknown>): NormalizedOrigin {
     const system = doc.system || {};
     const grants = normalizeGrants(system.grants);
     const positions = resolvePositions(system);

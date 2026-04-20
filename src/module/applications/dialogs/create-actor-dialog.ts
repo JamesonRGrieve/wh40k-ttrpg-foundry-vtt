@@ -87,7 +87,7 @@ export class WH40KCreateActorDialog {
                         label: 'Create',
                         icon: 'fa-solid fa-plus',
                         default: true,
-                        callback: async (_event: Event, button: any) => {
+                        callback: async (_event: Event, button: HTMLElement) => {
                             const form = button.form as HTMLFormElement;
                             const system = (form.querySelector('[name="system"]') as HTMLSelectElement).value;
                             const kind = (form.querySelector('[name="kind"]') as HTMLSelectElement).value;

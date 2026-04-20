@@ -22,7 +22,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * Internal state for the dialog.
      * @type {Object}
      */
-    #state: any = {
+    #state: Record<string, unknown> = {
         mode: 'library', // "library", "save", "load"
         npc: null,
         selectedPreset: null,
@@ -82,7 +82,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {string} mode - The dialog mode ("library", "save", "load").
      * @param {Object} options - Application options.
      */
-    constructor(npc: any = null, mode: string = 'library', options = {}) {
+    constructor(npc: unknown = null, mode: string = 'library', options = {}) {
         super(options);
         this.#state.npc = npc;
         this.#state.mode = mode;
@@ -96,7 +96,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * Show the preset library.
      * @returns {Promise<CombatPresetDialog>}
      */
-    static showLibrary(): any {
+    static showLibrary(): unknown {
         const dialog = new CombatPresetDialog(null, 'library');
         void dialog.render(true);
         return dialog;
@@ -107,7 +107,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {WH40KNPC} npc - The NPC actor.
      * @returns {Promise<CombatPresetDialog>}
      */
-    static savePreset(npc: any): any {
+    static savePreset(npc: unknown): unknown {
         const dialog = new CombatPresetDialog(npc, 'save');
         void dialog.render(true);
         return dialog;
@@ -118,7 +118,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {WH40KNPC} npc - The NPC actor.
      * @returns {Promise<CombatPresetDialog>}
      */
-    static loadPreset(npc: any): any {
+    static loadPreset(npc: unknown): unknown {
         const dialog = new CombatPresetDialog(npc, 'load');
         void dialog.render(true);
         return dialog;
@@ -132,7 +132,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * Get all saved presets.
      * @returns {Array<Object>} Array of preset objects.
      */
-    static getPresets(): any {
+    static getPresets(): unknown[] {
         return game.settings.get('wh40k-rpg', this.SETTING_KEY) || [];
     }
 
@@ -141,7 +141,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {Object} preset - The preset data.
      * @returns {Promise<void>}
      */
-    static async addPreset(preset: any): Promise<void> {
+    static async addPreset(preset: unknown): Promise<void> {
         const presets = this.getPresets();
         presets.push({
             ...preset,
@@ -157,9 +157,9 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {Object} updates - The updates to apply.
      * @returns {Promise<void>}
      */
-    static async updatePreset(id: string, updates: any): Promise<void> {
+    static async updatePreset(id: string, updates: unknown): Promise<void> {
         const presets = this.getPresets();
-        const index = presets.findIndex((p: any) => p.id === id);
+        const index = presets.findIndex((p: { id: string }) => p.id === id);
         if (index >= 0) {
             presets[index] = { ...presets[index], ...updates };
             await game.settings.set('wh40k-rpg', this.SETTING_KEY, presets);
@@ -173,7 +173,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      */
     static async deletePresetById(id: string): Promise<void> {
         const presets = this.getPresets();
-        const filtered = presets.filter((p: any) => p.id !== id);
+        const filtered = presets.filter((p: { id: string }) => p.id !== id);
         await game.settings.set('wh40k-rpg', this.SETTING_KEY, filtered);
     }
 
@@ -182,9 +182,9 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {string} id - The preset ID.
      * @returns {Object|null} The preset or null.
      */
-    static getPreset(id: string): any {
+    static getPreset(id: string): unknown {
         const presets = this.getPresets();
-        return presets.find((p: any) => p.id === id) || null;
+        return presets.find((p: { id: string }) => p.id === id) || null;
     }
 
     /* -------------------------------------------- */
@@ -198,7 +198,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {string} description - The preset description.
      * @returns {Object} The preset data.
      */
-    static createPresetFromNPC(npc: any, name: string, description: string = ''): any {
+    static createPresetFromNPC(npc: unknown, name: string, description: string = ''): Record<string, unknown> {
         return {
             name,
             description,
@@ -225,7 +225,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
      * @param {Object} preset - The preset data.
      * @returns {Promise<void>}
      */
-    static async applyPresetToNPC(npc: any, preset: any): Promise<void> {
+    static async applyPresetToNPC(npc: unknown, preset: unknown): Promise<void> {
         const updates = {
             'system.faction': preset.faction,
             'system.type': preset.type,
@@ -269,7 +269,7 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
         // Get presets
         const presets = (this.constructor as any).getPresets();
-        context.presets = presets.map((p: any) => ({
+        context.presets = presets.map((p: Record<string, unknown>) => ({
             ...p,
             selected: this.#state.selectedPreset === p.id,
             createdDate: new Date(p.createdAt).toLocaleDateString(),

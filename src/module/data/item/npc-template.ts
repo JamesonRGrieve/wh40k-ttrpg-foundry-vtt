@@ -255,7 +255,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * @param {string} [options.variant] - Variant name to apply.
      * @returns {Object} NPC system data ready for Actor.create().
      */
-    generateAtThreat(targetThreat, options = {}): any {
+    generateAtThreat(targetThreat, options = {}): Record<string, unknown> {
         // @ts-expect-error - dynamic property
         const { isHorde = false, variant = null } = options;
 
@@ -429,7 +429,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * @param {number} targetThreat - The target threat level.
      * @returns {Object} Preview data.
      */
-    previewAtThreat(targetThreat): any {
+    previewAtThreat(targetThreat): Record<string, unknown> {
         const data = this.generateAtThreat(targetThreat);
 
         return {

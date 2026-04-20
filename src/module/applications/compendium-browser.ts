@@ -101,7 +101,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         context.groupedResults = this._groupResults(context.results as unknown[]);
 
         // Add armour-specific filters if filtering armour
-        const hasArmour = (context.results as unknown[]).some((r: any) => r.type === 'armour');
+        const hasArmour = (context.results as unknown[]).some((r: { type: string }) => r.type === 'armour');
         if (hasArmour) {
             context.armourTypes = CONFIG.WH40K?.armourTypes || {};
             context.hasArmourFilters = true;
@@ -256,7 +256,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      * @param {object} system  The armour system data
      * @returns {object}       Prepared armour data
      */
-    _prepareArmourData(system: any): Record<string, unknown> {
+    _prepareArmourData(system: Record<string, unknown>): Record<string, unknown> {
         const ap = system.armourPoints || {};
         const coverage = system.coverage || [];
 
@@ -315,7 +315,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      * @param {object} system  The armour modification system data
      * @returns {object}       Prepared armour mod data
      */
-    _prepareArmourModData(system: any): Record<string, unknown> {
+    _prepareArmourModData(system: Record<string, unknown>): Record<string, unknown> {
         const restrictions = system.restrictions || {};
         const modifiers = system.modifiers || {};
 
@@ -379,7 +379,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      * @param {object} system  The weapon quality system data
      * @returns {object}       Prepared quality data
      */
-    _prepareQualityData(system: any): Record<string, unknown> {
+    _prepareQualityData(system: Record<string, unknown>): Record<string, unknown> {
         // Access CONFIG.wh40k (set during init hook)
         const rtConfig = CONFIG?.rt;
 
@@ -627,7 +627,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     async _onItemClick(event: Event): Promise<void> {
         event.preventDefault();
         const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
-        const doc = (await fromUuid(uuid)) as any;
+        const doc = await fromUuid(uuid);
         if (doc) doc.sheet.render(true);
     }
 
@@ -665,7 +665,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
      */
     static async #openItem(event: Event, target: HTMLElement): Promise<void> {
         const uuid = target.dataset.uuid;
-        const doc = (await fromUuid(uuid)) as any;
+        const doc = await fromUuid(uuid);
         if (doc) doc.sheet.render(true);
     }
 

@@ -120,7 +120,9 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         const types = ThreatCalculator.getTypes();
 
         // Get available folders
-        const folders = (game.folders as any).filter((f: any) => f.type === 'Actor' && f.displayed).map((f: any) => ({ id: f.id, name: f.name }));
+        const folders = (game.folders as any)
+            .filter((f: { type: string; displayed: boolean }) => f.type === 'Actor' && f.displayed)
+            .map((f: { id: string; name: string }) => ({ id: f.id, name: f.name }));
 
         // Generate preview names
         const previewNames = [];
@@ -155,7 +157,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
         const form = this.element;

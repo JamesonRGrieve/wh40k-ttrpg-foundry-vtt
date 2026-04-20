@@ -7,7 +7,7 @@ import BaseGrantData from './base-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class SkillGrantData extends (BaseGrantData as any) {
+export default class SkillGrantData extends BaseGrantData {
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -110,7 +110,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
      * Apply upgrade to a standard (non-specialist) skill.
      * @private
      */
-    _applyStandardSkillUpgrade(actor, schemaKey, targetLevel, updates, result): any {
+    _applyStandardSkillUpgrade(actor, schemaKey, targetLevel, updates, result): unknown {
         const currentSkill = actor.system.skills[schemaKey];
         const currentLevel = this._getSchemaSkillLevel(currentSkill);
         const currentOrder = (this.constructor as any).TRAINING_LEVELS[currentLevel]?.order ?? 0;
@@ -142,7 +142,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
      * Apply upgrade to a specialist skill entry.
      * @private
      */
-    _applySpecialistSkillUpgrade(actor, schemaKey, specialization, targetLevel, updates, result): any {
+    _applySpecialistSkillUpgrade(actor, schemaKey, specialization, targetLevel, updates, result): unknown {
         const currentSkill = actor.system.skills[schemaKey];
         const entries = currentSkill.entries || [];
 
@@ -214,7 +214,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
      * Get the schema skill key from various input formats.
      * @private
      */
-    _getSchemaSkillKey(key): any {
+    _getSchemaSkillKey(key): string | null {
         if (!key) return null;
 
         // Normalize the key
@@ -291,7 +291,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
      * Get current training level from a schema skill object.
      * @private
      */
-    _getSchemaSkillLevel(skill): any {
+    _getSchemaSkillLevel(skill): string {
         if (skill?.plus20) return 'plus20';
         if (skill?.plus10) return 'plus10';
         if (skill?.trained) return 'trained';
@@ -382,7 +382,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
      * @returns {string}
      * @private
      */
-    _getSkillKey(skillConfig): any {
+    _getSkillKey(skillConfig): string {
         if (skillConfig.specialization) {
             return `${skillConfig.key}:${skillConfig.specialization}`;
         }
@@ -421,7 +421,7 @@ export default class SkillGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    validateGrant(): any {
+    validateGrant(): string[] {
         const errors = super.validateGrant();
 
         if (!this.skills || this.skills.length === 0) {

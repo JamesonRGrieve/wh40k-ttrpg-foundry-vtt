@@ -108,7 +108,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @returns {object} Prepared talent data
      * @protected
      */
-    _prepareTalentData(system: any): Record<string, unknown> {
+    _prepareTalentData(system: Record<string, unknown>): Record<string, unknown> {
         // Get source reference properly (not the object)
         const sourceReference = system.sourceReference || '';
         const sourceBook = system.source?.book || '';
@@ -149,7 +149,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @returns {object} Prepared prerequisites data
      * @protected
      */
-    _preparePrerequisitesData(system: any): Record<string, unknown> {
+    _preparePrerequisitesData(system: Record<string, unknown>): Record<string, unknown> {
         const prereqs = system.prerequisites || {};
         const chars = prereqs.characteristics || {};
         const skills = prereqs.skills || [];
@@ -188,7 +188,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @returns {object} Prepared modifiers data
      * @protected
      */
-    _prepareModifiersData(system: any): Record<string, unknown> {
+    _prepareModifiersData(system: Record<string, unknown>): Record<string, unknown> {
         const mods = system.modifiers || {};
 
         // Characteristic modifiers
@@ -269,7 +269,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @returns {object} Prepared grants data
      * @protected
      */
-    _prepareGrantsData(system: any): Record<string, unknown> {
+    _prepareGrantsData(system: Record<string, unknown>): Record<string, unknown> {
         const grants = system.grants || {};
 
         const skills = (grants.skills || []).map((skill) => ({
@@ -322,7 +322,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @returns {object} Prepared situational data
      * @protected
      */
-    _prepareSituationalData(system: any): Record<string, unknown> {
+    _prepareSituationalData(system: Record<string, unknown>): Record<string, unknown> {
         const situational = system.modifiers?.situational || {};
 
         const characteristics = (situational.characteristics || []).map((mod) => ({
@@ -373,7 +373,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @returns {object} Prepared roll config data
      * @protected
      */
-    _prepareRollConfigData(system: any): Record<string, unknown> {
+    _prepareRollConfigData(system: Record<string, unknown>): Record<string, unknown> {
         const config = system.rollConfig || {};
         return {
             characteristic: config.characteristic || '',
@@ -443,7 +443,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
      * @returns {string[]} Ordered array of section IDs
      * @protected
      */
-    _getEffectsSectionOrder(modifiersData: any, situationalData: any, grantsData: any): any {
+    _getEffectsSectionOrder(modifiersData: Record<string, unknown>, situationalData: Record<string, unknown>, grantsData: Record<string, unknown>): string[] {
         const sections = [
             { id: 'modifiers', hasData: modifiersData.hasAny },
             { id: 'situational', hasData: situationalData.hasAny },
@@ -801,7 +801,7 @@ export default class TalentSheetV2 extends BaseItemSheet {
         if (!uuid) return;
 
         try {
-            const item = (await fromUuid(uuid)) as any;
+            const item = await fromUuid(uuid);
             if (item) {
                 item.sheet.render(true);
             }

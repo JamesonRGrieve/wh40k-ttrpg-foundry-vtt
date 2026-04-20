@@ -113,7 +113,7 @@ export default function HordeTemplate(Base: any): any {
          * @param {string} [source] - Source of the damage (for logging).
          * @returns {Promise<Actor>} The updated actor.
          */
-        applyMagnitudeDamage(amount: number, source = ''): any {
+        applyMagnitudeDamage(amount: number, source = ''): unknown {
             if (!this.horde.enabled) return this.parent;
 
             const newMagnitude = Math.max(0, this.horde.magnitude.current - amount);
@@ -135,7 +135,7 @@ export default function HordeTemplate(Base: any): any {
          * @param {string} [source] - Source of the restoration.
          * @returns {Promise<Actor>} The updated actor.
          */
-        restoreMagnitude(amount: number, source = ''): any {
+        restoreMagnitude(amount: number, source = ''): unknown {
             if (!this.horde.enabled) return this.parent;
 
             const newMagnitude = Math.min(this.horde.magnitude.max, this.horde.magnitude.current + amount);
@@ -155,7 +155,7 @@ export default function HordeTemplate(Base: any): any {
          * Toggle horde mode on/off.
          * @returns {Promise<Actor>} The updated actor.
          */
-        toggleHordeMode(): any {
+        toggleHordeMode(): unknown {
             return this.parent.update({
                 'system.horde.enabled': !this.horde.enabled,
             });
