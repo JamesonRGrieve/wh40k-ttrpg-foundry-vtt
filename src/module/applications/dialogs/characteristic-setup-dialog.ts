@@ -384,12 +384,12 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onRollInputKeydown(event: Event): void {
-        if ((event as any).key === 'Enter') {
+        if ((event as KeyboardEvent).key === 'Enter') {
             event.preventDefault();
-            this.#saveRollInput(event.currentTarget as any);
-        } else if ((event as any).key === 'Escape') {
+            this.#saveRollInput(event.currentTarget as HTMLInputElement);
+        } else if ((event as KeyboardEvent).key === 'Escape') {
             event.preventDefault();
-            this.#cancelRollInput(event.currentTarget as any);
+            this.#cancelRollInput(event.currentTarget as HTMLInputElement);
         }
     }
 
@@ -433,7 +433,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onDragStart(event: Event): void {
-        const target = event.currentTarget as any;
+        const target = event.currentTarget as HTMLElement;
         const rollIndex = parseInt(target.dataset.rollIndex);
         const fromCharacteristic = target.dataset.characteristic || null;
 
@@ -450,8 +450,8 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         };
 
         target.classList.add('dragging');
-        (event as any).dataTransfer.effectAllowed = 'move';
-        (event as any).dataTransfer.setData('text/plain', JSON.stringify(this.#dragData));
+        (event as DragEvent).dataTransfer.effectAllowed = 'move';
+        (event as DragEvent).dataTransfer.setData('text/plain', JSON.stringify(this.#dragData));
 
         // Add drag-active class to dialog
         this.element.classList.add('drag-active');
@@ -465,7 +465,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onDragEnd(event: Event): void {
-        (event.currentTarget as any).classList.remove('dragging');
+        (event.currentTarget as HTMLElement).classList.remove('dragging');
         this.element.classList.remove('drag-active');
         this.element.querySelectorAll('.drop-valid, .drop-hover').forEach((el) => {
             el.classList.remove('drop-valid', 'drop-hover');
@@ -483,9 +483,9 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     #onDragOver(event: Event): void {
         if (!this.#dragData) return;
         event.preventDefault();
-        (event as any).dataTransfer.dropEffect = 'move';
+        (event as DragEvent).dataTransfer.dropEffect = 'move';
 
-        const slot = event.currentTarget as any;
+        const slot = event.currentTarget as HTMLElement;
         slot.classList.add('drop-valid', 'drop-hover');
     }
 
@@ -497,7 +497,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
      * @private
      */
     #onDragLeave(event: Event): void {
-        (event.currentTarget as any).classList.remove('drop-hover');
+        (event.currentTarget as HTMLElement).classList.remove('drop-hover');
     }
 
     /* -------------------------------------------- */
@@ -511,7 +511,7 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
         event.preventDefault();
         if (!this.#dragData) return;
 
-        const slot = event.currentTarget as any;
+        const slot = event.currentTarget as HTMLElement;
         const targetChar = slot.dataset.characteristic;
         const draggedIndex = this.#dragData.index;
         const sourceChar = this.#dragData.characteristic;
@@ -548,8 +548,8 @@ export default class CharacteristicSetupDialog extends HandlebarsApplicationMixi
     #onBankDragOver(event: Event): void {
         if (!this.#dragData || this.#dragData.type !== 'assigned') return;
         event.preventDefault();
-        (event as any).dataTransfer.dropEffect = 'move';
-        (event.currentTarget as any).classList.add('drop-valid', 'drop-hover');
+        (event as DragEvent).dataTransfer.dropEffect = 'move';
+        (event.currentTarget as HTMLElement).classList.add('drop-valid', 'drop-hover');
     }
 
     /* -------------------------------------------- */

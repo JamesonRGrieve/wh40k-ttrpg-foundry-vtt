@@ -206,7 +206,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create condition effect data
      */
-    static _createConditionData(data: Record<string, unknown>): any {
+    static _createConditionData(data: Record<string, unknown>): Record<string, unknown> | null {
         const conditionId = data.conditionId;
 
         // Use the helper function
@@ -301,7 +301,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create characteristic modifier data
      */
-    static _createCharacteristicData(data: Record<string, unknown>): any {
+    static _createCharacteristicData(data: Record<string, unknown>): Record<string, unknown> | null {
         const characteristic = data.characteristic;
         const value = parseInt(data.modifierValue) || 0;
 
@@ -344,7 +344,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create skill modifier data
      */
-    static _createSkillData(data: Record<string, unknown>): any {
+    static _createSkillData(data: Record<string, unknown>): Record<string, unknown> | null {
         const skill = data.skill;
         const value = parseInt(data.modifierValue) || 0;
 
@@ -387,7 +387,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create combat modifier data
      */
-    static _createCombatData(data: Record<string, unknown>): any {
+    static _createCombatData(data: Record<string, unknown>): Record<string, unknown> | null {
         const combatType = data.combatType;
         const value = parseInt(data.modifierValue) || 0;
 
@@ -430,7 +430,7 @@ export default class EffectCreationDialog extends (DialogV2 as any) {
     /**
      * Create custom effect data
      */
-    static _createCustomData(data: Record<string, unknown>): any {
+    static _createCustomData(data: Record<string, unknown>): Record<string, unknown> | null {
         const name = data.customName?.trim();
 
         if (!name) return null;

@@ -158,10 +158,10 @@ export default class CombatQuickPanel extends ApplicationV2 {
         };
 
         // Initiative
-        const combatant = game.combat?.combatants.find((c) => (c as any).actorId === this.actor.id);
+        const combatant = game.combat?.combatants.find((c) => (c as Record<string, unknown>).actorId === this.actor.id);
         context.initiative = {
-            rolled: (combatant as any)?.initiative !== null,
-            value: (combatant as any)?.initiative || 0,
+            rolled: (combatant as Record<string, unknown>)?.initiative !== null,
+            value: (combatant as Record<string, unknown>)?.initiative || 0,
             bonus: this.actor.system.initiative.bonus || 0,
         };
 
@@ -446,7 +446,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {HTMLElement} target
      */
     static async #rollInitiative(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const combatant = game.combat?.combatants.find((c) => (c as any).actorId === this.actor.id);
+        const combatant = game.combat?.combatants.find((c) => (c as Record<string, unknown>).actorId === this.actor.id);
         if (!combatant) {
             ui.notifications.warn('Character not in combat');
             return;
@@ -582,7 +582,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         }
 
         const result = await ReloadActionManager.reloadWeapon(this.primaryWeapon, {
-            skipValidation: (event as any).shiftKey,
+            skipValidation: (event as MouseEvent).shiftKey,
         });
 
         if (result.success) {
@@ -607,7 +607,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content: `<p><strong>${this.actor.name}</strong> takes aim (+10 to next attack)</p>`,
             flavor: 'Aim Action',
-        } as any);
+        } as Record<string, unknown>);
 
         ui.notifications.info('Aim action taken (+10 next attack)');
     }
@@ -684,7 +684,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content: `<p><strong>${this.actor.name}</strong> uses ${item.name}</p>`,
-        } as any);
+        } as Record<string, unknown>);
 
         ui.notifications.info(`Used ${item.name}`);
     }

@@ -309,7 +309,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @returns {Array<{name: string, modifier: number, timestamp: number}>}
      * @private
      */
-    _getRecentRolls(): any {
+    _getRecentRolls(): unknown[] {
         const recent = (game.user as any).getFlag('wh40k-rpg', 'recentRolls') || [];
         return recent.slice(0, 3); // Last 3 rolls
     }

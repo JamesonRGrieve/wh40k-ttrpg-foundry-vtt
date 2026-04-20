@@ -31,8 +31,8 @@ const DIRECTION = {
 };
 
 export default class OriginPathBuilder extends HandlebarsApplicationMixin(ApplicationV2) {
-    declare render: any;
-    declare close: any;
+    declare render: unknown;
+    declare close: unknown;
 
     /** @override */
     static DEFAULT_OPTIONS = {
@@ -212,7 +212,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @param {object} options - Additional options
      * @returns {OriginPathBuilder} The builder instance
      */
-    static show(actor: WH40KBaseActor, options: Record<string, unknown> = {}): any {
+    static show(actor: WH40KBaseActor, options: Record<string, unknown> = {}): OriginPathBuilder {
         const builder = new OriginPathBuilder(actor, options);
         builder.render(true);
         return builder;
@@ -259,7 +259,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object|null}
      * @private
      */
-    _getLastConfirmedSelection(stepIndex: number): any {
+    _getLastConfirmedSelection(stepIndex: number): unknown {
         const orderedSteps = this.orderedSteps;
 
         for (let i = stepIndex - 1; i >= 0; i--) {
@@ -294,7 +294,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object} - Plain data object for selection storage
      * @private
      */
-    _itemToSelectionData(item: WH40KItem): any {
+    _itemToSelectionData(item: WH40KItem): Record<string, unknown> {
         const data = item.toObject ? item.toObject() : foundry.utils.deepClone(item);
         // Store original uuid for reference to compendium item
         data._sourceUuid = item.parent === this.actor ? item.flags?.core?.sourceId || data._sourceUuid || item.uuid : item.uuid || data._sourceUuid;
@@ -313,7 +313,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object} - The system data
      * @private
      */
-    _getSelectionSystem(selection: any): any {
+    _getSelectionSystem(selection: Record<string, unknown>): Record<string, unknown> {
         if (!selection) return {};
         const selectionSystem = foundry.utils.deepClone(selection.system || {});
         const sourceOrigin = this._getSourceOriginForSelection(selection);
@@ -325,7 +325,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Resolve a compendium/source origin for a persisted selection.
      * @private
      */
-    _getSourceOriginForSelection(selection: any): any {
+    _getSourceOriginForSelection(selection: Record<string, unknown>): unknown {
         const pool = [...(this.allOrigins || []), ...(this.lineageOrigins || [])];
         if (!pool.length || !selection) return null;
 
@@ -510,7 +510,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Prepare characteristic generation context for rendering.
      * @private
      */
-    _prepareCharGenContext(): any {
+    _prepareCharGenContext(): Record<string, unknown> {
         const CHARS = (this.constructor as any).GENERATION_CHARACTERISTICS;
         const DEFAULT_BASE = 25;
         const originBonuses = this._getOriginCharacteristicBonuses();
@@ -648,7 +648,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Get the current step selection or preview.
      * @private
      */
-    _getCurrentSelection(): any {
+    _getCurrentSelection(): unknown {
         if (this.showLineage) {
             return this.previewedOrigin || this.lineageSelection;
         }
@@ -841,7 +841,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Array}
      * @private
      */
-    _prepareLineageOrigins(): any {
+    _prepareLineageOrigins(): Record<string, unknown>[] {
         const activeLineageIds = new Set(
             [
                 this.previewedOrigin?.id,
@@ -1012,12 +1012,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
         this._charDragData = { type: fromChar ? 'assigned' : 'bank', index: rollIndex, characteristic: fromChar };
         target.classList.add('dragging');
-        (event as any).dataTransfer.effectAllowed = 'move';
-        (event as any).dataTransfer.setData('text/plain', '');
+        (event as DragEvent).dataTransfer.effectAllowed = 'move';
+        (event as DragEvent).dataTransfer.setData('text/plain', '');
     }
 
     _onCharDragEnd(event: Event): void {
-        (event.currentTarget as any).classList.remove('dragging');
+        (event.currentTarget as HTMLElement).classList.remove('dragging');
         this.element?.querySelectorAll('.drop-valid, .drop-hover').forEach((el) => el.classList.remove('drop-valid', 'drop-hover'));
         this._charDragData = null;
     }
@@ -1026,7 +1026,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         event.preventDefault();
         if (!this._charDragData) return;
         this._saveScrollPosition();
-        const slot = event.currentTarget as any;
+        const slot = event.currentTarget as HTMLElement;
         const targetChar = slot.dataset.characteristic;
         const draggedIndex = this._charDragData.index;
         const sourceChar = this._charDragData.characteristic;
@@ -1046,7 +1046,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this.render();
     }
 
-    _prepareStepNavigation(): any {
+    _prepareStepNavigation(): Record<string, unknown>[] {
         const orderedSteps = this.orderedSteps;
         const steps = orderedSteps.map((step, index) => {
             const hasSelection = this.selections.has(step.step);
@@ -1140,7 +1140,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Array}
      * @private
      */
-    _prepareOriginsForStep(stepLayout: any): any {
+    _prepareOriginsForStep(stepLayout: Record<string, unknown>): Record<string, unknown>[] {
         if (!stepLayout?.cards) return [];
 
         return this._dedupeOriginsByIdentity(stepLayout.cards.map((card) => card.origin))
@@ -1692,7 +1692,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<string|null>}
      * @private
      */
-    _findSkillUuid(skillName: string, specialization: any = null): any {
+    _findSkillUuid(skillName: string, specialization: string | null = null): string | null {
         try {
             const skillPack = game.packs.find((p) => p.metadata.name === 'dh2-core-stats-skills');
             if (!skillPack) return null;
@@ -1769,7 +1769,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
-    _calculateStatus(): any {
+    _calculateStatus(): Record<string, unknown> {
         const totalSteps = this.systemConfig.coreSteps.length + (this.systemConfig.optionalStep ? 1 : 0) + 1;
         const stepsCount = this.selections.size + (this.lineageSelection ? 1 : 0) + (this._hasAssignedCharacteristics() ? 1 : 0);
         const coreStepsComplete = this.selections.size >= this.systemConfig.coreSteps.length;
@@ -2791,7 +2791,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
-    _buildGrantSelections(): any {
+    _buildGrantSelections(): Record<string, unknown> {
         const selections = {};
         for (const [, selection] of this.selections) {
             const choices = selection.system?.grants?.choices || [];
@@ -2821,7 +2821,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {object}
      * @private
      */
-    _buildRolledValues(): any {
+    _buildRolledValues(): Record<string, unknown> {
         const values: unknown = {};
         for (const [, selection] of this.selections) {
             const rollResults = selection.system?.rollResults || {};

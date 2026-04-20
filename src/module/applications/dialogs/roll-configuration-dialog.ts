@@ -305,7 +305,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
         const item = await (fromUuid as any)(uuid);
         if (item) {
             // Check for Shift+Click to post to chat
-            if ((event as any).shiftKey) {
+            if ((event as MouseEvent).shiftKey) {
                 item.toMessage();
             } else {
                 // Default: open sheet
@@ -336,7 +336,7 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
      * @param {HTMLFormElement} form
      * @param {FormDataExtended} formData
      */
-    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): any {
+    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): void {
         const data = foundry.utils.expandObject(formData.object);
 
         // Get final values
