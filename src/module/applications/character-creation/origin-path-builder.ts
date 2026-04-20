@@ -15,6 +15,7 @@ import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
+import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
 import { normalizeOrigin, type NormalizedOrigin } from './normalized-origin.ts';
 import OriginDetailDialog from './origin-detail-dialog.ts';
 import OriginPathChoiceDialog from './origin-path-choice-dialog.ts';
@@ -153,8 +154,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._charAdvancedMode = false;
         this._charDragData = null;
         this._divination = (this.actor.system as any)?.originPath?.divination || '';
-        this._thronesRolled = (this.actor.system as any)?.throneGelt || 0;
-        this._influenceRolled = (this.actor.system as any)?.influence || 0;
+        const isDH2Homebrew = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
+        this._thronesRolled = isDH2Homebrew ? 0 : (this.actor.system as any)?.throneGelt || 0;
+        this._influenceRolled = isDH2Homebrew ? 0 : (this.actor.system as any)?.influence || 0;
         this._savedScrollTop = 0;
         this._initCharacteristicState();
 
@@ -426,7 +428,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         let currentOrigins = [];
         let selectedItem = null;
 
-        if (this.showCharacteristics) {
+        if (this.showEquipment) {
+            currentOrigins = [];
+            selectedItem = null;
+            await this._loadEquipmentItems();
+        } else if (this.showCharacteristics) {
             // No origins to show on characteristics step
             currentOrigins = [];
             selectedItem = null;
@@ -456,6 +462,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const optionalStepLabel = hasOptionalStep ? this._getLocalizedStepLabel(this.systemConfig.optionalStep.key) : '';
         const optionalStepIcon = this.systemConfig.optionalStep?.icon ?? 'fa-crown';
 
+        const isDH2 = this.gameSystem === 'dh2e';
+        const ruleset = WH40KSettings.getRuleset();
+        const isHomebrew = isDH2 && ruleset === 'homebrew';
+        const isRaw = isDH2 && ruleset === 'raw';
         return {
             actor: this.actor,
             gameSystem: this.gameSystem,
@@ -465,6 +475,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             hasDirectionToggle: this.gameSystem === 'rt',
             showLineage: this.showLineage,
             showCharacteristics: this.showCharacteristics,
+            showEquipment: this.showEquipment,
+            hasEquipmentStep: !!this.systemConfig.equipmentStep,
+            isDH2,
+            isHomebrew,
+            isRaw,
+            hideThroneGelt: isRaw,
 
             // System-aware content
             journeyTitle: journeyTitle !== journeyTitleKey ? journeyTitle : game.i18n.localize('WH40K.OriginPath.YourJourney'),
@@ -491,9 +507,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             // Characteristic generation data
             charGen: this.showCharacteristics ? this._prepareCharGenContext() : null,
 
+            // Equip Acolyte step data (DH2e only)
+            equipment: this.showEquipment ? this._prepareEquipmentContext() : null,
+
             // Selected origin details
             selectedOrigin: selectedOrigin,
-            showSelectionPanel: !this.showCharacteristics,
+            showSelectionPanel: !this.showCharacteristics && !this.showEquipment,
 
             // Lineage info
             hasLineageSelection: !!this.lineageSelection,
@@ -1463,7 +1482,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             isConfirmed = selection?.id === itemId;
         }
 
-        const showThrones = !!this._getContextualThronesFormula();
+        const hideThroneGelt = this.gameSystem === 'dh2e' && WH40KSettings.getRuleset() === 'raw';
+        const showThrones = !hideThroneGelt && !!this._getContextualThronesFormula();
         const showInfluence = currentStep.key === 'background';
         const thronesFormula = this._getContextualThronesFormula();
         const influenceMod = this._getContextualInfluenceMod();
@@ -2824,6 +2844,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Roll starting influence (1d5 + Fellowship Bonus + homeworld modifier).
      */
     static async #rollInfluence(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
+        if (this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew()) {
+            ui.notifications.info(game.i18n.localize('WH40K.OriginPath.HomebrewInfluenceNoRoll'));
+            this._influenceRolled = 0;
+            this._saveScrollPosition?.();
+            this.render();
+            return;
+        }
         const felBonus = (this.actor.system as any).characteristics?.fellowship?.bonus || 0;
         const mod = this._getContextualInfluenceMod();
         const roll = new Roll('1d5');

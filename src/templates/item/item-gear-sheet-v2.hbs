@@ -84,6 +84,7 @@
         </div>
       </div>
       
+      {{#unless hideThroneGelt}}
       <div class="wh40k-gear-stat wh40k-gear-stat--cost">
         <div class="wh40k-gear-stat__icon">
           <i class="fas fa-coins"></i>
@@ -93,6 +94,7 @@
           <span class="wh40k-gear-stat__value">{{system.cost.dh2.homebrew.throneGelt}}₮</span>
         </div>
       </div>
+      {{/unless}}
     </div>
 
     {{!-- ═══════════════════════════════════════════════════════════════════
@@ -242,6 +244,7 @@
             </div>
             
             {{!-- Economic --}}
+            {{#unless hideThroneGelt}}
             <div class="wh40k-gear-section">
               <div class="wh40k-gear-section__header">
                 <i class="fas fa-coins"></i>
@@ -250,11 +253,12 @@
               <div class="wh40k-gear-section__body">
                 <div class="wh40k-field">
                   <label>Cost (Thrones)</label>
-                  <input type="number" name="system.cost.dh2.homebrew.throneGelt" value="{{source.cost.dh2.homebrew.throneGelt}}" 
+                  <input type="number" name="system.cost.dh2.homebrew.throneGelt" value="{{source.cost.dh2.homebrew.throneGelt}}"
                          data-dtype="Number" min="0" />
                 </div>
               </div>
             </div>
+            {{/unless}}
             
             {{!-- Consumable Toggle --}}
             <div class="wh40k-gear-section">

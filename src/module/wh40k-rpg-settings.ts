@@ -1,5 +1,7 @@
 import { SYSTEM_ID } from './constants.ts';
 
+export type DH2Ruleset = 'raw' | 'homebrew';
+
 export class WH40KSettings {
     static SETTINGS = {
         worldVersion: 'world-version',
@@ -8,7 +10,22 @@ export class WH40KSettings {
         processActiveEffectsDuringCombat: 'active-effects-during-combat',
         combatPresets: 'combat-presets',
         movementAutomation: 'movement-automation',
+        dh2Ruleset: 'dh2-ruleset',
     };
+
+    /** Current DH2e ruleset (raw vs homebrew). Safe to call before setting is registered (returns homebrew). */
+    static getRuleset(): DH2Ruleset {
+        try {
+            const value = game.settings?.get?.(SYSTEM_ID, WH40KSettings.SETTINGS.dh2Ruleset);
+            return value === 'raw' ? 'raw' : 'homebrew';
+        } catch {
+            return 'homebrew';
+        }
+    }
+
+    static isHomebrew(): boolean {
+        return WH40KSettings.getRuleset() === 'homebrew';
+    }
 
     static registerSettings() {
         // @ts-expect-error - argument type
@@ -59,6 +76,20 @@ export class WH40KSettings {
             config: false,
             default: [],
             type: Array,
+        });
+        // @ts-expect-error - argument type
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.dh2Ruleset, {
+            name: 'DH2e Economy Ruleset',
+            hint: 'RAW uses only Influence + Requisition (Throne Gelt hidden). Homebrew adds Throne Gelt as street-level currency and keeps Influence at 0 until earned (no starting roll).',
+            scope: 'world',
+            config: true,
+            requiresReload: true,
+            default: 'homebrew',
+            type: String,
+            choices: {
+                homebrew: 'Homebrew (Influence + Requisition + Throne Gelt)',
+                raw: 'RAW (Influence + Requisition)',
+            },
         });
         // @ts-expect-error - argument type
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.movementAutomation, {

@@ -274,13 +274,15 @@
                        class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                        {{#unless inEditMode}}readonly{{/unless}} />
               </div>
+              {{#unless hideThroneGelt}}
               <div class="wh40k-field">
                 <label>Cost (Thrones)</label>
-                <input type="number" name="system.cost.dh2.homebrew.throneGelt" value="{{item.system.cost.dh2.homebrew.throneGelt}}" 
+                <input type="number" name="system.cost.dh2.homebrew.throneGelt" value="{{item.system.cost.dh2.homebrew.throneGelt}}"
                        data-dtype="Number" min="0"
                        class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
                        {{#unless inEditMode}}readonly{{/unless}} />
               </div>
+              {{/unless}}
             </div>
           </div>
         </div>
