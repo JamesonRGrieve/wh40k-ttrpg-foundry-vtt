@@ -33,11 +33,13 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
                 armourTypes: new fields.SetField(new fields.StringField({ required: true }), { required: true, initial: new Set() }),
             }),
 
-            // Stat modifiers
+            // Stat modifiers — allow null for items whose homologated source
+            // data has no modifier set yet (would otherwise fail validation
+            // on actor load and invalidate the parent actor).
             modifiers: new fields.SchemaField({
-                armourPoints: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                maxAgility: new fields.NumberField({ required: true, initial: 0, integer: true }),
-                weight: new fields.NumberField({ required: true, initial: 0 }),
+                armourPoints: new fields.NumberField({ required: false, initial: 0, nullable: true, integer: true }),
+                maxAgility: new fields.NumberField({ required: false, initial: 0, nullable: true, integer: true }),
+                weight: new fields.NumberField({ required: false, initial: 0, nullable: true }),
             }),
 
             // Properties added

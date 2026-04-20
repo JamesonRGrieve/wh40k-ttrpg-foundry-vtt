@@ -18,7 +18,8 @@
 
     "strict": false,
     "strictNullChecks": false,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
     "noImplicitReturns": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,

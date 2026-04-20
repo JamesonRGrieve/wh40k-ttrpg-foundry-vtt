@@ -181,8 +181,20 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             }
         }
 
-        // Validate coverage is not empty
-        const coverage = data.coverage instanceof Set ? data.coverage : new Set(data.coverage || []);
+        // Validate coverage is not empty. Handle multiple stored shapes: Set
+        // (in-memory), array (legacy serialized), or object map {head:true,...}
+        // (current homologated shape). Reject anything else silently — a
+        // malformed coverage shouldn't crash actor load.
+        let coverage: Set<string>;
+        if (data.coverage instanceof Set) {
+            coverage = data.coverage;
+        } else if (Array.isArray(data.coverage)) {
+            coverage = new Set(data.coverage);
+        } else if (data.coverage && typeof data.coverage === 'object') {
+            coverage = new Set(Object.keys(data.coverage).filter((k) => (data.coverage as any)[k]));
+        } else {
+            coverage = new Set();
+        }
         if (coverage.size === 0) {
             throw new Error('Armour must cover at least one location');
         }
