@@ -1,4 +1,4 @@
 #!/bin/bash
 # Update Version Number
-# Using package script to allow json usage without required installation
-npm run version --next=$1
+# Usage: ./update_version.sh <new-version>
+NEXT_VERSION="$1" pnpm run version

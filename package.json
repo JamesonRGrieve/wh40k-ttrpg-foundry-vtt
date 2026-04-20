@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Warhammer 40K RPG Foundry VTT System",
   "scripts": {
-    "version": "json -I -f package.json -e \"this.version='$npm_config_next'\" && json -I -f src/system.json -e \"this.version='$npm_config_next'\"",
+    "version": "json -I -f package.json -e \"this.version='$NEXT_VERSION'\" && json -I -f src/system.json -e \"this.version='$NEXT_VERSION'\"",
     "clean": "gulp clean",
     "build": "gulp build",
     "packs": "gulp packs",
@@ -17,7 +17,7 @@
     "validate:json": "node -e \"const fs=require('fs'); const f='src/lang/en.json'; JSON.parse(fs.readFileSync(f,'utf8')); console.log(f+' OK')\"",
     "stylelint": "stylelint 'src/css/**/*.css'",
     "stylelint:fix": "stylelint 'src/css/**/*.css' --fix",
-    "check": "npm run validate:json && npm run lint && npm run format && npm run stylelint && npm run typecheck",
+    "check": "pnpm validate:json && pnpm lint && pnpm format && pnpm stylelint && pnpm typecheck",
     "prepare": "husky"
   },
   "browserslist": [
@@ -26,6 +26,7 @@
   "author": "Andru Quiroga",
   "license": "MIT",
   "private": true,
+  "packageManager": "pnpm@10.32.1",
   "lint-staged": {
     "src/module/**/*.ts": [
       "eslint --fix --quiet",

@@ -365,7 +365,7 @@ The cleanup script (`migrate-weapon-pack.mjs`) is reusable for future pack migra
 **Next Steps**:
 
 1. Commit changes to git
-2. Rebuild compendiums (`npm run build`)
+2. Rebuild compendiums (`pnpm build`)
 3. Test in Foundry VTT
 4. Consider icon asset creation (optional)
 5. Document patterns for future item pack cleanups

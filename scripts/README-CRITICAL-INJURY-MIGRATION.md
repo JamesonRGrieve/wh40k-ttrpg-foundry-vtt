@@ -115,7 +115,7 @@ If issues are found:
 2. Rebuild pack:
 
     ```bash
-    npm run packs
+    pnpm packs
     ```
 
 3. Revert code changes:

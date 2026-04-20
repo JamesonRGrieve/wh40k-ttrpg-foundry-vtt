@@ -8,21 +8,22 @@ Forked from [AndruQuiroga/RogueTraderVTT](https://github.com/AndruQuiroga/RogueT
 
 - Foundry VTT 13+ (verified on 14.359)
 - Node.js 18+
+- pnpm 10+ (`corepack enable` or install standalone)
 - `game-icons-net` module (recommended, provides item icons)
 
 ## Development Setup
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## Build
 
 ```bash
-npm run build        # Full build: clean → SCSS → copy → packs → archive
-npm run scss         # Compile SCSS only
-npm run packs        # Compile compendium packs only
-npx gulp             # Build + watch for changes
+pnpm build        # Full build: clean → SCSS → copy → packs → archive
+pnpm scss         # Compile SCSS only
+pnpm packs        # Compile compendium packs only
+pnpm exec gulp             # Build + watch for changes
 ```
 
 Build output goes to `dist/`.
@@ -30,12 +31,12 @@ Build output goes to `dist/`.
 ## Code Quality
 
 ```bash
-npm run lint         # ESLint check
-npm run lint:fix     # ESLint auto-fix
-npm run format       # Prettier check
-npm run format:fix   # Prettier auto-fix
-npm run validate:json # Validate lang/en.json
-npm run check        # All of the above
+pnpm lint         # ESLint check
+pnpm lint:fix     # ESLint auto-fix
+pnpm format       # Prettier check
+pnpm format:fix   # Prettier auto-fix
+pnpm validate:json # Validate lang/en.json
+pnpm check        # All of the above
 ```
 
 ## Deploy to Foundry VTT
@@ -47,7 +48,7 @@ The system is deployed via SCP to the Foundry VTT container.
 
 ```bash
 # 1. Build
-npm run build
+pnpm build
 
 # 2. Clear old deploy and copy new build
 ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/systems/wh40k-rpg; mkdir -p /opt/foundry-vtt/data/Data/systems/wh40k-rpg"
@@ -66,12 +67,12 @@ ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/worlds/dark-heresy/pack
 
 System files only (browser refresh after):
 ```bash
-npm run build && ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/systems/wh40k-rpg; mkdir -p /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null && scp -r dist/* root@192.168.5.40:/opt/foundry-vtt/data/Data/systems/wh40k-rpg/ 2>/dev/null && ssh root@192.168.5.40 "chown -R foundry-vtt:foundry-vtt /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null
+pnpm build && ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/systems/wh40k-rpg; mkdir -p /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null && scp -r dist/* root@192.168.5.40:/opt/foundry-vtt/data/Data/systems/wh40k-rpg/ 2>/dev/null && ssh root@192.168.5.40 "chown -R foundry-vtt:foundry-vtt /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null
 ```
 
 Full deploy with compendium reset:
 ```bash
-npm run build && ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/systems/wh40k-rpg; mkdir -p /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null && scp -r dist/* root@192.168.5.40:/opt/foundry-vtt/data/Data/systems/wh40k-rpg/ 2>/dev/null && ssh root@192.168.5.40 "chown -R foundry-vtt:foundry-vtt /opt/foundry-vtt/data/Data/systems/wh40k-rpg && rm -rf /opt/foundry-vtt/data/Data/worlds/dark-heresy/packs && systemctl restart foundry-vtt.service" 2>/dev/null
+pnpm build && ssh root@192.168.5.40 "rm -rf /opt/foundry-vtt/data/Data/systems/wh40k-rpg; mkdir -p /opt/foundry-vtt/data/Data/systems/wh40k-rpg" 2>/dev/null && scp -r dist/* root@192.168.5.40:/opt/foundry-vtt/data/Data/systems/wh40k-rpg/ 2>/dev/null && ssh root@192.168.5.40 "chown -R foundry-vtt:foundry-vtt /opt/foundry-vtt/data/Data/systems/wh40k-rpg && rm -rf /opt/foundry-vtt/data/Data/worlds/dark-heresy/packs && systemctl restart foundry-vtt.service" 2>/dev/null
 ```
 
 ### Server Details
