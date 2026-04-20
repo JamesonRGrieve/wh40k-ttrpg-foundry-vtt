@@ -154,6 +154,9 @@ export default class CharacterSheet extends BaseActorSheet {
             // Utility menu
             'showUtilityMenu': CharacterSheet.#showUtilityMenu,
 
+            // Window controls
+            'resetWindowSize': CharacterSheet.#resetWindowSize,
+
             // Misc actions
             'bonusVocalize': CharacterSheet.#bonusVocalize,
         },
@@ -161,6 +164,15 @@ export default class CharacterSheet extends BaseActorSheet {
         position: {
             width: 1050,
             height: 800,
+        },
+        window: {
+            controls: [
+                {
+                    icon: 'fa-solid fa-expand',
+                    label: 'WH40K.Sheet.ResetWindowSize',
+                    action: 'resetWindowSize',
+                },
+            ],
         },
         // Tab configuration - uses ApplicationV2 tab handling
         tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
@@ -2700,6 +2712,15 @@ export default class CharacterSheet extends BaseActorSheet {
 
         document.body.appendChild(menu);
         document.addEventListener('click', closeMenu);
+    }
+
+    /**
+     * Header control — reset the window to its default width and height.
+     */
+    static #resetWindowSize(this: CharacterSheet, event: Event, target: HTMLElement): void {
+        event.preventDefault();
+        const defaults = (this.constructor as typeof CharacterSheet).DEFAULT_OPTIONS.position;
+        (this as any).setPosition({ width: defaults.width, height: defaults.height });
     }
 
     /* -------------------------------------------- */

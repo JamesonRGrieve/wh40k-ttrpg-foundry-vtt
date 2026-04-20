@@ -793,29 +793,29 @@ WH40K.calculateDegrees = (roll, target) => {
  */
 WH40K.defaultIcons = {
     // Item types
-    weapon: 'modules/game-icons-net/blacktransparent/crossed-swords.svg',
-    armour: 'modules/game-icons-net/blacktransparent/shield.svg',
-    ammunition: 'modules/game-icons-net/blacktransparent/bullets.svg',
-    gear: 'modules/game-icons-net/blacktransparent/backpack.svg',
-    talent: 'modules/game-icons-net/blacktransparent/light-bulb.svg',
-    trait: 'modules/game-icons-net/blacktransparent/person.svg',
-    psychicPower: 'modules/game-icons-net/blacktransparent/psychic-waves.svg',
-    skill: 'modules/game-icons-net/blacktransparent/skills.svg',
-    cybernetic: 'modules/game-icons-net/blacktransparent/cyber-eye.svg',
-    forceField: 'modules/game-icons-net/blacktransparent/shield-reflect.svg',
-    attackSpecial: 'modules/game-icons-net/blacktransparent/spiked-tentacle.svg',
-    weaponMod: 'modules/game-icons-net/blacktransparent/gears.svg',
-    criticalInjury: 'modules/game-icons-net/blacktransparent/broken-bone.svg',
-    origin: 'modules/game-icons-net/blacktransparent/world.svg',
+    weapon: 'modules/game-icons-net-font/svg/crossed-swords.svg',
+    armour: 'modules/game-icons-net-font/svg/shield.svg',
+    ammunition: 'modules/game-icons-net-font/svg/bullets.svg',
+    gear: 'modules/game-icons-net-font/svg/backpack.svg',
+    talent: 'modules/game-icons-net-font/svg/light-bulb.svg',
+    trait: 'modules/game-icons-net-font/svg/person.svg',
+    psychicPower: 'modules/game-icons-net-font/svg/psychic-waves.svg',
+    skill: 'modules/game-icons-net-font/svg/skills.svg',
+    cybernetic: 'modules/game-icons-net-font/svg/cyber-eye.svg',
+    forceField: 'modules/game-icons-net-font/svg/shield-reflect.svg',
+    attackSpecial: 'modules/game-icons-net-font/svg/spiked-tentacle.svg',
+    weaponMod: 'modules/game-icons-net-font/svg/gears.svg',
+    criticalInjury: 'modules/game-icons-net-font/svg/broken-bone.svg',
+    origin: 'modules/game-icons-net-font/svg/world.svg',
 
     // Actor types
-    character: 'modules/game-icons-net/blacktransparent/cowled.svg',
-    npc: 'modules/game-icons-net/blacktransparent/person.svg',
-    vehicle: 'modules/game-icons-net/blacktransparent/jeep.svg',
-    starship: 'modules/game-icons-net/blacktransparent/spaceship.svg',
+    character: 'modules/game-icons-net-font/svg/cowled.svg',
+    npc: 'modules/game-icons-net-font/svg/person.svg',
+    vehicle: 'modules/game-icons-net-font/svg/jeep.svg',
+    starship: 'modules/game-icons-net-font/svg/spaceship.svg',
 };
 
-const gameIconPath = (name) => `modules/game-icons-net/whitetransparent/${name}.svg`;
+const gameIconPath = (name) => `modules/game-icons-net-font/svg/${name}.svg`;
 
 WH40K.skillIcons = {
     acrobatics: gameIconPath('jump-across'),
@@ -827,7 +827,7 @@ WH40K.skillIcons = {
     charm: gameIconPath('conversation'),
     chemUse: gameIconPath('medicine-pills'),
     ciphers: gameIconPath('lockpicks'),
-    climb: gameIconPath('climbing'),
+    climb: gameIconPath('mountain-climbing'),
     command: gameIconPath('crossed-pistols'),
     commerce: gameIconPath('conversation'),
     commonLore: gameIconPath('magnifying-glass'),
