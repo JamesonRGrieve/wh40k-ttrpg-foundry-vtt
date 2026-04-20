@@ -26,14 +26,16 @@ job("Package Release") {
         }
     }
 
-    container(displayName = "NPM Build", image = "node:14-alpine") {
+    container(displayName = "pnpm Build", image = "node:20-alpine") {
         shellScript {
             interpreter = "/bin/sh"
             content = """
-            	echo Install npm dependencies...
-                npm install
+            	echo Enable pnpm via corepack...
+                corepack enable
+                echo Install dependencies...
+                pnpm install --frozen-lockfile
                 echo Run Build
-                npm run build
+                pnpm run build
                 export ARCHIVE_NAME=`cd archive && echo *`
                 cp ./archive/* ${'$'}JB_SPACE_FILE_SHARE_PATH
             """.trimIndent()
@@ -54,14 +56,16 @@ job("Package Release") {
 }
 
 job("Build and Deploy") {
-    container(displayName = "NPM Build", image = "node:14-alpine") {
+    container(displayName = "pnpm Build", image = "node:20-alpine") {
     	shellScript {
         	interpreter = "/bin/sh"
             content = """
-            	echo Install npm dependencies...
-                npm install
+            	echo Enable pnpm via corepack...
+                corepack enable
+                echo Install dependencies...
+                pnpm install --frozen-lockfile
                 echo Run Build
-                npm run build
+                pnpm run build
                 export ARCHIVE_NAME=`cd archive && echo *`
                 cp ./archive/* ${'$'}JB_SPACE_FILE_SHARE_PATH
             """.trimIndent()

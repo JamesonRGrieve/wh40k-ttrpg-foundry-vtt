@@ -368,7 +368,7 @@ function generateReport() {
     report += `## Next Steps\n\n`;
     report += `1. Review warnings and issues above\n`;
     report += `2. Fix any critical issues manually\n`;
-    report += `3. Rebuild compendia: \`npm run build\`\n`;
+    report += `3. Rebuild compendia: \`pnpm build\`\n`;
     report += `4. Test in Foundry with Origin Path Builder\n`;
     report += `5. Run validation scripts:\n`;
     report += `   - \`node src/scripts/validate-origin-uuids.mjs\`\n`;
