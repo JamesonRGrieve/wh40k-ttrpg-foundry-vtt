@@ -45,7 +45,7 @@
                         </button>
                     </div>
                     <div class="wh40k-power-description description_{{item.id}}" {{hideIfNot (isExpanded (concat "description_" item.id))}}>
-                        {{item.system.description}}
+                        {{{item.system.description.value}}}
                     </div>
                 </div>
             {{/if}}
