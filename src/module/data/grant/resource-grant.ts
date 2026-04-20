@@ -85,6 +85,7 @@ export default class ResourceGrantData extends BaseGrantData {
 
     /** @inheritDoc */
     async _applyGrant(actor: WH40KBaseActor, data: Record<string, unknown>, options: Record<string, unknown>, result: Record<string, unknown>): Promise<void> {
+        const ctor = this.constructor as typeof ResourceGrantData;
         const updates = {};
         const selectedResources = data.selected ?? this.resources.map((r) => r.type);
         const rolledValues = data.rolledValues ?? {};
@@ -92,7 +93,7 @@ export default class ResourceGrantData extends BaseGrantData {
         for (const resourceConfig of this.resources) {
             const { type, formula, optional: resOptional } = resourceConfig;
 
-            const resourceDef = (this.constructor as any).RESOURCES[type];
+            const resourceDef = ctor.RESOURCES[type];
             if (!resourceDef) {
                 result.errors.push(`Invalid resource type: ${type}`);
                 continue;
@@ -134,11 +135,12 @@ export default class ResourceGrantData extends BaseGrantData {
 
     /** @inheritDoc */
     async reverse(actor, appliedState): Promise<unknown> {
+        const ctor = this.constructor as typeof ResourceGrantData;
         const restoreData = { resources: {} };
         const updates = {};
 
         for (const [type, state] of Object.entries(appliedState) as [string, any][]) {
-            const resourceDef = (this.constructor as any).RESOURCES[type];
+            const resourceDef = ctor.RESOURCES[type];
             if (!resourceDef) continue;
 
             const currentValue = (foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0) as number;
@@ -161,11 +163,12 @@ export default class ResourceGrantData extends BaseGrantData {
 
     /** @inheritDoc */
     async restore(actor, restoreData): Promise<unknown> {
+        const ctor = this.constructor as typeof ResourceGrantData;
         const result = this._initResult();
         const updates = {};
 
         for (const [type, state] of Object.entries(restoreData.resources ?? {}) as [string, any][]) {
-            const resourceDef = (this.constructor as any).RESOURCES[type];
+            const resourceDef = ctor.RESOURCES[type];
             if (!resourceDef) continue;
 
             const currentValue = (foundry.utils.getProperty(actor, resourceDef.valuePath) ?? 0) as number;
@@ -200,11 +203,12 @@ export default class ResourceGrantData extends BaseGrantData {
 
     /** @inheritDoc */
     async getSummary(): Promise<unknown> {
+        const ctor = this.constructor as typeof ResourceGrantData;
         const summary = await super.getSummary();
-        summary.icon = (this.constructor as any).ICON;
+        summary.icon = ctor.ICON;
 
         for (const resourceConfig of this.resources) {
-            const resourceDef = (this.constructor as any).RESOURCES[resourceConfig.type];
+            const resourceDef = ctor.RESOURCES[resourceConfig.type];
             const label = resourceDef ? game.i18n.localize(resourceDef.label) : resourceConfig.type;
 
             summary.details.push({

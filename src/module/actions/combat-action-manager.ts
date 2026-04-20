@@ -44,20 +44,18 @@ export class CombatActionManager {
 
     async processCombatActiveEffects(combat: Combat, data: Record<string, unknown>): Promise<void> {
         const turn = typeof data.turn === 'number' ? data.turn : combat.turn;
-        if (turn === null) return;
+        if (turn === null || turn === undefined) return;
         const currentCombatant = combat.turns[turn];
         game.wh40k.log('processCombatActiveEffects', currentCombatant);
 
-        if (currentCombatant) {
+        if (currentCombatant?.actor) {
             // Handle Actor Effects
-            if (currentCombatant.actor && currentCombatant.actor.effects) {
-                for (const effect of currentCombatant.actor.effects.contents) {
-                    // On Fire!
-                    if (effect.name === 'Burning') {
-                        await handleOnFire(currentCombatant.actor);
-                    } else if (effect.name === 'Bleeding') {
-                        await handleBleeding(currentCombatant.actor);
-                    }
+            for (const effect of currentCombatant.actor.effects) {
+                // On Fire!
+                if (effect.name === 'Burning') {
+                    await handleOnFire(currentCombatant.actor);
+                } else if (effect.name === 'Bleeding') {
+                    await handleBleeding(currentCombatant.actor);
                 }
             }
         }

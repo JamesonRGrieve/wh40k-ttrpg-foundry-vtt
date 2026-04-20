@@ -1,5 +1,28 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import BaseGrantData from './base-grant.ts';
+import BaseGrantData, { GrantApplicationResult, GrantSummary } from './base-grant.ts';
+
+/**
+ * Interface for a single skill grant configuration.
+ */
+interface SkillGrantConfig {
+    key: string;
+    specialization: string;
+    level: string;
+    optional: boolean;
+}
+
+/**
+ * Interface for the state of an applied skill grant.
+ */
+interface SkillAppliedState {
+    schemaKey: string;
+    specialization?: string;
+    entryIndex?: number;
+    previousLevel: string | null;
+    newLevel: string;
+    upgraded?: boolean;
+    created?: boolean;
+}
 
 /**
  * Grant that provides skill training to an actor.
@@ -12,14 +35,14 @@ export default class SkillGrantData extends BaseGrantData {
     /*  Static Properties                           */
     /* -------------------------------------------- */
 
-    static TYPE = 'skill';
-    static ICON = 'icons/svg/book.svg';
+    static override TYPE = 'skill';
+    static override ICON = 'icons/svg/book.svg';
 
     /**
      * Valid skill training levels.
      * @type {object}
      */
-    static TRAINING_LEVELS = {
+    static TRAINING_LEVELS: Record<string, { order: number; label: string; bonus: number }> = {
         known: { order: 1, label: 'WH40K.Skill.Level.Known', bonus: 0 },
         trained: { order: 1, label: 'WH40K.Skill.Level.Trained', bonus: 0 }, // RT/DH1e/DW rank 1 alias
         plus10: { order: 2, label: 'WH40K.Skill.Level.Plus10', bonus: 10 }, // RT/DH1e/DW rank 2 alias
@@ -29,12 +52,16 @@ export default class SkillGrantData extends BaseGrantData {
         plus30: { order: 4, label: 'WH40K.Skill.Level.Plus30', bonus: 30 }, // DH2e/BC/OW rank 4 alias
     };
 
+    /** Property declarations */
+    declare skills: SkillGrantConfig[];
+    declare applied: Record<string, SkillAppliedState>;
+
     /* -------------------------------------------- */
     /*  Schema Definition                           */
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -69,9 +96,14 @@ export default class SkillGrantData extends BaseGrantData {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _applyGrant(actor: WH40KBaseActor, data: Record<string, unknown>, options: Record<string, unknown>, result: Record<string, unknown>): Promise<void> {
-        const selectedSkills = data.selected ?? this.skills.map((s) => this._getSkillKey(s));
-        const updates = {};
+    override async _applyGrant(
+        actor: WH40KBaseActor,
+        data: Record<string, unknown>,
+        options: Record<string, unknown>,
+        result: GrantApplicationResult,
+    ): Promise<void> {
+        const selectedSkills = (data.selected as string[]) ?? this.skills.map((s) => this._getSkillKey(s));
+        const updates: Record<string, any> = {};
 
         for (const skillConfig of this.skills) {
             const skillKey = this._getSkillKey(skillConfig);
@@ -100,7 +132,9 @@ export default class SkillGrantData extends BaseGrantData {
                     ? this._applySpecialistSkillUpgrade(actor, schemaKey, specialization, skillConfig.level, updates, result)
                     : this._applyStandardSkillUpgrade(actor, schemaKey, skillConfig.level, updates, result);
 
-            if (upgradeResult) result.applied[skillKey] = upgradeResult;
+            if (upgradeResult) {
+                result.applied[skillKey] = upgradeResult;
+            }
         }
 
         await this._applyUpdates(actor, updates, options);
@@ -110,11 +144,18 @@ export default class SkillGrantData extends BaseGrantData {
      * Apply upgrade to a standard (non-specialist) skill.
      * @private
      */
-    _applyStandardSkillUpgrade(actor, schemaKey, targetLevel, updates, result): unknown {
+    _applyStandardSkillUpgrade(
+        actor: WH40KBaseActor,
+        schemaKey: string,
+        targetLevel: string,
+        updates: Record<string, any>,
+        result: GrantApplicationResult,
+    ): SkillAppliedState | null {
+        const ctor = this.constructor as typeof SkillGrantData;
         const currentSkill = actor.system.skills[schemaKey];
         const currentLevel = this._getSchemaSkillLevel(currentSkill);
-        const currentOrder = (this.constructor as any).TRAINING_LEVELS[currentLevel]?.order ?? 0;
-        const targetOrder = (this.constructor as any).TRAINING_LEVELS[targetLevel]?.order ?? 0;
+        const currentOrder = ctor.TRAINING_LEVELS[currentLevel]?.order ?? 0;
+        const targetOrder = ctor.TRAINING_LEVELS[targetLevel]?.order ?? 0;
 
         if (targetOrder <= currentOrder) {
             result.notifications.push(`${currentSkill.label || schemaKey} already at or above ${targetLevel}`);
@@ -123,11 +164,11 @@ export default class SkillGrantData extends BaseGrantData {
 
         // Apply the upgrade
         const levelUpdates = this._getLevelUpdates(targetLevel);
-        for (const [field, value] of Object.entries(levelUpdates) as [string, any][]) {
-            updates[`system.skills.${schemaKey}.${field.replace('system.', '')}`] = value;
+        for (const [field, value] of Object.entries(levelUpdates)) {
+            updates[`system.skills.${schemaKey}.${field}`] = value;
         }
 
-        const levelLabel = game.i18n.localize((this.constructor as any).TRAINING_LEVELS[targetLevel].label);
+        const levelLabel = game.i18n.localize(ctor.TRAINING_LEVELS[targetLevel].label);
         result.notifications.push(`${currentSkill.label || schemaKey}: ${levelLabel}`);
 
         return {
@@ -142,9 +183,17 @@ export default class SkillGrantData extends BaseGrantData {
      * Apply upgrade to a specialist skill entry.
      * @private
      */
-    _applySpecialistSkillUpgrade(actor, schemaKey, specialization, targetLevel, updates, result): unknown {
+    _applySpecialistSkillUpgrade(
+        actor: WH40KBaseActor,
+        schemaKey: string,
+        specialization: string,
+        targetLevel: string,
+        updates: Record<string, any>,
+        result: GrantApplicationResult,
+    ): SkillAppliedState | null {
+        const ctor = this.constructor as typeof SkillGrantData;
         const currentSkill = actor.system.skills[schemaKey];
-        const entries = currentSkill.entries || [];
+        const entries = (currentSkill.entries as any[]) || [];
 
         // Find existing entry with this specialization
         const entryIndex = entries.findIndex(
@@ -155,8 +204,8 @@ export default class SkillGrantData extends BaseGrantData {
             // Upgrade existing entry
             const entry = entries[entryIndex];
             const currentLevel = this._getSchemaSkillLevel(entry);
-            const currentOrder = (this.constructor as any).TRAINING_LEVELS[currentLevel]?.order ?? 0;
-            const targetOrder = (this.constructor as any).TRAINING_LEVELS[targetLevel]?.order ?? 0;
+            const currentOrder = ctor.TRAINING_LEVELS[currentLevel]?.order ?? 0;
+            const targetOrder = ctor.TRAINING_LEVELS[targetLevel]?.order ?? 0;
 
             if (targetOrder <= currentOrder) {
                 result.notifications.push(`${currentSkill.label || schemaKey} (${specialization}) already at or above ${targetLevel}`);
@@ -165,12 +214,11 @@ export default class SkillGrantData extends BaseGrantData {
 
             // Update the entry
             const levelUpdates = this._getLevelUpdates(targetLevel);
-            for (const [field, value] of Object.entries(levelUpdates) as [string, any][]) {
-                const cleanField = field.replace('system.', '');
-                updates[`system.skills.${schemaKey}.entries.${entryIndex}.${cleanField}`] = value;
+            for (const [field, value] of Object.entries(levelUpdates)) {
+                updates[`system.skills.${schemaKey}.entries.${entryIndex}.${field}`] = value;
             }
 
-            const levelLabel = game.i18n.localize((this.constructor as any).TRAINING_LEVELS[targetLevel].label);
+            const levelLabel = game.i18n.localize(ctor.TRAINING_LEVELS[targetLevel].label);
             result.notifications.push(`${currentSkill.label || schemaKey} (${specialization}): ${levelLabel}`);
 
             return {
@@ -196,7 +244,7 @@ export default class SkillGrantData extends BaseGrantData {
             const newEntries = [...entries, newEntry];
             updates[`system.skills.${schemaKey}.entries`] = newEntries;
 
-            const levelLabel = game.i18n.localize((this.constructor as any).TRAINING_LEVELS[targetLevel].label);
+            const levelLabel = game.i18n.localize(ctor.TRAINING_LEVELS[targetLevel].label);
             result.notifications.push(`${currentSkill.label || schemaKey} (${specialization}): ${levelLabel} (new)`);
 
             return {
@@ -214,14 +262,14 @@ export default class SkillGrantData extends BaseGrantData {
      * Get the schema skill key from various input formats.
      * @private
      */
-    _getSchemaSkillKey(key): string | null {
+    _getSchemaSkillKey(key: string): string | null {
         if (!key) return null;
 
         // Normalize the key
         const normalized = key.toLowerCase().replace(/[\s-]/g, '');
 
         // Map of common variants to schema keys
-        const keyMap = {
+        const keyMap: Record<string, string> = {
             // Standard skills
             'acrobatics': 'acrobatics',
             'awareness': 'awareness',
@@ -291,7 +339,7 @@ export default class SkillGrantData extends BaseGrantData {
      * Get current training level from a schema skill object.
      * @private
      */
-    _getSchemaSkillLevel(skill): string {
+    _getSchemaSkillLevel(skill: any): string {
         if (skill?.plus20) return 'plus20';
         if (skill?.plus10) return 'plus10';
         if (skill?.trained) return 'trained';
@@ -299,18 +347,18 @@ export default class SkillGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState): Promise<unknown> {
-        const restoreData = { skills: [] };
-        const updates = {};
+    override async reverse(actor: WH40KBaseActor, appliedState: Record<string, SkillAppliedState>): Promise<any> {
+        const restoreData: { skills: Array<Record<string, any>> } = { skills: [] };
+        const updates: Record<string, any> = {};
 
-        for (const [key, state] of Object.entries(appliedState) as [string, any][]) {
+        for (const [key, state] of Object.entries(appliedState)) {
             if (!state.schemaKey) continue;
 
             if (state.created && state.specialization !== undefined) {
                 // Remove created specialist entry
                 const currentSkill = actor.system.skills[state.schemaKey];
                 if (currentSkill?.entries && state.entryIndex !== undefined) {
-                    const newEntries = [...currentSkill.entries];
+                    const newEntries = [...(currentSkill.entries as any[])];
                     newEntries.splice(state.entryIndex, 1);
                     updates[`system.skills.${state.schemaKey}.entries`] = newEntries;
                     restoreData.skills.push({ key, removed: true, specialization: state.specialization });
@@ -322,13 +370,12 @@ export default class SkillGrantData extends BaseGrantData {
                 if (state.specialization !== undefined && state.entryIndex !== undefined) {
                     // Specialist skill entry
                     for (const [field, value] of Object.entries(levelUpdates)) {
-                        const cleanField = field.replace('system.', '');
-                        updates[`system.skills.${state.schemaKey}.entries.${state.entryIndex}.${cleanField}`] = value;
+                        updates[`system.skills.${state.schemaKey}.entries.${state.entryIndex}.${field}`] = value;
                     }
                 } else {
                     // Standard skill
                     for (const [field, value] of Object.entries(levelUpdates)) {
-                        updates[`system.skills.${state.schemaKey}.${field.replace('system.', '')}`] = value;
+                        updates[`system.skills.${state.schemaKey}.${field}`] = value;
                     }
                 }
                 restoreData.skills.push({ key, reverted: true, previousLevel: state.previousLevel });
@@ -343,19 +390,20 @@ export default class SkillGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    getAutomaticValue(): Record<string, unknown> | false {
+    override getAutomaticValue(): Record<string, unknown> | false {
         if (this.optional) return false;
         if (this.skills.some((s) => s.optional)) return false;
         return { selected: this.skills.map((s) => this._getSkillKey(s)) };
     }
 
     /** @inheritDoc */
-    async getSummary(): Promise<unknown> {
+    override async getSummary(): Promise<GrantSummary> {
+        const ctor = this.constructor as typeof SkillGrantData;
         const summary = await super.getSummary();
-        summary.icon = (this.constructor as any).ICON;
+        summary.icon = ctor.ICON;
 
         for (const skillConfig of this.skills) {
-            const levelLabel = game.i18n.localize((this.constructor as any).TRAINING_LEVELS[skillConfig.level]?.label ?? skillConfig.level);
+            const levelLabel = game.i18n.localize(ctor.TRAINING_LEVELS[skillConfig.level]?.label ?? skillConfig.level);
 
             let skillLabel = skillConfig.key;
             if (skillConfig.specialization) {
@@ -382,7 +430,7 @@ export default class SkillGrantData extends BaseGrantData {
      * @returns {string}
      * @private
      */
-    _getSkillKey(skillConfig): string {
+    _getSkillKey(skillConfig: SkillGrantConfig): string {
         if (skillConfig.specialization) {
             return `${skillConfig.key}:${skillConfig.specialization}`;
         }
@@ -395,8 +443,8 @@ export default class SkillGrantData extends BaseGrantData {
      * @returns {object}
      * @private
      */
-    _getLevelUpdates(level): Record<string, boolean> {
-        const updates = {
+    _getLevelUpdates(level: string): Record<string, boolean> {
+        const updates: Record<string, boolean> = {
             trained: false,
             plus10: false,
             plus20: false,
@@ -421,7 +469,8 @@ export default class SkillGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    validateGrant(): string[] {
+    override validateGrant(): string[] {
+        const ctor = this.constructor as typeof SkillGrantData;
         const errors = super.validateGrant();
 
         if (!this.skills || this.skills.length === 0) {
@@ -432,7 +481,7 @@ export default class SkillGrantData extends BaseGrantData {
             if (!skill.key) {
                 errors.push('Skill grant entry missing key');
             }
-            if (!(this.constructor as any).TRAINING_LEVELS[skill.level]) {
+            if (!ctor.TRAINING_LEVELS[skill.level]) {
                 errors.push(`Invalid training level: ${skill.level}`);
             }
         }

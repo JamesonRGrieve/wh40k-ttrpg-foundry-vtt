@@ -4,15 +4,16 @@ import { AssignDamageData } from '../rolls/assign-damage-data.ts';
 import { Hit } from '../rolls/damage-data.ts';
 import { uuid, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
+import { ActionData } from '../rolls/action-data.ts';
 
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
-    storedRolls: Record<string, any> = {};
+    storedRolls: Record<string, ActionData> = {};
 
-    initializeHooks() {
+    initializeHooks(): void {
         // Add show/hide support for chat messages
         Hooks.on('renderChatMessageHTML', (message: ChatMessage, html: HTMLElement, context: Record<string, unknown>) => {
-            game.wh40k.log('renderChatMessageHTML', { message, html, context });
+            (game as any).wh40k.log('renderChatMessageHTML', { message, html, context });
             html.querySelectorAll('.roll-control__hide-control').forEach((el: Element) =>
                 el.addEventListener('click', async (ev: Event) => await this._toggleExpandChatMessage(ev)),
             );
@@ -34,8 +35,9 @@ export class BasicActionManager {
         });
 
         // Initialize Scene Control Buttons
-        Hooks.on('getSceneControlButtons', (controls: any[]) => {
-            const bar = controls.find((c) => c.name === 'token');
+        // V14: controls is Record<string, SceneControl> keyed by control name, not an array
+        Hooks.on('getSceneControlButtons', (controls: Record<string, SceneControl>) => {
+            const bar = controls.tokens;
             if (!bar) return;
             const toolOrder = Object.keys(bar.tools).length;
             bar.tools.assignDamage = {
@@ -50,8 +52,8 @@ export class BasicActionManager {
         });
     }
 
-    _toggleExpandChatMessage(event: any) {
-        game.wh40k.log('roll-control-toggle');
+    _toggleExpandChatMessage(event: Event): void {
+        (game as any).wh40k.log('roll-control-toggle');
         event.preventDefault();
         const displayToggle = event.currentTarget as HTMLElement;
         const span = displayToggle.querySelector('span');
@@ -65,13 +67,13 @@ export class BasicActionManager {
         }
     }
 
-    async _rollDamage(event: any) {
+    async _rollDamage(event: Event): Promise<void> {
         event.preventDefault();
         const btn = event.currentTarget as HTMLButtonElement;
         const rollId = btn.dataset.rollId;
         const actionData = this.getActionData(rollId);
         if (!actionData) {
-            ui.notifications.warn('Roll data no longer available. Cannot roll damage.');
+            ui.notifications?.warn('Roll data no longer available. Cannot roll damage.');
             return;
         }
 
@@ -89,12 +91,12 @@ export class BasicActionManager {
             weaponName: actionData.rollData.name,
             hits: actionData.damageData.hits,
             targetActor: actionData.rollData.targetActor,
-            psychicEffect: actionData.psychicEffect || null,
+            psychicEffect: (actionData as any).psychicEffect || null,
         };
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
-        const html = await (foundry.applications.handlebars as any).renderTemplate(template, templateData);
-        const chatData: Record<string, unknown> = {
+        const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
+        const chatData: any = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,
@@ -104,18 +106,18 @@ export class BasicActionManager {
         await ChatMessage.create(chatData);
     }
 
-    async _refundResources(event: any) {
+    async _refundResources(event: Event): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget as HTMLElement;
         const rollId = div.dataset.rollId;
         const actionData = this.getActionData(rollId);
 
         if (!actionData) {
-            ui.notifications.warn(`Action data expired. Unable to perform action.`);
+            ui.notifications?.warn(`Action data expired. Unable to perform action.`);
             return;
         }
 
-        const confirmed = await (ConfirmationDialog as any).confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: 'Confirm Refund',
             content: 'Are you sure you would like to refund ammo, fate, etc for this action?',
             confirmLabel: 'Refund',
@@ -124,27 +126,27 @@ export class BasicActionManager {
 
         if (confirmed) {
             await actionData.refundResources();
-            ui.notifications.info(`Resources refunded`);
+            ui.notifications?.info(`Resources refunded`);
         }
     }
 
-    async _fateReroll(event: any) {
+    async _fateReroll(event: Event): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget as HTMLElement;
         const rollId = div.dataset.rollId;
         const actionData = this.getActionData(rollId);
 
         if (!actionData) {
-            ui.notifications.warn(`Action data expired. Unable to perform action.`);
+            ui.notifications?.warn(`Action data expired. Unable to perform action.`);
             return;
         }
 
-        if (actionData.rollData?.sourceActor?.system?.fate?.value <= 0) {
-            ui.notifications.warn(`Actor does not have enough fate points!`);
+        if ((actionData.rollData?.sourceActor?.system as any)?.fate?.value <= 0) {
+            ui.notifications?.warn(`Actor does not have enough fate points!`);
             return;
         }
 
-        const confirmed = await (ConfirmationDialog as any).confirm({
+        const confirmed = await ConfirmationDialog.confirm({
             title: 'Confirm Re-Roll',
             content: 'Are you sure you would like to use a fate point to re-roll action?',
             confirmLabel: 'Re-Roll',
@@ -155,7 +157,7 @@ export class BasicActionManager {
             // Generate new ID for action data
             actionData.id = uuid();
             // Use a FP
-            await actionData.rollData.sourceActor.spendFate();
+            await (actionData.rollData.sourceActor as any).spendFate();
             // Refund Initial Resources
             await actionData.refundResources();
             // Reset
@@ -165,7 +167,7 @@ export class BasicActionManager {
         }
     }
 
-    async _assignDamage(event: any) {
+    async _assignDamage(event: Event): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget as HTMLElement;
 
@@ -194,11 +196,11 @@ export class BasicActionManager {
             const targetedObjects = game.user.targets;
             if (targetedObjects && targetedObjects.size > 0) {
                 const target = targetedObjects.values().next().value;
-                targetActor = target.actor;
+                targetActor = (target as any).actor;
             }
         }
         if (!targetActor) {
-            ui.notifications.warn(`Cannot determine target actor to assign hit.`);
+            ui.notifications?.warn(`Cannot determine target actor to assign hit.`);
             return;
         }
 
@@ -206,7 +208,7 @@ export class BasicActionManager {
         await prepareAssignDamageRoll(assignData);
     }
 
-    async _applyDamage(event: any) {
+    async _applyDamage(event: Event): Promise<void> {
         event.preventDefault();
         const div = event.currentTarget as HTMLElement;
         const targetUuid = div.dataset.uuid;
@@ -217,22 +219,26 @@ export class BasicActionManager {
         const penetration = div.dataset.penetration;
         const fatigue = div.dataset.fatigue;
 
-        // @ts-expect-error - dynamic property access
-        const actor = (await fromUuid(targetUuid))?.actor;
-        if (!actor) {
-            ui.notifications.warn(`Cannot determine actor to assign hit.`);
+        if (!targetUuid) {
+            ui.notifications?.warn(`Cannot determine target UUID to assign hit.`);
+            return;
+        }
+
+        const actor = (await fromUuid(targetUuid)) as any;
+        const targetActor = actor?.actor ?? actor;
+
+        if (!targetActor) {
+            ui.notifications?.warn(`Cannot determine actor to assign hit.`);
             return;
         }
         for (const field of [damage, penetration, fatigue]) {
             if (field && isNaN(parseInt(field))) {
-                ui.notifications.warn(`Unable to determine damage/penetration/fatigue to assign.`);
+                ui.notifications?.warn(`Unable to determine damage/penetration/fatigue to assign.`);
                 return;
             }
         }
 
-        // @ts-expect-error - argument count
-        const assignDamageData = new AssignDamageData();
-        assignDamageData.actor = actor;
+        const assignDamageData = new AssignDamageData(targetActor, new Hit());
         if (ignoreArmour || 'true' === ignoreArmour || 'TRUE' === ignoreArmour) {
             assignDamageData.ignoreArmour = true;
         }
@@ -261,11 +267,9 @@ export class BasicActionManager {
         await assignDamageData.performActionAndSendToChat();
     }
 
-    async assignDamageTool() {
-        // @ts-expect-error - argument count
-        const sourceToken = (DHTargetedActionManager as any).getSourceToken();
-        // @ts-expect-error - missing name
-        const sourceActorData = sourceToken ? sourceToken.actor : (globalThis as any).source;
+    async assignDamageTool(): Promise<void> {
+        const sourceToken = DHTargetedActionManager.getSourceToken();
+        const sourceActorData = sourceToken ? (sourceToken.actor as any) : (globalThis as any).source;
         if (!sourceActorData) return;
 
         const hitData = new Hit();
@@ -273,12 +277,12 @@ export class BasicActionManager {
         await prepareAssignDamageRoll(assignData);
     }
 
-    getActionData(id: string | undefined): any {
+    getActionData(id: string | undefined): ActionData | null {
         if (!id) return null;
         return this.storedRolls[id];
     }
 
-    storeActionData(actionData: any) {
+    storeActionData(actionData: ActionData): void {
         // Store roll data for fate re-rolls and ammo refunds during session
         // Note: Rolls persist for entire session, consider adding cleanup on combat end if memory becomes an issue
         this.storedRolls[actionData.id] = actionData;
@@ -290,9 +294,9 @@ export class BasicActionManager {
      * @param data
      * @returns {Promise<void>}
      */
-    async sendItemVocalizeChat(data: any) {
-        const html = await (foundry.applications.handlebars as any).renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
-        const chatData: Record<string, unknown> = {
+    async sendItemVocalizeChat(data: any): Promise<void> {
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
+        const chatData: any = {
             user: game.user.id,
             content: html,
             rollMode: game.settings.get('core', 'rollMode'),

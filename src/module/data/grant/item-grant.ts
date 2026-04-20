@@ -1,5 +1,26 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import BaseGrantData from './base-grant.ts';
+import type { WH40KItem } from '../../documents/item.ts';
+import BaseGrantData, { GrantApplicationResult, GrantSummary } from './base-grant.ts';
+
+/**
+ * Interface for a single item grant configuration.
+ */
+interface ItemGrantConfig {
+    uuid: string;
+    optional: boolean;
+    overrides?: Record<string, any>;
+    // Legacy support fields
+    _legacyName?: string;
+    _legacySpecialization?: string;
+}
+
+/**
+ * Interface for the state of an applied item grant.
+ */
+interface ItemAppliedState {
+    uuid: string;
+    itemId: string;
+}
 
 /**
  * Grant that provides items (talents, traits, equipment) to an actor.
@@ -12,8 +33,8 @@ export default class ItemGrantData extends BaseGrantData {
     /*  Static Properties                           */
     /* -------------------------------------------- */
 
-    static TYPE = 'item';
-    static ICON = 'icons/svg/item-bag.svg';
+    static override TYPE = 'item';
+    static override ICON = 'icons/svg/item-bag.svg';
 
     /**
      * Valid item types for this grant.
@@ -21,12 +42,16 @@ export default class ItemGrantData extends BaseGrantData {
      */
     static VALID_TYPES = new Set(['talent', 'trait', 'weapon', 'armour', 'gear', 'ammunition', 'cybernetic', 'forceField', 'specialAbility']);
 
+    /** Property declarations */
+    declare items: ItemGrantConfig[];
+    declare applied: Record<string, string>; // Maps source UUID to created item ID on actor
+
     /* -------------------------------------------- */
     /*  Schema Definition                           */
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -38,6 +63,9 @@ export default class ItemGrantData extends BaseGrantData {
                     optional: new fields.BooleanField({ initial: false }),
                     // Override data for the granted item
                     overrides: new fields.ObjectField({ required: false, initial: {} }),
+                    // Legacy support fields
+                    _legacyName: new fields.StringField({ required: false, blank: true }),
+                    _legacySpecialization: new fields.StringField({ required: false, blank: true }),
                 }),
                 { required: true, initial: [] },
             ),
@@ -56,7 +84,7 @@ export default class ItemGrantData extends BaseGrantData {
      * Whether any items have been applied.
      * @type {boolean}
      */
-    get hasApplied() {
+    get hasApplied(): boolean {
         return Object.keys(this.applied).length > 0;
     }
 
@@ -65,21 +93,27 @@ export default class ItemGrantData extends BaseGrantData {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _applyGrant(actor: WH40KBaseActor, data: Record<string, unknown>, options: Record<string, unknown>, result: Record<string, unknown>): Promise<void> {
+    override async _applyGrant(
+        actor: WH40KBaseActor,
+        data: Record<string, unknown>,
+        options: Record<string, unknown>,
+        result: GrantApplicationResult,
+    ): Promise<void> {
+        const ctor = this.constructor as typeof ItemGrantData;
         const items = this.items ?? [];
         if (items.length === 0) {
             result.notifications.push('Item grant has no items to apply');
             return;
         }
 
-        const itemsToCreate = [];
-        const selectedUuids = data.selected ?? items.map((i) => i.uuid);
+        const itemsToCreate: Array<{ uuid: string; data: Record<string, any> }> = [];
+        const selectedUuids = (data.selected as string[]) ?? items.map((i) => i.uuid);
 
         for (const itemConfig of items) {
             const { uuid, optional, overrides, _legacyName, _legacySpecialization } = itemConfig;
 
             // Try to find the item - first by UUID, then by name
-            let sourceItem = null;
+            let sourceItem: WH40KItem | null = null;
             let resolvedUuid = uuid;
 
             if (uuid) {
@@ -88,7 +122,7 @@ export default class ItemGrantData extends BaseGrantData {
 
             // Fallback: lookup by name if no UUID or UUID not found
             if (!sourceItem && _legacyName) {
-                sourceItem = await this._findItemByName(_legacyName, _legacySpecialization);
+                sourceItem = (await this._findItemByName(_legacyName, _legacySpecialization)) as WH40KItem | null;
                 if (sourceItem) {
                     resolvedUuid = sourceItem.uuid;
                     game.wh40k?.log(`ItemGrantData: Resolved "${_legacyName}" to UUID ${resolvedUuid}`);
@@ -114,7 +148,7 @@ export default class ItemGrantData extends BaseGrantData {
             }
 
             // Validate item type
-            if (!(this.constructor as any).VALID_TYPES.has(sourceItem.type)) {
+            if (!ctor.VALID_TYPES.has(sourceItem.type)) {
                 result.errors.push(`Invalid item type "${sourceItem.type}" for ${sourceItem.name}`);
                 continue;
             }
@@ -126,26 +160,26 @@ export default class ItemGrantData extends BaseGrantData {
             }
 
             // Create item data, applying specialization if present
-            const effectiveOverrides = { ...overrides };
+            const effectiveOverrides = { ...(overrides ?? {}) };
             if (_legacySpecialization && sourceItem.type === 'talent') {
                 effectiveOverrides['system.specialization'] = _legacySpecialization;
                 effectiveOverrides['name'] = `${sourceItem.name} (${_legacySpecialization})`;
             }
-            const itemData = await this._createItemData(sourceItem, resolvedUuid, effectiveOverrides);
+            const itemData = this._createItemData(sourceItem, resolvedUuid, effectiveOverrides);
             itemsToCreate.push({ uuid: resolvedUuid, data: itemData });
         }
 
         // Apply if not dry run
         if (!options.dryRun && itemsToCreate.length > 0) {
-            const created = await actor.createEmbeddedDocuments(
+            const created = (await actor.createEmbeddedDocuments(
                 'Item',
                 itemsToCreate.map((i) => i.data),
-            );
+            )) as WH40KItem[];
 
             // Track what was applied
             created.forEach((item, index) => {
                 const sourceUuid = itemsToCreate[index].uuid;
-                result.applied[sourceUuid] = item.id;
+                result.applied[sourceUuid] = item.id!;
                 result.notifications.push(`Granted: ${item.name}`);
             });
         } else if (options.dryRun) {
@@ -157,9 +191,9 @@ export default class ItemGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState): Promise<unknown> {
-        const restoreData = { items: [] };
-        const idsToDelete = [];
+    override async reverse(actor: WH40KBaseActor, appliedState: Record<string, string>): Promise<any> {
+        const restoreData: { items: Array<{ uuid: string; data: any }> } = { items: [] };
+        const idsToDelete: string[] = [];
 
         for (const [uuid, itemId] of Object.entries(appliedState)) {
             const item = actor.items.get(itemId);
@@ -182,18 +216,18 @@ export default class ItemGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    async restore(actor, restoreData): Promise<unknown> {
+    override async restore(actor: WH40KBaseActor, restoreData: any): Promise<GrantApplicationResult> {
         const result = this._initResult();
-        if (!restoreData?.items?.length) return result;
+        const items: Array<{ uuid: string; data: any }> = restoreData?.items ?? [];
+        if (items.length === 0) return result;
 
-        const itemsToCreate = restoreData.items.map(({ uuid, data }) => ({ uuid, data }));
-        const created = await actor.createEmbeddedDocuments(
+        const created = (await actor.createEmbeddedDocuments(
             'Item',
-            itemsToCreate.map((i) => i.data),
-        );
+            items.map((i) => i.data),
+        )) as WH40KItem[];
 
         created.forEach((item, index) => {
-            result.applied[itemsToCreate[index].uuid] = item.id;
+            result.applied[items[index].uuid] = item.id!;
             result.notifications.push(`Restored: ${item.name}`);
         });
 
@@ -201,32 +235,31 @@ export default class ItemGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    getAutomaticValue(): Record<string, unknown> | false {
+    override getAutomaticValue(): Record<string, unknown> | false {
         if (this.optional) return false;
         if (this.items.some((i) => i.optional)) return false;
         return { selected: this.items.map((i) => i.uuid) };
     }
 
     /** @inheritDoc */
-    async getSummary(): Promise<void> {
+    override async getSummary(): Promise<GrantSummary> {
+        const ctor = this.constructor as typeof ItemGrantData;
         const summary = await super.getSummary();
-        summary.icon = (this.constructor as any).ICON;
+        summary.icon = ctor.ICON;
 
         for (const itemConfig of this.items) {
             const item = await this._fetchItem(itemConfig.uuid);
             if (item) {
                 summary.details.push({
-                    label: item.name,
+                    label: item.name ?? '',
                     value: item.type,
                     optional: itemConfig.optional,
-                    img: item.img,
                 });
             } else {
                 summary.details.push({
                     label: itemConfig.uuid,
                     value: 'Not found',
                     optional: itemConfig.optional,
-                    error: true,
                 });
             }
         }
@@ -235,7 +268,7 @@ export default class ItemGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    validateGrant(): string[] {
+    override validateGrant(): string[] {
         const errors = super.validateGrant();
 
         // items may be undefined if grant was created with invalid data
@@ -260,18 +293,18 @@ export default class ItemGrantData extends BaseGrantData {
 
     /**
      * Check if an item already exists on the actor.
-     * @param {WH40KActor} actor
+     * @param {WH40KBaseActor} actor
      * @param {WH40KItem} sourceItem
      * @returns {boolean}
      * @private
      */
-    _isDuplicate(actor, sourceItem): boolean {
+    _isDuplicate(actor: WH40KBaseActor, sourceItem: WH40KItem): boolean {
         return actor.items.some(
             (i) =>
                 i.type === sourceItem.type &&
                 i.name === sourceItem.name &&
                 // For talents/traits, also check specialization
-                (i.type !== 'talent' || i.system?.specialization === sourceItem.system?.specialization),
+                (i.type !== 'talent' || (i.system as any)?.specialization === (sourceItem.system as any)?.specialization),
         );
     }
 
@@ -280,10 +313,10 @@ export default class ItemGrantData extends BaseGrantData {
      * @param {WH40KItem} sourceItem
      * @param {string} uuid
      * @param {object} overrides
-     * @returns {Promise<object>}
+     * @returns {object}
      * @private
      */
-    _createItemData(sourceItem, uuid, overrides = {}): Record<string, unknown> {
+    _createItemData(sourceItem: WH40KItem, uuid: string, overrides: Record<string, any> = {}): Record<string, any> {
         const itemData = sourceItem.toObject();
 
         // Apply overrides
@@ -305,10 +338,10 @@ export default class ItemGrantData extends BaseGrantData {
      * Used as fallback when UUID is not available.
      * @param {string} name - Item name to search for
      * @param {string} [specialization] - Optional specialization for talents
-     * @returns {Promise<Item|null>}
+     * @returns {Promise<WH40KItem|null>}
      * @private
      */
-    async _findItemByName(name, specialization = ''): Promise<unknown> {
+    async _findItemByName(name: string, specialization = ''): Promise<unknown> {
         if (!name) return null;
 
         const nameLower = name.toLowerCase();

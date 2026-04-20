@@ -1055,8 +1055,8 @@ export default class CreatureTemplate extends CommonTemplate {
         // Collect origin path modifier sources for tooltip transparency
         this._registerOriginPathModifierSources();
 
-        for (const [name, char] of Object.entries(this.characteristics as Record<string, unknown>)) {
-            const originPathMod = this._getOriginPathCharacteristicModifier(name);
+        for (const [name, char] of Object.entries(this.characteristics) as [string, CharacteristicData][]) {
+            const originPathMod = (this as any)._getOriginPathCharacteristicModifier?.(name) || 0;
             const itemMod = this._getTotalCharacteristicModifier(name);
             const totalMod = originPathMod + itemMod;
 
@@ -1086,7 +1086,7 @@ export default class CreatureTemplate extends CommonTemplate {
         this.initiative.itemModifier = initMod;
 
         // Store combat modifiers for display
-        this.combatModifiers = {
+        (this as any).combatModifiers = {
             attack: this._getTotalCombatModifier('attack'), // Schema key: attack
             damage: this._getTotalCombatModifier('damage'),
             penetration: this._getTotalCombatModifier('penetration'),
@@ -1104,7 +1104,7 @@ export default class CreatureTemplate extends CommonTemplate {
         // Recalculate skills from updated characteristic totals (which now include item modifiers)
         this._prepareSkills();
 
-        for (const [skillKey, skill] of Object.entries(this.skills as Record<string, unknown>)) {
+        for (const [skillKey, skill] of Object.entries(this.skills) as [string, SkillData][]) {
             const itemMod = this._getTotalSkillModifier(skillKey);
             if (itemMod !== 0) {
                 skill.itemModifier = itemMod;
