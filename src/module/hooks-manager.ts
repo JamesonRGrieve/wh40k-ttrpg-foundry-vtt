@@ -115,8 +115,8 @@ export class HooksManager {
      * WH40KCreateActorDialog so users pick system + kind rather than a
      * flat type list.
      */
-    static renderActorDirectory(_app: Record<string, unknown>, html: HTMLElement, _data: Record<string, unknown>) {
-        const root: HTMLElement = html instanceof HTMLElement ? html : html?.[0] ?? html;
+    static renderActorDirectory(_app: foundry.applications.api.ApplicationV2, html: HTMLElement, _data: Record<string, unknown>) {
+        const root: HTMLElement = html instanceof HTMLElement ? html : (html as any)?.[0] ?? html;
         if (!root) return;
         const createBtn = root.querySelector(
             'button.create-document, a.create-document, button[data-action="createEntry"], button[data-action="createFolder"]',
@@ -141,13 +141,12 @@ export class HooksManager {
     static init() {
         console.log('Loading WH40K RPG System v1.0.0');
 
-        const CFG = CONFIG as any;
         const consolePrefix = 'WH40K RPG | ';
         game.wh40k = {
             debug: false,
-            log: (s: unknown, o?: unknown) => (game.wh40k.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
-            warn: (s: unknown, o?: unknown) => console.warn(`${consolePrefix}${s}`, o),
-            error: (s: unknown, o?: unknown) => console.error(`${consolePrefix}${s}`, o),
+            log: (s: string, o?: unknown) => (game.wh40k.debug ? console.log(`${consolePrefix}${s}`, o) : undefined),
+            warn: (s: string, o?: unknown) => console.warn(`${consolePrefix}${s}`, o),
+            error: (s: string, o?: unknown) => console.error(`${consolePrefix}${s}`, o),
             rollItemMacro,
             rollSkillMacro,
             rollCharacteristicMacro,
@@ -161,10 +160,10 @@ export class HooksManager {
             rollMalignancy: () => RollTableUtils.rollMalignancy(),
             showRollTableDialog: () => RollTableUtils.showRollTableDialog(),
             // Compendium browser
-            openCompendiumBrowser: (options: Record<string, unknown>) => RTCompendiumBrowser.open(options),
+            openCompendiumBrowser: (options: Record<string, unknown> = {}) => RTCompendiumBrowser.open(options),
             // Character creation
             OriginPathBuilder: characterCreation.OriginPathBuilder,
-            openOriginPathBuilder: (actor: WH40KBaseActor, options?: Record<string, unknown>) => characterCreation.OriginPathBuilder.show(actor, options),
+            openOriginPathBuilder: (actor: WH40KBaseActor, options: Record<string, unknown> = {}) => characterCreation.OriginPathBuilder.show(actor, options),
             // NPC utilities
             npc: npcApplications,
             applications: npcApplications, // Alias for shorter access
@@ -174,7 +173,7 @@ export class HooksManager {
             openEncounterBuilder: () => npcApplications.EncounterBuilder.show(),
             exportStatBlock: (actor: WH40KBaseActor, format: unknown) => npcApplications.StatBlockExporter.quickExport(actor, format),
             importStatBlock: (input: unknown) => npcApplications.StatBlockParser.open(input),
-            openTemplateSelector: (options: Record<string, unknown>) => npcApplications.TemplateSelector.open(options),
+            openTemplateSelector: (options: Record<string, unknown> = {}) => npcApplications.TemplateSelector.open(options),
             // Phase 7: QoL Features
             DifficultyCalculatorDialog: npcApplications.DifficultyCalculatorDialog,
             calculateDifficulty: (actor: WH40KBaseActor) => npcApplications.DifficultyCalculatorDialog.show(actor),
@@ -192,15 +191,15 @@ export class HooksManager {
         //CONFIG.debug.hooks = true;
 
         // Add custom constants for configuration.
-        CFG.wh40k = WH40K;
-        CFG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
-        CFG.MeasuredTemplate.defaults.angle = 30.0;
+        CONFIG.wh40k = WH40K;
+        CONFIG.Combat.initiative = { formula: '@initiative.base + @initiative.bonus', decimals: 0 };
+        CONFIG.MeasuredTemplate.defaults.angle = 30.0;
 
         // Define custom Document classes
-        CFG.Actor.documentClass = WH40KActorProxy;
+        CONFIG.Actor.documentClass = WH40KActorProxy as unknown as typeof WH40KActorProxy;
         // Per (system, kind) document class registrations. The generic proxy
         // dispatches to the right concrete class based on the actor's `type`.
-        CFG.Actor.documentClasses = {
+        (CONFIG.Actor as any).documentClasses = {
             'dh2-character': documents.WH40KDH2Character,
             'dh2-npc': documents.WH40KDH2NPC,
             'dh2-vehicle': documents.WH40KDH2Vehicle,
@@ -228,20 +227,20 @@ export class HooksManager {
             'vehicle': documents.WH40KDH2Vehicle,
             'starship': documents.WH40KRTStarship,
         };
-        CFG.Item.documentClass = WH40KItem;
-        CFG.ActiveEffect.documentClass = documents.WH40KActiveEffect;
-        CFG.ChatMessage.documentClass = documents.ChatMessageWH40K;
+        CONFIG.Item.documentClass = WH40KItem;
+        CONFIG.ActiveEffect.documentClass = documents.WH40KActiveEffect;
+        CONFIG.ChatMessage.documentClass = documents.ChatMessageWH40K;
 
         // Token document and movement
-        CFG.Token.documentClass = documents.TokenDocumentWH40K;
-        CFG.Token.rulerClass = TokenRulerWH40K;
+        CONFIG.Token.documentClass = documents.TokenDocumentWH40K;
+        CONFIG.Token.rulerClass = TokenRulerWH40K;
 
         // Register custom Roll classes for serialization/deserialization
-        CFG.Dice.rolls.push(dice.BasicRollWH40K, dice.D100Roll);
+        CONFIG.Dice.rolls.push(dice.BasicRollWH40K, dice.D100Roll);
 
         // Register data models for actors — one per (system, kind) type.
         // DataModels handle schema validation and data preparation.
-        CFG.Actor.dataModels = {
+        CONFIG.Actor.dataModels = {
             'dh2-character': dataModels.DH2CharacterData,
             'dh2-npc': dataModels.DH2NPCData,
             'dh2-vehicle': dataModels.DH2VehicleData,
@@ -270,7 +269,7 @@ export class HooksManager {
 
         // Register Item data models
         // DataModels handle schema validation, migration, and data preparation
-        CFG.Item.dataModels = {
+        CONFIG.Item.dataModels = {
             // Equipment
             weapon: dataModels.WeaponData,
             armour: dataModels.ArmourData,
@@ -326,7 +325,7 @@ export class HooksManager {
         const DocumentSheetConfig = foundry.applications.apps.DocumentSheetConfig as any;
 
         // Unregister core V1 actor sheet and register V2 actor sheets
-        DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.appv1.sheets.ActorSheet);
+        DocumentSheetConfig.unregisterSheet(Actor, 'core', (foundry.appv1.sheets as any).ActorSheet);
 
         // Per-type sheet registration. Each of the 19 concrete actor types
         // gets exactly one default sheet — the factory-generated system
@@ -493,7 +492,7 @@ export class HooksManager {
         });
 
         // Unregister core V1 item sheet and register V2 item sheets
-        DocumentSheetConfig.unregisterSheet(Item, 'core', foundry.appv1.sheets.ItemSheet);
+        DocumentSheetConfig.unregisterSheet(Item, 'core', (foundry.appv1.sheets as any).ItemSheet);
 
         // Default item sheet for unspecified types
         DocumentSheetConfig.registerSheet(Item, SYSTEM_ID, BaseItemSheet, {
@@ -682,7 +681,7 @@ export class HooksManager {
         // Register movement actions and Token HUD hooks (after settings are available)
         documents.TokenDocumentWH40K.registerMovementActions();
         documents.TokenDocumentWH40K.registerHUDListeners();
-        CFG.Token.movement.costAggregator = (results: unknown[], distance: unknown, segment: unknown) => {
+        CONFIG.Token.movement.costAggregator = (results: any[], _distance: unknown, _segment: unknown) => {
             return Math.max(...results.map((i: { cost: number }) => i.cost));
         };
     }
@@ -691,8 +690,8 @@ export class HooksManager {
         await checkAndMigrateWorld();
 
         // Initialize rich tooltip system
-        game.wh40k.tooltips = new TooltipsWH40K();
-        await game.wh40k.tooltips.initialize();
+        (game.wh40k as any).tooltips = new TooltipsWH40K();
+        await (game.wh40k.tooltips as any).initialize();
         TransactionManager.initialize();
 
         game.tours.register(SYSTEM_ID, 'main-tour', new DHTourMain());
@@ -725,7 +724,7 @@ export class HooksManager {
             }
         }
         if (updates.length > 0) {
-            await Actor.updateDocuments(updates);
+            await (Actor as any).updateDocuments(updates);
             game.wh40k?.log?.(`Migrated ${updates.length} NPC sheetClass flag(s) from NPCSheetV2 to NPCSheet.`);
         }
     }
@@ -765,13 +764,13 @@ export class HooksManager {
         if (!game.user?.isGM) return;
 
         const LEGACY = new Set(['character', 'npc', 'vehicle', 'starship']);
-        const targets = Array.from(game.actors ?? []).filter((a: { type: string }) => LEGACY.has(a.type));
+        const targets = Array.from(game.actors ?? []).filter((a: any) => LEGACY.has(a.type));
         if (!targets.length) {
             await (game.settings as any).set(SYSTEM_ID, SETTING_DONE, true);
             return;
         }
 
-        const inferSystem = (a: Record<string, unknown>): string => {
+        const inferSystem = (a: any): string => {
             const raw = a.system?.gameSystem;
             if (!raw || typeof raw !== 'string') return 'dh2';
             return raw === 'dh2e' ? 'dh2' : raw === 'dh1e' ? 'dh1' : raw;
@@ -784,7 +783,7 @@ export class HooksManager {
         //   // iterate backup.actors and re-create any missing ones manually.
         const backup = {
             timestamp: new Date().toISOString(),
-            actors: targets.map((a: { toObject: () => unknown }) => a.toObject()),
+            actors: targets.map((a: any) => a.toObject()),
         };
         await (game.settings as any).set(SYSTEM_ID, SETTING_BACKUP, backup);
         game.wh40k?.log?.(`Backed up ${backup.actors.length} legacy actor(s) to world setting ${SYSTEM_ID}.${SETTING_BACKUP} before migration.`);
@@ -841,26 +840,26 @@ export class HooksManager {
         await (game.settings as any).set(SYSTEM_ID, SETTING_DONE, true);
     }
 
-    static hotbarDrop(bar, data, slot) {
+    static hotbarDrop(_bar: any, data: any, slot: number) {
         game.wh40k.log('Hotbar Drop:', data);
         switch (data.type) {
             case 'characteristic':
-                void createCharacteristicMacro(data, slot);
+                void rollCharacteristicMacro(data, slot);
                 return false;
             case 'item':
             case 'Item':
-                void createItemMacro(data, slot);
+                void rollItemMacro(data, slot);
                 return false;
             case 'skill':
-                void createSkillMacro(data, slot);
+                void rollSkillMacro(data, slot);
                 return false;
             default:
                 return true;
         }
     }
 
-    static renderCompendiumDirectory(app, html, data) {
-        const $html = html instanceof HTMLElement ? $(html) : html;
+    static renderCompendiumDirectory(_app: any, html: HTMLElement, _data: any) {
+        const $html = html instanceof HTMLElement ? $(html) : (html as any);
         const header = $html.find('.directory-header');
         if (!header.length) return;
 
@@ -873,7 +872,7 @@ export class HooksManager {
         `);
         browserBtn.on('click', (event) => {
             event.preventDefault();
-            RTCompendiumBrowser.open();
+            void RTCompendiumBrowser.open();
         });
         header.find('.header-actions').prepend(browserBtn);
     }
@@ -882,7 +881,7 @@ export class HooksManager {
      * Auto-select appropriate sheet for npcV2 actors based on primaryUse field.
      * Hook: getActorSheetClass
      */
-    static getActorSheetClass(actor, sheetData) {
+    static getActorSheetClass(actor: any, sheetData: any) {
         // Only handle npcV2 actors
         if (actor.type !== 'npcV2') return null;
 
@@ -893,10 +892,10 @@ export class HooksManager {
         if (primaryUse === 'vehicle' || primaryUse === 'ship') {
             // Find VehicleSheet in registered sheets
             // @ts-expect-error - dynamic property access
-            const vehicleSheet = Object.values(sheetData).find((s) => s.id === 'wh40k-rpg.VehicleSheet');
+            const vehicleSheet = Object.values(sheetData).find((s: any) => s.id === 'wh40k-rpg.VehicleSheet');
             if (vehicleSheet) {
                 // @ts-expect-error - dynamic property access
-                return vehicleSheet.id;
+                return (vehicleSheet as any).id;
             }
         }
 
