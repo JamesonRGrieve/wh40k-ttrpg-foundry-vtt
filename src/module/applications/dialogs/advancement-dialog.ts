@@ -15,6 +15,29 @@ import { getAvailableXP, spendXP, canAfford } from '../../utils/xp-transaction.t
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+interface AdvancementAdvance {
+    name: string;
+    type: 'skill' | 'talent';
+    cost: number;
+    specialization?: string;
+    prerequisites?: Array<{ key: string; value: number }>;
+}
+
+interface AdvancementContext extends Record<string, unknown> {
+    systemConfig: BaseSystemConfig | null;
+    usesAptitudes: boolean;
+    usesCareerTables: boolean;
+    hasCareer: boolean;
+    originCareerName: string | null;
+    xp: { total: number; used: number; available: number; usedPercent: number };
+    activeTab: string;
+    tabs: Array<{ id: string; label: string; icon: string; active: boolean }>;
+    characteristics: Record<string, unknown>[];
+    skills: Record<string, unknown>[];
+    talents: Record<string, unknown>[];
+    recentPurchases: string[];
+}
+
 export default class AdvancementDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     /* -------------------------------------------- */
     /*  Configuration                               */
@@ -57,28 +80,16 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    /** @type {Actor} */
-    actor = null;
-
-    /** @type {string} */
-    careerKey = 'rogueTrader';
-
-    /** @type {string} */
+    actor: WH40KBaseActor;
+    careerKey: string;
     #activeTab = 'characteristics';
-
-    /** @type {Set<string>} Track purchased advances this session for animation */
-    #recentPurchases = new Set();
+    #recentPurchases = new Set<string>();
 
     /* -------------------------------------------- */
     /*  Construction                                */
     /* -------------------------------------------- */
 
-    /**
-     * @param {Actor} actor - The actor to advance
-     * @param {object} options - Additional options
-     * @param {string} [options.careerKey] - Career key for advancement options
-     */
-    constructor(actor, options: Record<string, unknown> = {}) {
+    constructor(actor: WH40KBaseActor, options: { careerKey?: string } & ApplicationV2Config.DefaultOptions = {}) {
         super(options);
         this.actor = actor;
         this.careerKey = options.careerKey ?? 'rogueTrader';
@@ -88,7 +99,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     get title(): string {
-        const systemConfig = SystemConfigRegistry.getOrNull(this.actor?.system?.gameSystem);
+        const systemConfig = SystemConfigRegistry.getOrNull((this.actor.system as any)?.gameSystem);
         if (systemConfig && !systemConfig.usesCareerTables) {
             return game.i18n.localize('WH40K.Advancement.Title') || 'Advancement';
         }
@@ -100,12 +111,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /*  Static Factory                              */
     /* -------------------------------------------- */
 
-    /**
-     * Open the advancement dialog for an actor
-     * @param {Actor} actor - The actor
-     * @param {object} options - Options
-     * @returns {AdvancementDialog}
-     */
     static open(actor: WH40KBaseActor, options: Record<string, unknown> = {}): AdvancementDialog {
         const dialog = new this(actor, options);
         void dialog.render(true);
@@ -117,28 +122,26 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const context: unknown = await super._prepareContext(options);
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AdvancementContext> {
+        const context = (await super._prepareContext(options)) as AdvancementContext;
 
-        // Get system config early — determines career-based vs aptitude-based flow
-        const systemConfig = SystemConfigRegistry.getOrNull(this.actor.system?.gameSystem);
+        const systemConfig = SystemConfigRegistry.getOrNull((this.actor.system as any)?.gameSystem);
         context.systemConfig = systemConfig;
         context.usesAptitudes = systemConfig?.usesAptitudes ?? false;
         context.usesCareerTables = systemConfig?.usesCareerTables ?? true;
 
-        let career: unknown = null;
+        let career: any = null;
 
         if (systemConfig?.usesCareerTables || !systemConfig) {
-            // Career-based systems (RT, DH1e, DW): require a career selection
-            const originCareer = this.actor.system.originPath?.career;
+            const originCareer = (this.actor.system as any).originPath?.career;
             const careerKey = getCareerKeyFromName(originCareer);
             context.hasCareer = !!careerKey;
             context.originCareerName = originCareer || null;
 
             if (!context.hasCareer) {
                 context.xp = {
-                    total: this.actor.system.experience?.total ?? 0,
-                    used: this.actor.system.experience?.used ?? 0,
+                    total: (this.actor.system as any).experience?.total ?? 0,
+                    used: (this.actor.system as any).experience?.used ?? 0,
                     available: getAvailableXP(this.actor),
                     usedPercent: 0,
                 };
@@ -148,14 +151,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             this.careerKey = careerKey;
             career = getCareerAdvancements(this.careerKey);
         } else {
-            // Aptitude-based systems (DH2e, BC, OW): no career needed
             context.hasCareer = true;
             context.originCareerName = null;
         }
 
-        // XP Summary
-        const total = this.actor.system.experience?.total ?? 0;
-        const used = this.actor.system.experience?.used ?? 0;
+        const total = (this.actor.system as any).experience?.total ?? 0;
+        const used = (this.actor.system as any).experience?.used ?? 0;
         context.xp = {
             total,
             used,
@@ -163,60 +164,41 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             usedPercent: total > 0 ? Math.round((used / total) * 100) : 0,
         };
 
-        // Active tab
         context.activeTab = this.#activeTab;
 
-        // Prepare tabs
         context.tabs = [
             { id: 'characteristics', label: 'WH40K.Advancement.Tab.Characteristics', icon: 'fa-chart-bar', active: this.#activeTab === 'characteristics' },
             { id: 'skills', label: 'WH40K.Advancement.Tab.Skills', icon: 'fa-book', active: this.#activeTab === 'skills' },
             { id: 'talents', label: 'WH40K.Advancement.Tab.Talents', icon: 'fa-star', active: this.#activeTab === 'talents' },
         ];
 
-        // Prepare characteristic advances
         context.characteristics = this.#prepareCharacteristics(career, systemConfig);
 
-        // Prepare skill and talent advances
         if (systemConfig?.usesCareerTables || !systemConfig) {
-            // Career-based: use fixed advance list
             const advances = career?.RANK_1_ADVANCES ?? [];
-            context.skills = this.#prepareAdvances(advances.filter((a) => a.type === 'skill'));
-            context.talents = this.#prepareAdvances(advances.filter((a) => a.type === 'talent'));
+            context.skills = this.#prepareAdvances(advances.filter((a: any) => a.type === 'skill'));
+            context.talents = this.#prepareAdvances(advances.filter((a: any) => a.type === 'talent'));
         } else {
-            // Aptitude-based: prepare skills from actor's skill items with aptitude costs
             context.skills = this.#prepareAptitudeSkills(systemConfig);
             context.talents = this.#prepareAptitudeTalents(systemConfig);
         }
 
-        // Recent purchases for animation
         context.recentPurchases = [...this.#recentPurchases];
 
         return context;
     }
 
-    /* -------------------------------------------- */
-
-    /**
-     * Prepare characteristic advancement data.
-     * Uses system config for cost calculation when available, falls back to career registry.
-     * @param {Object} career - Career advancement data (for career-based systems)
-     * @param {BaseSystemConfig|null} systemConfig - System config (for all systems)
-     * @returns {Array}
-     */
-    #prepareCharacteristics(career: unknown, systemConfig: BaseSystemConfig | null): Record<string, unknown>[] {
-        const characteristics = this.actor.system.characteristics ?? {};
+    #prepareCharacteristics(career: any, systemConfig: BaseSystemConfig | null): Record<string, unknown>[] {
+        const characteristics = (this.actor.system as any).characteristics ?? {};
         const available = getAvailableXP(this.actor);
-
-        // Use system config tier order if available, fall back to career registry
         const tierOrder = systemConfig ? systemConfig.characteristicTierOrder : TIER_ORDER;
 
         return Object.entries(CONFIG.wh40k?.characteristics ?? {})
             .filter(([key]) => key !== 'influence')
-            .map(([key, config]) => {
+            .map(([key, config]: [string, any]) => {
                 const char = characteristics[key] ?? {};
                 const currentAdvances = char.advance ?? 0;
 
-                // Compute cost using system config or career registry
                 const nextCost = systemConfig
                     ? systemConfig.getCharacteristicAdvanceCost(this.actor, key, currentAdvances)
                     : getNextCharacteristicCost(this.careerKey, key, currentAdvances);
@@ -224,7 +206,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 const isMaxed = currentAdvances >= tierOrder.length;
                 const canPurchase = !isMaxed && nextCost && available >= nextCost.cost;
 
-                // Build tier display from system config tiers
                 const tiers = tierOrder.map((tier, index) => ({
                     tier,
                     label: game.i18n.localize(CONFIG.wh40k?.advancementTiers?.[tier]?.label ?? tier),
@@ -250,31 +231,16 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             });
     }
 
-    /* -------------------------------------------- */
-
-    /**
-     * Prepare skill/talent advancement data
-     * @param {Array} advances - Array of advancement definitions
-     * @returns {Array}
-     */
-    #prepareAdvances(advances: unknown[]): Record<string, unknown>[] {
+    #prepareAdvances(advances: any[]): Record<string, unknown>[] {
         const available = getAvailableXP(this.actor);
 
         return advances.map((advance, index) => {
             const id = `${advance.type}:${advance.name}:${advance.specialization ?? ''}`;
-
-            // Check if already owned
             const owned = this.#checkOwnership(advance);
-
-            // Check prerequisites
             const prereqResult = checkPrerequisites(this.actor, advance.prerequisites ?? []);
-
-            // Determine state
             const canPurchase = !owned && prereqResult.valid && available >= advance.cost;
             const cantAfford = !owned && prereqResult.valid && available < advance.cost;
             const blocked = !owned && !prereqResult.valid;
-
-            // Display name
             const displayName = advance.specialization ? `${advance.name} (${advance.specialization})` : advance.name;
 
             return {
@@ -296,20 +262,14 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         });
     }
 
-    /* -------------------------------------------- */
-
-    /**
-     * Prepare skill advances for aptitude-based systems (DH2e, BC, OW).
-     * Lists all visible skills with their current rank, next cost, and aptitude match count.
-     */
-    #prepareAptitudeSkills(systemConfig: any): unknown[] {
+    #prepareAptitudeSkills(systemConfig: any): any[] {
         const available = getAvailableXP(this.actor);
-        const actorSkills = this.actor.system.skills ?? {};
+        const actorSkills = (this.actor.system as any).skills ?? {};
         const visibleSkills = systemConfig.getVisibleSkills?.() ?? new Set<string>();
         const skillConfigs = CONFIG.wh40k?.skills ?? {};
         const ranks = systemConfig.getSkillRanks();
 
-        const result: unknown[] = [];
+        const result: any[] = [];
 
         for (const skillKey of visibleSkills) {
             const config = skillConfigs[skillKey];
@@ -343,20 +303,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         return result.sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    /* -------------------------------------------- */
-
-    /**
-     * Prepare talent advances for aptitude-based systems (DH2e, BC, OW).
-     * Lists actor's existing talents that can be ranked up, plus a note about browsing compendiums.
-     */
-    #prepareAptitudeTalents(systemConfig: any): unknown[] {
+    #prepareAptitudeTalents(systemConfig: any): any[] {
         const available = getAvailableXP(this.actor);
-        const result: unknown[] = [];
+        const result: any[] = [];
 
-        // List existing talents that are stackable (can be ranked up)
         for (const item of this.actor.items) {
             if (item.type !== 'talent') continue;
-            if (!item.system.stackable) continue;
+            if (!(item.system as any).stackable) continue;
 
             const cost = systemConfig.getTalentAdvanceCost?.(this.actor, item);
             const canPurchase = cost != null && available >= cost;
@@ -364,7 +317,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             result.push({
                 id: `talent:${item.name}:rank`,
                 name: item.name,
-                displayName: `${item.name} (Rank ${(item.system.rank ?? 1) + 1})`,
+                displayName: `${item.name} (Rank ${((item.system as any).rank ?? 1) + 1})`,
                 type: 'talent',
                 cost,
                 owned: false,
@@ -377,36 +330,20 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         return result.sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    /* -------------------------------------------- */
-
-    /**
-     * Check if actor already owns an advancement
-     * @param {Object} advance - Advancement definition
-     * @returns {boolean}
-     */
-    #checkOwnership(advance: any): boolean {
+    #checkOwnership(advance: AdvancementAdvance): boolean {
         if (advance.type === 'skill') {
-            return this.#hasSkillTrained(advance.name, advance.specialization);
+            return this.#hasSkillTrained(advance.name, advance.specialization ?? '');
         } else if (advance.type === 'talent') {
-            return this.#hasTalent(advance.name, advance.specialization);
+            return this.#hasTalent(advance.name, advance.specialization ?? '');
         }
         return false;
     }
 
-    /* -------------------------------------------- */
-
-    /**
-     * Check if actor has a skill trained
-     * @param {string} skillName - Skill name
-     * @param {string} [specialization] - Optional specialization
-     * @returns {boolean}
-     */
     #hasSkillTrained(skillName: string, specialization: string): boolean {
-        const skills = this.actor.system.skills;
+        const skills = (this.actor.system as any).skills;
         if (!skills) return false;
 
-        // Map skill names to keys
-        const keyMap = {
+        const keyMap: Record<string, string> = {
             'awareness': 'awareness',
             'command': 'command',
             'commerce': 'commerce',
@@ -427,15 +364,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         if (!skill) return false;
 
-        // Non-specialist skill
         if (!specialization) {
             return skill.trained === true;
         }
 
-        // Specialist skill - check entries
         if (skill.entries) {
             return skill.entries.some(
-                (entry) =>
+                (entry: any) =>
                     (entry.name?.toLowerCase() === specialization.toLowerCase() || entry.slug?.toLowerCase() === specialization.toLowerCase()) &&
                     entry.trained === true,
             );
@@ -444,30 +379,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         return false;
     }
 
-    /* -------------------------------------------- */
-
-    /**
-     * Check if actor has a talent
-     * @param {string} talentName - Talent name
-     * @param {string} [specialization] - Optional specialization
-     * @returns {boolean}
-     */
     #hasTalent(talentName: string, specialization: string): boolean {
         const searchName = specialization ? `${talentName} (${specialization})`.toLowerCase() : talentName.toLowerCase();
-
         return this.actor.items.some((item) => item.type === 'talent' && item.name.toLowerCase() === searchName);
     }
 
-    /* -------------------------------------------- */
-    /*  Actions                                     */
-    /* -------------------------------------------- */
-
-    /**
-     * Switch active tab
-     * @param {Event} event
-     * @param {HTMLElement} target
-     */
-    static #switchTab(this: any, event: Event, target: HTMLElement): void {
+    static #switchTab(this: AdvancementDialog, event: Event, target: HTMLElement): void {
         const tab = target.dataset.tab;
         if (tab) {
             this.#activeTab = tab;
@@ -475,24 +392,15 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
     }
 
-    /* -------------------------------------------- */
-
-    /**
-     * Purchase a characteristic advance
-     * @param {Event} event
-     * @param {HTMLElement} target
-     */
-    static async #purchaseCharacteristic(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #purchaseCharacteristic(this: AdvancementDialog, event: Event, target: HTMLElement): Promise<void> {
         const charKey = target.dataset.characteristic;
         if (!charKey) return;
 
-        const char = this.actor.system.characteristics?.[charKey];
+        const char = (this.actor.system as any).characteristics?.[charKey];
         if (!char) return;
 
         const currentAdvances = char.advance ?? 0;
-
-        // Use system config for cost calculation when available, fall back to career registry
-        const systemConfig = SystemConfigRegistry.getOrNull(this.actor.system?.gameSystem);
+        const systemConfig = SystemConfigRegistry.getOrNull((this.actor.system as any)?.gameSystem);
         const nextCost = systemConfig
             ? systemConfig.getCharacteristicAdvanceCost(this.actor, charKey, currentAdvances)
             : getNextCharacteristicCost(this.careerKey, charKey, currentAdvances);
@@ -507,26 +415,22 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        // Get display info
         const charConfig = CONFIG.wh40k?.characteristics?.[charKey];
         const charLabel = charConfig ? game.i18n.localize(charConfig.label) : charKey;
         const tierLabel = game.i18n.localize(CONFIG.wh40k?.advancementTiers?.[nextCost.tier]?.label ?? nextCost.tier);
 
-        // Confirm before spending
         const confirmed = await Dialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: nextCost.cost, name: `${charLabel} (${tierLabel})` }),
         });
         if (!confirmed) return;
 
-        // Spend XP
         const result = await spendXP(this.actor, nextCost.cost, `${charLabel} (${tierLabel})`);
         if (!result.success) {
             ui.notifications.error(result.error);
             return;
         }
 
-        // Apply the characteristic advance
         const newAdvance = currentAdvances + 1;
         const currentCost = char.cost ?? 0;
 
@@ -535,10 +439,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             [`system.characteristics.${charKey}.cost`]: currentCost + nextCost.cost,
         });
 
-        // Mark as recently purchased for animation
         this.#recentPurchases.add(`char:${charKey}`);
 
-        // Notify success
         ui.notifications.info(
             game.i18n.format('WH40K.Advancement.PurchasedCharacteristic', {
                 char: charLabel,
@@ -547,34 +449,24 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }),
         );
 
-        // Re-render to show updated state
         this.render();
 
-        // Clear animation flag after delay
         setTimeout(() => {
             this.#recentPurchases.delete(`char:${charKey}`);
         }, 2000);
     }
 
-    /* -------------------------------------------- */
-
-    /**
-     * Purchase a skill or talent advance
-     * @param {Event} event
-     * @param {HTMLElement} target
-     */
-    static async #purchaseAdvance(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const advanceIndex = parseInt(target.dataset.index, 10);
+    static async #purchaseAdvance(this: AdvancementDialog, event: Event, target: HTMLElement): Promise<void> {
+        const advanceIndex = parseInt(target.dataset.index ?? '0', 10);
         const advanceType = target.dataset.type;
 
         const career = getCareerAdvancements(this.careerKey);
         const advances = career?.RANK_1_ADVANCES ?? [];
-        const typeAdvances = advances.filter((a) => a.type === advanceType);
+        const typeAdvances = advances.filter((a: any) => a.type === advanceType);
         const advance = typeAdvances[advanceIndex];
 
         if (!advance) return;
 
-        // Validate
         if (!canAfford(this.actor, advance.cost)) {
             ui.notifications.warn(game.i18n.localize('WH40K.Advancement.Error.CannotAfford'));
             return;
@@ -592,32 +484,27 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const displayName = advance.specialization ? `${advance.name} (${advance.specialization})` : advance.name;
 
-        // Confirm before spending
         const confirmed = await Dialog.confirm({
             title: game.i18n.localize('WH40K.Advancement.Title'),
             content: game.i18n.format('WH40K.Advancement.ConfirmPurchase', { cost: advance.cost, name: displayName }),
         });
         if (!confirmed) return;
 
-        // Spend XP
         const result = await spendXP(this.actor, advance.cost, displayName);
         if (!result.success) {
             ui.notifications.error(result.error);
             return;
         }
 
-        // Apply the advance
         if (advance.type === 'skill') {
             await this.#applySkillAdvance(advance);
         } else if (advance.type === 'talent') {
             await this.#applyTalentAdvance(advance);
         }
 
-        // Mark as recently purchased
         const id = `${advance.type}:${advance.name}:${advance.specialization ?? ''}`;
         this.#recentPurchases.add(id);
 
-        // Notify
         ui.notifications.info(
             game.i18n.format('WH40K.Advancement.Purchased', {
                 name: displayName,
@@ -625,23 +512,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }),
         );
 
-        // Re-render
         this.render();
 
-        // Clear animation
         setTimeout(() => {
             this.#recentPurchases.delete(id);
         }, 2000);
     }
 
-    /* -------------------------------------------- */
-
-    /**
-     * Apply a skill advance to the actor.
-     * Increments the skill's `advance` field (XP-purchased rank increases).
-     * Effective rank is computed at runtime from origin path rank + advance.
-     * @param {Object} advance - Skill advance data
-     */
     async #applySkillAdvance(advance: any): Promise<void> {
         const skillKey = SkillKeyHelper.nameToKey(advance.name);
         if (!skillKey) {
@@ -650,12 +527,10 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
 
         if (advance.specialization) {
-            // Specialist skill — find or create entry, increment its advance
-            const currentEntries = this.actor.system.skills?.[skillKey]?.entries ?? [];
-            const entryIndex = currentEntries.findIndex((e) => (e.name || '').toLowerCase() === advance.specialization.toLowerCase());
+            const currentEntries = (this.actor.system as any).skills?.[skillKey]?.entries ?? [];
+            const entryIndex = currentEntries.findIndex((e: any) => (e.name || '').toLowerCase() === advance.specialization.toLowerCase());
 
             if (entryIndex >= 0) {
-                // Existing entry — increment advance
                 const currentAdvance = currentEntries[entryIndex].advance ?? 0;
                 const currentCost = currentEntries[entryIndex].cost ?? 0;
                 await this.actor.update({
@@ -663,7 +538,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     [`system.skills.${skillKey}.entries.${entryIndex}.cost`]: currentCost + advance.cost,
                 });
             } else {
-                // New specialist entry
                 const newEntry = {
                     name: advance.specialization,
                     slug: advance.specialization.toLowerCase().replace(/\s+/g, '-'),
@@ -676,9 +550,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 });
             }
         } else {
-            // Standard skill — increment advance
-            const currentAdvance = this.actor.system.skills?.[skillKey]?.advance ?? 0;
-            const currentCost = this.actor.system.skills?.[skillKey]?.cost ?? 0;
+            const currentAdvance = (this.actor.system as any).skills?.[skillKey]?.advance ?? 0;
+            const currentCost = (this.actor.system as any).skills?.[skillKey]?.cost ?? 0;
             await this.actor.update({
                 [`system.skills.${skillKey}.advance`]: currentAdvance + 1,
                 [`system.skills.${skillKey}.cost`]: currentCost + advance.cost,
@@ -686,22 +559,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
     }
 
-    /* -------------------------------------------- */
-
-    /**
-     * Apply a talent advance to the actor
-     * @param {Object} advance - Talent advance data
-     */
     async #applyTalentAdvance(advance: any): Promise<void> {
         const talentName = advance.specialization ? `${advance.name} (${advance.specialization})` : advance.name;
+        let talentData: any = null;
 
-        // Try to find talent in compendium
-        let talentData = null;
-
-        // Search in compendiums
-        for (const pack of game.packs.filter((p) => p.documentName === 'Item')) {
+        for (const pack of game.packs.filter((p: any) => p.documentName === 'Item')) {
             const index = await pack.getIndex({ fields: ['name', 'type'] });
-            const match = index.find((i) => (i as any).type === 'talent' && (i as any).name.toLowerCase() === talentName.toLowerCase());
+            const match = index.find((i: any) => i.type === 'talent' && i.name.toLowerCase() === talentName.toLowerCase());
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
@@ -710,7 +574,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }
         }
 
-        // If not found, create basic talent
         if (!talentData) {
             talentData = {
                 name: talentName,
@@ -722,21 +585,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             };
         }
 
-        // Ensure cost is set
         talentData.system.cost = advance.cost;
-
-        // Create the item on the actor
         await this.actor.createEmbeddedDocuments('Item', [talentData]);
     }
 
-    /* -------------------------------------------- */
-
-    /**
-     * Open compendium item sheet for reference
-     * @param {Event} event
-     * @param {HTMLElement} target
-     */
-    static async #openCompendiumItem(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #openCompendiumItem(this: AdvancementDialog, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         event.stopPropagation();
 
@@ -745,10 +598,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         if (!itemName) return;
 
-        // Search for the item in compendiums
-        for (const pack of game.packs.filter((p) => p.documentName === 'Item')) {
+        for (const pack of game.packs.filter((p: any) => p.documentName === 'Item')) {
             const index = await pack.getIndex({ fields: ['name', 'type'] });
-            const match = index.find((i) => (i as any).type === itemType && (i as any).name.toLowerCase() === itemName.toLowerCase());
+            const match = index.find((i: any) => i.type === itemType && i.name.toLowerCase() === itemName.toLowerCase());
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
@@ -757,10 +609,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }
         }
 
-        // If not found as exact type, try searching all items
-        for (const pack of game.packs.filter((p) => p.documentName === 'Item')) {
+        for (const pack of game.packs.filter((p: any) => p.documentName === 'Item')) {
             const index = await pack.getIndex({ fields: ['name', 'type'] });
-            const match = index.find((i) => (i as any).name.toLowerCase() === itemName.toLowerCase());
+            const match = index.find((i: any) => i.name.toLowerCase() === itemName.toLowerCase());
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
@@ -769,7 +620,6 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             }
         }
 
-        // Not found
         ui.notifications.warn(game.i18n.format('WH40K.Advancement.ItemNotFound', { name: itemName }));
     }
 }

@@ -4,15 +4,18 @@
  * Extends the basic VisualFeedbackMixin with more sophisticated animations
  */
 
+type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { EnhancedAnimationsMixinAPI } from './sheet-mixin-types.js';
+
 /**
  * Mixin to add enhanced animation capabilities to ApplicationV2 sheets.
  * @template {ApplicationV2} T
- * @param {typeof T} Base   Application class being extended.
- * @returns {typeof EnhancedAnimationsApplication}
+ * @param {T} Base   Application class being extended.
+ * @returns {any}
  * @mixin
  */
-export default function EnhancedAnimationsMixin<T extends new (...args: any[]) => any>(Base: T) {
-    class EnhancedAnimationsApplication extends Base {
+export default function EnhancedAnimationsMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+    return class EnhancedAnimationsApplication extends Base implements EnhancedAnimationsMixinAPI {
         /* -------------------------------------------- */
         /*  Configuration                               */
         /* -------------------------------------------- */
@@ -39,14 +42,18 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
          */
         _runningAnimations: Map<string, number> = new Map();
 
+        /** Previous animation state snapshot. */
+        _previousState: any = null;
+        /** MutationObserver for dynamic content. */
+        _mutationObserver: MutationObserver | null = null;
+
         /* -------------------------------------------- */
         /*  Hook into Document Updates                  */
         /* -------------------------------------------- */
 
         /** @override */
-        // @ts-expect-error - return type
-        _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
-            super._onRender?.(context, options);
+        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+            await super._onRender(context, options);
 
             // Capture current state for comparison
             this._captureAnimationState();
@@ -62,23 +69,22 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
          * @protected
          */
         _captureAnimationState(): void {
-            if (!this.document) return;
+            const document = (this as any).document;
+            if (!document) return;
 
             this._previousState = {
-                wounds: this.document.system.wounds?.value,
-                woundsMax: this.document.system.wounds?.max,
+                wounds: document.system.wounds?.value,
+                woundsMax: document.system.wounds?.max,
                 characteristics: {},
-                experience: this.document.system.experience?.total,
-                fatigue: this.document.system.fatigue?.value,
+                experience: document.system.experience?.total,
+                fatigue: document.system.fatigue?.value,
             };
 
             // Capture characteristic bonuses
-            for (const [key, char] of Object.entries(this.document.system.characteristics || {})) {
+            for (const [key, char] of Object.entries(document.system.characteristics || {})) {
                 this._previousState.characteristics[key] = {
-                    // @ts-expect-error - dynamic property access
-                    total: char.total,
-                    // @ts-expect-error - dynamic property access
-                    bonus: char.bonus,
+                    total: (char as any).total,
+                    bonus: (char as any).bonus,
                 };
             }
         }
@@ -96,8 +102,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
                 for (const mutation of mutations) {
                     if (mutation.type === 'attributes' && mutation.attributeName === 'data-percent') {
                         // Progress bar percentage changed
-                        // @ts-expect-error - type mismatch
-                        this._animateProgressBar(mutation.target);
+                        this._animateProgressBar(mutation.target as HTMLElement);
                     }
                 }
             });
@@ -119,19 +124,18 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
          * @param {number} fromValue        Starting value
          * @param {number} toValue          Ending value
          * @param {Object} options          Animation options
-         * @returns {Promise<void>}
          */
         animateCounter(element: HTMLElement, fromValue: number, toValue: number, options: Record<string, unknown> = {}): void {
             if (!element || fromValue === toValue) return;
             if (this._shouldSkipAnimation()) return;
 
-            const duration = options.duration || this._animationConfig.counterDuration;
-            const formatFn = options.format || ((v) => Math.round(v));
+            const duration = (options.duration as number) || this._animationConfig.counterDuration;
+            const formatFn = (options.format as (v: number) => string) || ((v: number) => Math.round(v).toString());
             const animationKey = element.dataset.animationKey || `counter-${Date.now()}`;
 
             // Cancel existing animation on this element
             if (this._runningAnimations.has(animationKey)) {
-                cancelAnimationFrame(this._runningAnimations.get(animationKey));
+                cancelAnimationFrame(this._runningAnimations.get(animationKey)!);
             }
 
             // Add counter class for styling
@@ -183,32 +187,25 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             if (this._shouldSkipAnimation()) return;
 
             // Animate the counter
-            const woundsDisplay = this.element.querySelector('.wh40k-wounds-current');
+            const woundsDisplay = this.element.querySelector('.wh40k-wounds-current') as HTMLElement | null;
             if (woundsDisplay) {
-                void this.animateCounter(woundsDisplay, oldValue, newValue);
+                this.animateCounter(woundsDisplay, oldValue, newValue);
             }
 
             // Animate the wounds bar
-            const woundsBar = this.element.querySelector('.wh40k-wounds-bar');
+            const woundsBar = this.element.querySelector('.wh40k-wounds-bar') as HTMLElement | null;
             if (woundsBar) {
-                const max = this.document.system.wounds?.max || 1;
+                const max = (this as any).document.system.wounds?.max || 1;
                 const oldPercent = (oldValue / max) * 100;
                 const newPercent = (newValue / max) * 100;
                 this._animateWoundsBar(woundsBar, oldPercent, newPercent);
             }
 
             // Add visual feedback class
-            const woundsValue = this.element.querySelector('.wh40k-wounds-value');
+            const woundsValue = this.element.querySelector('.wh40k-wounds-value') as HTMLElement | null;
             if (woundsValue) {
                 const animClass = newValue > oldValue ? 'stat-heal' : 'stat-damage';
                 this._flashElement(woundsValue, animClass, 800);
-            }
-
-            // Show brief notification
-            if (woundsDisplay && Math.abs(newValue - oldValue) > 0) {
-                const delta = newValue - oldValue;
-                const message = delta > 0 ? `+${delta} Wounds` : `${delta} Wounds`;
-                this._showBriefNotification(woundsDisplay, message, delta > 0 ? 'success' : 'error');
             }
         }
 
@@ -222,7 +219,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
          * @protected
          */
         _animateWoundsBar(barElement: HTMLElement, fromPercent: number, toPercent: number): void {
-            const fill = barElement.querySelector('.wh40k-wounds-bar-fill');
+            const fill = barElement.querySelector('.wh40k-wounds-bar-fill') as HTMLElement | null;
             if (!fill) return;
 
             const duration = this._animationConfig.barDuration;
@@ -260,10 +257,10 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             if (this._shouldSkipAnimation()) return;
 
             // Find the characteristic display
-            const charElement = this.element.querySelector(`[data-characteristic="${charKey}"] .char-total`);
+            const charElement = this.element.querySelector(`[data-characteristic="${charKey}"] .char-total`) as HTMLElement | null;
 
             if (charElement) {
-                void this.animateCounter(charElement, oldValue, newValue);
+                this.animateCounter(charElement, oldValue, newValue);
                 this._flashElement(charElement, 'changed', 500);
             }
 
@@ -288,35 +285,28 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             if (this._shouldSkipAnimation()) return;
 
             // Find bonus display - try V1 HUD first, then fallback
-            let bonusElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`);
+            let bonusElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`) as HTMLElement | null;
 
             // Fallback to generic bonus-val class
             if (!bonusElement) {
-                bonusElement = this.element.querySelector(`[data-characteristic="${charKey}"] .bonus-val`);
+                bonusElement = this.element.querySelector(`[data-characteristic="${charKey}"] .bonus-val`) as HTMLElement | null;
             }
 
             if (!bonusElement) return;
 
             // Animate counter
-            void this.animateCounter(bonusElement, oldBonus, newBonus);
+            this.animateCounter(bonusElement, oldBonus, newBonus);
 
             // Pulse effect on the circle container (V1 HUD)
             const circleContainer = bonusElement.closest('.wh40k-char-hud-circle');
             if (circleContainer) {
                 circleContainer.classList.remove('value-changed');
-                void circleContainer.offsetWidth; // Force reflow
+                void (circleContainer as HTMLElement).offsetWidth; // Force reflow
                 circleContainer.classList.add('value-changed');
 
                 setTimeout(() => {
                     circleContainer.classList.remove('value-changed');
                 }, 500);
-            }
-
-            // Show notification
-            const delta = newBonus - oldBonus;
-            if (delta !== 0) {
-                const message = `Bonus ${delta > 0 ? `+${delta}` : delta}`;
-                this._showBriefNotification(bonusElement, message, 'info');
             }
         }
 
@@ -333,19 +323,17 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             if (this._shouldSkipAnimation()) return;
             if (newXP <= oldXP) return; // Only animate gains
 
-            const xpElement = this.element.querySelector('[name="system.experience.total"], ' + '.xp-total, ' + '[data-field="experience-total"]');
+            const xpElement = this.element.querySelector(
+                '[name="system.experience.total"], ' + '.xp-total, ' + '[data-field="experience-total"]',
+            ) as HTMLElement | null;
 
             if (!xpElement) return;
 
             // Animate counter
-            void this.animateCounter(xpElement, oldXP, newXP);
+            this.animateCounter(xpElement, oldXP, newXP);
 
             // Add golden radiance effect
-            this._flashElement(xpElement.closest('.xp-display') || xpElement, 'stat-advancement', 1000);
-
-            // Show notification
-            const gained = newXP - oldXP;
-            this._showBriefNotification(xpElement, `+${gained} XP`, 'success');
+            this._flashElement((xpElement.closest('.xp-display') as HTMLElement) || xpElement, 'stat-advancement', 1000);
         }
 
         /* -------------------------------------------- */
@@ -360,10 +348,10 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
         _animateProgressBar(barElement: HTMLElement): void {
             if (this._shouldSkipAnimation()) return;
 
-            const fill = barElement.querySelector('.wh40k-wounds-bar-fill, .progress-fill');
+            const fill = barElement.querySelector('.wh40k-wounds-bar-fill, .progress-fill') as HTMLElement | null;
 
             if (fill) {
-                (fill as HTMLElement).style.transition = `width ${this._animationConfig.barDuration}ms ease-out`;
+                fill.style.transition = `width ${this._animationConfig.barDuration}ms ease-out`;
             }
         }
 
@@ -393,18 +381,22 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
         /* -------------------------------------------- */
 
         /**
-         * Show a brief floating notification near an element.
-         * @param {HTMLElement} element     Element to show notification near
-         * @param {string} message          Message text
-         * @param {string} type             Type: "success", "error", "info", "warning"
+         * Check if animations should be skipped (reduced motion preference).
+         * @returns {boolean}
          * @protected
          */
+        _shouldSkipAnimation(): boolean {
+            if (!this._animationConfig.respectReducedMotion) return false;
+            return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        }
+
+        /* -------------------------------------------- */
+
         _showBriefNotification(element: HTMLElement, message: string, type: string = 'info'): void {
             const notification = document.createElement('div');
             notification.className = `wh40k-brief-notification wh40k-notification-${type}`;
             notification.textContent = message;
 
-            // Position near element
             const rect = element.getBoundingClientRect();
             notification.style.cssText = `
                 position: fixed;
@@ -419,13 +411,11 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
 
             document.body.appendChild(notification);
 
-            // Fade in
             requestAnimationFrame(() => {
                 notification.style.opacity = '1';
                 notification.style.transform = 'translateX(0)';
             });
 
-            // Fade out and remove
             setTimeout(() => {
                 notification.style.opacity = '0';
                 notification.style.transform = 'translateX(10px)';
@@ -435,20 +425,8 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
 
         /* -------------------------------------------- */
 
-        /**
-         * Check if animations should be skipped (reduced motion preference).
-         * @returns {boolean}
-         * @protected
-         */
-        _shouldSkipAnimation(): boolean {
-            if (!this._animationConfig.respectReducedMotion) return false;
-            return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        }
-
-        /* -------------------------------------------- */
-
         /** @override */
-        close(options: Record<string, unknown>): unknown {
+        async close(options: Record<string, unknown>): Promise<void> {
             // Clean up
             if (this._mutationObserver) {
                 this._mutationObserver.disconnect();
@@ -461,9 +439,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             }
             this._runningAnimations.clear();
 
-            return super.close(options);
+            return super.close(options as any);
         }
-    }
-
-    return EnhancedAnimationsApplication;
+    };
 }

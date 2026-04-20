@@ -1,6 +1,7 @@
 import { capitalize } from '../handlebars/handlebars-helpers.ts';
 import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import { WH40KItemContainer } from './item-container.ts';
+import type { WH40KItemDocument } from '../types/global.d.ts';
 
 export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
     static #pruneUndefined(value: unknown): unknown {
@@ -26,12 +27,17 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
     /**
      * Override to clean/validate img field before validation runs.
      * Foundry V13 has strict img validation - ensure valid file extension.
-     * @param {object} data - The candidate data object to clean
+     * @param {object} source - The candidate data object to clean
      * @param {object} options - Additional options
+     * @param {object} _state - Internal state
      * @returns {object} The cleaned data
      * @override
      */
-    static cleanData(source: Record<string, unknown> = {}, options: Record<string, unknown> = {}, _state: Record<string, unknown> = {}) {
+    static cleanData(
+        source: Record<string, unknown> = {},
+        options: DataModelV14.CleaningOptions = {},
+        _state: DataModelV14.UpdateState = {},
+    ): Record<string, unknown> {
         // Remove explicit undefined values before schema validation runs.
         // Foundry treats `undefined` differently from an omitted field during updates.
         this.#pruneUndefined(source);
@@ -43,7 +49,7 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
             // Handle empty, null, undefined, or non-string img values
             if (!imgValue || imgValue === '' || typeof imgValue !== 'string' || imgValue.trim() === '') {
                 // Set to type-specific default
-                source.img = this._getDefaultIcon(source.type || 'unknown');
+                source.img = this._getDefaultIcon((source.type as string) || 'unknown');
                 console.warn(`WH40K | cleanData: Invalid img value "${imgValue}" for type "${source.type}", using default: ${source.img}`);
             } else {
                 // Check if has valid extension
@@ -52,14 +58,14 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
 
                 // Also check for obviously invalid paths
                 if (imgStr === 'null' || imgStr === 'undefined' || imgStr.length < 5) {
-                    source.img = this._getDefaultIcon(source.type || 'unknown');
+                    source.img = this._getDefaultIcon((source.type as string) || 'unknown');
                     console.warn(`WH40K | cleanData: Invalid img path "${imgValue}" for type "${source.type}", using default: ${source.img}`);
                 } else {
                     const hasValidExtension = validExtensions.some((ext) => imgStr.endsWith(ext));
 
                     if (!hasValidExtension) {
                         // Invalid extension - use type-specific default
-                        source.img = this._getDefaultIcon(source.type || 'unknown');
+                        source.img = this._getDefaultIcon((source.type as string) || 'unknown');
                         console.warn(`WH40K | cleanData: No valid extension in "${imgValue}" for type "${source.type}", using default: ${source.img}`);
                     }
                 }
@@ -78,9 +84,9 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
      * @returns {string} Path to default icon
      * @private
      */
-    static _getDefaultIcon(type) {
+    static _getDefaultIcon(type: string): string {
         // Use Foundry's built-in default icons that definitely exist
-        const defaultIcons = {
+        const defaultIcons: Record<string, string> = {
             weapon: 'icons/svg/sword.svg',
             armour: 'icons/svg/shield.svg',
             gear: 'icons/svg/item-bag.svg',
@@ -103,7 +109,7 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
         };
 
         // Return type-specific icon or generic mystery-man fallback
-        return (defaultIcons as Record<string, string>)[type] || 'icons/svg/mystery-man.svg';
+        return defaultIcons[type] || 'icons/svg/mystery-man.svg';
     }
 
     /** Helper to get the item type as a plain string for comparison. */
@@ -396,8 +402,8 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
      * Get the item type label for display
      * @returns {string} The localized item type label
      */
-    get itemTypeLabel() {
-        const typeLabels = {
+    get itemTypeLabel(): string {
+        const typeLabels: Record<string, string> = {
             weapon: 'Weapon',
             armour: 'Armour',
             talent: 'Talent',
@@ -417,7 +423,7 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
             ammunition: 'Ammunition',
             forceField: 'Force Field',
         };
-        return (typeLabels as any)[this.type] || this.type;
+        return typeLabels[this.type as string] || (this.type as string);
     }
 
     /**
@@ -440,7 +446,7 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
      * Send this item's details to chat as a card
      * @param {Object} options - Options for the chat card
      */
-    async sendToChat(options = {}): Promise<void> {
+    async sendToChat(options: Record<string, unknown> = {}): Promise<void> {
         const cardData = {
             item: this,
             itemTypeLabel: this.itemTypeLabel,
@@ -467,10 +473,10 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
 
         const html = await foundry.applications.handlebars.renderTemplate(template, cardData);
 
-        const chatData: unknown = {
+        const chatData: Record<string, unknown> = {
             user: game.user.id,
             content: html,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            speaker: ChatMessage.getSpeaker({ actor: this.actor as Actor }),
             // Set flags for ChatMessageWH40K enrichment
             flags: {
                 'wh40k-rpg': {
@@ -495,7 +501,7 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
         chatData.rollMode = game.settings.get('core', 'rollMode');
         applyRollModeWhispers(chatData);
 
-        return ChatMessage.create(chatData);
+        return ChatMessage.create(chatData as unknown as foundry.documents.ChatMessageSource);
     }
 
     /**

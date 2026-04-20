@@ -9,6 +9,7 @@ import ExpandableTooltipMixin from '../api/expandable-tooltip-mixin.ts';
 import PrimarySheetMixin from '../api/primary-sheet-mixin.ts';
 import StatBreakdownMixin from '../api/stat-breakdown-mixin.ts';
 import { getMaterializedItemSource, remapSubmitDataToVariantPaths } from '../../utils/item-variant-utils.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -24,8 +25,9 @@ const { ItemSheetV2 } = foundry.applications.sheets;
  * - StatBreakdownMixin (stat calculation breakdowns)
  */
 export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ItemSheetV2 as any)))) {
-    constructor(options: Record<string, unknown> = {}) {
-        // @ts-expect-error Foundry V2 constructor accepts options
+    declare document: WH40KItem;
+
+    constructor(options: Partial<ApplicationV2.Options> = {}) {
         super(options);
     }
 
@@ -84,7 +86,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /** @override */
-    tabGroups = {
+    tabGroups: Record<string, string> = {
         primary: 'description',
     };
 
@@ -94,9 +96,8 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /**
      * Convenience access to the item.
-     * @type {Item}
      */
-    get item() {
+    get item(): WH40KItem {
         return this.document;
     }
 
@@ -105,39 +106,34 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /**
      * Whether the sheet is in edit mode.
      * Compendium items are always in view mode.
-     * @type {boolean}
      * @private
      */
     #editMode = false;
 
     /**
      * Whether this item is from a compendium (read-only).
-     * @type {boolean}
      */
-    get isCompendiumItem() {
+    get isCompendiumItem(): boolean {
         return this.item.pack !== null;
     }
 
     /**
      * Whether this item is owned by an actor.
-     * @type {boolean}
      */
-    get isOwnedByActor() {
+    get isOwnedByActor(): boolean {
         return !!this.item.actor;
     }
 
     /**
      * Whether the sheet should show edit controls.
-     * @type {boolean}
      */
-    get canEdit() {
+    get canEdit(): boolean {
         if (this.isCompendiumItem) return false;
         return this.isEditable;
     }
 
     /**
      * Whether the sheet is currently in edit mode.
-     * @type {boolean}
      */
     get inEditMode(): boolean {
         // Compendium items are never in edit mode
@@ -153,12 +149,12 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // Get parent context first
         const parentContext = await super._prepareContext(options);
 
         // Build our context
-        const context = {
+        const context: Record<string, unknown> = {
             item: this.item,
             data: this.item, // Legacy compatibility
             document: this.item, // Required for V13 {{editor}} helper
@@ -182,11 +178,12 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         };
 
         // Ensure dh has required config properties for selectOptions (safety measure)
-        if (!context.dh.availabilities) {
-            context.dh.availabilities = CONFIG.WH40K?.availabilities || WH40K.availabilities || {};
+        const dh = context.dh as Record<string, unknown>;
+        if (!dh.availabilities) {
+            dh.availabilities = CONFIG.WH40K?.availabilities || WH40K.availabilities || {};
         }
-        if (!context.dh.craftsmanships) {
-            context.dh.craftsmanships = CONFIG.WH40K?.craftsmanships || WH40K.craftsmanships || {};
+        if (!dh.craftsmanships) {
+            dh.craftsmanships = CONFIG.WH40K?.craftsmanships || WH40K.craftsmanships || {};
         }
 
         // Merge contexts: parent provides base, our values override
@@ -198,12 +195,12 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /**
      * Prepare the tabs for the sheet.
-     * @returns {object[]}
      * @protected
      */
     _getTabs(): Record<string, Record<string, unknown>> {
-        const tabs = {};
-        for (const { tab, group, label, condition } of (this.constructor as any).TABS) {
+        const tabs: Record<string, Record<string, unknown>> = {};
+        const configTabs = (this.constructor as typeof BaseItemSheet).TABS;
+        for (const { tab, group, label, condition } of configTabs as any) {
             if (condition && !condition(this.document)) continue;
             tabs[tab] = {
                 id: tab,
@@ -224,13 +221,10 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /**
      * Prepare form data for submission.
      * Override to clean img field before validation (V13 strictness).
-     * @param {FormDataExtended} formData - The form data
-     * @param {Event} event - The form submission event
-     * @returns {object} The prepared data object
      * @override
      * @protected
      */
-    _prepareSubmitData(event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Record<string, unknown> {
+    _prepareSubmitData(event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Record<string, unknown> {
         let submitData = super._prepareSubmitData(event, form, formData);
 
         // CRITICAL FIX: Clean img field if present to prevent validation errors
@@ -244,7 +238,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
                 delete submitData.img;
             } else {
                 const validExtensions = ['.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif'];
-                const imgStr = imgValue.toLowerCase().trim();
+                const imgStr = (imgValue as string).toLowerCase().trim();
                 const hasValidExtension = validExtensions.some((ext) => imgStr.endsWith(ext));
 
                 if (!hasValidExtension || imgStr.length < 5 || imgStr === 'null' || imgStr === 'undefined') {
@@ -262,7 +256,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Handle delta inputs for numeric fields
@@ -311,24 +305,24 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
         this.element.querySelectorAll('.effect-edit').forEach((btn) => {
             btn.addEventListener('click', () => {
-                const effectId = btn.dataset.effectId;
-                const effect = this.item.effects.get(effectId);
+                const effectId = (btn as HTMLElement).dataset.effectId;
+                const effect = this.item.effects.get(effectId!);
                 effect?.sheet.render(true);
             });
         });
 
         this.element.querySelectorAll('.effect-delete').forEach((btn) => {
             btn.addEventListener('click', async () => {
-                const effectId = btn.dataset.effectId;
-                const effect = this.item.effects.get(effectId);
+                const effectId = (btn as HTMLElement).dataset.effectId;
+                const effect = this.item.effects.get(effectId!);
                 await effect?.delete();
             });
         });
 
         this.element.querySelectorAll('.effect-enable, .effect-disable').forEach((btn) => {
             btn.addEventListener('click', async () => {
-                const effectId = btn.dataset.effectId;
-                const effect = this.item.effects.get(effectId);
+                const effectId = (btn as HTMLElement).dataset.effectId;
+                const effect = this.item.effects.get(effectId!);
                 await effect?.update({ disabled: !effect.disabled });
             });
         });
@@ -364,17 +358,14 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /**
      * Handle editing an image via the file browser.
-     * @this {BaseItemSheet}
-     * @param {PointerEvent} event  The triggering event.
-     * @param {HTMLElement} target  The action target.
      */
-    static async #onEditImage(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onEditImage(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset.edit ?? 'img';
         const current = foundry.utils.getProperty(this.document._source, attr);
         const fp = new CONFIG.ux.FilePicker({
             current,
             type: 'image',
-            callback: (path) => this.document.update({ [attr]: path }),
+            callback: (path: string) => this.document.update({ [attr]: path }),
             position: {
                 top: this.position.top + 40,
                 left: this.position.left + 10,
@@ -387,11 +378,8 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /**
      * Toggle edit mode for actor-owned items.
-     * @this {BaseItemSheet}
-     * @param {PointerEvent} event  The triggering event.
-     * @param {HTMLElement} target  The action target.
      */
-    static #toggleEditMode(this: any, event: Event, target: HTMLElement): void {
+    static #toggleEditMode(this: BaseItemSheet, event: Event, target: HTMLElement): void {
         if (!this.canEdit) return;
         this.#editMode = !this.#editMode;
         this.render();
@@ -400,16 +388,9 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /* -------------------------------------------- */
 
     /**
-     * Handle form submission for item sheets.
-    /* -------------------------------------------- */
-
-    /**
      * Handle creating an effect.
-     * @this {BaseItemSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #effectCreate(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #effectCreate(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
         await this.item.createEmbeddedDocuments(
             'ActiveEffect',
             [
@@ -428,13 +409,10 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /**
      * Handle editing an effect.
-     * @this {BaseItemSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
      */
-    static #effectEdit(this: any, event: Event, target: HTMLElement): void {
+    static #effectEdit(this: BaseItemSheet, event: Event, target: HTMLElement): void {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
-        const effect = this.item.effects.get(effectId);
+        const effect = this.item.effects.get(effectId!);
         effect?.sheet.render(true);
     }
 
@@ -442,13 +420,10 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /**
      * Handle deleting an effect.
-     * @this {BaseItemSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #effectDelete(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #effectDelete(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
-        const effect = this.item.effects.get(effectId);
+        const effect = this.item.effects.get(effectId!);
         await effect?.delete();
     }
 
@@ -456,13 +431,10 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /**
      * Handle toggling an effect.
-     * @this {BaseItemSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #effectToggle(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #effectToggle(this: BaseItemSheet, event: Event, target: HTMLElement): Promise<void> {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
-        const effect = this.item.effects.get(effectId);
+        const effect = this.item.effects.get(effectId!);
         await effect?.update({ disabled: !effect.disabled });
     }
 
@@ -470,11 +442,8 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
 
     /**
      * Handle toggling section visibility.
-     * @this {BaseItemSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
      */
-    static #toggleSection(this: any, event: Event, target: HTMLElement): void {
+    static #toggleSection(this: BaseItemSheet, event: Event, target: HTMLElement): void {
         const sectionName = target.dataset.toggle;
         if (!sectionName) return;
 

@@ -3,14 +3,23 @@
  * Provides collapsible sections that remember their state across sessions
  */
 
+type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { BaseActorSheetMixins } from './sheet-mixin-types.js';
+
+interface CollapsiblePanelConfig {
+    label: string;
+    icon: string;
+    panels: Record<string, boolean>;
+}
+
 /**
  * Mixin to add enhanced collapsible panel capabilities.
  * @template {ApplicationV2} T
- * @param {typeof T} Base   Application class being extended.
- * @returns {typeof CollapsiblePanelApplication}
+ * @param {T} Base   Application class being extended.
+ * @returns {any}
  * @mixin
  */
-export default function CollapsiblePanelMixin<T extends new (...args: any[]) => any>(Base: T) {
+export default function CollapsiblePanelMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
     class CollapsiblePanelApplication extends (Base as any) {
         /* -------------------------------------------- */
         /*  Properties                                  */
@@ -27,10 +36,10 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
 
         /**
          * Preset panel configurations for quick access.
-         * @type {Object<string, Object>}
+         * @type {Object<string, CollapsiblePanelConfig>}
          * @protected
          */
-        static PANEL_PRESETS: Record<string, { label: string; icon: string; panels: Record<string, boolean> }> = {
+        static PANEL_PRESETS: Record<string, CollapsiblePanelConfig> = {
             combat: {
                 label: 'Combat Mode',
                 icon: 'fa-sword',
@@ -90,15 +99,15 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
         /* -------------------------------------------- */
 
         /** @override */
-        async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             const context = await super._prepareContext(options);
 
             // Load saved panel states
-            await this._loadPanelStates();
+            this._loadPanelStates();
 
             // Add panel state to context
             context.panelStates = this._getPanelStates();
-            context.panelPresets = (this.constructor as any).PANEL_PRESETS;
+            context.panelPresets = (this.constructor as typeof CollapsiblePanelApplication).PANEL_PRESETS;
 
             return context;
         }
@@ -106,7 +115,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
         /* -------------------------------------------- */
 
         /** @override */
-        _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void | Promise<void> {
+        _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void | Promise<void> {
             super._onRender(context, options);
 
             // Apply saved panel states to DOM
@@ -124,19 +133,20 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
 
         /**
          * Load panel states from user flags.
-         * @returns {Promise<void>}
+         * @returns {void}
          * @protected
          */
         _loadPanelStates(): void {
             if (!game.user) return;
 
             const flagKey = this._getPanelFlagKey();
-            const savedStates = (game.user as any).getFlag('wh40k-rpg', flagKey) || {};
+            const savedStates = (game.user.getFlag('wh40k-rpg', flagKey) as Record<string, boolean> | undefined) || {};
 
             // Merge with current states
+            const actorSheet = this as unknown as BaseActorSheetMixins;
             Object.entries(savedStates).forEach(([panelId, isExpanded]) => {
-                if (this.expandedSections) {
-                    this.expandedSections.set(panelId, isExpanded);
+                if (actorSheet.expandedSections) {
+                    actorSheet.expandedSections.set(panelId, isExpanded);
                 }
             });
         }
@@ -154,11 +164,11 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             if (!game.user || !panelId) return;
 
             const flagKey = this._getPanelFlagKey();
-            const currentStates = (game.user as any).getFlag('wh40k-rpg', flagKey) || {};
+            const currentStates = (game.user.getFlag('wh40k-rpg', flagKey) as Record<string, boolean> | undefined) || {};
 
             currentStates[panelId] = isExpanded;
 
-            await (game.user as any).setFlag('wh40k-rpg', flagKey, currentStates);
+            await game.user.setFlag('wh40k-rpg', flagKey, currentStates);
         }
 
         /* -------------------------------------------- */
@@ -169,9 +179,10 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @protected
          */
         _getPanelFlagKey(): string {
+            const sheet = this as unknown as BaseActorSheetMixins;
             // Use document UUID if available for per-actor settings
-            if (this.document) {
-                return `panelStates.${this.document.documentName}.${this.document.id}`;
+            if (sheet.document) {
+                return `panelStates.${sheet.document.documentName}.${sheet.document.id}`;
             }
             // Otherwise use application ID for global settings
             return `panelStates.${this.id}`;
@@ -181,14 +192,15 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
 
         /**
          * Get current panel states.
-         * @returns {Object<string, boolean>}
+         * @returns {Record<string, boolean>}
          * @protected
          */
         _getPanelStates(): Record<string, boolean> {
-            if (!this.expandedSections) return {};
+            const sheet = this as unknown as BaseActorSheetMixins;
+            if (!sheet.expandedSections) return {};
 
             const states: Record<string, boolean> = {};
-            this.expandedSections.forEach((isExpanded: boolean, panelId: string) => {
+            sheet.expandedSections.forEach((isExpanded: boolean, panelId: string) => {
                 states[panelId] = isExpanded;
             });
 
@@ -202,9 +214,10 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @protected
          */
         _applyPanelStates(): void {
-            if (!this.expandedSections) return;
+            const sheet = this as unknown as BaseActorSheetMixins;
+            if (!sheet.expandedSections) return;
 
-            this.expandedSections.forEach((isExpanded, panelId) => {
+            sheet.expandedSections.forEach((isExpanded, panelId) => {
                 const panel = this.element.querySelector(`[data-panel-id="${panelId}"]`);
                 if (!panel) return;
 
@@ -227,7 +240,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @returns {Promise<void>}
          */
         async togglePanel(panelId: string, forceState?: boolean): Promise<void> {
-            const panel = this.element.querySelector(`[data-panel-id="${panelId}"]`);
+            const panel = this.element.querySelector(`[data-panel-id="${panelId}"]`) as HTMLElement | null;
             if (!panel) return;
 
             const isCurrentlyExpanded = !panel.classList.contains('collapsed');
@@ -237,8 +250,9 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             await this._animatePanelToggle(panel, willBeExpanded);
 
             // Update state
-            if (this.expandedSections) {
-                this.expandedSections.set(panelId, willBeExpanded);
+            const sheet = this as unknown as BaseActorSheetMixins;
+            if (sheet.expandedSections) {
+                sheet.expandedSections.set(panelId, willBeExpanded);
             }
 
             // Save to user flags
@@ -252,11 +266,11 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @returns {Promise<void>}
          */
         async expandAllPanels(): Promise<void> {
-            const panels = (this.element as HTMLElement).querySelectorAll<HTMLElement>('[data-panel-id]');
+            const panels = this.element.querySelectorAll<HTMLElement>('[data-panel-id]');
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
-                await this.togglePanel(panelId, true);
+                if (panelId) await this.togglePanel(panelId, true);
             }
         }
 
@@ -267,11 +281,11 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @returns {Promise<void>}
          */
         async collapseAllPanels(): Promise<void> {
-            const panels = (this.element as HTMLElement).querySelectorAll<HTMLElement>('[data-panel-id]');
+            const panels = this.element.querySelectorAll<HTMLElement>('[data-panel-id]');
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
-                await this.togglePanel(panelId, false);
+                if (panelId) await this.togglePanel(panelId, false);
             }
         }
 
@@ -283,7 +297,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @returns {Promise<void>}
          */
         async applyPanelPreset(presetName: string): Promise<void> {
-            const preset = (this.constructor as any).PANEL_PRESETS[presetName];
+            const preset = (this.constructor as typeof CollapsiblePanelApplication).PANEL_PRESETS[presetName];
             if (!preset) return;
 
             // Special handling for "all" and "none"
@@ -297,12 +311,14 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             }
 
             // Apply preset states
-            const panels = (this.element as HTMLElement).querySelectorAll<HTMLElement>('[data-panel-id]');
+            const panels = this.element.querySelectorAll<HTMLElement>('[data-panel-id]');
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
-                const shouldExpand = preset.panels[panelId] ?? false;
-                await this.togglePanel(panelId, shouldExpand);
+                if (panelId) {
+                    const shouldExpand = preset.panels[panelId] ?? false;
+                    await this.togglePanel(panelId, shouldExpand);
+                }
             }
 
             // Show notification
@@ -317,12 +333,14 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
          * @returns {Promise<void>}
          */
         async collapseAllExcept(exceptPanelId: string): Promise<void> {
-            const panels = (this.element as HTMLElement).querySelectorAll<HTMLElement>('[data-panel-id]');
+            const panels = this.element.querySelectorAll<HTMLElement>('[data-panel-id]');
 
             for (const panel of panels) {
                 const panelId = panel.dataset.panelId;
-                const shouldExpand = panelId === exceptPanelId;
-                await this.togglePanel(panelId, shouldExpand);
+                if (panelId) {
+                    const shouldExpand = panelId === exceptPanelId;
+                    await this.togglePanel(panelId, shouldExpand);
+                }
             }
         }
 
@@ -419,15 +437,17 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
                 event.stopPropagation();
 
                 // Get the Nth panel
-                const panels = Array.from((this.element as HTMLElement).querySelectorAll<HTMLElement>('[data-panel-id]'));
+                const panels = Array.from(this.element.querySelectorAll<HTMLElement>('[data-panel-id]'));
                 const panelEl = panels[num - 1];
 
                 if (panelEl) {
                     const panelId = panelEl.dataset.panelId;
-                    void this.togglePanel(panelId);
+                    if (panelId) {
+                        void this.togglePanel(panelId);
 
-                    // Scroll into view
-                    panelEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        // Scroll into view
+                        panelEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
                 }
             });
         }
@@ -449,6 +469,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
             if (!panel) return;
 
             const panelId = panel.dataset.panelId;
+            if (!panelId) return;
 
             // Shift+Click = Collapse all except this one
             if ((event as MouseEvent).shiftKey) {

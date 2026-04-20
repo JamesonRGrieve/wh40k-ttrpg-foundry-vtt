@@ -18,6 +18,27 @@ import type { WH40KItem } from '../../documents/item.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+interface AcquisitionContext extends Record<string, unknown> {
+    profitFactor: { current: number; starting: number };
+    item: {
+        name: string;
+        img: string | null;
+        type: string;
+        availability: string;
+        craftsmanship: string;
+        cost: number;
+    } | null;
+    availabilityModifier: number;
+    craftsmanshipModifier: number;
+    commonModifiers: Array<{ key: string; label: string; value: number; selected: boolean }>;
+    baseModifier: number;
+    commonTotal: number;
+    customModifier: number;
+    totalModifier: number;
+    finalTarget: number;
+    recentAcquisitions: unknown[];
+}
+
 export default class AcquisitionDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     /* -------------------------------------------- */
     /*  Configuration                               */
@@ -62,35 +83,11 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    /**
-     * The actor making the acquisition
-     * @type {Actor}
-     */
-    actor = null;
-
-    /**
-     * The item being acquired (optional)
-     * @type {object|null}
-     */
-    item = null;
-
-    /**
-     * Selected common modifiers
-     * @type {Set<string>}
-     */
-    selectedModifiers = new Set();
-
-    /**
-     * Custom modifier value
-     * @type {number}
-     */
-    customModifier = 0;
-
-    /**
-     * Resolve function for promise
-     * @type {Function|null}
-     */
-    #resolve = null;
+    declare actor: WH40KBaseActor;
+    declare item: WH40KItem | null;
+    declare selectedModifiers: Set<string>;
+    declare customModifier: number;
+    #resolve: ((value: unknown) => void) | null = null;
 
     /* -------------------------------------------- */
     /*  Construction                                */
@@ -98,13 +95,15 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Create acquisition dialog
-     * @param {Actor} actor  The actor
+     * @param {WH40KBaseActor} actor  The actor
      * @param {object} options  Additional options
      */
-    constructor(actor, options: Record<string, unknown> = {}) {
+    constructor(actor: WH40KBaseActor, options: { item?: WH40KItem } & Record<string, unknown> = {}) {
         super(options);
         this.actor = actor;
         this.item = options.item || null;
+        this.selectedModifiers = new Set();
+        this.customModifier = 0;
     }
 
     /* -------------------------------------------- */
@@ -119,11 +118,11 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const context: unknown = await super._prepareContext(options);
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AcquisitionContext> {
+        const context = (await super._prepareContext(options)) as AcquisitionContext;
 
         // Profit Factor
-        const pf = this.actor.system.rogueTrader?.profitFactor || { current: 0, starting: 0 };
+        const pf = (this.actor.system as any).rogueTrader?.profitFactor || { current: 0, starting: 0 };
         context.profitFactor = {
             current: pf.current,
             starting: pf.starting,
@@ -132,12 +131,12 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         // Item data
         if (this.item) {
             context.item = {
-                name: this.item.name,
+                name: this.item.name || 'Unknown',
                 img: this.item.img,
                 type: this.item.type,
-                availability: this.item.system?.availability || 'Common',
-                craftsmanship: this.item.system?.craftsmanship || 'Common',
-                cost: this.item.system?.cost || 0,
+                availability: (this.item.system as any)?.availability || 'Common',
+                craftsmanship: (this.item.system as any)?.craftsmanship || 'Common',
+                cost: (this.item.system as any)?.cost || 0,
             };
 
             // Calculate availability modifier
@@ -168,7 +167,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         context.commonTotal = commonTotal;
 
         context.customModifier = this.customModifier;
-        context.totalModifier = context.baseModifier + commonTotal + this.customModifier;
+        context.totalModifier = context.baseModifier + context.commonTotal + this.customModifier;
         context.finalTarget = pf.current + context.totalModifier;
 
         // Recent acquisitions
@@ -237,12 +236,10 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Toggle a common modifier
-     * @this {AcquisitionDialog}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
-    static async #toggleModifier(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleModifier(this: AcquisitionDialog, event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.modifier;
+        if (!key) return;
 
         if (this.selectedModifiers.has(key)) {
             this.selectedModifiers.delete(key);
@@ -257,32 +254,21 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Handle form submission
-     * @this {AcquisitionDialog}
-     * @param {Event} event
-     * @param {HTMLFormElement} form
-     * @param {FormDataExtended} formData
      */
-    static #onSubmit(this: any, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): void {
-        // Get custom modifier
-        this.customModifier = parseInt(formData.object.customModifier) || 0;
-
-        // This will trigger roll
-        return true as any;
+    static #onSubmit(this: AcquisitionDialog, event: Event, form: HTMLFormElement, formData: FormDataExtended): void {
+        this.customModifier = parseInt(formData.object.customModifier as string) || 0;
     }
 
     /* -------------------------------------------- */
 
     /**
      * Roll the acquisition test
-     * @this {AcquisitionDialog}
-     * @param {PointerEvent} event
-     * @param {HTMLElement} target
      */
-    static async #roll(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #roll(this: AcquisitionDialog, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         // Get form data
-        const form = this.element;
+        const form = this.element as HTMLFormElement;
         const formData = new FormDataExtended(form);
         this.customModifier = parseInt(formData.object.customModifier as string) || 0;
 
@@ -327,7 +313,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
         // Critical failure: reduce PF
         if (dos <= -3) {
-            const newPF = Math.max(0, this.actor.system.rogueTrader.profitFactor.current - 1);
+            const newPF = Math.max(0, (this.actor.system as any).rogueTrader.profitFactor.current - 1);
             await this.actor.update({ 'system.rogueTrader.profitFactor.current': newPF });
             ui.notifications.warn(`Critical failure! Profit Factor reduced to ${newPF}`);
         }

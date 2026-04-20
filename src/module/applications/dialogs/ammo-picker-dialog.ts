@@ -11,7 +11,29 @@
  *   });
  */
 
+import type { WH40KItem } from '../../documents/item.ts';
+
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+interface AmmoPickerConfig {
+    ammoItems: WH40KItem[];
+    currentAmmoUuid: string;
+    weaponName: string;
+    clipMax: number;
+}
+
+interface AmmoPickerContext extends Record<string, unknown> {
+    weaponName: string;
+    clipMax: number;
+    ammoItems: Array<{
+        uuid: string;
+        name: string;
+        img: string;
+        quantity: number;
+        isCurrentlyLoaded: boolean;
+        modifierSummary: string;
+    }>;
+}
 
 export default class AmmoPickerDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     /* -------------------------------------------- */
@@ -53,21 +75,18 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /*  Properties                                  */
     /* -------------------------------------------- */
 
-    #config: {
-        ammoItems: unknown[];
-        currentAmmoUuid: string;
-        weaponName: string;
-        clipMax: number;
-    };
-
-    #resolve: ((value: unknown) => void) | null = null;
+    #config: AmmoPickerConfig;
+    #resolve: ((value: WH40KItem | null) => void) | null = null;
     #resolved = false;
 
     /* -------------------------------------------- */
     /*  Construction                                */
     /* -------------------------------------------- */
 
-    constructor(config: { ammoItems: unknown[]; currentAmmoUuid?: string; weaponName: string; clipMax: number }, options = {}) {
+    constructor(
+        config: { ammoItems: WH40KItem[]; currentAmmoUuid?: string; weaponName: string; clipMax: number },
+        options: ApplicationV2Config.DefaultOptions = {},
+    ) {
         super(options);
         this.#config = {
             ammoItems: config.ammoItems || [],
@@ -89,12 +108,11 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        // @ts-expect-error - argument type
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AmmoPickerContext> {
         const context = await super._prepareContext(options);
 
         const ammoItems = this.#config.ammoItems.map((item) => {
-            const mods = item.system.modifiers;
+            const mods = item.system.modifiers as { damage?: number; penetration?: number; range?: number };
             const modParts: string[] = [];
             if (mods?.damage) modParts.push(`${mods.damage > 0 ? '+' : ''}${mods.damage} Dmg`);
             if (mods?.penetration) modParts.push(`${mods.penetration > 0 ? '+' : ''}${mods.penetration} Pen`);
@@ -102,9 +120,9 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
 
             return {
                 uuid: item.uuid,
-                name: item.name,
-                img: item.img,
-                quantity: item.system.quantity,
+                name: item.name ?? 'Unknown',
+                img: item.img ?? '',
+                quantity: item.system.quantity as number,
                 isCurrentlyLoaded: item.uuid === this.#config.currentAmmoUuid,
                 modifierSummary: modParts.length ? modParts.join(', ') : '',
             };
@@ -115,19 +133,19 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
             weaponName: this.#config.weaponName,
             clipMax: this.#config.clipMax,
             ammoItems,
-        };
+        } as AmmoPickerContext;
     }
 
     /* -------------------------------------------- */
     /*  Event Handlers                              */
     /* -------------------------------------------- */
 
-    static async #onSelect(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const form = this.element.querySelector('.ammo-picker-content');
-        const selected = form?.querySelector('input[name="selectedAmmo"]:checked');
+    static async #onSelect(this: AmmoPickerDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
+        const form = this.element.querySelector('.ammo-picker-content') as HTMLFormElement | null;
+        const selected = form?.querySelector('input[name="selectedAmmo"]:checked') as HTMLInputElement | null;
         if (!selected) return;
 
-        const selectedUuid = (selected as HTMLInputElement).value;
+        const selectedUuid = selected.value;
         const selectedItem = this.#config.ammoItems.find((item) => item.uuid === selectedUuid);
 
         this.#resolved = true;
@@ -137,7 +155,7 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
 
     /* -------------------------------------------- */
 
-    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: AmmoPickerDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         this.#resolved = true;
         this.#resolve?.(null);
         await this.close();
@@ -148,12 +166,10 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    // @ts-expect-error - override type
-    async close(options: Record<string, unknown> = {}): Promise<void> {
+    async close(options?: Record<string, unknown>): Promise<void> {
         if (!this.#resolved && this.#resolve) {
             this.#resolve(null);
         }
-        // @ts-expect-error - type assignment
         return super.close(options);
     }
 
@@ -161,25 +177,14 @@ export default class AmmoPickerDialog extends HandlebarsApplicationMixin(Applica
     /*  Public API                                  */
     /* -------------------------------------------- */
 
-    async wait(): Promise<unknown> {
+    async wait(): Promise<WH40KItem | null> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             void this.render(true);
         });
     }
 
-    /**
-     * Show the ammo picker dialog and wait for user selection.
-     * If only one ammo type is available, auto-selects it without showing the dialog.
-     * @param {object} config
-     * @param {Item[]} config.ammoItems - Compatible ammunition items
-     * @param {string} [config.currentAmmoUuid] - UUID of currently loaded ammo
-     * @param {string} config.weaponName - Name of the weapon being reloaded
-     * @param {number} config.clipMax - Effective clip max for display
-     * @returns {Promise<Item|null>} Selected ammo item, or null if cancelled
-     */
-    static async pick(config: { ammoItems: unknown[]; currentAmmoUuid?: string; weaponName: string; clipMax: number }): Promise<unknown> {
-        // Auto-select if only one type available
+    static async pick(config: { ammoItems: WH40KItem[]; currentAmmoUuid?: string; weaponName: string; clipMax: number }): Promise<WH40KItem | null> {
         if (config.ammoItems.length === 1) {
             return config.ammoItems[0];
         }

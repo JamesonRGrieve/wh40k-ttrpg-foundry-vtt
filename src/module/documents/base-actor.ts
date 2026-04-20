@@ -3,6 +3,7 @@ import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import type { WH40KItem } from './item.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
 import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants.ts';
+import type { WH40KCharacteristic, WH40KStatBreakdown, WH40KModifierEntry } from '../types/global.d.ts';
 
 export class WH40KBaseActor extends Actor {
     declare system: import('../data/abstract/actor-data-model.ts').default;

@@ -11,15 +11,28 @@ const { ApplicationV2 } = foundry.applications.api;
  * Compendium browser for browsing and filtering WH40K system compendiums.
  */
 export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
+    declare _filters: {
+        type: string;
+        search: string;
+        source: string;
+        category: string;
+        groupBy: string;
+        armourType?: string;
+        minAP?: number;
+        coverage?: string;
+        modType?: string;
+        hasModifiers?: boolean;
+        hasProperties?: boolean;
+    };
+
     constructor(options: Record<string, unknown> = {}) {
-        // @ts-expect-error - argument count
         super(options);
         this._filters = {
-            type: options.type || 'all',
+            type: (options.type as string) || 'all',
             search: '',
             source: 'all',
             category: 'all',
-            groupBy: options.groupBy || 'source',
+            groupBy: (options.groupBy as string) || 'source',
         };
     }
 
@@ -43,7 +56,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
             resizable: true,
             minimizable: true,
         },
-    };
+    } as ApplicationV2Config.DefaultOptions;
 
     /* -------------------------------------------- */
 
@@ -53,30 +66,32 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
             template: 'systems/wh40k-rpg/templates/applications/compendium-browser.hbs',
             scrollable: ['.content'],
         },
+    } as Record<string, ApplicationV2Config.PartConfiguration>;
+
+    /* -------------------------------------------- */
+
+    /** @override */
+    static TABS = {
+        primary: {
+            tabs: {
+                items: { tab: 'items', group: 'primary', label: 'Items' },
+                actors: { tab: 'actors', group: 'primary', label: 'Actors' },
+            },
+        },
     };
 
     /* -------------------------------------------- */
 
     /** @override */
-    static TABS = [
-        { id: 'items', group: 'primary', label: 'Items' },
-        { id: 'actors', group: 'primary', label: 'Actors' },
-    ];
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    tabGroups = {
-        primary: 'items',
-    };
+    declare tabGroups: HandlebarsApplicationV14.TabGroupsState;
 
     /* -------------------------------------------- */
     /*  Rendering                                   */
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        const context = (await super._prepareContext(options)) as Record<string, unknown>;
 
         const packs = game.packs.filter((p) => p.metadata.system === 'wh40k-rpg');
 
@@ -101,9 +116,9 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         context.groupedResults = this._groupResults(context.results as unknown[]);
 
         // Add armour-specific filters if filtering armour
-        const hasArmour = (context.results as unknown[]).some((r: { type: string }) => r.type === 'armour');
+        const hasArmour = (context.results as unknown[]).some((r: any) => r.type === 'armour');
         if (hasArmour) {
-            context.armourTypes = CONFIG.WH40K?.armourTypes || {};
+            context.armourTypes = (CONFIG as any).WH40K?.armourTypes || {};
             context.hasArmourFilters = true;
         }
 
@@ -111,7 +126,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         const hasArmourMods = (context.results as unknown[]).some((r: any) => r.type === 'armourModification');
         if (hasArmourMods) {
             context.hasArmourModFilters = true;
-            context.armourTypesForMods = CONFIG.WH40K?.armourTypes || {};
+            context.armourTypesForMods = (CONFIG as any).WH40K?.armourTypes || {};
         }
 
         return context;
@@ -122,7 +137,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         // Set up event listeners
@@ -143,9 +158,10 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
 
         // Set up drag handlers for compendium items
         this.element.querySelectorAll('.compendium-item').forEach((el) => {
-            el.setAttribute('draggable', true);
-            el.addEventListener('dragstart', this._onDragStart.bind(this));
-            el.addEventListener('click', this._onItemClick.bind(this));
+            const hEl = el as HTMLElement;
+            hEl.setAttribute('draggable', 'true');
+            hEl.addEventListener('dragstart', this._onDragStart.bind(this));
+            hEl.addEventListener('click', this._onItemClick.bind(this));
         });
     }
 

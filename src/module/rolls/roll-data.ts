@@ -10,6 +10,7 @@ import { calculateWeaponModifiersAttackBonuses, updateWeaponModifiers } from '..
 import { getWeaponTrainingModifier } from '../rules/weapon-training.ts';
 import { WH40KBaseActor } from '../documents/base-actor.ts';
 import { WH40KItem } from '../documents/item.ts';
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 /**
  * Base class for all roll-related data
@@ -101,20 +102,19 @@ export class RollData {
 
         const str: string[] = [];
 
-        const ammoName = (actionItem.system as any)?.loadedAmmo?.name;
+        const ammoName = (actionItem.system as { loadedAmmo?: { name: string } })?.loadedAmmo?.name;
         if (ammoName) {
             str.push(ammoName);
         }
 
-        const specials = this.attackSpecials.map((s) => s.name).join(',');
+        const specials = this.attackSpecials.map((s: { name: string }) => s.name).join(',');
         if (specials) {
             str.push(specials);
         }
 
-        // @ts-expect-error - WeaponRollData property
-        if (this.hasWeaponModification && typeof this.hasWeaponModification === 'function') {
-            // @ts-expect-error - WeaponRollData property
-            const mods = (this as any).weaponModifications?.map((m: any) => m.name).join(',');
+        const weaponRollData = this as unknown as WeaponRollData;
+        if (typeof weaponRollData.hasWeaponModification === 'function') {
+            const mods = weaponRollData.weaponModifications?.map((m: { name: string }) => m.name).join(',');
             if (mods) {
                 str.push(mods);
             }
@@ -226,8 +226,9 @@ export class WeaponRollData extends RollData {
     }
 
     async update(): Promise<void> {
-        if ((this.weapon.system as any).attackBonus) {
-            this.modifiers['weapon'] = (this.weapon.system as any).attackBonus;
+        const weaponSystem = this.weapon.system as { attackBonus?: number; type?: string; usesAmmo?: boolean };
+        if (weaponSystem.attackBonus) {
+            this.modifiers['attack'] = weaponSystem.attackBonus;
         }
 
         // Check weapon training
@@ -239,7 +240,7 @@ export class WeaponRollData extends RollData {
         }
 
         this.canAim = this.action !== 'All Out Attack';
-        this.isLasWeapon = (this.weapon.system as any).type === 'Las';
+        this.isLasWeapon = weaponSystem.type === 'Las';
         this.isSpray = this.hasAttackSpecial('Spray');
         this.isStun = this.action === 'Stun';
         this.isFeint = this.action === 'Feint';
@@ -250,15 +251,16 @@ export class WeaponRollData extends RollData {
         this.ignoreSuccess = this.isSpray;
         this.ignoreControls = this.isFeint || this.isStun || this.isKnockDown;
         this.ignoreDamage = this.isStun || this.isFeint || this.isKnockDown;
-        this.isThrown = (this.weapon as any).isThrown;
+        this.isThrown = (this.weapon as { isThrown?: boolean }).isThrown ?? false;
 
         this.isOpposed = this.isKnockDown || this.isFeint;
         if (this.isOpposed && this.targetActor) {
+            const targetActor = this.targetActor as WH40KBaseActorDocument;
             if (this.isFeint) {
-                this.opposedTarget = (this.targetActor as any).characteristics?.weaponSkill?.total ?? 0;
+                this.opposedTarget = targetActor.characteristics?.weaponSkill?.total ?? 0;
                 this.opposedChar = 'WS';
             } else if (this.isKnockDown) {
-                this.opposedTarget = (this.targetActor as any).characteristics?.strength?.total ?? 0;
+                this.opposedTarget = targetActor.characteristics?.strength?.total ?? 0;
                 this.opposedChar = 'S';
             }
         }
@@ -267,7 +269,7 @@ export class WeaponRollData extends RollData {
         await updateAttackSpecials(this);
         updateAvailableCombatActions(this);
         calculateCombatActionModifier(this);
-        if ((this.weapon as any).usesAmmo) {
+        if (weaponSystem.usesAmmo) {
             this.usesAmmo = true;
             calculateAmmoInformation(this);
         } else {
@@ -285,9 +287,10 @@ export class WeaponRollData extends RollData {
         this.modifiers['modifier'] = 0;
 
         // Size Bonus should not change after initial targeting
-        if (this.targetActor && (this.targetActor.system as any).size) {
+        const targetActorSystem = this.targetActor?.system as { size?: string | number };
+        if (this.targetActor && targetActorSystem.size) {
             try {
-                const size = Number.parseInt((this.targetActor.system as any).size);
+                const size = Number.parseInt(targetActorSystem.size.toString());
                 this.modifiers['target-size'] = (size - 4) * 10;
             } catch {
                 ui.notifications?.warn('Target size is not a number. Unexpected error.');
@@ -295,13 +298,15 @@ export class WeaponRollData extends RollData {
         }
 
         // Talents
-        if (this.sourceActor && (this.sourceActor as any).hasTalent('Eye of Vengeance') && (this.sourceActor.system as any).fate?.value > 0) {
+        const sourceActor = this.sourceActor as WH40KBaseActorDocument;
+        const sourceActorSystem = sourceActor?.system as { fate?: { value: number } };
+        if (sourceActor && sourceActor.hasTalent('Eye of Vengeance') && sourceActorSystem.fate && sourceActorSystem.fate.value > 0) {
             this.hasEyeOfVengeanceAvailable = true;
         }
 
         this.weaponSelect = this.weapons.length > 1;
         this.weapon = this.weapons[0];
-        (this.weapon as any).isSelected = true;
+        (this.weapon as { isSelected?: boolean }).isSelected = true;
     }
 
     selectWeapon(weaponName: string): void {
@@ -315,18 +320,20 @@ export class WeaponRollData extends RollData {
     }
 
     updateBaseTarget(): void {
-        if (!this.sourceActor) return;
+        const sourceActor = this.sourceActor as WH40KBaseActorDocument | null;
+        if (!sourceActor) return;
 
-        if ((this.weapon as any).isRanged) {
-            this.baseTarget = (this.sourceActor as any).characteristics?.ballisticSkill?.total ?? 0;
+        const weaponSystem = this.weapon.system as { isRanged?: boolean };
+        if (weaponSystem.isRanged) {
+            this.baseTarget = sourceActor.characteristics?.ballisticSkill?.total ?? 0;
             this.baseChar = 'BS';
         } else {
-            this.baseTarget = (this.sourceActor as any).characteristics?.weaponSkill?.total ?? 0;
+            this.baseTarget = sourceActor.characteristics?.weaponSkill?.total ?? 0;
             this.baseChar = 'WS';
         }
 
         if (this.action === 'Knock Down') {
-            this.baseTarget = (this.sourceActor as any).characteristics?.strength?.total ?? 0;
+            this.baseTarget = sourceActor.characteristics?.strength?.total ?? 0;
             this.baseChar = 'S';
         }
     }
@@ -344,7 +351,7 @@ export class WeaponRollData extends RollData {
 
         // Unselect Weapon -- UI issues if it's selected on start
         if (this.weapon) {
-            (this.weapon as any).isSelected = false;
+            (this.weapon as { isSelected?: boolean }).isSelected = false;
         }
 
         // Suppressing Fire ignores other modifiers

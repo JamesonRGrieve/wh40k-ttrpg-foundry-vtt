@@ -7,7 +7,7 @@ import BaseRollDialog from './base-roll-dialog.ts';
 /**
  * Dialog for assigning damage to a target.
  */
-interface AssignDamageDialogOptions extends ApplicationOptions {}
+type AssignDamageDialogOptions = Record<string, unknown>;
 
 // @ts-expect-error - TS2417 static side inheritance
 export default class AssignDamageDialog extends BaseRollDialog {

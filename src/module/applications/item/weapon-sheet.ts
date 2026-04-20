@@ -3,7 +3,7 @@
  */
 
 import type { WH40KItem } from '../../documents/item.ts';
-import type { WeaponData } from '../../data/item/weapon.ts';
+import type { default as WeaponData } from '../../data/item/weapon.ts';
 import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';

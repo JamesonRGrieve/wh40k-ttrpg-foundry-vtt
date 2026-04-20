@@ -8,7 +8,7 @@ import BaseRollDialog from './base-roll-dialog.ts';
 /**
  * Dialog for configuring simple skill or characteristic rolls.
  */
-interface SimpleRollDialogOptions extends ApplicationOptions {}
+type SimpleRollDialogOptions = Record<string, unknown>;
 
 // @ts-expect-error - TS2417 static side inheritance
 export default class SimpleRollDialog extends BaseRollDialog {

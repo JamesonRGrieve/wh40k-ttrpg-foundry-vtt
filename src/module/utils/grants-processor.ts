@@ -8,7 +8,10 @@
 import { SkillKeyHelper } from '../helpers/skill-key-helper.ts';
 import { evaluateWoundsFormula, evaluateFateFormula } from './formula-evaluator.ts';
 import type { WH40KItem } from '../documents/item.ts';
-import type { WH40KActor } from '../documents/actor.ts';
+import type { WH40KBaseActor as WH40KActor } from '../documents/base-actor.ts';
+import type { ItemGrantData, SkillGrantData, CharacteristicGrantData, ChoiceGrantData, ResourceGrantData } from '../data/grant/_module.ts';
+
+type GrantDataModel = ItemGrantData | SkillGrantData | CharacteristicGrantData | ChoiceGrantData | ResourceGrantData;
 
 export interface Grant {
     name: string;
@@ -84,7 +87,7 @@ class GrantContext {
             insanityBonus: 0,
             aptitudes: [],
             notifications: [],
-        };
+        } as GrantResult;
     }
 }
 
@@ -111,14 +114,14 @@ export class GrantsProcessor {
         }
 
         // Check if item has grants
-        const grants = (item.system as any)?.grants;
+        const grants = (item.system as { grants?: unknown }).grants;
         if (!grants) {
             game.wh40k?.log(`GrantsProcessor: No grants found on item: ${item.name}`);
             return context.result;
         }
 
         // Check if this is a talent with the hasGrants flag
-        if (item.type === 'talent' && !(item.system as any)?.hasGrants) {
+        if (item.type === 'talent' && !(item.system as { hasGrants?: boolean }).hasGrants) {
             game.wh40k?.log(`GrantsProcessor: Talent ${item.name} has no hasGrants flag`);
             return context.result;
         }
@@ -126,7 +129,7 @@ export class GrantsProcessor {
         game.wh40k?.log(`GrantsProcessor: Processing grants from ${item.type}: ${item.name} (mode: ${context.mode}, depth: ${context.depth})`);
 
         // Process based on item type
-        if (item.type === 'originPath' || (item.flags?.rt as any)?.kind === 'origin') {
+        if (item.type === 'originPath' || (item.flags?.rt as { kind?: string })?.kind === 'origin') {
             await this._processOriginGrants(item, context);
         } else if (item.type === 'talent' || item.type === 'trait') {
             await this._processItemGrants(item, context);
@@ -156,7 +159,8 @@ export class GrantsProcessor {
         if (result.characteristics && Object.keys(result.characteristics).length > 0) {
             for (const [char, value] of Object.entries(result.characteristics)) {
                 if (value !== 0) {
-                    const currentAdvance = (actor.system as any).characteristics[char]?.advance || 0;
+                    const actorSystem = actor.system as { characteristics: Record<string, { advance: number }> };
+                    const currentAdvance = actorSystem.characteristics[char]?.advance || 0;
                     updates[`system.characteristics.${char}.advance`] = currentAdvance + Number(value);
                 }
             }
@@ -164,39 +168,43 @@ export class GrantsProcessor {
 
         // Apply wounds bonus
         if (result.woundsBonus) {
-            const current = (actor.system as any).wounds?.value || 0;
-            const max = (actor.system as any).wounds?.max || 0;
+            const actorSystem = actor.system as { wounds?: { value: number; max: number } };
+            const current = actorSystem.wounds?.value || 0;
+            const max = actorSystem.wounds?.max || 0;
             updates['system.wounds.value'] = current + result.woundsBonus;
             updates['system.wounds.max'] = max + result.woundsBonus;
         }
 
         // Apply fate bonus
         if (result.fateBonus) {
-            const current = (actor.system as any).fate?.value || 0;
-            const max = (actor.system as any).fate?.max || 0;
+            const actorSystem = actor.system as { fate?: { value: number; max: number } };
+            const current = actorSystem.fate?.value || 0;
+            const max = actorSystem.fate?.max || 0;
             updates['system.fate.value'] = current + result.fateBonus;
             updates['system.fate.max'] = max + result.fateBonus;
         }
 
         // Apply corruption/insanity
         if (result.corruptionBonus) {
-            const current = (actor.system as any).corruption?.value || 0;
+            const actorSystem = actor.system as { corruption?: { value: number } };
+            const current = actorSystem.corruption?.value || 0;
             updates['system.corruption.value'] = current + result.corruptionBonus;
         }
         if (result.insanityBonus) {
-            const current = (actor.system as any).insanity?.value || 0;
+            const actorSystem = actor.system as { insanity?: { value: number } };
+            const current = actorSystem.insanity?.value || 0;
             updates['system.insanity.value'] = current + result.insanityBonus;
         }
 
         // Apply actor updates
         if (Object.keys(updates).length > 0) {
-            await actor.update(updates);
+            await actor.update(updates as Record<string, unknown>);
         }
 
         // Create items
         const itemsToAdd = result.itemsToCreate.filter((i) => !i._upgradeExisting);
         if (itemsToAdd.length > 0) {
-            await actor.createEmbeddedDocuments('Item', itemsToAdd);
+            await actor.createEmbeddedDocuments('Item', itemsToAdd as any[]);
         }
 
         // Apply skill upgrades
@@ -204,12 +212,13 @@ export class GrantsProcessor {
         for (const upgrade of upgrades) {
             const existingSkill = actor.items.get(upgrade._existingId as string);
             if (existingSkill) {
-                const skillUpdates: Record<string, any> = {};
-                if ((upgrade.system as any).trained) skillUpdates['system.trained'] = true;
-                if ((upgrade.system as any).plus10) skillUpdates['system.plus10'] = true;
-                if ((upgrade.system as any).plus20) skillUpdates['system.plus20'] = true;
+                const skillUpdates: Record<string, unknown> = {};
+                const upgradeSystem = upgrade.system as { trained?: boolean; plus10?: boolean; plus20?: boolean };
+                if (upgradeSystem.trained) skillUpdates['system.trained'] = true;
+                if (upgradeSystem.plus10) skillUpdates['system.plus10'] = true;
+                if (upgradeSystem.plus20) skillUpdates['system.plus20'] = true;
                 if (Object.keys(skillUpdates).length > 0) {
-                    await (existingSkill as any).update(skillUpdates);
+                    await existingSkill.update(skillUpdates);
                 }
             }
         }

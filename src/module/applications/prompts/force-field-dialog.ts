@@ -7,7 +7,7 @@ import BaseRollDialog from './base-roll-dialog.ts';
 /**
  * Dialog for configuring force field rolls.
  */
-interface ForceFieldDialogOptions extends ApplicationOptions {}
+type ForceFieldDialogOptions = Record<string, unknown>;
 
 // @ts-expect-error - TS2417 static side inheritance
 export default class ForceFieldDialog extends BaseRollDialog {
