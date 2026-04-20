@@ -3,18 +3,34 @@ import { SYSTEM_ID } from '../constants.ts';
 import { PsychicActionData, WeaponActionData } from '../rolls/action-data.ts';
 import { calculateTokenDistance } from '../utils/range-calculator.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
+import { WH40KBaseActor } from '../documents/base-actor.ts';
+import { WH40KItem } from '../documents/item.ts';
 
+/**
+ * Interface for combined source and target data
+ */
+export interface SourceAndTargetData {
+    actor: WH40KBaseActor;
+    target: WH40KBaseActor | null;
+    distance: number;
+}
+
+/**
+ * Manager for targeted actions (attacks, powers) with distance calculation
+ */
 export class TargetedActionManager {
-    initializeHooks() {
+    /**
+     * Initialize hooks for TargetedActionManager
+     */
+    initializeHooks(): void {
         // Initialize Scene Control Buttons
-        Hooks.on('getSceneControlButtons', (controls) => {
-            const bar = controls.token;
-            if (!bar) return;
+        Hooks.on('getSceneControlButtons', (controls: any[]) => {
+            const tokenControl = controls.find((c) => c.name === 'token');
+            if (!tokenControl) return;
             try {
-                // @ts-expect-error - argument type
                 if (!game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
-                    const toolOrder = Object.keys(bar.tools).length;
-                    bar.tools.attack = {
+                    const toolOrder = tokenControl.tools.length;
+                    tokenControl.tools.push({
                         name: 'Attack',
                         title: 'Attack',
                         icon: 'fas fa-swords',
@@ -22,7 +38,7 @@ export class TargetedActionManager {
                         onClick: async () => this.performWeaponAttack(),
                         button: true,
                         order: toolOrder,
-                    };
+                    });
                 }
             } catch (error) {
                 game.wh40k.log('Unable to add game bar icon.', error);
@@ -30,27 +46,35 @@ export class TargetedActionManager {
         });
     }
 
-    tokenDistance(token1, token2) {
+    /**
+     * Calculate distance between two tokens
+     */
+    tokenDistance(token1: Token, token2: Token): number {
         // Use the new range calculator for consistent distance calculation
         return calculateTokenDistance(token1, token2);
     }
 
-    getSourceToken(source) {
+    /**
+     * Get source token from various inputs
+     */
+    getSourceToken(source: WH40KBaseActor | Token | null = null): Token | undefined {
         game.wh40k.log('getSourceToken', source);
-        let sourceToken;
+        let sourceToken: Token | undefined;
+
         if (source) {
-            sourceToken = source.token ?? source.getActiveTokens()[0];
+            // @ts-expect-error - token vs actor
+            sourceToken = (source as Token).actor ? (source as Token) : (source as WH40KBaseActor).getActiveTokens()[0];
         } else {
-            const controlledObjects = game.canvas.tokens.controlledObjects;
-            if (!controlledObjects || controlledObjects.size === 0) {
+            const controlled = game.canvas.tokens.controlled;
+            if (!controlled || controlled.length === 0) {
                 ui.notifications.warn('You need to control a token!');
                 return undefined;
             }
-            if (controlledObjects.size > 1) {
+            if (controlled.length > 1) {
                 ui.notifications.warn('You need to control a single token! Multi-token support is not yet added.');
                 return undefined;
             }
-            sourceToken = [...controlledObjects.values()][0];
+            sourceToken = controlled[0];
         }
 
         if (sourceToken && !sourceToken.actor) {
@@ -61,11 +85,16 @@ export class TargetedActionManager {
         return sourceToken;
     }
 
-    getTargetToken(target) {
+    /**
+     * Get target token from various inputs
+     */
+    getTargetToken(target: WH40KBaseActor | Token | null = null): Token | undefined {
         game.wh40k.log('getTargetToken', target);
-        let targetToken;
+        let targetToken: Token | undefined;
+
         if (target) {
-            targetToken = target.token ?? target.getActiveTokens()[0];
+            // @ts-expect-error - token vs actor
+            targetToken = (target as Token).actor ? (target as Token) : (target as WH40KBaseActor).getActiveTokens()[0];
         } else {
             const targetedObjects = game.user.targets;
             if (!targetedObjects || targetedObjects.size === 0) return undefined;
@@ -73,7 +102,7 @@ export class TargetedActionManager {
                 ui.notifications.warn('You need to target a single token! Multi-token targeting is not yet added.');
                 return undefined;
             }
-            targetToken = [...targetedObjects.values()][0];
+            targetToken = [...targetedObjects.values()][0] as Token;
         }
 
         if (targetToken && !targetToken.actor) {
@@ -84,17 +113,20 @@ export class TargetedActionManager {
         return targetToken;
     }
 
-    createSourceAndTargetData(source, target) {
+    /**
+     * Create source and target data for an action
+     */
+    createSourceAndTargetData(source: WH40KBaseActor | Token | null = null, target: WH40KBaseActor | Token | null = null): SourceAndTargetData | undefined {
         game.wh40k.log('createSourceAndTargetData', { source, target });
 
         // Source
         const sourceToken = this.getSourceToken(source);
-        const sourceActorData = sourceToken ? sourceToken.actor : source;
+        const sourceActorData = sourceToken ? (sourceToken.actor as WH40KBaseActor) : (source as WH40KBaseActor);
         if (!sourceActorData) return undefined;
 
         // Target
         const targetToken = this.getTargetToken(target);
-        const targetActorData = targetToken ? targetToken.actor : target;
+        const targetActorData = targetToken ? (targetToken.actor as WH40KBaseActor) : (target as WH40KBaseActor);
 
         // Distance
         const targetDistance = sourceToken && targetToken ? this.tokenDistance(sourceToken, targetToken) : 0;
@@ -106,13 +138,20 @@ export class TargetedActionManager {
         };
     }
 
-    async performWeaponAttack(source = null, target = null, weapon = null) {
+    /**
+     * Perform a weapon attack
+     */
+    async performWeaponAttack(
+        source: WH40KBaseActor | Token | null = null,
+        target: WH40KBaseActor | Token | null = null,
+        weapon: WH40KItem | null = null,
+    ): Promise<void> {
         game.wh40k.log('performWeaponAttack', { source, target, weapon });
         const rollData = this.createSourceAndTargetData(source, target);
         if (!rollData) return;
 
         // Weapon
-        const weapons = weapon ? [weapon] : rollData.actor.items.filter((item) => item.type === 'weapon').filter((item) => item.system.equipped);
+        const weapons = weapon ? [weapon] : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'weapon' && item.system.equipped) as WH40KItem[]);
         if (!weapons || weapons.length === 0) {
             ui.notifications.warn('Actor must have an equipped weapon!');
             return;
@@ -127,13 +166,20 @@ export class TargetedActionManager {
         await prepareUnifiedRoll(weaponAttack);
     }
 
-    async performPsychicAttack(source = null, target = null, psychicPower = null) {
+    /**
+     * Perform a psychic attack
+     */
+    async performPsychicAttack(
+        source: WH40KBaseActor | Token | null = null,
+        target: WH40KBaseActor | Token | null = null,
+        psychicPower: WH40KItem | null = null,
+    ): Promise<void> {
         game.wh40k.log('performPsychicAttack');
         const rollData = this.createSourceAndTargetData(source, target);
         if (!rollData) return;
 
         // Powers
-        const powers = psychicPower ? [psychicPower] : rollData.actor.items.filter((item) => item.type === 'psychicPower');
+        const powers = psychicPower ? [psychicPower] : (rollData.actor.items.filter((item: WH40KItem) => item.type === 'psychicPower') as WH40KItem[]);
         if (!powers || powers.length === 0) {
             ui.notifications.warn('Actor must have psychic power!');
             return;

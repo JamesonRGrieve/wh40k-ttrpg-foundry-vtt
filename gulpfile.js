@@ -74,6 +74,16 @@ function resolvePackSourceDocument(filePath, seen = new Set()) {
   return resolvePackSourceDocument(targetPath, seen);
 }
 
+function detectCollectionType(folder) {
+  const segment = (name) => new RegExp(`(^|-)${name}(-|$)`).test(folder);
+
+  if (segment('actors')) return 'actors';
+  if (segment('items')) return 'items';
+  if (segment('journals')) return 'journal';
+  if (segment('rolltables')) return 'tables';
+  return 'items';
+}
+
 /* ----------------------------------------- */
 /*  Compile Packs (V13 LevelDB Format)
 /* ----------------------------------------- */
@@ -117,17 +127,10 @@ async function compilePacks() {
     // Create the LevelDB database
     const db = new ClassicLevel(dbPath, { valueEncoding: 'json' });
     
-    // Determine the document collection type from the folder name
-    let collectionType = 'items'; // default
-    if (folder.includes('-actors-')) {
-      collectionType = 'actors';
-    } else if (folder.includes('-items-')) {
-      collectionType = 'items';
-    } else if (folder.includes('-journals-')) {
-      collectionType = 'journal';
-    } else if (folder.includes('-rolltables-')) {
-      collectionType = 'tables';
-    }
+    // Determine the document collection type from the folder name.
+    // Some packs end with the segment (e.g. dh2-core-rolltables), so
+    // matching only *-type-* misclassifies them as items.
+    const collectionType = detectCollectionType(folder);
     
     try {
       // Special handling for origin-path pack - create folders for each step
@@ -199,7 +202,7 @@ async function compilePacks() {
 /* ----------------------------------------- */
 
 function compileTypeScript(done) {
-  exec('npx tsc', (err, stdout, stderr) => {
+  exec('pnpm exec tsc', (err, stdout, stderr) => {
     if (stdout) console.log(stdout);
     if (stderr) console.error(stderr);
     done();

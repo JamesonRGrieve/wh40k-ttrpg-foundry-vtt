@@ -4,9 +4,6 @@ import type { WH40KItem } from './item.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
 import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants.ts';
 
-// WH40KCharacteristic, WH40KModifierEntry, WH40KStatBreakdown are declared
-// globally in types/global.d.ts — do not redeclare here.
-
 export class WH40KBaseActor extends Actor {
     declare system: import('../data/abstract/actor-data-model.ts').default;
     /* -------------------------------------------- */
@@ -15,28 +12,17 @@ export class WH40KBaseActor extends Actor {
 
     /**
      * Handle the creation of descendant documents (items).
-     * Triggers recalculation of item-based data.
-     * Also processes talent grants for newly added talents.
      * @override
      */
-    _onCreateDescendantDocuments(
-        parent: Record<string, unknown>,
-        collection: string,
-        documents: unknown[],
-        data: unknown[],
-        options: Record<string, unknown>,
-        userId: string,
-    ): void {
-        (super._onCreateDescendantDocuments as any)(parent, collection, documents, data, options, userId);
+    _onCreateDescendantDocuments(parent: any, collection: string, documents: any[], data: any[], options: any, userId: string): void {
+        super._onCreateDescendantDocuments(parent, collection, documents, data, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
 
             // Process talent grants for newly added talents
-            // Only process if this is the user who created the items
             if (game.user.id === userId) {
-                for (const item of documents) {
+                for (const item of documents as any[]) {
                     if (item.type === 'talent' && item.system?.hasGrants) {
-                        // Use setTimeout to ensure the item is fully created before processing grants
                         setTimeout(() => void processTalentGrants(item, this), 100);
                     }
                 }
@@ -46,18 +32,10 @@ export class WH40KBaseActor extends Actor {
 
     /**
      * Handle the update of descendant documents (items).
-     * Triggers recalculation of item-based data.
      * @override
      */
-    _onUpdateDescendantDocuments(
-        parent: Record<string, unknown>,
-        collection: string,
-        documents: unknown[],
-        changes: unknown[],
-        options: Record<string, unknown>,
-        userId: string,
-    ): void {
-        (super._onUpdateDescendantDocuments as any)(parent, collection, documents, changes, options, userId);
+    _onUpdateDescendantDocuments(parent: any, collection: string, documents: any[], changes: any[], options: any, userId: string): void {
+        super._onUpdateDescendantDocuments(parent, collection, documents, changes, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
         }
@@ -65,53 +43,26 @@ export class WH40KBaseActor extends Actor {
 
     /**
      * Handle the deletion of descendant documents (items).
-     * Triggers recalculation of item-based data.
-     * Also handles removal of granted items when a talent is deleted.
      * @override
      */
-    _onDeleteDescendantDocuments(
-        parent: Record<string, unknown>,
-        collection: string,
-        documents: unknown[],
-        ids: string[],
-        options: Record<string, unknown>,
-        userId: string,
-    ): void {
-        // Process talent removal BEFORE deletion to access the talent's data
+    _onDeleteDescendantDocuments(parent: any, collection: string, documents: any[], ids: string[], options: any, userId: string): void {
         if (collection === 'items' && game.user.id === userId) {
-            for (const item of documents) {
+            for (const item of documents as any[]) {
                 if (item.type === 'talent' && item.system?.hasGrants) {
-                    // Use setTimeout to show dialog after the item is deleted
                     setTimeout(() => void handleTalentRemoval(item, this), 100);
                 }
             }
         }
 
-        (super._onDeleteDescendantDocuments as any)(parent, collection, documents, ids, options, userId);
+        super._onDeleteDescendantDocuments(parent, collection, documents, ids, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
         }
     }
 
-    /**
-     * Called when items are created, updated, or deleted.
-     * Triggers recalculation of item-based data via prepareEmbeddedData.
-     * @protected
-     */
-    _onItemsChanged(): void {
-        // Re-run embedded data preparation if the DataModel supports it
-        if (typeof this.system?.prepareEmbeddedData === 'function') {
-            // Reset modifier tracking before recalculating
-            if (typeof this.system._initializeModifierTracking === 'function') {
-                this.system._initializeModifierTracking();
-            }
-            this.system.prepareEmbeddedData();
-        }
-    }
-
-    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: Record<string, unknown>): Promise<void> {
-        await (super._preCreate as any)(data, options, user);
-        const initData = {
+    async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: unknown): Promise<void> {
+        await super._preCreate(data as any, options, user);
+        const initData: Record<string, any> = {
             'token.bar1': { attribute: 'wounds' },
             'token.bar2': { attribute: 'fate' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
@@ -128,11 +79,11 @@ export class WH40KBaseActor extends Actor {
             initData['token.actorLink'] = true;
 
             // Set default favorite skills for new characters
-            if (!(this as any).getFlag('wh40k-rpg', 'favoriteSkills')) {
+            if (!this.getFlag('wh40k-rpg', 'favoriteSkills')) {
                 initData['flags.wh40k-rpg.favoriteSkills'] = ['dodge', 'awareness', 'scrutiny', 'inquiry', 'commerce', 'techUse', 'command', 'medicae'];
             }
         }
-        (this as any).updateSource(initData);
+        this.updateSource(initData);
     }
 
     get characteristics(): Record<string, WH40KCharacteristic> {

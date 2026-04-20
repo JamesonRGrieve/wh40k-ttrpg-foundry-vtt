@@ -3,10 +3,29 @@
  */
 
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WeaponData } from '../../data/item/weapon.ts';
 import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
 import ContainerItemSheet from './container-item-sheet.ts';
+
+interface WeaponSheetContext extends Record<string, unknown> {
+    system: WeaponData;
+    CONFIG: any;
+    weaponClasses: Record<string, string>;
+    weaponTypes: Record<string, string>;
+    damageTypes: Record<string, string>;
+    availabilities: Record<string, string>;
+    craftsmanships: Record<string, string>;
+    reloadTimes: Record<string, { label: string }>;
+    bodyCollapsed: boolean;
+    qualitiesArray: Array<{ identifier: string; label: string; description: string; level: number | null }>;
+    prepareQualityTooltip: (identifier: string, level?: number | null) => string;
+    effectiveDamageLabel: string;
+    effectivePenetration: number;
+    effectiveToHit: number;
+    effectiveWeight: number;
+}
 
 /**
  * Sheet for weapon items with support for weapon modifications and ammunition.
@@ -94,9 +113,10 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const context: unknown = await super._prepareContext(options);
-        const system = this.item.system;
+    async _prepareContext(options: Record<string, unknown>): Promise<WeaponSheetContext> {
+        const context = (await super._prepareContext(options)) as WeaponSheetContext;
+        const system = this.item.system as WeaponData;
+        context.system = system;
 
         // Add CONFIG reference for templates - ensure dropdown options are available
         context.CONFIG = CONFIG;
@@ -371,10 +391,10 @@ export default class WeaponSheet extends ContainerItemSheet {
     /**
      * Roll weapon attack.
      * @this {WeaponSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
+     * @param {PointerEvent} event         Triggering click event.
+     * @param {HTMLButtonElement} target  Button that was clicked.
      */
-    static async #rollAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollAttack(this: WeaponSheet, event: PointerEvent, target: HTMLButtonElement): Promise<void> {
         const actor = this.item.actor;
         if (!actor) {
             ui.notifications.warn('This weapon must be on an actor to roll.');
@@ -389,10 +409,10 @@ export default class WeaponSheet extends ContainerItemSheet {
     /**
      * Roll weapon damage.
      * @this {WeaponSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
+     * @param {PointerEvent} event         Triggering click event.
+     * @param {HTMLButtonElement} target  Button that was clicked.
      */
-    static async #rollDamage(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollDamage(this: WeaponSheet, event: PointerEvent, target: HTMLButtonElement): Promise<void> {
         const actor = this.item.actor;
         if (!actor) {
             ui.notifications.warn('This weapon must be on an actor to roll.');
@@ -564,11 +584,11 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onReload(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onReload(this: WeaponSheet, event: PointerEvent, target: HTMLButtonElement): Promise<void> {
         const actor = this.item.actor;
 
         // Perform reload with validation
-        const skipValidation = (event as MouseEvent).shiftKey; // Hold Shift to skip validation
+        const skipValidation = event.shiftKey; // Hold Shift to skip validation
         const result = await ReloadActionManager.reloadWeapon(this.item, {
             skipValidation,
         });
@@ -608,8 +628,8 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleModificationActive(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset.modIndex, 10);
+    static async #toggleModificationActive(this: WeaponSheet, event: PointerEvent, target: HTMLButtonElement): Promise<void> {
+        const index = parseInt(target.dataset.modIndex ?? '', 10);
         if (isNaN(index)) return;
 
         const mods = foundry.utils.deepClone(this.item.system.modifications);
@@ -631,14 +651,14 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #viewModification(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset.modIndex, 10);
+    static async #viewModification(this: WeaponSheet, event: PointerEvent, target: HTMLButtonElement): Promise<void> {
+        const index = parseInt(target.dataset.modIndex ?? '', 10);
         if (isNaN(index)) return;
 
         const mod = this.item.system.modifications[index];
         if (!mod) return;
 
-        const modItem: unknown = await fromUuid(mod.uuid);
+        const modItem = await fromUuid<Item>(mod.uuid);
         if (!modItem) {
             ui.notifications.error(`Modification "${mod.name}" not found. It may have been deleted.`);
             return;

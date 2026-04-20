@@ -1,5 +1,5 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import BaseGrantData from './base-grant.ts';
+import BaseGrantData, { GrantApplicationResult, GrantSummary } from './base-grant.ts';
 
 /**
  * Grant that provides characteristic bonuses to an actor.
@@ -12,8 +12,8 @@ export default class CharacteristicGrantData extends BaseGrantData {
     /*  Static Properties                           */
     /* -------------------------------------------- */
 
-    static TYPE = 'characteristic';
-    static ICON = 'icons/svg/dice-target.svg';
+    static override TYPE = 'characteristic';
+    static override ICON = 'icons/svg/dice-target.svg';
 
     /**
      * Valid characteristic keys.
@@ -31,12 +31,16 @@ export default class CharacteristicGrantData extends BaseGrantData {
         'fellowship',
     ]);
 
+    /** Property declarations */
+    declare characteristics: Array<{ key: string; value: number; optional: boolean }>;
+    declare applied: Record<string, { previousValue: number; appliedValue: number; newValue: number }>;
+
     /* -------------------------------------------- */
     /*  Schema Definition                           */
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+    static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
         const fields = foundry.data.fields;
         return {
             ...super.defineSchema(),
@@ -65,14 +69,20 @@ export default class CharacteristicGrantData extends BaseGrantData {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _applyGrant(actor: WH40KBaseActor, data: Record<string, unknown>, options: Record<string, unknown>, result: Record<string, unknown>): Promise<void> {
-        const selectedChars = data.selected ?? this.characteristics.map((c) => c.key);
-        const updates = {};
+    override async _applyGrant(
+        actor: WH40KBaseActor,
+        data: Record<string, unknown>,
+        options: Record<string, unknown>,
+        result: GrantApplicationResult,
+    ): Promise<void> {
+        const ctor = this.constructor as typeof CharacteristicGrantData;
+        const selectedChars = (data.selected as string[]) ?? this.characteristics.map((c) => c.key);
+        const updates: Record<string, number> = {};
 
         for (const charConfig of this.characteristics) {
             const { key, value, optional: charOptional } = charConfig;
 
-            if (!(this.constructor as any).VALID_CHARACTERISTICS.has(key)) {
+            if (!ctor.VALID_CHARACTERISTICS.has(key)) {
                 result.errors.push(`Invalid characteristic: ${key}`);
                 continue;
             }
@@ -96,11 +106,11 @@ export default class CharacteristicGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    async reverse(actor, appliedState): Promise<unknown> {
-        const restoreData = { characteristics: {} };
-        const updates = {};
+    override async reverse(actor: WH40KBaseActor, appliedState: Record<string, any>): Promise<Record<string, any>> {
+        const restoreData: { characteristics: Record<string, any> } = { characteristics: {} };
+        const updates: Record<string, number> = {};
 
-        for (const [key, state] of Object.entries(appliedState) as [string, any][]) {
+        for (const [key, state] of Object.entries(appliedState)) {
             if (state.previousValue !== undefined) {
                 updates[`system.characteristics.${key}.advance`] = state.previousValue;
                 restoreData.characteristics[key] = state;
@@ -115,11 +125,12 @@ export default class CharacteristicGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    async restore(actor, restoreData): Promise<unknown> {
+    override async restore(actor: WH40KBaseActor, restoreData: any): Promise<GrantApplicationResult> {
         const result = this._initResult();
-        const updates = {};
+        const updates: Record<string, number> = {};
 
-        for (const [key, state] of Object.entries(restoreData.characteristics ?? {}) as [string, any][]) {
+        const characteristics = (restoreData.characteristics ?? {}) as Record<string, { appliedValue: number }>;
+        for (const [key, state] of Object.entries(characteristics)) {
             const currentAdvance = actor.system?.characteristics?.[key]?.advance ?? 0;
             const newAdvance = currentAdvance + state.appliedValue;
             updates[`system.characteristics.${key}.advance`] = newAdvance;
@@ -131,16 +142,17 @@ export default class CharacteristicGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    getAutomaticValue(): Record<string, unknown> | false {
+    override getAutomaticValue(): Record<string, unknown> | false {
         if (this.optional) return false;
         if (this.characteristics.some((c) => c.optional)) return false;
         return { selected: this.characteristics.map((c) => c.key) };
     }
 
     /** @inheritDoc */
-    async getSummary(): Promise<unknown> {
+    override async getSummary(): Promise<GrantSummary> {
+        const ctor = this.constructor as typeof CharacteristicGrantData;
         const summary = await super.getSummary();
-        summary.icon = (this.constructor as any).ICON;
+        summary.icon = ctor.ICON;
 
         for (const charConfig of this.characteristics) {
             const label = game.i18n.localize(`WH40K.Characteristic.${charConfig.key}`);
@@ -157,12 +169,13 @@ export default class CharacteristicGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    validateGrant(): string[] {
+    override validateGrant(): string[] {
+        const ctor = this.constructor as typeof CharacteristicGrantData;
         const errors = super.validateGrant();
 
         const characteristics = this.characteristics ?? [];
         for (const charConfig of characteristics) {
-            if (!(this.constructor as any).VALID_CHARACTERISTICS.has(charConfig.key)) {
+            if (!ctor.VALID_CHARACTERISTICS.has(charConfig.key)) {
                 errors.push(`Invalid characteristic key: ${charConfig.key}`);
             }
         }

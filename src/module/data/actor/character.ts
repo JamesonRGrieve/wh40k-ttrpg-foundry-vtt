@@ -583,19 +583,21 @@ export default class CharacterData extends CreatureTemplate {
      * @protected
      */
     _computeExperienceSpent(): void {
-        const actor = this.parent;
+        const actor = this.parent as foundry.abstract.Document;
         if (!actor?.items || !this.experience) return;
 
         this.experience.spentCharacteristics = 0;
         this.experience.spentSkills = 0;
         this.experience.spentTalents = 0;
-        this.experience.spentPsychicPowers = this.psy.cost;
 
-        for (const characteristic of Object.values(this.characteristics)) {
+        const psy = (this as any).psy as { cost: number } | undefined;
+        this.experience.spentPsychicPowers = psy?.cost || 0;
+
+        for (const characteristic of Object.values(this.characteristics) as Array<{ cost: number | string }>) {
             this.experience.spentCharacteristics += parseInt(String(characteristic.cost), 10);
         }
 
-        for (const skill of Object.values(this.skills)) {
+        for (const skill of Object.values(this.skills) as Array<{ cost: number | string; entries?: Array<{ cost?: number | string }> }>) {
             if (Array.isArray(skill.entries)) {
                 for (const speciality of skill.entries) {
                     this.experience.spentSkills += parseInt(String(speciality.cost ?? 0), 10);
@@ -606,10 +608,10 @@ export default class CharacterData extends CreatureTemplate {
         }
 
         for (const item of actor.items) {
-            if (item.isTalent) {
-                this.experience.spentTalents += parseInt(item.cost, 10);
-            } else if (item.isPsychicPower) {
-                this.experience.spentPsychicPowers += parseInt(item.cost, 10);
+            if ((item as any).isTalent) {
+                this.experience.spentTalents += parseInt((item as any).system?.cost || '0', 10);
+            } else if ((item as any).isPsychicPower) {
+                this.experience.spentPsychicPowers += parseInt((item as any).system?.cost || '0', 10);
             }
         }
 
@@ -622,11 +624,12 @@ export default class CharacterData extends CreatureTemplate {
      * @protected
      */
     _updateWoundsFateModifiers(): void {
-        const itemWounds = this.modifierSources?.wounds?.reduce((total, src) => total + (src.value || 0), 0) || 0;
-        const itemFate = this.modifierSources?.fate?.reduce((total, src) => total + (src.value || 0), 0) || 0;
+        const modifierSources = (this as any).modifierSources as { wounds?: Array<{ value?: number }>; fate?: Array<{ value?: number }> } | undefined;
+        const itemWounds = modifierSources?.wounds?.reduce((total: number, src: { value?: number }) => total + (src.value || 0), 0) || 0;
+        const itemFate = modifierSources?.fate?.reduce((total: number, src: { value?: number }) => total + (src.value || 0), 0) || 0;
 
-        this.totalWoundsModifier = itemWounds + this._getOriginPathWoundsModifier();
-        this.totalFateModifier = itemFate + this._getOriginPathFateModifier();
+        (this as any).totalWoundsModifier = itemWounds + ((this as any)._getOriginPathWoundsModifier?.() || 0);
+        (this as any).totalFateModifier = itemFate + ((this as any)._getOriginPathFateModifier?.() || 0);
     }
 
     /**

@@ -180,8 +180,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
         const modifiers = [];
 
         // Collect from all modifier-providing items
-        const modifierItems = (this.items as any).filter(
-            (item: WH40KItem) =>
+        const modifierItems = this.items.filter(
+            (item: WH40KItemDocument) =>
                 item.isTalent ||
                 item.isTrait ||
                 item.isCondition ||
@@ -191,7 +191,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
         );
 
         for (const item of modifierItems) {
-            const situational = item.system?.modifiers?.situational?.[type];
+            const situational = (item.system as any)?.modifiers?.situational?.[type];
             if (!situational || !Array.isArray(situational)) continue;
 
             for (const mod of situational) {
@@ -203,8 +203,8 @@ export class WH40KAcolyte extends WH40KBaseActor {
                     value: mod.value,
                     condition: mod.condition,
                     icon: mod.icon || 'fa-solid fa-exclamation-triangle',
-                    source: item.name,
-                    itemId: item.id,
+                    source: item.name ?? '',
+                    itemId: item.id ?? '',
                 });
             }
         }
@@ -375,7 +375,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     async rollPsychicPowerDamage(power: WH40KItem): Promise<void> {
         await prepareDamageRoll({
             psychicPower: true,
-            pr: this.psy.currentRating,
+            pr: this.psy.rating,
             name: power.name,
             damage: power.system.damage,
             damageType: power.system.damageType,
@@ -389,28 +389,30 @@ export class WH40KAcolyte extends WH40KBaseActor {
      */
     async rollItem(itemId: string): Promise<void> {
         game.wh40k.log('RollItem', itemId);
-        const item = this.items.get(itemId) as any;
+        const item = this.items.get(itemId);
+        if (!item) return;
+
         switch (item.type) {
             case 'weapon':
                 if (!item.system.equipped) {
                     ui.notifications.warn('Actor must have weapon equipped!');
                     return;
                 }
-                if ((game.settings as any).get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
+                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
                     if (item.isRanged) {
-                        await this.rollCharacteristic('ballisticSkill', item.name);
+                        await this.rollCharacteristic('ballisticSkill', item.name ?? undefined);
                     } else {
-                        await this.rollCharacteristic('weaponSkill', item.name);
+                        await this.rollCharacteristic('weaponSkill', item.name ?? undefined);
                     }
                 } else {
-                    await DHTargetedActionManager.performWeaponAttack(this, null, item);
+                    await DHTargetedActionManager.performWeaponAttack(this, null, item as any);
                 }
                 return;
             case 'psychicPower':
-                if ((game.settings as any).get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
-                    await this.rollCharacteristic('willpower', item.name);
+                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
+                    await this.rollCharacteristic('willpower', item.name ?? undefined);
                 } else {
-                    await DHTargetedActionManager.performPsychicAttack(this, null, item);
+                    await DHTargetedActionManager.performPsychicAttack(this, null, item as any);
                 }
                 return;
             case 'forceField':
@@ -418,14 +420,14 @@ export class WH40KAcolyte extends WH40KBaseActor {
                     ui.notifications.warn('Actor must have force field equipped and activated!');
                     return;
                 }
-                await prepareUnifiedRoll(new ForceFieldData(this, item));
+                await prepareUnifiedRoll(new ForceFieldData(this, item as any));
                 return;
             default:
                 await DHBasicActionManager.sendItemVocalizeChat({
-                    actor: this.name,
-                    name: item.name,
-                    type: item.type?.toUpperCase(),
-                    description: await TextEditor.enrichHTML(item.system.benefit ?? item.system.description, {
+                    actor: this.name ?? '',
+                    name: item.name ?? '',
+                    type: item.type?.toUpperCase() ?? '',
+                    description: await TextEditor.enrichHTML(item.system.benefit ?? item.system.description ?? '', {
                         rollData: {
                             actor: this,
                             item: item,

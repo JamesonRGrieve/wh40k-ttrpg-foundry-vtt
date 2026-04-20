@@ -142,6 +142,7 @@ export default class ChoiceGrantData extends BaseGrantData {
 
     /** @inheritDoc */
     async reverse(actor, appliedState): Promise<unknown> {
+        const ctor = this.constructor as typeof ChoiceGrantData;
         const restoreData = {
             selectedOptions: appliedState.selectedOptions ?? [],
             grantResults: {},
@@ -156,7 +157,7 @@ export default class ChoiceGrantData extends BaseGrantData {
             if (!option || !option.grants[index]) continue;
 
             const grantConfig = option.grants[index];
-            const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
+            const GrantClass = ctor.GRANT_TYPES[grantConfig.type];
             if (!GrantClass) continue;
 
             const grant = new GrantClass(grantConfig);
@@ -174,9 +175,10 @@ export default class ChoiceGrantData extends BaseGrantData {
     }
 
     /** @inheritDoc */
-    async getSummary(): Promise<void> {
+    async getSummary(): Promise<any> {
+        const ctor = this.constructor as typeof ChoiceGrantData;
         const summary = await super.getSummary();
-        summary.icon = (this.constructor as any).ICON;
+        summary.icon = ctor.ICON;
         summary.choiceCount = this.count;
         summary.options = [];
 
@@ -188,7 +190,7 @@ export default class ChoiceGrantData extends BaseGrantData {
             };
 
             for (const grantConfig of option.grants) {
-                const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
+                const GrantClass = ctor.GRANT_TYPES[grantConfig.type];
                 if (GrantClass) {
                     const grant = new GrantClass(grantConfig);
                     const grantSummary = await grant.getSummary();
@@ -204,6 +206,7 @@ export default class ChoiceGrantData extends BaseGrantData {
 
     /** @inheritDoc */
     validateGrant(): void {
+        const ctor = this.constructor as typeof ChoiceGrantData;
         const errors = super.validateGrant();
 
         // Handle missing/undefined options gracefully
@@ -221,7 +224,7 @@ export default class ChoiceGrantData extends BaseGrantData {
         for (const option of options) {
             const grants = option.grants ?? [];
             for (const grantConfig of grants) {
-                const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
+                const GrantClass = ctor.GRANT_TYPES[grantConfig.type];
                 if (!GrantClass) {
                     errors.push(`Unknown grant type "${grantConfig.type}" in option "${option.label}"`);
                 }
@@ -245,7 +248,8 @@ export default class ChoiceGrantData extends BaseGrantData {
      * @private
      */
     _applySubGrant(actor, grantConfig, data, options): unknown {
-        const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
+        const ctor = this.constructor as typeof ChoiceGrantData;
+        const GrantClass = ctor.GRANT_TYPES[grantConfig.type];
         if (!GrantClass) {
             return {
                 success: false,

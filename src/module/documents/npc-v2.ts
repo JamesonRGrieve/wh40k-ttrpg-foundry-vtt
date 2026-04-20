@@ -181,34 +181,34 @@ export class WH40KNPCV2 extends WH40KBaseActor {
      * @param {string} itemId - The embedded item ID.
      * @returns {Promise}
      */
-    async rollItem(itemId): Promise<void> {
-        const item = this.items.get(itemId) as any;
+    async rollItem(itemId: string): Promise<void> {
+        const item = this.items.get(itemId);
         if (!item) return;
 
         switch (item.type) {
             case 'weapon': {
-                if ((game.settings as any).get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
-                    const charKey = item.system.isMeleeWeapon ? 'weaponSkill' : 'ballisticSkill';
-                    await this.rollCharacteristic(charKey, item.name);
+                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simpleAttackRolls)) {
+                    const charKey = (item.system as any).isMeleeWeapon ? 'weaponSkill' : 'ballisticSkill';
+                    await this.rollCharacteristic(charKey, item.name ?? undefined);
                 } else {
-                    await DHTargetedActionManager.performWeaponAttack(this, null, item);
+                    await DHTargetedActionManager.performWeaponAttack(this, null, item as any);
                 }
                 return;
             }
             case 'psychicPower': {
-                if ((game.settings as any).get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
-                    await this.rollCharacteristic('willpower', item.name);
+                if (game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.simplePsychicRolls)) {
+                    await this.rollCharacteristic('willpower', item.name ?? undefined);
                 } else {
-                    await DHTargetedActionManager.performPsychicAttack(this, null, item);
+                    await DHTargetedActionManager.performPsychicAttack(this, null, item as any);
                 }
                 return;
             }
             default: {
                 const { DHBasicActionManager } = await import('../actions/basic-action-manager.ts');
                 await DHBasicActionManager.sendItemVocalizeChat({
-                    actor: this.name,
-                    name: item.name,
-                    type: item.type?.toUpperCase(),
+                    actor: this.name ?? '',
+                    name: item.name ?? '',
+                    type: item.type?.toUpperCase() ?? '',
                     description: await TextEditor.enrichHTML(item.system.benefit ?? item.system.description ?? '', {
                         rollData: { actor: this, item },
                     }),

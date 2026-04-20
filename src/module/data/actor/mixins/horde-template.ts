@@ -1,20 +1,61 @@
+import type { WH40KBaseActor } from '../../../documents/base-actor.ts';
+
 const { SchemaField, NumberField, BooleanField, ArrayField, StringField } = foundry.data.fields;
+
+/**
+ * Interface representing a single entry in the horde magnitude log.
+ */
+export interface HordeLogEntry {
+    amount: number;
+    source: string;
+    timestamp: number;
+}
+
+/**
+ * Interface representing the horde data structure within the actor's system data.
+ */
+export interface HordeData {
+    enabled: boolean;
+    magnitude: {
+        max: number;
+        current: number;
+    };
+    magnitudeLog: HordeLogEntry[];
+    traits: string[];
+    damageMultiplier: number;
+    sizeModifier: number;
+}
+
+/**
+ * Constructor type for mixin base classes.
+ */
+type Constructor<T = object> = new (...args: any[]) => T;
 
 /**
  * HordeTemplate mixin for actors that can operate in horde mode.
  * Provides magnitude tracking, damage multipliers, and horde-specific rules.
  *
  * @param {typeof foundry.abstract.TypeDataModel} Base - The base class to extend.
- * @returns {typeof foundry.abstract.TypeDataModel} The extended class with horde capabilities.
+ * @returns {typeof HordeTemplateMixin} The extended class with horde capabilities.
  */
-export default function HordeTemplate(Base: any): any {
+export default function HordeTemplate<T extends Constructor<foundry.abstract.TypeDataModel<any, any>>>(Base: T) {
     return class HordeTemplateMixin extends Base {
+        declare horde: HordeData;
+
+        /**
+         * Access the parent actor document with proper typing.
+         * @returns {WH40KBaseActor}
+         */
+        get parentActor(): WH40KBaseActor {
+            return (this as any).parent as WH40KBaseActor;
+        }
+
         /* -------------------------------------------- */
         /*  Model Configuration                         */
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        static defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
+        static override defineSchema(): Record<string, foundry.data.fields.DataField.Any> {
             return {
                 ...super.defineSchema(),
                 horde: new SchemaField({
@@ -31,7 +72,7 @@ export default function HordeTemplate(Base: any): any {
                     magnitudeLog: new ArrayField(
                         new SchemaField({
                             amount: new NumberField({ required: true, integer: true }),
-                            source: new StringField({ required: false, blank: true }),
+                            source: new StringField({ required: false, initial: '', blank: true }),
                             timestamp: new NumberField({ required: true }),
                         }),
                         { required: true, initial: [] },
@@ -52,7 +93,7 @@ export default function HordeTemplate(Base: any): any {
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        static _migrateData(source: Record<string, unknown>): void {
+        static override _migrateData(source: Record<string, any>): void {
             super._migrateData?.(source);
             // Ensure horde object exists
             source.horde ??= {
@@ -79,7 +120,7 @@ export default function HordeTemplate(Base: any): any {
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        prepareDerivedData(): void {
+        override prepareDerivedData(): void {
             super.prepareDerivedData();
             this._prepareHordeData();
         }
@@ -111,54 +152,54 @@ export default function HordeTemplate(Base: any): any {
          * Apply magnitude damage to the horde.
          * @param {number} amount - Amount of magnitude to reduce.
          * @param {string} [source] - Source of the damage (for logging).
-         * @returns {Promise<Actor>} The updated actor.
+         * @returns {Promise<WH40KBaseActor> | WH40KBaseActor} The updated actor or parent if disabled.
          */
-        applyMagnitudeDamage(amount: number, source = ''): unknown {
-            if (!this.horde.enabled) return this.parent;
+        applyMagnitudeDamage(amount: number, source = ''): Promise<WH40KBaseActor> | WH40KBaseActor {
+            if (!this.horde.enabled) return this.parentActor;
 
             const newMagnitude = Math.max(0, this.horde.magnitude.current - amount);
-            const logEntry = {
+            const logEntry: HordeLogEntry = {
                 amount: -amount,
                 source,
                 timestamp: Date.now(),
             };
 
-            return this.parent.update({
+            return this.parentActor.update({
                 'system.horde.magnitude.current': newMagnitude,
                 'system.horde.magnitudeLog': [...this.horde.magnitudeLog, logEntry],
-            });
+            }) as Promise<WH40KBaseActor>;
         }
 
         /**
          * Restore magnitude to the horde.
          * @param {number} amount - Amount of magnitude to restore.
          * @param {string} [source] - Source of the restoration.
-         * @returns {Promise<Actor>} The updated actor.
+         * @returns {Promise<WH40KBaseActor> | WH40KBaseActor} The updated actor or parent if disabled.
          */
-        restoreMagnitude(amount: number, source = ''): unknown {
-            if (!this.horde.enabled) return this.parent;
+        restoreMagnitude(amount: number, source = ''): Promise<WH40KBaseActor> | WH40KBaseActor {
+            if (!this.horde.enabled) return this.parentActor;
 
             const newMagnitude = Math.min(this.horde.magnitude.max, this.horde.magnitude.current + amount);
-            const logEntry = {
+            const logEntry: HordeLogEntry = {
                 amount: amount,
                 source,
                 timestamp: Date.now(),
             };
 
-            return this.parent.update({
+            return this.parentActor.update({
                 'system.horde.magnitude.current': newMagnitude,
                 'system.horde.magnitudeLog': [...this.horde.magnitudeLog, logEntry],
-            });
+            }) as Promise<WH40KBaseActor>;
         }
 
         /**
          * Toggle horde mode on/off.
-         * @returns {Promise<Actor>} The updated actor.
+         * @returns {Promise<WH40KBaseActor>} The updated actor.
          */
-        toggleHordeMode(): unknown {
-            return this.parent.update({
+        toggleHordeMode(): Promise<WH40KBaseActor> {
+            return this.parentActor.update({
                 'system.horde.enabled': !this.horde.enabled,
-            });
+            }) as Promise<WH40KBaseActor>;
         }
 
         /**
