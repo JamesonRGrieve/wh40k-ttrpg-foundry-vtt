@@ -14,14 +14,17 @@
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import OriginPathBuilder from './origin-path-builder.ts';
 
-function make(gameSystem: string, className: string) {
-    const cls = class extends (OriginPathBuilder as any) {
+/**
+ * Creates a per-system subclass of OriginPathBuilder.
+ */
+function make(gameSystem: string, className: string): typeof OriginPathBuilder {
+    class SystemOriginPathBuilder extends OriginPathBuilder {
         constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
             super(actor, { ...options, gameSystem });
         }
-    };
-    Object.defineProperty(cls, 'name', { value: className });
-    return cls;
+    }
+    Object.defineProperty(SystemOriginPathBuilder, 'name', { value: className });
+    return SystemOriginPathBuilder as typeof OriginPathBuilder;
 }
 
 export const DH2OriginPathBuilder = make('dh2e', 'DH2OriginPathBuilder');
@@ -32,7 +35,7 @@ export const OWOriginPathBuilder = make('ow', 'OWOriginPathBuilder');
 export const DWOriginPathBuilder = make('dw', 'DWOriginPathBuilder');
 
 /** Map an actor type id (e.g. 'dh2-character') to the right per-system builder. */
-export function getBuilderForActorType(type: string): unknown {
+export function getBuilderForActorType(type: string): typeof OriginPathBuilder {
     if (type.startsWith('dh2-')) return DH2OriginPathBuilder;
     if (type.startsWith('dh1-')) return DH1OriginPathBuilder;
     if (type.startsWith('rt-')) return RTOriginPathBuilder;

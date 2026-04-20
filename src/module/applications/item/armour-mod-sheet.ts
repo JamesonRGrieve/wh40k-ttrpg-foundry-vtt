@@ -3,12 +3,12 @@
  */
 
 import ContainerItemSheet from './container-item-sheet.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 
 /**
  * Sheet for armour modification items.
  * Extends ContainerItemSheet to support embedded mods (if needed).
  */
-// @ts-expect-error - TS2417 static side inheritance
 export default class ArmourModSheet extends ContainerItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
@@ -75,27 +75,27 @@ export default class ArmourModSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
+        const system = this.item.system as any;
 
         // Add CONFIG reference for template helpers
         context.dh = CONFIG.wh40k || {};
 
         // Add armour types config for restrictions
         context.armourTypes = CONFIG.wh40k?.armourTypes || {};
-        context.armourTypesArray = Object.entries(context.armourTypes).map(([key, config]) => ({
+        context.armourTypesArray = Object.entries(context.armourTypes as Record<string, any>).map(([key, config]) => ({
             key,
             label: game.i18n.localize(config.label),
-            selected: this.item.system.restrictions.armourTypes.has(key),
+            selected: system.restrictions.armourTypes.has(key),
         }));
 
         // Add properties config
         context.armourProperties = CONFIG.wh40k?.armourProperties || {};
 
         // Prepare added properties array
-        context.addedPropertiesArray = Array.from(this.item.system.addedProperties).map((key) => {
-            // @ts-expect-error - index type
-            const config = context.armourProperties[key];
+        context.addedPropertiesArray = Array.from(system.addedProperties as Set<string>).map((key) => {
+            const config = (context.armourProperties as any)[key];
             return {
                 key,
                 label: config ? game.i18n.localize(config.label) : key,
@@ -104,9 +104,8 @@ export default class ArmourModSheet extends ContainerItemSheet {
         });
 
         // Prepare removed properties array
-        context.removedPropertiesArray = Array.from(this.item.system.removedProperties).map((key) => {
-            // @ts-expect-error - index type
-            const config = context.armourProperties[key];
+        context.removedPropertiesArray = Array.from(system.removedProperties as Set<string>).map((key) => {
+            const config = (context.armourProperties as any)[key];
             return {
                 key,
                 label: config ? game.i18n.localize(config.label) : key,
@@ -115,8 +114,8 @@ export default class ArmourModSheet extends ContainerItemSheet {
         });
 
         // Available properties (not yet added or removed)
-        const usedKeys = new Set([...this.item.system.addedProperties, ...this.item.system.removedProperties]);
-        context.availablePropertiesArray = Object.entries(context.armourProperties)
+        const usedKeys = new Set([...(system.addedProperties as Set<string>), ...(system.removedProperties as Set<string>)]);
+        context.availablePropertiesArray = Object.entries(context.armourProperties as Record<string, any>)
             .filter(([key]) => !usedKeys.has(key))
             .map(([key, config]) => ({
                 key,
@@ -128,16 +127,17 @@ export default class ArmourModSheet extends ContainerItemSheet {
     }
 
     /** @inheritDoc */
-    async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _preparePartContext(partId: string, context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // Get shared context from _prepareContext
         const sharedContext = await this._prepareContext(options);
         const partContext = { ...sharedContext, ...context };
+        const system = this.item.system as any;
 
         switch (partId) {
             case 'header':
-                partContext.icon = this.item.system.icon;
-                partContext.restrictionsSummary = this.item.system.restrictionsLabelEnhanced;
-                partContext.modifiersSummary = this.item.system.modifierSummary;
+                partContext.icon = system.icon;
+                partContext.restrictionsSummary = system.restrictionsLabelEnhanced;
+                partContext.modifiersSummary = system.modifierSummary;
                 break;
 
             case 'restrictions':
@@ -145,7 +145,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
                 break;
 
             case 'modifiers':
-                partContext.modifiers = this.item.system.modifiers;
+                partContext.modifiers = system.modifiers;
                 break;
 
             case 'properties':
@@ -153,8 +153,8 @@ export default class ArmourModSheet extends ContainerItemSheet {
                 break;
 
             case 'effect':
-                partContext.effect = this.item.system.effect || '';
-                partContext.notes = this.item.system.notes || '';
+                partContext.effect = system.effect || '';
+                partContext.notes = system.notes || '';
                 break;
         }
 
@@ -167,12 +167,14 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
     /**
      * Handle toggling an armour type restriction.
+     * @param {ArmourModSheet} this
      * @param {PointerEvent} event  The triggering event
      * @param {HTMLElement} target  The target element
      */
-    static async #onToggleArmourType(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleArmourType(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): void {
         const type = target.dataset.type;
-        const current = new Set(this.item.system.restrictions.armourTypes);
+        if (!type) return;
+        const current = new Set((this.item.system as any).restrictions.armourTypes as string[]);
 
         if (current.has(type)) {
             current.delete(type);
@@ -192,12 +194,14 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
     /**
      * Handle adjusting a modifier value.
+     * @param {ArmourModSheet} this
      * @param {PointerEvent} event  The triggering event
      * @param {HTMLElement} target  The target element
      */
-    static async #onAdjustModifier(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onAdjustModifier(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): void {
         const field = target.dataset.field;
-        const delta = parseInt(target.dataset.delta);
+        if (!field) return;
+        const delta = parseInt(target.dataset.delta || '0', 10);
         const current = foundry.utils.getProperty(this.item.system, field) || 0;
 
         await this.item.update({
@@ -207,14 +211,16 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
     /**
      * Handle adding a property.
+     * @param {ArmourModSheet} this
      * @param {PointerEvent} event  The triggering event
      * @param {HTMLElement} target  The target element
      */
-    static async #onAddProperty(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onAddProperty(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): void {
         const property = target.dataset.property;
         const list = target.dataset.list; // "added" or "removed"
+        if (!property || !list) return;
         const field = `${list}Properties`;
-        const current = new Set(this.item.system[field]);
+        const current = new Set((this.item.system as any)[field] as string[]);
 
         current.add(property);
 
@@ -225,14 +231,16 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
     /**
      * Handle removing a property.
+     * @param {ArmourModSheet} this
      * @param {PointerEvent} event  The triggering event
      * @param {HTMLElement} target  The target element
      */
-    static async #onRemoveProperty(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onRemoveProperty(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): void {
         const property = target.dataset.property;
         const list = target.dataset.list; // "added" or "removed"
+        if (!property || !list) return;
         const field = `${list}Properties`;
-        const current = new Set(this.item.system[field]);
+        const current = new Set((this.item.system as any)[field] as string[]);
 
         current.delete(property);
 

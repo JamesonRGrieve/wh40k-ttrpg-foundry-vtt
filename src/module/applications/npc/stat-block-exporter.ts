@@ -1,13 +1,3 @@
-/**
- * @file StatBlockExporter - Export NPC data to various formats
- * Phase 6: Advanced GM Tools
- *
- * Provides:
- * - Export to formatted text (for sharing/printing)
- * - Export to JSON (for backup/import)
- * - Copy to clipboard functionality
- */
-
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -60,25 +50,25 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /**
      * The actor being exported.
-     * @type {Actor}
+     * @type {WH40KBaseActor | null}
      */
-    #actor = null;
+    #actor: WH40KBaseActor | null = null;
 
     /**
      * Current export format.
-     * @type {string}
+     * @type {'text' | 'json'}
      */
-    #format = 'text';
+    #format: 'text' | 'json' = 'text';
 
     /* -------------------------------------------- */
     /*  Constructor                                 */
     /* -------------------------------------------- */
 
     /**
-     * @param {Actor} actor - The NPC actor to export.
-     * @param {Object} [options] - Application options.
+     * @param {WH40KBaseActor} actor - The NPC actor to export.
+     * @param {Record<string, unknown>} [options] - Application options.
      */
-    constructor(actor, options = {}) {
+    constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
         super(options);
         this.#actor = actor;
     }
@@ -96,11 +86,11 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /**
      * Export an NPC to formatted text.
-     * @param {Actor} actor - The actor to export.
+     * @param {WH40KBaseActor} actor - The actor to export.
      * @returns {string} Formatted text stat block.
      */
     static toText(actor: WH40KBaseActor): string {
-        const sys = actor.system;
+        const sys = actor.system as any;
         const lines = [];
 
         // Header
@@ -259,13 +249,13 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /**
      * Export an NPC to JSON format.
-     * @param {Actor} actor - The actor to export.
+     * @param {WH40KBaseActor} actor - The actor to export.
      * @param {Object} [options] - Export options.
      * @param {boolean} [options.includeItems=true] - Include embedded items.
      * @param {boolean} [options.prettyPrint=true] - Pretty print JSON.
      * @returns {string} JSON string.
      */
-    static toJSON(actor: WH40KBaseActor, options: Record<string, unknown> = {}): Record<string, unknown> {
+    static toJSON(actor: WH40KBaseActor, options: { includeItems?: boolean; prettyPrint?: boolean } = {}): string {
         const { includeItems = true, prettyPrint = true } = options;
 
         const exportData = {
@@ -307,8 +297,10 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const context: unknown = await super._prepareContext(options);
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        const context = await super._prepareContext(options);
+
+        if (!this.#actor) return context;
 
         // Generate export content based on format
         const textContent = StatBlockExporter.toText(this.#actor);
@@ -330,14 +322,14 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
         // Handle format toggle
         const formatTabs = this.element.querySelectorAll('[data-format]');
         for (const tab of formatTabs) {
-            tab.addEventListener('click', (e: Event) => {
-                this.#format = (e.currentTarget as HTMLElement).dataset.format;
+            tab.addEventListener('click', (e) => {
+                this.#format = (e.currentTarget as HTMLElement).dataset.format as 'text' | 'json';
                 void this.render({ parts: ['content'] });
             });
         }
@@ -349,10 +341,12 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /**
      * Copy current content to clipboard.
+     * @param {StatBlockExporter} this
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCopyToClipboard(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCopyToClipboard(this: StatBlockExporter, event: PointerEvent, target: HTMLElement): Promise<void> {
+        if (!this.#actor) return;
         const content = this.#format === 'json' ? StatBlockExporter.toJSON(this.#actor) : StatBlockExporter.toText(this.#actor);
 
         try {
@@ -366,10 +360,12 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /**
      * Download as JSON file.
+     * @param {StatBlockExporter} this
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #onExportJson(this: any, event: Event, target: HTMLElement): void {
+    static #onExportJson(this: StatBlockExporter, event: PointerEvent, target: HTMLElement): void {
+        if (!this.#actor) return;
         const content = StatBlockExporter.toJSON(this.#actor);
         const filename = `${this.#actor.name.slugify()}.json`;
 
@@ -379,10 +375,12 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /**
      * Download as text file.
+     * @param {StatBlockExporter} this
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #onExportText(this: any, event: Event, target: HTMLElement): void {
+    static #onExportText(this: StatBlockExporter, event: PointerEvent, target: HTMLElement): void {
+        if (!this.#actor) return;
         const content = StatBlockExporter.toText(this.#actor);
         const filename = `${this.#actor.name.slugify()}.txt`;
 
@@ -392,10 +390,11 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /**
      * Close the dialog.
+     * @param {StatBlockExporter} this
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onClose(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onClose(this: StatBlockExporter, event: PointerEvent, target: HTMLElement): Promise<void> {
         await this.close();
     }
 
@@ -429,10 +428,10 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /**
      * Open the exporter for an actor.
-     * @param {Actor} actor - The actor to export.
+     * @param {WH40KBaseActor} actor - The actor to export.
      * @returns {StatBlockExporter} The exporter instance.
      */
-    static show(actor: WH40KBaseActor): unknown {
+    static show(actor: WH40KBaseActor): StatBlockExporter {
         const exporter = new this(actor);
         void exporter.render(true);
         return exporter;
@@ -440,11 +439,11 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
 
     /**
      * Quick export to clipboard without dialog.
-     * @param {Actor} actor - The actor to export.
-     * @param {string} [format="text"] - Export format ("text" or "json").
+     * @param {WH40KBaseActor} actor - The actor to export.
+     * @param {'text' | 'json'} [format="text"] - Export format ("text" or "json").
      * @returns {Promise<void>}
      */
-    static async quickExport(actor: WH40KBaseActor, format: unknown = 'text'): Promise<void> {
+    static async quickExport(actor: WH40KBaseActor, format: 'text' | 'json' = 'text'): Promise<void> {
         const content = format === 'json' ? this.toJSON(actor) : this.toText(actor);
 
         try {

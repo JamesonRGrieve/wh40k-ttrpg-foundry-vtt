@@ -41,9 +41,9 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
             ...Base.DEFAULT_OPTIONS,
             actions: {
                 ...Base.DEFAULT_OPTIONS.actions,
-                toggleModifier: this.#toggleModifier,
-                viewModifierSource: this.#viewModifierSource,
-                toggleModifiersPanel: this.#toggleModifiersPanel,
+                toggleModifier: ActiveModifiersMixin.toggleModifier,
+                viewModifierSource: ActiveModifiersMixin.viewModifierSource,
+                toggleModifiersPanel: ActiveModifiersMixin.toggleModifiersPanel,
             },
         };
 
@@ -55,7 +55,7 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
         /**
          * Toggle a modifier on/off (for optional modifiers)
          */
-        static async #toggleModifier(this: any, event: Event, target: HTMLElement): Promise<void> {
+        static async toggleModifier(this: any, event: Event, target: HTMLElement): Promise<void> {
             const itemId = target.dataset.itemId;
             if (!itemId) return;
 
@@ -72,7 +72,7 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
         /**
          * View the source item of a modifier
          */
-        static #viewModifierSource(this: any, event: Event, target: HTMLElement): void {
+        static viewModifierSource(this: any, event: Event, target: HTMLElement): void {
             const itemId = target.dataset.itemId;
             if (!itemId) return;
 
@@ -86,9 +86,10 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
         /**
          * Toggle modifiers panel collapsed state
          */
-        static #toggleModifiersPanel(this: any, event: Event, target: HTMLElement): void {
-            this.#modifiersPanelCollapsed = !this.#modifiersPanelCollapsed;
-            this.render();
+        static toggleModifiersPanel(this: any, event: Event, target: HTMLElement): void {
+            const instance = this as any;
+            instance.#modifiersPanelCollapsed = !instance.#modifiersPanelCollapsed;
+            instance.render();
         }
 
         /**
@@ -218,7 +219,7 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
         }
 
         #formatModifierDescription(modifiers: WH40KItemModifiers): string {
-            const parts = [];
+            const parts: string[] = [];
 
             if (modifiers.characteristics) {
                 for (const [char, value] of Object.entries(modifiers.characteristics)) {
@@ -264,7 +265,7 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
                 return 'Permanent';
             }
 
-            const parts = [];
+            const parts: string[] = [];
             if (effect.duration.rounds) {
                 parts.push(`${effect.duration.rounds} rounds`);
             }

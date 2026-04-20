@@ -1,25 +1,23 @@
-/**
- * @file BaseRollDialog - Base class for roll configuration dialogs
- * Based on dnd5e's RollConfigurationDialog pattern for Foundry V13+
- */
-
 import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/application-v2-mixin.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
-
-interface BaseRollDialogOptions {}
 
 /**
  * Base dialog class for roll prompts.
  * Provides common functionality for weapon, psychic, force field, and other roll dialogs.
  */
 export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
+    declare rollData: Record<string, unknown> & {
+        initialize?: () => void;
+        update?: () => Promise<void>;
+    };
+    declare initialized: boolean;
+
     /**
-     * @param {object} rollData     The roll data to configure.
-     * @param {BaseRollDialogOptions} [options={}] Dialog options.
+     * @param {Record<string, unknown>} rollData     The roll data to configure.
+     * @param {ApplicationV2Config.DefaultOptions} [options={}] Dialog options.
      */
-    constructor(rollData: any = {}, options: BaseRollDialogOptions = {}) {
-        // @ts-expect-error - argument count
+    constructor(rollData: Record<string, unknown> = {}, options: ApplicationV2Config.DefaultOptions = {}) {
         super(options);
         this.rollData = rollData;
         this.initialized = false;
@@ -28,15 +26,15 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'roll-dialog', 'standard-form'],
         actions: {
-            roll: BaseRollDialog.#onRoll,
-            cancel: BaseRollDialog.#onCancel,
+            roll: BaseRollDialog.#onRoll as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            cancel: BaseRollDialog.#onCancel as unknown as ApplicationV2Config.DefaultOptions['actions'],
         },
         form: {
-            handler: BaseRollDialog.#onFormSubmit,
+            handler: BaseRollDialog.#onFormSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: true,
             closeOnSubmit: false,
         },
@@ -52,10 +50,11 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/base-roll-prompt.hbs',
-            scrollable: [''],
+            classes: [],
+            scrollable: [],
         },
     };
 
@@ -80,7 +79,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         // Initialize roll data on first render
         if (!this.initialized && this.rollData.initialize) {
             this.rollData.initialize();
@@ -92,7 +91,7 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
             await this.rollData.update();
         }
 
-        const context = await super._prepareContext(options);
+        const context = (await super._prepareContext(options)) as Record<string, unknown>;
         return {
             ...context,
             ...this.rollData,
@@ -103,11 +102,9 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
     }
 
     /* -------------------------------------------- */
-    /*  Rendering                                   */
-    /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
         setupNumberInputAutoSelect(this.element);
     }
@@ -118,13 +115,12 @@ export default class BaseRollDialog extends ApplicationV2Mixin(ApplicationV2) {
 
     /**
      * Handle form submission - updates roll data with form values.
-     * @this {BaseRollDialog}
-     * @param {Event} event           The form submission event.
+     * @param {SubmitEvent} event           The form submission event.
      * @param {HTMLFormElement} form  The form element.
      * @param {FormDataExtended} formData  The form data.
      */
-    static async #onFormSubmit(this: BaseRollDialog, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): Promise<void> {
-        const data = foundry.utils.expandObject((formData as any).object);
+    static async #onFormSubmit(this: BaseRollDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): Promise<void> {
+        const data = foundry.utils.expandObject(formData.object);
         this._updateRollData(data);
 
         if (this.rollData.update) {

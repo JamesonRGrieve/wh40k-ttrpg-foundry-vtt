@@ -26,7 +26,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             ...Base.DEFAULT_OPTIONS,
             actions: {
                 ...Base.DEFAULT_OPTIONS.actions,
-                toggleItemPreview: this.#toggleItemPreview,
+                toggleItemPreview: ItemPreviewMixin.toggleItemPreview,
             },
         };
 
@@ -38,7 +38,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
         /**
          * Toggle an item preview card
          */
-        static #toggleItemPreview(this: any, event: Event, target: HTMLElement): void {
+        static toggleItemPreview(this: any, event: Event, target: HTMLElement): void {
             const itemId = target.dataset.itemId;
             if (!itemId) return;
 
@@ -49,15 +49,16 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
             const itemRow = this.element.querySelector(`[data-item-id="${itemId}"]`) as HTMLElement | null;
             if (!itemRow) return;
 
+            const instance = this as any;
             // Check if preview is already open
-            const isOpen = this.#openPreviews.has(itemId);
+            const isOpen = instance.#openPreviews.has(itemId);
 
             if (isOpen) {
                 // Close preview
-                this.#closePreview(itemId);
+                instance.#closePreview(itemId);
             } else {
                 // Open preview
-                this.#openPreview(item as WH40KItem, itemRow);
+                instance.#openPreview(item as WH40KItem, itemRow);
             }
         }
 
@@ -173,8 +174,8 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          */
         #generateWeaponPreview(item: WH40KItem): string {
             const sys = item.system as WeaponDataModel;
-            const damage = sys.damage;
-            const stats = sys.stats;
+            const damage = (sys as any).damage;
+            const stats = (sys as any).stats;
 
             return `
                 <div class="wh40k-weapon-preview-stats">
@@ -201,13 +202,13 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
                     <div class="wh40k-stat-pill tw-inline-flex tw-items-center tw-gap-1 tw-rounded-md tw-border tw-border-[var(--wh40k-item-panel-border)] tw-bg-[var(--wh40k-item-panel-bg)] tw-px-2.5 tw-py-1 tw-text-sm">
                         <i class="fa-solid fa-box tw-text-[var(--wh40k-stat-neutral)]"></i>
                         <span class="wh40k-stat-pill__label tw-text-xs tw-text-[var(--color-text-secondary)] tw-opacity-80">Clip</span>
-                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${sys.clip?.current || 0}/${
-                sys.clip?.max || 0
+                        <span class="wh40k-stat-pill__value tw-font-semibold tw-text-[var(--color-text-primary)]">${(sys as any).clip?.current || 0}/${
+                (sys as any).clip?.max || 0
             }</span>
                     </div>
                 </div>
-                ${this.#generateQualitiesHTML(sys.qualities)}
-                ${sys.description ? `<div class="wh40k-item-preview-description">${sys.description}</div>` : ''}
+                ${this.#generateQualitiesHTML((sys as any).qualities)}
+                ${(sys as any).description ? `<div class="wh40k-item-preview-description">${(sys as any).description}</div>` : ''}
             `;
         }
 
@@ -216,7 +217,7 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          */
         #generateArmourPreview(item: WH40KItem): string {
             const sys = item.system as ArmourDataModel;
-            const locations = sys.locations;
+            const locations = (sys as any).locations;
 
             return `
                 <div class="wh40k-armour-preview-locations">
@@ -251,8 +252,8 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
                             : ''
                     }
                 </div>
-                ${this.#generateQualitiesHTML(Array.from(sys.properties))}
-                ${sys.description ? `<div class="wh40k-item-preview-description">${sys.description}</div>` : ''}
+                ${this.#generateQualitiesHTML(Array.from((sys as any).properties))}
+                ${(sys as any).description ? `<div class="wh40k-item-preview-description">${(sys as any).description}</div>` : ''}
             `;
         }
 
@@ -392,10 +393,10 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
         /**
          * Generate HTML for qualities/properties tags
          */
-        #generateQualitiesHTML(qualities: unknown[]): string {
+        #generateQualitiesHTML(qualities: unknown): string {
             if (!qualities) return '';
 
-            let qualitiesArray = [];
+            let qualitiesArray: any[] = [];
             if (Array.isArray(qualities)) {
                 qualitiesArray = qualities;
             } else if (typeof qualities === 'object') {

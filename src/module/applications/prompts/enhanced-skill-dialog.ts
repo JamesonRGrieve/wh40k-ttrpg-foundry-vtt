@@ -13,20 +13,48 @@ import ApplicationV2Mixin, { setupNumberInputAutoSelect } from '../api/applicati
 
 const { ApplicationV2 } = foundry.applications.api;
 
+interface DifficultyPreset {
+    key: string;
+    label: string;
+    modifier: number;
+    icon: string;
+    description: string;
+}
+
+interface CommonModifierPreset {
+    key: string;
+    label: string;
+    value: number;
+    description: string;
+}
+
+interface EnhancedSkillDialogData {
+    name?: string;
+    rollData?: {
+        name?: string;
+        baseTarget?: number;
+        modifiers: Record<string, number>;
+        calculateTotalModifiers: () => Promise<void>;
+    };
+}
+
 /**
  * Enhanced dialog for configuring skill or characteristic rolls.
  */
-// @ts-expect-error Foundry V2 mixin pattern
-export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV2 as any) {
+export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV2) {
+    declare simpleSkillData: EnhancedSkillDialogData;
+    declare _selectedDifficulty: number;
+    declare _commonModifiers: Record<string, boolean>;
+    declare _customModifier: number;
+
     /**
-     * @param {object} simpleSkillData  The skill data.
-     * @param {object} [options={}]     Dialog options.
+     * @param {EnhancedSkillDialogData} simpleSkillData  The skill data.
+     * @param {ApplicationV2Config.DefaultOptions} [options={}]     Dialog options.
      */
-    constructor(simpleSkillData: any = {}, options: Record<string, unknown> = {}) {
-        // @ts-expect-error Foundry V2 constructor accepts options
+    constructor(simpleSkillData: EnhancedSkillDialogData = {}, options: ApplicationV2Config.DefaultOptions = {}) {
         super(options);
         this.simpleSkillData = simpleSkillData;
-        this._selectedDifficulty = 0; // Challenging (baseline)
+        this._selectedDifficulty = 0;
         this._commonModifiers = {};
         this._customModifier = 0;
     }
@@ -34,16 +62,16 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         tag: 'form',
         classes: ['wh40k-rpg', 'dialog', 'enhanced-skill-roll', 'standard-form'],
         actions: {
-            selectDifficulty: EnhancedSkillDialog.#onSelectDifficulty,
-            toggleModifier: EnhancedSkillDialog.#onToggleModifier,
-            updateCustom: EnhancedSkillDialog.#onUpdateCustom,
-            roll: EnhancedSkillDialog.#onRoll,
-            rollRepeat: EnhancedSkillDialog.#onRollRepeat,
-            cancel: EnhancedSkillDialog.#onCancel,
+            selectDifficulty: EnhancedSkillDialog.#onSelectDifficulty as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            toggleModifier: EnhancedSkillDialog.#onToggleModifier as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            updateCustom: EnhancedSkillDialog.#onUpdateCustom as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            roll: EnhancedSkillDialog.#onRoll as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            rollRepeat: EnhancedSkillDialog.#onRollRepeat as unknown as ApplicationV2Config.DefaultOptions['actions'],
+            cancel: EnhancedSkillDialog.#onCancel as unknown as ApplicationV2Config.DefaultOptions['actions'],
         },
         form: {
             submitOnChange: false,
@@ -51,7 +79,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         },
         position: {
             width: 450,
-            height: 'auto' as const,
+            height: 'auto',
         },
         window: {
             title: 'Skill Test',
@@ -62,7 +90,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/prompt/enhanced-skill-roll.hbs',
         },
@@ -72,114 +100,24 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /*  Difficulty Presets                          */
     /* -------------------------------------------- */
 
-    /**
-     * Difficulty preset configurations.
-     * @type {Array<{key: string, label: string, modifier: number, icon: string, description: string}>}
-     */
-    static DIFFICULTIES = [
-        {
-            key: 'trivial',
-            label: 'Trivial',
-            modifier: 60,
-            icon: 'fa-smile',
-            description: 'Automatic success unless complications',
-        },
-        {
-            key: 'easy',
-            label: 'Easy',
-            modifier: 30,
-            icon: 'fa-grin',
-            description: 'Simple tasks with no pressure',
-        },
-        {
-            key: 'routine',
-            label: 'Routine',
-            modifier: 20,
-            icon: 'fa-meh',
-            description: 'Standard tasks with time',
-        },
-        {
-            key: 'ordinary',
-            label: 'Ordinary',
-            modifier: 10,
-            icon: 'fa-smile-beam',
-            description: 'Typical difficulty',
-        },
-        {
-            key: 'challenging',
-            label: 'Challenging',
-            modifier: 0,
-            icon: 'fa-grimace',
-            description: 'No modifier (baseline)',
-            default: true,
-        },
-        {
-            key: 'difficult',
-            label: 'Difficult',
-            modifier: -10,
-            icon: 'fa-frown',
-            description: 'Complex or contested tasks',
-        },
-        {
-            key: 'hard',
-            label: 'Hard',
-            modifier: -20,
-            icon: 'fa-dizzy',
-            description: 'Very challenging circumstances',
-        },
-        {
-            key: 'veryHard',
-            label: 'Very Hard',
-            modifier: -30,
-            icon: 'fa-tired',
-            description: 'Exceptional difficulty',
-        },
-        {
-            key: 'hellish',
-            label: 'Hellish',
-            modifier: -60,
-            icon: 'fa-skull',
-            description: 'Near-impossible feats',
-        },
+    static DIFFICULTIES: DifficultyPreset[] = [
+        { key: 'trivial', label: 'Trivial', modifier: 60, icon: 'fa-smile', description: 'Automatic success unless complications' },
+        { key: 'easy', label: 'Easy', modifier: 30, icon: 'fa-grin', description: 'Simple tasks with no pressure' },
+        { key: 'routine', label: 'Routine', modifier: 20, icon: 'fa-meh', description: 'Standard tasks with time' },
+        { key: 'ordinary', label: 'Ordinary', modifier: 10, icon: 'fa-smile-beam', description: 'Typical difficulty' },
+        { key: 'challenging', label: 'Challenging', modifier: 0, icon: 'fa-grimace', description: 'No modifier (baseline)' },
+        { key: 'difficult', label: 'Difficult', modifier: -10, icon: 'fa-frown', description: 'Complex or contested tasks' },
+        { key: 'hard', label: 'Hard', modifier: -20, icon: 'fa-dizzy', description: 'Very challenging circumstances' },
+        { key: 'veryHard', label: 'Very Hard', modifier: -30, icon: 'fa-tired', description: 'Exceptional difficulty' },
+        { key: 'hellish', label: 'Hellish', modifier: -60, icon: 'fa-skull', description: 'Near-impossible feats' },
     ];
 
-    /* -------------------------------------------- */
-
-    /**
-     * Common modifier presets.
-     * @type {Array<{key: string, label: string, value: number, description: string}>}
-     */
-    static COMMON_MODIFIERS = [
-        {
-            key: 'goodTools',
-            label: 'Good Tools',
-            value: 10,
-            description: 'Quality equipment aids the task',
-        },
-        {
-            key: 'poorTools',
-            label: 'Poor Tools',
-            value: -10,
-            description: 'Inadequate or damaged equipment',
-        },
-        {
-            key: 'rushed',
-            label: 'Rushed',
-            value: -10,
-            description: 'Insufficient time to work carefully',
-        },
-        {
-            key: 'extraTime',
-            label: 'Extra Time',
-            value: 10,
-            description: 'Taking time to work methodically',
-        },
-        {
-            key: 'assistance',
-            label: 'Assistance',
-            value: 10,
-            description: '+10 per helper (max +30)',
-        },
+    static COMMON_MODIFIERS: CommonModifierPreset[] = [
+        { key: 'goodTools', label: 'Good Tools', value: 10, description: 'Quality equipment aids the task' },
+        { key: 'poorTools', label: 'Poor Tools', value: -10, description: 'Inadequate or damaged equipment' },
+        { key: 'rushed', label: 'Rushed', value: -10, description: 'Insufficient time to work carefully' },
+        { key: 'extraTime', label: 'Extra Time', value: 10, description: 'Taking time to work methodically' },
+        { key: 'assistance', label: 'Assistance', value: 10, description: '+10 per helper (max +30)' },
     ];
 
     /* -------------------------------------------- */
@@ -218,8 +156,8 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const context = await super._prepareContext(options);
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<unknown> {
+        const context = (await super._prepareContext(options)) as Record<string, unknown>;
         const rollData = this.simpleSkillData.rollData;
 
         // Calculate total modifier
@@ -229,14 +167,14 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         const totalModifier = difficultyMod + commonMod + customMod;
 
         // Prepare difficulty buttons
-        const difficulties = (this.constructor as any).DIFFICULTIES.map((d) => ({
+        const difficulties = EnhancedSkillDialog.DIFFICULTIES.map((d) => ({
             ...d,
             selected: d.modifier === this._selectedDifficulty,
             cssClass: d.modifier === this._selectedDifficulty ? 'selected' : '',
         }));
 
         // Prepare common modifiers
-        const commonModifiers = (this.constructor as any).COMMON_MODIFIERS.map((m) => ({
+        const commonModifiers = EnhancedSkillDialog.COMMON_MODIFIERS.map((m) => ({
             ...m,
             checked: this._commonModifiers[m.key] || false,
         }));
@@ -246,9 +184,9 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
         return {
             ...context,
-            skillName: this.simpleSkillData.name || rollData?.name || 'Test',
-            baseTarget: rollData?.baseTarget || 0,
-            finalTarget: (rollData?.baseTarget || 0) + totalModifier,
+            skillName: this.simpleSkillData.name ?? rollData?.name ?? 'Test',
+            baseTarget: rollData?.baseTarget ?? 0,
+            finalTarget: (rollData?.baseTarget ?? 0) + totalModifier,
             difficulties,
             commonModifiers,
             customModifier: this._customModifier,
@@ -263,21 +201,23 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+    async _onRender(context: unknown, options: ApplicationV2Config.RenderOptions): Promise<void> {
         await super._onRender(context, options);
 
         setupNumberInputAutoSelect(this.element);
 
         // Focus custom modifier input
-        this.element.querySelector('#customModifier')?.addEventListener('input', (e) => {
+        const customInput = this.element.querySelector('#customModifier') as HTMLInputElement | null;
+        customInput?.addEventListener('input', (e) => {
             this._customModifier = parseInt((e.target as HTMLInputElement).value) || 0;
-            this.render(false, { parts: ['form'] });
+            void this.render(false, { parts: ['form'] });
         });
 
         // Add keyboard shortcut (Enter to roll)
         this.element.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
+            const ke = e as KeyboardEvent;
+            if (ke.key === 'Enter' && !ke.shiftKey) {
+                ke.preventDefault();
                 void this._performRoll();
             }
         });
@@ -296,7 +236,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         let total = 0;
         for (const [key, active] of Object.entries(this._commonModifiers)) {
             if (!active) continue;
-            const modifier = (this.constructor as any).COMMON_MODIFIERS.find((m) => m.key === key);
+            const modifier = EnhancedSkillDialog.COMMON_MODIFIERS.find((m) => m.key === key);
             if (modifier) total += modifier.value;
         }
         return total;
@@ -309,9 +249,9 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @returns {Array<{name: string, modifier: number, timestamp: number}>}
      * @private
      */
-    _getRecentRolls(): unknown[] {
-        const recent = (game.user as any).getFlag('wh40k-rpg', 'recentRolls') || [];
-        return recent.slice(0, 3); // Last 3 rolls
+    _getRecentRolls(): Array<{ name: string; modifier: number; timestamp: number }> {
+        const recent = (game.user as any).getFlag('wh40k-rpg', 'recentRolls') as Array<{ name: string; modifier: number; timestamp: number }> | undefined;
+        return recent?.slice(0, 3) ?? [];
     }
 
     /* -------------------------------------------- */
@@ -321,15 +261,15 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      * @param {number} modifier  Total modifier used.
      * @private
      */
-    async _saveToRecentRolls(modifier: any): Promise<void> {
-        const recent = (game.user as any).getFlag('wh40k-rpg', 'recentRolls') || [];
+    async _saveToRecentRolls(modifier: number): Promise<void> {
+        const recent =
+            ((game.user as any).getFlag('wh40k-rpg', 'recentRolls') as Array<{ name: string; modifier: number; timestamp: number }> | undefined) ?? [];
         recent.unshift({
-            name: this.simpleSkillData.name || 'Test',
+            name: this.simpleSkillData.name ?? 'Test',
             modifier,
             timestamp: Date.now(),
         });
 
-        // Keep only last 10
         const trimmed = recent.slice(0, 10);
         await (game.user as any).setFlag('wh40k-rpg', 'recentRolls', trimmed);
     }
@@ -340,12 +280,9 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
     /**
      * Handle difficulty button click.
-     * @this {EnhancedSkillDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onSelectDifficulty(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const modifier = parseInt(target.dataset.modifier);
+    static async #onSelectDifficulty(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
+        const modifier = parseInt(target.dataset.modifier ?? '0', 10);
         this._selectedDifficulty = modifier;
 
         // Animate selection
@@ -359,25 +296,21 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
     /**
      * Handle common modifier checkbox toggle.
-     * @this {EnhancedSkillDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Checkbox that was clicked.
      */
-    static async #onToggleModifier(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onToggleModifier(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
         const key = target.dataset.modifierKey;
-        this._commonModifiers[key] = (target as HTMLInputElement).checked;
-        await this.render(false, { parts: ['form'] });
+        if (key) {
+            this._commonModifiers[key] = (target as HTMLInputElement).checked;
+            await this.render(false, { parts: ['form'] });
+        }
     }
 
     /* -------------------------------------------- */
 
     /**
      * Handle custom modifier input change.
-     * @this {EnhancedSkillDialog}
-     * @param {Event} event         Triggering input event.
-     * @param {HTMLElement} target  Input that was changed.
      */
-    static async #onUpdateCustom(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onUpdateCustom(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
         this._customModifier = parseInt((target as HTMLInputElement).value) || 0;
         await this.render(false, { parts: ['form'] });
     }
@@ -386,11 +319,8 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
     /**
      * Handle roll button click.
-     * @this {EnhancedSkillDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onRoll(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onRoll(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
         await this._performRoll();
     }
 
@@ -398,12 +328,9 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
     /**
      * Handle repeat last roll button click.
-     * @this {EnhancedSkillDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onRollRepeat(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const modifier = parseInt(target.dataset.modifier);
+    static async #onRollRepeat(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
+        const modifier = parseInt(target.dataset.modifier ?? '0', 10);
 
         // Apply the modifier directly
         this._customModifier = modifier - this._selectedDifficulty;
@@ -415,11 +342,8 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
     /**
      * Handle cancel button click.
-     * @this {EnhancedSkillDialog}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: EnhancedSkillDialog, event: Event, target: HTMLElement): Promise<void> {
         await this.close();
     }
 
@@ -433,6 +357,7 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
      */
     async _performRoll(): Promise<void> {
         const rollData = this.simpleSkillData.rollData;
+        if (!rollData) return;
 
         // Calculate total modifier
         const totalModifier = this._selectedDifficulty + this._calculateCommonModifiers() + this._customModifier;
@@ -447,8 +372,8 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
         // Execute roll
         await rollData.calculateTotalModifiers();
-        await this.simpleSkillData.calculateSuccessOrFailure();
-        await sendActionDataToChat(this.simpleSkillData);
+        await (this.simpleSkillData as any).calculateSuccessOrFailure?.();
+        await sendActionDataToChat(this.simpleSkillData as any);
 
         await this.close();
     }

@@ -3,6 +3,7 @@
  */
 
 import ContainerItemSheet from './container-item-sheet.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 import type { default as ArmourDataModel } from '../../data/item/armour.ts';
 
 /**
@@ -17,7 +18,7 @@ export default class ArmourSheet extends ContainerItemSheet {
             height: 580,
         },
         actions: {
-            ...ContainerItemSheet.DEFAULT_OPTIONS?.actions,
+            ...(ContainerItemSheet as any).DEFAULT_OPTIONS?.actions,
             toggleCoverage: ArmourSheet.#toggleCoverage,
             addProperty: ArmourSheet.#addProperty,
             removeProperty: ArmourSheet.#removeProperty,
@@ -67,19 +68,19 @@ export default class ArmourSheet extends ContainerItemSheet {
         context.armourTypes = CONFIG.WH40K?.armourTypes || {};
         context.bodyLocations = CONFIG.WH40K?.bodyLocations || {};
         context.availableProperties = this._getAvailableProperties();
-        context.apSummary = sys.apSummary;
-        context.coverageLabel = sys.coverageLabel;
-        context.coverageIcons = sys.coverageIcons;
-        context.propertyLabels = sys.propertyLabels;
+        context.apSummary = (sys as any).apSummary;
+        context.coverageLabel = (sys as any).coverageLabel;
+        context.coverageIcons = (sys as any).coverageIcons;
+        context.propertyLabels = (sys as any).propertyLabels;
 
         // Convert coverage Set to array for template
-        context.coverageArray = Array.from(sys.coverage || []);
+        context.coverageArray = Array.from((sys as any).coverage || []);
 
         // Add propertiesArray for safe template access
-        context.propertiesArray = sys.propertiesArray || [];
+        context.propertiesArray = (sys as any).propertiesArray || [];
 
         // Add modifications array for safe template access
-        context.modificationsArray = sys.modifications || [];
+        context.modificationsArray = (sys as any).modifications || [];
 
         return context;
     }
@@ -90,7 +91,7 @@ export default class ArmourSheet extends ContainerItemSheet {
     _getAvailableProperties(): Record<string, { label: string }> {
         const props: Record<string, { label: string }> = {};
         const available = ['sealed', 'auto-stabilized', 'hexagrammic', 'blessed', 'camouflage', 'lightweight', 'reinforced', 'agility-bonus', 'strength-bonus'];
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as any;
 
         for (const id of available) {
             // Skip already-added properties
@@ -114,10 +115,13 @@ export default class ArmourSheet extends ContainerItemSheet {
 
     /**
      * Toggle coverage for a body location.
+     * @param {ArmourSheet} this
+     * @param {Event} event
+     * @param {HTMLElement} target
      */
     static async #toggleCoverage(this: ArmourSheet, event: Event, target: HTMLElement): Promise<void> {
         const location = target.dataset.location;
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as any;
         const coverage = new Set(sys.coverage || []);
 
         // Handle "all" special case
@@ -159,13 +163,16 @@ export default class ArmourSheet extends ContainerItemSheet {
 
     /**
      * Add a special property.
+     * @param {ArmourSheet} this
+     * @param {Event} event
+     * @param {HTMLElement} target
      */
     static async #addProperty(this: ArmourSheet, event: Event, target: HTMLElement): Promise<void> {
         const select = this.element.querySelector("[name='new-property']") as HTMLSelectElement | null;
         const property = select?.value;
         if (!property) return;
 
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as any;
         const properties = new Set(sys.properties || []);
         properties.add(property);
 
@@ -177,10 +184,13 @@ export default class ArmourSheet extends ContainerItemSheet {
 
     /**
      * Remove a special property.
+     * @param {ArmourSheet} this
+     * @param {Event} event
+     * @param {HTMLElement} target
      */
     static async #removeProperty(this: ArmourSheet, event: Event, target: HTMLElement): Promise<void> {
         const property = target.dataset.property;
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as any;
         const properties = new Set(sys.properties || []);
         if (property) properties.delete(property);
 
@@ -189,9 +199,12 @@ export default class ArmourSheet extends ContainerItemSheet {
 
     /**
      * Add a modification to the armour.
+     * @param {ArmourSheet} this
+     * @param {Event} event
+     * @param {HTMLElement} target
      */
     static #addModification(this: ArmourSheet, event: Event, target: HTMLElement): void {
-        const sys = this.item.system as ArmourDataModel;
+        const sys = this.item.system as any;
         // Check if slots available
         if (sys.availableModSlots <= 0) {
             ui.notifications.warn(game.i18n.localize('WH40K.Armour.NoSlotsAvailable'));
@@ -204,16 +217,19 @@ export default class ArmourSheet extends ContainerItemSheet {
 
     /**
      * Edit a modification.
+     * @param {ArmourSheet} this
+     * @param {Event} event
+     * @param {HTMLElement} target
      */
     static async #editMod(this: ArmourSheet, event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset.modIndex ?? '');
-        const sys = this.item.system as ArmourDataModel;
+        const index = parseInt(target.dataset.modIndex ?? '', 10);
+        const sys = this.item.system as any;
         const mod = sys.modifications[index];
         if (!mod?.uuid) return;
 
         try {
-            const item = await fromUuid(mod.uuid);
-            if (item && 'sheet' in item) (item as any).sheet.render(true);
+            const item = (await fromUuid(mod.uuid)) as any;
+            if (item && item.sheet) item.sheet.render(true);
         } catch (err) {
             console.error('Failed to open modification:', err);
         }
@@ -221,10 +237,13 @@ export default class ArmourSheet extends ContainerItemSheet {
 
     /**
      * Remove a modification from the armour.
+     * @param {ArmourSheet} this
+     * @param {Event} event
+     * @param {HTMLElement} target
      */
     static async #removeMod(this: ArmourSheet, event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset.modIndex ?? '');
-        const sys = this.item.system as ArmourDataModel;
+        const index = parseInt(target.dataset.modIndex ?? '', 10);
+        const sys = this.item.system as any;
         const modifications = [...sys.modifications];
         modifications.splice(index, 1);
 

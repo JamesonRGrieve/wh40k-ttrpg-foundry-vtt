@@ -1,15 +1,13 @@
-/**
- * @file TemplateSelector - Browse and instantiate NPC templates
- * Phase 7: Template System
- *
- * Provides:
- * - Browse available NPC templates
- * - Filter by category, faction, threat
- * - Preview template at different threat levels
- * - Create NPC from selected template
- */
+import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+interface FilterState {
+    category: string;
+    faction: string;
+    search: string;
+}
 
 /**
  * Dialog for browsing and selecting NPC templates.
@@ -59,15 +57,15 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Available templates (cached).
-     * @type {Array<Item>}
+     * @type {WH40KItem[]}
      */
-    #templates: unknown[] = [];
+    #templates: WH40KItem[] = [];
 
     /**
      * Current filter settings.
-     * @type {Object}
+     * @type {FilterState}
      */
-    #filters: Record<string, string> = {
+    #filters: FilterState = {
         category: '',
         faction: '',
         search: '',
@@ -93,9 +91,9 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Promise resolver.
-     * @type {Function|null}
+     * @type {((value: WH40KNPCV2 | null) => void) | null}
      */
-    #resolve: ((value: unknown) => void) | null = null;
+    #resolve: ((value: WH40KNPCV2 | null) => void) | null = null;
 
     /**
      * Whether submitted.
@@ -105,7 +103,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Render timeout handle.
-     * @type {any}
+     * @type {ReturnType<typeof setTimeout> | null}
      */
     _renderTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -114,9 +112,8 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        // @ts-expect-error - argument type
-        const context: unknown = await super._prepareContext(options);
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        const context = await super._prepareContext(options);
 
         // Load templates if not cached
         if (this.#templates.length === 0) {
@@ -127,35 +124,33 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         const filteredTemplates = this._filterTemplates();
 
         // Get selected template details
-        let selectedTemplate: unknown = null;
+        let selectedTemplate: WH40KItem | undefined;
         let preview = null;
         if (this.#selectedUuid) {
-            selectedTemplate = this.#templates.find((t: { uuid: string }) => t.uuid === this.#selectedUuid);
+            selectedTemplate = this.#templates.find((t) => t.uuid === this.#selectedUuid);
             if (selectedTemplate) {
-                preview = selectedTemplate.system.previewAtThreat(this.#threatLevel);
+                preview = (selectedTemplate.system as any).previewAtThreat(this.#threatLevel);
             }
         }
 
         // Get unique categories and factions for filter dropdowns
-        const categories = [...new Set(this.#templates.map((t: Record<string, unknown>) => (t.system as Record<string, unknown>).category))].sort();
-        const factions = [
-            ...new Set(this.#templates.map((t: Record<string, unknown>) => (t.system as Record<string, unknown>).faction).filter((f: unknown) => f)),
-        ].sort();
+        const categories = [...new Set(this.#templates.map((t) => (t.system as any).category))].sort();
+        const factions = [...new Set(this.#templates.map((t) => (t.system as any).faction).filter((f) => f))].sort();
 
         return {
             ...context,
 
             // Templates
-            templates: filteredTemplates.map((t: Record<string, unknown>) => ({
+            templates: filteredTemplates.map((t) => ({
                 uuid: t.uuid,
                 name: t.name,
                 img: t.img,
-                category: t.system.category,
-                faction: t.system.faction,
-                baseThreat: t.system.baseThreatLevel,
-                type: t.system.type,
-                role: t.system.role,
-                summary: t.system.summary,
+                category: (t.system as any).category,
+                faction: (t.system as any).faction,
+                baseThreat: (t.system as any).baseThreatLevel,
+                type: (t.system as any).type,
+                role: (t.system as any).role,
+                summary: (t.system as any).summary,
                 selected: t.uuid === this.#selectedUuid,
             })),
             hasTemplates: filteredTemplates.length > 0,
@@ -163,12 +158,12 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
             // Filters
             filters: this.#filters,
-            categories: categories.map((c: unknown) => ({ key: c, label: (c as string).titleCase(), selected: c === this.#filters.category })),
-            factions: factions.map((f: unknown) => ({ key: f, label: f, selected: f === this.#filters.faction })),
+            categories: categories.map((c) => ({ key: c, label: (c as string).titleCase(), selected: c === this.#filters.category })),
+            factions: factions.map((f) => ({ key: f, label: f, selected: f === this.#filters.faction })),
 
             // Selection
             selectedTemplate,
-            hasSelection: selectedTemplate !== null,
+            hasSelection: !!selectedTemplate,
             preview,
             threatLevel: this.#threatLevel,
             isHorde: this.#isHorde,
@@ -188,51 +183,51 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
+    _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
         void super._onRender(context, options);
 
         // Filter inputs
-        const categorySelect = this.element.querySelector('[name="filterCategory"]');
-        const factionSelect = this.element.querySelector('[name="filterFaction"]');
-        const searchInput = this.element.querySelector('[name="filterSearch"]');
+        const categorySelect = this.element.querySelector('[name="filterCategory"]') as HTMLSelectElement | null;
+        const factionSelect = this.element.querySelector('[name="filterFaction"]') as HTMLSelectElement | null;
+        const searchInput = this.element.querySelector('[name="filterSearch"]') as HTMLInputElement | null;
 
         if (categorySelect) {
             categorySelect.addEventListener('change', () => {
-                this.#filters.category = (categorySelect as HTMLSelectElement).value;
+                this.#filters.category = categorySelect.value;
                 void this.render({ parts: ['content'] });
             });
         }
 
         if (factionSelect) {
             factionSelect.addEventListener('change', () => {
-                this.#filters.faction = (factionSelect as HTMLSelectElement).value;
+                this.#filters.faction = factionSelect.value;
                 void this.render({ parts: ['content'] });
             });
         }
 
         if (searchInput) {
             searchInput.addEventListener('input', () => {
-                this.#filters.search = (searchInput as HTMLInputElement).value;
+                this.#filters.search = searchInput.value;
                 this._debounceRender();
             });
         }
 
         // Threat level slider
-        const threatSlider = this.element.querySelector('[name="threatLevel"]');
+        const threatSlider = this.element.querySelector('[name="threatLevel"]') as HTMLInputElement | null;
         const threatValue = this.element.querySelector('.threat-value');
         if (threatSlider) {
             threatSlider.addEventListener('input', () => {
-                this.#threatLevel = parseInt((threatSlider as HTMLInputElement).value, 10);
-                if (threatValue) (threatValue as HTMLElement).textContent = String(this.#threatLevel);
+                this.#threatLevel = parseInt(threatSlider.value, 10);
+                if (threatValue) threatValue.textContent = String(this.#threatLevel);
                 this._debounceRender();
             });
         }
 
         // Horde checkbox
-        const hordeCheckbox = this.element.querySelector('[name="isHorde"]');
+        const hordeCheckbox = this.element.querySelector('[name="isHorde"]') as HTMLInputElement | null;
         if (hordeCheckbox) {
             hordeCheckbox.addEventListener('change', () => {
-                this.#isHorde = (hordeCheckbox as HTMLInputElement).checked;
+                this.#isHorde = hordeCheckbox.checked;
             });
         }
     }
@@ -260,7 +255,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         this.#templates = [];
 
         // Load from world items
-        const worldTemplates = game.items.filter((i: { type: string }) => i.type === 'npcTemplate');
+        const worldTemplates = game.items.filter((i: any) => i.type === 'npcTemplate') as WH40KItem[];
         this.#templates.push(...worldTemplates);
 
         // Load from compendiums
@@ -270,10 +265,10 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
             try {
                 const index = await pack.getIndex({ fields: ['type', 'system.category', 'system.faction'] });
-                const templateEntries = index.filter((e: { type: string }) => e.type === 'npcTemplate');
+                const templateEntries = index.filter((e: any) => e.type === 'npcTemplate');
 
                 for (const entry of templateEntries) {
-                    const item = await pack.getDocument(entry._id);
+                    const item = (await pack.getDocument(entry._id)) as WH40KItem | null;
                     if (item) this.#templates.push(item);
                 }
             } catch (err) {
@@ -284,18 +279,19 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Filter templates based on current filter settings.
-     * @returns {Array<Item>}
+     * @returns {WH40KItem[]}
      * @private
      */
-    _filterTemplates(): unknown[] {
-        return this.#templates.filter((t: Record<string, unknown>) => {
+    _filterTemplates(): WH40KItem[] {
+        return this.#templates.filter((t) => {
+            const system = t.system as any;
             // Category filter
-            if (this.#filters.category && t.system.category !== this.#filters.category) {
+            if (this.#filters.category && system.category !== this.#filters.category) {
                 return false;
             }
 
             // Faction filter
-            if (this.#filters.faction && t.system.faction !== this.#filters.faction) {
+            if (this.#filters.faction && system.faction !== this.#filters.faction) {
                 return false;
             }
 
@@ -303,7 +299,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             if (this.#filters.search) {
                 const search = this.#filters.search.toLowerCase();
                 const name = t.name.toLowerCase();
-                const faction = (t.system.faction || '').toLowerCase();
+                const faction = (system.faction || '').toLowerCase();
                 if (!name.includes(search) && !faction.includes(search)) {
                     return false;
                 }
@@ -319,10 +315,11 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Select a template.
+     * @param {TemplateSelector} this
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #selectTemplate(this: any, event: Event, target: HTMLElement): void {
+    static #selectTemplate(this: TemplateSelector, event: PointerEvent, target: HTMLElement): void {
         const uuid = target.dataset.uuid;
         if (!uuid) return;
 
@@ -332,30 +329,32 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Clear all filters.
+     * @param {TemplateSelector} this
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #clearFilter(this: any, event: Event, target: HTMLElement): void {
+    static #clearFilter(this: TemplateSelector, event: PointerEvent, target: HTMLElement): void {
         this.#filters = { category: '', faction: '', search: '' };
         this.render({ parts: ['content'] });
     }
 
     /**
      * Create NPC from selected template.
+     * @param {TemplateSelector} this
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCreate(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCreate(this: TemplateSelector, event: PointerEvent, target: HTMLElement): Promise<void> {
         if (!this.#selectedUuid) {
             ui.notifications.warn('Select a template first.');
             return;
         }
 
-        const template = this.#templates.find((t: { uuid: string }) => t.uuid === this.#selectedUuid);
+        const template = this.#templates.find((t) => t.uuid === this.#selectedUuid);
         if (!template) return;
 
         try {
-            const systemData = template.system.generateAtThreat(this.#threatLevel, {
+            const systemData = (template.system as any).generateAtThreat(this.#threatLevel, {
                 isHorde: this.#isHorde,
             });
 
@@ -366,15 +365,15 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                 system: systemData,
             };
 
-            const actor = await (Actor as any).create(actorData);
+            const actor = (await Actor.create(actorData)) as WH40KNPCV2 | undefined;
 
             if (actor) {
                 // Create embedded traits and talents
-                const itemsToCreate: unknown[] = [];
+                const itemsToCreate: Record<string, unknown>[] = [];
 
-                for (const trait of template.system.traits || []) {
+                for (const trait of (template.system as any).traits || []) {
                     if (trait.uuid) {
-                        const item = await (fromUuid as any)(trait.uuid);
+                        const item = (await fromUuid(trait.uuid)) as any;
                         if (item) {
                             itemsToCreate.push({
                                 name: item.name,
@@ -386,9 +385,9 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                     }
                 }
 
-                for (const talent of template.system.talents || []) {
+                for (const talent of (template.system as any).talents || []) {
                     if (talent.uuid) {
-                        const item = await (fromUuid as any)(talent.uuid);
+                        const item = (await fromUuid(talent.uuid)) as any;
                         if (item) {
                             itemsToCreate.push({
                                 name: item.name,
@@ -405,7 +404,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                 }
 
                 ui.notifications.info(`Created NPC: ${actor.name}`);
-                actor.sheet.render(true);
+                actor.sheet?.render(true);
 
                 this.#submitted = true;
                 if (this.#resolve) this.#resolve(actor);
@@ -419,10 +418,11 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Cancel and close.
+     * @param {TemplateSelector} this
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #onCancel(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #onCancel(this: TemplateSelector, event: PointerEvent, target: HTMLElement): Promise<void> {
         this.#submitted = false;
         if (this.#resolve) this.#resolve(null);
         await this.close();
@@ -433,7 +433,6 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    // @ts-expect-error - override type
     async close(options: Record<string, unknown> = {}): Promise<void> {
         if (this._renderTimeout) clearTimeout(this._renderTimeout);
 
@@ -441,7 +440,6 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             this.#resolve(null);
         }
 
-        // @ts-expect-error - type assignment
         return super.close(options);
     }
 
@@ -451,9 +449,9 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Wait for selection.
-     * @returns {Promise<Actor|null>} Created actor or null.
+     * @returns {Promise<WH40KNPCV2 | null>} Created actor or null.
      */
-    async wait(): Promise<unknown> {
+    async wait(): Promise<WH40KNPCV2 | null> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             void this.render(true);
@@ -462,12 +460,10 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Open the template selector.
-     * @param {Object} [options] - Options.
-     * @param {string} [options.category] - Initial category filter.
-     * @param {string} [options.faction] - Initial faction filter.
-     * @returns {Promise<Actor|null>} Created actor or null.
+     * @param {Partial<FilterState>} [options] - Options.
+     * @returns {Promise<WH40KNPCV2 | null>} Created actor or null.
      */
-    static async open(options: Record<string, unknown> = {}): Promise<unknown> {
+    static async open(options: Partial<FilterState> = {}): Promise<WH40KNPCV2 | null> {
         const selector = new this();
 
         if (options.category) selector.#filters.category = options.category;

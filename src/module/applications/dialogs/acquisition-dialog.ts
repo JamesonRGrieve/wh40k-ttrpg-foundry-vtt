@@ -39,28 +39,36 @@ interface AcquisitionContext extends Record<string, unknown> {
     recentAcquisitions: unknown[];
 }
 
+interface AcquisitionHistoryEntry {
+    item: WH40KItem | null;
+    roll: number;
+    target: number;
+    success: boolean;
+    dos: number;
+    timestamp: number;
+}
+
 export default class AcquisitionDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     /* -------------------------------------------- */
     /*  Configuration                               */
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
         id: 'acquisition-dialog-{id}',
         classes: ['wh40k-rpg', 'acquisition-dialog'],
         tag: 'form',
         window: {
             title: 'WH40K.Acquisition.Title',
             icon: 'fa-solid fa-coins',
-            minimizable: false,
             resizable: false,
         },
         position: {
             width: 480,
-            height: 'auto' as const,
+            height: 'auto',
         },
         form: {
-            handler: AcquisitionDialog.#onSubmit,
+            handler: AcquisitionDialog.#onSubmit as unknown as ApplicationV2Config.FormConfiguration['handler'],
             submitOnChange: false,
             closeOnSubmit: true,
         },
@@ -73,7 +81,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /* -------------------------------------------- */
 
     /** @override */
-    static PARTS = {
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         form: {
             template: 'systems/wh40k-rpg/templates/dialogs/acquisition-dialog.hbs',
         },
@@ -132,7 +140,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         if (this.item) {
             context.item = {
                 name: this.item.name || 'Unknown',
-                img: this.item.img,
+                img: this.item.img ?? null,
                 type: this.item.type,
                 availability: (this.item.system as any)?.availability || 'Common',
                 craftsmanship: (this.item.system as any)?.craftsmanship || 'Common',
@@ -222,12 +230,11 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Get recent acquisitions from actor flags
-     * @returns {Array}  Recent acquisitions
+     * @returns {AcquisitionHistoryEntry[]}  Recent acquisitions
      * @private
      */
-    _getRecentAcquisitions(): unknown[] {
-        const history = this.actor.getFlag('wh40k-rpg', 'acquisitionHistory') || [];
-        return history.slice(-5).reverse(); // Last 5, most recent first
+    _getRecentAcquisitions(): AcquisitionHistoryEntry[] {
+        return (this.actor.getFlag('wh40k-rpg', 'acquisitionHistory') as AcquisitionHistoryEntry[])?.slice(-5).reverse() || [];
     }
 
     /* -------------------------------------------- */
@@ -255,7 +262,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /**
      * Handle form submission
      */
-    static #onSubmit(this: AcquisitionDialog, event: Event, form: HTMLFormElement, formData: FormDataExtended): void {
+    static #onSubmit(this: AcquisitionDialog, event: SubmitEvent, form: HTMLFormElement, formData: FormDataExtended): void {
         this.customModifier = parseInt(formData.object.customModifier as string) || 0;
     }
 
@@ -264,7 +271,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
     /**
      * Roll the acquisition test
      */
-    static async #roll(this: AcquisitionDialog, event: Event, target: HTMLElement): Promise<void> {
+    static async #roll(this: AcquisitionDialog, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         // Get form data
@@ -273,7 +280,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
         this.customModifier = parseInt(formData.object.customModifier as string) || 0;
 
         // Calculate final target
-        const context = await this._prepareContext({});
+        const context = await this._prepareContext({ force: true });
         const finalTarget = context.finalTarget;
 
         // Roll d100
@@ -337,11 +344,11 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Log acquisition to actor flags
-     * @param {object} data  Acquisition data
+     * @param {AcquisitionHistoryEntry} data  Acquisition data
      * @private
      */
-    async _logAcquisition(data: Record<string, unknown>): Promise<void> {
-        const history = this.actor.getFlag('wh40k-rpg', 'acquisitionHistory') || [];
+    async _logAcquisition(data: AcquisitionHistoryEntry): Promise<void> {
+        const history = (this.actor.getFlag('wh40k-rpg', 'acquisitionHistory') as AcquisitionHistoryEntry[]) || [];
         history.push(data);
 
         // Keep last 20
@@ -357,7 +364,14 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
      * @param {object} data  Message data
      * @private
      */
-    async _createAcquisitionMessage(data: Record<string, unknown>): Promise<unknown> {
+    async _createAcquisitionMessage(data: {
+        roll: Roll;
+        target: number;
+        success: boolean;
+        dos: number;
+        item: WH40KItem | null;
+        modifiers: { base: number; common: number; custom: number };
+    }): Promise<ChatMessage | undefined> {
         const content = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/acquisition-test.hbs', {
             actor: this.actor,
             item: data.item,
@@ -368,12 +382,12 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             modifiers: data.modifiers,
         });
 
-        await ChatMessage.create({
+        return ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             content,
             flavor: 'Profit Factor Acquisition Test',
             rolls: [data.roll],
-        } as Record<string, unknown>);
+        } as unknown as Record<string, unknown>);
     }
 
     /* -------------------------------------------- */

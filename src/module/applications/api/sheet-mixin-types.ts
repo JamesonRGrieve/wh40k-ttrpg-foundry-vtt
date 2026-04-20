@@ -265,7 +265,7 @@ export interface StatBreakdownMixinAPI {
 
 /** API surface added by ActiveModifiersMixin */
 export interface ActiveModifiersMixinAPI {
-    prepareActiveModifiers(): any;
+    prepareActiveModifiers(): unknown;
 }
 
 /* -------------------------------------------- */

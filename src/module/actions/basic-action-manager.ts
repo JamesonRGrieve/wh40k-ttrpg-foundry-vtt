@@ -5,6 +5,7 @@ import { Hit } from '../rolls/damage-data.ts';
 import { uuid, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
 import { ActionData } from '../rolls/action-data.ts';
+import type { WH40KBaseActorDocument } from '../types/global.d.ts';
 
 export class BasicActionManager {
     // This is stored rolls for allowing re-rolls, ammo refund, etc.
@@ -13,7 +14,7 @@ export class BasicActionManager {
     initializeHooks(): void {
         // Add show/hide support for chat messages
         Hooks.on('renderChatMessageHTML', (message: ChatMessage, html: HTMLElement, context: Record<string, unknown>) => {
-            (game as any).wh40k.log('renderChatMessageHTML', { message, html, context });
+            game.wh40k.log('renderChatMessageHTML', { message, html, context });
             html.querySelectorAll('.roll-control__hide-control').forEach((el: Element) =>
                 el.addEventListener('click', async (ev: Event) => await this._toggleExpandChatMessage(ev)),
             );
@@ -45,7 +46,7 @@ export class BasicActionManager {
                 title: 'Assign Damage',
                 icon: 'fas fa-shield',
                 visible: true,
-                onClick: async () => this.assignDamageTool(),
+                onClick: async () => await this.assignDamageTool(),
                 button: true,
                 order: toolOrder,
             };
@@ -53,7 +54,7 @@ export class BasicActionManager {
     }
 
     _toggleExpandChatMessage(event: Event): void {
-        (game as any).wh40k.log('roll-control-toggle');
+        game.wh40k.log('roll-control-toggle');
         event.preventDefault();
         const displayToggle = event.currentTarget as HTMLElement;
         const span = displayToggle.querySelector('span');
@@ -86,17 +87,17 @@ export class BasicActionManager {
         await actionData.calculateHits();
 
         // Build template data
-        const damageRolls = actionData.damageData.hits.map((h: any) => h.damageRoll).filter((r: any) => r);
+        const damageRolls = actionData.damageData?.hits.map((h: Hit) => h.damageRoll).filter((r: Roll | undefined) => r) as Roll[];
         const templateData = {
             weaponName: actionData.rollData.name,
-            hits: actionData.damageData.hits,
+            hits: actionData.damageData?.hits,
             targetActor: actionData.rollData.targetActor,
             psychicEffect: (actionData as any).psychicEffect || null,
         };
 
         const template = 'systems/wh40k-rpg/templates/chat/damage-roll-chat.hbs';
         const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
-        const chatData: any = {
+        const chatData: Record<string, unknown> = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,
@@ -141,7 +142,8 @@ export class BasicActionManager {
             return;
         }
 
-        if ((actionData.rollData?.sourceActor?.system as any)?.fate?.value <= 0) {
+        const sourceActor = actionData.rollData.sourceActor as WH40KBaseActorDocument | null;
+        if ((sourceActor?.system as any)?.fate?.value <= 0) {
             ui.notifications?.warn(`Actor does not have enough fate points!`);
             return;
         }
@@ -157,7 +159,7 @@ export class BasicActionManager {
             // Generate new ID for action data
             actionData.id = uuid();
             // Use a FP
-            await (actionData.rollData.sourceActor as any).spendFate();
+            await sourceActor!.spendFate();
             // Refund Initial Resources
             await actionData.refundResources();
             // Reset
@@ -186,17 +188,14 @@ export class BasicActionManager {
 
         const targetUuid = div.dataset.targetUuid;
 
-        let targetActor: any;
+        let targetActor: Actor | undefined;
         if (targetUuid) {
-            targetActor = await fromUuid(targetUuid);
-            if (targetActor?.actor !== undefined) {
-                targetActor = targetActor.actor;
-            }
+            const doc = await fromUuid(targetUuid);
+            targetActor = doc instanceof Actor ? doc : (doc as any)?.actor;
         } else {
             const targetedObjects = game.user.targets;
             if (targetedObjects && targetedObjects.size > 0) {
-                const target = targetedObjects.values().next().value;
-                targetActor = (target as any).actor;
+                targetActor = (targetedObjects.values().next().value as TokenDocument).actor ?? undefined;
             }
         }
         if (!targetActor) {
@@ -204,7 +203,7 @@ export class BasicActionManager {
             return;
         }
 
-        const assignData = new AssignDamageData(targetActor, hitData);
+        const assignData = new AssignDamageData(targetActor as WH40KBaseActorDocument, hitData);
         await prepareAssignDamageRoll(assignData);
     }
 
@@ -224,8 +223,8 @@ export class BasicActionManager {
             return;
         }
 
-        const actor = (await fromUuid(targetUuid)) as any;
-        const targetActor = actor?.actor ?? actor;
+        const actor = await fromUuid(targetUuid);
+        const targetActor = (actor instanceof Actor ? actor : (actor as any)?.actor) as WH40KBaseActorDocument | undefined;
 
         if (!targetActor) {
             ui.notifications?.warn(`Cannot determine actor to assign hit.`);
@@ -239,26 +238,16 @@ export class BasicActionManager {
         }
 
         const assignDamageData = new AssignDamageData(targetActor, new Hit());
-        if (ignoreArmour || 'true' === ignoreArmour || 'TRUE' === ignoreArmour) {
+        if (ignoreArmour === 'true' || ignoreArmour === 'TRUE') {
             assignDamageData.ignoreArmour = true;
         }
 
         const hit = new Hit();
-        if (location) {
-            hit.location = location;
-        }
-        if (damage) {
-            hit.totalDamage = Number.parseInt(damage);
-        }
-        if (penetration) {
-            hit.totalPenetration = Number.parseInt(penetration);
-        }
-        if (fatigue) {
-            hit.totalFatigue = Number.parseInt(fatigue);
-        }
-        if (damageType) {
-            hit.damageType = damageType;
-        }
+        if (location) hit.location = location;
+        if (damage) hit.totalDamage = Number.parseInt(damage);
+        if (penetration) hit.totalPenetration = Number.parseInt(penetration);
+        if (fatigue) hit.totalFatigue = Number.parseInt(fatigue);
+        if (damageType) hit.damageType = damageType;
 
         assignDamageData.hit = hit;
 
@@ -269,34 +258,26 @@ export class BasicActionManager {
 
     async assignDamageTool(): Promise<void> {
         const sourceToken = DHTargetedActionManager.getSourceToken();
-        const sourceActorData = sourceToken ? (sourceToken.actor as any) : (globalThis as any).source;
-        if (!sourceActorData) return;
+        const sourceActor = sourceToken?.actor as WH40KBaseActorDocument | undefined;
+        if (!sourceActor) return;
 
         const hitData = new Hit();
-        const assignData = new AssignDamageData(sourceActorData, hitData);
+        const assignData = new AssignDamageData(sourceActor, hitData);
         await prepareAssignDamageRoll(assignData);
     }
 
     getActionData(id: string | undefined): ActionData | null {
         if (!id) return null;
-        return this.storedRolls[id];
+        return this.storedRolls[id] ?? null;
     }
 
     storeActionData(actionData: ActionData): void {
-        // Store roll data for fate re-rolls and ammo refunds during session
-        // Note: Rolls persist for entire session, consider adding cleanup on combat end if memory becomes an issue
         this.storedRolls[actionData.id] = actionData;
     }
 
-    /**
-     * Data Expected to vocalize item:
-     * actor, name, type description
-     * @param data
-     * @returns {Promise<void>}
-     */
-    async sendItemVocalizeChat(data: any): Promise<void> {
+    async sendItemVocalizeChat(data: Record<string, unknown>): Promise<void> {
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/item-vocalize-chat.hbs', data);
-        const chatData: any = {
+        const chatData: Record<string, unknown> = {
             user: game.user.id,
             content: html,
             rollMode: game.settings.get('core', 'rollMode'),
