@@ -198,8 +198,8 @@
     justify-content: center;
     gap: var(--wh40k-space-xs);
     padding: var(--wh40k-space-sm) var(--wh40k-space-md);
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.1)'} 0%, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.05)'} 100%);
-    border: 1px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-gold) r g b / 0.1) 0%, rgb(from var(--wh40k-accent-gold) r g b / 0.05) 100%);
+    border: 1px solid rgb(from var(--wh40k-accent-gold) r g b / 0.3);
     border-radius: var(--wh40k-radius-md);
     color: var(--wh40k-accent-gold);
     font-size: 0.85rem;
@@ -210,10 +210,10 @@
     transition: all var(--wh40k-transition-base);
 
     &:hover {
-        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'} 0%, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.1)'} 100%);
+        background: linear-gradient(135deg, rgb(from var(--wh40k-accent-gold) r g b / 0.2) 0%, rgb(from var(--wh40k-accent-gold) r g b / 0.1) 100%);
         border-color: var(--wh40k-accent-gold);
         transform: translateY(-1px);
-        box-shadow: 0 2px 8px #{'rgb(from var(--wh40k-accent-gold) r g b / 0.2)'};
+        box-shadow: 0 2px 8px rgb(from var(--wh40k-accent-gold) r g b / 0.2);
     }
 
     &:active {

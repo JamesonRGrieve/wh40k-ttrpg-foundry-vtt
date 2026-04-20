@@ -46,7 +46,7 @@
 
     &:hover {
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 12px #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+        box-shadow: 0 0 12px rgb(from var(--wh40k-color-gold) r g b / 0.3);
 
         .wh40k-origin-header__image-overlay {
             opacity: 1;
@@ -149,7 +149,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+        box-shadow: 0 0 0 2px rgb(from var(--wh40k-color-gold) r g b / 0.15);
     }
 }
 
@@ -183,56 +183,56 @@
 
 // Step-specific colors (matching step index)
 .wh40k-origin-badge--step {
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'});
-    border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-color-gold) r g b / 0.15), rgb(from var(--wh40k-color-gold) r g b / 0.05));
+    border-color: rgb(from var(--wh40k-color-gold) r g b / 0.3);
     color: var(--wh40k-color-gold);
 }
 
 .wh40k-origin-badge--step0 {
     // Home World - Green/Earth tones
-    background: linear-gradient(135deg, rgba(#4a7c59, 0.15), rgba(#4a7c59, 0.05));
-    border-color: rgba(#4a7c59, 0.3);
+    background: linear-gradient(135deg, rgb(from #4a7c59 r g b / 0.15), rgb(from #4a7c59 r g b / 0.05));
+    border-color: rgb(from #4a7c59 r g b / 0.3);
     color: #5ba86d;
 }
 
 .wh40k-origin-badge--step1 {
     // Birthright - Blue/Noble
-    background: linear-gradient(135deg, rgba(#4a6a7c, 0.15), rgba(#4a6a7c, 0.05));
-    border-color: rgba(#4a6a7c, 0.3);
+    background: linear-gradient(135deg, rgb(from #4a6a7c r g b / 0.15), rgb(from #4a6a7c r g b / 0.05));
+    border-color: rgb(from #4a6a7c r g b / 0.3);
     color: #5b8aa8;
 }
 
 .wh40k-origin-badge--step2 {
     // Lure - Purple/Mysterious
-    background: linear-gradient(135deg, rgba(#6a4a7c, 0.15), rgba(#6a4a7c, 0.05));
-    border-color: rgba(#6a4a7c, 0.3);
+    background: linear-gradient(135deg, rgb(from #6a4a7c r g b / 0.15), rgb(from #6a4a7c r g b / 0.05));
+    border-color: rgb(from #6a4a7c r g b / 0.3);
     color: #8a5ba8;
 }
 
 .wh40k-origin-badge--step3 {
     // Trials - Red/Danger
-    background: linear-gradient(135deg, rgba(#7c4a4a, 0.15), rgba(#7c4a4a, 0.05));
-    border-color: rgba(#7c4a4a, 0.3);
+    background: linear-gradient(135deg, rgb(from #7c4a4a r g b / 0.15), rgb(from #7c4a4a r g b / 0.05));
+    border-color: rgb(from #7c4a4a r g b / 0.3);
     color: #a85b5b;
 }
 
 .wh40k-origin-badge--step4 {
     // Motivation - Orange/Ambition
-    background: linear-gradient(135deg, rgba(#7c6a4a, 0.15), rgba(#7c6a4a, 0.05));
-    border-color: rgba(#7c6a4a, 0.3);
+    background: linear-gradient(135deg, rgb(from #7c6a4a r g b / 0.15), rgb(from #7c6a4a r g b / 0.05));
+    border-color: rgb(from #7c6a4a r g b / 0.3);
     color: #a88a5b;
 }
 
 .wh40k-origin-badge--step5 {
     // Career - Gold/Achievement
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.2)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.1)'});
-    border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.4)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-color-gold) r g b / 0.2), rgb(from var(--wh40k-color-gold) r g b / 0.1));
+    border-color: rgb(from var(--wh40k-color-gold) r g b / 0.4);
     color: color-mix(in srgb, var(--wh40k-color-gold), white 10%);
 }
 
 .wh40k-origin-badge--index {
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-skills) r g b / 0.15)'}, #{'rgb(from var(--wh40k-accent-skills) r g b / 0.05)'});
-    border-color: #{'rgb(from var(--wh40k-accent-skills) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-skills) r g b / 0.15), rgb(from var(--wh40k-accent-skills) r g b / 0.05));
+    border-color: rgb(from var(--wh40k-accent-skills) r g b / 0.3);
     color: var(--wh40k-accent-skills);
 }
 
@@ -272,13 +272,13 @@
 
     &:hover {
         color: var(--color-text-primary);
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.05);
     }
 
     &.active {
         color: var(--wh40k-color-gold);
         border-bottom-color: var(--wh40k-color-gold);
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.08)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.08);
     }
 }
 
@@ -404,7 +404,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+        box-shadow: 0 0 0 2px rgb(from var(--wh40k-color-gold) r g b / 0.15);
     }
 }
 
@@ -475,7 +475,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+        box-shadow: 0 0 0 2px rgb(from var(--wh40k-color-gold) r g b / 0.15);
     }
 }
 
@@ -545,20 +545,20 @@
     text-transform: uppercase;
 
     &--trained {
-        background: #{'rgb(from var(--wh40k-accent-skills) r g b / 0.15)'};
-        border: 1px solid #{'rgb(from var(--wh40k-accent-skills) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-accent-skills) r g b / 0.15);
+        border: 1px solid rgb(from var(--wh40k-accent-skills) r g b / 0.3);
         color: var(--wh40k-accent-skills);
     }
 
     &--plus10 {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
-        border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.15);
+        border: 1px solid rgb(from var(--wh40k-color-gold) r g b / 0.3);
         color: var(--wh40k-color-gold);
     }
 
     &--plus20 {
-        background: #{'rgb(from var(--wh40k-accent-green) r g b / 0.15)'};
-        border: 1px solid #{'rgb(from var(--wh40k-accent-green) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-accent-green) r g b / 0.15);
+        border: 1px solid rgb(from var(--wh40k-accent-green) r g b / 0.3);
         color: var(--wh40k-accent-green-bright);
     }
 }
@@ -577,8 +577,8 @@
     display: inline-flex;
     align-items: center;
     padding: 4px 10px;
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'});
-    border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-color-gold) r g b / 0.15), rgb(from var(--wh40k-color-gold) r g b / 0.05));
+    border: 1px solid rgb(from var(--wh40k-color-gold) r g b / 0.3);
     border-radius: var(--wh40k-radius-sm);
     font-size: 0.75rem;
     font-weight: 600;
@@ -667,8 +667,8 @@
     }
 
     &--required {
-        background: #{'rgb(from var(--wh40k-accent-green) r g b / 0.1)'};
-        border: 1px solid #{'rgb(from var(--wh40k-accent-green) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-accent-green) r g b / 0.1);
+        border: 1px solid rgb(from var(--wh40k-accent-green) r g b / 0.3);
         color: var(--wh40k-accent-green-bright);
 
         i {
@@ -677,8 +677,8 @@
     }
 
     &--excluded {
-        background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.1)'};
-        border: 1px solid #{'rgb(from var(--wh40k-accent-combat) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-accent-combat) r g b / 0.1);
+        border: 1px solid rgb(from var(--wh40k-accent-combat) r g b / 0.3);
         color: color-mix(in srgb, var(--wh40k-accent-combat), white 15%);
 
         i {
@@ -709,26 +709,26 @@
     text-transform: uppercase;
 
     &--skill {
-        background: #{'rgb(from var(--wh40k-accent-skills) r g b / 0.15)'};
-        border: 1px solid #{'rgb(from var(--wh40k-accent-skills) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-accent-skills) r g b / 0.15);
+        border: 1px solid rgb(from var(--wh40k-accent-skills) r g b / 0.3);
         color: var(--wh40k-accent-skills);
     }
 
     &--talent {
-        background: #{'rgb(from var(--wh40k-accent-talents) r g b / 0.15)'};
-        border: 1px solid #{'rgb(from var(--wh40k-accent-talents) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-accent-talents) r g b / 0.15);
+        border: 1px solid rgb(from var(--wh40k-accent-talents) r g b / 0.3);
         color: var(--wh40k-accent-talents);
     }
 
     &--characteristic {
-        background: #{'rgb(from var(--wh40k-accent-combat) r g b / 0.15)'};
-        border: 1px solid #{'rgb(from var(--wh40k-accent-combat) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-accent-combat) r g b / 0.15);
+        border: 1px solid rgb(from var(--wh40k-accent-combat) r g b / 0.3);
         color: color-mix(in srgb, var(--wh40k-accent-combat), white 15%);
     }
 
     &--equipment {
-        background: #{'rgb(from var(--wh40k-accent-equipment) r g b / 0.15)'};
-        border: 1px solid #{'rgb(from var(--wh40k-accent-equipment) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-accent-equipment) r g b / 0.15);
+        border: 1px solid rgb(from var(--wh40k-accent-equipment) r g b / 0.3);
         color: color-mix(in srgb, var(--wh40k-accent-equipment), white 15%);
     }
 }
@@ -738,7 +738,7 @@
     font-weight: 600;
     color: var(--wh40k-color-gold);
     padding: 4px 10px;
-    background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.1)'};
+    background: rgb(from var(--wh40k-color-gold) r g b / 0.1);
     border-radius: var(--wh40k-radius-sm);
 }
 
@@ -797,7 +797,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
+        box-shadow: 0 0 0 2px rgb(from var(--wh40k-color-gold) r g b / 0.15);
     }
 
     &::placeholder {

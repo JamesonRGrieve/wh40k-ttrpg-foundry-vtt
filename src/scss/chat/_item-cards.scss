@@ -496,8 +496,8 @@
     padding: 4px 8px;
     font-size: 0.7rem;
     font-weight: 600;
-    background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.12)'}, #{'rgb(from var(--wh40k-accent-gold) r g b / 0.06)'});
-    border: 1px solid #{'rgb(from var(--wh40k-accent-gold) r g b / 0.3)'};
+    background: linear-gradient(135deg, rgb(from var(--wh40k-accent-gold) r g b / 0.12), rgb(from var(--wh40k-accent-gold) r g b / 0.06));
+    border: 1px solid rgb(from var(--wh40k-accent-gold) r g b / 0.3);
     border-radius: var(--wh40k-radius-sm);
     color: var(--wh40k-item-border);
 
@@ -519,8 +519,8 @@
 
     .wh40k-item-card__effect-text {
         padding: var(--wh40k-space-sm);
-        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.08)'}, transparent);
-        border-left: 3px solid #{'rgb(from var(--wh40k-accent-psychic) r g b / 0.4)'};
+        background: linear-gradient(135deg, rgb(from var(--wh40k-accent-psychic) r g b / 0.08), transparent);
+        border-left: 3px solid rgb(from var(--wh40k-accent-psychic) r g b / 0.4);
         border-radius: 0 var(--wh40k-radius-sm) var(--wh40k-radius-sm) 0;
     }
 }
@@ -536,8 +536,8 @@
 
     .wh40k-item-card__benefit-text {
         padding: var(--wh40k-space-sm);
-        background: linear-gradient(135deg, #{'rgb(from var(--wh40k-accent-green) r g b / 0.08)'}, transparent);
-        border-left: 3px solid #{'rgb(from var(--wh40k-accent-green) r g b / 0.4)'};
+        background: linear-gradient(135deg, rgb(from var(--wh40k-accent-green) r g b / 0.08), transparent);
+        border-left: 3px solid rgb(from var(--wh40k-accent-green) r g b / 0.4);
         border-radius: 0 var(--wh40k-radius-sm) var(--wh40k-radius-sm) 0;
     }
 }
@@ -549,8 +549,8 @@
     gap: var(--wh40k-space-xs);
     padding: var(--wh40k-space-sm);
     margin-top: var(--wh40k-space-sm);
-    background: linear-gradient(135deg, rgba(#e67e22, 0.1), transparent);
-    border-left: 3px solid rgba(#e67e22, 0.5);
+    background: linear-gradient(135deg, rgb(from #e67e22 r g b / 0.1), transparent);
+    border-left: 3px solid rgb(from #e67e22 r g b / 0.5);
     border-radius: 0 var(--wh40k-radius-sm) var(--wh40k-radius-sm) 0;
     font-size: 0.8rem;
 }
@@ -729,9 +729,9 @@
             color: var(--wh40k-accent-green);
         }
         .wh40k-movement-type-badge {
-            background: #{'rgb(from var(--wh40k-accent-green) r g b / 0.15)'};
+            background: rgb(from var(--wh40k-accent-green) r g b / 0.15);
             color: #19703e;
-            border: 1px solid #{'rgb(from var(--wh40k-accent-green) r g b / 0.3)'};
+            border: 1px solid rgb(from var(--wh40k-accent-green) r g b / 0.3);
         }
     }
 
@@ -740,9 +740,9 @@
             color: #2980b9;
         }
         .wh40k-movement-type-badge {
-            background: rgba(#2980b9, 0.15);
+            background: rgb(from #2980b9 r g b / 0.15);
             color: #1b557a;
-            border: 1px solid rgba(#2980b9, 0.3);
+            border: 1px solid rgb(from #2980b9 r g b / 0.3);
         }
     }
 
@@ -751,9 +751,9 @@
             color: #e67e22;
         }
         .wh40k-movement-type-badge {
-            background: rgba(#e67e22, 0.15);
+            background: rgb(from #e67e22 r g b / 0.15);
             color: #a85913;
-            border: 1px solid rgba(#e67e22, 0.3);
+            border: 1px solid rgb(from #e67e22 r g b / 0.3);
         }
     }
 
@@ -762,9 +762,9 @@
             color: #c0392b;
         }
         .wh40k-movement-type-badge {
-            background: rgba(#c0392b, 0.15);
+            background: rgb(from #c0392b r g b / 0.15);
             color: #81261d;
-            border: 1px solid rgba(#c0392b, 0.3);
+            border: 1px solid rgb(from #c0392b r g b / 0.3);
         }
     }
 }

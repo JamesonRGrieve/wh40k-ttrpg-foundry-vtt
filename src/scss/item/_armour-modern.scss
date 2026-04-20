@@ -812,7 +812,7 @@
 
     &--danger {
         &:hover {
-            background: #{'rgb(from var(--wh40k-accent-red) r g b / 0.2)'};
+            background: rgb(from var(--wh40k-accent-red) r g b / 0.2);
             border-color: var(--wh40k-accent-red);
             color: var(--wh40k-accent-red);
         }
@@ -863,7 +863,7 @@
 
     &:hover {
         .wh40k-toggle-equipped__indicator i {
-            color: #{'rgb(from var(--wh40k-accent-green-bright) r g b / 0.7)'};
+            color: rgb(from var(--wh40k-accent-green-bright) r g b / 0.7);
         }
 
         .wh40k-toggle-equipped__label {

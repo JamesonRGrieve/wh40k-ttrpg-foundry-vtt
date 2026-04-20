@@ -40,7 +40,7 @@
 .wh40k-backpack-header {
     display: flex;
     padding: var(--wh40k-space-md) var(--wh40k-space-lg);
-    background: linear-gradient(180deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.12)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.04)'});
+    background: linear-gradient(180deg, rgb(from var(--wh40k-color-gold) r g b / 0.12), rgb(from var(--wh40k-color-gold) r g b / 0.04));
     border-bottom: 1px solid var(--wh40k-border-light);
 }
 
@@ -127,7 +127,7 @@
     &:focus {
         outline: none;
         border-color: var(--wh40k-color-gold);
-        box-shadow: 0 0 0 2px #{'rgb(from var(--wh40k-color-gold) r g b / 0.2)'};
+        box-shadow: 0 0 0 2px rgb(from var(--wh40k-color-gold) r g b / 0.2);
     }
 
     &::placeholder {
@@ -227,8 +227,8 @@
     .wh40k-item-badge {
         margin-left: auto;
         padding: 1px 6px;
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.2)'};
-        border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.4)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.2);
+        border: 1px solid rgb(from var(--wh40k-color-gold) r g b / 0.4);
         border-radius: var(--wh40k-radius-sm);
         font-size: 0.7rem;
         font-weight: 600;
@@ -269,11 +269,11 @@
     }
 
     &::-webkit-scrollbar-thumb {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.3);
         border-radius: var(--wh40k-radius-sm);
 
         &:hover {
-            background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.5)'};
+            background: rgb(from var(--wh40k-color-gold) r g b / 0.5);
         }
     }
 }
@@ -288,7 +288,7 @@
     align-items: center;
     justify-content: center;
     width: 32px;
-    background: linear-gradient(180deg, #{'rgb(from var(--wh40k-color-gold) r g b / 0.08)'}, #{'rgb(from var(--wh40k-color-gold) r g b / 0.02)'});
+    background: linear-gradient(180deg, rgb(from var(--wh40k-color-gold) r g b / 0.08), rgb(from var(--wh40k-color-gold) r g b / 0.02));
     border-left: 1px solid var(--wh40k-border-light);
     border-right: 1px solid var(--wh40k-border-light);
     position: relative;
@@ -307,8 +307,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
-    border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+    background: rgb(from var(--wh40k-color-gold) r g b / 0.15);
+    border: 1px solid rgb(from var(--wh40k-color-gold) r g b / 0.3);
     border-radius: 50%;
     color: var(--wh40k-color-gold);
     font-size: 0.75rem;
@@ -376,20 +376,20 @@
     height: 28px;
 
     &:hover {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.08)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.08);
     }
 
     &.wh40k-row-equipped {
-        background: #{'rgb(from var(--wh40k-color-success) r g b / 0.08)'};
+        background: rgb(from var(--wh40k-color-success) r g b / 0.08);
         border-left: 2px solid var(--wh40k-color-success);
     }
 
     &.wh40k-row-stowed {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.05)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.05);
     }
 
     &.wh40k-row-ship {
-        background: rgba(#6a9bdc, 0.05);
+        background: rgb(from #6a9bdc r g b / 0.05);
         border-left: 2px solid #6a9bdc;
     }
 
@@ -532,30 +532,30 @@
     }
 
     &.wh40k-badge-equipped {
-        background: #{'rgb(from var(--wh40k-color-success) r g b / 0.2)'};
+        background: rgb(from var(--wh40k-color-success) r g b / 0.2);
         color: color-mix(in srgb, var(--wh40k-color-success), white 20%);
     }
 
     &.wh40k-badge-backpack {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.2)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.2);
         color: var(--wh40k-color-gold);
     }
 
     &.wh40k-badge-carried {
-        background: rgba(#888, 0.2);
+        background: rgb(from #888 r g b / 0.2);
         color: #ccc;
     }
 
     &.wh40k-badge-ship {
-        background: rgba(#6a9bdc, 0.2);
+        background: rgb(from #6a9bdc r g b / 0.2);
         color: #a8c5eb;
     }
 }
 
 .wh40k-action-btn {
     padding: 2px 6px;
-    background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
-    border: 1px solid #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+    background: rgb(from var(--wh40k-color-gold) r g b / 0.15);
+    border: 1px solid rgb(from var(--wh40k-color-gold) r g b / 0.3);
     border-radius: var(--wh40k-radius-sm);
     color: var(--wh40k-color-gold);
     cursor: pointer;
@@ -564,30 +564,30 @@
     display: inline-block;
 
     &:hover {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.25)'};
-        border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.5)'};
-        box-shadow: 0 0 4px #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.25);
+        border-color: rgb(from var(--wh40k-color-gold) r g b / 0.5);
+        box-shadow: 0 0 4px rgb(from var(--wh40k-color-gold) r g b / 0.3);
     }
 
     &.wh40k-btn-ship {
-        background: rgba(#6a9bdc, 0.15);
-        border-color: rgba(#6a9bdc, 0.3);
+        background: rgb(from #6a9bdc r g b / 0.15);
+        border-color: rgb(from #6a9bdc r g b / 0.3);
         color: #a8c5eb;
 
         &:hover {
-            background: rgba(#6a9bdc, 0.25);
-            border-color: rgba(#6a9bdc, 0.5);
+            background: rgb(from #6a9bdc r g b / 0.25);
+            border-color: rgb(from #6a9bdc r g b / 0.5);
         }
     }
 
     &.wh40k-btn-backpack {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.15)'};
-        border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.3)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.15);
+        border-color: rgb(from var(--wh40k-color-gold) r g b / 0.3);
         color: var(--wh40k-color-gold);
 
         &:hover {
-            background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.25)'};
-            border-color: #{'rgb(from var(--wh40k-color-gold) r g b / 0.5)'};
+            background: rgb(from var(--wh40k-color-gold) r g b / 0.25);
+            border-color: rgb(from var(--wh40k-color-gold) r g b / 0.5);
         }
     }
 }
@@ -600,7 +600,7 @@
     position: relative;
 
     &[data-drop-zone='personal'].wh40k-drag-over {
-        background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.1)'};
+        background: rgb(from var(--wh40k-color-gold) r g b / 0.1);
         border: 2px dashed var(--wh40k-color-gold);
 
         &::after {
@@ -610,7 +610,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             padding: var(--wh40k-space-md) var(--wh40k-space-lg);
-            background: #{'rgb(from var(--wh40k-color-gold) r g b / 0.9)'};
+            background: rgb(from var(--wh40k-color-gold) r g b / 0.9);
             color: #000;
             border-radius: var(--wh40k-radius-md);
             font-weight: 600;
@@ -621,7 +621,7 @@
     }
 
     &[data-drop-zone='ship'].wh40k-drag-over {
-        background: rgba(#6a9bdc, 0.1);
+        background: rgb(from #6a9bdc r g b / 0.1);
         border: 2px dashed #6a9bdc;
 
         &::after {
@@ -631,7 +631,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             padding: var(--wh40k-space-md) var(--wh40k-space-lg);
-            background: rgba(#6a9bdc, 0.9);
+            background: rgb(from #6a9bdc r g b / 0.9);
             color: #000;
             border-radius: var(--wh40k-radius-md);
             font-weight: 600;
