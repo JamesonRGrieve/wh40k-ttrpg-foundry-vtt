@@ -265,7 +265,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {boolean} [options.prettyPrint=true] - Pretty print JSON.
      * @returns {string} JSON string.
      */
-    static toJSON(actor: WH40KBaseActor, options: Record<string, unknown> = {}): any {
+    static toJSON(actor: WH40KBaseActor, options: Record<string, unknown> = {}): Record<string, unknown> {
         const { includeItems = true, prettyPrint = true } = options;
 
         const exportData = {
@@ -330,7 +330,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
         // Handle format toggle
@@ -432,7 +432,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {Actor} actor - The actor to export.
      * @returns {StatBlockExporter} The exporter instance.
      */
-    static show(actor: WH40KBaseActor): any {
+    static show(actor: WH40KBaseActor): unknown {
         const exporter = new this(actor);
         void exporter.render(true);
         return exporter;
@@ -444,7 +444,7 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
      * @param {string} [format="text"] - Export format ("text" or "json").
      * @returns {Promise<void>}
      */
-    static async quickExport(actor: WH40KBaseActor, format: any = 'text'): Promise<void> {
+    static async quickExport(actor: WH40KBaseActor, format: unknown = 'text'): Promise<void> {
         const content = format === 'json' ? this.toJSON(actor) : this.toText(actor);
 
         try {

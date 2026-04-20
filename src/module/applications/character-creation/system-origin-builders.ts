@@ -32,7 +32,7 @@ export const OWOriginPathBuilder = make('ow', 'OWOriginPathBuilder');
 export const DWOriginPathBuilder = make('dw', 'DWOriginPathBuilder');
 
 /** Map an actor type id (e.g. 'dh2-character') to the right per-system builder. */
-export function getBuilderForActorType(type: string): any {
+export function getBuilderForActorType(type: string): unknown {
     if (type.startsWith('dh2-')) return DH2OriginPathBuilder;
     if (type.startsWith('dh1-')) return DH1OriginPathBuilder;
     if (type.startsWith('rt-')) return RTOriginPathBuilder;

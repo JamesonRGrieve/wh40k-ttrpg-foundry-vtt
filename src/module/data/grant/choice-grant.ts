@@ -11,7 +11,7 @@ import SkillGrantData from './skill-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class ChoiceGrantData extends (BaseGrantData as any) {
+export default class ChoiceGrantData extends BaseGrantData {
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -70,7 +70,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    _initResult(): any {
+    _initResult(): Record<string, unknown> {
         return { success: true, applied: { selectedOptions: [], grantResults: {} }, notifications: [], errors: [] };
     }
 
@@ -244,7 +244,7 @@ export default class ChoiceGrantData extends (BaseGrantData as any) {
      * @returns {Promise<GrantApplicationResult>}
      * @private
      */
-    _applySubGrant(actor, grantConfig, data, options): any {
+    _applySubGrant(actor, grantConfig, data, options): unknown {
         const GrantClass = (this.constructor as any).GRANT_TYPES[grantConfig.type];
         if (!GrantClass) {
             return {

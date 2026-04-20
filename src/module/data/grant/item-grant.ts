@@ -7,7 +7,7 @@ import BaseGrantData from './base-grant.ts';
  *
  * @extends BaseGrantData
  */
-export default class ItemGrantData extends (BaseGrantData as any) {
+export default class ItemGrantData extends BaseGrantData {
     /* -------------------------------------------- */
     /*  Static Properties                           */
     /* -------------------------------------------- */
@@ -235,7 +235,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
     }
 
     /** @inheritDoc */
-    validateGrant(): any {
+    validateGrant(): string[] {
         const errors = super.validateGrant();
 
         // items may be undefined if grant was created with invalid data
@@ -265,7 +265,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
      * @returns {boolean}
      * @private
      */
-    _isDuplicate(actor, sourceItem): any {
+    _isDuplicate(actor, sourceItem): boolean {
         return actor.items.some(
             (i) =>
                 i.type === sourceItem.type &&
@@ -283,7 +283,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
      * @returns {Promise<object>}
      * @private
      */
-    _createItemData(sourceItem, uuid, overrides = {}): any {
+    _createItemData(sourceItem, uuid, overrides = {}): Record<string, unknown> {
         const itemData = sourceItem.toObject();
 
         // Apply overrides
@@ -321,7 +321,7 @@ export default class ItemGrantData extends (BaseGrantData as any) {
 
             const index = await pack.getIndex();
 
-            const match = index.find((entry: any) => {
+            const match = index.find((entry: { name: string }) => {
                 const entryLower = entry.name.toLowerCase();
                 if (entryLower === nameLower) return true;
                 if (compositeLower && entryLower === compositeLower) return true;

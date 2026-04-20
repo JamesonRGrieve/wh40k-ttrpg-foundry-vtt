@@ -198,7 +198,7 @@ export default class ItemDataModel extends SystemDataModel {
      * The Item document that contains this data model.
      * @type {Item}
      */
-    get item(): any {
+    get item(): unknown {
         return this.parent;
     }
 
@@ -206,7 +206,7 @@ export default class ItemDataModel extends SystemDataModel {
      * The Actor that owns this item, if any.
      * @type {Actor|null}
      */
-    get actor(): any {
+    get actor(): unknown {
         return this.parent?.actor ?? null;
     }
 

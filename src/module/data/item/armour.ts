@@ -395,7 +395,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         );
     }
 
-    _getLegacyField(field): any {
+    _getLegacyField(field): unknown {
         return this.parent?._source?.system?.[field];
     }
 
@@ -408,7 +408,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         return Object.values(source.armourPoints ?? {}).some((value) => Number(value) > 0);
     }
 
-    _hasCustomArmourPoints(): any {
+    _hasCustomArmourPoints(): boolean {
         return Object.values(this.armourPoints ?? {}).some((value) => Number(value) > 0);
     }
 
@@ -451,7 +451,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         return coverage.size ? coverage : null;
     }
 
-    _parseLegacyLocations(): any {
+    _parseLegacyLocations(): Set<string> | null {
         const rawLocations = this._getLegacyField('locations');
         if (!rawLocations || typeof rawLocations !== 'string') return null;
 
@@ -490,7 +490,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} source Source data
      * @returns {object|null}
      */
-    static #parseLegacyAP(source: Record<string, unknown>): any {
+    static #parseLegacyAP(source: Record<string, unknown>): Record<string, unknown> | null {
         const rawAp = source.ap;
         if (rawAp === null || rawAp === undefined) return null;
 
@@ -545,7 +545,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         return null;
     }
 
-    _parseLegacyAP(): any {
+    _parseLegacyAP(): Record<string, unknown> | null {
         const rawAp = this._getLegacyField('ap');
         if (rawAp === null || rawAp === undefined) return null;
 
@@ -581,7 +581,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         return null;
     }
 
-    _getLegacyArmourProfile(): any {
+    _getLegacyArmourProfile(): Record<string, unknown> | null {
         const ap = this._parseLegacyAP();
         if (!ap) return null;
 
@@ -591,7 +591,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         };
     }
 
-    _getEffectiveCoverage(): any {
+    _getEffectiveCoverage(): Set<string> | null {
         if (!this._hasCustomArmourPoints()) {
             const legacyCoverage = this._parseLegacyLocations();
             if (legacyCoverage?.size) return legacyCoverage;
@@ -870,7 +870,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {string} location - The body location
      * @returns {number} - Effective AP value
      */
-    getEffectiveAPForLocation(location): any {
+    getEffectiveAPForLocation(location): number {
         const baseAP = this.getAPForLocation(location);
         const craftMods = this.craftsmanshipModifiers;
 
@@ -885,7 +885,7 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @param {object} [weapon] - Optional weapon data model
      * @returns {number} - Effective AP value
      */
-    getEffectiveAPAgainstWeapon(location, weapon = null): any {
+    getEffectiveAPAgainstWeapon(location, weapon = null): number {
         let ap = this.getEffectiveAPForLocation(location);
 
         // Primitive armour vs non-primitive weapon: halve AP (round up)

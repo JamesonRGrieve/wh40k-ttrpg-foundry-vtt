@@ -108,7 +108,7 @@ export default class AttackTemplate extends SystemDataModel {
      * Is this a melee attack?
      * @type {boolean}
      */
-    get isMelee(): any {
+    get isMelee(): boolean {
         return this.attack.type === 'melee';
     }
 
@@ -116,7 +116,7 @@ export default class AttackTemplate extends SystemDataModel {
      * Is this a ranged attack?
      * @type {boolean}
      */
-    get isRanged(): any {
+    get isRanged(): boolean {
         return this.attack.type === 'ranged' || this.attack.type === 'thrown';
     }
 
@@ -124,7 +124,7 @@ export default class AttackTemplate extends SystemDataModel {
      * Is this a psychic attack?
      * @type {boolean}
      */
-    get isPsychic(): any {
+    get isPsychic(): boolean {
         return this.attack.type === 'psychic';
     }
 

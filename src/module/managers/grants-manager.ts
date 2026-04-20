@@ -348,7 +348,7 @@ export class GrantsManager {
      * @param {object} [metadata={}] - Additional metadata
      * @returns {Promise<void>}
      */
-    static async saveAppliedState(actor: WH40KBaseActor, sourceKey: any, state: any, metadata: any = {}) {
+    static async saveAppliedState(actor: WH40KBaseActor, sourceKey: unknown, state: unknown, metadata: Record<string, unknown> = {}) {
         if (!actor || !sourceKey) return;
 
         const flagData = {
@@ -579,7 +579,7 @@ export class GrantsManager {
      * Reverse characteristic grant.
      * @private
      */
-    static async _reverseCharacteristicGrant(actor: WH40KBaseActor, applied: any, result: Record<string, unknown>) {
+    static async _reverseCharacteristicGrant(actor: WH40KBaseActor, applied: Record<string, unknown>, result: Record<string, unknown>) {
         const updates = {};
 
         for (const [key, state] of Object.entries(applied || {}) as [string, any][]) {
@@ -598,7 +598,7 @@ export class GrantsManager {
      * Reverse skill grant.
      * @private
      */
-    static async _reverseSkillGrant(actor: WH40KBaseActor, applied: any, result: Record<string, unknown>) {
+    static async _reverseSkillGrant(actor: WH40KBaseActor, applied: Record<string, unknown>, result: Record<string, unknown>) {
         const idsToDelete = [];
         const itemsToUpdate = [];
 
@@ -628,7 +628,7 @@ export class GrantsManager {
      * Reverse item grant.
      * @private
      */
-    static async _reverseItemGrant(actor: WH40KBaseActor, applied: any, result: Record<string, unknown>) {
+    static async _reverseItemGrant(actor: WH40KBaseActor, applied: Record<string, unknown>, result: Record<string, unknown>) {
         const idsToDelete = [];
 
         for (const [, itemId] of Object.entries(applied || {}) as [string, any][]) {
@@ -648,7 +648,7 @@ export class GrantsManager {
      * Reverse resource grant.
      * @private
      */
-    static async _reverseResourceGrant(actor: WH40KBaseActor, applied: any, result: Record<string, unknown>) {
+    static async _reverseResourceGrant(actor: WH40KBaseActor, applied: Record<string, unknown>, result: Record<string, unknown>) {
         const updates = {};
 
         const resourcePaths: Record<string, unknown> = {

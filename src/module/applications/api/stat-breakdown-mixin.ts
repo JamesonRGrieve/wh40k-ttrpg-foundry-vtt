@@ -105,7 +105,7 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => any
             if (!uuid) return;
 
             // Fetch and render the item
-            const item = (await fromUuid(uuid)) as any;
+            const item = await fromUuid(uuid);
             if (item) {
                 item.sheet.render(true);
             }

@@ -3,7 +3,7 @@ import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import { WH40KItemContainer } from './item-container.ts';
 
 export class WH40KItem extends WH40KItemContainer {
-    static #pruneUndefined(value: any): any {
+    static #pruneUndefined(value: unknown): unknown {
         if (Array.isArray(value)) {
             return value.map((entry) => this.#pruneUndefined(entry));
         }
@@ -31,7 +31,7 @@ export class WH40KItem extends WH40KItemContainer {
      * @returns {object} The cleaned data
      * @override
      */
-    static cleanData(source: Record<string, unknown> = {}, options: Record<string, unknown> = {}, _state: any = {}) {
+    static cleanData(source: Record<string, unknown> = {}, options: Record<string, unknown> = {}, _state: Record<string, unknown> = {}) {
         // Remove explicit undefined values before schema validation runs.
         // Foundry treats `undefined` differently from an omitted field during updates.
         this.#pruneUndefined(source);
@@ -311,7 +311,7 @@ export class WH40KItem extends WH40KItemContainer {
         return this._type === 'peer';
     }
 
-    _onCreate(data, options, user): any {
+    _onCreate(data, options, user): unknown {
         game.wh40k.log('Determining nested items for', this);
         void this._determineNestedItems();
         return super._onCreate(data, options, user);
@@ -432,7 +432,7 @@ export class WH40KItem extends WH40KItemContainer {
      * Check if this item can be rolled
      * @returns {boolean}
      */
-    get isRollable(): any {
+    get isRollable(): boolean {
         return (this.isTalent && this.system?.isRollable) || (this.isSkill && this.system?.rollConfig);
     }
 
@@ -741,7 +741,7 @@ export class WH40KItem extends WH40KItemContainer {
                 const skillPack = game.packs.get('wh40k-rpg.dh2-core-stats-skills');
                 if (skillPack) {
                     const index = await skillPack.getIndex({ fields: ['name'] });
-                    const skillEntry = index.find((s: any) => s.name.toLowerCase() === skillName.toLowerCase());
+                    const skillEntry = index.find((s: { name: string }) => s.name.toLowerCase() === skillName.toLowerCase());
                     if (skillEntry) {
                         const skill = await skillPack.getDocument(skillEntry._id);
                         if (skill) itemsToAdd.push(skill.toObject());
@@ -756,7 +756,7 @@ export class WH40KItem extends WH40KItemContainer {
                 const talentPack = game.packs.get('wh40k-rpg.dh2-core-stats-talents');
                 if (talentPack) {
                     const index = await talentPack.getIndex({ fields: ['name'] });
-                    const talentEntry = index.find((t: any) => t.name.toLowerCase() === (talentName as string).toLowerCase());
+                    const talentEntry = index.find((t: { name: string }) => t.name.toLowerCase() === (talentName as string).toLowerCase());
                     if (talentEntry) {
                         const talent = await talentPack.getDocument(talentEntry._id);
                         if (talent) itemsToAdd.push(talent.toObject());
@@ -784,7 +784,7 @@ export class WH40KItem extends WH40KItemContainer {
     /**
      * Get a preview of what this origin path will grant
      */
-    getOriginPreview(): any {
+    getOriginPreview(): unknown {
         if (!this.isOriginPath) return null;
 
         const modifiers = this.system.modifiers || {};

@@ -248,7 +248,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
         // Track input changes
@@ -269,7 +269,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} input - Raw input text.
      * @returns {Object} Parsed NPC data with validation.
      */
-    static parse(input: string): any {
+    static parse(input: string): Record<string, unknown> {
         const trimmed = input.trim();
 
         if (!trimmed) {
@@ -309,7 +309,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} input - JSON string.
      * @returns {Object} Parsed data with validation.
      */
-    static parseJSON(input: string): any {
+    static parseJSON(input: string): Record<string, unknown> {
         const result = {
             data: null,
             errors: [],
@@ -364,7 +364,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} input - Text input.
      * @returns {Object} Parsed data with validation.
      */
-    static parseText(input: string): any {
+    static parseText(input: string): Record<string, unknown> {
         const result = {
             data: null,
             errors: [],
@@ -482,7 +482,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return TextPatternExtractor.splitLines(input);
     }
 
-    static _extractName(lines: string[], input: string): any {
+    static _extractName(lines: string[], input: string): unknown {
         if (lines.length === 0) return 'Imported NPC';
         const firstLine = lines[0];
         if (this._looksLikeCharacteristicHeader(firstLine)) {
@@ -500,7 +500,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return TextPatternExtractor.looksLikeHeader(line, required);
     }
 
-    static _parseCharacteristics(lines: string[], input: string): any {
+    static _parseCharacteristics(lines: string[], input: string): unknown {
         const result = {
             values: {},
             unnaturalValues: {},
@@ -551,7 +551,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return result;
     }
 
-    static _applyCharacteristics(systemData: any, characteristicResult: any): void {
+    static _applyCharacteristics(systemData: Record<string, unknown>, characteristicResult: Record<string, unknown>): void {
         for (const [key, value] of Object.entries(characteristicResult.values) as [string, number][]) {
             if (!systemData.characteristics[key]) continue;
             systemData.characteristics[key].base = value;
@@ -567,14 +567,14 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         }
     }
 
-    static _parseWounds(input: string): any {
+    static _parseWounds(input: string): unknown {
         const match = input.match(this.PATTERNS.wounds);
         if (!match) return null;
         const value = parseInt(match[1], 10);
         return Number.isNaN(value) ? null : value;
     }
 
-    static _parseMovement(input: string): any {
+    static _parseMovement(input: string): unknown {
         const match = input.match(this.PATTERNS.movement);
         if (match) {
             const values = [match[1], match[2], match[3], match[4]].filter((value) => value).map((value) => parseInt(value, 10));
@@ -609,7 +609,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return null;
     }
 
-    static _parseArmour(text: string): any {
+    static _parseArmour(text: string): unknown {
         if (!text) return null;
         const normalized = text.replace(/\./g, ' ');
         const locations = this._parseArmourLocations(normalized);
@@ -632,7 +632,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return null;
     }
 
-    static _parseArmourLocations(text: string): any {
+    static _parseArmourLocations(text: string): unknown {
         const matches = [...text.matchAll(this.PATTERNS.armourByLocation)];
         if (matches.length === 0) return null;
         const locations = {
@@ -663,7 +663,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return locations;
     }
 
-    static _parseThreatLevel(input: string): any {
+    static _parseThreatLevel(input: string): unknown {
         const match = input.match(this.PATTERNS.threat);
         if (match) {
             const value = parseInt(match[1], 10);
@@ -683,7 +683,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return null;
     }
 
-    static _parseSkills(text: string): any {
+    static _parseSkills(text: string): unknown {
         if (!text) return { trainedSkills: {}, hasEntries: false };
         const entries = this._splitList(text);
         const trainedSkills = {};
@@ -710,7 +710,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return { trainedSkills, hasEntries: Object.keys(trainedSkills).length > 0 };
     }
 
-    static _parseTalents(text: string): any {
+    static _parseTalents(text: string): unknown {
         if (!text) return [];
         const entries = this._splitList(text);
         const items = [];
@@ -736,7 +736,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return items;
     }
 
-    static _parseTraits(text: string): any {
+    static _parseTraits(text: string): unknown {
         const result = {
             items: [],
             parsedTraits: [],
@@ -760,7 +760,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return result;
     }
 
-    static _applyTraitAdjustments(systemData: any, traits: unknown[]): void {
+    static _applyTraitAdjustments(systemData: Record<string, unknown>, traits: unknown[]): void {
         if (!traits || traits.length === 0) return;
         const sizeMap = {
             tiny: 1,
@@ -792,7 +792,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         }
     }
 
-    static _parseWeapons(text: string): any {
+    static _parseWeapons(text: string): unknown {
         if (!text) return [];
         const entries = this._splitList(text);
         const weapons = [];
@@ -807,7 +807,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return weapons;
     }
 
-    static _parseWeaponEntry(entry: any): any {
+    static _parseWeaponEntry(entry: unknown): unknown {
         const match = entry.match(/^([^()]+)\s*(?:\((.+)\))?$/);
         if (!match) return null;
         const name = match[1].trim();
@@ -887,7 +887,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         };
     }
 
-    static _inferWeaponClass(name: string, range: string): any {
+    static _inferWeaponClass(name: string, range: string): unknown {
         const lower = name.toLowerCase();
         if (range.toLowerCase() === 'melee') return 'melee';
         if (lower.includes('pistol')) return 'pistol';
@@ -896,7 +896,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return 'basic';
     }
 
-    static _parseSkillEntry(entry: any): any {
+    static _parseSkillEntry(entry: unknown): unknown {
         const bonusMatch = entry.match(/\+\s*(\d+)/);
         const bonusValue = bonusMatch ? parseInt(bonusMatch[1], 10) : 0;
         let level = 'trained';
@@ -932,7 +932,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         };
     }
 
-    static _parseTraitEntry(entry: any): any {
+    static _parseTraitEntry(entry: unknown): unknown {
         const match = entry.match(/^(.+?)(?:\s*\(([^)]+)\))?$/);
         const name = match ? match[1].trim() : entry.trim();
         const value = match && match[2] ? match[2].trim() : null;
@@ -971,7 +971,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         };
     }
 
-    static _parseNameWithSpecializations(name: string): any {
+    static _parseNameWithSpecializations(name: string): unknown {
         const match = name.match(/^(.+?)\s*\(([^)]+)\)$/);
         if (!match) {
             return { baseName: name, specializations: [] };
@@ -985,7 +985,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return { baseName, specializations };
     }
 
-    static _extractSection(lines: string[], label: string): any {
+    static _extractSection(lines: string[], label: string): unknown {
         return TextPatternExtractor.extractSection(lines, label, this.SECTION_HEADERS);
     }
 
@@ -997,37 +997,37 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return TextPatternExtractor.splitList(text);
     }
 
-    static _cleanEntry(entry: any): string {
+    static _cleanEntry(entry: unknown): string {
         return TextPatternExtractor.cleanEntry(entry);
     }
 
-    static _extractValueTokens(line: string): any {
+    static _extractValueTokens(line: string): unknown {
         return TextPatternExtractor.extractValueTokens(line);
     }
 
-    static _extractParentheticalNumbers(line: string): any {
+    static _extractParentheticalNumbers(line: string): unknown {
         return TextPatternExtractor.extractParentheticalNumbers(line);
     }
 
-    static _parseNumericValue(value: any): any {
+    static _parseNumericValue(value: unknown): unknown {
         return TextPatternExtractor.parseNumericValue(value);
     }
 
-    static _toSkillKey(text: string, capitalize: boolean = false): any {
+    static _toSkillKey(text: string, capitalize: boolean = false): unknown {
         return TextPatternExtractor.toKey(text, capitalize);
     }
 
-    static _extractSkillSectionFallback(input: string): any {
+    static _extractSkillSectionFallback(input: string): unknown {
         const match = input.match(this.PATTERNS.skillList);
         return match ? match[1].trim() : '';
     }
 
-    static _extractWeaponSectionFallback(input: string): any {
+    static _extractWeaponSectionFallback(input: string): unknown {
         const match = input.match(this.PATTERNS.weaponList);
         return match ? match[1].trim() : '';
     }
 
-    static _characteristicKeyFromShort(short: string): any {
+    static _characteristicKeyFromShort(short: string): unknown {
         if (!short) return null;
         const normalized = this._normalizeShortCharacteristic(short);
         if (normalized === 'A') return this.CHAR_MAP.Ag;
@@ -1038,7 +1038,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
         return short.replace(/\./g, '').replace(/\s+/g, '');
     }
 
-    static _unnaturalCharacteristicKey(name: string): any {
+    static _unnaturalCharacteristicKey(name: string): unknown {
         const lowered = name.toLowerCase();
         if (lowered.includes('strength')) return 'strength';
         if (lowered.includes('toughness')) return 'toughness';
@@ -1190,7 +1190,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} [initialInput=""] - Optional initial input.
      * @returns {Promise<Actor|null>} Created actor or null.
      */
-    static async open(initialInput: any = ''): Promise<unknown> {
+    static async open(initialInput: unknown = ''): Promise<unknown> {
         let input = initialInput;
         let options = {};
         if (typeof initialInput === 'object' && initialInput !== null) {
@@ -1210,7 +1210,7 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
      * @param {string} input - Input to parse.
      * @returns {Object} Parse result with data, errors, warnings.
      */
-    static quickParse(input: string): any {
+    static quickParse(input: string): Record<string, unknown> {
         return this.parse(input);
     }
 }

@@ -28,7 +28,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
          * Sheet tabs.
          * @type {Array<{tab: string, label: string, icon?: string}>}
          */
-        static TABS: Array<{ tab: string; label: string; icon?: string; group?: string; condition?: (doc: any) => boolean }> = [];
+        static TABS: Array<{ tab: string; label: string; icon?: string; group?: string; condition?: (doc: unknown) => boolean }> = [];
 
         /* -------------------------------------------- */
 
@@ -354,7 +354,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
             // @ts-expect-error - property access
             if ((await this._deleteDocument(event, target)) === false) return;
             const uuid = target.closest<HTMLElement>('[data-uuid]')?.dataset.uuid;
-            const doc = (await fromUuid(uuid)) as any;
+            const doc = await fromUuid(uuid);
             doc?.deleteDialog();
         }
 
@@ -407,7 +407,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => any>
             if ((await this._showDocument(event, target)) === false) return;
             if ([HTMLInputElement, HTMLSelectElement].some((el) => event.target instanceof el)) return;
             const uuid = target.closest<HTMLElement>('[data-uuid]')?.dataset.uuid;
-            const doc = (await fromUuid(uuid)) as any;
+            const doc = await fromUuid(uuid);
             doc?.sheet?.render({ force: true });
         }
 

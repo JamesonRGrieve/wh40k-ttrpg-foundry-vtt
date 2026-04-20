@@ -147,7 +147,7 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
         return Math.ceil(baseCost * modifier);
     }
 
-    override getTalentAdvanceCost(actor: WH40KBaseActor, talent: any, context?: Record<string, unknown>): number | null {
+    override getTalentAdvanceCost(actor: WH40KBaseActor, talent: unknown, context?: Record<string, unknown>): number | null {
         const baseCost = super.getTalentAdvanceCost(actor, talent, context);
         if (baseCost == null) return null;
 

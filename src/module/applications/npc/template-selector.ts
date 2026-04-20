@@ -67,7 +67,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * Current filter settings.
      * @type {Object}
      */
-    #filters: any = {
+    #filters: Record<string, string> = {
         category: '',
         faction: '',
         search: '',
@@ -95,7 +95,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * Promise resolver.
      * @type {Function|null}
      */
-    #resolve: ((value: any) => void) | null = null;
+    #resolve: ((value: unknown) => void) | null = null;
 
     /**
      * Whether submitted.
@@ -107,7 +107,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * Render timeout handle.
      * @type {any}
      */
-    _renderTimeout: any = null;
+    _renderTimeout: ReturnType<typeof setTimeout> | null = null;
 
     /* -------------------------------------------- */
     /*  Rendering                                   */
@@ -130,21 +130,23 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         let selectedTemplate: unknown = null;
         let preview = null;
         if (this.#selectedUuid) {
-            selectedTemplate = this.#templates.find((t: any) => t.uuid === this.#selectedUuid);
+            selectedTemplate = this.#templates.find((t: { uuid: string }) => t.uuid === this.#selectedUuid);
             if (selectedTemplate) {
                 preview = selectedTemplate.system.previewAtThreat(this.#threatLevel);
             }
         }
 
         // Get unique categories and factions for filter dropdowns
-        const categories = [...new Set(this.#templates.map((t: any) => t.system.category))].sort();
-        const factions = [...new Set(this.#templates.map((t: any) => t.system.faction).filter((f: any) => f))].sort();
+        const categories = [...new Set(this.#templates.map((t: Record<string, unknown>) => (t.system as Record<string, unknown>).category))].sort();
+        const factions = [
+            ...new Set(this.#templates.map((t: Record<string, unknown>) => (t.system as Record<string, unknown>).faction).filter((f: unknown) => f)),
+        ].sort();
 
         return {
             ...context,
 
             // Templates
-            templates: filteredTemplates.map((t: any) => ({
+            templates: filteredTemplates.map((t: Record<string, unknown>) => ({
                 uuid: t.uuid,
                 name: t.name,
                 img: t.img,
@@ -161,8 +163,8 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
             // Filters
             filters: this.#filters,
-            categories: categories.map((c: any) => ({ key: c, label: c.titleCase(), selected: c === this.#filters.category })),
-            factions: factions.map((f: any) => ({ key: f, label: f, selected: f === this.#filters.faction })),
+            categories: categories.map((c: unknown) => ({ key: c, label: (c as string).titleCase(), selected: c === this.#filters.category })),
+            factions: factions.map((f: unknown) => ({ key: f, label: f, selected: f === this.#filters.faction })),
 
             // Selection
             selectedTemplate,
@@ -186,7 +188,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     }
 
     /** @override */
-    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): any {
+    _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
         void super._onRender(context, options);
 
         // Filter inputs
@@ -258,7 +260,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         this.#templates = [];
 
         // Load from world items
-        const worldTemplates = game.items.filter((i: any) => i.type === 'npcTemplate');
+        const worldTemplates = game.items.filter((i: { type: string }) => i.type === 'npcTemplate');
         this.#templates.push(...worldTemplates);
 
         // Load from compendiums
@@ -268,7 +270,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
             try {
                 const index = await pack.getIndex({ fields: ['type', 'system.category', 'system.faction'] });
-                const templateEntries = index.filter((e: any) => e.type === 'npcTemplate');
+                const templateEntries = index.filter((e: { type: string }) => e.type === 'npcTemplate');
 
                 for (const entry of templateEntries) {
                     const item = await pack.getDocument(entry._id);
@@ -286,7 +288,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      * @private
      */
     _filterTemplates(): unknown[] {
-        return this.#templates.filter((t: any) => {
+        return this.#templates.filter((t: Record<string, unknown>) => {
             // Category filter
             if (this.#filters.category && t.system.category !== this.#filters.category) {
                 return false;
@@ -349,7 +351,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             return;
         }
 
-        const template = this.#templates.find((t: any) => t.uuid === this.#selectedUuid);
+        const template = this.#templates.find((t: { uuid: string }) => t.uuid === this.#selectedUuid);
         if (!template) return;
 
         try {

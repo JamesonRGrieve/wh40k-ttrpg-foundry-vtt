@@ -251,7 +251,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {boolean} hasEntries - Whether skill has specialist entries (skill group)
      * @returns {SchemaField}
      */
-    static SkillField(label: string, charShort: string, advanced = false, hasEntries = false): any {
+    static SkillField(label: string, charShort: string, advanced = false, hasEntries = false): unknown {
         const schema: Record<string, unknown> = {
             label: new StringField({ required: true, initial: label }),
             characteristic: new StringField({ required: true, initial: charShort }),
@@ -828,7 +828,7 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {number} fallback - Fallback value if conversion fails
      * @returns {number}
      */
-    static _toInt(value: any, fallback = 0): number {
+    static _toInt(value: unknown, fallback = 0): number {
         if (value === null || value === undefined || value === '') return fallback;
         const num = Number(value);
         if (Number.isNaN(num)) return fallback;

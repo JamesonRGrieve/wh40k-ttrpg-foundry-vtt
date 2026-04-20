@@ -46,7 +46,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
          * @type {Actor|null}
          * @private
          */
-        _whatIfPreview: any = null;
+        _whatIfPreview: unknown = null;
 
         /**
          * Cache of calculated impacts
@@ -170,7 +170,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
          * @param {Actor} preview  Preview actor
          * @private
          */
-        _compareCharacteristics(current: any, preview: any): void {
+        _compareCharacteristics(current: Record<string, unknown>, preview: Record<string, unknown>): void {
             for (const [key, previewChar] of Object.entries(preview.system.characteristics)) {
                 const currentChar = current.system.characteristics[key];
 
@@ -208,7 +208,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
          * @param {Actor} preview  Preview actor
          * @private
          */
-        _compareSkills(current: any, preview: any): void {
+        _compareSkills(current: Record<string, unknown>, preview: Record<string, unknown>): void {
             for (const [key, previewSkill] of Object.entries(preview.system.skills)) {
                 const currentSkill = current.system.skills[key];
 
@@ -251,7 +251,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
          * @param {Actor} preview  Preview actor
          * @private
          */
-        _compareDerivedStats(current: any, preview: any): void {
+        _compareDerivedStats(current: Record<string, unknown>, preview: Record<string, unknown>): void {
             const comparisons = [
                 { path: 'system.wounds.max', selector: "[data-stat='wounds-max']", type: 'wounds' },
                 { path: 'system.initiative.bonus', selector: "[data-stat='initiative']", type: 'initiative' },
@@ -342,7 +342,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
          * @param {*} value  The new value
          * @public
          */
-        async previewChange(path: string, value: any): Promise<void> {
+        async previewChange(path: string, value: unknown): Promise<void> {
             if (!this._whatIfActive) {
                 // If not in What-If mode, just apply directly
                 await this._applyChange(path, value);
@@ -532,7 +532,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
          * @param {*} value  New value
          * @private
          */
-        async _applyChange(path: string, value: any): Promise<void> {
+        async _applyChange(path: string, value: unknown): Promise<void> {
             const update = {};
             foundry.utils.setProperty(update, path, value);
             await this.document.update(update);
@@ -547,7 +547,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => any>(Base:
          * @returns {object}  State information
          * @public
          */
-        getWhatIfState(): { active: boolean; changes: Record<string, unknown>; impacts: any; changeCount: number } {
+        getWhatIfState(): { active: boolean; changes: Record<string, unknown>; impacts: unknown; changeCount: number } {
             return {
                 active: this._whatIfActive,
                 changes: foundry.utils.deepClone(this._whatIfChanges),

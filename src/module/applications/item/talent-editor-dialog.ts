@@ -141,7 +141,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object} Prepared prerequisites data
      * @protected
      */
-    _preparePrerequisitesData(system: any): Record<string, unknown> {
+    _preparePrerequisitesData(system: Record<string, unknown>): Record<string, unknown> {
         const prereqs = system.prerequisites || {};
 
         // Convert characteristics object to array for template iteration
@@ -169,7 +169,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object} Prepared modifiers data
      * @protected
      */
-    _prepareModifiersEditData(system: any): Record<string, unknown> {
+    _prepareModifiersEditData(system: Record<string, unknown>): Record<string, unknown> {
         const mods = system.modifiers || {};
 
         // Convert characteristics object to array
@@ -234,7 +234,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object} Prepared situational data
      * @protected
      */
-    _prepareSituationalEditData(system: any): Record<string, unknown> {
+    _prepareSituationalEditData(system: Record<string, unknown>): Record<string, unknown> {
         const situational = system.modifiers?.situational || {};
 
         return {
@@ -270,7 +270,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {object} Prepared grants data
      * @protected
      */
-    _prepareGrantsEditData(system: any): Record<string, unknown> {
+    _prepareGrantsEditData(system: Record<string, unknown>): Record<string, unknown> {
         const grants = system.grants || {};
 
         return {
@@ -525,19 +525,19 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      */
     _setupSectionTabs(): void {
         const tabs = this.element.querySelectorAll('.ted-section-tab');
-        tabs.forEach((tab: any) => {
+        tabs.forEach((tab: Element) => {
             tab.addEventListener('click', (event: Event) => {
                 event.preventDefault();
-                const section = tab.dataset.section;
+                const section = (tab as HTMLElement).dataset.section;
                 if (!section) return;
 
                 // Update active tab
-                tabs.forEach((t: any) => t.classList.remove('active'));
+                tabs.forEach((t: Element) => t.classList.remove('active'));
                 tab.classList.add('active');
 
                 // Show/hide panels
                 const panels = this.element.querySelectorAll('.ted-section-panel');
-                panels.forEach((panel: any) => {
+                panels.forEach((panel: Element) => {
                     panel.classList.toggle('active', panel.dataset.section === section);
                 });
 
@@ -804,7 +804,7 @@ export class TalentEditorDialog extends HandlebarsApplicationMixin(ApplicationV2
      * @returns {string} HTML string for the new row
      * @protected
      */
-    _createNewRow(category: string, type: string, index: number): any {
+    _createNewRow(category: string, type: string, index: number): Record<string, unknown> {
         const characteristicOptions = this._getCharacteristicOptions()
             .map((o) => `<option value="${o.value}">${o.label}</option>`)
             .join('');

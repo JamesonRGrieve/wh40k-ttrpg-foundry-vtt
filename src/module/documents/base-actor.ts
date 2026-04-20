@@ -230,7 +230,7 @@ export class WH40KBaseActor extends Actor {
         };
     }
 
-    _findCharacteristic(short: string): any {
+    _findCharacteristic(short: string): unknown {
         for (const characteristic of Object.values(this.characteristics)) {
             if (characteristic.short === short) {
                 return characteristic;
@@ -325,7 +325,7 @@ export class WH40KBaseActor extends Actor {
      * @returns {Object} Breakdown object
      * @private
      */
-    #getCharacteristicBreakdown(charKey: string, characteristic: any): WH40KStatBreakdown {
+    #getCharacteristicBreakdown(charKey: string, characteristic: Record<string, unknown>): WH40KStatBreakdown {
         const base = Number(characteristic.base ?? characteristic.starting ?? 0);
         const advance = Number(characteristic.advance ?? characteristic.advances ?? 0);
         const modifierValue = Number(characteristic.modifier ?? 0);
@@ -362,7 +362,7 @@ export class WH40KBaseActor extends Actor {
      * @returns {Object} Breakdown object
      * @private
      */
-    #getSkillBreakdown(skillKey: string, skill: any): WH40KStatBreakdown {
+    #getSkillBreakdown(skillKey: string, skill: Record<string, unknown>): WH40KStatBreakdown {
         const charShort = skill.characteristic;
         const characteristic = this._findCharacteristic(charShort);
         const baseTarget = characteristic.total || 0;

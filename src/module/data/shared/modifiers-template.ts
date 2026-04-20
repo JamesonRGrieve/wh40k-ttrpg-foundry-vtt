@@ -321,7 +321,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {string} char   The characteristic key.
      * @returns {number}
      */
-    getCharacteristicModifier(char): any {
+    getCharacteristicModifier(char): number {
         return this.modifiers.characteristics[char] ?? 0;
     }
 
@@ -332,7 +332,7 @@ export default class ModifiersTemplate extends SystemDataModel {
      * @param {string} skill   The skill key.
      * @returns {number}
      */
-    getSkillModifier(skill): any {
+    getSkillModifier(skill): number {
         return this.modifiers.skills[skill] ?? 0;
     }
 
