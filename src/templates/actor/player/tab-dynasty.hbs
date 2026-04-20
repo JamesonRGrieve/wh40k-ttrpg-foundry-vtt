@@ -3,7 +3,7 @@
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     <div class="tw-grid tw-grid-cols-2 tw-gap-3 tw-w-full">
         {{!-- Left Column --}}
-        <div class="wh40k-dynasty-col tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
+        <div class="wh40k-dynasty-col tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{!-- Profit Factor Panel with Visual Gauge --}}
             <div class="wh40k-panel wh40k-panel-profit-v2">
                 <div class="wh40k-panel-header">
@@ -111,7 +111,7 @@
         </div>
         
         {{!-- Right Column --}}
-        <div class="wh40k-dynasty-col tw-flex tw-flex-col tw-gap-0 tw-overflow-visible tw-min-w-0">
+        <div class="wh40k-dynasty-col tw-flex tw-w-full tw-min-w-0 tw-self-stretch tw-flex-col tw-gap-4 tw-overflow-visible">
             {{!-- Acquisitions --}}
             {{> systems/wh40k-rpg/templates/actor/panel/acquisitions-panel.hbs}}
             
