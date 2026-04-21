@@ -12,7 +12,7 @@ interface SheetTab {
     label: string;
     icon?: string;
     group?: string;
-    condition?: (doc: any) => boolean;
+    condition?: (doc: WH40KBaseActorDocument | WH40KItemDocument) => boolean;
 }
 
 /**
@@ -27,9 +27,9 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             actions: {
-                editDocument: (PrimarySheetWH40K as any).#showDocument,
-                deleteDocument: (PrimarySheetWH40K as any).#deleteDocument,
-                showDocument: (PrimarySheetWH40K as any).#showDocument,
+                editDocument: PrimarySheetWH40K.#showDocument,
+                deleteDocument: PrimarySheetWH40K.#deleteDocument,
+                showDocument: PrimarySheetWH40K.#showDocument,
             },
         };
 
@@ -69,6 +69,10 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
          */
         _mode: number | null = null;
 
+        declare document: WH40KBaseActorDocument | WH40KItemDocument;
+        declare isEditable: boolean;
+        declare tabGroups: HandlebarsApplicationV14.TabGroupsState;
+
         /* -------------------------------------------- */
         /*  Rendering                                   */
         /* -------------------------------------------- */
@@ -79,8 +83,8 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
 
             const renderContext = (options as any).renderContext;
             let mode = (options as any).mode;
-            if (mode === undefined && renderContext === 'createItem') mode = (this.constructor as any).MODES.EDIT;
-            this._mode = mode ?? this._mode ?? (this.constructor as any).MODES.PLAY;
+            if (mode === undefined && renderContext === 'createItem') mode = PrimarySheetWH40K.MODES.EDIT;
+            this._mode = mode ?? this._mode ?? PrimarySheetWH40K.MODES.PLAY;
         }
 
         /* -------------------------------------------- */
@@ -90,7 +94,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
             const parts = super._configureRenderParts(options);
             for (const key of Object.keys(parts)) {
                 const tab = (this.constructor as typeof PrimarySheetWH40K).TABS.find((t) => t.tab === key);
-                if (tab?.condition && !tab.condition((this as any).document)) delete parts[key];
+                if (tab?.condition && !tab.condition(this.document)) delete parts[key];
             }
             return parts;
         }
@@ -100,7 +104,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
         /** @inheritDoc */
         async _renderFrame(options: ApplicationV2Config.RenderOptions): Promise<HTMLElement> {
             const html = await super._renderFrame(options);
-            if (!game.user.isGM && (this as any).document.limited) html.classList.add('limited');
+            if (!game.user.isGM && this.document.limited) html.classList.add('limited');
             return html;
         }
 
@@ -113,11 +117,10 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
         _renderModeToggle(): void {
             const header = this.element.querySelector('.window-header');
             const toggle = header?.querySelector<HTMLInputElement>('.mode-slider');
-            const isEditable = (this as any).isEditable as boolean;
 
-            if (isEditable && !toggle) {
+            if (this.isEditable && !toggle) {
                 const newToggle = document.createElement('slide-toggle');
-                (newToggle as any).checked = this._mode === (this.constructor as typeof PrimarySheetWH40K).MODES.EDIT;
+                (newToggle as any).checked = this._mode === PrimarySheetWH40K.MODES.EDIT;
                 newToggle.classList.add('mode-slider');
                 newToggle.dataset.tooltip = 'WH40K.SheetModeEdit';
                 newToggle.setAttribute('aria-label', game.i18n.localize('WH40K.SheetModeEdit'));
@@ -125,9 +128,9 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
                 newToggle.addEventListener('dblclick', (event: Event) => event.stopPropagation());
                 newToggle.addEventListener('pointerdown', (event: Event) => event.stopPropagation());
                 header?.prepend(newToggle);
-            } else if (isEditable && toggle) {
-                (toggle as any).checked = this._mode === (this.constructor as typeof PrimarySheetWH40K).MODES.EDIT;
-            } else if (!isEditable && toggle) {
+            } else if (this.isEditable && toggle) {
+                toggle.checked = this._mode === PrimarySheetWH40K.MODES.EDIT;
+            } else if (!this.isEditable && toggle) {
                 toggle.remove();
             }
         }
@@ -137,10 +140,10 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
         /** @inheritDoc */
         async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
             const context = await super._prepareContext(options);
-            const doc = (this as any).document;
+            const doc = this.document;
             context.owner = doc.isOwner;
-            context.locked = !(this as any).isEditable;
-            context.editable = (this as any).isEditable && this._mode === (this.constructor as any).MODES.EDIT;
+            context.locked = !this.isEditable;
+            context.editable = this.isEditable && this._mode === PrimarySheetWH40K.MODES.EDIT;
             context.tabs = this._getTabs();
             return context;
         }
@@ -154,7 +157,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
             options: ApplicationV2Config.RenderOptions,
         ): Promise<Record<string, unknown>> {
             const partContext = await super._preparePartContext(partId, context, options);
-            (partContext as any).tab = (context as any).tabs[partId];
+            (partContext as any).tab = (context.tabs as Record<string, unknown>)[partId];
             return partContext;
         }
 
@@ -166,14 +169,14 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
          * @protected
          */
         _getTabs(): Record<string, Record<string, unknown>> {
-            return (this.constructor as typeof PrimarySheetWH40K).TABS.reduce((tabs: any, { tab, condition, ...config }) => {
-                if (!condition || condition((this as any).document))
+            return (this.constructor as typeof PrimarySheetWH40K).TABS.reduce((tabs: Record<string, unknown>, { tab, condition, ...config }) => {
+                if (!condition || condition(this.document))
                     tabs[tab] = {
                         ...config,
                         id: tab,
                         group: 'primary',
-                        active: (this as any).tabGroups.primary === tab,
-                        cssClass: (this as any).tabGroups.primary === tab ? 'active' : '',
+                        active: this.tabGroups.primary === tab,
+                        cssClass: this.tabGroups.primary === tab ? 'active' : '',
                     };
                 return tabs;
             }, {});
@@ -186,7 +189,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
         /** @inheritDoc */
         async _onFirstRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onFirstRender(context, options);
-            if ((this as any).tabGroups.primary) this.element.classList.add(`tab-${(this as any).tabGroups.primary}`);
+            if (this.tabGroups.primary) this.element.classList.add(`tab-${this.tabGroups.primary}`);
         }
 
         /* -------------------------------------------- */
@@ -231,7 +234,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
                 if (!nav || !content) continue;
 
                 const group = nav.dataset.group || 'primary';
-                const activeTab = (this as any).tabGroups?.[group] ?? initial;
+                const activeTab = this.tabGroups?.[group] ?? initial;
 
                 for (const tabLink of nav.querySelectorAll<HTMLElement>('[data-tab]')) {
                     tabLink.addEventListener('click', (event) => {
@@ -256,7 +259,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
          * @protected
          */
         _activateTab(tab: string, group: string, nav: HTMLElement, content: HTMLElement): void {
-            if ((this as any).tabGroups) (this as any).tabGroups[group] = tab;
+            if (this.tabGroups) this.tabGroups[group] = tab;
 
             for (const link of nav.querySelectorAll<HTMLElement>('[data-tab]')) {
                 const isActive = link.dataset.tab === tab;
@@ -323,7 +326,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
             if ((await this._deleteDocument(event, target)) === false) return;
             const uuid = target.closest<HTMLElement>('[data-uuid]')?.dataset.uuid;
             const doc = await fromUuid(uuid ?? '');
-            (doc as any)?.deleteDialog();
+            if (doc instanceof foundry.abstract.Document) doc.deleteDialog();
         }
 
         /* -------------------------------------------- */
@@ -335,13 +338,13 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
         /* -------------------------------------------- */
 
         async _onChangeSheetMode(event: Event): Promise<void> {
-            const { MODES } = this.constructor as any;
+            const { MODES } = PrimarySheetWH40K;
             const toggle = event.currentTarget as HTMLInputElement;
             const label = game.i18n.localize(`WH40K.SheetMode${toggle.checked ? 'Play' : 'Edit'}`);
             toggle.dataset.tooltip = label;
             toggle.setAttribute('aria-label', label);
             this._mode = toggle.checked ? MODES.EDIT : MODES.PLAY;
-            await (this as any).submit();
+            await this.submit();
             this.render();
         }
 
@@ -365,7 +368,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
             if ([HTMLInputElement, HTMLSelectElement].some((el) => event.target instanceof el)) return;
             const uuid = target.closest<HTMLElement>('[data-uuid]')?.dataset.uuid;
             const doc = await fromUuid(uuid ?? '');
-            (doc as any)?.sheet?.render({ force: true });
+            if (doc instanceof foundry.abstract.Document && doc.sheet) doc.sheet.render({ force: true });
         }
 
         /* -------------------------------------------- */

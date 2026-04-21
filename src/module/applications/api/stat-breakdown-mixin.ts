@@ -42,6 +42,8 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => App
          */
         #activePopover: HTMLElement | null = null;
 
+        declare document: WH40KBaseActorDocument;
+
         /**
          * Add stat breakdown action handlers
          * @override
@@ -50,8 +52,8 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => App
             ...Base.DEFAULT_OPTIONS,
             actions: {
                 ...(Base.DEFAULT_OPTIONS as any).actions,
-                showStatBreakdown: (StatBreakdownApplication as any).#showStatBreakdown,
-                viewBreakdownSource: (StatBreakdownApplication as any).#viewBreakdownSource,
+                showStatBreakdown: StatBreakdownApplication.#showStatBreakdown,
+                viewBreakdownSource: StatBreakdownApplication.#viewBreakdownSource,
             },
         };
 
@@ -82,10 +84,10 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => App
             }
 
             // Get breakdown data from document
-            const doc = (this as any).document;
+            const doc = this.document;
             let breakdown: BreakdownData | undefined;
-            if (typeof doc.getStatBreakdown === 'function') {
-                breakdown = doc.getStatBreakdown(statKey);
+            if (typeof (doc as any).getStatBreakdown === 'function') {
+                breakdown = (doc as any).getStatBreakdown(statKey);
             } else {
                 console.warn(`Document does not implement getStatBreakdown for ${statKey}`);
                 return;
@@ -115,8 +117,8 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => App
             if (!uuid) return;
 
             const item = await fromUuid(uuid);
-            if (item && 'sheet' in item && item.sheet) {
-                (item.sheet as any).render(true);
+            if (item instanceof foundry.abstract.Document && item.sheet) {
+                item.sheet.render(true);
             }
         }
 

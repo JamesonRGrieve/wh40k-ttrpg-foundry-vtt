@@ -132,7 +132,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
         _getCharacteristicContextOptions(target: HTMLElement): foundry.applications.ux.ContextMenu.Entry[] {
             const charKey = target.dataset.characteristic;
             if (!charKey) return [];
-            const char = (this.actor as any).characteristics?.[charKey] as WH40KCharacteristic | undefined;
+            const char = (this.actor as any).system.characteristics?.[charKey] as WH40KCharacteristic | undefined;
             if (!char) return [];
 
             return [
@@ -181,7 +181,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
         _getSkillContextOptions(target: HTMLElement): foundry.applications.ux.ContextMenu.Entry[] {
             const skillKey = target.dataset.skill;
             if (!skillKey) return [];
-            const skill = (this.actor as any).skills?.[skillKey] as WH40KSkill | undefined;
+            const skill = (this.actor as any).system.skills?.[skillKey] as WH40KSkill | undefined;
             if (!skill) return [];
 
             const options: foundry.applications.ux.ContextMenu.Entry[] = [
@@ -249,7 +249,8 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
 
             // Weapon-specific options
             if (item.type === 'weapon') {
-                const system = item.system as any;
+                const system = item.system as Record<string, unknown>;
+                const rateOfFire = system.rateOfFire as string | undefined;
                 options.push(
                     {
                         name: 'Standard Attack',
@@ -263,7 +264,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
                     },
                 );
 
-                if (system.rateOfFire?.includes('S')) {
+                if (rateOfFire?.includes('S')) {
                     options.push({
                         name: 'Semi-Auto Burst',
                         icon: '<i class="fas fa-redo"></i>',
@@ -271,7 +272,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
                     });
                 }
 
-                if (system.rateOfFire?.includes('–') || system.rateOfFire?.includes('/-')) {
+                if (rateOfFire?.includes('–') || rateOfFire?.includes('/-')) {
                     options.push({
                         name: 'Full-Auto Burst',
                         icon: '<i class="fas fa-fire"></i>',
@@ -282,20 +283,22 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
 
             // Equip/Unequip for applicable items
             if (['weapon', 'armour', 'gear'].includes(item.type)) {
-                const system = item.system as any;
+                const system = item.system as Record<string, unknown>;
+                const equipped = system.equipped as boolean | undefined;
                 options.push({
-                    name: system.equipped ? 'Unequip' : 'Equip',
-                    icon: `<i class="fas ${system.equipped ? 'fa-times-circle' : 'fa-check-circle'}"></i>`,
+                    name: equipped ? 'Unequip' : 'Equip',
+                    icon: `<i class="fas ${equipped ? 'fa-times-circle' : 'fa-check-circle'}"></i>`,
                     callback: () => this._toggleEquipped(item),
                 });
             }
 
             // Activate/Deactivate for force fields, etc.
-            const system = item.system as any;
-            if (system.activated !== undefined) {
+            const system = item.system as Record<string, unknown>;
+            const activated = system.activated as boolean | undefined;
+            if (activated !== undefined) {
                 options.push({
-                    name: system.activated ? 'Deactivate' : 'Activate',
-                    icon: `<i class="fas ${system.activated ? 'fa-power-off' : 'fa-bolt'}"></i>`,
+                    name: activated ? 'Deactivate' : 'Activate',
+                    icon: `<i class="fas ${activated ? 'fa-power-off' : 'fa-bolt'}"></i>`,
                     callback: () => this._toggleActivated(item),
                 });
             }
@@ -431,11 +434,13 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
         async _weaponAttack(item: WH40KItem, mode: string): Promise<void> {}
 
         async _toggleEquipped(item: WH40KItem): Promise<void> {
-            await item.update({ 'system.equipped': !(item.system as any).equipped });
+            const system = item.system as Record<string, unknown>;
+            await item.update({ 'system.equipped': !(system.equipped as boolean) });
         }
 
         async _toggleActivated(item: WH40KItem): Promise<void> {
-            await item.update({ 'system.activated': !(item.system as any).activated });
+            const system = item.system as Record<string, unknown>;
+            await item.update({ 'system.activated': !(system.activated as boolean) });
         }
 
         async _spendFate(purpose: string): Promise<void> {}
@@ -449,7 +454,9 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
             });
 
             if (confirmed) {
-                const currentTotal = (this.actor.system as any).fate?.total ?? 0;
+                const system = this.actor.system as Record<string, unknown>;
+                const fate = system.fate as Record<string, unknown> | undefined;
+                const currentTotal = (fate?.total as number) ?? 0;
                 if (currentTotal > 0) {
                     await this.actor.update({ 'system.fate.total': currentTotal - 1 });
                     ui.notifications.warn('Fate Point burned! Maximum reduced permanently.');

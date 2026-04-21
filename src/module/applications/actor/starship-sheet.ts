@@ -21,8 +21,8 @@ export default class StarshipSheet extends BaseActorSheet {
         ...BaseActorSheet.DEFAULT_OPTIONS,
         actions: {
             ...BaseActorSheet.DEFAULT_OPTIONS.actions,
-            fireShipWeapon: (StarshipSheet as any).#fireShipWeapon,
-            rollInitiative: (StarshipSheet as any).#rollInitiative,
+            fireShipWeapon: StarshipSheet.#fireShipWeapon,
+            rollInitiative: StarshipSheet.#rollInitiative,
         },
         classes: ['starship'],
         position: {
@@ -182,9 +182,9 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #fireShipWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #fireShipWeapon(this: StarshipSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const itemId = (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
-        const weapon = this.actor.items.get(itemId);
+        const weapon = this.actor.items.get(itemId ?? '');
         if (!weapon) return;
 
         const cardData = {
@@ -193,7 +193,7 @@ export default class StarshipSheet extends BaseActorSheet {
             crewRating: (this.actor.system as any).crew?.crewRating || 30,
         };
 
-        const html = await (foundry as any).applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
+        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);
 
         ChatMessage.create({
             user: game.user.id,
@@ -210,7 +210,7 @@ export default class StarshipSheet extends BaseActorSheet {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #rollInitiative(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollInitiative(this: StarshipSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         await this.actor.rollInitiative?.();
     }
 }

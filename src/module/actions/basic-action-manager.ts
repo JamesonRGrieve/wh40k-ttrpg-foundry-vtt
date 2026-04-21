@@ -188,14 +188,16 @@ export class BasicActionManager {
 
         const targetUuid = div.dataset.targetUuid;
 
-        let targetActor: Actor | undefined;
+        let targetActor: WH40KBaseActorDocument | undefined;
         if (targetUuid) {
             const doc = await fromUuid(targetUuid);
-            targetActor = doc instanceof Actor ? doc : (doc as any)?.actor;
+            const actor = doc instanceof Actor ? doc : (doc as any)?.actor;
+            targetActor = actor instanceof Actor ? (actor as WH40KBaseActorDocument) : undefined;
         } else {
             const targetedObjects = game.user.targets;
             if (targetedObjects && targetedObjects.size > 0) {
-                targetActor = (targetedObjects.values().next().value as TokenDocument).actor ?? undefined;
+                const token = targetedObjects.values().next().value as TokenDocument;
+                targetActor = token.actor as WH40KBaseActorDocument | undefined;
             }
         }
         if (!targetActor) {
@@ -224,7 +226,7 @@ export class BasicActionManager {
         }
 
         const actor = await fromUuid(targetUuid);
-        const targetActor = (actor instanceof Actor ? actor : (actor as any)?.actor) as WH40KBaseActorDocument | undefined;
+        const targetActor = actor instanceof Actor ? (actor as WH40KBaseActorDocument) : ((actor as any)?.actor as WH40KBaseActorDocument | undefined);
 
         if (!targetActor) {
             ui.notifications?.warn(`Cannot determine actor to assign hit.`);
