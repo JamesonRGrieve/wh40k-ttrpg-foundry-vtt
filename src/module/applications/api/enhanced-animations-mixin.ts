@@ -5,6 +5,7 @@
  */
 
 type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { WH40KBaseActorDocument, WH40KWounds } from '../../types/global.d.ts';
 import type { EnhancedAnimationsMixinAPI } from './sheet-mixin-types.js';
 
 /**

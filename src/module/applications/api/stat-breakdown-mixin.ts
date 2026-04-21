@@ -12,6 +12,7 @@
  */
 
 type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { WH40KBaseActorDocument } from '../../types/global.d.ts';
 
 interface ModifierEntry {
     value: number;
