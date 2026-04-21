@@ -77,6 +77,10 @@ stage_release() {
         echo "ERROR: dist/system.json not found — build must run first." >&2
         exit 1
     fi
+    if ! command -v zip >/dev/null 2>&1; then
+        echo "ERROR: 'zip' is required to strip copyrighted packs from the release." >&2
+        exit 1
+    fi
 
     mkdir -p "$out_dir"
     # Filenames here must match the manifest/download URLs declared in
@@ -85,8 +89,23 @@ stage_release() {
     cp -f "dist/system.json" "${out_dir}/system.json"
     cp -f "$versioned_zip" "${out_dir}/wh40k-rpg.zip"
 
+    # The packs/ tree is a private submodule containing copyrighted Games
+    # Workshop content (Dark Heresy 1e/2e, Rogue Trader, Black Crusade,
+    # Deathwatch, Only War compendium data). It ships in the local build for
+    # personal deploys but MUST NOT leave this machine. Strip it from the
+    # public release zip before upload. zip -d exits 12 when no entries
+    # match — tolerate that so a cleanly-built zip without packs still
+    # passes.
+    echo "  Stripping packs/ (copyrighted content) from release zip…"
+    zip -d "${out_dir}/wh40k-rpg.zip" 'packs/*' 'packs' >/dev/null 2>&1 || [ $? -eq 12 ]
+
+    if unzip -l "${out_dir}/wh40k-rpg.zip" 2>/dev/null | grep -qE '^\s*[0-9]+.*\spacks/'; then
+        echo "ERROR: packs/ entries still present in ${out_dir}/wh40k-rpg.zip — refusing to publish." >&2
+        exit 1
+    fi
+
     echo "  Manifest : ${out_dir}/system.json  (v${version})"
-    echo "  Package  : ${out_dir}/wh40k-rpg.zip"
+    echo "  Package  : ${out_dir}/wh40k-rpg.zip  (packs stripped)"
     echo "  Upload both to a GitHub release; Foundry installs from the manifest URL in system.json."
 }
 
