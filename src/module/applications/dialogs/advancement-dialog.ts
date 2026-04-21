@@ -541,16 +541,28 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     /** Check talent prereqs (characteristics / skills / talents) against this actor. */
-    #checkTalentPrereqs(prereqs: { characteristics?: Record<string, number>; skills?: string[]; talents?: string[] }): { valid: boolean; unmet: string[] } {
+    #checkTalentPrereqs(prereqs: { characteristics?: Record<string, number>; skills?: unknown; talents?: unknown }): { valid: boolean; unmet: string[] } {
         const unmet: string[] = [];
         const sys: any = this.actor.system;
         const chars = sys?.characteristics ?? {};
-        for (const [charKey, min] of Object.entries(prereqs?.characteristics ?? {})) {
-            const actual = (chars as any)[charKey]?.total ?? 0;
-            if (actual < (min as number)) unmet.push(`${charKey} ${min}+`);
+
+        // Some compendium entries store these as {} (Record) rather than [] (Array) — coerce defensively.
+        const coerceList = (value: unknown): string[] => {
+            if (Array.isArray(value)) return value.filter((v): v is string => typeof v === 'string');
+            if (value && typeof value === 'object') return Object.values(value).filter((v): v is string => typeof v === 'string');
+            return [];
+        };
+
+        const charReqs = prereqs?.characteristics;
+        if (charReqs && typeof charReqs === 'object') {
+            for (const [charKey, min] of Object.entries(charReqs)) {
+                const actual = (chars as any)[charKey]?.total ?? 0;
+                if (actual < (min as number)) unmet.push(`${charKey} ${min}+`);
+            }
         }
+
         const skills = sys?.skills ?? {};
-        for (const skillReq of prereqs?.skills ?? []) {
+        for (const skillReq of coerceList(prereqs?.skills)) {
             const m = skillReq.match(/^(.+?)\s*\+?(\d+)?$/);
             const name = (m ? m[1] : skillReq).toLowerCase().trim();
             const bonus = m && m[2] ? parseInt(m[2], 10) : 0;
@@ -559,8 +571,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const rankThreshold = bonus === 0 ? 1 : bonus === 10 ? 2 : bonus === 20 ? 3 : bonus === 30 ? 4 : 1;
             if (rank < rankThreshold) unmet.push(skillReq);
         }
+
         const ownedTalents = new Set(this.actor.items.filter((i: any) => i.type === 'talent').map((i: any) => i.name.toLowerCase()));
-        for (const talentReq of prereqs?.talents ?? []) {
+        for (const talentReq of coerceList(prereqs?.talents)) {
             if (!ownedTalents.has(talentReq.toLowerCase())) unmet.push(talentReq);
         }
         return { valid: unmet.length === 0, unmet };
@@ -644,7 +657,16 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     async #prepareTraitPanel(): Promise<any> {
         const actor: any = this.actor;
         const ownedTraits = actor.items.filter((i: any) => i.type === 'trait');
-        const list = ownedTraits.map((t: any) => {
+
+        // Collapse duplicates by name + specialization (pre-fix grant runs may have left some behind)
+        const traitMap = new Map<string, any>();
+        for (const t of ownedTraits) {
+            const spec = (t.system?.specialization ?? '').toString().toLowerCase().trim();
+            const key = `${t.name.toLowerCase()}|${spec}`;
+            if (!traitMap.has(key)) traitMap.set(key, t);
+        }
+
+        const list = [...traitMap.values()].map((t: any) => {
             const origin = actor.items.find(
                 (i: any) => i.isOriginPath && (i.system?.grants?.traits ?? []).some((g: any) => (g.name ?? '').toLowerCase() === t.name.toLowerCase()),
             );
@@ -669,12 +691,14 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const ownedElites = new Set(actor.items.filter((i: any) => i.isOriginPath && i.system?.step === 'elite').map((i: any) => i.name.toLowerCase()));
 
-        const elites: any[] = [];
+        const elitesByName = new Map<string, any>();
         for (const pack of packs) {
             const index = await pack.getIndex({ fields: ['name', 'type', 'system.step', 'system.description.value'] });
             for (const entry of index) {
                 if (entry.system?.step !== 'elite') continue;
-                const owned = ownedElites.has(entry.name.toLowerCase());
+                const key = entry.name.toLowerCase();
+                if (elitesByName.has(key)) continue;
+                const owned = ownedElites.has(key);
                 // Parse XP cost from description HTML (falls back to 1000)
                 const descHtml = entry.system?.description?.value ?? '';
                 const xpMatch = descHtml.match(/Experience Cost<\/h3>\s*<p>\s*([\d,]+)\s*xp/i) ?? descHtml.match(/([\d,]+)\s*xp/i);
@@ -683,7 +707,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 const summaryMatch = descHtml.match(/<h2>[^<]*<\/h2>\s*<p>([^<]+)<\/p>/);
                 const summary = summaryMatch ? summaryMatch[1].trim() : '';
 
-                elites.push({
+                elitesByName.set(key, {
                     id: `elite:${entry.name}`,
                     uuid: entry.uuid,
                     name: entry.name,
@@ -695,6 +719,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 });
             }
         }
+        const elites = [...elitesByName.values()];
         elites.sort((a, b) => a.name.localeCompare(b.name));
         elites.forEach((e, i) => (e.index = i));
 

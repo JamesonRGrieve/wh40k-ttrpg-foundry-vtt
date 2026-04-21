@@ -12,6 +12,26 @@
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+interface NPC {
+    uuid: string;
+    name: string;
+    img: string;
+    threat: number;
+    count: number;
+}
+
+interface PartyConfig {
+    count: number;
+    averageLevel: number;
+}
+
+interface Template {
+    name: string;
+    npcs: NPC[];
+    party: PartyConfig;
+    savedAt: number;
+}
+
 /**
  * Application for building and managing combat encounters.
  * @extends {ApplicationV2}
@@ -82,24 +102,24 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
     /**
      * NPCs in the current encounter.
-     * @type {Array<{uuid: string, name: string, img: string, threat: number, count: number}>}
+     * @type {NPC[]}
      */
-    #npcs: unknown[] = [];
+    #npcs: NPC[] = [];
 
     /**
      * Party configuration.
-     * @type {{count: number, averageLevel: number}}
+     * @type {PartyConfig}
      */
-    #party: Record<string, unknown> = {
+    #party: PartyConfig = {
         count: 4,
         averageLevel: 5,
     };
 
     /**
      * Saved templates.
-     * @type {Array<{name: string, npcs: Array}>}
+     * @type {Template[]}
      */
-    #templates: unknown[] = [];
+    #templates: Template[] = [];
 
     /* -------------------------------------------- */
     /*  Singleton Pattern                           */
@@ -137,8 +157,8 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const context: unknown = await super._prepareContext(options);
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        const context = await super._prepareContext(options);
 
         // Calculate encounter metrics
         const totalThreat = this.#npcs.reduce((sum, npc) => sum + npc.threat * npc.count, 0);
@@ -180,7 +200,7 @@ export default class EncounterBuilder extends HandlebarsApplicationMixin(Applica
 
             // Difficulty
             difficulty,
-            difficultyLabel: game.i18n.localize(difficulty.label),
+            difficultyLabel: game.i18n.localize(difficulty.label as string),
             difficultyColor: difficulty.color,
             threatRatio: ratio.toFixed(1),
 

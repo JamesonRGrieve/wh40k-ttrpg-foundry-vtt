@@ -50,7 +50,10 @@ function ensureGlobalDragTracking(): void {
         (e: DragEvent) => {
             try {
                 const raw = e.dataTransfer?.getData('text/plain');
-                _activeDragType = raw ? (JSON.parse(raw) as any).type ?? null : null;
+                interface DragData {
+                    type?: string;
+                }
+                _activeDragType = raw ? (JSON.parse(raw) as DragData).type ?? null : null;
             } catch {
                 _activeDragType = null;
             }
@@ -79,7 +82,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
         /*  Initialization                              */
         /* -------------------------------------------- */
 
-        _draggedItem: Record<string, unknown> | null = null;
+        _draggedItem: { id: string; item: WH40KItem; element: HTMLElement } | null = null;
         _dragStartPos: { x: number; y: number } | null = null;
         _splitResult: { quantity: number } | null = null;
 
@@ -169,7 +172,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
         async _onEnhancedDragStart(event: DragEvent): Promise<void> {
             const element = event.currentTarget as HTMLElement;
             const itemId = element.dataset.itemId;
-            const item = this.document.items.get(itemId ?? '');
+            const item = this.document.items.get(itemId ?? '') as WH40KItem | undefined;
 
             if (!item) return;
 
@@ -177,8 +180,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
             this._draggedItem = {
                 id: itemId ?? '',
-                item: item as unknown as Record<string, unknown>,
-                element: element,
+                item,
+                element,
             };
 
             if (event.ctrlKey && this._canSplitItem(item)) {
@@ -269,7 +272,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const system = item.system as Record<string, unknown>;
             const quantity = (system.quantity as number) || 1;
 
-            return (foundry.applications.api as any).DialogV2.prompt({
+            return (foundry.applications.api.DialogV2 as any).prompt({
                 window: { title: `Split ${item.name}` },
                 content: `
                     <form class="wh40k-split-dialog">

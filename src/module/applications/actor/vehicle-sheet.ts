@@ -5,6 +5,7 @@
  */
 
 import type { WH40KVehicle } from '../../documents/vehicle.ts';
+import type { WH40KItem } from '../../documents/item.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
 
 /**
@@ -228,7 +229,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const components: any[] = [];
         const other: any[] = [];
 
-        for (const item of (context as any).items) {
+        for (const item of (context as any).items as WH40KItem[]) {
             switch (item.type) {
                 case 'weapon':
                 case 'shipWeapon':
@@ -440,7 +441,7 @@ export default class VehicleSheet extends BaseActorSheet {
         const item = this.actor.items.get(itemId);
         if (!item) return;
 
-        await item.update({ 'system.active': !(item.system as any).active });
+        await item.update({ 'system.active': !(item.system as Record<string, unknown>).active });
     }
 
     /* -------------------------------------------- */
@@ -459,7 +460,7 @@ export default class VehicleSheet extends BaseActorSheet {
         if (!item) return;
 
         // Toggle damaged state or apply specific damage
-        const damaged = (item.system as any).damaged || false;
+        const damaged = (item.system as Record<string, unknown>).damaged || false;
         await item.update({ 'system.damaged': !damaged });
 
         ui.notifications.info(`${item.name} ${damaged ? 'repaired' : 'damaged'}.`);

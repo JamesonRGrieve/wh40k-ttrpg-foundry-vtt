@@ -157,7 +157,10 @@ export default class ItemGrantData extends BaseGrantData {
             const effectiveOverrides = { ...(overrides ?? {}) };
             if (_legacySpecialization && sourceItem.type === 'talent') {
                 effectiveOverrides['system.specialization'] = _legacySpecialization;
-                effectiveOverrides['name'] = `${sourceItem.name} (${_legacySpecialization})`;
+                // Strip any pre-existing "(X)" suffix so we don't produce "Name (X) (X)" or "Name (X) (Y)"
+                // when the compendium source or lookup path returns an already-specialized item.
+                const bareName = sourceItem.name.replace(/\s*\([^)]+\)\s*$/, '').trim();
+                effectiveOverrides['name'] = `${bareName} (${_legacySpecialization})`;
             }
 
             // Check for duplicates against the *final* name+specialization, not the bare source.

@@ -568,7 +568,9 @@ export class GrantsProcessor {
         const itemData = talentItem.toObject();
         if (talentGrant.specialization) {
             (itemData.system as any).specialization = talentGrant.specialization;
-            itemData.name = `${itemData.name} (${talentGrant.specialization})`;
+            // Strip any existing "(X)" suffix so we don't produce "Name (X) (X)"
+            const bareName = itemData.name.replace(/\s*\([^)]+\)\s*$/, '').trim();
+            itemData.name = `${bareName} (${talentGrant.specialization})`;
         }
 
         // Mark as granted

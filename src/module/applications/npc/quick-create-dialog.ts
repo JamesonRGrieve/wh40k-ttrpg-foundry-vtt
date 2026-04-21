@@ -13,6 +13,25 @@ interface NPCState {
     isHorde: boolean;
 }
 
+interface NPCState {
+    name: string;
+    threatLevel: number;
+    role: string;
+    type: string;
+    preset: string;
+    faction: string;
+    isHorde: boolean;
+}
+
+interface PreviewState {
+    characteristics: Array<{ key: string; label: string; short: string; value: number; bonus: number }>;
+    skills: Array<{ key: string; name: string; level: string; bonus: number }>;
+    weapons: Array<{ name: string; damage: string; pen: string; range: string }>;
+    wounds: number;
+    armour: number;
+    movement: Record<string, number>;
+}
+
 /**
  * Dialog for quickly creating NPCs with auto-generated stats.
  * @extends {ApplicationV2}
@@ -188,7 +207,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
                 wounds: (previewData.wounds as any).max,
                 armour: (previewData.armour as any).total,
                 movement: previewData.movement,
-            },
+            } as PreviewState,
 
             // Buttons
             buttons: [

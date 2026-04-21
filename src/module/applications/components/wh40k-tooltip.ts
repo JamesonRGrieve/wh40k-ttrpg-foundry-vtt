@@ -49,15 +49,21 @@ export class TooltipsWH40K {
                 const item = (await pack.getDocument(entry._id)) as WH40KItem | null;
                 if (item) {
                     const key = entry.name.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
-                    const system = item.system as Record<string, unknown>;
+                    const system = item.system as {
+                        descriptor?: string;
+                        uses?: string;
+                        useTime?: string;
+                        isBasic?: boolean;
+                        aptitudes?: string[];
+                    };
 
                     this.#skillDescriptions.set(key, {
                         name: entry.name,
-                        descriptor: system?.descriptor || '',
-                        uses: system?.uses || '',
-                        useTime: system?.useTime || '',
-                        isBasic: system?.isBasic ?? true,
-                        aptitudes: system?.aptitudes || [],
+                        descriptor: system.descriptor || '',
+                        uses: system.uses || '',
+                        useTime: system.useTime || '',
+                        isBasic: system.isBasic ?? true,
+                        aptitudes: system.aptitudes || [],
                     });
                 }
             }
@@ -667,21 +673,27 @@ export function prepareArmorTooltipData(location: string, armorData: WH40KArmour
         equipped: equipped.map((item) => ({
             name: item.name,
             img: item.img,
-            ap: (item.system as any)?.armour?.[location] || 0,
+            ap: ((item.system as Record<string, unknown>)?.armour as Record<string, number>)?.[location] || 0,
         })),
     };
     return JSON.stringify(data);
 }
 
 export function prepareWeaponTooltipData(weapon: WH40KItem): string {
-    const sys = weapon.system as any;
+    const sys = weapon.system as {
+        damage?: string;
+        penetration?: number;
+        range?: string;
+        rof?: string;
+        qualities?: Array<{ name: string } | string>;
+    };
     const data = {
         name: weapon.name,
         damage: sys?.damage || '—',
         penetration: sys?.penetration || 0,
         range: sys?.range || '—',
         rof: sys?.rof || '—',
-        qualities: sys?.qualities?.map((q: any) => q.name || q) || [],
+        qualities: sys?.qualities?.map((q) => (typeof q === 'string' ? q : q.name)) || [],
     };
     return JSON.stringify(data);
 }

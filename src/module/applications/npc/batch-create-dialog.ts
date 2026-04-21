@@ -18,6 +18,21 @@ interface BatchState {
     openSheets: boolean;
 }
 
+interface BatchState {
+    namePattern: string;
+    count: number;
+    threatLevel: number;
+    role: string;
+    type: string;
+    preset: string;
+    faction: string;
+    isHorde: boolean;
+    randomize: boolean;
+    randomizeAmount: number;
+    folder: string;
+    openSheets: boolean;
+}
+
 /**
  * Dialog for creating multiple NPCs at once.
  * @extends {ApplicationV2}
@@ -190,7 +205,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
         ];
 
         for (const field of fields) {
-            const el = form.querySelector(`[name="${field.name}"]`);
+            const el = form.querySelector(`[name="${field.name}"]`) as HTMLInputElement | HTMLSelectElement;
             if (!el) continue;
 
             el.addEventListener(field.type === 'boolean' ? 'change' : 'input', () => {
@@ -199,7 +214,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 } else if (field.type === 'number') {
                     (this.#state as any)[field.name] = parseInt((el as HTMLInputElement).value, 10) || 0;
                 } else {
-                    (this.#state as any)[field.name] = (el as HTMLInputElement).value;
+                    (this.#state as any)[field.name] = el.value;
                 }
                 this._debounceRender();
             });

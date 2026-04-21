@@ -102,9 +102,9 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
     /** @override */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const system = this.origin.system as any;
-        const grants = system?.grants || {};
-        const modifiers = system?.modifiers?.characteristics || {};
+        const system = this.origin.system as Record<string, unknown>;
+        const grants = (system?.grants as Record<string, any>) || {};
+        const modifiers = (system?.modifiers as any)?.characteristics || {};
 
         context.origin = this.origin;
         context.allowSelection = this.allowSelection;
@@ -114,12 +114,12 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
         context.name = this.origin.name;
         context.img = this.origin.img;
         context.step = system?.step;
-        context.stepLabel = this._getStepLabel(system?.step);
-        context.xpCost = system?.xpCost || 0;
-        context.isAdvanced = system?.isAdvancedOrigin || false;
+        context.stepLabel = this._getStepLabel(system?.step as string);
+        context.xpCost = (system?.xpCost as number) || 0;
+        context.isAdvanced = (system?.isAdvancedOrigin as boolean) || false;
 
         // Description - parse HTML properly
-        context.description = system?.description?.value || '';
+        context.description = (system?.description as any)?.value || '';
         context.hasDescription = !!context.description;
 
         // Source info
@@ -128,18 +128,18 @@ export default class OriginDetailDialog extends HandlebarsApplicationMixin(Appli
 
         // Characteristic modifiers
         context.characteristics = [];
-        for (const [key, value] of Object.entries(modifiers)) {
-            if ((value as number) !== 0) {
+        for (const [key, value] of Object.entries(modifiers as Record<string, number>)) {
+            if (value !== 0) {
                 context.characteristics.push({
                     key: key,
                     label: getCharacteristicDisplayInfo(key).label,
                     short: getCharacteristicDisplayInfo(key).short,
                     value: value,
-                    positive: (value as number) > 0,
+                    positive: value > 0,
                 });
             }
         }
-        context.hasCharacteristics = context.characteristics.length > 0;
+        context.hasCharacteristics = (context.characteristics as any[]).length > 0;
 
         // Wounds/Fate formulas
         context.woundsFormula = grants.woundsFormula || null;

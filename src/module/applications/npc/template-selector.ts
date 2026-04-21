@@ -9,6 +9,19 @@ interface FilterState {
     search: string;
 }
 
+interface TemplateRow {
+    uuid: string;
+    name: string;
+    img: string;
+    category: string;
+    faction: string;
+    baseThreat: number;
+    type: string;
+    role: string;
+    summary: string;
+    selected: boolean;
+}
+
 /**
  * Dialog for browsing and selecting NPC templates.
  * @extends {ApplicationV2}
@@ -141,24 +154,26 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
             ...context,
 
             // Templates
-            templates: filteredTemplates.map((t) => ({
-                uuid: t.uuid,
-                name: t.name,
-                img: t.img,
-                category: (t.system as any).category,
-                faction: (t.system as any).faction,
-                baseThreat: (t.system as any).baseThreatLevel,
-                type: (t.system as any).type,
-                role: (t.system as any).role,
-                summary: (t.system as any).summary,
-                selected: t.uuid === this.#selectedUuid,
-            })),
+            templates: filteredTemplates.map(
+                (t): TemplateRow => ({
+                    uuid: t.uuid,
+                    name: t.name,
+                    img: t.img ?? '',
+                    category: (t.system as any).category,
+                    faction: (t.system as any).faction,
+                    baseThreat: (t.system as any).baseThreatLevel,
+                    type: (t.system as any).type,
+                    role: (t.system as any).role,
+                    summary: (t.system as any).summary,
+                    selected: t.uuid === this.#selectedUuid,
+                }),
+            ),
             hasTemplates: filteredTemplates.length > 0,
             templateCount: filteredTemplates.length,
 
             // Filters
             filters: this.#filters,
-            categories: categories.map((c) => ({ key: c, label: (c as string).titleCase(), selected: c === this.#filters.category })),
+            categories: categories.map((c) => ({ key: c, label: String(c).titleCase(), selected: c === this.#filters.category })),
             factions: factions.map((f) => ({ key: f, label: f, selected: f === this.#filters.faction })),
 
             // Selection
