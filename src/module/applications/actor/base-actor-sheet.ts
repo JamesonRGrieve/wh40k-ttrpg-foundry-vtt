@@ -6,6 +6,7 @@
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KWounds, WH40KInitiative, WH40KMovement } from '../../types/global.d.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 import CollapsiblePanelMixin from '../api/collapsible-panel-mixin.ts';
 import ContextMenuMixin from '../api/context-menu-mixin.ts';
@@ -21,36 +22,97 @@ import { ActiveModifiersMixin, ItemPreviewMixin } from '../components/_module.ts
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 // import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 
-const { ActorSheetV2 } = foundry.applications.sheets;
+type AnyApplicationV2Ctor = new (...args: any[]) => foundry.applications.api.ApplicationV2.Any;
+const applications = foundry.applications as typeof foundry.applications & { sheets: { ActorSheetV2: AnyApplicationV2Ctor } };
+const { ActorSheetV2 } = applications.sheets;
+type BaseActorSheetSystem = WH40KBaseActorDocument['system'] & {
+    characteristics: Record<string, WH40KCharacteristic>;
+    skills: Record<string, WH40KSkill>;
+    wounds?: WH40KWounds;
+    initiative?: WH40KInitiative;
+    movement?: WH40KMovement;
+    experience?: { total?: number; used?: number };
+    schema?: { fields?: Record<string, unknown> };
+    _source?: Record<string, unknown>;
+};
+
+type BaseActorSheetActor = WH40KBaseActor & { system: BaseActorSheetSystem };
+type SkillLike = Partial<
+    WH40KSkill & {
+        hidden: boolean;
+        trainingLevel: number;
+        charShort: string;
+        breakdown: string;
+        tooltipData: string;
+        isFavorite: boolean;
+        showFavorite: boolean;
+        isGranted: boolean;
+    }
+> &
+    Record<string, unknown>;
+type CharacteristicLike = Partial<WH40KCharacteristic> & Record<string, unknown>;
+type TalentLike = {
+    id: string;
+    _id?: string;
+    name: string;
+    img?: string;
+    type: string;
+    flags?: Record<string, unknown>;
+    system: {
+        tier?: number;
+        tierLabel?: string;
+        category?: string;
+        categoryLabel?: string;
+        fullName?: string;
+        aptitudes?: string[];
+        prerequisitesLabel?: string;
+        hasPrerequisites?: boolean;
+        cost?: number;
+        benefit?: unknown;
+        description?: unknown;
+    };
+    tierLabel?: string;
+};
+type TraitLike = {
+    id: string;
+    _id?: string;
+    name: string;
+    img?: string;
+    type: string;
+    system: {
+        fullName?: string;
+        category?: string;
+        categoryLabel?: string;
+        hasLevel?: boolean;
+        level?: number;
+        isVariable?: boolean;
+    };
+};
+type TraitGroup = { category: string; categoryLabel: string; traits: Record<string, unknown>[] };
+const ApplicationV2Base = ApplicationV2Mixin(ActorSheetV2) as unknown as AnyApplicationV2Ctor;
+const PrimarySheetBase = PrimarySheetMixin(ApplicationV2Base) as unknown as AnyApplicationV2Ctor;
+const TooltipBase = TooltipMixin(PrimarySheetBase) as unknown as AnyApplicationV2Ctor;
+const VisualFeedbackBase = VisualFeedbackMixin(TooltipBase) as unknown as AnyApplicationV2Ctor;
+const AnimatedBase = EnhancedAnimationsMixin(VisualFeedbackBase) as unknown as AnyApplicationV2Ctor;
+const CollapsibleBase = CollapsiblePanelMixin(AnimatedBase) as unknown as AnyApplicationV2Ctor;
+const ContextMenuBase = ContextMenuMixin(CollapsibleBase) as unknown as AnyApplicationV2Ctor;
+const DragDropBase = EnhancedDragDropMixin(ContextMenuBase) as unknown as AnyApplicationV2Ctor;
+const WhatIfBase = WhatIfMixin(DragDropBase) as unknown as AnyApplicationV2Ctor;
+const StatBreakdownBase = StatBreakdownMixin(WhatIfBase) as unknown as AnyApplicationV2Ctor;
+const ItemPreviewBase = ItemPreviewMixin(StatBreakdownBase) as unknown as AnyApplicationV2Ctor;
+const BaseActorSheetBase = ActiveModifiersMixin(ItemPreviewBase) as unknown as AnyApplicationV2Ctor;
 
 /**
  * Base actor sheet built on ApplicationV2.
  * All actor sheets should extend this class.
  */
-export default class BaseActorSheet extends ActiveModifiersMixin(
-    ItemPreviewMixin(
-        StatBreakdownMixin(
-            WhatIfMixin(
-                EnhancedDragDropMixin(
-                    ContextMenuMixin(
-                        CollapsiblePanelMixin(EnhancedAnimationsMixin(VisualFeedbackMixin(TooltipMixin(PrimarySheetMixin(ApplicationV2Mixin(ActorSheetV2)))))),
-                    ),
-                ),
-            ),
-        ),
-    ),
-) {
+export default class BaseActorSheet extends BaseActorSheetBase {
     // ---- Typed declarations from mixin chain (see sheet-mixin-types.ts) ----
     // Foundry base properties
-    declare actor: WH40KBaseActor;
-    declare document: WH40KBaseActor;
-    declare element: HTMLElement;
-    declare position: { top: number; left: number; width: number; height: number };
+    declare actor: BaseActorSheetActor;
+    declare document: WH40KBaseActorDocument & { system: BaseActorSheetSystem };
     declare isEditable: boolean;
-    declare hasFrame: boolean;
-    declare id: string;
     declare tabGroups: Record<string, string>;
-    declare options: Record<string, unknown>;
 
     // EnhancedAnimationsMixin
     declare _previousState: unknown;
@@ -95,18 +157,18 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     // WhatIfMixin
     declare _whatIfActive: boolean;
     declare _whatIfChanges: Record<string, unknown>;
-    declare _whatIfPreview: unknown;
-    declare _whatIfImpacts: unknown[] | Record<string, unknown>;
+    declare _whatIfPreview: WH40KBaseActorDocument | null;
+    declare _whatIfImpacts: Array<{ type: string; message: string }>;
     declare enterWhatIfMode: () => Promise<void>;
     declare commitWhatIfChanges: () => Promise<void>;
     declare cancelWhatIfChanges: () => Promise<void>;
     declare exitWhatIfMode: () => Promise<void>;
     declare previewChange: (path: string, value: unknown) => Promise<void>;
     declare isWhatIfActive: () => boolean;
-    declare getWhatIfState: () => { active: boolean; changes: Record<string, unknown>; impacts: unknown; changeCount: number };
+    declare getWhatIfState: () => { active: boolean; changes: Record<string, unknown>; impacts: Array<{ type: string; message: string }>; changeCount: number };
 
     // EnhancedDragDropMixin
-    declare _draggedItem: Record<string, unknown> | null;
+    declare _draggedItem: { id: string; item: WH40KItem; element: HTMLElement } | null;
     declare _dragStartPos: { x: number; y: number } | null;
     declare _splitResult: { quantity: number } | null;
     declare removeFromFavorites: (itemId: string) => Promise<void>;
@@ -114,7 +176,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     declare getFavoriteItems: () => unknown[];
 
     // ActiveModifiersMixin
-    declare prepareActiveModifiers: () => any;
+    declare prepareActiveModifiers: () => unknown;
 
     // Instance properties used by BaseActorSheet itself
     declare _updateListener: ((document: any, changes: any, options: any, userId: string) => void) | null;
@@ -130,10 +192,6 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     // CollapsiblePanelMixin static action handlers
     static _onTogglePanel: (event: Event, target: HTMLElement) => Promise<void>;
     static _onApplyPreset: (event: Event, target: HTMLElement) => Promise<void>;
-
-    constructor(...args: any[]) {
-        super(...(args as []));
-    }
 
     /* -------------------------------------------- */
 
@@ -217,8 +275,17 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = {
+    async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
+        const context: Record<string, unknown> & {
+            actor: BaseActorSheetActor;
+            system: BaseActorSheetSystem;
+            fields: Record<string, unknown>;
+            effects: unknown[];
+            items: unknown[];
+            rollableClass: string;
+            source?: unknown;
+            skillTrainingConfig?: unknown;
+        } = {
             ...(await super._prepareContext(options)),
             actor: this.actor,
             system: this.actor.system,
@@ -244,14 +311,6 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         await this._prepareItems(context);
 
         return context;
-    }
-
-    /* -------------------------------------------- */
-
-    /** @inheritDoc */
-    async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const partContext = await super._preparePartContext(partId, context, options);
-        return partContext;
     }
 
     /* -------------------------------------------- */
@@ -639,7 +698,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      */
     _charShortToKey(short: string): string {
         // Use the same map as CommonTemplate for consistency
-        const map = {
+        const map: Record<string, string> = {
             WS: 'weaponSkill',
             BS: 'ballisticSkill',
             S: 'strength',
@@ -662,8 +721,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @param {object} [parentSkill]  Parent skill for specialist entries
      * @protected
      */
-    _augmentSkillData(key: string, data: Record<string, unknown>, characteristics: Record<string, unknown>, parentSkill: any = null): void {
-        const charShort = data.characteristic || parentSkill?.characteristic || 'S';
+    _augmentSkillData(key: string, data: SkillLike, characteristics: Record<string, CharacteristicLike>, parentSkill: SkillLike | null = null): void {
+        const charShort = String(data.characteristic ?? parentSkill?.characteristic ?? 'S');
         const charKey = this._charShortToKey(charShort);
         const char = characteristics[charKey];
 
@@ -688,12 +747,12 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         data.tooltipData = this.prepareSkillTooltip(key, data, characteristics);
 
         // Check if skill is favorite (auto-remove if untrained advanced)
-        const favorites = ((this.actor as any).getFlag('wh40k-rpg', 'favoriteSkills') as string[]) || [];
+        const favorites = ((this.actor as WH40KBaseActorDocument).getFlag('wh40k-rpg', 'favoriteSkills') as string[]) || [];
         const isUntrainedAdvanced = data.advanced && (data.trainingLevel || 0) === 0;
         if (isUntrainedAdvanced && favorites.includes(key)) {
             // Auto-unfavourite untrained advanced skills
             const updated = favorites.filter((f: string) => f !== key);
-            (this.actor as any).setFlag('wh40k-rpg', 'favoriteSkills', updated);
+            void (this.actor as WH40KBaseActorDocument).setFlag('wh40k-rpg', 'favoriteSkills', updated);
             data.isFavorite = false;
         } else {
             data.isFavorite = favorites.includes(key);
@@ -726,7 +785,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {number}  Training level (0-4)
      * @protected
      */
-    _getTrainingLevel(skill: any): number {
+    _getTrainingLevel(skill: SkillLike): number {
         if (skill.plus30) return 4;
         if (skill.plus20) return 3;
         if (skill.plus10) return 2;
@@ -741,7 +800,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {string}  Breakdown string
      * @protected
      */
-    _getSkillBreakdown(skill: any, char: any): string {
+    _getSkillBreakdown(skill: SkillLike, char: CharacteristicLike | undefined): string {
         const charTotal = char?.total ?? 0;
         const level = this._getTrainingLevel(skill);
         const baseValue = level > 0 ? charTotal : Math.floor(charTotal / 2);
@@ -854,9 +913,9 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Object} Augmented talent data
      * @protected
      */
-    _augmentTalentData(talent: any): Record<string, unknown> {
+    _augmentTalentData(talent: TalentLike): Record<string, unknown> {
         // Check if this talent is favorited
-        const favorites = ((this.actor as any).getFlag('wh40k-rpg', 'favoriteTalents') as string[]) || [];
+        const favorites = ((this.actor as WH40KBaseActorDocument).getFlag('wh40k-rpg', 'favoriteTalents') as string[]) || [];
         const isFavorite = favorites.includes(talent.id);
 
         // Build tooltip text from description/benefit
@@ -904,7 +963,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Object} Augmented trait data
      * @protected
      */
-    _augmentTraitData(trait: any): Record<string, unknown> {
+    _augmentTraitData(trait: TraitLike): Record<string, unknown> {
         return {
             id: trait.id,
             _id: trait._id,
@@ -928,8 +987,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Object[]} Array of tier groups
      * @protected
      */
-    _groupTalentsByTier(talents: unknown[]): Record<string, unknown>[] {
-        const groups = {};
+    _groupTalentsByTier(talents: Array<Record<string, unknown> & { system: { tier?: number }; tierLabel?: string }>): Record<string, unknown>[] {
+        const groups: Record<number, { tier: number; tierLabel: string; talents: Array<Record<string, unknown>> }> = {};
 
         for (const talent of talents) {
             const tier = talent.system.tier || 0;
@@ -942,7 +1001,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
         }
 
         // Convert to sorted array
-        return (Object.values(groups) as Record<string, unknown>[]).sort((a, b) => a.tier - b.tier);
+        return Object.values(groups).sort((a, b) => a.tier - b.tier);
     }
 
     /**
@@ -951,7 +1010,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {string[]} Sorted unique categories
      * @protected
      */
-    _getTalentCategories(talents: unknown[]): string[] {
+    _getTalentCategories(talents: TalentLike[]): string[] {
         const categories = new Set<string>();
         for (const talent of talents) {
             if (talent.system.category) {
@@ -983,7 +1042,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @protected
      */
     _prepareTraitsContext(context: Record<string, unknown>): Record<string, unknown> {
-        const traits = (context.items as unknown[]).filter((i: any) => i.type === 'trait');
+        const traits = (context.items as TraitLike[]).filter((i) => i.type === 'trait');
 
         // Apply filters if present
         let filteredTraits = traits;
@@ -1027,8 +1086,8 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Object[]} Array of category groups
      * @protected
      */
-    _groupTraitsByCategory(traits: unknown[]): Record<string, unknown>[] {
-        const groups = {
+    _groupTraitsByCategory(traits: Array<Record<string, unknown> & { system: { category?: string } }>): TraitGroup[] {
+        const groups: Record<string, TraitGroup> = {
             creature: { category: 'creature', categoryLabel: 'Creature', traits: [] },
             character: { category: 'character', categoryLabel: 'Character', traits: [] },
             elite: { category: 'elite', categoryLabel: 'Elite', traits: [] },
@@ -1056,7 +1115,7 @@ export default class BaseActorSheet extends ActiveModifiersMixin(
      * @returns {Array<Object>} Category options
      * @protected
      */
-    _getTraitCategories(traits: unknown[]): Record<string, unknown>[] {
+    _getTraitCategories(traits: Array<Record<string, unknown> & { system: { category?: string } }>): Record<string, unknown>[] {
         const categories = new Set<string>();
         for (const trait of traits) {
             categories.add(trait.system.category || 'general');
