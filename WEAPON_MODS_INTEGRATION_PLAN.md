@@ -1425,7 +1425,7 @@ After core integration is complete:
 **Next Steps**:
 
 1. Review plan with team/stakeholders
-2. Create beads issue for Phase 1 implementation
+2. Create or update repository-native tracking for Phase 1 implementation
 3. Begin implementation following phase breakdown
 4. Test iteratively
 5. Deploy Phase 1

@@ -3,7 +3,7 @@
  * Adds animated feedback when actor values are updated
  */
 
-type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { ApplicationV2Ctor } from './application-types.ts';
 import type { VisualFeedbackMixinAPI } from './sheet-mixin-types.js';
 
 /**
@@ -13,8 +13,12 @@ import type { VisualFeedbackMixinAPI } from './sheet-mixin-types.js';
  * @returns {any}
  * @mixin
  */
-export default function VisualFeedbackMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
-    return class VisualFeedbackApplication extends Base implements VisualFeedbackMixinAPI {
+export default function VisualFeedbackMixin<T extends ApplicationV2Ctor>(Base: T) {
+    return class VisualFeedbackApplication extends Base {
+        constructor(...args: any[]) {
+            super(...args);
+        }
+
         /* -------------------------------------------- */
         /*  Change Tracking                             */
         /* -------------------------------------------- */
@@ -24,19 +28,19 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => Ap
          * @type {Map<string, any>}
          * @protected
          */
-        _previousValues: Map<string, any> = new Map();
+        _previousValues: Map<string, number | string> = new Map();
 
         /* -------------------------------------------- */
 
-        declare document: any;
+        declare document: { toObject(): Record<string, unknown> } | null;
 
         /* -------------------------------------------- */
         /*  Form Submission Override                    */
         /* -------------------------------------------- */
 
         /** @override */
-        _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> | void {
-            super._onRender(context, options);
+        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+            await super._onRender(context, options);
             this._captureCurrentValues();
         }
 
@@ -170,7 +174,7 @@ export default function VisualFeedbackMixin<T extends new (...args: any[]) => Ap
          * @protected
          */
         _animateDerivedStat(selector: string): void {
-            const element = this.element.querySelector(selector);
+            const element = this.element.querySelector(selector) as HTMLElement | null;
             if (!element) return;
 
             element.classList.remove('derived-stat-changed');

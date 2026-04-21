@@ -9,6 +9,12 @@ import { WH40KItem } from '../documents/item.ts';
 import WeaponData from '../data/item/weapon.ts';
 import AmmunitionData from '../data/item/ammunition.ts';
 
+interface AmmunitionDataWithQuantity extends AmmunitionData {
+    quantity?: number;
+}
+
+type ReloadWeaponSystem = WeaponData & { reload: string };
+
 /**
  * Action cost object with half/full counts
  */
@@ -32,6 +38,14 @@ export interface ReloadResult {
  * Handles reload time calculation, action economy validation, and special qualities.
  */
 export class ReloadActionManager {
+    private static getWeaponSystem(weapon: WH40KItem): ReloadWeaponSystem {
+        return weapon.system as unknown as ReloadWeaponSystem;
+    }
+
+    private static getAmmoSystem(item: WH40KItem): AmmunitionDataWithQuantity {
+        return item.system as unknown as AmmunitionDataWithQuantity;
+    }
+
     /**
      * Reload action time costs mapped to action economy.
      */
@@ -60,8 +74,8 @@ export class ReloadActionManager {
             };
         }
 
-        const system = weapon.system as WeaponData;
-        const actor = weapon.actor as WH40KBaseActor | null;
+        const system = this.getWeaponSystem(weapon);
+        const actor = weapon.actor as unknown as WH40KBaseActor | null;
 
         // Check if weapon uses ammo
         if (!system.usesAmmo) {
@@ -158,10 +172,10 @@ export class ReloadActionManager {
                 if (previousValue > 0 && system.hasLoadedAmmo) {
                     // Re-deduct the rounds we just returned (reverse the return)
                     const prevAmmoItem =
-                        actor.items.find((i) => i.uuid === system.loadedAmmo.uuid) ||
-                        actor.items.find((i) => i.type === 'ammunition' && i.name === system.loadedAmmo.name);
+                        actor.items.find((i: WH40KItem) => i.uuid === system.loadedAmmo.uuid) ||
+                        actor.items.find((i: WH40KItem) => i.type === 'ammunition' && i.name === system.loadedAmmo.name);
                     if (prevAmmoItem) {
-                        const ammoSystem = prevAmmoItem.system as AmmunitionData;
+                        const ammoSystem = this.getAmmoSystem(prevAmmoItem);
                         await prevAmmoItem.update({ 'system.quantity': (ammoSystem.quantity || 0) - previousValue });
                     }
                 }
@@ -173,7 +187,7 @@ export class ReloadActionManager {
             }
 
             // Step 3: Calculate and load rounds
-            const ammoSystem = selectedAmmo.system as AmmunitionData;
+            const ammoSystem = this.getAmmoSystem(selectedAmmo);
             const clipMod = ammoSystem.clipModifier ?? 0;
             const newEffectiveMax = Math.max(1, system.clip.max + clipMod);
             const roundsToLoad = Math.min(newEffectiveMax, ammoSystem.quantity || 0);
@@ -209,8 +223,8 @@ export class ReloadActionManager {
             }
             message += ` — ${reloadCost.label}`;
 
-            if (this.hasCustomisedQuality(weapon) && effectiveReloadTime !== (system as any).reload) {
-                message += ` (Customised: ${(system as any).reload} → ${effectiveReloadTime})`;
+            if (this.hasCustomisedQuality(weapon) && effectiveReloadTime !== system.reload) {
+                message += ` (Customised: ${system.reload} → ${effectiveReloadTime})`;
             }
 
             return {
@@ -236,8 +250,8 @@ export class ReloadActionManager {
      * @returns Effective reload time
      */
     static getEffectiveReloadTime(weapon: WH40KItem): string {
-        const system = weapon.system as WeaponData;
-        const baseReload = (system as any).reload as string;
+        const system = this.getWeaponSystem(weapon);
+        const baseReload = system.reload;
 
         // Check for Customised quality
         if (!this.hasCustomisedQuality(weapon)) {
@@ -263,7 +277,7 @@ export class ReloadActionManager {
      * @returns
      */
     static hasCustomisedQuality(weapon: WH40KItem): boolean {
-        const system = weapon.system as WeaponData;
+        const system = this.getWeaponSystem(weapon);
         const qualities = system.effectiveSpecial;
         return qualities?.has('customised') ?? false;
     }
@@ -282,7 +296,7 @@ export class ReloadActionManager {
 
         // Check if in combat
         const combat = game.combat;
-        const isInCombat = !!(combat?.started && combat.combatants.some((c: any) => c.actorId === actor.id));
+        const isInCombat = !!(combat?.started && combat.combatants.some((c: Combatant) => c.actor?.id === actor.id));
 
         if (!isInCombat) {
             // Out of combat - allow reload with notification
@@ -291,7 +305,7 @@ export class ReloadActionManager {
 
         // Check if it's the actor's turn
         const currentCombatant = combat?.combatant;
-        const isActorsTurn = !!(currentCombatant && (currentCombatant as any).actorId === actor.id);
+        const isActorsTurn = !!(currentCombatant && currentCombatant.actor?.id === actor.id);
 
         if (!isActorsTurn) {
             // Not actor's turn - ask for confirmation
@@ -341,13 +355,13 @@ export class ReloadActionManager {
      * @returns
      */
     static async sendReloadToChat(actor: WH40KBaseActor, weapon: WH40KItem, result: ReloadResult): Promise<ChatMessage | undefined> {
-        const system = weapon.system as WeaponData;
+        const system = this.getWeaponSystem(weapon);
         const templateData = {
             actor: actor,
             weapon: weapon,
             result: result,
             effectiveReloadTime: this.getEffectiveReloadTime(weapon),
-            baseReloadTime: (system as any).reload,
+            baseReloadTime: system.reload,
             hasCustomised: this.hasCustomisedQuality(weapon),
             clipCurrent: system.clip.value,
             clipMax: system.effectiveClipMax,
@@ -375,14 +389,14 @@ export class ReloadActionManager {
     static findSpareAmmunition(actor: WH40KBaseActor, weapon: WH40KItem): WH40KItem[] {
         if (!actor || !weapon) return [];
 
-        const system = weapon.system as WeaponData;
+        const system = this.getWeaponSystem(weapon);
         const weaponType = system.type;
         const currentAmmoUuid = system.loadedAmmo?.uuid;
 
         // Find ammunition items compatible with this weapon type that have rounds available
         const compatible = actor.items.filter((item: WH40KItem) => {
             if (item.type !== 'ammunition') return false;
-            const ammoSystem = item.system as AmmunitionData;
+            const ammoSystem = this.getAmmoSystem(item);
             if ((ammoSystem.quantity || 0) <= 0) return false;
             const ammoWeaponTypes = ammoSystem.weaponTypes;
             // Universal ammo (empty weaponTypes set) is compatible with all weapons

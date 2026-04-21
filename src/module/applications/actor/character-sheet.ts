@@ -20,8 +20,11 @@ import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import TransactionRequestDialog from '../dialogs/transaction-request-dialog.ts';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
+import type { DialogV2Like, TextEditorImplementationLike } from '../api/application-types.ts';
 
-const TextEditor = foundry.applications.ux.TextEditor.implementation;
+const TextEditor = (foundry.applications as unknown as { ux: { TextEditor: { implementation: TextEditorImplementationLike } } }).ux.TextEditor.implementation;
+const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
+const toast = (foundry.applications as unknown as { api?: { Toast?: Record<string, (...args: unknown[]) => void> } }).api?.Toast;
 const ARMOUR_DISPLAY_LOCATIONS = [
     { key: 'head', label: 'Head', shortLabel: 'Head', rollRange: '01-10' },
     { key: 'rightArm', label: 'Right Arm', shortLabel: 'R.Arm', rollRange: '11-20' },
@@ -31,20 +34,83 @@ const ARMOUR_DISPLAY_LOCATIONS = [
     { key: 'leftLeg', label: 'Left Leg', shortLabel: 'L.Leg', rollRange: '86-00' },
 ] as const;
 
+type SheetTabConfig = {
+    tab: string;
+    label: string;
+    group: string;
+    cssClass?: string;
+};
+
+type CharacterSheetContext = Record<string, unknown> & {
+    actor?: Record<string, unknown> & { characteristics?: Record<string, Record<string, unknown>> };
+    system?: Record<string, unknown> & {
+        rogueTrader?: Record<string, unknown>;
+        modifierSources?: { characteristics?: Record<string, unknown> };
+        wounds?: { value?: number; max?: number };
+        fatigue?: { value?: number; max?: number };
+        armour?: Record<string, unknown>;
+    };
+    dh?: Record<string, unknown> & { combatActions?: { attacks?: Array<{ subtypes?: string[] }> } };
+};
+
+type OriginSummary = {
+    steps: Record<string, unknown>[];
+    completedSteps: number;
+    totalSteps: number;
+    isComplete: boolean;
+    characteristics: Array<{ key: string; short: string; value: number; positive: boolean }>;
+    skills: string[];
+    talents: string[];
+    traits: string[];
+};
+
+type CategorizedItems = {
+    all: WH40KItem[];
+    allCarried: WH40KItem[];
+    allShip: WH40KItem[];
+    weapons: WH40KItem[];
+    armour: WH40KItem[];
+    forceField: WH40KItem[];
+    cybernetic: WH40KItem[];
+    gear: WH40KItem[];
+    storageLocation: WH40KItem[];
+    criticalInjury: WH40KItem[];
+    equipped: WH40KItem[];
+};
+
+type WeaponLike = WH40KItem & {
+    system: WH40KItem['system'] & {
+        equipped?: boolean;
+        activated?: boolean;
+        class?: string;
+        type?: string;
+        clip?: { max?: number; value?: number };
+        ammoPercentage?: number;
+        effectiveClipMax?: number;
+    };
+    ammoPercent?: number;
+};
+
+type UtilityMenuOption = {
+    name: string;
+    icon: string;
+    callback: () => void | Promise<void>;
+    condition?: () => boolean;
+};
+
 /**
  * Actor sheet for Acolyte/Character type actors.
  */
 export default class CharacterSheet extends BaseActorSheet {
     declare actor: WH40KAcolyte;
-    declare document: WH40KAcolyte;
-    declare element: HTMLElement;
-    declare position: { top: number; left: number; width: number; height: number };
+    declare document: WH40KAcolyte & BaseActorSheet['document'];
     declare isEditable: boolean;
-    declare _powersFilter: Record<string, any>;
+    declare _powersFilter: Record<string, unknown>;
     declare _equipmentFilter: { search: string; type: string; status: string };
     declare _skillsFilter: { search: string; characteristic: string; training: string };
     declare _traitsFilter: Record<string, unknown>;
-    declare render: (options?: Record<string, unknown> | boolean) => any;
+    declare _throttleTimers: Map<string, number>;
+    declare _originPathSummary?: OriginSummary;
 
     /**
      * Whether the sheet is in edit mode (showing inline stat fields).
@@ -61,8 +127,10 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+        ...BaseActorSheet.DEFAULT_OPTIONS,
         actions: {
+            ...((BaseActorSheet.DEFAULT_OPTIONS.actions as Record<string, unknown>) ?? {}),
             'toggleEditMode': CharacterSheet.#toggleEditMode,
             // Combat actions
             'attack': CharacterSheet.#attack,
@@ -162,6 +230,7 @@ export default class CharacterSheet extends BaseActorSheet {
         },
         classes: ['wh40k-rpg', 'sheet', 'actor', 'player'],
         position: {
+            ...((BaseActorSheet.DEFAULT_OPTIONS.position as Record<string, unknown>) ?? {}),
             width: 1050,
             height: 800,
         },
@@ -196,7 +265,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * Foundry V13 ApplicationV2 handles tab visibility automatically.
      * @override
      */
-    static PARTS = {
+    static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         header: {
             template: 'systems/wh40k-rpg/templates/actor/player/header.hbs',
         },
@@ -242,7 +311,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * Tab configuration for the primary tab group.
      * @override
      */
-    static TABS = [
+    static TABS: SheetTabConfig[] = [
         { tab: 'overview', label: 'WH40K.Tabs.Overview', group: 'primary', cssClass: 'tab-overview' },
         { tab: 'skills', label: 'WH40K.Tabs.Statistics', group: 'primary', cssClass: 'tab-skills' },
         // talents tab removed — content moved to overview and skills tabs
@@ -309,7 +378,6 @@ export default class CharacterSheet extends BaseActorSheet {
      * @private
      */
     _notify(type: 'info' | 'warning' | 'error', message: string, options: Record<string, unknown> = {}): void {
-        const toast = (foundry.applications?.api as any)?.Toast;
         if (toast && typeof toast[type] === 'function') {
             toast[type](message, options);
             return;
@@ -344,7 +412,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /** @inheritDoc */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
+        const context = (await super._prepareContext(options as never)) as CharacterSheetContext;
 
         // Edit mode state
         context.inEditMode = this.inEditMode;
@@ -412,7 +480,15 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     async _preparePartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const partContext = await super._preparePartContext(partId, context, options);
+        const prototype = Object.getPrototypeOf(CharacterSheet.prototype) as {
+            _preparePartContext?: (
+                this: CharacterSheet,
+                partId: string,
+                context: Record<string, unknown>,
+                options: Record<string, unknown>,
+            ) => Promise<Record<string, unknown>>;
+        };
+        const partContext = (await prototype._preparePartContext?.call(this, partId, context, options)) ?? {};
 
         switch (partId) {
             case 'header':
@@ -447,21 +523,22 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     async _prepareTabPartContext(partId: string, context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        const sheetContext = context as CharacterSheetContext;
         // Find the tab configuration
-        const tabConfig = (this.constructor as any).TABS.find((t) => t.tab === partId);
+        const tabConfig = ((this.constructor as unknown as { TABS: SheetTabConfig[] }).TABS || []).find((t: SheetTabConfig) => t.tab === partId);
         if (tabConfig) {
-            context.tab = {
+            sheetContext.tab = {
                 id: tabConfig.tab,
-                group: tabConfig.group,
-                cssClass: tabConfig.cssClass,
+                group: tabConfig.group ?? 'primary',
+                cssClass: tabConfig.cssClass ?? '',
                 label: game.i18n.localize(tabConfig.label),
-                active: this.tabGroups[tabConfig.group] === tabConfig.tab,
+                active: this.tabGroups[(tabConfig.group ?? 'primary') as keyof typeof this.tabGroups] === tabConfig.tab,
             };
         }
 
         // Add filter state, specialist skills, talents, and traits for skills tab
         if (partId === 'skills') {
-            context.skillsFilter = this._skillsFilter;
+            sheetContext.skillsFilter = this._skillsFilter;
             // Add skillLists for specialist skills panel
             if (!context.skillLists) {
                 await this._prepareSkills(context);
@@ -589,9 +666,9 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareTabsContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         // Tabs use the static TABS configuration
-        context.tabs = (this.constructor as any).TABS.map((tab) => ({
+        context.tabs = ((this.constructor as unknown as { TABS: SheetTabConfig[] }).TABS || []).map((tab: SheetTabConfig) => ({
             ...tab,
-            active: this.tabGroups[tab.group] === tab.tab,
+            active: this.tabGroups[(tab.group ?? 'primary') as keyof typeof this.tabGroups] === tab.tab,
             label: game.i18n.localize(tab.label),
         }));
         return context;
@@ -600,8 +677,8 @@ export default class CharacterSheet extends BaseActorSheet {
     /* -------------------------------------------- */
 
     /** @inheritDoc */
-    _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): void {
-        super._onFirstRender(context, options);
+    async _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+        await super._onFirstRender(context, options as never);
 
         // Ensure initial tab is active
         const activeTab = this.tabGroups.primary || 'overview';
@@ -641,8 +718,9 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     _prepareCharacteristicHUD(context: Record<string, unknown>): void {
-        const hudCharacteristics = context.actor?.characteristics ?? {};
-        const modifierSources = context.system?.modifierSources?.characteristics ?? {};
+        const sheetContext = context as CharacterSheetContext;
+        const hudCharacteristics = sheetContext.actor?.characteristics ?? {};
+        const modifierSources = sheetContext.system?.modifierSources?.characteristics ?? {};
 
         // SVG circle parameters for progress ring
         const radius = 52;
@@ -706,7 +784,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const originItems = this.actor.items.filter((item) => (item as any).isOriginPath || (item.type as string) === 'originPath');
 
         // Calculate totals from all origins
-        const charTotals = {};
+        const charTotals: Record<string, number> = {};
         const skillSet = new Set();
         const talentSet = new Set();
         const traitSet = new Set();
@@ -759,7 +837,7 @@ export default class CharacterSheet extends BaseActorSheet {
                     for (const choice of grants.choices) {
                         const selectedValues = selectedChoices[choice.label] || [];
                         for (const selectedValue of selectedValues) {
-                            const option = choice.options?.find((o) => o.value === selectedValue);
+                            const option = choice.options?.find((o: { value?: string; grants?: Record<string, unknown> }) => o.value === selectedValue);
                             if (!option?.grants) continue;
 
                             const choiceGrants = option.grants;
@@ -817,7 +895,7 @@ export default class CharacterSheet extends BaseActorSheet {
         });
 
         // Build characteristic summary array
-        const charShorts = {
+        const charShorts: Record<string, string> = {
             weaponSkill: 'WS',
             ballisticSkill: 'BS',
             strength: 'S',
@@ -830,7 +908,7 @@ export default class CharacterSheet extends BaseActorSheet {
             influence: 'Inf',
         };
 
-        const characteristicBonuses = [];
+        const characteristicBonuses: OriginSummary['characteristics'] = [];
         for (const [key, value] of Object.entries(charTotals) as [string, number][]) {
             if (value !== 0) {
                 characteristicBonuses.push({
@@ -849,9 +927,9 @@ export default class CharacterSheet extends BaseActorSheet {
             totalSteps: 6,
             isComplete: completedSteps === 6,
             characteristics: characteristicBonuses,
-            skills: Array.from(skillSet),
-            talents: Array.from(talentSet),
-            traits: Array.from(traitSet),
+            skills: Array.from(skillSet) as string[],
+            talents: Array.from(talentSet) as string[],
+            traits: Array.from(traitSet) as string[],
         };
 
         return preparedSteps;
@@ -861,7 +939,7 @@ export default class CharacterSheet extends BaseActorSheet {
      * Get the origin path summary (call after _prepareOriginPathSteps)
      * @returns {object}
      */
-    _getOriginPathSummary(): Record<string, unknown> {
+    _getOriginPathSummary(): OriginSummary {
         return (
             this._originPathSummary || {
                 steps: [],
@@ -883,8 +961,8 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {object} Categorized items
      * @protected
      */
-    _getCategorizedItems(): Record<string, unknown[]> {
-        const categories = {
+    _getCategorizedItems(): CategorizedItems {
+        const categories: CategorizedItems = {
             all: [],
             allCarried: [], // Items on person or in backpack (not ship)
             allShip: [], // Items in ship storage
@@ -942,37 +1020,44 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {object} categorized  Categorized items.
      * @protected
      */
-    _prepareLoadoutData(context: Record<string, unknown>, categorized: Record<string, unknown[]>): void {
+    _prepareLoadoutData(context: Record<string, unknown>, categorized: CategorizedItems): void {
+        const loadoutContext = context as CharacterSheetContext & {
+            armourItems?: WH40KItem[];
+            forceFieldItems?: WH40KItem[];
+            cyberneticItems?: WH40KItem[];
+            gearItems?: WH40KItem[];
+            equippedItems?: WH40KItem[];
+        };
         // Add all items to context for the Backpack panel
-        context.allItems = categorized.all;
-        context.allCarriedItems = categorized.allCarried; // Personal/backpack items
-        context.allShipItems = categorized.allShip; // Ship storage items
+        loadoutContext.allItems = categorized.all;
+        loadoutContext.allCarriedItems = categorized.allCarried;
+        loadoutContext.allShipItems = categorized.allShip;
 
         // Filter items by type
-        context.armourItems = categorized.armour;
-        context.forceFieldItems = categorized.forceField;
-        context.cyberneticItems = categorized.cybernetic;
-        context.gearItems = categorized.gear;
-        context.storageLocations = categorized.storageLocation;
+        loadoutContext.armourItems = categorized.armour;
+        loadoutContext.forceFieldItems = categorized.forceField;
+        loadoutContext.cyberneticItems = categorized.cybernetic;
+        loadoutContext.gearItems = categorized.gear;
+        loadoutContext.storageLocations = categorized.storageLocation;
 
         // Equipped items (all types that are equipped)
-        context.equippedItems = categorized.equipped;
+        loadoutContext.equippedItems = categorized.equipped;
 
         // Counts for section headers
-        context.armourCount = context.armourItems.length;
-        context.forceFieldCount = context.forceFieldItems.length;
-        context.cyberneticCount = context.cyberneticItems.length;
-        context.gearCount = context.gearItems.length;
-        context.equippedCount = context.equippedItems.length;
+        loadoutContext.armourCount = loadoutContext.armourItems?.length ?? 0;
+        loadoutContext.forceFieldCount = loadoutContext.forceFieldItems?.length ?? 0;
+        loadoutContext.cyberneticCount = loadoutContext.cyberneticItems?.length ?? 0;
+        loadoutContext.gearCount = loadoutContext.gearItems?.length ?? 0;
+        loadoutContext.equippedCount = loadoutContext.equippedItems?.length ?? 0;
 
         // Encumbrance percentage for bar
         const enc = (this.actor as any).encumbrance ?? {};
         const encMax = enc.max || 1;
-        context.encumbrancePercent = Math.min(100, Math.round((enc.value / encMax) * 100));
+        loadoutContext.encumbrancePercent = Math.min(100, Math.round((enc.value / encMax) * 100));
 
         // Backpack fill percentage
         const backpackMax = enc.backpack_max || 1;
-        context.backpackPercent = Math.min(100, Math.round((enc.backpack_value / backpackMax) * 100));
+        loadoutContext.backpackPercent = Math.min(100, Math.round((enc.backpack_value / backpackMax) * 100));
     }
 
     /* -------------------------------------------- */
@@ -983,16 +1068,19 @@ export default class CharacterSheet extends BaseActorSheet {
      * @param {object} categorized  Categorized items.
      * @protected
      */
-    _prepareCombatData(context: Record<string, unknown>, categorized: Record<string, unknown[]>): void {
-        const weapons = categorized.weapons;
-        const system = context.system ?? this.actor.system ?? {};
+    _prepareCombatData(context: Record<string, unknown>, categorized: CategorizedItems): void {
+        const sheetContext = context as CharacterSheetContext;
+        const weapons = categorized.weapons as WeaponLike[];
+        const system = (sheetContext.system ?? (this.actor.system as unknown as CharacterSheetContext['system']) ?? {}) as NonNullable<
+            CharacterSheetContext['system']
+        >;
 
         // Calculate vitals percentages
         const woundsMax = system.wounds?.max || 1;
-        context.woundsPercent = Math.min(100, Math.round(((system.wounds?.value ?? 0) / woundsMax) * 100));
+        sheetContext.woundsPercent = Math.min(100, Math.round(((system.wounds?.value ?? 0) / woundsMax) * 100));
 
         const fatigueMax = system.fatigue?.max || 1;
-        context.fatiguePercent = Math.min(100, Math.round(((system.fatigue?.value ?? 0) / fatigueMax) * 100));
+        sheetContext.fatiguePercent = Math.min(100, Math.round(((system.fatigue?.value ?? 0) / fatigueMax) * 100));
 
         // Calculate reaction targets
         const skills = (this.actor as any).skills ?? {};
@@ -1004,7 +1092,7 @@ export default class CharacterSheet extends BaseActorSheet {
         if (dodgeSkill.plus20) dodgeBase += 20;
         else if (dodgeSkill.plus10) dodgeBase += 10;
         else if (!dodgeSkill.trained && !dodgeSkill.basic) dodgeBase = Math.floor(dodgeBase / 2);
-        context.dodgeTarget = dodgeBase;
+        sheetContext.dodgeTarget = dodgeBase;
 
         // Parry target: WS + Parry training
         const parrySkill = skills.parry ?? ({} as Record<string, unknown>);
@@ -1012,68 +1100,83 @@ export default class CharacterSheet extends BaseActorSheet {
         if (parrySkill.plus20) parryBase += 20;
         else if (parrySkill.plus10) parryBase += 10;
         else if (!parrySkill.trained && !parrySkill.basic) parryBase = Math.floor(parryBase / 2);
-        context.parryTarget = parryBase;
+        sheetContext.parryTarget = parryBase;
 
         // Critical injuries
-        context.criticalInjuries = categorized.criticalInjury;
+        sheetContext.criticalInjuries = categorized.criticalInjury;
 
         // Force field (first active/equipped one)
         const forceFields = categorized.forceField;
-        context.forceField = forceFields.find((ff) => ff.system?.equipped || ff.system?.activated) || forceFields[0];
-        context.hasForceField = !!context.forceField;
-        context.armourDisplayLocations = this.#prepareArmourDisplayLocations(system, categorized.armour as WH40KItem[]);
-        context.armourDisplay = Object.fromEntries((context.armourDisplayLocations as Array<Record<string, unknown>>).map((entry) => [entry.key, entry]));
+        sheetContext.forceField =
+            forceFields.find((ff) => (ff.system as WeaponLike['system'])?.equipped || (ff.system as WeaponLike['system'])?.activated) || forceFields[0];
+        sheetContext.hasForceField = !!sheetContext.forceField;
+        sheetContext.armourDisplayLocations = this.#prepareArmourDisplayLocations(system as Record<string, any>, categorized.armour as WH40KItem[]);
+        sheetContext.armourDisplay = Object.fromEntries(
+            ((sheetContext.armourDisplayLocations as Array<Record<string, unknown>>) || []).map((entry) => [entry.key, entry]),
+        );
 
         // Weapon slots - categorize by class and equipped status
         const equippedWeapons = weapons.filter((w) => w.system?.equipped);
-        context.equippedWeapons = equippedWeapons;
+        sheetContext.equippedWeapons = equippedWeapons;
         const rangedWeapons = equippedWeapons.filter((w) => w.system?.class !== 'Melee');
         const meleeWeapons = equippedWeapons.filter((w) => w.system?.class === 'Melee');
 
         // Primary weapon
-        context.primaryWeapon = rangedWeapons[0] || meleeWeapons[0] || weapons.find((w) => w.system?.equipped);
+        sheetContext.primaryWeapon = rangedWeapons[0] || meleeWeapons[0] || weapons.find((w) => w.system?.equipped);
 
         // Secondary weapon
-        if (context.primaryWeapon) {
+        if (sheetContext.primaryWeapon) {
             if (rangedWeapons[0] && meleeWeapons[0]) {
-                context.secondaryWeapon = meleeWeapons[0];
+                sheetContext.secondaryWeapon = meleeWeapons[0];
             } else if (rangedWeapons.length > 1) {
-                context.secondaryWeapon = rangedWeapons[1];
+                sheetContext.secondaryWeapon = rangedWeapons[1];
             } else if (meleeWeapons.length > 1) {
-                context.secondaryWeapon = meleeWeapons[1];
+                sheetContext.secondaryWeapon = meleeWeapons[1];
             }
         }
 
         // Sidearm: Pistol class weapon
-        context.sidearm = weapons.find((w) => w.system?.class === 'Pistol' && w !== context.primaryWeapon && w !== context.secondaryWeapon);
+        sheetContext.sidearm = weapons.find((w) => w.system?.class === 'Pistol' && w !== sheetContext.primaryWeapon && w !== sheetContext.secondaryWeapon);
 
         // Grenades: Thrown class weapons
-        context.grenades = weapons.filter((w) => w.system?.class === 'Thrown' || w.system?.type === 'grenade');
+        sheetContext.grenades = weapons.filter((w) => w.system?.class === 'Thrown' || w.system?.type === 'grenade');
 
         // Other weapons (not in slots)
-        const slotWeapons = [context.primaryWeapon, context.secondaryWeapon, context.sidearm, ...context.grenades].filter(Boolean);
-        context.otherWeapons = weapons.filter((w) => !slotWeapons.includes(w));
+        const slotWeapons = [
+            sheetContext.primaryWeapon,
+            sheetContext.secondaryWeapon,
+            sheetContext.sidearm,
+            ...((sheetContext.grenades as WeaponLike[] | undefined) ?? []),
+        ].filter(Boolean);
+        sheetContext.otherWeapons = weapons.filter((w) => !slotWeapons.includes(w));
 
         // Add ammo percentage to weapons
-        [context.primaryWeapon, context.secondaryWeapon, context.sidearm].filter(Boolean).forEach((w) => {
+        ([sheetContext.primaryWeapon, sheetContext.secondaryWeapon, sheetContext.sidearm].filter(Boolean) as WeaponLike[]).forEach((w) => {
             if (w.system?.clip?.max) {
                 w.ammoPercent = w.system.ammoPercentage ?? Math.round((w.system.clip.value / w.system.effectiveClipMax) * 100);
             }
         });
 
         // Prepare active effects data
-        context.effects = this.actor.effects.map((effect: any) => ({
-            id: effect.id,
-            label: effect.label || effect.name,
-            icon: effect.icon,
-            disabled: effect.disabled,
-            sourceName: effect.sourceName,
-            changes: effect.changes || [],
-            document: effect,
-        }));
+        sheetContext.effects = this.actor.effects.map((effect: foundry.documents.BaseActiveEffect) => {
+            const activeEffect = effect as foundry.documents.BaseActiveEffect & {
+                label?: string;
+                sourceName?: string;
+                changes?: unknown[];
+            };
+            return {
+                id: effect.id,
+                label: activeEffect.label || effect.name,
+                icon: effect.icon,
+                disabled: effect.disabled,
+                sourceName: activeEffect.sourceName,
+                changes: (activeEffect.changes || []) as unknown[],
+                document: effect,
+            };
+        });
 
         // Change mode lookup for display
-        context.changeModeLookup = {
+        sheetContext.changeModeLookup = {
             0: 'Custom',
             1: 'Multiply',
             2: 'Add',
@@ -1084,7 +1187,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Extract combat talents for display in combat actions panel
         const talents = this.actor.items.filter((i) => (i.type as string) === 'talent');
-        context.combatTalents = talents
+        sheetContext.combatTalents = talents
             .filter((t) => (t.system as any)?.category === 'combat')
             .map((t) => ({
                 id: t.id,
@@ -1097,10 +1200,10 @@ export default class CharacterSheet extends BaseActorSheet {
             }));
 
         // Partition attack actions into melee, ranged, and general (both)
-        const attacks = context.dh?.combatActions?.attacks || [];
-        context.meleeAttacks = attacks.filter((a) => a.subtypes?.includes('Melee'));
-        context.rangedAttacks = attacks.filter((a) => a.subtypes?.includes('Ranged'));
-        context.generalAttacks = attacks.filter((a) => a.subtypes?.includes('Melee or Ranged'));
+        const attacks = sheetContext.dh?.combatActions?.attacks || [];
+        sheetContext.meleeAttacks = attacks.filter((a: { subtypes?: string[] }) => a.subtypes?.includes('Melee'));
+        sheetContext.rangedAttacks = attacks.filter((a: { subtypes?: string[] }) => a.subtypes?.includes('Ranged'));
+        sheetContext.generalAttacks = attacks.filter((a: { subtypes?: string[] }) => a.subtypes?.includes('Melee or Ranged'));
     }
 
     /* -------------------------------------------- */
@@ -1200,7 +1303,11 @@ export default class CharacterSheet extends BaseActorSheet {
      * @protected
      */
     _prepareDynastyData(): Record<string, unknown> {
-        const pf = this.actor.system?.rogueTrader?.profitFactor ?? {};
+        const pf = (this.actor.system?.rogueTrader?.profitFactor ?? {}) as {
+            current?: number;
+            starting?: number;
+            modifier?: number;
+        };
         const currentPF = pf.current ?? 0;
         const startingPF = pf.starting ?? 0;
         const modifier = pf.modifier ?? 0;
@@ -1244,7 +1351,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareOverviewContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         // Add Active Effects data
-        context.effects = this.actor.effects.map((effect) => ({
+        context.effects = this.actor.effects.map((effect: foundry.documents.BaseActiveEffect) => ({
             id: effect.id,
             name: effect.name,
             icon: effect.icon,
@@ -1272,7 +1379,7 @@ export default class CharacterSheet extends BaseActorSheet {
         await this._prepareTabPartContext('overview', ctx, options);
 
         // Add Active Effects data for dashboard preview
-        const effects = this.actor.effects.map((effect) => ({
+        const effects = this.actor.effects.map((effect: foundry.documents.BaseActiveEffect) => ({
             id: effect.id,
             name: effect.name,
             icon: effect.icon,
@@ -1513,7 +1620,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareEquipmentContext(context: Record<string, unknown>, options: Record<string, unknown>): Record<string, unknown> {
         // Equipment data already prepared in _prepareLoadoutData
-        context.transactionSourceCount = TransactionManager.listSourcesForBuyer(this.actor).length;
+        context.transactionSourceCount = TransactionManager.listSourcesForBuyer(this.actor as unknown as Actor).length;
         return context;
     }
 
@@ -1735,7 +1842,7 @@ export default class CharacterSheet extends BaseActorSheet {
             `;
 
             await ChatMessage.create({
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                speaker: ChatMessage.getSpeaker({ actor: this.actor as unknown as Actor }),
                 content,
                 rolls: [roll],
                 flags: {
@@ -1828,7 +1935,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // Prepare chat data
         const chatData = {
             user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            speaker: ChatMessage.getSpeaker({ actor: this.actor as unknown as Actor }),
             content: await (foundry.applications.handlebars as any).renderTemplate('systems/wh40k-rpg/templates/chat/combat-action-card.hbs', {
                 name: game.i18n.localize(actionConfig.label),
                 actor: this.actor.name,
@@ -1868,7 +1975,7 @@ export default class CharacterSheet extends BaseActorSheet {
         // Prepare chat data
         const chatData = {
             user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            speaker: ChatMessage.getSpeaker({ actor: this.actor as unknown as Actor }),
             content: await (foundry.applications.handlebars as any).renderTemplate('systems/wh40k-rpg/templates/chat/movement-card.hbs', {
                 actor: this.actor.name,
                 movementType: movementType,
@@ -2236,7 +2343,7 @@ export default class CharacterSheet extends BaseActorSheet {
         await this._updateSystemField('system.fate.value', currentFate - 1);
 
         await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            speaker: ChatMessage.getSpeaker({ actor: this.actor as unknown as Actor }),
             content: `
                 <div class="wh40k-fate-spend-message">
                     <div style="display: flex; align-items: center; gap: 8px; padding: 12px; background: rgba(196, 135, 29, 0.1); border-left: 3px solid #c4871d; border-radius: 4px;">
@@ -2443,7 +2550,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const options = targets.map((a: any) => `<option value="${a.id}">${a.name}</option>`).join('');
         const content = `<form><div class="form-group"><label>Give ${itemIds.length} item(s) to:</label><select name="targetActorId">${options}</select></div></form>`;
 
-        const targetId = await (foundry.applications.api as any).DialogV2.prompt({
+        const targetId = await dialogV2.prompt({
             window: { title: 'Give Items' },
             content,
             ok: {
@@ -2511,7 +2618,7 @@ export default class CharacterSheet extends BaseActorSheet {
 
             switch (action) {
                 case 'equip-armour': {
-                    const armourItems = items.filter((i) => i.type === 'armour' || i.isArmour);
+                    const armourItems = items.filter((i: WH40KItem & { isArmour?: boolean }) => i.type === 'armour' || i.isArmour);
                     for (const item of armourItems) {
                         if (!item.system.equipped) {
                             await item.update({ 'system.equipped': true });
@@ -2525,7 +2632,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 }
 
                 case 'unequip-all': {
-                    const equippedItems = items.filter((i) => i.system?.equipped === true);
+                    const equippedItems = items.filter((i: WH40KItem) => (i.system as { equipped?: boolean })?.equipped === true);
                     for (const item of equippedItems) {
                         await item.update({ 'system.equipped': false });
                         count++;
@@ -2537,7 +2644,10 @@ export default class CharacterSheet extends BaseActorSheet {
                 }
 
                 case 'stow-gear': {
-                    const gearItems = items.filter((i) => (i.type === 'gear' || i.isGear) && !i.system.inBackpack);
+                    const gearItems = items.filter(
+                        (i: WH40KItem & { isGear?: boolean; system: WH40KItem['system'] & { inBackpack?: boolean } }) =>
+                            (i.type === 'gear' || i.isGear) && !i.system.inBackpack,
+                    );
                     for (const item of gearItems) {
                         await item.update({
                             'system.inBackpack': true,
@@ -2681,7 +2791,7 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #bonusVocalize(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             const bonusName = target.dataset.bonusName;
-            const bonus = (this as any).actor.backgroundEffects?.abilities?.find((a) => a.name === bonusName);
+            const bonus = (this as any).actor.backgroundEffects?.abilities?.find((a: { name?: string }) => a.name === bonusName);
             if (bonus) {
                 await DHBasicActionManager.sendItemVocalizeChat({
                     actor: (this as any).actor.name,
@@ -2764,7 +2874,7 @@ export default class CharacterSheet extends BaseActorSheet {
         event.preventDefault();
         event.stopPropagation();
 
-        const options = (this as any)._getUtilityMenuOptions();
+        const options = (this as any)._getUtilityMenuOptions() as UtilityMenuOption[];
         if (options.length === 0) return;
 
         // Create a simple context menu programmatically
@@ -2779,7 +2889,7 @@ export default class CharacterSheet extends BaseActorSheet {
         menu.style.top = `${rect.bottom + 5}px`;
 
         // Add menu items
-        options.forEach((option) => {
+        options.forEach((option: UtilityMenuOption) => {
             if (option.condition && !option.condition()) return;
 
             const item = document.createElement('div');
@@ -2793,8 +2903,8 @@ export default class CharacterSheet extends BaseActorSheet {
         });
 
         // Add close listener
-        const closeMenu = (e) => {
-            if (!menu.contains(e.target)) {
+        const closeMenu = (e: Event) => {
+            if (!menu.contains(e.target as Node | null)) {
                 menu.remove();
                 document.removeEventListener('click', closeMenu);
             }
@@ -2809,7 +2919,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static #resetWindowSize(this: CharacterSheet, event: Event, target: HTMLElement): void {
         event.preventDefault();
-        const defaults = (this.constructor as typeof CharacterSheet).DEFAULT_OPTIONS.position;
+        const defaults = (this.constructor as typeof CharacterSheet).DEFAULT_OPTIONS.position as { width?: number; height?: number };
         (this as any).setPosition({ width: defaults.width, height: defaults.height });
     }
 
@@ -2819,8 +2929,6 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /** @override */
     _createCustomContextMenus(): void {
-        super._createCustomContextMenus();
-
         // Note: Utility menu is now handled via action instead of context menu
     }
 
@@ -2829,12 +2937,14 @@ export default class CharacterSheet extends BaseActorSheet {
      * @returns {ContextMenuEntry[]}
      * @protected
      */
-    _getUtilityMenuOptions(): Record<string, unknown>[] {
+    _getUtilityMenuOptions(): UtilityMenuOption[] {
         return [
             {
                 name: game.i18n.localize('WH40K.Utility.SetupCharacteristics'),
                 icon: '<i class="fa-solid fa-sliders"></i>',
-                callback: () => CharacteristicSetupDialog.open(this.actor),
+                callback: async () => {
+                    await CharacteristicSetupDialog.open(this.actor);
+                },
             },
         ];
     }
@@ -2892,10 +3002,11 @@ export default class CharacterSheet extends BaseActorSheet {
 
         let visibleCount = 0;
 
-        itemCards.forEach((card) => {
-            const itemName = card.getAttribute('title')?.toLowerCase() || '';
-            const itemType = card.getAttribute('data-item-type') || '';
-            const isEquipped = card.querySelector('.wh40k-inv-equipped') !== null;
+        itemCards.forEach((card: Element) => {
+            const element = card as HTMLElement;
+            const itemName = element.getAttribute('title')?.toLowerCase() || '';
+            const itemType = element.getAttribute('data-item-type') || '';
+            const isEquipped = element.querySelector('.wh40k-inv-equipped') !== null;
 
             // Check filters
             const matchesSearch = !searchTerm || itemName.includes(searchTerm);
@@ -2904,10 +3015,10 @@ export default class CharacterSheet extends BaseActorSheet {
 
             // Show/hide card
             if (matchesSearch && matchesType && matchesStatus) {
-                card.style.display = '';
+                element.style.display = '';
                 visibleCount++;
             } else {
-                card.style.display = 'none';
+                element.style.display = 'none';
             }
         });
 
@@ -3431,7 +3542,7 @@ export default class CharacterSheet extends BaseActorSheet {
             } else {
                 // Fallback: create a simple chat message
                 await ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
+                    speaker: ChatMessage.getSpeaker({ actor: (this as any).actor as Actor }),
                     content: `<div class="wh40k-power-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
             }
@@ -3501,7 +3612,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 await item.toChat();
             } else {
                 await ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
+                    speaker: ChatMessage.getSpeaker({ actor: (this as any).actor as Actor }),
                     content: `<div class="wh40k-ritual-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
             }
@@ -3547,7 +3658,7 @@ export default class CharacterSheet extends BaseActorSheet {
                 await item.toChat();
             } else {
                 await ChatMessage.create({
-                    speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
+                    speaker: ChatMessage.getSpeaker({ actor: (this as any).actor as Actor }),
                     content: `<div class="wh40k-order-chat"><h3>${item.name}</h3><p>${item.system.description || ''}</p></div>`,
                 });
             }
@@ -3585,7 +3696,7 @@ export default class CharacterSheet extends BaseActorSheet {
                     // Simple d100 roll as last resort
                     const roll = await new Roll('1d100').evaluate();
                     await ChatMessage.create({
-                        speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
+                        speaker: ChatMessage.getSpeaker({ actor: (this as any).actor as Actor }),
                         content: `<div class="wh40k-phenomena-roll"><h3>Psychic Phenomena</h3><p>Roll: ${roll.total}</p></div>`,
                         rolls: [roll],
                     });
@@ -3625,7 +3736,7 @@ export default class CharacterSheet extends BaseActorSheet {
                     // Simple d100 roll as last resort
                     const roll = await new Roll('1d100').evaluate();
                     await ChatMessage.create({
-                        speaker: ChatMessage.getSpeaker({ actor: (this as any).actor }),
+                        speaker: ChatMessage.getSpeaker({ actor: (this as any).actor as Actor }),
                         content: `<div class="wh40k-perils-roll"><h3>Perils of the Warp</h3><p>Roll: ${roll.total}</p></div>`,
                         rolls: [roll],
                     });
@@ -3654,8 +3765,8 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Update active class on filter buttons
         const filterBtns = (this as any).element.querySelectorAll('.wh40k-panel-psychic-powers .wh40k-filter-btn');
-        filterBtns.forEach((btn) => {
-            btn.classList.toggle('active', btn.dataset.discipline === discipline);
+        filterBtns.forEach((btn: Element) => {
+            btn.classList.toggle('active', (btn as HTMLElement).dataset.discipline === discipline);
         });
 
         // Re-render the powers part
@@ -3679,8 +3790,8 @@ export default class CharacterSheet extends BaseActorSheet {
 
         // Update active class on filter buttons
         const filterBtns = (this as any).element.querySelectorAll('.wh40k-panel-orders .wh40k-filter-btn');
-        filterBtns.forEach((btn) => {
-            btn.classList.toggle('active', btn.dataset.category === category);
+        filterBtns.forEach((btn: Element) => {
+            btn.classList.toggle('active', (btn as HTMLElement).dataset.category === category);
         });
 
         // Re-render the powers part

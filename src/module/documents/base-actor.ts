@@ -3,10 +3,31 @@ import { toCamelCase } from '../handlebars/handlebars-helpers.ts';
 import type { WH40KItem } from './item.ts';
 import { SimpleSkillData } from '../rolls/action-data.ts';
 import { processTalentGrants, handleTalentRemoval } from '../utils/talent-grants.ts';
-import type { WH40KCharacteristic, WH40KStatBreakdown, WH40KModifierEntry } from '../types/global.d.ts';
+import type { WH40KActorSystemData, WH40KCharacteristic, WH40KStatBreakdown, WH40KModifierEntry } from '../types/global.d.ts';
+
+type RollDataLike = Record<string, unknown> & {
+    actor?: WH40KBaseActor;
+    nameOverride?: string;
+    type?: string;
+    baseTarget?: number;
+    modifiers: { modifier: number };
+};
+
+type CharacteristicLike = Record<string, unknown> & WH40KCharacteristic;
+type SkillLike = Record<string, unknown> & import('../types/global.d.ts').WH40KSkill;
+type ItemModifierCarrier = WH40KItem & {
+    system: WH40KItem['system'] & {
+        modifiers?: {
+            characteristics?: Record<string, number>;
+            skills?: Record<string, number>;
+            other?: Array<{ key: string; value: number }>;
+        };
+    };
+};
 
 export class WH40KBaseActor extends Actor {
-    declare system: import('../data/abstract/actor-data-model.ts').default;
+    declare system: WH40KActorSystemData;
+    declare items: foundry.utils.Collection<WH40KItem>;
     /* -------------------------------------------- */
     /*  Descendant Document Hooks                   */
     /* -------------------------------------------- */
@@ -15,14 +36,21 @@ export class WH40KBaseActor extends Actor {
      * Handle the creation of descendant documents (items).
      * @override
      */
-    _onCreateDescendantDocuments(parent: any, collection: string, documents: any[], data: any[], options: any, userId: string): void {
+    _onCreateDescendantDocuments(
+        parent: foundry.abstract.Document.Any | null,
+        collection: string,
+        documents: WH40KItem[],
+        data: Array<Record<string, unknown>>,
+        options: Record<string, unknown>,
+        userId: string,
+    ): void {
         super._onCreateDescendantDocuments(parent, collection, documents, data, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
 
             // Process talent grants for newly added talents
             if (game.user.id === userId) {
-                for (const item of documents as any[]) {
+                for (const item of documents) {
                     if (item.type === 'talent' && item.system?.hasGrants) {
                         setTimeout(() => void processTalentGrants(item, this), 100);
                     }
@@ -35,7 +63,14 @@ export class WH40KBaseActor extends Actor {
      * Handle the update of descendant documents (items).
      * @override
      */
-    _onUpdateDescendantDocuments(parent: any, collection: string, documents: any[], changes: any[], options: any, userId: string): void {
+    _onUpdateDescendantDocuments(
+        parent: foundry.abstract.Document.Any | null,
+        collection: string,
+        documents: WH40KItem[],
+        changes: Array<Record<string, unknown>>,
+        options: Record<string, unknown>,
+        userId: string,
+    ): void {
         super._onUpdateDescendantDocuments(parent, collection, documents, changes, options, userId);
         if (collection === 'items') {
             this._onItemsChanged();
@@ -46,9 +81,16 @@ export class WH40KBaseActor extends Actor {
      * Handle the deletion of descendant documents (items).
      * @override
      */
-    _onDeleteDescendantDocuments(parent: any, collection: string, documents: any[], ids: string[], options: any, userId: string): void {
+    _onDeleteDescendantDocuments(
+        parent: foundry.abstract.Document.Any | null,
+        collection: string,
+        documents: WH40KItem[],
+        ids: string[],
+        options: Record<string, unknown>,
+        userId: string,
+    ): void {
         if (collection === 'items' && game.user.id === userId) {
-            for (const item of documents as any[]) {
+            for (const item of documents) {
                 if (item.type === 'talent' && item.system?.hasGrants) {
                     setTimeout(() => void handleTalentRemoval(item, this), 100);
                 }
@@ -66,7 +108,10 @@ export class WH40KBaseActor extends Actor {
      * Triggers recalculation of item-based data via prepareEmbeddedData.
      */
     _onItemsChanged(): void {
-        const system = this.system as any;
+        const system = this.system as {
+            _initializeModifierTracking?: () => void;
+            prepareEmbeddedData?: () => void;
+        };
         if (typeof system?._initializeModifierTracking === 'function') {
             system._initializeModifierTracking();
         }
@@ -76,8 +121,8 @@ export class WH40KBaseActor extends Actor {
     }
 
     async _preCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: unknown): Promise<void> {
-        await super._preCreate(data as any, options, user);
-        const initData: Record<string, any> = {
+        await super._preCreate(data as never, options, user);
+        const initData: Record<string, unknown> = {
             'token.bar1': { attribute: 'wounds' },
             'token.bar2': { attribute: 'fate' },
             'token.displayName': CONST.TOKEN_DISPLAY_MODES.OWNER_HOVER,
@@ -98,7 +143,7 @@ export class WH40KBaseActor extends Actor {
                 initData['flags.wh40k-rpg.favoriteSkills'] = ['dodge', 'awareness', 'scrutiny', 'inquiry', 'commerce', 'techUse', 'command', 'medicae'];
             }
         }
-        this.updateSource(initData);
+        this.updateSource(initData as never);
     }
 
     get characteristics(): Record<string, WH40KCharacteristic> {
@@ -137,7 +182,7 @@ export class WH40KBaseActor extends Actor {
         const characteristic = this.characteristics[characteristicName];
 
         const simpleSkillData = new SimpleSkillData();
-        const rollData = simpleSkillData.rollData;
+        const rollData = simpleSkillData.rollData as unknown as RollDataLike;
         rollData.actor = this;
         rollData.nameOverride = characteristic.label;
         rollData.type = override ? override : 'Characteristic';
@@ -255,13 +300,13 @@ export class WH40KBaseActor extends Actor {
         // Try characteristic
         const characteristic = this.system.characteristics?.[statKey];
         if (characteristic) {
-            return this.#getCharacteristicBreakdown(statKey, characteristic);
+            return this.#getCharacteristicBreakdown(statKey, characteristic as CharacteristicLike);
         }
 
         // Try skill
         const skill = this.system.skills?.[statKey];
         if (skill) {
-            return this.#getSkillBreakdown(statKey, skill);
+            return this.#getSkillBreakdown(statKey, skill as SkillLike);
         }
 
         // Try derived stats (wounds, initiative, etc.)
@@ -291,16 +336,16 @@ export class WH40KBaseActor extends Actor {
      * @returns {Object} Breakdown object
      * @private
      */
-    #getCharacteristicBreakdown(charKey: string, characteristic: Record<string, unknown>): WH40KStatBreakdown {
+    #getCharacteristicBreakdown(charKey: string, characteristic: CharacteristicLike): WH40KStatBreakdown {
         const base = Number(characteristic.base ?? characteristic.starting ?? 0);
         const advance = Number(characteristic.advance ?? characteristic.advances ?? 0);
         const modifierValue = Number(characteristic.modifier ?? 0);
 
-        const breakdown = {
+        const breakdown: WH40KStatBreakdown = {
             label: characteristic.label || charKey.toUpperCase(),
-            base: base,
+            base,
             modifiers: [],
-            total: characteristic.total || 0,
+            total: Number(characteristic.total || 0),
         };
 
         // Add advances
@@ -328,16 +373,16 @@ export class WH40KBaseActor extends Actor {
      * @returns {Object} Breakdown object
      * @private
      */
-    #getSkillBreakdown(skillKey: string, skill: Record<string, unknown>): WH40KStatBreakdown {
+    #getSkillBreakdown(skillKey: string, skill: SkillLike): WH40KStatBreakdown {
         const charShort = skill.characteristic;
-        const characteristic = this._findCharacteristic(charShort);
-        const baseTarget = characteristic.total || 0;
+        const characteristic = this._findCharacteristic(charShort) as { total?: number };
+        const baseTarget = Number(characteristic.total || 0);
 
-        const breakdown = {
+        const breakdown: WH40KStatBreakdown = {
             label: skill.label || skillKey,
             base: baseTarget,
             modifiers: [],
-            total: skill.current || baseTarget,
+            total: Number(skill.current || baseTarget),
         };
 
         // Add training modifiers
@@ -390,7 +435,7 @@ export class WH40KBaseActor extends Actor {
         const strength = this.system.characteristics?.strength;
         const willpower = this.system.characteristics?.willpower;
 
-        const breakdown = {
+        const breakdown: WH40KStatBreakdown = {
             label: 'Wounds',
             base: 0,
             modifiers: [],
@@ -437,7 +482,7 @@ export class WH40KBaseActor extends Actor {
         const initiative = this.system.initiative;
         const agility = this.system.characteristics?.agility;
 
-        const breakdown = {
+        const breakdown: WH40KStatBreakdown = {
             label: 'Initiative',
             base: agility?.bonus || 0,
             modifiers: [],
@@ -458,7 +503,7 @@ export class WH40KBaseActor extends Actor {
     #getFateBreakdown(): WH40KStatBreakdown {
         const fate = this.system.fate;
 
-        const breakdown = {
+        const breakdown: WH40KStatBreakdown = {
             label: 'Fate Points',
             base: fate.rolled ? fate.max - (this.system.totalFateModifier || 0) : 0,
             modifiers: [],
@@ -489,7 +534,7 @@ export class WH40KBaseActor extends Actor {
         const armour = this.system.armour?.[location];
         if (!armour) return null;
 
-        const breakdown = {
+        const breakdown: WH40KStatBreakdown = {
             label: `Armour (${location})`,
             base: 0,
             modifiers: [],
@@ -530,7 +575,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectCharacteristicModifiers(charKey: string, modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as unknown[]) {
+        for (const item of [...this.items] as ItemModifierCarrier[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.characteristics) continue;
 
@@ -553,7 +598,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectSkillModifiers(skillKey: string, modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as unknown[]) {
+        for (const item of [...this.items] as ItemModifierCarrier[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.skills) continue;
 
@@ -575,11 +620,11 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectWoundsModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as unknown[]) {
+        for (const item of [...this.items] as ItemModifierCarrier[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.other) continue;
 
-            const woundsMod = modifiers.other.find((m) => m.key === 'wounds' || m.key === 'wounds.max');
+            const woundsMod = modifiers.other.find((m: { key: string; value: number }) => m.key === 'wounds' || m.key === 'wounds.max');
             if (woundsMod && woundsMod.value !== 0) {
                 modifiersArray.push({
                     source: item.name,
@@ -597,11 +642,11 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #collectInitiativeModifiers(modifiersArray: WH40KModifierEntry[]): void {
-        for (const item of [...this.items] as unknown[]) {
+        for (const item of [...this.items] as ItemModifierCarrier[]) {
             const modifiers = item.system.modifiers;
             if (!modifiers?.other) continue;
 
-            const initiativeMod = modifiers.other.find((m) => m.key === 'initiative');
+            const initiativeMod = modifiers.other.find((m: { key: string; value: number }) => m.key === 'initiative');
             if (initiativeMod && initiativeMod.value !== 0) {
                 modifiersArray.push({
                     source: item.name,
@@ -636,7 +681,7 @@ export class WH40KBaseActor extends Actor {
      * @private
      */
     #getItemIcon(item: WH40KItem): string {
-        const iconMap = {
+        const iconMap: Record<string, string> = {
             talent: 'fa-solid fa-star',
             trait: 'fa-solid fa-dna',
             condition: 'fa-solid fa-circle-exclamation',

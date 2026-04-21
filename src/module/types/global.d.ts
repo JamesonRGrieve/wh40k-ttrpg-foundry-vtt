@@ -139,6 +139,47 @@ export interface WH40KArmourLocation {
     traitBonus: number;
 }
 
+export type WH40KActorSystemData = import('../data/abstract/actor-data-model.ts').default & {
+    [key: string]: unknown;
+    characteristics: Record<string, WH40KCharacteristic>;
+    skills: Record<string, WH40KSkill>;
+    initiative: WH40KInitiative;
+    wounds: WH40KWounds;
+    movement: WH40KMovement;
+    size: string;
+    fatigue?: { value: number; max: number };
+    fate?: WH40KFate;
+    backpack?: Record<string, unknown>;
+    psy?: Record<string, unknown>;
+    bio?: Record<string, string>;
+    experience?: { used: number; total: number; available: number };
+    insanity?: { value: number };
+    corruption?: { value: number };
+    aptitudes?: Set<string>;
+    armour?: Record<string, WH40KArmourLocation>;
+    encumbrance?: { value: number; max: number; over: boolean };
+    backgroundEffects?: unknown[];
+    originPath?: Record<string, unknown>;
+    rogueTrader?: Record<string, unknown>;
+    modifierSources?: Record<string, unknown>;
+    combatActions?: unknown[];
+    totalFateModifier?: number;
+    prepareEmbeddedData?: () => void;
+    _initializeModifierTracking?: () => void;
+    prepareDerivedData?: () => void;
+};
+
+export type WH40KItemSystemData = import('../data/abstract/item-data-model.ts').default & {
+    [key: string]: unknown;
+    equipped?: boolean;
+    quantity?: number;
+    reload?: string;
+    class?: string;
+    type?: string;
+    step?: string;
+    weight?: number;
+};
+
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 import type { RTCompendiumBrowser } from '../applications/compendium-browser.ts';
@@ -303,26 +344,27 @@ declare global {
     }
 }
 
-export interface WH40KBaseActorDocument extends Actor {
-    system: import('../data/abstract/actor-data-model.ts').default;
+export interface WH40KBaseActorDocument extends WH40KBaseActor {
+    system: WH40KActorSystemData;
     items: foundry.utils.Collection<WH40KItem>;
     characteristics: Record<string, WH40KCharacteristic>;
     skills: Record<string, WH40KSkill>;
     initiative: WH40KInitiative;
     wounds: WH40KWounds;
     movement: WH40KMovement;
-    rollCharacteristicCheck(characteristic: string): Promise<any>;
-    rollWeaponAction(item: WH40KItem): Promise<any>;
-    rollPsychicPower(item: WH40KItem): Promise<any>;
+    rollCharacteristicCheck(characteristic: string): Promise<unknown>;
+    rollWeaponAction(item: WH40KItem): Promise<unknown>;
+    rollPsychicPower(item: WH40KItem): Promise<unknown>;
+    spendFate?(): Promise<void>;
     _onItemsChanged(): void;
-    getFlag(scope: string, key: string): any;
-    setFlag(scope: string, key: string, value: any): Promise<any>;
-    update(data: Record<string, any>, options?: Record<string, any>): Promise<any>;
-    updateSource(data: Record<string, any>): void;
+    getFlag(scope: string, key: string): unknown;
+    setFlag(scope: string, key: string, value: unknown): Promise<unknown>;
+    update(data: Record<string, unknown>, options?: Record<string, unknown>): Promise<unknown>;
+    updateSource(data: Record<string, unknown>): void;
 }
 
-export interface WH40KItemDocument extends Item {
-    system: import('../data/abstract/item-data-model.ts').default;
+export interface WH40KItemDocument extends WH40KItem {
+    system: WH40KItemSystemData;
     actor: WH40KBaseActorDocument | null;
     isOriginPath: boolean;
     isNavigatorPower: boolean;
@@ -335,10 +377,10 @@ export interface WH40KItemDocument extends Item {
     isMalignancy: boolean;
     isMutation: boolean;
     isSpecialAbility: boolean;
-    flags: Record<string, any>;
-    getFlag(scope: string, key: string): any;
-    setFlag(scope: string, key: string, value: any): Promise<any>;
-    update(data: Record<string, any>, options?: Record<string, any>): Promise<any>;
+    flags: Record<string, unknown>;
+    getFlag(scope: string, key: string): unknown;
+    setFlag(scope: string, key: string, value: unknown): Promise<unknown>;
+    update(data: Record<string, unknown>, options?: Record<string, unknown>): Promise<unknown>;
     sendToChat(): Promise<void>;
 }
 

@@ -3,7 +3,7 @@
  * Provides collapsible sections that remember their state across sessions
  */
 
-type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { ApplicationV2Ctor } from './application-types.ts';
 import type { BaseActorSheetMixins } from './sheet-mixin-types.js';
 
 interface CollapsiblePanelConfig {
@@ -19,8 +19,12 @@ interface CollapsiblePanelConfig {
  * @returns {any}
  * @mixin
  */
-export default function CollapsiblePanelMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
-    class CollapsiblePanelApplication extends (Base as any) {
+export default function CollapsiblePanelMixin<T extends ApplicationV2Ctor>(Base: T) {
+    class CollapsiblePanelApplication extends Base {
+        constructor(...args: any[]) {
+            super(...args);
+        }
+
         /* -------------------------------------------- */
         /*  Properties                                  */
         /* -------------------------------------------- */
@@ -100,7 +104,7 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
 
         /** @override */
         async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-            const context = await super._prepareContext(options);
+            const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
 
             // Load saved panel states
             this._loadPanelStates();
@@ -115,8 +119,8 @@ export default function CollapsiblePanelMixin<T extends new (...args: any[]) => 
         /* -------------------------------------------- */
 
         /** @override */
-        _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void | Promise<void> {
-            super._onRender(context, options);
+        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+            await super._onRender(context, options);
 
             // Apply saved panel states to DOM
             this._applyPanelStates();
