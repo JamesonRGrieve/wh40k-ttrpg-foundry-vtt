@@ -41,11 +41,17 @@
     ]
   },
   "dependencies": {},
+  "overrides": {
+    "braces": "^3.0.3",
+    "micromatch": "^4.0.8",
+    "tinymce": "^7.0.0"
+  },
   "pnpm": {
     "overrides": {
       "braces@<3.0.3": "^3.0.3",
       "micromatch@<4.0.8": "^4.0.8",
-      "postcss@<8.4.31": "^8.4.31"
+      "postcss@<8.4.31": "^8.4.31",
+      "tinymce@<7.0.0": "^7.0.0"
     }
   },
   "devDependencies": {
