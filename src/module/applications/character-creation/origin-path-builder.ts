@@ -3501,7 +3501,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _resetExperienceAndAdvancements(): Promise<void> {
-        const startingXP = (this.systemConfig?.startingXP as number) ?? 0;
+        // startingXP lives on the full system config (registryConfig), not the
+        // OriginStepConfig slice stored in systemConfig. Reading from
+        // systemConfig here always resolved to `undefined`, which silently
+        // zeroed the reset.
+        const startingXP = (this.registryConfig?.startingXP as number) ?? 0;
         const update: Record<string, unknown> = {
             'system.experience.total': startingXP,
             'system.experience.used': 0,
