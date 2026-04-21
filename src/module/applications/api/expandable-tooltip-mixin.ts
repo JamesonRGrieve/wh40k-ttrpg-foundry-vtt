@@ -13,7 +13,7 @@
  * @mixin
  */
 
-type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { ApplicationV2Ctor } from './application-types.ts';
 
 /**
  * Mixin for expandable tooltip functionality
@@ -21,8 +21,12 @@ type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
  * @param {T} Base - The base class to extend
  * @returns {any} Extended class with expandable tooltip support
  */
-export default function ExpandableTooltipMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+export default function ExpandableTooltipMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class ExpandableTooltipApplication extends Base {
+        constructor(...args: any[]) {
+            super(...args);
+        }
+
         /**
          * Storage for currently open expandable panels
          * @type {Set<string>}
@@ -35,9 +39,10 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
          * @override
          */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
-            ...Base.DEFAULT_OPTIONS,
+            ...((Base as unknown as { DEFAULT_OPTIONS?: Partial<ApplicationV2Config.DefaultOptions> }).DEFAULT_OPTIONS ?? {}),
             actions: {
-                ...(Base.DEFAULT_OPTIONS as any).actions,
+                ...(((Base as unknown as { DEFAULT_OPTIONS?: { actions?: Record<string, unknown> } }).DEFAULT_OPTIONS?.actions as Record<string, unknown>) ??
+                    {}),
                 toggleExpandable: ExpandableTooltipApplication.#toggleExpandable,
             },
         };
@@ -140,7 +145,7 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
                 const content = element.innerHTML;
                 const enriched = await TextEditor.enrichHTML(content, {
                     async: true,
-                    relativeTo: (this as any).document as foundry.abstract.Document,
+                    relativeTo: (this as any).document as foundry.abstract.Document.Any,
                 });
                 element.innerHTML = enriched;
                 element.removeAttribute('data-enrich');
@@ -155,7 +160,15 @@ export default function ExpandableTooltipMixin<T extends new (...args: any[]) =>
          * @override
          */
         _attachPartListeners(partId: string, htmlElement: HTMLElement, options: ApplicationV2Config.RenderOptions): void {
-            super._attachPartListeners(partId, htmlElement, options);
+            const prototype = Object.getPrototypeOf(ExpandableTooltipApplication.prototype) as {
+                _attachPartListeners?: (
+                    this: ExpandableTooltipApplication,
+                    partId: string,
+                    htmlElement: HTMLElement,
+                    options: ApplicationV2Config.RenderOptions,
+                ) => void;
+            };
+            prototype._attachPartListeners?.call(this, partId, htmlElement, options);
 
             // Close panels on Escape key
             htmlElement.addEventListener('keydown', (event: KeyboardEvent) => {

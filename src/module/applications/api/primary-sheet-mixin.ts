@@ -3,8 +3,8 @@
  * Based on dnd5e's PrimarySheetMixin pattern
  */
 
-type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
 import DragDropMixin from './drag-drop-api-mixin.ts';
+import type { ApplicationV2Ctor } from './application-types.ts';
 import type { WH40KBaseActorDocument, WH40KItemDocument } from '../../types/global.d.ts';
 import type { PrimarySheetMixinAPI } from './sheet-mixin-types.js';
 
@@ -23,8 +23,12 @@ interface SheetTab {
  * @returns {any}
  * @mixin
  */
-export default function PrimarySheetMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class PrimarySheetWH40K extends DragDropMixin(Base) implements PrimarySheetMixinAPI {
+        constructor(...args: any[]) {
+            super(...args);
+        }
+
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             actions: {
@@ -92,7 +96,13 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
 
         /** @inheritDoc */
         _configureRenderParts(options: ApplicationV2Config.RenderOptions): Record<string, ApplicationV2Config.PartConfiguration> {
-            const parts = super._configureRenderParts(options);
+            const prototype = Object.getPrototypeOf(PrimarySheetWH40K.prototype) as {
+                _configureRenderParts?: (
+                    this: PrimarySheetWH40K,
+                    options: ApplicationV2Config.RenderOptions,
+                ) => Record<string, ApplicationV2Config.PartConfiguration>;
+            };
+            const parts = prototype._configureRenderParts?.call(this, options) ?? {};
             for (const key of Object.keys(parts)) {
                 const tab = (this.constructor as typeof PrimarySheetWH40K).TABS.find((t) => t.tab === key);
                 if (tab?.condition && !tab.condition(this.document)) delete parts[key];
@@ -140,7 +150,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
 
         /** @inheritDoc */
         async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-            const context = await super._prepareContext(options);
+            const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
             const doc = this.document;
             context.owner = doc.isOwner;
             context.locked = !this.isEditable;
@@ -157,8 +167,16 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
             context: Record<string, unknown>,
             options: ApplicationV2Config.RenderOptions,
         ): Promise<Record<string, unknown>> {
-            const partContext = await super._preparePartContext(partId, context, options);
-            (partContext as any).tab = (context.tabs as Record<string, unknown>)[partId];
+            const prototype = Object.getPrototypeOf(PrimarySheetWH40K.prototype) as {
+                _preparePartContext?: (
+                    this: PrimarySheetWH40K,
+                    partId: string,
+                    context: Record<string, unknown>,
+                    options: ApplicationV2Config.RenderOptions,
+                ) => Promise<Record<string, unknown>>;
+            };
+            const partContext = (await prototype._preparePartContext?.call(this, partId, context, options)) ?? {};
+            (partContext as Record<string, unknown>).tab = (context.tabs as Record<string, unknown>)[partId];
             return partContext;
         }
 
@@ -170,17 +188,20 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
          * @protected
          */
         _getTabs(): Record<string, Record<string, unknown>> {
-            return (this.constructor as typeof PrimarySheetWH40K).TABS.reduce((tabs: Record<string, unknown>, { tab, condition, ...config }) => {
-                if (!condition || condition(this.document))
-                    tabs[tab] = {
-                        ...config,
-                        id: tab,
-                        group: 'primary',
-                        active: this.tabGroups.primary === tab,
-                        cssClass: this.tabGroups.primary === tab ? 'active' : '',
-                    };
-                return tabs;
-            }, {});
+            return (this.constructor as typeof PrimarySheetWH40K).TABS.reduce(
+                (tabs: Record<string, Record<string, unknown>>, { tab, condition, ...config }) => {
+                    if (!condition || condition(this.document))
+                        tabs[tab] = {
+                            ...config,
+                            id: tab,
+                            group: 'primary',
+                            active: this.tabGroups.primary === tab,
+                            cssClass: this.tabGroups.primary === tab ? 'active' : '',
+                        };
+                    return tabs;
+                },
+                {},
+            );
         }
 
         /* -------------------------------------------- */
@@ -327,7 +348,9 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
             if ((await this._deleteDocument(event, target)) === false) return;
             const uuid = target.closest<HTMLElement>('[data-uuid]')?.dataset.uuid;
             const doc = await fromUuid(uuid ?? '');
-            if (doc instanceof foundry.abstract.Document) doc.deleteDialog();
+            if (doc instanceof foundry.abstract.Document) {
+                await (doc as foundry.abstract.Document.Any & { deleteDialog?: () => Promise<unknown> }).deleteDialog?.();
+            }
         }
 
         /* -------------------------------------------- */
@@ -353,7 +376,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
 
         _onClickAction(event: Event, target: HTMLElement): void {
             if (target.dataset.action === 'addDocument') this._addDocument(event, target);
-            else super._onClickAction(event, target);
+            else super._onClickAction(event as PointerEvent, target as never);
         }
 
         /* -------------------------------------------- */
@@ -369,7 +392,11 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
             if ([HTMLInputElement, HTMLSelectElement].some((el) => event.target instanceof el)) return;
             const uuid = target.closest<HTMLElement>('[data-uuid]')?.dataset.uuid;
             const doc = await fromUuid(uuid ?? '');
-            if (doc instanceof foundry.abstract.Document && doc.sheet) doc.sheet.render({ force: true });
+            if (doc instanceof foundry.abstract.Document) {
+                (doc as foundry.abstract.Document.Any & { sheet?: { render: (options?: Record<string, unknown> | boolean) => unknown } }).sheet?.render({
+                    force: true,
+                });
+            }
         }
 
         /* -------------------------------------------- */

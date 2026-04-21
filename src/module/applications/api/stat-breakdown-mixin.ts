@@ -11,7 +11,7 @@
  * - Popover shows breakdown with clickable source items
  */
 
-type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { AnyApplicationV2, ApplicationV2Ctor } from './application-types.ts';
 import type { WH40KBaseActorDocument } from '../../types/global.d.ts';
 
 interface ModifierEntry {
@@ -34,8 +34,12 @@ interface BreakdownData {
  * @param {T} Base - The base class to extend
  * @returns {any} Extended class with stat breakdown support
  */
-export default function StatBreakdownMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+export default function StatBreakdownMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class StatBreakdownApplication extends Base {
+        constructor(...args: any[]) {
+            super(...args);
+        }
+
         /**
          * Currently open breakdown popover
          * @type {HTMLElement|null}
@@ -50,9 +54,10 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => App
          * @override
          */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
-            ...Base.DEFAULT_OPTIONS,
+            ...((Base as unknown as { DEFAULT_OPTIONS?: Partial<ApplicationV2Config.DefaultOptions> }).DEFAULT_OPTIONS ?? {}),
             actions: {
-                ...(Base.DEFAULT_OPTIONS as any).actions,
+                ...(((Base as unknown as { DEFAULT_OPTIONS?: { actions?: Record<string, unknown> } }).DEFAULT_OPTIONS?.actions as Record<string, unknown>) ??
+                    {}),
                 showStatBreakdown: StatBreakdownApplication.#showStatBreakdown,
                 viewBreakdownSource: StatBreakdownApplication.#viewBreakdownSource,
             },
@@ -118,8 +123,8 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => App
             if (!uuid) return;
 
             const item = await fromUuid(uuid);
-            if (item instanceof foundry.abstract.Document && item.sheet) {
-                item.sheet.render(true);
+            if (item instanceof foundry.abstract.Document) {
+                (item as foundry.abstract.Document.Any & { sheet?: { render: (options?: Record<string, unknown> | boolean) => unknown } }).sheet?.render(true);
             }
         }
 
@@ -293,13 +298,5 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => App
         /* -------------------------------------------- */
         /*  Lifecycle                                   */
         /* -------------------------------------------- */
-
-        /**
-         * @override
-         */
-        async close(options: Record<string, unknown> = {}): Promise<void> {
-            this.#closePopover();
-            return super.close(options);
-        }
     };
 }

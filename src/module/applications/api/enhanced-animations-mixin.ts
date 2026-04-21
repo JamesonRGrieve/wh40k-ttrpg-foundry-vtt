@@ -4,9 +4,17 @@
  * Extends the basic VisualFeedbackMixin with more sophisticated animations
  */
 
-type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { AnyApplicationV2, ApplicationV2Ctor } from './application-types.ts';
 import type { WH40KBaseActorDocument, WH40KWounds } from '../../types/global.d.ts';
 import type { EnhancedAnimationsMixinAPI } from './sheet-mixin-types.js';
+
+interface AnimationSnapshot {
+    wounds?: number;
+    woundsMax?: number;
+    characteristics?: Record<string, { total?: number; bonus?: number }>;
+    experience?: number;
+    fatigue?: number;
+}
 
 /**
  * Mixin to add enhanced animation capabilities to ApplicationV2 sheets.
@@ -15,8 +23,12 @@ import type { EnhancedAnimationsMixinAPI } from './sheet-mixin-types.js';
  * @returns {any}
  * @mixin
  */
-export default function EnhancedAnimationsMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+export default function EnhancedAnimationsMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class EnhancedAnimationsApplication extends Base implements EnhancedAnimationsMixinAPI {
+        constructor(...args: any[]) {
+            super(...args);
+        }
+
         /* -------------------------------------------- */
         /*  Configuration                               */
         /* -------------------------------------------- */
@@ -44,7 +56,7 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
         _runningAnimations: Map<string, number> = new Map();
 
         /** Previous animation state snapshot. */
-        _previousState: any = null;
+        _previousState: AnimationSnapshot | null = null;
         /** MutationObserver for dynamic content. */
         _mutationObserver: MutationObserver | null = null;
 
@@ -433,22 +445,5 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
         }
 
         /* -------------------------------------------- */
-
-        /** @override */
-        async close(options: Record<string, unknown>): Promise<void> {
-            // Clean up
-            if (this._mutationObserver) {
-                this._mutationObserver.disconnect();
-                this._mutationObserver = null;
-            }
-
-            // Cancel all running animations
-            for (const frameId of this._runningAnimations.values()) {
-                cancelAnimationFrame(frameId);
-            }
-            this._runningAnimations.clear();
-
-            return super.close(options as any);
-        }
     };
 }

@@ -20,10 +20,14 @@ import VisualFeedbackMixin from '../api/visual-feedback-mixin.ts';
 import WhatIfMixin from '../api/what-if-mixin.ts';
 import { ActiveModifiersMixin, ItemPreviewMixin } from '../components/_module.ts';
 import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
+import type { ApplicationV2Ctor, DialogV2Like } from '../api/application-types.ts';
 // import EffectCreationDialog from '../prompts/effect-creation-dialog.ts';
 
-type AnyApplicationV2Ctor = new (...args: any[]) => foundry.applications.api.ApplicationV2.Any;
-const applications = foundry.applications as typeof foundry.applications & { sheets: { ActorSheetV2: AnyApplicationV2Ctor } };
+type AnyApplicationV2Ctor = ApplicationV2Ctor;
+const applications = foundry.applications as unknown as typeof foundry.applications & {
+    sheets: { ActorSheetV2: AnyApplicationV2Ctor };
+};
+const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
 const { ActorSheetV2 } = applications.sheets;
 type BaseActorSheetSystem = WH40KBaseActorDocument['system'] & {
     characteristics: Record<string, WH40KCharacteristic>;
@@ -50,15 +54,9 @@ type SkillLike = Partial<
     }
 > &
     Record<string, unknown>;
-type CharacteristicLike = Partial<WH40KCharacteristic> & Record<string, unknown>;
-type TalentLike = {
-    id: string;
-    _id?: string;
-    name: string;
-    img?: string;
-    type: string;
-    flags?: Record<string, unknown>;
-    system: {
+type CharacteristicLike = WH40KCharacteristic;
+type TalentLike = WH40KItem & {
+    system: WH40KItem['system'] & {
         tier?: number;
         tierLabel?: string;
         category?: string;
@@ -73,13 +71,8 @@ type TalentLike = {
     };
     tierLabel?: string;
 };
-type TraitLike = {
-    id: string;
-    _id?: string;
-    name: string;
-    img?: string;
-    type: string;
-    system: {
+type TraitLike = WH40KItem & {
+    system: WH40KItem['system'] & {
         fullName?: string;
         category?: string;
         categoryLabel?: string;
@@ -89,6 +82,20 @@ type TraitLike = {
     };
 };
 type TraitGroup = { category: string; categoryLabel: string; traits: Record<string, unknown>[] };
+type TalentDisplay = Record<string, unknown> & {
+    system: { tier?: number };
+    tierLabel?: string;
+};
+type TraitDisplay = Record<string, unknown> & {
+    name: string;
+    system: { category?: string; hasLevel?: boolean };
+};
+type TraitCategoryKey = 'creature' | 'character' | 'elite' | 'unique' | 'origin' | 'general';
+type PreviousSheetState = {
+    wounds?: number;
+    experience?: number;
+    characteristics?: Record<string, { total?: number }>;
+};
 const ApplicationV2Base = ApplicationV2Mixin(ActorSheetV2) as unknown as AnyApplicationV2Ctor;
 const PrimarySheetBase = PrimarySheetMixin(ApplicationV2Base) as unknown as AnyApplicationV2Ctor;
 const TooltipBase = TooltipMixin(PrimarySheetBase) as unknown as AnyApplicationV2Ctor;
@@ -196,7 +203,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /* -------------------------------------------- */
 
     /** @override */
-    static DEFAULT_OPTIONS = {
+    static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         actions: {
             editImage: BaseActorSheet.#onEditImage,
             roll: BaseActorSheet.#roll,
@@ -286,7 +293,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             source?: unknown;
             skillTrainingConfig?: unknown;
         } = {
-            ...(await super._prepareContext(options)),
+            ...(await super._prepareContext(options as never)),
             actor: this.actor,
             system: this.actor.system,
             fields: this.actor.system.schema?.fields ?? {},
@@ -913,7 +920,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @returns {Object} Augmented talent data
      * @protected
      */
-    _augmentTalentData(talent: TalentLike): Record<string, unknown> {
+    _augmentTalentData(talent: TalentLike): TalentDisplay {
         // Check if this talent is favorited
         const favorites = ((this.actor as WH40KBaseActorDocument).getFlag('wh40k-rpg', 'favoriteTalents') as string[]) || [];
         const isFavorite = favorites.includes(talent.id);
@@ -963,7 +970,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @returns {Object} Augmented trait data
      * @protected
      */
-    _augmentTraitData(trait: TraitLike): Record<string, unknown> {
+    _augmentTraitData(trait: TraitLike): TraitDisplay {
         return {
             id: trait.id,
             _id: trait._id,
@@ -987,7 +994,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @returns {Object[]} Array of tier groups
      * @protected
      */
-    _groupTalentsByTier(talents: Array<Record<string, unknown> & { system: { tier?: number }; tierLabel?: string }>): Record<string, unknown>[] {
+    _groupTalentsByTier(talents: TalentDisplay[]): Record<string, unknown>[] {
         const groups: Record<number, { tier: number; tierLabel: string; talents: Array<Record<string, unknown>> }> = {};
 
         for (const talent of talents) {
@@ -1046,7 +1053,11 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Apply filters if present
         let filteredTraits = traits;
-        const filter = this._traitsFilter || {};
+        const filter = (this._traitsFilter || {}) as {
+            search?: string;
+            category?: string;
+            hasLevel?: boolean;
+        };
 
         if (filter.search) {
             const search = filter.search.toLowerCase();
@@ -1086,8 +1097,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @returns {Object[]} Array of category groups
      * @protected
      */
-    _groupTraitsByCategory(traits: Array<Record<string, unknown> & { system: { category?: string } }>): TraitGroup[] {
-        const groups: Record<string, TraitGroup> = {
+    _groupTraitsByCategory(traits: TraitDisplay[]): TraitGroup[] {
+        const groups: Record<TraitCategoryKey, TraitGroup> = {
             creature: { category: 'creature', categoryLabel: 'Creature', traits: [] },
             character: { category: 'character', categoryLabel: 'Character', traits: [] },
             elite: { category: 'elite', categoryLabel: 'Elite', traits: [] },
@@ -1097,7 +1108,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         };
 
         for (const trait of traits) {
-            const category = trait.system.category || 'general';
+            const category = (trait.system.category || 'general') as TraitCategoryKey;
             if (groups[category]) {
                 groups[category].traits.push(trait);
             } else {
@@ -1136,7 +1147,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @protected
      */
     _getTraitIcon(category: string): string {
-        const icons = {
+        const icons: Record<TraitCategoryKey, string> = {
             creature: 'fa-paw',
             character: 'fa-user-shield',
             elite: 'fa-star',
@@ -1144,7 +1155,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             origin: 'fa-route',
             general: 'fa-shield-alt',
         };
-        return icons[category] || 'fa-shield-alt';
+        return icons[category as TraitCategoryKey] || 'fa-shield-alt';
     }
 
     /**
@@ -1154,7 +1165,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @protected
      */
     _getTraitCategoryColor(category: string): string {
-        const colors = {
+        const colors: Record<TraitCategoryKey, string> = {
             creature: 'trait-creature',
             character: 'trait-character',
             elite: 'trait-elite',
@@ -1162,7 +1173,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             origin: 'trait-origin',
             general: 'trait-general',
         };
-        return colors[category] || 'trait-general';
+        return colors[category as TraitCategoryKey] || 'trait-general';
     }
 
     /**
@@ -1172,7 +1183,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @protected
      */
     _getCategoryLabel(category: string): string {
-        const labels = {
+        const labels: Record<TraitCategoryKey, string> = {
             creature: 'Creature',
             character: 'Character',
             elite: 'Elite',
@@ -1180,7 +1191,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             origin: 'Origin Path',
             general: 'General',
         };
-        return labels[category] || 'General';
+        return labels[category as TraitCategoryKey] || 'General';
     }
 
     /* -------------------------------------------- */
@@ -1465,7 +1476,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (!this._previousState) return;
 
         const current = this.document.system;
-        const previous = this._previousState;
+        const previous = this._previousState as PreviousSheetState;
 
         // Check wounds
         if (current.wounds?.value !== previous.wounds) {
@@ -1896,7 +1907,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (!dropdown) return;
 
         // Close all other dropdowns first
-        (this as any).element.querySelectorAll('.wh40k-char-hud-details.expanded').forEach((el) => {
+        (this as any).element.querySelectorAll('.wh40k-char-hud-details.expanded').forEach((el: Element) => {
             if (el !== dropdown) {
                 el.classList.remove('expanded');
                 // Also remove active class from the toggle icon
@@ -2000,7 +2011,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // For dropdown selection, add directly
         // Check if specialization already exists
-        const existing = skill.entries.find((e) => e.name.toLowerCase() === name.toLowerCase());
+        const existing = skill.entries.find((e: { name?: string }) => e.name?.toLowerCase() === name.toLowerCase());
         if (existing) {
             (ui as any).notifications.warn(`${skill.label} (${name}) already exists.`);
             return;
@@ -2095,7 +2106,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Search for the skill by label
         const searchLabel = skill.label.toLowerCase().replace(/[^a-z0-9]/g, '');
         const index = await pack.getIndex();
-        const entry = index.find((i) => {
+        const entry = index.find((i: { name?: string }) => {
             const indexName = (i as any).name.toLowerCase().replace(/[^a-z0-9]/g, '');
             return indexName === searchLabel;
         });
@@ -2300,7 +2311,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const currentUnnatural = char.unnatural || 1;
 
         // Create edit dialog using DialogV2
-        const result = await foundry.applications.api.DialogV2.wait({
+        const result = (await dialogV2.wait({
             window: {
                 title: `Edit ${char.label}`,
                 icon: 'fas fa-edit',
@@ -2336,7 +2347,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                     label: 'Save',
                     icon: 'fas fa-save',
                     default: true,
-                    callback: (event, button, _dialog) => {
+                    callback: (_event: Event, button: { form: HTMLFormElement }, _dialog: unknown): Record<string, unknown> => {
                         return new FormDataExtended(button.form).object;
                     },
                 },
@@ -2346,8 +2357,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                     icon: 'fas fa-times',
                 },
             ],
-            close: () => null,
-        });
+            close: (): null => null,
+        })) as Record<string, string> | null;
 
         // Update actor with new values if saved
         if (result) {
