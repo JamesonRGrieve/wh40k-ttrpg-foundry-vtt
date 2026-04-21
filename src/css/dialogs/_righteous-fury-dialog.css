@@ -3,17 +3,15 @@
 /* ============================================ */
 
 .wh40k-fury-prompt {
-    padding: 24px;
+    /* Layout: tw-p-6 */
 
     &__header {
-        text-align: center;
-        margin-bottom: 24px;
+        /* Layout: tw-text-center tw-mb-6 */
     }
 
     &__icon {
-        font-size: 3rem;
+        /* Layout: tw-text-5xl tw-mb-2 */
         line-height: 1;
-        margin-bottom: 8px;
         animation: fury-pulse 1s ease-in-out infinite;
     }
 
@@ -29,13 +27,12 @@
     }
 
     &__body {
-        text-align: center;
+        /* Layout: tw-text-center */
     }
 
     &__description {
-        font-size: 1rem;
+        /* Layout: tw-text-base tw-my-4 */
         color: var(--wh40k-text-dark);
-        margin: 16px 0;
         line-height: 1.5;
 
         strong {
@@ -45,10 +42,8 @@
     }
 
     &__instructions {
-        font-size: 0.9rem;
+        /* Layout: tw-text-sm tw-my-4 tw-p-3 */
         color: var(--wh40k-text-medium);
-        margin: 16px 0;
-        padding: 12px;
         background: var(--wh40k-panel-bg);
         border-radius: var(--wh40k-radius-md);
         border: 1px solid var(--wh40k-border-color);
@@ -60,10 +55,7 @@
     }
 
     &__result {
-        margin: 24px 0;
-        padding: 20px;
-        border-radius: 6px;
-        border: 3px solid;
+        /* Layout: tw-my-6 tw-p-5 tw-rounded-md tw-border-4 tw-border-solid */
 
         &--success {
             background: var(--wh40k-success-bg);
@@ -78,21 +70,19 @@
     }
 
     &__roll-value {
+        /* Layout: tw-text-5xl tw-leading-none */
         font-family: var(--wh40k-font-display);
-        font-size: 3rem;
         font-weight: 700;
         color: var(--wh40k-gold-bright);
-        line-height: 1;
     }
 
     &__roll-label {
-        font-size: 1rem;
+        /* Layout: tw-text-base tw-mt-2 */
         color: var(--wh40k-text-medium);
-        margin-top: 8px;
     }
 
     &__success {
-        margin-top: 16px;
+        /* Layout: tw-mt-4 */
 
         h3 {
             font-family: var(--wh40k-font-display);
@@ -106,14 +96,13 @@
         }
 
         p {
-            font-size: 0.95rem;
+            /* Layout: tw-text-sm tw-my-2 */
             color: var(--wh40k-text-dark);
-            margin: 8px 0;
         }
     }
 
     &__failure {
-        margin-top: 16px;
+        /* Layout: tw-mt-4 */
 
         h3 {
             font-family: var(--wh40k-font-display);
@@ -124,25 +113,20 @@
         }
 
         p {
-            font-size: 0.9rem;
+            /* Layout: tw-text-sm tw-my-2 */
             color: var(--wh40k-text-muted);
             font-style: italic;
-            margin: 8px 0;
         }
     }
 
     &__dos {
-        font-size: 0.85rem;
+        /* Layout: tw-text-xs tw-mt-2 */
         color: var(--wh40k-success-primary);
         font-weight: 600;
-        margin-top: 8px;
     }
 
     &__actions {
-        display: flex;
-        justify-content: center;
-        gap: var(--wh40k-space-md);
-        margin-top: 24px;
+        /* Layout: tw-flex tw-justify-center tw-gap-4 tw-mt-6 */
 
         button {
             min-width: 150px;

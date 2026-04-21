@@ -47,28 +47,18 @@
 
 /* Footer with buttons */
 .confirmation-dialog-content .form-footer {
-    display: flex;
-    gap: 10px;
-    padding-top: 16px;
-    border-top: 1px solid rgba(201, 162, 39, 0.2);
+    /* Layout: tw-flex tw-gap-2.5 tw-pt-4 */
 }
 
 /* Base dialog button styles */
 .confirmation-dialog .dialog-button {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--wh40k-space-sm);
-    padding: 12px 20px;
+    /* Layout: tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-p-3 tw-rounded-md tw-cursor-pointer */
     border: none;
-    border-radius: var(--wh40k-radius-md);
     font-family: var(--wh40k-font-ui);
     font-size: 0.9rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
     i {

@@ -11,20 +11,14 @@
     }
 
     .wh40k-difficulty-calculator {
-        display: flex;
-        flex-direction: column;
-        gap: var(--wh40k-space-lg);
-        padding: var(--wh40k-space-md);
+        /* Layout: tw-flex tw-flex-col tw-gap-6 tw-p-4 */
         max-height: 80vh;
         overflow-y: auto;
 
         /* NPC Info Panel */
         .wh40k-panel--npc-info {
             .wh40k-panel-header {
-                display: flex;
-                align-items: center;
-                gap: var(--wh40k-space-md);
-                padding: var(--wh40k-space-md);
+                /* Layout: tw-flex tw-items-center tw-gap-4 tw-p-4 */
                 background: var(--color-bg-secondary);
                 border-radius: var(--wh40k-radius-lg);
             }
@@ -38,7 +32,7 @@
             }
 
             .wh40k-panel-header-text {
-                flex: 1;
+                /* Layout: tw-flex-1 */
 
                 h3 {
                     margin: 0 0 4px 0;
@@ -49,9 +43,7 @@
                 .wh40k-subtitle {
                     font-size: 0.9rem;
                     color: var(--color-text-light-secondary);
-                    display: flex;
-                    align-items: center;
-                    gap: var(--wh40k-space-sm);
+                    /* Layout: tw-flex tw-items-center tw-gap-2 */
                 }
             }
 
@@ -68,12 +60,10 @@
 
         /* Quantity Panel */
         .wh40k-panel--quantity {
-            padding: var(--wh40k-space-md);
+            /* Layout: tw-p-4 */
 
             .wh40k-form-group {
-                display: flex;
-                flex-direction: column;
-                gap: var(--wh40k-space-sm);
+                /* Layout: tw-flex tw-flex-col tw-gap-2 */
             }
 
             .wh40k-label {
@@ -105,10 +95,7 @@
         /* Party Panel */
         .wh40k-panel--party {
             .wh40k-panel-header {
-                display: flex;
-                align-items: center;
-                gap: var(--wh40k-space-sm);
-                padding: var(--wh40k-space-md) var(--wh40k-space-md) var(--wh40k-space-sm);
+                /* Layout: tw-flex tw-items-center tw-gap-2 tw-pb-2 */
                 border-bottom: 2px solid var(--color-border-secondary);
 
                 h4 {
@@ -123,25 +110,18 @@
             }
 
             .wh40k-panel-body {
-                padding: var(--wh40k-space-md);
+                /* Layout: tw-p-4 */
             }
 
             .wh40k-party-list {
                 list-style: none;
-                margin: 0 0 var(--wh40k-space-md) 0;
-                padding: 0;
-                display: flex;
-                flex-direction: column;
-                gap: var(--wh40k-space-sm);
+                /* Layout: tw-flex tw-flex-col tw-gap-2 tw-mb-4 */
                 max-height: 300px;
                 overflow-y: auto;
             }
 
             .wh40k-party-member {
-                display: flex;
-                align-items: center;
-                gap: var(--wh40k-space-sm);
-                padding: var(--wh40k-space-sm);
+                /* Layout: tw-flex tw-items-center tw-gap-2 tw-p-2 */
                 background: var(--color-bg-secondary);
                 border-radius: var(--wh40k-radius-md);
 
@@ -154,7 +134,7 @@
                 }
 
                 .wh40k-party-member-name {
-                    flex: 1;
+                    /* Layout: tw-flex-1 */
                     font-weight: 600;
                     color: var(--color-text-light-primary);
                 }
@@ -167,17 +147,11 @@
             }
 
             .wh40k-stats-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: var(--wh40k-space-md);
-                margin-top: var(--wh40k-space-md);
+                /* Layout: tw-grid tw-grid-cols-3 tw-gap-4 tw-mt-4 */
             }
 
             .wh40k-stat-box {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: var(--wh40k-space-md);
+                /* Layout: tw-flex tw-flex-col tw-items-center tw-p-4 */
                 background: var(--color-bg-secondary);
                 border-radius: var(--wh40k-radius-lg);
                 border: 2px solid var(--color-border-secondary);
@@ -198,8 +172,7 @@
             }
 
             .wh40k-empty-message {
-                text-align: center;
-                padding: var(--wh40k-space-lg);
+                /* Layout: tw-text-center tw-p-6 */
                 color: var(--color-text-light-secondary);
                 font-style: italic;
             }
@@ -208,10 +181,7 @@
         /* Threat Analysis Panel */
         .wh40k-panel--threat-analysis {
             .wh40k-panel-header {
-                display: flex;
-                align-items: center;
-                gap: var(--wh40k-space-sm);
-                padding: var(--wh40k-space-md) var(--wh40k-space-md) var(--wh40k-space-sm);
+                /* Layout: tw-flex tw-items-center tw-gap-2 tw-pb-2 */
                 border-bottom: 2px solid var(--color-border-secondary);
 
                 h4 {
@@ -226,31 +196,29 @@
             }
 
             .wh40k-panel-body {
-                padding: var(--wh40k-space-md);
+                /* Layout: tw-p-4 */
             }
 
             .wh40k-threat-comparison {
-                margin-bottom: var(--wh40k-space-lg);
+                /* Layout: tw-mb-6 */
             }
 
             .wh40k-threat-bar {
-                margin-bottom: var(--wh40k-space-md);
+                /* Layout: tw-mb-4 */
 
                 .wh40k-threat-bar-label {
+                    /* Layout: tw-mb-2 */
                     font-size: 0.85rem;
                     font-weight: 600;
                     color: var(--color-text-light-secondary);
-                    margin-bottom: var(--wh40k-space-sm);
                     text-transform: uppercase;
                 }
 
                 .wh40k-threat-bar-visual {
-                    position: relative;
-                    width: 100%;
+                    /* Layout: tw-relative tw-w-full tw-overflow-hidden */
                     height: 30px;
                     background: var(--color-bg-secondary);
                     border-radius: var(--wh40k-radius-md);
-                    overflow: hidden;
                     border: 2px solid var(--color-border-secondary);
                 }
 
@@ -260,22 +228,18 @@
                 }
 
                 .wh40k-threat-bar-value {
+                    /* Layout: tw-mt-2 */
                     text-align: center;
                     font-size: 1.2rem;
                     font-weight: 700;
                     color: var(--color-text-light-primary);
-                    margin-top: var(--wh40k-space-sm);
                 }
             }
 
             .wh40k-threat-ratio {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: var(--wh40k-space-lg);
+                /* Layout: tw-flex tw-flex-col tw-items-center tw-p-8 tw-mb-6 */
                 background: var(--color-bg-secondary);
                 border-radius: var(--wh40k-radius-lg);
-                margin-bottom: var(--wh40k-space-lg);
 
                 .wh40k-ratio-value {
                     font-size: 3rem;
@@ -291,34 +255,31 @@
             }
 
             .wh40k-difficulty-result {
-                padding: var(--wh40k-space-lg);
+                /* Layout: tw-p-8 tw-mb-6 tw-text-center */
                 border-radius: var(--wh40k-radius-lg);
                 border: 3px solid;
-                margin-bottom: var(--wh40k-space-lg);
-                text-align: center;
 
                 .wh40k-difficulty-badge {
-                    display: inline-block;
-                    padding: var(--wh40k-space-sm) var(--wh40k-space-lg);
+                    /* Layout: tw-inline-block tw-px-6 tw-py-2 tw-mb-4 */
                     border-radius: var(--wh40k-radius-lg);
                     font-size: 1.4rem;
                     font-weight: 700;
                     text-transform: uppercase;
                     color: white;
-                    margin-bottom: var(--wh40k-space-md);
                 }
 
                 .wh40k-difficulty-description {
+                    /* Layout: tw-m-0 */
                     font-size: 0.95rem;
                     color: var(--color-text-light-primary);
-                    margin: 0;
                     font-weight: 500;
                 }
             }
 
             .wh40k-difficulty-scale {
                 h5 {
-                    margin: 0 0 var(--wh40k-space-md) 0;
+                    /* Layout: tw-mb-4 */
+                    margin: 0;
                     font-size: 0.9rem;
                     text-transform: uppercase;
                     color: var(--color-text-light-secondary);
@@ -329,21 +290,15 @@
                     list-style: none;
                     margin: 0;
                     padding: 0;
-                    display: flex;
-                    flex-direction: column;
-                    gap: var(--wh40k-space-sm);
+                    /* Layout: tw-flex tw-flex-col tw-gap-2 */
                     max-height: 240px;
                     overflow-y: auto;
                 }
 
                 .wh40k-scale-item {
-                    display: flex;
-                    align-items: center;
-                    gap: var(--wh40k-space-sm);
-                    padding: var(--wh40k-space-sm);
+                    /* Layout: tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap */
                     background: var(--color-bg-secondary);
                     border-radius: var(--wh40k-radius-md);
-                    flex-wrap: wrap;
 
                     .wh40k-scale-dot {
                         width: 12px;
@@ -353,7 +308,7 @@
                     }
 
                     .wh40k-scale-label {
-                        flex: 1 1 auto;
+                        /* Layout: tw-flex-1 */
                         min-width: 100px;
                         font-weight: 600;
                         color: var(--color-text-light-primary);

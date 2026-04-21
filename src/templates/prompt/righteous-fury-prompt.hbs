@@ -1,48 +1,48 @@
 {{!-- Righteous Fury Confirmation Prompt --}}
 <form class="wh40k-form">
     <div class="wh40k-fury-prompt">
-        <div class="wh40k-fury-prompt__header">
-            <div class="wh40k-fury-prompt__icon">⚡</div>
+        <div class="wh40k-fury-prompt__header tw-text-center tw-mb-6">
+            <div class="wh40k-fury-prompt__icon tw-text-5xl tw-mb-2">⚡</div>
             <h2 class="wh40k-fury-prompt__title">Righteous Fury!</h2>
         </div>
         
-        <div class="wh40k-fury-prompt__body">
+        <div class="wh40k-fury-prompt__body tw-text-center">
             {{#unless hasRolled}}
-                <p class="wh40k-fury-prompt__description">
+                <p class="wh40k-fury-prompt__description tw-text-base tw-my-4">
                     You scored a devastating hit with <strong>{{weaponName}}</strong>!
                 </p>
-                <p class="wh40k-fury-prompt__instructions">
+                <p class="wh40k-fury-prompt__instructions tw-text-sm tw-my-4 tw-p-3">
                     Roll to confirm with <strong>{{characteristic}}</strong> (Target: {{target}})
                 </p>
                 
-                <div class="wh40k-fury-prompt__actions">
+                <div class="wh40k-fury-prompt__actions tw-flex tw-justify-center tw-gap-4 tw-mt-6">
                     <button type="button" class="wh40k-btn wh40k-btn--primary" data-action="roll">
                         <i class="fas fa-dice-d20"></i>
                         Roll Confirmation
                     </button>
                 </div>
             {{else}}
-                <div class="wh40k-fury-prompt__result {{#if success}}wh40k-fury-prompt__result--success{{else}}wh40k-fury-prompt__result--failure{{/if}}">
-                    <div class="wh40k-fury-prompt__roll-value">{{confirmationRoll.total}}</div>
-                    <div class="wh40k-fury-prompt__roll-label">vs {{target}}</div>
+                <div class="wh40k-fury-prompt__result tw-my-6 tw-p-5 tw-rounded-md tw-border-4 tw-border-solid {{#if success}}wh40k-fury-prompt__result--success{{else}}wh40k-fury-prompt__result--failure{{/if}}">
+                    <div class="wh40k-fury-prompt__roll-value tw-text-5xl tw-leading-none">{{confirmationRoll.total}}</div>
+                    <div class="wh40k-fury-prompt__roll-label tw-text-base tw-mt-2">vs {{target}}</div>
                 </div>
                 
                 {{#if success}}
-                    <div class="wh40k-fury-prompt__success">
+                    <div class="wh40k-fury-prompt__success tw-mt-4">
                         <h3>⚡ Confirmed! ⚡</h3>
-                        <p>Additional d10 damage and critical effect!</p>
+                        <p class="tw-text-sm tw-my-2">Additional d10 damage and critical effect!</p>
                         {{#if (gt dos 0)}}
-                            <p class="wh40k-fury-prompt__dos">{{dos}} Degrees of Success</p>
+                            <p class="wh40k-fury-prompt__dos tw-text-xs tw-mt-2">{{dos}} Degrees of Success</p>
                         {{/if}}
                     </div>
                 {{else}}
-                    <div class="wh40k-fury-prompt__failure">
+                    <div class="wh40k-fury-prompt__failure tw-mt-4">
                         <h3>Not Confirmed</h3>
-                        <p>The blow was powerful, but not devastating.</p>
+                        <p class="tw-text-sm tw-my-2">The blow was powerful, but not devastating.</p>
                     </div>
                 {{/if}}
                 
-                <div class="wh40k-fury-prompt__actions">
+                <div class="wh40k-fury-prompt__actions tw-flex tw-justify-center tw-gap-4 tw-mt-6">
                     <button type="button" class="wh40k-btn wh40k-btn--primary" data-action="cancel">
                         <i class="fas fa-check"></i>
                         Continue

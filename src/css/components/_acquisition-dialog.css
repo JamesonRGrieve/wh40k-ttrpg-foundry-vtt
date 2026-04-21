@@ -2,16 +2,11 @@
     /** Acquisition Dialog Styling */
     .acquisition-dialog {
         .acquisition-content {
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            /* Layout: tw-flex tw-flex-col tw-gap-4 */
         }
 
         .acquisition-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            /* Layout: tw-flex tw-justify-between tw-items-center */
             padding-bottom: 0.75rem;
             border-bottom: 2px solid var(--wh40k-bronze);
 
@@ -28,9 +23,7 @@
         }
 
         .acquisition-item {
-            display: flex;
-            gap: 0.75rem;
-            padding: 0.75rem;
+            /* Layout: tw-flex tw-gap-3 tw-p-3 */
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--wh40k-bronze);
             border-radius: var(--wh40k-radius-md);
@@ -57,9 +50,7 @@
 
         .modifier-row,
         .modifier-checkbox {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.25rem 0;
+            /* Layout: tw-flex tw-justify-between tw-py-1 */
 
             .positive {
                 color: #4caf50;
@@ -70,7 +61,7 @@
         }
 
         .acquisition-summary {
-            padding: 0.75rem;
+            /* Layout: tw-p-3 */
             background: rgba(212, 175, 55, 0.1);
             border: 2px solid var(--wh40k-gold);
             border-radius: var(--wh40k-radius-md);
@@ -89,8 +80,7 @@
         }
 
         .acquisition-actions {
-            display: flex;
-            gap: 0.5rem;
+            /* Layout: tw-flex tw-gap-2 */
 
             button {
                 flex: 1;
