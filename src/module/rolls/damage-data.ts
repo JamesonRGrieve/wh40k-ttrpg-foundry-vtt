@@ -64,7 +64,7 @@ export class Hit {
 
         // Determine Righteous Fury Effects
         for (const righteousFury of hit.righteousFury) {
-            righteousFury.effect = getCriticalDamage(hit.damageType, hit.location, righteousFury.roll.total);
+            righteousFury.effect = await getCriticalDamage(hit.damageType, hit.location, righteousFury.roll.total);
         }
 
         return hit;

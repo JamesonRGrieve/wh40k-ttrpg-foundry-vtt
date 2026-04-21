@@ -43,7 +43,7 @@ export class AssignDamageData {
         }
     }
 
-    finalize() {
+    async finalize() {
         const totalDamage = Number.parseInt(this.hit.totalDamage);
         const totalPenetration = Number.parseInt(this.hit.totalPenetration);
 
@@ -87,7 +87,7 @@ export class AssignDamageData {
                 this.criticalDamageTaken = this.criticalDamageTaken - this.tb < 1 ? 1 : this.criticalDamageTaken - this.tb;
             }
 
-            this.criticalEffect = getCriticalDamage(this.hit.damageType, this.hit.location, this.actor.system.wounds.critical + this.criticalDamageTaken);
+            this.criticalEffect = await getCriticalDamage(this.hit.damageType, this.hit.location, this.actor.system.wounds.critical + this.criticalDamageTaken);
         }
 
         if (this.hit.totalFatigue > 0) {
