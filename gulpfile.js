@@ -114,23 +114,53 @@ async function compilePacks() {
     fs.mkdirSync(packsDir, { recursive: true });
   }
 
+  // Windows-safe recursive remove. rmSync with force:true still surfaces
+  // EBUSY/EPERM/ENOTEMPTY when another process holds a handle — antivirus,
+  // File Explorer preview, or a prior ClassicLevel instance whose native
+  // LOCK release hasn't drained yet. Retry with backoff before giving up.
+  function removePackDir(dir) {
+    if (!fs.existsSync(dir)) return;
+    const retryable = new Set(['EBUSY', 'EPERM', 'ENOTEMPTY', 'EACCES']);
+    for (let attempt = 0; attempt < 5; attempt++) {
+      try {
+        fs.rmSync(dir, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+        return;
+      } catch (err) {
+        if (!retryable.has(err.code) || attempt === 4) throw err;
+        const until = Date.now() + 200 * (attempt + 1);
+        while (Date.now() < until) { /* spin briefly */ }
+      }
+    }
+  }
+
   // Process each pack into a LevelDB compendium
   for (const { pack: folder, sourceDir, relPath } of packEntries) {
     const dbPath = path.join(packsDir, relPath);
-    
-    // Remove existing database folder if it exists
-    if (fs.existsSync(dbPath)) {
-      fs.rmSync(dbPath, { recursive: true, force: true });
+
+    try {
+      removePackDir(dbPath);
+    } catch (err) {
+      console.error(`Failed to clean pack dir ${dbPath}: ${err.code || err.message}. Skipping.`);
+      continue;
     }
 
-    // Create the LevelDB database
+    // Create and explicitly open the LevelDB database. Without the explicit
+    // open, abstract-level defers opening until the first operation; if that
+    // deferred open fails, every subsequent put surfaces as
+    // LEVEL_DATABASE_NOT_OPEN and gets mislabeled as a per-file parse error.
     const db = new ClassicLevel(dbPath, { valueEncoding: 'json' });
-    
+    try {
+      await db.open();
+    } catch (openErr) {
+      console.error(`Failed to open pack database ${dbPath}: ${openErr.code || openErr.message}. Skipping.`);
+      continue;
+    }
+
     // Determine the document collection type from the folder name.
     // Some packs end with the segment (e.g. dh2-core-rolltables), so
     // matching only *-type-* misclassifies them as items.
     const collectionType = detectCollectionType(folder);
-    
+
     try {
       // Special handling for origin-path pack - create folders for each step
       const originPathFolders = {};
