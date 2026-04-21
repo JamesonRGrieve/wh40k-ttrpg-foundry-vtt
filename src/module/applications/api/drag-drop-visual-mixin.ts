@@ -17,6 +17,7 @@
 
 type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KBaseActorDocument, WH40KItemDocument } from '../../types/global.d.ts';
 import type { EnhancedDragDropMixinAPI } from './sheet-mixin-types.js';
 
 /** Human-readable labels for item types shown in the header drop zone. */

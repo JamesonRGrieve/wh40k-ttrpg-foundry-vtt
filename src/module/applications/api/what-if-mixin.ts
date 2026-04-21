@@ -14,6 +14,7 @@
  */
 
 type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KSkillEntry } from '../../types/global.d.ts';
 import type { WhatIfMixinAPI } from './sheet-mixin-types.js';
 
 /**

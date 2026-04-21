@@ -5,6 +5,7 @@
 
 type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
 import DragDropMixin from './drag-drop-api-mixin.ts';
+import type { WH40KBaseActorDocument, WH40KItemDocument } from '../../types/global.d.ts';
 import type { PrimarySheetMixinAPI } from './sheet-mixin-types.js';
 
 interface SheetTab {
