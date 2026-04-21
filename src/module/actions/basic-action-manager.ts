@@ -15,22 +15,16 @@ export class BasicActionManager {
         // Add show/hide support for chat messages
         Hooks.on('renderChatMessageHTML', (message: ChatMessage, html: HTMLElement, context: Record<string, unknown>) => {
             game.wh40k.log('renderChatMessageHTML', { message, html, context });
-            html.querySelectorAll('.roll-control__hide-control').forEach((el: Element) =>
+            html.querySelectorAll('.roll-control__hide-control').forEach((el) =>
                 el.addEventListener('click', async (ev: Event) => await this._toggleExpandChatMessage(ev)),
             );
-            html.querySelectorAll('.roll-control__refund').forEach((el: Element) =>
-                el.addEventListener('click', async (ev: Event) => await this._refundResources(ev)),
-            );
-            html.querySelectorAll('.roll-control__fate-reroll').forEach((el: Element) =>
-                el.addEventListener('click', async (ev: Event) => await this._fateReroll(ev)),
-            );
-            html.querySelectorAll('.roll-control__assign-damage').forEach((el: Element) =>
+            html.querySelectorAll('.roll-control__refund').forEach((el) => el.addEventListener('click', async (ev: Event) => await this._refundResources(ev)));
+            html.querySelectorAll('.roll-control__fate-reroll').forEach((el) => el.addEventListener('click', async (ev: Event) => await this._fateReroll(ev)));
+            html.querySelectorAll('.roll-control__assign-damage').forEach((el) =>
                 el.addEventListener('click', async (ev: Event) => await this._assignDamage(ev)),
             );
-            html.querySelectorAll('.roll-control__roll-damage').forEach((el: Element) =>
-                el.addEventListener('click', async (ev: Event) => await this._rollDamage(ev)),
-            );
-            html.querySelectorAll('.roll-control__apply-damage').forEach((el: Element) =>
+            html.querySelectorAll('.roll-control__roll-damage').forEach((el) => el.addEventListener('click', async (ev: Event) => await this._rollDamage(ev)));
+            html.querySelectorAll('.roll-control__apply-damage').forEach((el) =>
                 el.addEventListener('click', async (ev: Event) => await this._applyDamage(ev)),
             );
         });
