@@ -34,7 +34,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
         _whatIfPreview: any = null;
         _whatIfImpacts: any[] | Record<string, unknown> = {};
 
-        declare document: any;
+        declare document: WH40KBaseActorDocument;
 
         /* -------------------------------------------- */
         /*  Rendering                                   */
@@ -122,9 +122,12 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
 
         /* -------------------------------------------- */
 
-        _compareCharacteristics(current: any, preview: any): void {
-            for (const [key, previewChar] of Object.entries(preview.system.characteristics) as [string, any]) {
-                const currentChar = current.system.characteristics[key];
+        _compareCharacteristics(current: WH40KBaseActorDocument, preview: WH40KBaseActorDocument): void {
+            const currentChars = current.system.characteristics as Record<string, WH40KCharacteristic>;
+            const previewChars = preview.system.characteristics as Record<string, WH40KCharacteristic>;
+
+            for (const [key, previewChar] of Object.entries(previewChars)) {
+                const currentChar = currentChars[key];
 
                 if (!currentChar) continue;
 
@@ -148,9 +151,12 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
 
         /* -------------------------------------------- */
 
-        _compareSkills(current: any, preview: any): void {
-            for (const [key, previewSkill] of Object.entries(preview.system.skills) as [string, any]) {
-                const currentSkill = current.system.skills[key];
+        _compareSkills(current: WH40KBaseActorDocument, preview: WH40KBaseActorDocument): void {
+            const currentSkills = current.system.skills as Record<string, WH40KSkill>;
+            const previewSkills = preview.system.skills as Record<string, WH40KSkill>;
+
+            for (const [key, previewSkill] of Object.entries(previewSkills)) {
+                const currentSkill = currentSkills[key];
 
                 if (!currentSkill) continue;
 
@@ -163,8 +169,8 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
                 }
 
                 if (currentSkill.entries && previewSkill.entries) {
-                    previewSkill.entries.forEach((previewEntry: any, index: number) => {
-                        const currentEntry = currentSkill.entries[index];
+                    previewSkill.entries.forEach((previewEntry: WH40KSkillEntry, index: number) => {
+                        const currentEntry = currentSkill.entries?.[index];
                         if (currentEntry && currentEntry.current !== previewEntry.current) {
                             this._showComparison(`[data-skill="${key}"][data-entry-index="${index}"]`, {
                                 current: currentEntry.current,
@@ -179,19 +185,21 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
 
         /* -------------------------------------------- */
 
-        _compareDerivedStats(current: any, preview: any): void {
+        _compareDerivedStats(current: WH40KBaseActorDocument, preview: WH40KBaseActorDocument): void {
+            const system = current.system as any;
+            const previewSystem = preview.system as any;
             const comparisons = [
-                { path: 'system.wounds.max', selector: "[data-stat='wounds-max']", type: 'wounds' },
-                { path: 'system.initiative.bonus', selector: "[data-stat='initiative']", type: 'initiative' },
-                { path: 'system.movement.half', selector: "[data-stat='movement-half']", type: 'movement' },
-                { path: 'system.movement.full', selector: "[data-stat='movement-full']", type: 'movement' },
-                { path: 'system.movement.charge', selector: "[data-stat='movement-charge']", type: 'movement' },
-                { path: 'system.movement.run', selector: "[data-stat='movement-run']", type: 'movement' },
+                { path: 'wounds.max', selector: "[data-stat='wounds-max']", type: 'wounds' },
+                { path: 'initiative.bonus', selector: "[data-stat='initiative']", type: 'initiative' },
+                { path: 'movement.half', selector: "[data-stat='movement-half']", type: 'movement' },
+                { path: 'movement.full', selector: "[data-stat='movement-full']", type: 'movement' },
+                { path: 'movement.charge', selector: "[data-stat='movement-charge']", type: 'movement' },
+                { path: 'movement.run', selector: "[data-stat='movement-run']", type: 'movement' },
             ];
 
             for (const comp of comparisons) {
-                const currentValue = foundry.utils.getProperty(current, comp.path);
-                const previewValue = foundry.utils.getProperty(preview, comp.path);
+                const currentValue = foundry.utils.getProperty(system, comp.path);
+                const previewValue = foundry.utils.getProperty(previewSystem, comp.path);
 
                 if (currentValue !== previewValue) {
                     this._showComparison(comp.selector, {
@@ -285,8 +293,11 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
             const current = this.document;
             const preview = this._whatIfPreview;
 
-            for (const [key, previewChar] of Object.entries(preview.system.characteristics) as [string, any]) {
-                const currentChar = current.system.characteristics[key];
+            const currentChars = current.system.characteristics as Record<string, WH40KCharacteristic>;
+            const previewChars = preview.system.characteristics as Record<string, WH40KCharacteristic>;
+
+            for (const [key, previewChar] of Object.entries(previewChars)) {
+                const currentChar = currentChars[key];
                 if (currentChar.bonus !== previewChar.bonus) {
                     impacts.push({
                         type: 'characteristic',
@@ -295,24 +306,27 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
                 }
             }
 
-            if (current.system.initiative.bonus !== preview.system.initiative.bonus) {
+            const sys = current.system as any;
+            const preSys = preview.system as any;
+
+            if (sys.initiative.bonus !== preSys.initiative.bonus) {
                 impacts.push({
                     type: 'combat',
-                    message: `Initiative: ${current.system.initiative.bonus} → ${preview.system.initiative.bonus}`,
+                    message: `Initiative: ${sys.initiative.bonus} → ${preSys.initiative.bonus}`,
                 });
             }
 
-            if (current.system.wounds.max !== preview.system.wounds.max) {
+            if (sys.wounds.max !== preSys.wounds.max) {
                 impacts.push({
                     type: 'survival',
-                    message: `Max Wounds: ${current.system.wounds.max} → ${preview.system.wounds.max}`,
+                    message: `Max Wounds: ${sys.wounds.max} → ${preSys.wounds.max}`,
                 });
             }
 
-            if (current.system.movement.half !== preview.system.movement.half) {
+            if (sys.movement.half !== preSys.movement.half) {
                 impacts.push({
                     type: 'movement',
-                    message: `Half Move: ${current.system.movement.half}m → ${preview.system.movement.half}m`,
+                    message: `Half Move: ${sys.movement.half}m → ${preSys.movement.half}m`,
                 });
             }
 

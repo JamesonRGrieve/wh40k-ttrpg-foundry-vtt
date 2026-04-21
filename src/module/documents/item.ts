@@ -10,10 +10,16 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
         }
 
         if (value && typeof value === 'object' && !(value instanceof Set) && !(value instanceof Map)) {
+            // ActorDelta.updateSyntheticActor hands us frozen delta objects during token
+            // resynthesis; mutating them would throw and abort Item init, which in turn
+            // blanks the token texture. Skip frozen/sealed objects entirely — their
+            // `undefined` fields will be handled by schema coercion downstream.
+            if (Object.isFrozen(value) || Object.isSealed(value)) return value;
             for (const key of Object.keys(value)) {
                 const entry = value[key];
                 if (entry === undefined) {
-                    delete value[key];
+                    const desc = Object.getOwnPropertyDescriptor(value, key);
+                    if (desc?.configurable) delete value[key];
                     continue;
                 }
 

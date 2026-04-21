@@ -47,6 +47,8 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
         /** MutationObserver for dynamic content. */
         _mutationObserver: MutationObserver | null = null;
 
+        declare document: WH40KBaseActorDocument;
+
         /* -------------------------------------------- */
         /*  Hook into Document Updates                  */
         /* -------------------------------------------- */
@@ -69,19 +71,20 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
          * @protected
          */
         _captureAnimationState(): void {
-            const document = (this as any).document;
+            const document = this.document;
             if (!document) return;
 
+            const system = document.system as any;
             this._previousState = {
-                wounds: (document.system as any).wounds?.value as number | undefined,
-                woundsMax: (document.system as any).wounds?.max as number | undefined,
+                wounds: system.wounds?.value as number | undefined,
+                woundsMax: system.wounds?.max as number | undefined,
                 characteristics: {} as Record<string, { total: number; bonus: number }>,
-                experience: (document.system as any).experience?.total as number | undefined,
-                fatigue: (document.system as any).fatigue?.value as number | undefined,
+                experience: system.experience?.total as number | undefined,
+                fatigue: system.fatigue?.value as number | undefined,
             };
 
             // Capture characteristic bonuses
-            const chars = (document.system as any).characteristics as Record<string, { total: number; bonus: number }> | undefined;
+            const chars = system.characteristics as Record<string, { total: number; bonus: number }> | undefined;
             if (chars) {
                 for (const [key, char] of Object.entries(chars)) {
                     this._previousState.characteristics[key] = {
@@ -198,8 +201,9 @@ export default function EnhancedAnimationsMixin<T extends new (...args: any[]) =
             // Animate the wounds bar
             const woundsBar = this.element.querySelector<HTMLElement>('.wh40k-wounds-bar');
             if (woundsBar) {
-                const doc = (this as any).document;
-                const max = (doc.system as any).wounds?.max ?? 1;
+                const doc = this.document;
+                const wounds = doc.system.wounds as WH40KWounds | undefined;
+                const max = wounds?.max ?? 1;
                 const oldPercent = (oldValue / max) * 100;
                 const newPercent = (newValue / max) * 100;
                 this._animateWoundsBar(woundsBar, oldPercent, newPercent);

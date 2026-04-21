@@ -283,7 +283,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #addSkill(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #addSkill(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         const skills = foundry.utils.deepClone(this.item.system.trainedSkills || []);
@@ -302,9 +302,9 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #removeSkill(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeSkill(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const index = parseInt(target.dataset.index, 10);
+        const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
         const skills = foundry.utils.deepClone(this.item.system.trainedSkills || []);
@@ -376,9 +376,9 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #removeTrait(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeTrait(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const index = parseInt(target.dataset.index, 10);
+        const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
         const traits = foundry.utils.deepClone(this.item.system.traits || []);
@@ -473,7 +473,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #createFromTemplate(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #createFromTemplate(this: NPCTemplateSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         event.preventDefault();
 
         const threatLevel = this._previewThreat;
@@ -526,7 +526,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
                 }
 
                 ui.notifications.info(`Created NPC: ${actor.name}`);
-                actor.sheet.render(true);
+                actor.sheet?.render(true);
             }
         } catch (err) {
             console.error('Failed to create NPC from template:', err);
