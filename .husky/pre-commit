@@ -1,1 +1,12 @@
 pnpm exec lint-staged --hide-unstaged
+
+# Validate pack compilation when the compiler or any pack source changes.
+# The prior silent-error bug in compilePacks went unnoticed because lint-staged
+# only inspects the diff, not the actual Gulp pipeline. `gulp packs` exercises
+# the full pipeline (including the explicit db.open() error surfacing added
+# alongside this hook), so a broken compiler fails here instead of mid-release.
+changed="$(git diff --cached --name-only --diff-filter=ACMR)"
+if printf '%s\n' "$changed" | grep -qE '^(gulpfile\.js|src/packs/)'; then
+    echo "[pre-commit] gulpfile or pack sources changed — validating compilePacks…"
+    pnpm -s packs
+fi
