@@ -38,7 +38,7 @@ const DEAD_ICON_REMAPS: Record<string, string> = {
 };
 
 export async function checkAndMigrateWorld() {
-    const worldVersion = 187;
+    const worldVersion = 188;
 
     // @ts-expect-error - argument type
     const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
@@ -374,6 +374,57 @@ export async function checkAndMigrateWorld() {
 
             if (idsToDelete.length) {
                 await actor.deleteEmbeddedDocuments('Item', idsToDelete);
+            }
+        }
+
+        // Collapse talent names with duplicate or chained parens: "Name (X) (Y)" → "Name (X)" (v188)
+        // Caused by earlier grant-composition bug where specialization was appended on top of an
+        // already-specialized source name.
+        // @ts-expect-error - operator type
+        if (currentVersion < 188) {
+            const talents = actor.items.filter((i) => i.type === 'talent');
+            for (const talent of talents) {
+                // Match names ending in two or more `(...)` groups
+                const match = talent.name.match(/^(.*?)\s*(\([^)]+\))\s*(\([^)]+\))\s*$/);
+                if (!match) continue;
+                const base = match[1].trim();
+                const firstParen = match[2].slice(1, -1).trim();
+                const secondParen = match[3].slice(1, -1).trim();
+                // Prefer the current system.specialization if set; otherwise keep the first paren
+                const keptSpec = (talent.system?.specialization ?? '').toString().trim() || firstParen;
+                const newName = `${base} (${keptSpec})`;
+                if (newName !== talent.name) {
+                    await talent.update({
+                        'name': newName,
+                        'system.specialization': keptSpec,
+                    });
+                    game.wh40k?.log?.(`Repaired talent name: "${talent.name}" (had "${firstParen}" and "${secondParen}") → "${newName}"`);
+                }
+            }
+
+            // Second dedup pass — a rename may have surfaced new duplicates
+            const afterRename = actor.items.filter((i) => i.type === 'talent');
+            const groups2 = new Map();
+            for (const talent of afterRename) {
+                const spec = (talent.system?.specialization ?? '').toString().toLowerCase().trim();
+                const m = talent.name.match(/^(.*?)\s*\(([^)]+)\)\s*$/);
+                const baseName = (m ? m[1] : talent.name).toLowerCase().trim();
+                const key = `${baseName}|${spec || (m ? m[2].toLowerCase().trim() : '')}`;
+                if (!groups2.has(key)) groups2.set(key, []);
+                groups2.get(key).push(talent);
+            }
+            const dupIds = [];
+            for (const group of groups2.values()) {
+                if (group.length < 2) continue;
+                group.sort((a, b) => {
+                    const rankDiff = (b.system?.rank ?? 1) - (a.system?.rank ?? 1);
+                    if (rankDiff !== 0) return rankDiff;
+                    return (a._stats?.createdTime ?? 0) - (b._stats?.createdTime ?? 0);
+                });
+                for (let i = 1; i < group.length; i++) dupIds.push(group[i].id);
+            }
+            if (dupIds.length) {
+                await actor.deleteEmbeddedDocuments('Item', dupIds);
             }
         }
     }

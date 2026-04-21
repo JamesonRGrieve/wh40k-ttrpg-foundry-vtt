@@ -1303,26 +1303,14 @@ export default class CharacterSheet extends BaseActorSheet {
 
     /**
      * Build per-aptitude display data with the origin path source(s) that granted it.
-     * Inherent characteristic aptitudes are labelled as "Innate". Others come from
-     * home world / background / role / elite advance grants or resolved choices.
+     * Aptitudes come from home world / background / role / elite advance grants or
+     * resolved choices. (Characteristic-named aptitudes are NOT auto-granted per RAW.)
      * @protected
      */
     _prepareAptitudePills(): Array<{ aptitude: string; sources: string[] }> {
         const actor = this.actor as any;
         const aptitudes: string[] = actor?.system?.aptitudes ?? [];
         if (!Array.isArray(aptitudes) || aptitudes.length === 0) return [];
-
-        const INHERENT = new Set([
-            'Weapon Skill',
-            'Ballistic Skill',
-            'Strength',
-            'Toughness',
-            'Agility',
-            'Intelligence',
-            'Perception',
-            'Willpower',
-            'Fellowship',
-        ]);
 
         const sourcesOf: Record<string, string[]> = {};
         const addSource = (apt: string, src: string) => {
@@ -1382,15 +1370,12 @@ export default class CharacterSheet extends BaseActorSheet {
             }
         }
 
-        // Keep RAW order: innate chars first (in DH2 char order), then everything else alphabetical
-        const INHERENT_ORDER = ['Weapon Skill', 'Ballistic Skill', 'Strength', 'Toughness', 'Agility', 'Intelligence', 'Perception', 'Willpower', 'Fellowship'];
-        const innate = aptitudes.filter((a) => INHERENT.has(a)).sort((a, b) => INHERENT_ORDER.indexOf(a) - INHERENT_ORDER.indexOf(b));
-        const extra = aptitudes.filter((a) => !INHERENT.has(a)).sort((a, b) => a.localeCompare(b));
-
-        return [...innate, ...extra].map((apt) => ({
-            aptitude: apt,
-            sources: INHERENT.has(apt) && !sourcesOf[apt] ? ['Innate'] : sourcesOf[apt] ?? ['Unknown'],
-        }));
+        return [...aptitudes]
+            .sort((a, b) => a.localeCompare(b))
+            .map((apt) => ({
+                aptitude: apt,
+                sources: sourcesOf[apt] ?? ['Unknown'],
+            }));
     }
 
     /* -------------------------------------------- */

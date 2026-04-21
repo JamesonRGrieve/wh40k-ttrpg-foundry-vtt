@@ -126,8 +126,8 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
                 newToggle.dataset.tooltip = 'WH40K.SheetModeEdit';
                 newToggle.setAttribute('aria-label', game.i18n.localize('WH40K.SheetModeEdit'));
                 newToggle.addEventListener('change', this._onChangeSheetMode.bind(this) as EventListener);
-                newToggle.addEventListener('dblclick', (event: Event) => event.stopPropagation());
-                newToggle.addEventListener('pointerdown', (event: Event) => event.stopPropagation());
+                newToggle.addEventListener('dblclick', (event: MouseEvent) => event.stopPropagation());
+                newToggle.addEventListener('pointerdown', (event: PointerEvent) => event.stopPropagation());
                 header?.prepend(newToggle);
             } else if (this.isEditable && toggle) {
                 toggle.checked = this._mode === PrimarySheetWH40K.MODES.EDIT;
@@ -211,7 +211,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
             this.element.querySelectorAll('.draggable input').forEach((el) => {
                 const input = el as HTMLInputElement;
                 input.draggable = true;
-                input.ondragstart = (event) => {
+                input.ondragstart = (event: DragEvent) => {
                     event.preventDefault();
                     event.stopPropagation();
                 };
@@ -387,7 +387,7 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
         /* -------------------------------------------- */
 
         _sortItems(items: any[], mode: string): any[] {
-            return items.sort((a, b) => a.sort - b.sort);
+            return items.sort((a: { sort: number }, b: { sort: number }) => a.sort - b.sort);
         }
     };
 }

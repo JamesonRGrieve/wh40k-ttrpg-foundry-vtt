@@ -6,7 +6,7 @@ import { WH40KBaseActor } from '../documents/base-actor.ts';
  */
 export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.TokenRuler {
     /** @inheritDoc */
-    _getWaypointStyle(waypoint: any) {
+    _getWaypointStyle(waypoint: Canvas.Ruler.Waypoint) {
         const style = super._getWaypointStyle(waypoint);
         return this.#getSpeedBasedStyle(waypoint, style);
     }
@@ -14,7 +14,7 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
     /* -------------------------------------------- */
 
     /** @override */
-    _getSegmentStyle(waypoint: any) {
+    _getSegmentStyle(waypoint: Canvas.Ruler.Waypoint) {
         const style = super._getSegmentStyle(waypoint);
         return this.#getSpeedBasedStyle(waypoint, style);
     }
@@ -22,7 +22,7 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
     /* -------------------------------------------- */
 
     /** @override */
-    _getGridHighlightStyle(waypoint: any, offset: any) {
+    _getGridHighlightStyle(waypoint: Canvas.Ruler.Waypoint, offset: number) {
         const style = super._getGridHighlightStyle(waypoint, offset);
         return this.#getSpeedBasedStyle(waypoint, style);
     }
@@ -32,11 +32,11 @@ export default class TokenRulerWH40K extends foundry.canvas.placeables.tokens.To
     /**
      * Modify segment or grid-highlighting style based on movement speed.
      * Colors: green (within budget), yellow (1-2x budget), red (over 2x).
-     * @param {any} waypoint - The waypoint
-     * @param {any} style - The default styling
-     * @returns {any} The adjusted style
+     * @param {Canvas.Ruler.Waypoint} waypoint - The waypoint
+     * @param {Record<string, unknown>} style - The default styling
+     * @returns {Record<string, unknown>} The adjusted style
      */
-    #getSpeedBasedStyle(waypoint: any, style: any) {
+    #getSpeedBasedStyle(waypoint: Canvas.Ruler.Waypoint, style: Record<string, unknown>) {
         // Only apply to the local user's movement
         if (!(game.user?.id && (this.token as any)?._plannedMovement) || (CONFIG as any).Token.movement.actions[waypoint.action]?.teleport) return style;
 
