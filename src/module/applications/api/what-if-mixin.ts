@@ -32,8 +32,8 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
 
         _whatIfActive: boolean = false;
         _whatIfChanges: Record<string, unknown> = {};
-        _whatIfPreview: any = null;
-        _whatIfImpacts: any[] | Record<string, unknown> = {};
+        _whatIfPreview: WH40KBaseActorDocument | null = null;
+        _whatIfImpacts: { type: string; message: string }[] = [];
 
         declare document: WH40KBaseActorDocument;
 
@@ -189,7 +189,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
         _compareDerivedStats(current: WH40KBaseActorDocument, preview: WH40KBaseActorDocument): void {
             const system = current.system as any;
             const previewSystem = preview.system as any;
-            const comparisons = [
+            const comparisons: { path: string; selector: string; type: string }[] = [
                 { path: 'wounds.max', selector: "[data-stat='wounds-max']", type: 'wounds' },
                 { path: 'initiative.bonus', selector: "[data-stat='initiative']", type: 'initiative' },
                 { path: 'movement.half', selector: "[data-stat='movement-half']", type: 'movement' },
@@ -215,7 +215,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
         /* -------------------------------------------- */
 
         _showComparison(selector: string, data: { current: number; preview: number; type: string }): void {
-            const elements = this.element.querySelectorAll(selector);
+            const elements = this.element.querySelectorAll<HTMLElement>(selector);
 
             elements.forEach((element) => {
                 element.classList.add('what-if-preview');
@@ -223,7 +223,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
                 const difference = data.preview - data.current;
                 const sign = difference > 0 ? '+' : '';
 
-                let badge = element.querySelector('.what-if-badge');
+                let badge = element.querySelector<HTMLElement>('.what-if-badge');
                 if (!badge) {
                     badge = document.createElement('div');
                     badge.className = 'what-if-badge';
@@ -232,9 +232,9 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
 
                 badge.className = `what-if-badge ${difference > 0 ? 'positive' : 'negative'}`;
                 badge.textContent = `${data.current} → ${data.preview} (${sign}${difference})`;
-                (badge as HTMLElement).dataset.current = data.current.toString();
-                (badge as HTMLElement).dataset.preview = data.preview.toString();
-                (badge as HTMLElement).dataset.difference = difference.toString();
+                badge.dataset.current = data.current.toString();
+                badge.dataset.preview = data.preview.toString();
+                badge.dataset.difference = difference.toString();
             });
         }
 
@@ -281,7 +281,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
             const baseData = this.document.toObject();
             const previewData = foundry.utils.mergeObject(baseData, this._whatIfChanges, { inplace: false });
 
-            this._whatIfPreview = new (CONFIG.Actor as any).documentClass(previewData, { parent: null });
+            this._whatIfPreview = new (CONFIG.Actor as typeof Actor).documentClass(previewData, { parent: null });
             this._whatIfPreview.prepareData();
 
             this._calculateImpacts();
@@ -290,7 +290,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
         _calculateImpacts(): void {
             if (!this._whatIfPreview) return;
 
-            const impacts = [];
+            const impacts: { type: string; message: string }[] = [];
             const current = this.document;
             const preview = this._whatIfPreview;
 
@@ -334,26 +334,12 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
             this._whatIfImpacts = impacts;
         }
 
-        async commitWhatIfChanges(): Promise<void> {
-            if (!this._whatIfActive) return;
-
-            if (Object.keys(this._whatIfChanges).length === 0) {
-                ui.notifications.warn('No changes to commit');
-                await this.exitWhatIfMode();
-                return;
-            }
-
-            await this.document.update(this._whatIfChanges);
-            ui.notifications.info(`Committed ${Object.keys(this._whatIfChanges).length} changes`);
-            await this.exitWhatIfMode();
-        }
-
         async cancelWhatIfChanges(): Promise<void> {
             if (!this._whatIfActive) return;
 
             const count = Object.keys(this._whatIfChanges).length;
             if (count > 0) {
-                const confirm = await (foundry.applications.api as any).DialogV2.confirm({
+                const confirm = await (foundry.applications.api.DialogV2 as any).confirm({
                     window: { title: 'Cancel What-If Mode' },
                     content: `Discard ${count} pending change${count !== 1 ? 's' : ''}?`,
                     yes: { label: 'Discard', default: true },

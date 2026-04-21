@@ -70,7 +70,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
     async _loadAllSpecializations(): Promise<void> {
         this._compendiumLoaded = true;
 
-        for (const pack of game.packs) {
+        for (const pack of game.packs as foundry.utils.Collection<CompendiumCollection>) {
             if (pack.metadata.type !== 'Item') continue;
             if (!pack.metadata.name.includes('skill')) continue;
 
@@ -78,8 +78,8 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
             const skillEntries = index.filter((entry) => entry.name.includes('(X)'));
 
             for (const entry of skillEntries) {
-                const doc = (await pack.getDocument(entry._id)) as any;
-                const specs = doc?.system?.specializations as string[] | undefined;
+                const doc = (await pack.getDocument(entry._id)) as { system?: { specializations?: string[] } } | null;
+                const specs = doc?.system?.specializations;
                 if (specs?.length) {
                     const baseName = entry.name.replace(/\s*\(X\)\s*$/i, '').trim();
                     this._specializationMap.set(baseName.toLowerCase(), specs);
@@ -101,20 +101,22 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         const context = await super._prepareContext(options);
 
         // Get specialist skills from actor
-        const skills = (this.actorDoc.system as any)?.skills ?? {};
+        const skills = (this.actorDoc.system as { skills?: Record<string, unknown> })?.skills ?? {};
         const specialistSkills = Object.entries(skills)
-            .filter(([_, data]) => (data as any).entries !== undefined)
+            .filter(([_, data]) => (data as { entries?: unknown }).entries !== undefined)
             .map(([key, data]) => ({
                 key,
-                label: (data as any).label || key,
-                characteristic: (data as any).charShort || (data as any).characteristic,
+                label: (data as { label?: string }).label || key,
+                characteristic:
+                    (data as { charShort?: string; characteristic?: string }).charShort ||
+                    (data as { charShort?: string; characteristic?: string }).characteristic,
             }))
             .sort((a, b) => a.label.localeCompare(b.label));
 
         // Get specializations for pre-selected skill
         const selectedKey = this.preSelectedSkillKey;
-        const selectedSkill = selectedKey ? skills[selectedKey] : null;
-        const selectedLabel = (selectedSkill as any)?.label || '';
+        const selectedSkill = selectedKey ? (skills as Record<string, { label?: string }>)[selectedKey] : null;
+        const selectedLabel = selectedSkill?.label || '';
         const specializations = this._specializationMap.get(selectedLabel.toLowerCase()) ?? [];
 
         return {
@@ -166,9 +168,9 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
         const specGroup = this.element.querySelector('#specialization-group') as HTMLElement | null;
         if (!specSelect || !specGroup) return;
 
-        const skills = (this.actorDoc.system as any)?.skills ?? {};
+        const skills = (this.actorDoc.system as { skills?: Record<string, { label?: string }> })?.skills ?? {};
         const skill = skills[skillKey];
-        const label = (skill as any)?.label || '';
+        const label = skill?.label || '';
         const specializations = this._specializationMap.get(label.toLowerCase()) ?? [];
 
         // Clear and repopulate

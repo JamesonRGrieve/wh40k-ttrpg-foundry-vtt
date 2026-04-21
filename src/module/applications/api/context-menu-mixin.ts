@@ -249,8 +249,8 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
 
             // Weapon-specific options
             if (item.type === 'weapon') {
-                const system = item.system as Record<string, unknown>;
-                const rateOfFire = system.rateOfFire as string | undefined;
+                const system = item.system as { rateOfFire?: string };
+                const rateOfFire = system.rateOfFire;
                 options.push(
                     {
                         name: 'Standard Attack',
@@ -283,8 +283,8 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
 
             // Equip/Unequip for applicable items
             if (['weapon', 'armour', 'gear'].includes(item.type)) {
-                const system = item.system as Record<string, unknown>;
-                const equipped = system.equipped as boolean | undefined;
+                const system = item.system as { equipped?: boolean };
+                const equipped = system.equipped;
                 options.push({
                     name: equipped ? 'Unequip' : 'Equip',
                     icon: `<i class="fas ${equipped ? 'fa-times-circle' : 'fa-check-circle'}"></i>`,
@@ -293,8 +293,8 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
             }
 
             // Activate/Deactivate for force fields, etc.
-            const system = item.system as Record<string, unknown>;
-            const activated = system.activated as boolean | undefined;
+            const system = item.system as { activated?: boolean };
+            const activated = system.activated;
             if (activated !== undefined) {
                 options.push({
                     name: activated ? 'Deactivate' : 'Activate',

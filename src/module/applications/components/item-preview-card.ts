@@ -174,8 +174,8 @@ export function ItemPreviewMixin<TBase extends typeof foundry.appv1.sheets.Actor
          */
         #generateWeaponPreview(item: WH40KItem): string {
             const sys = item.system as WeaponDataModel;
-            const damage = (sys as any).damage;
-            const stats = (sys as any).stats;
+            const damage = (sys as any).damage as { formula?: string };
+            const stats = (sys as any).stats as { penetration?: number; range?: string; rof?: string };
 
             return `
                 <div class="wh40k-weapon-preview-stats">

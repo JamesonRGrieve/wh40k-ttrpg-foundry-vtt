@@ -257,7 +257,9 @@
             "Tab": {
                 "Characteristics": "Characteristics",
                 "Skills": "Skills",
-                "Talents": "Talents"
+                "Talents": "Talents",
+                "Psychic": "Psychic Powers",
+                "Traits": "Traits"
             },
             "Tier": {
                 "Simple": "Simple",
@@ -1702,7 +1704,9 @@
             "Tab": {
                 "Characteristics": "Characteristics",
                 "Skills": "Skills",
-                "Talents": "Talents"
+                "Talents": "Talents",
+                "Psychic": "Psychic Powers",
+                "Traits": "Traits"
             },
             "Tier": {
                 "Simple": "Simple",

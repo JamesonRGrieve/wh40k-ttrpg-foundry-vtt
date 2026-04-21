@@ -215,7 +215,7 @@ export function criticalDamage(): CriticalDamageTable {
     };
 }
 
-export function getFuzzy(obj: any, term: string) {
+export function getFuzzy(obj: Record<string, unknown>, term: string): unknown {
     let resolvedTerm = term;
     if (resolvedTerm.toUpperCase() === 'LEFT LEG' || resolvedTerm.toUpperCase() === 'RIGHT LEG') {
         resolvedTerm = 'Leg';
@@ -236,9 +236,9 @@ export function getFuzzy(obj: any, term: string) {
 
 export function getCriticalDamage(type: string, location: string, amount: number): string | null {
     const criticalDamageMap = criticalDamage();
-    const damageMap = getFuzzy(criticalDamageMap, type);
+    const damageMap = getFuzzy(criticalDamageMap as Record<string, unknown>, type);
     if (!damageMap) return null;
-    const locationMap = getFuzzy(damageMap, location);
+    const locationMap = getFuzzy(damageMap as Record<string, unknown>, location);
     if (!locationMap) return null;
-    return locationMap[amount > 10 ? 10 : amount];
+    return (locationMap as Record<number, string>)[amount > 10 ? 10 : amount];
 }

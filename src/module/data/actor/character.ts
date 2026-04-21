@@ -483,14 +483,11 @@ export default class CharacterData extends CreatureTemplate {
         }
 
         // Collect aptitudes from origin path (DH2e/BC/OW use aptitudes for XP costs).
-        // Sources: fixed grants.aptitudes + resolved grants.choices[type=aptitude] +
-        // the 9 inherent characteristic-based aptitudes every character has per DH2 Core p.79.
+        // Sources: fixed grants.aptitudes + resolved grants.choices[type=aptitude].
+        // Per DH2 Core p.79, characteristic-named aptitudes (Weapon Skill, etc.) are
+        // NOT auto-granted — a character only has aptitudes granted by home world,
+        // background, role, and elite advances.
         const allAptitudes = new Set<string>();
-
-        // Inherent characteristic aptitudes (DH2 RAW: every character has these)
-        for (const apt of ['Weapon Skill', 'Ballistic Skill', 'Strength', 'Toughness', 'Agility', 'Intelligence', 'Perception', 'Willpower', 'Fellowship']) {
-            allAptitudes.add(apt);
-        }
 
         for (const item of originItems) {
             const grants = item.system?.grants;
