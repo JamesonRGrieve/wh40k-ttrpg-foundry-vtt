@@ -286,6 +286,32 @@
         {{/if}}
       </div>
 
+      {{#if psychic.chips.length}}
+      <div class="wh40k-adv__psy-controls">
+        <nav class="wh40k-adv__psy-chips">
+          {{#each psychic.chips as |chip|}}
+          <button type="button"
+                  class="wh40k-adv__psy-chip {{#if chip.active}}wh40k-adv__psy-chip--active{{/if}}"
+                  data-action="switchDiscipline"
+                  data-discipline="{{chip.key}}"
+                  title="{{chip.accessible}} accessible / {{chip.count}} total">
+            <span class="wh40k-adv__psy-chip-label">{{chip.label}}</span>
+            <span class="wh40k-adv__psy-chip-count">{{chip.accessible}}/{{chip.count}}</span>
+          </button>
+          {{/each}}
+        </nav>
+        {{#if psychic.hasBlocked}}
+        <button type="button"
+                class="wh40k-adv__psy-filter {{#if psychic.availableOnly}}wh40k-adv__psy-filter--active{{/if}}"
+                data-action="toggleAvailableOnly"
+                title="Show only powers at or below your Psy Rating">
+          <i class="fas {{#if psychic.availableOnly}}fa-check-square{{else}}fa-square{{/if}}"></i>
+          Available to me
+        </button>
+        {{/if}}
+      </div>
+      {{/if}}
+
       {{#each psychic.disciplines as |discipline|}}
       <h4 class="wh40k-adv__psy-disc-header">{{discipline.label}}</h4>
       <div class="wh40k-adv__advance-list">
@@ -342,6 +368,13 @@
         {{/each}}
       </div>
       {{/each}}
+
+      {{#unless psychic.disciplines.length}}
+      <div class="wh40k-adv__empty">
+        <i class="fas fa-filter"></i>
+        <p>No powers match the current filter.</p>
+      </div>
+      {{/unless}}
       {{else}}
       <div class="wh40k-adv__empty">
         <i class="fas fa-brain"></i>

@@ -63,6 +63,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             purchaseAdvance: AdvancementDialog.#purchaseAdvance,
             purchasePsyRating: AdvancementDialog.#purchasePsyRating,
             switchTab: AdvancementDialog.#switchTab,
+            switchDiscipline: AdvancementDialog.#switchDiscipline,
+            toggleAvailableOnly: AdvancementDialog.#toggleAvailableOnly,
             openCompendiumItem: AdvancementDialog.#openCompendiumItem,
         },
     };
@@ -84,6 +86,8 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     actor: WH40KBaseActor;
     careerKey: string;
     #activeTab = 'characteristics';
+    #activeDiscipline = 'all';
+    #psyAvailableOnly = false;
     #recentPurchases = new Set<string>();
 
     /* -------------------------------------------- */
@@ -647,11 +651,45 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             if (!grouped[p.disciplineLabel]) grouped[p.disciplineLabel] = [];
             grouped[p.disciplineLabel].push(p);
         }
-        const disciplines = Object.entries(grouped)
-            .map(([label, items]) => ({ label, items }))
-            .sort((a, b) => a.label.localeCompare(b.label));
 
-        return { psyAdvance, disciplines };
+        const availableOnly = this.#psyAvailableOnly;
+        const activeDiscipline = this.#activeDiscipline;
+
+        // Chips: "All" plus one per discipline, with count + accessible (not-blocked) count
+        const disciplineKeys = Object.keys(grouped).sort();
+        const chips: Array<{ key: string; label: string; count: number; accessible: number; active: boolean }> = [
+            {
+                key: 'all',
+                label: 'All',
+                count: powers.length,
+                accessible: powers.filter((p) => !p.blocked).length,
+                active: activeDiscipline === 'all',
+            },
+            ...disciplineKeys.map((label) => ({
+                key: label,
+                label,
+                count: grouped[label].length,
+                accessible: grouped[label].filter((p) => !p.blocked).length,
+                active: activeDiscipline === label,
+            })),
+        ];
+
+        // Build the filtered discipline sections the template iterates over
+        const visibleLabels = activeDiscipline === 'all' ? disciplineKeys : disciplineKeys.filter((l) => l === activeDiscipline);
+        const disciplines = visibleLabels
+            .map((label) => {
+                const items = grouped[label].filter((p) => !availableOnly || !p.blocked);
+                return { label, items };
+            })
+            .filter((d) => d.items.length > 0);
+
+        return {
+            psyAdvance,
+            disciplines,
+            chips,
+            availableOnly,
+            hasBlocked: powers.some((p) => p.blocked),
+        };
     }
 
     async #prepareTraitPanel(): Promise<any> {
@@ -786,6 +824,19 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             this.#activeTab = tab;
             this.render();
         }
+    }
+
+    static #switchDiscipline(this: AdvancementDialog, event: Event, target: HTMLElement): void {
+        const discipline = target.dataset.discipline;
+        if (discipline) {
+            this.#activeDiscipline = discipline;
+            this.render();
+        }
+    }
+
+    static #toggleAvailableOnly(this: AdvancementDialog, _event: Event, _target: HTMLElement): void {
+        this.#psyAvailableOnly = !this.#psyAvailableOnly;
+        this.render();
     }
 
     static async #purchaseCharacteristic(this: AdvancementDialog, event: Event, target: HTMLElement): Promise<void> {

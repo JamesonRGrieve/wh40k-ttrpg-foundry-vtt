@@ -647,6 +647,81 @@
     font-weight: bold;
 }
 
+.wh40k-adv__psy-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.wh40k-adv__psy-chips {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    flex: 1 1 auto;
+}
+
+.wh40k-adv__psy-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(120, 46, 150, 0.4);
+    background: rgba(120, 46, 150, 0.06);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.wh40k-adv__psy-chip:hover {
+    background: rgba(120, 46, 150, 0.15);
+    border-color: rgba(180, 80, 220, 0.7);
+}
+
+.wh40k-adv__psy-chip--active {
+    background: rgba(180, 80, 220, 0.35);
+    border-color: rgba(180, 80, 220, 1);
+    box-shadow: 0 0 4px rgba(180, 80, 220, 0.5);
+    color: #fff;
+}
+
+.wh40k-adv__psy-chip-label {
+    font-weight: 600;
+}
+
+.wh40k-adv__psy-chip-count {
+    font-size: 0.65rem;
+    opacity: 0.75;
+}
+
+.wh40k-adv__psy-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid var(--wh40k-border-color, #4a3728);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.wh40k-adv__psy-filter:hover {
+    background: rgba(212, 175, 55, 0.08);
+    color: var(--color-text-primary);
+}
+
+.wh40k-adv__psy-filter--active {
+    background: rgba(46, 204, 113, 0.18);
+    border-color: rgba(46, 204, 113, 0.8);
+    color: var(--color-text-primary);
+}
+
 .wh40k-adv__psy-disc-header {
     margin: 0.75rem 0 0.35rem;
     padding-bottom: 0.25rem;
