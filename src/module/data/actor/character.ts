@@ -190,9 +190,12 @@ export default class CharacterData extends CreatureTemplate {
             }),
 
             // ===== EXPERIENCE =====
+            // Defaults are 0/0: actual starting XP is applied by the origin path
+            // builder's _resetExperienceAndAdvancements using the system's
+            // startingXP config (1000 for DH2e, etc.).
             experience: new fields.SchemaField({
-                used: new fields.NumberField({ required: true, initial: 4500, min: 0, integer: true }),
-                total: new fields.NumberField({ required: true, initial: 5000, min: 0, integer: true }),
+                used: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+                total: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
                 available: new fields.NumberField({ required: true, initial: 0, integer: true }), // Derived
             }),
 
