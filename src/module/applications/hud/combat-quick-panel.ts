@@ -71,15 +71,15 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * The actor this panel is displaying
-     * @type {Actor}
+     * @type {WH40KBaseActor | null}
      */
-    actor = null;
+    actor: WH40KBaseActor | null = null;
 
     /**
      * The primary weapon being displayed
-     * @type {Item|null}
+     * @type {WH40KItem | null}
      */
-    primaryWeapon = null;
+    primaryWeapon: WH40KItem | null = null;
 
     /**
      * Track if reactions have been used this round
@@ -102,10 +102,10 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
     /**
      * Create a new combat quick panel
-     * @param {Actor} actor  The actor to display
+     * @param {WH40KBaseActor} actor  The actor to display
      * @param {object} options  Additional options
      */
-    constructor(actor, options: Record<string, unknown> = {}) {
+    constructor(actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
         super(options);
         this.actor = actor;
         this._updatePrimaryWeapon();
@@ -158,11 +158,11 @@ export default class CombatQuickPanel extends ApplicationV2 {
         };
 
         // Initiative
-        const combatant = game.combat?.combatants.find((c) => (c as Record<string, unknown>).actorId === this.actor.id);
+        const combatant = game.combat?.combatants.find((c) => (c as { actorId?: string }).actorId === this.actor?.id);
         context.initiative = {
-            rolled: (combatant as Record<string, unknown>)?.initiative !== null,
-            value: (combatant as Record<string, unknown>)?.initiative || 0,
-            bonus: this.actor.system.initiative.bonus || 0,
+            rolled: (combatant as { initiative?: number | null })?.initiative !== null,
+            value: (combatant as { initiative?: number | null })?.initiative || 0,
+            bonus: this.actor?.system.initiative.bonus || 0,
         };
 
         // Primary weapon
@@ -196,7 +196,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @returns {object}  Prepared weapon data
      * @private
      */
-    _prepareWeaponData(weapon: any): Record<string, unknown> {
+    _prepareWeaponData(weapon: WH40KItem | null): Record<string, unknown> {
         if (!weapon) {
             return {
                 none: true,
@@ -204,21 +204,29 @@ export default class CombatQuickPanel extends ApplicationV2 {
             };
         }
 
-        const rof = weapon.system.rateOfFire || {};
+        const rof = (weapon.system as { rateOfFire?: Record<string, unknown> }).rateOfFire || {};
 
         return {
             id: weapon.id,
             name: weapon.name,
             img: weapon.img,
-            damage: weapon.system.damage,
-            penetration: weapon.system.penetration || 0,
-            range: weapon.system.range,
-            clip: weapon.system.clip,
+            damage: (weapon.system as { damage?: string }).damage,
+            penetration: (weapon.system as { penetration?: number }).penetration || 0,
+            range: (weapon.system as { range?: string }).range,
+            clip: (weapon.system as { clip?: Record<string, unknown> }).clip,
             ammo: {
-                current: weapon.system.clip?.value || 0,
-                max: weapon.system.effectiveClipMax || weapon.system.clip?.max || 0,
-                percentage: weapon.system.ammoPercentage ?? 100,
-                low: weapon.system.clip?.value <= (weapon.system.effectiveClipMax || weapon.system.clip?.max || 0) * 0.25,
+                current: (weapon.system as { clip?: { value: number } }).clip?.value || 0,
+                max:
+                    (weapon.system as { effectiveClipMax?: number; clip?: { max: number } }).effectiveClipMax ||
+                    (weapon.system as { clip?: { max: number } }).clip?.max ||
+                    0,
+                percentage: (weapon.system as { ammoPercentage?: number }).ammoPercentage ?? 100,
+                low:
+                    (weapon.system as { clip?: { value: number } }).clip?.value <=
+                    ((weapon.system as { effectiveClipMax?: number; clip?: { max: number } }).effectiveClipMax ||
+                        (weapon.system as { clip?: { max: number } }).clip?.max ||
+                        0) *
+                        0.25,
             },
             rateOfFire: {
                 single: rof.single,
@@ -446,14 +454,14 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {HTMLElement} target
      */
     static async #rollInitiative(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const combatant = game.combat?.combatants.find((c) => (c as Record<string, unknown>).actorId === this.actor.id);
+        const combatant = game.combat?.combatants.find((c) => (c as { actorId?: string }).actorId === this.actor?.id);
         if (!combatant) {
             ui.notifications.warn('Character not in combat');
             return;
         }
 
         await game.combat.rollInitiative([combatant.id]);
-        ui.notifications.info(`Rolled initiative for ${this.actor.name}`);
+        ui.notifications.info(`Rolled initiative for ${this.actor?.name}`);
     }
 
     /* -------------------------------------------- */
@@ -464,14 +472,14 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #standardAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #standardAttack(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
             ui.notifications.warn('No weapon equipped');
             return;
         }
 
         // Quick attack - no dialog
-        await this.actor.rollWeaponAttack(this.primaryWeapon.id, {
+        await this.actor?.rollWeaponAttack(this.primaryWeapon.id, {
             skipDialog: true,
             rateOfFire: 'single',
         });
@@ -485,13 +493,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #semiAutoAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
-        if (!this.primaryWeapon?.system.rateOfFire?.semiAuto) {
+    static async #semiAutoAttack(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+        if (!(this.primaryWeapon?.system as { rateOfFire?: { semiAuto?: boolean } })?.rateOfFire?.semiAuto) {
             ui.notifications.warn('Weapon does not support semi-auto');
             return;
         }
 
-        await this.actor.rollWeaponAttack(this.primaryWeapon.id, {
+        await this.actor?.rollWeaponAttack(this.primaryWeapon.id, {
             skipDialog: true,
             rateOfFire: 'semiAuto',
         });
@@ -505,13 +513,13 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #fullAutoAttack(this: any, event: Event, target: HTMLElement): Promise<void> {
-        if (!this.primaryWeapon?.system.rateOfFire?.fullAuto) {
+    static async #fullAutoAttack(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+        if (!(this.primaryWeapon?.system as { rateOfFire?: { fullAuto?: boolean } })?.rateOfFire?.fullAuto) {
             ui.notifications.warn('Weapon does not support full-auto');
             return;
         }
 
-        await this.actor.rollWeaponAttack(this.primaryWeapon.id, {
+        await this.actor?.rollWeaponAttack(this.primaryWeapon.id, {
             skipDialog: true,
             rateOfFire: 'fullAuto',
         });
@@ -525,19 +533,19 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #dodge(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #dodge(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.dodge) {
             ui.notifications.warn('Already used dodge this round');
             return;
         }
 
-        const skill = this.actor.system.skills?.dodge;
+        const skill = this.actor?.system.skills?.dodge;
         if (!skill) {
             ui.notifications.warn('No dodge skill');
             return;
         }
 
-        await this.actor.rollSkill('dodge', { skipDialog: true });
+        await this.actor?.rollSkill('dodge', { skipDialog: true });
         this.reactionsUsed.dodge = true;
         this.render(false);
     }
@@ -550,19 +558,19 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #parry(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #parry(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
         if (this.reactionsUsed.parry) {
             ui.notifications.warn('Already used parry this round');
             return;
         }
 
-        const skill = this.actor.system.skills?.parry;
+        const skill = this.actor?.system.skills?.parry;
         if (!skill) {
             ui.notifications.warn('No parry skill');
             return;
         }
 
-        await this.actor.rollSkill('parry', { skipDialog: true });
+        await this.actor?.rollSkill('parry', { skipDialog: true });
         this.reactionsUsed.parry = true;
         this.render(false);
     }
@@ -575,14 +583,14 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #reload(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #reload(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
         if (!this.primaryWeapon) {
             ui.notifications.warn('No weapon equipped');
             return;
         }
 
         const result = await ReloadActionManager.reloadWeapon(this.primaryWeapon, {
-            skipValidation: (event as MouseEvent).shiftKey,
+            skipValidation: event.shiftKey,
         });
 
         if (result.success) {
@@ -601,11 +609,11 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #aim(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #aim(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
         // Apply aim effect (+10 to next attack)
         await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: `<p><strong>${this.actor.name}</strong> takes aim (+10 to next attack)</p>`,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor as Actor }),
+            content: `<p><strong>${this.actor?.name}</strong> takes aim (+10 to next attack)</p>`,
             flavor: 'Aim Action',
         } as Record<string, unknown>);
 
@@ -620,10 +628,10 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #drawWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const weapons = this.actor.items.filter((i) => i.type === 'weapon' && !i.system.equipped);
+    static async #drawWeapon(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
+        const weapons = this.actor?.items.filter((i) => i.type === 'weapon' && !(i.system as { equipped?: boolean }).equipped);
 
-        if (weapons.length === 0) {
+        if (!weapons || weapons.length === 0) {
             ui.notifications.warn('No weapons to draw');
             return;
         }
@@ -648,9 +656,10 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #switchWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #switchWeapon(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
         const weaponId = target.dataset.weaponId;
-        const weapon = this.actor.items.get(weaponId);
+        if (!weaponId) return;
+        const weapon = this.actor?.items.get(weaponId);
 
         if (!weapon) return;
 
@@ -674,16 +683,17 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static async #useConsumable(this: any, event: Event, target: HTMLElement): Promise<void> {
+    static async #useConsumable(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
-        const item = this.actor.items.get(itemId);
+        if (!itemId) return;
+        const item = this.actor?.items.get(itemId);
 
         if (!item) return;
 
         // TODO: Implement consumable use logic
         await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            content: `<p><strong>${this.actor.name}</strong> uses ${item.name}</p>`,
+            speaker: ChatMessage.getSpeaker({ actor: this.actor as Actor }),
+            content: `<p><strong>${this.actor?.name}</strong> uses ${item.name}</p>`,
         } as Record<string, unknown>);
 
         ui.notifications.info(`Used ${item.name}`);
@@ -697,7 +707,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @param {PointerEvent} event
      * @param {HTMLElement} target
      */
-    static #toggleOpacity(this: any, event: Event, target: HTMLElement): void {
+    static #toggleOpacity(this: any, event: PointerEvent, target: HTMLElement): void {
         this.opacityLevel = (this.opacityLevel + 1) % 4;
 
         // Apply opacity class

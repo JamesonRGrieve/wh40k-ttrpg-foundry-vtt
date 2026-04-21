@@ -93,7 +93,7 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        static override _migrateData(source: Record<string, any>): void {
+        static override _migrateData(source: Record<string, unknown>): void {
             super._migrateData?.(source);
             // Ensure horde object exists
             source.horde ??= {
@@ -105,12 +105,13 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
                 sizeModifier: 0,
             };
             // Migrate magnitude values to integers
-            if (source.horde.magnitude) {
-                if (source.horde.magnitude.max !== undefined) {
-                    source.horde.magnitude.max = parseInt(source.horde.magnitude.max) || 30;
+            const horde = source.horde as HordeData;
+            if (horde.magnitude) {
+                if (horde.magnitude.max !== undefined) {
+                    horde.magnitude.max = parseInt(String(horde.magnitude.max), 10) || 30;
                 }
-                if (source.horde.magnitude.current !== undefined) {
-                    source.horde.magnitude.current = parseInt(source.horde.magnitude.current) || 30;
+                if (horde.magnitude.current !== undefined) {
+                    horde.magnitude.current = parseInt(String(horde.magnitude.current), 10) || 30;
                 }
             }
         }

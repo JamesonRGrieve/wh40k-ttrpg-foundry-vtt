@@ -77,7 +77,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
     /** @inheritDoc */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const system = this.item.system as any;
+        const system = this.item.system as ArmourModificationData;
 
         // Add CONFIG reference for template helpers
         context.dh = CONFIG.wh40k || {};
@@ -94,8 +94,8 @@ export default class ArmourModSheet extends ContainerItemSheet {
         context.armourProperties = CONFIG.wh40k?.armourProperties || {};
 
         // Prepare added properties array
-        context.addedPropertiesArray = Array.from(system.addedProperties as Set<string>).map((key) => {
-            const config = (context.armourProperties as any)[key];
+        context.addedPropertiesArray = Array.from(system.addedProperties).map((key) => {
+            const config = (context.armourProperties as Record<string, any>)[key];
             return {
                 key,
                 label: config ? game.i18n.localize(config.label) : key,
@@ -104,8 +104,8 @@ export default class ArmourModSheet extends ContainerItemSheet {
         });
 
         // Prepare removed properties array
-        context.removedPropertiesArray = Array.from(system.removedProperties as Set<string>).map((key) => {
-            const config = (context.armourProperties as any)[key];
+        context.removedPropertiesArray = Array.from(system.removedProperties).map((key) => {
+            const config = (context.armourProperties as Record<string, any>)[key];
             return {
                 key,
                 label: config ? game.i18n.localize(config.label) : key,
@@ -114,7 +114,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
         });
 
         // Available properties (not yet added or removed)
-        const usedKeys = new Set([...(system.addedProperties as Set<string>), ...(system.removedProperties as Set<string>)]);
+        const usedKeys = new Set([...Array.from(system.addedProperties), ...Array.from(system.removedProperties)]);
         context.availablePropertiesArray = Object.entries(context.armourProperties as Record<string, any>)
             .filter(([key]) => !usedKeys.has(key))
             .map(([key, config]) => ({
@@ -131,7 +131,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
         // Get shared context from _prepareContext
         const sharedContext = await this._prepareContext(options);
         const partContext = { ...sharedContext, ...context };
-        const system = this.item.system as any;
+        const system = this.item.system as ArmourModificationData;
 
         switch (partId) {
             case 'header':
@@ -174,7 +174,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
     static async #onToggleArmourType(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const type = target.dataset.type;
         if (!type) return;
-        const current = new Set((this.item.system as any).restrictions.armourTypes as string[]);
+        const current = new Set((this.item.system as ArmourModificationData).restrictions.armourTypes);
 
         if (current.has(type)) {
             current.delete(type);
@@ -219,8 +219,8 @@ export default class ArmourModSheet extends ContainerItemSheet {
         const property = target.dataset.property;
         const list = target.dataset.list; // "added" or "removed"
         if (!property || !list) return;
-        const field = `${list}Properties`;
-        const current = new Set((this.item.system as any)[field] as string[]);
+        const field = `${list}Properties` as 'addedProperties' | 'removedProperties';
+        const current = new Set((this.item.system as ArmourModificationData)[field]);
 
         current.add(property);
 
@@ -239,8 +239,8 @@ export default class ArmourModSheet extends ContainerItemSheet {
         const property = target.dataset.property;
         const list = target.dataset.list; // "added" or "removed"
         if (!property || !list) return;
-        const field = `${list}Properties`;
-        const current = new Set((this.item.system as any)[field] as string[]);
+        const field = `${list}Properties` as 'addedProperties' | 'removedProperties';
+        const current = new Set((this.item.system as ArmourModificationData)[field]);
 
         current.delete(property);
 
