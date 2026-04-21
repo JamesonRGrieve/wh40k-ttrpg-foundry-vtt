@@ -13,16 +13,6 @@ interface NPCState {
     isHorde: boolean;
 }
 
-interface NPCState {
-    name: string;
-    threatLevel: number;
-    role: string;
-    type: string;
-    preset: string;
-    faction: string;
-    isHorde: boolean;
-}
-
 interface PreviewState {
     characteristics: Array<{ key: string; label: string; short: string; value: number; bonus: number }>;
     skills: Array<{ key: string; name: string; level: string; bonus: number }>;
