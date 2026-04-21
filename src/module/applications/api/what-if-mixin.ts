@@ -250,7 +250,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
 
             this._whatIfActive = true;
             this._whatIfChanges = {};
-            this._whatIfImpacts = {};
+            this._whatIfImpacts = [];
 
             await this.render(false);
 
@@ -359,7 +359,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
             this._whatIfActive = false;
             this._whatIfChanges = {};
             this._whatIfPreview = null;
-            this._whatIfImpacts = {};
+            this._whatIfImpacts = [];
 
             this.element.classList.remove('what-if-mode');
 
