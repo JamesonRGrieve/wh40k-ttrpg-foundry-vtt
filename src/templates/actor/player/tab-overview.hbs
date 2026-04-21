@@ -291,6 +291,19 @@
                         <span class="wh40k-xp-label">Experience</span>
                         <span class="wh40k-xp-value">{{system.experience.available}}/{{system.experience.total}}</span>
                     </div>
+                    {{#if aptitudePills.length}}
+                    <div class="wh40k-aptitude-row tw-flex tw-flex-wrap tw-items-baseline tw-gap-1 tw-pt-1">
+                        <span class="wh40k-xp-label tw-shrink-0">Aptitudes</span>
+                        <div class="wh40k-aptitude-pills tw-flex tw-flex-wrap tw-gap-1">
+                            {{#each aptitudePills as |pill|}}
+                            <span class="wh40k-aptitude-pill tw-text-[0.7rem] tw-px-1.5 tw-py-0.5 tw-rounded tw-border tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-[rgba(212,175,55,0.08)]"
+                                  data-tooltip="{{#each pill.sources}}{{this}}{{#unless @last}} · {{/unless}}{{/each}}">
+                                {{pill.aptitude}}
+                            </span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/if}}
                 </div>
             </div>
             {{/unless}}

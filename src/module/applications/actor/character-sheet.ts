@@ -1295,7 +1295,102 @@ export default class CharacterSheet extends BaseActorSheet {
         const favoriteTalents = this._prepareFavoriteTalents();
         ctx.favoriteTalents = favoriteTalents;
 
+        // Aptitude pills with per-source attribution (DH2e/BC/OW)
+        ctx.aptitudePills = this._prepareAptitudePills();
+
         return ctx;
+    }
+
+    /**
+     * Build per-aptitude display data with the origin path source(s) that granted it.
+     * Inherent characteristic aptitudes are labelled as "Innate". Others come from
+     * home world / background / role / elite advance grants or resolved choices.
+     * @protected
+     */
+    _prepareAptitudePills(): Array<{ aptitude: string; sources: string[] }> {
+        const actor = this.actor as any;
+        const aptitudes: string[] = actor?.system?.aptitudes ?? [];
+        if (!Array.isArray(aptitudes) || aptitudes.length === 0) return [];
+
+        const INHERENT = new Set([
+            'Weapon Skill',
+            'Ballistic Skill',
+            'Strength',
+            'Toughness',
+            'Agility',
+            'Intelligence',
+            'Perception',
+            'Willpower',
+            'Fellowship',
+        ]);
+
+        const sourcesOf: Record<string, string[]> = {};
+        const addSource = (apt: string, src: string) => {
+            if (!sourcesOf[apt]) sourcesOf[apt] = [];
+            if (!sourcesOf[apt].includes(src)) sourcesOf[apt].push(src);
+        };
+
+        const stepLabels: Record<string, string> = {
+            homeWorld: 'Home World',
+            background: 'Background',
+            role: 'Role',
+            elite: 'Elite Advance',
+            regiment: 'Regiment',
+            speciality: 'Speciality',
+            chapter: 'Chapter',
+            archetype: 'Archetype',
+            race: 'Race',
+            pride: 'Pride',
+            disgrace: 'Disgrace',
+            career: 'Career',
+            birthright: 'Birthright',
+            lureOfTheVoid: 'Lure of the Void',
+            trialsAndTravails: 'Trials and Travails',
+            motivation: 'Motivation',
+            lineage: 'Lineage',
+            divination: 'Divination',
+        };
+
+        const originItems = actor.items.filter((i: any) => i.isOriginPath);
+        for (const item of originItems) {
+            const step = item.system?.step || '';
+            const src = `${stepLabels[step] ?? 'Origin'}: ${item.name}`;
+            const grants = item.system?.grants ?? {};
+
+            // Fixed aptitudes
+            if (Array.isArray(grants.aptitudes)) {
+                for (const apt of grants.aptitudes) if (apt) addSource(apt, src);
+            }
+
+            // Resolved aptitude choices (mirrors logic in character.ts._computeOriginPathEffects)
+            const choices = (grants.choices ?? []) as any[];
+            const selectedChoices = (item.system?.selectedChoices ?? {}) as Record<string, string[]>;
+            const labelCounts: Record<string, number> = {};
+            for (const choice of choices) {
+                const baseLabel = choice.label || choice.name || '';
+                labelCounts[baseLabel] = (labelCounts[baseLabel] || 0) + 1;
+                const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
+                const choiceKey = `${baseLabel}${suffix}`;
+                if (choice.type !== 'aptitude') continue;
+                const picks = selectedChoices[choiceKey];
+                if (!Array.isArray(picks)) continue;
+                for (const pick of picks) {
+                    const option = choice.options?.find((o: any) => o.value === pick || o.name === pick);
+                    const value = option?.value || option?.name || pick;
+                    if (value) addSource(value, src);
+                }
+            }
+        }
+
+        // Keep RAW order: innate chars first (in DH2 char order), then everything else alphabetical
+        const INHERENT_ORDER = ['Weapon Skill', 'Ballistic Skill', 'Strength', 'Toughness', 'Agility', 'Intelligence', 'Perception', 'Willpower', 'Fellowship'];
+        const innate = aptitudes.filter((a) => INHERENT.has(a)).sort((a, b) => INHERENT_ORDER.indexOf(a) - INHERENT_ORDER.indexOf(b));
+        const extra = aptitudes.filter((a) => !INHERENT.has(a)).sort((a, b) => a.localeCompare(b));
+
+        return [...innate, ...extra].map((apt) => ({
+            aptitude: apt,
+            sources: INHERENT.has(apt) && !sourcesOf[apt] ? ['Innate'] : sourcesOf[apt] ?? ['Unknown'],
+        }));
     }
 
     /* -------------------------------------------- */

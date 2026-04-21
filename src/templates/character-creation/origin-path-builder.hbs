@@ -695,6 +695,19 @@
                     </div>
                 </div>
             {{/if}}
+            {{#if preview.aptitudes.length}}
+                <div class="preview-category">
+                    <div class="category-title">Aptitudes</div>
+                    <div class="category-items">
+                        {{#each preview.aptitudes as |apt|}}
+                            <span class="grant-tag aptitude-tag">
+                                <i class="fa-solid fa-bullseye"></i>
+                                <span class="tag-label">{{apt}}</span>
+                            </span>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
             {{#if preview.wounds}}
                 <div class="preview-category">
                     <div class="category-title">{{localize "WH40K.Wounds"}}</div>

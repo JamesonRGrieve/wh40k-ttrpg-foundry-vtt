@@ -153,18 +153,25 @@ export default class ItemGrantData extends BaseGrantData {
                 continue;
             }
 
-            // Check for duplicates
-            if (this._isDuplicate(actor, sourceItem)) {
-                result.notifications.push(`${sourceItem.name} already exists, skipping`);
-                continue;
-            }
-
             // Create item data, applying specialization if present
             const effectiveOverrides = { ...(overrides ?? {}) };
             if (_legacySpecialization && sourceItem.type === 'talent') {
                 effectiveOverrides['system.specialization'] = _legacySpecialization;
                 effectiveOverrides['name'] = `${sourceItem.name} (${_legacySpecialization})`;
             }
+
+            // Check for duplicates against the *final* name+specialization, not the bare source.
+            // Otherwise granting Weapon Training with specialization "Shock" re-runs create
+            // additional copies because the actor item name "(Shock)" never matched bare "Weapon Training".
+            const effectiveName = (effectiveOverrides['name'] as string) ?? sourceItem.name;
+            const effectiveSpec =
+                (effectiveOverrides['system.specialization'] as string | undefined) ??
+                (sourceItem.system as { specialization?: string } | undefined)?.specialization;
+            if (this._isDuplicateByName(actor, sourceItem.type, effectiveName, effectiveSpec)) {
+                result.notifications.push(`${effectiveName} already exists, skipping`);
+                continue;
+            }
+
             const itemData = this._createItemData(sourceItem, resolvedUuid, effectiveOverrides);
             itemsToCreate.push({ uuid: resolvedUuid, data: itemData });
         }
@@ -305,14 +312,22 @@ export default class ItemGrantData extends BaseGrantData {
      * @private
      */
     _isDuplicate(actor: WH40KBaseActor, sourceItem: WH40KItem): boolean {
-        return actor.items.some(
-            (i) =>
-                i.type === sourceItem.type &&
-                i.name === sourceItem.name &&
-                // For talents/traits, also check specialization
-                (i.type !== 'talent' ||
-                    (i.system as { specialization?: string })?.specialization === (sourceItem.system as { specialization?: string })?.specialization),
-        );
+        return this._isDuplicateByName(actor, sourceItem.type, sourceItem.name, (sourceItem.system as { specialization?: string })?.specialization);
+    }
+
+    /**
+     * Duplicate check using the final name + specialization the grant will produce.
+     * Necessary because _legacySpecialization rewrites the actor-item name.
+     * @private
+     */
+    _isDuplicateByName(actor: WH40KBaseActor, itemType: string, name: string, specialization?: string): boolean {
+        const normSpec = (specialization ?? '').toString().toLowerCase().trim();
+        return actor.items.some((i) => {
+            if (i.type !== itemType || i.name !== name) return false;
+            if (itemType !== 'talent') return true;
+            const actorSpec = ((i.system as { specialization?: string })?.specialization ?? '').toString().toLowerCase().trim();
+            return actorSpec === normSpec;
+        });
     }
 
     /**
