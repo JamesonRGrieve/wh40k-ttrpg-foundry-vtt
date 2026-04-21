@@ -1,6 +1,6 @@
 {
   "name": "wh40k-rpg",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Warhammer 40K RPG Foundry VTT System",
   "scripts": {
     "version": "json -I -f package.json -e \"this.version='$NEXT_VERSION'\" && json -I -f src/system.json -e \"this.version='$NEXT_VERSION'\"",

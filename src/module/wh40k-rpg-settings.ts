@@ -35,7 +35,7 @@ export class WH40KSettings {
             scope: 'world',
             config: true,
             requiresReload: true,
-            default: 0,
+            default: 1,
             type: Number,
         });
         // @ts-expect-error - argument type
