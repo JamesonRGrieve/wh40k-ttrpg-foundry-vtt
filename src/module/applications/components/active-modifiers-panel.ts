@@ -55,7 +55,7 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
         /**
          * Toggle a modifier on/off (for optional modifiers)
          */
-        static async toggleModifier(this: any, event: Event, target: HTMLElement): Promise<void> {
+        static async toggleModifier(this: any, event: PointerEvent, target: HTMLElement): Promise<void> {
             const itemId = target.dataset.itemId;
             if (!itemId) return;
 
@@ -64,15 +64,15 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
             if (!item) return;
 
             // Toggle the item's active state
-            const system = item.system as Record<string, unknown>;
-            const isActive = (system.active as boolean) ?? true;
+            const system = item.system as { active?: boolean };
+            const isActive = system.active ?? true;
             await item.update({ 'system.active': !isActive });
         }
 
         /**
          * View the source item of a modifier
          */
-        static viewModifierSource(this: any, event: Event, target: HTMLElement): void {
+        static viewModifierSource(this: any, event: PointerEvent, target: HTMLElement): void {
             const itemId = target.dataset.itemId;
             if (!itemId) return;
 
@@ -86,9 +86,9 @@ export function ActiveModifiersMixin<TBase extends typeof foundry.appv1.sheets.A
         /**
          * Toggle modifiers panel collapsed state
          */
-        static toggleModifiersPanel(this: any, event: Event, target: HTMLElement): void {
-            const instance = this as any;
-            instance.#modifiersPanelCollapsed = !instance.#modifiersPanelCollapsed;
+        static toggleModifiersPanel(this: any, event: PointerEvent, target: HTMLElement): void {
+            const instance = this as { '#modifiersPanelCollapsed': boolean; 'render': () => void };
+            instance['#modifiersPanelCollapsed'] = !instance['#modifiersPanelCollapsed'];
             instance.render();
         }
 

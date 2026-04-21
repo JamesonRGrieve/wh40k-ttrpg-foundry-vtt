@@ -24,14 +24,13 @@ export default class MappingField extends foundry.data.fields.ObjectField {
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    _cleanType(value: Record<string, unknown>, options: Record<string, unknown> = {}): Record<string, unknown> {
+    _cleanType(value: Record<string, unknown>, options: DataModelV14.CleaningOptions = {}): Record<string, unknown> {
         const cleaned = super._cleanType(value, options) as Record<string, unknown>;
 
         // Clean each mapped value
         for (const [key, v] of Object.entries(cleaned)) {
-            // @ts-expect-error - TS2339
             if (this.model instanceof foundry.data.fields.DataField) {
-                cleaned[key] = (this.model as any).clean(v, options);
+                cleaned[key] = this.model.clean(v, options);
             }
         }
 
@@ -41,17 +40,17 @@ export default class MappingField extends foundry.data.fields.ObjectField {
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    initialize(value: Record<string, unknown>, model: unknown, options: Record<string, unknown> = {}): Record<string, unknown> {
+    initialize(
+        value: Record<string, unknown>,
+        model: InstanceType<typeof foundry.abstract.DataModel>,
+        options: Record<string, unknown> = {},
+    ): Record<string, unknown> {
         if (!value) return {};
 
         const initialized: Record<string, unknown> = {};
         for (const [key, v] of Object.entries(value)) {
-            // @ts-expect-error - TS2339
-            if (this.model instanceof foundry.data.fields.SchemaField) {
-                initialized[key] = (this.model as any).initialize(v, model, options);
-                // @ts-expect-error - TS2339
-            } else if (this.model instanceof foundry.data.fields.DataField) {
-                initialized[key] = (this.model as any).initialize(v, model, options);
+            if (this.model instanceof foundry.data.fields.SchemaField || this.model instanceof foundry.data.fields.DataField) {
+                initialized[key] = this.model.initialize(v, model, options);
             } else {
                 initialized[key] = v;
             }
@@ -76,9 +75,8 @@ export default class MappingField extends foundry.data.fields.ObjectField {
             }
 
             try {
-                // @ts-expect-error - TS2339
                 if (this.model instanceof foundry.data.fields.DataField) {
-                    (this.model as any).validate(v, options);
+                    this.model.validate(v, options);
                 }
             } catch (err) {
                 errors.push(`${key}: ${(err as Error).message}`);

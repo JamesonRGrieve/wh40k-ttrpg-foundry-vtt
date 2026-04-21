@@ -203,13 +203,14 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
 
         // Focus custom modifier input
         const customInput = this.element.querySelector('#customModifier') as HTMLInputElement | null;
-        customInput?.addEventListener('input', (e) => {
-            this._customModifier = parseInt((e.target as HTMLInputElement).value) || 0;
+        customInput?.addEventListener('input', (e: Event) => {
+            const input = e.target as HTMLInputElement;
+            this._customModifier = parseInt(input.value, 10) || 0;
             void this.render(false, { parts: ['form'] });
         });
 
         // Add keyboard shortcut (Enter to roll)
-        this.element.addEventListener('keydown', (e) => {
+        this.element.addEventListener('keydown', (e: Event) => {
             const ke = e as KeyboardEvent;
             if (ke.key === 'Enter' && !ke.shiftKey) {
                 ke.preventDefault();

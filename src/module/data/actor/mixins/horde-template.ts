@@ -153,9 +153,9 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
          * Apply magnitude damage to the horde.
          * @param {number} amount - Amount of magnitude to reduce.
          * @param {string} [source] - Source of the damage (for logging).
-         * @returns {Promise<WH40KBaseActor> | WH40KBaseActor} The updated actor or parent if disabled.
+         * @returns {Promise<WH40KBaseActor>} The updated actor or parent if disabled.
          */
-        applyMagnitudeDamage(amount: number, source = ''): Promise<WH40KBaseActor> | WH40KBaseActor {
+        async applyMagnitudeDamage(amount: number, source = ''): Promise<WH40KBaseActor> {
             if (!this.horde.enabled) return this.parentActor;
 
             const newMagnitude = Math.max(0, this.horde.magnitude.current - amount);
@@ -165,19 +165,19 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
                 timestamp: Date.now(),
             };
 
-            return this.parentActor.update({
+            return (await this.parentActor.update({
                 'system.horde.magnitude.current': newMagnitude,
                 'system.horde.magnitudeLog': [...this.horde.magnitudeLog, logEntry],
-            }) as Promise<WH40KBaseActor>;
+            })) as WH40KBaseActor;
         }
 
         /**
          * Restore magnitude to the horde.
          * @param {number} amount - Amount of magnitude to restore.
          * @param {string} [source] - Source of the restoration.
-         * @returns {Promise<WH40KBaseActor> | WH40KBaseActor} The updated actor or parent if disabled.
+         * @returns {Promise<WH40KBaseActor>} The updated actor or parent if disabled.
          */
-        restoreMagnitude(amount: number, source = ''): Promise<WH40KBaseActor> | WH40KBaseActor {
+        async restoreMagnitude(amount: number, source = ''): Promise<WH40KBaseActor> {
             if (!this.horde.enabled) return this.parentActor;
 
             const newMagnitude = Math.min(this.horde.magnitude.max, this.horde.magnitude.current + amount);
@@ -187,10 +187,10 @@ export default function HordeTemplate<T extends Constructor<foundry.abstract.Typ
                 timestamp: Date.now(),
             };
 
-            return this.parentActor.update({
+            return (await this.parentActor.update({
                 'system.horde.magnitude.current': newMagnitude,
                 'system.horde.magnitudeLog': [...this.horde.magnitudeLog, logEntry],
-            }) as Promise<WH40KBaseActor>;
+            })) as WH40KBaseActor;
         }
 
         /**

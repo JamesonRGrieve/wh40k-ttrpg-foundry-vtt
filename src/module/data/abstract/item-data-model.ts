@@ -93,7 +93,11 @@ export default class ItemDataModel extends SystemDataModel {
             }
             // Handle SchemaField - recurse into nested fields
             else if (field instanceof foundry.data.fields.SchemaField && typeof value === 'object' && value !== null) {
-                ItemDataModel.#cleanNumericFields(value as Record<string, unknown>, field.fields, processed);
+                ItemDataModel.#cleanNumericFields(
+                    value as Record<string, unknown>,
+                    field.fields as Record<string, foundry.data.fields.DataField.Any>,
+                    processed,
+                );
             }
         }
     }
