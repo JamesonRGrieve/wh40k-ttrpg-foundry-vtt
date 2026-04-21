@@ -236,7 +236,7 @@ export function getFuzzy(obj: Record<string, unknown>, term: string): unknown {
 
 export function getCriticalDamage(type: string, location: string, amount: number): string | null {
     const criticalDamageMap = criticalDamage();
-    const damageMap = getFuzzy(criticalDamageMap as Record<string, unknown>, type);
+    const damageMap = getFuzzy(criticalDamageMap, type);
     if (!damageMap) return null;
     const locationMap = getFuzzy(damageMap as Record<string, unknown>, location);
     if (!locationMap) return null;

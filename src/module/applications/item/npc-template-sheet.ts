@@ -142,7 +142,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const sys = this.item.system;
+        const sys = this.item.system as any;
 
         // Prepare categories
         const categories = [
@@ -189,7 +189,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
         ].map((p) => ({ ...p, selected: p.key === sys.equipmentPreset }));
 
         // Prepare characteristics for display
-        const characteristics = [
+        const characteristics: Array<{ key: string; label: string; short: string; value: number; unnatural: number }> = [
             { key: 'weaponSkill', label: 'Weapon Skill', short: 'WS' },
             { key: 'ballisticSkill', label: 'Ballistic Skill', short: 'BS' },
             { key: 'strength', label: 'Strength', short: 'S' },

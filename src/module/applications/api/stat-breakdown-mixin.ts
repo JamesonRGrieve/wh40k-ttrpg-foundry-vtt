@@ -110,7 +110,7 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => App
          * @param {HTMLElement} target - Action target
          * @private
          */
-        static async #viewBreakdownSource(event: Event, target: HTMLElement): Promise<void> {
+        static async #viewBreakdownSource(event: PointerEvent, target: HTMLElement): Promise<void> {
             event.preventDefault();
             event.stopPropagation();
 
@@ -145,10 +145,10 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => App
             document.body.appendChild(popover);
             this.#activePopover = popover;
 
-            popover.addEventListener('click', (event) => event.stopPropagation());
+            popover.addEventListener('click', (event: MouseEvent) => event.stopPropagation());
 
             setTimeout(() => {
-                document.addEventListener('click', this.#handleOutsideClick.bind(this), { once: true });
+                document.addEventListener('click', (event: MouseEvent) => this.#handleOutsideClick(event), { once: true });
             }, 0);
 
             document.addEventListener('keydown', this.#handleEscape.bind(this), { once: true });
@@ -248,9 +248,9 @@ export default function StatBreakdownMixin<T extends new (...args: any[]) => App
                 closeBtn.addEventListener('click', () => this.#closePopover());
             }
 
-            const sourceLinks = popover.querySelectorAll('[data-action="viewBreakdownSource"]');
+            const sourceLinks = popover.querySelectorAll<HTMLElement>('[data-action="viewBreakdownSource"]');
             for (const link of sourceLinks) {
-                link.addEventListener('click', (event) => {
+                link.addEventListener('click', (event: MouseEvent) => {
                     (this.constructor as any).#viewBreakdownSource.call(this, event, link);
                 });
             }

@@ -151,13 +151,14 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
     /**
      * Clean armour modification data.
      * @param {object} source     The source data
-     * @param {object} options    Additional options
+     * @param {DataModelV14.CleaningOptions} options    Additional options
      * @protected
      */
-    static _cleanData(source: Record<string, unknown> | undefined, options): void {
+    static _cleanData(source: Record<string, unknown> | undefined, options: DataModelV14.CleaningOptions): void {
         super._cleanData?.(source, options);
+        if (!source) return;
         // Convert SetFields to Arrays for storage
-        if ((source.restrictions as any)?.armourTypes instanceof Set) {
+        if (source.restrictions instanceof Object && (source.restrictions as any).armourTypes instanceof Set) {
             (source.restrictions as any).armourTypes = Array.from((source.restrictions as any).armourTypes);
         }
         if (source.addedProperties instanceof Set) {

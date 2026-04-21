@@ -141,20 +141,20 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         await super._onRender(context, options);
 
         // Set up event listeners
-        this.element.querySelector('.search-input')?.addEventListener('input', this._onSearch.bind(this));
-        this.element.querySelector('.filter-source')?.addEventListener('change', this._onFilterSource.bind(this));
-        this.element.querySelector('.filter-category')?.addEventListener('change', this._onFilterCategory.bind(this));
-        this.element.querySelector('.filter-group-by')?.addEventListener('change', this._onGroupBy.bind(this));
+        this.element.querySelector<HTMLInputElement>('.search-input')?.addEventListener('input', (e) => this._onSearch(e as InputEvent));
+        this.element.querySelector<HTMLSelectElement>('.filter-source')?.addEventListener('change', (e) => this._onFilterSource(e));
+        this.element.querySelector<HTMLSelectElement>('.filter-category')?.addEventListener('change', (e) => this._onFilterCategory(e));
+        this.element.querySelector<HTMLSelectElement>('.filter-group-by')?.addEventListener('change', (e) => this._onGroupBy(e));
 
         // Armour-specific filters
-        this.element.querySelector('.filter-armour-type')?.addEventListener('change', this._onFilterArmourType.bind(this));
-        this.element.querySelector('.filter-min-ap')?.addEventListener('input', this._onFilterMinAP.bind(this));
-        this.element.querySelector('.filter-coverage')?.addEventListener('change', this._onFilterCoverage.bind(this));
+        this.element.querySelector<HTMLSelectElement>('.filter-armour-type')?.addEventListener('change', (e) => this._onFilterArmourType(e));
+        this.element.querySelector<HTMLInputElement>('.filter-min-ap')?.addEventListener('input', (e) => this._onFilterMinAP(e));
+        this.element.querySelector<HTMLSelectElement>('.filter-coverage')?.addEventListener('change', (e) => this._onFilterCoverage(e));
 
         // Armour modification filters
-        this.element.querySelector('.filter-mod-type')?.addEventListener('change', this._onFilterModType.bind(this));
-        this.element.querySelector('.filter-has-modifiers')?.addEventListener('change', this._onFilterHasModifiers.bind(this));
-        this.element.querySelector('.filter-has-properties')?.addEventListener('change', this._onFilterHasProperties.bind(this));
+        this.element.querySelector<HTMLSelectElement>('.filter-mod-type')?.addEventListener('change', (e) => this._onFilterModType(e));
+        this.element.querySelector<HTMLInputElement>('.filter-has-modifiers')?.addEventListener('change', (e) => this._onFilterHasModifiers(e));
+        this.element.querySelector<HTMLInputElement>('.filter-has-properties')?.addEventListener('change', (e) => this._onFilterHasProperties(e));
 
         // Set up drag handlers for compendium items
         this.element.querySelectorAll('.compendium-item').forEach((el) => {
@@ -590,7 +590,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     /*  Instance Event Handlers                     */
     /* -------------------------------------------- */
 
-    _onSearch(event: Event): void {
+    _onSearch(event: InputEvent): void {
         this._filters.search = (event.target as HTMLInputElement).value;
         this.render();
     }
@@ -640,16 +640,18 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
         this.render();
     }
 
-    async _onItemClick(event: Event): Promise<void> {
+    async _onItemClick(event: PointerEvent): Promise<void> {
         event.preventDefault();
         const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
+        if (!uuid) return;
         const doc = await fromUuid(uuid);
-        if (doc) doc.sheet.render(true);
+        if (doc) (doc as { sheet: { render: (force: boolean) => void } }).sheet.render(true);
     }
 
-    _onDragStart(event: Event): void {
+    _onDragStart(event: DragEvent): void {
         const uuid = (event.currentTarget as HTMLElement).dataset.uuid;
-        (event as DragEvent).dataTransfer.setData(
+        if (!uuid || !event.dataTransfer) return;
+        event.dataTransfer.setData(
             'text/plain',
             JSON.stringify({
                 type: 'Item',

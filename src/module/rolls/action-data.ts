@@ -33,7 +33,7 @@ export class ActionData {
     checkForPerils(): void {
         if (this.rollData.power) {
             const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument | null;
-            if (sourceActor && (sourceActor.system as any)?.psy?.rating < (this.rollData as PsychicRollData).pr) {
+            if (sourceActor && (sourceActor.system as { psy?: { rating: number } })?.psy?.rating < (this.rollData as PsychicRollData).pr) {
                 if (this.rollData.roll && !/^(.)\1+$/.test(this.rollData.roll.total.toString())) {
                     this.addEffect('Psychic Phenomena', 'The warp convulses with energy!');
                 }
@@ -81,7 +81,8 @@ export class ActionData {
                 const opposedDegrees = getOpposedDegrees(this.rollData.dos, this.rollData.dof, this.rollData.opposedDos, this.rollData.opposedDof);
                 if (opposedDegrees >= 2) {
                     const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument | null;
-                    const strengthBonus = (sourceActor?.system as any)?.characteristics?.strength?.bonus ?? 0;
+                    const strengthBonus =
+                        (sourceActor?.system as { characteristics?: { strength?: { bonus: number } } })?.characteristics?.strength?.bonus ?? 0;
                     this.addEffect(
                         'Knock Down',
                         `The target is knocked Prone and must use a Stand action in his turn to regain his feet! The impact deals [[1d5-3+${strengthBonus}]] (min 0) damage and one level of fatigue to the target!`,
@@ -106,7 +107,7 @@ export class ActionData {
 
     async _calculateHit(): Promise<void> {
         const weaponRollData = this.rollData as WeaponRollData;
-        if (!(weaponRollData as any).isManualRoll) {
+        if (!(weaponRollData as { isManualRoll?: boolean }).isManualRoll) {
             this.rollData.roll = await roll1d100();
         }
         const rollTotal = this.rollData.roll?.total ?? 0;
@@ -126,12 +127,14 @@ export class ActionData {
 
             if (weaponRollData.isStun) {
                 const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument | null;
-                const stunRoll = new Roll(`1d10+${(sourceActor?.system as any)?.getCharacteristicFuzzy('Strength').bonus}`, {});
+                const bonus =
+                    (sourceActor?.system as { getCharacteristicFuzzy?: (char: string) => { bonus: number } })?.getCharacteristicFuzzy?.('Strength')?.bonus ?? 0;
+                const stunRoll = new Roll(`1d10+${bonus}`, {});
                 await stunRoll.evaluate();
                 this.rollData.roll = stunRoll;
 
                 if (this.rollData.targetActor) {
-                    const defense = (this.rollData.targetActor.system as any).armour.head.total;
+                    const defense = (this.rollData.targetActor.system as { armour?: { head?: { total: number } } })?.armour?.head?.total ?? 0;
                     if (stunRoll.total >= defense) {
                         this.rollData.success = true;
                         this.addEffect(
@@ -161,7 +164,14 @@ export class ActionData {
                 this.addEffect('Spray', 'Everyone in 30 degree arc must pass an agility test or be hit.');
             }
 
-            const itemSystem = actionItem.system as any;
+            const itemSystem = actionItem.system as {
+                isMelee?: boolean;
+                isRanged?: boolean;
+                craftsmanship?: string;
+                isPsychicBarrage?: boolean;
+                isPsychicStorm?: boolean;
+                usesAmmo?: boolean;
+            };
             if (itemSystem.isMelee) {
                 if (!this.rollData.success) {
                     const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument | null;
@@ -223,14 +233,15 @@ export class ActionData {
             this.rollData.dos = 1 + getDegree(this.rollData.modifiedTarget, this.rollData.roll?.total ?? 0);
 
             if (actionItem && this.damageData) {
+                const itemSystem = actionItem.system as { isRanged?: boolean; isPsychicBarrage?: boolean; isPsychicStorm?: boolean; usesAmmo?: boolean };
                 if (
                     this.rollData.action === 'Semi-Auto Burst' ||
                     this.rollData.action === 'Swift Attack' ||
-                    (actionItem.system as any).isPsychicBarrage ||
+                    itemSystem.isPsychicBarrage ||
                     this.rollData.action === 'Suppressing Fire - Semi' ||
                     this.rollData.action === 'Suppressing Fire - Full'
                 ) {
-                    if ((actionItem.system as any).isRanged && weaponRollData.hasWeaponModification('Fluid Action')) {
+                    if (itemSystem.isRanged && weaponRollData.hasWeaponModification('Fluid Action')) {
                         this.rollData.dos += 1;
                     }
 
@@ -240,21 +251,17 @@ export class ActionData {
                         this.damageData.additionalHits *= 2;
                     }
 
-                    if ((actionItem.system as any).isRanged && this.damageData.additionalHits > weaponRollData.fireRate - 1) {
+                    if (itemSystem.isRanged && this.damageData.additionalHits > weaponRollData.fireRate - 1) {
                         this.damageData.additionalHits = weaponRollData.fireRate - 1;
                     }
-                } else if (
-                    this.rollData.action === 'Full Auto Burst' ||
-                    this.rollData.action === 'Lightning Attack' ||
-                    (actionItem.system as any).isPsychicStorm
-                ) {
+                } else if (this.rollData.action === 'Full Auto Burst' || this.rollData.action === 'Lightning Attack' || itemSystem.isPsychicStorm) {
                     this.damageData.additionalHits += Math.floor(this.rollData.dos - 1);
 
                     if (this.rollData.hasAttackSpecial('Storm')) {
                         this.damageData.additionalHits *= 2;
                     }
 
-                    if ((actionItem.system as any).usesAmmo && this.damageData.additionalHits > weaponRollData.fireRate - 1) {
+                    if (itemSystem.usesAmmo && this.damageData.additionalHits > weaponRollData.fireRate - 1) {
                         this.damageData.additionalHits = weaponRollData.fireRate - 1;
                     }
                 }
@@ -348,7 +355,7 @@ export class ActionData {
             await this.checkForPerils();
 
             if (this.rollData.success) {
-                (this.rollData as any).hitLocation = getHitLocationForRoll(this.rollData.roll?.total ?? 0);
+                (this.rollData as { hitLocation?: string }).hitLocation = getHitLocationForRoll(this.rollData.roll?.total ?? 0);
             }
 
             await this.createEffectData();
@@ -403,7 +410,9 @@ export class PsychicActionData extends ActionData {
 
     async descriptionText(): Promise<void> {
         if (this.rollData.power) {
-            this.psychicEffect = await TextEditor.enrichHTML((this.rollData.power.system as any).description, { rollData: this.rollData });
+            this.psychicEffect = await TextEditor.enrichHTML((this.rollData.power.system as { description?: string })?.description ?? '', {
+                rollData: this.rollData,
+            });
         }
     }
 }

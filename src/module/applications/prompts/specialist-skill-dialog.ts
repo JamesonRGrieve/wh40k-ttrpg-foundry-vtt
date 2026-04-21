@@ -209,7 +209,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
             return;
         }
 
-        await (this.actorDoc as any).addSpecialitySkill(skillKey, speciality);
+        await this.actorDoc.addSpecialitySkill(skillKey, speciality);
         await this.close();
     }
 
@@ -244,7 +244,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
  * Open a specialist skill dialog.
  * @param {object} data  Dialog data — must include `actor`, may include `skillName`.
  */
-export function prepareCreateSpecialistSkillPrompt(data: { actor: any; skillName?: string; [key: string]: any }) {
+export function prepareCreateSpecialistSkillPrompt(data: { actor: WH40KBaseActor; skillName?: string } & Record<string, unknown>) {
     const prompt = new SpecialistSkillDialog(data.actor, {
         preSelectedSkillKey: data.skillName || '',
     });
