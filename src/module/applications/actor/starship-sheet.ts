@@ -120,7 +120,11 @@ export default class StarshipSheet extends BaseActorSheet {
         let spaceUsed = 0;
 
         for (const component of context.shipComponents as WH40KItem[]) {
-            const sys = component.system as any;
+            const sys = component.system as {
+                condition?: string;
+                power?: { generated?: number; used?: number };
+                space?: number;
+            };
             if (sys.condition === 'functional') {
                 powerGenerated += sys.power?.generated || 0;
                 powerUsed += sys.power?.used || 0;
@@ -129,13 +133,16 @@ export default class StarshipSheet extends BaseActorSheet {
         }
 
         for (const weapon of context.shipWeapons as WH40KItem[]) {
-            const sys = weapon.system as any;
+            const sys = weapon.system as { power?: number; space?: number };
             powerUsed += sys.power || 0;
             spaceUsed += sys.space || 0;
         }
 
         for (const upgrade of context.shipUpgrades as WH40KItem[]) {
-            const sys = upgrade.system as any;
+            const sys = upgrade.system as {
+                power?: { generated?: number; used?: number };
+                space?: number;
+            };
             powerGenerated += sys.power?.generated || 0;
             powerUsed += sys.power?.used || 0;
             spaceUsed += sys.space || 0;
@@ -145,7 +152,7 @@ export default class StarshipSheet extends BaseActorSheet {
         context.powerUsed = powerUsed;
         context.spaceUsed = spaceUsed;
         context.powerAvailable = powerGenerated - powerUsed;
-        context.spaceAvailable = ((this.actor.system as any).space?.total || 0) - spaceUsed;
+        context.spaceAvailable = ((this.actor.system as { space?: { total?: number } }).space?.total || 0) - spaceUsed;
     }
 
     /* -------------------------------------------- */
@@ -190,7 +197,7 @@ export default class StarshipSheet extends BaseActorSheet {
         const cardData = {
             actor: this.actor,
             weapon: weapon,
-            crewRating: (this.actor.system as any).crew?.crewRating || 30,
+            crewRating: (this.actor.system as { crew?: { crewRating?: number } }).crew?.crewRating || 30,
         };
 
         const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/ship-weapon-chat.hbs', cardData);

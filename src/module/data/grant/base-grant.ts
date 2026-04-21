@@ -6,7 +6,7 @@ import type { WH40KItem } from '../../documents/item.ts';
  */
 export interface GrantApplicationResult {
     success: boolean;
-    applied: Record<string, any>;
+    applied: Record<string, unknown>;
     notifications: string[];
     errors: string[];
 }

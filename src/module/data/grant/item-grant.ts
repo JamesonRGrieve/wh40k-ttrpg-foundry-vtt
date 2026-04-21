@@ -106,7 +106,7 @@ export default class ItemGrantData extends BaseGrantData {
             return;
         }
 
-        const itemsToCreate: Array<{ uuid: string; data: Record<string, any> }> = [];
+        const itemsToCreate: Array<{ uuid: string; data: Record<string, unknown> }> = [];
         const selectedUuids = (data.selected as string[]) ?? items.map((i) => i.uuid);
 
         for (const itemConfig of items) {

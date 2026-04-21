@@ -194,7 +194,7 @@ export default class TransactionRequestDialog extends HandlebarsApplicationMixin
 
             await TransactionManager.notifyRequester('Transaction request sent to the GM for approval.', 'info');
             this.#resolve?.(true);
-            await this.close({ _skipResolve: true });
+            await this.close({ _skipResolve: true } as Record<string, unknown>);
         } catch (error) {
             await TransactionManager.notifyRequester(error instanceof Error ? error.message : 'Unable to submit transaction request.', 'error');
         }
