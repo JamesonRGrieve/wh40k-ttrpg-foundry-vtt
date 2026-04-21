@@ -5,25 +5,18 @@
 
 .stat-block-exporter {
     .stat-block-exporter-content {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        height: 100%;
+        /* Layout: tw-flex tw-flex-col tw-gap-4 tw-h-full */
     }
 
     /* Format tabs */
     .export-format-tabs {
-        display: flex;
-        gap: 0.5rem;
+        /* Layout: tw-flex tw-gap-2 tw-pb-2 */
         border-bottom: 1px solid var(--color-border-light-tertiary);
-        padding-bottom: 0.5rem;
 
         .format-tab {
-            padding: 0.5rem 1rem;
+            /* Layout: tw-p-2 tw-rounded-md tw-cursor-pointer */
             background: var(--color-bg-option);
             border: 1px solid var(--color-border-light-tertiary);
-            border-radius: var(--wh40k-radius-md) 4px 0 0;
-            cursor: pointer;
             transition: all var(--wh40k-transition-base);
 
             &:hover {
@@ -37,36 +30,30 @@
             }
 
             i {
-                margin-right: 0.5rem;
+                /* Layout: tw-mr-2 */
             }
         }
     }
 
     /* Preview area */
     .export-preview {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        min-height: 0;
+        /* Layout: tw-flex tw-flex-col tw-flex-1 tw-min-h-0 */
 
         label {
+            /* Layout: tw-font-bold tw-mb-2 */
             font-weight: bold;
-            margin-bottom: 0.5rem;
         }
 
         .export-content {
-            flex: 1;
-            overflow: auto;
+            /* Layout: tw-flex-1 tw-overflow-auto tw-p-4 tw-m-0 */
             background: #1a1a1a;
             color: #e0e0e0;
-            padding: 1rem;
             border-radius: var(--wh40k-radius-md);
             font-family: 'Fira Code', 'Consolas', monospace;
             font-size: 0.75rem;
             line-height: 1.4;
             white-space: pre-wrap;
             word-break: break-word;
-            margin: 0;
             border: 1px solid var(--color-border-light-tertiary);
         }
 
@@ -77,12 +64,11 @@
 
     /* Footer */
     .sheet-footer {
-        padding-top: 1rem;
+        /* Layout: tw-flex tw-gap-2 tw-pt-4 */
         border-top: 1px solid var(--color-border-light-tertiary);
-        gap: 0.5rem;
 
         button {
-            flex: 1;
+            /* Layout: tw-flex-1 */
         }
 
         .primary {

@@ -1,20 +1,20 @@
 {{!-- Combat Preset Dialog Template --}}
-<form class="wh40k-combat-preset-dialog">
+<form class="wh40k-combat-preset-dialog tw-flex tw-flex-col tw-gap-4 tw-p-4">
   
   {{!-- Save Mode --}}
   {{#if (eq mode "save")}}
     <section class="wh40k-panel wh40k-panel--save-preset">
-      <header class="wh40k-panel-header">
+      <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-2 tw-pb-2">
         <i class="fa-solid fa-save"></i>
         <h3>Save Combat Preset</h3>
       </header>
-      <div class="wh40k-panel-body">
+      <div class="wh40k-panel-body tw-p-4">
         {{#if npc}}
-          <div class="wh40k-npc-preview">
+          <div class="wh40k-npc-preview tw-flex tw-items-center tw-gap-4 tw-p-4 tw-mb-6">
             <img src="{{npc.img}}" alt="{{npc.name}}" class="wh40k-token-image" />
-            <div class="wh40k-npc-info">
+            <div class="wh40k-npc-info tw-flex-1">
               <h4>{{npc.name}}</h4>
-              <div class="wh40k-npc-stats">
+              <div class="wh40k-npc-stats tw-flex tw-gap-2">
                 <span class="wh40k-badge">Threat {{npc.threatLevel}}</span>
                 <span class="wh40k-badge">{{npc.type}}</span>
                 <span class="wh40k-badge">{{npc.role}}</span>
@@ -22,7 +22,7 @@
             </div>
           </div>
 
-          <div class="wh40k-form-group">
+          <div class="wh40k-form-group tw-mb-4">
             <label class="wh40k-label">Preset Name *</label>
             <input 
               type="text" 
@@ -33,7 +33,7 @@
             />
           </div>
 
-          <div class="wh40k-form-group">
+          <div class="wh40k-form-group tw-mb-4">
             <label class="wh40k-label">Description</label>
             <textarea 
               name="presetDescription" 
@@ -43,7 +43,7 @@
             ></textarea>
           </div>
 
-          <div class="wh40k-form-actions">
+          <div class="wh40k-form-actions tw-flex tw-justify-end tw-pt-4">
             <button 
               type="button" 
               class="wh40k-btn wh40k-btn--primary" 
@@ -60,15 +60,15 @@
   {{!-- Load Mode --}}
   {{#if (eq mode "load")}}
     <section class="wh40k-panel wh40k-panel--load-preset">
-      <header class="wh40k-panel-header">
+      <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-2 tw-pb-2">
         <i class="fa-solid fa-download"></i>
         <h3>Load Combat Preset</h3>
       </header>
-      <div class="wh40k-panel-body">
+      <div class="wh40k-panel-body tw-p-4">
         {{#if npc}}
-          <div class="wh40k-npc-preview">
+          <div class="wh40k-npc-preview tw-flex tw-items-center tw-gap-4 tw-p-4 tw-mb-6">
             <img src="{{npc.img}}" alt="{{npc.name}}" class="wh40k-token-image" />
-            <div class="wh40k-npc-info">
+            <div class="wh40k-npc-info tw-flex-1">
               <h4>{{npc.name}}</h4>
               <p class="wh40k-warning">Loading a preset will overwrite this NPC's stats.</p>
             </div>
@@ -76,21 +76,21 @@
         {{/if}}
 
         {{#if hasPresets}}
-          <div class="wh40k-preset-list">
+          <div class="wh40k-preset-list tw-flex tw-flex-col tw-gap-2 tw-mb-4">
             {{#each presets}}
               <div 
                 class="wh40k-preset-item {{#if this.selected}}wh40k-preset-item--selected{{/if}}" 
                 data-action="selectPreset"
                 data-preset-id="{{this.id}}"
               >
-                <div class="wh40k-preset-header">
+                <div class="wh40k-preset-header tw-flex tw-justify-between tw-items-center tw-mb-2">
                   <h5 class="wh40k-preset-name">{{this.name}}</h5>
                   <span class="wh40k-preset-date">{{this.createdDate}}</span>
                 </div>
                 {{#if this.description}}
-                  <p class="wh40k-preset-description">{{this.description}}</p>
+                  <p class="wh40k-preset-description tw-mb-2">{{this.description}}</p>
                 {{/if}}
-                <div class="wh40k-preset-stats">
+                <div class="wh40k-preset-stats tw-flex tw-gap-2 tw-flex-wrap">
                   <span class="wh40k-badge wh40k-badge--small">Threat {{this.threatLevel}}</span>
                   <span class="wh40k-badge wh40k-badge--small">{{this.type}}</span>
                   {{#if this.faction}}<span class="wh40k-badge wh40k-badge--small">{{this.faction}}</span>{{/if}}
@@ -99,7 +99,7 @@
             {{/each}}
           </div>
 
-          <div class="wh40k-form-actions">
+          <div class="wh40k-form-actions tw-flex tw-justify-end tw-pt-4">
             <button 
               type="button" 
               class="wh40k-btn wh40k-btn--primary" 
@@ -110,7 +110,7 @@
             </button>
           </div>
         {{else}}
-          <p class="wh40k-empty-message">
+          <p class="wh40k-empty-message tw-text-center tw-p-10">
             <i class="fa-solid fa-info-circle"></i>
             No presets saved yet. Create one from an NPC sheet.
           </p>
@@ -122,9 +122,9 @@
   {{!-- Library Mode --}}
   {{#if (eq mode "library")}}
     <section class="wh40k-panel wh40k-panel--preset-library">
-      <header class="wh40k-panel-header">
+      <header class="wh40k-panel-header tw-flex tw-items-center tw-p-4">
+        <h3 class="tw-flex-1">Preset Library</h3>
         <i class="fa-solid fa-bookmark"></i>
-        <h3>Preset Library</h3>
         <button 
           type="button" 
           class="wh40k-btn wh40k-btn--icon" 
@@ -134,27 +134,27 @@
           <i class="fa-solid fa-file-import"></i>
         </button>
       </header>
-      <div class="wh40k-panel-body">
+      <div class="wh40k-panel-body tw-p-4">
         {{#if hasPresets}}
-          <div class="wh40k-preset-library-list">
+          <div class="wh40k-preset-library-list tw-flex tw-flex-col tw-gap-4">
             {{#each presets}}
-              <div class="wh40k-preset-library-item">
-                <div class="wh40k-preset-content">
-                  <div class="wh40k-preset-header">
+              <div class="wh40k-preset-library-item tw-flex tw-gap-4 tw-p-4">
+                <div class="wh40k-preset-content tw-flex-1">
+                  <div class="wh40k-preset-header tw-flex tw-justify-between tw-items-center tw-mb-2">
                     <h5 class="wh40k-preset-name">{{this.name}}</h5>
                     <span class="wh40k-preset-date">{{this.createdDate}}</span>
                   </div>
                   {{#if this.description}}
-                    <p class="wh40k-preset-description">{{this.description}}</p>
+                    <p class="wh40k-preset-description tw-mb-2">{{this.description}}</p>
                   {{/if}}
-                  <div class="wh40k-preset-stats">
+                  <div class="wh40k-preset-stats tw-flex tw-gap-2 tw-flex-wrap">
                     <span class="wh40k-badge wh40k-badge--small">Threat {{this.threatLevel}}</span>
                     <span class="wh40k-badge wh40k-badge--small">{{this.type}}</span>
                     {{#if this.role}}<span class="wh40k-badge wh40k-badge--small">{{this.role}}</span>{{/if}}
                     {{#if this.faction}}<span class="wh40k-badge wh40k-badge--small">{{this.faction}}</span>{{/if}}
                   </div>
                 </div>
-                <div class="wh40k-preset-actions">
+                <div class="wh40k-preset-actions tw-flex tw-gap-2 tw-items-start">
                   <button 
                     type="button" 
                     class="wh40k-btn wh40k-btn--icon" 
@@ -178,7 +178,7 @@
             {{/each}}
           </div>
         {{else}}
-          <p class="wh40k-empty-message">
+          <p class="wh40k-empty-message tw-text-center tw-p-10">
             <i class="fa-solid fa-info-circle"></i>
             No presets saved yet. Create one from an NPC sheet.
           </p>

@@ -5,9 +5,7 @@
 
 .batch-create-dialog {
     .batch-create-content {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
+        /* Layout: tw-flex tw-flex-col tw-gap-3 */
     }
 
     /* Form groups */
@@ -62,17 +60,13 @@
 
     /* Row of form groups */
     .form-group-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
+        /* Layout: tw-grid tw-grid-cols-2 tw-gap-4 */
     }
 
     /* Slider group */
     .slider-group {
         .slider-with-value {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            /* Layout: tw-flex tw-items-center tw-gap-4 */
 
             input[type='range'] {
                 flex: 1;
@@ -134,9 +128,7 @@
             margin: 0;
             padding: 0;
             list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            /* Layout: tw-flex tw-flex-wrap tw-gap-2 */
 
             li {
                 background: var(--color-bg-btn);
@@ -149,9 +141,7 @@
 
     /* Footer */
     .sheet-footer {
-        padding-top: 0.75rem;
-        border-top: 1px solid var(--color-border-light-tertiary);
-        gap: 0.5rem;
+        /* Layout: tw-pt-3 tw-gap-2 */
 
         button {
             flex: 1;

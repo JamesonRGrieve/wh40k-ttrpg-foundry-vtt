@@ -1,5 +1,5 @@
 {{!-- Batch Create Dialog --}}
-<div class="batch-create-content">
+<div class="batch-create-content tw-flex tw-flex-col tw-gap-3">
   {{!-- Name Pattern --}}
   <div class="form-group">
     <label>{{localize "WH40K.NPC.BatchCreate.NamePattern"}}</label>
@@ -16,7 +16,7 @@
   {{!-- Threat Level --}}
   <div class="form-group slider-group">
     <label>{{localize "WH40K.NPC.ThreatLevel"}}</label>
-    <div class="slider-with-value">
+    <div class="slider-with-value tw-flex tw-items-center tw-gap-4">
       <input type="range" name="threatLevel" value="{{state.threatLevel}}" min="1" max="30" step="1"/>
       <span class="threat-value">{{state.threatLevel}}</span>
     </div>
@@ -94,7 +94,7 @@
     {{#if state.randomize}}
     <div class="form-group indent">
       <label>{{localize "WH40K.NPC.BatchCreate.RandomizeAmount"}}</label>
-      <div class="slider-with-value">
+      <div class="slider-with-value tw-flex tw-items-center tw-gap-4">
         <input type="range" name="randomizeAmount" value="{{state.randomizeAmount}}" min="5" max="30" step="5"/>
         <span>±{{state.randomizeAmount}}%</span>
       </div>
@@ -113,7 +113,7 @@
   {{!-- Preview --}}
   <div class="batch-preview">
     <h4>{{localize "WH40K.NPC.Preview"}}</h4>
-    <ul class="name-preview-list">
+    <ul class="name-preview-list tw-flex tw-flex-wrap tw-gap-2">
       {{#each previewNames}}
       <li>{{this}}</li>
       {{/each}}
@@ -121,7 +121,7 @@
   </div>
 
   {{!-- Buttons --}}
-  <footer class="sheet-footer flexrow">
+  <footer class="sheet-footer flexrow tw-pt-3 tw-gap-2">
     {{#each buttons}}
     <button type="{{type}}" {{#if action}}data-action="{{action}}"{{/if}} class="{{cssClass}}">
       <i class="{{icon}}"></i>
