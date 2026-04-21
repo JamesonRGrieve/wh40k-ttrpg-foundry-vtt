@@ -18,21 +18,6 @@ interface BatchState {
     openSheets: boolean;
 }
 
-interface BatchState {
-    namePattern: string;
-    count: number;
-    threatLevel: number;
-    role: string;
-    type: string;
-    preset: string;
-    faction: string;
-    isHorde: boolean;
-    randomize: boolean;
-    randomizeAmount: number;
-    folder: string;
-    openSheets: boolean;
-}
-
 /**
  * Dialog for creating multiple NPCs at once.
  * @extends {ApplicationV2}
