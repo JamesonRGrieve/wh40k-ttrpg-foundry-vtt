@@ -1,6 +1,29 @@
 import { SYSTEM_ID } from './constants.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
+// Baseline release. Version 0.0.1 ships with migration worldVersion = 1.
+// No migrations run against a fresh 0.0.1 world — every prior migration below
+// was inherited from the upstream fork and has been retained, commented out,
+// purely as reference for future schema changes. When you add the first real
+// migration past v1, bump WORLD_VERSION and branch on `currentVersion < N`.
+const WORLD_VERSION = 1;
+
+export async function checkAndMigrateWorld() {
+    // @ts-expect-error - argument type
+    const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
+    // @ts-expect-error - comparison type
+    if (WORLD_VERSION !== currentVersion && game.user.isGM) {
+        // @ts-expect-error - argument type
+        void game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, WORLD_VERSION);
+    }
+}
+
+/* ---------------------------------------------------------------------------
+ * Historical migrations (pre-0.0.1). Preserved for reference only — this code
+ * does not run. When authoring the next migration, lift whichever pattern you
+ * need from here and wire it into `checkAndMigrateWorld` above.
+ * ---------------------------------------------------------------------------
+
 const DEAD_ICON_REMAPS: Record<string, string> = {
     'icons/svg/backpack.svg': 'modules/game-icons-net-font/svg/backpack.svg',
     'icons/svg/alien.svg': 'modules/game-icons-net-font/svg/alien-bug.svg',
@@ -527,3 +550,5 @@ export async function checkAndMigrateWorld() {
         });
     }
 }
+
+--- end historical migrations reference --- */

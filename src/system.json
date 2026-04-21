@@ -2,7 +2,7 @@
     "id": "wh40k-rpg",
     "title": "Warhammer 40K RPG",
     "description": "Unified Foundry VTT system for FFG/Cubicle 7 Warhammer 40,000 RPGs (Dark Heresy 2e, Rogue Trader, Black Crusade, Only War, Deathwatch).",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "compatibility": {
         "minimum": 13,
         "verified": "14.349",
@@ -31,29 +31,75 @@
     "scripts": [],
     "documentTypes": {
         "Actor": {
-            "dh2-character": { "htmlFields": ["details.biography"] },
-            "dh2-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
-            "dh2-vehicle": { "htmlFields": ["details.biography"] },
-            "dh1-character": { "htmlFields": ["details.biography"] },
-            "dh1-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
-            "dh1-vehicle": { "htmlFields": ["details.biography"] },
-            "rt-character": { "htmlFields": ["details.biography"] },
-            "rt-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
-            "rt-vehicle": { "htmlFields": ["details.biography"] },
-            "rt-starship": { "htmlFields": ["details.biography"] },
-            "bc-character": { "htmlFields": ["details.biography"] },
-            "bc-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
-            "bc-vehicle": { "htmlFields": ["details.biography"] },
-            "ow-character": { "htmlFields": ["details.biography"] },
-            "ow-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
-            "ow-vehicle": { "htmlFields": ["details.biography"] },
-            "dw-character": { "htmlFields": ["details.biography"] },
-            "dw-npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
-            "dw-vehicle": { "htmlFields": ["details.biography"] },
-            "character": { "htmlFields": ["details.biography"] },
-            "npc": { "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"] },
-            "vehicle": { "htmlFields": ["details.biography"] },
-            "starship": { "htmlFields": ["details.biography"] }
+            "dh2-character": {
+                "htmlFields": ["details.biography"]
+            },
+            "dh2-npc": {
+                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+            },
+            "dh2-vehicle": {
+                "htmlFields": ["details.biography"]
+            },
+            "dh1-character": {
+                "htmlFields": ["details.biography"]
+            },
+            "dh1-npc": {
+                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+            },
+            "dh1-vehicle": {
+                "htmlFields": ["details.biography"]
+            },
+            "rt-character": {
+                "htmlFields": ["details.biography"]
+            },
+            "rt-npc": {
+                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+            },
+            "rt-vehicle": {
+                "htmlFields": ["details.biography"]
+            },
+            "rt-starship": {
+                "htmlFields": ["details.biography"]
+            },
+            "bc-character": {
+                "htmlFields": ["details.biography"]
+            },
+            "bc-npc": {
+                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+            },
+            "bc-vehicle": {
+                "htmlFields": ["details.biography"]
+            },
+            "ow-character": {
+                "htmlFields": ["details.biography"]
+            },
+            "ow-npc": {
+                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+            },
+            "ow-vehicle": {
+                "htmlFields": ["details.biography"]
+            },
+            "dw-character": {
+                "htmlFields": ["details.biography"]
+            },
+            "dw-npc": {
+                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+            },
+            "dw-vehicle": {
+                "htmlFields": ["details.biography"]
+            },
+            "character": {
+                "htmlFields": ["details.biography"]
+            },
+            "npc": {
+                "htmlFields": ["description", "tactics", "specialAbilities", "quickNotes"]
+            },
+            "vehicle": {
+                "htmlFields": ["details.biography"]
+            },
+            "starship": {
+                "htmlFields": ["details.biography"]
+            }
         },
         "Item": {
             "ammunition": {
