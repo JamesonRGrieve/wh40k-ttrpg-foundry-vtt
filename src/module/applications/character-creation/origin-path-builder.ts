@@ -3022,43 +3022,40 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this.render();
     }
 
-    /** DH2e Divination Table (Core Rulebook Table 2-9) */
-    static DIVINATION_TABLE = [
-        { min: 1, max: 5, text: 'Mutation without, corruption within.' },
-        { min: 6, max: 9, text: 'Trust in your fear.' },
-        { min: 10, max: 13, text: 'Humans must die so that humanity can endure.' },
-        { min: 14, max: 17, text: 'The pain of the bullet is ecstasy compared to damnation.' },
-        { min: 18, max: 21, text: 'Be a boon to your allies and a bane to your enemies.' },
-        { min: 22, max: 25, text: 'The wise man learns from the deaths of others.' },
-        { min: 26, max: 30, text: 'Kill the alien before it can speak its lies.' },
-        { min: 31, max: 35, text: 'Truth is subjective.' },
-        { min: 36, max: 40, text: 'Thought begets Heresy; Heresy begets Retribution.' },
-        { min: 41, max: 45, text: 'The only true fear is dying without your duty done.' },
-        { min: 46, max: 50, text: 'Only in death does duty end.' },
-        { min: 51, max: 55, text: 'A mind without purpose will wander in dark places.' },
-        { min: 56, max: 60, text: "No man died in the Emperor's service that died in vain." },
-        { min: 61, max: 65, text: 'To war is human.' },
-        { min: 66, max: 70, text: 'There are no civilians in the battle for survival.' },
-        { min: 71, max: 75, text: 'Violence solves everything.' },
-        { min: 76, max: 80, text: 'Even a man who has nothing can still offer his life.' },
-        { min: 81, max: 85, text: 'Do not ask why you serve. Only ask how.' },
-        { min: 86, max: 90, text: 'The gun is mightier than the sword.' },
-        { min: 91, max: 93, text: 'In the darkness, follow the light of Terra.' },
-        { min: 94, max: 96, text: 'There is nothing to fear but failure.' },
-        { min: 97, max: 100, text: "To stand in the presence of the Emperor's chosen is reward enough." },
-    ];
-
     /**
-     * Roll on the divination table.
+     * Roll on the Divination compendium RollTable (DH2 Core Rulebook Table 2-9).
+     * The table text lives in the private packs submodule (GW-copyrighted); if
+     * the pack isn't installed, fall back to a bare 1d100 so the player at
+     * least records a roll result and can fill in the maxim by hand.
      */
     static async #rollDivination(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
-        const roll = new Roll('1d100');
-        await roll.evaluate();
-        const result = roll.total;
-        const entry = OriginPathBuilder.DIVINATION_TABLE.find((e) => result >= e.min && result <= e.max);
-        this._divination = entry ? entry.text : 'The Emperor protects.';
+        const table = await OriginPathBuilder.#getDivinationTable();
+        if (table) {
+            const draw = await (table as any).draw({ displayChat: true });
+            const result = draw?.results?.[0];
+            this._divination = (result?.text as string) || '';
+        } else {
+            const roll = await new Roll('1d100').evaluate();
+            ui.notifications?.warn?.(
+                'Divination RollTable not installed — recorded the d100 result only. Enter the maxim manually or install the content pack.',
+            );
+            this._divination = `Roll: ${roll.total}`;
+        }
         this._saveScrollPosition?.();
         this.render();
+    }
+
+    /**
+     * Resolve the Divination RollTable, preferring a world-local copy (which
+     * a GM may have edited) and falling back to the compendium entry.
+     */
+    static async #getDivinationTable(): Promise<unknown | null> {
+        const worldTable = (game.tables as any)?.getName?.('Divination');
+        if (worldTable) return worldTable;
+        const pack = game.packs.get('wh40k-rpg.dh2-core-rolltables');
+        if (!pack) return null;
+        const docs = await pack.getDocuments();
+        return (docs as unknown[]).find((d: any) => d?.name === 'Divination') ?? null;
     }
 
     /**
