@@ -77,25 +77,37 @@ export default class ArmourModSheet extends ContainerItemSheet {
     /** @inheritDoc */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const system = this.item.system as ArmourModificationData;
+        const system = this.item.system as {
+            restrictions: { armourTypes: Set<string> };
+            addedProperties: Set<string>;
+            removedProperties: Set<string>;
+            icon: string;
+            modifiers: Record<string, unknown>;
+            effect: string;
+            notes: string;
+            restrictionsLabelEnhanced: string;
+            modifierSummary: string;
+        };
 
         // Add CONFIG reference for template helpers
         context.dh = CONFIG.wh40k || {};
 
         // Add armour types config for restrictions
-        context.armourTypes = CONFIG.wh40k?.armourTypes || {};
-        context.armourTypesArray = Object.entries(context.armourTypes as Record<string, any>).map(([key, config]) => ({
+        const armourTypes = (CONFIG.wh40k as { armourTypes?: Record<string, { label: string }> })?.armourTypes || {};
+        context.armourTypes = armourTypes;
+        context.armourTypesArray = Object.entries(armourTypes).map(([key, config]) => ({
             key,
             label: game.i18n.localize(config.label),
             selected: system.restrictions.armourTypes.has(key),
         }));
 
         // Add properties config
-        context.armourProperties = CONFIG.wh40k?.armourProperties || {};
+        const armourProperties = (CONFIG.wh40k as { armourProperties?: Record<string, { label: string; description: string }> })?.armourProperties || {};
+        context.armourProperties = armourProperties;
 
         // Prepare added properties array
         context.addedPropertiesArray = Array.from(system.addedProperties).map((key) => {
-            const config = (context.armourProperties as Record<string, any>)[key];
+            const config = armourProperties[key];
             return {
                 key,
                 label: config ? game.i18n.localize(config.label) : key,
@@ -105,7 +117,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
         // Prepare removed properties array
         context.removedPropertiesArray = Array.from(system.removedProperties).map((key) => {
-            const config = (context.armourProperties as Record<string, any>)[key];
+            const config = armourProperties[key];
             return {
                 key,
                 label: config ? game.i18n.localize(config.label) : key,
@@ -115,7 +127,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
 
         // Available properties (not yet added or removed)
         const usedKeys = new Set([...Array.from(system.addedProperties), ...Array.from(system.removedProperties)]);
-        context.availablePropertiesArray = Object.entries(context.armourProperties as Record<string, any>)
+        context.availablePropertiesArray = Object.entries(armourProperties)
             .filter(([key]) => !usedKeys.has(key))
             .map(([key, config]) => ({
                 key,
@@ -131,7 +143,17 @@ export default class ArmourModSheet extends ContainerItemSheet {
         // Get shared context from _prepareContext
         const sharedContext = await this._prepareContext(options);
         const partContext = { ...sharedContext, ...context };
-        const system = this.item.system as ArmourModificationData;
+        const system = this.item.system as {
+            restrictions: { armourTypes: Set<string> };
+            addedProperties: Set<string>;
+            removedProperties: Set<string>;
+            icon: string;
+            modifiers: Record<string, unknown>;
+            effect: string;
+            notes: string;
+            restrictionsLabelEnhanced: string;
+            modifierSummary: string;
+        };
 
         switch (partId) {
             case 'header':
@@ -174,7 +196,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
     static async #onToggleArmourType(this: ArmourModSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const type = target.dataset.type;
         if (!type) return;
-        const current = new Set((this.item.system as ArmourModificationData).restrictions.armourTypes);
+        const current = new Set((this.item.system as { restrictions: { armourTypes: string[] } }).restrictions.armourTypes);
 
         if (current.has(type)) {
             current.delete(type);
@@ -202,7 +224,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
         const field = target.dataset.field;
         if (!field) return;
         const delta = parseInt(target.dataset.delta || '0', 10);
-        const current = foundry.utils.getProperty(this.item.system, field) || 0;
+        const current = foundry.utils.getProperty(this.item.system as object, field) || 0;
 
         await this.item.update({
             [`system.${field}`]: Number(current) + delta,
@@ -220,7 +242,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
         const list = target.dataset.list; // "added" or "removed"
         if (!property || !list) return;
         const field = `${list}Properties` as 'addedProperties' | 'removedProperties';
-        const current = new Set((this.item.system as ArmourModificationData)[field]);
+        const current = new Set((this.item.system as { [key: string]: string[] })[field]);
 
         current.add(property);
 
@@ -240,7 +262,7 @@ export default class ArmourModSheet extends ContainerItemSheet {
         const list = target.dataset.list; // "added" or "removed"
         if (!property || !list) return;
         const field = `${list}Properties` as 'addedProperties' | 'removedProperties';
-        const current = new Set((this.item.system as ArmourModificationData)[field]);
+        const current = new Set((this.item.system as { [key: string]: string[] })[field]);
 
         current.delete(property);
 

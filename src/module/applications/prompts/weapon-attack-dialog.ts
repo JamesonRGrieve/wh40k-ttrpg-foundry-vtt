@@ -102,8 +102,8 @@ export default class WeaponAttackDialog extends BaseRollDialog {
      * Handle weapon selection via action.
      */
     static async #onSelectWeapon(this: WeaponAttackDialog, event: Event, target: HTMLElement): Promise<void> {
-        (this.rollData as any).selectWeapon?.(target.getAttribute('name'));
-        await this.rollData.update?.();
+        await this.weaponAttackData.rollData.selectWeapon?.(target.getAttribute('name') ?? '');
+        await this.weaponAttackData.rollData.update?.();
         void this.render();
     }
 
@@ -113,7 +113,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
 
     /** @override */
     _validateRoll(): boolean {
-        if ((this.rollData.fireRate as number) === 0) {
+        if ((this.weaponAttackData.rollData.fireRate as number) === 0) {
             ui.notifications.warn('Not enough ammo to perform action. Do you need to reload?');
             return false;
         }
@@ -126,7 +126,7 @@ export default class WeaponAttackDialog extends BaseRollDialog {
     async _performRoll(): Promise<void> {
         if (!this._validateRoll()) return;
 
-        await this.rollData.finalize?.();
+        await this.weaponAttackData.rollData.finalize?.();
         await this.weaponAttackData.performActionAndSendToChat?.();
         await this.close();
     }

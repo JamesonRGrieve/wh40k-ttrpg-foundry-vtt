@@ -281,17 +281,17 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
         // Calculate final target
         const context = await this._prepareContext({ force: true });
-        const finalTarget = context.finalTarget;
+        const finalTarget = context.finalTarget as number;
 
         // Roll d100
         const roll = await new Roll('1d100').evaluate();
-        const success = roll.total <= finalTarget;
-        const dos = Math.floor((finalTarget - roll.total) / 10);
+        const success = roll.total! <= finalTarget;
+        const dos = Math.floor((finalTarget - roll.total!) / 10);
 
         // Log acquisition
         await this._logAcquisition({
             item: this.item,
-            roll: roll.total,
+            roll: roll.total!,
             target: finalTarget,
             success,
             dos,
@@ -306,8 +306,8 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             dos,
             item: this.item,
             modifiers: {
-                base: context.baseModifier,
-                common: context.commonTotal,
+                base: context.baseModifier as number,
+                common: context.commonTotal as number,
                 custom: this.customModifier,
             },
         });
@@ -320,7 +320,8 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
 
         // Critical failure: reduce PF
         if (dos <= -3) {
-            const newPF = Math.max(0, (this.actor.system as any).rogueTrader.profitFactor.current - 1);
+            const rogueTrader = (this.actor.system as any).rogueTrader;
+            const newPF = Math.max(0, rogueTrader.profitFactor.current - 1);
             await this.actor.update({ 'system.rogueTrader.profitFactor.current': newPF });
             ui.notifications.warn(`Critical failure! Profit Factor reduced to ${newPF}`);
         }
@@ -330,7 +331,7 @@ export default class AcquisitionDialog extends HandlebarsApplicationMixin(Applic
             this.#resolve({
                 success,
                 dos,
-                roll: roll.total,
+                roll: roll.total!,
                 target: finalTarget,
             });
         }
