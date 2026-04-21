@@ -103,7 +103,7 @@ export default class SkillGrantData extends BaseGrantData {
         result: GrantApplicationResult,
     ): Promise<void> {
         const selectedSkills = (data.selected as string[]) ?? this.skills.map((s) => this._getSkillKey(s));
-        const updates: Record<string, any> = {};
+        const updates: Record<string, unknown> = {};
 
         for (const skillConfig of this.skills) {
             const skillKey = this._getSkillKey(skillConfig);
@@ -121,7 +121,7 @@ export default class SkillGrantData extends BaseGrantData {
                 continue;
             }
 
-            const currentSkill = actor.system.skills[schemaKey];
+            const currentSkill = (actor.system as { skills: Record<string, any> }).skills[schemaKey];
             if (!currentSkill) {
                 result.errors.push(`Skill not found on actor: ${schemaKey}`);
                 continue;
@@ -133,7 +133,7 @@ export default class SkillGrantData extends BaseGrantData {
                     : this._applyStandardSkillUpgrade(actor, schemaKey, skillConfig.level, updates, result);
 
             if (upgradeResult) {
-                result.applied[skillKey] = upgradeResult;
+                (result.applied as Record<string, SkillAppliedState>)[skillKey] = upgradeResult;
             }
         }
 
@@ -148,11 +148,11 @@ export default class SkillGrantData extends BaseGrantData {
         actor: WH40KBaseActor,
         schemaKey: string,
         targetLevel: string,
-        updates: Record<string, any>,
+        updates: Record<string, unknown>,
         result: GrantApplicationResult,
     ): SkillAppliedState | null {
         const ctor = this.constructor as typeof SkillGrantData;
-        const currentSkill = actor.system.skills[schemaKey];
+        const currentSkill = (actor.system as { skills: Record<string, any> }).skills[schemaKey];
         const currentLevel = this._getSchemaSkillLevel(currentSkill);
         const currentOrder = ctor.TRAINING_LEVELS[currentLevel]?.order ?? 0;
         const targetOrder = ctor.TRAINING_LEVELS[targetLevel]?.order ?? 0;
@@ -188,16 +188,17 @@ export default class SkillGrantData extends BaseGrantData {
         schemaKey: string,
         specialization: string,
         targetLevel: string,
-        updates: Record<string, any>,
+        updates: Record<string, unknown>,
         result: GrantApplicationResult,
     ): SkillAppliedState | null {
         const ctor = this.constructor as typeof SkillGrantData;
-        const currentSkill = actor.system.skills[schemaKey];
+        const currentSkill = (actor.system as { skills: Record<string, any> }).skills[schemaKey];
         const entries = (currentSkill.entries as any[]) || [];
 
         // Find existing entry with this specialization
         const entryIndex = entries.findIndex(
-            (e) => (e.name || '').toLowerCase() === specialization.toLowerCase() || (e.specialization || '').toLowerCase() === specialization.toLowerCase(),
+            (e: any) =>
+                (e.name || '').toLowerCase() === specialization.toLowerCase() || (e.specialization || '').toLowerCase() === specialization.toLowerCase(),
         );
 
         if (entryIndex >= 0) {

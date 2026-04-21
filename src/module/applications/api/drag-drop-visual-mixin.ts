@@ -115,8 +115,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
                 el.setAttribute('draggable', 'true');
 
-                el.addEventListener('dragstart', this._onEnhancedDragStart.bind(this) as EventListener);
-                el.addEventListener('dragend', this._onEnhancedDragEnd.bind(this) as EventListener);
+                el.addEventListener('dragstart', (event: DragEvent) => this._onEnhancedDragStart(event));
+                el.addEventListener('dragend', (event: DragEvent) => this._onEnhancedDragEnd(event));
             });
 
             this._setupDropZones();
@@ -134,15 +134,15 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const dropZones = this.element.querySelectorAll<HTMLElement>('[data-drop-zone]');
 
             dropZones.forEach((zone) => {
-                zone.addEventListener('dragover', this._onEnhancedDragOver.bind(this) as EventListener);
-                zone.addEventListener('dragleave', this._onEnhancedDragLeave.bind(this) as EventListener);
-                zone.addEventListener('drop', this._onEnhancedDrop.bind(this) as EventListener);
+                zone.addEventListener('dragover', (event: DragEvent) => this._onEnhancedDragOver(event));
+                zone.addEventListener('dragleave', (event: DragEvent) => this._onEnhancedDragLeave(event));
+                zone.addEventListener('drop', (event: DragEvent) => this._onEnhancedDrop(event));
             });
 
-            const inventoryLists = this.element.querySelectorAll('.inventory-list, .item-list');
+            const inventoryLists = this.element.querySelectorAll<HTMLElement>('.inventory-list, .item-list');
             inventoryLists.forEach((list) => {
-                list.addEventListener('dragover', this._onInventoryDragOver.bind(this) as EventListener);
-                list.addEventListener('drop', this._onInventoryDrop.bind(this) as EventListener);
+                list.addEventListener('dragover', (event: DragEvent) => this._onInventoryDragOver(event));
+                list.addEventListener('drop', (event: DragEvent) => this._onInventoryDrop(event));
             });
         }
 
@@ -156,8 +156,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const favBar = this.element.querySelector<HTMLElement>('[data-favorites-bar]');
             if (!favBar) return;
 
-            favBar.addEventListener('dragover', this._onFavoritesDragOver.bind(this) as EventListener);
-            favBar.addEventListener('drop', this._onFavoritesDrop.bind(this) as EventListener);
+            favBar.addEventListener('dragover', (event: DragEvent) => this._onFavoritesDragOver(event));
+            favBar.addEventListener('drop', (event: DragEvent) => this._onFavoritesDrop(event));
         }
 
         /* -------------------------------------------- */

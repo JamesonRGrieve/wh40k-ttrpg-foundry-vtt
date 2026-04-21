@@ -138,17 +138,17 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
         // Get selected template details
         let selectedTemplate: WH40KItem | undefined;
-        let preview = null;
+        let preview: Record<string, unknown> | null = null;
         if (this.#selectedUuid) {
             selectedTemplate = this.#templates.find((t) => t.uuid === this.#selectedUuid);
             if (selectedTemplate) {
-                preview = (selectedTemplate.system as any).previewAtThreat(this.#threatLevel);
+                preview = (selectedTemplate.system as any).previewAtThreat(this.#threatLevel) as Record<string, unknown>;
             }
         }
 
         // Get unique categories and factions for filter dropdowns
-        const categories = [...new Set(this.#templates.map((t) => (t.system as any).category))].sort();
-        const factions = [...new Set(this.#templates.map((t) => (t.system as any).faction).filter((f) => f))].sort();
+        const categories = [...new Set(this.#templates.map((t) => (t.system as any).category as string))].sort();
+        const factions = [...new Set(this.#templates.map((t) => (t.system as any).faction as string).filter((f) => f))].sort();
 
         return {
             ...context,
@@ -159,12 +159,12 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                     uuid: t.uuid,
                     name: t.name,
                     img: t.img ?? '',
-                    category: (t.system as any).category,
-                    faction: (t.system as any).faction,
-                    baseThreat: (t.system as any).baseThreatLevel,
-                    type: (t.system as any).type,
-                    role: (t.system as any).role,
-                    summary: (t.system as any).summary,
+                    category: (t.system as any).category as string,
+                    faction: (t.system as any).faction as string,
+                    baseThreat: (t.system as any).baseThreatLevel as number,
+                    type: (t.system as any).type as string,
+                    role: (t.system as any).role as string,
+                    summary: (t.system as any).summary as string,
                     selected: t.uuid === this.#selectedUuid,
                 }),
             ),
