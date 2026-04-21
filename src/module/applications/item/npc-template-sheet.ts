@@ -142,7 +142,21 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        const sys = this.item.system as any;
+        const sys = this.item.system as {
+            category: string;
+            role: string;
+            type: string;
+            equipmentPreset: string;
+            baseCharacteristics: Record<string, number>;
+            unnaturals: Record<string, number>;
+            trainedSkills: any[];
+            customWeapons: any[];
+            traits: any[];
+            talents: any[];
+            variants: any[];
+            scaling: any;
+            previewAtThreat: (threat: number) => any;
+        };
 
         // Prepare categories
         const categories = [

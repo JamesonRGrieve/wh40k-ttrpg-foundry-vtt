@@ -200,11 +200,11 @@ export default function PrimarySheetMixin<T extends new (...args: any[]) => Appl
             await super._onRender(context, options);
 
             this._renderModeToggle();
-            this.element.classList.toggle('editable', (this as any).isEditable && this._mode === (this.constructor as any).MODES.EDIT);
-            this.element.classList.toggle('interactable', (this as any).isEditable && this._mode === (this.constructor as any).MODES.PLAY);
-            this.element.classList.toggle('locked', !(this as any).isEditable);
+            this.element.classList.toggle('editable', this.isEditable && this._mode === (this.constructor as any).MODES.EDIT);
+            this.element.classList.toggle('interactable', this.isEditable && this._mode === (this.constructor as any).MODES.PLAY);
+            this.element.classList.toggle('locked', !this.isEditable);
 
-            if ((this as any).isEditable) {
+            if (this.isEditable) {
                 this.element.querySelectorAll('input').forEach((e) => e.addEventListener('focus', () => e.select()));
             }
 

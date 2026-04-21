@@ -134,35 +134,39 @@ export default class CombatQuickPanel extends ApplicationV2 {
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
-        const context: unknown = await super._prepareContext(options);
+    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
+        const context = (await super._prepareContext(options)) as Record<string, unknown>;
+
+        if (!this.actor) return context;
 
         // Actor data
         context.actor = this.actor;
         context.system = this.actor.system;
 
         // Vitals
+        const wounds = (this.actor.system as any).wounds;
         context.wounds = {
-            value: this.actor.system.wounds.value,
-            max: this.actor.system.wounds.max,
-            percentage: Math.round((this.actor.system.wounds.value / this.actor.system.wounds.max) * 100),
-            critical: this.actor.system.wounds.value <= 0,
-            low: this.actor.system.wounds.value <= this.actor.system.wounds.max * 0.25,
+            value: wounds.value,
+            max: wounds.max,
+            percentage: Math.round((wounds.value / wounds.max) * 100),
+            critical: wounds.value <= 0,
+            low: wounds.value <= wounds.max * 0.25,
         };
 
+        const fatigue = (this.actor.system as any).fatigue;
         context.fatigue = {
-            value: this.actor.system.fatigue.value,
-            max: this.actor.system.fatigue.max,
-            percentage: Math.round((this.actor.system.fatigue.value / this.actor.system.fatigue.max) * 100),
-            exhausted: this.actor.system.fatigue.value >= this.actor.system.fatigue.max,
+            value: fatigue.value,
+            max: fatigue.max,
+            percentage: Math.round((fatigue.value / fatigue.max) * 100),
+            exhausted: fatigue.value >= fatigue.max,
         };
 
         // Initiative
         const combatant = game.combat?.combatants.find((c) => (c as { actorId?: string }).actorId === this.actor?.id);
         context.initiative = {
-            rolled: (combatant as { initiative?: number | null })?.initiative !== null,
-            value: (combatant as { initiative?: number | null })?.initiative || 0,
-            bonus: this.actor?.system.initiative.bonus || 0,
+            rolled: (combatant?.initiative ?? null) !== null,
+            value: (combatant?.initiative as number) || 0,
+            bonus: (this.actor.system as any).initiative.bonus || 0,
         };
 
         // Primary weapon
@@ -179,7 +183,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
         context.actions = this._prepareQuickActions();
 
         // Consumables
-        context.consumables = this.actor.items.filter((i) => i.type === 'gear' && i.system.consumable && i.system.equipped).slice(0, 3);
+        context.consumables = this.actor.items.filter((i) => i.type === 'gear' && (i.system as any).consumable && (i.system as any).equipped).slice(0, 3);
 
         // Panel state
         context.opacityLevel = this.opacityLevel;
