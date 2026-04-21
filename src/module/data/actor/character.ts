@@ -479,13 +479,43 @@ export default class CharacterData extends CreatureTemplate {
             if (stepMap.chapter?.name) this.originPath.chapter = stepMap.chapter.name;
         }
 
-        // Collect aptitudes from all origin path items (DH2e/BC/OW use aptitudes for XP costs)
+        // Collect aptitudes from origin path (DH2e/BC/OW use aptitudes for XP costs).
+        // Sources: fixed grants.aptitudes + resolved grants.choices[type=aptitude] +
+        // the 9 inherent characteristic-based aptitudes every character has per DH2 Core p.79.
         const allAptitudes = new Set<string>();
+
+        // Inherent characteristic aptitudes (DH2 RAW: every character has these)
+        for (const apt of ['Weapon Skill', 'Ballistic Skill', 'Strength', 'Toughness', 'Agility', 'Intelligence', 'Perception', 'Willpower', 'Fellowship']) {
+            allAptitudes.add(apt);
+        }
+
         for (const item of originItems) {
-            const aptitudes = item.system?.grants?.aptitudes;
-            if (Array.isArray(aptitudes)) {
-                for (const apt of aptitudes) {
+            const grants = item.system?.grants;
+            if (!grants) continue;
+
+            // Fixed aptitudes
+            if (Array.isArray(grants.aptitudes)) {
+                for (const apt of grants.aptitudes) {
                     if (apt) allAptitudes.add(apt);
+                }
+            }
+
+            // Resolved aptitude choices — mirrors the key logic in origin-path-builder._prepareChoices
+            const choices = (grants.choices ?? []) as any[];
+            const selectedChoices = (item.system?.selectedChoices ?? {}) as Record<string, string[]>;
+            const labelCounts: Record<string, number> = {};
+            for (const choice of choices) {
+                const baseLabel = choice.label || choice.name || '';
+                labelCounts[baseLabel] = (labelCounts[baseLabel] || 0) + 1;
+                const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
+                const choiceKey = `${baseLabel}${suffix}`;
+                if (choice.type !== 'aptitude') continue;
+                const picks = selectedChoices[choiceKey];
+                if (!Array.isArray(picks)) continue;
+                for (const pick of picks) {
+                    const option = choice.options?.find((o: any) => o.value === pick || o.name === pick);
+                    const value = option?.value || option?.name || pick;
+                    if (value) allAptitudes.add(value);
                 }
             }
         }

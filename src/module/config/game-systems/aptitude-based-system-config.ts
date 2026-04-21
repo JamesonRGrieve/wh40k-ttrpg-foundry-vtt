@@ -116,6 +116,22 @@ export abstract class AptitudeBasedSystemConfig extends BaseSystemConfig {
         return advanceAptitudes.filter((a) => charSet.has(a.toLowerCase())).length;
     }
 
+    /**
+     * Compute match metadata for an advance's aptitudes. Used by the advancement
+     * dialog to render 2/1/0 indicator dots and show which aptitudes matched.
+     */
+    getAdvanceMatchInfo(actor: WH40KBaseActor, advanceAptitudes: string[]): { matches: number; matched: string[]; unmatched: string[]; all: string[] } {
+        const characterAptitudes = this.getCharacterAptitudes(actor);
+        const charSet = new Set(characterAptitudes.map((a) => a.toLowerCase()));
+        const matched: string[] = [];
+        const unmatched: string[] = [];
+        for (const apt of advanceAptitudes) {
+            if (charSet.has(apt.toLowerCase())) matched.push(apt);
+            else unmatched.push(apt);
+        }
+        return { matches: matched.length, matched, unmatched, all: [...advanceAptitudes] };
+    }
+
     // ── Cost Implementations ─────────────────────────────────────
 
     getCharacteristicAdvanceCost(actor: WH40KBaseActor, charKey: string, currentTier: number): AdvanceCostResult | null {

@@ -1217,29 +1217,13 @@ export default class CreatureTemplate extends CommonTemplate {
      * @param {string} charKey - The characteristic key
      * @returns {number}
      */
-    _getOriginPathCharacteristicModifier(charKey: string): number {
-        const actor = this.parent;
-        if (!actor?.items) return 0;
-        let total = 0;
-        const originItems = actor.items.filter((item) => item.isOriginPath);
-        for (const item of originItems) {
-            // Base characteristic modifiers from ModifiersTemplate
-            const mods = item.system?.modifiers?.characteristics;
-            if (mods && mods[charKey]) {
-                total += mods[charKey];
-            }
-
-            // Choice-based characteristic modifiers from activeModifiers
-            const activeMods = item.system?.activeModifiers;
-            if (Array.isArray(activeMods)) {
-                for (const mod of activeMods) {
-                    if (mod.type === 'characteristic' && mod.key === charKey && mod.value) {
-                        total += mod.value;
-                    }
-                }
-            }
-        }
-        return total;
+    _getOriginPathCharacteristicModifier(_charKey: string): number {
+        // Origin-path characteristic bonuses are baked directly into
+        // `system.characteristics.*.base` by the Origin Path Builder on commit
+        // (see _collectOriginCharacteristicBonuses). Adding them again at runtime
+        // would double-count, so this always returns 0. Kept as a hook so
+        // tooltip/source-registration code paths stay valid.
+        return 0;
     }
 
     /**

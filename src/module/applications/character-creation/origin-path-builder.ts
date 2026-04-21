@@ -1861,6 +1861,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             skills: [],
             talents: [],
             traits: [],
+            aptitudes: [],
             equipment: [],
             wounds: null,
             fate: null,
@@ -1870,6 +1871,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const skillMap = new Map(); // name -> {name, uuid}
         const talentMap = new Map(); // name -> {name, uuid}
         const traitMap = new Map(); // name -> {name, uuid}
+        const aptitudeSet = new Set<string>();
         const equipmentList = [];
 
         for (const [, selection] of this.selections) {
@@ -1934,6 +1936,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (grants.equipment) {
                 for (const item of grants.equipment) {
                     equipmentList.push(item.name || item);
+                }
+            }
+
+            // Collect fixed aptitudes
+            if (Array.isArray(grants.aptitudes)) {
+                for (const apt of grants.aptitudes) {
+                    if (apt) aptitudeSet.add(apt);
                 }
             }
 
@@ -2016,6 +2025,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                             }
                         }
                     }
+
+                    // Aptitude-typed choices: selected values ARE the aptitude names
+                    if (choice.type === 'aptitude') {
+                        for (const selectedValue of selectedValues) {
+                            const option = choice.options?.find((o) => o.value === selectedValue || o.name === selectedValue);
+                            const aptName = option?.value || option?.name || selectedValue;
+                            if (aptName) aptitudeSet.add(aptName);
+                        }
+                    }
                 }
             }
 
@@ -2054,6 +2072,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         );
         preview.traits = Array.from(traitMap.values());
         preview.equipment = equipmentList.map((name) => ({ name }));
+        preview.aptitudes = Array.from(aptitudeSet).sort((a, b) => a.localeCompare(b));
 
         return preview;
     }
@@ -3287,18 +3306,27 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const charAssignments = this._charAssignments;
             const hasCharRolls = charRolls.some((r) => r > 0) && CHARS.some((k) => charAssignments[k] !== null);
             if (hasCharRolls) {
+                // Sum origin-path characteristic bonuses across every committed selection, so
+                // baked-in bonuses like Imperial World's +5 Fellowship land directly in the
+                // base characteristic instead of being re-computed at runtime every render.
+                const originModSums = this._collectOriginCharacteristicBonuses();
+
                 const charUpdate: Record<string, unknown> = {
                     'system.characterGeneration.rolls': charRolls,
                     'system.characterGeneration.assignments': charAssignments,
                     'system.characterGeneration.customBases.enabled': this._charAdvancedMode,
                 };
+                // Reset every base characteristic to (baseline + assigned roll + origin bonuses).
+                // Rolls and origin bonuses are ALWAYS applied on origin commit (no override
+                // checkbox), so a re-commit must rewrite each characteristic even if the
+                // assignment or origin selection moved off of it.
                 for (const key of CHARS) {
                     charUpdate[`system.characterGeneration.customBases.${key}`] = this._charCustomBases[key];
+                    const baseDefault = this._charAdvancedMode ? this._charCustomBases[key] ?? 25 : 25;
                     const rollIndex = charAssignments[key];
-                    if (rollIndex !== null && charRolls[rollIndex] > 0) {
-                        const base = this._charAdvancedMode ? this._charCustomBases[key] ?? 25 : 25;
-                        charUpdate[`system.characteristics.${key}.base`] = base + charRolls[rollIndex];
-                    }
+                    const rolled = rollIndex !== null && charRolls[rollIndex] > 0 ? charRolls[rollIndex] : 0;
+                    const originBonus = originModSums[key] || 0;
+                    charUpdate[`system.characteristics.${key}.base`] = baseDefault + rolled + originBonus;
                 }
                 await this.actor.update(charUpdate);
             }
@@ -3378,6 +3406,48 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
         }
         return values;
+    }
+
+    /**
+     * Sum origin-path characteristic bonuses across every committed origin so the final
+     * values can be written directly into `system.characteristics.*.base` at commit time,
+     * with no runtime re-computation needed.
+     *
+     * Sources per origin:
+     * - `system.modifiers.characteristics[key]` — base bonuses authored on the origin
+     * - `system.activeModifiers[]` with `type === 'characteristic'` — bonuses resolved
+     *    from choice selections (e.g. "pick a +5 bonus from three options")
+     *
+     * @private
+     */
+    _collectOriginCharacteristicBonuses(): Record<string, number> {
+        const sums: Record<string, number> = {};
+        const addToSum = (key: string, value: unknown) => {
+            const n = Number(value);
+            if (!Number.isFinite(n) || n === 0) return;
+            sums[key] = (sums[key] || 0) + n;
+        };
+
+        const collectFromSelection = (selection: NormalizedOrigin | null) => {
+            if (!selection) return;
+            const system = this._getSelectionSystem(selection);
+            const charMods = (system?.modifiers as any)?.characteristics as Record<string, unknown> | undefined;
+            if (charMods) {
+                for (const [key, value] of Object.entries(charMods)) addToSum(key, value);
+            }
+            const activeMods = (system as any)?.activeModifiers as Array<Record<string, unknown>> | undefined;
+            if (Array.isArray(activeMods)) {
+                for (const mod of activeMods) {
+                    if (mod?.type === 'characteristic' && typeof mod?.key === 'string') {
+                        addToSum(mod.key as string, mod.value);
+                    }
+                }
+            }
+        };
+
+        for (const [, selection] of this.selections) collectFromSelection(selection);
+        collectFromSelection(this.lineageSelection);
+        return sums;
     }
 
     /** Item types considered "inventory" — wiped on a Reset Inventory commit. */
