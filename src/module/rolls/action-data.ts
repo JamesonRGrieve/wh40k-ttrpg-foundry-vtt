@@ -320,7 +320,8 @@ export class ActionData {
         await useAmmo(this);
 
         if (this.rollData.eyeOfVengeance) {
-            await (this.rollData.sourceActor as WH40KBaseActorDocument).spendFate();
+            const sourceActor = this.rollData.sourceActor as WH40KBaseActorDocument | null;
+            await sourceActor?.spendFate();
         }
     }
 

@@ -7,6 +7,7 @@
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KCharacteristic, WH40KModifierEntry, WH40KSkill, WH40KArmourLocation } from '../../types/global.d.ts';
 
 /**
  * A class responsible for orchestrating rich tooltips in the WH40K RPG system.
@@ -37,7 +38,7 @@ export class TooltipsWH40K {
     async _loadSkillDescriptions(): Promise<void> {
         try {
             const skillPackNames = ['wh40k-rpg.dh2-core-stats-skills', 'wh40k-rpg.rt-core-items-skills', 'wh40k-rpg.dw-core-items-skills'];
-            const pack = skillPackNames.map((n) => game.packs.get(n)).find((p): p is any => !!p);
+            const pack = skillPackNames.map((n) => game.packs.get(n)).find((p): p is foundry.abstract.CompendiumCollection<any> => !!p);
             if (!pack) {
                 console.warn('WH40K Tooltips | Could not find skills compendium');
                 return;
@@ -48,7 +49,7 @@ export class TooltipsWH40K {
                 const item = (await pack.getDocument(entry._id)) as WH40KItem | null;
                 if (item) {
                     const key = entry.name.toLowerCase().replace(/\s+/g, '').replace(/-/g, '');
-                    const system = item.system as Record<string, any>;
+                    const system = item.system as Record<string, unknown>;
 
                     this.#skillDescriptions.set(key, {
                         name: entry.name,
@@ -98,7 +99,7 @@ export class TooltipsWH40K {
     }
 
     async _onTooltipActivate(): Promise<void> {
-        const element = (game as any).tooltip.element as HTMLElement;
+        const element = game.tooltip.element as HTMLElement;
         if (!element) return;
 
         const tooltipType = element.dataset.wh40kTooltip;
@@ -122,12 +123,12 @@ export class TooltipsWH40K {
         if (element.classList.contains('content-link') && element.dataset.uuid) {
             const doc = await fromUuid(element.dataset.uuid);
             if (doc) {
-                await this._onHoverContentLink(doc as any);
+                await this._onHoverContentLink(doc as WH40KItem);
             }
         }
     }
 
-    async _onHoverContentLink(doc: any): Promise<void> {
+    async _onHoverContentLink(doc: WH40KItem): Promise<void> {
         const result = await (doc.richTooltip?.() ?? doc.system?.richTooltip?.() ?? {});
         const { content, classes } = result;
 
@@ -272,7 +273,7 @@ export class TooltipsWH40K {
 
         const calculatedBase = baseValue ?? (level > 0 ? charValue : Math.floor(charValue / 2));
         const bonus = dataBonus ?? 0;
-        const skillInfo = (game as any).wh40k?.tooltips?.getSkillDescription(name);
+        const skillInfo = game.wh40k?.tooltips?.getSkillDescription(name);
         const descriptor = skillInfo?.descriptor || '';
 
         let html = `
@@ -590,7 +591,11 @@ export { TooltipsWH40K as WH40KTooltip };
 /*  Static Tooltip Data Helpers                  */
 /* -------------------------------------------- */
 
-export function prepareCharacteristicTooltipData(key: string, characteristic: any, modifierSources: Record<string, any[]> = {}): string {
+export function prepareCharacteristicTooltipData(
+    key: string,
+    characteristic: WH40KCharacteristic,
+    modifierSources: Record<string, WH40KModifierEntry[]> = {},
+): string {
     const sources = modifierSources[key] || [];
     const data = {
         name: key,
@@ -601,15 +606,20 @@ export function prepareCharacteristicTooltipData(key: string, characteristic: an
         unnatural: characteristic.unnatural || 1,
         total: characteristic.total || 0,
         bonus: characteristic.bonus || 0,
-        sources: sources.map((s: any) => ({
-            name: s.name || s.source || 'Unknown',
-            value: s.value || s.modifier || 0,
+        sources: sources.map((s) => ({
+            name: s.source || 'Unknown',
+            value: s.value || 0,
         })),
     };
     return JSON.stringify(data);
 }
 
-export function prepareSkillTooltipData(key: string, skill: any, characteristics: Record<string, any> = {}, _actorUuid?: string): string {
+export function prepareSkillTooltipData(
+    key: string,
+    skill: WH40KSkill,
+    characteristics: Record<string, WH40KCharacteristic> = {},
+    _actorUuid?: string,
+): string {
     const charKey = skill.characteristic || skill.char || 'strength';
     const char = characteristics[charKey] || {};
     const charTotal = char.total || 0;
@@ -639,7 +649,7 @@ export function prepareSkillTooltipData(key: string, skill: any, characteristics
     return JSON.stringify(data);
 }
 
-export function prepareArmorTooltipData(location: string, armorData: any, equipped: any[] = []): string {
+export function prepareArmorTooltipData(location: string, armorData: WH40KArmourLocation, equipped: WH40KItem[] = []): string {
     const locationLabels: Record<string, string> = {
         head: 'Head',
         rightArm: 'Right Arm',
@@ -654,23 +664,24 @@ export function prepareArmorTooltipData(location: string, armorData: any, equipp
         toughnessBonus: armorData.toughnessBonus || 0,
         traitBonus: armorData.traitBonus || 0,
         armorValue: armorData.value || 0,
-        equipped: equipped.map((item: any) => ({
+        equipped: equipped.map((item) => ({
             name: item.name,
             img: item.img,
-            ap: item.system?.armour?.[location] || 0,
+            ap: (item.system as any)?.armour?.[location] || 0,
         })),
     };
     return JSON.stringify(data);
 }
 
-export function prepareWeaponTooltipData(weapon: any): string {
+export function prepareWeaponTooltipData(weapon: WH40KItem): string {
+    const sys = weapon.system as any;
     const data = {
         name: weapon.name,
-        damage: weapon.system?.damage || '—',
-        penetration: weapon.system?.penetration || 0,
-        range: weapon.system?.range || '—',
-        rof: weapon.system?.rof || '—',
-        qualities: weapon.system?.qualities?.map((q: any) => q.name || q) || [],
+        damage: sys?.damage || '—',
+        penetration: sys?.penetration || 0,
+        range: sys?.range || '—',
+        rof: sys?.rof || '—',
+        qualities: sys?.qualities?.map((q: any) => q.name || q) || [],
     };
     return JSON.stringify(data);
 }

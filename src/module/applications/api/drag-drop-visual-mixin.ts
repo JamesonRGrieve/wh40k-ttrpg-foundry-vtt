@@ -84,7 +84,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
 
         static DRAG_THRESHOLD: number = 5;
 
-        declare document: any;
+        declare document: WH40KBaseActorDocument | WH40KItemDocument;
 
         /* -------------------------------------------- */
         /*  Render Hooks                                */
@@ -105,7 +105,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @private
          */
         _setupEnhancedDragDrop(): void {
-            this.element.querySelectorAll('[data-item-id]').forEach((el) => {
+            this.element.querySelectorAll<HTMLElement>('[data-item-id]').forEach((el) => {
                 if (el.closest('.wh40k-tp_row') || el.closest('.wh40k-talent-row')) return;
                 if (el.closest('[data-disable-drag="true"]') || el.closest('.wh40k-panel-backpack-split')) return;
 
@@ -127,7 +127,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          */
         _setupDropZones(): void {
             ensureGlobalDragTracking();
-            const dropZones = this.element.querySelectorAll('[data-drop-zone]');
+            const dropZones = this.element.querySelectorAll<HTMLElement>('[data-drop-zone]');
 
             dropZones.forEach((zone) => {
                 zone.addEventListener('dragover', this._onEnhancedDragOver.bind(this) as EventListener);
@@ -149,7 +149,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @private
          */
         _setupFavoritesBar(): void {
-            const favBar = this.element.querySelector('[data-favorites-bar]');
+            const favBar = this.element.querySelector<HTMLElement>('[data-favorites-bar]');
             if (!favBar) return;
 
             favBar.addEventListener('dragover', this._onFavoritesDragOver.bind(this) as EventListener);
@@ -168,15 +168,15 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
         async _onEnhancedDragStart(event: DragEvent): Promise<void> {
             const element = event.currentTarget as HTMLElement;
             const itemId = element.dataset.itemId;
-            const item = this.document.items.get(itemId);
+            const item = this.document.items.get(itemId ?? '');
 
             if (!item) return;
 
             this._dragStartPos = { x: event.clientX, y: event.clientY };
 
             this._draggedItem = {
-                id: itemId,
-                item: item,
+                id: itemId ?? '',
+                item: item as unknown as Record<string, unknown>,
                 element: element,
             };
 
@@ -216,7 +216,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             const ghost = document.createElement('div');
             ghost.className = 'wh40k-drag-ghost';
 
-            const quantity = this._splitResult ? this._splitResult.quantity : (item.system as any).quantity || 1;
+            const system = item.system as Record<string, unknown>;
+            const quantity = this._splitResult ? this._splitResult.quantity : (system.quantity as number) || 1;
 
             ghost.innerHTML = `
                 <div class="ghost-content">
@@ -224,7 +225,7 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                     <div class="ghost-details">
                         <div class="ghost-name">${item.name}</div>
                         ${quantity > 1 ? `<div class="ghost-quantity">×${quantity}</div>` : ''}
-                        ${(item.system as any).equipped ? '<i class="fas fa-check-circle ghost-equipped"></i>' : ''}
+                        ${system.equipped ? '<i class="fas fa-check-circle ghost-equipped"></i>' : ''}
                     </div>
                 </div>
             `;
@@ -247,7 +248,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @private
          */
         _canSplitItem(item: WH40KItem): boolean {
-            const quantity = (item.system as any).quantity;
+            const system = item.system as Record<string, unknown>;
+            const quantity = system.quantity as number;
             if (!quantity || quantity <= 1) return false;
 
             const splittableTypes = ['gear', 'weapon'];
@@ -263,7 +265,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @private
          */
         _showSplitDialog(item: WH40KItem): Promise<{ quantity: number } | null> {
-            const quantity = (item.system as any).quantity || 1;
+            const system = item.system as Record<string, unknown>;
+            const quantity = (system.quantity as number) || 1;
 
             return (foundry.applications.api as any).DialogV2.prompt({
                 window: { title: `Split ${item.name}` },
@@ -280,8 +283,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
                     icon: 'fas fa-split',
                     label: 'Split',
                     callback: (event: SubmitEvent, button: HTMLButtonElement, dialog: HTMLElement) => {
-                        const input = dialog.querySelector('[name="quantity"]') as HTMLInputElement;
-                        const qty = parseInt(input.value);
+                        const input = dialog.querySelector<HTMLInputElement>('[name="quantity"]');
+                        const qty = input ? parseInt(input.value) : 0;
                         if (qty > 0 && qty <= quantity) {
                             return { quantity: qty };
                         }
@@ -548,7 +551,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
          * @private
          */
         async _handleSplitDrop(item: WH40KItem, quantity: number): Promise<void> {
-            const currentQty = (item.system as any).quantity || 1;
+            const system = item.system as Record<string, unknown>;
+            const currentQty = (system.quantity as number) || 1;
             const remaining = currentQty - quantity;
 
             if (remaining <= 0) {
@@ -557,7 +561,8 @@ export default function EnhancedDragDropMixin<T extends new (...args: any[]) => 
             }
 
             const newItemData = item.toObject();
-            (newItemData.system as any).quantity = quantity;
+            const newSystem = newItemData.system as Record<string, unknown>;
+            newSystem.quantity = quantity;
             newItemData.name = `${item.name} (${quantity})`;
 
             await this.document.createEmbeddedDocuments('Item', [newItemData]);

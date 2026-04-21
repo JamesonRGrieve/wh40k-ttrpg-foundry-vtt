@@ -32,16 +32,16 @@ export default class VehicleSheet extends BaseActorSheet {
         tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
         actions: {
             ...BaseActorSheet.DEFAULT_OPTIONS.actions,
-            rollCharacteristic: (VehicleSheet as any).#rollCharacteristic,
-            rollSkill: (VehicleSheet as any).#rollSkill,
-            rollWeapon: (VehicleSheet as any).#rollWeapon,
-            rollInitiative: (VehicleSheet as any).#rollInitiative,
-            adjustStructure: (VehicleSheet as any).#adjustStructure,
-            repairDamage: (VehicleSheet as any).#repairDamage,
-            modifyCrew: (VehicleSheet as any).#modifyCrew,
-            adjustCrewMorale: (VehicleSheet as any).#adjustCrewMorale,
-            toggleComponentActive: (VehicleSheet as any).#toggleComponentActive,
-            damageComponent: (VehicleSheet as any).#damageComponent,
+            rollCharacteristic: VehicleSheet.#rollCharacteristic,
+            rollSkill: VehicleSheet.#rollSkill,
+            rollWeapon: VehicleSheet.#rollWeapon,
+            rollInitiative: VehicleSheet.#rollInitiative,
+            adjustStructure: VehicleSheet.#adjustStructure,
+            repairDamage: VehicleSheet.#repairDamage,
+            modifyCrew: VehicleSheet.#modifyCrew,
+            adjustCrewMorale: VehicleSheet.#adjustCrewMorale,
+            toggleComponentActive: VehicleSheet.#toggleComponentActive,
+            damageComponent: VehicleSheet.#damageComponent,
         },
     };
 
@@ -304,11 +304,11 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollCharacteristic(this: VehicleSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollCharacteristic(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const char = target.dataset.characteristic;
         if (!char) return;
 
-        await this.actor.rollCharacteristic(char);
+        await (this.actor as any).rollCharacteristic(char);
     }
 
     /* -------------------------------------------- */
@@ -319,12 +319,12 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollSkill(this: VehicleSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollSkill(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const skill = target.dataset.skill;
         const spec = target.dataset.specialization;
         if (!skill) return;
 
-        await this.actor.rollSkill(skill, spec);
+        await (this.actor as any).rollSkill(skill, spec);
     }
 
     /* -------------------------------------------- */
@@ -335,7 +335,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollWeapon(this: VehicleSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #rollWeapon(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
@@ -353,8 +353,8 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #rollInitiative(this: VehicleSheet, event: Event, target: HTMLElement): Promise<void> {
-        await this.actor.rollInitiative({ createCombatants: true });
+    static async #rollInitiative(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+        await (this.actor as any).rollInitiative({ createCombatants: true });
     }
 
     /* -------------------------------------------- */
@@ -365,8 +365,8 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #adjustStructure(this: VehicleSheet, event: Event, target: HTMLElement): Promise<void> {
-        const delta = parseInt(target.dataset.delta ?? '0') || 0;
+    static async #adjustStructure(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+        const delta = parseInt(target.dataset.delta ?? '0', 10) || 0;
         const current = (this.actor.system as any).wounds.value;
         const max = (this.actor.system as any).wounds.max;
 
@@ -382,8 +382,8 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #repairDamage(this: VehicleSheet, event: Event, target: HTMLElement): Promise<void> {
-        const amount = parseInt(target.dataset.amount ?? '1') || 1;
+    static async #repairDamage(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+        const amount = parseInt(target.dataset.amount ?? '1', 10) || 1;
         const current = (this.actor.system as any).wounds.value;
         const max = (this.actor.system as any).wounds.max;
 
@@ -401,8 +401,8 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #modifyCrew(this: VehicleSheet, event: Event, target: HTMLElement): Promise<void> {
-        const delta = parseInt(target.dataset.delta ?? '0') || 0;
+    static async #modifyCrew(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+        const delta = parseInt(target.dataset.delta ?? '0', 10) || 0;
         const current = (this.actor.system as any).crew?.rating || 30;
 
         const newValue = Math.max(1, Math.min(100, current + delta));
@@ -417,8 +417,8 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #adjustCrewMorale(this: VehicleSheet, event: Event, target: HTMLElement): Promise<void> {
-        const delta = parseInt(target.dataset.delta ?? '0') || 0;
+    static async #adjustCrewMorale(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
+        const delta = parseInt(target.dataset.delta ?? '0', 10) || 0;
         const current = (this.actor.system as any).crew?.morale || 50;
 
         const newValue = Math.max(0, Math.min(100, current + delta));
@@ -433,7 +433,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #toggleComponentActive(this: VehicleSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleComponentActive(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 
@@ -451,7 +451,7 @@ export default class VehicleSheet extends BaseActorSheet {
      * @param {Event} event - The triggering event.
      * @param {HTMLElement} target - The target element.
      */
-    static async #damageComponent(this: VehicleSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #damageComponent(this: VehicleSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId;
         if (!itemId) return;
 

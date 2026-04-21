@@ -119,7 +119,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #toggleCoverage(this: ArmourSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleCoverage(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const location = target.dataset.location;
         const sys = this.item.system as any;
         const coverage = new Set(sys.coverage || []);
@@ -134,14 +134,14 @@ export default class ArmourSheet extends ContainerItemSheet {
                 coverage.clear();
                 coverage.add('all');
             }
-        } else {
+        } else if (location) {
             // Remove "all" if present
             coverage.delete('all');
 
             // Toggle specific location
-            if (location && coverage.has(location)) {
+            if (coverage.has(location)) {
                 coverage.delete(location);
-            } else if (location) {
+            } else {
                 coverage.add(location);
             }
 
@@ -167,7 +167,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #addProperty(this: ArmourSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #addProperty(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const select = this.element.querySelector("[name='new-property']") as HTMLSelectElement | null;
         const property = select?.value;
         if (!property) return;
@@ -188,7 +188,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #removeProperty(this: ArmourSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeProperty(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const property = target.dataset.property;
         const sys = this.item.system as any;
         const properties = new Set(sys.properties || []);
@@ -221,7 +221,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #editMod(this: ArmourSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #editMod(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.modIndex ?? '', 10);
         const sys = this.item.system as any;
         const mod = sys.modifications[index];
@@ -241,7 +241,7 @@ export default class ArmourSheet extends ContainerItemSheet {
      * @param {Event} event
      * @param {HTMLElement} target
      */
-    static async #removeMod(this: ArmourSheet, event: Event, target: HTMLElement): Promise<void> {
+    static async #removeMod(this: ArmourSheet, event: PointerEvent, target: HTMLElement): Promise<void> {
         const index = parseInt(target.dataset.modIndex ?? '', 10);
         const sys = this.item.system as any;
         const modifications = [...sys.modifications];
