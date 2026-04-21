@@ -1,20 +1,20 @@
 {{!-- Stat Block Parser Dialog --}}
-<div class="stat-block-parser-content">
+<div class="stat-block-parser-content tw-flex tw-flex-col tw-gap-4 tw-h-full">
   {{!-- Input Section --}}
-  <div class="parser-input-section">
-    <div class="input-header">
+  <div class="parser-input-section tw-grow-0 tw-shrink-0">
+    <div class="input-header tw-flex tw-justify-between tw-items-center tw-mb-2">
       <label>{{localize "WH40K.NPC.Import.PasteStatBlock"}}</label>
-      <button type="button" data-action="clearInput" class="icon-button" title="Clear">
+      <button type="button" data-action="clearInput" class="icon-button tw-p-1 tw-cursor-pointer" title="Clear">
         <i class="fa-solid fa-eraser"></i>
       </button>
     </div>
-    <textarea name="rawInput" rows="12" placeholder="{{localize "WH40K.NPC.Import.Placeholder"}}">{{rawInput}}</textarea>
-    <p class="hint">{{localize "WH40K.NPC.Import.Hint"}}</p>
+    <textarea name="rawInput" rows="12" placeholder="{{localize "WH40K.NPC.Import.Placeholder"}}" class="tw-w-full">{{rawInput}}</textarea>
+    <p class="hint tw-text-xs tw-mt-1">{{localize "WH40K.NPC.Import.Hint"}}</p>
   </div>
 
   {{!-- Parse Button --}}
-  <div class="parse-action">
-    <button type="button" data-action="parse" class="secondary">
+  <div class="parse-action tw-text-center">
+    <button type="button" data-action="parse" class="secondary tw-px-8 tw-py-2">
       <i class="fa-solid fa-magnifying-glass"></i>
       {{localize "WH40K.NPC.Import.Parse"}}
     </button>
@@ -22,33 +22,33 @@
 
   {{!-- Errors/Warnings/Info --}}
   {{#if hasErrors}}
-  <div class="parse-messages errors">
-    <h4><i class="fa-solid fa-circle-exclamation"></i> {{localize "WH40K.NPC.Import.Errors"}}</h4>
-    <ul>
+  <div class="parse-messages errors tw-p-3 tw-rounded-md">
+    <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-2"><i class="fa-solid fa-circle-exclamation"></i> {{localize "WH40K.NPC.Import.Errors"}}</h4>
+    <ul class="tw-m-0 tw-pl-6 tw-text-xs">
       {{#each errors}}
-      <li>{{this}}</li>
+      <li class="tw-mb-1">{{this}}</li>
       {{/each}}
     </ul>
   </div>
   {{/if}}
 
   {{#if hasWarnings}}
-  <div class="parse-messages warnings">
-    <h4><i class="fa-solid fa-triangle-exclamation"></i> {{localize "WH40K.NPC.Import.Warnings"}}</h4>
-    <ul>
+  <div class="parse-messages warnings tw-p-3 tw-rounded-md">
+    <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-2"><i class="fa-solid fa-triangle-exclamation"></i> {{localize "WH40K.NPC.Import.Warnings"}}</h4>
+    <ul class="tw-m-0 tw-pl-6 tw-text-xs">
       {{#each warnings}}
-      <li>{{this}}</li>
+      <li class="tw-mb-1">{{this}}</li>
       {{/each}}
     </ul>
   </div>
   {{/if}}
 
   {{#if hasInfo}}
-  <div class="parse-messages info">
-    <h4><i class="fa-solid fa-circle-info"></i> {{localize "WH40K.NPC.Import.Info"}}</h4>
-    <ul>
+  <div class="parse-messages info tw-p-3 tw-rounded-md">
+    <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-2"><i class="fa-solid fa-circle-info"></i> {{localize "WH40K.NPC.Import.Info"}}</h4>
+    <ul class="tw-m-0 tw-pl-6 tw-text-xs">
       {{#each info}}
-      <li>{{this}}</li>
+      <li class="tw-mb-1">{{this}}</li>
       {{/each}}
     </ul>
   </div>
@@ -56,60 +56,60 @@
 
   {{!-- Preview Section --}}
   {{#if hasParsed}}
-  <div class="parser-preview-section">
-    <h3>{{localize "WH40K.NPC.Preview"}}</h3>
+  <div class="parser-preview-section tw-flex-1 tw-overflow-auto tw-p-6">
+    <h3 class="tw-m-0 tw-mb-4 tw-pb-2">{{localize "WH40K.NPC.Preview"}}</h3>
     
-    <div class="preview-grid">
+    <div class="preview-grid tw-grid tw-gap-4">
       {{!-- Basic Info --}}
-      <div class="preview-panel">
-        <h4>{{localize "WH40K.NPC.Identity"}}</h4>
-        <dl>
+      <div class="preview-panel tw-p-4">
+        <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-1"> {{localize "WH40K.NPC.Identity"}}</h4>
+        <dl class="tw-m-0 tw-text-sm">
           <dt>{{localize "WH40K.NPC.Name"}}</dt>
-          <dd>{{parsedData.name}}</dd>
+          <dd class="tw-m-0 tw-mb-2">{{parsedData.name}}</dd>
           <dt>{{localize "WH40K.NPC.Type"}}</dt>
-          <dd>{{parsedData.system.type}}</dd>
+          <dd class="tw-m-0 tw-mb-2">{{parsedData.system.type}}</dd>
           <dt>{{localize "WH40K.NPC.ThreatLevel"}}</dt>
-          <dd>{{parsedData.system.threatLevel}}</dd>
+          <dd class="tw-m-0 tw-mb-2">{{parsedData.system.threatLevel}}</dd>
         </dl>
       </div>
 
       {{!-- Characteristics --}}
-      <div class="preview-panel characteristics">
-        <h4>{{localize "WH40K.Characteristics.Label"}}</h4>
-        <div class="char-grid">
+      <div class="preview-panel characteristics tw-p-4">
+        <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-1">{{localize "WH40K.Characteristics.Label"}}</h4>
+        <div class="char-grid tw-grid tw-grid-cols-5 tw-gap-2">
           {{#each parsedData.system.characteristics as |char key|}}
-          <div class="char-item">
-            <span class="char-label">{{char.short}}</span>
-            <span class="char-value">{{char.base}}</span>
+          <div class="char-item tw-text-center tw-p-1 tw-rounded-sm">
+            <span class="char-label tw-block tw-text-xs">{{char.short}}</span>
+            <span class="char-value tw-font-bold tw-text-base">{{char.base}}</span>
           </div>
           {{/each}}
         </div>
       </div>
 
       {{!-- Vitals --}}
-      <div class="preview-panel preview-panel--skills">
-        <h4>{{localize "WH40K.Vitals.Label"}}</h4>
-        <dl>
+      <div class="preview-panel preview-panel--skills tw-p-4">
+        <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-1">{{localize "WH40K.Vitals.Label"}}</h4>
+        <dl class="tw-m-0 tw-text-sm">
           <dt>{{localize "WH40K.Wounds.Label"}}</dt>
-          <dd>{{parsedData.system.wounds.max}}</dd>
+          <dd class="tw-m-0 tw-mb-2">{{parsedData.system.wounds.max}}</dd>
           {{#if parsedData.system.armour}}
           <dt>{{localize "WH40K.Armour.Label"}}</dt>
-          <dd>{{parsedData.system.armour.total}}</dd>
+          <dd class="tw-m-0 tw-mb-2">{{parsedData.system.armour.total}}</dd>
           {{/if}}
         </dl>
       </div>
 
       {{!-- Skills --}}
       {{#if parsedData}}
-      <div class="preview-panel preview-panel--talents">
-        <h4><i class="fa-solid fa-list-check"></i> {{localize "WH40K.Skills"}}</h4>
-        <ul class="preview-list">
+      <div class="preview-panel preview-panel--talents tw-p-4">
+        <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-1"><i class="fa-solid fa-list-check"></i> {{localize "WH40K.Skills"}}</h4>
+        <ul class="preview-list tw-list-none tw-p-0 tw-m-0 tw-grid tw-gap-1">
           {{#if hasPreviewSkills}}
             {{#each previewSkills as |skill|}}
-            <li><i class="fa-solid fa-check"></i>{{skill.name}}</li>
+            <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-rounded-sm tw-text-sm"><i class="fa-solid fa-check"></i>{{skill.name}}</li>
             {{/each}}
           {{else}}
-            <li class="preview-empty">None</li>
+            <li class="preview-empty tw-flex tw-justify-center tw-p-2 tw-rounded-sm tw-text-sm">None</li>
           {{/if}}
         </ul>
       </div>
@@ -117,15 +117,15 @@
 
       {{!-- Talents --}}
       {{#if parsedData}}
-      <div class="preview-panel preview-panel--traits">
-        <h4><i class="fa-solid fa-star"></i> {{localize "WH40K.Talents"}}</h4>
-        <ul class="preview-list">
+      <div class="preview-panel preview-panel--traits tw-p-4">
+        <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-1"><i class="fa-solid fa-star"></i> {{localize "WH40K.Talents"}}</h4>
+        <ul class="preview-list tw-list-none tw-p-0 tw-m-0 tw-grid tw-gap-1">
           {{#if hasPreviewTalents}}
             {{#each previewTalents as |item|}}
-            <li><i class="fa-solid fa-bolt"></i>{{item.name}}</li>
+            <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-rounded-sm tw-text-sm"><i class="fa-solid fa-bolt"></i>{{item.name}}</li>
             {{/each}}
           {{else}}
-            <li class="preview-empty">None</li>
+            <li class="preview-empty tw-flex tw-justify-center tw-p-2 tw-rounded-sm tw-text-sm">None</li>
           {{/if}}
         </ul>
       </div>
@@ -133,15 +133,15 @@
 
       {{!-- Traits --}}
       {{#if parsedData}}
-      <div class="preview-panel preview-panel--weapons">
-        <h4><i class="fa-solid fa-dna"></i> {{localize "WH40K.Traits"}}</h4>
-        <ul class="preview-list">
+      <div class="preview-panel preview-panel--weapons tw-p-4">
+        <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-1"><i class="fa-solid fa-dna"></i> {{localize "WH40K.Traits"}}</h4>
+        <ul class="preview-list tw-list-none tw-p-0 tw-m-0 tw-grid tw-gap-1">
           {{#if hasPreviewTraits}}
             {{#each previewTraits as |item|}}
-            <li><i class="fa-solid fa-shield"></i>{{item.name}}</li>
+            <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-rounded-sm tw-text-sm"><i class="fa-solid fa-shield"></i>{{item.name}}</li>
             {{/each}}
           {{else}}
-            <li class="preview-empty">None</li>
+            <li class="preview-empty tw-flex tw-justify-center tw-p-2 tw-rounded-sm tw-text-sm">None</li>
           {{/if}}
         </ul>
       </div>
@@ -149,15 +149,15 @@
 
       {{!-- Weapons --}}
       {{#if parsedData}}
-      <div class="preview-panel">
-        <h4><i class="fa-solid fa-gun"></i> {{localize "WH40K.Weapons"}}</h4>
-        <ul class="preview-list">
+      <div class="preview-panel tw-p-4">
+        <h4 class="tw-m-0 tw-mb-2 tw-text-sm tw-flex tw-items-center tw-gap-1"><i class="fa-solid fa-gun"></i> {{localize "WH40K.Weapons"}}</h4>
+        <ul class="preview-list tw-list-none tw-p-0 tw-m-0 tw-grid tw-gap-1">
           {{#if hasPreviewWeapons}}
             {{#each previewWeapons as |weapon|}}
-            <li><i class="fa-solid fa-bullseye"></i>{{weapon.name}} ({{weapon.damage}}, Pen {{weapon.pen}})</li>
+            <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-rounded-sm tw-text-sm"><i class="fa-solid fa-bullseye"></i>{{weapon.name}} ({{weapon.damage}}, Pen {{weapon.pen}})</li>
             {{/each}}
           {{else}}
-            <li class="preview-empty">None</li>
+            <li class="preview-empty tw-flex tw-justify-center tw-p-2 tw-rounded-sm tw-text-sm">None</li>
           {{/if}}
         </ul>
       </div>
@@ -167,9 +167,9 @@
   {{/if}}
 
   {{!-- Action Buttons --}}
-  <footer class="sheet-footer flexrow">
+  <footer class="sheet-footer flexrow tw-pt-4 tw-flex tw-gap-2">
     {{#each buttons}}
-    <button type="{{type}}" {{#if action}}data-action="{{action}}"{{/if}} class="{{cssClass}}" {{#if disabled}}disabled{{/if}}>
+    <button type="{{type}}" {{#if action}}data-action="{{action}}"{{/if}} class="{{cssClass}} tw-grow" {{#if disabled}}disabled{{/if}}>
       <i class="{{icon}}"></i>
       {{localize label}}
     </button>

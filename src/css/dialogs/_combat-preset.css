@@ -5,18 +5,12 @@
 
 .combat-preset-dialog {
     .wh40k-combat-preset-dialog {
-        display: flex;
-        flex-direction: column;
-        gap: var(--wh40k-space-lg);
-        padding: var(--wh40k-space-md);
+        /* Layout: tw-flex tw-flex-col tw-gap-4 tw-p-4 */
 
         /* Save Mode */
         .wh40k-panel--save-preset {
             .wh40k-panel-header {
-                display: flex;
-                align-items: center;
-                gap: var(--wh40k-space-sm);
-                padding: var(--wh40k-space-md) var(--wh40k-space-md) var(--wh40k-space-sm);
+                /* Layout: tw-flex tw-items-center tw-gap-2 tw-pb-2 */
                 border-bottom: 2px solid var(--color-border-secondary);
 
                 h3 {
@@ -31,17 +25,13 @@
             }
 
             .wh40k-panel-body {
-                padding: var(--wh40k-space-md);
+                /* Layout: tw-p-4 */
             }
 
             .wh40k-npc-preview {
-                display: flex;
-                align-items: center;
-                gap: var(--wh40k-space-md);
-                padding: var(--wh40k-space-md);
+                /* Layout: tw-flex tw-items-center tw-gap-4 tw-p-4 tw-mb-6 */
                 background: var(--color-bg-secondary);
                 border-radius: var(--wh40k-radius-lg);
-                margin-bottom: var(--wh40k-space-lg);
 
                 .wh40k-token-image {
                     width: 60px;
@@ -52,7 +42,7 @@
                 }
 
                 .wh40k-npc-info {
-                    flex: 1;
+                    /* Layout: tw-flex-1 */
 
                     h4 {
                         margin: 0 0 var(--wh40k-space-sm) 0;
@@ -61,14 +51,13 @@
                     }
 
                     .wh40k-npc-stats {
-                        display: flex;
-                        gap: var(--wh40k-space-sm);
+                        /* Layout: tw-flex tw-gap-2 */
                     }
                 }
             }
 
             .wh40k-form-group {
-                margin-bottom: var(--wh40k-space-md);
+                /* Layout: tw-mb-4 */
 
                 .wh40k-label {
                     display: block;
@@ -103,9 +92,7 @@
             }
 
             .wh40k-form-actions {
-                display: flex;
-                justify-content: flex-end;
-                padding-top: var(--wh40k-space-md);
+                /* Layout: tw-flex tw-justify-end tw-pt-4 */
                 border-top: 2px solid var(--color-border-secondary);
             }
         }
@@ -113,10 +100,7 @@
         /* Load Mode */
         .wh40k-panel--load-preset {
             .wh40k-panel-header {
-                display: flex;
-                align-items: center;
-                gap: var(--wh40k-space-sm);
-                padding: var(--wh40k-space-md) var(--wh40k-space-md) var(--wh40k-space-sm);
+                /* Layout: tw-flex tw-items-center tw-gap-2 tw-pb-2 */
                 border-bottom: 2px solid var(--color-border-secondary);
 
                 h3 {
@@ -131,7 +115,7 @@
             }
 
             .wh40k-panel-body {
-                padding: var(--wh40k-space-md);
+                /* Layout: tw-p-4 */
             }
 
             .wh40k-warning {
@@ -142,12 +126,9 @@
             }
 
             .wh40k-preset-list {
-                display: flex;
-                flex-direction: column;
-                gap: var(--wh40k-space-sm);
+                /* Layout: tw-flex tw-flex-col tw-gap-2 tw-mb-4 */
                 max-height: 400px;
                 overflow-y: auto;
-                margin-bottom: var(--wh40k-space-md);
                 padding: 2px; /* Prevent box-shadow clip */
             }
 
@@ -172,10 +153,7 @@
                 }
 
                 .wh40k-preset-header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: var(--wh40k-space-sm);
+                    /* Layout: tw-flex tw-justify-between tw-items-center tw-mb-2 */
 
                     .wh40k-preset-name {
                         margin: 0;
@@ -191,23 +169,19 @@
                 }
 
                 .wh40k-preset-description {
-                    margin: 0 0 var(--wh40k-space-sm) 0;
+                    /* Layout: tw-mb-2 */
                     font-size: 0.9rem;
                     color: var(--color-text-light-secondary);
                     font-style: italic;
                 }
 
                 .wh40k-preset-stats {
-                    display: flex;
-                    gap: var(--wh40k-space-sm);
-                    flex-wrap: wrap;
+                    /* Layout: tw-flex tw-gap-2 tw-flex-wrap */
                 }
             }
 
             .wh40k-form-actions {
-                display: flex;
-                justify-content: flex-end;
-                padding-top: var(--wh40k-space-md);
+                /* Layout: tw-flex tw-justify-end tw-pt-4 */
                 border-top: 2px solid var(--color-border-secondary);
             }
         }
@@ -215,15 +189,12 @@
         /* Library Mode */
         .wh40k-panel--preset-library {
             .wh40k-panel-header {
-                display: flex;
-                align-items: center;
-                gap: var(--wh40k-space-sm);
-                padding: var(--wh40k-space-md);
+                /* Layout: tw-flex tw-items-center tw-p-4 */
                 border-bottom: 2px solid var(--color-border-secondary);
 
                 h3 {
                     margin: 0;
-                    flex: 1;
+                    /* Layout: tw-flex-1 */
                     font-size: 1.2rem;
                     color: var(--color-text-light-primary);
                 }
@@ -234,21 +205,17 @@
             }
 
             .wh40k-panel-body {
-                padding: var(--wh40k-space-md);
+                /* Layout: tw-p-4 */
             }
 
             .wh40k-preset-library-list {
-                display: flex;
-                flex-direction: column;
-                gap: var(--wh40k-space-md);
+                /* Layout: tw-flex tw-flex-col tw-gap-4 */
                 max-height: 500px;
                 overflow-y: auto;
             }
 
             .wh40k-preset-library-item {
-                display: flex;
-                gap: var(--wh40k-space-md);
-                padding: var(--wh40k-space-md);
+                /* Layout: tw-flex tw-gap-4 tw-p-4 */
                 background: var(--color-bg-secondary);
                 border: 2px solid var(--color-border-secondary);
                 border-radius: var(--wh40k-radius-lg);
@@ -260,20 +227,15 @@
                 }
 
                 .wh40k-preset-content {
-                    flex: 1;
+                    /* Layout: tw-flex-1 */
                 }
 
                 .wh40k-preset-actions {
-                    display: flex;
-                    gap: var(--wh40k-space-sm);
-                    align-items: flex-start;
+                    /* Layout: tw-flex tw-gap-2 tw-items-start */
                 }
 
                 .wh40k-preset-header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: var(--wh40k-space-sm);
+                    /* Layout: tw-flex tw-justify-between tw-items-center tw-mb-2 */
 
                     .wh40k-preset-name {
                         margin: 0;
@@ -289,16 +251,14 @@
                 }
 
                 .wh40k-preset-description {
-                    margin: 0 0 var(--wh40k-space-sm) 0;
+                    /* Layout: tw-mb-2 */
                     font-size: 0.9rem;
                     color: var(--color-text-light-secondary);
                     font-style: italic;
                 }
 
                 .wh40k-preset-stats {
-                    display: flex;
-                    gap: var(--wh40k-space-sm);
-                    flex-wrap: wrap;
+                    /* Layout: tw-flex tw-gap-2 tw-flex-wrap */
                 }
             }
         }

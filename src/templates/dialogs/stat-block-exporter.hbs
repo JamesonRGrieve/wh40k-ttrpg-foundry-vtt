@@ -1,31 +1,31 @@
 {{!-- Stat Block Exporter Dialog --}}
-<div class="stat-block-exporter-content">
+<div class="stat-block-exporter-content tw-flex tw-flex-col tw-gap-4 tw-h-full">
   {{!-- Format Tabs --}}
-  <nav class="export-format-tabs">
-    <button type="button" class="format-tab {{#eq format "text"}}active{{/eq}}" data-format="text">
-      <i class="fa-solid fa-file-lines"></i>
+  <nav class="export-format-tabs tw-flex tw-gap-2 tw-border-b tw-border-solid tw-border-gray-300 tw-pb-2">
+    <button type="button" class="format-tab tw-p-2 tw-rounded-md tw-cursor-pointer {{#eq format "text"}}active{{/eq}}" data-format="text">
+      <i class="fa-solid fa-file-lines tw-mr-2"></i>
       {{localize "WH40K.NPC.Export.TextFormat"}}
     </button>
-    <button type="button" class="format-tab {{#eq format "json"}}active{{/eq}}" data-format="json">
-      <i class="fa-solid fa-file-code"></i>
+    <button type="button" class="format-tab tw-p-2 tw-rounded-md tw-cursor-pointer {{#eq format "json"}}active{{/eq}}" data-format="json">
+      <i class="fa-solid fa-file-code tw-mr-2"></i>
       {{localize "WH40K.NPC.Export.JSONFormat"}}
     </button>
   </nav>
 
   {{!-- Export Preview --}}
-  <div class="export-preview">
-    <label>{{localize "WH40K.NPC.Export.Preview"}}</label>
+  <div class="export-preview tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
+    <label class="tw-font-bold tw-mb-2">{{localize "WH40K.NPC.Export.Preview"}}</label>
     {{#eq format "text"}}
-    <pre class="export-content text-content">{{textContent}}</pre>
+    <pre class="export-content text-content tw-flex-1 tw-overflow-auto tw-p-4 tw-m-0">{{textContent}}</pre>
     {{else}}
-    <pre class="export-content json-content">{{jsonContent}}</pre>
+    <pre class="export-content json-content tw-flex-1 tw-overflow-auto tw-p-4 tw-m-0">{{jsonContent}}</pre>
     {{/eq}}
   </div>
 
   {{!-- Action Buttons --}}
-  <footer class="sheet-footer flexrow">
+  <footer class="sheet-footer flexrow tw-flex tw-gap-2 tw-pt-4 tw-border-t tw-border-solid tw-border-gray-300">
     {{#each buttons}}
-    <button type="button" data-action="{{action}}" class="{{cssClass}}">
+    <button type="button" data-action="{{action}}" class="{{cssClass}} tw-flex-1">
       <i class="{{icon}}"></i>
       {{localize label}}
     </button>
