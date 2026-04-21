@@ -8,8 +8,10 @@ import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KCharacteristic, WH40KSkill } from '../../types/global.d.ts';
+import type { ApplicationV2Ctor, ContextMenuEntryLike, DialogV2Like, FoundryApplicationUXLike } from './application-types.ts';
 
-type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+const applicationUX = (foundry.applications as unknown as { ux: FoundryApplicationUXLike }).ux;
+const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
 
 type ActorType = WH40KAcolyte | WH40KNPCV2 | WH40KBaseActor;
 
@@ -17,7 +19,11 @@ type ActorType = WH40KAcolyte | WH40KNPCV2 | WH40KBaseActor;
  * Custom ContextMenu subclass for WH40K RPG styling.
  * Uses Foundry V13's native ContextMenu with fixed positioning.
  */
-export class WH40KContextMenu extends foundry.applications.ux.ContextMenu {
+export class WH40KContextMenu extends applicationUX.ContextMenu {
+    constructor(...args: any[]) {
+        super(...args);
+    }
+
     /** @override */
     _setPosition(html: HTMLElement, target: HTMLElement, options: Record<string, unknown> = {}): void {
         html.classList.add('wh40k-context-menu');
@@ -55,8 +61,12 @@ export class WH40KContextMenu extends foundry.applications.ux.ContextMenu {
  * @returns {any}
  * @mixin
  */
-export default function ContextMenuMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+export default function ContextMenuMixin<T extends ApplicationV2Ctor>(Base: T) {
     class ContextMenuApplication extends Base {
+        constructor(...args: any[]) {
+            super(...args);
+        }
+
         declare actor: ActorType;
 
         /* -------------------------------------------- */
@@ -129,7 +139,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
          * @returns {foundry.applications.ux.ContextMenu.Entry[]}
          * @protected
          */
-        _getCharacteristicContextOptions(target: HTMLElement): foundry.applications.ux.ContextMenu.Entry[] {
+        _getCharacteristicContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
             const charKey = target.dataset.characteristic;
             if (!charKey) return [];
             const char = (this.actor as any).system.characteristics?.[charKey] as WH40KCharacteristic | undefined;
@@ -178,13 +188,13 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
          * @returns {foundry.applications.ux.ContextMenu.Entry[]}
          * @protected
          */
-        _getSkillContextOptions(target: HTMLElement): foundry.applications.ux.ContextMenu.Entry[] {
+        _getSkillContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
             const skillKey = target.dataset.skill;
             if (!skillKey) return [];
             const skill = (this.actor as any).system.skills?.[skillKey] as WH40KSkill | undefined;
             if (!skill) return [];
 
-            const options: foundry.applications.ux.ContextMenu.Entry[] = [
+            const options: ContextMenuEntryLike[] = [
                 {
                     name: `Roll ${skill.label || skillKey} Test`,
                     icon: '<i class="fas fa-dice-d20"></i>',
@@ -239,13 +249,13 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
          * @returns {foundry.applications.ux.ContextMenu.Entry[]}
          * @protected
          */
-        _getItemContextOptions(target: HTMLElement): foundry.applications.ux.ContextMenu.Entry[] {
+        _getItemContextOptions(target: HTMLElement): ContextMenuEntryLike[] {
             const itemId = target.dataset.itemId;
             if (!itemId) return [];
             const item = this.actor.items.get(itemId);
             if (!item) return [];
 
-            const options: foundry.applications.ux.ContextMenu.Entry[] = [];
+            const options: ContextMenuEntryLike[] = [];
 
             // Weapon-specific options
             if (item.type === 'weapon') {
@@ -332,7 +342,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
          * @returns {foundry.applications.ux.ContextMenu.Entry[]}
          * @protected
          */
-        _getFatePointContextOptions(): foundry.applications.ux.ContextMenu.Entry[] {
+        _getFatePointContextOptions(): ContextMenuEntryLike[] {
             return [
                 {
                     name: 'Spend for Re-roll',
@@ -385,7 +395,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
                 (Bonus: ${char.bonus})
             </div>`;
             await ChatMessage.create({
-                speaker: ChatMessage.getSpeaker({ actor: this.actor as Actor }),
+                speaker: ChatMessage.getSpeaker({ actor: this.actor as unknown as Actor }),
                 content,
             });
         }
@@ -418,7 +428,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
         }
 
         async _deleteItem(item: WH40KItem): Promise<void> {
-            const confirmed = await foundry.applications.api.DialogV2.confirm({
+            const confirmed = await dialogV2.confirm({
                 window: { title: `Delete ${item.name}?` },
                 content: `<p>Are you sure you want to delete <strong>${item.name}</strong>?</p>`,
                 yes: { default: false },
@@ -446,7 +456,7 @@ export default function ContextMenuMixin<T extends new (...args: any[]) => Appli
         async _spendFate(purpose: string): Promise<void> {}
 
         async _burnFatePoint(): Promise<void> {
-            const confirmed = await foundry.applications.api.DialogV2.confirm({
+            const confirmed = await dialogV2.confirm({
                 window: { title: 'Burn Fate Point?' },
                 content: `<p><strong>Warning:</strong> This will permanently reduce your maximum Fate Points!</p><p>Are you sure?</p>`,
                 yes: { default: false },

@@ -6,7 +6,7 @@
  * This is the API layer - for visual feedback, see drag-drop-visual-mixin.mjs
  */
 
-type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { ApplicationV2Ctor } from './application-types.ts';
 import type { DragDropMixinAPI } from './sheet-mixin-types.js';
 
 /**
@@ -16,10 +16,14 @@ import type { DragDropMixinAPI } from './sheet-mixin-types.js';
  * @returns {any}
  * @mixin
  */
-export default function DragDropMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+export default function DragDropMixin<T extends ApplicationV2Ctor>(Base: T) {
     return class DragDropApplication extends Base implements DragDropMixinAPI {
+        constructor(...args: any[]) {
+            super(...args);
+        }
+
         /** @override */
-        static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
+        static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> & { dragDrop?: object[] } = {
             dragDrop: [
                 { dragSelector: '[data-item-id] .item-row', dropSelector: null },
                 { dragSelector: '[data-effect-id] .item-row', dropSelector: null },
@@ -84,7 +88,10 @@ export default function DragDropMixin<T extends new (...args: any[]) => Applicat
         async _onDragStart(event: DragEvent): Promise<void> {
             const dataTransfer = event.dataTransfer;
             if (!dataTransfer) return;
-            await super._onDragStart(event);
+            const prototype = Object.getPrototypeOf(DragDropApplication.prototype) as {
+                _onDragStart?: (this: DragDropApplication, event: DragEvent) => Promise<void>;
+            };
+            await prototype._onDragStart?.call(this, event);
             const doc = (this as any).document;
             if (!doc.isOwner || doc.collection?.locked) {
                 dataTransfer.effectAllowed = 'copyLink';

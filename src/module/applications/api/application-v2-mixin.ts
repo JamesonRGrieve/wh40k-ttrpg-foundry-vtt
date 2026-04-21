@@ -3,7 +3,10 @@
  * Based on dnd5e's ApplicationV2Mixin pattern for Foundry V13+
  */
 
-const { HandlebarsApplicationMixin } = foundry.applications.api;
+import type { ApplicationV2Ctor, FoundryApplicationApiLike } from './application-types.ts';
+
+const applicationAPI = (foundry.applications as unknown as { api: FoundryApplicationApiLike }).api;
+const { HandlebarsApplicationMixin } = applicationAPI;
 
 /**
  * Mixin method for ApplicationV2-based WH40K RPG applications.
@@ -12,8 +15,12 @@ const { HandlebarsApplicationMixin } = foundry.applications.api;
  * @returns {typeof BaseApplicationWH40K}
  * @mixin
  */
-export default function ApplicationV2Mixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
+export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T) {
     class BaseApplicationWH40K extends HandlebarsApplicationMixin(Base) {
+        constructor(...args: any[]) {
+            super(...args);
+        }
+
         /** @override */
         static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
             actions: {
@@ -53,7 +60,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
          * @type {string}
          */
         get subtitle(): string {
-            const options = this.options as { window?: { subtitle?: string } };
+            const options = (this as unknown as { options: { window?: { subtitle?: string } } }).options;
             return game.i18n.localize(options?.window?.subtitle ?? '');
         }
 
@@ -64,7 +71,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
         /** @inheritDoc */
         _configureRenderOptions(options: ApplicationV2Config.RenderOptions): void {
             super._configureRenderOptions(options);
-            if (options.isFirstRender && this.hasFrame) {
+            if (options.isFirstRender && (this as unknown as { hasFrame: boolean }).hasFrame) {
                 options.window ||= {};
                 options.window.subtitle ||= this.subtitle;
             }
@@ -73,8 +80,8 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        _onFirstRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
-            super._onFirstRender(context, options);
+        async _onFirstRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+            await super._onFirstRender(context, options);
             this._renderContainers(context, options);
         }
 
@@ -82,7 +89,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
 
         /** @inheritDoc */
         async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-            const context = await super._prepareContext(options);
+            const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
             context.CONFIG = CONFIG.wh40k;
             return context;
         }
@@ -95,7 +102,15 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
             context: Record<string, unknown>,
             options: ApplicationV2Config.RenderOptions,
         ): Promise<Record<string, unknown>> {
-            return { ...(await super._preparePartContext(partId, context, options)) };
+            const prototype = Object.getPrototypeOf(BaseApplicationWH40K.prototype) as {
+                _preparePartContext?: (
+                    this: BaseApplicationWH40K,
+                    partId: string,
+                    context: Record<string, unknown>,
+                    options: ApplicationV2Config.RenderOptions,
+                ) => Promise<Record<string, unknown>>;
+            };
+            return { ...((await prototype._preparePartContext?.call(this, partId, context, options)) ?? {}) };
         }
 
         /* -------------------------------------------- */
@@ -107,11 +122,12 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
          * @protected
          */
         _renderContainers(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void {
-            const containerElements = Array.from(this.element.querySelectorAll<HTMLElement>('[data-container-id]'));
+            const root = (this as unknown as { element: HTMLElement }).element;
+            const containerElements = Array.from(root.querySelectorAll<HTMLElement>('[data-container-id]'));
             const containers: Record<string, HTMLElement> = Object.fromEntries(containerElements.map((el) => [el.dataset.containerId!, el]));
             for (const [part, config] of Object.entries((this.constructor as typeof BaseApplicationWH40K).PARTS)) {
                 if (!config.container?.id) continue;
-                const element = this.element.querySelector<HTMLElement>(`[data-application-part="${part}"]`);
+                const element = root.querySelector<HTMLElement>(`[data-application-part="${part}"]`);
                 if (!element) continue;
                 let container = containers[config.container.id];
                 if (!container) {
@@ -146,7 +162,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
         _updateFrame(options: ApplicationV2Config.RenderOptions): void {
             super._updateFrame(options);
             if (options.window?.subtitle) {
-                const subtitle = this.element.querySelector('.window-header > .window-subtitle') as HTMLElement | null;
+                const subtitle = (this as unknown as { element: HTMLElement }).element.querySelector('.window-header > .window-subtitle') as HTMLElement | null;
                 if (subtitle) subtitle.innerText = options.window.subtitle;
             }
         }
@@ -154,11 +170,11 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
         /* -------------------------------------------- */
 
         /** @inheritDoc */
-        _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): void | Promise<void> {
-            super._onRender(context, options);
+        async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
+            await super._onRender(context, options);
 
             // Add special styling for multi-select tags
-            for (const select of this.element.querySelectorAll('multi-select')) {
+            for (const select of (this as unknown as { element: HTMLElement }).element.querySelectorAll('multi-select')) {
                 const multiSelect = select as HTMLInputElement;
                 if (multiSelect.disabled) continue;
                 for (const tag of select.querySelectorAll('.tag')) {
@@ -175,7 +191,7 @@ export default function ApplicationV2Mixin<T extends new (...args: any[]) => App
          */
         _disableFields(): void {
             const selector = `.window-content :is(${['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON'].join(', ')}):not(.always-interactive)`;
-            for (const element of this.element.querySelectorAll<HTMLElement>(selector)) {
+            for (const element of (this as unknown as { element: HTMLElement }).element.querySelectorAll<HTMLElement>(selector)) {
                 if (element instanceof HTMLTextAreaElement) element.readOnly = true;
                 else if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement || element instanceof HTMLButtonElement)
                     element.disabled = true;

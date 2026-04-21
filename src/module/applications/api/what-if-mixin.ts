@@ -13,9 +13,10 @@
  * - Clear visual distinction from reality
  */
 
-type ApplicationV2 = foundry.applications.api.ApplicationV2.Any;
+import type { ApplicationV2Ctor, DialogV2Like } from './application-types.ts';
 import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KSkillEntry } from '../../types/global.d.ts';
-import type { WhatIfMixinAPI } from './sheet-mixin-types.js';
+
+const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
 
 /**
  * Mixin that adds "What-If" mode functionality to actor sheets
@@ -24,8 +25,12 @@ import type { WhatIfMixinAPI } from './sheet-mixin-types.js';
  * @returns {any}
  * @mixin
  */
-export default function WhatIfMixin<T extends new (...args: any[]) => ApplicationV2>(Base: T) {
-    return class WhatIfApplication extends Base implements WhatIfMixinAPI {
+export default function WhatIfMixin<T extends ApplicationV2Ctor>(Base: T) {
+    return class WhatIfApplication extends Base {
+        constructor(...args: any[]) {
+            super(...args);
+        }
+
         /* -------------------------------------------- */
         /*  What-If Mode State                          */
         /* -------------------------------------------- */
@@ -43,7 +48,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
 
         /** @inheritDoc */
         async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
-            const context = await super._prepareContext(options);
+            const context = (await super._prepareContext(options as never)) as Record<string, unknown>;
 
             context.whatIf = {
                 active: this._whatIfActive,
@@ -339,7 +344,7 @@ export default function WhatIfMixin<T extends new (...args: any[]) => Applicatio
 
             const count = Object.keys(this._whatIfChanges).length;
             if (count > 0) {
-                const confirm = await (foundry.applications.api.DialogV2 as any).confirm({
+                const confirm = await dialogV2.confirm({
                     window: { title: 'Cancel What-If Mode' },
                     content: `Discard ${count} pending change${count !== 1 ? 's' : ''}?`,
                     yes: { label: 'Discard', default: true },

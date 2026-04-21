@@ -1,29 +1,48 @@
 import { capitalize } from '../handlebars/handlebars-helpers.ts';
 import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import { WH40KItemContainer } from './item-container.ts';
-import type { WH40KItemDocument } from '../types/global.d.ts';
+import type { WH40KItemDocument, WH40KItemSystemData } from '../types/global.d.ts';
+import type { WH40KBaseActor } from './base-actor.ts';
 
-export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
+type AttackSpecialIndexEntry = {
+    _id: string;
+    name: string;
+    img?: string;
+    type?: string;
+    system: Record<string, unknown> & { hasLevel?: boolean; level?: unknown; enabled?: unknown };
+};
+
+type OriginActorLike = WH40KBaseActor & {
+    system: WH40KBaseActor['system'] & {
+        characteristics?: Record<string, { advance?: number }>;
+        wounds?: { max?: number };
+        fate?: { total?: number };
+    };
+};
+
+export class WH40KItem extends WH40KItemContainer {
+    declare system: WH40KItemSystemData;
     static #pruneUndefined(value: unknown): unknown {
         if (Array.isArray(value)) {
             return value.map((entry) => this.#pruneUndefined(entry));
         }
 
         if (value && typeof value === 'object' && !(value instanceof Set) && !(value instanceof Map)) {
+            const mutableValue = value as Record<string, unknown>;
             // ActorDelta.updateSyntheticActor hands us frozen delta objects during token
             // resynthesis; mutating them would throw and abort Item init, which in turn
             // blanks the token texture. Skip frozen/sealed objects entirely — their
             // `undefined` fields will be handled by schema coercion downstream.
             if (Object.isFrozen(value) || Object.isSealed(value)) return value;
-            for (const key of Object.keys(value)) {
-                const entry = value[key];
+            for (const key of Object.keys(mutableValue)) {
+                const entry = mutableValue[key];
                 if (entry === undefined) {
-                    const desc = Object.getOwnPropertyDescriptor(value, key);
-                    if (desc?.configurable) delete value[key];
+                    const desc = Object.getOwnPropertyDescriptor(mutableValue, key);
+                    if (desc?.configurable) delete mutableValue[key];
                     continue;
                 }
 
-                value[key] = this.#pruneUndefined(entry);
+                mutableValue[key] = this.#pruneUndefined(entry);
             }
         }
 
@@ -122,10 +141,12 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
         return this.type as string;
     }
 
-    get totalWeight(): boolean {
+    get totalWeight(): number {
         let weight = this.system.weight || 0;
         if (this.items && this.items.size > 0) {
-            this.items.forEach((item: WH40KItem) => (weight += item.totalWeight));
+            this.items.forEach((item) => {
+                weight += (item as unknown as WH40KItem).totalWeight;
+            });
         }
         return weight;
     }
@@ -307,7 +328,7 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
     }
 
     get isInBackpack(): boolean {
-        return this.system.backpack?.inBackpack || false;
+        return !!(this.system.backpack as { inBackpack?: boolean } | undefined)?.inBackpack;
     }
 
     get isJournalEntry(): boolean {
@@ -322,7 +343,7 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
         return this._type === 'peer';
     }
 
-    _onCreate(data, options, user): unknown {
+    _onCreate(data: Record<string, unknown>, options: Record<string, unknown>, user: unknown): unknown {
         game.wh40k.log('Determining nested items for', this);
         void this._determineNestedItems();
         return super._onCreate(data, options, user);
@@ -362,9 +383,10 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
 
         // Check for specials
         if (this.system.special) {
+            const specialData = this.system.special as Record<string, unknown>;
             game.wh40k.log(`Performing first time nested item configuration for item: ${this.name as string} with specials: `, this.system.special);
-            if (this.isWeapon) await this._updateSpecialsFromPack('wh40k-rpg.weapons', this.system.special);
-            if (this.isAmmunition) await this._updateSpecialsFromPack('wh40k-rpg.ammo', this.system.special);
+            if (this.isWeapon) await this._updateSpecialsFromPack('wh40k-rpg.weapons', specialData);
+            if (this.isAmmunition) await this._updateSpecialsFromPack('wh40k-rpg.ammo', specialData);
             game.wh40k.log(`Special migrated for item: ${this.name as string}`, this.system.special);
             this.system.special = undefined;
 
@@ -372,8 +394,8 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
         }
     }
 
-    async _updateSpecialsFromPack(pack, data): Promise<unknown> {
-        const compendium = game.packs.find((p) => p.collection === pack);
+    async _updateSpecialsFromPack(pack: string, data: Record<string, unknown>): Promise<unknown> {
+        const compendium = game.packs.find((p: { collection?: string }) => p.collection === pack);
         if (!compendium) return;
         await compendium.configure({ locked: false });
         const attackSpecials = await this._getAttackSpecials(data);
@@ -383,14 +405,14 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
         await compendium.configure({ locked: true });
     }
 
-    async _getAttackSpecials(specialData): Promise<unknown> {
-        const attackSpecialPack = game.packs.find((p) => p.collection === 'wh40k-rpg.attack-specials');
+    async _getAttackSpecials(specialData: Record<string, unknown>): Promise<AttackSpecialIndexEntry[]> {
+        const attackSpecialPack = game.packs.find((p: { collection?: string }) => p.collection === 'wh40k-rpg.attack-specials');
         if (!attackSpecialPack) return [];
         const index = await attackSpecialPack.getIndex({ fields: ['name', 'img', 'type', 'system'] });
-        const specials = [];
+        const specials: AttackSpecialIndexEntry[] = [];
         for (const special of Object.keys(specialData)) {
             const specialName = capitalize(special);
-            const attackSpecial: unknown = index.find((n) => n.name === specialName);
+            const attackSpecial = index.find((n: { name?: string }) => n.name === specialName) as AttackSpecialIndexEntry | undefined;
             if (attackSpecial) {
                 if (attackSpecial.system.hasLevel) {
                     attackSpecial.system.level = specialData[special];
@@ -444,7 +466,7 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
      * @returns {boolean}
      */
     get isRollable(): boolean {
-        return (this.isTalent && this.system?.isRollable) || (this.isSkill && this.system?.rollConfig);
+        return !!((this.isTalent && this.system?.isRollable) || (this.isSkill && this.system?.rollConfig));
     }
 
     /**
@@ -506,7 +528,7 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
         chatData.rollMode = game.settings.get('core', 'rollMode');
         applyRollModeWhispers(chatData);
 
-        return ChatMessage.create(chatData as unknown as foundry.documents.ChatMessageSource);
+        return ChatMessage.create(chatData);
     }
 
     /**
@@ -545,7 +567,13 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
             return this.sendToChat();
         }
 
-        const rollConfig = this.system?.rollConfig;
+        const rollConfig = this.system?.rollConfig as
+            | {
+                  characteristic?: string;
+                  modifier?: number;
+                  description?: string;
+              }
+            | undefined;
         if (!rollConfig?.characteristic) {
             return this.sendToChat();
         }
@@ -712,19 +740,26 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
      * Apply origin path modifiers to an actor
      * Automatically applies characteristic bonuses, skills, and talents from origin paths
      */
-    async applyOriginToActor(actor): Promise<void> {
+    async applyOriginToActor(actor: OriginActorLike): Promise<void> {
         if (!this.isOriginPath) {
             ui.notifications.warn('This item is not an origin path and cannot be auto-applied.');
             return;
         }
 
-        const updates: unknown = {};
-        const itemsToAdd = [];
-        const modifiers = this.system.modifiers || {};
+        const updates: Record<string, unknown> = {};
+        const itemsToAdd: Record<string, unknown>[] = [];
+        const modifiers = (this.system.modifiers || {}) as {
+            characteristics?: Record<string, number>;
+            wounds?: number;
+            fate?: number;
+            skills?: string[];
+            talents?: string[];
+            traits?: string[];
+        };
 
         // Apply characteristic modifiers
         if (modifiers.characteristics) {
-            const characteristics: unknown = {};
+            const characteristics: Record<string, unknown> = {};
             for (const [key, value] of Object.entries(modifiers.characteristics)) {
                 if (value !== 0) {
                     const currentBonus = actor.system.characteristics?.[key]?.advance || 0;
@@ -798,9 +833,16 @@ export class WH40KItem extends WH40KItemContainer implements WH40KItemDocument {
     getOriginPreview(): unknown {
         if (!this.isOriginPath) return null;
 
-        const modifiers = this.system.modifiers || {};
+        const modifiers = (this.system.modifiers || {}) as {
+            characteristics?: Record<string, number>;
+            wounds?: number;
+            fate?: number;
+            skills?: string[];
+            talents?: string[];
+            traits?: string[];
+        };
         const preview = {
-            characteristics: [],
+            characteristics: [] as Array<{ name: string; value: string | number }>,
             wounds: modifiers.wounds || 0,
             fate: modifiers.fate || 0,
             skills: modifiers.skills || [],

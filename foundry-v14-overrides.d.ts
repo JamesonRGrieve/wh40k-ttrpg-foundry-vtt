@@ -302,6 +302,13 @@ declare global {
             };
             /** Action handlers map */
             actions?: Record<string, Function | { handler: Function; buttons?: number[] }>;
+            /** Legacy V1-style tab config still used by some migrated sheets */
+            tabs?: Array<{
+                navSelector: string;
+                contentSelector: string;
+                initial?: string;
+                group?: string;
+            }>;
         }
 
         interface RenderOptions {

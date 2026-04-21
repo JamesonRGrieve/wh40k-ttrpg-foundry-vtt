@@ -11,121 +11,49 @@ Foundry V13 game system for Rogue Trader RPG (Warhammer 40K, Dark Heresy 2e rule
 
 ---
 
-## Beads-First Workflow
+## Work Tracking
 
-**ALL work MUST be tracked in Beads.** This is non-negotiable.
+Track work in the repository itself. Use issues, pull requests, or a local Markdown checklist when the task spans multiple sessions. Do not assume any external task-tracking CLI is available.
 
-### Ticket Requirements
+### Task Requirements
 
-Every ticket needs:
+When documenting a bug, feature, task, or epic, include:
 
--   **Title**: Clear, actionable (e.g., "Fix weapon quality label display")
--   **Type**: `bug`, `feature`, `task`, or `epic`
--   **Priority**: 0-4 (0=critical, 2=default, 4=backlog)
--   **Description**: What and why (2-3 sentences minimum)
--   **Design Notes**: How you plan to implement (files to touch, approach)
--   **Acceptance Criteria**: Checklist of "done" conditions
--   **Labels**: Tag with relevant categories (optional but recommended)
--   **Dependencies**: Link blocking issues (optional)
--   **Parent**: For epics, use parent/child hierarchies (optional)
-
-#### Basic Ticket
-
-```bash
-bd create --title="Fix weapon quality label display" \
-  --type=bug --priority=1 \
-  --description="Quality labels show identifiers instead of names. Need to map identifiers to localized labels." \
-  --design="Files: weapon-sheet.mjs, quality-tags.hbs. Use CONFIG.rt.weaponQualities mapping." \
-  --acceptance="- [ ] Quality labels show proper names\n- [ ] Localized strings used\n- [ ] Works in edit and view mode"
-```
-
-#### With Labels
-
-```bash
-bd create --title="Add weapon comparison dialog" \
-  --type=feature --priority=2 \
-  --labels="ui,weapons,combat" \
-  --description="Side-by-side comparison of weapon stats for players choosing equipment."
-```
-
-#### Epic with Child Tasks
-
-```bash
-# Create parent epic
-bd create --title="Weapon System Overhaul" --type=epic --priority=1 \
-  --description="Comprehensive weapon system improvements"
-# Returns: RogueTraderVTT-abc
-
-# Create child tasks (auto-numbered .1, .2, .3)
-bd create --title="Add weapon qualities system" --type=task --priority=1 \
-  --parent=RogueTraderVTT-abc
-
-bd create --title="Implement weapon modifications" --type=task --priority=1 \
-  --parent=RogueTraderVTT-abc
-```
-
-#### With Dependencies
-
-```bash
-# Create blocker first
-bd create --title="Create quality DataModel" --type=task --priority=0
-# Returns: RogueTraderVTT-xyz
-
-# Create dependent work
-bd create --title="Add quality sheet UI" --type=task --priority=1 \
-  --deps="RogueTraderVTT-xyz"  # This blocks until xyz is closed
-```
+-   **Title**: Clear and actionable
+-   **Priority**: Critical, high, normal, or backlog
+-   **Description**: What is broken or needed, and why it matters
+-   **Design Notes**: Intended approach and likely files to touch
+-   **Acceptance Criteria**: Flat checklist of done conditions
+-   **Dependencies**: Blocking work, if any
 
 ### Session Workflow
 
 ```bash
-# START: Find and claim work
-bd ready                              # What's available?
-bd update <id> --status=in_progress   # Claim it
+# START: inspect repo state
+git status
 
-# DURING: Track progress
-bd update <id> --notes="Progress update, findings, blockers..."
+# DURING: keep notes in the issue, PR, or local session summary
 
-# END: Close and sync (MANDATORY)
-bd close <id> --reason="Summary of what was done"
-bd sync && git push                   # NEVER skip this
+# END: verify, commit intentionally, and push
+git status
+git add <files>
+git commit -m "<clear summary>"
+git pull --rebase
+git push
 ```
 
-### Essential Commands
+### When to Use Persistent Tracking vs Todo Lists
 
-```bash
-# Finding Work
-bd ready                           # Show issues ready to work (no blockers)
-bd list --status=open              # All open issues
-bd list --status=in_progress       # Your active work
-bd show <id>                       # Detailed issue view
-bd blocked                         # Show blocked issues
-
-# Managing Issues
-bd update <id> --priority=1        # Change priority
-bd update <id> --add-label=ui      # Add label
-bd dep add <issue> <blocker>       # Add dependency (issue depends on blocker)
-bd dep remove <issue> <blocker>    # Remove dependency
-
-# Closing Work
-bd close <id1> <id2> <id3>         # Close multiple (efficient)
-bd close <id> --reason="Done"      # Close with reason
-bd reopen <id>                     # Reopen if needed
-```
-
-### When to Use Beads vs TodoWrite
-
-| Beads                          | TodoWrite                    |
-| ------------------------------ | ---------------------------- |
-| Multi-session work             | Single-session task lists    |
-| Work with dependencies         | Breaking down immediate work |
-| Bugs, features, strategic work | Step-by-step execution       |
-| Anything needing persistence   | Temporary planning           |
+| Persistent tracking           | Todo lists                   |
+| ----------------------------- | ---------------------------- |
+| Multi-session work            | Single-session task lists    |
+| Work with dependencies        | Breaking down immediate work |
+| Bugs, features, strategic work| Step-by-step execution       |
+| Anything needing history      | Temporary planning           |
 
 ### Agent Delegation
 
-**Default to `beads-task-agent`** for any beads work requiring 2+ commands.
-Use CLI directly ONLY for single atomic operations (create one, close one).
+Use direct CLI and repository-native documentation. Do not depend on any external task-tracking agent or workflow tool.
 
 ---
 
@@ -326,11 +254,10 @@ See `data/item/` for all DataModels. Key categories:
 **Work is NOT complete until `git push` succeeds.**
 
 ```bash
-# 1. Close completed work
-bd close <id1> <id2> --reason="Summary"
+# 1. Review changes
+git status
 
-# 2. Sync and push (MANDATORY)
-bd sync
+# 2. Commit and push (MANDATORY)
 git pull --rebase && git push
 git status  # MUST show "up to date with origin"
 ```
@@ -340,4 +267,4 @@ git status  # MUST show "up to date with origin"
 -   NEVER stop before pushing
 -   NEVER say "ready to push when you are" - YOU push
 -   If push fails, resolve and retry until success
--   Create tickets for any remaining work before ending
+-   Document any remaining work in the repo before ending

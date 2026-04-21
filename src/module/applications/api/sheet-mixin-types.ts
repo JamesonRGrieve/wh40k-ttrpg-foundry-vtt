@@ -92,7 +92,7 @@ export interface TooltipMixinAPI {
 /** API surface added by VisualFeedbackMixin */
 export interface VisualFeedbackMixinAPI {
     /** Store previous values for comparison. */
-    _previousValues: Map<string, any>;
+    _previousValues: Map<string, number | string>;
     /** Track the last form submission time to prevent animation spam. */
     _lastSubmitTime: number;
 
@@ -123,7 +123,7 @@ export interface EnhancedAnimationsMixinAPI {
     /** Track currently running animations. */
     _runningAnimations: Map<string, number>;
     /** Previous animation state snapshot. */
-    _previousState: any;
+    _previousState: unknown;
     /** MutationObserver for dynamic content. */
     _mutationObserver: MutationObserver | null;
 
