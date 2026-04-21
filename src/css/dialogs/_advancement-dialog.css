@@ -612,6 +612,94 @@
 }
 
 /* ============================================ */
+/* Psychic powers */
+/* ============================================ */
+.wh40k-adv__psy-rating-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(120, 46, 150, 0.4);
+    background: rgba(120, 46, 150, 0.08);
+    border-radius: 4px;
+}
+
+.wh40k-adv__psy-rating-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.wh40k-adv__psy-rating-label {
+    font-weight: bold;
+}
+
+.wh40k-adv__psy-rating-value {
+    font-size: 1.1rem;
+    color: rgba(180, 80, 220, 1);
+    font-weight: bold;
+}
+
+.wh40k-adv__psy-rating-maxed {
+    color: var(--wh40k-gold, #d4af37);
+    font-weight: bold;
+}
+
+.wh40k-adv__psy-disc-header {
+    margin: 0.75rem 0 0.35rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid rgba(180, 80, 220, 0.3);
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-primary);
+}
+
+/* ============================================ */
+/* Talent tier badge */
+/* ============================================ */
+.wh40k-adv__advance-tier-badge {
+    display: inline-block;
+    min-width: 1.75em;
+    padding: 2px 6px;
+    margin-right: 0.4rem;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 3px;
+    background: rgba(192, 128, 32, 0.2);
+    color: var(--color-text-secondary);
+    border: 1px solid rgba(192, 128, 32, 0.4);
+}
+
+/* ============================================ */
+/* Aptitude match indicators */
+/* ============================================ */
+.wh40k-adv__apt-dots {
+    display: inline-flex;
+    gap: 2px;
+    margin-left: 0.35rem;
+    align-items: center;
+}
+
+.wh40k-adv__apt-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(120, 120, 120, 0.35);
+    border: 1px solid rgba(120, 120, 120, 0.6);
+}
+
+.wh40k-adv__apt-dot--matched {
+    background: rgba(46, 204, 113, 0.85);
+    border-color: rgba(46, 204, 113, 1);
+    box-shadow: 0 0 3px rgba(46, 204, 113, 0.6);
+}
+
+/* ============================================ */
 /* Reduced Motion */
 /* ============================================ */
 @media (prefers-reduced-motion: reduce) {

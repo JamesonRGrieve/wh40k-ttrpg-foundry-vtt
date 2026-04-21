@@ -38,7 +38,7 @@ const DEAD_ICON_REMAPS: Record<string, string> = {
 };
 
 export async function checkAndMigrateWorld() {
-    const worldVersion = 186;
+    const worldVersion = 187;
 
     // @ts-expect-error - argument type
     const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
@@ -326,6 +326,54 @@ export async function checkAndMigrateWorld() {
                 if (itemReplacement) {
                     await item.update({ img: itemReplacement });
                 }
+            }
+        }
+
+        // Dedupe embedded talents + rename Weapon Training (Stock) → (Shock) (v187)
+        // @ts-expect-error - operator type
+        if (currentVersion < 187) {
+            const talents = actor.items.filter((i) => i.type === 'talent');
+
+            // First pass: rename "Weapon Training (Stock)" → "(Shock)" variants
+            for (const talent of talents) {
+                if (/^Weapon Training \(Stock\)$/i.test(talent.name)) {
+                    await talent.update({
+                        'name': talent.name.replace(/\(Stock\)/i, '(Shock)'),
+                        'system.specialization': 'Shock',
+                    });
+                }
+            }
+
+            // Second pass: group by (base-name, specialization) and dedupe
+            const refreshed = actor.items.filter((i) => i.type === 'talent');
+            const groups = new Map();
+            for (const talent of refreshed) {
+                const spec = (talent.system?.specialization ?? '').toString().toLowerCase().trim();
+                const match = talent.name.match(/^(.*?)\s*\(([^)]+)\)\s*$/);
+                const baseName = (match ? match[1] : talent.name).toLowerCase().trim();
+                const key = `${baseName}|${spec || (match ? match[2].toLowerCase().trim() : '')}`;
+                if (!groups.has(key)) groups.set(key, []);
+                groups.get(key).push(talent);
+            }
+
+            const idsToDelete = [];
+            for (const group of groups.values()) {
+                if (group.length < 2) continue;
+                // Keep the one with the highest rank; ties → keep earliest-created
+                group.sort((a, b) => {
+                    const rankDiff = (b.system?.rank ?? 1) - (a.system?.rank ?? 1);
+                    if (rankDiff !== 0) return rankDiff;
+                    const aTime = a._stats?.createdTime ?? 0;
+                    const bTime = b._stats?.createdTime ?? 0;
+                    return aTime - bTime;
+                });
+                for (let i = 1; i < group.length; i++) {
+                    idsToDelete.push(group[i].id);
+                }
+            }
+
+            if (idsToDelete.length) {
+                await actor.deleteEmbeddedDocuments('Item', idsToDelete);
             }
         }
     }
