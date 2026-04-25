@@ -1328,7 +1328,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             // Double-click on text span or the wrapper enters edit mode
             if (textEl) textEl.addEventListener('dblclick', enterEdit);
             wrap.addEventListener('dblclick', enterEdit);
-            // Legacy: dblclick on the input itself (for inline-edits without text span)
+            // dblclick on the input itself (for inline-edits without text span)
             input.addEventListener('dblclick', enterEdit);
 
             input.addEventListener('blur', (event) => {
@@ -1370,7 +1370,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             }
         });
 
-        // Legacy item action handlers for V1 templates
+        // Item action handlers
         // These use .item-edit, .item-delete, .item-vocalize classes
         this.element.querySelectorAll('.item-edit').forEach((el) => {
             el.addEventListener('click', (event) => {
@@ -1396,10 +1396,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             });
         });
 
-        // Legacy panel toggle handlers for V1 templates
+        // Panel toggle handlers
         // These use .sheet-control__hide-control class with data-toggle attribute
         this.element.querySelectorAll('.sheet-control__hide-control').forEach((el) => {
-            el.addEventListener('click', this._onLegacyPanelToggle.bind(this));
+            el.addEventListener('click', this._onPanelToggle.bind(this));
         });
 
         // Click-outside handler to close characteristic HUD dropdowns
@@ -1503,12 +1503,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     /* -------------------------------------------- */
 
     /**
-     * Handle legacy panel toggle clicks from V1 templates.
+     * Handle panel toggle clicks.
      * Uses the data-toggle attribute to identify which section to expand/collapse.
      * @param {Event} event  The click event.
      * @protected
      */
-    async _onLegacyPanelToggle(event: Event): Promise<void> {
+    async _onPanelToggle(event: Event): Promise<void> {
         event.preventDefault();
         const target = (event.currentTarget as HTMLElement).dataset.toggle;
         if (!target) return;
