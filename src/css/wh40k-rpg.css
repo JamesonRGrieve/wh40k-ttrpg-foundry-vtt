@@ -23,7 +23,6 @@
 @import './dialogs/_npc-quick-create.css';
 @import './dialogs/_threat-scaler.css';
 @import './dialogs/_stat-block-parser.css';
-@import './dialogs/_batch-create.css';
 @import './dialogs/_difficulty-calculator.css';
 @import './dialogs/_combat-preset.css';
 @import './dialogs/_characteristic-setup.css';
@@ -1343,5 +1342,6 @@
     }
 }
 
-/* Tailwind utility layer — processed by PostCSS after sass compilation */
+/* Tailwind layers — processed by PostCSS after legacy CSS imports */
+@tailwind components;
 @tailwind utilities;

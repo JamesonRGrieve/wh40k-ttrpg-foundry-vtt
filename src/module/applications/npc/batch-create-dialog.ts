@@ -161,7 +161,12 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             previewNames,
 
             buttons: [
-                { type: 'submit', icon: 'fa-solid fa-plus', label: 'WH40K.NPC.BatchCreate.Create', cssClass: 'primary' },
+                {
+                    type: 'submit',
+                    icon: 'fa-solid fa-plus',
+                    label: 'WH40K.NPC.BatchCreate.Create',
+                    cssClass: 'tw-bg-[var(--wh40k-color-accent,var(--wh40k-color-gold))] tw-text-white hover:tw-bg-[#9e801f]',
+                },
                 { type: 'button', action: 'cancel', icon: 'fa-solid fa-times', label: 'Cancel' },
             ],
         };
