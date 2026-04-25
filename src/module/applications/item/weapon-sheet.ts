@@ -31,7 +31,6 @@ interface WeaponSheetContext extends Record<string, unknown> {
  * Sheet for weapon items with support for weapon modifications and ammunition.
  * Redesigned as a single-page layout with FAB action buttons.
  */
-// @ts-expect-error Foundry ApplicationV2 static override pattern
 export default class WeaponSheet extends ContainerItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {

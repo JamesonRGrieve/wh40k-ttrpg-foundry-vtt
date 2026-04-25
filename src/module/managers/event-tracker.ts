@@ -75,7 +75,6 @@ export class EventTracker {
      * Call during system init.
      */
     static registerSettings(): void {
-        // @ts-expect-error - argument type
         game.settings.register(SYSTEM_ID, SETTING_KEY, {
             name: 'Event Tracker State',
             hint: 'Stores which campaign events have been resolved.',
@@ -114,7 +113,6 @@ export class EventTracker {
 
     /** Get resolved event IDs from world settings. */
     static getResolved(): ResolvedState {
-        // @ts-expect-error - argument type
         return game.settings.get(SYSTEM_ID, SETTING_KEY) ?? {};
     }
 
@@ -126,7 +124,6 @@ export class EventTracker {
         } else {
             delete state[eventId];
         }
-        // @ts-expect-error - argument type
         await game.settings.set(SYSTEM_ID, SETTING_KEY, state);
     }
 
@@ -452,7 +449,6 @@ export class EventTracker {
         }
 
         if (!EventTracker._graph) {
-            // @ts-expect-error - argument type
             ui.notifications.warn('Event graph not loaded. Ensure events.json is in the system folder.');
             return;
         }

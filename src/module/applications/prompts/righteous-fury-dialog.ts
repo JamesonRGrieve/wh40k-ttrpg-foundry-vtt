@@ -7,13 +7,13 @@ import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
 const { ApplicationV2 } = foundry.applications.api;
 
 interface RighteousFuryDialogOptions {
-  actor?: Actor;
-  characteristic?: string;
-  target?: number;
-  weaponName?: string;
-  isMelee?: boolean;
-  onConfirm?: Function;
-  onFail?: Function;
+    actor?: Actor;
+    characteristic?: string;
+    target?: number;
+    weaponName?: string;
+    isMelee?: boolean;
+    onConfirm?: Function;
+    onFail?: Function;
 }
 
 /**
@@ -25,7 +25,6 @@ export default class RighteousFuryDialog extends ApplicationV2Mixin(ApplicationV
      * @param {RighteousFuryDialogOptions} options - Dialog options
      */
     constructor(options: RighteousFuryDialogOptions = {}) {
-        // @ts-expect-error - argument count
         super(options);
         this.actor = options.actor;
         this.characteristic = options.characteristic;

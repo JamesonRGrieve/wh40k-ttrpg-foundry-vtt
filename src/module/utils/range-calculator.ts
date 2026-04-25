@@ -10,11 +10,47 @@
  * - Extreme Range: > weapon range * 3 (-30)
  */
 
+export interface RangeBracket {
+    label: string;
+    modifier: number;
+    description: string;
+    maxMultiplier: number;
+}
+
+export interface RangeInfo {
+    bracket: string;
+    label: string;
+    modifier: number;
+    description: string;
+}
+
+export interface ModifiedRangeInfo extends RangeInfo {
+    modifiedBy: string | null;
+}
+
+export interface RangeCalculationResult extends ModifiedRangeInfo {
+    isMeltaRange: boolean;
+}
+
+export interface RangeDisplayInfo {
+    label: string;
+    modifierText: string;
+    modifierClass: string;
+    tooltip: string;
+    isMeltaRange: boolean;
+}
+
+export interface RangeCalculationOptions {
+    distance?: number;
+    weaponRange?: number;
+    weaponQualities?: Set<string>;
+    isRangedWeapon?: boolean;
+}
+
 /**
  * Range bracket definitions.
- * @type {Object<string, {label: string, modifier: number, description: string}>}
  */
-export const RANGE_BRACKETS = {
+export const RANGE_BRACKETS: Record<string, RangeBracket> = {
     pointBlank: {
         label: 'Point Blank',
         modifier: 30,
@@ -53,7 +89,7 @@ export const RANGE_BRACKETS = {
  * @param {number} weaponRange - Base weapon range in meters
  * @returns {{bracket: string, label: string, modifier: number, description: string}}
  */
-export function calculateRangeBracket(distance, weaponRange) {
+export function calculateRangeBracket(distance: number, weaponRange: number): RangeInfo {
     // Handle melee weapons
     if (weaponRange <= 1 || distance <= 1) {
         return {
@@ -131,9 +167,9 @@ export function calculateRangeBracket(distance, weaponRange) {
  * @param {Set<string>} weaponQualities - Set of weapon quality identifiers
  * @returns {{bracket: string, label: string, modifier: number, modifiedBy: string|null}}
  */
-export function applyQualityModifiers(rangeInfo, weaponQualities) {
+export function applyQualityModifiers(rangeInfo: RangeInfo, weaponQualities: Set<string>): ModifiedRangeInfo {
     let modifier = rangeInfo.modifier;
-    let modifiedBy = null;
+    let modifiedBy: string | null = null;
 
     // Gyro-Stabilised: Never worse than Long Range (-10)
     // If penalty would be worse than -10, cap it at -10
@@ -158,7 +194,7 @@ export function applyQualityModifiers(rangeInfo, weaponQualities) {
  * @param {string} bracket - Range bracket identifier
  * @returns {boolean} - True if at melta short range
  */
-export function isAtMeltaRange(bracket) {
+export function isAtMeltaRange(bracket: string): boolean {
     return bracket === 'pointBlank' || bracket === 'short';
 }
 
@@ -180,7 +216,7 @@ export function isAtMeltaRange(bracket) {
  *   isMeltaRange: boolean
  * }}
  */
-export function calculateRangeModifier(options) {
+export function calculateRangeModifier(options: RangeCalculationOptions): RangeCalculationResult {
     const { distance = 0, weaponRange = 0, weaponQualities = new Set(), isRangedWeapon = true } = options;
 
     // Melee weapons don't use range brackets
@@ -218,12 +254,11 @@ export function calculateRangeModifier(options) {
  * @param {Token} token2 - Second token
  * @returns {number} - Distance in grid units (converted to meters)
  */
-export function calculateTokenDistance(token1, token2) {
+export function calculateTokenDistance(token1: Token | null | undefined, token2: Token | null | undefined): number {
     if (!token1 || !token2) return 0;
 
     // Measure path distance using Foundry's grid system
-    // @ts-expect-error - argument count
-    const pathDistance = canvas.grid.measurePath([token1, token2]);
+    const pathDistance = canvas.grid.measurePath([token1, token2], {});
     let distance = pathDistance.distance || 0;
 
     // Account for elevation difference (3D distance)
@@ -254,7 +289,7 @@ export function calculateTokenDistance(token1, token2) {
  *   isMeltaRange: boolean
  * }}
  */
-export function formatRangeDisplay(rangeInfo) {
+export function formatRangeDisplay(rangeInfo: RangeCalculationResult & { description?: string }): RangeDisplayInfo {
     const { label, modifier, modifiedBy, isMeltaRange, description } = rangeInfo;
 
     // Format modifier text with sign
@@ -269,7 +304,7 @@ export function formatRangeDisplay(rangeInfo) {
     // Build tooltip
     let tooltip = description;
     if (modifiedBy) {
-        const qualityNames = {
+        const qualityNames: Record<string, string> = {
             'gyro-stabilised': 'Gyro-Stabilised',
         };
         tooltip += ` (Modified by ${qualityNames[modifiedBy] || modifiedBy})`;
@@ -294,7 +329,7 @@ export function formatRangeDisplay(rangeInfo) {
  * @param {number} maxRangeMultiplier - Maximum range multiplier (default 3 for extreme range)
  * @returns {boolean} - True if out of range
  */
-export function isOutOfRange(distance, weaponRange, maxRangeMultiplier = 3) {
+export function isOutOfRange(distance: number, weaponRange: number, maxRangeMultiplier: number = 3): boolean {
     // No limit for melee
     if (weaponRange <= 1) return false;
 
