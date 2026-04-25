@@ -6,6 +6,11 @@ pnpm exec lint-staged --hide-unstaged
 echo "[pre-commit] running tsc ratchet…"
 pnpm -s typecheck:ratchet
 
+# ESLint warning ratchet: blocks commits that increase the eslint warning
+# count. Update via: pnpm lint:ratchet:update
+echo "[pre-commit] running eslint ratchet…"
+pnpm -s lint:ratchet
+
 # Validate pack compilation when the compiler or any pack source changes.
 # The prior silent-error bug in compilePacks went unnoticed because lint-staged
 # only inspects the diff, not the actual Gulp pipeline. `gulp packs` exercises
