@@ -36,130 +36,21 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
     /* -------------------------------------------- */
 
     /**
-     * Migrate armour data.
+     * Normalize armour data shape.
      * @param {object} source  The source data
      * @protected
      */
     static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
-        ArmourData.#migrateArmourPoints(source);
-        ArmourData.#migrateCoverage(source);
-        ArmourData.#migrateMaxAgility(source);
-        ArmourData.#migrateWeight(source);
-        ArmourData.#migrateProperties(source);
-        ArmourData.#migrateCollections(source);
-    }
-
-    /**
-     * Migrate `ap` → `armourPoints`.
-     * @param {object} source  The source data
-     */
-    static #migrateArmourPoints(source: Record<string, unknown>): void {
-        if (source.ap !== undefined && !ArmourData.#hasCustomArmourPoints(source)) {
-            const parsed = ArmourData.#parseLegacyAP(source);
-            if (parsed?.pointsByLocation) {
-                source.armourPoints = parsed.pointsByLocation;
-            } else if (parsed?.defaultValue !== undefined) {
-                const ap = parsed.defaultValue;
-                source.armourPoints = {
-                    head: ap,
-                    body: ap,
-                    leftArm: ap,
-                    rightArm: ap,
-                    leftLeg: ap,
-                    rightLeg: ap,
-                };
-            } else if (parsed?.special) {
-                source.armourPoints = {
-                    head: 0,
-                    body: 0,
-                    leftArm: 0,
-                    rightArm: 0,
-                    leftLeg: 0,
-                    rightLeg: 0,
-                };
-                const specialNote = typeof source.ap === 'string' ? source.ap : 'Special';
-                source.notes = `${source.notes || ''} [AP: ${specialNote}]`.trim();
-            }
-        }
-    }
-
-    /**
-     * Migrate `locations` → `coverage`.
-     * @param {object} source  The source data
-     */
-    static #migrateCoverage(source: Record<string, unknown>): void {
-        if (ArmourData.#hasCoverage(source)) return;
-
-        if (typeof source.locations === 'string') {
-            const parsed = ArmourData.#parseLegacyLocations(source);
-            if (parsed?.size) {
-                source.coverage = Array.from(parsed);
-                return;
-            }
-        }
-
-        const inferredCoverage = ArmourData.#inferCoverageFromArmourPoints(source.armourPoints as Record<string, unknown> | undefined);
-        if (inferredCoverage.size) {
-            source.coverage = Array.from(inferredCoverage);
-        }
-    }
-
-    /**
-     * Migrate `maxAg` string → `maxAgility` number.
-     * @param {object} source  The source data
-     */
-    static #migrateMaxAgility(source: Record<string, unknown>): void {
-        if (source.maxAg !== undefined && source.maxAgility === undefined) {
-            if (source.maxAg === '-' || source.maxAg === '' || source.maxAg === null) {
-                source.maxAgility = null;
-            } else {
-                const parsed = parseInt(source.maxAg);
-                if (!isNaN(parsed)) source.maxAgility = parsed;
-            }
-        }
-    }
-
-    /**
-     * Clean weight (remove "kg" suffix).
-     * @param {object} source  The source data
-     */
-    static #migrateWeight(source: Record<string, unknown>): void {
-        if (typeof source.weight === 'string') {
-            const cleaned = parseFloat(source.weight.replace(/[^\d.]/g, ''));
-            if (!isNaN(cleaned)) source.weight = cleaned;
-        }
-    }
-
-    /**
-     * Ensure properties exists.
-     * @param {object} source  The source data
-     */
-    static #migrateProperties(source: Record<string, unknown>): void {
         if (!source.properties) {
             source.properties = [];
         }
-    }
-
-    /**
-     * Convert arrays to Sets for V13.
-     * @param {object} source  The source data
-     */
-    static #migrateCollections(source: Record<string, unknown>): void {
         if (Array.isArray(source.coverage)) {
             source.coverage = new Set(source.coverage);
         }
         if (Array.isArray(source.properties)) {
             source.properties = new Set(source.properties);
         }
-    }
-
-    static #hasCoverage(source: Record<string, unknown>): boolean {
-        const { coverage } = source;
-        if (coverage instanceof Set) return coverage.size > 0;
-        if (Array.isArray(coverage)) return coverage.length > 0;
-        if (!coverage || typeof coverage !== 'object') return false;
-        return Object.values(coverage).some((value) => Boolean(value));
     }
 
     static #inferCoverageFromArmourPoints(armourPoints: Record<string, unknown> | undefined): Set<string> {
@@ -213,15 +104,11 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
             }
         }
 
-        // Validate coverage is not empty. Handle multiple stored shapes: Set
-        // (in-memory), array (legacy serialized), or object map {head:true,...}
-        // (current homologated shape). Reject anything else silently — a
-        // malformed coverage shouldn't crash actor load.
+        // Validate coverage is not empty. Coverage may be a Set (in-memory) or
+        // an object map {head:true,...} (current homologated shape).
         let coverage: Set<string>;
         if (coverageValue instanceof Set) {
             coverage = coverageValue;
-        } else if (Array.isArray(coverageValue)) {
-            coverage = new Set(coverageValue);
         } else if (coverageValue && typeof coverageValue === 'object') {
             coverage = new Set(Object.keys(coverageValue).filter((k) => (coverageValue as Record<string, unknown>)[k]));
         } else {
@@ -456,209 +343,8 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
         );
     }
 
-    _getLegacyField(field): unknown {
-        return this.parent?._source?.system?.[field];
-    }
-
-    /**
-     * Check if armour has custom armour points.
-     * @param {object} source Source data to check
-     * @returns {boolean}
-     */
-    static #hasCustomArmourPoints(source: Record<string, unknown>): boolean {
-        return Object.values(source.armourPoints ?? {}).some((value) => Number(value) > 0);
-    }
-
-    _hasCustomArmourPoints(): boolean {
-        return Object.values(this.armourPoints ?? {}).some((value) => Number(value) > 0);
-    }
-
-    /**
-     * Parse legacy locations field.
-     * @param {object} source Source data
-     * @returns {Set|null}
-     */
-    static #parseLegacyLocations(source: Record<string, unknown>): Set<string> | null {
-        const rawLocations = source.locations;
-        if (!rawLocations || typeof rawLocations !== 'string') return null;
-
-        const normalized = rawLocations.toLowerCase();
-        if (normalized.includes('all')) {
-            return new Set(['all']);
-        }
-
-        const coverage = new Set<string>();
-        const tokens = normalized
-            .split(',')
-            .map((token) => token.trim())
-            .filter(Boolean);
-        for (const token of tokens) {
-            if (token.includes('head')) {
-                coverage.add('head');
-            }
-            if (token.includes('body') || token.includes('chest') || token.includes('torso')) {
-                coverage.add('body');
-            }
-            if (token.includes('arm')) {
-                coverage.add('leftArm');
-                coverage.add('rightArm');
-            }
-            if (token.includes('leg')) {
-                coverage.add('leftLeg');
-                coverage.add('rightLeg');
-            }
-        }
-
-        return coverage.size ? coverage : null;
-    }
-
-    _parseLegacyLocations(): Set<string> | null {
-        const rawLocations = this._getLegacyField('locations');
-        if (!rawLocations || typeof rawLocations !== 'string') return null;
-
-        const normalized = rawLocations.toLowerCase();
-        if (normalized.includes('all')) {
-            return new Set(['all']);
-        }
-
-        const coverage = new Set();
-        const tokens = normalized
-            .split(',')
-            .map((token) => token.trim())
-            .filter(Boolean);
-        for (const token of tokens) {
-            if (token.includes('head')) {
-                coverage.add('head');
-            }
-            if (token.includes('body') || token.includes('chest') || token.includes('torso')) {
-                coverage.add('body');
-            }
-            if (token.includes('arm')) {
-                coverage.add('leftArm');
-                coverage.add('rightArm');
-            }
-            if (token.includes('leg')) {
-                coverage.add('leftLeg');
-                coverage.add('rightLeg');
-            }
-        }
-
-        return coverage.size ? coverage : null;
-    }
-
-    /**
-     * Parse legacy AP field.
-     * @param {object} source Source data
-     * @returns {object|null}
-     */
-    static #parseLegacyAP(source: Record<string, unknown>): Record<string, unknown> | null {
-        const rawAp = source.ap;
-        if (rawAp === null || rawAp === undefined) return null;
-
-        // Handle "Special" or narrative AP
-        if (rawAp === 'Special' || (typeof rawAp === 'string' && rawAp.toLowerCase().includes('psy'))) {
-            return { special: true };
-        }
-
-        // Handle percentage (force fields)
-        if (typeof rawAp === 'string' && rawAp.includes('%')) {
-            const percent = parseFloat(rawAp) / 100;
-            return { special: true, percentage: percent };
-        }
-
-        // Handle decimal (force fields as decimal)
-        if (typeof rawAp === 'number' && rawAp < 1 && rawAp > 0) {
-            return { special: true, percentage: rawAp };
-        }
-
-        // Handle single number
-        if (typeof rawAp === 'number') {
-            return { defaultValue: rawAp };
-        }
-
-        if (typeof rawAp !== 'string') {
-            return null;
-        }
-
-        // Try to parse as single number
-        const values = rawAp.match(/-?\d+(?:\.\d+)?/g);
-        if (!values) return null;
-
-        const parsed = values.map((value) => Number(value));
-        if (parsed.length === 1) {
-            return { defaultValue: parsed[0] };
-        }
-
-        // Handle pattern "H/B/A/L"
-        if (parsed.length === 4) {
-            return {
-                pointsByLocation: {
-                    head: parsed[0],
-                    body: parsed[1],
-                    leftArm: parsed[2],
-                    rightArm: parsed[2],
-                    leftLeg: parsed[3],
-                    rightLeg: parsed[3],
-                },
-            };
-        }
-
-        return null;
-    }
-
-    _parseLegacyAP(): Record<string, unknown> | null {
-        const rawAp = this._getLegacyField('ap');
-        if (rawAp === null || rawAp === undefined) return null;
-
-        if (typeof rawAp === 'number') {
-            return { defaultValue: rawAp };
-        }
-
-        if (typeof rawAp !== 'string') {
-            return null;
-        }
-
-        const values = rawAp.match(/-?\d+(?:\.\d+)?/g);
-        if (!values) return null;
-
-        const parsed = values.map((value) => Number(value));
-        if (parsed.length === 1) {
-            return { defaultValue: parsed[0] };
-        }
-
-        if (parsed.length === 4) {
-            return {
-                pointsByLocation: {
-                    head: parsed[0],
-                    body: parsed[1],
-                    leftArm: parsed[2],
-                    rightArm: parsed[2],
-                    leftLeg: parsed[3],
-                    rightLeg: parsed[3],
-                },
-            };
-        }
-
-        return null;
-    }
-
-    _getLegacyArmourProfile(): Record<string, unknown> | null {
-        const ap = this._parseLegacyAP();
-        if (!ap) return null;
-
-        return {
-            coverage: this._parseLegacyLocations(),
-            ...ap,
-        };
-    }
-
-    _getEffectiveCoverage(): Set<string> | null {
-        if (!this._hasCustomArmourPoints()) {
-            const legacyCoverage = this._parseLegacyLocations();
-            if (legacyCoverage?.size) return legacyCoverage;
-        }
-
-        const inferred = new Set();
+    _getEffectiveCoverage(): Set<string> {
+        const inferred = new Set<string>();
         const locations = ['head', 'body', 'leftArm', 'rightArm', 'leftLeg', 'rightLeg'];
         for (const location of locations) {
             if (Number(this.armourPoints?.[location]) > 0) {
@@ -676,19 +362,6 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
      * @returns {number}
      */
     getAPForLocation(location): number {
-        if (!this._hasCustomArmourPoints()) {
-            const legacy = this._getLegacyArmourProfile();
-            if (legacy) {
-                if (legacy.coverage && !legacy.coverage.has('all') && !legacy.coverage.has(location)) {
-                    return 0;
-                }
-                if (legacy.pointsByLocation) {
-                    return legacy.pointsByLocation[location] ?? 0;
-                }
-                return legacy.defaultValue ?? 0;
-            }
-        }
-
         const coverage = this._getEffectiveCoverage();
         if (coverage.has('all')) return this.armourPoints[location] ?? 0;
         if (coverage.size && !coverage.has(location)) return 0;
