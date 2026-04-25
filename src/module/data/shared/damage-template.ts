@@ -16,7 +16,6 @@ export default class DamageTemplate extends SystemDataModel {
         const fields = foundry.data.fields;
         return {
             damage: new fields.SchemaField({
-                // @ts-expect-error - argument count
                 formula: new FormulaField({ required: true, blank: true, initial: '' }),
                 type: new fields.StringField({
                     required: true,

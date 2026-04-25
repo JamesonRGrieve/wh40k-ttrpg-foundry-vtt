@@ -76,7 +76,6 @@ export class RollData {
     power?: WH40KItem;
 
     get showDamage(): boolean {
-        // @ts-expect-error - isThrown on WeaponRollData
         return this.success || this.isThrown;
     }
 

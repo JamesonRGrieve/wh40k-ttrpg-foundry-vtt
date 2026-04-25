@@ -146,7 +146,6 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
 
     /** @override */
     get chatProperties(): string[] {
-        // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.restrictionsLabel];
 
         const mods = this.modifiers;

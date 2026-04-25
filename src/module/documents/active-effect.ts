@@ -52,7 +52,6 @@ export class WH40KActiveEffect extends ActiveEffect {
      */
     get nature(): string {
         // Check explicit flag
-        // @ts-expect-error - argument type
         const flagNature = this.getFlag('wh40k-rpg', 'nature');
         if (flagNature) return flagNature;
 
@@ -134,7 +133,6 @@ export class WH40KActiveEffect extends ActiveEffect {
         if (!actor.system.characteristics?.[charKey]) return null;
 
         const current = foundry.utils.getProperty(actor, path) ?? 0;
-        // @ts-expect-error - argument type
         return this._applyChangeValue(current, change);
     }
 
@@ -152,7 +150,6 @@ export class WH40KActiveEffect extends ActiveEffect {
         if (!actor.system.skills?.[skillKey]) return null;
 
         const current = foundry.utils.getProperty(actor, path) ?? 0;
-        // @ts-expect-error - argument type
         return this._applyChangeValue(current, change);
     }
 
@@ -166,7 +163,6 @@ export class WH40KActiveEffect extends ActiveEffect {
     _applyCombatChange(actor: WH40KBaseActor, change: EffectChange): number {
         const path = change.key;
         const current = foundry.utils.getProperty(actor, path) ?? 0;
-        // @ts-expect-error - argument type
         return this._applyChangeValue(current, change);
     }
 
@@ -180,7 +176,6 @@ export class WH40KActiveEffect extends ActiveEffect {
     _applyMovementChange(actor: WH40KBaseActor, change: EffectChange): number {
         const path = change.key;
         const current = foundry.utils.getProperty(actor, path) ?? 0;
-        // @ts-expect-error - argument type
         return this._applyChangeValue(current, change);
     }
 

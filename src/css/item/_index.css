@@ -31,25 +31,22 @@
 
 /* Item Type Specific Styles */
 @import './_weapon.css'; /* Weapon sheet & chat card */
-@import './_weapon-quality-sheet.css'; /* Weapon quality sheet V2 */
-@import './_armour-v2.css'; /* Armour sheet V2 */
+@import './_weapon-quality-sheet.css'; /* Weapon quality sheet */
+@import './_armour.css'; /* Armour sheet */
 @import './_armour-modification.css'; /* Armour modification sheet */
-@import './_gear-v2.css'; /* Gear sheet V2 */
-@import './_cybernetic-v2.css'; /* Cybernetic sheet V2 */
-@import './_force-field-v2.css'; /* Force field sheet V2 */
-@import './_talent-sheet.css'; /* Talent sheet legacy (backup) */
-@import './_talent-sheet-v2.css'; /* Talent sheet V2 complete redesign */
-@import './_trait-sheet.css'; /* Trait sheet modern redesign */
+@import './_gear.css'; /* Gear sheet */
+@import './_cybernetic.css'; /* Cybernetic sheet */
+@import './_force-field.css'; /* Force field sheet */
+@import './_talent-sheet.css'; /* Talent sheet */
+@import './_trait-sheet.css'; /* Trait sheet */
 @import './_skill.css'; /* Skill sheet */
 @import './_condition.css'; /* Condition sheet & chat card */
 @import './_critical-injury.css'; /* Critical injury sheet & chat card */
-@import './_origin-path-modern.css'; /* Origin path modern tabbed redesign */
+@import './_origin-path.css'; /* Origin path sheet */
 
-/* Legacy/Deprecated (keep for backwards compatibility) */
-@import './_talents.css'; /* Talent/trait legacy styles */
-@import './_talent-trait-modern.css'; /* Talent/trait legacy tabbed */
-@import './_origin-path.css'; /* Origin path legacy styles */
-@import './_actor-styles.css'; /* Modern actor sheet integration */
+@import './_talents.css'; /* Talent/trait list styles */
+@import './_talent-trait-modern.css'; /* Talent/trait tabbed */
+@import './_actor-styles.css'; /* Actor sheet integration */
 
 /* NPC Templates (Phase 7) */
 @import './_npc-template-sheet.css'; /* NPC template item sheet */
