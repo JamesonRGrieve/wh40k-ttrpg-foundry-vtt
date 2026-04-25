@@ -396,7 +396,6 @@ async function enrichQuality(match, options) {
 
     if (qualityPack) {
         const index = await qualityPack.getIndex();
-        // @ts-expect-error - dynamic property access
         const entry = index.find((e) => e.name.toLowerCase() === config || e.name.toLowerCase().includes(config));
         if (entry) {
             quality = await qualityPack.getDocument(entry._id);
@@ -438,7 +437,6 @@ async function enrichProperty(match, options) {
 
     if (propertyPack) {
         const index = await propertyPack.getIndex();
-        // @ts-expect-error - dynamic property access
         const entry = index.find((e) => e.name.toLowerCase() === config || e.name.toLowerCase().includes(config));
         if (entry) {
             property = await propertyPack.getDocument(entry._id);
@@ -480,7 +478,6 @@ async function enrichCondition(match, options) {
 
     if (conditionPack) {
         const index = await conditionPack.getIndex();
-        // @ts-expect-error - dynamic property access
         const entry = index.find((e) => e.name.toLowerCase() === config || e.name.toLowerCase().includes(config));
         if (entry) {
             condition = await conditionPack.getDocument(entry._id);

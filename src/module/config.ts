@@ -776,7 +776,6 @@ WH40K.calculateDegrees = (roll, target) => {
         roll,
         target,
         degrees: success ? degrees : -degrees,
-        // @ts-expect-error - type assignment
         label: success ? game.i18n.format('WH40K.Degrees.Success', { degrees }) : game.i18n.format('WH40K.Degrees.Failure', { degrees }),
     };
 };

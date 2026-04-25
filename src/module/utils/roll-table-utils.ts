@@ -229,7 +229,6 @@ export class RollTableUtils {
 
 // Register global access
 Hooks.once('ready', () => {
-    // @ts-expect-error - type assignment
     game.wh40k = game.wh40k || {};
     game.wh40k.rollTable = RollTableUtils;
 });

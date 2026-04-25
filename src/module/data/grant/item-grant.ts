@@ -9,9 +9,6 @@ interface ItemGrantConfig {
     uuid: string;
     optional: boolean;
     overrides?: Record<string, any>;
-    // Legacy support fields
-    _legacyName?: string;
-    _legacySpecialization?: string;
 }
 
 /**
@@ -63,9 +60,6 @@ export default class ItemGrantData extends BaseGrantData {
                     optional: new fields.BooleanField({ initial: false }),
                     // Override data for the granted item
                     overrides: new fields.ObjectField({ required: false, initial: {} }),
-                    // Legacy support fields
-                    _legacyName: new fields.StringField({ required: false, blank: true }),
-                    _legacySpecialization: new fields.StringField({ required: false, blank: true }),
                 }),
                 { required: true, initial: [] },
             ),
@@ -110,37 +104,16 @@ export default class ItemGrantData extends BaseGrantData {
         const selectedUuids = (data.selected as string[]) ?? items.map((i) => i.uuid);
 
         for (const itemConfig of items) {
-            const { uuid, optional, overrides, _legacyName, _legacySpecialization } = itemConfig;
+            const { uuid, optional, overrides } = itemConfig;
 
-            // Try to find the item - first by UUID, then by name
-            let sourceItem: WH40KItem | null = null;
-            let resolvedUuid = uuid;
-
-            if (uuid) {
-                sourceItem = await this._fetchItem(uuid);
-            }
-
-            // Fallback: lookup by name if no UUID or UUID not found
-            if (!sourceItem && _legacyName) {
-                sourceItem = (await this._findItemByName(_legacyName, _legacySpecialization)) as WH40KItem | null;
-                if (sourceItem) {
-                    resolvedUuid = sourceItem.uuid;
-                    game.wh40k?.log(`ItemGrantData: Resolved "${_legacyName}" to UUID ${resolvedUuid}`);
-                }
-            }
-
-            // Still no item found
+            const sourceItem = uuid ? await this._fetchItem(uuid) : null;
             if (!sourceItem) {
-                if (_legacyName) {
-                    result.notifications.push(`Could not find "${_legacyName}" in compendiums`);
-                } else if (uuid) {
-                    result.errors.push(`Could not find item: ${uuid}`);
-                }
+                if (uuid) result.errors.push(`Could not find item: ${uuid}`);
                 continue;
             }
 
-            // Skip if not selected (only check when we have a UUID in selection list)
-            if (uuid && !selectedUuids.includes(uuid)) {
+            // Skip if not selected
+            if (!selectedUuids.includes(uuid)) {
                 if (!optional && !this.optional) {
                     result.errors.push(`Required item ${uuid} not selected`);
                 }
@@ -153,19 +126,7 @@ export default class ItemGrantData extends BaseGrantData {
                 continue;
             }
 
-            // Create item data, applying specialization if present
             const effectiveOverrides = { ...(overrides ?? {}) };
-            if (_legacySpecialization && sourceItem.type === 'talent') {
-                effectiveOverrides['system.specialization'] = _legacySpecialization;
-                // Strip any pre-existing "(X)" suffix so we don't produce "Name (X) (X)" or "Name (X) (Y)"
-                // when the compendium source or lookup path returns an already-specialized item.
-                const bareName = sourceItem.name.replace(/\s*\([^)]+\)\s*$/, '').trim();
-                effectiveOverrides['name'] = `${bareName} (${_legacySpecialization})`;
-            }
-
-            // Check for duplicates against the *final* name+specialization, not the bare source.
-            // Otherwise granting Weapon Training with specialization "Shock" re-runs create
-            // additional copies because the actor item name "(Shock)" never matched bare "Weapon Training".
             const effectiveName = (effectiveOverrides['name'] as string) ?? sourceItem.name;
             const effectiveSpec =
                 (effectiveOverrides['system.specialization'] as string | undefined) ??
@@ -175,8 +136,8 @@ export default class ItemGrantData extends BaseGrantData {
                 continue;
             }
 
-            const itemData = this._createItemData(sourceItem, resolvedUuid, effectiveOverrides);
-            itemsToCreate.push({ uuid: resolvedUuid, data: itemData });
+            const itemData = this._createItemData(sourceItem, uuid, effectiveOverrides);
+            itemsToCreate.push({ uuid, data: itemData });
         }
 
         // Apply if not dry run
@@ -319,8 +280,7 @@ export default class ItemGrantData extends BaseGrantData {
     }
 
     /**
-     * Duplicate check using the final name + specialization the grant will produce.
-     * Necessary because _legacySpecialization rewrites the actor-item name.
+     * Duplicate check by name + specialization.
      * @private
      */
     _isDuplicateByName(actor: WH40KBaseActor, itemType: string, name: string, specialization?: string): boolean {
@@ -356,41 +316,5 @@ export default class ItemGrantData extends BaseGrantData {
         itemData._id = foundry.utils.randomID();
 
         return itemData;
-    }
-
-    /**
-     * Find an item by name in compendiums.
-     * Used as fallback when UUID is not available.
-     * @param {string} name - Item name to search for
-     * @param {string} [specialization] - Optional specialization for talents
-     * @returns {Promise<WH40KItem|null>}
-     * @private
-     */
-    async _findItemByName(name: string, specialization = ''): Promise<WH40KItem | null> {
-        if (!name) return null;
-
-        const nameLower = name.toLowerCase();
-        const compositeLower = specialization ? `${name} (${specialization})`.toLowerCase() : '';
-
-        // Search all Item packs — talents/traits/gear are spread across
-        // system-specific packs (dh2-core-stats-talents, rt-core-items-traits, etc.)
-        for (const pack of game.packs) {
-            if (pack.documentName !== 'Item') continue;
-
-            const index = await pack.getIndex();
-
-            const match = index.find((entry: { name: string }) => {
-                const entryLower = entry.name.toLowerCase();
-                if (entryLower === nameLower) return true;
-                if (compositeLower && entryLower === compositeLower) return true;
-                return false;
-            });
-
-            if (match) {
-                return (await pack.getDocument(match._id)) as WH40KItem | null;
-            }
-        }
-
-        return null;
     }
 }
