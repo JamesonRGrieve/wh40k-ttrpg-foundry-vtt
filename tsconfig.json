@@ -16,7 +16,7 @@
     "allowSyntheticDefaultImports": true,
     "rewriteRelativeImportExtensions": true,
 
-    "strict": false,
+    "strict": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
