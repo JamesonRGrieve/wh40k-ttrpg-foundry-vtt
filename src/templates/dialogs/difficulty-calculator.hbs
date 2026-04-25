@@ -1,133 +1,135 @@
 {{! Difficulty Calculator Dialog Template }}
-<form class="wh40k-difficulty-calculator tw-flex tw-flex-col tw-gap-6 tw-p-4">
+<form class="wh40k-difficulty-calculator tw-flex tw-flex-col tw-gap-6 tw-p-4 tw-max-h-[80vh] tw-overflow-y-auto">
     {{! NPC Info }}
-    <section class="wh40k-panel wh40k-panel--npc-info">
-        <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-4 tw-p-4">
-            <img src="{{npc.img}}" alt="{{npc.name}}" class="wh40k-token-image" />
-            <div class="wh40k-panel-header-text tw-flex-1">
-                <h3>{{npc.name}}</h3>
-                <div class="wh40k-subtitle tw-flex tw-items-center tw-gap-2">
+    <section class="wh40k-panel">
+        <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-4 tw-p-4 tw-bg-[var(--color-bg-secondary)] tw-rounded-lg">
+            <img src="{{npc.img}}" alt="{{npc.name}}" class="tw-w-[60px] tw-h-[60px] tw-rounded-lg tw-border-2 tw-border-solid tw-border-[var(--color-border-secondary)] tw-object-cover" />
+            <div class="tw-flex-1">
+                <h3 class="tw-m-0 tw-mb-1 tw-text-[1.4rem] tw-text-[var(--color-text-light-primary)]">{{npc.name}}</h3>
+                <div class="tw-flex tw-items-center tw-gap-2 tw-text-base tw-text-[var(--color-text-light-secondary)]">
                     Threat
                     {{npc.threatLevel}}
                     •
                     {{npc.type}}
-                    {{#if npc.isHorde}}<span class="wh40k-badge wh40k-badge--horde">Horde</span>{{/if}}
+                    {{#if npc.isHorde}}<span class="tw-bg-[#9c27b0] tw-text-white tw-px-2 tw-py-0.5 tw-rounded-md tw-text-[0.7rem] tw-font-bold tw-uppercase">Horde</span>{{/if}}
                 </div>
             </div>
         </header>
     </section>
 
     {{! Quantity Input }}
-    <section class="wh40k-panel wh40k-panel--quantity tw-p-4">
-        <label class="wh40k-form-group tw-flex tw-flex-col tw-gap-2">
-            <span class="wh40k-label">Number of Enemies</span>
-            <input type="number" name="quantity" value="{{quantity}}" min="1" class="wh40k-input" data-tooltip="How many of this NPC are in the encounter?" />
+    <section class="wh40k-panel tw-p-4">
+        <label class="tw-flex tw-flex-col tw-gap-2">
+            <span class="tw-font-semibold tw-text-base tw-text-[var(--color-text-light-secondary)] tw-uppercase tw-tracking-[0.5px]">Number of Enemies</span>
+            <input type="number" name="quantity" value="{{quantity}}" min="1"
+                   class="tw-px-3 tw-py-2 tw-text-lg tw-text-center tw-font-bold tw-bg-[var(--color-bg-secondary)] tw-border-2 tw-border-solid tw-border-[var(--color-border-secondary)] tw-rounded-md tw-text-[var(--color-text-light-primary)] tw-transition-all focus:tw-border-[var(--wh40k-accent-gold)] focus:tw-outline-none"
+                   data-tooltip="How many of this NPC are in the encounter?" />
         </label>
     </section>
 
     {{! Party Composition }}
-    <section class="wh40k-panel wh40k-panel--party">
-        <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-2 tw-pb-2">
+    <section class="wh40k-panel">
+        <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>h4]:tw-m-0 [&>h4]:tw-text-[1.1rem] [&>h4]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
             <i class="fa-solid fa-users"></i>
             <h4>Party Composition</h4>
         </header>
-        <div class="wh40k-panel-body tw-p-4">
+        <div class="tw-p-4">
             {{#if partyMembers}}
-                <ul class="wh40k-party-list tw-flex tw-flex-col tw-gap-2 tw-mb-4">
+                <ul class="tw-list-none tw-flex tw-flex-col tw-gap-2 tw-mb-4 tw-max-h-[300px] tw-overflow-y-auto">
                     {{#each partyMembers}}
-                        <li class="wh40k-party-member tw-flex tw-items-center tw-gap-2 tw-p-2">
-                            <img src="{{this.img}}" alt="{{this.name}}" class="wh40k-avatar" />
-                            <span class="wh40k-party-member-name tw-flex-1">{{this.name}}</span>
-                            <span class="wh40k-party-member-rank">Rank {{this.rank}}</span>
+                        <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-bg-[var(--color-bg-secondary)] tw-rounded-md">
+                            <img src="{{this.img}}" alt="{{this.name}}" class="tw-w-9 tw-h-9 tw-rounded-full tw-border-2 tw-border-solid tw-border-[var(--color-border-secondary)] tw-object-cover" />
+                            <span class="tw-flex-1 tw-font-semibold tw-text-[var(--color-text-light-primary)]">{{this.name}}</span>
+                            <span class="tw-text-[0.85rem] tw-text-[var(--color-text-light-secondary)] tw-font-semibold">Rank {{this.rank}}</span>
                         </li>
                     {{/each}}
                 </ul>
             {{else}}
-                <p class="wh40k-empty-message tw-text-center tw-p-6">No active party members found.</p>
+                <p class="tw-text-center tw-p-6 tw-text-[var(--color-text-light-secondary)] tw-italic">No active party members found.</p>
             {{/if}}
 
-            <div class="wh40k-stats-grid tw-grid tw-grid-cols-3 tw-gap-4 tw-mt-4">
-                <div class="wh40k-stat-box tw-flex tw-flex-col tw-items-center tw-p-4">
-                    <span class="wh40k-stat-label">Party Size</span>
-                    <span class="wh40k-stat-value">{{partySize}}</span>
+            <div class="tw-grid tw-grid-cols-3 tw-gap-4 tw-mt-4">
+                <div class="tw-flex tw-flex-col tw-items-center tw-p-4 tw-bg-[var(--color-bg-secondary)] tw-rounded-lg tw-border-2 tw-border-solid tw-border-[var(--color-border-secondary)]">
+                    <span class="tw-text-[0.75rem] tw-uppercase tw-tracking-[0.5px] tw-text-[var(--color-text-light-secondary)] tw-mb-1">Party Size</span>
+                    <span class="tw-text-2xl tw-font-bold tw-text-[var(--wh40k-accent-gold)]">{{partySize}}</span>
                 </div>
-                <div class="wh40k-stat-box tw-flex tw-flex-col tw-items-center tw-p-4">
-                    <span class="wh40k-stat-label">Avg. Rank</span>
-                    <span class="wh40k-stat-value">{{partyLevel}}</span>
+                <div class="tw-flex tw-flex-col tw-items-center tw-p-4 tw-bg-[var(--color-bg-secondary)] tw-rounded-lg tw-border-2 tw-border-solid tw-border-[var(--color-border-secondary)]">
+                    <span class="tw-text-[0.75rem] tw-uppercase tw-tracking-[0.5px] tw-text-[var(--color-text-light-secondary)] tw-mb-1">Avg. Rank</span>
+                    <span class="tw-text-2xl tw-font-bold tw-text-[var(--wh40k-accent-gold)]">{{partyLevel}}</span>
                 </div>
-                <div class="wh40k-stat-box tw-flex tw-flex-col tw-items-center tw-p-4">
-                    <span class="wh40k-stat-label">Party Threat</span>
-                    <span class="wh40k-stat-value">{{partyThreat}}</span>
+                <div class="tw-flex tw-flex-col tw-items-center tw-p-4 tw-bg-[var(--color-bg-secondary)] tw-rounded-lg tw-border-2 tw-border-solid tw-border-[var(--color-border-secondary)]">
+                    <span class="tw-text-[0.75rem] tw-uppercase tw-tracking-[0.5px] tw-text-[var(--color-text-light-secondary)] tw-mb-1">Party Threat</span>
+                    <span class="tw-text-2xl tw-font-bold tw-text-[var(--wh40k-accent-gold)]">{{partyThreat}}</span>
                 </div>
             </div>
         </div>
     </section>
 
     {{! Threat Analysis }}
-    <section class="wh40k-panel wh40k-panel--threat-analysis">
-        <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-2 tw-pb-2">
+    <section class="wh40k-panel">
+        <header class="wh40k-panel-header tw-flex tw-items-center tw-gap-2 tw-pb-2 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>h4]:tw-m-0 [&>h4]:tw-text-[1.1rem] [&>h4]:tw-text-[var(--color-text-light-primary)] [&>i]:tw-text-[var(--wh40k-accent-gold)]">
             <i class="fa-solid fa-chart-line"></i>
             <h4>Threat Analysis</h4>
         </header>
-        <div class="wh40k-panel-body tw-p-4">
-            <div class="wh40k-threat-comparison tw-mb-6">
-                <div class="wh40k-threat-bar tw-mb-4">
-                    <div class="wh40k-threat-bar-label tw-mb-2">NPC Threat</div>
-                    <div class="wh40k-threat-bar-visual tw-relative tw-w-full tw-overflow-hidden">
-                        <div class="wh40k-threat-bar-fill" style="width: {{multiply threatRatio 100}}%; background-color: {{difficulty.color}};"></div>
+        <div class="tw-p-4">
+            <div class="tw-mb-6">
+                <div class="tw-mb-4">
+                    <div class="tw-mb-2 tw-text-[0.85rem] tw-font-semibold tw-text-[var(--color-text-light-secondary)] tw-uppercase">NPC Threat</div>
+                    <div class="tw-relative tw-w-full tw-overflow-hidden tw-h-[30px] tw-bg-[var(--color-bg-secondary)] tw-rounded-md tw-border-2 tw-border-solid tw-border-[var(--color-border-secondary)]">
+                        <div class="tw-h-full tw-transition-[width] tw-duration-300" style="width: {{multiply threatRatio 100}}%; background-color: {{difficulty.color}};"></div>
                     </div>
-                    <div class="wh40k-threat-bar-value tw-mt-2">{{totalThreat}}</div>
+                    <div class="tw-mt-2 tw-text-center tw-text-lg tw-font-bold tw-text-[var(--color-text-light-primary)]">{{totalThreat}}</div>
                 </div>
 
-                <div class="wh40k-threat-ratio tw-flex tw-flex-col tw-items-center tw-p-8 tw-mb-6">
-                    <span class="wh40k-ratio-value" style="color: {{difficulty.color}};">
+                <div class="tw-flex tw-flex-col tw-items-center tw-p-8 tw-mb-6 tw-bg-[var(--color-bg-secondary)] tw-rounded-lg">
+                    <span class="tw-text-[3rem] tw-font-bold" style="color: {{difficulty.color}};">
                         {{threatRatio}}×
                     </span>
-                    <span class="wh40k-ratio-label">Threat Ratio</span>
+                    <span class="tw-text-[0.85rem] tw-uppercase tw-tracking-[0.5px] tw-text-[var(--color-text-light-secondary)]">Threat Ratio</span>
                 </div>
             </div>
 
             {{! Difficulty Rating }}
-            <div class="wh40k-difficulty-result tw-p-8 tw-mb-6 tw-text-center" style="border-color: {{difficulty.color}};">
-                <div class="wh40k-difficulty-badge tw-inline-block tw-px-6 tw-py-2 tw-mb-4" style="background-color: {{difficulty.color}};">
+            <div class="tw-p-8 tw-mb-6 tw-text-center tw-rounded-lg tw-border-[3px] tw-border-solid" style="border-color: {{difficulty.color}};">
+                <div class="tw-inline-block tw-px-6 tw-py-2 tw-mb-4 tw-rounded-lg tw-text-[1.4rem] tw-font-bold tw-uppercase tw-text-white" style="background-color: {{difficulty.color}};">
                     {{difficulty.label}}
                 </div>
-                <p class="wh40k-difficulty-description tw-m-0">{{difficulty.description}}</p>
+                <p class="tw-m-0 tw-text-[0.95rem] tw-text-[var(--color-text-light-primary)] tw-font-medium">{{difficulty.description}}</p>
             </div>
 
             {{! Difficulty Scale Reference }}
-            <div class="wh40k-difficulty-scale">
-                <h5 class="tw-mb-4">Difficulty Scale</h5>
-                <ul class="wh40k-scale-list tw-flex tw-flex-col tw-gap-2">
-                    <li class="wh40k-scale-item tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap">
-                        <span class="wh40k-scale-dot" style="background-color: #4caf50;"></span>
-                        <span class="wh40k-scale-label tw-flex-1">Trivial</span>
-                        <span class="wh40k-scale-range">&lt; 0.25×</span>
+            <div>
+                <h5 class="tw-mb-4 tw-m-0 tw-text-base tw-uppercase tw-text-[var(--color-text-light-secondary)] tw-tracking-[0.5px]">Difficulty Scale</h5>
+                <ul class="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-gap-2 tw-max-h-[240px] tw-overflow-y-auto">
+                    <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap tw-bg-[var(--color-bg-secondary)] tw-rounded-md">
+                        <span class="tw-w-3 tw-h-3 tw-rounded-full tw-shrink-0" style="background-color: #4caf50;"></span>
+                        <span class="tw-flex-1 tw-min-w-[100px] tw-font-semibold tw-text-[var(--color-text-light-primary)]">Trivial</span>
+                        <span class="tw-text-[0.85rem] tw-text-[var(--color-text-light-secondary)] tw-font-mono tw-shrink-0">&lt; 0.25×</span>
                     </li>
-                    <li class="wh40k-scale-item tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap">
-                        <span class="wh40k-scale-dot" style="background-color: #8bc34a;"></span>
-                        <span class="wh40k-scale-label tw-flex-1">Easy</span>
-                        <span class="wh40k-scale-range">0.25-0.50×</span>
+                    <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap tw-bg-[var(--color-bg-secondary)] tw-rounded-md">
+                        <span class="tw-w-3 tw-h-3 tw-rounded-full tw-shrink-0" style="background-color: #8bc34a;"></span>
+                        <span class="tw-flex-1 tw-min-w-[100px] tw-font-semibold tw-text-[var(--color-text-light-primary)]">Easy</span>
+                        <span class="tw-text-[0.85rem] tw-text-[var(--color-text-light-secondary)] tw-font-mono tw-shrink-0">0.25-0.50×</span>
                     </li>
-                    <li class="wh40k-scale-item tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap">
-                        <span class="wh40k-scale-dot" style="background-color: #ff9800;"></span>
-                        <span class="wh40k-scale-label tw-flex-1">Moderate</span>
-                        <span class="wh40k-scale-range">0.50-0.75×</span>
+                    <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap tw-bg-[var(--color-bg-secondary)] tw-rounded-md">
+                        <span class="tw-w-3 tw-h-3 tw-rounded-full tw-shrink-0" style="background-color: #ff9800;"></span>
+                        <span class="tw-flex-1 tw-min-w-[100px] tw-font-semibold tw-text-[var(--color-text-light-primary)]">Moderate</span>
+                        <span class="tw-text-[0.85rem] tw-text-[var(--color-text-light-secondary)] tw-font-mono tw-shrink-0">0.50-0.75×</span>
                     </li>
-                    <li class="wh40k-scale-item tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap">
-                        <span class="wh40k-scale-dot" style="background-color: #ff5722;"></span>
-                        <span class="wh40k-scale-label tw-flex-1">Dangerous</span>
-                        <span class="wh40k-scale-range">0.75-1.00×</span>
+                    <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap tw-bg-[var(--color-bg-secondary)] tw-rounded-md">
+                        <span class="tw-w-3 tw-h-3 tw-rounded-full tw-shrink-0" style="background-color: #ff5722;"></span>
+                        <span class="tw-flex-1 tw-min-w-[100px] tw-font-semibold tw-text-[var(--color-text-light-primary)]">Dangerous</span>
+                        <span class="tw-text-[0.85rem] tw-text-[var(--color-text-light-secondary)] tw-font-mono tw-shrink-0">0.75-1.00×</span>
                     </li>
-                    <li class="wh40k-scale-item tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap">
-                        <span class="wh40k-scale-dot" style="background-color: #f44336;"></span>
-                        <span class="wh40k-scale-label tw-flex-1">Deadly</span>
-                        <span class="wh40k-scale-range">1.00-1.50×</span>
+                    <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap tw-bg-[var(--color-bg-secondary)] tw-rounded-md">
+                        <span class="tw-w-3 tw-h-3 tw-rounded-full tw-shrink-0" style="background-color: #f44336;"></span>
+                        <span class="tw-flex-1 tw-min-w-[100px] tw-font-semibold tw-text-[var(--color-text-light-primary)]">Deadly</span>
+                        <span class="tw-text-[0.85rem] tw-text-[var(--color-text-light-secondary)] tw-font-mono tw-shrink-0">1.00-1.50×</span>
                     </li>
-                    <li class="wh40k-scale-item tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap">
-                        <span class="wh40k-scale-dot" style="background-color: #9c27b0;"></span>
-                        <span class="wh40k-scale-label tw-flex-1">Apocalyptic</span>
-                        <span class="wh40k-scale-range">&gt; 1.50×</span>
+                    <li class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-flex-wrap tw-bg-[var(--color-bg-secondary)] tw-rounded-md">
+                        <span class="tw-w-3 tw-h-3 tw-rounded-full tw-shrink-0" style="background-color: #9c27b0;"></span>
+                        <span class="tw-flex-1 tw-min-w-[100px] tw-font-semibold tw-text-[var(--color-text-light-primary)]">Apocalyptic</span>
+                        <span class="tw-text-[0.85rem] tw-text-[var(--color-text-light-secondary)] tw-font-mono tw-shrink-0">&gt; 1.50×</span>
                     </li>
                 </ul>
             </div>
