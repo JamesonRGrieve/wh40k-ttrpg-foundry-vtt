@@ -1,4 +1,29 @@
-/* ── source: src/css/wh40k-rpg.css ── */
+/* =============================================================================
+   wh40k-rpg.css — single CSS source for the wh40k-rpg Foundry system.
+
+   Migration status (see commit history `Tailwind migration A..E`):
+   - Foundation, scope, animations, design tokens: tailwind.config.js.
+   - JS state toggles (opacity, flash, etc.): data-attrs + Tailwind data variants.
+   - Several dialogs already migrated to fully-inline tw- utilities and removed
+     from this file (see `Tailwind migration C1.*` commits for the catalogue).
+   - Everything else is consolidated here from the former 129-file src/css/**
+     tree (look for "source:" comment markers below to trace origin).
+
+   Adding new component CSS to `src/css/` should be the exception, not the rule:
+   - Prefer inline `tw-*` utilities on `.hbs` templates / sheet PARTS classes.
+   - Shared form/dialog patterns: register them in the tailwind.config.js plugin
+     (see `addComponents({ '.form-group': ... })` there) so utilities like
+     `.tw-form-group` work everywhere.
+   - Keyframe animations: register in `tailwind.config.js` `theme.extend.keyframes`
+     + `theme.extend.animation` so `tw-animate-foo` resolves.
+   - Truly Foundry-DOM-targeted overrides (`#chat-log .message`, etc.) belong
+     here as scoped global rules.
+
+   Build pipeline (gulpfile.js): postcss-nested -> tailwindcss -> autoprefixer
+   -> cssnano. `important: '.wh40k-rpg'` in tailwind config scopes every utility
+   under the system's root sheet class so utilities reliably beat Foundry core
+   CSS specificity.
+   ============================================================================= */
 @import url('https://fonts.googleapis.com/css?family=IM+Fell+DW+Pica:400|Lusitana:400:700|Cinzel:400:700|Roboto:400,500,700&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
