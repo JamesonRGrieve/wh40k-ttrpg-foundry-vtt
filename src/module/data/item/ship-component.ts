@@ -126,92 +126,13 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
     /*  Data Migration                              */
     /* -------------------------------------------- */
 
-    /* -------------------------------------------- */
-    /*  Data Migration                              */
-    /* -------------------------------------------- */
-
     /**
-     * Migrate ship component data.
+     * Normalize ship component data shape.
      * @param {object} source  The source data
      * @protected
      */
     static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
-        ShipComponentData.#migratePowerUsage(source);
-        ShipComponentData.#migrateSpaceUsage(source);
-        ShipComponentData.#migrateSpCost(source);
-        ShipComponentData.#migrateType(source);
-        ShipComponentData.#migrateHullType(source);
-    }
-
-    /**
-     * Handle legacy powerUsage field.
-     * @param {object} source  The source data
-     */
-    static #migratePowerUsage(source: Record<string, unknown>): void {
-        if ('powerUsage' in source && !source.power) {
-            const usage = source.powerUsage;
-            source.power = {
-                used: usage >= 0 ? usage : 0,
-                generated: usage < 0 ? Math.abs(usage) : 0,
-            };
-            delete source.powerUsage;
-        }
-    }
-
-    /**
-     * Handle legacy spaceUsage field.
-     * @param {object} source  The source data
-     */
-    static #migrateSpaceUsage(source: Record<string, unknown>): void {
-        if ('spaceUsage' in source && source.space === undefined) {
-            source.space = source.spaceUsage;
-            delete source.spaceUsage;
-        }
-    }
-
-    /**
-     * Handle legacy spCost field.
-     * @param {object} source  The source data
-     */
-    static #migrateSpCost(source: Record<string, unknown>): void {
-        if ('spCost' in source && source.shipPoints === undefined) {
-            source.shipPoints = source.spCost;
-            delete source.spCost;
-        }
-    }
-
-    /**
-     * Handle legacy type field.
-     * @param {object} source  The source data
-     */
-    static #migrateType(source: Record<string, unknown>): void {
-        if ('type' in source && !source.componentType) {
-            let type = source.type.replace(/^\(es\.\)\s*/, '').toLowerCase();
-            type = type.replace(/\s+/g, '-');
-            source.componentType = type;
-
-            if (source.type.startsWith('(es.)')) {
-                source.essential = true;
-            }
-            delete source.type;
-        }
-    }
-
-    /**
-     * Parse hullType string to array.
-     * @param {object} source  The source data
-     */
-    static #migrateHullType(source: Record<string, unknown>): void {
-        if (typeof source.hullType === 'string') {
-            const types = source.hullType
-                .toLowerCase()
-                .replace(/all ships?/i, 'all')
-                .split(/[,\s]+/)
-                .map((s) => s.trim().replace(/\s+/g, '-'))
-                .filter(Boolean);
-            source.hullType = types.length ? types : ['all'];
-        }
     }
 
     /* -------------------------------------------- */

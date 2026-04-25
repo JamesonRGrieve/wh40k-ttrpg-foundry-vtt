@@ -6,11 +6,6 @@
 import type { WH40KBaseActor } from '../documents/base-actor.ts';
 import type { WH40KItem } from '../documents/item.ts';
 
-interface LegacyAPResult {
-    defaultValue?: number;
-    pointsByLocation?: Record<string, number>;
-}
-
 interface ArmourLocationData {
     total: number;
     toughnessBonus: number;
@@ -23,139 +18,36 @@ const BODY_LOCATIONS: string[] = ['body', 'head', 'leftArm', 'rightArm', 'leftLe
 
 /**
  * Gets the armourPoints object from an item's system data.
- * Handles nested structures where armourPoints might contain another armourPoints object.
  * @param {object} itemSystem - The item's system data
  * @returns {object|null} The armour points object or null
  */
 function getArmourPointsObject(itemSystem: Record<string, unknown>): Record<string, unknown> | null {
     const raw = (itemSystem as { armourPoints?: any })?.armourPoints;
     if (!raw || typeof raw !== 'object') return null;
-    // Handle nested structure
-    if ((raw as { armourPoints?: unknown }).armourPoints && typeof (raw as { armourPoints?: unknown }).armourPoints === 'object') {
-        return (raw as { armourPoints: Record<string, unknown> }).armourPoints;
-    }
     return raw as Record<string, unknown>;
 }
 
 /**
- * Parses legacy location strings into a Set of body locations.
- * @param {string} rawLocations - Legacy location string like "Head, Body, Arms"
- * @returns {Set|null} Set of location keys or null
- */
-function parseLegacyLocations(rawLocations: string | null | undefined): Set<string> | null {
-    if (!rawLocations || typeof rawLocations !== 'string') return null;
-    const normalized = rawLocations.toLowerCase();
-    if (normalized.includes('all')) {
-        return new Set(['all']);
-    }
-    const coverage = new Set<string>();
-    const tokens = normalized
-        .split(',')
-        .map((token: string) => token.trim())
-        .filter(Boolean);
-    for (const token of tokens) {
-        if (token.includes('head')) {
-            coverage.add('head');
-        }
-        if (token.includes('body') || token.includes('chest') || token.includes('torso')) {
-            coverage.add('body');
-        }
-        if (token.includes('arm')) {
-            coverage.add('leftArm');
-            coverage.add('rightArm');
-        }
-        if (token.includes('leg')) {
-            coverage.add('leftLeg');
-            coverage.add('rightLeg');
-        }
-    }
-    return coverage.size ? coverage : null;
-}
-
-/**
- * Parses legacy AP values from string or number format.
- * @param {string|number} rawAp - Legacy AP value
- * @returns {object|null} Parsed AP object with defaultValue or pointsByLocation
- */
-function parseLegacyAP(rawAp: string | number | null | undefined): LegacyAPResult | null {
-    if (rawAp === null || rawAp === undefined) return null;
-    if (typeof rawAp === 'number') {
-        return { defaultValue: rawAp };
-    }
-    if (typeof rawAp !== 'string') return null;
-    const values = rawAp.match(/-?\d+(?:\.\d+)?/g);
-    if (!values) return null;
-    const parsed = values.map((value: string) => Number(value));
-    if (parsed.length === 1) {
-        return { defaultValue: parsed[0] };
-    }
-    if (parsed.length >= 6) {
-        return {
-            pointsByLocation: {
-                head: parsed[0],
-                body: parsed[1],
-                leftArm: parsed[2],
-                rightArm: parsed[3],
-                leftLeg: parsed[4],
-                rightLeg: parsed[5],
-            },
-        };
-    }
-    if (parsed.length === 4) {
-        return {
-            pointsByLocation: {
-                head: parsed[0],
-                body: parsed[1],
-                leftArm: parsed[2],
-                rightArm: parsed[2],
-                leftLeg: parsed[3],
-                rightLeg: parsed[3],
-            },
-        };
-    }
-    return null;
-}
-
-/**
  * Gets the AP value for a specific location from an armour item.
- * Handles both modern armourPoints schema and legacy formats.
  * Uses effective AP which includes craftsmanship bonuses.
  * @param {object} armourSystem - The armour item's system data
  * @param {string} location - Body location key
  * @returns {number} AP value for that location
  */
 function getArmourAPForLocation(armourSystem: Record<string, unknown>, location: string): number {
-    // Try modern getEffectiveAPForLocation method first (includes craftsmanship)
     if (armourSystem && typeof armourSystem.getEffectiveAPForLocation === 'function') {
         return armourSystem.getEffectiveAPForLocation(location);
     }
-
-    // Fall back to getAPForLocation (base AP without craftsmanship)
     if (armourSystem && typeof armourSystem.getAPForLocation === 'function') {
         return armourSystem.getAPForLocation(location);
     }
 
-    // Try modern armourPoints schema
     const armourPoints = getArmourPointsObject(armourSystem);
     if (armourPoints) {
-        const hasValues = Object.values(armourPoints).some((value: unknown) => Number(value) > 0);
-        if (hasValues) {
-            const value = Number((armourPoints as any)?.[location] ?? 0);
-            return Number.isFinite(value) ? value : 0;
-        }
+        const value = Number((armourPoints as any)?.[location] ?? 0);
+        return Number.isFinite(value) ? value : 0;
     }
-
-    // Fall back to legacy format
-    const coverage = parseLegacyLocations(armourSystem?.locations);
-    if (coverage && !coverage.has('all') && !coverage.has(location)) {
-        return 0;
-    }
-    const legacy = parseLegacyAP(armourSystem?.ap);
-    if (!legacy) return 0;
-    if (legacy.pointsByLocation) {
-        return legacy.pointsByLocation[location] ?? 0;
-    }
-    return legacy.defaultValue ?? 0;
+    return 0;
 }
 
 /**

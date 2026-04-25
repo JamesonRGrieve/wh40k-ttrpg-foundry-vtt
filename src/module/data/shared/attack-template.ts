@@ -1,5 +1,5 @@
 import SystemDataModel from '../abstract/system-data-model.ts';
-import { inferActiveGameLine, isLineVariantContainer, resolveLineVariant } from '../../utils/item-variant-utils.ts';
+import { inferActiveGameLine, resolveLineVariant } from '../../utils/item-variant-utils.ts';
 
 /**
  * Template for items with attack capabilities.
@@ -56,30 +56,6 @@ export default class AttackTemplate extends SystemDataModel {
      */
     static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
-        AttackTemplate.#migrateRateOfFire(source);
-    }
-
-    /**
-     * Migrate legacy rate of fire formats.
-     * @param {object} source  The source data
-     */
-    static #migrateRateOfFire(source: Record<string, unknown>): void {
-        if (!source.attack?.rateOfFire) return;
-        const normalizeRateOfFire = (attack: Record<string, unknown>) => {
-            const rof = attack?.rateOfFire;
-            if (!rof) return;
-            if (typeof rof.semi === 'string') rof.semi = Number(rof.semi) || 0;
-            if (typeof rof.full === 'string') rof.full = Number(rof.full) || 0;
-        };
-
-        if (isLineVariantContainer(source.attack)) {
-            for (const branch of Object.values(source.attack)) {
-                if (branch && typeof branch === 'object') normalizeRateOfFire(branch as Record<string, unknown>);
-            }
-            return;
-        }
-
-        normalizeRateOfFire(source.attack);
     }
 
     static #emptyAttack(): Record<string, unknown> {
