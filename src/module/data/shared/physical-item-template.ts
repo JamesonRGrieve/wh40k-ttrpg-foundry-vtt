@@ -133,7 +133,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
     }
 
     /**
-     * Migrate legacy cost formats.
+     * Normalize cost field shape.
      * @param {object} source  The source data
      */
     static #migrateCost(source: Record<string, unknown>): void {
@@ -145,31 +145,8 @@ export default class PhysicalItemTemplate extends SystemDataModel {
             return numericValue;
         };
 
-        // Convert number cost to object
-        if (typeof source.cost === 'number') {
-            const legacyCost = source.cost;
-            source.cost = emptyCost;
-            if (Array.isArray(source.gameSystems) && source.gameSystems.includes('dh2e')) {
-                source.cost.dh2.homebrew.throneGelt = normalizeNullableNumber(legacyCost) ?? 0;
-            }
-            return;
-        }
-
         if (!source.cost || typeof source.cost !== 'object') {
             source.cost = emptyCost;
-            return;
-        }
-
-        if ('value' in source.cost || 'requisition' in source.cost || 'currency' in source.cost) {
-            const legacyValue = normalizeNullableNumber(source.cost.value);
-            const legacyDh2Req = normalizeNullableNumber(source.cost.requisition?.dh2);
-            const legacyDwReq = normalizeNullableNumber(source.cost.requisition?.dw);
-            source.cost = emptyCost;
-            if (Array.isArray(source.gameSystems) && source.gameSystems.includes('dh2e')) {
-                source.cost.dh2.homebrew.throneGelt = legacyValue;
-                source.cost.dh2.homebrew.requisition = legacyDh2Req;
-            }
-            source.cost.dw.requisition = legacyDwReq;
             return;
         }
 

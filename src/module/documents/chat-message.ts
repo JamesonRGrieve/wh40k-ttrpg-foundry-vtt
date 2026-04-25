@@ -174,7 +174,6 @@ export class ChatMessageWH40K extends ChatMessage {
         if (!card) return;
 
         const messageId = card.dataset.messageId;
-        // @ts-expect-error - dynamic property access
         const message = game.messages.get(messageId);
 
         if (!message) {
