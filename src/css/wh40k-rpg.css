@@ -18,7 +18,6 @@
 @import './panels/_index.css';
 @import './chat/_index.css';
 @import './prompts/_index.css';
-@import './dialogs/_effect-creation-dialog.css';
 @import './dialogs/_talent-editor-dialog.css';
 @import './dialogs/_npc-quick-create.css';
 @import './dialogs/_threat-scaler.css';
