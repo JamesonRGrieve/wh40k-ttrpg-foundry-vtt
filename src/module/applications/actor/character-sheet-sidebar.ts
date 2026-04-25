@@ -13,7 +13,7 @@ export default class CharacterSheetSidebar extends CharacterSheet {
     /** @override */
     static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         ...CharacterSheet.DEFAULT_OPTIONS,
-        classes: ['player', 'sidebar-nav'],
+        classes: ['wh40k-rpg', 'sheet', 'actor', 'player', 'sidebar-nav'],
         tabs: [{ navSelector: 'nav.wh40k-navigation', contentSelector: '#tab-body', initial: 'overview', group: 'primary' }],
     };
 
