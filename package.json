@@ -81,7 +81,6 @@
     "lint-staged": "^16.4.0",
     "merge-stream": "2.0.0",
     "postcss": "^8.5.9",
-    "postcss-import": "^16.1.1",
     "postcss-nested": "^7.0.2",
     "prettier": "2.7.1",
     "stylelint": "^17.7.0",

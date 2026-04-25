@@ -7,7 +7,6 @@ const through2 = require("through2");
 const yaml = require("js-yaml");
 const merge = require("merge-stream");
 const clean = require("gulp-clean");
-const postcssImport = require('postcss-import');
 const postcssNested = require('postcss-nested');
 const fs = require("fs");
 const path = require("path");
@@ -283,7 +282,6 @@ function compileTypeScript(done) {
 function compileCss() {
   return gulp.src(SYSTEM_CSS)
     .pipe(postcss([
-      postcssImport,
       postcssNested,
       tailwindcss,
       autoprefixer({ cascade: false }),
@@ -296,7 +294,6 @@ function compileCss() {
 function compileCssWatch() {
   return gulp.src(SYSTEM_CSS)
     .pipe(postcss([
-      postcssImport,
       postcssNested,
       tailwindcss,
       autoprefixer({ cascade: false }),
