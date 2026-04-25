@@ -139,38 +139,110 @@ export interface WH40KArmourLocation {
     traitBonus: number;
 }
 
-export type WH40KActorSystemData = import('../data/abstract/actor-data-model.ts').default & {
+export interface WH40KActorBio {
+    playerName?: string;
+    gender?: string;
+    age?: string | number;
+    height?: string;
+    weight?: string;
+    homeworld?: string;
+    notes?: string;
     [key: string]: unknown;
+}
+
+export interface WH40KExperience {
+    used: number;
+    total: number;
+    available: number;
+}
+
+export interface WH40KEncumbrance {
+    value: number;
+    max: number;
+    over: boolean;
+}
+
+export interface WH40KFatigue {
+    value: number;
+    max: number;
+}
+
+export interface WH40KCorruptionInsanity {
+    value: number;
+    max?: number;
+    degree?: number;
+}
+
+export interface WH40KPsy {
+    rating: number;
+    discipline: string;
+    powers: string[];
+    [key: string]: unknown;
+}
+
+export interface WH40KBackpack {
+    weightCapacity?: number;
+    contents?: unknown[];
+    [key: string]: unknown;
+}
+
+export type WH40KActorSystemData = import('../data/abstract/actor-data-model.ts').default & {
     characteristics: Record<string, WH40KCharacteristic>;
     skills: Record<string, WH40KSkill>;
+    trainedSkills?: Record<string, WH40KSkill>;
     initiative: WH40KInitiative;
     wounds: WH40KWounds;
     movement: WH40KMovement;
-    size: string;
-    fatigue?: { value: number; max: number };
+    size: string | number;
+    fatigue?: WH40KFatigue;
     fate?: WH40KFate;
-    backpack?: Record<string, unknown>;
-    psy?: Record<string, unknown>;
-    bio?: Record<string, string>;
-    experience?: { used: number; total: number; available: number };
-    insanity?: { value: number };
-    corruption?: { value: number };
-    aptitudes?: Set<string>;
-    armour?: Record<string, WH40KArmourLocation>;
-    encumbrance?: { value: number; max: number; over: boolean };
+    backpack?: WH40KBackpack;
+    psy?: WH40KPsy;
+    bio?: WH40KActorBio;
+    experience?: WH40KExperience;
+    insanity?: WH40KCorruptionInsanity;
+    corruption?: WH40KCorruptionInsanity;
+    aptitudes?: Set<string> | string[];
+    armour?: Record<string, WH40KArmourLocation> & {
+        mode?: 'simple' | 'locations';
+        total?: number;
+        toughnessBonus?: number;
+        traitBonus?: number;
+    };
+    encumbrance?: WH40KEncumbrance;
     backgroundEffects?: unknown[];
     originPath?: Record<string, unknown>;
     rogueTrader?: Record<string, unknown>;
     modifierSources?: Record<string, unknown>;
     combatActions?: unknown[];
     totalFateModifier?: number;
+    threatLevel?: number;
+    threatTier?: string;
+    tags?: string[];
+    horde?: { enabled: boolean; magnitude: { max: number; current: number } };
+    crew?: Record<string, unknown>;
+    integrity?: { value: number; max: number };
+    morale?: { value: number; max: number };
+    propulsion?: Record<string, unknown>;
+    detection?: Record<string, unknown>;
+    detectionBonus?: number;
+    schema?: unknown;
+    _source?: Record<string, unknown>;
     prepareEmbeddedData?: () => void;
     _initializeModifierTracking?: () => void;
     prepareDerivedData?: () => void;
+    addTrainedSkill?: (key: string, options?: Record<string, unknown>) => Promise<void>;
+    removeSkill?: (key: string) => Promise<void>;
+    pinAbility?: (id: string) => Promise<void>;
+    unpinAbility?: (id: string) => Promise<void>;
+    switchArmourMode?: (mode: 'simple' | 'locations') => Promise<void>;
+    toggleHordeMode?: () => Promise<void>;
+    applyMagnitudeDamage?: (amount: number, source?: string) => Promise<void>;
+    restoreMagnitude?: (amount: number) => Promise<void>;
+    [key: string]: unknown;
 };
 
 export type WH40KItemSystemData = import('../data/abstract/item-data-model.ts').default & {
-    [key: string]: unknown;
     equipped?: boolean;
     quantity?: number;
     reload?: string;
@@ -178,6 +250,32 @@ export type WH40KItemSystemData = import('../data/abstract/item-data-model.ts').
     type?: string;
     step?: string;
     weight?: number;
+    craftsmanship?: string;
+    availability?: string;
+    cost?: number | string;
+    damage?: string | { value: string; bonus?: number };
+    penetration?: number;
+    range?: number | string;
+    rateOfFire?: { single: number; semi: number; full: number } | string;
+    clip?: { current: number; max: number; type?: string };
+    container?: string | null;
+    attackType?: string;
+    detection?: number;
+    detectionBonus?: number;
+    description?: WH40KDescription;
+    source?: WH40KSourceReference;
+    modifiers?: WH40KItemModifiers;
+    talents?: string[];
+    aptitudes?: string[];
+    cls?: string;
+    tier?: number | string;
+    rarity?: string;
+    hasGrants?: boolean;
+    grants?: unknown[];
+    isMeleeWeapon?: boolean;
+    isRangedWeapon?: boolean;
+    melee?: boolean;
+    [key: string]: unknown;
 };
 
 import type { WH40KBaseActor } from '../documents/base-actor.ts';

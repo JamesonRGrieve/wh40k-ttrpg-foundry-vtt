@@ -27,75 +27,6 @@ function getArmourPointsObject(armour) {
     return raw;
 }
 
-function parseLegacyLocations(rawLocations) {
-    if (!rawLocations || typeof rawLocations !== 'string') return null;
-    const normalized = rawLocations.toLowerCase();
-    if (normalized.includes('all')) {
-        return new Set(['all']);
-    }
-    const coverage = new Set();
-    const tokens = normalized
-        .split(',')
-        .map((token) => token.trim())
-        .filter(Boolean);
-    for (const token of tokens) {
-        if (token.includes('head')) {
-            coverage.add('head');
-        }
-        if (token.includes('body') || token.includes('chest') || token.includes('torso')) {
-            coverage.add('body');
-        }
-        if (token.includes('arm')) {
-            coverage.add('leftArm');
-            coverage.add('rightArm');
-        }
-        if (token.includes('leg')) {
-            coverage.add('leftLeg');
-            coverage.add('rightLeg');
-        }
-    }
-    return coverage.size ? coverage : null;
-}
-
-function parseLegacyAP(rawAp) {
-    if (rawAp === null || rawAp === undefined) return null;
-    if (typeof rawAp === 'number') {
-        return { defaultValue: rawAp };
-    }
-    if (typeof rawAp !== 'string') return null;
-    const values = rawAp.match(/-?\d+(?:\.\d+)?/g);
-    if (!values) return null;
-    const parsed = values.map((value) => Number(value));
-    if (parsed.length === 1) {
-        return { defaultValue: parsed[0] };
-    }
-    if (parsed.length >= 6) {
-        return {
-            pointsByLocation: {
-                head: parsed[0],
-                body: parsed[1],
-                leftArm: parsed[2],
-                rightArm: parsed[3],
-                leftLeg: parsed[4],
-                rightLeg: parsed[5],
-            },
-        };
-    }
-    if (parsed.length === 4) {
-        return {
-            pointsByLocation: {
-                head: parsed[0],
-                body: parsed[1],
-                leftArm: parsed[2],
-                rightArm: parsed[2],
-                leftLeg: parsed[3],
-                rightLeg: parsed[3],
-            },
-        };
-    }
-    return null;
-}
-
 function getArmourAPForLocation(armour, location) {
     if (!armour) return 0;
     if (typeof armour.getAPForLocation === 'function') {
@@ -103,23 +34,10 @@ function getArmourAPForLocation(armour, location) {
     }
     const armourPoints = getArmourPointsObject(armour);
     if (armourPoints) {
-        const hasValues = Object.values(armourPoints).some((value) => Number(value) > 0);
-        if (hasValues) {
-            const value = Number(armourPoints?.[location] ?? 0);
-            return Number.isFinite(value) ? value : 0;
-        }
+        const value = Number(armourPoints?.[location] ?? 0);
+        return Number.isFinite(value) ? value : 0;
     }
-
-    const coverage = parseLegacyLocations(armour.locations);
-    if (coverage && !coverage.has('all') && !coverage.has(location)) {
-        return 0;
-    }
-    const legacy = parseLegacyAP(armour.ap);
-    if (!legacy) return 0;
-    if (legacy.pointsByLocation) {
-        return legacy.pointsByLocation[location] ?? 0;
-    }
-    return legacy.defaultValue ?? 0;
+    return 0;
 }
 
 export function registerHandlebarsHelpers() {
