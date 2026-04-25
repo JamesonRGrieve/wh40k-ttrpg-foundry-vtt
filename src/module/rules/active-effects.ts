@@ -1,7 +1,7 @@
 import { roll1d100, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 
 /* -------------------------------------------- */
-/*  Legacy Combat Effects                       */
+/*  Combat Effects                              */
 /* -------------------------------------------- */
 
 export async function handleBleeding(actor) {

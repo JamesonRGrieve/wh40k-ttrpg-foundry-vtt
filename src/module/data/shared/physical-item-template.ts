@@ -116,20 +116,7 @@ export default class PhysicalItemTemplate extends SystemDataModel {
      */
     static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
-        PhysicalItemTemplate.#migrateWeight(source);
         PhysicalItemTemplate.#migrateCost(source);
-    }
-
-    /**
-     * Migrate legacy weight formats.
-     * @param {object} source  The source data
-     */
-    static #migrateWeight(source: Record<string, unknown>): void {
-        // Convert string weight to number
-        if (typeof source.weight === 'string') {
-            const num = Number(source.weight);
-            source.weight = Number.isNaN(num) ? 0 : num;
-        }
     }
 
     /**

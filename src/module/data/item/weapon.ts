@@ -1002,15 +1002,6 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     }
 
     /**
-     * Simple reload (legacy method).
-     * @deprecated Use reload() instead for inventory tracking and action economy
-     */
-    reloadSimple(): unknown {
-        console.warn('wh40k-rpg | reloadSimple() is deprecated, use reload() instead');
-        return this.reload({ skipValidation: true });
-    }
-
-    /**
      * Load ammunition into the weapon.
      * @param {Item} ammoItem - The ammunition item to load
      * @returns {Promise<Item>} - The updated weapon
