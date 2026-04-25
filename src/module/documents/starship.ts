@@ -11,7 +11,6 @@ export class WH40KStarship extends WH40KBaseActor {
             'token.disposition': CONST.TOKEN_DISPOSITIONS.NEUTRAL,
             'token.name': data.name,
         };
-        // @ts-expect-error - type mismatch
         this.updateSource(initData);
     }
 

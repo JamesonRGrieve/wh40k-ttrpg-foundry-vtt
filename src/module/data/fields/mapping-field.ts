@@ -2,7 +2,6 @@
  * A special ObjectField for mapping data.
  * Similar to DnD5e's MappingField for handling object-based data.
  */
-// @ts-expect-error - TS2339
 export default class MappingField extends foundry.data.fields.ObjectField {
     model: foundry.data.fields.DataField.Any;
     initialKeys: string[] | null;

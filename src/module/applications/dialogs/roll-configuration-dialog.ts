@@ -125,7 +125,6 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
 
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        // @ts-expect-error - argument type
         const context: unknown = await super._prepareContext(options);
 
         // Calculate the difficulty modifier
@@ -364,13 +363,11 @@ export default class RollConfigurationDialog extends HandlebarsApplicationMixin(
     }
 
     /** @override */
-    // @ts-expect-error - override type
     async close(options: Record<string, unknown> = {}): Promise<void> {
         // Ensure we resolve with null if closed without submitting
         if (this.#resolve && !(options as any).submitted) {
             this.#resolve(null);
         }
-        // @ts-expect-error - type assignment
         return super.close(options);
     }
 
