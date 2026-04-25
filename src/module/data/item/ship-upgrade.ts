@@ -74,72 +74,12 @@ export default class ShipUpgradeData extends ItemDataModel.mixin(DescriptionTemp
     /* -------------------------------------------- */
 
     /**
-     * Migrate legacy pack data to V13 schema.
+     * Normalize ship upgrade data shape.
      * @param {object} source  Candidate source data
      */
     static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
-        ShipUpgradeData.#migrateSpCost(source);
-        ShipUpgradeData.#migrateEffects(source);
-        ShipUpgradeData.#migrateShipAvailability(source);
-        ShipUpgradeData.#migrateModifiers(source);
         ShipUpgradeData.#initializeDefaults(source);
-    }
-
-    /**
-     * Rename spCost → shipPoints.
-     * @param {object} source  The source data
-     */
-    static #migrateSpCost(source: Record<string, unknown>): void {
-        if ('spCost' in source && source.shipPoints === undefined) {
-            source.shipPoints = source.spCost;
-            delete source.spCost;
-        }
-    }
-
-    /**
-     * Rename effects → effect.
-     * @param {object} source  The source data
-     */
-    static #migrateEffects(source: Record<string, unknown>): void {
-        if ('effects' in source && !source.effect) {
-            source.effect = source.effects;
-            delete source.effects;
-        }
-    }
-
-    /**
-     * Parse shipAvailability → notes.
-     * @param {object} source  The source data
-     */
-    static #migrateShipAvailability(source: Record<string, unknown>): void {
-        if ('shipAvailability' in source) {
-            if (!source.notes) {
-                source.notes = `Ship Availability: ${source.shipAvailability}`;
-            }
-            delete source.shipAvailability;
-        }
-    }
-
-    /**
-     * Add missing modifiers fields.
-     * @param {object} source  The source data
-     */
-    static #migrateModifiers(source: Record<string, unknown>): void {
-        if (source.modifiers && typeof source.modifiers === 'object') {
-            const defaults = {
-                speed: 0,
-                manoeuvrability: 0,
-                detection: 0,
-                armour: 0,
-                hullIntegrity: 0,
-                turretRating: 0,
-                voidShields: 0,
-                morale: 0,
-                crewRating: 0,
-            };
-            source.modifiers = { ...defaults, ...source.modifiers };
-        }
     }
 
     /**

@@ -238,16 +238,16 @@ export default function PrimarySheetMixin<T extends ApplicationV2Ctor>(Base: T) 
                 };
             });
 
-            this._activateLegacyTabs();
+            this._activateTabs();
         }
 
         /* -------------------------------------------- */
 
         /**
-         * Activate legacy V1-style tabs that use data-tab and data-group attributes.
+         * Activate tabs using data-tab and data-group attributes.
          * @protected
          */
-        _activateLegacyTabs(): void {
+        _activateTabs(): void {
             const tabsConfig = (this.options as any).tabs ?? [];
             for (const config of tabsConfig) {
                 const { navSelector, contentSelector, initial } = config;

@@ -535,15 +535,6 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
      */
     static _cleanData(source: Record<string, unknown> | undefined, options): void {
         super._cleanData?.(source, options);
-        // Ensure numeric fields are properly typed
-        if (source?.grants) {
-            if (typeof source.grants.wounds === 'string') {
-                source.grants.wounds = parseInt(source.grants.wounds) || 0;
-            }
-            if (typeof source.grants.fateThreshold === 'string') {
-                source.grants.fateThreshold = parseInt(source.grants.fateThreshold) || 0;
-            }
-        }
     }
 
     /* -------------------------------------------- */
