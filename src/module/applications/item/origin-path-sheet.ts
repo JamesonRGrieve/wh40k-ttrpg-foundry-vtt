@@ -84,7 +84,6 @@ export default class OriginPathSheet extends BaseItemSheet {
                     label: getCharacteristicDisplayInfo(key).label,
                     short: getCharacteristicDisplayInfo(key).short,
                     value: value,
-                    // @ts-expect-error - operator type
                     positive: value > 0,
                 });
             }
