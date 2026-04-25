@@ -669,9 +669,6 @@ export default class NPCSheet extends (CharacterSheet as any) {
         context.stealthSkills = allBasicSkills.filter((s) => s.category === 'stealth').map((s) => ({ ...s, added: trainedKeys.includes(s.key) }));
 
         context.technicalSkills = allBasicSkills.filter((s) => s.category === 'technical').map((s) => ({ ...s, added: trainedKeys.includes(s.key) }));
-
-        // Legacy: available skills for dropdown (not yet trained)
-        context.availableSkills = allBasicSkills.filter((s) => !trainedKeys.includes(s.key));
     }
 
     /* -------------------------------------------- */
