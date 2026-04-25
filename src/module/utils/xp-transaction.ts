@@ -61,7 +61,6 @@ export async function spendXP(actor, cost, reason = '') {
             success: false,
             error: game.i18n.format('WH40K.Advancement.Error.InsufficientXP', {
                 cost,
-                // @ts-expect-error - type assignment
                 available,
             }),
         };
@@ -117,7 +116,6 @@ export async function spendXPBatch(actor, purchases) {
             success: false,
             error: game.i18n.format('WH40K.Advancement.Error.InsufficientXP', {
                 cost: totalCost,
-                // @ts-expect-error - type assignment
                 available,
             }),
         };

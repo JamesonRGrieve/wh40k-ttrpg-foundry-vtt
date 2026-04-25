@@ -221,7 +221,6 @@ export class WH40KActiveEffect extends ActiveEffect {
      */
     get changesSummary(): { key: string; label: string; value: string; mode: string }[] {
         return this.changes.map((change) => {
-            // @ts-expect-error - dynamic property access
             const key = change.key.split('.').pop();
             const label = this._getChangeLabel(change.key);
             const value = this._formatChangeValue(change);
@@ -311,17 +310,14 @@ export class WH40KActiveEffect extends ActiveEffect {
         }
 
         if (d.rounds) {
-            // @ts-expect-error - type assignment
             return game.i18n.format('WH40K.ActiveEffect.DurationRounds', { rounds: d.rounds });
         }
 
         if (d.turns) {
-            // @ts-expect-error - type assignment
             return game.i18n.format('WH40K.ActiveEffect.DurationTurns', { turns: d.turns });
         }
 
         if (d.seconds) {
-            // @ts-expect-error - type assignment
             return game.i18n.format('WH40K.ActiveEffect.DurationSeconds', { seconds: d.seconds });
         }
 
