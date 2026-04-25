@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const plugin = require('tailwindcss/plugin');
+
 module.exports = {
   content: [
     './src/templates/**/*.hbs',
@@ -159,5 +161,52 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addComponents }) {
+      // Selectors here are auto-prefixed by Tailwind's `prefix: 'tw-'` config,
+      // so write them WITHOUT the tw- prefix.
+      addComponents({
+        // Shared form-group: standard label-over-input pattern used in nearly every dialog.
+        '.form-group': {
+          marginBottom: '0',
+          '& > label': {
+            fontWeight: 'bold',
+            marginBottom: '0.25rem',
+            display: 'block',
+          },
+          '& input[type="text"], & input[type="number"], & input[type="email"], & input[type="password"], & select, & textarea': {
+            width: '100%',
+            padding: '0.4rem 0.5rem',
+            border: '1px solid var(--color-border-light-tertiary)',
+            borderRadius: 'var(--wh40k-radius-md)',
+            background: 'var(--color-bg-option)',
+          },
+          '& input:focus, & select:focus, & textarea:focus': {
+            outline: 'none',
+            borderColor: 'var(--wh40k-color-accent, var(--wh40k-color-gold))',
+          },
+          '& > .hint': {
+            fontSize: '0.75rem',
+            color: 'var(--color-text-light-6)',
+            marginTop: '0.25rem',
+          },
+        },
+        // Checkbox modifier: label and input on one line.
+        '.form-group--checkbox > label': {
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          fontWeight: 'normal',
+          cursor: 'pointer',
+        },
+        '.form-group--checkbox input[type="checkbox"]': {
+          width: 'auto',
+        },
+        // Indent modifier for nested form-groups.
+        '.form-group--indent': {
+          marginLeft: '1.5rem',
+        },
+      });
+    }),
+  ],
 };

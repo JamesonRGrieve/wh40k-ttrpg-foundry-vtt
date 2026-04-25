@@ -1,31 +1,31 @@
 {{!-- Batch Create Dialog --}}
-<div class="batch-create-content tw-flex tw-flex-col tw-gap-3">
+<div class="tw-flex tw-flex-col tw-gap-3">
   {{!-- Name Pattern --}}
-  <div class="form-group">
+  <div class="tw-form-group">
     <label>{{localize "WH40K.NPC.BatchCreate.NamePattern"}}</label>
     <input type="text" name="namePattern" value="{{state.namePattern}}" placeholder="NPC {n}"/>
-    <p class="hint">{{localize "WH40K.NPC.BatchCreate.NamePatternHint"}}</p>
+    <p class="tw-hint">{{localize "WH40K.NPC.BatchCreate.NamePatternHint"}}</p>
   </div>
 
   {{!-- Count --}}
-  <div class="form-group">
+  <div class="tw-form-group">
     <label>{{localize "WH40K.NPC.BatchCreate.Count"}}</label>
     <input type="number" name="count" value="{{state.count}}" min="1" max="100"/>
   </div>
 
   {{!-- Threat Level --}}
-  <div class="form-group slider-group">
+  <div class="tw-form-group">
     <label>{{localize "WH40K.NPC.ThreatLevel"}}</label>
-    <div class="slider-with-value tw-flex tw-items-center tw-gap-4">
+    <div class="tw-flex tw-items-center tw-gap-4 [&>input[type=range]]:tw-flex-1 [&>input[type=range]]:tw-accent-[var(--wh40k-color-accent,var(--wh40k-color-gold))]">
       <input type="range" name="threatLevel" value="{{state.threatLevel}}" min="1" max="30" step="1"/>
-      <span class="threat-value">{{state.threatLevel}}</span>
+      <span class="tw-min-w-[2rem] tw-text-center tw-font-bold tw-text-lg">{{state.threatLevel}}</span>
     </div>
-    <p class="tier-label">{{tierName}}</p>
+    <p class="tw-text-[0.8rem] tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))] tw-italic tw-mt-1">{{tierName}}</p>
   </div>
 
   {{!-- Role & Type --}}
-  <div class="form-group-row">
-    <div class="form-group">
+  <div class="tw-grid tw-grid-cols-2 tw-gap-4">
+    <div class="tw-form-group">
       <label>{{localize "WH40K.NPC.Role"}}</label>
       <select name="role">
         {{#each roles}}
@@ -34,7 +34,7 @@
       </select>
     </div>
 
-    <div class="form-group">
+    <div class="tw-form-group">
       <label>{{localize "WH40K.NPC.Type"}}</label>
       <select name="type">
         {{#each types}}
@@ -45,7 +45,7 @@
   </div>
 
   {{!-- Equipment Preset --}}
-  <div class="form-group">
+  <div class="tw-form-group">
     <label>{{localize "WH40K.NPC.EquipmentPreset"}}</label>
     <select name="preset">
       {{#each presets}}
@@ -55,14 +55,14 @@
   </div>
 
   {{!-- Faction --}}
-  <div class="form-group">
+  <div class="tw-form-group">
     <label>{{localize "WH40K.NPC.Faction"}}</label>
     <input type="text" name="faction" value="{{state.faction}}" placeholder="Optional"/>
   </div>
 
   {{!-- Folder --}}
   {{#if folders.length}}
-  <div class="form-group">
+  <div class="tw-form-group">
     <label>{{localize "WH40K.NPC.BatchCreate.Folder"}}</label>
     <select name="folder">
       <option value="">{{localize "WH40K.NPC.BatchCreate.NoFolder"}}</option>
@@ -74,17 +74,17 @@
   {{/if}}
 
   {{!-- Options --}}
-  <fieldset class="batch-options">
+  <fieldset class="tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-rounded-md tw-p-3 tw-m-0 [&>legend]:tw-px-2 [&>legend]:tw-font-bold [&>legend]:tw-text-base [&>.tw-form-group]:tw-mb-2 [&>.tw-form-group:last-child]:tw-mb-0">
     <legend>{{localize "WH40K.NPC.BatchCreate.Options"}}</legend>
-    
-    <div class="form-group checkbox">
+
+    <div class="tw-form-group tw-form-group--checkbox">
       <label>
         <input type="checkbox" name="isHorde" {{#if state.isHorde}}checked{{/if}}/>
         {{localize "WH40K.NPC.EnableHordeMode"}}
       </label>
     </div>
 
-    <div class="form-group checkbox">
+    <div class="tw-form-group tw-form-group--checkbox">
       <label>
         <input type="checkbox" name="randomize" {{#if state.randomize}}checked{{/if}}/>
         {{localize "WH40K.NPC.BatchCreate.RandomizeStats"}}
@@ -92,28 +92,28 @@
     </div>
 
     {{#if state.randomize}}
-    <div class="form-group indent">
+    <div class="tw-form-group tw-form-group--indent">
       <label>{{localize "WH40K.NPC.BatchCreate.RandomizeAmount"}}</label>
-      <div class="slider-with-value tw-flex tw-items-center tw-gap-4">
+      <div class="tw-flex tw-items-center tw-gap-4 [&>input[type=range]]:tw-flex-1 [&>input[type=range]]:tw-accent-[var(--wh40k-color-accent,var(--wh40k-color-gold))]">
         <input type="range" name="randomizeAmount" value="{{state.randomizeAmount}}" min="5" max="30" step="5"/>
         <span>±{{state.randomizeAmount}}%</span>
       </div>
     </div>
     {{/if}}
 
-    <div class="form-group checkbox">
+    <div class="tw-form-group tw-form-group--checkbox">
       <label>
         <input type="checkbox" name="openSheets" {{#if state.openSheets}}checked{{/if}}/>
         {{localize "WH40K.NPC.BatchCreate.OpenSheets"}}
       </label>
-      <p class="hint">{{localize "WH40K.NPC.BatchCreate.OpenSheetsHint"}}</p>
+      <p class="tw-hint">{{localize "WH40K.NPC.BatchCreate.OpenSheetsHint"}}</p>
     </div>
   </fieldset>
 
   {{!-- Preview --}}
-  <div class="batch-preview">
+  <div class="tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-rounded-md tw-p-3 [&>h4]:tw-m-0 [&>h4]:tw-mb-2 [&>h4]:tw-text-base [&>h4]:tw-text-[var(--wh40k-color-accent,var(--wh40k-color-gold))]">
     <h4>{{localize "WH40K.NPC.Preview"}}</h4>
-    <ul class="name-preview-list tw-flex tw-flex-wrap tw-gap-2">
+    <ul class="tw-m-0 tw-p-0 tw-list-none tw-flex tw-flex-wrap tw-gap-2 [&>li]:tw-bg-[var(--color-bg-btn)] [&>li]:tw-px-2 [&>li]:tw-py-1 [&>li]:tw-rounded-sm [&>li]:tw-text-[0.85rem]">
       {{#each previewNames}}
       <li>{{this}}</li>
       {{/each}}
@@ -121,7 +121,7 @@
   </div>
 
   {{!-- Buttons --}}
-  <footer class="sheet-footer flexrow tw-pt-3 tw-gap-2">
+  <footer class="tw-flex tw-pt-3 tw-gap-2 [&>button]:tw-flex-1">
     {{#each buttons}}
     <button type="{{type}}" {{#if action}}data-action="{{action}}"{{/if}} class="{{cssClass}}">
       <i class="{{icon}}"></i>
