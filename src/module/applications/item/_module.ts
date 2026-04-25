@@ -24,7 +24,7 @@ export { default as ShipWeaponSheet } from './ship-weapon-sheet.ts';
 export { default as ShipUpgradeSheet } from './ship-upgrade-sheet.ts';
 export { default as SkillSheet } from './skill-sheet.ts';
 export { default as StorageLocationSheet } from './storage-location-sheet.ts';
-export { default as TalentSheet } from './talent-sheet-v2.ts';
+export { default as TalentSheet } from './talent-sheet.ts';
 export { default as TraitSheet } from './trait-sheet.ts';
 export { default as WeaponModSheet } from './weapon-mod-sheet.ts';
 export { default as WeaponQualitySheet } from './weapon-quality-sheet.ts';

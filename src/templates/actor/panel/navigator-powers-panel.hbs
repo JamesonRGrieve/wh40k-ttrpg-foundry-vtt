@@ -1,36 +1,131 @@
-<div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-2">
-    <div class="wh40k-panel-header">
-        <span class="wh40k-panel-title">{{localize "WH40K.NavigatorPowers.Header"}}</span>
-    </div>
+{{!-- Navigator Powers Panel V2 - Modern Card-based Design --}}
+<div class="wh40k-panel wh40k-panel-powers wh40k-panel-navigator-powers">
+    <header class="wh40k-panel-header" data-action="togglePanel" data-panel-id="navigator-powers">
+        <span class="wh40k-panel-title">
+            <i class="fas fa-eye"></i>
+            Navigator Powers
+            {{#if navigatorPowersCount}}
+            <span class="wh40k-count-badge">{{navigatorPowersCount}}</span>
+            {{/if}}
+        </span>
+        <i class="fas fa-chevron-down wh40k-panel-toggle"></i>
+    </header>
     <div class="wh40k-panel-body">
-        <div class="wh40k-table--border">
-            <div class="table-row--head">
-                <div class="table-cell--span2">{{localize "WH40K.NavigatorPowers.Name"}}</div>
-                <div class="table-cell">{{localize "WH40K.NavigatorPowers.Range"}}</div>
-                <div class="table-cell">{{localize "WH40K.NavigatorPowers.Test"}}</div>
-                <div class="table-cell--last">
-                    <label class="wh40k-control-button">
-                        <span class="wh40k-control-button__span material-icons">{{defaultVal icon "add_circle"}}</span>
-                    </label>
-                </div>
-            </div>
+        {{!-- Powers List --}}
+        <div class="wh40k-powers-list" data-drop-zone="powers" data-accepts="navigatorPower">
             {{#each navigatorPowers as |power|}}
-                <div class="table-row">
-                    <div class="table-cell--span2">
-                        <button class="item-name" data-item-id="{{power._id}}" type="button">
-                            <img class="wh40k-item-img" src="{{power.img}}" alt="{{power.name}}" />
+            <div class="wh40k-power-card wh40k-navigator-card item-drag" data-item-id="{{power.id}}" draggable="true">
+                {{!-- Power Header --}}
+                <div class="wh40k-power-card-header">
+                    <img class="wh40k-power-icon" src="{{power.img}}" alt="{{power.name}}" />
+                    <div class="wh40k-power-info">
+                        <button type="button" class="wh40k-power-name" data-action="itemEdit" data-item-id="{{power.id}}" title="Edit Power">
                             {{power.name}}
                         </button>
+                        <div class="wh40k-power-meta">
+                            <span class="wh40k-power-type wh40k-type-navigator">
+                                <i class="fas fa-eye"></i> Navigator
+                            </span>
+                        </div>
                     </div>
-                    <div class="table-cell">{{power.system.range}}</div>
-                    <div class="table-cell">{{power.system.test}}</div>
-                    <div class="table-cell--last">
-                        <label class="wh40k-control-button item-delete" data-item-id="{{power._id}}">
-                            <span class="wh40k-control-button__span material-icons">delete</span>
-                        </label>
+                    <div class="wh40k-power-card-actions">
+                        <button type="button" class="wh40k-power-btn wh40k-btn-roll" data-action="rollPower" data-item-id="{{power.id}}" title="Use Power">
+                            <i class="fas fa-dice-d20"></i>
+                        </button>
+                        <button type="button" class="wh40k-power-btn wh40k-btn-chat" data-action="vocalizePower" data-item-id="{{power.id}}" title="Post to Chat">
+                            <i class="fas fa-comment"></i>
+                        </button>
+                        <button type="button" class="wh40k-power-btn wh40k-btn-expand" data-action="togglePowerDetails" data-item-id="{{power.id}}" title="Toggle Details">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
                     </div>
                 </div>
+                
+                {{!-- Power Stats Row --}}
+                <div class="wh40k-power-stats">
+                    <div class="wh40k-power-stat">
+                        <span class="wh40k-stat-label">Test</span>
+                        <span class="wh40k-stat-value">{{power.system.testLabel}}</span>
+                    </div>
+                    <div class="wh40k-power-stat">
+                        <span class="wh40k-stat-label">Action</span>
+                        <span class="wh40k-stat-value">{{power.system.activationLabel}}</span>
+                    </div>
+                </div>
+                
+                {{!-- Power Level Badges --}}
+                <div class="wh40k-navigator-levels">
+                    {{#if power.system.levels.novice.effect}}
+                    <span class="wh40k-level-badge wh40k-level-novice" title="Novice Effect">
+                        <i class="fas fa-seedling"></i> Novice
+                    </span>
+                    {{/if}}
+                    {{#if power.system.levels.adept.effect}}
+                    <span class="wh40k-level-badge wh40k-level-adept" title="Adept Effect">
+                        <i class="fas fa-star-half-alt"></i> Adept
+                    </span>
+                    {{/if}}
+                    {{#if power.system.levels.master.effect}}
+                    <span class="wh40k-level-badge wh40k-level-master" title="Master Effect">
+                        <i class="fas fa-crown"></i> Master
+                    </span>
+                    {{/if}}
+                </div>
+                
+                {{!-- Expandable Details --}}
+                <div class="wh40k-power-details" data-power-id="{{power.id}}" hidden>
+                    {{#if power.system.levels.novice.effect}}
+                    <div class="wh40k-power-detail-section wh40k-section-novice">
+                        <span class="wh40k-detail-heading"><i class="fas fa-seedling"></i> Novice</span>
+                        <div class="wh40k-detail-content">{{{power.system.levels.novice.effect}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if power.system.levels.adept.effect}}
+                    <div class="wh40k-power-detail-section wh40k-section-adept">
+                        <span class="wh40k-detail-heading"><i class="fas fa-star-half-alt"></i> Adept</span>
+                        <div class="wh40k-detail-content">{{{power.system.levels.adept.effect}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if power.system.levels.master.effect}}
+                    <div class="wh40k-power-detail-section wh40k-section-master">
+                        <span class="wh40k-detail-heading"><i class="fas fa-crown"></i> Master</span>
+                        <div class="wh40k-detail-content">{{{power.system.levels.master.effect}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if power.system.sideEffects}}
+                    <div class="wh40k-power-detail-section wh40k-section-danger">
+                        <span class="wh40k-detail-heading"><i class="fas fa-exclamation-triangle"></i> Side Effects</span>
+                        <div class="wh40k-detail-content">{{{power.system.sideEffects}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if power.system.description}}
+                    <div class="wh40k-power-detail-section">
+                        <span class="wh40k-detail-heading">Description</span>
+                        <div class="wh40k-detail-content">{{{power.system.description}}}</div>
+                    </div>
+                    {{/if}}
+                    <div class="wh40k-power-detail-actions">
+                        <button type="button" class="wh40k-detail-btn" data-action="itemEdit" data-item-id="{{power.id}}">
+                            <i class="fas fa-cog"></i> Edit
+                        </button>
+                        <button type="button" class="wh40k-detail-btn wh40k-btn-danger" data-action="itemDelete" data-item-id="{{power.id}}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{else}}
+            <div class="wh40k-empty-state">
+                <i class="fas fa-eye"></i>
+                <p>No navigator powers</p>
+            </div>
             {{/each}}
+        </div>
+        
+        {{!-- Add Power Dropzone --}}
+        <div class="wh40k-dropzone {{#if navigatorPowersCount}}wh40k-dropzone--compact{{/if}}" data-action="itemCreate" data-type="navigatorPower">
+            <i class="fas fa-plus wh40k-dropzone-icon"></i>
+            <span class="wh40k-dropzone-text">{{#if navigatorPowersCount}}Drop or click to add{{else}}Drop Navigator Power or Click to Create{{/if}}</span>
         </div>
     </div>
 </div>

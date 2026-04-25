@@ -71,7 +71,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-sheet-modern.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
         },
     };

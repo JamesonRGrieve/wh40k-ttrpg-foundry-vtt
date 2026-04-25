@@ -47,7 +47,6 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Protection rating (1-100 roll threshold)

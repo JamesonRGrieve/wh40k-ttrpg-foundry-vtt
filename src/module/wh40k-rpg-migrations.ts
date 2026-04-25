@@ -60,14 +60,11 @@ const DEAD_ICON_REMAPS: Record<string, string> = {
 export async function checkAndMigrateWorld() {
     const worldVersion = 188;
 
-    // @ts-expect-error - argument type
     const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
-    // @ts-expect-error - comparison type
     if (worldVersion !== currentVersion && game.user.isGM) {
         ui.notifications.info('Upgrading the world, please wait...');
 
         // Update Actors
-        // @ts-expect-error - dynamic property access
         for (const actor of game.actors.contents) {
             try {
                 await migrateActorData(actor, currentVersion);
@@ -77,7 +74,6 @@ export async function checkAndMigrateWorld() {
         }
 
         // Update Items
-        // @ts-expect-error - dynamic property access
         for (const item of game.items.contents) {
             try {
                 await migrateItemData(item, currentVersion);
@@ -92,7 +88,6 @@ export async function checkAndMigrateWorld() {
         // Display Release Notes
         await displayReleaseNotes(worldVersion);
 
-        // @ts-expect-error - argument type
         void game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, worldVersion);
         ui.notifications.info('Upgrade complete!');
     }
@@ -247,7 +242,6 @@ export async function checkAndMigrateWorld() {
             }
         }
 
-        // @ts-expect-error - operator type
         if (currentVersion < 180) {
             // Update User Items to be Nested
             for (const item of actor.items) {
@@ -259,7 +253,6 @@ export async function checkAndMigrateWorld() {
             }
         }
 
-        // @ts-expect-error - operator type
         if (currentVersion < 182) {
             const skills = actor.system?.skills;
 
@@ -280,7 +273,6 @@ export async function checkAndMigrateWorld() {
 
         // V13 Compatibility Migration (v184)
         // Migrate embedded items on actors
-        // @ts-expect-error - operator type
         if (currentVersion < 184) {
             for (const item of actor.items) {
                 const updateData = {};
@@ -323,7 +315,6 @@ export async function checkAndMigrateWorld() {
         }
 
         // Remove deprecated loadout system flags (v185)
-        // @ts-expect-error - operator type
         if (currentVersion < 185) {
             const flags = actor.flags?.['wh40k-rpg'];
             if (flags?.equipmentViewMode !== undefined || flags?.equipmentPresets !== undefined) {
@@ -335,7 +326,6 @@ export async function checkAndMigrateWorld() {
         }
 
         // Repoint dead icons/svg/*.svg paths (v186)
-        // @ts-expect-error - operator type
         if (currentVersion < 186) {
             const actorReplacement = DEAD_ICON_REMAPS[actor.img];
             if (actorReplacement) {
@@ -350,7 +340,6 @@ export async function checkAndMigrateWorld() {
         }
 
         // Dedupe embedded talents + rename Weapon Training (Stock) → (Shock) (v187)
-        // @ts-expect-error - operator type
         if (currentVersion < 187) {
             const talents = actor.items.filter((i) => i.type === 'talent');
 
@@ -400,7 +389,6 @@ export async function checkAndMigrateWorld() {
         // Collapse talent names with duplicate or chained parens: "Name (X) (Y)" → "Name (X)" (v188)
         // Caused by earlier grant-composition bug where specialization was appended on top of an
         // already-specialized source name.
-        // @ts-expect-error - operator type
         if (currentVersion < 188) {
             const talents = actor.items.filter((i) => i.type === 'talent');
             for (const talent of talents) {

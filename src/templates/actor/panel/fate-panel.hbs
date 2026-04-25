@@ -1,0 +1,135 @@
+{{!-- Fate Panel - Inquisitorial Rosette Pips (count up like fatigue) --}}
+<div class="wh40k-panel wh40k-fate-panel-v2 {{#if (eq system.fate.value 0)}}wh40k-fate-empty-state{{/if}}">
+
+    {{!-- Panel Header - Click to expand/collapse --}}
+    <div class="wh40k-panel-header wh40k-panel-header--clickable sheet-control__hide-control"
+         data-toggle="fate_details"
+         title="Click to {{#if (isExpanded 'fate_details' actor)}}collapse{{else}}expand{{/if}}">
+        <span class="wh40k-panel-title">
+            <i class="fas fa-skull"></i> Fate
+        </span>
+        <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'fate_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
+    </div>
+
+    {{!-- Panel Body --}}
+    <div class="wh40k-panel-body">
+
+        {{!-- Main Display: Rosette Pips + Counter --}}
+        <div class="wh40k-fate-display">
+            <div class="wh40k-fate-tracker">
+                <button type="button"
+                        class="wh40k-fate-btn wh40k-fate-minus"
+                        data-action="decrement"
+                        data-field="system.fate.value"
+                        data-min="0"
+                        title="Spend Fate Point">
+                    <i class="fas fa-minus"></i>
+                </button>
+
+                <div class="wh40k-fate-value">
+                    <span class="wh40k-fate-current">{{system.fate.value}}</span>
+                    <span class="wh40k-fate-sep">/</span>
+                    <span class="wh40k-fate-max">{{system.fate.max}}</span>
+                </div>
+
+                <button type="button"
+                        class="wh40k-fate-btn wh40k-fate-plus"
+                        data-action="increment"
+                        data-field="system.fate.value"
+                        data-max="{{system.fate.max}}"
+                        title="Restore Fate Point">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            {{!-- Rosette Pip Display --}}
+            <div class="wh40k-fate-pips">
+                {{#if (gt system.fate.max 0)}}
+                    {{#each (range 1 system.fate.max) as |index|}}
+                        <button type="button"
+                                class="wh40k-fate-pip {{#if (lte index ../system.fate.value)}}wh40k-fate-pip--filled{{/if}}"
+                                data-action="setFateStar"
+                                data-fate-index="{{index}}"
+                                title="Fate Point {{index}}{{#if (lte index ../system.fate.value)}} (Available — click to spend){{else}} (Spent — click to restore){{/if}}">
+                            <i class="fas fa-skull"></i>
+                        </button>
+                    {{/each}}
+                {{else}}
+                    <div class="wh40k-fate-none">
+                        <i class="far fa-circle"></i>
+                        <span>No Fate Points</span>
+                    </div>
+                {{/if}}
+            </div>
+
+            {{!-- Stat Breakdown Button --}}
+            <button
+                type="button"
+                class="wh40k-stat-breakdown-btn wh40k-stat-breakdown-btn--compact"
+                data-action="showStatBreakdown"
+                data-stat-key="fate"
+                title="Show fate calculation">
+                <i class="fa-solid fa-calculator"></i>
+            </button>
+        </div>
+
+        {{!-- Edit Mode (Expandable) --}}
+        <div class="wh40k-panel-details fate_details" {{hideIfNot (isExpanded 'fate_details' actor)}}>
+
+            {{!-- Quick Edit Section --}}
+            <div class="wh40k-fate-edit-section">
+                <div class="wh40k-fate-edit-header">
+                    <i class="fas fa-cog"></i> Edit Fate Points
+                </div>
+
+                <div class="wh40k-fate-edit-grid">
+                    <label class="wh40k-edit-field">
+                        <span class="wh40k-edit-label">Max Fate Points</span>
+                        <input type="number"
+                               data-dtype="Number"
+                               class="wh40k-edit-input"
+                               name="system.fate.max"
+                               value="{{system.fate.max}}"
+                               min="0"
+                               max="10"
+                               placeholder="Max" />
+                    </label>
+
+                    <label class="wh40k-edit-field">
+                        <span class="wh40k-edit-label">Current Fate</span>
+                        <input type="number"
+                               data-dtype="Number"
+                               class="wh40k-edit-input"
+                               name="system.fate.value"
+                               value="{{system.fate.value}}"
+                               min="0"
+                               max="{{system.fate.max}}"
+                               placeholder="Current" />
+                    </label>
+                </div>
+            </div>
+
+            {{!-- About Fate Info Section --}}
+            <div class="wh40k-fate-edit-section">
+                <div class="wh40k-fate-info-box">
+                    <i class="fas fa-book-open"></i>
+                    <div class="wh40k-info-content">
+                        <strong>About Fate Points</strong>
+                        <p>Fate Points represent the Emperor's favor and divine protection. They can be spent to alter destiny in critical moments.</p>
+
+                        <strong>Uses of Fate:</strong>
+                        <ul>
+                            <li><strong>Reroll a Test:</strong> Reroll any failed test, keeping the second result</li>
+                            <li><strong>Avoid Death:</strong> When reduced to 0 wounds, spend a Fate Point to survive with 1 wound instead</li>
+                            <li><strong>Divine Intervention:</strong> Call upon the Emperor's grace for a minor miracle at the GM's discretion</li>
+                            <li><strong>Righteous Fury:</strong> Confirm a Righteous Fury result automatically</li>
+                        </ul>
+
+                        <p class="wh40k-fate-warning"><i class="fas fa-fire"></i> <strong>Burning Fate:</strong> Permanently spending a Fate Point (reducing your maximum) can achieve truly miraculous results, but this should only be done in the direst circumstances.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

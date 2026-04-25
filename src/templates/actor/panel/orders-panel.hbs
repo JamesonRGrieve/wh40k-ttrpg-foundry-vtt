@@ -1,36 +1,136 @@
-<div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-1">
-    <div class="wh40k-panel-header">
-        <span class="wh40k-panel-title">{{localize "WH40K.Orders.Header"}}</span>
-    </div>
+{{!-- Orders Panel V2 - Modern Card-based Design --}}
+<div class="wh40k-panel wh40k-panel-powers wh40k-panel-orders">
+    <header class="wh40k-panel-header" data-action="togglePanel" data-panel-id="orders">
+        <span class="wh40k-panel-title">
+            <i class="fas fa-ship"></i>
+            Ship Orders
+            {{#if ordersCount}}
+            <span class="wh40k-count-badge">{{ordersCount}}</span>
+            {{/if}}
+        </span>
+        <i class="fas fa-chevron-down wh40k-panel-toggle"></i>
+    </header>
     <div class="wh40k-panel-body">
-        <div class="wh40k-table--border">
-            <div class="table-row--head">
-                <div class="table-cell--span2">{{localize "WH40K.Orders.Name"}}</div>
-                <div class="table-cell">{{localize "WH40K.Orders.Action"}}</div>
-                <div class="table-cell--last">
-                    <label class="wh40k-control-button" data-action="itemCreate" data-type="order">
-                        <span class="wh40k-control-button__span material-icons">add_circle</span>
-                    </label>
-                </div>
-            </div>
-            {{#each actor.items as |item|}}
-                {{#if item.isOrder}}
-                    <div class="table-row">
-                        <div class="table-cell--span2">
-                            <button class="item-name wh40k-item-button" data-item-id="{{item.id}}" type="button">
-                                <img class="wh40k-item-img" src="{{item.img}}" alt="{{item.name}}" />
-                                {{item.name}}
-                            </button>
-                        </div>
-                        <div class="table-cell wh40k-action-cell">{{item.system.typeAndAction}}</div>
-                        <div class="table-cell--last">
-                            <label class="wh40k-control-button item-delete" data-item-id="{{item.id}}">
-                                <span class="wh40k-control-button__span material-icons">delete</span>
-                            </label>
+        {{!-- Category Filter Tabs --}}
+        {{#if orderCategories.length}}
+        <div class="wh40k-power-filters">
+            <button type="button" class="wh40k-filter-btn {{#unless activeOrderCategory}}active{{/unless}}" data-action="filterOrders" data-category="">
+                All
+            </button>
+            {{#each orderCategories as |cat|}}
+            <button type="button" class="wh40k-filter-btn wh40k-filter-{{cat.id}}" data-action="filterOrders" data-category="{{cat.id}}">
+                {{cat.label}}
+            </button>
+            {{/each}}
+        </div>
+        {{/if}}
+        
+        {{!-- Orders List --}}
+        <div class="wh40k-powers-list" data-drop-zone="powers" data-accepts="order">
+            {{#each orders as |order|}}
+            <div class="wh40k-power-card wh40k-order-card item-drag" data-item-id="{{order.id}}" data-category="{{order.system.category}}" draggable="true">
+                {{!-- Order Header --}}
+                <div class="wh40k-power-card-header">
+                    <img class="wh40k-power-icon" src="{{order.img}}" alt="{{order.name}}" />
+                    <div class="wh40k-power-info">
+                        <button type="button" class="wh40k-power-name" data-action="itemEdit" data-item-id="{{order.id}}" title="Edit Order">
+                            {{order.name}}
+                        </button>
+                        <div class="wh40k-power-meta">
+                            <span class="wh40k-order-category wh40k-cat-{{order.system.category}}">
+                                {{#if (eq order.system.category "combat")}}
+                                <i class="fas fa-crosshairs"></i>
+                                {{else if (eq order.system.category "maneuver")}}
+                                <i class="fas fa-route"></i>
+                                {{else if (eq order.system.category "command")}}
+                                <i class="fas fa-bullhorn"></i>
+                                {{else if (eq order.system.category "support")}}
+                                <i class="fas fa-hands-helping"></i>
+                                {{else if (eq order.system.category "special")}}
+                                <i class="fas fa-star"></i>
+                                {{else}}
+                                <i class="fas fa-ship"></i>
+                                {{/if}}
+                                {{order.system.categoryLabel}}
+                            </span>
+                            <span class="wh40k-order-action">
+                                {{order.system.actionTypeLabel}}
+                            </span>
                         </div>
                     </div>
-                {{/if}}
+                    <div class="wh40k-power-card-actions">
+                        <button type="button" class="wh40k-power-btn wh40k-btn-roll" data-action="rollOrder" data-item-id="{{order.id}}" title="Execute Order">
+                            <i class="fas fa-dice-d20"></i>
+                        </button>
+                        <button type="button" class="wh40k-power-btn wh40k-btn-chat" data-action="vocalizeOrder" data-item-id="{{order.id}}" title="Post to Chat">
+                            <i class="fas fa-comment"></i>
+                        </button>
+                        <button type="button" class="wh40k-power-btn wh40k-btn-expand" data-action="togglePowerDetails" data-item-id="{{order.id}}" title="Toggle Details">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                {{!-- Order Stats Row --}}
+                <div class="wh40k-power-stats">
+                    <div class="wh40k-power-stat">
+                        <span class="wh40k-stat-label">Test</span>
+                        <span class="wh40k-stat-value">{{order.system.testLabel}}</span>
+                    </div>
+                    <div class="wh40k-power-stat">
+                        <span class="wh40k-stat-label">Action</span>
+                        <span class="wh40k-stat-value">{{order.system.actionTypeLabel}}</span>
+                    </div>
+                </div>
+                
+                {{!-- Expandable Details --}}
+                <div class="wh40k-power-details" data-power-id="{{order.id}}" hidden>
+                    {{#if order.system.requirements}}
+                    <div class="wh40k-power-detail-section">
+                        <span class="wh40k-detail-heading"><i class="fas fa-list-check"></i> Requirements</span>
+                        <div class="wh40k-detail-content">{{{order.system.requirements}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if order.system.effect}}
+                    <div class="wh40k-power-detail-section wh40k-section-success">
+                        <span class="wh40k-detail-heading"><i class="fas fa-check-circle"></i> Effect</span>
+                        <div class="wh40k-detail-content">{{{order.system.effect}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if order.system.failure}}
+                    <div class="wh40k-power-detail-section wh40k-section-danger">
+                        <span class="wh40k-detail-heading"><i class="fas fa-exclamation-triangle"></i> Failure</span>
+                        <div class="wh40k-detail-content">{{{order.system.failure}}}</div>
+                    </div>
+                    {{/if}}
+                    {{#if order.system.description}}
+                    <div class="wh40k-power-detail-section">
+                        <span class="wh40k-detail-heading">Description</span>
+                        <div class="wh40k-detail-content">{{{order.system.description}}}</div>
+                    </div>
+                    {{/if}}
+                    <div class="wh40k-power-detail-actions">
+                        <button type="button" class="wh40k-detail-btn" data-action="itemEdit" data-item-id="{{order.id}}">
+                            <i class="fas fa-cog"></i> Edit
+                        </button>
+                        <button type="button" class="wh40k-detail-btn wh40k-btn-danger" data-action="itemDelete" data-item-id="{{order.id}}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{else}}
+            <div class="wh40k-empty-state">
+                <i class="fas fa-ship"></i>
+                <p>No ship orders known</p>
+            </div>
             {{/each}}
+        </div>
+        
+        {{!-- Add Order Dropzone --}}
+        <div class="wh40k-dropzone {{#if ordersCount}}wh40k-dropzone--compact{{/if}}" data-action="itemCreate" data-type="order">
+            <i class="fas fa-plus wh40k-dropzone-icon"></i>
+            <span class="wh40k-dropzone-text">{{#if ordersCount}}Drop or click to add{{else}}Drop Ship Order or Click to Create{{/if}}</span>
         </div>
     </div>
 </div>

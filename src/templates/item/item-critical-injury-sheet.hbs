@@ -1,0 +1,234 @@
+{{!-- 
+  Rogue Trader Critical Injury Item Sheet - V2 Redesign
+  Matches weapon/armour sheet patterns with modern ApplicationV2 structure
+--}}
+<div class="wh40k-critical-injury-sheet">
+  <form autocomplete="off">
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         HEADER: Compact injury identity with inline stats
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <header class="wh40k-injury-header">
+      <div class="wh40k-injury-header__image" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" />
+        <div class="wh40k-injury-header__image-overlay">
+          <i class="fas {{item.system.damageTypeIcon}}"></i>
+        </div>
+      </div>
+      
+      <div class="wh40k-injury-header__info">
+        <input type="text" class="wh40k-injury-header__name" name="name" value="{{item.name}}" placeholder="Critical Injury Name" />
+        
+        <div class="wh40k-injury-header__meta">
+          <span class="wh40k-injury-badge wh40k-injury-badge--damage wh40k-injury-badge--{{item.system.damageType}}" title="Damage Type">
+            <i class="fas {{item.system.damageTypeIcon}}"></i>
+            {{item.system.damageTypeLabel}}
+          </span>
+          <span class="wh40k-injury-badge wh40k-injury-badge--location" title="Body Location">
+            <i class="fas {{item.system.bodyPartIcon}}"></i>
+            {{item.system.bodyPartLabel}}
+          </span>
+          <span class="wh40k-injury-badge wh40k-injury-badge--severity wh40k-injury-badge--{{item.system.severityClass}}" title="Severity Level">
+            <i class="fas fa-chart-line"></i>
+            Severity {{item.system.severity}}
+          </span>
+          {{#if item.system.isPermanent}}
+          <span class="wh40k-injury-badge wh40k-injury-badge--permanent" title="Permanent Injury">
+            <i class="fas fa-infinity"></i>
+            Permanent
+          </span>
+          {{/if}}
+        </div>
+      </div>
+    </header>
+
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         SEVERITY INDICATOR: Visual slider showing severity 1-10
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="wh40k-injury-severity">
+      <div class="wh40k-injury-severity__header">
+        <i class="fas fa-chart-line"></i>
+        <span>Severity Level</span>
+      </div>
+      <div class="wh40k-injury-severity__slider">
+        <input type="range" 
+               name="system.severity" 
+               min="1" 
+               max="10" 
+               value="{{item.system.severity}}" 
+               data-dtype="Number"
+               data-action="changeSeverity"
+               class="wh40k-injury-severity__input" />
+        <div class="wh40k-injury-severity__labels">
+          <span class="wh40k-injury-severity__label wh40k-injury-severity__label--min">Minor (1)</span>
+          <span class="wh40k-injury-severity__label wh40k-injury-severity__label--current">
+            <strong>{{item.system.severity}}</strong>
+          </span>
+          <span class="wh40k-injury-severity__label wh40k-injury-severity__label--max">Fatal (10)</span>
+        </div>
+        <div class="wh40k-injury-severity__zones">
+          <span class="wh40k-injury-severity__zone wh40k-injury-severity__zone--minor" title="Minor (1-3)"></span>
+          <span class="wh40k-injury-severity__zone wh40k-injury-severity__zone--moderate" title="Moderate (4-6)"></span>
+          <span class="wh40k-injury-severity__zone wh40k-injury-severity__zone--severe" title="Severe (7-9)"></span>
+          <span class="wh40k-injury-severity__zone wh40k-injury-severity__zone--fatal" title="Fatal (10)"></span>
+        </div>
+      </div>
+    </div>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB NAVIGATION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <nav class="wh40k-tabs wh40k-tabs--injury wh40k-injury-tabs" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-injury-tab active" data-tab="details" data-group="primary">
+        <i class="fas fa-info-circle"></i>
+        <span>Details</span>
+      </button>
+      <button type="button" class="wh40k-tab wh40k-injury-tab" data-tab="description" data-group="primary">
+        <i class="fas fa-book"></i>
+        <span>Description</span>
+      </button>
+    </nav>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB CONTENT
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="wh40k-injury-content wh40k-tab-content wh40k-tab-content--injury scrollable">
+      
+      {{!-- DETAILS TAB --}}
+      <div class="wh40k-injury-panel tab active" data-tab="details" data-group="primary">
+        
+        {{!-- Basic Properties --}}
+        <div class="wh40k-injury-section">
+          <div class="wh40k-injury-section__header">
+            <i class="fas fa-cog"></i>
+            <h3>Injury Properties</h3>
+          </div>
+          <div class="wh40k-injury-section__body">
+            <div class="wh40k-field-grid wh40k-field-grid--2col">
+              <div class="wh40k-field">
+                <label>Damage Type</label>
+                <select name="system.damageType">
+                  <option value="impact" {{#if (eq item.system.damageType "impact")}}selected{{/if}}>Impact</option>
+                  <option value="rending" {{#if (eq item.system.damageType "rending")}}selected{{/if}}>Rending</option>
+                  <option value="explosive" {{#if (eq item.system.damageType "explosive")}}selected{{/if}}>Explosive</option>
+                  <option value="energy" {{#if (eq item.system.damageType "energy")}}selected{{/if}}>Energy</option>
+                </select>
+              </div>
+              <div class="wh40k-field">
+                <label>Body Location</label>
+                <select name="system.bodyPart">
+                  <option value="head" {{#if (eq item.system.bodyPart "head")}}selected{{/if}}>Head</option>
+                  <option value="arm" {{#if (eq item.system.bodyPart "arm")}}selected{{/if}}>Arm</option>
+                  <option value="body" {{#if (eq item.system.bodyPart "body")}}selected{{/if}}>Body</option>
+                  <option value="leg" {{#if (eq item.system.bodyPart "leg")}}selected{{/if}}>Leg</option>
+                </select>
+              </div>
+              <div class="wh40k-field">
+                <label>Severity (1-10)</label>
+                <input type="number" name="system.severity" value="{{item.system.severity}}" 
+                       data-dtype="Number" min="1" max="10" />
+              </div>
+              <div class="wh40k-field wh40k-field--checkbox">
+                <label>
+                  <input type="checkbox" name="system.permanent" {{checked item.system.permanent}} />
+                  <span>Permanent Injury</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Effect --}}
+        <div class="wh40k-injury-section">
+          <div class="wh40k-injury-section__header">
+            <i class="fas fa-file-medical"></i>
+            <h3>Injury Effect (Severity {{item.system.severity}})</h3>
+          </div>
+          <div class="wh40k-injury-section__body wh40k-injury-section__body--editor">
+            {{#if inEditMode}}
+              {{#each item.system.availableSeverities as |sev|}}
+                {{#with (lookup ../item.system.effects sev) as |effect|}}
+                  <div class="wh40k-severity-effect-editor">
+                    <label><strong>Severity {{sev}}:</strong></label>
+                    {{editor effect.text target=(concat "system.effects." sev ".text") button=true editable=../editable engine="prosemirror"}}
+                    <label>
+                      <input type="checkbox" name="system.effects.{{sev}}.permanent" {{checked effect.permanent}} />
+                      <span>Permanent</span>
+                    </label>
+                  </div>
+                {{/with}}
+              {{/each}}
+            {{else}}
+              <div class="wh40k-description-content">{{{item.system.currentEffect}}}</div>
+              <div class="wh40k-injury-severity-preview">
+                <p><em>This injury has effects for all severity levels 1-10. Change the severity slider to preview different effects.</em></p>
+              </div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Notes --}}
+        <div class="wh40k-injury-section">
+          <div class="wh40k-injury-section__header">
+            <i class="fas fa-sticky-note"></i>
+            <h3>GM Notes</h3>
+          </div>
+          <div class="wh40k-injury-section__body">
+            <textarea name="system.notes" rows="3" placeholder="Treatment details, duration, special circumstances...">{{item.system.notes}}</textarea>
+          </div>
+        </div>
+
+      </div>
+
+      {{!-- DESCRIPTION TAB --}}
+      <div class="wh40k-injury-panel tab" data-tab="description" data-group="primary">
+        
+        {{!-- Full Description --}}
+        <div class="wh40k-injury-section">
+          <div class="wh40k-injury-section__header">
+            <i class="fas fa-book"></i>
+            <h3>Description</h3>
+          </div>
+          <div class="wh40k-injury-section__body wh40k-injury-section__body--editor">
+            {{#if inEditMode}}
+            {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+            {{else}}
+            <div class="wh40k-description-content">{{{system.description.value}}}</div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Source --}}
+        <div class="wh40k-injury-section">
+          <div class="wh40k-injury-section__header">
+            <i class="fas fa-book-open"></i>
+            <h3>Source</h3>
+          </div>
+          <div class="wh40k-injury-section__body">
+            <div class="wh40k-field-grid wh40k-field-grid--3col">
+              <div class="wh40k-field">
+                <label>Source Book</label>
+                <input type="text" name="system.source.book" value="{{source.source.book}}" 
+                       placeholder="Rogue Trader Core" />
+              </div>
+              <div class="wh40k-field">
+                <label>Page</label>
+                <input type="text" name="system.source.page" value="{{source.source.page}}" 
+                       placeholder="254" />
+              </div>
+              <div class="wh40k-field">
+                <label>Custom Reference</label>
+                <input type="text" name="system.source.custom" value="{{source.source.custom}}" 
+                       placeholder="Homebrew" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </form>
+</div>
