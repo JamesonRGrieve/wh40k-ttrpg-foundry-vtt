@@ -62,7 +62,6 @@ export class TargetedActionManager {
         let sourceToken: Token | undefined;
 
         if (source) {
-            // @ts-expect-error - token vs actor
             sourceToken = (source as Token).actor ? (source as Token) : (source as WH40KBaseActor).getActiveTokens()[0];
         } else {
             const controlled = game.canvas.tokens.controlled;
@@ -93,7 +92,6 @@ export class TargetedActionManager {
         let targetToken: Token | undefined;
 
         if (target) {
-            // @ts-expect-error - token vs actor
             targetToken = (target as Token).actor ? (target as Token) : (target as WH40KBaseActor).getActiveTokens()[0];
         } else {
             const targetedObjects = game.user.targets;

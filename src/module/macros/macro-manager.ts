@@ -2,11 +2,8 @@ function getTokenActor(actorId) {
     // Fetch the actor from the current users token or the actor collection.
     const speaker = ChatMessage.getSpeaker();
     let actor;
-    // @ts-expect-error - dynamic property access
     if (actorId) actor = game.actors.get(actorId);
-    // @ts-expect-error - dynamic property access
     if (!actor && speaker.token) actor = game.actors.tokens[speaker.token];
-    // @ts-expect-error - dynamic property access
     if (!actor) actor = game.actors.get(speaker.actor);
     if (!actor) return ui.notifications.warn(`Cannot find controlled Actor. Is an Actor selector and do you have permissions?`);
     return actor;

@@ -11,7 +11,6 @@ import BaseRollDialog from './base-roll-dialog.ts';
  */
 type DamageRollDialogOptions = Record<string, unknown>;
 
-// @ts-expect-error - TS2417 static side inheritance
 export default class DamageRollDialog extends BaseRollDialog {
     constructor(rollData = {}, options: DamageRollDialogOptions = {}) {
         super(rollData, options);

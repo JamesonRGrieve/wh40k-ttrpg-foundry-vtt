@@ -14,7 +14,6 @@ export class WH40KItemContainer extends Item {
     async update(data: Record<string, unknown> = {}, options: Record<string, unknown> = {}): Promise<unknown> {
         data._id = this.id;
         if (this.isNestedItem()) {
-            // @ts-expect-error - property access
             await this.parent.updateNestedDocuments(data);
             return undefined;
         } else {
@@ -39,12 +38,10 @@ export class WH40KItemContainer extends Item {
     async setNested(data: Record<string, unknown> | Record<string, unknown>[]): Promise<unknown> {
         // Make array if not
         const dataArray = Array.isArray(data) ? data : [data];
-        // @ts-expect-error - argument type
         return await this.setFlag(SYSTEM_ID, DH_CONTAINER_ID, dataArray);
     }
 
     getNested(): unknown[] {
-        // @ts-expect-error - argument type
         return this.getFlag(SYSTEM_ID, DH_CONTAINER_ID) ?? [];
     }
 

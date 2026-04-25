@@ -9,11 +9,8 @@ import { WH40KSettings } from './wh40k-rpg-settings.ts';
 const WORLD_VERSION = 1;
 
 export async function checkAndMigrateWorld() {
-    // @ts-expect-error - argument type
     const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
-    // @ts-expect-error - comparison type
     if (WORLD_VERSION !== currentVersion && game.user.isGM) {
-        // @ts-expect-error - argument type
         void game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, WORLD_VERSION);
     }
 }
