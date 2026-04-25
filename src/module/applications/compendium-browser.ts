@@ -41,7 +41,7 @@ export class RTCompendiumBrowser extends ApplicationV2Mixin(ApplicationV2) {
     /** @override */
     static DEFAULT_OPTIONS = {
         id: 'wh40k-compendium-browser',
-        classes: ['wh40k-compendium-browser', 'standard-form'],
+        classes: ['wh40k-rpg', 'wh40k-compendium-browser', 'standard-form'],
         tag: 'div',
         actions: {
             clearFilters: RTCompendiumBrowser.#clearFilters,

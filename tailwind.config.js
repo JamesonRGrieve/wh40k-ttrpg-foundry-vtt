@@ -5,6 +5,7 @@ module.exports = {
     './src/module/**/*.{ts,js}',
   ],
   prefix: 'tw-',
+  important: '.wh40k-rpg',
   corePlugins: {
     preflight: false, // Don't reset existing Foundry/system styles
   },
