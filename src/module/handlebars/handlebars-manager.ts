@@ -160,7 +160,6 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/item/item-weapon-sheet-modern.hbs',
             'systems/wh40k-rpg/templates/item/item-armour-sheet-v2.hbs',
             'systems/wh40k-rpg/templates/item/item-gear-sheet-v2.hbs',
-            'systems/wh40k-rpg/templates/item/item-talent-sheet-modern.hbs',
             'systems/wh40k-rpg/templates/item/item-trait-sheet-modern.hbs',
             'systems/wh40k-rpg/templates/item/item-skill-sheet-modern.hbs',
             'systems/wh40k-rpg/templates/item/item-psychic-power-sheet-modern.hbs',

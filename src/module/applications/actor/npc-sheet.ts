@@ -1270,7 +1270,7 @@ export default class NPCSheet extends (CharacterSheet as any) {
      */
     static async #calculateDifficulty(event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const { DifficultyCalculatorDialog: DiffCalcDialog } = game.wh40k.applications;
+        const { DifficultyCalculatorDialog: DiffCalcDialog } = game.wh40k.npc;
         await DiffCalcDialog.show((this as any).actor);
     }
 
