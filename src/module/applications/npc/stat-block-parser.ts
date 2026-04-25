@@ -240,8 +240,21 @@ export default class StatBlockParser extends HandlebarsApplicationMixin(Applicat
             hasInfo: this.#info.length > 0,
             canImport: this.#parsedData !== null && this.#errors.length === 0,
             buttons: [
-                { type: 'button', action: 'parse', icon: 'fa-solid fa-magnifying-glass', label: 'WH40K.NPC.Import.Parse', cssClass: 'secondary' },
-                { type: 'submit', icon: 'fa-solid fa-file-import', label: 'WH40K.NPC.Import.Import', cssClass: 'primary', disabled: !this.#parsedData },
+                {
+                    type: 'button',
+                    action: 'parse',
+                    icon: 'fa-solid fa-magnifying-glass',
+                    label: 'WH40K.NPC.Import.Parse',
+                    cssClass: 'tw-bg-[var(--color-bg-btn)]',
+                },
+                {
+                    type: 'submit',
+                    icon: 'fa-solid fa-file-import',
+                    label: 'WH40K.NPC.Import.Import',
+                    cssClass:
+                        'tw-bg-[var(--wh40k-color-accent,var(--wh40k-color-gold))] tw-text-white hover:tw-bg-[#9e801f] disabled:tw-opacity-50 disabled:tw-cursor-not-allowed',
+                    disabled: !this.#parsedData,
+                },
                 { type: 'button', action: 'cancel', icon: 'fa-solid fa-times', label: 'Cancel' },
             ],
         };
