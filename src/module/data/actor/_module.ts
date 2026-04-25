@@ -25,12 +25,6 @@ export { CharacterBaseData, NPCBaseData, VehicleBaseData, StarshipBaseData } fro
 // Concrete per-(system, kind) data models
 export * from './concrete/_module.ts';
 
-// Legacy names (back-compat while callers migrate; delete in cleanup pass)
-export { default as CharacterData } from './character.ts';
-export { default as NPCDataV2 } from './npc-v2.ts';
-export { default as StarshipData } from './starship.ts';
-export { default as VehicleData } from './vehicle.ts';
-
 // Shared templates
 export { CommonTemplate, CreatureTemplate } from './templates/_module.ts';
 

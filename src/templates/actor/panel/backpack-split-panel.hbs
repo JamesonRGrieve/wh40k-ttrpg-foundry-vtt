@@ -25,7 +25,7 @@
                 <div class="wh40k-encumbrance-bar-fill {{#if (gte encumbrancePercent 100)}}wh40k-enc-danger{{else if (gte encumbrancePercent 75)}}wh40k-enc-warning{{else if (gte encumbrancePercent 50)}}wh40k-enc-caution{{/if}}"
                      style="width: {{encumbrancePercent}}%"></div>
             </div>
-            <span class="wh40k-enc-value">{{actor.encumbrance.current}} / {{actor.encumbrance.max}} kg</span>
+            <span class="wh40k-enc-value">{{actor.encumbrance.value}} / {{actor.encumbrance.max}} kg</span>
             {{#if actor.encumbrance.encumbered}}
             <i class="fas fa-exclamation-triangle wh40k-enc-alert" title="Encumbered!"></i>
             {{/if}}

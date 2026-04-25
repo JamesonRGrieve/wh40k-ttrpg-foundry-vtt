@@ -171,7 +171,6 @@ export class HooksManager {
             openOriginPathBuilder: (actor: WH40KBaseActor, options: Record<string, unknown> = {}) => characterCreation.OriginPathBuilder.show(actor, options),
             // NPC utilities
             npc: npcApplications,
-            applications: npcApplications, // Alias for shorter access
             ThreatCalculator: npcApplications.ThreatCalculator,
             quickCreateNPC: (config: unknown) => npcApplications.NPCQuickCreateDialog.create(config),
             batchCreateNPCs: (config: unknown) => npcApplications.BatchCreateDialog.open(config),
