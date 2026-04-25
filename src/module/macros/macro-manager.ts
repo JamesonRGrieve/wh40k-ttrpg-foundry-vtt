@@ -50,11 +50,9 @@ export async function createItemMacro(data, slot) {
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
-        // @ts-expect-error - type assignment
         name: macroName,
         type: 'script',
         img: data.data.img,
-        // @ts-expect-error - type assignment
         command: command,
         // @ts-expect-error - extended property
         flags: { 'dh.itemMacro': true },
@@ -91,11 +89,9 @@ export async function createSkillMacro(data, slot) {
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
-        // @ts-expect-error - type assignment
         name: macroName,
         img: 'systems/wh40k-rpg/icons/talents/red/r_36.png',
         type: 'script',
-        // @ts-expect-error - type assignment
         command: command,
         // @ts-expect-error - extended property
         flags: { 'dh.skillMacro': true },
@@ -127,11 +123,9 @@ export async function createCharacteristicMacro(data, slot) {
     if (checkExistingMacro(macroName, command)) return;
 
     const macro = await Macro.create({
-        // @ts-expect-error - type assignment
         name: macroName,
         img: 'systems/wh40k-rpg/icons/talents/violet/p_05.png',
         type: 'script',
-        // @ts-expect-error - type assignment
         command: command,
         // @ts-expect-error - extended property
         flags: { 'dh.characteristicMacro': true },
