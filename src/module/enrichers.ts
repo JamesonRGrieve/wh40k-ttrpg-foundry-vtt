@@ -330,9 +330,7 @@ async function handleEnricherClick(event) {
         case 'characteristic':
             if (actorUuid) {
                 const actor = await fromUuid(actorUuid);
-                // @ts-expect-error - dynamic property access
                 if (actor?.rollCharacteristic) {
-                    // @ts-expect-error - dynamic property access
                     await actor.rollCharacteristic(config);
                 }
             }
@@ -341,10 +339,8 @@ async function handleEnricherClick(event) {
         case 'skill':
             if (actorUuid) {
                 const actor = await fromUuid(actorUuid);
-                // @ts-expect-error - dynamic property access
                 if (actor?.rollSkill) {
                     const [skillKey, specialization] = config.split(':');
-                    // @ts-expect-error - dynamic property access
                     await actor.rollSkill(skillKey, specialization);
                 }
             }
@@ -359,18 +355,15 @@ async function handleEnricherClick(event) {
                 if (item) {
                     // Check for Shift+Click to post to chat
                     if (event.shiftKey) {
-                        // @ts-expect-error - dynamic property access
                         item.toMessage();
                     }
                     // Check for Ctrl+Click to open sheet
                     else if (event.ctrlKey || event.metaKey) {
-                        // @ts-expect-error - dynamic property access
                         item.sheet.render(true);
                     }
                     // Default: show inline preview
                     else {
                         // TODO: Integrate with ItemPreviewCard when available
-                        // @ts-expect-error - dynamic property access
                         item.sheet.render(true);
                     }
                 }

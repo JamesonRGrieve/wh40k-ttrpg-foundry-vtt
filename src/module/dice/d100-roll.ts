@@ -38,7 +38,6 @@ export default class D100Roll extends BasicRollWH40K {
      * @type {number}
      */
     get target() {
-        // @ts-expect-error - dynamic property
         return this.configuration.target ?? 0;
     }
 

@@ -436,9 +436,7 @@ export default class NPCTemplateData extends ItemDataModel {
             threatLevel: targetThreat,
             characteristics: Object.entries(data.characteristics).map(([key, char]) => ({
                 key,
-                // @ts-expect-error - dynamic property access
                 label: char.short,
-                // @ts-expect-error - dynamic property access
                 value: char.base,
             })),
             wounds: data.wounds.max,

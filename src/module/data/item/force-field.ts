@@ -282,7 +282,6 @@ export default class ForceFieldData extends ItemDataModel.mixin(DescriptionTempl
 
         // Show roll to chat
         await roll.toMessage({
-            // @ts-expect-error - type assignment
             flavor: game.i18n.format('WH40K.ForceField.ProtectionRoll', {
                 name: this.parent?.name || 'Force Field',
                 isProtected: isProtected ? game.i18n.localize('WH40K.ForceField.Protected') : game.i18n.localize('WH40K.ForceField.NotProtected'),

@@ -112,7 +112,6 @@ export function findSkillUuid(skillName, specialization = null) {
         const specializationLower = resolvedSpecialization?.toLowerCase();
 
         for (const [id, entry] of index.entries()) {
-            // @ts-expect-error - dynamic property access
             const entryNameLower = entry.name.toLowerCase();
 
             // Check if entry name contains the skill name
@@ -179,7 +178,6 @@ export async function getSkillFromUuid(uuid) {
 
     try {
         const item = await fromUuid(uuid);
-        // @ts-expect-error - dynamic property access
         if (item && item.type === 'skill') {
             return item;
         }
