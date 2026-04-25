@@ -37,16 +37,16 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
             // Role purpose/function
             purpose: new fields.HTMLField({ required: true, blank: true }),
 
-            // Career preferences (modern: array, legacy: string)
+            // Career preferences
             careerPreferences: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
             // Career note (for "Usually X" text)
             careerNote: new fields.StringField({ required: false, blank: true }),
 
-            // Subordinate roles (modern: array, legacy: string)
+            // Subordinate roles
             subordinates: new fields.ArrayField(new fields.StringField({ required: true }), { required: true, initial: [] }),
 
-            // Important skills (modern: array of objects, legacy: array of strings or string)
+            // Important skills
             importantSkills: new fields.ArrayField(
                 new fields.SchemaField({
                     name: new fields.StringField({ required: true }),
@@ -72,7 +72,7 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
                 { required: true, initial: [] },
             ),
 
-            // Legacy effect field (kept for backward compatibility)
+            // Effect description (HTML)
             effect: new fields.HTMLField({ required: false, blank: true }),
 
             // Ship bonuses (structured)
@@ -103,15 +103,10 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * @type {string}
      */
     get careerPreferencesLabel(): string {
-        // Handle both array and string (legacy)
-        if (Array.isArray(this.careerPreferences)) {
-            if (!this.careerPreferences.length) return '-';
-            let label = this.careerPreferences.join(', ');
-            if (this.careerNote) label = `${this.careerNote}; ${label}`;
-            return label;
-        }
-        // Legacy string handling
-        return this.careerPreferences || '-';
+        if (!this.careerPreferences.length) return '-';
+        let label = this.careerPreferences.join(', ');
+        if (this.careerNote) label = `${this.careerNote}; ${label}`;
+        return label;
     }
 
     /**
@@ -119,13 +114,8 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * @type {string}
      */
     get subordinatesLabel(): string {
-        // Handle both array and string (legacy)
-        if (Array.isArray(this.subordinates)) {
-            if (!this.subordinates.length) return '-';
-            return this.subordinates.join(', ');
-        }
-        // Legacy string handling
-        return this.subordinates || '-';
+        if (!this.subordinates.length) return '-';
+        return this.subordinates.join(', ');
     }
 
     /**
@@ -133,23 +123,13 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
      * @type {string}
      */
     get importantSkillsLabel(): string {
-        // Handle both array of objects and array of strings (legacy)
-        if (Array.isArray(this.importantSkills)) {
-            if (!this.importantSkills.length) return '-';
-            return this.importantSkills
-                .map((skill) => {
-                    if (typeof skill === 'object' && skill.name) {
-                        if (skill.specialization) {
-                            return `${skill.name} (${skill.specialization})`;
-                        }
-                        return skill.name;
-                    }
-                    return skill; // Legacy string
-                })
-                .join(', ');
-        }
-        // Legacy string handling
-        return this.importantSkills || '-';
+        if (!this.importantSkills.length) return '-';
+        return this.importantSkills
+            .map((skill) => {
+                if (skill.specialization) return `${skill.name} (${skill.specialization})`;
+                return skill.name;
+            })
+            .join(', ');
     }
 
     /**
@@ -161,7 +141,6 @@ export default class ShipRoleData extends ItemDataModel.mixin(DescriptionTemplat
             const ability = this.abilities[0];
             return ability.description || ability.name;
         }
-        // Fallback to legacy effect
         return this.effect || '';
     }
 
