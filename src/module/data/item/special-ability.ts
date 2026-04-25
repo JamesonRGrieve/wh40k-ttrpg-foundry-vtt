@@ -21,7 +21,6 @@ export default class SpecialAbilityData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
-            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Benefit/effect description

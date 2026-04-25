@@ -247,7 +247,6 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
 
     /** @override */
     get chatProperties(): string[] {
-        // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.categoryLabel];
 
         if (this.hasLimitedUses) {

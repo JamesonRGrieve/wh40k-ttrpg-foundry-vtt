@@ -1,52 +1,54 @@
 /* ============================================ */
-/* Cybernetic Item Sheet Styles */
+/* Rogue Trader Cybernetic Sheet Styles */
+/* ============================================ */
+/* Modern cybernetic item sheet styling */
+/* Matches weapon sheet pattern with tech-themed colors */
+
+/* ============================================ */
+/* CYBERNETIC SHEET BASE */
 /* ============================================ */
 
-/* -------------------------------------------- */
-/*  Main Sheet Container                        */
-/* -------------------------------------------- */
-
 .wh40k-cybernetic-sheet {
-    --cyber-primary: #00d4ff;
-    --cyber-secondary: #0096c7;
-
     display: flex;
     flex-direction: column;
     height: 100%;
-    min-height: 0; /* Critical for flex scrolling */
-    background: var(--wh40k-bg-dark, #1a1a1a);
-    color: var(--wh40k-text-primary, #e8e6e3);
+    background: var(--wh40k-sheet-bg);
+    color: var(--wh40k-text-dark);
+    font-family: var(--wh40k-font-ui);
+    font-size: 0.9rem;
+    overflow: hidden;
 
     form {
         display: flex;
         flex-direction: column;
-        height: 100%;
-        min-height: 0; /* Critical for flex scrolling */
-        gap: 0;
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
     }
 }
 
-/* -------------------------------------------- */
-/*  Header                                      */
-/* -------------------------------------------- */
+/* ============================================ */
+/* HEADER */
+/* ============================================ */
 
 .wh40k-cybernetic-header {
-    flex-shrink: 0; /* Don't allow header to shrink */
-    display: grid;
-    grid-template-columns: 64px 1fr auto;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-    background: linear-gradient(135deg, rgb(from var(--cyber-primary) r g b / 0.15) 0%, rgb(from var(--cyber-primary) r g b / 0.05) 100%);
-    border-bottom: 2px solid rgb(from var(--cyber-primary) r g b / 0.4);
+    display: flex;
+    align-items: center;
+    gap: var(--wh40k-space-md);
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(128, 128, 128, 0.15) 0%, transparent 100%);
+    border-bottom: 2px solid rgba(128, 128, 128, 0.4);
 
     &__image {
+        position: relative;
         width: 64px;
         height: 64px;
-        border-radius: var(--wh40k-radius-lg);
+        flex-shrink: 0;
+        border: 2px solid var(--wh40k-bronze);
+        border-radius: 6px;
         overflow: hidden;
-        position: relative;
-        border: 2px solid rgb(from var(--cyber-primary) r g b / 0.5);
         cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
 
         img {
             width: 100%;
@@ -54,564 +56,415 @@
             object-fit: cover;
         }
 
-        &-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity var(--wh40k-transition-base);
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px var(--wh40k-shadow-medium);
 
-            i {
-                color: var(--cyber-primary);
-                font-size: 1.25rem;
+            .wh40k-cybernetic-header__image-overlay {
+                opacity: 1;
             }
         }
+    }
 
-        &:hover &-overlay {
-            opacity: 1;
+    &__image-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        transition: opacity var(--wh40k-transition-base);
+
+        i {
+            color: white;
+            font-size: 1.2rem;
         }
     }
 
     &__info {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 0.375rem;
+        flex: 1;
+        min-width: 0;
     }
 
     &__name {
-        font-family: var(--wh40k-font-heading, 'Modesto Condensed');
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--cyber-primary);
+        width: 100%;
+        padding: 4px 8px;
+        margin: 0;
         background: transparent;
         border: none;
         border-bottom: 1px solid transparent;
-        padding: 0;
-        width: 100%;
+        font-family: var(--wh40k-font-display);
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--wh40k-text-dark);
+        transition: border-color var(--wh40k-transition-base);
 
+        &:hover,
         &:focus {
+            border-bottom-color: var(--wh40k-gold);
             outline: none;
-            border-bottom-color: var(--cyber-primary);
         }
     }
 
     &__meta {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
-        align-items: center;
+        gap: 6px;
+        margin-top: 6px;
+        padding-left: 8px;
     }
 
     &__equipped {
-        display: flex;
-        align-items: center;
+        flex-shrink: 0;
     }
 }
 
-/* -------------------------------------------- */
-/*  Cybernetic Badges                           */
-/* -------------------------------------------- */
+/* ============================================ */
+/* CYBERNETIC BADGES */
+/* ============================================ */
 
-.wh40k-cyber-badge {
+.wh40k-cybernetic-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
-    padding: 0.25rem 0.625rem;
+    gap: var(--wh40k-space-xs);
+    padding: 3px 8px;
     border-radius: var(--wh40k-radius-md);
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.03em;
 
-    i {
-        font-size: 0.7rem;
-        opacity: 0.8;
-    }
-
-    /* Type badge */
     &--type {
-        background: rgb(from var(--cyber-primary) r g b / 0.25);
-        border-color: rgb(from var(--cyber-primary) r g b / 0.5);
-        color: var(--cyber-primary);
+        background: rgba(128, 128, 128, 0.1);
+        border: 1px solid rgba(128, 128, 128, 0.4);
+        color: silver;
     }
 
-    /* Location badge */
     &--location {
-        background: rgb(from var(--cyber-secondary) r g b / 0.25);
-        border-color: rgb(from var(--cyber-secondary) r g b / 0.5);
-        color: color-mix(in srgb, var(--cyber-secondary), white 20%);
+        background: var(--wh40k-panel-bg-translucent);
+        border: 1px solid var(--wh40k-border-color-light);
+        color: var(--wh40k-text-medium);
     }
 
-    /* Craftsmanship */
-    &--poor {
-        color: #95a5a6;
-        border-color: rgb(from #95a5a6 r g b / 0.4);
-    }
-    &--common {
-        color: #bdc3c7;
-    }
-    &--good {
-        color: var(--wh40k-accent-green-bright);
-        border-color: rgb(from var(--cyber-success) r g b / 0.4);
-        background: rgb(from var(--cyber-success) r g b / 0.15);
-    }
-    &--best {
-        color: var(--wh40k-color-gold);
-        border-color: rgb(from var(--wh40k-color-gold) r g b / 0.4);
-        background: rgb(from var(--wh40k-color-gold) r g b / 0.15);
+    &--craft {
+        border: 1px solid;
+
+        &.wh40k-cybernetic-badge--poor {
+            background: rgba(139, 0, 0, 0.1);
+            border-color: rgba(139, 0, 0, 0.4);
+            color: var(--wh40k-red);
+        }
+
+        &.wh40k-cybernetic-badge--common {
+            background: var(--wh40k-panel-bg-translucent);
+            border-color: var(--wh40k-border-color-light);
+            color: var(--wh40k-text-muted);
+        }
+
+        &.wh40k-cybernetic-badge--good {
+            background: rgba(45, 90, 45, 0.1);
+            border-color: rgba(45, 90, 45, 0.4);
+            color: var(--wh40k-green);
+        }
+
+        &.wh40k-cybernetic-badge--best {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: rgba(212, 175, 55, 0.5);
+            color: var(--wh40k-gold);
+        }
     }
 }
 
-/* -------------------------------------------- */
-/*  Scrollable Content                          */
-/* -------------------------------------------- */
+/* ============================================ */
+/* STAT BAR */
+/* ============================================ */
+
+.wh40k-cybernetic-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 8px;
+    background: var(--wh40k-panel-bg-solid);
+    border-bottom: 1px solid var(--wh40k-border-color-light);
+}
+
+.wh40k-cybernetic-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 60px;
+    padding: 8px 6px;
+    background: var(--wh40k-panel-bg);
+    border-radius: var(--wh40k-radius-md);
+    border: 1px solid var(--wh40k-border-color-light);
+
+    &__icon {
+        font-size: 1rem;
+        color: var(--wh40k-bronze);
+        margin-bottom: 4px;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+    }
+
+    &__label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--wh40k-text-muted);
+    }
+
+    &__value {
+        font-family: var(--wh40k-font-display);
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--wh40k-text-dark);
+    }
+
+    /* Stat variants */
+    &--type {
+        .wh40k-cybernetic-stat__icon {
+            color: silver;
+        }
+        .wh40k-cybernetic-stat__value {
+            color: silver;
+        }
+    }
+
+    &--locations {
+        .wh40k-cybernetic-stat__icon {
+            color: var(--wh40k-bronze);
+        }
+    }
+}
+
+/* ============================================ */
+/* TAB NAVIGATION */
+/* ============================================ */
+
+.wh40k-cybernetic-tabs {
+    display: flex;
+    gap: 2px;
+    padding: 0 12px;
+    background: var(--wh40k-panel-bg-solid);
+    border-bottom: 1px solid var(--wh40k-border-color);
+}
+
+.wh40k-cybernetic-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--wh40k-text-muted);
+    cursor: pointer;
+    transition: all var(--wh40k-transition-base);
+
+    i {
+        font-size: 0.9rem;
+    }
+
+    &:hover {
+        color: var(--wh40k-text-dark);
+        background: var(--wh40k-panel-bg-translucent);
+    }
+
+    &.active {
+        color: silver;
+        border-bottom-color: silver;
+        background: rgba(128, 128, 128, 0.1);
+    }
+}
+
+/* ============================================ */
+/* TAB CONTENT */
+/* ============================================ */
 
 .wh40k-cybernetic-content {
-    flex: 1; /* Take remaining space */
-    min-height: 0; /* Critical for flex scrolling */
-    overflow-y: auto; /* Enable vertical scrolling */
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-    padding: 0.75rem;
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
 
-    /* Custom scrollbar styling */
+    /* Scrollbar styling */
     &::-webkit-scrollbar {
         width: 8px;
     }
 
     &::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.3);
+        background: var(--wh40k-panel-bg);
     }
 
     &::-webkit-scrollbar-thumb {
-        background: rgb(from var(--cyber-primary) r g b / 0.4);
+        background: var(--wh40k-border-color);
         border-radius: var(--wh40k-radius-md);
 
         &:hover {
-            background: rgb(from var(--cyber-primary) r g b / 0.6);
+            background: var(--wh40k-gold-dark);
         }
     }
 }
 
-/* -------------------------------------------- */
-/*  Panels                                      */
-/* -------------------------------------------- */
+.wh40k-cybernetic-panel {
+    display: none;
 
-.wh40k-cybernetic-sheet .wh40k-panel {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgb(from var(--cyber-primary) r g b / 0.2);
-    border-radius: var(--wh40k-radius-lg);
-    margin-bottom: 0.75rem;
+    &.active {
+        display: block;
+    }
+}
+
+/* ============================================ */
+/* SECTIONS */
+/* ============================================ */
+
+.wh40k-cybernetic-section {
+    background: var(--wh40k-panel-bg);
+    border: 1px solid var(--wh40k-border-color-light);
+    border-radius: 6px;
+    margin-bottom: 12px;
     overflow: hidden;
 
-    &.wh40k-panel--implant {
-        border-left: 3px solid var(--cyber-primary);
-    }
-
-    &.wh40k-panel--modifiers {
-        border-left: 3px solid var(--wh40k-accent-psychic);
-    }
-
-    &.wh40k-panel--armour {
-        border-left: 3px solid #f39c12;
-    }
-
-    &.wh40k-panel--physical {
-        border-left: 3px solid #95a5a6;
-    }
-
-    &.wh40k-panel--installation {
-        border-left: 3px solid #e67e22;
-    }
-
-    &.wh40k-panel--effect {
-        border-left: 3px solid var(--wh40k-accent-green-bright);
-    }
-
-    &.wh40k-panel--drawbacks {
-        border-left: 3px solid var(--wh40k-accent-red);
-    }
-
-    &.wh40k-panel--description {
-        border-left: 3px solid var(--wh40k-color-gold);
-    }
-
-    &.wh40k-panel--notes {
-        border-left: 3px solid var(--wh40k-accent-info);
-    }
-}
-
-.wh40k-cybernetic-sheet .wh40k-panel-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background: linear-gradient(135deg, rgb(from var(--cyber-primary) r g b / 0.15) 0%, rgb(from var(--cyber-primary) r g b / 0.05) 100%);
-    border-bottom: 1px solid rgb(from var(--cyber-primary) r g b / 0.2);
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--cyber-primary);
-
-    i {
-        opacity: 0.8;
-    }
-
-    span {
-        flex: 1;
-    }
-
-    &__toggle {
+    &__header {
         display: flex;
         align-items: center;
-        gap: 0.375rem;
-        font-size: 0.75rem;
-        margin-left: auto;
-        cursor: pointer;
+        gap: var(--wh40k-space-sm);
+        padding: 10px 12px;
+        background: linear-gradient(135deg, var(--wh40k-accent-overlay) 0%, transparent 100%);
+        border-bottom: 1px solid var(--wh40k-border-color-light);
 
-        input {
-            width: 1rem;
-            height: 1rem;
-            accent-color: var(--cyber-primary);
+        i {
+            font-size: 0.9rem;
+            color: var(--wh40k-bronze);
         }
 
-        span {
-            flex: none;
-            color: rgba(255, 255, 255, 0.7);
+        h3 {
+            flex: 1;
+            margin: 0;
+            font-family: var(--wh40k-font-display);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--wh40k-text-dark);
         }
     }
-}
 
-.wh40k-cybernetic-sheet .wh40k-panel-body {
-    padding: 0.75rem;
+    &__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--wh40k-space-xs);
+        padding: 3px 8px;
+        border-radius: var(--wh40k-radius-md);
+        font-size: 0.7rem;
+        font-weight: 600;
+        background: var(--wh40k-panel-bg-translucent);
+        border: 1px solid var(--wh40k-border-color-light);
+        color: var(--wh40k-text-muted);
+    }
 
-    &--editor {
+    &__body {
+        padding: 12px;
+
+        &--editor {
+            padding: 0;
+
+            .editor {
+                min-height: 200px;
+            }
+        }
+    }
+
+    &--full .wh40k-cybernetic-section__body {
         padding: 0;
-
-        .editor {
-            min-height: 150px;
-        }
-
-        .editor-content {
-            padding: 0.75rem;
-        }
     }
 }
 
-/* -------------------------------------------- */
-/*  Location Grid                               */
-/* -------------------------------------------- */
+/* ============================================ */
+/* LOCATION GRID */
+/* ============================================ */
 
 .wh40k-location-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: var(--wh40k-space-sm);
 }
 
 .wh40k-location-toggle {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.15);
+    gap: 6px;
+    padding: 10px;
     border-radius: 6px;
+    background: var(--wh40k-panel-bg-translucent);
+    border: 2px solid var(--wh40k-border-color-light);
     cursor: pointer;
     transition: all var(--wh40k-transition-base);
-    position: relative;
-
-    input {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    i {
-        font-size: 1rem;
-        color: rgba(255, 255, 255, 0.4);
-        transition: color var(--wh40k-transition-base);
-    }
-
-    span {
-        font-size: 0.65rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.5);
-        transition: color var(--wh40k-transition-base);
-    }
-
-    &:hover {
-        border-color: rgb(from var(--cyber-primary) r g b / 0.5);
-        background: rgb(from var(--cyber-primary) r g b / 0.1);
-
-        i,
-        span {
-            color: rgba(255, 255, 255, 0.8);
-        }
-    }
-
-    &--active {
-        background: rgb(from var(--cyber-primary) r g b / 0.2);
-        border-color: var(--cyber-primary);
-
-        i {
-            color: var(--cyber-primary);
-            text-shadow: 0 0 8px rgb(from var(--cyber-primary) r g b / 0.5);
-        }
-        span {
-            color: #fff;
-        }
-
-        &:hover {
-            background: rgb(from var(--cyber-primary) r g b / 0.25);
-        }
-    }
-}
-
-/* -------------------------------------------- */
-/*  Field Rows                                  */
-/* -------------------------------------------- */
-
-.wh40k-cybernetic-sheet .wh40k-field-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
-
-    &:last-child {
-        margin-bottom: 0;
-    }
-}
-
-.wh40k-cybernetic-sheet .wh40k-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-
-    label {
-        font-size: 0.7rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: rgba(255, 255, 255, 0.6);
-    }
-
-    input,
-    select,
-    textarea {
-        padding: 0.375rem 0.5rem;
-        background: rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: var(--wh40k-radius-md);
-        color: #fff;
-        font-size: 0.85rem;
-
-        &:focus {
-            outline: none;
-            border-color: var(--cyber-primary);
-            box-shadow: 0 0 0 2px rgb(from var(--cyber-primary) r g b / 0.2);
-        }
-    }
-
-    select {
-        cursor: pointer;
-    }
-
-    textarea {
-        min-height: 80px;
-        resize: vertical;
-        font-family: var(--wh40k-font-ui);
-    }
-}
-
-/* -------------------------------------------- */
-/*  Armour AP Grid (reuse from armour sheet)   */
-/* -------------------------------------------- */
-
-.wh40k-cybernetic-sheet .wh40k-armour-ap-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-}
-
-.wh40k-cybernetic-sheet .wh40k-armour-ap-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-
-    label {
-        display: flex;
-        align-items: center;
-        gap: 0.375rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.7);
-        text-transform: uppercase;
-
-        i {
-            color: var(--cyber-primary);
-            opacity: 0.7;
-        }
-    }
-
-    input {
-        width: 100%;
-        padding: 0.375rem 0.5rem;
-        background: rgba(0, 0, 0, 0.3);
-        border: 1px solid rgb(from var(--cyber-primary) r g b / 0.3);
-        border-radius: var(--wh40k-radius-md);
-        color: var(--cyber-primary);
-        font-size: 1.25rem;
-        font-weight: 700;
-        font-family: var(--wh40k-font-mono, 'Courier New');
-        text-align: center;
-
-        &:focus {
-            outline: none;
-            border-color: var(--cyber-primary);
-            box-shadow: 0 0 0 2px rgb(from var(--cyber-primary) r g b / 0.2);
-        }
-    }
-}
-
-/* -------------------------------------------- */
-/*  Toggle Equipped                             */
-/* -------------------------------------------- */
-
-.wh40k-cybernetic-sheet .wh40k-toggle-equipped {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    cursor: pointer;
 
     input {
         display: none;
     }
 
-    &__indicator {
-        i {
-            font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.3);
-            transition: color var(--wh40k-transition-base);
-        }
-    }
-
-    &__label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.5);
+    i {
+        font-size: 1.5rem;
+        color: var(--wh40k-text-muted);
         transition: color var(--wh40k-transition-base);
     }
 
-    input:checked ~ &__indicator i {
-        color: var(--wh40k-accent-green-bright);
-        text-shadow: 0 0 8px rgb(from var(--cyber-success) r g b / 0.5);
-    }
-
-    input:checked ~ &__label {
-        color: var(--wh40k-accent-green-bright);
+    span {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--wh40k-text-muted);
+        transition: color var(--wh40k-transition-base);
     }
 
     &:hover {
-        .wh40k-toggle-equipped__indicator i {
-            color: rgb(from var(--cyber-success) r g b / 0.7);
-        }
-        .wh40k-toggle-equipped__label {
-            color: rgba(255, 255, 255, 0.8);
-        }
+        background: var(--wh40k-btn-bg-hover);
+        border-color: var(--wh40k-bronze);
     }
-}
 
-/* -------------------------------------------- */
-/*  Modifier Display                            */
-/* -------------------------------------------- */
-
-.wh40k-modifiers-display {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.wh40k-modifier-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-
-    &__title {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.85rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--cyber-primary);
-        margin: 0;
-        padding-bottom: 0.375rem;
-        border-bottom: 1px solid rgb(from var(--cyber-primary) r g b / 0.3);
+    &--active,
+    input:checked ~ & {
+        background: rgba(128, 128, 128, 0.15);
+        border-color: silver;
 
         i {
-            font-size: 0.9rem;
-            opacity: 0.8;
+            color: silver;
+        }
+
+        span {
+            color: silver;
         }
     }
 }
 
-.wh40k-modifier-list {
+/* ============================================ */
+/* CYBERNETIC AP GRID */
+/* ============================================ */
+
+.wh40k-cybernetic-ap-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-
-    @media (max-width: 500px) {
-        grid-template-columns: 1fr;
-    }
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
 }
 
-.wh40k-modifier-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0.75rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--wh40k-radius-md);
-    transition: all var(--wh40k-transition-base);
+/* ============================================ */
+/* MODIFIER GRID */
+/* ============================================ */
 
-    &:hover {
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgb(from var(--cyber-primary) r g b / 0.3);
-    }
-
-    &__name {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.8);
-        text-transform: capitalize;
-    }
-
-    &__value {
-        font-size: 1rem;
-        font-weight: 700;
-        font-family: var(--wh40k-font-mono, 'Courier New');
-        padding: 0.25rem 0.5rem;
-        border-radius: 3px;
-
-        &--positive {
-            color: var(--wh40k-accent-green-bright);
-            background: rgb(from var(--cyber-success) r g b / 0.15);
-            border: 1px solid rgb(from var(--cyber-success) r g b / 0.3);
-        }
-
-        &--negative {
-            color: var(--wh40k-accent-red);
-            background: rgb(from var(--cyber-danger) r g b / 0.15);
-            border: 1px solid rgb(from var(--cyber-danger) r g b / 0.3);
-        }
-    }
+.wh40k-modifier-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
 }

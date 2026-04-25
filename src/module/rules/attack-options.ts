@@ -305,7 +305,6 @@ export function getAvailableAttackModes(weapon) {
     const modes = weapon.isRanged ? RANGED_ATTACK_MODES : MELEE_ATTACK_MODES;
     return modes.map((mode) => ({
         ...mode,
-        // @ts-expect-error - dynamic property
         available: mode.requires ? mode.requires(weapon) : true,
     }));
 }
