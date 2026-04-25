@@ -142,6 +142,16 @@ module.exports = {
         'header-main': 'minmax(280px, 1fr) auto',
         'header-topline': 'auto 1fr',
       },
+      keyframes: {
+        'flash-gold': {
+          '0%': { boxShadow: '0 0 0 rgba(212, 175, 55, 0)' },
+          '50%': { boxShadow: '0 0 30px rgba(212, 175, 55, 0.8)' },
+          '100%': { boxShadow: '0 0 15px rgba(212, 175, 55, 0.5)' },
+        },
+      },
+      animation: {
+        'flash-gold': 'flash-gold 0.3s ease-out',
+      },
     },
   },
   plugins: [],

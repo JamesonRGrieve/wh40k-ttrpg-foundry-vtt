@@ -282,8 +282,10 @@ export default class EnhancedSkillDialog extends ApplicationV2Mixin(ApplicationV
         this._selectedDifficulty = modifier;
 
         // Animate selection
-        target.classList.add('flash-select');
-        setTimeout(() => target.classList.remove('flash-select'), 300);
+        target.dataset.flash = 'true';
+        setTimeout(() => {
+            delete target.dataset.flash;
+        }, 300);
 
         await this.render(false, { parts: ['form'] });
     }

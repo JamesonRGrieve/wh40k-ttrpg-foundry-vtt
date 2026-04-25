@@ -187,7 +187,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
 
         // Panel state
         context.opacityLevel = this.opacityLevel;
-        context.opacityClass = this._getOpacityClass();
+        context.opacityKey = this._getOpacityKey();
 
         return context;
     }
@@ -319,9 +319,9 @@ export default class CombatQuickPanel extends ApplicationV2 {
      * @returns {string}  CSS class
      * @private
      */
-    _getOpacityClass(): string {
-        const levels = ['opacity-full', 'opacity-high', 'opacity-medium', 'opacity-low'];
-        return levels[this.opacityLevel] || levels[0];
+    _getOpacityKey(): string {
+        const keys = ['full', 'high', 'medium', 'low'];
+        return keys[this.opacityLevel] || keys[0];
     }
 
     /* -------------------------------------------- */
@@ -714,10 +714,7 @@ export default class CombatQuickPanel extends ApplicationV2 {
     static #toggleOpacity(this: any, event: PointerEvent, target: HTMLElement): void {
         this.opacityLevel = (this.opacityLevel + 1) % 4;
 
-        // Apply opacity class
-        const panel = this.element;
-        panel.classList.remove('opacity-full', 'opacity-high', 'opacity-medium', 'opacity-low');
-        panel.classList.add(this._getOpacityClass());
+        this.element.dataset.opacity = this._getOpacityKey();
     }
 
     /* -------------------------------------------- */
