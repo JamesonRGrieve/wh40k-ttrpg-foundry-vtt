@@ -563,17 +563,7 @@ export class GrantsManager {
                 // Choice grants contain nested grants, reverse them
                 if (applied.grantResults) {
                     for (const [key, nestedState] of Object.entries(applied.grantResults) as [string, any][]) {
-                        // New shape: { type, applied }. Legacy: raw applied data with no type.
-                        const nestedType = nestedState?.type ?? 'unknown';
-                        const nestedApplied = nestedState?.applied ?? nestedState;
-                        if (nestedType === 'unknown') {
-                            console.warn(
-                                `GrantsManager: Skipping reverse of nested grant '${key}' — type missing from stored state (likely a pre-fix legacy record):`,
-                                nestedState,
-                            );
-                            continue;
-                        }
-                        await this._reverseGrant(actor, key, { type: nestedType, applied: nestedApplied });
+                        await this._reverseGrant(actor, key, { type: nestedState.type, applied: nestedState.applied });
                     }
                 }
                 break;
