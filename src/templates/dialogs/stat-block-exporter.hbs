@@ -1,29 +1,35 @@
 {{!-- Stat Block Exporter Dialog --}}
-<div class="stat-block-exporter-content tw-flex tw-flex-col tw-gap-4 tw-h-full">
+<div class="tw-flex tw-flex-col tw-gap-4 tw-h-full">
   {{!-- Format Tabs --}}
-  <nav class="export-format-tabs tw-flex tw-gap-2 tw-border-b tw-border-solid tw-border-gray-300 tw-pb-2">
-    <button type="button" class="format-tab tw-p-2 tw-rounded-md tw-cursor-pointer {{#eq format "text"}}active{{/eq}}" data-format="text">
+  <nav class="tw-flex tw-gap-2 tw-border-b tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-pb-2">
+    <button type="button"
+            class="tw-p-2 tw-rounded-md tw-cursor-pointer tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-transition-all hover:tw-bg-[var(--color-bg-hover)] data-[active=true]:tw-bg-[var(--wh40k-color-accent,var(--wh40k-color-gold))] data-[active=true]:tw-text-white data-[active=true]:tw-border-[var(--wh40k-color-accent,var(--wh40k-color-gold))]"
+            data-active="{{#eq format "text"}}true{{else}}false{{/eq}}"
+            data-format="text">
       <i class="fa-solid fa-file-lines tw-mr-2"></i>
       {{localize "WH40K.NPC.Export.TextFormat"}}
     </button>
-    <button type="button" class="format-tab tw-p-2 tw-rounded-md tw-cursor-pointer {{#eq format "json"}}active{{/eq}}" data-format="json">
+    <button type="button"
+            class="tw-p-2 tw-rounded-md tw-cursor-pointer tw-bg-[var(--color-bg-option)] tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-transition-all hover:tw-bg-[var(--color-bg-hover)] data-[active=true]:tw-bg-[var(--wh40k-color-accent,var(--wh40k-color-gold))] data-[active=true]:tw-text-white data-[active=true]:tw-border-[var(--wh40k-color-accent,var(--wh40k-color-gold))]"
+            data-active="{{#eq format "json"}}true{{else}}false{{/eq}}"
+            data-format="json">
       <i class="fa-solid fa-file-code tw-mr-2"></i>
       {{localize "WH40K.NPC.Export.JSONFormat"}}
     </button>
   </nav>
 
   {{!-- Export Preview --}}
-  <div class="export-preview tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
+  <div class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
     <label class="tw-font-bold tw-mb-2">{{localize "WH40K.NPC.Export.Preview"}}</label>
     {{#eq format "text"}}
-    <pre class="export-content text-content tw-flex-1 tw-overflow-auto tw-p-4 tw-m-0">{{textContent}}</pre>
+    <pre class="tw-flex-1 tw-overflow-auto tw-p-4 tw-m-0 tw-bg-[#1a1a1a] tw-text-[#e0e0e0] tw-rounded-md tw-font-mono tw-text-xs tw-leading-[1.4] tw-whitespace-pre-wrap tw-break-words tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)]">{{textContent}}</pre>
     {{else}}
-    <pre class="export-content json-content tw-flex-1 tw-overflow-auto tw-p-4 tw-m-0">{{jsonContent}}</pre>
+    <pre class="tw-flex-1 tw-overflow-auto tw-p-4 tw-m-0 tw-bg-[#1a1a1a] tw-text-[#a6e22e] tw-rounded-md tw-font-mono tw-text-xs tw-leading-[1.4] tw-whitespace-pre-wrap tw-break-words tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)]">{{jsonContent}}</pre>
     {{/eq}}
   </div>
 
   {{!-- Action Buttons --}}
-  <footer class="sheet-footer flexrow tw-flex tw-gap-2 tw-pt-4 tw-border-t tw-border-solid tw-border-gray-300">
+  <footer class="tw-flex tw-gap-2 tw-pt-4 tw-border-t tw-border-solid tw-border-[var(--color-border-light-tertiary)]">
     {{#each buttons}}
     <button type="button" data-action="{{action}}" class="{{cssClass}} tw-flex-1">
       <i class="{{icon}}"></i>
