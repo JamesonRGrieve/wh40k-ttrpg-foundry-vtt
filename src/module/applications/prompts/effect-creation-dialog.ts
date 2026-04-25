@@ -30,10 +30,20 @@ export default class EffectCreationDialog extends DialogV2 {
 
     /** @override */
     static DEFAULT_OPTIONS: ApplicationV2Config.DefaultOptions = {
+        classes: ['wh40k-rpg', 'wh40k-effect-creation-dialog'],
         window: {
             title: 'WH40K.ActiveEffect.CreateEffect',
             icon: 'fas fa-sparkles',
-            contentClasses: ['wh40k-effect-creation-dialog'],
+            contentClasses: [
+                'tw-bg-gradient-to-br',
+                'tw-from-[#1a1612]',
+                'tw-to-[#2c2417]',
+                'tw-border-2',
+                'tw-border-solid',
+                'tw-border-[var(--wh40k-accent-gold)]',
+                'tw-shadow-[0_8px_32px_rgba(0,0,0,0.5)]',
+                '[&_.dialog-buttons]:tw-hidden',
+            ],
         },
         position: {
             width: 520,
