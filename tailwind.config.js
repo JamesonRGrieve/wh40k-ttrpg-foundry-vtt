@@ -148,9 +148,14 @@ module.exports = {
           '50%': { boxShadow: '0 0 30px rgba(212, 175, 55, 0.8)' },
           '100%': { boxShadow: '0 0 15px rgba(212, 175, 55, 0.5)' },
         },
+        'fury-pulse': {
+          '0%, 100%': { transform: 'scale(1)', opacity: '1' },
+          '50%': { transform: 'scale(1.1)', opacity: '0.8' },
+        },
       },
       animation: {
         'flash-gold': 'flash-gold 0.3s ease-out',
+        'fury-pulse': 'fury-pulse 1s ease-in-out infinite',
       },
     },
   },

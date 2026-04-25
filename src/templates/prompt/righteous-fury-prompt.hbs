@@ -1,48 +1,48 @@
 {{!-- Righteous Fury Confirmation Prompt --}}
 <form class="wh40k-form">
-    <div class="wh40k-fury-prompt">
-        <div class="wh40k-fury-prompt__header tw-text-center tw-mb-6">
-            <div class="wh40k-fury-prompt__icon tw-text-5xl tw-mb-2">⚡</div>
-            <h2 class="wh40k-fury-prompt__title">Righteous Fury!</h2>
+    <div class="tw-p-6">
+        <div class="tw-text-center tw-mb-6">
+            <div class="tw-text-5xl tw-mb-2 tw-leading-none tw-animate-fury-pulse">⚡</div>
+            <h2 class="tw-font-display tw-text-xl tw-font-bold tw-text-[var(--wh40k-gold-bright)] tw-uppercase tw-tracking-[0.15em] tw-m-0 [text-shadow:0_0_10px_rgba(255,215,0,0.5)]">Righteous Fury!</h2>
         </div>
-        
-        <div class="wh40k-fury-prompt__body tw-text-center">
+
+        <div class="tw-text-center">
             {{#unless hasRolled}}
-                <p class="wh40k-fury-prompt__description tw-text-base tw-my-4">
+                <p class="tw-text-base tw-my-4 tw-text-[var(--wh40k-text-dark)] tw-leading-[1.5] [&_strong]:tw-text-[var(--wh40k-gold)] [&_strong]:tw-font-bold">
                     You scored a devastating hit with <strong>{{weaponName}}</strong>!
                 </p>
-                <p class="wh40k-fury-prompt__instructions tw-text-sm tw-my-4 tw-p-3">
+                <p class="tw-text-sm tw-my-4 tw-p-3 tw-text-[var(--wh40k-text-medium)] tw-bg-[var(--wh40k-panel-bg)] tw-rounded-md tw-border tw-border-solid tw-border-[var(--wh40k-border-color)] [&_strong]:tw-text-[var(--wh40k-gold)] [&_strong]:tw-font-bold">
                     Roll to confirm with <strong>{{characteristic}}</strong> (Target: {{target}})
                 </p>
-                
-                <div class="wh40k-fury-prompt__actions tw-flex tw-justify-center tw-gap-4 tw-mt-6">
+
+                <div class="tw-flex tw-justify-center tw-gap-4 tw-mt-6 [&>button]:tw-min-w-[150px]">
                     <button type="button" class="wh40k-btn wh40k-btn--primary" data-action="roll">
                         <i class="fas fa-dice-d20"></i>
                         Roll Confirmation
                     </button>
                 </div>
             {{else}}
-                <div class="wh40k-fury-prompt__result tw-my-6 tw-p-5 tw-rounded-md tw-border-4 tw-border-solid {{#if success}}wh40k-fury-prompt__result--success{{else}}wh40k-fury-prompt__result--failure{{/if}}">
-                    <div class="wh40k-fury-prompt__roll-value tw-text-5xl tw-leading-none">{{confirmationRoll.total}}</div>
-                    <div class="wh40k-fury-prompt__roll-label tw-text-base tw-mt-2">vs {{target}}</div>
+                <div class="tw-my-6 tw-p-5 tw-rounded-md tw-border-4 tw-border-solid {{#if success}}tw-bg-[var(--wh40k-success-bg)] tw-border-[var(--wh40k-success-primary)] tw-shadow-[0_0_20px_var(--wh40k-card-success-glow)]{{else}}tw-bg-[var(--wh40k-panel-bg)] tw-border-[var(--wh40k-text-muted)]{{/if}}">
+                    <div class="tw-text-5xl tw-leading-none tw-font-display tw-font-bold tw-text-[var(--wh40k-gold-bright)]">{{confirmationRoll.total}}</div>
+                    <div class="tw-text-base tw-mt-2 tw-text-[var(--wh40k-text-medium)]">vs {{target}}</div>
                 </div>
-                
+
                 {{#if success}}
-                    <div class="wh40k-fury-prompt__success tw-mt-4">
+                    <div class="tw-mt-4 [&>h3]:tw-font-display [&>h3]:tw-text-[1.3rem] [&>h3]:tw-font-bold [&>h3]:tw-text-[var(--wh40k-gold-bright)] [&>h3]:tw-uppercase [&>h3]:tw-tracking-[0.1em] [&>h3]:tw-m-0 [&>h3]:tw-mb-3 [&>h3]:[text-shadow:0_0_10px_rgba(255,215,0,0.5)] [&>p]:tw-text-[var(--wh40k-text-dark)]">
                         <h3>⚡ Confirmed! ⚡</h3>
                         <p class="tw-text-sm tw-my-2">Additional d10 damage and critical effect!</p>
                         {{#if (gt dos 0)}}
-                            <p class="wh40k-fury-prompt__dos tw-text-xs tw-mt-2">{{dos}} Degrees of Success</p>
+                            <p class="tw-text-xs tw-mt-2 tw-text-[var(--wh40k-success-primary)] tw-font-semibold">{{dos}} Degrees of Success</p>
                         {{/if}}
                     </div>
                 {{else}}
-                    <div class="wh40k-fury-prompt__failure tw-mt-4">
+                    <div class="tw-mt-4 [&>h3]:tw-font-display [&>h3]:tw-text-[1.2rem] [&>h3]:tw-font-semibold [&>h3]:tw-text-[var(--wh40k-text-dark)] [&>h3]:tw-m-0 [&>h3]:tw-mb-3 [&>p]:tw-text-[var(--wh40k-text-muted)] [&>p]:tw-italic">
                         <h3>Not Confirmed</h3>
                         <p class="tw-text-sm tw-my-2">The blow was powerful, but not devastating.</p>
                     </div>
                 {{/if}}
-                
-                <div class="wh40k-fury-prompt__actions tw-flex tw-justify-center tw-gap-4 tw-mt-6">
+
+                <div class="tw-flex tw-justify-center tw-gap-4 tw-mt-6 [&>button]:tw-min-w-[150px]">
                     <button type="button" class="wh40k-btn wh40k-btn--primary" data-action="cancel">
                         <i class="fas fa-check"></i>
                         Continue
