@@ -15,9 +15,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
     declare damageType: string;
     declare bodyPart: string;
     declare severity: number;
-    declare effect: string;
     declare effects: Record<string, { text?: string; permanent?: boolean; [key: string]: any }>;
-    declare permanent: boolean;
     declare notes: string;
 
     /** @inheritdoc */
@@ -46,18 +44,12 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
             // Current severity level (1-10+)
             severity: new fields.NumberField({ required: true, initial: 1, min: 1, integer: true }),
 
-            // LEGACY: Single effect description (deprecated, use effects object)
-            effect: new fields.HTMLField({ required: false, blank: true }),
-
-            // NEW: Effects object storing all severity levels (1-10)
+            // Effects object storing all severity levels (1-10)
             // Structure: { "1": { text: "...", permanent: false }, "2": { ... }, ... }
             effects: new fields.ObjectField({
                 required: false,
                 initial: {},
             }),
-
-            // Is this injury permanent? (legacy, now stored per-severity in effects)
-            permanent: new fields.BooleanField({ required: false, initial: false }),
 
             // Notes
             notes: new fields.StringField({ required: false, blank: true }),
@@ -69,25 +61,11 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
     /* -------------------------------------------- */
 
     /**
-     * Check if this injury uses the new consolidated format.
-     * @type {boolean}
-     */
-    get isConsolidated() {
-        return Object.keys(this.effects || {}).length > 0;
-    }
-
-    /**
      * Get the current effect text for the active severity level.
-     * Supports both legacy (single effect) and consolidated (effects object) formats.
      * @type {string}
      */
     get currentEffect() {
-        if (this.isConsolidated) {
-            const severityData = this.effects[this.severity];
-            return severityData?.text || '';
-        }
-        // Legacy format
-        return this.effect || '';
+        return this.effects[this.severity]?.text || '';
     }
 
     /**
@@ -95,12 +73,7 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * @type {boolean}
      */
     get isPermanent() {
-        if (this.isConsolidated) {
-            const severityData = this.effects[this.severity];
-            return severityData?.permanent || false;
-        }
-        // Legacy format
-        return this.permanent || false;
+        return this.effects[this.severity]?.permanent || false;
     }
 
     /**
@@ -109,13 +82,9 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
      * @type {number[]}
      */
     get availableSeverities() {
-        if (this.isConsolidated) {
-            return Object.keys(this.effects)
-                .map((k) => parseInt(k))
-                .sort((a, b) => a - b);
-        }
-        // Legacy format - only current severity
-        return [this.severity];
+        return Object.keys(this.effects)
+            .map((k) => parseInt(k))
+            .sort((a, b) => a - b);
     }
 
     /**
@@ -187,7 +156,6 @@ export default class CriticalInjuryData extends ItemDataModel.mixin(DescriptionT
 
     /**
      * Get full injury description (combines effect + notes).
-     * Uses currentEffect to support both legacy and consolidated formats.
      * @type {string}
      */
     get fullDescription() {
