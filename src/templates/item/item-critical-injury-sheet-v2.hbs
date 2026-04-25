@@ -143,36 +143,27 @@
         <div class="wh40k-injury-section">
           <div class="wh40k-injury-section__header">
             <i class="fas fa-file-medical"></i>
-            <h3>Injury Effect{{#if item.system.isConsolidated}} (Severity {{item.system.severity}}){{/if}}</h3>
+            <h3>Injury Effect (Severity {{item.system.severity}})</h3>
           </div>
           <div class="wh40k-injury-section__body wh40k-injury-section__body--editor">
             {{#if inEditMode}}
-              {{#if item.system.isConsolidated}}
-                {{!-- Consolidated format: Show all severity levels for editing --}}
-                {{#each item.system.availableSeverities as |sev|}}
-                  {{#with (lookup ../item.system.effects sev) as |effect|}}
-                    <div class="wh40k-severity-effect-editor">
-                      <label><strong>Severity {{sev}}:</strong></label>
-                      {{editor effect.text target=(concat "system.effects." sev ".text") button=true editable=../editable engine="prosemirror"}}
-                      <label>
-                        <input type="checkbox" name="system.effects.{{sev}}.permanent" {{checked effect.permanent}} />
-                        <span>Permanent</span>
-                      </label>
-                    </div>
-                  {{/with}}
-                {{/each}}
-              {{else}}
-                {{!-- Legacy format: Single effect editor --}}
-                {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
-              {{/if}}
+              {{#each item.system.availableSeverities as |sev|}}
+                {{#with (lookup ../item.system.effects sev) as |effect|}}
+                  <div class="wh40k-severity-effect-editor">
+                    <label><strong>Severity {{sev}}:</strong></label>
+                    {{editor effect.text target=(concat "system.effects." sev ".text") button=true editable=../editable engine="prosemirror"}}
+                    <label>
+                      <input type="checkbox" name="system.effects.{{sev}}.permanent" {{checked effect.permanent}} />
+                      <span>Permanent</span>
+                    </label>
+                  </div>
+                {{/with}}
+              {{/each}}
             {{else}}
-              {{!-- View mode: Show current severity effect --}}
               <div class="wh40k-description-content">{{{item.system.currentEffect}}}</div>
-              {{#if item.system.isConsolidated}}
-                <div class="wh40k-injury-severity-preview">
-                  <p><em>This injury has effects for all severity levels 1-10. Change the severity slider to preview different effects.</em></p>
-                </div>
-              {{/if}}
+              <div class="wh40k-injury-severity-preview">
+                <p><em>This injury has effects for all severity levels 1-10. Change the severity slider to preview different effects.</em></p>
+              </div>
             {{/if}}
           </div>
         </div>
