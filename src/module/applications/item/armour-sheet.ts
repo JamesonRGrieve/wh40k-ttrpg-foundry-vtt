@@ -33,7 +33,7 @@ export default class ArmourSheet extends ContainerItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-armour-sheet-v2.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-armour-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
         },
     };

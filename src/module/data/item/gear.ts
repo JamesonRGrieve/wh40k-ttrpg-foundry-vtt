@@ -28,7 +28,6 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         return {
             ...super.defineSchema(),
 
-            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Gear category

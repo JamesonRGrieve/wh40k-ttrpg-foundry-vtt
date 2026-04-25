@@ -53,7 +53,6 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
         return {
             ...super.defineSchema(),
 
-            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Weapon classification (usage pattern only)
@@ -738,11 +737,8 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
     /** @override */
     get chatProperties(): string[] {
         const props = [
-            // @ts-expect-error - TS2339
             ...PhysicalItemTemplate.prototype.chatProperties.call(this),
-            // @ts-expect-error - TS2339
             ...AttackTemplate.prototype.chatProperties.call(this),
-            // @ts-expect-error - TS2339
             ...DamageTemplate.prototype.chatProperties.call(this),
         ];
 
@@ -917,18 +913,15 @@ export default class WeaponData extends ItemDataModel.mixin(DescriptionTemplate,
 
         for (const qualityId of this.effectiveSpecial) {
             // Parse level from quality ID (e.g., "blast-3" -> "blast", 3)
-            // @ts-expect-error - dynamic property access
             const match = qualityId.match(/^(.+?)-(\d+)$/);
             const baseId = match ? match[1] : qualityId;
             const level = match ? parseInt(match[2]) : null;
 
-            // @ts-expect-error - index type
             const definition = config[baseId] || config[qualityId];
 
             qualities.push({
                 id: qualityId,
                 baseId: baseId,
-                // @ts-expect-error - dynamic property access
                 label: definition?.label ? game.i18n.localize(definition.label) : qualityId.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
                 description: definition?.description ? game.i18n.localize(definition.description) : '',
                 level: level,

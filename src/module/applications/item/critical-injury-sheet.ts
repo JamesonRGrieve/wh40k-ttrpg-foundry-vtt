@@ -27,7 +27,7 @@ export default class CriticalInjurySheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-critical-injury-sheet-v2.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-critical-injury-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
         },
     };

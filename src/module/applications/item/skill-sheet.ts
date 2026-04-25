@@ -24,7 +24,7 @@ export default class SkillSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-skill-sheet-modern.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-skill-sheet.hbs',
             scrollable: ['.wh40k-item-body'],
         },
     };

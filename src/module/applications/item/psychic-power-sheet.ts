@@ -23,7 +23,7 @@ export default class PsychicPowerSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-psychic-power-sheet-modern.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-psychic-power-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
         },
     };

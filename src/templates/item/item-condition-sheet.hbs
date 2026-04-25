@@ -1,0 +1,251 @@
+{{!-- 
+  Rogue Trader Condition Item Sheet - V2 Redesign
+  Matches weapon/armour sheet patterns with modern ApplicationV2 structure
+--}}
+<div class="wh40k-condition-sheet">
+  <form autocomplete="off">
+    
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         HEADER: Compact condition identity with inline stats
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <header class="wh40k-condition-header">
+      <div class="wh40k-condition-header__image" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" />
+        <div class="wh40k-condition-header__image-overlay wh40k-condition-header__image-overlay--{{item.system.nature}}">
+          <i class="fas {{item.system.natureIcon}}"></i>
+        </div>
+      </div>
+      
+      <div class="wh40k-condition-header__info">
+        <input type="text" class="wh40k-condition-header__name" name="name" value="{{item.name}}" placeholder="Condition Name" />
+        
+        <div class="wh40k-condition-header__meta">
+          <span class="wh40k-condition-badge wh40k-condition-badge--nature wh40k-condition-badge--{{item.system.nature}}" title="Condition Nature">
+            <i class="fas {{item.system.natureIcon}}"></i>
+            {{item.system.natureLabel}}
+          </span>
+          <span class="wh40k-condition-badge wh40k-condition-badge--applies" title="Applies To">
+            <i class="fas {{item.system.appliesToIcon}}"></i>
+            {{item.system.appliesToLabel}}
+          </span>
+          {{#if item.system.stackable}}
+          <span class="wh40k-condition-badge wh40k-condition-badge--stacks" title="Stackable Condition">
+            <i class="fas fa-layer-group"></i>
+            ×{{item.system.stacks}}
+          </span>
+          {{/if}}
+          {{#if item.system.isTemporary}}
+          <span class="wh40k-condition-badge wh40k-condition-badge--duration" title="Duration">
+            <i class="fas fa-clock"></i>
+            {{item.system.durationDisplay}}
+          </span>
+          {{/if}}
+        </div>
+      </div>
+    </header>
+
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB NAVIGATION
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <nav class="wh40k-tabs wh40k-tabs--condition wh40k-condition-tabs" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-condition-tab active" data-tab="details" data-group="primary">
+        <i class="fas fa-info-circle"></i>
+        <span>Details</span>
+      </button>
+      <button type="button" class="wh40k-tab wh40k-condition-tab" data-tab="description" data-group="primary">
+        <i class="fas fa-book"></i>
+        <span>Description</span>
+      </button>
+      <button type="button" class="wh40k-tab wh40k-condition-tab" data-tab="effects" data-group="primary">
+        <i class="fas fa-magic"></i>
+        <span>Effects</span>
+      </button>
+    </nav>
+
+    {{!-- ═══════════════════════════════════════════════════════════════════
+         TAB CONTENT
+    ═══════════════════════════════════════════════════════════════════ --}}
+    <div class="wh40k-condition-content wh40k-tab-content wh40k-tab-content--condition scrollable">
+      
+      {{!-- DETAILS TAB --}}
+      <div class="wh40k-condition-panel tab active" data-tab="details" data-group="primary">
+        
+        {{!-- Basic Properties --}}
+        <div class="wh40k-condition-section">
+          <div class="wh40k-condition-section__header">
+            <i class="fas fa-cog"></i>
+            <h3>Condition Properties</h3>
+          </div>
+          <div class="wh40k-condition-section__body">
+            <div class="wh40k-field-grid wh40k-field-grid--2col">
+              <div class="wh40k-field">
+                <label>Nature</label>
+                <select name="system.nature">
+                  <option value="beneficial" {{#if (eq item.system.nature "beneficial")}}selected{{/if}}>Beneficial</option>
+                  <option value="harmful" {{#if (eq item.system.nature "harmful")}}selected{{/if}}>Harmful</option>
+                  <option value="neutral" {{#if (eq item.system.nature "neutral")}}selected{{/if}}>Neutral</option>
+                </select>
+              </div>
+              <div class="wh40k-field">
+                <label>Applies To</label>
+                <select name="system.appliesTo">
+                  <option value="self" {{#if (eq item.system.appliesTo "self")}}selected{{/if}}>Self</option>
+                  <option value="target" {{#if (eq item.system.appliesTo "target")}}selected{{/if}}>Target</option>
+                  <option value="both" {{#if (eq item.system.appliesTo "both")}}selected{{/if}}>Both</option>
+                  <option value="area" {{#if (eq item.system.appliesTo "area")}}selected{{/if}}>Area</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Stacking --}}
+        <div class="wh40k-condition-section">
+          <div class="wh40k-condition-section__header">
+            <i class="fas fa-layer-group"></i>
+            <h3>Stacking</h3>
+          </div>
+          <div class="wh40k-condition-section__body">
+            <div class="wh40k-field wh40k-field--checkbox">
+              <label>
+                <input type="checkbox" name="system.stackable" {{checked item.system.stackable}} />
+                <span>Condition is Stackable</span>
+              </label>
+            </div>
+            {{#if item.system.stackable}}
+            <div class="wh40k-field">
+              <label>Current Stacks</label>
+              <input type="number" name="system.stacks" value="{{item.system.stacks}}" 
+                     data-dtype="Number" min="1" />
+            </div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Duration --}}
+        <div class="wh40k-condition-section">
+          <div class="wh40k-condition-section__header">
+            <i class="fas fa-clock"></i>
+            <h3>Duration</h3>
+          </div>
+          <div class="wh40k-condition-section__body">
+            <div class="wh40k-field-grid wh40k-field-grid--2col">
+              <div class="wh40k-field">
+                <label>Duration Value</label>
+                <input type="number" name="system.duration.value" value="{{item.system.duration.value}}" 
+                       data-dtype="Number" min="0" />
+              </div>
+              <div class="wh40k-field">
+                <label>Duration Units</label>
+                <select name="system.duration.units">
+                  <option value="permanent" {{#if (eq item.system.duration.units "permanent")}}selected{{/if}}>Permanent</option>
+                  <option value="rounds" {{#if (eq item.system.duration.units "rounds")}}selected{{/if}}>Rounds</option>
+                  <option value="minutes" {{#if (eq item.system.duration.units "minutes")}}selected{{/if}}>Minutes</option>
+                  <option value="hours" {{#if (eq item.system.duration.units "hours")}}selected{{/if}}>Hours</option>
+                  <option value="days" {{#if (eq item.system.duration.units "days")}}selected{{/if}}>Days</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{!-- Effect --}}
+        <div class="wh40k-condition-section">
+          <div class="wh40k-condition-section__header">
+            <i class="fas fa-bolt"></i>
+            <h3>Condition Effect</h3>
+          </div>
+          <div class="wh40k-condition-section__body wh40k-condition-section__body--editor">
+            {{#if inEditMode}}
+            {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
+            {{else}}
+            <div class="wh40k-description-content">{{{system.effect}}}</div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Removal --}}
+        <div class="wh40k-condition-section">
+          <div class="wh40k-condition-section__header">
+            <i class="fas fa-eraser"></i>
+            <h3>Removal Conditions</h3>
+          </div>
+          <div class="wh40k-condition-section__body wh40k-condition-section__body--editor">
+            {{#if inEditMode}}
+            {{editor system.removal target="system.removal" button=true editable=editable engine="prosemirror"}}
+            {{else}}
+            <div class="wh40k-description-content">{{{system.removal}}}</div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Notes --}}
+        <div class="wh40k-condition-section">
+          <div class="wh40k-condition-section__header">
+            <i class="fas fa-sticky-note"></i>
+            <h3>GM Notes</h3>
+          </div>
+          <div class="wh40k-condition-section__body">
+            <textarea name="system.notes" rows="3" placeholder="Additional notes, special circumstances...">{{item.system.notes}}</textarea>
+          </div>
+        </div>
+
+      </div>
+
+      {{!-- DESCRIPTION TAB --}}
+      <div class="wh40k-condition-panel tab" data-tab="description" data-group="primary">
+        
+        {{!-- Full Description --}}
+        <div class="wh40k-condition-section">
+          <div class="wh40k-condition-section__header">
+            <i class="fas fa-book"></i>
+            <h3>Description</h3>
+          </div>
+          <div class="wh40k-condition-section__body wh40k-condition-section__body--editor">
+            {{#if inEditMode}}
+            {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
+            {{else}}
+            <div class="wh40k-description-content">{{{system.description.value}}}</div>
+            {{/if}}
+          </div>
+        </div>
+
+        {{!-- Source --}}
+        <div class="wh40k-condition-section">
+          <div class="wh40k-condition-section__header">
+            <i class="fas fa-book-open"></i>
+            <h3>Source</h3>
+          </div>
+          <div class="wh40k-condition-section__body">
+            <div class="wh40k-field-grid wh40k-field-grid--3col">
+              <div class="wh40k-field">
+                <label>Source Book</label>
+                <input type="text" name="system.source.book" value="{{source.source.book}}" 
+                       placeholder="Rogue Trader Core" />
+              </div>
+              <div class="wh40k-field">
+                <label>Page</label>
+                <input type="text" name="system.source.page" value="{{source.source.page}}" 
+                       placeholder="249" />
+              </div>
+              <div class="wh40k-field">
+                <label>Custom Reference</label>
+                <input type="text" name="system.source.custom" value="{{source.source.custom}}" 
+                       placeholder="Homebrew" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {{!-- EFFECTS TAB --}}
+      <div class="wh40k-condition-panel tab" data-tab="effects" data-group="primary">
+        {{> systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs}}
+      </div>
+
+    </div>
+
+  </form>
+</div>
