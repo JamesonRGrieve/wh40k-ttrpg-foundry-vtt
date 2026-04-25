@@ -11,6 +11,8 @@
     "watch": "gulp",
     "lint": "eslint src/module/ --ext .ts",
     "lint:fix": "eslint src/module/ --ext .ts --fix",
+    "lint:ratchet": "node scripts/lint-ratchet.mjs",
+    "lint:ratchet:update": "node scripts/lint-ratchet.mjs --update",
     "format": "prettier --check 'src/**/*.{ts,json,css,hbs}'",
     "format:fix": "prettier --write 'src/**/*.{ts,json,css,hbs}'",
     "typecheck": "tsc --noEmit",

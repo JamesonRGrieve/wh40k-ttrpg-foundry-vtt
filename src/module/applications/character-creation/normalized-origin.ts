@@ -147,10 +147,9 @@ function resolveId(doc: Record<string, unknown>): string {
 
 /**
  * Resolve positions array from raw origin data.
- * Handles three legacy field names and ensures a sorted array.
  */
 function resolvePositions(system: Record<string, unknown>): number[] {
-    const raw = system?.pathPositions ?? system?.allPositions ?? system?.positions;
+    const raw = system?.positions;
     if (Array.isArray(raw) && raw.length > 0) {
         return [...raw].sort((a, b) => a - b);
     }

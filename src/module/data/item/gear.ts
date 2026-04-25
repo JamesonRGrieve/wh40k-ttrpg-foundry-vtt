@@ -77,173 +77,12 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
     /* -------------------------------------------- */
 
     /**
-     * Type → Category mapping for legacy pack data
-     * @type {Object<string, string>}
-     * @private
-     */
-    static #TYPE_TO_CATEGORY = {
-        'Tool - Device': 'tools',
-        'Tool - Handheld': 'tools',
-        'Tool - Misc': 'tools',
-        'Tool - Worn': 'tools',
-        'Tool - Structure': 'tools',
-        'Tool - Tome': 'tools',
-        'Tool - Astartes': 'tools',
-        'Tool - Infantry Gear': 'survival',
-        'Consumable': 'consumable',
-        'Drug': 'drugs',
-        'Clothing': 'clothing',
-        'Clothing (Astartes)': 'clothing',
-        'Cybernetic': 'tech',
-        'Service': 'general',
-        'Medal': 'general',
-        'Familiar': 'tech',
-        'Poison': 'drugs',
-        'Disease': 'consumable',
-        'exotic': 'luxury',
-        'xenos': 'luxury',
-    };
-
-    /**
-     * Availability normalization for legacy pack data
-     * @type {Object<string, string>}
-     * @private
-     */
-    static #NORMALIZE_AVAILABILITY = {
-        'Ubiquitous': 'ubiquitous',
-        'Abundant': 'abundant',
-        'Plentiful': 'plentiful',
-        'Common': 'common',
-        'Average': 'average',
-        'Scarce': 'scarce',
-        'Rare': 'rare',
-        'Very Rare': 'very-rare',
-        'Extremely Rare': 'extremely-rare',
-        'Near Unique': 'near-unique',
-        'Unique': 'unique',
-        'Special': 'average',
-        'Initiated': 'average',
-    };
-
-    /* -------------------------------------------- */
-    /*  Data Migration                              */
-    /* -------------------------------------------- */
-
-    /**
-     * Migrate gear data.
+     * Normalize gear data shape.
      * @param {object} source  The source data
      * @protected
      */
     static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
-        GearData.#migrateCategory(source);
-        GearData.#migrateAvailability(source);
-        GearData.#migrateCharges(source);
-        GearData.#migrateWeight(source);
-        GearData.#migrateDescription(source);
-        GearData.#migrateCost(source);
-    }
-
-    /**
-     * Migrate old pack format: type → category.
-     * @param {object} source  The source data
-     */
-    static #migrateCategory(source: Record<string, unknown>): void {
-        if (source.type && !source.category) {
-            source.category = GearData.#TYPE_TO_CATEGORY[source.type] || 'general';
-            delete source.type;
-        }
-    }
-
-    /**
-     * Migrate old pack format: effects (availability enum) → availability.
-     * @param {object} source  The source data
-     */
-    static #migrateAvailability(source: Record<string, unknown>): void {
-        if (source.effects && !source.availability) {
-            source.availability = GearData.#NORMALIZE_AVAILABILITY[source.effects] || 'average';
-        }
-    }
-
-    /**
-     * Migrate old pack format: charges → uses.
-     * @param {object} source  The source data
-     */
-    static #migrateCharges(source: Record<string, unknown>): void {
-        if (source.charges && !source.uses) {
-            source.uses = {
-                value: parseInt(source.charges.value) || 0,
-                max: parseInt(source.charges.max) || 0,
-            };
-            delete source.charges;
-        }
-    }
-
-    /**
-     * Migrate weight string → number.
-     * @param {object} source  The source data
-     */
-    static #migrateWeight(source: Record<string, unknown>): void {
-        if (typeof source.weight === 'string') {
-            source.weight = GearData.#parseWeight(source.weight);
-        }
-    }
-
-    /**
-     * Migrate old pack format: build description from scattered fields.
-     * @param {object} source  The source data
-     */
-    static #migrateDescription(source: Record<string, unknown>): void {
-        if (source.availability && String(source.availability).length > 50) {
-            const parts = [];
-            parts.push(`<p>${source.availability}</p>`);
-            if (source.cost && String(source.cost).length > 10) {
-                parts.push(`<h3>Requirements</h3><p>${source.cost}</p>`);
-            }
-            if (source.description?.value) {
-                parts.push(source.description.value);
-            }
-            source.description = source.description || {};
-            source.description.value = parts.join('\n');
-            source.effect = source.availability;
-        }
-    }
-
-    /**
-     * Migrate old pack format: parse cost from notes.
-     * @param {object} source  The source data
-     */
-    static #migrateCost(source: Record<string, unknown>): void {
-        if (source.notes && !source.cost?.value) {
-            const costMatch = String(source.notes).match(/(\d+(?:,\d+)?)\s*T(?:hrone)?/i);
-            if (costMatch) {
-                source.cost = {
-                    dh1: {
-                        throneGelt: null,
-                    },
-                    dh2: {
-                        influence: null,
-                        homebrew: {
-                            requisition: null,
-                            throneGelt:
-                                Array.isArray(source.gameSystems) && source.gameSystems.includes('dh2e') ? parseInt(costMatch[1].replace(/,/g, ''), 10) : null,
-                        },
-                    },
-                    rt: {
-                        profitFactor: null,
-                    },
-                    dw: {
-                        requisition: null,
-                    },
-                    bc: {
-                        infamy: null,
-                    },
-                    ow: {
-                        logistics: null,
-                    },
-                };
-            }
-        }
     }
 
     /** @inheritdoc */
@@ -259,20 +98,6 @@ export default class GearData extends ItemDataModel.mixin(DescriptionTemplate, P
         this.effect = (resolveLineVariant(this.effect as unknown, lineKey) as string) ?? '';
         this.duration = (resolveLineVariant(this.duration as unknown, lineKey) as string) ?? '';
         this.notes = (resolveLineVariant(this.notes as unknown, lineKey) as string) ?? '';
-    }
-
-    /**
-     * Parse weight string to number.
-     * @param {string} weightStr - Weight string like "1.5kg", "-", "?"
-     * @returns {number}
-     */
-    static #parseWeight(weightStr) {
-        if (!weightStr || weightStr === '-' || weightStr === '?') return 0;
-        const cleaned = String(weightStr)
-            .replace(/kg|g|\s/gi, '')
-            .trim();
-        const num = parseFloat(cleaned);
-        return isNaN(num) ? 0 : num;
     }
 
     /* -------------------------------------------- */
