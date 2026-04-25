@@ -61,7 +61,7 @@ export interface PrimarySheetMixinAPI extends DragDropMixinAPI {
     _getTabs(): Record<string, Record<string, unknown>>;
     _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void>;
     _onRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void>;
-    _activateLegacyTabs(): void;
+    _activateTabs(): void;
     _activateTab(tab: string, group: string, nav: HTMLElement, content: HTMLElement): void;
     animateStatChange(element: HTMLElement, type?: string): void;
     animateValueChange(element: HTMLElement, oldValue: number, newValue: number): void;

@@ -256,29 +256,22 @@ export default class ModifiersTemplate extends SystemDataModel {
      */
     static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
-        ModifiersTemplate.#migrateModifiers(source);
+        ModifiersTemplate.#normalizeModifiers(source);
     }
 
     /**
-     * Migrate legacy modifier formats.
+     * Ensure modifiers nested objects exist.
      * @param {object} source  The source data
      */
-    static #migrateModifiers(source: Record<string, unknown>): void {
+    static #normalizeModifiers(source: Record<string, unknown>): void {
         if (!source.modifiers) return;
 
-        // Ensure nested objects exist
         source.modifiers.characteristics ??= {};
         source.modifiers.skills ??= {};
         source.modifiers.combat ??= {};
         source.modifiers.resources ??= {};
         source.modifiers.other ??= [];
         source.modifiers.situational ??= { characteristics: [], skills: [], combat: [] };
-
-        // Migrate legacy flat modifiers to nested structure
-        if (source.modifiers.strength !== undefined) {
-            source.modifiers.characteristics.strength = source.modifiers.strength;
-            delete source.modifiers.strength;
-        }
     }
 
     /* -------------------------------------------- */

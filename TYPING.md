@@ -16,7 +16,7 @@ This codebase is on a **strict-mode TypeScript ratchet**. New code must obey the
 | `allowJs`                     | false | No `.js` files in `src/`. New files must be `.ts`. |
 | `skipLibCheck`                | true  | Foundry V14 types are still in flux.         |
 
-The `pnpm typecheck:ratchet` script gates new errors via the pre-commit hook.
+The `pnpm typecheck:ratchet` script gates new tsc errors via the pre-commit hook. A parallel `pnpm lint:ratchet` script gates new ESLint warnings the same way (baseline in `.eslint-warning-baseline`). Both run in `.husky/pre-commit` after `lint-staged`.
 
 ## Established patterns
 
