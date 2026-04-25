@@ -1,9 +1,0 @@
-.wh40k-wrapper {
-    /* ============================================ */
-    /* CHAT CARDS - CONSOLIDATED */
-    /* ============================================ */
-    /* This file is DEPRECATED - all chat card styles moved to src/scss/chat/ */
-    /* Item cards: src/scss/chat/_item-cards.scss */
-    /* Roll cards: src/scss/chat/_roll-cards.scss */
-    /* Kept for legacy compatibility only - remove after confirming no legacy templates */
-}
