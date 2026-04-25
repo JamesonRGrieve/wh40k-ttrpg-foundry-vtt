@@ -56,7 +56,7 @@
 }
 
 /* Flex, spacing, and text utilities removed — use Tailwind tw-* classes instead */
-/* .wh40k-text-muted retained (used in item-skill-sheet-modern.hbs, vehicle-upgrades-panel.hbs) */
+/* .wh40k-text-muted retained (used in item-skill-sheet.hbs, vehicle-upgrades-panel.hbs) */
 
 .wh40k-text-muted {
     color: var(--color-text-tertiary);

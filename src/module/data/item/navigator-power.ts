@@ -28,7 +28,6 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
-            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Power test configuration

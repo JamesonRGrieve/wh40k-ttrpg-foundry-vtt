@@ -29,7 +29,7 @@ export default class AmmoSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-ammo-sheet-v2.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-ammo-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
         },
     };
