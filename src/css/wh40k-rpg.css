@@ -53,7 +53,7 @@
 @import './actor/_npc-sheet.css';
 
 /* Vehicle Sheet V2 - ApplicationV2 sheet (outside wh40k-wrapper) */
-@import './actor/_vehicle-sheet-v2.css';
+@import './actor/_vehicle-sheet.css';
 
 /* ============================================
    Wrapper-scoped styles (each file wraps its own content in .wh40k-wrapper)

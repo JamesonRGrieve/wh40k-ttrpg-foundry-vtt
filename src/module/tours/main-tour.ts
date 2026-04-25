@@ -13,7 +13,6 @@ export class DHTourMain extends WH40KTour {
                     selector: '[data-tab="compendium"]',
                     title: 'Compendium tab',
                     content: 'Go to your compendium tab',
-                    // @ts-expect-error - extended property
                     action: 'click',
                 },
                 {

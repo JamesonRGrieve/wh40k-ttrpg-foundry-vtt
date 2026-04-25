@@ -695,7 +695,6 @@ export default class ArmourData extends ItemDataModel.mixin(DescriptionTemplate,
 
     /** @override */
     get chatProperties(): string[] {
-        // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this)];
 
         props.unshift(this.typeLabel);

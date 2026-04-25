@@ -30,7 +30,6 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // What weapon types can use this ammo
@@ -149,7 +148,6 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @override */
     get chatProperties(): string[] {
-        // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), `For: ${this.weaponTypesLabel}`];
 
         const mods = this.modifiers;

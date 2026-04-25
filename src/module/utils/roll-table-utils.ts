@@ -202,7 +202,6 @@ export class RollTableUtils {
             </form>
         `;
 
-        // @ts-expect-error - DialogV2 argument type
         void foundry.applications.api.DialogV2.prompt({
             window: { title: 'Roll Table' },
             content,

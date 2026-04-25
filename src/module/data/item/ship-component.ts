@@ -38,7 +38,6 @@ export default class ShipComponentData extends ItemDataModel.mixin(DescriptionTe
         return {
             ...super.defineSchema(),
 
-            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Component type/category

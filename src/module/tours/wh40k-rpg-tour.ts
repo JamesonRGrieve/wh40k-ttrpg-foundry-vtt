@@ -12,7 +12,6 @@ export class WH40KTour extends foundry.nue.Tour {
         return new Promise((resolve, reject) => {
             const element = document.querySelector(selector);
             if (element) {
-                // @ts-expect-error - TS2794
                 resolve();
                 return;
             }
@@ -40,16 +39,13 @@ export class WH40KTour extends foundry.nue.Tour {
         await super._postStep();
         if (this.stepIndex < 0 || !this.hasNext) return;
 
-        // @ts-expect-error - TS2339
         if (!this.currentStep.action) return;
 
         if (this.triggerReset) {
             this.triggerReset = false;
             return;
         }
-        // @ts-expect-error - TS2339
         const target = this.currentStep.target ? this.currentStep.target : this.currentStep.selector;
-        // @ts-expect-error - TS2339
         switch (this.currentStep.action) {
             case 'click':
                 document.querySelector(target).click();

@@ -5,7 +5,7 @@
 
 @import './_grid.css'; /* Shared grid/column classes, header HUD */
 @import './_core.css'; /* Core panel component */
-@import './_vitals-modern.css'; /* Modern vitals design for Overview tab */
+@import './_vitals.css'; /* Vitals design for Overview tab */
 @import './_overview-vitals.css'; /* Themed vitals panels for Overview tab */
 @import './_overview-dashboard.css'; /* Ultra-dense dashboard for Overview tab */
 @import './_wounds.css'; /* Wounds panel V2 - Modern redesign with pip system */
@@ -13,8 +13,8 @@
 @import './_fate.css'; /* Fate panel V2 - Golden star pips and spending menu */
 @import './_corruption.css'; /* Corruption/insanity panels, degree badges */
 @import './_corruption-v2.css'; /* Corruption panel V2 - Degree badges, threshold warnings, malignancy tracking */
-@import './_insanity-v2.css'; /* Insanity panel V2 - Degree badges, threshold warnings, mental disorder tracking */
-@import './_experience-v2.css'; /* Experience panel V2 - Modern, dynamic, interactive XP tracker */
+@import './_insanity.css'; /* Insanity panel - degree badges, threshold warnings, mental disorder tracking */
+@import './_experience.css'; /* Experience panel - dynamic interactive XP tracker */
 @import './_equipment-cards.css'; /* Modern card-based equipment design */
 @import './_dynasty-modern.css'; /* Modern Dynasty tab components (acquisitions, XP, profit) */
 @import './_movement.css'; /* Movement grid, affliction lists */

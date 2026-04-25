@@ -88,7 +88,6 @@ export class WH40KItemContainer extends Item {
     hasItemByType(item: string, type: string): boolean {
         game.wh40k.log('Check for Has Nested Item', item);
         if (!this.system.container) return false;
-        // @ts-expect-error - system data access
         return !!this.items.find((i) => i.name === item && i.type === type && (i.system.equipped || i.system.enabled));
     }
 
@@ -174,7 +173,6 @@ export class WH40KItemContainer extends Item {
                 currentItem.prepareData();
                 this.items.set(idata._id, currentItem);
                 if (this.sheet) {
-                    // @ts-expect-error - extended property
                     currentItem.render(false, { action: 'update', data: currentItem.system });
                 }
             }
