@@ -8,5 +8,4 @@ export { default as AcolyteSheetSidebar } from './character-sheet-sidebar.ts';
 export { BlackCrusadeSheet, DarkHeresy1Sheet, DarkHeresy2Sheet, DeathwatchSheet, OnlyWarSheet, RogueTraderSheet } from './game-system-sheets.ts';
 export { default as NPCSheet } from './npc-sheet.ts';
 export { default as VehicleSheet } from './vehicle-sheet.ts';
-export { default as VehicleSheetV2 } from './vehicle-sheet-v2.ts';
 export { default as StarshipSheet } from './starship-sheet.ts';
