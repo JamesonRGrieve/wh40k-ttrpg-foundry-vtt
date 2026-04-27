@@ -1,6 +1,6 @@
 # WH40K RPG — Foundry VTT System
 
-Unified Foundry VTT system for FFG/Cubicle 7 Warhammer 40,000 RPGs: Dark Heresy 2e, Rogue Trader, Black Crusade, Only War, Deathwatch.
+Unified Foundry VTT system for FFG/Cubicle 7 Warhammer 40,000 RPGs: Dark Heresy 1e, Dark Heresy 2e, Rogue Trader, Black Crusade, Only War, Deathwatch, and Imperium Maledictum.
 
 Forked from [AndruQuiroga/RogueTraderVTT](https://github.com/AndruQuiroga/RogueTraderVTT), which was forked from [mrkeathley/dark-heresy-2nd-vtt](https://github.com/mrkeathley/dark-heresy-2nd-vtt).
 
