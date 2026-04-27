@@ -28,3 +28,7 @@ export { default as WH40KOWVehicle } from './ow-vehicle.ts';
 export { default as WH40KDWCharacter } from './dw-character.ts';
 export { default as WH40KDWNPC } from './dw-npc.ts';
 export { default as WH40KDWVehicle } from './dw-vehicle.ts';
+
+export { default as WH40KIMCharacter } from './im-character.ts';
+export { default as WH40KIMNPC } from './im-npc.ts';
+export { default as WH40KIMVehicle } from './im-vehicle.ts';
