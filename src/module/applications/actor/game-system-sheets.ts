@@ -1,7 +1,7 @@
 /**
  * @file Per-game-system sheet variants.
  *
- * Each game line (DH1, DH2, OW, BC, RT, DW) gets TWO concrete sheets that
+ * Each game line (DH1, DH2, OW, BC, RT, DW, IM) gets TWO concrete sheets that
  * share a system config (CSS class + header template + skill-rank labels):
  *
  *     CharacterSheet
@@ -63,11 +63,12 @@ function makeSystemVariant(baseCls: any, className: string, cfg: SystemSheetConf
 
 const SYSTEMS: Array<[string, SystemSheetConfig]> = [
     ['DarkHeresy2', { cssClass: 'dark-heresy', headerFile: 'header-dh.hbs', gameSystemId: 'dh2e' }],
-    ['RogueTrader', { cssClass: 'rogue-trader', headerFile: 'header-rt.hbs', gameSystemId: 'rt' }],
-    ['BlackCrusade', { cssClass: 'black-crusade', headerFile: 'header-bc.hbs', gameSystemId: 'bc' }],
-    ['OnlyWar', { cssClass: 'only-war', headerFile: 'header-ow.hbs', gameSystemId: 'ow' }],
-    ['Deathwatch', { cssClass: 'deathwatch', headerFile: 'header-dw.hbs', gameSystemId: 'dw' }],
-    ['DarkHeresy1', { cssClass: 'dark-heresy-1e', headerFile: 'header-dh1.hbs', gameSystemId: 'dh1e' }],
+    ['RogueTrader', { cssClass: 'rogue-trader', headerFile: 'header-dh.hbs', gameSystemId: 'rt' }],
+    ['BlackCrusade', { cssClass: 'black-crusade', headerFile: 'header-dh.hbs', gameSystemId: 'bc' }],
+    ['OnlyWar', { cssClass: 'only-war', headerFile: 'header-dh.hbs', gameSystemId: 'ow' }],
+    ['Deathwatch', { cssClass: 'deathwatch', headerFile: 'header-dh.hbs', gameSystemId: 'dw' }],
+    ['DarkHeresy1', { cssClass: 'dark-heresy-1e', headerFile: 'header-dh.hbs', gameSystemId: 'dh1e' }],
+    ['ImperiumMaledictum', { cssClass: 'imperium-maledictum', headerFile: 'header-dh.hbs', gameSystemId: 'im' }],
 ];
 
 // -- Player sheets (extend CharacterSheet) ---------------------------------
@@ -78,6 +79,7 @@ export const BlackCrusadePlayerSheet = makeSystemVariant(CharacterSheet, 'BlackC
 export const OnlyWarPlayerSheet = makeSystemVariant(CharacterSheet, 'OnlyWarPlayerSheet', SYSTEMS[3][1]);
 export const DeathwatchPlayerSheet = makeSystemVariant(CharacterSheet, 'DeathwatchPlayerSheet', SYSTEMS[4][1]);
 export const DarkHeresy1PlayerSheet = makeSystemVariant(CharacterSheet, 'DarkHeresy1PlayerSheet', SYSTEMS[5][1]);
+export const ImperiumMaledictumPlayerSheet = makeSystemVariant(CharacterSheet, 'ImperiumMaledictumPlayerSheet', SYSTEMS[6][1]);
 
 // -- NPC sheets (extend NPCSheet, which itself extends CharacterSheet) -----
 
@@ -87,6 +89,7 @@ export const BlackCrusadeNPCSheet = makeSystemVariant(NPCSheet, 'BlackCrusadeNPC
 export const OnlyWarNPCSheet = makeSystemVariant(NPCSheet, 'OnlyWarNPCSheet', SYSTEMS[3][1]);
 export const DeathwatchNPCSheet = makeSystemVariant(NPCSheet, 'DeathwatchNPCSheet', SYSTEMS[4][1]);
 export const DarkHeresy1NPCSheet = makeSystemVariant(NPCSheet, 'DarkHeresy1NPCSheet', SYSTEMS[5][1]);
+export const ImperiumMaledictumNPCSheet = makeSystemVariant(NPCSheet, 'ImperiumMaledictumNPCSheet', SYSTEMS[6][1]);
 
 // -- Vehicle sheets (extend VehicleSheet) ---------------------------------
 
@@ -96,6 +99,7 @@ export const BlackCrusadeVehicleSheet = makeSystemVariant(VehicleSheet, 'BlackCr
 export const OnlyWarVehicleSheet = makeSystemVariant(VehicleSheet, 'OnlyWarVehicleSheet', SYSTEMS[3][1]);
 export const DeathwatchVehicleSheet = makeSystemVariant(VehicleSheet, 'DeathwatchVehicleSheet', SYSTEMS[4][1]);
 export const DarkHeresy1VehicleSheet = makeSystemVariant(VehicleSheet, 'DarkHeresy1VehicleSheet', SYSTEMS[5][1]);
+export const ImperiumMaledictumVehicleSheet = makeSystemVariant(VehicleSheet, 'ImperiumMaledictumVehicleSheet', SYSTEMS[6][1]);
 
 // -- Starship sheets (extend StarshipSheet) -------------------------------
 // Only RT ships starships. Factory leaves room for other systems.
@@ -113,3 +117,4 @@ export const BlackCrusadeSheet = BlackCrusadePlayerSheet;
 export const OnlyWarSheet = OnlyWarPlayerSheet;
 export const DeathwatchSheet = DeathwatchPlayerSheet;
 export const DarkHeresy1Sheet = DarkHeresy1PlayerSheet;
+export const ImperiumMaledictumSheet = ImperiumMaledictumPlayerSheet;

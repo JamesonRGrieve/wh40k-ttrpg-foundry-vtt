@@ -18,6 +18,7 @@ import {
     BlackCrusadePlayerSheet,
     OnlyWarPlayerSheet,
     DeathwatchPlayerSheet,
+    ImperiumMaledictumPlayerSheet,
     // NPC sheets (default for {system}-npc)
     DarkHeresy1NPCSheet,
     DarkHeresy2NPCSheet,
@@ -25,6 +26,7 @@ import {
     BlackCrusadeNPCSheet,
     OnlyWarNPCSheet,
     DeathwatchNPCSheet,
+    ImperiumMaledictumNPCSheet,
     // Vehicle sheets (default for {system}-vehicle)
     DarkHeresy1VehicleSheet,
     DarkHeresy2VehicleSheet,
@@ -32,6 +34,7 @@ import {
     BlackCrusadeVehicleSheet,
     OnlyWarVehicleSheet,
     DeathwatchVehicleSheet,
+    ImperiumMaledictumVehicleSheet,
     // Starship sheet (default for rt-starship)
     RogueTraderStarshipSheet,
 } from './applications/actor/game-system-sheets.ts';
@@ -223,6 +226,9 @@ export class HooksManager {
             'dw-character': documents.WH40KDWCharacter,
             'dw-npc': documents.WH40KDWNPC,
             'dw-vehicle': documents.WH40KDWVehicle,
+            'im-character': documents.WH40KIMCharacter,
+            'im-npc': documents.WH40KIMNPC,
+            'im-vehicle': documents.WH40KIMVehicle,
             // Legacy-type fallbacks — kept so existing actors still load and
             // render until the ready-hook migration retypes them. Default to
             // DH2 concrete classes (this campaign's active system).
@@ -264,6 +270,9 @@ export class HooksManager {
             'dw-character': dataModels.DWCharacterData,
             'dw-npc': dataModels.DWNPCData,
             'dw-vehicle': dataModels.DWVehicleData,
+            'im-character': dataModels.IMCharacterData,
+            'im-npc': dataModels.IMNPCData,
+            'im-vehicle': dataModels.IMVehicleData,
             // Legacy-type data-model fallbacks (same reasoning as above).
             'character': dataModels.DH2CharacterData,
             'npc': dataModels.DH2NPCData,
@@ -336,8 +345,8 @@ export class HooksManager {
         // variant matching its system + kind. The sidebar/generic fallbacks
         // register against each of that kind's new types as selectable alt
         // options (makeDefault:false) so GMs can still switch if needed.
-        const npcTypeIds = ['dh2-npc', 'dh1-npc', 'rt-npc', 'bc-npc', 'ow-npc', 'dw-npc'];
-        const vehicleTypeIds = ['dh2-vehicle', 'dh1-vehicle', 'rt-vehicle', 'bc-vehicle', 'ow-vehicle', 'dw-vehicle'];
+        const npcTypeIds = ['dh2-npc', 'dh1-npc', 'rt-npc', 'bc-npc', 'ow-npc', 'dw-npc', 'im-npc'];
+        const vehicleTypeIds = ['dh2-vehicle', 'dh1-vehicle', 'rt-vehicle', 'bc-vehicle', 'ow-vehicle', 'dw-vehicle', 'im-vehicle'];
         const starshipTypeIds = ['rt-starship'];
 
         // --- Per-system default PC sheets ---
@@ -376,6 +385,11 @@ export class HooksManager {
             makeDefault: true,
             label: 'WH40K.Sheet.Deathwatch',
         });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, ImperiumMaledictumPlayerSheet, {
+            types: ['im-character'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.ImperiumMaledictum',
+        });
 
         // --- Per-system default NPC sheets ---
         // Also covers the legacy `npc` type (see PC sheet comment above).
@@ -408,6 +422,11 @@ export class HooksManager {
             types: ['dw-npc'],
             makeDefault: true,
             label: 'WH40K.Sheet.DeathwatchNPC',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, ImperiumMaledictumNPCSheet, {
+            types: ['im-npc'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.ImperiumMaledictumNPC',
         });
         // Generic NPCSheet — selectable fallback on all NPC types.
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NPCSheet, {
@@ -446,6 +465,11 @@ export class HooksManager {
             types: ['dw-vehicle'],
             makeDefault: true,
             label: 'WH40K.Sheet.DeathwatchVehicle',
+        });
+        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, ImperiumMaledictumVehicleSheet, {
+            types: ['im-vehicle'],
+            makeDefault: true,
+            label: 'WH40K.Sheet.ImperiumMaledictumVehicle',
         });
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheet, {
             types: vehicleTypeIds,

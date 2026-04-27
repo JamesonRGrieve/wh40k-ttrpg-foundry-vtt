@@ -4,7 +4,7 @@
  */
 
 /** Canonical game system identifiers */
-export type GameSystemId = 'rt' | 'dh1e' | 'dh2e' | 'bc' | 'ow' | 'dw';
+export type GameSystemId = 'rt' | 'dh1e' | 'dh2e' | 'bc' | 'ow' | 'dw' | 'im';
 
 /** Skill rank definition for display and computation */
 export interface SkillRankDef {

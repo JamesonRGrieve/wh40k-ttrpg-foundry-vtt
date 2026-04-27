@@ -443,18 +443,21 @@
             "BlackCrusade": "Black Crusade Sheet",
             "OnlyWar": "Only War Sheet",
             "Deathwatch": "Deathwatch Sheet",
+            "ImperiumMaledictum": "Imperium Maledictum Sheet",
             "DarkHeresy1NPC": "Dark Heresy 1e NPC",
             "DarkHeresy2NPC": "Dark Heresy 2e NPC",
             "RogueTraderNPC": "Rogue Trader NPC",
             "BlackCrusadeNPC": "Black Crusade NPC",
             "OnlyWarNPC": "Only War NPC",
             "DeathwatchNPC": "Deathwatch NPC",
+            "ImperiumMaledictumNPC": "Imperium Maledictum NPC",
             "DarkHeresy1Vehicle": "Dark Heresy 1e Vehicle",
             "DarkHeresy2Vehicle": "Dark Heresy 2e Vehicle",
             "RogueTraderVehicle": "Rogue Trader Vehicle",
             "BlackCrusadeVehicle": "Black Crusade Vehicle",
             "OnlyWarVehicle": "Only War Vehicle",
             "DeathwatchVehicle": "Deathwatch Vehicle",
+            "ImperiumMaledictumVehicle": "Imperium Maledictum Vehicle",
             "RogueTraderStarship": "Rogue Trader Starship"
         },
         "TYPES": {
@@ -477,7 +480,10 @@
                 "ow-vehicle": "Only War Vehicle",
                 "dw-character": "Deathwatch Character",
                 "dw-npc": "Deathwatch NPC",
-                "dw-vehicle": "Deathwatch Vehicle"
+                "dw-vehicle": "Deathwatch Vehicle",
+                "im-character": "Imperium Maledictum Character",
+                "im-npc": "Imperium Maledictum NPC",
+                "im-vehicle": "Imperium Maledictum Vehicle"
             }
         },
         "CreateActor": {
