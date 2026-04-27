@@ -10,7 +10,6 @@ import type { WH40KBaseActor } from './documents/base-actor.ts';
 import { DHBasicActionManager } from './actions/basic-action-manager.ts';
 import { DHCombatActionManager } from './actions/combat-action-manager.ts';
 import { DHTargetedActionManager } from './actions/targeted-action-manager.ts';
-import CharacterSheetSidebar from './applications/actor/character-sheet-sidebar.ts';
 import {
     // Player sheets (default for {system}-character)
     DarkHeresy1PlayerSheet,
@@ -337,7 +336,6 @@ export class HooksManager {
         // variant matching its system + kind. The sidebar/generic fallbacks
         // register against each of that kind's new types as selectable alt
         // options (makeDefault:false) so GMs can still switch if needed.
-        const playerTypeIds = ['dh2-character', 'dh1-character', 'rt-character', 'bc-character', 'ow-character', 'dw-character'];
         const npcTypeIds = ['dh2-npc', 'dh1-npc', 'rt-npc', 'bc-npc', 'ow-npc', 'dw-npc'];
         const vehicleTypeIds = ['dh2-vehicle', 'dh1-vehicle', 'rt-vehicle', 'bc-vehicle', 'ow-vehicle', 'dw-vehicle'];
         const starshipTypeIds = ['rt-starship'];
@@ -377,11 +375,6 @@ export class HooksManager {
             types: ['dw-character'],
             makeDefault: true,
             label: 'WH40K.Sheet.Deathwatch',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, CharacterSheetSidebar, {
-            types: playerTypeIds,
-            makeDefault: false,
-            label: 'WH40K.Sheet.PlayerCharacterSidebar',
         });
 
         // --- Per-system default NPC sheets ---
