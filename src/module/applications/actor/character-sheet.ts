@@ -732,8 +732,15 @@ export default class CharacterSheet extends BaseActorSheet {
                     field('Role', 'system.originPath.role', originPath.role ?? ''),
                     field('Endeavour', 'system.originPath.motivation', originPath.motivation ?? '', 'Endeavour'),
                 ];
-            case 'rt':
             case 'dh2e':
+                return [
+                    playerField,
+                    field(game.i18n.localize('WH40K.OriginPath.HomeWorld'), 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Home World'),
+                    field(game.i18n.localize('WH40K.OriginPath.Background'), 'system.originPath.background', originPath.background ?? '', 'Background'),
+                    field(game.i18n.localize('WH40K.OriginPath.Role'), 'system.originPath.role', originPath.role ?? '', 'Role'),
+                    field('Divination', 'system.originPath.divination', originPath.divination ?? '', 'Divination'),
+                ];
+            case 'rt':
             default:
                 return [
                     playerField,

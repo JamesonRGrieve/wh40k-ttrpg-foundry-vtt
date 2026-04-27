@@ -1,20 +1,20 @@
 {{!-- Redesigned Corruption Panel - Degree Badges, Threshold Warnings, Malignancy Tracking --}}
-<div class="wh40k-panel wh40k-corruption-panel-v2 {{corruptionDegreeClass system.corruption}}">
+<div class="wh40k-panel tw-rounded-lg tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-overflow-hidden tw-relative tw-mb-4 tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)] {{corruptionDegreeClass system.corruption}}">
 
     {{!-- Panel Header - Click to expand/collapse --}}
-    <div class="wh40k-panel-header wh40k-panel-header--clickable sheet-control__hide-control"
+    <div class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-p-2 tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-transition-all tw-duration-200 tw-w-full tw-box-border tw-cursor-pointer sheet-control__hide-control"
          data-toggle="corruption_details"
          title="Click to {{#if (isExpanded 'corruption_details' actor)}}collapse{{else}}expand{{/if}}">
-        <span class="wh40k-panel-title">
-            <i class="fas fa-skull"></i> Corruption
+        <span class="wh40k-panel-title tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-text-dark)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">
+            <i class="fas fa-skull tw-text-[var(--panel-accent,var(--wh40k-accent-gold))] tw-flex-shrink-0"></i> Corruption
         </span>
         
         {{!-- Dynamic Purity Seal Badge --}}
-        <div class="wh40k-corruption-header-status">
-            <div class="wh40k-corruption-badge {{corruptionDegreeClass system.corruption}}"
+        <div class="wh40k-corruption-header-status tw-ml-auto">
+            <div class="wh40k-corruption-badge {{corruptionDegreeClass system.corruption}} tw-flex tw-items-center tw-gap-1 tw-bg-[rgba(0,0,0,0.2)] tw-px-2 tw-py-1 tw-rounded-md"
                  title="{{corruptionDegree system.corruption}} - {{corruptionModifier system.corruption}} to tests">
-                <i class="fas fa-certificate wh40k-badge-icon"></i>
-                <span class="wh40k-badge-label">{{corruptionDegree system.corruption}}</span>
+                <i class="fas fa-certificate wh40k-badge-icon tw-text-gold"></i>
+                <span class="wh40k-badge-label tw-text-xs tw-font-bold tw-uppercase">{{corruptionDegree system.corruption}}</span>
             </div>
         </div>
         
@@ -22,14 +22,14 @@
     </div>
 
     {{!-- Panel Body --}}
-    <div class="wh40k-panel-body">
+    <div class="wh40k-panel-body tw-p-4 tw-bg-[var(--wh40k-panel-body-bg)]">
 
         {{!-- Main Display --}}
         <div class="wh40k-corruption-display">
 
             {{!-- Current Value & Modifier --}}
-            <div class="wh40k-corruption-header">
-                <div class="wh40k-corruption-value">
+            <div class="wh40k-corruption-header tw-flex tw-items-center tw-justify-between tw-mb-2">
+                <div class="wh40k-corruption-value tw-flex tw-items-center tw-gap-2">
                     <button type="button"
                             class="wh40k-corruption-btn wh40k-corruption-minus"
                             data-action="decrement"
@@ -39,9 +39,9 @@
                         <i class="fas fa-minus"></i>
                     </button>
 
-                    <div class="wh40k-corruption-number">
-                        <span class="wh40k-corruption-current">{{system.corruption}}</span>
-                        <span class="wh40k-corruption-max">/ 100</span>
+                    <div class="wh40k-corruption-number tw-flex tw-items-baseline tw-gap-1">
+                        <span class="wh40k-corruption-current tw-text-xl tw-font-bold">{{system.corruption}}</span>
+                        <span class="wh40k-corruption-max tw-text-sm tw-text-gray-500">/ 100</span>
                     </div>
 
                     <button type="button"
@@ -54,16 +54,16 @@
                     </button>
                 </div>
 
-                <div class="wh40k-corruption-modifier">
+                <div class="wh40k-corruption-modifier tw-text-sm tw-font-medium">
                     <span class="wh40k-modifier-label">Modifier:</span>
-                    <span class="wh40k-modifier-value">{{corruptionModifier system.corruption}}</span>
+                    <span class="wh40k-modifier-value tw-text-gold">{{corruptionModifier system.corruption}}</span>
                 </div>
             </div>
 
             {{!-- Progress Bar with Threshold Markers --}}
-            <div class="wh40k-corruption-bar-container">
+            <div class="wh40k-corruption-bar-container tw-relative tw-h-4 tw-bg-[rgba(0,0,0,0.3)] tw-rounded-md tw-overflow-hidden tw-mb-2">
                 <div class="wh40k-corruption-bar">
-                    <div class="wh40k-corruption-bar-fill" style="width: {{system.corruption}}%"></div>
+                    <div class="wh40k-corruption-bar-fill tw-h-full tw-bg-gradient-to-r tw-from-green-700 tw-to-crimson-dark" style="width: {{system.corruption}}%"></div>
 
                     {{!-- Threshold Markers --}}
                     <div class="wh40k-threshold-marker" style="left: 30%;" title="TAINTED → SOILED (30)">
@@ -83,17 +83,17 @@
 
             {{!-- Warning Messages at Thresholds --}}
             {{#if (eq system.corruption 100)}}
-            <div class="wh40k-corruption-alert wh40k-alert-damned">
+            <div class="wh40k-corruption-alert wh40k-alert-damned tw-text-crimson tw-flex tw-items-center tw-gap-2">
                 <i class="fas fa-fire-alt"></i>
                 <span>DAMNED - Soul Lost to Chaos!</span>
             </div>
             {{else if (gte system.corruption 90)}}
-            <div class="wh40k-corruption-alert wh40k-alert-profane">
+            <div class="wh40k-corruption-alert wh40k-alert-profane tw-text-crimson-light tw-flex tw-items-center tw-gap-2">
                 <i class="fas fa-exclamation-triangle"></i>
                 <span>PROFANE - On the Edge of Damnation (-30)</span>
             </div>
             {{else if (gte system.corruption 60)}}
-            <div class="wh40k-corruption-alert wh40k-alert-debased">
+            <div class="wh40k-corruption-alert wh40k-alert-debased tw-text-warning tw-flex tw-items-center tw-gap-2">
                 <i class="fas fa-skull-crossbones"></i>
                 <span>DEBASED - Deeply Corrupted (-20)</span>
             </div>
@@ -103,8 +103,8 @@
 
         {{!-- Malignancies Section (always visible if any exist) --}}
         {{#if (any actor.items "isMalignancy")}}
-        <div class="wh40k-malignancy-preview">
-            <div class="wh40k-malignancy-count">
+        <div class="wh40k-malignancy-preview tw-mt-2 tw-text-sm tw-text-gray-400">
+            <div class="wh40k-malignancy-count tw-flex tw-items-center tw-gap-2">
                 <i class="fas fa-biohazard"></i>
                 <span>{{countType actor.items "isMalignancy"}} Malignancies</span>
             </div>
@@ -112,7 +112,7 @@
         {{/if}}
 
         {{!-- Edit Mode (Expandable) --}}
-        <div class="wh40k-panel-details corruption_details" {{hideIfNot (isExpanded 'corruption_details' actor)}}>
+        <div class="wh40k-panel-details corruption_details tw-mt-2" {{hideIfNot (isExpanded 'corruption_details' actor)}}>
 
             {{!-- Direct Edit Section --}}
             <div class="wh40k-corruption-edit-section">
@@ -120,11 +120,11 @@
                     <i class="fas fa-cog"></i> Edit Corruption
                 </div>
 
-                <div class="wh40k-corruption-edit-field">
-                    <label class="wh40k-edit-label">Corruption Points (0-100)</label>
+                <div class="wh40k-corruption-edit-field tw-mt-1">
+                    <label class="wh40k-edit-label tw-text-xs tw-text-gray-400">Corruption Points (0-100)</label>
                     <input type="number"
                            data-dtype="Number"
-                           class="wh40k-edit-input"
+                           class="wh40k-edit-input tw-w-full tw-p-1 tw-rounded"
                            name="system.corruption"
                            value="{{source.corruption}}"
                            min="0"
@@ -133,9 +133,9 @@
                 </div>
 
                 {{!-- Quick Adjust Buttons --}}
-                <div class="wh40k-corruption-quick-set">
+                <div class="wh40k-corruption-quick-set tw-flex tw-gap-1 tw-mt-2">
                     <button type="button" 
-                            class="wh40k-quick-adjust-btn" 
+                            class="wh40k-quick-adjust-btn tw-px-2 tw-py-1 tw-bg-gray-700 tw-rounded" 
                             data-action="adjustStat" 
                             data-field="system.corruption" 
                             data-delta="-5"
@@ -144,7 +144,7 @@
                         -5
                     </button>
                     <button type="button" 
-                            class="wh40k-quick-adjust-btn" 
+                            class="wh40k-quick-adjust-btn tw-px-2 tw-py-1 tw-bg-gray-700 tw-rounded" 
                             data-action="adjustStat" 
                             data-field="system.corruption" 
                             data-delta="-1"
@@ -153,7 +153,7 @@
                         -1
                     </button>
                     <button type="button" 
-                            class="wh40k-quick-adjust-btn" 
+                            class="wh40k-quick-adjust-btn tw-px-2 tw-py-1 tw-bg-gray-700 tw-rounded" 
                             data-action="adjustStat" 
                             data-field="system.corruption" 
                             data-delta="1"
@@ -162,7 +162,7 @@
                         +1
                     </button>
                     <button type="button" 
-                            class="wh40k-quick-adjust-btn" 
+                            class="wh40k-quick-adjust-btn tw-px-2 tw-py-1 tw-bg-gray-700 tw-rounded" 
                             data-action="adjustStat" 
                             data-field="system.corruption" 
                             data-delta="5"
@@ -174,16 +174,16 @@
             </div>
 
             {{!-- Malignancies List --}}
-            <div class="wh40k-corruption-edit-section">
+            <div class="wh40k-corruption-edit-section tw-mt-4">
                 <div class="wh40k-corruption-edit-header">
                     <i class="fas fa-biohazard"></i> Malignancies
                 </div>
 
                 {{#if (any actor.items "isMalignancy")}}
-                <div class="wh40k-malignancy-list">
+                <div class="wh40k-malignancy-list tw-space-y-1 tw-mt-1">
                     {{#each actor.items as |item|}}
                         {{#if item.isMalignancy}}
-                        <div class="wh40k-malignancy-card">
+                        <div class="wh40k-malignancy-card tw-flex tw-justify-between tw-bg-[rgba(0,0,0,0.2)] tw-p-1 tw-rounded">
                             <button type="button"
                                     class="wh40k-malignancy-name item-edit"
                                     data-item-id="{{item.id}}"
@@ -204,11 +204,11 @@
                 {{/if}}
                 
                 {{!-- Drop Zone (always visible) --}}
-                <div class="wh40k-dropzone {{#unless (any actor.items "isMalignancy")}}wh40k-dropzone-empty{{/unless}}" 
+                <div class="wh40k-dropzone {{#unless (any actor.items "isMalignancy")}}wh40k-dropzone-empty{{/unless}} tw-mt-2 tw-border tw-border-dashed tw-border-gray-600 tw-p-2 tw-text-center tw-rounded" 
                      data-action="itemCreate"
                      data-type="malignancy">
                     <i class="fas fa-shield-alt wh40k-dropzone-icon"></i>
-                    <span class="wh40k-dropzone-text">
+                    <span class="wh40k-dropzone-text tw-text-xs">
                         {{#if (any actor.items "isMalignancy")}}
                             Drop Malignancies Here or Click to Create
                         {{else}}
@@ -219,12 +219,12 @@
             </div>
 
             {{!-- Info Section --}}
-            <div class="wh40k-corruption-edit-section">
-                <div class="wh40k-corruption-info-box">
-                    <i class="fas fa-book-dead"></i>
-                    <div class="wh40k-info-content">
+            <div class="wh40k-corruption-edit-section tw-mt-4">
+                <div class="wh40k-corruption-info-box tw-bg-[rgba(0,0,0,0.2)] tw-p-3 tw-rounded">
+                    <i class="fas fa-book-dead tw-text-crimson"></i>
+                    <div class="wh40k-info-content tw-text-xs tw-space-y-1 tw-mt-1">
                         <strong>Corruption Degrees</strong>
-                        <ul class="wh40k-degree-list">
+                        <ul class="wh40k-degree-list tw-list-none tw-pl-0">
                             <li><span class="wh40k-degree-name">PURE (0):</span> Untainted by Chaos - No penalty</li>
                             <li><span class="wh40k-degree-name">TAINTED (1-30):</span> Minor exposure - No penalty</li>
                             <li><span class="wh40k-degree-name">SOILED (31-60):</span> Visibly corrupted - <strong>-10</strong> to checks</li>
@@ -232,7 +232,7 @@
                             <li><span class="wh40k-degree-name">PROFANE (91-99):</span> On the edge - <strong>-30</strong> to checks</li>
                             <li><span class="wh40k-degree-name wh40k-degree-damned">DAMNED (100):</span> Soul lost to Chaos - <strong>NPC only</strong></li>
                         </ul>
-                        <p class="wh40k-corruption-warning"><i class="fas fa-skull"></i> Malignancies are physical and mental manifestations of Chaos corruption.</p>
+                        <p class="wh40k-corruption-warning tw-text-gray-400 tw-italic"><i class="fas fa-skull"></i> Malignancies are physical and mental manifestations of Chaos corruption.</p>
                     </div>
                 </div>
             </div>

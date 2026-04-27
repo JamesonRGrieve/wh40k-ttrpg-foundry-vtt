@@ -1,22 +1,22 @@
 {{!-- Redesigned Wounds Panel - Modern, Interactive, Player-Friendly --}}
-<div class="wh40k-panel wh40k-wounds-panel-v2 {{#if (eq system.wounds.value 0)}}wh40k-wounds-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}wh40k-wounds-warning{{/if}}">
+<div class="wh40k-panel tw-rounded-lg tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-overflow-hidden tw-relative tw-mb-4 tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)] {{#if (eq system.wounds.value 0)}}wh40k-wounds-critical{{else if (lt (percent system.wounds.value system.wounds.max) 25)}}wh40k-wounds-warning{{/if}}">
 
     {{!-- Panel Header - Click to expand/collapse --}}
-    <div class="wh40k-panel-header wh40k-panel-header--clickable sheet-control__hide-control"
+    <div class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-p-2 tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-transition-all tw-duration-200 tw-w-full tw-box-border tw-cursor-pointer sheet-control__hide-control"
          data-toggle="wounds_details"
          title="Click to {{#if (isExpanded 'wounds_details' actor)}}collapse{{else}}expand{{/if}}">
-        <span class="wh40k-panel-title">
-            <i class="fas fa-heart-broken"></i> Wounds
+        <span class="wh40k-panel-title tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-text-dark)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">
+            <i class="fas fa-heart-broken tw-text-[var(--panel-accent,var(--wh40k-accent-gold))] tw-flex-shrink-0"></i> Wounds
         </span>
         <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'wounds_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
     </div>
 
     {{!-- Panel Body --}}
-    <div class="wh40k-panel-body">
+    <div class="wh40k-panel-body tw-p-4 tw-bg-[var(--wh40k-panel-body-bg)]">
 
         {{!-- Main Display: Current/Max with Quick Controls --}}
         <div class="wh40k-wounds-display">
-            <div class="wh40k-wounds-tracker">
+            <div class="wh40k-wounds-tracker tw-flex tw-items-center tw-justify-between">
                 <button type="button"
                         class="wh40k-wounds-btn wh40k-wounds-minus"
                         data-action="decrement"
@@ -26,7 +26,7 @@
                     <i class="fas fa-minus"></i>
                 </button>
 
-                <div class="wh40k-wounds-value">
+                <div class="wh40k-wounds-value tw-flex tw-items-center tw-gap-1">
                     <span class="wh40k-wounds-current">{{system.wounds.value}}</span>
                     <span class="wh40k-wounds-sep">/</span>
                     <span class="wh40k-wounds-max">{{system.wounds.max}}</span>

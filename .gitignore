@@ -56,3 +56,5 @@ stories/**/*.js.map
 
 ## Worktrees and harness state
 .claude/
+.aider.chat.history.md
+.aider.input.history

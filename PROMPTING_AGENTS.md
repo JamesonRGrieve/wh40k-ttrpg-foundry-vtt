@@ -14,6 +14,8 @@ This means three things:
 
 If an agent leaves the worktree (touches `main`, deletes another agent's files, edits the monolith CSS or other shared state), kill it and re-scope. The orchestrator merges by reading manifests + diffs, never by re-running the agent's narrative.
 
+Any failure detected during the audit step belongs back in this document. When a reviewer finds a recurring prompt failure mode in the diff — missing behavior hooks, dropped labels, out-of-scope edits, false "ported" claims, or similar — add a short note here so the next brief can prevent it instead of relearning it.
+
 ## Model registry
 
 Each entry: invocation, auth scope, observed strengths, observed failure modes, when to use.
@@ -126,6 +128,7 @@ Failure modes and responses:
 
 - **Worktree dirty after run, no manifest, no useful diff** — agent went off the rails. Discard the worktree, re-scope tighter, retry.
 - **Manifest claims success but `pnpm check` fails** — recipe was wrong. Fix the recipe in the brief; re-run.
+- **Audit finds a regression even though the diff is in scope** — capture the exact failure mode in this document and tighten future briefs to forbid it explicitly before re-running.
 - **Agent claims "skipped because entangled"** — verify by reading the templates. If genuinely entangled, leave; if not, the brief was missing context the agent needed.
 - **Agent edited a file outside scope** — the brief's DO NOT section was incomplete. Discard the worktree, expand the blacklist explicitly, retry.
 
