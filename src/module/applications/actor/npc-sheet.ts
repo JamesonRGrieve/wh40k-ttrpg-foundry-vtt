@@ -105,82 +105,30 @@ export default class NPCSheet extends (CharacterSheet as any) {
     /* -------------------------------------------- */
 
     /**
-     * PARTS for the NPC sheet.
-     * NPCs reuse the full PC template set (templates/actor/player/*.hbs) — same
-     * header, same tab nav, same panels — and diverge only via {{#if isNPC}}
-     * branches inside those templates for widgets that read PC-only fields
-     * (Fate, Fatigue, Lift/Push, XP, Origin Path, Influence/Requisition/Gelt).
-     * A sixth "npc" part under templates/actor/npc/ holds every NPC-unique
-     * panel (horde, barter, tags, combat tracker, GM tools, etc.).
+     * PARTS for the NPC sheet — inherits the PC sidebar layout (header + tabs
+     * containers, body parts) from CharacterSheet, drops the PC-only Overview
+     * and Powers tabs, and adds an "npc" tab under templates/actor/npc/ for
+     * NPC-unique panels (horde, barter, tags, combat tracker, GM tools, etc.).
+     * The sidebar accent colour is overridden via --wh40k-sidebar-accent in
+     * _npc-sheet.css so NPCs read --npc-accent-primary while PCs keep gold.
      * @override
      */
-    static PARTS = {
-        header: {
-            template: 'systems/wh40k-rpg/templates/actor/player/header.hbs',
-            container: {
-                classes: [
-                    'wh40k-sidebar',
-                    'tw-flex',
-                    'tw-flex-col',
-                    'tw-h-full',
-                    'tw-min-h-0',
-                    'tw-min-w-0',
-                    'tw-overflow-y-auto',
-                    'tw-overflow-x-hidden',
-                    'tw-bg-[var(--color-bg-secondary,#252525)]',
-                    'tw-border-r-2',
-                    'tw-border-solid',
-                    'tw-border-[var(--npc-accent-primary)]',
-                ],
-                id: 'sidebar',
+    static PARTS = (() => {
+        const parent = (CharacterSheet as any).PARTS;
+        return {
+            header: parent.header,
+            tabs: parent.tabs,
+            skills: parent.skills,
+            combat: parent.combat,
+            equipment: parent.equipment,
+            biography: parent.biography,
+            npc: {
+                template: 'systems/wh40k-rpg/templates/actor/npc/tab-npc.hbs',
+                container: { classes: ['wh40k-body'], id: 'tab-body' },
+                scrollable: [''],
             },
-        },
-        tabs: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
-            container: {
-                classes: [
-                    'wh40k-sidebar',
-                    'tw-flex',
-                    'tw-flex-col',
-                    'tw-h-full',
-                    'tw-min-h-0',
-                    'tw-min-w-0',
-                    'tw-overflow-y-auto',
-                    'tw-overflow-x-hidden',
-                    'tw-bg-[var(--color-bg-secondary,#252525)]',
-                    'tw-border-r-2',
-                    'tw-border-solid',
-                    'tw-border-[var(--npc-accent-primary)]',
-                ],
-                id: 'sidebar',
-            },
-        },
-        skills: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tab-skills.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
-        combat: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tab-combat.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
-        equipment: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tab-equipment.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
-        biography: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tab-biography.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
-        npc: {
-            template: 'systems/wh40k-rpg/templates/actor/npc/tab-npc.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
-    };
+        };
+    })();
 
     /* -------------------------------------------- */
 

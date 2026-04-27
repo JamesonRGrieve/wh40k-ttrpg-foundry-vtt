@@ -408,9 +408,7 @@
         "Sheet": {
             "ResetWindowSize": "Reset Window Size",
             "Acolyte": "Character Sheet",
-            "AcolyteSidebar": "Character Sheet (Sidebar)",
             "PlayerCharacter": "Player Character Sheet",
-            "PlayerCharacterSidebar": "Player Character Sheet (Sidebar)",
             "NPC": "NPC Sheet",
             "Vehicle": "Vehicle Sheet",
             "Starship": "Starship Sheet",

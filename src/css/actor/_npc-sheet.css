@@ -1,20 +1,13 @@
 /* ============================================ */
-/* NPC Sheet V2 Styles - Modern Redesign */
+/* Player Sheet (PC + NPC) — Sidebar Layout Foundation */
 /* ============================================ */
-/* Vertical navigation, GM-focused, clean layout */
+/* Both PC and NPC sheets render with portrait + nav in a left sidebar
+ * and tab content on the right. Form grid + window-content flex live
+ * here because those elements aren't reachable from Tailwind utilities
+ * on PARTS containers. NPC-specific accent vars and panels are nested
+ * under `.wh40k-rpg.sheet.actor.player.npc` below. */
 
-/* ============================================ */
-/* Base Sheet Structure - Sidebar Layout */
-/* ============================================ */
-
-.wh40k-rpg.sheet.actor.player.npc {
-    --npc-accent-combat: #dc3545;
-    --npc-accent-defense: #2196f3;
-    --npc-accent-movement: #4caf50;
-    --npc-accent-skills: #9c27b0;
-    --npc-accent-abilities: #ff9800;
-    --npc-accent-notes: #607d8b;
-
+.wh40k-rpg.sheet.actor.player {
     /* ApplicationV2 Layout Foundation */
     .window-content {
         display: flex !important;
@@ -36,13 +29,27 @@
         width: 100% !important;
     }
 
-    /* Sidebar + nav + header styling lives in Tailwind utilities on
-     * their templates / PARTS container classes. Form grid stays here
-     * because the form element itself isn't reachable from Tailwind. */
-
     .wh40k-navigation .wh40k-nav-item {
         margin: 0;
     }
+}
+
+/* ============================================ */
+/* NPC Sheet V2 Styles - Modern Redesign */
+/* ============================================ */
+/* Vertical navigation, GM-focused, clean layout */
+
+.wh40k-rpg.sheet.actor.player.npc {
+    --npc-accent-combat: #dc3545;
+    --npc-accent-defense: #2196f3;
+    --npc-accent-movement: #4caf50;
+    --npc-accent-skills: #9c27b0;
+    --npc-accent-abilities: #ff9800;
+    --npc-accent-notes: #607d8b;
+
+    /* Override the player sidebar accent colour so NPC sidebars use the
+     * NPC palette while PC sheets keep the gold default. */
+    --wh40k-sidebar-accent: var(--npc-accent-primary);
 
     /* Main content area (tabs) */
     .wh40k-body {
