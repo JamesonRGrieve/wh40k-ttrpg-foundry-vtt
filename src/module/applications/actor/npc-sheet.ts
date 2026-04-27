@@ -6,7 +6,7 @@
  * (horde, barter/transactions, tags, combat tracker, faction, GM tools, stat-block I/O).
  */
 
-import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
+import type { WH40KNPC } from '../../documents/npc.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
@@ -22,8 +22,8 @@ import CharacterSheet from './character-sheet.ts';
  * @extends {CharacterSheet}
  */
 export default class NPCSheet extends (CharacterSheet as any) {
-    declare actor: WH40KNPCV2;
-    declare document: WH40KNPCV2;
+    declare actor: WH40KNPC;
+    declare document: WH40KNPC;
     declare element: HTMLElement;
     declare position: { top: number; left: number; width: number; height: number };
     declare isEditable: boolean;
