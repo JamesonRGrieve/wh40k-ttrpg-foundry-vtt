@@ -57,11 +57,8 @@ export default class ShipComponentSheet extends BaseItemSheet {
         context.conditions = this._getConditionChoices();
 
         // Add display helpers
-        // @ts-expect-error - dynamic property access
         context.isGenerator = context.system.power?.generated > 0;
-        // @ts-expect-error - dynamic property access
         context.isPowerConsumer = context.system.power?.used > 0;
-        // @ts-expect-error - dynamic property access
         context.hasModifiers = context.system.hasModifiers;
 
         return context;

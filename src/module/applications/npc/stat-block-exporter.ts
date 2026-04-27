@@ -313,7 +313,12 @@ export default class StatBlockExporter extends HandlebarsApplicationMixin(Applic
             textContent,
             jsonContent,
             buttons: [
-                { action: 'copyToClipboard', icon: 'fa-solid fa-clipboard', label: 'WH40K.NPC.Export.CopyToClipboard', cssClass: 'primary' },
+                {
+                    action: 'copyToClipboard',
+                    icon: 'fa-solid fa-clipboard',
+                    label: 'WH40K.NPC.Export.CopyToClipboard',
+                    cssClass: 'tw-bg-[var(--wh40k-color-gold)] tw-text-white hover:tw-bg-[#9e801f]',
+                },
                 { action: 'exportText', icon: 'fa-solid fa-file-lines', label: 'WH40K.NPC.Export.DownloadText' },
                 { action: 'exportJson', icon: 'fa-solid fa-file-code', label: 'WH40K.NPC.Export.DownloadJSON' },
                 { action: 'close', icon: 'fa-solid fa-times', label: 'Close' },

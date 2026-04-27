@@ -68,7 +68,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-weapon-sheet-modern.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-weapon-sheet.hbs',
             scrollable: ['.wh40k-weapon-body'],
         },
     };
