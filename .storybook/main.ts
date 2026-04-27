@@ -5,7 +5,15 @@ import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
 
 const config: StorybookConfig = {
-    stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(js|ts)'],
+    // Discover stories from both the top-level `stories/` directory (the
+    // historical convention) and co-located `*.stories.ts` siblings under
+    // `src/module/applications/` (the symmetry-coverage convention — every
+    // sheet/dialog gets a sibling story so renames keep them in lock-step).
+    stories: [
+        '../stories/**/*.mdx',
+        '../stories/**/*.stories.@(js|ts)',
+        '../src/module/**/*.stories.@(js|ts)',
+    ],
     // Mirror Foundry's deployed asset roots: anything Foundry serves at /, /icons, /ui,
     // /fonts, /scripts, /lang, etc. resolves to the pulled .foundry-release/public/ tree
     // so direct asset URLs in templates (e.g. <img src="/icons/svg/...">) work in stories.
