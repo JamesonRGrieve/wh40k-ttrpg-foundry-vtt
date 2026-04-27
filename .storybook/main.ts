@@ -7,6 +7,11 @@ import autoprefixer from 'autoprefixer';
 
 const config: StorybookConfig = {
     stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(js|ts)'],
+    // Mirror Foundry's deployed asset roots: anything Foundry serves at /, /icons, /ui,
+    // /fonts, /scripts, /lang, etc. resolves to the pulled .foundry-release/public/ tree
+    // so direct asset URLs in templates (e.g. <img src="/icons/svg/...">) work in stories.
+    // Run pull-foundry.sh first to populate this tree.
+    staticDirs: [{ from: '../.foundry-release/public', to: '/' }],
     framework: {
         name: '@storybook/html-vite',
         options: {},
