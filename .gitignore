@@ -50,5 +50,9 @@ playwright-report/
 .css-coverage.json
 .ts-coverage.json
 
+## Stray TypeScript transpile output (source-of-truth is the .ts files)
+stories/**/*.js
+stories/**/*.js.map
+
 ## Worktrees and harness state
 .claude/
