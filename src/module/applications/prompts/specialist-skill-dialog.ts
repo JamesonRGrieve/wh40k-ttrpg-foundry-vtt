@@ -182,7 +182,7 @@ export default class SpecialistSkillDialog extends ApplicationV2Mixin(Applicatio
             specSelect.appendChild(option);
         }
 
-        specGroup.style.display = specializations.length ? '' : 'none';
+        specGroup.classList.toggle('tw-hidden', specializations.length === 0);
     }
 
     /* -------------------------------------------- */

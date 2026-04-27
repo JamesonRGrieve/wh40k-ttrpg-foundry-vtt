@@ -1,28 +1,28 @@
 {{! Unified Roll Dialog: Force Field Panel }}
 {{#if forceField}}
-    <div class="urd-panel__field">
-        <span class="urd-panel__label">Force Field</span>
-        <span class="urd-panel__value">{{forceField.name}}</span>
+    <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
+        <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Force Field</span>
+        <span class="tw-text-base tw-font-semibold tw-text-gold-raw">{{forceField.name}}</span>
     </div>
     {{#if protectionRating}}
-        <div class="urd-panel__field">
-            <span class="urd-panel__label">Protection Rating</span>
-            <span class="urd-panel__value">{{protectionRating}}</span>
+        <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
+            <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Protection Rating</span>
+            <span class="tw-text-base tw-font-semibold tw-text-gold-raw">{{protectionRating}}</span>
         </div>
     {{/if}}
     {{#if forceField.system.activated}}
-        <div class="urd-panel__status urd-panel__status--active">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-py-2 tw-px-3 tw-rounded-md tw-text-sm tw-font-semibold tw-mt-2 tw-bg-[rgba(74,222,128,0.1)] tw-text-[#4ade80] tw-border tw-border-[rgba(74,222,128,0.3)]">
             <i class="fas fa-check-circle"></i>
             Activated
         </div>
     {{else}}
-        <div class="urd-panel__status urd-panel__status--inactive">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-py-2 tw-px-3 tw-rounded-md tw-text-sm tw-font-semibold tw-mt-2 tw-bg-[rgba(248,113,113,0.1)] tw-text-[#f87171] tw-border tw-border-[rgba(248,113,113,0.3)]">
             <i class="fas fa-times-circle"></i>
             Not Activated
         </div>
     {{/if}}
     {{#if forceField.system.overloaded}}
-        <div class="urd-panel__status urd-panel__status--warning">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-py-2 tw-px-3 tw-rounded-md tw-text-sm tw-font-semibold tw-mt-2 tw-bg-[rgba(251,191,36,0.1)] tw-text-[#fbbf24] tw-border tw-border-[rgba(251,191,36,0.3)]">
             <i class="fas fa-exclamation-triangle"></i>
             Overloaded
         </div>

@@ -1,7 +1,7 @@
 {{!-- Rogue Trader Roll Card - Modern Design --}}
 {{#with rollData}}
-<div class="wh40k-chat">
-    <div class="wh40k-roll-card">
+<div class="wh40k-chat tw-font-ui">
+    <div class="wh40k-roll-card tw-relative tw-overflow-hidden tw-rounded-md">
         {{!-- Header --}}
         <div class="wh40k-roll-card__header">
             <div class="wh40k-roll-card__actor">{{sheetName}}</div>
@@ -67,8 +67,8 @@
 
         {{!-- Hidden dice data for Foundry --}}
         {{#unless isManualRoll}}
-        <div class="wh40k-roll-card__dice">
-            <div class="dice-roll-render">{{{render}}}</div>
+        <div class="wh40k-roll-card__dice tw-hidden">
+            <div class="tw-hidden">{{{render}}}</div>
         </div>
         {{/unless}}
     </div>

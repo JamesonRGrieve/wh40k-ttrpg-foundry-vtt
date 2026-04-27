@@ -1,44 +1,44 @@
 {{!-- Roll Configuration Dialog Template --}}
-<div class="roll-config-dialog">
+<div class="tw-p-4 tw-bg-gradient-to-b tw-from-[#1a1a24] tw-to-[#0d0d12] tw-text-[#e8e4d9] tw-font-ui">
     {{!-- Header with actor info --}}
     {{#if actor}}
-    <header class="roll-config-header">
-        <img class="roll-config-portrait" src="{{actorImg}}" alt="{{actorName}}" />
-        <div class="roll-config-info">
-            <h3 class="roll-config-name">{{rollName}}</h3>
-            <span class="roll-config-actor">{{actorName}}</span>
+    <header class="tw-flex tw-items-center tw-gap-3 tw-pb-3 tw-mb-4 tw-border-b tw-border-solid tw-border-[rgba(201,162,39,0.3)]">
+        <img class="tw-w-12 tw-h-12 tw-rounded-full tw-border-2 tw-border-solid tw-border-gold tw-object-cover tw-shadow-md" src="{{actorImg}}" alt="{{actorName}}" />
+        <div class="tw-flex-1">
+            <h3 class="tw-font-display tw-text-lg tw-font-semibold tw-text-gold tw-m-0 tw-uppercase tw-tracking-[0.05em]">{{rollName}}</h3>
+            <span class="tw-text-[0.85rem] tw-text-[#9a9a8a]">{{actorName}}</span>
         </div>
     </header>
     {{else}}
-    <header class="roll-config-header roll-config-header--simple">
-        <h3 class="roll-config-name">{{rollName}}</h3>
+    <header class="tw-flex tw-items-center tw-justify-center tw-gap-3 tw-pb-3 tw-mb-4 tw-border-b tw-border-solid tw-border-[rgba(201,162,39,0.3)]">
+        <h3 class="tw-font-display tw-text-lg tw-font-semibold tw-text-gold tw-m-0 tw-uppercase tw-tracking-[0.05em]">{{rollName}}</h3>
     </header>
     {{/if}}
 
     {{!-- Target Display --}}
-    <div class="roll-config-target">
-        <div class="roll-config-target-row">
-            <span class="roll-config-label">{{localize "WH40K.Roll.BaseTarget"}}</span>
-            <span class="roll-config-value">{{baseTarget}}</span>
+    <div class="tw-bg-black/30 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.2)] tw-rounded-md tw-p-3 tw-mb-4">
+        <div class="tw-flex tw-justify-between tw-items-center tw-py-1">
+            <span class="tw-text-[#9a9a8a] tw-font-medium">{{localize "WH40K.Roll.BaseTarget"}}</span>
+            <span class="tw-font-semibold tw-text-[#e8e4d9]">{{baseTarget}}</span>
         </div>
         {{#if (ne totalModifier 0)}}
-        <div class="roll-config-target-row roll-config-target-row--modifier {{#if (gt totalModifier 0)}}positive{{else}}negative{{/if}}">
-            <span class="roll-config-label">{{localize "WH40K.Roll.Modifier"}}</span>
-            <span class="roll-config-value">{{#if (gt totalModifier 0)}}+{{/if}}{{totalModifier}}</span>
+        <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem]">
+            <span class="tw-text-[#9a9a8a] tw-font-medium">{{localize "WH40K.Roll.Modifier"}}</span>
+            <span class="tw-font-semibold {{#if (gt totalModifier 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">{{#if (gt totalModifier 0)}}+{{/if}}{{totalModifier}}</span>
         </div>
         {{/if}}
-        <div class="roll-config-target-row roll-config-target-row--final">
-            <span class="roll-config-label">{{localize "WH40K.Roll.FinalTarget"}}</span>
-            <span class="roll-config-value roll-config-value--large">{{finalTarget}}</span>
+        <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-mt-2 tw-pt-2 tw-border-t tw-border-solid tw-border-[rgba(201,162,39,0.2)]">
+            <span class="tw-text-[#9a9a8a] tw-font-medium">{{localize "WH40K.Roll.FinalTarget"}}</span>
+            <span class="tw-text-xl tw-font-semibold tw-text-gold tw-[text-shadow:0_0_10px_rgba(201,162,39,0.3)]">{{finalTarget}}</span>
         </div>
     </div>
 
     {{!-- Difficulty Selection --}}
-    <div class="form-group">
+    <div class="tw-mb-3 [&>label]:tw-block [&>label]:tw-text-xs [&>label]:tw-font-semibold [&>label]:tw-text-gold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em] [&>label]:tw-mb-1">
         <label>{{localize "WH40K.Roll.Difficulty"}}</label>
-        <select name="difficulty" class="roll-config-select">
+        <select name="difficulty" class="tw-w-full tw-px-3 tw-py-2 tw-bg-black/40 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] focus:tw-outline-none focus:tw-border-gold focus:tw-shadow-[0_0_8px_rgba(201,162,39,0.3)]">
             {{#each difficulties}}
-            <option value="{{this.key}}" {{#if this.selected}}selected{{/if}}>
+            <option value="{{this.key}}" {{#if this.selected}}selected{{/if}} class="tw-bg-[#1a1a24] tw-text-[#e8e4d9]">
                 {{this.label}} ({{#if (gt this.value 0)}}+{{/if}}{{this.value}})
             </option>
             {{/each}}
@@ -47,29 +47,29 @@
 
     {{!-- Situational Modifiers --}}
     {{#if hasSituationalModifiers}}
-    <div class="form-group roll-config-situational">
+    <div class="tw-mb-3 [&>label]:tw-block [&>label]:tw-text-xs [&>label]:tw-font-semibold [&>label]:tw-text-gold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em] [&>label]:tw-mb-2">
         <label>{{localize "WH40K.Roll.SituationalModifiers"}}</label>
-        <div class="roll-config-situational-list">
+        <div class="tw-flex tw-flex-col tw-gap-1.5">
             {{#each situationalModifiers}}
-            <button type="button" 
-                    class="roll-config-situational-item {{#if this.active}}active{{/if}}"
+            <button type="button"
+                    class="tw-flex tw-items-center tw-gap-2.5 tw-p-2.5 tw-bg-black/30 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.2)] tw-rounded-md tw-text-[#9a9a8a] tw-cursor-pointer tw-transition-all tw-text-left tw-text-[0.85rem] hover:tw-bg-[rgba(201,162,39,0.1)] hover:tw-border-[rgba(201,162,39,0.4)] hover:[&>i]:tw-text-gold [&>i]:tw-text-[14px] [&>i]:tw-text-[#6a6a5a] [&>i]:tw-w-[18px] [&>i]:tw-text-center [&>i]:tw-shrink-0 [&>i]:tw-transition-colors {{#if this.active}}!tw-bg-gradient-to-br !tw-from-[rgba(201,162,39,0.25)] !tw-to-[rgba(201,162,39,0.15)] !tw-border-gold tw-shadow-[0_0_8px_rgba(201,162,39,0.2)] [&>i]:!tw-text-gold [&>.situational-source]:!tw-text-[#e8e4d9]{{/if}}"
                     data-action="toggleSituational"
                     data-modifier-id="{{this.id}}"
                     title="{{this.condition}}">
                 <i class="{{this.icon}}"></i>
-                <span class="situational-source">{{this.source}}</span>
-                <span class="situational-value {{#if (gt this.value 0)}}positive{{else}}negative{{/if}}">
+                <span class="situational-source tw-flex-1 tw-font-medium tw-text-[#b8b8a8] tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">{{this.source}}</span>
+                <span class="tw-font-bold tw-text-[0.9rem] tw-px-2 tw-py-0.5 tw-rounded-sm tw-bg-black/20 tw-shrink-0 {{#if (gt this.value 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
                     {{this.valueDisplay}}
                 </span>
             </button>
             {{/each}}
         </div>
         {{#if (gt situationalModifierTotal 0)}}
-        <div class="roll-config-situational-total positive">
+        <div class="tw-mt-2 tw-px-3 tw-py-1.5 tw-text-right tw-text-[0.85rem] tw-font-semibold tw-border-t tw-border-solid tw-border-[rgba(201,162,39,0.15)] tw-text-[#4ade80]">
             {{localize "WH40K.Roll.SituationalTotal"}}: +{{situationalModifierTotal}}
         </div>
         {{else if (lt situationalModifierTotal 0)}}
-        <div class="roll-config-situational-total negative">
+        <div class="tw-mt-2 tw-px-3 tw-py-1.5 tw-text-right tw-text-[0.85rem] tw-font-semibold tw-border-t tw-border-solid tw-border-[rgba(201,162,39,0.15)] tw-text-[#f87171]">
             {{localize "WH40K.Roll.SituationalTotal"}}: {{situationalModifierTotal}}
         </div>
         {{/if}}
@@ -78,14 +78,14 @@
 
     {{!-- Permanent Modifiers (from items, conditions, talents, traits) --}}
     {{#if hasPermanentModifiers}}
-    <div class="form-group roll-config-permanent">
+    <div class="tw-mt-4 tw-mb-3 [&>label]:tw-block [&>label]:tw-text-xs [&>label]:tw-font-semibold [&>label]:tw-text-gold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em] [&>label]:tw-mb-1">
         <label>{{localize "WH40K.Roll.PermanentModifiers"}}</label>
-        <div class="roll-config-permanent-list">
+        <div class="tw-flex tw-flex-col tw-gap-1.5 tw-mt-2">
             {{#each permanentModifiers}}
-            <div class="roll-config-permanent-item">
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-px-3 tw-py-2 tw-bg-black/20 tw-border-l-[3px] tw-border-l-solid tw-border-l-[rgba(168,85,247,0.5)] tw-rounded-md tw-transition-all hover:tw-bg-black/30 hover:tw-border-l-[rgba(168,85,247,0.8)]">
                 {{#if this.hasSource}}
-                <button type="button" 
-                        class="roll-config-permanent-source"
+                <button type="button"
+                        class="tw-flex-1 tw-flex tw-items-center tw-gap-1.5 tw-bg-transparent tw-border-0 tw-p-0 tw-text-[0.9rem] tw-text-[rgba(232,228,217,0.9)] tw-text-left tw-cursor-pointer tw-transition-colors hover:tw-text-gold [&>i]:tw-opacity-70"
                         data-action="viewModifierSource"
                         data-uuid="{{this.uuid}}"
                         title="{{localize "WH40K.Roll.ClickToView"}}">
@@ -93,27 +93,27 @@
                     <span>{{this.source}}</span>
                 </button>
                 {{else}}
-                <div class="roll-config-permanent-source-static">
+                <div class="tw-flex-1 tw-flex tw-items-center tw-gap-1.5 tw-text-[0.9rem] tw-text-[rgba(232,228,217,0.7)] [&>i]:tw-opacity-50">
                     {{#if this.icon}}<i class="{{this.icon}}"></i>{{/if}}
                     <span>{{this.source}}</span>
                 </div>
                 {{/if}}
-                <span class="roll-config-permanent-value {{#if (gt this.value 0)}}positive{{else}}negative{{/if}}">
+                <span class="tw-text-[0.95rem] tw-font-semibold tw-px-2 tw-py-0.5 tw-rounded-xl {{#if (gt this.value 0)}}tw-text-[#4ade80] tw-bg-[rgba(74,222,128,0.1)]{{else}}tw-text-[#f87171] tw-bg-[rgba(248,113,113,0.1)]{{/if}}">
                     {{this.valueDisplay}}
                 </span>
             </div>
             {{/each}}
         </div>
         {{#if (gt permanentModifierTotal 0)}}
-        <div class="roll-config-permanent-total positive">
+        <div class="tw-mt-2 tw-px-3 tw-py-1.5 tw-text-right tw-text-[0.85rem] tw-font-semibold tw-border-t tw-border-solid tw-border-[rgba(168,85,247,0.15)] tw-text-[#4ade80]">
             {{localize "WH40K.Roll.PermanentTotal"}}: +{{permanentModifierTotal}}
         </div>
         {{else if (lt permanentModifierTotal 0)}}
-        <div class="roll-config-permanent-total negative">
+        <div class="tw-mt-2 tw-px-3 tw-py-1.5 tw-text-right tw-text-[0.85rem] tw-font-semibold tw-border-t tw-border-solid tw-border-[rgba(168,85,247,0.15)] tw-text-[#f87171]">
             {{localize "WH40K.Roll.PermanentTotal"}}: {{permanentModifierTotal}}
         </div>
         {{else if (eq permanentModifierTotal 0)}}
-        <div class="roll-config-permanent-total neutral">
+        <div class="tw-mt-2 tw-px-3 tw-py-1.5 tw-text-right tw-text-[0.85rem] tw-font-semibold tw-border-t tw-border-solid tw-border-[rgba(168,85,247,0.15)] tw-text-[rgba(232,228,217,0.7)]">
             {{localize "WH40K.Roll.PermanentTotal"}}: {{permanentModifierTotal}}
         </div>
         {{/if}}
@@ -121,20 +121,21 @@
     {{/if}}
 
     {{!-- Custom Modifier --}}
-    <div class="form-group">
+    <div class="tw-mb-3 [&>label]:tw-block [&>label]:tw-text-xs [&>label]:tw-font-semibold [&>label]:tw-text-gold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em] [&>label]:tw-mb-1">
         <label>{{localize "WH40K.Roll.CustomModifier"}}</label>
-        <div class="roll-config-modifier-input">
-            <input type="number" name="customModifier" value="{{customModifier}}" placeholder="±0" />
-            <span class="roll-config-modifier-hint">{{localize "WH40K.Roll.CustomModifierHint"}}</span>
+        <div class="tw-flex tw-flex-col tw-gap-1">
+            <input type="number" name="customModifier" value="{{customModifier}}" placeholder="±0"
+                   class="tw-w-full tw-px-3 tw-py-2 tw-bg-black/40 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] focus:tw-outline-none focus:tw-border-gold focus:tw-shadow-[0_0_8px_rgba(201,162,39,0.3)]" />
+            <span class="tw-text-[0.75rem] tw-text-[#6a6a5a] tw-italic">{{localize "WH40K.Roll.CustomModifierHint"}}</span>
         </div>
     </div>
 
     {{!-- Roll Mode --}}
-    <div class="form-group">
+    <div class="tw-mb-3 [&>label]:tw-block [&>label]:tw-text-xs [&>label]:tw-font-semibold [&>label]:tw-text-gold [&>label]:tw-uppercase [&>label]:tw-tracking-[0.05em] [&>label]:tw-mb-1">
         <label>{{localize "WH40K.Roll.RollMode"}}</label>
-        <select name="rollMode" class="roll-config-select">
+        <select name="rollMode" class="tw-w-full tw-px-3 tw-py-2 tw-bg-black/40 tw-border tw-border-solid tw-border-[rgba(201,162,39,0.3)] tw-rounded-md tw-text-[#e8e4d9] tw-text-[0.9rem] focus:tw-outline-none focus:tw-border-gold focus:tw-shadow-[0_0_8px_rgba(201,162,39,0.3)]">
             {{#each rollModes}}
-            <option value="{{this.key}}" {{#if this.selected}}selected{{/if}}>
+            <option value="{{this.key}}" {{#if this.selected}}selected{{/if}} class="tw-bg-[#1a1a24] tw-text-[#e8e4d9]">
                 {{this.label}}
             </option>
             {{/each}}
@@ -142,9 +143,11 @@
     </div>
 
     {{!-- Buttons --}}
-    <footer class="roll-config-footer">
+    <footer class="tw-flex tw-gap-2 tw-mt-4 tw-pt-4 tw-border-t tw-border-solid tw-border-[rgba(201,162,39,0.2)]">
         {{#each buttons}}
-        <button type="{{this.type}}" class="roll-config-btn {{this.cssClass}}" {{#if this.action}}data-action="{{this.action}}"{{/if}}>
+        <button type="{{this.type}}"
+                class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-2.5 tw-bg-gradient-to-br tw-from-[rgba(201,162,39,0.2)] tw-to-[rgba(201,162,39,0.1)] tw-border tw-border-solid tw-border-[rgba(201,162,39,0.4)] tw-rounded-md tw-text-gold tw-text-[0.85rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all hover:tw-from-[rgba(201,162,39,0.4)] hover:tw-to-[rgba(201,162,39,0.2)] hover:tw-border-gold hover:tw-shadow-[0_0_12px_rgba(201,162,39,0.3)] [&>i]:tw-text-[14px] {{#if (eq this.cssClass 'primary')}}!tw-bg-gradient-to-br !tw-from-gold !tw-to-[#8b7015] !tw-border-gold !tw-text-[#0d0d12] hover:!tw-from-[#ddb832] hover:!tw-to-[#a08020] hover:tw-shadow-[0_0_16px_rgba(201,162,39,0.5)]{{/if}}"
+                {{#if this.action}}data-action="{{this.action}}"{{/if}}>
             <i class="{{this.icon}}"></i>
             {{localize this.label}}
         </button>

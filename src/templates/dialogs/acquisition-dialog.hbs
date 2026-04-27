@@ -1,22 +1,22 @@
 {{!-- Acquisition Dialog Template --}}
-<div class="acquisition-content tw-flex tw-flex-col tw-gap-4">
-    
+<div class="tw-flex tw-flex-col tw-gap-4">
+
     {{!-- Header: Profit Factor --}}
-    <div class="acquisition-header tw-flex tw-justify-between tw-items-center">
+    <div class="tw-flex tw-justify-between tw-items-center tw-pb-3 tw-border-b-2 tw-border-solid tw-border-bronze [&>h2]:tw-m-0 [&>h2]:tw-text-gold">
         <h2><i class="fas fa-coins"></i> Profit Factor Acquisition</h2>
-        <div class="pf-display">
-            <span class="pf-label">Current PF:</span>
-            <span class="pf-value">{{profitFactor.current}}</span>
+        <div>
+            <span>Current PF:</span>
+            <span class="tw-text-xl tw-font-bold tw-text-gold">{{profitFactor.current}}</span>
         </div>
     </div>
 
     {{!-- Item Being Acquired --}}
     {{#if item}}
-    <div class="acquisition-item tw-flex tw-gap-3 tw-p-3">
-        <img src="{{item.img}}" alt="{{item.name}}" class="item-icon" />
-        <div class="item-details">
-            <div class="item-name">{{item.name}}</div>
-            <div class="item-meta">
+    <div class="tw-flex tw-gap-3 tw-p-3 tw-bg-black/30 tw-border tw-border-solid tw-border-bronze tw-rounded-md">
+        <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-12 tw-h-12 tw-border tw-border-solid tw-border-gold" />
+        <div>
+            <div class="tw-font-bold">{{item.name}}</div>
+            <div>
                 <span>{{item.availability}}</span>
                 <span>{{item.craftsmanship}}</span>
             </div>
@@ -25,33 +25,33 @@
     {{/if}}
 
     {{!-- Base Modifiers --}}
-    <div class="modifiers-section">
+    <div class="[&>h3]:tw-m-0 [&>h3]:tw-mb-2 [&>h3]:tw-text-gold [&>h3]:tw-text-base">
         <h3>Base Modifiers</h3>
-        <div class="modifier-row tw-flex tw-justify-between tw-py-1">
-            <span class="modifier-label">Availability:</span>
-            <span class="modifier-value {{#if (gt availabilityModifier 0)}}positive{{else if (lt availabilityModifier 0)}}negative{{/if}}">
+        <div class="tw-flex tw-justify-between tw-py-1 [&_.positive]:tw-text-[#4caf50] [&_.negative]:tw-text-[#f44336]">
+            <span>Availability:</span>
+            <span class="{{#if (gt availabilityModifier 0)}}positive{{else if (lt availabilityModifier 0)}}negative{{/if}}">
                 {{#if (gt availabilityModifier 0)}}+{{/if}}{{availabilityModifier}}
             </span>
         </div>
-        <div class="modifier-row tw-flex tw-justify-between tw-py-1">
-            <span class="modifier-label">Craftsmanship:</span>
-            <span class="modifier-value {{#if (gt craftsmanshipModifier 0)}}positive{{else if (lt craftsmanshipModifier 0)}}negative{{/if}}">
+        <div class="tw-flex tw-justify-between tw-py-1 [&_.positive]:tw-text-[#4caf50] [&_.negative]:tw-text-[#f44336]">
+            <span>Craftsmanship:</span>
+            <span class="{{#if (gt craftsmanshipModifier 0)}}positive{{else if (lt craftsmanshipModifier 0)}}negative{{/if}}">
                 {{#if (gt craftsmanshipModifier 0)}}+{{/if}}{{craftsmanshipModifier}}
             </span>
         </div>
     </div>
 
     {{!-- Common Modifiers --}}
-    <div class="modifiers-section">
+    <div class="[&>h3]:tw-m-0 [&>h3]:tw-mb-2 [&>h3]:tw-text-gold [&>h3]:tw-text-base">
         <h3>Additional Modifiers</h3>
         {{#each commonModifiers}}
-        <label class="modifier-checkbox tw-flex tw-justify-between tw-py-1">
-            <input type="checkbox" 
-                   data-action="toggleModifier" 
+        <label class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-gap-2 [&_.positive]:tw-text-[#4caf50] [&_.negative]:tw-text-[#f44336]">
+            <input type="checkbox"
+                   data-action="toggleModifier"
                    data-modifier="{{this.key}}"
                    {{#if this.selected}}checked{{/if}} />
-            <span class="modifier-label">{{this.label}}</span>
-            <span class="modifier-value {{#if (gt this.value 0)}}positive{{else}}negative{{/if}}">
+            <span class="tw-flex-1">{{this.label}}</span>
+            <span class="{{#if (gt this.value 0)}}positive{{else}}negative{{/if}}">
                 {{#if (gt this.value 0)}}+{{/if}}{{this.value}}
             </span>
         </label>
@@ -59,50 +59,50 @@
     </div>
 
     {{!-- Custom Modifier --}}
-    <div class="modifiers-section">
-        <label class="custom-modifier">
-            <span class="modifier-label">Custom Modifier:</span>
-            <input type="number" name="customModifier" value="{{customModifier}}" placeholder="±0" />
+    <div>
+        <label class="tw-flex tw-items-center tw-gap-2">
+            <span>Custom Modifier:</span>
+            <input type="number" name="customModifier" value="{{customModifier}}" placeholder="±0" class="tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-border tw-border-solid tw-border-[var(--color-border-light-tertiary)] tw-bg-[var(--color-bg-option)]" />
         </label>
     </div>
 
     {{!-- Summary --}}
-    <div class="acquisition-summary tw-p-3">
-        <div class="summary-row">
+    <div class="tw-p-3 tw-bg-[rgba(212,175,55,0.1)] tw-border-2 tw-border-solid tw-border-gold tw-rounded-md">
+        <div class="tw-flex tw-justify-between">
             <span>Base PF:</span>
             <span>{{profitFactor.current}}</span>
         </div>
-        <div class="summary-row">
+        <div class="tw-flex tw-justify-between [&_.positive]:tw-text-[#4caf50] [&_.negative]:tw-text-[#f44336]">
             <span>Total Modifiers:</span>
             <span class="{{#if (gt totalModifier 0)}}positive{{else if (lt totalModifier 0)}}negative{{/if}}">
                 {{#if (gt totalModifier 0)}}+{{/if}}{{totalModifier}}
             </span>
         </div>
-        <div class="summary-row final">
+        <div class="tw-flex tw-justify-between tw-text-lg tw-font-bold tw-pt-2 tw-border-t tw-border-solid tw-border-bronze">
             <span>Final Target:</span>
-            <span class="final-target">{{finalTarget}}</span>
+            <span class="tw-text-gold tw-text-xl">{{finalTarget}}</span>
         </div>
     </div>
 
     {{!-- Actions --}}
-    <div class="acquisition-actions tw-flex tw-gap-2">
-        <button type="button" class="acquisition-roll-btn" data-action="roll">
+    <div class="tw-flex tw-gap-2 [&>button]:tw-flex-1 [&>button]:tw-p-3 [&>button]:tw-font-bold [&>button]:tw-cursor-pointer">
+        <button type="button" class="tw-bg-gold tw-text-black tw-border-2 tw-border-solid tw-border-bronze" data-action="roll">
             <i class="fas fa-dice-d20"></i> Roll Acquisition Test
         </button>
-        <button type="button" class="acquisition-cancel-btn" data-action="close">
+        <button type="button" class="tw-bg-[var(--color-bg-btn,#333)] tw-text-[var(--wh40k-text-primary,#e8e4d9)] tw-border-2 tw-border-solid tw-border-bronze" data-action="close">
             <i class="fas fa-times"></i> Cancel
         </button>
     </div>
 
     {{!-- Recent Acquisitions --}}
     {{#if recentAcquisitions}}
-    <div class="recent-acquisitions">
+    <div class="[&>h4]:tw-m-0 [&>h4]:tw-mb-2 [&>h4]:tw-text-gold [&>h4]:tw-text-base">
         <h4>Recent Acquisitions</h4>
-        <ul>
+        <ul class="tw-m-0 tw-p-0 tw-list-none tw-flex tw-flex-col tw-gap-1">
             {{#each recentAcquisitions}}
-            <li class="{{#if this.success}}success{{else}}failure{{/if}}">
-                <span class="acq-name">{{this.item.name}}</span>
-                <span class="acq-result">{{this.roll}}/{{this.target}}</span>
+            <li class="tw-flex tw-justify-between tw-px-2 tw-py-1 tw-rounded-sm {{#if this.success}}tw-bg-[rgba(76,175,80,0.15)] tw-text-[#4caf50]{{else}}tw-bg-[rgba(244,67,54,0.15)] tw-text-[#f44336]{{/if}}">
+                <span>{{this.item.name}}</span>
+                <span>{{this.roll}}/{{this.target}}</span>
             </li>
             {{/each}}
         </ul>

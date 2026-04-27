@@ -1,10 +1,10 @@
 {{! Skill Chat Card }}
-<div class="wh40k-chat-card wh40k-chat-card--skill">
-    <header class="wh40k-chat-header">
-        <img class="wh40k-chat-icon" src="{{skill.img}}" alt="{{skill.name}}" />
-        <div class="wh40k-chat-title">
-            <h3>{{skill.name}}</h3>
-            <div class="wh40k-chat-meta">
+<div class="wh40k-chat-card wh40k-chat-card--skill tw-p-2">
+    <header class="tw-flex tw-items-center tw-gap-2">
+        <img class="tw-w-8 tw-h-8 tw-rounded tw-object-cover" src="{{skill.img}}" alt="{{skill.name}}" />
+        <div class="tw-flex-1">
+            <h3 class="tw-m-0 tw-text-base tw-font-bold">{{skill.name}}</h3>
+            <div class="tw-flex tw-flex-wrap tw-gap-1 tw-mt-1">
                 <span class="wh40k-badge wh40k-badge--{{skill.system.skillType}}">
                     {{skill.system.skillTypeLabel}}
                 </span>
@@ -23,26 +23,26 @@
     </header>
 
     {{#if skill.system.descriptor}}
-        <div class="wh40k-chat-section">
-            <p class="wh40k-chat-descriptor">{{skill.system.descriptor}}</p>
+        <div class="tw-mt-2">
+            <p class="tw-italic tw-text-sm tw-m-0">{{skill.system.descriptor}}</p>
         </div>
     {{/if}}
 
     {{#if skill.system.uses}}
-        <div class="wh40k-chat-section">
-            <h4><i class="fas fa-list-check"></i> Uses</h4>
-            <div class="wh40k-chat-content">{{{skill.system.uses}}}</div>
+        <div class="tw-mt-2">
+            <h4 class="tw-m-0 tw-text-sm tw-font-bold"><i class="fas fa-list-check"></i> Uses</h4>
+            <div class="tw-text-sm">{{{skill.system.uses}}}</div>
         </div>
     {{/if}}
 
     {{#if skill.system.specialRules}}
-        <div class="wh40k-chat-section">
-            <h4><i class="fas fa-book-open"></i> Special Rules</h4>
-            <div class="wh40k-chat-content">{{{skill.system.specialRules}}}</div>
+        <div class="tw-mt-2">
+            <h4 class="tw-m-0 tw-text-sm tw-font-bold"><i class="fas fa-book-open"></i> Special Rules</h4>
+            <div class="tw-text-sm">{{{skill.system.specialRules}}}</div>
         </div>
     {{/if}}
 
-    <footer class="wh40k-chat-footer">
+    <footer class="tw-mt-2 tw-text-xs tw-flex tw-flex-wrap tw-gap-2 tw-opacity-80">
         {{#if skill.system.useTime}}
             <span><strong>Time:</strong> {{skill.system.useTime}}</span>
         {{/if}}
@@ -50,9 +50,9 @@
             <span><strong>Aptitudes:</strong> {{join skill.system.aptitudes ", "}}</span>
         {{/if}}
         {{#if skill.system.hasSpecializations}}
-            <div class="wh40k-specializations">
+            <div class="tw-w-full">
                 <strong>Available Specializations:</strong>
-                <span class="wh40k-spec-list">{{join skill.system.specializations ", "}}</span>
+                <span>{{join skill.system.specializations ", "}}</span>
             </div>
         {{/if}}
     </footer>

@@ -2,18 +2,18 @@
 
 {{!-- Weapon Selection (if multiple) --}}
 {{#if weaponSelect}}
-    <div class="urd-panel__section">
-        <h4 class="urd-panel__section-title">Select Weapon</h4>
-        <div class="wh40k-prompt__weapon-list">
+    <div class="tw-mb-3">
+        <h4 class="tw-font-display tw-text-xs tw-font-semibold tw-text-gold-raw tw-uppercase tw-tracking-[0.1em] tw-m-0 tw-mb-2">Select Weapon</h4>
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-my-2">
             {{#each weapons as |weapon|}}
-                <label class="wh40k-prompt__weapon-item {{#if weapon.isSelected}}wh40k-prompt__weapon-item--selected{{/if}}"
+                <label class="tw-flex tw-items-center tw-gap-[14px] tw-py-3 tw-px-[14px] tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(0,0,0,0.35)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-translate-x-1 {{#if weapon.isSelected}}tw-bg-[rgba(201,162,39,0.08)] tw-border-gold-raw tw-shadow-[0_0_20px_rgba(201,162,39,0.2),inset_0_0_20px_rgba(201,162,39,0.05)] [&_.urd-weapon-name]:tw-text-gold-raw{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}}"
                        data-action="selectWeapon" data-weapon-id="{{weapon.id}}">
-                    <input class="wh40k-prompt__weapon-check" type="checkbox" {{checked weapon.isSelected}} name="{{weapon.id}}" tabindex="-1" />
-                    <img class="wh40k-prompt__weapon-img" alt="{{weapon.name}}" src="{{weapon.img}}" />
-                    <div class="wh40k-prompt__weapon-info">
-                        <div class="wh40k-prompt__weapon-name">{{weapon.name}}</div>
+                    <input class="tw-w-5 tw-h-5 tw-cursor-pointer tw-shrink-0 tw-[accent-color:#c9a227]" type="checkbox" {{checked weapon.isSelected}} name="{{weapon.id}}" tabindex="-1" />
+                    <img class="tw-w-[42px] tw-h-[42px] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-md tw-object-cover tw-shrink-0 tw-bg-[rgba(0,0,0,0.3)]" alt="{{weapon.name}}" src="{{weapon.img}}" />
+                    <div class="tw-flex-1 tw-min-w-0">
+                        <div class="urd-weapon-name tw-font-semibold tw-text-[0.95rem] tw-text-[#e8e4d9] tw-mb-[3px] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">{{weapon.name}}</div>
                         {{#if weapon.items}}
-                            <div class="wh40k-prompt__weapon-details">
+                            <div class="tw-text-sm tw-text-[#9a9a8a] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">
                                 {{#each weapon.items as |item|}}{{item.name}}{{#unless @last}}, {{/unless}}{{/each}}
                             </div>
                         {{/if}}
@@ -27,49 +27,49 @@
 {{#if weapon}}
     {{!-- Ammo Info --}}
     {{#if usesAmmo}}
-        <div class="urd-panel__field">
-            <span class="urd-panel__label">Ammunition</span>
-            <span class="urd-panel__value">{{ammoText}}</span>
+        <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
+            <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Ammunition</span>
+            <span class="tw-text-base tw-font-semibold tw-text-gold-raw">{{ammoText}}</span>
         </div>
     {{/if}}
 
     {{!-- ═══════ ATTACK MODE ═══════ --}}
-    <div class="urd-card-group">
-        <div class="urd-card-group__title">
+    <div class="tw-flex tw-flex-col tw-gap-1 tw-py-2">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-font-ui tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#9a9a8a] tw-p-0 tw-m-0 [&_i:first-child]:tw-text-gold-raw [&_i:first-child]:tw-text-xs">
             <i class="fas fa-crosshairs"></i> Attack Mode
         </div>
-        <div class="urd-card-group__cards">
+        <div class="tw-grid tw-grid-cols-3 tw-gap-1">
             {{#each attackModes}}
                 <button type="button"
-                        class="urd-card {{#if isSelected}}urd-card--selected{{/if}} {{#unless available}}urd-card--disabled{{/unless}}"
+                        class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-0.5 tw-py-1 tw-px-1 tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all tw-font-ui tw-text-2xs tw-text-[#9a9a8a] tw-relative tw-min-h-14 tw-text-center {{#if isSelected}}tw-border-gold-raw tw-bg-[rgba(201,162,39,0.1)] tw-text-[#e8e4d9] tw-shadow-[0_0_6px_rgba(201,162,39,0.15)] [&_.urd-card__icon]:tw-text-gold-raw{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}} {{#unless available}}tw-opacity-35 tw-cursor-not-allowed tw-pointer-events-none{{/unless}} enabled:hover:tw-border-[rgba(255,255,255,0.15)] enabled:hover:tw-bg-[rgba(0,0,0,0.4)] enabled:hover:tw--translate-y-px enabled:hover:tw-shadow-sm enabled:hover:tw-text-[#e8e4d9] active:tw-translate-y-0"
                         data-action="selectAttackMode" data-mode-key="{{key}}"
                         data-tooltip="{{tooltip}}"
                         {{#unless available}}disabled{{/unless}}>
-                    <i class="urd-card__icon {{icon}}"></i>
-                    <span class="urd-card__name">{{label}}</span>
-                    <span class="urd-card__badge">{{actionCost}}</span>
-                    <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
+                    <i class="urd-card__icon {{icon}} tw-text-xs tw-text-[#7a7a6a] tw-transition-colors"></i>
+                    <span class="tw-font-medium tw-text-2xs tw-leading-[1.1]">{{label}}</span>
+                    <span class="tw-py-0 tw-px-[3px] tw-text-[0.5rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[#7a7a6a] tw-bg-[rgba(255,255,255,0.06)] tw-rounded-sm">{{actionCost}}</span>
+                    <span class="tw-font-semibold tw-text-2xs {{#if (gt modifier 0)}}tw-text-[#4ade80]{{else if (lt modifier 0)}}tw-text-[#f87171]{{else}}tw-text-[#7a7a6a]{{/if}}">{{modifierLabel}}</span>
                 </button>
             {{/each}}
         </div>
 
         {{!-- Melee Special Options (collapsible) --}}
         {{#if isMelee}}
-            <button type="button" class="urd-card-group__expand" data-action="toggleSpecialOptions">
+            <button type="button" class="tw-flex tw-items-center tw-gap-1 tw-py-0.5 tw-px-2 tw-text-2xs tw-font-ui tw-text-[#7a7a6a] tw-bg-transparent tw-border-0 tw-cursor-pointer tw-transition-colors hover:tw-text-[#9a9a8a] [&>i]:tw-text-[0.55rem]" data-action="toggleSpecialOptions">
                 <i class="fas {{#if specialOptionsExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}}"></i>
                 Special Options
             </button>
             {{#if specialOptionsExpanded}}
-                <div class="urd-card-group__cards urd-card-group__cards--sub">
+                <div class="tw-grid tw-grid-cols-3 tw-gap-1 tw-pl-2">
                     {{#each meleeSpecialOptions}}
                         <button type="button"
-                                class="urd-card {{#if isSelected}}urd-card--selected{{/if}}"
+                                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-0.5 tw-py-1 tw-px-1 tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all tw-font-ui tw-text-2xs tw-text-[#9a9a8a] tw-relative tw-min-h-14 tw-text-center {{#if isSelected}}tw-border-gold-raw tw-bg-[rgba(201,162,39,0.1)] tw-text-[#e8e4d9] tw-shadow-[0_0_6px_rgba(201,162,39,0.15)] [&_.urd-card__icon]:tw-text-gold-raw{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}} enabled:hover:tw-border-[rgba(255,255,255,0.15)] enabled:hover:tw-bg-[rgba(0,0,0,0.4)] enabled:hover:tw--translate-y-px enabled:hover:tw-shadow-sm enabled:hover:tw-text-[#e8e4d9] active:tw-translate-y-0"
                                 data-action="selectAttackMode" data-mode-key="{{key}}"
                                 data-tooltip="{{tooltip}}">
-                            <i class="urd-card__icon {{icon}}"></i>
-                            <span class="urd-card__name">{{label}}</span>
-                            <span class="urd-card__badge">{{actionCost}}</span>
-                            <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
+                            <i class="urd-card__icon {{icon}} tw-text-xs tw-text-[#7a7a6a] tw-transition-colors"></i>
+                            <span class="tw-font-medium tw-text-2xs tw-leading-[1.1]">{{label}}</span>
+                            <span class="tw-py-0 tw-px-[3px] tw-text-[0.5rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[#7a7a6a] tw-bg-[rgba(255,255,255,0.06)] tw-rounded-sm">{{actionCost}}</span>
+                            <span class="tw-font-semibold tw-text-2xs {{#if (gt modifier 0)}}tw-text-[#4ade80]{{else if (lt modifier 0)}}tw-text-[#f87171]{{else}}tw-text-[#7a7a6a]{{/if}}">{{modifierLabel}}</span>
                         </button>
                     {{/each}}
                 </div>
@@ -79,8 +79,8 @@
 
     {{!-- Called Shot Location (conditional) --}}
     {{#if isCalledShot}}
-        <div class="urd-panel__field">
-            <span class="urd-panel__label">Called Shot Location</span>
+        <div class="tw-flex tw-items-center tw-justify-between tw-py-1.5 tw-min-h-9 tw-border-b tw-border-[rgba(255,255,255,0.05)]">
+            <span class="tw-text-sm tw-font-medium tw-text-[#b8b8a8]">Called Shot Location</span>
             <select class="wh40k-prompt__select" name="calledShotLocation">
                 {{selectOptions locations selected=calledShotLocation}}
             </select>
@@ -89,21 +89,21 @@
 
     {{!-- ═══════ AIM (ranged only) ═══════ --}}
     {{#if isRanged}}
-        <div class="urd-card-group">
-            <div class="urd-card-group__title">
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-py-2 tw-border-t tw-border-[rgba(255,255,255,0.06)]">
+            <div class="tw-flex tw-items-center tw-gap-2 tw-font-ui tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#9a9a8a] tw-p-0 tw-m-0 [&_i:first-child]:tw-text-gold-raw [&_i:first-child]:tw-text-xs">
                 <i class="fas fa-eye"></i> Aim
             </div>
-            <div class="urd-card-group__cards">
+            <div class="tw-grid tw-grid-cols-3 tw-gap-1">
                 {{#each aimOptions}}
                     <button type="button"
-                            class="urd-card {{#if isSelected}}urd-card--selected{{/if}} {{#if disabled}}urd-card--disabled{{/if}}"
+                            class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-0.5 tw-py-1 tw-px-1 tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all tw-font-ui tw-text-2xs tw-text-[#9a9a8a] tw-relative tw-min-h-14 tw-text-center {{#if isSelected}}tw-border-gold-raw tw-bg-[rgba(201,162,39,0.1)] tw-text-[#e8e4d9] tw-shadow-[0_0_6px_rgba(201,162,39,0.15)] [&_.urd-card__icon]:tw-text-gold-raw{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}} {{#if disabled}}tw-opacity-35 tw-cursor-not-allowed tw-pointer-events-none{{/if}} enabled:hover:tw-border-[rgba(255,255,255,0.15)] enabled:hover:tw-bg-[rgba(0,0,0,0.4)] enabled:hover:tw--translate-y-px enabled:hover:tw-shadow-sm enabled:hover:tw-text-[#e8e4d9] active:tw-translate-y-0"
                             data-action="selectAimMode" data-aim-key="{{key}}"
                             data-tooltip="{{tooltip}}"
                             {{#if disabled}}disabled{{/if}}>
-                        <i class="urd-card__icon {{icon}}"></i>
-                        <span class="urd-card__name">{{label}}</span>
-                        {{#if actionCost}}<span class="urd-card__badge">{{actionCost}}</span>{{/if}}
-                        <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
+                        <i class="urd-card__icon {{icon}} tw-text-xs tw-text-[#7a7a6a] tw-transition-colors"></i>
+                        <span class="tw-font-medium tw-text-2xs tw-leading-[1.1]">{{label}}</span>
+                        {{#if actionCost}}<span class="tw-py-0 tw-px-[3px] tw-text-[0.5rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em] tw-text-[#7a7a6a] tw-bg-[rgba(255,255,255,0.06)] tw-rounded-sm">{{actionCost}}</span>{{/if}}
+                        <span class="tw-font-semibold tw-text-2xs {{#if (gt modifier 0)}}tw-text-[#4ade80]{{else if (lt modifier 0)}}tw-text-[#f87171]{{else}}tw-text-[#7a7a6a]{{/if}}">{{modifierLabel}}</span>
                     </button>
                 {{/each}}
             </div>
@@ -112,43 +112,43 @@
 
     {{!-- ═══════ RANGE (ranged only, collapsible) ═══════ --}}
     {{#if isRanged}}
-        <div class="urd-card-group urd-card-group--collapsible">
-            <button type="button" class="urd-card-group__title urd-card-group__title--toggle" data-action="toggleRangeSection">
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-py-2 tw-pb-1 tw-border-t tw-border-[rgba(255,255,255,0.06)]">
+            <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-font-ui tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#9a9a8a] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-cursor-pointer tw-w-full tw-justify-start hover:tw-text-[#e8e4d9] [&_i:first-child]:tw-text-gold-raw [&_i:first-child]:tw-text-xs" data-action="toggleRangeSection">
                 <i class="fas fa-ruler"></i> Range
                 {{#unless rangeExpanded}}
-                    <span class="urd-card-group__summary">
-                        <span class="urd-card-group__summary-label">{{selectedRangeSummary.label}}</span>
-                        <span class="urd-card-group__summary-mod {{#if (gt selectedRangeSummary.modifier 0)}}urd-card-group__summary-mod--positive{{else if (lt selectedRangeSummary.modifier 0)}}urd-card-group__summary-mod--negative{{else}}urd-card-group__summary-mod--neutral{{/if}}">{{selectedRangeSummary.modifierLabel}}</span>
+                    <span class="tw-ml-auto tw-flex tw-items-center tw-gap-1 tw-text-2xs tw-font-normal tw-normal-case tw-tracking-normal">
+                        <span class="tw-text-[#e8e4d9]">{{selectedRangeSummary.label}}</span>
+                        <span class="tw-font-semibold {{#if (gt selectedRangeSummary.modifier 0)}}tw-text-[#4ade80]{{else if (lt selectedRangeSummary.modifier 0)}}tw-text-[#f87171]{{else}}tw-text-[#7a7a6a]{{/if}}">{{selectedRangeSummary.modifierLabel}}</span>
                     </span>
                 {{/unless}}
-                <i class="fas {{#if rangeExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} urd-card-group__chevron"></i>
+                <i class="fas {{#if rangeExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} tw-ml-auto tw-text-2xs tw-transition-transform"></i>
             </button>
             {{#if rangeExpanded}}
-                <div class="urd-card-group__cards">
+                <div class="tw-grid tw-grid-cols-3 tw-gap-1">
                     {{#each rangeBrackets}}
                         <button type="button"
-                                class="urd-card {{#if isSelected}}urd-card--selected{{/if}}"
+                                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-0.5 tw-py-1 tw-px-1 tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all tw-font-ui tw-text-2xs tw-text-[#9a9a8a] tw-relative tw-min-h-14 tw-text-center {{#if isSelected}}tw-border-gold-raw tw-bg-[rgba(201,162,39,0.1)] tw-text-[#e8e4d9] tw-shadow-[0_0_6px_rgba(201,162,39,0.15)]{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}} enabled:hover:tw-border-[rgba(255,255,255,0.15)] enabled:hover:tw-bg-[rgba(0,0,0,0.4)] enabled:hover:tw--translate-y-px enabled:hover:tw-shadow-sm enabled:hover:tw-text-[#e8e4d9]"
                                 data-action="selectRangeBracket" data-bracket="{{key}}"
                                 data-tooltip="{{label}}: {{rangeText}}">
-                            <span class="urd-card__name">{{label}}</span>
-                            {{#if rangeText}}<span class="urd-card__range">{{rangeText}}</span>{{/if}}
-                            <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
+                            <span class="tw-font-medium tw-text-2xs tw-leading-[1.1]">{{label}}</span>
+                            {{#if rangeText}}<span class="tw-text-[0.5rem] tw-text-[#7a7a6a]">{{rangeText}}</span>{{/if}}
+                            <span class="tw-font-semibold tw-text-2xs {{#if (gt modifier 0)}}tw-text-[#4ade80]{{else if (lt modifier 0)}}tw-text-[#f87171]{{else}}tw-text-[#7a7a6a]{{/if}}">{{modifierLabel}}</span>
                         </button>
                     {{/each}}
                 </div>
-                <div style="display: flex; align-items: center; gap: 4px; margin-top: 2px;">
-                    <button type="button" class="urd-card-group__action" data-action="selectTarget">
+                <div class="tw-flex tw-items-center tw-gap-1 tw-mt-0.5">
+                    <button type="button" class="tw-ml-auto tw-py-0.5 tw-px-2 tw-text-2xs tw-font-ui tw-text-[#9a9a8a] tw-bg-[rgba(255,255,255,0.04)] tw-border tw-border-[rgba(255,255,255,0.06)] tw-rounded-sm tw-cursor-pointer tw-transition-all hover:tw-text-[#e8e4d9] hover:tw-border-gold-raw hover:tw-bg-[rgba(201,162,39,0.08)] [&>i]:tw-mr-0.5" data-action="selectTarget">
                         <i class="fas fa-crosshairs"></i> Select Target
                     </button>
                 </div>
                 {{#if rangeModifiedBy}}
-                    <div class="urd-card-group__hint">
+                    <div class="tw-flex tw-items-center tw-gap-1 tw-py-0.5 tw-px-2 tw-text-2xs tw-text-[#7a7a6a] tw-italic [&>i]:tw-text-gold-raw">
                         <i class="fas fa-info-circle"></i>
                         Range modifier affected by {{rangeModifiedBy}}
                     </div>
                 {{/if}}
                 {{#if isMeltaRange}}
-                    <div class="urd-card-group__hint urd-card-group__hint--melta">
+                    <div class="tw-flex tw-items-center tw-gap-1 tw-py-0.5 tw-px-2 tw-text-2xs tw-italic tw-text-[#e67e22] [&>i]:tw-text-[#e67e22]">
                         <i class="fas fa-fire"></i>
                         Melta: Double penetration at this range
                     </div>
@@ -159,31 +159,31 @@
 
     {{!-- ═══════ SITUATIONAL MODIFIERS (collapsible) ═══════ --}}
     {{#if hasCombatSituationals}}
-        <div class="urd-card-group urd-card-group--collapsible">
-            <button type="button" class="urd-card-group__title urd-card-group__title--toggle" data-action="toggleSituationalSection">
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-py-2 tw-pb-1 tw-border-t tw-border-[rgba(255,255,255,0.06)]">
+            <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-font-ui tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#9a9a8a] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-cursor-pointer tw-w-full tw-justify-start hover:tw-text-[#e8e4d9] [&_i:first-child]:tw-text-gold-raw [&_i:first-child]:tw-text-xs" data-action="toggleSituationalSection">
                 <i class="fas fa-sliders-h"></i> Situational
                 {{#unless situationalExpanded}}
-                    <span class="urd-card-group__summary">
+                    <span class="tw-ml-auto tw-flex tw-items-center tw-gap-1 tw-text-2xs tw-font-normal tw-normal-case tw-tracking-normal">
                         {{#if selectedSituationalSummary.hasActive}}
-                            <span class="urd-card-group__summary-label">{{selectedSituationalSummary.label}}</span>
-                            <span class="urd-card-group__summary-mod {{#if (gt selectedSituationalSummary.total 0)}}urd-card-group__summary-mod--positive{{else if (lt selectedSituationalSummary.total 0)}}urd-card-group__summary-mod--negative{{else}}urd-card-group__summary-mod--neutral{{/if}}">{{selectedSituationalSummary.totalLabel}}</span>
+                            <span class="tw-text-[#e8e4d9]">{{selectedSituationalSummary.label}}</span>
+                            <span class="tw-font-semibold {{#if (gt selectedSituationalSummary.total 0)}}tw-text-[#4ade80]{{else if (lt selectedSituationalSummary.total 0)}}tw-text-[#f87171]{{else}}tw-text-[#7a7a6a]{{/if}}">{{selectedSituationalSummary.totalLabel}}</span>
                         {{else}}
-                            <span class="urd-card-group__summary-label">None</span>
+                            <span class="tw-text-[#e8e4d9]">None</span>
                         {{/if}}
                     </span>
                 {{/unless}}
-                <i class="fas {{#if situationalExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} urd-card-group__chevron"></i>
+                <i class="fas {{#if situationalExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} tw-ml-auto tw-text-2xs tw-transition-transform"></i>
             </button>
             {{#if situationalExpanded}}
-                <div class="urd-card-group__cards">
+                <div class="tw-grid tw-grid-cols-3 tw-gap-1">
                     {{#each combatSituationals}}
                         <button type="button"
-                                class="urd-card urd-card--toggle {{#if isActive}}urd-card--active{{/if}}"
+                                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-0.5 tw-py-1 tw-px-1 tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all tw-font-ui tw-text-2xs tw-text-[#9a9a8a] tw-relative tw-min-h-14 tw-text-center {{#if isActive}}tw-border-gold-raw tw-bg-[rgba(201,162,39,0.1)] tw-text-[#e8e4d9] tw-shadow-[0_0_6px_rgba(201,162,39,0.15)] [&_.urd-card__icon]:tw-text-gold-raw{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}} enabled:hover:tw-border-[rgba(255,255,255,0.15)] enabled:hover:tw-bg-[rgba(0,0,0,0.4)] enabled:hover:tw--translate-y-px enabled:hover:tw-shadow-sm enabled:hover:tw-text-[#e8e4d9]"
                                 data-action="toggleCombatSituational" data-situational-key="{{key}}"
                                 data-tooltip="{{tooltip}}">
-                            <i class="urd-card__icon {{icon}}"></i>
-                            <span class="urd-card__name">{{label}}</span>
-                            <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
+                            <i class="urd-card__icon {{icon}} tw-text-xs tw-text-[#7a7a6a] tw-transition-colors"></i>
+                            <span class="tw-font-medium tw-text-2xs tw-leading-[1.1]">{{label}}</span>
+                            <span class="tw-font-semibold tw-text-2xs {{#if (gt modifier 0)}}tw-text-[#4ade80]{{else if (lt modifier 0)}}tw-text-[#f87171]{{else}}tw-text-[#7a7a6a]{{/if}}">{{modifierLabel}}</span>
                         </button>
                     {{/each}}
                 </div>
@@ -193,26 +193,26 @@
 
     {{!-- ═══════ SIZE MODIFIERS (ranged only, collapsed) ═══════ --}}
     {{#if isRanged}}
-        <div class="urd-card-group urd-card-group--collapsible">
-            <button type="button" class="urd-card-group__title urd-card-group__title--toggle" data-action="toggleSizeSection">
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-py-2 tw-pb-1 tw-border-t tw-border-[rgba(255,255,255,0.06)]">
+            <button type="button" class="tw-flex tw-items-center tw-gap-2 tw-font-ui tw-text-xs tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#9a9a8a] tw-p-0 tw-m-0 tw-bg-transparent tw-border-0 tw-cursor-pointer tw-w-full tw-justify-start hover:tw-text-[#e8e4d9] [&_i:first-child]:tw-text-gold-raw [&_i:first-child]:tw-text-xs" data-action="toggleSizeSection">
                 <i class="fas fa-expand-arrows-alt"></i> Target Size
                 {{#unless sizeExpanded}}
-                    <span class="urd-card-group__summary">
-                        <span class="urd-card-group__summary-label">{{selectedSizeSummary.label}}</span>
-                        <span class="urd-card-group__summary-mod {{#if (gt selectedSizeSummary.modifier 0)}}urd-card-group__summary-mod--positive{{else if (lt selectedSizeSummary.modifier 0)}}urd-card-group__summary-mod--negative{{else}}urd-card-group__summary-mod--neutral{{/if}}">{{selectedSizeSummary.modifierLabel}}</span>
+                    <span class="tw-ml-auto tw-flex tw-items-center tw-gap-1 tw-text-2xs tw-font-normal tw-normal-case tw-tracking-normal">
+                        <span class="tw-text-[#e8e4d9]">{{selectedSizeSummary.label}}</span>
+                        <span class="tw-font-semibold {{#if (gt selectedSizeSummary.modifier 0)}}tw-text-[#4ade80]{{else if (lt selectedSizeSummary.modifier 0)}}tw-text-[#f87171]{{else}}tw-text-[#7a7a6a]{{/if}}">{{selectedSizeSummary.modifierLabel}}</span>
                     </span>
                 {{/unless}}
-                <i class="fas {{#if sizeExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} urd-card-group__chevron"></i>
+                <i class="fas {{#if sizeExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} tw-ml-auto tw-text-2xs tw-transition-transform"></i>
             </button>
             {{#if sizeExpanded}}
-                <div class="urd-card-group__cards">
+                <div class="tw-grid tw-grid-cols-3 tw-gap-1">
                     {{#each sizeOptions}}
                         <button type="button"
-                                class="urd-card {{#if isSelected}}urd-card--selected{{/if}}"
+                                class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-0.5 tw-py-1 tw-px-1 tw-bg-[rgba(0,0,0,0.25)] tw-border tw-rounded-md tw-cursor-pointer tw-transition-all tw-font-ui tw-text-2xs tw-text-[#9a9a8a] tw-relative tw-min-h-14 tw-text-center {{#if isSelected}}tw-border-gold-raw tw-bg-[rgba(201,162,39,0.1)] tw-text-[#e8e4d9] tw-shadow-[0_0_6px_rgba(201,162,39,0.15)]{{else}}tw-border-[rgba(255,255,255,0.06)]{{/if}} enabled:hover:tw-border-[rgba(255,255,255,0.15)] enabled:hover:tw-bg-[rgba(0,0,0,0.4)] enabled:hover:tw--translate-y-px enabled:hover:tw-shadow-sm enabled:hover:tw-text-[#e8e4d9]"
                                 data-action="selectSizeModifier" data-size-key="{{key}}"
                                 data-tooltip="{{label}} target size modifier">
-                            <span class="urd-card__name">{{label}}</span>
-                            <span class="urd-card__mod {{#if (gt modifier 0)}}urd-card__mod--positive{{else if (lt modifier 0)}}urd-card__mod--negative{{else}}urd-card__mod--neutral{{/if}}">{{modifierLabel}}</span>
+                            <span class="tw-font-medium tw-text-2xs tw-leading-[1.1]">{{label}}</span>
+                            <span class="tw-font-semibold tw-text-2xs {{#if (gt modifier 0)}}tw-text-[#4ade80]{{else if (lt modifier 0)}}tw-text-[#f87171]{{else}}tw-text-[#7a7a6a]{{/if}}">{{modifierLabel}}</span>
                         </button>
                     {{/each}}
                 </div>

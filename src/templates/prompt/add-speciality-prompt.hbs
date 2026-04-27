@@ -18,7 +18,7 @@
             </select>
         </div>
 
-        <div class="wh40k-specialist-prompt__field-group" id="specialization-group" {{#unless specializations.length}}style="display:none"{{/unless}}>
+        <div class="wh40k-specialist-prompt__field-group {{#unless specializations.length}}tw-hidden{{/unless}}" id="specialization-group">
             <label class="wh40k-specialist-prompt__field-label">Specialization</label>
             <select class="wh40k-prompt__select" id="specialization-select">
                 <option value="">-- Select a specialization --</option>

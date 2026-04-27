@@ -1,27 +1,27 @@
-{{!-- 
+{{!--
   Talent Editor Dialog Template
   Comprehensive editor for complex talent fields (modifiers, grants, prerequisites, situational)
 --}}
-<div class="ted-container">
-  
+<div class="tw-flex tw-flex-col tw-h-full tw-bg-[var(--color-bg-primary)] tw-font-body">
+
   {{!-- Section Tabs --}}
-  <nav class="ted-section-tabs">
-    <button type="button" class="ted-section-tab {{#if sections.prerequisites}}active{{/if}}" 
+  <nav class="tw-flex tw-px-3 tw-bg-[var(--color-bg-secondary)] tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] tw-shrink-0">
+    <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-border-solid tw-border-transparent tw-text-[var(--color-text-secondary)] tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-text-[var(--color-text-primary)] hover:tw-bg-gold/5 [&>i]:tw-text-[0.95em] {{#if sections.prerequisites}}!tw-text-gold !tw-border-b-gold !tw-bg-gold/10{{/if}}"
             data-action="switchSection" data-section="prerequisites">
       <i class="fa-solid fa-lock"></i>
       <span>Prerequisites</span>
     </button>
-    <button type="button" class="ted-section-tab {{#if sections.modifiers}}active{{/if}}" 
+    <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-border-solid tw-border-transparent tw-text-[var(--color-text-secondary)] tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-text-[var(--color-text-primary)] hover:tw-bg-gold/5 [&>i]:tw-text-[0.95em] {{#if sections.modifiers}}!tw-text-gold !tw-border-b-gold !tw-bg-gold/10{{/if}}"
             data-action="switchSection" data-section="modifiers">
       <i class="fa-solid fa-chart-line"></i>
       <span>Modifiers</span>
     </button>
-    <button type="button" class="ted-section-tab {{#if sections.situational}}active{{/if}}" 
+    <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-border-solid tw-border-transparent tw-text-[var(--color-text-secondary)] tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-text-[var(--color-text-primary)] hover:tw-bg-gold/5 [&>i]:tw-text-[0.95em] {{#if sections.situational}}!tw-text-gold !tw-border-b-gold !tw-bg-gold/10{{/if}}"
             data-action="switchSection" data-section="situational">
       <i class="fa-solid fa-clock-rotate-left"></i>
       <span>Situational</span>
     </button>
-    <button type="button" class="ted-section-tab {{#if sections.grants}}active{{/if}}" 
+    <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-px-3 tw-py-2 tw-bg-transparent tw-border-0 tw-border-b-[3px] tw-border-solid tw-border-transparent tw-text-[var(--color-text-secondary)] tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-text-[var(--color-text-primary)] hover:tw-bg-gold/5 [&>i]:tw-text-[0.95em] {{#if sections.grants}}!tw-text-gold !tw-border-b-gold !tw-bg-gold/10{{/if}}"
             data-action="switchSection" data-section="grants">
       <i class="fa-solid fa-gift"></i>
       <span>Grants</span>
@@ -29,427 +29,432 @@
   </nav>
 
   {{!-- Content Area --}}
-  <div class="ted-content">
-    
+  <div class="tw-flex-1 tw-overflow-y-auto tw-p-3">
+
+    {{!-- Reusable wrapper styles --}}
+    {{!-- field-group: tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md tw-transition-all hover:tw-bg-black/20 hover:tw-border-[var(--wh40k-accent-talents)]/30 last:tw-mb-0 --}}
+    {{!-- field-label: tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em] [&>i]:tw-text-[0.9em] [&>i]:tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] --}}
+    {{!-- list-row: tw-grid tw-grid-cols-[1fr_80px_32px] tw-gap-2 tw-items-center tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-transition-all hover:tw-bg-black/35 hover:tw-border-[var(--wh40k-accent-talents)]/30 [&_input]:tw-px-2.5 [&_input]:tw-py-1.5 [&_input]:tw-text-[0.85rem] [&_input]:tw-bg-black/40 [&_input]:tw-border [&_input]:tw-border-solid [&_input]:tw-border-[var(--color-border-light)] [&_input]:tw-rounded-sm [&_input]:tw-text-[var(--color-text-primary)] focus:[&_input]:tw-border-gold focus:[&_input]:tw-outline-none [&_input[type=number]]:tw-w-[70px] [&_input[type=number]]:tw-text-center [&_select]:tw-px-2.5 [&_select]:tw-py-1.5 [&_select]:tw-text-[0.85rem] [&_select]:tw-bg-black/40 [&_select]:tw-border [&_select]:tw-border-solid [&_select]:tw-border-[var(--color-border-light)] [&_select]:tw-rounded-sm [&_select]:tw-text-[var(--color-text-primary)] focus:[&_select]:tw-border-gold focus:[&_select]:tw-outline-none --}}
+
     {{!-- ═══════════════════════════════════════════════════════════════════
          PREREQUISITES SECTION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="ted-section-panel {{#if sections.prerequisites}}active{{/if}}" data-section="prerequisites">
-      <div class="ted-section-header">
+    <div class="{{#unless sections.prerequisites}}tw-hidden{{/unless}}" data-section="prerequisites">
+      <div class="tw-flex tw-items-center tw-gap-2 tw-mb-4 tw-pb-3 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>i]:tw-text-lg [&>i]:tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] [&>h3]:tw-flex-1 [&>h3]:tw-flex [&>h3]:tw-items-center [&>h3]:tw-gap-2 [&>h3]:tw-m-0 [&>h3]:tw-font-heading [&>h3]:tw-text-lg [&>h3]:tw-font-bold [&>h3]:tw-text-gold [&>h3]:tw-uppercase [&>h3]:tw-tracking-[0.05em]">
         <i class="fa-solid fa-lock"></i>
         <h3>Prerequisites</h3>
-        <p class="ted-section-hint">Define requirements that must be met before this talent can be taken.</p>
+        <p class="tw-w-full tw-m-0 tw-pl-[calc(1.2rem+0.5rem)] tw-text-[0.82rem] tw-italic tw-text-[var(--color-text-tertiary)] tw-leading-[1.4]">Define requirements that must be met before this talent can be taken.</p>
       </div>
-      
+
       {{!-- Text Prerequisites --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-font"></i>
           Text Prerequisites
         </label>
-        <textarea name="prerequisites.text" rows="2" class="ted-textarea" 
+        <textarea name="prerequisites.text" rows="2" class="tw-w-full tw-px-3 tw-py-2 tw-text-sm tw-bg-black/30 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-resize-y tw-min-h-[50px] focus:tw-border-gold focus:tw-outline-none"
                   placeholder="Freeform text prerequisites (e.g., 'Must be a member of the Adeptus Mechanicus')">{{prerequisites.text}}</textarea>
       </div>
-      
+
       {{!-- Characteristic Prerequisites --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-dumbbell"></i>
           Characteristic Requirements
         </label>
-        <div class="ted-list" data-category="prerequisites" data-type="characteristics">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="prerequisites" data-type="characteristics">
           {{#each prerequisites.characteristics}}
-          <div class="ted-list-row">
-            <select name="prerequisites.characteristics.{{@index}}.key">
+          <div class="tw-grid tw-grid-cols-[1fr_80px_32px] tw-gap-2 tw-items-center tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <select name="prerequisites.characteristics.{{@index}}.key" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none">
               <option value="">-- Select --</option>
               {{#each ../characteristicOptions}}
               <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
               {{/each}}
             </select>
-            <input type="number" name="prerequisites.characteristics.{{@index}}.value" value="{{this.value}}" min="0" placeholder="Min value" />
-            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+            <input type="number" name="prerequisites.characteristics.{{@index}}.value" value="{{this.value}}" min="0" placeholder="Min value" class="tw-w-[70px] tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-text-center tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson hover:tw-shadow-[0_0_8px_rgba(139,0,0,0.3)] [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="prerequisites" data-type="characteristics">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold hover:tw-shadow-[0_0_10px_rgba(201,162,39,0.15)] [&>i]:tw-text-[0.85em]" data-action="addItem" data-category="prerequisites" data-type="characteristics">
           <i class="fa-solid fa-plus"></i> Add Characteristic Requirement
         </button>
       </div>
-      
+
       {{!-- Skill Prerequisites --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-graduation-cap"></i>
           Skill Requirements
         </label>
-        <div class="ted-list" data-category="prerequisites" data-type="skills">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="prerequisites" data-type="skills">
           {{#each prerequisites.skills}}
-          <div class="ted-list-row">
-            <input type="text" name="prerequisites.skills.{{@index}}.name" value="{{this.name}}" placeholder="Skill name (e.g., Dodge, Parry)" />
-            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          <div class="tw-grid tw-grid-cols-[1fr_32px] tw-gap-2 tw-items-center tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <input type="text" name="prerequisites.skills.{{@index}}.name" value="{{this.name}}" placeholder="Skill name (e.g., Dodge, Parry)" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="prerequisites" data-type="skills">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="prerequisites" data-type="skills">
           <i class="fa-solid fa-plus"></i> Add Skill Requirement
         </button>
       </div>
-      
+
       {{!-- Talent Prerequisites --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-star"></i>
           Talent Requirements
         </label>
-        <div class="ted-list" data-category="prerequisites" data-type="talents">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="prerequisites" data-type="talents">
           {{#each prerequisites.talents}}
-          <div class="ted-list-row">
-            <input type="text" name="prerequisites.talents.{{@index}}.name" value="{{this.name}}" placeholder="Talent name" />
-            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          <div class="tw-grid tw-grid-cols-[1fr_32px] tw-gap-2 tw-items-center tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <input type="text" name="prerequisites.talents.{{@index}}.name" value="{{this.name}}" placeholder="Talent name" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="prerequisites" data-type="talents">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="prerequisites" data-type="talents">
           <i class="fa-solid fa-plus"></i> Add Talent Requirement
         </button>
       </div>
     </div>
-    
+
     {{!-- ═══════════════════════════════════════════════════════════════════
          MODIFIERS SECTION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="ted-section-panel {{#if sections.modifiers}}active{{/if}}" data-section="modifiers">
-      <div class="ted-section-header">
+    <div class="{{#unless sections.modifiers}}tw-hidden{{/unless}}" data-section="modifiers">
+      <div class="tw-flex tw-items-center tw-gap-2 tw-mb-4 tw-pb-3 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>i]:tw-text-lg [&>i]:tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] [&>h3]:tw-flex-1 [&>h3]:tw-flex [&>h3]:tw-items-center [&>h3]:tw-gap-2 [&>h3]:tw-m-0 [&>h3]:tw-font-heading [&>h3]:tw-text-lg [&>h3]:tw-font-bold [&>h3]:tw-text-gold [&>h3]:tw-uppercase [&>h3]:tw-tracking-[0.05em]">
         <i class="fa-solid fa-chart-line"></i>
         <h3>Permanent Modifiers</h3>
-        <p class="ted-section-hint">Modifiers automatically applied while this talent is possessed.</p>
+        <p class="tw-w-full tw-m-0 tw-pl-[calc(1.2rem+0.5rem)] tw-text-[0.82rem] tw-italic tw-text-[var(--color-text-tertiary)] tw-leading-[1.4]">Modifiers automatically applied while this talent is possessed.</p>
       </div>
-      
+
       {{!-- Characteristic Modifiers --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-dumbbell"></i>
           Characteristic Modifiers
         </label>
-        <div class="ted-list" data-category="modifiers" data-type="characteristics">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="modifiers" data-type="characteristics">
           {{#each modifiers.characteristics}}
-          <div class="ted-list-row">
-            <select name="modifiers.characteristics.{{@index}}.key">
+          <div class="tw-grid tw-grid-cols-[1fr_80px_32px] tw-gap-2 tw-items-center tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <select name="modifiers.characteristics.{{@index}}.key" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none">
               <option value="">-- Select --</option>
               {{#each ../characteristicOptions}}
               <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
               {{/each}}
             </select>
-            <input type="number" name="modifiers.characteristics.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
-            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+            <input type="number" name="modifiers.characteristics.{{@index}}.value" value="{{this.value}}" placeholder="+/-" class="tw-w-[70px] tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-text-center tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="modifiers" data-type="characteristics">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="modifiers" data-type="characteristics">
           <i class="fa-solid fa-plus"></i> Add Characteristic Modifier
         </button>
       </div>
-      
+
       {{!-- Skill Modifiers --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-graduation-cap"></i>
           Skill Modifiers
         </label>
-        <div class="ted-list" data-category="modifiers" data-type="skills">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="modifiers" data-type="skills">
           {{#each modifiers.skills}}
-          <div class="ted-list-row">
-            <select name="modifiers.skills.{{@index}}.key">
+          <div class="tw-grid tw-grid-cols-[1fr_80px_32px] tw-gap-2 tw-items-center tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <select name="modifiers.skills.{{@index}}.key" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none">
               <option value="">-- Select --</option>
               {{#each ../skillOptions}}
               <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
               {{/each}}
             </select>
-            <input type="number" name="modifiers.skills.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
-            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+            <input type="number" name="modifiers.skills.{{@index}}.value" value="{{this.value}}" placeholder="+/-" class="tw-w-[70px] tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-text-center tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="modifiers" data-type="skills">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="modifiers" data-type="skills">
           <i class="fa-solid fa-plus"></i> Add Skill Modifier
         </button>
       </div>
-      
+
       {{!-- Combat Modifiers --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-swords"></i>
           Combat Modifiers
         </label>
-        <div class="ted-list" data-category="modifiers" data-type="combat">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="modifiers" data-type="combat">
           {{#each modifiers.combat}}
-          <div class="ted-list-row">
-            <select name="modifiers.combat.{{@index}}.key">
+          <div class="tw-grid tw-grid-cols-[1fr_80px_32px] tw-gap-2 tw-items-center tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <select name="modifiers.combat.{{@index}}.key" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none">
               <option value="">-- Select --</option>
               {{#each ../combatOptions}}
               <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
               {{/each}}
             </select>
-            <input type="number" name="modifiers.combat.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
-            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+            <input type="number" name="modifiers.combat.{{@index}}.value" value="{{this.value}}" placeholder="+/-" class="tw-w-[70px] tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-text-center tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="modifiers" data-type="combat">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="modifiers" data-type="combat">
           <i class="fa-solid fa-plus"></i> Add Combat Modifier
         </button>
       </div>
-      
+
       {{!-- Resource Modifiers --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-heart"></i>
           Resource Modifiers
         </label>
-        <div class="ted-list" data-category="modifiers" data-type="resources">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="modifiers" data-type="resources">
           {{#each modifiers.resources}}
-          <div class="ted-list-row">
-            <select name="modifiers.resources.{{@index}}.key">
+          <div class="tw-grid tw-grid-cols-[1fr_80px_32px] tw-gap-2 tw-items-center tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <select name="modifiers.resources.{{@index}}.key" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none">
               <option value="">-- Select --</option>
               {{#each ../resourceOptions}}
               <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
               {{/each}}
             </select>
-            <input type="number" name="modifiers.resources.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
-            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+            <input type="number" name="modifiers.resources.{{@index}}.value" value="{{this.value}}" placeholder="+/-" class="tw-w-[70px] tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-text-center tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="modifiers" data-type="resources">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="modifiers" data-type="resources">
           <i class="fa-solid fa-plus"></i> Add Resource Modifier
         </button>
       </div>
-      
+
       {{!-- Other Modifiers --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-ellipsis"></i>
           Other Modifiers
         </label>
-        <div class="ted-list" data-category="modifiers" data-type="other">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="modifiers" data-type="other">
           {{#each modifiers.other}}
-          <div class="ted-list-row ted-list-row--wide">
-            <input type="text" name="modifiers.other.{{@index}}.key" value="{{this.key}}" placeholder="Key (e.g., movement)" />
-            <input type="text" name="modifiers.other.{{@index}}.label" value="{{this.label}}" placeholder="Label" />
-            <input type="number" name="modifiers.other.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
-            <select name="modifiers.other.{{@index}}.mode">
+          <div class="tw-grid tw-grid-cols-[1fr_1fr_80px_80px_32px] tw-gap-2 tw-items-center tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <input type="text" name="modifiers.other.{{@index}}.key" value="{{this.key}}" placeholder="Key (e.g., movement)" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <input type="text" name="modifiers.other.{{@index}}.label" value="{{this.label}}" placeholder="Label" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <input type="number" name="modifiers.other.{{@index}}.value" value="{{this.value}}" placeholder="+/-" class="tw-w-[70px] tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-text-center tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <select name="modifiers.other.{{@index}}.mode" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none">
               <option value="add" {{#if (eq this.mode "add")}}selected{{/if}}>Add</option>
               <option value="multiply" {{#if (eq this.mode "multiply")}}selected{{/if}}>Multiply</option>
               <option value="override" {{#if (eq this.mode "override")}}selected{{/if}}>Override</option>
             </select>
-            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="modifiers" data-type="other">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="modifiers" data-type="other">
           <i class="fa-solid fa-plus"></i> Add Other Modifier
         </button>
       </div>
     </div>
-    
+
     {{!-- ═══════════════════════════════════════════════════════════════════
          SITUATIONAL SECTION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="ted-section-panel {{#if sections.situational}}active{{/if}}" data-section="situational">
-      <div class="ted-section-header">
+    <div class="{{#unless sections.situational}}tw-hidden{{/unless}}" data-section="situational">
+      <div class="tw-flex tw-items-center tw-gap-2 tw-mb-4 tw-pb-3 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>i]:tw-text-lg [&>i]:tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] [&>h3]:tw-flex-1 [&>h3]:tw-flex [&>h3]:tw-items-center [&>h3]:tw-gap-2 [&>h3]:tw-m-0 [&>h3]:tw-font-heading [&>h3]:tw-text-lg [&>h3]:tw-font-bold [&>h3]:tw-text-gold [&>h3]:tw-uppercase [&>h3]:tw-tracking-[0.05em]">
         <i class="fa-solid fa-clock-rotate-left"></i>
         <h3>Situational Modifiers</h3>
-        <p class="ted-section-hint">Modifiers that appear as checkboxes in roll dialogs when conditions apply.</p>
+        <p class="tw-w-full tw-m-0 tw-pl-[calc(1.2rem+0.5rem)] tw-text-[0.82rem] tw-italic tw-text-[var(--color-text-tertiary)] tw-leading-[1.4]">Modifiers that appear as checkboxes in roll dialogs when conditions apply.</p>
       </div>
-      
+
       {{!-- Situational Characteristic Modifiers --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-dumbbell"></i>
           Characteristic Situational Modifiers
         </label>
-        <div class="ted-list" data-category="situational" data-type="characteristics">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="situational" data-type="characteristics">
           {{#each situational.characteristics}}
-          <div class="ted-list-row ted-list-row--stacked">
-            <div class="ted-row-inline">
-              <select name="situational.characteristics.{{@index}}.key">
+          <div class="tw-flex tw-flex-col tw-gap-2 tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <div class="tw-grid tw-grid-cols-[1fr_80px_32px] tw-gap-2 tw-items-center">
+              <select name="situational.characteristics.{{@index}}.key" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none">
                 <option value="">-- Select --</option>
                 {{#each ../characteristicOptions}}
                 <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
                 {{/each}}
               </select>
-              <input type="number" name="situational.characteristics.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
-              <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+              <input type="number" name="situational.characteristics.{{@index}}.value" value="{{this.value}}" placeholder="+/-" class="tw-w-[70px] tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-text-center tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+              <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
             </div>
-            <textarea name="situational.characteristics.{{@index}}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When fighting in melee combat')">{{this.condition}}</textarea>
+            <textarea name="situational.characteristics.{{@index}}.condition" rows="2" class="tw-w-full tw-px-3 tw-py-2 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-resize-y tw-min-h-[50px] focus:tw-border-gold focus:tw-outline-none" placeholder="Condition description (e.g., 'When fighting in melee combat')">{{this.condition}}</textarea>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="situational" data-type="characteristics">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="situational" data-type="characteristics">
           <i class="fa-solid fa-plus"></i> Add Situational Characteristic Modifier
         </button>
       </div>
-      
+
       {{!-- Situational Skill Modifiers --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-graduation-cap"></i>
           Skill Situational Modifiers
         </label>
-        <div class="ted-list" data-category="situational" data-type="skills">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="situational" data-type="skills">
           {{#each situational.skills}}
-          <div class="ted-list-row ted-list-row--stacked">
-            <div class="ted-row-inline">
-              <select name="situational.skills.{{@index}}.key">
+          <div class="tw-flex tw-flex-col tw-gap-2 tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <div class="tw-grid tw-grid-cols-[1fr_80px_32px] tw-gap-2 tw-items-center">
+              <select name="situational.skills.{{@index}}.key" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none">
                 <option value="">-- Select --</option>
                 {{#each ../skillOptions}}
                 <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
                 {{/each}}
               </select>
-              <input type="number" name="situational.skills.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
-              <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+              <input type="number" name="situational.skills.{{@index}}.value" value="{{this.value}}" placeholder="+/-" class="tw-w-[70px] tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-text-center tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+              <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
             </div>
-            <textarea name="situational.skills.{{@index}}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When performing acrobatic maneuvers')">{{this.condition}}</textarea>
+            <textarea name="situational.skills.{{@index}}.condition" rows="2" class="tw-w-full tw-px-3 tw-py-2 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-resize-y tw-min-h-[50px] focus:tw-border-gold focus:tw-outline-none" placeholder="Condition description (e.g., 'When performing acrobatic maneuvers')">{{this.condition}}</textarea>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="situational" data-type="skills">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="situational" data-type="skills">
           <i class="fa-solid fa-plus"></i> Add Situational Skill Modifier
         </button>
       </div>
-      
+
       {{!-- Situational Combat Modifiers --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-swords"></i>
           Combat Situational Modifiers
         </label>
-        <div class="ted-list" data-category="situational" data-type="combat">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="situational" data-type="combat">
           {{#each situational.combat}}
-          <div class="ted-list-row ted-list-row--stacked">
-            <div class="ted-row-inline">
-              <select name="situational.combat.{{@index}}.key">
+          <div class="tw-flex tw-flex-col tw-gap-2 tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <div class="tw-grid tw-grid-cols-[1fr_80px_32px] tw-gap-2 tw-items-center">
+              <select name="situational.combat.{{@index}}.key" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none">
                 <option value="">-- Select --</option>
                 {{#each ../combatOptions}}
                 <option value="{{this.value}}" {{#if (eq this.value ../this.key)}}selected{{/if}}>{{this.label}}</option>
                 {{/each}}
               </select>
-              <input type="number" name="situational.combat.{{@index}}.value" value="{{this.value}}" placeholder="+/-" />
-              <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+              <input type="number" name="situational.combat.{{@index}}.value" value="{{this.value}}" placeholder="+/-" class="tw-w-[70px] tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-text-center tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+              <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
             </div>
-            <textarea name="situational.combat.{{@index}}.condition" rows="2" class="ted-textarea-condition" placeholder="Condition description (e.g., 'When attacking from surprise')">{{this.condition}}</textarea>
+            <textarea name="situational.combat.{{@index}}.condition" rows="2" class="tw-w-full tw-px-3 tw-py-2 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-resize-y tw-min-h-[50px] focus:tw-border-gold focus:tw-outline-none" placeholder="Condition description (e.g., 'When attacking from surprise')">{{this.condition}}</textarea>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="situational" data-type="combat">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="situational" data-type="combat">
           <i class="fa-solid fa-plus"></i> Add Situational Combat Modifier
         </button>
       </div>
     </div>
-    
+
     {{!-- ═══════════════════════════════════════════════════════════════════
          GRANTS SECTION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="ted-section-panel {{#if sections.grants}}active{{/if}}" data-section="grants">
-      <div class="ted-section-header">
+    <div class="{{#unless sections.grants}}tw-hidden{{/unless}}" data-section="grants">
+      <div class="tw-flex tw-items-center tw-gap-2 tw-mb-4 tw-pb-3 tw-border-b-2 tw-border-solid tw-border-[var(--color-border-secondary)] [&>i]:tw-text-lg [&>i]:tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] [&>h3]:tw-flex-1 [&>h3]:tw-flex [&>h3]:tw-items-center [&>h3]:tw-gap-2 [&>h3]:tw-m-0 [&>h3]:tw-font-heading [&>h3]:tw-text-lg [&>h3]:tw-font-bold [&>h3]:tw-text-gold [&>h3]:tw-uppercase [&>h3]:tw-tracking-[0.05em]">
         <i class="fa-solid fa-gift"></i>
         <h3>Grants</h3>
-        <p class="ted-section-hint">Skills, talents, traits, and special abilities granted by this talent.</p>
+        <p class="tw-w-full tw-m-0 tw-pl-[calc(1.2rem+0.5rem)] tw-text-[0.82rem] tw-italic tw-text-[var(--color-text-tertiary)] tw-leading-[1.4]">Skills, talents, traits, and special abilities granted by this talent.</p>
       </div>
-      
+
       {{!-- Granted Skills --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-graduation-cap"></i>
           Granted Skills
         </label>
-        <div class="ted-list" data-category="grants" data-type="skills">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="grants" data-type="skills">
           {{#each grants.skills}}
-          <div class="ted-list-row ted-list-row--wide">
-            <input type="text" name="grants.skills.{{@index}}.name" value="{{this.name}}" placeholder="Skill name" />
-            <input type="text" name="grants.skills.{{@index}}.specialization" value="{{this.specialization}}" placeholder="Specialization (optional)" />
-            <select name="grants.skills.{{@index}}.level">
+          <div class="tw-grid tw-grid-cols-[1fr_1fr_80px_32px] tw-gap-2 tw-items-center tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <input type="text" name="grants.skills.{{@index}}.name" value="{{this.name}}" placeholder="Skill name" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <input type="text" name="grants.skills.{{@index}}.specialization" value="{{this.specialization}}" placeholder="Specialization (optional)" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <select name="grants.skills.{{@index}}.level" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none">
               {{#each ../trainingLevelOptions}}
               <option value="{{this.value}}" {{#if (eq this.value ../this.level)}}selected{{/if}}>{{this.label}}</option>
               {{/each}}
             </select>
-            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="grants" data-type="skills">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="grants" data-type="skills">
           <i class="fa-solid fa-plus"></i> Add Granted Skill
         </button>
       </div>
-      
+
       {{!-- Granted Talents --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-star"></i>
           Granted Talents
         </label>
-        <div class="ted-list" data-category="grants" data-type="talents">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="grants" data-type="talents">
           {{#each grants.talents}}
-          <div class="ted-list-row ted-list-row--wide">
-            <input type="text" name="grants.talents.{{@index}}.name" value="{{this.name}}" placeholder="Talent name" />
-            <input type="text" name="grants.talents.{{@index}}.specialization" value="{{this.specialization}}" placeholder="Specialization (optional)" />
-            <input type="text" name="grants.talents.{{@index}}.uuid" value="{{this.uuid}}" placeholder="UUID (optional)" />
-            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          <div class="tw-grid tw-grid-cols-[1fr_1fr_1fr_32px] tw-gap-2 tw-items-center tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <input type="text" name="grants.talents.{{@index}}.name" value="{{this.name}}" placeholder="Talent name" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <input type="text" name="grants.talents.{{@index}}.specialization" value="{{this.specialization}}" placeholder="Specialization (optional)" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <input type="text" name="grants.talents.{{@index}}.uuid" value="{{this.uuid}}" placeholder="UUID (optional)" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="grants" data-type="talents">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="grants" data-type="talents">
           <i class="fa-solid fa-plus"></i> Add Granted Talent
         </button>
       </div>
-      
+
       {{!-- Granted Traits --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-dna"></i>
           Granted Traits
         </label>
-        <div class="ted-list" data-category="grants" data-type="traits">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="grants" data-type="traits">
           {{#each grants.traits}}
-          <div class="ted-list-row ted-list-row--wide">
-            <input type="text" name="grants.traits.{{@index}}.name" value="{{this.name}}" placeholder="Trait name" />
-            <input type="number" name="grants.traits.{{@index}}.level" value="{{this.level}}" placeholder="Level (optional)" />
-            <input type="text" name="grants.traits.{{@index}}.uuid" value="{{this.uuid}}" placeholder="UUID (optional)" />
-            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          <div class="tw-grid tw-grid-cols-[1fr_80px_1fr_32px] tw-gap-2 tw-items-center tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <input type="text" name="grants.traits.{{@index}}.name" value="{{this.name}}" placeholder="Trait name" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <input type="number" name="grants.traits.{{@index}}.level" value="{{this.level}}" placeholder="Level (optional)" class="tw-w-[70px] tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-text-center tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <input type="text" name="grants.traits.{{@index}}.uuid" value="{{this.uuid}}" placeholder="UUID (optional)" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="grants" data-type="traits">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="grants" data-type="traits">
           <i class="fa-solid fa-plus"></i> Add Granted Trait
         </button>
       </div>
-      
+
       {{!-- Special Abilities --}}
-      <div class="ted-field-group">
-        <label class="ted-field-label">
+      <div class="tw-mb-4 tw-p-3 tw-bg-black/15 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-md last:tw-mb-0">
+        <label class="tw-flex tw-items-center tw-gap-1.5 tw-mb-2 tw-font-heading tw-text-[0.82rem] tw-font-bold tw-text-gold tw-uppercase tw-tracking-[0.06em]">
           <i class="fa-solid fa-bolt-lightning"></i>
           Special Abilities
         </label>
-        <div class="ted-list" data-category="grants" data-type="specialAbilities">
+        <div class="tw-flex tw-flex-col tw-gap-2 tw-mt-2" data-category="grants" data-type="specialAbilities">
           {{#each grants.specialAbilities}}
-          <div class="ted-list-row ted-list-row--column">
-            <input type="text" name="grants.specialAbilities.{{@index}}.name" value="{{this.name}}" placeholder="Ability name" />
-            <textarea name="grants.specialAbilities.{{@index}}.description" rows="2" placeholder="Description">{{this.description}}</textarea>
-            <button type="button" class="ted-btn-remove" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
+          <div class="tw-flex tw-flex-col tw-gap-2 tw-px-3 tw-py-2 tw-bg-black/25 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm">
+            <input type="text" name="grants.specialAbilities.{{@index}}.name" value="{{this.name}}" placeholder="Ability name" class="tw-px-2.5 tw-py-1.5 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] focus:tw-border-gold focus:tw-outline-none" />
+            <textarea name="grants.specialAbilities.{{@index}}.description" rows="2" class="tw-w-full tw-px-3 tw-py-2 tw-text-[0.85rem] tw-bg-black/40 tw-border tw-border-solid tw-border-[var(--color-border-light)] tw-rounded-sm tw-text-[var(--color-text-primary)] tw-resize-y tw-min-h-[50px] focus:tw-border-gold focus:tw-outline-none" placeholder="Description">{{this.description}}</textarea>
+            <button type="button" class="tw-self-end tw-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-bg-crimson/15 tw-border tw-border-solid tw-border-crimson/40 tw-rounded-sm tw-text-crimson-light tw-cursor-pointer tw-transition-all hover:tw-bg-crimson/30 hover:tw-border-crimson [&>i]:tw-text-[0.8rem]" data-action="removeItem"><i class="fa-solid fa-trash"></i></button>
           </div>
           {{/each}}
         </div>
-        <button type="button" class="ted-btn-add" data-action="addItem" data-category="grants" data-type="specialAbilities">
+        <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-px-4 tw-py-2 tw-bg-[var(--wh40k-accent-talents)]/10 tw-border tw-border-dashed tw-border-[var(--wh40k-accent-talents)]/30 tw-rounded-sm tw-text-[color-mix(in_srgb,var(--wh40k-accent-talents),white_15%)] tw-font-heading tw-text-[0.82rem] tw-font-semibold tw-uppercase tw-tracking-[0.04em] tw-cursor-pointer tw-transition-all hover:tw-bg-[var(--wh40k-accent-talents)]/20 hover:tw-border-solid hover:tw-border-gold hover:tw-text-gold" data-action="addItem" data-category="grants" data-type="specialAbilities">
           <i class="fa-solid fa-plus"></i> Add Special Ability
         </button>
       </div>
     </div>
-    
-  </div>{{!-- .ted-content --}}
+
+  </div>{{!-- content area --}}
 
   {{!-- Footer with Submit --}}
-  <footer class="ted-footer">
-    <button type="submit" class="ted-btn-submit">
+  <footer class="tw-flex tw-justify-end tw-gap-3 tw-p-3 tw-bg-gradient-to-b tw-from-transparent tw-to-black/20 tw-border-t-2 tw-border-solid tw-border-[var(--color-border-secondary)] tw-shrink-0">
+    <button type="submit" class="tw-inline-flex tw-items-center tw-gap-2 tw-px-6 tw-py-3 tw-bg-gradient-to-b tw-from-gold/15 tw-to-gold/10 tw-border tw-border-solid tw-border-gold/40 tw-rounded-md tw-text-gold tw-font-heading tw-text-[0.9rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] tw-cursor-pointer tw-transition-all tw-shadow-[0_2px_8px_rgba(0,0,0,0.3)] hover:tw-from-gold/25 hover:tw-to-gold/15 hover:tw-border-gold hover:tw-text-gold-light hover:tw-shadow-[0_0_16px_rgba(201,162,39,0.3)] hover:-tw-translate-y-px active:tw-translate-y-0 active:tw-shadow-[0_0_8px_rgba(201,162,39,0.2)]">
       <i class="fa-solid fa-check"></i>
       Save Changes
     </button>
