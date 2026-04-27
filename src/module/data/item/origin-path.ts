@@ -130,14 +130,8 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
                 // Wound formula - supports dice notation like "2xTB+1d5+2"
                 woundsFormula: new fields.StringField({ required: false, blank: true, initial: '' }),
 
-                // Legacy wound modifier (kept for backward compatibility)
-                wounds: new fields.NumberField({ required: true, initial: 0, integer: true }),
-
                 // Fate formula - supports conditional notation like "(1-5|=2),(6-10|=3)"
                 fateFormula: new fields.StringField({ required: false, blank: true, initial: '' }),
-
-                // Legacy fate threshold modifier (kept for backward compatibility)
-                fateThreshold: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
 
                 // Blessed by Emperor (fate points on critical success)
                 blessedByEmperor: new fields.BooleanField({ required: true, initial: false }),
@@ -393,14 +387,6 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
             }
         }
 
-        if (grants.wounds !== 0) {
-            summary.push(`Wounds: ${grants.wounds >= 0 ? '+' : ''}${grants.wounds}`);
-        }
-
-        if (grants.fateThreshold > 0) {
-            summary.push(`Fate: +${grants.fateThreshold}`);
-        }
-
         if (grants.skills.length) {
             summary.push(`Skills: ${grants.skills.map((s) => s.name).join(', ')}`);
         }
@@ -525,72 +511,16 @@ export default class OriginPathData extends ItemDataModel.mixin(DescriptionTempl
     }
 
     /* -------------------------------------------- */
-    /*  Data Migration & Cleanup                    */
-    /* -------------------------------------------- */
     /*  Data Migration                              */
     /* -------------------------------------------- */
 
     /**
-     * Migrate origin path data.
+     * Normalize origin path data shape.
      * @param {object} source  The source data
      * @protected
      */
     static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
-        OriginPathData.#migratePositions(source);
-        OriginPathData.#migrateNavigation(source);
-        OriginPathData.#migrateWoundsAndFate(source);
-        OriginPathData.#migrateEffectText(source);
-    }
-
-    /**
-     * Convert old position + positions to single positions array.
-     * @param {object} source  The source data
-     */
-    static #migratePositions(source: Record<string, unknown>): void {
-        if (source.position !== undefined && source.positions !== undefined) {
-            const oldPosition = source.position;
-            const oldPositions = source.positions || [];
-            const newPositions = [oldPosition, ...oldPositions];
-            source.positions = [...new Set(newPositions)].sort((a, b) => a - b);
-            delete source.position;
-        } else if (source.position !== undefined) {
-            source.positions = [source.position];
-            delete source.position;
-        }
-    }
-
-    /**
-     * Remove old navigation field.
-     * @param {object} source  The source data
-     */
-    static #migrateNavigation(source: Record<string, unknown>): void {
-        delete source.navigation;
-    }
-
-    /**
-     * Warn about legacy wounds/fate fields if formulas are missing.
-     * @param {object} source  The source data
-     */
-    static #migrateWoundsAndFate(source: Record<string, unknown>): void {
-        const grants = source.grants || {};
-        if (grants.wounds && !grants.woundsFormula) {
-            console.debug(`Origin Path "${source.identifier || '?'}" uses legacy grants.wounds field. Consider adding a woundsFormula instead.`);
-        }
-        if (grants.fateThreshold && !grants.fateFormula) {
-            console.debug(`Origin Path "${source.identifier || '?'}" uses legacy grants.fateThreshold field. Consider adding a fateFormula instead.`);
-        }
-    }
-
-    /**
-     * Migrate effectText to description.
-     * @param {object} source  The source data
-     */
-    static #migrateEffectText(source: Record<string, unknown>): void {
-        if (source.effectText && !source.description?.value) {
-            source.description = source.description || {};
-            source.description.value = `<p>${source.effectText.replace(/\n/g, '<br>')}</p>`;
-        }
     }
 
     /* -------------------------------------------- */

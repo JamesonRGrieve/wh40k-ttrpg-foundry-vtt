@@ -63,11 +63,6 @@ export default class SkillData extends ItemDataModel.mixin(DescriptionTemplate) 
             // Common uses
             uses: new fields.HTMLField({ required: false, blank: true }),
 
-            // Legacy fields
-            type: new fields.StringField({ required: false, blank: true }),
-            requirements: new fields.StringField({ required: false, blank: true }),
-            source: new fields.StringField({ required: false, blank: true }),
-
             // Special rules for this skill
             specialRules: new fields.HTMLField({ required: false, blank: true }),
 

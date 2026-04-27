@@ -71,19 +71,12 @@ export default class AmmunitionData extends ItemDataModel.mixin(DescriptionTempl
     /* -------------------------------------------- */
 
     /**
-     * Migrate ammunition data.
+     * Normalize ammunition data shape.
      * @param {object} source  The source data
      * @protected
      */
     static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
-        // Legacy field cleanup
-        delete source.usedWith;
-        delete source.damageOrEffect;
-        delete source.qualities;
-        delete source.damageModifier;
-        delete source.penetrationModifier;
-        delete source.specialRules;
     }
 
     /** @inheritdoc */
