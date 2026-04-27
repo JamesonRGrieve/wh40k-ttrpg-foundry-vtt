@@ -2,7 +2,7 @@ export { WH40KBaseActor } from './base-actor.ts';
 
 // Per-kind document classes.
 export { WH40KAcolyte } from './acolyte.ts';
-export { WH40KNPCV2 } from './npc-v2.ts';
+export { WH40KNPC } from './npc.ts';
 export { WH40KVehicle } from './vehicle.ts';
 export { WH40KStarship } from './starship.ts';
 

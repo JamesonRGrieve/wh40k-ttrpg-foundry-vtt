@@ -1,4 +1,4 @@
-import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
+import type { WH40KNPC } from '../../documents/npc.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -25,7 +25,7 @@ interface Preset {
 
 interface DialogState {
     mode: 'library' | 'save' | 'load';
-    npc: WH40KNPCV2 | null;
+    npc: WH40KNPC | null;
     selectedPreset: string | null;
 }
 
@@ -96,11 +96,11 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
     /**
      * Create a new CombatPresetDialog.
-     * @param {WH40KNPCV2 | null} npc - The NPC actor (optional for library mode).
+     * @param {WH40KNPC | null} npc - The NPC actor (optional for library mode).
      * @param {'library' | 'save' | 'load'} mode - The dialog mode ("library", "save", "load").
      * @param {Record<string, unknown>} options - Application options.
      */
-    constructor(npc: WH40KNPCV2 | null = null, mode: 'library' | 'save' | 'load' = 'library', options: Record<string, unknown> = {}) {
+    constructor(npc: WH40KNPC | null = null, mode: 'library' | 'save' | 'load' = 'library', options: Record<string, unknown> = {}) {
         super(options);
         this.#state.npc = npc;
         this.#state.mode = mode;
@@ -122,10 +122,10 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
     /**
      * Save a preset from an NPC.
-     * @param {WH40KNPCV2} npc - The NPC actor.
+     * @param {WH40KNPC} npc - The NPC actor.
      * @returns {CombatPresetDialog}
      */
-    static savePreset(npc: WH40KNPCV2): CombatPresetDialog {
+    static savePreset(npc: WH40KNPC): CombatPresetDialog {
         const dialog = new CombatPresetDialog(npc, 'save');
         void dialog.render(true);
         return dialog;
@@ -133,10 +133,10 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
     /**
      * Load a preset onto an NPC.
-     * @param {WH40KNPCV2} npc - The NPC actor.
+     * @param {WH40KNPC} npc - The NPC actor.
      * @returns {CombatPresetDialog}
      */
-    static loadPreset(npc: WH40KNPCV2): CombatPresetDialog {
+    static loadPreset(npc: WH40KNPC): CombatPresetDialog {
         const dialog = new CombatPresetDialog(npc, 'load');
         void dialog.render(true);
         return dialog;
@@ -211,12 +211,12 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
     /**
      * Create a preset from an NPC.
-     * @param {WH40KNPCV2} npc - The NPC actor.
+     * @param {WH40KNPC} npc - The NPC actor.
      * @param {string} name - The preset name.
      * @param {string} description - The preset description.
      * @returns {Omit<Preset, 'id' | 'createdAt'>} The preset data.
      */
-    static createPresetFromNPC(npc: WH40KNPCV2, name: string, description: string = ''): Omit<Preset, 'id' | 'createdAt'> {
+    static createPresetFromNPC(npc: WH40KNPC, name: string, description: string = ''): Omit<Preset, 'id' | 'createdAt'> {
         const system = npc.system as any;
         return {
             name,
@@ -240,11 +240,11 @@ export default class CombatPresetDialog extends HandlebarsApplicationMixin(Appli
 
     /**
      * Apply a preset to an NPC.
-     * @param {WH40KNPCV2} npc - The NPC actor.
+     * @param {WH40KNPC} npc - The NPC actor.
      * @param {Preset} preset - The preset data.
      * @returns {Promise<void>}
      */
-    static async applyPresetToNPC(npc: WH40KNPCV2, preset: Preset): Promise<void> {
+    static async applyPresetToNPC(npc: WH40KNPC, preset: Preset): Promise<void> {
         const updates = {
             'system.faction': preset.faction,
             'system.type': preset.type,

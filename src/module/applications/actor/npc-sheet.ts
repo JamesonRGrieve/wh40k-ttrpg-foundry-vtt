@@ -6,7 +6,7 @@
  * (horde, barter/transactions, tags, combat tracker, faction, GM tools, stat-block I/O).
  */
 
-import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
+import type { WH40KNPC } from '../../documents/npc.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
 import CombatPresetDialog from '../npc/combat-preset-dialog.ts';
 import StatBlockExporter from '../npc/stat-block-exporter.ts';
@@ -22,8 +22,8 @@ import CharacterSheet from './character-sheet.ts';
  * @extends {CharacterSheet}
  */
 export default class NPCSheet extends (CharacterSheet as any) {
-    declare actor: WH40KNPCV2;
-    declare document: WH40KNPCV2;
+    declare actor: WH40KNPC;
+    declare document: WH40KNPC;
     declare element: HTMLElement;
     declare position: { top: number; left: number; width: number; height: number };
     declare isEditable: boolean;
@@ -105,82 +105,30 @@ export default class NPCSheet extends (CharacterSheet as any) {
     /* -------------------------------------------- */
 
     /**
-     * PARTS for the NPC sheet.
-     * NPCs reuse the full PC template set (templates/actor/player/*.hbs) — same
-     * header, same tab nav, same panels — and diverge only via {{#if isNPC}}
-     * branches inside those templates for widgets that read PC-only fields
-     * (Fate, Fatigue, Lift/Push, XP, Origin Path, Influence/Requisition/Gelt).
-     * A sixth "npc" part under templates/actor/npc/ holds every NPC-unique
-     * panel (horde, barter, tags, combat tracker, GM tools, etc.).
+     * PARTS for the NPC sheet — inherits the PC sidebar layout (header + tabs
+     * containers, body parts) from CharacterSheet, drops the PC-only Overview
+     * and Powers tabs, and adds an "npc" tab under templates/actor/npc/ for
+     * NPC-unique panels (horde, barter, tags, combat tracker, GM tools, etc.).
+     * The sidebar accent colour is overridden via --wh40k-sidebar-accent in
+     * _npc-sheet.css so NPCs read --npc-accent-primary while PCs keep gold.
      * @override
      */
-    static PARTS = {
-        header: {
-            template: 'systems/wh40k-rpg/templates/actor/player/header.hbs',
-            container: {
-                classes: [
-                    'wh40k-sidebar',
-                    'tw-flex',
-                    'tw-flex-col',
-                    'tw-h-full',
-                    'tw-min-h-0',
-                    'tw-min-w-0',
-                    'tw-overflow-y-auto',
-                    'tw-overflow-x-hidden',
-                    'tw-bg-[var(--color-bg-secondary,#252525)]',
-                    'tw-border-r-2',
-                    'tw-border-solid',
-                    'tw-border-[var(--npc-accent-primary)]',
-                ],
-                id: 'sidebar',
+    static PARTS = (() => {
+        const parent = (CharacterSheet as any).PARTS;
+        return {
+            header: parent.header,
+            tabs: parent.tabs,
+            skills: parent.skills,
+            combat: parent.combat,
+            equipment: parent.equipment,
+            biography: parent.biography,
+            npc: {
+                template: 'systems/wh40k-rpg/templates/actor/npc/tab-npc.hbs',
+                container: { classes: ['wh40k-body'], id: 'tab-body' },
+                scrollable: [''],
             },
-        },
-        tabs: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
-            container: {
-                classes: [
-                    'wh40k-sidebar',
-                    'tw-flex',
-                    'tw-flex-col',
-                    'tw-h-full',
-                    'tw-min-h-0',
-                    'tw-min-w-0',
-                    'tw-overflow-y-auto',
-                    'tw-overflow-x-hidden',
-                    'tw-bg-[var(--color-bg-secondary,#252525)]',
-                    'tw-border-r-2',
-                    'tw-border-solid',
-                    'tw-border-[var(--npc-accent-primary)]',
-                ],
-                id: 'sidebar',
-            },
-        },
-        skills: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tab-skills.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
-        combat: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tab-combat.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
-        equipment: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tab-equipment.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
-        biography: {
-            template: 'systems/wh40k-rpg/templates/actor/player/tab-biography.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
-        npc: {
-            template: 'systems/wh40k-rpg/templates/actor/npc/tab-npc.hbs',
-            container: { classes: ['wh40k-body'], id: 'tab-body' },
-            scrollable: [''],
-        },
-    };
+        };
+    })();
 
     /* -------------------------------------------- */
 
@@ -258,6 +206,64 @@ export default class NPCSheet extends (CharacterSheet as any) {
         await this._prepareItems(context);
 
         return context;
+    }
+
+    protected _getSidebarHeaderFields(_gameSystem: string) {
+        const threatTier = (this.actor.system?.threatTier ?? {}) as { color?: string; label?: string };
+        return [
+            {
+                label: 'Threat',
+                name: 'system.threatLevel',
+                type: 'number',
+                value: this.actor.system?.threatLevel ?? 1,
+                min: 1,
+                max: 30,
+                icon: 'fa-solid fa-skull',
+                rowClass: 'wh40k-threat-row',
+                inputClass: 'wh40k-threat-input',
+                borderColor: threatTier.color,
+                valueLabel: threatTier.label,
+                valueClass: 'wh40k-threat-tier',
+                valueColor: threatTier.color,
+            },
+            {
+                label: 'Type',
+                name: 'system.type',
+                type: 'select',
+                value: this.actor.system?.type ?? 'troop',
+                options: {
+                    troop: 'Troop',
+                    elite: 'Elite',
+                    master: 'Master',
+                    horde: 'Horde',
+                    swarm: 'Swarm',
+                    creature: 'Creature',
+                    daemon: 'Daemon',
+                    xenos: 'Xenos',
+                },
+            },
+            {
+                label: 'Role',
+                name: 'system.role',
+                type: 'select',
+                value: this.actor.system?.role ?? 'bruiser',
+                options: {
+                    bruiser: 'Bruiser',
+                    sniper: 'Sniper',
+                    caster: 'Caster',
+                    support: 'Support',
+                    commander: 'Commander',
+                    specialist: 'Specialist',
+                },
+            },
+            {
+                label: 'Faction',
+                name: 'system.faction',
+                type: 'text',
+                value: this.actor.system?.faction ?? '',
+                placeholder: 'Faction',
+            },
+        ];
     }
 
     /* -------------------------------------------- */

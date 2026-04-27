@@ -1,4 +1,4 @@
-import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
+import type { WH40KNPC } from '../../documents/npc.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -104,9 +104,9 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Promise resolver.
-     * @type {((value: WH40KNPCV2 | null) => void) | null}
+     * @type {((value: WH40KNPC | null) => void) | null}
      */
-    #resolve: ((value: WH40KNPCV2 | null) => void) | null = null;
+    #resolve: ((value: WH40KNPC | null) => void) | null = null;
 
     /**
      * Whether submitted.
@@ -380,7 +380,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                 system: systemData,
             };
 
-            const actor = (await Actor.create(actorData)) as WH40KNPCV2 | undefined;
+            const actor = (await Actor.create(actorData)) as WH40KNPC | undefined;
 
             if (actor) {
                 // Create embedded traits and talents
@@ -464,9 +464,9 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
 
     /**
      * Wait for selection.
-     * @returns {Promise<WH40KNPCV2 | null>} Created actor or null.
+     * @returns {Promise<WH40KNPC | null>} Created actor or null.
      */
-    async wait(): Promise<WH40KNPCV2 | null> {
+    async wait(): Promise<WH40KNPC | null> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             void this.render(true);
@@ -476,9 +476,9 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
     /**
      * Open the template selector.
      * @param {Partial<FilterState>} [options] - Options.
-     * @returns {Promise<WH40KNPCV2 | null>} Created actor or null.
+     * @returns {Promise<WH40KNPC | null>} Created actor or null.
      */
-    static async open(options: Partial<FilterState> = {}): Promise<WH40KNPCV2 | null> {
+    static async open(options: Partial<FilterState> = {}): Promise<WH40KNPC | null> {
         const selector = new this();
 
         if (options.category) selector.#filters.category = options.category;

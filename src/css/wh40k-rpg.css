@@ -46458,22 +46458,15 @@ body.theme-dark {
 
 /* ── source: src/css/actor/_npc-sheet.css ── */
 /* ============================================ */
-/* NPC Sheet V2 Styles - Modern Redesign */
+/* Player Sheet (PC + NPC) — Sidebar Layout Foundation */
 /* ============================================ */
-/* Vertical navigation, GM-focused, clean layout */
+/* Both PC and NPC sheets render with portrait + nav in a left sidebar
+ * and tab content on the right. Form grid + window-content flex live
+ * here because those elements aren't reachable from Tailwind utilities
+ * on PARTS containers. NPC-specific accent vars and panels are nested
+ * under `.wh40k-rpg.sheet.actor.player.npc` below. */
 
-/* ============================================ */
-/* Base Sheet Structure - Sidebar Layout */
-/* ============================================ */
-
-.wh40k-rpg.sheet.actor.player.npc {
-    --npc-accent-combat: #dc3545;
-    --npc-accent-defense: #2196f3;
-    --npc-accent-movement: #4caf50;
-    --npc-accent-skills: #9c27b0;
-    --npc-accent-abilities: #ff9800;
-    --npc-accent-notes: #607d8b;
-
+.wh40k-rpg.sheet.actor.player {
     /* ApplicationV2 Layout Foundation */
     .window-content {
         display: flex !important;
@@ -46495,13 +46488,27 @@ body.theme-dark {
         width: 100% !important;
     }
 
-    /* Sidebar + nav + header styling lives in Tailwind utilities on
-     * their templates / PARTS container classes. Form grid stays here
-     * because the form element itself isn't reachable from Tailwind. */
-
     .wh40k-navigation .wh40k-nav-item {
         margin: 0;
     }
+}
+
+/* ============================================ */
+/* NPC Sheet V2 Styles - Modern Redesign */
+/* ============================================ */
+/* Vertical navigation, GM-focused, clean layout */
+
+.wh40k-rpg.sheet.actor.player.npc {
+    --npc-accent-combat: #dc3545;
+    --npc-accent-defense: #2196f3;
+    --npc-accent-movement: #4caf50;
+    --npc-accent-skills: #9c27b0;
+    --npc-accent-abilities: #ff9800;
+    --npc-accent-notes: #607d8b;
+
+    /* Override the player sidebar accent colour so NPC sidebars use the
+     * NPC palette while PC sheets keep the gold default. */
+    --wh40k-sidebar-accent: var(--npc-accent-primary);
 
     /* Main content area (tabs) */
     .wh40k-body {
@@ -60419,17 +60426,6 @@ body.theme-dark {
         }
     }
 
-    /* Legacy wh40k-main-layout for compatibility */
-    .wh40k-main-layout {
-        display: grid !important;
-        grid-template-columns: 160px minmax(0, 1fr) !important;
-        grid-template-rows: minmax(0, 1fr) !important;
-        flex: 1 1 auto !important;
-        min-height: 0 !important;
-        overflow: hidden !important;
-        grid-column: auto !important;
-    }
-
     /* The body scrolls and takes remaining space */
     .wh40k-body,
     #tab-body {
@@ -60943,71 +60939,6 @@ body.theme-dark {
         background: var(--wh40k-input-bg, #fff) !important;
         color: var(--wh40k-text-dark, #333) !important;
         font-size: 0.8em !important;
-    }
-}
-
-/* -------------------------------------------- */
-/* Sidebar Navigation Variant                   */
-/* -------------------------------------------- */
-
-.window-app.wh40k-rpg.sidebar-nav {
-    /* Sidebar variant uses grid layout with nav on left */
-    form.sheet-body {
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        grid-template-rows: auto 1fr !important;
-        gap: 0 !important;
-    }
-
-    /* Main layout container for sidebar + body */
-    #main.wh40k-main-layout {
-        display: grid !important;
-        grid-template-columns: 120px 1fr !important;
-        grid-template-rows: 1fr !important;
-        gap: 0 !important;
-        flex: 1 1 auto !important;
-        min-height: 0 !important;
-        overflow: hidden !important;
-    }
-
-    /* Sidebar navigation - vertical */
-    nav.wh40k-navigation.wh40k-sidebar-nav {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 2px !important;
-        padding: 6px !important;
-        background: rgba(0, 0, 0, 0.3) !important;
-        border-right: 1px solid rgba(120, 46, 34, 0.4) !important;
-        overflow-y: auto !important;
-        min-width: 100px !important;
-        max-width: 120px !important;
-    }
-
-    nav.wh40k-sidebar-nav .wh40k-nav-item {
-        display: block !important;
-        padding: 6px 8px !important;
-        border-radius: var(--wh40k-radius-md) !important;
-        cursor: pointer !important;
-        transition: background-color 0.2s !important;
-        text-transform: uppercase !important;
-        font-size: 0.75em !important;
-        text-align: left !important;
-        white-space: nowrap !important;
-    }
-
-    nav.wh40k-sidebar-nav .wh40k-nav-item:hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-    }
-
-    nav.wh40k-sidebar-nav .wh40k-nav-item.active {
-        background: rgba(196, 135, 29, 0.3) !important;
-        border-left: 3px solid #c4871d !important;
-    }
-
-    /* Body takes remaining space in sidebar variant */
-    .wh40k-body {
-        overflow-y: auto !important;
-        min-height: 0 !important;
     }
 }
 
