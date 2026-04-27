@@ -1,35 +1,15 @@
-{{!-- Dark Heresy 2e Character Sheet Header --}}
-{{#if isNPC}}
+{{!-- Dark Heresy 2e Character Sheet Header — sidebar layout for PC + NPC.
+     Both branches render the shared sidebar-header partial (name, portrait,
+     divination, origin bubbles) and append a system-specific bio block:
+     PCs get Player/Home World/Career/Rank; NPCs get Threat/Type/Role/Faction. --}}
+
 <div class="wh40k-header wh40k-panel wh40k-character-header wh40k-npc-sidebar-header tw-flex tw-flex-none tw-flex-col tw-gap-3 tw-px-3 tw-py-3 tw-min-w-0 tw-m-0 tw-border-r-0 tw-border-b tw-border-solid tw-border-[var(--color-border-secondary,#444)] tw-rounded-none">
     <div class="tw-flex tw-flex-col tw-items-center tw-gap-3">
-        <div class="wh40k-header-name-line tw-flex tw-w-full tw-items-center tw-gap-2">
-            <input class="wh40k-header-input wh40k-name-input tw-min-w-0 tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[1.05rem] tw-font-bold tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="name" type="text" value="{{actor.name}}" />
-        </div>
 
-        <div class="wh40k-portrait-container tw-relative tw-aspect-[11/15] tw-w-full tw-max-w-[160px] tw-cursor-pointer tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium,rgba(0,0,0,0.2))] tw-transition-all hover:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)]">
-            <i class="fa-solid fa-dice-d20 wh40k-origin-builder-btn tw-absolute tw-text-2xl tw-top-2 tw-left-2 tw-z-10 tw-cursor-pointer tw-opacity-60 tw-transition-all hover:tw-opacity-100 hover:tw-drop-shadow-[0_0_8px_rgba(212,175,55,0.9)] {{#unless originPathComplete}}pulse{{/unless}}"
-               data-action="openOriginPathBuilder"
-               data-tooltip="{{localize 'WH40K.Utility.SetupOriginPath'}}"></i>
-            <img class="wh40k-portrait tw-h-full tw-w-full tw-object-cover tw-bg-[rgba(0,0,0,0.25)]" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
-        </div>
-
-        {{#if originPathSteps.length}}
-        <div class="wh40k-npc-origin-grid tw-grid tw-w-full tw-grid-cols-2 tw-gap-2">
-            {{#each originPathSteps as |step|}}
-            <div class="tw-flex tw-aspect-square tw-items-center tw-justify-center tw-overflow-hidden tw-rounded-lg tw-border tw-border-solid tw-bg-[rgba(0,0,0,0.2)] tw-transition-all {{#if step.item}}tw-border-gold tw-cursor-pointer hover:tw-border-[#f0d060] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)]{{else}}tw-border-[var(--wh40k-border-color,#4a3728)] tw-opacity-40 tw-cursor-default{{/if}}"
-                 {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
-                 {{#if step.tooltipData}}data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{step.tooltipData}}"{{else}}data-tooltip="{{step.label}}"{{/if}}>
-                {{#if step.item}}
-                    <img src="{{step.item.img}}" alt="{{step.item.name}}" class="tw-h-full tw-w-full tw-object-cover" />
-                {{else}}
-                    <i class="fas {{step.icon}} tw-text-xl tw-text-[var(--wh40k-text-muted)]"></i>
-                {{/if}}
-            </div>
-            {{/each}}
-        </div>
-        {{/if}}
+        {{> systems/wh40k-rpg/templates/actor/partial/sidebar-header.hbs}}
 
         <div class="tw-flex tw-w-full tw-flex-col tw-gap-2">
+            {{#if isNPC}}
             <div class="wh40k-header-row wh40k-threat-row tw-flex tw-min-w-0 tw-items-baseline tw-gap-2">
                 <span class="wh40k-header-label tw-min-w-[48px] tw-shrink-0 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]"><i class="fa-solid fa-skull"></i> Threat</span>
                 <input class="wh40k-header-input wh40k-threat-input tw-min-w-0 tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[var(--wh40k-text-dark,#333)] focus:tw-outline-none" name="system.threatLevel" type="number" min="1" max="30" value="{{source.threatLevel}}" style="border-color: {{threatTier.color}};" />
@@ -51,55 +31,24 @@
                 <span class="wh40k-header-label tw-min-w-[48px] tw-shrink-0 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">Faction</span>
                 <input class="wh40k-header-input tw-min-w-0 tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.faction" type="text" value="{{source.faction}}" placeholder="Faction" />
             </div>
+            {{else}}
+            <div class="wh40k-header-row tw-flex tw-min-w-0 tw-items-baseline tw-gap-2">
+                <span class="wh40k-header-label tw-min-w-[60px] tw-shrink-0 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize "WH40K.Character.Player"}}</span>
+                <input class="wh40k-header-input wh40k-player-input tw-min-w-0 tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" />
+            </div>
+            <div class="wh40k-header-row tw-flex tw-min-w-0 tw-items-baseline tw-gap-2">
+                <span class="wh40k-header-label tw-min-w-[60px] tw-shrink-0 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize "WH40K.OriginPath.HomeWorld"}}</span>
+                <input class="wh40k-header-input tw-min-w-0 tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.originPath.homeWorld" type="text" value="{{system.originPath.homeWorld}}" placeholder="Home World" />
+            </div>
+            <div class="wh40k-header-row tw-flex tw-min-w-0 tw-items-baseline tw-gap-2">
+                <span class="wh40k-header-label tw-min-w-[60px] tw-shrink-0 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize "WH40K.OriginPath.Career"}}</span>
+                <input class="wh40k-header-input tw-min-w-0 tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.originPath.career" type="text" value="{{system.originPath.career}}" placeholder="Career" />
+            </div>
+            <div class="wh40k-header-row tw-flex tw-min-w-0 tw-items-baseline tw-gap-2">
+                <span class="wh40k-header-label tw-min-w-[60px] tw-shrink-0 tw-text-[0.75rem] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize "WH40K.Character.Rank"}}</span>
+                <input class="wh40k-header-input wh40k-rank-input tw-min-w-0 tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.rank" type="number" value="{{system.rank}}" placeholder="Rank" />
+            </div>
+            {{/if}}
         </div>
     </div>
 </div>
-{{else}}
-<div class="wh40k-header wh40k-panel wh40k-character-header tw-relative tw-pt-2 tw-px-3 tw-pb-1.5">
-    <div class="wh40k-header-left tw-flex tw-flex-col tw-gap-2">
-        {{!-- Name line above portrait --}}
-        <div class="wh40k-header-name-line tw-flex tw-items-center tw-justify-start">
-            <span class="wh40k-hdr-name" data-inline-edit {{#unless actor.name}}data-inline-edit-start{{/unless}}>
-                <span class="wh40k-hdr-name-text wh40k-inline-edit-text">{{#if actor.name}}{{actor.name}}{{else}}<em class="wh40k-hdr-placeholder">Character Name</em>{{/if}}</span>
-                <input class="wh40k-hdr-name-input wh40k-inline-edit-input" name="name" type="text" value="{{actor.name}}" placeholder="Character Name" readonly />
-                <button type="button" class="wh40k-inline-edit-save" data-inline-edit-save tabindex="-1" title="Save"><i class="fas fa-check"></i></button>
-            </span>
-            <span class="wh40k-hdr-paren">(</span>
-            <span class="wh40k-hdr-player" data-inline-edit {{#unless system.bio.playerName}}data-inline-edit-start{{/unless}}>
-                <span class="wh40k-hdr-player-text wh40k-inline-edit-text">{{#if system.bio.playerName}}{{system.bio.playerName}}{{else}}<em class="wh40k-hdr-placeholder">Player Name</em>{{/if}}</span>
-                <input class="wh40k-hdr-player-input wh40k-inline-edit-input" name="system.bio.playerName" type="text" value="{{system.bio.playerName}}" placeholder="Player Name" readonly />
-                <button type="button" class="wh40k-inline-edit-save" data-inline-edit-save tabindex="-1" title="Save"><i class="fas fa-check"></i></button>
-            </span>
-            <span class="wh40k-hdr-paren">)</span>
-        </div>
-        {{!-- Portrait + Origin Path Icons side by side --}}
-        <div class="wh40k-header-topline tw-grid tw-grid-cols-header-topline tw-items-center tw-gap-2.5">
-            <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-shrink-0">
-                <div class="wh40k-portrait-container tw-relative tw-aspect-[11/15] tw-w-44 tw-shrink-0 tw-cursor-pointer tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium,rgba(0,0,0,0.2))] tw-transition-all hover:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)]">
-                    <i class="fa-solid fa-dice-d20 wh40k-origin-builder-btn tw-absolute tw-text-2xl tw-top-2 tw-left-2 tw-z-10 tw-cursor-pointer tw-opacity-60 tw-transition-all hover:tw-opacity-100 hover:tw-drop-shadow-[0_0_8px_rgba(212,175,55,0.9)] {{#unless originPathComplete}}pulse{{/unless}}"
-                       data-action="openOriginPathBuilder"
-                       data-tooltip="{{localize 'WH40K.Utility.SetupOriginPath'}}"></i>
-                    <img class="wh40k-portrait tw-h-full tw-w-full tw-object-cover tw-bg-[rgba(0,0,0,0.25)]" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
-                </div>
-                {{#if system.originPath.divination}}
-                <p class="wh40k-divination tw-italic tw-opacity-50">{{system.originPath.divination}}</p>
-                {{/if}}
-            </div>
-            {{!-- Origin Path Step Icons --}}
-            <div class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-2">
-                {{#each originPathSteps as |step|}}
-                <div class="tw-flex tw-items-center tw-justify-center tw-w-14 tw-h-14 tw-rounded-full tw-overflow-hidden tw-border-2 tw-border-solid tw-bg-[rgba(0,0,0,0.2)] tw-transition-all {{#if step.item}}tw-border-gold tw-cursor-pointer hover:tw-border-[#f0d060] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)] hover:tw-scale-110{{else}}tw-border-[var(--wh40k-border-color,#4a3728)] tw-opacity-40 tw-cursor-default{{/if}}"
-                     {{#if step.item}}data-action="itemEdit" data-item-id="{{step.item._id}}"{{/if}}
-                     {{#if step.tooltipData}}data-wh40k-tooltip="generic" data-wh40k-tooltip-data="{{step.tooltipData}}"{{else}}data-tooltip="{{step.label}}"{{/if}}>
-                    {{#if step.item}}
-                        <img src="{{step.item.img}}" alt="{{step.item.name}}" class="tw-w-12 tw-h-12 tw-max-w-12 tw-max-h-12 tw-object-cover tw-rounded-full tw-border-2 tw-border-solid tw-border-gold" />
-                    {{else}}
-                        <i class="fas {{step.icon}} tw-text-xl tw-text-[var(--wh40k-text-muted)]"></i>
-                    {{/if}}
-                </div>
-                {{/each}}
-            </div>
-        </div>
-    </div>
-</div>
-{{/if}}
