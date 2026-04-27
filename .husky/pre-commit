@@ -1,5 +1,11 @@
 pnpm exec lint-staged --hide-unstaged
 
+# Type-check ratchet: blocks commits that increase tsc --noEmit error count.
+# Update the baseline (.tsc-error-baseline) in the same commit when the
+# count drops, via: pnpm typecheck:ratchet:update
+echo "[pre-commit] running tsc ratchet…"
+pnpm -s typecheck:ratchet
+
 # Validate pack compilation when the compiler or any pack source changes.
 # The prior silent-error bug in compilePacks went unnoticed because lint-staged
 # only inspects the diff, not the actual Gulp pipeline. `gulp packs` exercises
