@@ -18,6 +18,8 @@ These are not optional polish items. Every PR, refactor, and new component must 
 
 4. **Full DRY.** No copy-paste between sheets, mixins, templates, helpers, or DataModels. Extract partials, mixins, and utility functions. If you write similar logic twice, the third time you extract — and prefer extracting on the second instance when the abstraction is obvious.
 
+5. **All player-facing strings live in the langpack.** Any string a user can read in the UI — labels, tab names, button text, tooltips, placeholders, dialog titles, validation/error messages, chat card text, notifications — must be a localization key resolved through `src/lang/en.json` and namespaced under `WH40K.*`. Use `{{localize "WH40K.…"}}` (or `{{#localize}}…{{/localize}}` for inline blocks) in Handlebars and `game.i18n.localize(...)` / `game.i18n.format(...)` in TypeScript. Hard-coded English in templates, sheet `DEFAULT_OPTIONS.window.title`, `static TABS[].label`, action method strings, or `ui.notifications.*` calls is a regression and must be ported the moment you touch the surrounding code. Add new keys to `en.json` in the same PR; never reference a key that doesn't exist. Internal identifiers (CSS classes, action names, schema field paths, data-* attributes, log messages, dev-only console output) are not player-facing and stay as plain strings.
+
 ---
 
 ## Testing & visual coverage (required for every component)
