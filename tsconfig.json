@@ -9,8 +9,7 @@
     "declaration": false,
     "sourceMap": true,
 
-    "allowJs": true,
-    "checkJs": false,
+    "allowJs": false,
 
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
