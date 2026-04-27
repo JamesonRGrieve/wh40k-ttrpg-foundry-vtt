@@ -1,110 +1,17 @@
 import { SYSTEM_ID } from './constants.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
 
-// Baseline release. Version 0.0.1 shipped with migration worldVersion = 1.
-// v2 — retype legacy actors from the pre-split `character` / `npc` / `vehicle`
-// / `starship` types to their concrete (system, kind) types so the per-system
-// sheet registrations in HooksManager.registerSheets resolve.
-const WORLD_VERSION = 2;
-const SETTING_LEGACY_TYPE_BACKUP = 'migration-actor-types-v2-backup';
+// Baseline release. Version 0.0.1 ships with migration worldVersion = 1.
+// No migrations run against a fresh 0.0.1 world — every prior migration below
+// was inherited from the upstream fork and has been retained, commented out,
+// purely as reference for future schema changes. When you add the first real
+// migration past v1, bump WORLD_VERSION and branch on `currentVersion < N`.
+const WORLD_VERSION = 1;
 
 export async function checkAndMigrateWorld() {
-    const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion) as number;
-    if (WORLD_VERSION === currentVersion || !game.user.isGM) return;
-
-    if (currentVersion < 2) {
-        await migrateLegacyActorTypes();
-    }
-
-    void game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, WORLD_VERSION);
-}
-
-/**
- * v2 — Retype every actor still on the legacy 4 types (character/npc/vehicle/
- * starship) to the new (system, kind) concrete type. Foundry doesn't support
- * changing `type` in place, so we delete the actor and recreate it under the
- * same id (keepId: true) so existing references — scene tokens, macros, journal
- * `@Actor[id]` links, chat messages — keep resolving.
- *
- * Before any destructive action a full JSON snapshot of every legacy actor's
- * `toObject()` is cached in a world setting so a broken migration can be rolled
- * back manually:
- *   const backup = game.settings.get('wh40k-rpg', 'migration-actor-types-v2-backup');
- *   // backup.actors[] holds the pre-migration documents.
- */
-async function migrateLegacyActorTypes() {
-    const LEGACY = new Set(['character', 'npc', 'vehicle', 'starship']);
-    const targets = Array.from(game.actors ?? []).filter((a: { type: string }) => LEGACY.has(a.type));
-    if (!targets.length) return;
-
-    if (!game.settings.settings.has(`${SYSTEM_ID}.${SETTING_LEGACY_TYPE_BACKUP}`)) {
-        game.settings.register(SYSTEM_ID, SETTING_LEGACY_TYPE_BACKUP, {
-            name: SETTING_LEGACY_TYPE_BACKUP,
-            scope: 'world',
-            config: false,
-            type: Object,
-            default: {},
-        });
-    }
-
-    const inferSystem = (a: { system?: { gameSystem?: unknown } }): string => {
-        const raw = a.system?.gameSystem;
-        if (typeof raw !== 'string' || !raw) return 'dh2';
-        if (raw === 'dh2e') return 'dh2';
-        if (raw === 'dh1e') return 'dh1';
-        return raw;
-    };
-
-    const backup = {
-        timestamp: new Date().toISOString(),
-        actors: targets.map((a: { toObject: () => unknown }) => a.toObject()),
-    };
-    await game.settings.set(SYSTEM_ID, SETTING_LEGACY_TYPE_BACKUP, backup);
-    game.wh40k?.log?.(`Backed up ${backup.actors.length} legacy actor(s) to ${SYSTEM_ID}.${SETTING_LEGACY_TYPE_BACKUP} before migration.`);
-
-    let migrated = 0;
-    const failed: Array<{ id: string; name: string; error: string }> = [];
-
-    for (const actor of targets) {
-        const id = actor.id;
-        const name = actor.name;
-        try {
-            const sys = inferSystem(actor as { system?: { gameSystem?: unknown } });
-            // starship was RT-only; everything else maps under the inferred system.
-            const newType = actor.type === 'starship' ? 'rt-starship' : `${sys}-${actor.type}`;
-            const source = (actor as { toObject: () => Record<string, unknown> }).toObject();
-            source.type = newType;
-
-            await actor.delete();
-            const created = await Actor.create(source, { keepId: true });
-            if (!created) {
-                delete (source as Record<string, unknown>)._id;
-                const fallback = await Actor.create(source);
-                if (!fallback) {
-                    failed.push({ id, name, error: 'Create returned falsy — data is in the world-setting backup.' });
-                } else {
-                    failed.push({
-                        id,
-                        name,
-                        error: `Recreated with new id ${fallback.id} (old id lost; references may need remapping).`,
-                    });
-                }
-                continue;
-            }
-            migrated++;
-        } catch (err) {
-            game.wh40k?.error?.(`Migration error for ${name} (${id}):`, err);
-            failed.push({ id, name, error: String(err) });
-        }
-    }
-
-    game.wh40k?.log?.(
-        `Actor-type migration: ${migrated}/${targets.length} retyped successfully` +
-            (failed.length ? `, ${failed.length} failed (see console). Backup: ${SYSTEM_ID}.${SETTING_LEGACY_TYPE_BACKUP}` : '.'),
-    );
-    if (failed.length) {
-        console.warn('[WH40K] Actor migration failures:', failed);
-        ui.notifications.warn(`Actor migration: ${failed.length} failed. Check console. Backup in world settings (${SYSTEM_ID}.${SETTING_LEGACY_TYPE_BACKUP}).`);
+    const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
+    if (WORLD_VERSION !== currentVersion && game.user.isGM) {
+        void game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, WORLD_VERSION);
     }
 }
 
@@ -153,11 +60,14 @@ const DEAD_ICON_REMAPS: Record<string, string> = {
 export async function checkAndMigrateWorld() {
     const worldVersion = 188;
 
+    // @ts-expect-error - argument type
     const currentVersion = game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion);
+    // @ts-expect-error - comparison type
     if (worldVersion !== currentVersion && game.user.isGM) {
         ui.notifications.info('Upgrading the world, please wait...');
 
         // Update Actors
+        // @ts-expect-error - dynamic property access
         for (const actor of game.actors.contents) {
             try {
                 await migrateActorData(actor, currentVersion);
@@ -167,6 +77,7 @@ export async function checkAndMigrateWorld() {
         }
 
         // Update Items
+        // @ts-expect-error - dynamic property access
         for (const item of game.items.contents) {
             try {
                 await migrateItemData(item, currentVersion);
@@ -181,6 +92,7 @@ export async function checkAndMigrateWorld() {
         // Display Release Notes
         await displayReleaseNotes(worldVersion);
 
+        // @ts-expect-error - argument type
         void game.settings.set(SYSTEM_ID, WH40KSettings.SETTINGS.worldVersion, worldVersion);
         ui.notifications.info('Upgrade complete!');
     }
@@ -335,6 +247,7 @@ export async function checkAndMigrateWorld() {
             }
         }
 
+        // @ts-expect-error - operator type
         if (currentVersion < 180) {
             // Update User Items to be Nested
             for (const item of actor.items) {
@@ -346,6 +259,7 @@ export async function checkAndMigrateWorld() {
             }
         }
 
+        // @ts-expect-error - operator type
         if (currentVersion < 182) {
             const skills = actor.system?.skills;
 
@@ -366,6 +280,7 @@ export async function checkAndMigrateWorld() {
 
         // V13 Compatibility Migration (v184)
         // Migrate embedded items on actors
+        // @ts-expect-error - operator type
         if (currentVersion < 184) {
             for (const item of actor.items) {
                 const updateData = {};
@@ -408,6 +323,7 @@ export async function checkAndMigrateWorld() {
         }
 
         // Remove deprecated loadout system flags (v185)
+        // @ts-expect-error - operator type
         if (currentVersion < 185) {
             const flags = actor.flags?.['wh40k-rpg'];
             if (flags?.equipmentViewMode !== undefined || flags?.equipmentPresets !== undefined) {
@@ -419,6 +335,7 @@ export async function checkAndMigrateWorld() {
         }
 
         // Repoint dead icons/svg/*.svg paths (v186)
+        // @ts-expect-error - operator type
         if (currentVersion < 186) {
             const actorReplacement = DEAD_ICON_REMAPS[actor.img];
             if (actorReplacement) {
@@ -433,6 +350,7 @@ export async function checkAndMigrateWorld() {
         }
 
         // Dedupe embedded talents + rename Weapon Training (Stock) → (Shock) (v187)
+        // @ts-expect-error - operator type
         if (currentVersion < 187) {
             const talents = actor.items.filter((i) => i.type === 'talent');
 
@@ -482,6 +400,7 @@ export async function checkAndMigrateWorld() {
         // Collapse talent names with duplicate or chained parens: "Name (X) (Y)" → "Name (X)" (v188)
         // Caused by earlier grant-composition bug where specialization was appended on top of an
         // already-specialized source name.
+        // @ts-expect-error - operator type
         if (currentVersion < 188) {
             const talents = actor.items.filter((i) => i.type === 'talent');
             for (const talent of talents) {
