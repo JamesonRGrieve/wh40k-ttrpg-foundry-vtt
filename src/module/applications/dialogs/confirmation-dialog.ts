@@ -42,7 +42,7 @@ export default class ConfirmationDialog extends HandlebarsApplicationMixin(Appli
             icon: 'fa-solid fa-question-circle',
             minimizable: false,
             resizable: false,
-            contentClasses: ['standard-form'],
+            contentClasses: ['standard-form', 'tw-p-0', 'tw-bg-gradient-to-b', 'tw-from-[#1a1a24]', 'tw-to-[#0d0d12]'],
         },
         position: {
             width: 400,

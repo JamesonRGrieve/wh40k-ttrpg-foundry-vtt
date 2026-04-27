@@ -71,14 +71,12 @@ export default class OriginPathSheet extends BaseItemSheet {
 
         // Source info
         context.source = system?.source || {};
-        // @ts-expect-error - dynamic property access
         context.hasSource = !!(context.source.book || context.source.page);
 
         // Characteristic modifiers
         context.characteristics = [];
         for (const [key, value] of Object.entries(modifiers)) {
             if (value !== 0) {
-                // @ts-expect-error - dynamic property access
                 context.characteristics.push({
                     key: key,
                     label: getCharacteristicDisplayInfo(key).label,
@@ -88,7 +86,6 @@ export default class OriginPathSheet extends BaseItemSheet {
                 });
             }
         }
-        // @ts-expect-error - dynamic property access
         context.hasCharacteristics = context.characteristics.length > 0;
 
         // Wounds/Fate formulas
@@ -104,7 +101,6 @@ export default class OriginPathSheet extends BaseItemSheet {
             levelLabel: getTrainingLabel(skill.level),
             displayName: skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name,
         }));
-        // @ts-expect-error - dynamic property access
         context.hasSkills = context.skills.length > 0;
 
         // Talents
@@ -114,7 +110,6 @@ export default class OriginPathSheet extends BaseItemSheet {
             uuid: talent.uuid || null,
             hasItem: !!talent.uuid,
         }));
-        // @ts-expect-error - dynamic property access
         context.hasTalents = context.talents.length > 0;
 
         // Traits
@@ -124,7 +119,6 @@ export default class OriginPathSheet extends BaseItemSheet {
             uuid: trait.uuid || null,
             hasItem: !!trait.uuid,
         }));
-        // @ts-expect-error - dynamic property access
         context.hasTraits = context.traits.length > 0;
 
         // Equipment
@@ -133,12 +127,10 @@ export default class OriginPathSheet extends BaseItemSheet {
             quantity: item.quantity || 1,
             uuid: item.uuid || null,
         }));
-        // @ts-expect-error - dynamic property access
         context.hasEquipment = context.equipment.length > 0;
 
         // Special Abilities
         context.specialAbilities = grants.specialAbilities || [];
-        // @ts-expect-error - dynamic property access
         context.hasSpecialAbilities = context.specialAbilities.length > 0;
 
         // Choices
@@ -153,12 +145,10 @@ export default class OriginPathSheet extends BaseItemSheet {
                 description: opt.description || '',
             })),
         }));
-        // @ts-expect-error - dynamic property access
         context.hasChoices = context.choices.length > 0;
 
         // Requirements
         context.requirements = system?.requirements || {};
-        // @ts-expect-error - dynamic property access
         context.hasRequirements = !!(context.requirements.text || context.requirements.previousSteps?.length || context.requirements.excludedSteps?.length);
 
         return context;

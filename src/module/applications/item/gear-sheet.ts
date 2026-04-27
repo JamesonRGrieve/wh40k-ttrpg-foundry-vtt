@@ -27,7 +27,7 @@ export default class GearSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-gear-sheet-v2.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-gear-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
         },
     };
@@ -86,7 +86,6 @@ export default class GearSheet extends BaseItemSheet {
      * @param {HTMLElement} target
      */
     static async #onConsumeUse(event: Event, target: HTMLElement): Promise<void> {
-        // @ts-expect-error - TS2339
         await this.item.system.consume();
     }
 }

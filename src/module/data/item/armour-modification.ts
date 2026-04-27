@@ -25,7 +25,6 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
         return {
             ...super.defineSchema(),
 
-            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // What armour types this can be applied to
@@ -360,7 +359,6 @@ export default class ArmourModificationData extends ItemDataModel.mixin(Descript
 
     /** @override */
     get chatProperties(): string[] {
-        // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this)];
 
         // Restrictions

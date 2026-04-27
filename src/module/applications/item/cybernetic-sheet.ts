@@ -23,7 +23,7 @@ export default class CyberneticSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-cybernetic-sheet-v2.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-cybernetic-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
         },
     };

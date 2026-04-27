@@ -1,5 +1,5 @@
 /**
- * @file TalentSheet - Redesigned ApplicationV2 sheet for talent items
+ * @file TalentSheet - ApplicationV2 sheet for talent items
  *
  * Features:
  * - Modern tabbed interface following origin-path-sheet patterns
@@ -23,7 +23,7 @@ export default class TalentSheet extends BaseItemSheet {
 
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['wh40k-rpg', 'sheet', 'item', 'talent-sheet-v2'],
+        classes: ['wh40k-rpg', 'sheet', 'item', 'talent-sheet'],
         actions: {
             ...super.DEFAULT_OPTIONS?.actions,
             rollTalent: TalentSheet.#rollTalent,
@@ -47,7 +47,7 @@ export default class TalentSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/wh40k-rpg/templates/item/talent-sheet-v2.hbs',
+            template: 'systems/wh40k-rpg/templates/item/talent-sheet.hbs',
             scrollable: ['.wh40k-talent-content'],
         },
     };
@@ -157,7 +157,6 @@ export default class TalentSheet extends BaseItemSheet {
 
         // Format characteristics requirements
         const characteristicReqs = Object.entries(chars)
-            // @ts-expect-error - operator type
             .filter(([_, value]) => value > 0)
             .map(([key, value]) => ({
                 key,
@@ -199,7 +198,6 @@ export default class TalentSheet extends BaseItemSheet {
                 label: this._getCharacteristicLabel(key),
                 short: this._getCharacteristicShort(key),
                 value,
-                // @ts-expect-error - operator type
                 positive: value > 0,
             }));
 
@@ -210,7 +208,6 @@ export default class TalentSheet extends BaseItemSheet {
                 key,
                 label: this._formatSkillLabel(key),
                 value,
-                // @ts-expect-error - operator type
                 positive: value > 0,
             }));
 
@@ -222,7 +219,6 @@ export default class TalentSheet extends BaseItemSheet {
                 key,
                 label: this._formatCombatLabel(key),
                 value,
-                // @ts-expect-error - operator type
                 positive: value > 0,
             }));
 
@@ -234,7 +230,6 @@ export default class TalentSheet extends BaseItemSheet {
                 key,
                 label: this._formatResourceLabel(key),
                 value,
-                // @ts-expect-error - operator type
                 positive: value > 0,
             }));
 

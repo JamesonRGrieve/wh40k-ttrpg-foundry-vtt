@@ -324,7 +324,6 @@ export default class D100Roll extends BasicRollWH40K {
     static async test(options = {}) {
         return this.build({
             ...options,
-            // @ts-expect-error - dynamic property
             baseTarget: options.baseTarget ?? options.target,
         });
     }

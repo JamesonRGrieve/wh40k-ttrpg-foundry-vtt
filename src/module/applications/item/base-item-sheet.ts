@@ -71,7 +71,7 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-sheet-modern.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
         },
     };
@@ -160,7 +160,6 @@ export default class BaseItemSheet extends StatBreakdownMixin(ExpandableTooltipM
         // Build our context
         const context: Record<string, unknown> = {
             item: this.item,
-            data: this.item, // Legacy compatibility
             document: this.item, // Required for V13 {{editor}} helper
             system: this.item.system,
             source: this.isEditable ? getMaterializedItemSource(this.item) : this.item.system,

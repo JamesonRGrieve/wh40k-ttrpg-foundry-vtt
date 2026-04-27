@@ -61,7 +61,6 @@ export function computeEncumbrance(actor) {
     return {
         max: maxWeight,
         value: currentWeight,
-        current: currentWeight, // Alias for compatibility
         encumbered: currentWeight > maxWeight,
         backpack_max: backpackMax,
         backpack_value: backpackWeight,

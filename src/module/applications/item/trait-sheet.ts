@@ -23,7 +23,7 @@ export default class TraitSheet extends BaseItemSheet {
     /** @override */
     static PARTS = {
         sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-trait-sheet-modern.hbs',
+            template: 'systems/wh40k-rpg/templates/item/item-trait-sheet.hbs',
             scrollable: ['.wh40k-tab-content'],
         },
     };

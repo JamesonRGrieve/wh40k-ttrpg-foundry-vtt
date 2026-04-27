@@ -432,9 +432,7 @@ export default class ThreatCalculator {
         }
 
         // Add dodge for all NPCs
-        // @ts-expect-error - dynamic property
         if (!skills.dodge) {
-            // @ts-expect-error - dynamic property
             skills.dodge = {
                 name: 'dodge',
                 characteristic: 'agility',
@@ -446,9 +444,7 @@ export default class ThreatCalculator {
         }
 
         // Add awareness for all NPCs
-        // @ts-expect-error - dynamic property
         if (!skills.awareness) {
-            // @ts-expect-error - dynamic property
             skills.awareness = {
                 name: 'awareness',
                 characteristic: 'perception',
@@ -595,11 +591,8 @@ export default class ThreatCalculator {
             role: role,
             type: actualType,
             threatLevel: threatLevel,
-            // @ts-expect-error - argument type
             characteristics: this.generateCharacteristics(threatLevel, role),
-            // @ts-expect-error - argument type
             wounds: this.generateWounds(threatLevel, actualType),
-            // @ts-expect-error - argument type
             movement: this.generateMovement(threatLevel),
             size: 4,
             initiative: {
@@ -607,11 +600,8 @@ export default class ThreatCalculator {
                 base: '1d10',
                 bonus: 0,
             },
-            // @ts-expect-error - argument type
             trainedSkills: this.generateSkills(role, threatLevel),
-            // @ts-expect-error - argument type
             weapons: this.generateWeapons(preset, threatLevel),
-            // @ts-expect-error - argument type
             armour: this.generateArmour(preset, threatLevel),
             specialAbilities: '',
             customStats: {
@@ -633,7 +623,6 @@ export default class ThreatCalculator {
             description: '',
             tactics: '',
             source: '',
-            // @ts-expect-error - argument type
             horde: this.generateHorde(isHorde || actualType === 'horde' || actualType === 'swarm', threatLevel),
         };
     }
@@ -667,7 +656,6 @@ export default class ThreatCalculator {
         // Scale characteristics
         if (scaleCharacteristics) {
             for (const [key, char] of Object.entries(currentData.characteristics)) {
-                // @ts-expect-error - dynamic property access
                 const newBase = Math.round(char.base * scaleFactor);
                 updates[`characteristics.${key}.base`] = Math.max(10, Math.min(99, newBase));
             }
@@ -683,7 +671,6 @@ export default class ThreatCalculator {
         // Scale skill bonuses
         if (scaleSkills) {
             for (const [key, skill] of Object.entries(currentData.trainedSkills)) {
-                // @ts-expect-error - dynamic property access
                 const newBonus = Math.round((skill.bonus || 0) + diff * 2);
                 updates[`trainedSkills.${key}.bonus`] = Math.max(0, newBonus);
             }
@@ -710,7 +697,6 @@ export default class ThreatCalculator {
                 updates['armour.total'] = Math.max(0, Math.min(15, newArmour));
             } else {
                 for (const [loc, value] of Object.entries(currentData.armour.locations)) {
-                    // @ts-expect-error - arithmetic type
                     const newArmour = Math.round(value * scaleFactor);
                     updates[`armour.locations.${loc}`] = Math.max(0, Math.min(15, newArmour));
                 }
@@ -760,17 +746,12 @@ export default class ThreatCalculator {
 
         // Add characteristic previews
         for (const [key, char] of Object.entries(currentData.characteristics)) {
-            // @ts-expect-error - dynamic property access
             const newBase = updates[`characteristics.${key}.base`] ?? char.base;
             preview.characteristics[key] = {
-                // @ts-expect-error - dynamic property access
                 label: char.label,
-                // @ts-expect-error - dynamic property access
                 short: char.short,
-                // @ts-expect-error - dynamic property access
                 current: char.base,
                 new: newBase,
-                // @ts-expect-error - dynamic property access
                 change: newBase - char.base,
             };
         }
