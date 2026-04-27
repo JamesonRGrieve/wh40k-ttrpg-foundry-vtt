@@ -5,7 +5,7 @@
 
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
-import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
+import type { WH40KNPC } from '../../documents/npc.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KCharacteristic, WH40KSkill } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor, ContextMenuEntryLike, DialogV2Like, FoundryApplicationUXLike } from './application-types.ts';
@@ -13,7 +13,7 @@ import type { ApplicationV2Ctor, ContextMenuEntryLike, DialogV2Like, FoundryAppl
 const applicationUX = (foundry.applications as unknown as { ux: FoundryApplicationUXLike }).ux;
 const dialogV2 = (foundry.applications as unknown as { api: { DialogV2: DialogV2Like } }).api.DialogV2;
 
-type ActorType = WH40KAcolyte | WH40KNPCV2 | WH40KBaseActor;
+type ActorType = WH40KAcolyte | WH40KNPC | WH40KBaseActor;
 
 /**
  * Custom ContextMenu subclass for WH40K RPG styling.

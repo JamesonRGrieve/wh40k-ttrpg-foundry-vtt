@@ -11,7 +11,7 @@ import { WH40KBaseActor } from './base-actor.ts';
  *
  * @extends {WH40KBaseActor}
  */
-export class WH40KNPCV2 extends WH40KBaseActor {
+export class WH40KNPC extends WH40KBaseActor {
     /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
