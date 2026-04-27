@@ -1,0 +1,38 @@
+{{!-- Shared actor identity block: name input above portrait.
+
+     Used by every sheet header that needs the standard name + portrait pair
+     (character, NPC, vehicle, starship). Each consumer passes a few options to
+     control labelling and the origin-path-builder overlay; layout is fixed
+     (name input above portrait) so every sheet shares the same identity unit.
+
+     Resolves these context fields directly: `actor.name`, `actor.img`, and
+     (when `withOriginBuilder` is true) `originPathComplete`.
+
+     Parameters (passed via {{> ... key=value }} on the partial invocation):
+
+       - nameLabelKey       i18n key for an inline label rendered before the
+                            input. Pass nothing (or empty string) for a bare
+                            input — this is the character-sheet default.
+       - withOriginBuilder  When true, overlays the origin-path-builder dice
+                            button on the portrait (character sheet only).
+       - portraitWidthClass Tailwind size class for the portrait container.
+                            Defaults to "tw-w-full tw-max-w-[160px]" (sidebar).
+                            Vehicle/starship pass "tw-w-44" for fixed width. --}}
+
+<div class="wh40k-actor-identity tw-flex tw-flex-col tw-items-stretch tw-gap-2 tw-w-full tw-min-w-0">
+    <div class="wh40k-actor-identity__name tw-flex tw-min-w-0 tw-items-baseline tw-gap-2.5">
+        {{#if nameLabelKey}}
+        <span class="wh40k-header-label tw-shrink-0 tw-text-[0.85em] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize nameLabelKey}}</span>
+        {{/if}}
+        <input class="wh40k-header-input wh40k-name-input tw-min-w-0 tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[1.05rem] tw-font-bold tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="name" type="text" value="{{actor.name}}" />
+    </div>
+
+    <div class="wh40k-portrait-container tw-relative tw-aspect-[11/15] {{#if portraitWidthClass}}{{portraitWidthClass}}{{else}}tw-w-full tw-max-w-[160px]{{/if}} tw-self-center tw-cursor-pointer tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium,rgba(0,0,0,0.2))] tw-transition-all hover:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)]">
+        {{#if withOriginBuilder}}
+        <i class="fa-solid fa-dice-d20 wh40k-origin-builder-btn tw-absolute tw-text-2xl tw-top-2 tw-left-2 tw-z-10 tw-cursor-pointer tw-opacity-60 tw-transition-all hover:tw-opacity-100 hover:tw-drop-shadow-[0_0_8px_rgba(212,175,55,0.9)] {{#unless originPathComplete}}pulse{{/unless}}"
+           data-action="openOriginPathBuilder"
+           data-tooltip="{{localize 'WH40K.Utility.SetupOriginPath'}}"></i>
+        {{/if}}
+        <img class="wh40k-portrait tw-h-full tw-w-full tw-object-cover tw-bg-[rgba(0,0,0,0.25)]" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+    </div>
+</div>

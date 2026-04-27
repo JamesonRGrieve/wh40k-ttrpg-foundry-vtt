@@ -285,7 +285,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         header: {
-            template: 'systems/wh40k-rpg/templates/actor/player/header.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/player/header-dh.hbs',
             container: {
                 classes: [
                     'wh40k-sidebar',
