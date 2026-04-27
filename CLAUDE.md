@@ -93,6 +93,8 @@ ai gemini 1 --model gemini-3.1-flash-lite-preview -p '<task brief>'
 - **Slot 1+** uses self-contained config under `.ai-sessions/gemini/<N>/` and works from any shell with no env override — this is the slot to use for spawned background tasks.
 - Backends besides `gemini` (e.g. `codex`, `claude`, `local`) follow the same `<provider> <slot>` shape; pick whichever has a working session.
 
+**Operator's notebook for prompting agents lives at `PROMPTING_AGENTS.md`** — invocation flags, model failure modes, brief template, worktree hygiene, partition shapes. Update it as new models are tried or new failure modes surface; do not duplicate that material here.
+
 Background workers run in **isolated git worktrees** (one per task) so concurrent grinders don't collide on shared files like `src/css/wh40k-rpg.css`. The orchestrator handles the merge — workers only modify files in their scope, never delete from the monolith, and write a `.migration-manifest.json` at the worktree root listing what they ported and what is now safe to delete. After all workers report, the orchestrator copies template changes to main and runs `pnpm css:block delete <source>` for each safe-to-delete entry.
 
 Tasks that suit cheap-model grinders (each map to a ratchet that gates regression):
