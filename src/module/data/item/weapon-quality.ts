@@ -37,68 +37,6 @@ export default class WeaponQualityData extends ItemDataModel.mixin(DescriptionTe
     }
 
     /* -------------------------------------------- */
-    /*  Data Migration                              */
-    /* -------------------------------------------- */
-
-    /**
-     * Migrate legacy weapon quality data to new structure.
-     * @param {object} source  The source data
-     * @protected
-     */
-    static _migrateData(source: Record<string, unknown>): void {
-        super._migrateData?.(source);
-        WeaponQualityData.#migrateRating(source);
-        WeaponQualityData.#migrateModifiersAndEffect(source);
-        WeaponQualityData.#migrateEffect(source);
-        WeaponQualityData.#migrateIdentifier(source);
-    }
-
-    static #migrateRating(source: Record<string, unknown>): void {
-        if ('rating' in source) {
-            source.hasLevel = source.rating > 0;
-            source.level = source.rating > 0 ? source.rating : null;
-            delete source.rating;
-        }
-    }
-
-    static #migrateModifiersAndEffect(source: Record<string, unknown>): void {
-        if ('modifiers' in source || 'specialEffect' in source) {
-            const notesParts = [];
-            if (source.modifiers) {
-                const mods = [];
-                if (source.modifiers.damage) mods.push(`Damage: ${source.modifiers.damage >= 0 ? '+' : ''}${source.modifiers.damage}`);
-                if (source.modifiers.penetration) mods.push(`Pen: ${source.modifiers.penetration >= 0 ? '+' : ''}${source.modifiers.penetration}`);
-                if (source.modifiers.toHit) mods.push(`To Hit: ${source.modifiers.toHit >= 0 ? '+' : ''}${source.modifiers.toHit}`);
-                if (source.modifiers.range) mods.push(`Range: ${source.modifiers.range >= 0 ? '+' : ''}${source.modifiers.range}`);
-                if (mods.length > 0) notesParts.push(mods.join(', '));
-                delete source.modifiers;
-            }
-            if (source.specialEffect) {
-                notesParts.push(source.specialEffect);
-                delete source.specialEffect;
-            }
-            if (notesParts.length > 0) {
-                source.notes = notesParts.join('. ');
-            }
-        }
-    }
-
-    static #migrateEffect(source: Record<string, unknown>): void {
-        if (typeof source.effect === 'number') {
-            source.effect = `<p>Effect ${source.effect}</p>`;
-        }
-    }
-
-    static #migrateIdentifier(source: Record<string, unknown>): void {
-        if (!source.identifier && source.name) {
-            source.identifier = source.name
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-+|-+$/g, '');
-        }
-    }
-
-    /* -------------------------------------------- */
     /*  Properties                                  */
     /* -------------------------------------------- */
 

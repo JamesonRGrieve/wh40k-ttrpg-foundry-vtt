@@ -98,18 +98,7 @@ export default class ChoiceGrantData extends BaseGrantData {
         }
 
         for (const optionLabel of selectedOptions) {
-            let option = choiceOptions.find((o) => o.label === optionLabel);
-            let extractedSpec: string | null = null;
-
-            // Composite match: "Weapon Training (Solid Projectile)" → base "Weapon Training"
-            if (!option) {
-                const parenIdx = optionLabel.indexOf(' (');
-                if (parenIdx > 0) {
-                    const baseName = optionLabel.substring(0, parenIdx);
-                    extractedSpec = optionLabel.substring(parenIdx + 2, optionLabel.length - 1);
-                    option = choiceOptions.find((o) => o.label === baseName);
-                }
-            }
+            const option = choiceOptions.find((o) => o.label === optionLabel);
             if (!option) {
                 result.errors.push(`Unknown option: ${optionLabel}`);
                 continue;
@@ -121,15 +110,6 @@ export default class ChoiceGrantData extends BaseGrantData {
             const grants = option.grants ?? [];
             for (let i = 0; i < grants.length; i++) {
                 const grantConfig = grants[i];
-
-                // Propagate extracted specialization to item grants
-                if (extractedSpec && grantConfig.type === 'item' && Array.isArray(grantConfig.items)) {
-                    for (const item of grantConfig.items) {
-                        if (!item._legacySpecialization) {
-                            item._legacySpecialization = extractedSpec;
-                        }
-                    }
-                }
 
                 const grantResults = result.applied.grantResults;
                 const grantResult = await this._applySubGrant(actor, grantConfig, data, options);
@@ -163,8 +143,7 @@ export default class ChoiceGrantData extends BaseGrantData {
             const GrantClass = ctor.GRANT_TYPES[grantConfig.type];
             if (!GrantClass) continue;
 
-            // New shape: { type, applied }. Legacy shape: raw applied data.
-            const grantApplied = (grantEntry as Record<string, unknown>)?.applied ?? grantEntry;
+            const grantApplied = (grantEntry as Record<string, unknown>)?.applied;
 
             const grant = new GrantClass(grantConfig);
             const reverseData = await grant.reverse(actor, grantApplied);
