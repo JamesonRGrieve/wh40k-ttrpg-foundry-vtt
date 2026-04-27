@@ -6,6 +6,7 @@ Thumbs.db
 
 ## Libraries
 src/module/foundry-core
+.foundry-release/
 
 ## Build Output
 node_modules
@@ -37,3 +38,6 @@ bdui-linux-x64
 /docs/tmp.txt
 dist/
 node_modules/
+
+## Storybook
+storybook-static/

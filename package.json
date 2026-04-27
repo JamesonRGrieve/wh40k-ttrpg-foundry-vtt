@@ -17,7 +17,13 @@
     "validate:json": "node -e \"const fs=require('fs'); const f='src/lang/en.json'; JSON.parse(fs.readFileSync(f,'utf8')); console.log(f+' OK')\"",
     "stylelint": "stylelint 'src/css/**/*.css'",
     "stylelint:fix": "stylelint 'src/css/**/*.css' --fix",
-    "check": "pnpm validate:json && pnpm lint && pnpm format && pnpm stylelint && pnpm typecheck",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "check": "pnpm validate:json && pnpm lint && pnpm format && pnpm stylelint && pnpm typecheck && pnpm test",
     "prepare": "husky"
   },
   "browserslist": [
@@ -40,7 +46,6 @@
       "prettier --write"
     ]
   },
-  "dependencies": {},
   "overrides": {
     "braces": "^3.0.3",
     "micromatch": "^4.0.8",
@@ -56,9 +61,12 @@
   },
   "devDependencies": {
     "@league-of-foundry-developers/foundry-vtt-types": "^13.346.0-beta.20250812191140",
+    "@storybook/html-vite": "^10.3.5",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
     "@typescript-eslint/parser": "^8.58.0",
     "@typhonjs-fvtt/eslint-config-foundry.js": "0.8.0",
+    "@vitest/coverage-v8": "^4.1.5",
+    "@vitest/ui": "^4.1.5",
     "autoprefixer": "^10.4.20",
     "classic-level": "^1.4.1",
     "cssnano": "^7.1.5",
@@ -71,6 +79,8 @@
     "gulp-clean": "0.4.0",
     "gulp-postcss": "^10.0.0",
     "gulp-zip": "5.1.0",
+    "handlebars": "^4.7.9",
+    "happy-dom": "^20.9.0",
     "husky": "^9.1.7",
     "js-yaml": "4.1.1",
     "json": "11.0.0",
@@ -80,12 +90,15 @@
     "postcss-import": "^16.1.1",
     "postcss-nested": "^7.0.2",
     "prettier": "2.7.1",
+    "storybook": "^10.3.5",
     "stylelint": "^17.7.0",
     "stylelint-config-standard": "^40.0.0",
     "stylelint-order": "^8.1.1",
     "tailwindcss": "^3.4.19",
     "through2": "4.0.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "^8.0.10",
+    "vitest": "^4.1.5"
   },
   "main": "gulpfile.js",
   "directories": {
