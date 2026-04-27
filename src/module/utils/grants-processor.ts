@@ -293,22 +293,16 @@ export class GrantsProcessor {
     static async _processBaseGrants(originItem: WH40KItem, context: GrantContext): Promise<void> {
         const grants = (originItem.system as any)?.grants || {};
 
-        // Wounds - prefer formula over legacy field
+        // Wounds
         if (grants.woundsFormula) {
             const woundsValue = await this._evaluateWounds(grants.woundsFormula, context.actor, originItem);
             context.result.woundsBonus += woundsValue;
-        } else if (grants.wounds && grants.wounds !== 0) {
-            context.result.woundsBonus += grants.wounds;
-            console.debug(`Origin "${originItem.name}" uses legacy grants.wounds field. Consider migrating to woundsFormula.`);
         }
 
-        // Fate - prefer formula over legacy field
+        // Fate
         if (grants.fateFormula) {
             const fateValue = await this._evaluateFate(grants.fateFormula, originItem);
             context.result.fateBonus += fateValue;
-        } else if (grants.fateThreshold && grants.fateThreshold !== 0) {
-            context.result.fateBonus += grants.fateThreshold;
-            console.debug(`Origin "${originItem.name}" uses legacy grants.fateThreshold field. Consider migrating to fateFormula.`);
         }
 
         // Process grant arrays
