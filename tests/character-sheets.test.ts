@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import headerSrc from '../src/templates/actor/player/header-dh.hbs?raw';
 import npcTabSrc from '../src/templates/actor/npc/tab-npc.hbs?raw';
 import biographyTabSrc from '../src/templates/actor/player/tab-biography.hbs?raw';
+import skillsTabSrc from '../src/templates/actor/player/tab-skills.hbs?raw';
 import tabsSrc from '../src/templates/actor/player/tabs.hbs?raw';
 import { mockActor } from '../stories/mocks';
 import { initializeStoryHandlebars } from '../stories/template-support';
@@ -12,6 +13,7 @@ initializeStoryHandlebars();
 const headerTemplate = Handlebars.compile(headerSrc);
 const tabsTemplate = Handlebars.compile(tabsSrc);
 const biographyTemplate = Handlebars.compile(biographyTabSrc);
+const skillsTemplate = Handlebars.compile(skillsTabSrc);
 const npcTemplate = Handlebars.compile(npcTabSrc);
 
 function wrap(html: string): HTMLElement {
@@ -59,6 +61,7 @@ function playerContext(systemId: 'dh2e' | 'im') {
             source: { notes: '<p>Background notes.</p>' },
             enriched: { notes: '<p>Background notes.</p>' },
         },
+        inEditMode: false,
         journalEntries: [{ id: 'journal-1', name: 'Interrogation Log', system: { time: 'M41.998', place: 'Scintilla', description: 'Important lead.' } }],
         tabs: [
             { tab: 'skills', group: 'primary', label: 'Skills', cssClass: 'tab-skills', active: false },
@@ -190,5 +193,18 @@ describe('character sheet template composition', () => {
         expect(element.textContent).toContain('Scale to Threat');
         expect(element.querySelector('[data-action="toggleHordeMode"]')).not.toBeNull();
         expect(element.querySelector('input[name="system.threatLevel"]')).not.toBeNull();
+    });
+
+    it('renders a direct characteristic roll overlay on the statistics page', () => {
+        const context = {
+            ...playerContext('dh2e'),
+            tab: { id: 'skills', group: 'primary', cssClass: 'tab-skills', active: true },
+        };
+        const element = wrap(skillsTemplate(context));
+
+        const overlay = element.querySelector<HTMLElement>('.wh40k-char-hud-circle [data-roll-type="characteristic"]');
+        expect(overlay).not.toBeNull();
+        expect(overlay?.querySelector('.fa-dice-d20')).not.toBeNull();
+        expect(overlay?.dataset.rollTarget).toBeTruthy();
     });
 });

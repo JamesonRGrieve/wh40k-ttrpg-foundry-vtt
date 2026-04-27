@@ -173,6 +173,11 @@ export default function ApplicationV2Mixin<T extends ApplicationV2Ctor>(Base: T)
         async _onRender(context: Record<string, unknown>, options: ApplicationV2Config.RenderOptions): Promise<void> {
             await super._onRender(context, options);
 
+            // Shared PARTS containers (for example the player-sheet sidebar)
+            // can be replaced during later full renders, so rebuild them every
+            // render instead of only on first render.
+            this._renderContainers(context, options);
+
             // Add special styling for multi-select tags
             for (const select of (this as unknown as { element: HTMLElement }).element.querySelectorAll('multi-select')) {
                 const multiSelect = select as HTMLInputElement;

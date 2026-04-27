@@ -11,7 +11,7 @@
  * the right per-system data model and sheet automatically.
  */
 
-const AVAILABILITY: Record<string, string[]> = {
+export const ACTOR_SYSTEM_AVAILABILITY: Record<string, string[]> = {
     dh2: ['character', 'npc', 'vehicle'],
     dh1: ['character', 'npc', 'vehicle'],
     rt: ['character', 'npc', 'vehicle', 'starship'],
@@ -21,7 +21,7 @@ const AVAILABILITY: Record<string, string[]> = {
     im: ['character', 'npc', 'vehicle'],
 };
 
-const SYSTEM_LABELS: Record<string, string> = {
+export const ACTOR_SYSTEM_LABELS: Record<string, string> = {
     dh2: 'Dark Heresy 2e',
     dh1: 'Dark Heresy 1e',
     rt: 'Rogue Trader',
@@ -31,7 +31,7 @@ const SYSTEM_LABELS: Record<string, string> = {
     im: 'Imperium Maledictum',
 };
 
-const KIND_LABELS: Record<string, string> = {
+export const ACTOR_KIND_LABELS: Record<string, string> = {
     character: 'Player Character',
     npc: 'NPC',
     vehicle: 'Vehicle',
@@ -50,15 +50,15 @@ export class WH40KCreateActorDialog {
      */
     static async open(opts: CreateActorOptions = {}): Promise<Actor | null> {
         const initialSystem = opts.initialSystem ?? 'dh2';
-        const initialKind = AVAILABILITY[initialSystem][0];
+        const initialKind = ACTOR_SYSTEM_AVAILABILITY[initialSystem][0];
 
-        const systemSelect = Object.keys(SYSTEM_LABELS)
-            .map((k) => `<option value="${k}" ${k === initialSystem ? 'selected' : ''}>${SYSTEM_LABELS[k]}</option>`)
+        const systemSelect = Object.keys(ACTOR_SYSTEM_LABELS)
+            .map((k) => `<option value="${k}" ${k === initialSystem ? 'selected' : ''}>${ACTOR_SYSTEM_LABELS[k]}</option>`)
             .join('');
 
-        const kindSelect = Object.keys(KIND_LABELS)
-            .filter((k) => AVAILABILITY[initialSystem].includes(k))
-            .map((k) => `<option value="${k}" ${k === initialKind ? 'selected' : ''}>${KIND_LABELS[k]}</option>`)
+        const kindSelect = Object.keys(ACTOR_KIND_LABELS)
+            .filter((k) => ACTOR_SYSTEM_AVAILABILITY[initialSystem].includes(k))
+            .map((k) => `<option value="${k}" ${k === initialKind ? 'selected' : ''}>${ACTOR_KIND_LABELS[k]}</option>`)
             .join('');
 
         const content = `
@@ -95,7 +95,7 @@ export class WH40KCreateActorDialog {
                             const kind = (form.querySelector('[name="kind"]') as HTMLSelectElement).value;
                             const nameInput = (form.querySelector('[name="name"]') as HTMLInputElement).value.trim();
                             const type = `${system}-${kind}`;
-                            const name = nameInput || `New ${SYSTEM_LABELS[system]} ${KIND_LABELS[kind]}`;
+                            const name = nameInput || `New ${ACTOR_SYSTEM_LABELS[system]} ${ACTOR_KIND_LABELS[kind]}`;
                             const data: Record<string, unknown> = { name, type };
                             if (opts.folder) data.folder = opts.folder;
                             const actor = await Actor.create(data);
@@ -119,11 +119,11 @@ export class WH40KCreateActorDialog {
                 if (!sysSel || !kindSel) return;
                 sysSel.addEventListener('change', () => {
                     const sys = sysSel.value;
-                    const allowed = AVAILABILITY[sys] ?? [];
+                    const allowed = ACTOR_SYSTEM_AVAILABILITY[sys] ?? [];
                     const current = kindSel.value;
-                    kindSel.innerHTML = Object.keys(KIND_LABELS)
+                    kindSel.innerHTML = Object.keys(ACTOR_KIND_LABELS)
                         .filter((k) => allowed.includes(k))
-                        .map((k) => `<option value="${k}" ${k === current ? 'selected' : ''}>${KIND_LABELS[k]}</option>`)
+                        .map((k) => `<option value="${k}" ${k === current ? 'selected' : ''}>${ACTOR_KIND_LABELS[k]}</option>`)
                         .join('');
                     if (!allowed.includes(current)) {
                         kindSel.value = allowed[0];

@@ -102,6 +102,21 @@
             "OriginPathNotAvailable": "Origin Path Builder not available",
             "OriginPathError": "Failed to open Origin Path Builder"
         },
+        "Actor": {
+            "ConvertSystem": {
+                "Menu": "Convert System",
+                "Title": "Convert Character System",
+                "Description": "Convert {actor} to another player-character system.",
+                "Current": "Current System",
+                "Target": "Target System",
+                "Warning": "This creates a replacement actor in the target system, preserves compatible fields, repoints linked scene tokens, and removes the original actor.",
+                "Confirm": "Convert",
+                "Cancel": "Cancel",
+                "Success": "{actor} converted to {system}.",
+                "Failure": "Actor conversion failed.",
+                "NotConvertible": "Only player-character actors can be converted between systems."
+            }
+        },
         "RighteousFury": {
             "Title": "⚡ Righteous Fury! ⚡",
             "Triggered": "Righteous Fury Triggered!",

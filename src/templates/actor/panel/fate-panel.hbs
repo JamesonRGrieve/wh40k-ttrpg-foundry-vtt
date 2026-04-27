@@ -1,22 +1,22 @@
 {{!-- Fate Panel - Inquisitorial Rosette Pips (count up like fatigue) --}}
-<div class="wh40k-panel wh40k-fate-panel-v2 {{#if (eq system.fate.value 0)}}wh40k-fate-empty-state{{/if}}">
+<div class="wh40k-panel tw-rounded-lg tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-overflow-hidden tw-relative tw-mb-4 tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)] {{#if (eq system.fate.value 0)}}wh40k-fate-empty-state{{/if}}">
 
     {{!-- Panel Header - Click to expand/collapse --}}
-    <div class="wh40k-panel-header wh40k-panel-header--clickable sheet-control__hide-control"
+    <div class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-p-2 tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-transition-all tw-duration-200 tw-w-full tw-box-border tw-cursor-pointer sheet-control__hide-control"
          data-toggle="fate_details"
          title="Click to {{#if (isExpanded 'fate_details' actor)}}collapse{{else}}expand{{/if}}">
-        <span class="wh40k-panel-title">
-            <i class="fas fa-skull"></i> Fate
+        <span class="wh40k-panel-title tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-text-dark)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">
+            <i class="fas fa-skull tw-text-[var(--panel-accent,var(--wh40k-accent-gold))] tw-flex-shrink-0"></i> Fate
         </span>
         <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'fate_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
     </div>
 
     {{!-- Panel Body --}}
-    <div class="wh40k-panel-body">
+    <div class="wh40k-panel-body tw-p-4 tw-bg-[var(--wh40k-panel-body-bg)]">
 
         {{!-- Main Display: Rosette Pips + Counter --}}
         <div class="wh40k-fate-display">
-            <div class="wh40k-fate-tracker">
+            <div class="wh40k-fate-tracker tw-flex tw-items-center tw-justify-between tw-mb-2">
                 <button type="button"
                         class="wh40k-fate-btn wh40k-fate-minus"
                         data-action="decrement"
@@ -26,7 +26,7 @@
                     <i class="fas fa-minus"></i>
                 </button>
 
-                <div class="wh40k-fate-value">
+                <div class="wh40k-fate-value tw-flex tw-items-center tw-gap-1">
                     <span class="wh40k-fate-current">{{system.fate.value}}</span>
                     <span class="wh40k-fate-sep">/</span>
                     <span class="wh40k-fate-max">{{system.fate.max}}</span>
@@ -43,7 +43,7 @@
             </div>
 
             {{!-- Rosette Pip Display --}}
-            <div class="wh40k-fate-pips">
+            <div class="wh40k-fate-pips tw-flex tw-flex-wrap tw-justify-center tw-gap-1 tw-mb-2">
                 {{#if (gt system.fate.max 0)}}
                     {{#each (range 1 system.fate.max) as |index|}}
                         <button type="button"
@@ -55,7 +55,7 @@
                         </button>
                     {{/each}}
                 {{else}}
-                    <div class="wh40k-fate-none">
+                    <div class="wh40k-fate-none tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-gray-500">
                         <i class="far fa-circle"></i>
                         <span>No Fate Points</span>
                     </div>
@@ -65,7 +65,7 @@
             {{!-- Stat Breakdown Button --}}
             <button
                 type="button"
-                class="wh40k-stat-breakdown-btn wh40k-stat-breakdown-btn--compact"
+                class="wh40k-stat-breakdown-btn wh40k-stat-breakdown-btn--compact tw-mx-auto tw-block"
                 data-action="showStatBreakdown"
                 data-stat-key="fate"
                 title="Show fate calculation">
@@ -74,7 +74,7 @@
         </div>
 
         {{!-- Edit Mode (Expandable) --}}
-        <div class="wh40k-panel-details fate_details" {{hideIfNot (isExpanded 'fate_details' actor)}}>
+        <div class="wh40k-panel-details fate_details tw-mt-2" {{hideIfNot (isExpanded 'fate_details' actor)}}>
 
             {{!-- Quick Edit Section --}}
             <div class="wh40k-fate-edit-section">
@@ -111,21 +111,21 @@
 
             {{!-- About Fate Info Section --}}
             <div class="wh40k-fate-edit-section">
-                <div class="wh40k-fate-info-box">
-                    <i class="fas fa-book-open"></i>
-                    <div class="wh40k-info-content">
+                <div class="wh40k-fate-info-box tw-flex tw-gap-3 tw-bg-[rgba(0,0,0,0.1)] tw-p-3 tw-rounded-md">
+                    <i class="fas fa-book-open tw-text-gold tw-text-xl"></i>
+                    <div class="wh40k-info-content tw-text-sm tw-space-y-1">
                         <strong>About Fate Points</strong>
                         <p>Fate Points represent the Emperor's favor and divine protection. They can be spent to alter destiny in critical moments.</p>
 
                         <strong>Uses of Fate:</strong>
-                        <ul>
+                        <ul class="tw-list-disc tw-pl-4">
                             <li><strong>Reroll a Test:</strong> Reroll any failed test, keeping the second result</li>
                             <li><strong>Avoid Death:</strong> When reduced to 0 wounds, spend a Fate Point to survive with 1 wound instead</li>
                             <li><strong>Divine Intervention:</strong> Call upon the Emperor's grace for a minor miracle at the GM's discretion</li>
                             <li><strong>Righteous Fury:</strong> Confirm a Righteous Fury result automatically</li>
                         </ul>
 
-                        <p class="wh40k-fate-warning"><i class="fas fa-fire"></i> <strong>Burning Fate:</strong> Permanently spending a Fate Point (reducing your maximum) can achieve truly miraculous results, but this should only be done in the direst circumstances.</p>
+                        <p class="wh40k-fate-warning tw-text-crimson"><i class="fas fa-fire"></i> <strong>Burning Fate:</strong> Permanently spending a Fate Point (reducing your maximum) can achieve truly miraculous results, but this should only be done in the direst circumstances.</p>
                     </div>
                 </div>
             </div>

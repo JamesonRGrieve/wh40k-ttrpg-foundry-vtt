@@ -1,22 +1,22 @@
 {{!-- Redesigned Fatigue Panel - Core Rules Compliant --}}
-<div class="wh40k-panel wh40k-fatigue-panel-v2 {{#if (gt system.fatigue.value system.fatigue.max)}}wh40k-unconscious{{else if (gt system.fatigue.value 0)}}wh40k-fatigued{{/if}}">
+<div class="wh40k-panel tw-rounded-lg tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-overflow-hidden tw-relative tw-mb-4 tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)] {{#if (gt system.fatigue.value system.fatigue.max)}}wh40k-unconscious{{else if (gt system.fatigue.value 0)}}wh40k-fatigued{{/if}}">
 
     {{!-- Panel Header - Click to expand/collapse --}}
-    <div class="wh40k-panel-header wh40k-panel-header--clickable sheet-control__hide-control"
+    <div class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-p-2 tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-transition-all tw-duration-200 tw-w-full tw-box-border tw-cursor-pointer sheet-control__hide-control"
          data-toggle="fatigue_details"
          title="Click to {{#if (isExpanded 'fatigue_details' actor)}}collapse{{else}}expand{{/if}}">
-        <span class="wh40k-panel-title">
-            <i class="fas fa-bolt"></i> Fatigue
+        <span class="wh40k-panel-title tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-text-dark)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">
+            <i class="fas fa-bolt tw-text-[var(--panel-accent,var(--wh40k-accent-gold))] tw-flex-shrink-0"></i> Fatigue
         </span>
         <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'fatigue_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
     </div>
 
     {{!-- Panel Body --}}
-    <div class="wh40k-panel-body">
+    <div class="wh40k-panel-body tw-p-4 tw-bg-[var(--wh40k-panel-body-bg)]">
 
         {{!-- Main Display: Current/Threshold with Quick Controls --}}
         <div class="wh40k-fatigue-display">
-            <div class="wh40k-fatigue-tracker">
+            <div class="wh40k-fatigue-tracker tw-flex tw-items-center tw-justify-between tw-mb-2">
                 <button type="button"
                         class="wh40k-fatigue-btn wh40k-fatigue-minus"
                         data-action="decrement"
@@ -26,7 +26,7 @@
                     <i class="fas fa-minus"></i>
                 </button>
 
-                <div class="wh40k-fatigue-value">
+                <div class="wh40k-fatigue-value tw-flex tw-items-center tw-gap-1">
                     <span class="wh40k-fatigue-current">{{system.fatigue.value}}</span>
                     <span class="wh40k-fatigue-sep">/</span>
                     <span class="wh40k-fatigue-max">{{system.fatigue.max}}</span>
@@ -42,11 +42,11 @@
             </div>
 
             {{!-- Progress Bar --}}
-            <div class="wh40k-fatigue-bar-container">
+            <div class="wh40k-fatigue-bar-container tw-relative tw-h-4 tw-bg-[rgba(0,0,0,0.3)] tw-rounded-md tw-overflow-hidden tw-mb-2">
                 <div class="wh40k-fatigue-bar"
                      data-percent="{{percent system.fatigue.value system.fatigue.max}}"
                      style="--fatigue-percent: {{percent system.fatigue.value system.fatigue.max}}%">
-                    <div class="wh40k-fatigue-bar-fill"></div>
+                    <div class="wh40k-fatigue-bar-fill tw-h-full tw-bg-gradient-to-r tw-from-yellow-600 tw-to-crimson-dark"></div>
 
                     {{!-- Threshold Marker at 100% --}}
                     <div class="wh40k-threshold-marker" style="left: 100%;" title="Collapse Threshold">
@@ -54,27 +54,27 @@
                         <span class="wh40k-threshold-label">TB</span>
                     </div>
                 </div>
-                <span class="wh40k-fatigue-percent">{{system.fatigue.value}} / {{system.fatigue.max}}</span>
+                <span class="wh40k-fatigue-percent tw-text-xs tw-text-gray-400">{{system.fatigue.value}} / {{system.fatigue.max}}</span>
             </div>
         </div>
 
         {{!-- Warning Messages --}}
         {{#if (gt system.fatigue.value system.fatigue.max)}}
-        <div class="wh40k-fatigue-alert wh40k-alert-unconscious">
+        <div class="wh40k-fatigue-alert wh40k-alert-unconscious tw-text-crimson tw-flex tw-items-center tw-gap-2">
             <i class="fas fa-dizzy"></i>
             <span>UNCONSCIOUS - Collapsed for {{sub 10 characteristics.toughness.bonus}} minutes!</span>
         </div>
         {{else if (gt system.fatigue.value 0)}}
-        <div class="wh40k-fatigue-alert wh40k-alert-fatigued">
+        <div class="wh40k-fatigue-alert wh40k-alert-fatigued tw-text-warning tw-flex tw-items-center tw-gap-2">
             <i class="fas fa-exclamation-triangle"></i>
             <span>FATIGUED - Suffer –10 penalty to all Tests</span>
         </div>
         {{/if}}
 
         {{!-- Quick Actions --}}
-        <div class="wh40k-fatigue-actions">
+        <div class="wh40k-fatigue-actions tw-flex tw-gap-2 tw-mt-2">
             <button type="button"
-                    class="wh40k-fatigue-action-btn wh40k-rest-btn"
+                    class="wh40k-fatigue-action-btn wh40k-rest-btn tw-flex tw-items-center tw-gap-1 tw-bg-gray-700 tw-px-2 tw-py-1 tw-rounded"
                     data-action="decrement"
                     data-field="system.fatigue.value"
                     data-min="0"
@@ -84,7 +84,7 @@
             </button>
             {{#if (gt system.fatigue.value 0)}}
             <button type="button"
-                    class="wh40k-fatigue-action-btn wh40k-clear-btn"
+                    class="wh40k-fatigue-action-btn wh40k-clear-btn tw-flex tw-items-center tw-gap-1 tw-bg-gray-700 tw-px-2 tw-py-1 tw-rounded"
                     data-action="clear-fatigue"
                     title="Clear all fatigue (full rest)">
                 <i class="fas fa-broom"></i>
@@ -94,7 +94,7 @@
         </div>
 
         {{!-- Edit Mode (Expandable) --}}
-        <div class="wh40k-panel-details fatigue_details" {{hideIfNot (isExpanded 'fatigue_details' actor)}}>
+        <div class="wh40k-panel-details fatigue_details tw-mt-2" {{hideIfNot (isExpanded 'fatigue_details' actor)}}>
 
             {{!-- Current Fatigue Editor --}}
             <div class="wh40k-fatigue-edit-section">
@@ -102,14 +102,14 @@
                     <i class="fas fa-cog"></i> Edit Values
                 </div>
 
-                <div class="wh40k-fatigue-edit-grid">
+                <div class="wh40k-fatigue-edit-grid tw-grid tw-grid-cols-2 tw-gap-2 tw-mt-1">
                     <label class="wh40k-edit-field">
-                        <span class="wh40k-edit-label">
+                        <span class="wh40k-edit-label tw-text-xs tw-text-gray-400">
                             Threshold
                         </span>
                         <input type="number"
                                data-dtype="Number"
-                               class="wh40k-edit-input"
+                               class="wh40k-edit-input tw-w-full tw-p-1 tw-rounded"
                                name="system.fatigue.max"
                                value="{{system.fatigue.max}}"
                                min="0"
@@ -118,10 +118,10 @@
                     </label>
 
                     <label class="wh40k-edit-field">
-                        <span class="wh40k-edit-label">Current Fatigue</span>
+                        <span class="wh40k-edit-label tw-text-xs tw-text-gray-400">Current Fatigue</span>
                         <input type="number"
                                data-dtype="Number"
-                               class="wh40k-edit-input"
+                               class="wh40k-edit-input tw-w-full tw-p-1 tw-rounded"
                                name="system.fatigue.value"
                                value="{{system.fatigue.value}}"
                                min="0"
@@ -131,10 +131,10 @@
             </div>
 
             {{!-- Info Section --}}
-            <div class="wh40k-fatigue-edit-section">
-                <div class="wh40k-fatigue-info-box">
-                    <i class="fas fa-book"></i>
-                    <div class="wh40k-info-content">
+            <div class="wh40k-fatigue-edit-section tw-mt-4">
+                <div class="wh40k-fatigue-info-box tw-bg-[rgba(0,0,0,0.2)] tw-p-3 tw-rounded">
+                    <i class="fas fa-book tw-text-gold"></i>
+                    <div class="wh40k-info-content tw-text-xs tw-space-y-1 tw-mt-1">
                         <strong>Fatigue Rules (Core)</strong>
                         <p><strong>Any Fatigue:</strong> –10 penalty to all Tests.</p>
                         <p><strong>Exceeds TB:</strong> Collapse unconscious for (10 – TB) minutes. Upon waking, fatigue resets to TB.</p>
