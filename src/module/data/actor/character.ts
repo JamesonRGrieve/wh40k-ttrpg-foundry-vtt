@@ -49,7 +49,7 @@ export default class CharacterData extends CreatureTemplate {
     // Typed property declarations matching defineSchema()
     declare rank: number;
     declare mutations: string;
-    declare gameSystem: 'rt' | 'dh1e' | 'dh2e' | 'bc' | 'ow' | 'dw';
+    declare gameSystem: 'rt' | 'dh1e' | 'dh2e' | 'bc' | 'ow' | 'dw' | 'im';
     declare bio: {
         playerName: string;
         gender: string;
@@ -147,7 +147,7 @@ export default class CharacterData extends CreatureTemplate {
             gameSystem: new fields.StringField({
                 required: true,
                 initial: 'rt',
-                choices: ['rt', 'dh1e', 'dh2e', 'bc', 'ow', 'dw'],
+                choices: ['rt', 'dh1e', 'dh2e', 'bc', 'ow', 'dw', 'im'],
             }),
 
             // ===== CHARACTER BIOGRAPHY =====

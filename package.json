@@ -23,6 +23,7 @@
     "test:coverage": "vitest run --coverage",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "test:storybook:integration": "sh ./scripts/run-storybook-playwright-tests.sh",
     "check": "pnpm validate:json && pnpm lint && pnpm format && pnpm stylelint && pnpm typecheck && pnpm test",
     "prepare": "husky"
   },
@@ -40,6 +41,12 @@
     ],
     "src/css/**/*.css": [
       "stylelint --fix",
+      "prettier --write"
+    ],
+    "stories/**/*.ts": [
+      "prettier --write"
+    ],
+    "tests/**/*.ts": [
       "prettier --write"
     ],
     "src/**/*.{json,hbs}": [
@@ -62,6 +69,7 @@
   "devDependencies": {
     "@league-of-foundry-developers/foundry-vtt-types": "^13.346.0-beta.20250812191140",
     "@storybook/html-vite": "^10.3.5",
+    "@playwright/test": "^1.55.1",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
     "@typescript-eslint/parser": "^8.58.0",
     "@typhonjs-fvtt/eslint-config-foundry.js": "0.8.0",
