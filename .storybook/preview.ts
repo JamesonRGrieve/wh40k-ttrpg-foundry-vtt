@@ -8,6 +8,18 @@ Handlebars.registerHelper('join', (arr: unknown, sep: string) => {
 });
 
 Handlebars.registerHelper('eq', (a: unknown, b: unknown) => a === b);
+Handlebars.registerHelper('gt', (a: number, b: number) => Number(a) > Number(b));
+Handlebars.registerHelper('lt', (a: number, b: number) => Number(a) < Number(b));
+Handlebars.registerHelper('gte', (a: number, b: number) => Number(a) >= Number(b));
+Handlebars.registerHelper('lte', (a: number, b: number) => Number(a) <= Number(b));
+Handlebars.registerHelper('divide', (a: number, b: number) => {
+    const denom = Number(b);
+    return denom === 0 ? 0 : Number(a) / denom;
+});
+Handlebars.registerHelper('concat', (...args: unknown[]) => {
+    args.pop();
+    return args.join('');
+});
 Handlebars.registerHelper('localize', (key: string) => key);
 
 const TEMPLATE_PREFIX = 'systems/wh40k-rpg/templates/';
