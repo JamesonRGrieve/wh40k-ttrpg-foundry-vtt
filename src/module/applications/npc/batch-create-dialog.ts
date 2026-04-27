@@ -1,5 +1,5 @@
 import ThreatCalculator from './threat-calculator.ts';
-import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
+import type { WH40KNPC } from '../../documents/npc.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -88,9 +88,9 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Promise resolver.
-     * @type {((value: WH40KNPCV2[]) => void) | null}
+     * @type {((value: WH40KNPC[]) => void) | null}
      */
-    #resolve: ((value: WH40KNPCV2[]) => void) | null = null;
+    #resolve: ((value: WH40KNPC[]) => void) | null = null;
 
     /**
      * Whether submitted.
@@ -283,11 +283,11 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Create the NPCs based on current state.
-     * @returns {Promise<WH40KNPCV2[]>}
+     * @returns {Promise<WH40KNPC[]>}
      * @private
      */
-    async _createNPCs(): Promise<WH40KNPCV2[]> {
-        const actors: WH40KNPCV2[] = [];
+    async _createNPCs(): Promise<WH40KNPC[]> {
+        const actors: WH40KNPC[] = [];
 
         // Generate base data
         const baseConfig = {
@@ -337,7 +337,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             }
 
             try {
-                const actor = (await Actor.create(actorData)) as WH40KNPCV2 | undefined;
+                const actor = (await Actor.create(actorData)) as WH40KNPC | undefined;
                 if (actor) actors.push(actor);
             } catch (err) {
                 console.error(`Failed to create NPC "${name}":`, err);
@@ -388,9 +388,9 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
 
     /**
      * Wait for dialog completion.
-     * @returns {Promise<WH40KNPCV2[]>} Created actors.
+     * @returns {Promise<WH40KNPC[]>} Created actors.
      */
-    async wait(): Promise<WH40KNPCV2[]> {
+    async wait(): Promise<WH40KNPC[]> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             void this.render(true);
@@ -400,9 +400,9 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /**
      * Open the batch create dialog.
      * @param {Partial<BatchState>} [config] - Initial configuration.
-     * @returns {Promise<WH40KNPCV2[]>} Created actors.
+     * @returns {Promise<WH40KNPC[]>} Created actors.
      */
-    static async open(config: Partial<BatchState> = {}): Promise<WH40KNPCV2[]> {
+    static async open(config: Partial<BatchState> = {}): Promise<WH40KNPC[]> {
         const dialog = new this(config);
         return dialog.wait();
     }
@@ -410,9 +410,9 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
     /**
      * Quick batch create without dialog.
      * @param {Record<string, unknown>} config - Configuration.
-     * @returns {Promise<WH40KNPCV2[]>} Created actors.
+     * @returns {Promise<WH40KNPC[]>} Created actors.
      */
-    static async quickCreate(config: Record<string, unknown>): Promise<WH40KNPCV2[]> {
+    static async quickCreate(config: Record<string, unknown>): Promise<WH40KNPC[]> {
         const {
             namePattern = 'NPC {n}',
             count = 1,
@@ -427,7 +427,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
             folder = '',
         } = config;
 
-        const actors: WH40KNPCV2[] = [];
+        const actors: WH40KNPC[] = [];
         const baseData = ThreatCalculator.generateNPCData({
             threatLevel,
             role,
@@ -459,7 +459,7 @@ export default class BatchCreateDialog extends HandlebarsApplicationMixin(Applic
                 folder: folder || undefined,
             };
 
-            const actor = (await Actor.create(actorData)) as WH40KNPCV2 | undefined;
+            const actor = (await Actor.create(actorData)) as WH40KNPC | undefined;
             if (actor) actors.push(actor);
         }
 
