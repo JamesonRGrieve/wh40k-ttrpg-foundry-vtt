@@ -24,6 +24,7 @@ export class HandlebarManager {
         const templates = [
             // Essential partials
             'systems/wh40k-rpg/templates/actor/partial/character-field.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/character-portrait.hbs',
             'systems/wh40k-rpg/templates/actor/partial/display-toggle.hbs',
             'systems/wh40k-rpg/templates/actor/partial/trait-toggle.hbs',
 
