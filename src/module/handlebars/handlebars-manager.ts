@@ -169,6 +169,18 @@ export class HandlebarManager {
             // Item panels
             'systems/wh40k-rpg/templates/item/panel/active-effects-panel.hbs',
             'systems/wh40k-rpg/templates/item/panel/modifiers-editor-panel.hbs',
+            'systems/wh40k-rpg/templates/item/panel/acquisition-panel.hbs',
+            'systems/wh40k-rpg/templates/item/panel/description-panel.hbs',
+            'systems/wh40k-rpg/templates/item/panel/item-header-physical.hbs',
+            'systems/wh40k-rpg/templates/item/panel/item-header.hbs',
+            'systems/wh40k-rpg/templates/item/panel/modifiers-panel.hbs',
+            'systems/wh40k-rpg/templates/item/panel/modifiers-summary.hbs',
+            'systems/wh40k-rpg/templates/item/panel/source-panel.hbs',
+
+            // Vehicle panels
+            'systems/wh40k-rpg/templates/actor/panel/vehicle-crew-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/vehicle-special-rules-panel.hbs',
+            'systems/wh40k-rpg/templates/actor/panel/vehicle-weapons-panel.hbs',
 
             // Component templates
             'systems/wh40k-rpg/templates/components/active-modifiers-panel.hbs',

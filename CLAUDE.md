@@ -26,13 +26,77 @@ These are not optional polish items. Every PR, refactor, and new component must 
 
 These are not aspirational. Code without these is incomplete.
 
-- **Vitest covers all functionality.** Pure logic (calculators, processors, validators), DataModel methods, Document methods, helpers, and mixin behaviors all get unit tests. `pnpm test` must pass before commit. Tests live in `tests/` (separate from `src/` so the build never ships them) or co-located as `*.test.ts`.
-- **Storybook stories for every component.** Sheets, dialogs, partials, chat cards, HUD widgets, prompts — each gets a `*.stories.ts`. Stories use the factories in `stories/mocks/` to produce realistic mock data; do not hand-author 200-field mock objects per story.
+- **Vitest covers all functionality.** Pure logic (calculators, processors, validators), DataModel methods, Document methods, helpers, and mixin behaviors all get unit tests. `pnpm test` must pass before commit. Tests live in `tests/` (separate from `src/` so the build never ships them) or co-located as `*.test.ts`. Use `pnpm scaffold:test <path-to-source.ts>` to generate a co-located skeleton.
+- **Storybook stories for every component.** Sheets, dialogs, partials, chat cards, HUD widgets, prompts — each gets a `*.stories.ts`. Stories use the factories in `stories/mocks/` (and the additions in `stories/mocks/extended.ts` for NPC / Vehicle / Starship and per-system variants) to produce realistic mock data; do not hand-author 200-field mock objects per story. Use `pnpm scaffold:story <path-to-source.ts>` to generate a skeleton, and the helpers in `stories/test-helpers.ts` (`renderSheet`, `renderSheetParts`, `clickAction`, `submitForm`, `assertActiveTab`, `assertField`) instead of hand-wiring Handlebars compilation per story.
 - **Interactive unit testing in stories.** Stories with behavior use Storybook's `play` function (or Vitest + happy-dom against the rendered output) to assert on clicks, form submission, action dispatch, and drag/drop where applicable. A "renders without throwing" story is not enough for a component with interactivity.
-- **CSS composition testing.** Full-sheet stories render multiple partials together (header + tabs + panels) so layout regressions, theme cascade breaks, and Tailwind class conflicts show up in visual review. Single-partial stories alone do not satisfy this.
-- **Live partials must be preloaded.** If a sheet or dialog references a new Handlebars partial at runtime, also add it to `HandlebarManager.preloadHandlebarsTemplates()` in `src/module/handlebars/handlebars-manager.ts`. Storybook's glob-based partial registration can hide this mistake; Foundry runtime will not.
+- **CSS composition testing.** Full-sheet stories render multiple partials together (header + tabs + panels) so layout regressions, theme cascade breaks, and Tailwind class conflicts show up in visual review. Single-partial stories alone do not satisfy this. Use `renderSheetParts(...)` from `stories/test-helpers.ts` for the composed-tree pattern.
+- **Live partials must be preloaded.** If a sheet or dialog references a new Handlebars partial at runtime, also add it to `HandlebarManager.preloadHandlebarsTemplates()` in `src/module/handlebars/handlebars-manager.ts`. Storybook's glob-based partial registration can hide this mistake; Foundry runtime will not. The `preload-drift` gate (run pre-commit) catches the omission for you — if it fails, fix the preload list, do not silence the gate.
+- **Per-system homologation in stories.** When a story exercises actor or item data, run it through `withSystem(actor, 'im')` (and the other six system IDs) at least once so DH2-only assumptions surface. Without per-system mocks, "works in DH2 but not the other six" regressions are invisible.
+- **Seeded RNG in stories and tests.** Replace `Math.random()` calls in stories/mocks with `randomId(prefix, rng)` from `stories/mocks/extended.ts`, seeded via `seedRandom(seed)`. Determinism makes screenshot diffs and `play`-function assertions stable across runs.
 
-When you add a component, the story and tests are part of the same PR. When you fix a component, also add the story/tests if they don't exist — leave the area better covered than you found it.
+When you add a component, the story and tests are part of the same PR. When you fix a component, also add the story/tests if they don't exist — leave the area better covered than you found it. The `coverage-symmetry` ratchet (pre-commit) blocks commits where missing-pair counts increase.
+
+---
+
+## Coverage metrics & ratchets
+
+Every direction in the previous section is backed by a coverage script and a ratchet. The ratchets enforce a one-way valve: any PR may improve a metric, no PR may regress one. When a metric drops, run the matching `*:ratchet:update` to lower the baseline in the same commit. The pre-commit hook runs all ratchets in sequence; bypassing with `--no-verify` requires explicit user authorization.
+
+### Ratchet inventory
+
+| Direction | Coverage script | Ratchet | Baseline file |
+| --- | --- | --- | --- |
+| Tailwind migration | `pnpm css:coverage` | `pnpm css:ratchet` | `.css-coverage-baseline` |
+| Strong TS (per-rule, per-dir) | `pnpm ts:coverage` | `pnpm ts:ratchet` | `.ts-coverage-baseline` |
+| `tsc --noEmit` total errors | (built into ratchet) | `pnpm typecheck:ratchet` | `.tsc-error-baseline` |
+| ESLint warnings | (built into ratchet) | `pnpm lint:ratchet` | `.eslint-warning-baseline` |
+| Sheet → story / data → test pairing | `pnpm symmetry` | `pnpm symmetry:ratchet` | `.symmetry-baseline` |
+| Preload-list integrity (Handlebars partials) | `pnpm preload:drift` | hard gate (no ratchet) | — |
+| i18n key codegen freshness | `pnpm i18n:check` | hard gate (auto-regen pre-commit) | — |
+
+The hard gates (preload-drift, i18n) cannot be ratcheted because regression is a real bug, not a velocity tradeoff. Fix the underlying issue.
+
+### CSS migration tooling
+
+The CSS pipeline is an in-progress migration from a single concatenated monolith (`src/css/wh40k-rpg.css`) toward inline Tailwind utilities. The monolith preserves original component boundaries via `/* ── source: <path> ── */` markers.
+
+- `pnpm css:coverage` — classifies every `.hbs` template as `tailwind-only`, `mixed`, or `css-only`. Output at `.css-coverage.json`.
+- `pnpm css:block-index` — parses the monolith markers into `.css-blocks.json` (which source path occupies which line range). Refreshed automatically pre-commit.
+- `pnpm css:block list` — list every source path still present in the monolith.
+- `pnpm css:block show <source>` — print the rule block for a source path.
+- `pnpm css:block delete <source>` — remove every range for a source path. Run only after every consumer template has been ported (verified by grepping the relevant classes).
+- The CSS variable → Tailwind utility translation map is `scripts/css-token-map.json`. Extend this file when a new variable becomes worth a token rather than re-deriving on every port.
+- The full migration recipe lives in `docs/tailwind-migration.md` — read it before porting templates.
+
+Never add new rule blocks to `src/css/wh40k-rpg.css` outside the trailing `@tailwind` directives. The CSS pipeline is being phased out; new styling is `tw-*` utilities inline on templates.
+
+### TS strictness tooling
+
+- `pnpm ts:coverage` — counts `: any`, ` as any`, `@ts-expect-error`, `@ts-ignore` per top-level directory under `src/module/`. Output at `.ts-coverage.json`.
+- The per-rule per-directory baseline catches the case where one directory cleans up while another regresses. The aggregate `tsc --noEmit` ratchet (`.tsc-error-baseline`) is independent and gates total errors.
+- Foundry V14 type overrides live in `foundry-v14-overrides.d.ts` at the repo root. Both V14 gotchas (cleanData `_state` and registerSheet anonymous-class collisions) are encoded as patterns in the codebase — extend those patterns rather than introducing new wrappers.
+
+### i18n typing
+
+- `pnpm i18n:gen` — flatten `src/lang/en.json` into a string-literal union at `src/module/types/i18n-keys.d.ts`. The pre-commit hook regenerates automatically.
+- `import { t } from '~/module/i18n/t'` — typed wrapper around `game.i18n.localize` / `game.i18n.format`. The type system rejects unknown keys and stale ones after a langpack rename. Use this for new code; existing `game.i18n.localize(...)` call sites can be migrated incrementally.
+
+### Pre-commit pipeline (in order)
+
+1. `lint-staged` — eslint --fix and prettier on staged files.
+2. `i18n:gen` — regenerate `i18n-keys.d.ts` from the langpack.
+3. `css:block-index` — refresh `.css-blocks.json` from the monolith.
+4. `typecheck:ratchet` — `tsc --noEmit` total error count cannot rise.
+5. `lint:ratchet` — ESLint warning count cannot rise; errors are never allowed.
+6. `css:ratchet` — `tailwind-only` cannot fall, `css-only` cannot rise.
+7. `ts:ratchet` — per-rule per-directory suppression counts cannot rise.
+8. `symmetry:ratchet` — missing-story / missing-test counts cannot rise.
+9. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
+10. Pack validation if `gulpfile.js` or `src/packs/` changed.
+11. `vitest run` — full Vitest suite must pass.
+12. Storybook Playwright integration tests.
+
+Hooks run for 30–60s on large commits. Wait for them; do not interrupt or `--no-verify` past failures. If a hook fails, investigate and fix; do not silence.
 
 ---
 
@@ -120,6 +184,31 @@ pnpm build-storybook                  # Static Storybook build
 pnpm typecheck                        # tsc --noEmit
 pnpm lint                             # eslint src/module/
 pnpm check                            # Aggregate: lint + format + stylelint + typecheck + test
+
+# Coverage scripts (read-only, write JSON reports)
+pnpm css:coverage                     # template tailwind/mixed/css-only classification
+pnpm ts:coverage                      # per-rule, per-directory TS suppression counts
+pnpm symmetry                         # sheets without stories, data/documents without tests
+pnpm preload:drift                    # Handlebars partial references vs preload list
+
+# CSS monolith surgery
+pnpm css:block-index                  # refresh .css-blocks.json from markers
+pnpm css:block list                   # list every source path in the monolith
+pnpm css:block show <src>             # print the rule block
+pnpm css:block delete <src>           # remove every range for <src>
+
+# Ratchet baselines (run after a metric drops, in the same commit)
+pnpm css:ratchet:update
+pnpm ts:ratchet:update
+pnpm symmetry:ratchet:update
+pnpm typecheck:ratchet:update
+pnpm lint:ratchet:update
+
+# Codegen and scaffolds
+pnpm i18n:gen                         # rebuild i18n-keys.d.ts from en.json
+pnpm scaffold:story <source.ts>       # write a co-located *.stories.ts skeleton
+pnpm scaffold:test <source.ts>        # write a co-located *.test.ts skeleton
+
 FOUNDRY_PASS=... ./pull-foundry.sh    # Mirror Foundry runtime + installed modules → .foundry-release/
 ```
 

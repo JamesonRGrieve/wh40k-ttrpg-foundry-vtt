@@ -1,43 +1,43 @@
 {{!-- Unified Roll Dialog: Dice Input Zone --}}
-<div class="urd-dice">
-    <div class="urd-dice__header">
-        <span class="urd-dice__header-title">Manual Roll</span>
-        <button type="button" class="urd-dice__mode-toggle" data-action="toggleDiceMode">
+<div class="tw-px-5 tw-py-4 tw-border-t tw-border-[rgba(255,255,255,0.06)] tw-bg-[rgba(0,0,0,0.1)]">
+    <div class="tw-flex tw-items-center tw-justify-between tw-mb-3">
+        <span class="tw-text-sm tw-font-semibold tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.08em]">Manual Roll</span>
+        <button type="button" class="tw-text-xs tw-text-[rgba(201,162,39,0.7)] tw-bg-transparent tw-border-0 tw-cursor-pointer tw-underline tw-p-0 hover:tw-text-gold-raw" data-action="toggleDiceMode">
             {{#if isTwoDice}}Single Input{{else}}Two Dice{{/if}}
         </button>
     </div>
 
     {{#if isTwoDice}}
         {{!-- Two-dice d10 input --}}
-        <div class="urd-dice__two-dice">
-            <div class="urd-dice__die">
-                <label class="urd-dice__die-label">Tens</label>
-                <input type="number" id="manual-tens" class="urd-dice__die-input"
+        <div class="tw-flex tw-items-center tw-justify-center tw-gap-2.5">
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                <label class="tw-text-[0.65rem] tw-text-[#6a6a6a] tw-uppercase tw-tracking-[0.1em]">Tens</label>
+                <input type="number" id="manual-tens" class="tw-w-14 tw-h-14 tw-p-0 tw-bg-[rgba(0,0,0,0.4)] tw-border-2 tw-border-[rgba(201,162,39,0.3)] tw-rounded-lg tw-text-[#e8e4d9] tw-text-[1.8rem] tw-font-bold tw-text-center tw-[font-variant-numeric:tabular-nums] tw-[appearance:textfield] [&::-webkit-outer-spin-button]:tw-[appearance:none] [&::-webkit-inner-spin-button]:tw-[appearance:none] tw-transition-all focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_16px_rgba(201,162,39,0.4)] focus:tw-bg-[rgba(0,0,0,0.5)] placeholder:tw-text-[#3a3a3a] placeholder:tw-text-2xl"
                        min="0" max="9" step="1"
                        value="{{#if (ne manualRollTens null)}}{{manualRollTens}}{{/if}}"
                        placeholder="-" autocomplete="off" />
             </div>
-            <span class="urd-dice__separator">+</span>
-            <div class="urd-dice__die">
-                <label class="urd-dice__die-label">Units</label>
-                <input type="number" id="manual-units" class="urd-dice__die-input"
+            <span class="tw-text-lg tw-text-[#6a6a6a] tw-font-light">+</span>
+            <div class="tw-flex tw-flex-col tw-items-center tw-gap-1">
+                <label class="tw-text-[0.65rem] tw-text-[#6a6a6a] tw-uppercase tw-tracking-[0.1em]">Units</label>
+                <input type="number" id="manual-units" class="tw-w-14 tw-h-14 tw-p-0 tw-bg-[rgba(0,0,0,0.4)] tw-border-2 tw-border-[rgba(201,162,39,0.3)] tw-rounded-lg tw-text-[#e8e4d9] tw-text-[1.8rem] tw-font-bold tw-text-center tw-[font-variant-numeric:tabular-nums] tw-[appearance:textfield] [&::-webkit-outer-spin-button]:tw-[appearance:none] [&::-webkit-inner-spin-button]:tw-[appearance:none] tw-transition-all focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_16px_rgba(201,162,39,0.4)] focus:tw-bg-[rgba(0,0,0,0.5)] placeholder:tw-text-[#3a3a3a] placeholder:tw-text-2xl"
                        min="0" max="9" step="1"
                        value="{{#if (ne manualRollUnits null)}}{{manualRollUnits}}{{/if}}"
                        placeholder="-" autocomplete="off" />
             </div>
-            <span class="urd-dice__separator">=</span>
-            <div class="urd-dice__total">
+            <span class="tw-text-lg tw-text-[#6a6a6a] tw-font-light">=</span>
+            <div class="tw-min-w-14 tw-text-center">
                 {{#if hasManualRoll}}
-                    <span class="urd-dice__total-value">{{manualRollTotal}}</span>
+                    <span class="tw-text-[1.8rem] tw-font-bold tw-text-gold-raw tw-[text-shadow:0_0_10px_rgba(201,162,39,0.3)]">{{manualRollTotal}}</span>
                 {{else}}
-                    <span class="urd-dice__total-placeholder">--</span>
+                    <span class="tw-text-[1.8rem] tw-font-light tw-text-[#3a3a3a]">--</span>
                 {{/if}}
             </div>
         </div>
     {{else}}
         {{!-- Single number input --}}
-        <div class="urd-dice__single">
-            <input type="number" id="manual-single" class="urd-dice__single-input"
+        <div class="tw-flex tw-justify-center">
+            <input type="number" id="manual-single" class="tw-w-[120px] tw-h-14 tw-py-0 tw-px-3 tw-bg-[rgba(0,0,0,0.4)] tw-border-2 tw-border-[rgba(201,162,39,0.3)] tw-rounded-lg tw-text-[#e8e4d9] tw-text-[1.8rem] tw-font-bold tw-text-center tw-[font-variant-numeric:tabular-nums] tw-[appearance:textfield] [&::-webkit-outer-spin-button]:tw-[appearance:none] [&::-webkit-inner-spin-button]:tw-[appearance:none] tw-transition-all focus:tw-outline-none focus:tw-border-gold-raw focus:tw-shadow-[0_0_16px_rgba(201,162,39,0.4)] placeholder:tw-text-base placeholder:tw-text-[#4a4a4a]"
                    min="1" max="100" step="1"
                    value="{{#if singleRollValue}}{{singleRollValue}}{{/if}}"
                    placeholder="1-100" autocomplete="off" />
@@ -46,11 +46,11 @@
 
     {{!-- Instant feedback --}}
     {{#if rollResult}}
-        <div class="urd-dice__result urd-dice__result--{{#if rollResult.success}}success{{else}}failure{{/if}}">
-            <div class="urd-dice__result-label">
+        <div class="tw-mt-3 tw-py-2.5 tw-px-4 tw-rounded-md tw-text-center {{#if rollResult.success}}tw-bg-[rgba(45,138,78,0.15)] tw-border tw-border-[rgba(74,222,128,0.4)]{{else}}tw-bg-[rgba(168,50,50,0.15)] tw-border tw-border-[rgba(248,113,113,0.4)]{{/if}}">
+            <div class="tw-font-display tw-text-base tw-font-bold tw-uppercase tw-tracking-[0.15em] {{#if rollResult.success}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
                 {{#if rollResult.success}}SUCCESS{{else}}FAILURE{{/if}}
             </div>
-            <div class="urd-dice__result-degrees">
+            <div class="tw-text-sm tw-font-semibold tw-mt-0.5 {{#if rollResult.success}}tw-text-[rgba(74,222,128,0.8)]{{else}}tw-text-[rgba(248,113,113,0.8)]{{/if}}">
                 {{#if rollResult.success}}
                     {{rollResult.dos}} DoS
                 {{else}}
@@ -61,7 +61,7 @@
     {{/if}}
 
     {{#if hasManualRoll}}
-        <button type="button" class="urd-dice__clear" data-action="clearManualRoll">
+        <button type="button" class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-mt-2.5 tw-w-full tw-py-1.5 tw-bg-transparent tw-border-0 tw-text-[#6a6a6a] tw-text-sm tw-cursor-pointer tw-transition-colors hover:tw-text-[#f87171]" data-action="clearManualRoll">
             <i class="fas fa-times"></i> Clear
         </button>
     {{/if}}

@@ -1,17 +1,17 @@
 {{!-- Unified Roll Dialog: Modifiers Section --}}
-<div class="urd-modifiers" {{#if isForceField}}hidden{{/if}}>
+<div class="tw-border-t tw-border-[rgba(255,255,255,0.06)] tw-py-2.5 tw-px-5" {{#if isForceField}}hidden{{/if}}>
 {{#unless isForceField}}
     {{!-- Situational modifier pills from character talents/traits/conditions --}}
     {{#if hasSituationalModifiers}}
-    <div class="urd-modifiers__pills">
+    <div class="tw-flex tw-flex-wrap tw-gap-1.5 tw-mb-2.5">
         {{#each situationalModifiers}}
         <button type="button"
-                class="urd-modifiers__pill {{#if active}}urd-modifiers__pill--active{{/if}}"
+                class="tw-inline-flex tw-items-center tw-gap-[5px] tw-py-1 tw-px-2.5 tw-border tw-rounded-2xl tw-cursor-pointer tw-text-[0.78rem] tw-transition-all [&>i]:tw-text-[0.7rem] [&>i]:tw-opacity-70 {{#if active}}tw-bg-[rgba(201,162,39,0.15)] tw-border-[rgba(201,162,39,0.5)] tw-text-[#e8e4d9] tw-shadow-[0_0_8px_rgba(201,162,39,0.15)] [&>i]:tw-opacity-100 [&>i]:tw-text-gold-raw{{else}}tw-bg-[rgba(0,0,0,0.25)] tw-border-[rgba(255,255,255,0.08)] tw-text-[#9a9a8a] hover:tw-bg-[rgba(201,162,39,0.08)] hover:tw-border-[rgba(201,162,39,0.3)] hover:tw-text-[#b8b8a8]{{/if}}"
                 data-action="toggleSituational" data-toggle-key="{{toggleKey}}"
                 data-tooltip="{{condition}}">
             {{#if icon}}<i class="{{icon}}"></i>{{/if}}
-            <span class="urd-modifiers__pill-name">{{source}}</span>
-            <span class="urd-modifiers__pill-value {{#if (gt value 0)}}urd-modifiers__pill-value--positive{{else}}urd-modifiers__pill-value--negative{{/if}}">
+            <span class="tw-font-medium tw-max-w-[120px] tw-overflow-hidden tw-text-ellipsis tw-whitespace-nowrap">{{source}}</span>
+            <span class="tw-font-bold tw-text-sm {{#if (gt value 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
                 {{valueLabel}}
             </span>
         </button>
@@ -21,23 +21,23 @@
 
     {{!-- Inline custom modifier: hidden until toggled --}}
     {{#if showCustomModifier}}
-    <div class="urd-modifiers__custom-inline">
-        <div class="urd-modifiers__custom-stepper">
-            <button type="button" class="urd-modifiers__custom-btn" data-action="customModDown">
+    <div class="tw-flex tw-items-center tw-justify-center tw-gap-2">
+        <div class="tw-flex tw-items-center tw-gap-0 tw-border tw-border-[rgba(201,162,39,0.2)] tw-rounded-md tw-overflow-hidden tw-bg-[rgba(0,0,0,0.2)]">
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-[30px] tw-h-[30px] tw-bg-[rgba(0,0,0,0.15)] tw-border-0 tw-text-gold-raw tw-cursor-pointer tw-text-[0.7rem] tw-transition-all hover:tw-bg-[rgba(201,162,39,0.15)] hover:tw-text-[#e8e4d9] active:tw-bg-[rgba(201,162,39,0.25)]" data-action="customModDown">
                 <i class="fas fa-minus"></i>
             </button>
-            <input type="number" id="unified-custom-modifier" class="urd-modifiers__custom-input"
+            <input type="number" id="unified-custom-modifier" class="tw-w-12 tw-py-1 tw-px-0.5 tw-bg-transparent tw-border-0 tw-border-l tw-border-r tw-border-[rgba(201,162,39,0.15)] tw-text-[#e8e4d9] tw-text-sm tw-text-center tw-font-bold tw-[appearance:textfield] [&::-webkit-outer-spin-button]:tw-[appearance:none] [&::-webkit-inner-spin-button]:tw-[appearance:none] focus:tw-outline-none focus:tw-bg-[rgba(201,162,39,0.08)]"
                    value="{{customMod}}" placeholder="0" />
-            <button type="button" class="urd-modifiers__custom-btn" data-action="customModUp">
+            <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-[30px] tw-h-[30px] tw-bg-[rgba(0,0,0,0.15)] tw-border-0 tw-text-gold-raw tw-cursor-pointer tw-text-[0.7rem] tw-transition-all hover:tw-bg-[rgba(201,162,39,0.15)] hover:tw-text-[#e8e4d9] active:tw-bg-[rgba(201,162,39,0.25)]" data-action="customModUp">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
-        <button type="button" class="urd-modifiers__custom-close" data-action="toggleCustomModifier">
+        <button type="button" class="tw-flex tw-items-center tw-justify-center tw-w-6 tw-h-6 tw-bg-transparent tw-border-0 tw-text-[#6a6a6a] tw-cursor-pointer tw-text-[0.7rem] tw-rounded-full tw-transition-all hover:tw-text-[#f87171] hover:tw-bg-[rgba(248,113,113,0.1)]" data-action="toggleCustomModifier">
             <i class="fas fa-times"></i>
         </button>
     </div>
     {{else}}
-    <button type="button" class="urd-modifiers__add-custom" data-action="toggleCustomModifier">
+    <button type="button" class="tw-flex tw-items-center tw-justify-center tw-gap-1.5 tw-w-full tw-py-1.5 tw-bg-transparent tw-border tw-border-dashed tw-border-[rgba(201,162,39,0.15)] tw-rounded-md tw-text-[rgba(201,162,39,0.5)] tw-text-[0.78rem] tw-cursor-pointer tw-transition-all hover:tw-border-[rgba(201,162,39,0.4)] hover:tw-text-gold-raw hover:tw-bg-[rgba(201,162,39,0.05)]" data-action="toggleCustomModifier">
         <i class="fas fa-plus-circle"></i> Custom Modifier
     </button>
     {{/if}}

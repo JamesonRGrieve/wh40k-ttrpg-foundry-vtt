@@ -1,5 +1,18 @@
 pnpm exec lint-staged --hide-unstaged
 
+# Regenerate i18n key types from src/lang/en.json. The codegen is idempotent;
+# if the langpack didn't change, the file is byte-for-byte identical and git
+# sees no change. New keys flow into src/module/types/i18n-keys.d.ts so the
+# typed t() helper picks them up immediately.
+echo "[pre-commit] regenerating i18n key types…"
+pnpm -s i18n:gen
+
+# Refresh the CSS block index so .css-blocks.json stays current with the
+# monolith. Cheap (one file scan); avoids the manual `pnpm css:block-index`
+# step after every CSS edit.
+echo "[pre-commit] refreshing CSS block index…"
+pnpm -s css:block-index
+
 # Type-check ratchet: blocks commits that increase tsc --noEmit error count.
 # Update the baseline (.tsc-error-baseline) in the same commit when the
 # count drops, via: pnpm typecheck:ratchet:update
@@ -10,6 +23,30 @@ pnpm -s typecheck:ratchet
 # count. Update via: pnpm lint:ratchet:update
 echo "[pre-commit] running eslint ratchet…"
 pnpm -s lint:ratchet
+
+# CSS-coverage ratchet: blocks commits that increase css-only template count
+# or decrease tailwind-only count. Update via: pnpm css:ratchet:update
+echo "[pre-commit] running css coverage ratchet…"
+pnpm -s css:ratchet
+
+# Per-rule TS-strictness ratchet: blocks commits that introduce new bare
+# `: any`, ` as any`, or `@ts-expect-error` in any per-directory bucket.
+# Update via: pnpm ts:ratchet:update
+echo "[pre-commit] running ts coverage ratchet…"
+pnpm -s ts:ratchet
+
+# Symmetry ratchet: blocks commits that increase the count of sheets/dialogs
+# without a sibling .stories.ts, or data/documents files without a sibling
+# .test.ts. Update via: pnpm symmetry:ratchet:update
+echo "[pre-commit] running symmetry ratchet…"
+pnpm -s symmetry:ratchet
+
+# Preload-drift gate: blocks commits where Handlebars partials are referenced
+# at runtime ({{> ...}}) but missing from preloadHandlebarsTemplates(), or
+# where preload entries point at non-existent templates. Hard fail (no ratchet —
+# this is a real bug class).
+echo "[pre-commit] running preload-drift gate…"
+pnpm -s preload:drift
 
 # Validate pack compilation when the compiler or any pack source changes.
 # The prior silent-error bug in compilePacks went unnoticed because lint-staged

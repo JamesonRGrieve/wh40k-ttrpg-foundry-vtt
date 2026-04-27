@@ -1,17 +1,17 @@
 {{!-- Unified Roll Dialog: Context Panel - delegates to sub-panels --}}
-<div class="urd-context" {{#unless hasContextPanel}}hidden{{/unless}}>
+<div class="tw-border-t tw-border-[rgba(255,255,255,0.06)]" {{#unless hasContextPanel}}hidden{{/unless}}>
 {{#if hasContextPanel}}
-    <button type="button" class="urd-context__header" data-action="toggleContextSection">
-        <span class="urd-context__header-title">
+    <button type="button" class="tw-flex tw-items-center tw-w-full tw-px-5 tw-py-3 tw-bg-[rgba(0,0,0,0.15)] tw-border-0 tw-text-[#e8e4d9] tw-cursor-pointer tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.08em] tw-transition-colors hover:tw-bg-[rgba(0,0,0,0.25)]" data-action="toggleContextSection">
+        <span class="tw-flex-1 tw-text-left tw-flex tw-items-center tw-gap-2 [&>i]:tw-text-gold-raw [&>i]:tw-text-[0.9rem]">
             {{#if isWeapon}}<i class="fas fa-crosshairs"></i> Attack Options{{/if}}
             {{#if isPsychic}}<i class="fas fa-brain"></i> Psychic Power{{/if}}
             {{#if isForceField}}<i class="fas fa-shield-alt"></i> Force Field{{/if}}
         </span>
-        <i class="fas {{#if contextExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} urd-context__chevron"></i>
+        <i class="fas {{#if contextExpanded}}fa-chevron-up{{else}}fa-chevron-down{{/if}} tw-text-[#6a6a6a] tw-text-xs"></i>
     </button>
 
     {{#if contextExpanded}}
-        <div class="urd-context__body">
+        <div class="tw-px-5 tw-pt-3 tw-pb-4 tw-bg-[rgba(0,0,0,0.08)]">
             {{#if isWeapon}}
                 {{> "systems/wh40k-rpg/templates/prompt/unified/panels/weapon-panel.hbs"}}
             {{/if}}

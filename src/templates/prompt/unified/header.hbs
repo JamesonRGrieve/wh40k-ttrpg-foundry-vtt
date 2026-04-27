@@ -1,11 +1,11 @@
 {{! Unified Roll Dialog: Header }}
-<div class="urd-header">
+<div class="tw-flex tw-items-center tw-gap-[14px] tw-px-5 tw-py-4 tw-bg-[linear-gradient(135deg,rgba(201,162,39,0.08)_0%,rgba(0,0,0,0.15)_100%)] tw-border-b tw-border-[rgba(201,162,39,0.2)]">
     {{#if actorImg}}
-        <img class="urd-header__portrait" src="{{actorImg}}" alt="{{actorName}}" />
+        <img class="tw-w-11 tw-h-11 tw-rounded-full tw-border-2 tw-border-gold-raw tw-object-cover tw-shadow-[0_2px_8px_rgba(0,0,0,0.4)] tw-shrink-0" src="{{actorImg}}" alt="{{actorName}}" />
     {{/if}}
-    <div class="urd-header__info">
-        {{#if actorName}}<div class="urd-header__actor">{{actorName}}</div>{{/if}}
-        <h2 class="urd-header__title">{{rollName}}</h2>
-        {{#if rollSubtitle}}<div class="urd-header__subtitle">{{rollSubtitle}}</div>{{/if}}
+    <div class="tw-flex-1 tw-min-w-0">
+        {{#if actorName}}<div class="tw-text-xs tw-text-[#9a9a8a] tw-uppercase tw-tracking-[0.1em]">{{actorName}}</div>{{/if}}
+        <h2 class="tw-font-display tw-text-[1.15rem] tw-font-semibold tw-text-gold-raw tw-uppercase tw-tracking-[0.08em] tw-m-0 tw-[text-shadow:0_2px_4px_rgba(0,0,0,0.5)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">{{rollName}}</h2>
+        {{#if rollSubtitle}}<div class="tw-text-sm tw-text-[#b8b8a8] tw-mt-0.5">{{rollSubtitle}}</div>{{/if}}
     </div>
 </div>
