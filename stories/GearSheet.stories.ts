@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
-import gearSheetSrc from '../src/templates/item/item-gear-sheet-v2.hbs?raw';
+import gearSheetSrc from '../src/templates/item/item-gear-sheet.hbs?raw';
 import { mockGearSheetContext, renderTemplate } from './mocks';
 import { initializeStoryHandlebars } from './template-support';
 

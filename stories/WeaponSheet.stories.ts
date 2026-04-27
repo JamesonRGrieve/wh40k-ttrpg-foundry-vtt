@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
-import weaponSheetSrc from '../src/templates/item/item-weapon-sheet-modern.hbs?raw';
+import weaponSheetSrc from '../src/templates/item/item-weapon-sheet.hbs?raw';
 import { mockWeaponSheetContext, renderTemplate } from './mocks';
 import { initializeStoryHandlebars } from './template-support';
 

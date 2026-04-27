@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import Handlebars from 'handlebars';
-import armourSheetSrc from '../src/templates/item/item-armour-sheet-v2.hbs?raw';
+import armourSheetSrc from '../src/templates/item/item-armour-sheet.hbs?raw';
 import { mockArmourSheetContext, renderTemplate } from './mocks';
 import { initializeStoryHandlebars } from './template-support';
 
