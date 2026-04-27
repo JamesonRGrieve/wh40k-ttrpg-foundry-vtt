@@ -155,6 +155,8 @@ export interface MockActor {
             role: string;
             trialsAndTravails: string;
             motivation: string;
+            career: string;
+            divination: string;
         };
         wounds: { value: number; max: number };
         fate: { value: number; max: number };
@@ -186,6 +188,8 @@ export function mockActor(overrides?: DeepPartial<MockActor>): MockActor {
                 role: 'Warrior',
                 trialsAndTravails: '',
                 motivation: 'Duty',
+                career: 'Guardsman',
+                divination: 'Trust in your fellow man, and put your faith in the Emperor.',
             },
             wounds: { value: 12, max: 12 },
             fate: { value: 3, max: 3 },
@@ -201,8 +205,16 @@ export function mockActor(overrides?: DeepPartial<MockActor>): MockActor {
 // ── Sheet rendering helpers ──────────────────────────────────────────────────
 
 export function renderTemplate<T>(template: HandlebarsTemplateDelegate, context: T): HTMLElement {
+    // Mirror Foundry V14's app-window.html shell exactly (.app.window-app + .window-content)
+    // under the theme-dark scope so foundry2.css's variables, reset, and chrome cascade
+    // through correctly. With Foundry's own CSS imported in preview.ts, no inline styling
+    // is needed — the deployed look comes from the cascade layers in foundry2.css.
     const wrap = document.createElement('div');
-    wrap.className = 'wh40k-wrapper';
-    wrap.innerHTML = template(context);
+    wrap.className = 'theme-dark wh40k-wrapper';
+    wrap.innerHTML = `
+        <div class="app window-app sheet" data-appid="0">
+            <section class="window-content">${template(context)}</section>
+        </div>
+    `;
     return wrap;
 }

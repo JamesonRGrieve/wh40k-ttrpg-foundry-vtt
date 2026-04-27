@@ -107,17 +107,20 @@ See `src/module/data/actor/templates/creature.ts`.
 ## Build, test, dev
 
 ```bash
-pnpm build            # Gulp build → dist/
-pnpm watch            # Continuous build
-pnpm test             # Vitest run
-pnpm test:watch       # Vitest watch
-pnpm test:coverage    # Vitest with v8 coverage
-pnpm storybook        # Storybook dev server (port 6006)
-pnpm build-storybook  # Static Storybook build
-pnpm typecheck        # tsc --noEmit
-pnpm lint             # eslint src/module/
-pnpm check            # Aggregate: validate-json + lint + format + stylelint + typecheck + test
+pnpm build                            # Gulp build → dist/
+pnpm watch                            # Continuous build
+pnpm test                             # Vitest run
+pnpm test:watch                       # Vitest watch
+pnpm test:coverage                    # Vitest with v8 coverage
+pnpm storybook                        # Storybook dev server (port 6006)
+pnpm build-storybook                  # Static Storybook build
+pnpm typecheck                        # tsc --noEmit
+pnpm lint                             # eslint src/module/
+pnpm check                            # Aggregate: lint + format + stylelint + typecheck + test
+FOUNDRY_PASS=... ./pull-foundry.sh    # Mirror Foundry runtime + installed modules → .foundry-release/
 ```
+
+**First-time Storybook setup:** run `pull-foundry.sh` once to populate `.foundry-release/` with Foundry's compiled stylesheet (`foundry2.css`), fonts, and other public assets. Storybook serves them as static files and loads `foundry2.css` via `<link>` (it cannot go through Vite's PostCSS pipeline because Tailwind misinterprets Foundry's native `@layer` cascade directives). Without this, stories render against browser defaults instead of Foundry's chrome / theme. Re-run `pull-foundry.sh` after Foundry server upgrades.
 
 Deploy is via `deploy.sh` in the parent vault directory — **never run it without explicit user instruction**.
 
