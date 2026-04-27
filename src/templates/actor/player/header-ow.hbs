@@ -5,6 +5,9 @@
         <div class="wh40k-header-left tw-flex tw-flex-col tw-gap-2">
             <div class="wh40k-header-topline tw-grid tw-grid-cols-header-topline tw-items-center tw-gap-2.5">
                 <div class="wh40k-header__logo wh40k-portrait-container tw-relative tw-aspect-[11/15] tw-w-44 tw-shrink-0 tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium,rgba(0,0,0,0.2))] tw-transition-all hover:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)]">
+                    <i class="fa-solid fa-dice-d20 wh40k-origin-builder-btn tw-absolute tw-text-2xl tw-top-2 tw-left-2 tw-z-10 tw-cursor-pointer tw-opacity-60 tw-transition-all hover:tw-opacity-100 hover:tw-drop-shadow-[0_0_8px_rgba(212,175,55,0.9)] {{#unless originPathComplete}}pulse{{/unless}}"
+                       data-action="openOriginPathBuilder"
+                       data-tooltip="{{localize 'WH40K.Utility.SetupOriginPath'}}"></i>
                     <img class="wh40k-header__logo-image wh40k-portrait tw-h-full tw-w-full tw-cursor-pointer tw-bg-[rgba(0,0,0,0.25)] tw-object-cover" src="{{actor.img}}" data-action="editImage" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
                 </div>
                 <div class="wh40k-header-info tw-flex tw-min-w-0 tw-flex-1 tw-flex-col tw-items-stretch tw-gap-1.5">
