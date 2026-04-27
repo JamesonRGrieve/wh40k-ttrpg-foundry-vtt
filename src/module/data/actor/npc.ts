@@ -15,8 +15,8 @@ const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectF
  *
  * @extends {ActorDataModel}
  */
-/** Shape of a single characteristic in NPCDataV2 (no advance field). */
-interface NPCV2CharacteristicData {
+/** Shape of a single characteristic in NPCData (no advance field). */
+interface NPCCharacteristicData {
     label: string;
     short: string;
     base: number;
@@ -50,7 +50,7 @@ interface NPCV2TrainedSkill {
     bonus: number;
 }
 
-export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
+export default class NPCData extends HordeTemplate(ActorDataModel) {
     // Typed property declarations matching defineSchema()
     declare faction: string;
     declare subfaction: string;
@@ -60,17 +60,17 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
     declare type: 'troop' | 'elite' | 'master' | 'horde' | 'swarm' | 'creature' | 'daemon' | 'xenos';
     declare threatLevel: number;
     declare characteristics: {
-        weaponSkill: NPCV2CharacteristicData;
-        ballisticSkill: NPCV2CharacteristicData;
-        strength: NPCV2CharacteristicData;
-        toughness: NPCV2CharacteristicData;
-        agility: NPCV2CharacteristicData;
-        intelligence: NPCV2CharacteristicData;
-        perception: NPCV2CharacteristicData;
-        willpower: NPCV2CharacteristicData;
-        fellowship: NPCV2CharacteristicData;
-        influence: NPCV2CharacteristicData;
-        [key: string]: NPCV2CharacteristicData;
+        weaponSkill: NPCCharacteristicData;
+        ballisticSkill: NPCCharacteristicData;
+        strength: NPCCharacteristicData;
+        toughness: NPCCharacteristicData;
+        agility: NPCCharacteristicData;
+        intelligence: NPCCharacteristicData;
+        perception: NPCCharacteristicData;
+        willpower: NPCCharacteristicData;
+        fellowship: NPCCharacteristicData;
+        influence: NPCCharacteristicData;
+        [key: string]: NPCCharacteristicData;
     };
     declare wounds: {
         max: number;
@@ -523,11 +523,11 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
      * @param {string} key - Short name (e.g., "Ag") or full key (e.g., "agility")
      * @returns {object|null}
      */
-    getCharacteristic(key: string): NPCV2CharacteristicData | null {
+    getCharacteristic(key: string): NPCCharacteristicData | null {
         if (this.characteristics[key]) {
             return this.characteristics[key];
         }
-        const fullKey = NPCDataV2.CHARACTERISTIC_MAP[key];
+        const fullKey = NPCData.CHARACTERISTIC_MAP[key];
         if (fullKey && this.characteristics[fullKey]) {
             return this.characteristics[fullKey];
         }
@@ -581,7 +581,7 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
      */
     getSkillTarget(skillName: string): number {
         const skill = this.trainedSkills[skillName];
-        const charKey = skill?.characteristic || NPCDataV2.SKILL_CHARACTERISTIC_MAP[skillName] || 'perception';
+        const charKey = skill?.characteristic || NPCData.SKILL_CHARACTERISTIC_MAP[skillName] || 'perception';
         const char = this.getCharacteristic(charKey);
         if (!char) return 0;
 
@@ -620,7 +620,7 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
     addTrainedSkill(name: string, characteristic: string | null = null, level = 'trained', bonus = 0): unknown {
         const skills = foundry.utils.deepClone(this.trainedSkills);
 
-        const charKey = characteristic || NPCDataV2.SKILL_CHARACTERISTIC_MAP[name] || 'perception';
+        const charKey = characteristic || NPCData.SKILL_CHARACTERISTIC_MAP[name] || 'perception';
 
         skills[name] = {
             name: name,
@@ -979,9 +979,9 @@ export default class NPCDataV2 extends HordeTemplate(ActorDataModel) {
     /** @inheritDoc */
     static _migrateData(source: Record<string, unknown>): void {
         super._migrateData?.(source);
-        NPCDataV2.#migrateSize(source);
-        NPCDataV2.#migrateWounds(source);
-        NPCDataV2.#migrateThreatLevel(source);
+        NPCData.#migrateSize(source);
+        NPCData.#migrateWounds(source);
+        NPCData.#migrateThreatLevel(source);
     }
 
     /**
