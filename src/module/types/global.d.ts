@@ -282,60 +282,301 @@ declare global {
         activeTool: string;
     }
 
+    interface ClientSettingRegistration {
+        name?: string;
+        hint?: string;
+        scope?: 'world' | 'client' | 'user';
+        config?: boolean;
+        requiresReload?: boolean;
+        type?: unknown;
+        default?: unknown;
+        choices?: Record<string, string>;
+        range?: { min: number; max: number; step?: number };
+        onChange?: (value: unknown) => void;
+        filePicker?: boolean | string;
+    }
+
     interface ClientSettings {
-        get(module: string, key: string): any;
-        set(module: string, key: string, value: any): Promise<any>;
-        register(module: string, key: string, data: any): void;
-        settings: Map<string, any>;
+        get(module: string, key: string): unknown;
+        set(module: string, key: string, value: unknown): Promise<unknown>;
+        register(module: string, key: string, data: ClientSettingRegistration): void;
+        settings: Map<string, unknown>;
+    }
+
+    interface FoundrySidebar {
+        tabs: Record<string, unknown>;
+        activateTab(name: string): void;
+    }
+
+    interface FoundryControls {
+        controls: Record<string, SceneControl>;
+        activeControl: string;
+        render(force?: boolean): void;
     }
 
     interface UI {
         notifications: Notifications;
-        sidebar: any;
-        chat: any;
-        combat: any;
-        compendium: any;
-        controls: any;
-        players: any;
-        settings: any;
-        tables: any;
-        tours: any;
-        nav: any;
-        bubbles: any;
-        broadcaster: any;
-        menu: any;
-        activeWindow: any;
-        windows: Record<number, any>;
+        sidebar: FoundrySidebar;
+        chat: { scrollBottom(options?: Record<string, unknown>): void; postOne?(...args: unknown[]): void };
+        combat: { render(force?: boolean): void };
+        compendium: { render(force?: boolean): void };
+        controls: FoundryControls;
+        players: { render(force?: boolean): void };
+        settings: { render(force?: boolean): void };
+        tables: { render(force?: boolean): void };
+        tours: { render(force?: boolean): void };
+        nav: { render(force?: boolean): void };
+        bubbles: { say(token: unknown, message: string, options?: Record<string, unknown>): void };
+        broadcaster: { render(force?: boolean): void };
+        menu: { render(force?: boolean): void };
+        activeWindow: unknown;
+        windows: Record<number, unknown>;
+    }
+
+    interface FoundryUserCollection {
+        get(id: string): FoundryUser | undefined;
+        find(predicate: (user: FoundryUser) => boolean): FoundryUser | undefined;
+        contents: FoundryUser[];
+    }
+
+    interface FoundryUser {
+        id: string;
+        name: string;
+        isGM: boolean;
+        active: boolean;
+        character?: WH40KBaseActor | null;
+        targets: Set<Token>;
+    }
+
+    interface FoundryActorCollection extends Iterable<WH40KBaseActor> {
+        get(id: string): WH40KBaseActor | undefined;
+        getName(name: string): WH40KBaseActor | undefined;
+        find(predicate: (actor: WH40KBaseActor) => boolean): WH40KBaseActor | undefined;
+        filter(predicate: (actor: WH40KBaseActor) => boolean): WH40KBaseActor[];
+        contents: WH40KBaseActor[];
+        tokens: Record<string, WH40KBaseActor>;
+    }
+
+    interface FoundryItemCollection extends Iterable<WH40KItem> {
+        get(id: string): WH40KItem | undefined;
+        getName(name: string): WH40KItem | undefined;
+        find(predicate: (item: WH40KItem) => boolean): WH40KItem | undefined;
+        filter(predicate: (item: WH40KItem) => boolean): WH40KItem[];
+        contents: WH40KItem[];
+    }
+
+    interface FoundrySceneCollection {
+        get(id: string): unknown;
+        contents: unknown[];
+        active?: unknown;
+        viewed?: unknown;
+    }
+
+    interface CompendiumIndexEntry {
+        _id: string;
+        name: string;
+        type?: string;
+        img?: string;
+        uuid?: string;
+        [key: string]: unknown;
+    }
+
+    interface CompendiumPack {
+        documentName: string;
+        metadata: { id: string; label: string; package: string; type: string; system?: string; [key: string]: unknown };
+        index: foundry.utils.Collection<CompendiumIndexEntry>;
+        getIndex(options?: { fields?: string[] }): Promise<foundry.utils.Collection<CompendiumIndexEntry>>;
+        getDocument(id: string): Promise<FoundryDocumentBase | undefined>;
+        getDocuments(query?: Record<string, unknown>): Promise<FoundryDocumentBase[]>;
+        importDocument(document: FoundryDocumentBase, options?: Record<string, unknown>): Promise<FoundryDocumentBase>;
+    }
+
+    interface FoundryPackCollection extends Iterable<CompendiumPack> {
+        get(id: string): CompendiumPack | undefined;
+        find(predicate: (pack: CompendiumPack) => boolean): CompendiumPack | undefined;
+        filter(predicate: (pack: CompendiumPack) => boolean): CompendiumPack[];
+        contents: CompendiumPack[];
     }
 
     // Augment ReadyGame to include wh40k
     interface ReadyGame {
         wh40k: WH40KGameSystem;
-        actors: any;
-        items: any;
-        users: any;
-        scenes: any;
-        packs: any;
+        actors: FoundryActorCollection;
+        items: FoundryItemCollection;
+        users: FoundryUserCollection;
+        scenes: FoundrySceneCollection;
+        packs: FoundryPackCollection;
+        messages: { get(id: string): ChatMessageWH40KType | undefined; contents: ChatMessageWH40KType[] };
         settings: ClientSettings;
         userId: string;
-        user: any;
-        tours: any;
+        user: FoundryUser;
+        tours: { register(namespace: string, name: string, tour: unknown): void; get(id: string): unknown };
+        canvas: Canvas;
+        i18n: {
+            localize(key: string): string;
+            format(key: string, data?: Record<string, unknown>): string;
+            lang: string;
+        };
+    }
+
+    interface ChatMessageSpeakerData {
+        scene?: string | null;
+        actor?: string | null;
+        token?: string | null;
+        alias?: string | null;
+    }
+
+    interface ChatMessageWH40KType {
+        id: string;
+        speaker: ChatMessageSpeakerData;
+        rolls?: Roll[];
+        isRoll: boolean;
+        flavor?: string;
+        content?: string;
+        getFlag(scope: string, key: string): unknown;
+        setFlag(scope: string, key: string, value: unknown): Promise<unknown>;
+    }
+
+    interface HookCallback {
+        (...args: unknown[]): unknown;
+    }
+
+    interface HooksAPI {
+        on(event: string, fn: HookCallback): number;
+        once(event: string, fn: HookCallback): number;
+        off(event: string, fn: HookCallback | number): void;
+        call(event: string, ...args: unknown[]): boolean;
+        callAll(event: string, ...args: unknown[]): boolean;
+    }
+
+    interface RollEvaluateOptions {
+        async?: boolean;
+        minimize?: boolean;
+        maximize?: boolean;
+        allowStrings?: boolean;
+        allowInteractive?: boolean;
+        [key: string]: unknown;
+    }
+
+    interface RollToMessageOptions {
+        flavor?: string;
+        speaker?: ChatMessageSpeakerData;
+        rollMode?: string;
+        create?: boolean;
+        [key: string]: unknown;
+    }
+
+    interface RollClass {
+        new (formula: string, data?: Record<string, unknown>, options?: Record<string, unknown>): Roll;
+        create(formula: string, data?: Record<string, unknown>): Roll;
+        fromTerms(terms: unknown[], options?: Record<string, unknown>): Roll;
+    }
+
+    interface Roll {
+        formula: string;
+        total: number;
+        result: string;
+        terms: unknown[];
+        rolled?: boolean;
+        breakdown?: string;
+        evaluate(options?: RollEvaluateOptions): Promise<Roll>;
+        toMessage(messageData?: RollToMessageOptions, options?: Record<string, unknown>): Promise<ChatMessageWH40KType>;
+        toJSON(): Record<string, unknown>;
+        bind?(...args: unknown[]): Roll;
+    }
+
+    interface ChatMessageClass {
+        new (data?: Record<string, unknown>, options?: Record<string, unknown>): ChatMessageWH40KType;
+        create(data: Record<string, unknown>, options?: Record<string, unknown>): Promise<ChatMessageWH40KType>;
+        getSpeaker(options?: { scene?: unknown; actor?: WH40KBaseActor; token?: unknown; alias?: string }): ChatMessageSpeakerData;
+        getSpeakerActor(speaker: ChatMessageSpeakerData): WH40KBaseActor | null;
+        getWhisperRecipients(name: string): FoundryUser[];
+        applyRollMode(messageData: Record<string, unknown>, rollMode: string): Record<string, unknown>;
+        documentClass: ChatMessageClass;
+    }
+
+    interface FoundryDocumentBase {
+        id: string;
+        _id?: string;
+        name: string;
+        img?: string | null;
+        uuid: string;
+        type: string;
+        flags: Record<string, Record<string, unknown>>;
+        system: Record<string, unknown>;
+        sheet?: { render(force?: boolean): void; close(): Promise<void> } | null;
+        parent?: FoundryDocumentBase | null;
+        pack?: string | null;
+        readonly isOwner: boolean;
+        readonly visible: boolean;
+        readonly limited: boolean;
+        readonly link: string;
+        getFlag(scope: string, key: string): unknown;
+        setFlag(scope: string, key: string, value: unknown): Promise<unknown>;
+        unsetFlag(scope: string, key: string): Promise<unknown>;
+        update(data: Record<string, unknown>, options?: Record<string, unknown>): Promise<unknown>;
+        delete(options?: Record<string, unknown>): Promise<unknown>;
+        clone(data?: Record<string, unknown>, options?: Record<string, unknown>): unknown;
+        toObject(source?: boolean): Record<string, unknown>;
+        toJSON(): Record<string, unknown>;
+        updateSource(data: Record<string, unknown>, options?: Record<string, unknown>): unknown;
+        createEmbeddedDocuments(type: string, data: Record<string, unknown>[], options?: Record<string, unknown>): Promise<FoundryDocumentBase[]>;
+        updateEmbeddedDocuments(type: string, data: Record<string, unknown>[], options?: Record<string, unknown>): Promise<FoundryDocumentBase[]>;
+        deleteEmbeddedDocuments(type: string, ids: string[], options?: Record<string, unknown>): Promise<FoundryDocumentBase[]>;
+        getEmbeddedDocument(type: string, id: string, options?: Record<string, unknown>): FoundryDocumentBase | undefined;
+    }
+
+    interface ActorBase extends FoundryDocumentBase {
+        items: foundry.utils.Collection<ItemBase>;
+        effects: foundry.utils.Collection<unknown>;
+        prototypeToken: Record<string, unknown>;
+        getActiveTokens(linked?: boolean, document?: boolean): Token[];
+        getRollData(): Record<string, unknown>;
+    }
+
+    interface ItemBase extends FoundryDocumentBase {
+        actor: ActorBase | null;
+        effects: foundry.utils.Collection<unknown>;
+        getRollData(): Record<string, unknown>;
+    }
+
+    interface ActorClass {
+        new (data?: Record<string, unknown>, options?: Record<string, unknown>): ActorBase;
+        create(data: Record<string, unknown> | Record<string, unknown>[], options?: Record<string, unknown>): Promise<ActorBase | ActorBase[] | undefined>;
+        createDocuments(data: Record<string, unknown>[], options?: Record<string, unknown>): Promise<ActorBase[]>;
+        documentClass: ActorClass;
+        readonly prototype: ActorBase;
+    }
+
+    interface ItemClass {
+        new (data?: Record<string, unknown>, options?: Record<string, unknown>): ItemBase;
+        create(data: Record<string, unknown> | Record<string, unknown>[], options?: Record<string, unknown>): Promise<ItemBase | ItemBase[] | undefined>;
+        createDocuments(data: Record<string, unknown>[], options?: Record<string, unknown>): Promise<ItemBase[]>;
+        documentClass: ItemClass;
+        readonly prototype: ItemBase;
+    }
+
+    interface TextEditorAPI {
+        enrichHTML(content: string, options?: Record<string, unknown>): Promise<string>;
+        getDragEventData(event: DragEvent): Record<string, unknown>;
+        implementation: TextEditorAPI;
+        enrichers: unknown[];
     }
 
     let game: ReadyGame;
     let canvas: Canvas;
     let ui: UI;
-    let CONFIG: any;
-    let Hooks: any;
-    let Actor: any;
-    let Item: any;
-    let ChatMessage: any;
-    let Roll: any;
-    let TextEditor: any;
-    let fromUuid: (uuid: string) => Promise<any>;
+    let CONFIG: Record<string, any>;
+    let Hooks: HooksAPI;
+    let Actor: ActorClass;
+    let Item: ItemClass;
+    let ChatMessage: ChatMessageClass;
+    let Roll: RollClass;
+    let TextEditor: TextEditorAPI;
+    let fromUuid: (uuid: string) => Promise<unknown>;
     let renderTemplate: (template: string, data: Record<string, unknown>) => Promise<string>;
-    let Hit: any;
-    let AssignDamageData: any;
+    let Hit: unknown;
+    let AssignDamageData: unknown;
 
     // Extend CONFIG with wh40k system config (both cases used in codebase)
     namespace CONFIG {
