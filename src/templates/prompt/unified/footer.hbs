@@ -1,14 +1,14 @@
 {{! Unified Roll Dialog: Footer Buttons }}
-<div class="urd-footer">
-    <button type="button" class="urd-footer__btn urd-footer__btn--primary" data-action="submitToChat">
-        <i class="fas fa-comment-dots"></i>
+<div class="tw-flex tw-gap-2 tw-px-5 tw-py-[14px] tw-bg-[linear-gradient(180deg,rgba(0,0,0,0.2)_0%,rgba(0,0,0,0.35)_100%)] tw-border-t tw-border-[rgba(201,162,39,0.15)]">
+    <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-2.5 tw-border-0 tw-rounded-md tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.06em] tw-cursor-pointer tw-transition-all tw-bg-[linear-gradient(135deg,#c9a227_0%,#8b6914_100%)] tw-text-[#0a0a0f] tw-shadow-[0_4px_12px_rgba(201,162,39,0.3)] hover:tw-bg-[linear-gradient(135deg,#d4ad32_0%,#9a7818_100%)] hover:tw-shadow-[0_6px_20px_rgba(201,162,39,0.4)] hover:tw--translate-y-px active:tw-translate-y-0" data-action="submitToChat">
+        <i class="fas fa-comment-dots tw-text-[14px]"></i>
         {{#if hasManualRoll}}Submit Roll{{else}}Post Target{{/if}}
     </button>
-    <button type="button" class="urd-footer__btn urd-footer__btn--secondary" data-action="systemRoll">
-        <i class="fas fa-dice"></i>
+    <button type="button" class="tw-flex-1 tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-4 tw-py-2.5 tw-rounded-md tw-text-sm tw-font-semibold tw-uppercase tw-tracking-[0.06em] tw-cursor-pointer tw-transition-all tw-bg-[rgba(255,255,255,0.06)] tw-text-gold-raw tw-border tw-border-[rgba(201,162,39,0.3)] hover:tw-bg-[rgba(201,162,39,0.12)] hover:tw-border-[rgba(201,162,39,0.5)]" data-action="systemRoll">
+        <i class="fas fa-dice tw-text-[14px]"></i>
         Auto Roll
     </button>
-    <button type="button" class="urd-footer__btn urd-footer__btn--cancel" data-action="cancel">
+    <button type="button" class="tw-flex-none tw-flex tw-items-center tw-justify-center tw-gap-2 tw-px-3 tw-py-2.5 tw-border-0 tw-rounded-md tw-font-semibold tw-uppercase tw-tracking-[0.06em] tw-cursor-pointer tw-transition-all tw-bg-transparent tw-text-[#6a6a6a] tw-text-[0.8rem] hover:tw-text-[#b8b8a8]" data-action="cancel">
         Cancel
     </button>
 </div>

@@ -1,28 +1,28 @@
 {{!-- Unified Roll Dialog: Hero Target Number with Difficulty Picker --}}
-<div class="urd-target">
-    <div class="urd-target__row">
-        <div class="urd-target__hero">
-            <div class="urd-target__number {{targetColorClass}}" data-value="{{finalTarget}}" data-tooltip="{{targetBreakdownTooltip}}">{{finalTarget}}</div>
-            <div class="urd-target__percent">%</div>
+<div class="tw-flex tw-flex-col tw-items-center tw-p-5 tw-bg-[linear-gradient(180deg,rgba(0,0,0,0.2)_0%,rgba(0,0,0,0.1)_100%)]">
+    <div class="tw-flex tw-items-center tw-gap-5">
+        <div class="tw-flex tw-items-baseline tw-gap-1">
+            <div class="urd-target__number tw-font-display tw-text-[4rem] tw-font-bold tw-leading-none tw-[font-variant-numeric:tabular-nums] tw-transition-[color,text-shadow] tw-duration-500 tw-ease-in-out {{targetColorClass}}" data-value="{{finalTarget}}" data-tooltip="{{targetBreakdownTooltip}}">{{finalTarget}}</div>
+            <div class="tw-text-lg tw-text-[rgba(201,162,39,0.5)] tw-font-normal">%</div>
         </div>
 
         {{!-- Difficulty picker beside the target --}}
         {{#if isForceField}}
-            <div class="urd-target__difficulty-label">Protection Rating</div>
+            <div class="tw-font-display tw-text-sm tw-font-semibold tw-text-[rgba(232,228,217,0.7)] tw-uppercase tw-tracking-[0.15em]">Protection Rating</div>
         {{else}}
-            <div class="urd-difficulty-picker">
-                <button type="button" class="urd-difficulty-picker__trigger" data-action="toggleDifficultyPicker">
-                    <span class="urd-difficulty-picker__label">{{difficulty.label}}</span>
-                    <span class="urd-difficulty-picker__mod">({{#if (gt difficulty.modifier 0)}}+{{/if}}{{difficulty.modifier}})</span>
-                    <i class="fas fa-caret-down urd-difficulty-picker__caret {{#if difficultyPickerOpen}}urd-difficulty-picker__caret--open{{/if}}"></i>
+            <div class="urd-difficulty-picker tw-relative tw-mt-2">
+                <button type="button" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-py-1 tw-px-[14px] tw-bg-[rgba(0,0,0,0.2)] tw-border tw-border-[rgba(201,162,39,0.25)] tw-rounded-[20px] tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(201,162,39,0.1)] hover:tw-border-[rgba(201,162,39,0.5)]" data-action="toggleDifficultyPicker">
+                    <span class="tw-font-display tw-text-sm tw-font-semibold tw-text-[rgba(232,228,217,0.85)] tw-uppercase tw-tracking-[0.12em]">{{difficulty.label}}</span>
+                    <span class="tw-text-xs tw-text-[rgba(201,162,39,0.7)] tw-font-semibold">({{#if (gt difficulty.modifier 0)}}+{{/if}}{{difficulty.modifier}})</span>
+                    <i class="fas fa-caret-down tw-text-[0.7rem] tw-text-[rgba(201,162,39,0.6)] tw-transition-transform tw-duration-[0.25s] {{#if difficultyPickerOpen}}tw-rotate-180{{/if}}"></i>
                 </button>
                 {{#if difficultyPickerOpen}}
-                <ul class="urd-difficulty-picker__list">
+                <ul class="tw-absolute tw-right-0 tw-top-[calc(100%+6px)] tw-min-w-[220px] tw-list-none tw-m-0 tw-py-1.5 tw-px-0 tw-bg-[rgba(18,18,24,0.97)] tw-border tw-border-[rgba(201,162,39,0.3)] tw-rounded-lg tw-shadow-[0_12px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(201,162,39,0.1)] tw-z-[100] tw-backdrop-blur-md">
                     {{#each difficultyPicker}}
-                    <li class="urd-difficulty-picker__item {{#if isCurrent}}urd-difficulty-picker__item--current{{/if}}"
+                    <li class="tw-flex tw-items-center tw-justify-between tw-py-2 tw-px-4 tw-cursor-pointer tw-transition-all hover:tw-bg-[rgba(201,162,39,0.12)] {{#if isCurrent}}tw-bg-[rgba(201,162,39,0.15)] tw-border-l-[3px] tw-border-l-gold-raw [&_.urd-difficulty-picker__item-label]:tw-text-gold-raw [&_.urd-difficulty-picker__item-label]:tw-font-bold{{/if}}"
                         data-action="selectDifficulty" data-difficulty-index="{{index}}">
-                        <span class="urd-difficulty-picker__item-label">{{label}}</span>
-                        <span class="urd-difficulty-picker__item-mod {{#if (gt modifier 0)}}urd-difficulty-picker__item-mod--positive{{else if (lt modifier 0)}}urd-difficulty-picker__item-mod--negative{{/if}}">
+                        <span class="urd-difficulty-picker__item-label tw-text-sm tw-font-medium tw-text-[#b8b8a8]">{{label}}</span>
+                        <span class="tw-text-[0.8rem] tw-font-bold tw-py-px tw-px-2 tw-rounded-[10px] {{#if (gt modifier 0)}}tw-text-[#4ade80] tw-bg-[rgba(74,222,128,0.1)]{{else if (lt modifier 0)}}tw-text-[#f87171] tw-bg-[rgba(248,113,113,0.1)]{{/if}}">
                             {{#if (gt modifier 0)}}+{{/if}}{{modifier}}
                         </span>
                     </li>
@@ -35,23 +35,23 @@
 
     {{!-- Breakdown line --}}
     {{#unless isForceField}}
-    <div class="urd-target__breakdown">
-        <span class="urd-target__breakdown-item">Base {{baseTarget}}</span>
+    <div class="tw-flex tw-items-center tw-gap-1.5 tw-mt-2.5 tw-text-xs tw-text-[#6a6a6a]">
+        <span>Base {{baseTarget}}</span>
         {{#if (ne difficultyMod 0)}}
-            <span class="urd-target__breakdown-sep">|</span>
-            <span class="urd-target__breakdown-item {{#if (gt difficultyMod 0)}}urd-target__breakdown-item--positive{{else}}urd-target__breakdown-item--negative{{/if}}">
+            <span class="tw-text-[rgba(201,162,39,0.3)]">|</span>
+            <span class="{{#if (gt difficultyMod 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
                 {{difficulty.label}} {{#if (gt difficultyMod 0)}}+{{/if}}{{difficultyMod}}
             </span>
         {{/if}}
         {{#if (ne situationalMod 0)}}
-            <span class="urd-target__breakdown-sep">|</span>
-            <span class="urd-target__breakdown-item {{#if (gt situationalMod 0)}}urd-target__breakdown-item--positive{{else}}urd-target__breakdown-item--negative{{/if}}">
+            <span class="tw-text-[rgba(201,162,39,0.3)]">|</span>
+            <span class="{{#if (gt situationalMod 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
                 Mods {{#if (gt situationalMod 0)}}+{{/if}}{{situationalMod}}
             </span>
         {{/if}}
         {{#if (ne customMod 0)}}
-            <span class="urd-target__breakdown-sep">|</span>
-            <span class="urd-target__breakdown-item {{#if (gt customMod 0)}}urd-target__breakdown-item--positive{{else}}urd-target__breakdown-item--negative{{/if}}">
+            <span class="tw-text-[rgba(201,162,39,0.3)]">|</span>
+            <span class="{{#if (gt customMod 0)}}tw-text-[#4ade80]{{else}}tw-text-[#f87171]{{/if}}">
                 Custom {{#if (gt customMod 0)}}+{{/if}}{{customMod}}
             </span>
         {{/if}}

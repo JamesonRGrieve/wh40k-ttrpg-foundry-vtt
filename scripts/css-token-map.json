@@ -1,0 +1,83 @@
+{
+  "_comment": "CSS variable → Tailwind utility translation hints. Used by porting agents and by the migration handbook. Keys are the CSS custom-property names found in src/css/wh40k-rpg.css; values are the recommended Tailwind utility (without the tw- prefix; templates author with the prefix). Anything not in this map should fall through to a hand-decision documented in docs/tailwind-migration.md. Source-of-truth for tokens is tailwind.config.js — this file is a translation cheat sheet.",
+
+  "colors": {
+    "--wh40k-color-gold": "text-gold",
+    "--wh40k-color-gold-dark": "text-gold-dark",
+    "--wh40k-color-gold-light": "text-gold-light",
+    "--wh40k-color-gold-accent": "text-gold-accent",
+    "--wh40k-color-gold-raw": "text-gold-raw",
+    "--wh40k-color-bronze": "text-bronze",
+    "--wh40k-color-brass": "text-brass",
+    "--wh40k-color-crimson": "text-crimson",
+    "--wh40k-color-crimson-light": "text-crimson-light",
+    "--wh40k-color-crimson-dark": "text-crimson-dark",
+    "--wh40k-color-success": "text-success",
+    "--wh40k-color-failure": "text-failure",
+    "--wh40k-color-warning": "text-warning",
+    "--wh40k-color-accent": "text-accent-gold",
+    "--wh40k-color-accent-combat": "text-accent-combat",
+    "--wh40k-color-accent-skills": "text-accent-skills",
+    "--wh40k-color-accent-talents": "text-accent-talents",
+    "--wh40k-color-accent-equipment": "text-accent-equipment",
+    "--wh40k-color-accent-bio": "text-accent-bio",
+    "--wh40k-color-accent-powers": "text-accent-powers",
+    "--wh40k-color-accent-dynasty": "text-accent-dynasty"
+  },
+  "_color_notes": "Each color token can substitute the leading `text-` prefix for `bg-`, `border-`, `ring-`, etc. depending on context.",
+
+  "spacing": {
+    "--wh40k-space-0": "0",
+    "--wh40k-space-1": "0.5",
+    "--wh40k-space-2": "1",
+    "--wh40k-space-3": "1.5",
+    "--wh40k-space-4": "2",
+    "--wh40k-space-5": "2.5",
+    "--wh40k-space-6": "3",
+    "--wh40k-space-8": "4",
+    "--wh40k-space-12": "6"
+  },
+  "_spacing_notes": "Use as `m-`, `p-`, `gap-`, `space-x-`, etc. Example: `padding: var(--wh40k-space-4)` → `tw-p-2`.",
+
+  "fontFamilies": {
+    "--wh40k-font-display": "font-display",
+    "--wh40k-font-heading": "font-heading",
+    "--wh40k-font-body": "font-body",
+    "--wh40k-font-ui": "font-ui",
+    "--wh40k-font-alt": "font-alt"
+  },
+
+  "fontSizes": {
+    "--wh40k-font-size-2xs": "text-2xs",
+    "--wh40k-font-size-xs": "text-xs",
+    "--wh40k-font-size-sm": "text-sm",
+    "--wh40k-font-size-base": "text-base",
+    "--wh40k-font-size-md": "text-md",
+    "--wh40k-font-size-lg": "text-lg",
+    "--wh40k-font-size-xl": "text-xl",
+    "--wh40k-font-size-2xl": "text-2xl"
+  },
+
+  "borderRadius": {
+    "--wh40k-radius-sm": "rounded-sm",
+    "--wh40k-radius-md": "rounded-md",
+    "--wh40k-radius-lg": "rounded-lg"
+  },
+
+  "boxShadow": {
+    "--wh40k-shadow-sm": "shadow-sm",
+    "--wh40k-shadow-md": "shadow-md",
+    "--wh40k-shadow-lg": "shadow-lg",
+    "--wh40k-shadow-inset": "shadow-inset"
+  },
+
+  "animations": {
+    "_note": "Keyframes that survive into Tailwind go in tailwind.config.js theme.extend.keyframes + theme.extend.animation. Two are migrated already; agents porting templates that depend on a non-migrated keyframe must (1) port the keyframe to tailwind.config.js, (2) use the `animate-<name>` utility on the template, (3) delete the original @keyframes block from the monolith.",
+    "flash-gold": "animate-flash-gold",
+    "fury-pulse": "animate-fury-pulse"
+  },
+
+  "_apply_policy": "Do NOT use @apply in newly authored CSS or in component plugins. The 20 @apply uses in the monolith are technical debt — when a template that consumes one is ported, inline the underlying utilities at the call site and delete the @apply rule. The only case for using @apply is inside `tailwind.config.js` `addComponents()` — and even there, prefer raw CSS over @apply because the prefix configuration leaks badly.",
+
+  "_foundry_chrome_exceptions": "These selectors target Foundry's V14 chrome (chat, ProseMirror, app windows) and CANNOT be ported to per-template Tailwind. They live in the residual CSS layer permanently: .ProseMirror, .editor-content, #chat-log, #chat-controls, .app, .application, .window-content, .form-fields, .filepicker. When deleting source-blocks, keep these selectors — move them into a small `src/css/foundry-chrome.css` and import that into the monolith head, then delete the rest of the block."
+}

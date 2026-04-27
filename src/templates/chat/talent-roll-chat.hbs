@@ -1,39 +1,39 @@
 <div class="wh40k-chat-card wh40k-talent-roll">
-    <header class="card-header flexrow">
-        <img class="item-image" src="{{item.img}}" alt="{{item.name}}"/>
-        <h3 class="item-name">{{item.name}}</h3>
-        <span class="roll-type">Talent Roll</span>
+    <header class="flexrow tw-items-center tw-gap-2 tw-p-2">
+        <img class="tw-w-8 tw-h-8 tw-rounded tw-object-cover" src="{{item.img}}" alt="{{item.name}}"/>
+        <h3 class="tw-flex-1 tw-m-0 tw-text-base tw-font-bold">{{item.name}}</h3>
+        <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-text-gold">Talent Roll</span>
     </header>
 
-    <section class="card-content">
+    <section class="tw-p-2">
         {{#if rollDescription}}
-        <p class="roll-description">{{rollDescription}}</p>
+        <p class="tw-italic tw-text-sm tw-mb-2">{{rollDescription}}</p>
         {{/if}}
 
-        <div class="roll-result {{#if success}}success{{else}}failure{{/if}}">
-            <div class="roll-dice">
-                <span class="roll-total">{{roll.total}}</span>
-                <span class="roll-vs">vs</span>
-                <span class="target-value">{{targetValue}}</span>
+        <div class="roll-result {{#if success}}success{{else}}failure{{/if}} tw-text-center">
+            <div class="tw-flex tw-items-center tw-justify-center tw-gap-2 tw-text-2xl tw-font-bold">
+                <span>{{roll.total}}</span>
+                <span class="tw-text-sm tw-uppercase tw-opacity-70">vs</span>
+                <span>{{targetValue}}</span>
             </div>
-            <div class="result-text">
+            <div class="tw-mt-2">
                 {{#if success}}
-                <span class="success-text"><i class="fas fa-check-circle"></i> Success!</span>
+                <span class="tw-text-success-l20 tw-font-bold"><i class="fas fa-check-circle"></i> Success!</span>
                 {{else}}
-                <span class="failure-text"><i class="fas fa-times-circle"></i> Failure!</span>
+                <span class="tw-text-failure-l10 tw-font-bold"><i class="fas fa-times-circle"></i> Failure!</span>
                 {{/if}}
-                <span class="degrees">({{degrees}} Degrees)</span>
+                <span class="tw-text-sm tw-opacity-80">({{degrees}} Degrees)</span>
             </div>
         </div>
 
         {{#if item.system.effect}}
-        <div class="effect-text">
+        <div class="tw-mt-2 tw-text-sm">
             <strong>Effect:</strong> {{{item.system.effect}}}
         </div>
         {{/if}}
     </section>
 
-    <footer class="card-footer">
-        <span class="actor-name">{{actor}}</span>
+    <footer class="tw-p-2 tw-text-right tw-text-xs tw-opacity-80">
+        <span>{{actor}}</span>
     </footer>
 </div>

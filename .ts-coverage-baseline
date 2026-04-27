@@ -1,0 +1,124 @@
+{
+  "totals": {
+    "any": 9,
+    "asAny": 827,
+    "tsExpectError": 19,
+    "tsIgnore": 0
+  },
+  "byDir": {
+    "actions": {
+      "any": 0,
+      "asAny": 7,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "applications": {
+      "any": 3,
+      "asAny": 722,
+      "tsExpectError": 19,
+      "tsIgnore": 0
+    },
+    "canvas": {
+      "any": 0,
+      "asAny": 4,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "config": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "_root": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "data": {
+      "any": 3,
+      "asAny": 29,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "dice": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "documents": {
+      "any": 0,
+      "asAny": 36,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "handlebars": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "helpers": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "i18n": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "macros": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "managers": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "rolls": {
+      "any": 1,
+      "asAny": 1,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "rules": {
+      "any": 0,
+      "asAny": 1,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "tours": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "transactions": {
+      "any": 0,
+      "asAny": 2,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "types": {
+      "any": 0,
+      "asAny": 0,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    },
+    "utils": {
+      "any": 2,
+      "asAny": 25,
+      "tsExpectError": 0,
+      "tsIgnore": 0
+    }
+  }
+}
