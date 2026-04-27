@@ -41,6 +41,24 @@ type SheetTabConfig = {
     cssClass?: string;
 };
 
+type SidebarHeaderField = {
+    label: string;
+    name: string;
+    type: 'text' | 'number' | 'select';
+    value: string | number;
+    placeholder?: string;
+    options?: Record<string, string>;
+    min?: number;
+    max?: number;
+    icon?: string;
+    rowClass?: string;
+    inputClass?: string;
+    borderColor?: string;
+    valueLabel?: string;
+    valueClass?: string;
+    valueColor?: string;
+};
+
 type CharacterSheetContext = Record<string, unknown> & {
     actor?: Record<string, unknown> & { characteristics?: Record<string, Record<string, unknown>> };
     system?: Record<string, unknown> & {
@@ -268,9 +286,43 @@ export default class CharacterSheet extends BaseActorSheet {
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         header: {
             template: 'systems/wh40k-rpg/templates/actor/player/header.hbs',
+            container: {
+                classes: [
+                    'wh40k-sidebar',
+                    'tw-flex',
+                    'tw-flex-col',
+                    'tw-h-full',
+                    'tw-min-h-0',
+                    'tw-min-w-0',
+                    'tw-overflow-y-auto',
+                    'tw-overflow-x-hidden',
+                    'tw-bg-[var(--color-bg-secondary,#252525)]',
+                    'tw-border-r-2',
+                    'tw-border-solid',
+                    'tw-border-[var(--wh40k-sidebar-accent,var(--wh40k-color-gold,#d4af37))]',
+                ],
+                id: 'sidebar',
+            },
         },
         tabs: {
             template: 'systems/wh40k-rpg/templates/actor/player/tabs.hbs',
+            container: {
+                classes: [
+                    'wh40k-sidebar',
+                    'tw-flex',
+                    'tw-flex-col',
+                    'tw-h-full',
+                    'tw-min-h-0',
+                    'tw-min-w-0',
+                    'tw-overflow-y-auto',
+                    'tw-overflow-x-hidden',
+                    'tw-bg-[var(--color-bg-secondary,#252525)]',
+                    'tw-border-r-2',
+                    'tw-border-solid',
+                    'tw-border-[var(--wh40k-sidebar-accent,var(--wh40k-color-gold,#d4af37))]',
+                ],
+                id: 'sidebar',
+            },
         },
         overview: {
             template: 'systems/wh40k-rpg/templates/actor/player/tab-overview.hbs',
@@ -607,12 +659,89 @@ export default class CharacterSheet extends BaseActorSheet {
         const gameSystem = (this as any)._gameSystemId || this.actor.system?.gameSystem || 'rt';
         const originOptions = await this._getOriginPathOptions(gameSystem);
         context.originOptions = originOptions;
+        context.headerFields = this._getSidebarHeaderFields(gameSystem);
 
         // Check if origin path is complete (has at least homeWorld + background + role)
         const op = this.actor.system?.originPath || {};
         context.originPathComplete = !!(op.homeWorld && op.background && op.role);
 
         return context;
+    }
+
+    protected _getSidebarHeaderFields(gameSystem: string): SidebarHeaderField[] {
+        const originPath = (this.actor.system?.originPath ?? {}) as Record<string, string | number>;
+        const bio = (this.actor.system?.bio ?? {}) as Record<string, string | number>;
+        const rank = (this.actor.system?.rank as string | number | undefined) ?? 1;
+
+        const field = (
+            label: string,
+            name: string,
+            value: string | number,
+            placeholder = label,
+            type: SidebarHeaderField['type'] = 'text',
+        ): SidebarHeaderField => ({
+            label,
+            name,
+            type,
+            value,
+            placeholder,
+            inputClass: name === 'system.rank' ? 'wh40k-rank-input' : undefined,
+        });
+
+        const playerField = field(game.i18n.localize('WH40K.Character.Player'), 'system.bio.playerName', bio.playerName ?? '', 'Player Name');
+
+        switch (gameSystem) {
+            case 'dh1e':
+                return [
+                    playerField,
+                    field('Home World', 'system.originPath.homeWorld', originPath.homeWorld ?? ''),
+                    field('Career Path', 'system.originPath.career', originPath.career ?? '', 'Career Path'),
+                    field('Rank', 'system.originPath.role', originPath.role ?? ''),
+                    field('Divination', 'system.originPath.divination', originPath.divination ?? ''),
+                ];
+            case 'bc':
+                return [
+                    playerField,
+                    field('Home World', 'system.originPath.homeWorld', originPath.homeWorld ?? ''),
+                    field('Archetype', 'system.originPath.role', originPath.role ?? '', 'Archetype'),
+                    field('Pride', 'system.originPath.background', originPath.background ?? ''),
+                    field('Disgrace', 'system.originPath.trialsAndTravails', originPath.trialsAndTravails ?? '', 'Disgrace'),
+                    field('Motivation', 'system.originPath.motivation', originPath.motivation ?? ''),
+                ];
+            case 'ow':
+                return [
+                    playerField,
+                    field('Home World', 'system.originPath.homeWorld', originPath.homeWorld ?? ''),
+                    field('Regiment', 'system.originPath.background', originPath.background ?? ''),
+                    field('Speciality', 'system.originPath.role', originPath.role ?? '', 'Speciality'),
+                    field('Demeanour', 'system.originPath.motivation', originPath.motivation ?? '', 'Demeanour'),
+                ];
+            case 'dw':
+                return [
+                    playerField,
+                    field('Chapter', 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Chapter'),
+                    field('Speciality', 'system.originPath.role', originPath.role ?? '', 'Speciality'),
+                    field('Rank', 'system.originPath.career', originPath.career ?? ''),
+                    field('Demeanour', 'system.originPath.motivation', originPath.motivation ?? '', 'Demeanour'),
+                ];
+            case 'im':
+                return [
+                    playerField,
+                    field('Patron', 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Patron'),
+                    field('Faction', 'system.originPath.background', originPath.background ?? '', 'Faction'),
+                    field('Role', 'system.originPath.role', originPath.role ?? ''),
+                    field('Endeavour', 'system.originPath.motivation', originPath.motivation ?? '', 'Endeavour'),
+                ];
+            case 'rt':
+            case 'dh2e':
+            default:
+                return [
+                    playerField,
+                    field(game.i18n.localize('WH40K.OriginPath.HomeWorld'), 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Home World'),
+                    field(game.i18n.localize('WH40K.OriginPath.Career'), 'system.originPath.career', originPath.career ?? '', 'Career'),
+                    field(game.i18n.localize('WH40K.Character.Rank'), 'system.rank', rank, 'Rank', 'number'),
+                ];
+        }
     }
 
     /**

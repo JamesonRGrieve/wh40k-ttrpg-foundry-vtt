@@ -2,7 +2,7 @@
  * @file WH40KCreateActorDialog — cascading Create Actor dialog.
  *
  * Replaces Foundry's default actor-create flow with:
- *   1. System select (DH2 / DH1 / RT / BC / OW / DW)
+ *   1. System select (DH2 / DH1 / RT / BC / OW / DW / IM)
  *   2. Kind select — options filtered by system (e.g. hides Starship when
  *      system !== RT)
  *   3. Name input
@@ -18,6 +18,7 @@ const AVAILABILITY: Record<string, string[]> = {
     bc: ['character', 'npc', 'vehicle'],
     ow: ['character', 'npc', 'vehicle'],
     dw: ['character', 'npc', 'vehicle'],
+    im: ['character', 'npc', 'vehicle'],
 };
 
 const SYSTEM_LABELS: Record<string, string> = {
@@ -27,6 +28,7 @@ const SYSTEM_LABELS: Record<string, string> = {
     bc: 'Black Crusade',
     ow: 'Only War',
     dw: 'Deathwatch',
+    im: 'Imperium Maledictum',
 };
 
 const KIND_LABELS: Record<string, string> = {

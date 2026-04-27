@@ -19,6 +19,7 @@ export const GAME_SYSTEMS = {
     bc: { id: 'bc', label: 'Black Crusade' },
     ow: { id: 'ow', label: 'Only War' },
     dw: { id: 'dw', label: 'Deathwatch' },
+    im: { id: 'im', label: 'Imperium Maledictum' },
 } as const;
 
 export type GameSystemKey = keyof typeof GAME_SYSTEMS;

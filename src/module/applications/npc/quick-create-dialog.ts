@@ -1,5 +1,5 @@
 import ThreatCalculator from './threat-calculator.ts';
-import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
+import type { WH40KNPC } from '../../documents/npc.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -79,9 +79,9 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
     /**
      * Promise resolver.
-     * @type {((value: WH40KNPCV2 | null) => void) | null}
+     * @type {((value: WH40KNPC | null) => void) | null}
      */
-    #resolve: ((value: WH40KNPCV2 | null) => void) | null = null;
+    #resolve: ((value: WH40KNPC | null) => void) | null = null;
 
     /**
      * Whether the dialog was submitted.
@@ -348,7 +348,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
         };
 
         try {
-            const actor = (await Actor.create(actorData)) as WH40KNPCV2 | undefined;
+            const actor = (await Actor.create(actorData)) as WH40KNPC | undefined;
 
             if (actor) {
                 ui.notifications.info(`Created NPC: ${String(actor.name)}`);
@@ -410,9 +410,9 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
 
     /**
      * Wait for the dialog to complete.
-     * @returns {Promise<WH40KNPCV2 | null>} The created actor, or null if cancelled.
+     * @returns {Promise<WH40KNPC | null>} The created actor, or null if cancelled.
      */
-    async wait(): Promise<WH40KNPCV2 | null> {
+    async wait(): Promise<WH40KNPC | null> {
         return new Promise((resolve) => {
             this.#resolve = resolve;
             void this.render(true);
@@ -426,9 +426,9 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
     /**
      * Open the quick create dialog and wait for result.
      * @param {Partial<NPCState>} [config] - Initial configuration.
-     * @returns {Promise<WH40KNPCV2 | null>} The created actor, or null if cancelled.
+     * @returns {Promise<WH40KNPC | null>} The created actor, or null if cancelled.
      */
-    static async create(config: Partial<NPCState> = {}): Promise<WH40KNPCV2 | null> {
+    static async create(config: Partial<NPCState> = {}): Promise<WH40KNPC | null> {
         const dialog = new this(config);
         return dialog.wait();
     }
@@ -440,12 +440,12 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
      * @param {string} config.namePattern - Name pattern (use {n} for number).
      * @param {boolean} config.randomize - Whether to randomize stats slightly.
      * @param {Record<string, unknown>} config.baseConfig - Base NPC configuration.
-     * @returns {Promise<WH40KNPCV2[]>} Array of created actors.
+     * @returns {Promise<WH40KNPC[]>} Array of created actors.
      */
-    static async createBatch(config: { count: number; namePattern: string; randomize: boolean; baseConfig: Record<string, unknown> }): Promise<WH40KNPCV2[]> {
+    static async createBatch(config: { count: number; namePattern: string; randomize: boolean; baseConfig: Record<string, unknown> }): Promise<WH40KNPC[]> {
         const { count = 1, namePattern = 'NPC {n}', randomize = false, baseConfig = {} } = config;
 
-        const actors: WH40KNPCV2[] = [];
+        const actors: WH40KNPC[] = [];
         const baseData = ThreatCalculator.generateNPCData(baseConfig);
 
         for (let i = 1; i <= count; i++) {
@@ -471,7 +471,7 @@ export default class NPCQuickCreateDialog extends HandlebarsApplicationMixin(App
                 system: systemData,
             };
 
-            const actor = (await Actor.create(actorData)) as WH40KNPCV2 | undefined;
+            const actor = (await Actor.create(actorData)) as WH40KNPC | undefined;
             if (actor) actors.push(actor);
         }
 

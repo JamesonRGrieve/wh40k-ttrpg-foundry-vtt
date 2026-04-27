@@ -1,9 +1,9 @@
-import type { WH40KNPCV2 } from '../../documents/npc-v2.ts';
+import type { WH40KNPC } from '../../documents/npc.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 interface DialogState {
-    npc: WH40KNPCV2 | null;
+    npc: WH40KNPC | null;
     quantity: number;
 }
 
@@ -65,10 +65,10 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
 
     /**
      * Create a new DifficultyCalculatorDialog.
-     * @param {WH40KNPCV2} npc - The NPC actor to calculate difficulty for.
+     * @param {WH40KNPC} npc - The NPC actor to calculate difficulty for.
      * @param {Record<string, unknown>} options - Application options.
      */
-    constructor(npc: WH40KNPCV2, options: Record<string, unknown> = {}) {
+    constructor(npc: WH40KNPC, options: Record<string, unknown> = {}) {
         super(options);
         this.#state.npc = npc;
     }
@@ -79,10 +79,10 @@ export default class DifficultyCalculatorDialog extends HandlebarsApplicationMix
 
     /**
      * Show the difficulty calculator for an NPC.
-     * @param {WH40KNPCV2} npc - The NPC actor.
+     * @param {WH40KNPC} npc - The NPC actor.
      * @returns {DifficultyCalculatorDialog}
      */
-    static show(npc: WH40KNPCV2): DifficultyCalculatorDialog {
+    static show(npc: WH40KNPC): DifficultyCalculatorDialog {
         const dialog = new DifficultyCalculatorDialog(npc);
         void dialog.render(true);
         return dialog;
