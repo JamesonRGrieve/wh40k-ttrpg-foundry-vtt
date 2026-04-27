@@ -1,25 +1,13 @@
 {{!-- Vehicle V2 Sheet Header --}}
 <div class="wh40k-header wh40k-panel wh40k-vehicle-v2-header">
     <div class="wh40k-header__info">
-        {{!-- Portrait --}}
-        <div class="wh40k-header__logo wh40k-portrait-container">
-            <img class="wh40k-header__logo-image wh40k-portrait" 
-                 src="{{actor.img}}" 
-                 data-edit="img" 
-                 alt="{{actor.name}}" 
-                 title="{{actor.name}}" />
+        {{!-- Identity: name input above portrait --}}
+        <div class="wh40k-vehicle-v2-identity tw-w-44 tw-shrink-0">
+            {{> systems/wh40k-rpg/templates/actor/partial/actor-identity.hbs nameLabelKey="WH40K.Vehicle.Name" portraitWidthClass="tw-w-44"}}
         </div>
-        
-        {{!-- Name and Identity --}}
-        <div class="wh40k-vehicle-v2-identity">
-            <div class="wh40k-vehicle-v2-name-row">
-                <input class="wh40k-vehicle-v2-name-input" 
-                       name="name" 
-                       type="text" 
-                       value="{{actor.name}}" 
-                       placeholder="{{localize 'WH40K.Vehicle.Name'}}" />
-            </div>
-            
+
+        {{!-- Meta: type + faction --}}
+        <div class="wh40k-vehicle-v2-meta">
             <div class="wh40k-vehicle-v2-meta-row">
                 {{!-- Type --}}
                 <div class="wh40k-vehicle-v2-field">
@@ -31,58 +19,58 @@
                         <option value="skimmer" {{#if (eq system.type "skimmer")}}selected{{/if}}>Skimmer</option>
                     </select>
                 </div>
-                
+
                 {{!-- Faction --}}
                 <div class="wh40k-vehicle-v2-field wh40k-vehicle-v2-field--wide">
                     <label>{{localize "WH40K.NPC.Faction"}}</label>
-                    <input type="text" 
-                           name="system.faction" 
-                           value="{{source.faction}}" 
+                    <input type="text"
+                           name="system.faction"
+                           value="{{source.faction}}"
                            placeholder="e.g., Imperial Guard, Ork" />
                 </div>
             </div>
         </div>
-        
+
         {{!-- Quick Stats --}}
         <div class="wh40k-vehicle-v2-quick-stats">
             {{!-- Structure --}}
             <div class="wh40k-vehicle-v2-stat-box wh40k-vehicle-v2-structure">
                 <span class="wh40k-vehicle-v2-stat-label">Structure</span>
                 <div class="wh40k-vehicle-v2-stat-values">
-                    <input type="number" 
-                           class="wh40k-vehicle-v2-stat-input" 
-                           name="system.wounds.value" 
-                           value="{{source.wounds.value}}" 
-                           min="0" 
+                    <input type="number"
+                           class="wh40k-vehicle-v2-stat-input"
+                           name="system.wounds.value"
+                           value="{{source.wounds.value}}"
+                           min="0"
                            title="Current" />
                     <span class="wh40k-vehicle-v2-stat-separator">/</span>
-                    <input type="number" 
-                           class="wh40k-vehicle-v2-stat-input" 
-                           name="system.wounds.max" 
-                           value="{{source.wounds.max}}" 
-                           min="1" 
+                    <input type="number"
+                           class="wh40k-vehicle-v2-stat-input"
+                           name="system.wounds.max"
+                           value="{{source.wounds.max}}"
+                           min="1"
                            title="Max" />
                 </div>
             </div>
-            
+
             {{!-- Hull/Armour --}}
             <div class="wh40k-vehicle-v2-stat-box wh40k-vehicle-v2-armour">
                 <span class="wh40k-vehicle-v2-stat-label">Armour</span>
-                <input type="number" 
-                       class="wh40k-vehicle-v2-stat-input" 
-                       name="system.armour.total" 
-                       value="{{source.armour.total}}" 
+                <input type="number"
+                       class="wh40k-vehicle-v2-stat-input"
+                       name="system.armour.total"
+                       value="{{source.armour.total}}"
                        min="0" />
             </div>
-            
+
             {{!-- Size --}}
             <div class="wh40k-vehicle-v2-stat-box wh40k-vehicle-v2-size">
                 <span class="wh40k-vehicle-v2-stat-label">Size</span>
-                <input type="number" 
-                       class="wh40k-vehicle-v2-stat-input" 
-                       name="system.size" 
-                       value="{{source.size}}" 
-                       min="1" 
+                <input type="number"
+                       class="wh40k-vehicle-v2-stat-input"
+                       name="system.size"
+                       value="{{source.size}}"
+                       min="1"
                        max="10" />
             </div>
         </div>
