@@ -1,4 +1,3 @@
-import type { WH40KBaseActor } from './documents/base-actor.ts';
 // Import data models
 
 // Import dice/roll classes
@@ -38,9 +37,6 @@ import {
     // Starship sheet (default for rt-starship)
     RogueTraderStarshipSheet,
 } from './applications/actor/game-system-sheets.ts';
-import NPCSheet from './applications/actor/npc-sheet.ts';
-import StarshipSheet from './applications/actor/starship-sheet.ts';
-import VehicleSheet from './applications/actor/vehicle-sheet.ts';
 import * as characterCreation from './applications/character-creation/_module.ts';
 import { RTCompendiumBrowser } from './applications/compendium-browser.ts';
 import { TooltipsWH40K } from './applications/components/_module.ts';
@@ -71,6 +67,7 @@ import {
     ShipUpgradeSheet,
     NPCTemplateSheet,
 } from './applications/item/_module.ts';
+import { ConvertActorSystemDialog } from './applications/dialogs/convert-actor-system-dialog.ts';
 import * as npcApplications from './applications/npc/_module.ts';
 import TokenRulerWH40K from './canvas/ruler.ts';
 import { SYSTEM_ID } from './constants.ts';
@@ -78,6 +75,7 @@ import * as dataModels from './data/_module.ts';
 import * as dice from './dice/_module.ts';
 import * as documents from './documents/_module.ts';
 import { WH40KActorProxy } from './documents/actor-proxy.ts';
+import type { WH40KBaseActor } from './documents/base-actor.ts';
 import { WH40KItem } from './documents/item.ts';
 import { HandlebarManager } from './handlebars/handlebars-manager.ts';
 import {
@@ -94,8 +92,16 @@ import { TransactionManager } from './transactions/transaction-manager.ts';
 import { RollTableUtils } from './utils/roll-table-utils.ts';
 import { checkAndMigrateWorld } from './wh40k-rpg-migrations.ts';
 import { WH40KSettings } from './wh40k-rpg-settings.ts';
+import { isConvertibleCharacterActorType } from './utils/actor-system-converter.ts';
 
 export { SYSTEM_ID };
+
+interface DirectoryContextOption {
+    name: string;
+    icon: string;
+    condition: (element: HTMLElement) => boolean;
+    callback: (element: HTMLElement) => void | Promise<void>;
+}
 
 export class HooksManager {
     static registerHooks(): void {
@@ -107,6 +113,12 @@ export class HooksManager {
         );
         Hooks.on('renderActorDirectory', (app: ActorDirectory, html: JQuery, data: Record<string, unknown>) =>
             HooksManager.renderActorDirectory(app, html, data),
+        );
+        Hooks.on('renderDocumentSheetConfig', (app: Application, html: JQuery, data: Record<string, unknown>) =>
+            HooksManager.renderDocumentSheetConfig(app, html, data),
+        );
+        Hooks.on('getActorDirectoryEntryContext', (_html: JQuery, options: DirectoryContextOption[]) =>
+            HooksManager.getActorDirectoryEntryContext(options),
         );
         Hooks.on('getActorSheetClass', (actor: Actor, sheetData: Record<string, { id: string; default?: boolean }>) =>
             HooksManager.getActorSheetClass(actor, sheetData),
@@ -143,6 +155,53 @@ export class HooksManager {
             },
             true,
         ); // capture-phase so we beat Foundry's own handler
+    }
+
+    static renderDocumentSheetConfig(app: Application, html: JQuery, _data: Record<string, unknown>): void {
+        const document = (app as Application & { document?: Actor | Item }).document;
+        if (!document || document.documentName !== 'Actor') return;
+
+        const root = html[0];
+        if (!root) return;
+
+        const sheetSelect = root.querySelector('select[name="sheetClass"]');
+        if (!(sheetSelect instanceof HTMLSelectElement)) return;
+
+        const defaultOptions = Array.from(sheetSelect.options).filter((option) => {
+            const value = option.value.trim();
+            const label = option.textContent?.trim().toLowerCase() ?? '';
+            return value === '' || value === 'default' || label === 'default sheet';
+        });
+
+        for (const option of defaultOptions) {
+            option.remove();
+        }
+
+        if (sheetSelect.options.length <= 1) {
+            sheetSelect.disabled = true;
+        }
+    }
+
+    static getActorDirectoryEntryContext(options: DirectoryContextOption[]): void {
+        options.push({
+            name: game.i18n.localize('WH40K.Actor.ConvertSystem.Menu'),
+            icon: '<i class="fas fa-right-left"></i>',
+            condition: (element: HTMLElement) => {
+                const actor = HooksManager.getActorFromDirectoryEntry(element);
+                return actor !== null && isConvertibleCharacterActorType(actor.type) && actor.isOwner;
+            },
+            callback: async (element: HTMLElement) => {
+                const actor = HooksManager.getActorFromDirectoryEntry(element);
+                if (!actor) return;
+                await ConvertActorSystemDialog.open(actor);
+            },
+        });
+    }
+
+    static getActorFromDirectoryEntry(element: HTMLElement): WH40KBaseActor | null {
+        const actorId = element.dataset.documentId ?? element.dataset.entryId ?? element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-document-id') ?? element.closest('[data-document-id], [data-entry-id]')?.getAttribute('data-entry-id');
+        if (!actorId) return null;
+        return (game.actors?.get(actorId) as WH40KBaseActor | undefined) ?? null;
     }
 
     static init() {
@@ -336,17 +395,15 @@ export class HooksManager {
         // V2 Sheets use DocumentSheetConfig API
         const DocumentSheetConfig = foundry.applications.apps.DocumentSheetConfig;
 
-        // Unregister core V1 actor sheet and register V2 actor sheets
+        // Unregister both core actor sheet generations so "Default Sheet"
+        // never appears alongside the system's type-bound sheets.
         DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.appv1.sheets.ActorSheet);
+        if (foundry.applications.sheets.ActorSheetV2) {
+            DocumentSheetConfig.unregisterSheet(Actor, 'core', foundry.applications.sheets.ActorSheetV2);
+        }
 
-        // Per-type sheet registration. Each of the 19 concrete actor types
-        // gets exactly one default sheet — the factory-generated system
-        // variant matching its system + kind. The sidebar/generic fallbacks
-        // register against each of that kind's new types as selectable alt
-        // options (makeDefault:false) so GMs can still switch if needed.
-        const npcTypeIds = ['dh2-npc', 'dh1-npc', 'rt-npc', 'bc-npc', 'ow-npc', 'dw-npc', 'im-npc'];
-        const vehicleTypeIds = ['dh2-vehicle', 'dh1-vehicle', 'rt-vehicle', 'bc-vehicle', 'ow-vehicle', 'dw-vehicle', 'im-vehicle'];
-        const starshipTypeIds = ['rt-starship'];
+        // Per-type sheet registration. Each concrete actor type gets exactly
+        // one matching default sheet. Sheet choice must not diverge from type.
 
         // --- Per-system default PC sheets ---
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2PlayerSheet, {
@@ -421,13 +478,6 @@ export class HooksManager {
             makeDefault: true,
             label: 'WH40K.Sheet.ImperiumMaledictumNPC',
         });
-        // Generic NPCSheet — selectable fallback on all NPC types.
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, NPCSheet, {
-            types: npcTypeIds,
-            makeDefault: false,
-            label: 'WH40K.Sheet.NPC',
-        });
-
         // --- Per-system default Vehicle sheets ---
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2VehicleSheet, {
             types: ['dh2-vehicle'],
@@ -464,22 +514,11 @@ export class HooksManager {
             makeDefault: true,
             label: 'WH40K.Sheet.ImperiumMaledictumVehicle',
         });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, VehicleSheet, {
-            types: vehicleTypeIds,
-            makeDefault: false,
-            label: 'WH40K.Sheet.Vehicle',
-        });
-
         // --- Starship (RT only for now) ---
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderStarshipSheet, {
             types: ['rt-starship'],
             makeDefault: true,
             label: 'WH40K.Sheet.RogueTraderStarship',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, StarshipSheet, {
-            types: starshipTypeIds,
-            makeDefault: false,
-            label: 'WH40K.Sheet.Starship',
         });
 
         // Unregister core V1 item sheet and register V2 item sheets

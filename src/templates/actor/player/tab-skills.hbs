@@ -25,9 +25,23 @@
                             data-characteristic="{{name}}"
                             title="{{this.label}}"
                         >{{this.short}}</button>
-                        <div class="wh40k-char-hud-circle" title="{{this.label}}">
-                            <span class="wh40k-char-hud-mod">{{this.bonus}}</span>
-                            <span class="wh40k-char-hud-mod-label">MOD</span>
+                        <div class="wh40k-char-hud-circle tw-relative tw-overflow-hidden tw-group/characteristic-roll" title="{{this.label}}">
+                            <span class="wh40k-char-hud-mod tw-transition-opacity tw-duration-150 group-hover/characteristic-roll:tw-opacity-15">{{this.bonus}}</span>
+                            <span class="wh40k-char-hud-mod-label tw-transition-opacity tw-duration-150 group-hover/characteristic-roll:tw-opacity-15">MOD</span>
+                            <button
+                                class="tw-absolute tw-inset-0 tw-z-[1] tw-flex tw-items-center tw-justify-center tw-rounded-full tw-border-0 tw-bg-[rgba(15,23,42,0.08)] tw-text-[rgba(255,255,255,0.78)] tw-opacity-0 tw-transition-all tw-duration-150 hover:tw-bg-[rgba(15,23,42,0.16)] hover:tw-text-white group-hover/characteristic-roll:tw-opacity-100"
+                                type="button"
+                                data-action="roll"
+                                data-roll-type="characteristic"
+                                data-roll-target="{{name}}"
+                                data-item-type="characteristic"
+                                data-item-id="{{name}}"
+                                data-characteristic="{{name}}"
+                                title="{{localize 'WH40K.Roll.Roll'}} {{this.label}}"
+                                aria-label="{{localize 'WH40K.Roll.Roll'}} {{this.label}}"
+                            >
+                                <i class="fa-solid fa-dice-d20 tw-text-lg tw-drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)]"></i>
+                            </button>
                         </div>
                         {{#if ../inEditMode}}
                         <div class="wh40k-char-hud-base wh40k-char-hud-base--edit">
