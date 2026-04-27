@@ -81,6 +81,32 @@ Never add new rule blocks to `src/css/wh40k-rpg.css` outside the trailing `@tail
 - `pnpm i18n:gen` — flatten `src/lang/en.json` into a string-literal union at `src/module/types/i18n-keys.d.ts`. The pre-commit hook regenerates automatically.
 - `import { t } from '~/module/i18n/t'` — typed wrapper around `game.i18n.localize` / `game.i18n.format`. The type system rejects unknown keys and stale ones after a langpack rename. Use this for new code; existing `game.i18n.localize(...)` call sites can be migrated incrementally.
 
+### Background ratcheting via cheap LLMs
+
+The ratchets are designed so cheap, narrow-task LLM workers can grind them down without supervision. The default mechanism is the harness `ai` launcher pointed at a Gemini Flash slot:
+
+```bash
+ai gemini 1 --model gemini-3.1-flash-lite-preview -p '<task brief>'
+```
+
+- **Slot 0** uses the host's real `$HOME` (interactive auth via OAuth in `~/.gemini/`); only usable from a TTY where `$HOME` is unredirected.
+- **Slot 1+** uses self-contained config under `.ai-sessions/gemini/<N>/` and works from any shell with no env override — this is the slot to use for spawned background tasks.
+- Backends besides `gemini` (e.g. `codex`, `claude`, `local`) follow the same `<provider> <slot>` shape; pick whichever has a working session.
+
+Background workers run in **isolated git worktrees** (one per task) so concurrent grinders don't collide on shared files like `src/css/wh40k-rpg.css`. The orchestrator handles the merge — workers only modify files in their scope, never delete from the monolith, and write a `.migration-manifest.json` at the worktree root listing what they ported and what is now safe to delete. After all workers report, the orchestrator copies template changes to main and runs `pnpm css:block delete <source>` for each safe-to-delete entry.
+
+Tasks that suit cheap-model grinders (each map to a ratchet that gates regression):
+
+| Task | Metric to drive |
+| --- | --- |
+| Port one `.hbs` template's classes to `tw-*` per `docs/tailwind-migration.md` | `pnpm css:coverage` (`css-only` ↓, `tailwind-only` ↑) |
+| Replace one ` as any` cast in a sheet with a narrow type | `pnpm ts:coverage` (per-dir `asAny` ↓) |
+| Add a `*.stories.ts` for one Sheet/Dialog using `pnpm scaffold:story` and `stories/test-helpers.ts` | `pnpm symmetry` (sheet missing-pair count ↓) |
+| Add a `*.test.ts` for one DataModel using `pnpm scaffold:test` | `pnpm symmetry` (data missing-pair count ↓) |
+| Migrate one `game.i18n.localize(...)` call site to `t(...)` | (no metric — but the typed key surface catches stale references on next run) |
+
+Cheap workers can be wrong. The pre-commit ratchets and the typecheck/lint/vitest/storybook gates are what make this safe — a worker that breaks a sheet still has to pass `pnpm check`, and the orchestrator never `--no-verify` past failures.
+
 ### Pre-commit pipeline (in order)
 
 1. `lint-staged` — eslint --fix and prettier on staged files.
