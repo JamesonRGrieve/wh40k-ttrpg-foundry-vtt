@@ -10,3 +10,9 @@ if printf '%s\n' "$changed" | grep -qE '^(gulpfile\.js|src/packs(/|$))'; then
     echo "[pre-commit] gulpfile or pack sources changed — validating compilePacks…"
     pnpm -s packs
 fi
+
+echo "[pre-commit] running Vitest…"
+./node_modules/.bin/vitest run
+
+echo "[pre-commit] running Storybook Playwright integration tests…"
+sh ./scripts/run-storybook-playwright-tests.sh

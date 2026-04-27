@@ -1,5 +1,5 @@
 /**
- * Concrete data models, one per (system, kind) pair. 19 total.
+ * Concrete data models, one per (system, kind) pair.
  *
  * Naming: {System}{Kind}Data, file {system}-{kind}.ts.
  * Each is a thin class extending its kind base (CharacterBaseData /
@@ -38,3 +38,8 @@ export { default as OWVehicleData } from './ow-vehicle.ts';
 export { default as DWCharacterData } from './dw-character.ts';
 export { default as DWNPCData } from './dw-npc.ts';
 export { default as DWVehicleData } from './dw-vehicle.ts';
+
+// Imperium Maledictum
+export { default as IMCharacterData } from './im-character.ts';
+export { default as IMNPCData } from './im-npc.ts';
+export { default as IMVehicleData } from './im-vehicle.ts';

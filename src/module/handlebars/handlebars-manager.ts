@@ -27,6 +27,8 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/character-portrait.hbs',
             'systems/wh40k-rpg/templates/actor/partial/display-toggle.hbs',
             'systems/wh40k-rpg/templates/actor/partial/sidebar-header.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/sidebar-field-row.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/sidebar-fields-panel.hbs',
             'systems/wh40k-rpg/templates/actor/partial/trait-toggle.hbs',
 
             // Acolyte sheet templates

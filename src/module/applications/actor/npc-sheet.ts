@@ -208,6 +208,64 @@ export default class NPCSheet extends (CharacterSheet as any) {
         return context;
     }
 
+    protected _getSidebarHeaderFields(_gameSystem: string) {
+        const threatTier = (this.actor.system?.threatTier ?? {}) as { color?: string; label?: string };
+        return [
+            {
+                label: 'Threat',
+                name: 'system.threatLevel',
+                type: 'number',
+                value: this.actor.system?.threatLevel ?? 1,
+                min: 1,
+                max: 30,
+                icon: 'fa-solid fa-skull',
+                rowClass: 'wh40k-threat-row',
+                inputClass: 'wh40k-threat-input',
+                borderColor: threatTier.color,
+                valueLabel: threatTier.label,
+                valueClass: 'wh40k-threat-tier',
+                valueColor: threatTier.color,
+            },
+            {
+                label: 'Type',
+                name: 'system.type',
+                type: 'select',
+                value: this.actor.system?.type ?? 'troop',
+                options: {
+                    troop: 'Troop',
+                    elite: 'Elite',
+                    master: 'Master',
+                    horde: 'Horde',
+                    swarm: 'Swarm',
+                    creature: 'Creature',
+                    daemon: 'Daemon',
+                    xenos: 'Xenos',
+                },
+            },
+            {
+                label: 'Role',
+                name: 'system.role',
+                type: 'select',
+                value: this.actor.system?.role ?? 'bruiser',
+                options: {
+                    bruiser: 'Bruiser',
+                    sniper: 'Sniper',
+                    caster: 'Caster',
+                    support: 'Support',
+                    commander: 'Commander',
+                    specialist: 'Specialist',
+                },
+            },
+            {
+                label: 'Faction',
+                name: 'system.faction',
+                type: 'text',
+                value: this.actor.system?.faction ?? '',
+                placeholder: 'Faction',
+            },
+        ];
+    }
+
     /* -------------------------------------------- */
 
     /**

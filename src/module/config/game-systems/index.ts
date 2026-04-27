@@ -8,6 +8,7 @@ import { BCSystemConfig } from './bc-config.ts';
 import { DH1eSystemConfig } from './dh1e-config.ts';
 import { DH2eSystemConfig } from './dh2e-config.ts';
 import { DWSystemConfig } from './dw-config.ts';
+import { IMSystemConfig } from './im-config.ts';
 import { OWSystemConfig } from './ow-config.ts';
 import { RTSystemConfig } from './rt-config.ts';
 import type { GameSystemId } from './types.ts';
@@ -20,6 +21,7 @@ const SYSTEM_CONFIGS: Record<GameSystemId, BaseSystemConfig> = {
     bc: new BCSystemConfig(),
     ow: new OWSystemConfig(),
     dw: new DWSystemConfig(),
+    im: new IMSystemConfig(),
 };
 
 /**

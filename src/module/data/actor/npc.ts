@@ -1,4 +1,5 @@
 import ActorDataModel from '../abstract/actor-data-model.ts';
+import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import HordeTemplate, { type HordeData } from './mixins/horde-template.ts';
 
 const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectField, HTMLField } = foundry.data.fields;
@@ -586,6 +587,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         if (!char) return 0;
 
         const gameSystem = (this.constructor as any).gameSystem;
+        const systemConfig = gameSystem ? SystemConfigRegistry.getOrNull(gameSystem) : null;
         let target = char.total;
 
         // Apply training bonuses
@@ -598,7 +600,7 @@ export default class NPCData extends HordeTemplate(ActorDataModel) {
         } else {
             // Untrained: flat -20 in DH2e (Known/Trained/Experienced/Veteran ladder),
             // half characteristic for career-based systems.
-            target = gameSystem === 'dh2e' ? char.total - 20 : Math.floor(char.total / 2);
+            target = systemConfig?.usesAptitudes ? char.total - 20 : Math.floor(char.total / 2);
         }
 
         // Apply custom override if enabled
