@@ -28,7 +28,6 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
         return {
             ...super.defineSchema(),
 
-            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Power test configuration
@@ -105,7 +104,6 @@ export default class NavigatorPowerData extends ItemDataModel.mixin(DescriptionT
 
     /** @override */
     get chatProperties(): string[] {
-        // @ts-expect-error - TS2339
         const props = [`Test: ${this.testLabel}`, ...ActivationTemplate.prototype.chatProperties.call(this)];
 
         return props;

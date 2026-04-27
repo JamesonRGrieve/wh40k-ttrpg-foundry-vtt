@@ -31,7 +31,6 @@ function checkMacroCanCreate() {
 }
 
 function checkExistingMacro(name, command) {
-    // @ts-expect-error - dynamic property access
     const existingMacro = game.macros.find((m) => m.name === name && m.command === command);
     if (existingMacro) {
         ui.notifications.warn(`Macro already exists`);
@@ -54,7 +53,6 @@ export async function createItemMacro(data, slot) {
         type: 'script',
         img: data.data.img,
         command: command,
-        // @ts-expect-error - extended property
         flags: { 'dh.itemMacro': true },
     });
     if (macro) await game.user.assignHotbarMacro(macro, slot);
@@ -93,7 +91,6 @@ export async function createSkillMacro(data, slot) {
         img: 'systems/wh40k-rpg/icons/talents/red/r_36.png',
         type: 'script',
         command: command,
-        // @ts-expect-error - extended property
         flags: { 'dh.skillMacro': true },
     });
     if (macro) await game.user.assignHotbarMacro(macro, slot);
@@ -127,7 +124,6 @@ export async function createCharacteristicMacro(data, slot) {
         img: 'systems/wh40k-rpg/icons/talents/violet/p_05.png',
         type: 'script',
         command: command,
-        // @ts-expect-error - extended property
         flags: { 'dh.characteristicMacro': true },
     });
     if (macro) await game.user.assignHotbarMacro(macro, slot);

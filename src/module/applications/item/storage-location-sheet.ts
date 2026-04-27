@@ -11,7 +11,7 @@ import ContainerItemSheet from './container-item-sheet.ts';
 export default class StorageLocationSheet extends ContainerItemSheet {
     /** @override */
     static DEFAULT_OPTIONS = {
-        classes: ['storage-location'],
+        classes: ['wh40k-rpg', 'storage-location'],
         position: {
             width: 550,
             height: 500,

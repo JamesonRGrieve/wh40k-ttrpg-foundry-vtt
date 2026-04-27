@@ -31,7 +31,6 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
         return {
             ...super.defineSchema(),
 
-            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Psychic discipline
@@ -138,12 +137,10 @@ export default class PsychicPowerData extends ItemDataModel.mixin(DescriptionTem
             this.disciplineLabel,
             `PR Cost: ${this.prCost}`,
             `Focus: ${this.focusTestLabel}`,
-            // @ts-expect-error - TS2339
             ...ActivationTemplate.prototype.chatProperties.call(this),
         ];
 
         if (this.isAttack) {
-            // @ts-expect-error - TS2339
             props.push(...DamageTemplate.prototype.chatProperties.call(this));
         }
 

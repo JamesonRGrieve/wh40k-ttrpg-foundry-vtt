@@ -173,7 +173,6 @@ export class HooksManager {
             openOriginPathBuilder: (actor: WH40KBaseActor, options: Record<string, unknown> = {}) => characterCreation.OriginPathBuilder.show(actor, options),
             // NPC utilities
             npc: npcApplications,
-            applications: npcApplications, // Alias for shorter access
             ThreatCalculator: npcApplications.ThreatCalculator,
             quickCreateNPC: (config: unknown) => npcApplications.NPCQuickCreateDialog.create(config),
             batchCreateNPCs: (config: unknown) => npcApplications.BatchCreateDialog.open(config),
@@ -350,13 +349,8 @@ export class HooksManager {
         const starshipTypeIds = ['rt-starship'];
 
         // --- Per-system default PC sheets ---
-        // DH2 covers both the new dh2-character type and the legacy
-        // `character` type (used by actors that predate the type split).
-        // Foundry's DocumentSheetConfig keys registrations by class, so
-        // legacy and new types must share the same call to avoid the second
-        // registration silently overwriting the first.
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2PlayerSheet, {
-            types: ['dh2-character', 'character'],
+            types: ['dh2-character'],
             makeDefault: true,
             label: 'WH40K.Sheet.DarkHeresy2',
         });
@@ -392,9 +386,8 @@ export class HooksManager {
         });
 
         // --- Per-system default NPC sheets ---
-        // Also covers the legacy `npc` type (see PC sheet comment above).
         DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2NPCSheet, {
-            types: ['dh2-npc', 'npc'],
+            types: ['dh2-npc'],
             makeDefault: true,
             label: 'WH40K.Sheet.DarkHeresy2NPC',
         });
@@ -487,30 +480,6 @@ export class HooksManager {
             types: starshipTypeIds,
             makeDefault: false,
             label: 'WH40K.Sheet.Starship',
-        });
-
-        // --- Legacy-type sheets (bridge while ready-hook migration runs) ---
-        // Actors with legacy types (character/npc/vehicle/starship) render
-        // with the DH2 concrete sheet until the migration retypes them.
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2PlayerSheet, {
-            types: ['character'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.DarkHeresy2',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2NPCSheet, {
-            types: ['npc'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.DarkHeresy2NPC',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, DarkHeresy2VehicleSheet, {
-            types: ['vehicle'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.DarkHeresy2Vehicle',
-        });
-        DocumentSheetConfig.registerSheet(Actor, SYSTEM_ID, RogueTraderStarshipSheet, {
-            types: ['starship'],
-            makeDefault: true,
-            label: 'WH40K.Sheet.RogueTraderStarship',
         });
 
         // Unregister core V1 item sheet and register V2 item sheets
@@ -714,143 +683,6 @@ export class HooksManager {
         if (!game.settings.get(SYSTEM_ID, WH40KSettings.SETTINGS.processActiveEffectsDuringCombat)) {
             DHCombatActionManager.disableHooks();
         }
-
-        // Legacy migration carried over from the last sheet rename.
-        await HooksManager._migrateNPCSheetClassFlag();
-        // (system, kind) type split — retype any actors still on the legacy
-        // `character` / `npc` / `vehicle` / `starship` types.
-        await HooksManager._migrateLegacyActorTypes();
-    }
-
-    /**
-     * Rewrite `flags.core.sheetClass` for NPC actors that still reference the
-     * old NPCSheetV2 identifier. Runs once per world startup; cheap enough
-     * (only iterates actors whose flag actually points at the old class).
-     */
-    static async _migrateNPCSheetClassFlag() {
-        const OLD_ID = `${SYSTEM_ID}.NPCSheetV2`;
-        const NEW_ID = `${SYSTEM_ID}.NPCSheet`;
-        const updates: Array<{ '_id': string; 'flags.core.sheetClass': string }> = [];
-        for (const actor of game.actors ?? []) {
-            if (actor.type !== 'npc') continue;
-            if (actor.getFlag?.('core', 'sheetClass') === OLD_ID) {
-                updates.push({ '_id': actor.id, 'flags.core.sheetClass': NEW_ID });
-            }
-        }
-        if (updates.length > 0) {
-            await Actor.updateDocuments(updates);
-            game.wh40k?.log?.(`Migrated ${updates.length} NPC sheetClass flag(s) from NPCSheetV2 to NPCSheet.`);
-        }
-    }
-
-    /**
-     * Retype every actor still on the legacy 4 types (character/npc/vehicle/
-     * starship) to the new (system, kind) concrete type. Foundry doesn't
-     * support changing `type` in place — we delete the actor and recreate it
-     * under the same id with the new type so all existing references
-     * (scene tokens, macros, journals with `@Actor[id]` links, chat messages)
-     * keep resolving.
-     *
-     * Before any destructive action, a full JSON snapshot of every legacy
-     * actor's `toObject()` is cached in a world setting so a broken migration
-     * can be rolled back. Runs GM-only, once per world (setting-gated).
-     */
-    static async _migrateLegacyActorTypes() {
-        const SETTING_DONE = 'migration-actor-types-v1-complete';
-        const SETTING_BACKUP = 'migration-actor-types-v1-backup';
-        const register = (key: string, type: any, def: unknown) => {
-            if (!game.settings.settings.has(`${SYSTEM_ID}.${key}`)) {
-                game.settings.register(SYSTEM_ID, key, {
-                    name: key,
-                    scope: 'world',
-                    config: false,
-                    type,
-                    default: def,
-                });
-            }
-        };
-        register(SETTING_DONE, Boolean, false);
-        register(SETTING_BACKUP, Object, {});
-
-        const done = game.settings.get(SYSTEM_ID, SETTING_DONE) as boolean | undefined;
-        if (done) return;
-        if (!game.user?.isGM) return;
-
-        const LEGACY = new Set(['character', 'npc', 'vehicle', 'starship']);
-        const targets = Array.from(game.actors ?? []).filter((a: any) => LEGACY.has(a.type));
-        if (!targets.length) {
-            await game.settings.set(SYSTEM_ID, SETTING_DONE, true);
-            return;
-        }
-
-        const inferSystem = (a: any): string => {
-            const raw = a.system?.gameSystem;
-            if (!raw || typeof raw !== 'string') return 'dh2';
-            return raw === 'dh2e' ? 'dh2' : raw === 'dh1e' ? 'dh1' : raw;
-        };
-
-        // --- Safety net: dump every legacy actor's full data to a world setting
-        // before touching anything. Restorable via a console macro if the
-        // migration leaves anyone in a bad state:
-        //   const backup = game.settings.get('wh40k-rpg', 'migration-actor-types-v1-backup');
-        //   // iterate backup.actors and re-create any missing ones manually.
-        const backup = {
-            timestamp: new Date().toISOString(),
-            actors: targets.map((a: any) => a.toObject()),
-        };
-        await game.settings.set(SYSTEM_ID, SETTING_BACKUP, backup);
-        game.wh40k?.log?.(`Backed up ${backup.actors.length} legacy actor(s) to world setting ${SYSTEM_ID}.${SETTING_BACKUP} before migration.`);
-
-        let migrated = 0;
-        const failed: Array<{ id: string; name: string; error: string }> = [];
-
-        for (const actor of targets) {
-            const id = actor.id;
-            const name = actor.name;
-            try {
-                const sys = inferSystem(actor);
-                const newType = `${sys}-${actor.type}`;
-                // Snapshot BEFORE any destructive action, so the recreate call
-                // below has the source if the delete succeeded.
-                const source = actor.toObject();
-                source.type = newType;
-
-                // Delete-then-create preserves the id so existing references
-                // (tokens, macros, journals) keep resolving.
-                await actor.delete();
-                const created = await Actor.create(source, { keepId: true });
-                if (!created) {
-                    // Recreate failed after delete — fall back to creating with
-                    // a new id so at least the data exists somewhere.
-                    delete (source as any)._id;
-                    const fallback = await Actor.create(source);
-                    if (!fallback) {
-                        failed.push({ id, name, error: 'Create returned falsy — data is in the world-setting backup.' });
-                    } else {
-                        failed.push({
-                            id,
-                            name,
-                            error: `Recreated with new id ${fallback.id} (old id lost; references may need remapping).`,
-                        });
-                    }
-                    continue;
-                }
-                migrated++;
-            } catch (err) {
-                game.wh40k?.error?.(`Migration error for ${name} (${id}):`, err);
-                failed.push({ id, name, error: String(err) });
-            }
-        }
-
-        game.wh40k?.log?.(
-            `Actor-type migration: ${migrated}/${targets.length} retyped successfully` +
-                (failed.length ? `, ${failed.length} failed (see console). Backup available in world setting ${SYSTEM_ID}.${SETTING_BACKUP}` : '.'),
-        );
-        if (failed.length) {
-            console.warn('[WH40K] Actor migration failures:', failed);
-            ui.notifications.warn(`Actor migration: ${failed.length} failed. Check console. Backup in world settings (${SYSTEM_ID}.${SETTING_BACKUP}).`);
-        }
-        await game.settings.set(SYSTEM_ID, SETTING_DONE, true);
     }
 
     static hotbarDrop(_bar: unknown, data: Record<string, unknown>, slot: number): boolean | void {

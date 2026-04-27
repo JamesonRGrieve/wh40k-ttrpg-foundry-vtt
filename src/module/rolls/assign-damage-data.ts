@@ -34,9 +34,7 @@ export class AssignDamageData {
         if (location) {
             for (const [name, locationArmour] of Object.entries(this.actor.system.armour)) {
                 if (location.replace(/\s/g, '').toUpperCase() === name.toUpperCase()) {
-                    // @ts-expect-error - dynamic property access
                     this.armour = locationArmour.value;
-                    // @ts-expect-error - dynamic property access
                     this.tb = locationArmour.toughnessBonus;
                 }
             }

@@ -35,7 +35,6 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
         return {
             ...super.defineSchema(),
 
-            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Modification category (for visual grouping and icons)
@@ -147,7 +146,6 @@ export default class WeaponModificationData extends ItemDataModel.mixin(Descript
 
     /** @override */
     get chatProperties(): string[] {
-        // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.restrictionsLabel];
 
         const mods = this.modifiers;

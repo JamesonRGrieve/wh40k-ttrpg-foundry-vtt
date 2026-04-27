@@ -33,7 +33,6 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
         return {
             ...super.defineSchema(),
 
-            // @ts-expect-error - argument count
             identifier: new IdentifierField({ required: true, blank: true }),
 
             // Cybernetic type
@@ -142,7 +141,6 @@ export default class CyberneticData extends ItemDataModel.mixin(DescriptionTempl
 
     /** @override */
     get chatProperties(): string[] {
-        // @ts-expect-error - TS2339
         const props = [...PhysicalItemTemplate.prototype.chatProperties.call(this), this.typeLabel, `Location: ${this.locationsLabel}`];
 
         if (this.hasArmourPoints) {
