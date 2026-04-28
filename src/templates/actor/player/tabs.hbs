@@ -1,13 +1,6 @@
 {{!-- Sidebar tab navigation — rendered inside the wh40k-sidebar container.
      Vertical column of label buttons; styling applies to PC and NPC sheets. --}}
-<nav class="wh40k-navigation tabs !tw-flex !tw-flex-col !tw-gap-1 !tw-m-0 !tw-p-2 !tw-shrink-0 !tw-grow-0 !tw-basis-auto !tw-bg-transparent" data-group="primary">
-    {{#each tabs}}
-    <a class="item wh40k-nav-item tw-flex tw-w-full tw-items-center tw-rounded-md tw-px-2 tw-py-1.5 tw-text-sm {{#if active}}active{{/if}} {{ cssClass }}"
-       data-action="tab"
-       data-group="{{ group }}"
-       data-tab="{{ tab }}"
-       data-tooltip="{{ label }}">
-        {{ label }}
-    </a>
-    {{/each}}
-</nav>
+{{> systems/wh40k-rpg/templates/actor/partial/tab-strip.hbs
+    tabs=tabs
+    navClass="!tw-flex !tw-flex-col !tw-gap-1 !tw-m-0 !tw-p-2 !tw-shrink-0 !tw-grow-0 !tw-basis-auto !tw-bg-transparent"
+    itemClass="wh40k-nav-item tw-flex tw-w-full tw-items-center tw-rounded-md tw-px-2 tw-py-1.5 tw-text-sm"}}

@@ -1,5 +1,5 @@
 /**
- * @file VehicleSheetV2 - Dedicated sheet for vehicle/ship NPCs
+ * @file VehicleSheet - Dedicated sheet for vehicle/ship NPCs
  * Completely different layout optimized for vehicle combat and crew management
  * Phase 6 implementation for npcV2 actors with primaryUse="vehicle" or "ship"
  */
@@ -25,7 +25,7 @@ export default class VehicleSheet extends BaseActorSheet {
     /** @override */
     static DEFAULT_OPTIONS: Partial<ApplicationV2Config.DefaultOptions> = {
         ...BaseActorSheet.DEFAULT_OPTIONS,
-        classes: ['wh40k-rpg', 'sheet', 'actor', 'vehicle-v2'],
+        classes: ['wh40k-rpg', 'sheet', 'actor', 'vehicle'],
         position: {
             width: 1000,
             height: 800,
@@ -52,29 +52,29 @@ export default class VehicleSheet extends BaseActorSheet {
     static PARTS: Record<string, ApplicationV2Config.PartConfiguration> = {
         ...BaseActorSheet.PARTS,
         header: {
-            template: 'systems/wh40k-rpg/templates/actor/vehicle-v2/header.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/vehicle/header.hbs',
         },
         tabs: {
-            template: 'systems/wh40k-rpg/templates/actor/vehicle-v2/tabs.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/vehicle/tabs.hbs',
         },
         overview: {
-            template: 'systems/wh40k-rpg/templates/actor/vehicle-v2/tab-overview.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/vehicle/tab-overview.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
         },
         combat: {
-            template: 'systems/wh40k-rpg/templates/actor/vehicle-v2/tab-combat.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/vehicle/tab-combat.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
         },
         crew: {
-            template: 'systems/wh40k-rpg/templates/actor/vehicle-v2/tab-crew.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/vehicle/tab-crew.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
         },
         components: {
-            template: 'systems/wh40k-rpg/templates/actor/vehicle-v2/tab-components.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/vehicle/tab-components.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
         },
         notes: {
-            template: 'systems/wh40k-rpg/templates/actor/vehicle-v2/tab-notes.hbs',
+            template: 'systems/wh40k-rpg/templates/actor/vehicle/tab-notes.hbs',
             container: { classes: ['wh40k-body'], id: 'tab-body' },
         },
     };

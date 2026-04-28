@@ -35,6 +35,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/vital-progress-bar.hbs',
             'systems/wh40k-rpg/templates/actor/partial/vital-edit-input.hbs',
             'systems/wh40k-rpg/templates/actor/partial/vital-quick-adjust.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/tab-strip.hbs',
 
             // Acolyte sheet templates
             'systems/wh40k-rpg/templates/actor/player/header-dh.hbs',
@@ -88,9 +89,11 @@ export class HandlebarManager {
             // Vehicle sheet templates
             'systems/wh40k-rpg/templates/actor/vehicle/header.hbs',
             'systems/wh40k-rpg/templates/actor/vehicle/tabs.hbs',
-            'systems/wh40k-rpg/templates/actor/vehicle/tab-stats.hbs',
-            'systems/wh40k-rpg/templates/actor/vehicle/tab-weapons.hbs',
-            'systems/wh40k-rpg/templates/actor/vehicle/tab-traits.hbs',
+            'systems/wh40k-rpg/templates/actor/vehicle/tab-overview.hbs',
+            'systems/wh40k-rpg/templates/actor/vehicle/tab-combat.hbs',
+            'systems/wh40k-rpg/templates/actor/vehicle/tab-crew.hbs',
+            'systems/wh40k-rpg/templates/actor/vehicle/tab-components.hbs',
+            'systems/wh40k-rpg/templates/actor/vehicle/tab-notes.hbs',
             'systems/wh40k-rpg/templates/actor/panel/vehicle-armour-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/vehicle-integrity-panel.hbs',
             'systems/wh40k-rpg/templates/actor/panel/vehicle-movement-panel.hbs',

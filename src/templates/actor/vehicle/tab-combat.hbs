@@ -1,46 +1,46 @@
-{{!-- Vehicle V2 Combat Tab --}}
+{{!-- Vehicle Combat Tab --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
-    <div class="wh40k-vehicle-v2-combat">
+    <div class="wh40k-vehicle-combat">
         
         {{!-- Weapons List --}}
-        <div class="wh40k-vehicle-v2-panel wh40k-vehicle-v2-weapons">
-            <h3 class="wh40k-vehicle-v2-panel-title">
+        <div class="wh40k-vehicle-panel wh40k-vehicle-weapons">
+            <h3 class="wh40k-vehicle-panel-title">
                 <i class="fas fa-crosshairs"></i>
                 Weapons
             </h3>
-            <div class="wh40k-vehicle-v2-weapons-list">
+            <div class="wh40k-vehicle-weapons-list">
                 {{#each weapons}}
-                <div class="wh40k-vehicle-v2-weapon-item" data-item-id="{{this._id}}">
-                    <div class="wh40k-vehicle-v2-weapon-name" data-action="rollWeapon" data-item-id="{{this._id}}">
+                <div class="wh40k-vehicle-weapon-item" data-item-id="{{this._id}}">
+                    <div class="wh40k-vehicle-weapon-name" data-action="rollWeapon" data-item-id="{{this._id}}">
                         {{this.name}}
                     </div>
-                    <div class="wh40k-vehicle-v2-weapon-stats">
+                    <div class="wh40k-vehicle-weapon-stats">
                         <span>{{this.system.damage}}</span>
                         <span>{{this.system.range}}m</span>
                     </div>
                 </div>
                 {{else}}
-                <div class="wh40k-vehicle-v2-empty">No weapons equipped</div>
+                <div class="wh40k-vehicle-empty">No weapons equipped</div>
                 {{/each}}
             </div>
         </div>
 
         {{!-- Traits --}}
-        <div class="wh40k-vehicle-v2-panel wh40k-vehicle-v2-traits">
-            <h3 class="wh40k-vehicle-v2-panel-title">
+        <div class="wh40k-vehicle-panel wh40k-vehicle-traits">
+            <h3 class="wh40k-vehicle-panel-title">
                 <i class="fas fa-shield-alt"></i>
                 Vehicle Traits
             </h3>
-            <div class="wh40k-vehicle-v2-traits-list">
+            <div class="wh40k-vehicle-traits-list">
                 {{#each vehicleTraits}}
-                <div class="wh40k-vehicle-v2-trait-item">
+                <div class="wh40k-vehicle-trait-item">
                     <strong>{{this.name}}</strong>
                     {{#if this.system.description}}
                     <p>{{{this.system.description}}}</p>
                     {{/if}}
                 </div>
                 {{else}}
-                <div class="wh40k-vehicle-v2-empty">No traits</div>
+                <div class="wh40k-vehicle-empty">No traits</div>
                 {{/each}}
             </div>
         </div>
