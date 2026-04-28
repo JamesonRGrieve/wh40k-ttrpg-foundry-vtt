@@ -47,6 +47,8 @@ Every direction in the previous section is backed by a coverage script and a rat
 | Direction | Coverage script | Ratchet | Baseline file |
 | --- | --- | --- | --- |
 | Tailwind migration | `pnpm css:coverage` | `pnpm css:ratchet` | `.css-coverage-baseline` |
+| Animation migration (`animation:` rule → `tw-animate-<name>`) | `pnpm animation:coverage` | `pnpm animation:ratchet` | `.animation-baseline` |
+| Per-system theme adoption (`<system>:tw-*` variants) — count must NOT FALL | `pnpm theme:coverage` | `pnpm theme:ratchet` | `.theme-baseline` |
 | Strong TS (per-rule, per-dir) | `pnpm ts:coverage` | `pnpm ts:ratchet` | `.ts-coverage-baseline` |
 | `tsc --noEmit` total errors | (built into ratchet) | `pnpm typecheck:ratchet` | `.tsc-error-baseline` |
 | ESLint warnings | (built into ratchet) | `pnpm lint:ratchet` | `.eslint-warning-baseline` |
@@ -69,6 +71,30 @@ The CSS pipeline is an in-progress migration from a single concatenated monolith
 - The full migration recipe lives in `docs/tailwind-migration.md` — read it before porting templates.
 
 Never add new rule blocks to `src/css/wh40k-rpg.css` outside the trailing `@tailwind` directives. The CSS pipeline is being phased out; new styling is `tw-*` utilities inline on templates.
+
+### Animation migration tooling
+
+All `@keyframes` definitions live in `tailwind.config.js` under `theme.extend.keyframes`, with paired entries in `theme.extend.animation`. Each animation generates a `tw-animate-<name>` utility class.
+
+The monolith currently still contains `animation: <name> ...` rules on selectors like `.wh40k-panel`, `.wh40k-prompt::before`, etc. — those rules reference the keyframes by name and continue to work via the cascade. A `safelist: [{ pattern: /^tw-animate-/ }]` entry in `tailwind.config.js` forces every `tw-animate-*` utility (and its `@keyframes`) to be emitted regardless of template usage, so the monolith's rules don't break when no template references the utility yet. **Drop the safelist once every animation is invoked via `tw-animate-<name>` on its template AND the matching `animation:` rule is removed from the monolith.**
+
+- `pnpm animation:coverage` — counts `animation:` / `animation-name:` declarations in `src/css/wh40k-rpg.css`. Output at `.animation-coverage.json`.
+- `pnpm animation:ratchet` — pre-commit gate; baseline at `.animation-baseline`. Update via `pnpm animation:ratchet:update` after a port.
+- Per-template port: replace each `animation: <name> ...` rule applied via a class with `tw-animate-<name>` on the consuming element. Delete the source rule. Run `pnpm animation:ratchet:update` and commit.
+
+### Per-system theme tooling — the ultimate target
+
+The 7 game systems (`bc`, `dh1e`, `dh2e`, `dw`, `ow`, `rt`, `im`, matching `src/module/config/game-systems/types.ts` `GameSystemId`) each get a Tailwind variant in `tailwind.config.js`. Use the variant in templates to gate utilities by system:
+
+```hbs
+<div class="tw-bg-gold dh2e:tw-bg-bronze rt:tw-bg-amber-700">…</div>
+```
+
+Each variant maps to `[data-wh40k-system="<id>"] &`. The data attribute lives on the sheet root or any ancestor of the styled element — surface it from `_gameSystemId` on the sheet (`element.dataset.wh40kSystem = this._gameSystemId`) when wiring up the first system-aware template. **Visual divergence between systems is the long-term goal of the Tailwind migration; the animation and CSS-coverage ratchets are stepping stones.**
+
+- `pnpm theme:coverage` — counts templates using at least one `<system>:tw-*` variant. Output at `.theme-coverage.json`, plus per-system hit counts.
+- `pnpm theme:ratchet` — pre-commit gate; baseline at `.theme-baseline`. **Direction is opposite to other ratchets**: count of per-system-aware templates cannot FALL. Update via `pnpm theme:ratchet:update` after adding variants.
+- Adoption recipe: pick a template, identify the elements that should differ visually per system, add `<system>:tw-*` variants alongside the base class, run `pnpm theme:ratchet:update`, commit.
 
 ### TS strictness tooling
 
@@ -102,6 +128,8 @@ Tasks that suit cheap-model grinders (each map to a ratchet that gates regressio
 | Task | Metric to drive |
 | --- | --- |
 | Port one `.hbs` template's classes to `tw-*` per `docs/tailwind-migration.md` | `pnpm css:coverage` (`css-only` ↓, `tailwind-only` ↑) |
+| Move one `animation: <name>` rule from monolith onto its consuming template as `tw-animate-<name>` | `pnpm animation:coverage` (count ↓) |
+| Add per-system theme variants (`dh2e:tw-bg-bronze rt:tw-bg-amber-700`) to one template's elements | `pnpm theme:coverage` (count ↑) |
 | Replace one ` as any` cast in a sheet with a narrow type | `pnpm ts:coverage` (per-dir `asAny` ↓) |
 | Add a `*.stories.ts` for one Sheet/Dialog using `pnpm scaffold:story` and `stories/test-helpers.ts` | `pnpm symmetry` (sheet missing-pair count ↓) |
 | Add a `*.test.ts` for one DataModel using `pnpm scaffold:test` | `pnpm symmetry` (data missing-pair count ↓) |
@@ -117,12 +145,14 @@ Cheap workers can be wrong. The pre-commit ratchets and the typecheck/lint/vites
 4. `typecheck:ratchet` — `tsc --noEmit` total error count cannot rise.
 5. `lint:ratchet` — ESLint warning count cannot rise; errors are never allowed.
 6. `css:ratchet` — `tailwind-only` cannot fall, `css-only` cannot rise.
-7. `ts:ratchet` — per-rule per-directory suppression counts cannot rise.
-8. `symmetry:ratchet` — missing-story / missing-test counts cannot rise.
-9. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
-10. Pack validation if `gulpfile.js` or `src/packs/` changed.
-11. `vitest run` — full Vitest suite must pass.
-12. Storybook Playwright integration tests.
+7. `animation:ratchet` — count of `animation:` / `animation-name:` rules in the monolith cannot rise.
+8. `theme:ratchet` — count of templates using per-system `<system>:tw-*` variants cannot fall (adoption ratchet — opposite direction; rises as templates gain per-system theming).
+9. `ts:ratchet` — per-rule per-directory suppression counts cannot rise.
+10. `symmetry:ratchet` — missing-story / missing-test counts cannot rise.
+11. `preload:drift` — every `{{> ... }}` partial reference must be preloaded; preload entries cannot point at non-existent files.
+12. Pack validation if `gulpfile.js` or `src/packs/` changed.
+13. `vitest run` — full Vitest suite must pass.
+14. Storybook Playwright integration tests.
 
 Hooks run for 30–60s on large commits. Wait for them; do not interrupt or `--no-verify` past failures. If a hook fails, investigate and fix; do not silence.
 
