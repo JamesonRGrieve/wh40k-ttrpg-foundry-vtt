@@ -1,25 +1,23 @@
-<div class="wh40k-panel wh40k-combat-controls tw-col-auto">
-    <div class="wh40k-panel-header">
-        <span class="wh40k-panel-title"><i class="fas fa-crosshairs"></i> Controls</span>
+{{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs
+    label="Controls"
+    icon="fa-crosshairs"
+    rootClass="wh40k-combat-controls tw-col-auto"}}
+    <div class="wh40k-control-grid tw-grid tw-grid-cols-2 tw-gap-2">
+        <button type="roll" class="wh40k-control-btn combat-control" data-action="attack">
+            <i class="fas fa-bullseye"></i>
+            <span>Attack</span>
+        </button>
+        <button type="roll" class="wh40k-control-btn combat-control" data-action="assign-damage">
+            <i class="fas fa-bolt"></i>
+            <span>Assign Damage</span>
+        </button>
+        <button type="roll" class="wh40k-control-btn combat-control" data-action="dodge">
+            <i class="fas fa-shoe-prints"></i>
+            <span>Dodge</span>
+        </button>
+        <button type="roll" class="wh40k-control-btn combat-control" data-action="parry">
+            <i class="fas fa-shield-alt"></i>
+            <span>Parry</span>
+        </button>
     </div>
-    <div class="wh40k-panel-body">
-        <div class="wh40k-control-grid tw-grid tw-grid-cols-2 tw-gap-2">
-            <button type="roll" class="wh40k-control-btn combat-control" data-action="attack">
-                <i class="fas fa-bullseye"></i>
-                <span>Attack</span>
-            </button>
-            <button type="roll" class="wh40k-control-btn combat-control" data-action="assign-damage">
-                <i class="fas fa-bolt"></i>
-                <span>Assign Damage</span>
-            </button>
-            <button type="roll" class="wh40k-control-btn combat-control" data-action="dodge">
-                <i class="fas fa-shoe-prints"></i>
-                <span>Dodge</span>
-            </button>
-            <button type="roll" class="wh40k-control-btn combat-control" data-action="parry">
-                <i class="fas fa-shield-alt"></i>
-                <span>Parry</span>
-            </button>
-        </div>
-    </div>
-</div>
+{{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

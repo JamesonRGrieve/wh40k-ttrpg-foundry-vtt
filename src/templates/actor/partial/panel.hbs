@@ -1,0 +1,36 @@
+{{!--
+    Generic panel scaffold — outer wrapper, header (icon + title + optional count badge),
+    and body. Most actor / item dashboard panels share this exact 3-element structure;
+    extracting it here means the consumer only writes the body.
+
+    Block-partial usage:
+        (#>) systems/wh40k-rpg/templates/actor/partial/panel.hbs label="Armour" icon="fa-shield-alt"
+            ... body markup ...
+        (/) systems/wh40k-rpg/templates/actor/partial/panel.hbs
+
+    Hash arguments:
+        label         — header title text (required).
+        icon          — Font Awesome class (e.g. "fa-shield-alt"). Optional; omitted icons
+                        leave the title text flush.
+        count         — optional numeric/badge slot rendered in the header
+                        (used by panels that show a list size).
+        rootClass     — extra utility classes appended to the outer `wh40k-panel`
+                        (e.g. `tw-col-auto`, `wh40k-effects-panel`).
+        headerClass   — extra utility classes on the header (e.g. modifier flags).
+        bodyClass     — extra utility classes on the body container.
+
+    Note: panels with custom header behaviour (clickable headers / chevron toggles
+    / inline buttons / bespoke status badges) should keep using `vital-panel-shell.hbs`
+    or stay inline — this scaffold deliberately covers only the static header case.
+--}}
+<div class="wh40k-panel{{#if rootClass}} {{rootClass}}{{/if}}">
+    <div class="wh40k-panel-header{{#if headerClass}} {{headerClass}}{{/if}}">
+        <span class="wh40k-panel-title">
+            {{#if icon}}<i class="fas {{icon}}"></i> {{/if}}{{label}}
+        </span>
+        {{#if count}}<span class="wh40k-panel-count">{{count}}</span>{{/if}}
+    </div>
+    <div class="wh40k-panel-body{{#if bodyClass}} {{bodyClass}}{{/if}}">
+        {{> @partial-block}}
+    </div>
+</div>
