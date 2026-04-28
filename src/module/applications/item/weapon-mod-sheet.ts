@@ -2,44 +2,20 @@
  * @file WeaponModSheet - ApplicationV2 sheet for weapon modification items
  */
 
-import BaseItemSheet from './base-item-sheet.ts';
+import defineSimpleItemSheet from './define-simple-item-sheet.ts';
 
-/**
- * Sheet for weapon modification items.
- */
-// @ts-expect-error - TS2417 static side inheritance
-export default class WeaponModSheet extends BaseItemSheet {
-    /** @override */
-    static DEFAULT_OPTIONS = {
-        classes: ['wh40k-rpg', 'sheet', 'item', 'weapon-mod'],
-        position: {
-            width: 500,
-            height: 420,
-        },
-    };
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static PARTS = {
-        sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-weapon-mod-sheet.hbs',
-            scrollable: ['.wh40k-tab-content'],
-        },
-    };
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static TABS = [
+/** Sheet for weapon modification items. */
+const WeaponModSheet = defineSimpleItemSheet({
+    className: 'WeaponModSheet',
+    classes: ['wh40k-rpg', 'sheet', 'item', 'weapon-mod'],
+    template: 'systems/wh40k-rpg/templates/item/item-weapon-mod-sheet.hbs',
+    width: 500,
+    height: 420,
+    tabs: [
         { tab: 'details', group: 'primary', label: 'Details' },
         { tab: 'description', group: 'primary', label: 'Description' },
-    ];
+    ],
+    defaultTab: 'details',
+});
 
-    /* -------------------------------------------- */
-
-    /** @override */
-    tabGroups = {
-        primary: 'details',
-    };
-}
+export default WeaponModSheet;
