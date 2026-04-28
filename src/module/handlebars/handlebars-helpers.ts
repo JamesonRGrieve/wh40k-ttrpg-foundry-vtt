@@ -375,6 +375,24 @@ export function registerHandlebarsHelpers() {
         return value || defaultVal;
     });
 
+    /**
+     * Inline ternary helper. `if` is taken as a block helper, so we expose `iff`
+     * as a subexpression-friendly form: `(iff cond "yes" "no")`. The third arg is
+     * optional and defaults to "" — useful when the caller wants a class string
+     * that's empty when the condition fails.
+     */
+    Handlebars.registerHelper('iff', (cond: unknown, ifTrue: unknown, ifFalse: unknown) => {
+        return cond ? ifTrue : (ifFalse ?? '');
+    });
+
+    /**
+     * Build an object literal from hash arguments — mainly so partials can pass
+     * structured data through subexpression syntax: `(object at=25 label="25%")`.
+     */
+    Handlebars.registerHelper('object', function (this: unknown, options: { hash?: Record<string, unknown> }) {
+        return options.hash ?? {};
+    });
+
     Handlebars.registerHelper('rateOfFireDisplay', (rateOfFire) => {
         if (!rateOfFire) return '';
         const single = rateOfFire.single ?? '-';

@@ -1,246 +1,168 @@
-{{!-- Insanity Panel V2 - Matches Corruption Panel Design --}}
-<div class="wh40k-panel tw-rounded-lg tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-overflow-hidden tw-relative tw-mb-4 tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)] {{insanityDegreeClass system.insanity}}">
+{{!-- Insanity Panel — vital meter with degree badge, threshold warnings, mental-disorder tracking. --}}
+{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="insanity" label="Insanity" icon="fa-brain" actor=actor
+    rootStateClass=(insanityDegreeClass system.insanity)
+    badge=(object
+        stateClass=(insanityDegreeClass system.insanity)
+        icon="fa-brain"
+        label=(insanityDegree system.insanity)
+        tooltip=(concat (insanityDegree system.insanity) " - " (insanityModifier system.insanity) " to tests"))}}
 
-    {{!-- Panel Header - Click to expand/collapse --}}
-    <div class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-p-2 tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-transition-all tw-duration-200 tw-w-full tw-box-border tw-cursor-pointer sheet-control__hide-control"
-         data-toggle="insanity_details"
-         title="Click to {{#if (isExpanded 'insanity_details' actor)}}collapse{{else}}expand{{/if}}">
-        <span class="wh40k-panel-title tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-text-dark)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">
-            <i class="fas fa-brain tw-text-[var(--panel-accent,var(--wh40k-accent-gold))] tw-flex-shrink-0"></i> Insanity
-        </span>
-        
-        {{!-- Dynamic Mind Badge --}}
-        <div class="wh40k-insanity-header-status tw-ml-auto">
-            <div class="wh40k-insanity-badge {{insanityDegreeClass system.insanity}} tw-flex tw-items-center tw-gap-1 tw-bg-[rgba(0,0,0,0.2)] tw-px-2 tw-py-1 tw-rounded-md"
-                 title="{{insanityDegree system.insanity}} - {{insanityModifier system.insanity}} to tests">
-                <i class="fas fa-brain wh40k-badge-icon tw-text-gold"></i>
-                <span class="wh40k-badge-label tw-text-xs tw-font-bold tw-uppercase">{{insanityDegree system.insanity}}</span>
+    {{!-- Main Display --}}
+    <div class="wh40k-insanity-display">
+
+        {{!-- Current Value & Modifier --}}
+        <div class="wh40k-insanity-header tw-flex tw-items-center tw-justify-between tw-mb-2">
+            {{> systems/wh40k-rpg/templates/actor/partial/vital-quick-controls
+                wrapperClass="wh40k-insanity-value tw-flex tw-items-center tw-gap-2"
+                cssPrefix="wh40k-insanity"
+                field="system.insanity"
+                current=system.insanity
+                maxLabel="100"
+                decTitle="Reduce Insanity"
+                incTitle="Increase Insanity"
+                maxValue="100"
+                valueWrapperClass="wh40k-insanity-number tw-flex tw-items-baseline tw-gap-1"}}
+
+            <div class="wh40k-insanity-modifier tw-text-sm tw-font-medium">
+                <span class="wh40k-modifier-label">Modifier:</span>
+                <span class="wh40k-modifier-value tw-text-gold">{{insanityModifier system.insanity}}</span>
             </div>
         </div>
-        
-        <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'insanity_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
-    </div>
 
-    {{!-- Panel Body --}}
-    <div class="wh40k-panel-body tw-p-4 tw-bg-[var(--wh40k-panel-body-bg)]">
+        {{!-- Progress Bar with Threshold Markers --}}
+        {{> systems/wh40k-rpg/templates/actor/partial/vital-progress-bar
+            cssPrefix="wh40k-insanity"
+            percent=system.insanity
+            containerClass="wh40k-insanity-bar-container tw-relative tw-h-4 tw-bg-[rgba(0,0,0,0.3)] tw-rounded-md tw-overflow-hidden tw-mb-2"
+            fillExtraClass="tw-h-full tw-bg-gradient-to-r tw-from-purple-700 tw-to-crimson-dark"
+            fillStyleWidth=true
+            thresholds=(array
+                (object at=10 label="10" title="STABLE → UNSETTLED (10)")
+                (object at=40 label="40" title="UNSETTLED → DISTURBED (40)")
+                (object at=60 label="60" title="DISTURBED → UNHINGED (60)")
+                (object at=80 label="80" title="UNHINGED → DERANGED (80)"))}}
 
-        {{!-- Main Display --}}
-        <div class="wh40k-insanity-display">
-
-            {{!-- Current Value & Modifier --}}
-            <div class="wh40k-insanity-header tw-flex tw-items-center tw-justify-between tw-mb-2">
-                <div class="wh40k-insanity-value tw-flex tw-items-center tw-gap-2">
-                    <button type="button"
-                            class="wh40k-insanity-btn wh40k-insanity-minus"
-                            data-action="decrement"
-                            data-field="system.insanity"
-                            data-min="0"
-                            title="Reduce Insanity">
-                        <i class="fas fa-minus"></i>
-                    </button>
-
-                    <div class="wh40k-insanity-number tw-flex tw-items-baseline tw-gap-1">
-                        <span class="wh40k-insanity-current tw-text-xl tw-font-bold">{{system.insanity}}</span>
-                        <span class="wh40k-insanity-max tw-text-sm tw-text-gray-500">/ 100</span>
-                    </div>
-
-                    <button type="button"
-                            class="wh40k-insanity-btn wh40k-insanity-plus"
-                            data-action="increment"
-                            data-field="system.insanity"
-                            data-max="100"
-                            title="Increase Insanity">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-
-                <div class="wh40k-insanity-modifier tw-text-sm tw-font-medium">
-                    <span class="wh40k-modifier-label">Modifier:</span>
-                    <span class="wh40k-modifier-value tw-text-gold">{{insanityModifier system.insanity}}</span>
-                </div>
-            </div>
-
-            {{!-- Progress Bar with Threshold Markers --}}
-            <div class="wh40k-insanity-bar-container tw-relative tw-h-4 tw-bg-[rgba(0,0,0,0.3)] tw-rounded-md tw-overflow-hidden tw-mb-2">
-                <div class="wh40k-insanity-bar">
-                    <div class="wh40k-insanity-bar-fill tw-h-full tw-bg-gradient-to-r tw-from-purple-700 tw-to-crimson-dark" style="width: {{system.insanity}}%"></div>
-
-                    {{!-- Threshold Markers --}}
-                    <div class="wh40k-threshold-marker" style="left: 10%;" title="STABLE → UNSETTLED (10)">
-                        <span class="wh40k-threshold-line"></span>
-                        <span class="wh40k-threshold-label">10</span>
-                    </div>
-                    <div class="wh40k-threshold-marker" style="left: 40%;" title="UNSETTLED → DISTURBED (40)">
-                        <span class="wh40k-threshold-line"></span>
-                        <span class="wh40k-threshold-label">40</span>
-                    </div>
-                    <div class="wh40k-threshold-marker" style="left: 60%;" title="DISTURBED → UNHINGED (60)">
-                        <span class="wh40k-threshold-line"></span>
-                        <span class="wh40k-threshold-label">60</span>
-                    </div>
-                    <div class="wh40k-threshold-marker" style="left: 80%;" title="UNHINGED → DERANGED (80)">
-                        <span class="wh40k-threshold-line"></span>
-                        <span class="wh40k-threshold-label">80</span>
-                    </div>
-                </div>
-            </div>
-
-            {{!-- Warning Messages at Thresholds --}}
-            {{#if (eq system.insanity 100)}}
-            <div class="wh40k-insanity-alert wh40k-alert-insane tw-text-crimson tw-flex tw-items-center tw-gap-2">
-                <i class="fas fa-dizzy"></i>
-                <span>TERMINALLY INSANE - Mind Lost to Madness!</span>
-            </div>
-            {{else if (gte system.insanity 80)}}
-            <div class="wh40k-insanity-alert wh40k-alert-deranged tw-text-crimson-light tw-flex tw-items-center tw-gap-2">
-                <i class="fas fa-exclamation-triangle"></i>
-                <span>DERANGED - On the Edge of Madness (-20)</span>
-            </div>
-            {{else if (gte system.insanity 60)}}
-            <div class="wh40k-insanity-alert wh40k-alert-unhinged tw-text-warning tw-flex tw-items-center tw-gap-2">
-                <i class="fas fa-user-injured"></i>
-                <span>UNHINGED - Severe Mental Instability (-10)</span>
-            </div>
-            {{/if}}
-
+        {{!-- Warning Messages at Thresholds --}}
+        {{#if (eq system.insanity 100)}}
+        <div class="wh40k-insanity-alert wh40k-alert-insane tw-text-crimson tw-flex tw-items-center tw-gap-2">
+            <i class="fas fa-dizzy"></i>
+            <span>TERMINALLY INSANE - Mind Lost to Madness!</span>
         </div>
-
-        {{!-- Mental Disorders Section (always visible if any exist) --}}
-        {{#if (any actor.items "isMentalDisorder")}}
-        <div class="wh40k-disorder-preview tw-mt-2 tw-text-sm tw-text-gray-400">
-            <div class="wh40k-disorder-count tw-flex tw-items-center tw-gap-2">
-                <i class="fas fa-head-side-virus"></i>
-                <span>{{countType actor.items "isMentalDisorder"}} Mental Disorders</span>
-            </div>
+        {{else if (gte system.insanity 80)}}
+        <div class="wh40k-insanity-alert wh40k-alert-deranged tw-text-crimson-light tw-flex tw-items-center tw-gap-2">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>DERANGED - On the Edge of Madness (-20)</span>
+        </div>
+        {{else if (gte system.insanity 60)}}
+        <div class="wh40k-insanity-alert wh40k-alert-unhinged tw-text-warning tw-flex tw-items-center tw-gap-2">
+            <i class="fas fa-user-injured"></i>
+            <span>UNHINGED - Severe Mental Instability (-10)</span>
         </div>
         {{/if}}
 
-        {{!-- Edit Mode (Expandable) --}}
-        <div class="wh40k-panel-details insanity_details tw-mt-2" {{hideIfNot (isExpanded 'insanity_details' actor)}}>
+    </div>
 
-            {{!-- Direct Edit Section --}}
-            <div class="wh40k-insanity-edit-section">
-                <div class="wh40k-insanity-edit-header">
-                    <i class="fas fa-cog"></i> Edit Insanity
-                </div>
-
-                <div class="wh40k-insanity-edit-field tw-mt-1">
-                    <label class="wh40k-edit-label tw-text-xs tw-text-gray-400">Insanity Points (0-100)</label>
-                    <input type="number"
-                           data-dtype="Number"
-                           class="wh40k-edit-input tw-w-full tw-p-1 tw-rounded"
-                           name="system.insanity"
-                           value="{{source.insanity}}"
-                           min="0"
-                           max="100"
-                           placeholder="0" />
-                </div>
-
-                {{!-- Quick Adjust Buttons --}}
-                <div class="wh40k-insanity-quick-adjust tw-flex tw-gap-1 tw-mt-2">
-                    <button type="button" 
-                            class="wh40k-quick-adjust-btn tw-px-2 tw-py-1 tw-bg-gray-700 tw-rounded" 
-                            data-action="adjustStat" 
-                            data-field="system.insanity" 
-                            data-delta="-5"
-                            data-min="0"
-                            title="Decrease by 5">
-                        -5
-                    </button>
-                    <button type="button" 
-                            class="wh40k-quick-adjust-btn tw-px-2 tw-py-1 tw-bg-gray-700 tw-rounded" 
-                            data-action="adjustStat" 
-                            data-field="system.insanity" 
-                            data-delta="-1"
-                            data-min="0"
-                            title="Decrease by 1">
-                        -1
-                    </button>
-                    <button type="button" 
-                            class="wh40k-quick-adjust-btn tw-px-2 tw-py-1 tw-bg-gray-700 tw-rounded" 
-                            data-action="adjustStat" 
-                            data-field="system.insanity" 
-                            data-delta="1"
-                            data-max="100"
-                            title="Increase by 1">
-                        +1
-                    </button>
-                    <button type="button" 
-                            class="wh40k-quick-adjust-btn tw-px-2 tw-py-1 tw-bg-gray-700 tw-rounded" 
-                            data-action="adjustStat" 
-                            data-field="system.insanity" 
-                            data-delta="5"
-                            data-max="100"
-                            title="Increase by 5">
-                        +5
-                    </button>
-                </div>
-            </div>
-
-            {{!-- Mental Disorders List --}}
-            <div class="wh40k-insanity-edit-section tw-mt-4">
-                <div class="wh40k-insanity-edit-header">
-                    <i class="fas fa-head-side-virus"></i> Mental Disorders
-                </div>
-
-                {{#if (any actor.items "isMentalDisorder")}}
-                <div class="wh40k-disorder-list tw-space-y-1 tw-mt-1">
-                    {{#each actor.items as |item|}}
-                        {{#if item.isMentalDisorder}}
-                        <div class="wh40k-disorder-card tw-flex tw-justify-between tw-bg-[rgba(0,0,0,0.2)] tw-p-1 tw-rounded">
-                            <button type="button"
-                                    class="wh40k-disorder-name item-edit"
-                                    data-item-id="{{item.id}}"
-                                    title="Edit {{item.name}}">
-                                <i class="fas fa-brain"></i>
-                                {{item.name}}
-                            </button>
-                            <button type="button"
-                                    class="wh40k-disorder-delete item-delete"
-                                    data-item-id="{{item.id}}"
-                                    title="Remove {{item.name}}">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        {{/if}}
-                    {{/each}}
-                </div>
-                {{/if}}
-                
-                {{!-- Drop Zone (always visible) --}}
-                <div class="wh40k-dropzone {{#unless (any actor.items "isMentalDisorder")}}wh40k-dropzone-empty{{/unless}} tw-mt-2 tw-border tw-border-dashed tw-border-gray-600 tw-p-2 tw-text-center tw-rounded" 
-                     data-action="itemCreate"
-                     data-type="mentalDisorder">
-                    <i class="fas fa-smile-beam wh40k-dropzone-icon"></i>
-                    <span class="wh40k-dropzone-text tw-text-xs">
-                        {{#if (any actor.items "isMentalDisorder")}}
-                            Drop Mental Disorders Here or Click to Create
-                        {{else}}
-                            No mental disorders (yet)
-                        {{/if}}
-                    </span>
-                </div>
-            </div>
-
-            {{!-- Info Section --}}
-            <div class="wh40k-insanity-edit-section tw-mt-4">
-                <div class="wh40k-insanity-info-box tw-bg-[rgba(0,0,0,0.2)] tw-p-3 tw-rounded">
-                    <i class="fas fa-book-medical tw-text-gold"></i>
-                    <div class="wh40k-info-content tw-text-xs tw-space-y-1 tw-mt-1">
-                        <strong>Insanity Degrees</strong>
-                        <ul class="wh40k-degree-list tw-list-none tw-pl-0">
-                            <li><span class="wh40k-degree-name">STABLE (0-9):</span> Sound of mind - No penalty</li>
-                            <li><span class="wh40k-degree-name">UNSETTLED (10-39):</span> Minor unease - <strong>+10</strong> to Fear tests</li>
-                            <li><span class="wh40k-degree-name">DISTURBED (40-59):</span> Troubled mind - No modifier</li>
-                            <li><span class="wh40k-degree-name">UNHINGED (60-79):</span> Severe instability - <strong>-10</strong> to checks</li>
-                            <li><span class="wh40k-degree-name">DERANGED (80-99):</span> On the brink - <strong>-20</strong> to checks</li>
-                            <li><span class="wh40k-degree-name wh40k-degree-insane">TERMINALLY INSANE (100):</span> Mind lost - <strong>NPC only</strong></li>
-                        </ul>
-                        <p class="wh40k-insanity-warning tw-text-gray-400 tw-italic"><i class="fas fa-brain"></i> Mental disorders represent psychological trauma from witnessing horrors beyond mortal comprehension.</p>
-                    </div>
-                </div>
-            </div>
-
+    {{!-- Mental Disorders Section (always visible if any exist) --}}
+    {{#if (any actor.items "isMentalDisorder")}}
+    <div class="wh40k-disorder-preview tw-mt-2 tw-text-sm tw-text-gray-400">
+        <div class="wh40k-disorder-count tw-flex tw-items-center tw-gap-2">
+            <i class="fas fa-head-side-virus"></i>
+            <span>{{countType actor.items "isMentalDisorder"}} Mental Disorders</span>
         </div>
     </div>
-</div>
+    {{/if}}
+
+    {{!-- Edit Mode (Expandable) --}}
+    <div class="wh40k-panel-details insanity_details tw-mt-2" {{hideIfNot (isExpanded 'insanity_details' actor)}}>
+
+        {{!-- Direct Edit Section --}}
+        <div class="wh40k-insanity-edit-section">
+            <div class="wh40k-insanity-edit-header">
+                <i class="fas fa-cog"></i> Edit Insanity
+            </div>
+
+            <div class="wh40k-insanity-edit-field tw-mt-1">
+                {{> systems/wh40k-rpg/templates/actor/partial/vital-edit-input
+                    name="system.insanity"
+                    label="Insanity Points (0-100)"
+                    value=source.insanity
+                    labelClass="tw-text-xs tw-text-gray-400"
+                    inputClass="tw-w-full tw-p-1 tw-rounded"
+                    min="0"
+                    max="100"
+                    placeholder="0"}}
+            </div>
+
+            {{!-- Quick Adjust Buttons --}}
+            {{> systems/wh40k-rpg/templates/actor/partial/vital-quick-adjust
+                field="system.insanity"
+                wrapperClass="wh40k-insanity-quick-adjust tw-flex tw-gap-1 tw-mt-2"
+                maxValue="100"}}
+        </div>
+
+        {{!-- Mental Disorders List --}}
+        <div class="wh40k-insanity-edit-section tw-mt-4">
+            <div class="wh40k-insanity-edit-header">
+                <i class="fas fa-head-side-virus"></i> Mental Disorders
+            </div>
+
+            {{#if (any actor.items "isMentalDisorder")}}
+            <div class="wh40k-disorder-list tw-space-y-1 tw-mt-1">
+                {{#each actor.items as |item|}}
+                    {{#if item.isMentalDisorder}}
+                    <div class="wh40k-disorder-card tw-flex tw-justify-between tw-bg-[rgba(0,0,0,0.2)] tw-p-1 tw-rounded">
+                        <button type="button"
+                                class="wh40k-disorder-name item-edit"
+                                data-item-id="{{item.id}}"
+                                title="Edit {{item.name}}">
+                            <i class="fas fa-brain"></i>
+                            {{item.name}}
+                        </button>
+                        <button type="button"
+                                class="wh40k-disorder-delete item-delete"
+                                data-item-id="{{item.id}}"
+                                title="Remove {{item.name}}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    {{/if}}
+                {{/each}}
+            </div>
+            {{/if}}
+
+            {{!-- Drop Zone (always visible) --}}
+            <div class="wh40k-dropzone {{#unless (any actor.items "isMentalDisorder")}}wh40k-dropzone-empty{{/unless}} tw-mt-2 tw-border tw-border-dashed tw-border-gray-600 tw-p-2 tw-text-center tw-rounded"
+                 data-action="itemCreate"
+                 data-type="mentalDisorder">
+                <i class="fas fa-smile-beam wh40k-dropzone-icon"></i>
+                <span class="wh40k-dropzone-text tw-text-xs">
+                    {{#if (any actor.items "isMentalDisorder")}}
+                        Drop Mental Disorders Here or Click to Create
+                    {{else}}
+                        No mental disorders (yet)
+                    {{/if}}
+                </span>
+            </div>
+        </div>
+
+        {{!-- Info Section --}}
+        <div class="wh40k-insanity-edit-section tw-mt-4">
+            <div class="wh40k-insanity-info-box tw-bg-[rgba(0,0,0,0.2)] tw-p-3 tw-rounded">
+                <i class="fas fa-book-medical tw-text-gold"></i>
+                <div class="wh40k-info-content tw-text-xs tw-space-y-1 tw-mt-1">
+                    <strong>Insanity Degrees</strong>
+                    <ul class="wh40k-degree-list tw-list-none tw-pl-0">
+                        <li><span class="wh40k-degree-name">STABLE (0-9):</span> Sound of mind - No penalty</li>
+                        <li><span class="wh40k-degree-name">UNSETTLED (10-39):</span> Minor unease - <strong>+10</strong> to Fear tests</li>
+                        <li><span class="wh40k-degree-name">DISTURBED (40-59):</span> Troubled mind - No modifier</li>
+                        <li><span class="wh40k-degree-name">UNHINGED (60-79):</span> Severe instability - <strong>-10</strong> to checks</li>
+                        <li><span class="wh40k-degree-name">DERANGED (80-99):</span> On the brink - <strong>-20</strong> to checks</li>
+                        <li><span class="wh40k-degree-name wh40k-degree-insane">TERMINALLY INSANE (100):</span> Mind lost - <strong>NPC only</strong></li>
+                    </ul>
+                    <p class="wh40k-insanity-warning tw-text-gray-400 tw-italic"><i class="fas fa-brain"></i> Mental disorders represent psychological trauma from witnessing horrors beyond mortal comprehension.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{{/systems/wh40k-rpg/templates/actor/partial/vital-panel-shell}}

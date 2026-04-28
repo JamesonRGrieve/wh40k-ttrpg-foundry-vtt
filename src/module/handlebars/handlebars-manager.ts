@@ -30,6 +30,11 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/sidebar-field-row.hbs',
             'systems/wh40k-rpg/templates/actor/partial/sidebar-fields-panel.hbs',
             'systems/wh40k-rpg/templates/actor/partial/trait-toggle.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/vital-panel-shell.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/vital-quick-controls.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/vital-progress-bar.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/vital-edit-input.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/vital-quick-adjust.hbs',
 
             // Acolyte sheet templates
             'systems/wh40k-rpg/templates/actor/player/header-dh.hbs',
