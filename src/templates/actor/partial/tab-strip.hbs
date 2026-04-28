@@ -1,0 +1,48 @@
+{{!--
+    Shared tab-nav strip — replaces the duplicated <nav>{{#each tabs}}<a/>{{/each}}</nav>
+    pattern across player / vehicle / future actor sheets.
+
+    Required hash params:
+        tabs       — array of tab descriptors. Each entry should have:
+                       { tab? | id, label, group, cssClass?, active?, icon? }
+                     Both `tab` and `id` are accepted as the data-tab key (player passes
+                     `tab`, vehicle passes `id` — the partial reads whichever exists).
+
+    Optional hash params:
+        navClass   — additional classes on the <nav> wrapper.
+        itemClass  — additional classes on each <a class="item ...">.
+        dataGroup  — overrides the data-group attr (default "primary").
+        withLabelWrap — when true, wraps each <a> in a <label class="wh40k-navigation__item ...">.
+                        Used by the older vehicle/starship chrome.
+
+    Usage:
+        {{> systems/wh40k-rpg/templates/actor/partial/tab-strip.hbs
+            tabs=tabs
+            navClass="!tw-flex !tw-flex-col !tw-gap-1 !tw-m-0 !tw-p-2 ..."
+            itemClass="wh40k-nav-item tw-flex tw-w-full tw-items-center ..."}}
+--}}
+<nav class="wh40k-navigation tabs {{navClass}}" data-group="{{#if dataGroup}}{{dataGroup}}{{else}}primary{{/if}}">
+    {{#each tabs}}
+    {{#if ../withLabelWrap}}
+    <label class="wh40k-navigation__item wh40k-nav-item">
+        <a class="item {{../itemClass}} {{cssClass}} {{#if active}}active{{/if}}"
+           data-action="tab"
+           data-group="{{#if group}}{{group}}{{else}}primary{{/if}}"
+           data-tab="{{#if tab}}{{tab}}{{else}}{{id}}{{/if}}"
+           data-tooltip="{{label}}">
+            {{#if icon}}<span class="material-icons">{{icon}}</span>{{/if}}
+            {{label}}
+        </a>
+    </label>
+    {{else}}
+    <a class="item {{../itemClass}} {{cssClass}} {{#if active}}active{{/if}}"
+       data-action="tab"
+       data-group="{{#if group}}{{group}}{{else}}primary{{/if}}"
+       data-tab="{{#if tab}}{{tab}}{{else}}{{id}}{{/if}}"
+       data-tooltip="{{label}}">
+        {{#if icon}}<span class="material-icons">{{icon}}</span>{{/if}}
+        {{label}}
+    </a>
+    {{/if}}
+    {{/each}}
+</nav>
