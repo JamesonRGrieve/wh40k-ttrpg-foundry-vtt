@@ -11,7 +11,24 @@ export class WH40KSettings {
         combatPresets: 'combat-presets',
         movementAutomation: 'movement-automation',
         dh2Ruleset: 'dh2-ruleset',
+        characteristicOffset: 'characteristic-offset',
     };
+
+    /** Integer offset added to the 20-point characteristic baseline during character generation. Defaults to 0. */
+    static getCharacteristicOffset(): number {
+        try {
+            const value = game.settings?.get?.(SYSTEM_ID, WH40KSettings.SETTINGS.characteristicOffset);
+            const n = Number(value);
+            return Number.isFinite(n) ? Math.trunc(n) : 0;
+        } catch {
+            return 0;
+        }
+    }
+
+    /** Effective base characteristic value used by character generation: 20 + offset. */
+    static getCharacteristicBase(): number {
+        return 20 + WH40KSettings.getCharacteristicOffset();
+    }
 
     /** Current DH2e ruleset (raw vs homebrew). Safe to call before setting is registered (returns homebrew). */
     static getRuleset(): DH2Ruleset {
@@ -84,6 +101,14 @@ export class WH40KSettings {
                 homebrew: 'Homebrew (Influence + Requisition + Throne Gelt)',
                 raw: 'RAW (Influence + Requisition)',
             },
+        });
+        game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.characteristicOffset, {
+            name: 'WH40K.SETTINGS.CharacteristicOffset.Name',
+            hint: 'WH40K.SETTINGS.CharacteristicOffset.Hint',
+            scope: 'world',
+            config: true,
+            default: 0,
+            type: Number,
         });
         game.settings.register(SYSTEM_ID, WH40KSettings.SETTINGS.movementAutomation, {
             name: 'WH40K.SETTINGS.MovementAutomation.Name',
