@@ -1,0 +1,60 @@
+{{!--
+    Shared stat-box — label + (current [/ max]) input pair.
+    Used by vehicle/header.hbs (Structure / Armour / Size), starship/header.hbs (Hull
+    Integrity / Morale / Population / Crew Rating), combat-station-panel, and the
+    tab-overview resources panel.
+
+    Required hash params:
+        label        — display label (e.g. "Hull Integrity")
+        valueName    — schema path for current value (e.g. "system.hullIntegrity.value")
+        value        — resolved current value (for the `value=` attr)
+
+    Optional hash params:
+        maxName      — schema path for max value. When provided, render value/max layout.
+        max          — resolved max (for the `value=` attr on the max input)
+        boxClass     — extra classes on outer box (e.g. "wh40k-hull-box")
+        labelClass   — extra classes on the label span (default empty)
+        valuesClass  — extra classes on the values container div (default empty)
+        inputClass   — extra classes on each <input> (e.g. "wh40k-vehicle-stat-input")
+        sepClass     — extra classes on the "/" separator span (default empty)
+        singleClass  — extra class on the single-value input. Pass "wh40k-stat-single"
+                       for the starship variant; vehicle leaves this empty.
+        boxBaseClass — overrides the base "wh40k-stat-box" class (vehicle uses
+                       "wh40k-vehicle-stat-box" instead)
+        labelBaseClass — overrides "wh40k-stat-label" (vehicle uses "wh40k-vehicle-stat-label")
+        inputBaseClass — overrides "wh40k-stat-input"
+        valuesBaseClass — overrides "wh40k-stat-values"
+        sepBaseClass    — overrides "wh40k-stat-separator"
+        min          — optional min attr applied to the value input (also applied to the
+                       max input when `minMax` is not specified)
+        minMax       — optional min attr applied to the max input (overrides `min` for that
+                       input — used by vehicle Structure where max-min is 1 and value-min is 0)
+        maxAttr      — optional max attr applied to the value input (single-value variant)
+--}}
+<div class="{{#if boxBaseClass}}{{boxBaseClass}}{{else}}wh40k-stat-box{{/if}} {{boxClass}}">
+    <span class="{{#if labelBaseClass}}{{labelBaseClass}}{{else}}wh40k-stat-label{{/if}} {{labelClass}}">{{label}}</span>
+    {{#if maxName}}
+    <div class="{{#if valuesBaseClass}}{{valuesBaseClass}}{{else}}wh40k-stat-values{{/if}} {{valuesClass}}">
+        <input type="number"
+               class="{{#if inputBaseClass}}{{inputBaseClass}}{{else}}wh40k-stat-input{{/if}} {{inputClass}}"
+               name="{{valueName}}"
+               value="{{value}}"
+               {{#if min}}min="{{min}}"{{/if}}
+               title="Current" />
+        <span class="{{#if sepBaseClass}}{{sepBaseClass}}{{else}}wh40k-stat-separator{{/if}} {{sepClass}}">/</span>
+        <input type="number"
+               class="{{#if inputBaseClass}}{{inputBaseClass}}{{else}}wh40k-stat-input{{/if}} {{inputClass}}"
+               name="{{maxName}}"
+               value="{{max}}"
+               {{#if minMax}}min="{{minMax}}"{{else}}{{#if min}}min="{{min}}"{{/if}}{{/if}}
+               title="Max" />
+    </div>
+    {{else}}
+    <input type="number"
+           class="{{#if inputBaseClass}}{{inputBaseClass}}{{else}}wh40k-stat-input{{/if}} {{singleClass}} {{inputClass}}"
+           name="{{valueName}}"
+           value="{{value}}"
+           {{#if min}}min="{{min}}"{{/if}}
+           {{#if maxAttr}}max="{{maxAttr}}"{{/if}} />
+    {{/if}}
+</div>

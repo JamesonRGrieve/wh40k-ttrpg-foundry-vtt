@@ -33,46 +33,41 @@
 
         {{!-- Quick Stats --}}
         <div class="wh40k-vehicle-quick-stats">
-            {{!-- Structure --}}
-            <div class="wh40k-vehicle-stat-box wh40k-vehicle-structure">
-                <span class="wh40k-vehicle-stat-label">Structure</span>
-                <div class="wh40k-vehicle-stat-values">
-                    <input type="number"
-                           class="wh40k-vehicle-stat-input"
-                           name="system.wounds.value"
-                           value="{{source.wounds.value}}"
-                           min="0"
-                           title="Current" />
-                    <span class="wh40k-vehicle-stat-separator">/</span>
-                    <input type="number"
-                           class="wh40k-vehicle-stat-input"
-                           name="system.wounds.max"
-                           value="{{source.wounds.max}}"
-                           min="1"
-                           title="Max" />
-                </div>
-            </div>
+            {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
+                label="Structure"
+                boxBaseClass="wh40k-vehicle-stat-box"
+                labelBaseClass="wh40k-vehicle-stat-label"
+                valuesBaseClass="wh40k-vehicle-stat-values"
+                inputBaseClass="wh40k-vehicle-stat-input"
+                sepBaseClass="wh40k-vehicle-stat-separator"
+                boxClass="wh40k-vehicle-structure"
+                valueName="system.wounds.value"
+                value=source.wounds.value
+                maxName="system.wounds.max"
+                max=source.wounds.max
+                min="0"
+                minMax="1"}}
 
-            {{!-- Hull/Armour --}}
-            <div class="wh40k-vehicle-stat-box wh40k-vehicle-armour">
-                <span class="wh40k-vehicle-stat-label">Armour</span>
-                <input type="number"
-                       class="wh40k-vehicle-stat-input"
-                       name="system.armour.total"
-                       value="{{source.armour.total}}"
-                       min="0" />
-            </div>
+            {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
+                label="Armour"
+                boxBaseClass="wh40k-vehicle-stat-box"
+                labelBaseClass="wh40k-vehicle-stat-label"
+                inputBaseClass="wh40k-vehicle-stat-input"
+                boxClass="wh40k-vehicle-armour"
+                valueName="system.armour.total"
+                value=source.armour.total
+                min="0"}}
 
-            {{!-- Size --}}
-            <div class="wh40k-vehicle-stat-box wh40k-vehicle-size">
-                <span class="wh40k-vehicle-stat-label">Size</span>
-                <input type="number"
-                       class="wh40k-vehicle-stat-input"
-                       name="system.size"
-                       value="{{source.size}}"
-                       min="1"
-                       max="10" />
-            </div>
+            {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
+                label="Size"
+                boxBaseClass="wh40k-vehicle-stat-box"
+                labelBaseClass="wh40k-vehicle-stat-label"
+                inputBaseClass="wh40k-vehicle-stat-input"
+                boxClass="wh40k-vehicle-size"
+                valueName="system.size"
+                value=source.size
+                min="1"
+                maxAttr="10"}}
         </div>
     </div>
 </div>
