@@ -29,6 +29,21 @@ pnpm -s lint:ratchet
 echo "[pre-commit] running css coverage ratchet…"
 pnpm -s css:ratchet
 
+# Animation ratchet: blocks commits that increase the count of `animation:` /
+# `animation-name:` declarations in src/css/wh40k-rpg.css. Each declaration is
+# a rule that should migrate to `tw-animate-<name>` on the consuming template.
+# Once the count reaches 0, the @keyframes safelist in tailwind.config.js can
+# be dropped. Update via: pnpm animation:ratchet:update
+echo "[pre-commit] running animation ratchet…"
+pnpm -s animation:ratchet
+
+# Theme ratchet: blocks commits that DECREASE the count of templates using
+# per-system `<system>:tw-*` variants (`bc:`, `dh1e:`, `dh2e:`, `dw:`, `ow:`,
+# `rt:`, `im:`). Direction is opposite to other ratchets — adoption climbs
+# over time. Update via: pnpm theme:ratchet:update
+echo "[pre-commit] running theme ratchet…"
+pnpm -s theme:ratchet
+
 # Per-rule TS-strictness ratchet: blocks commits that introduce new bare
 # `: any`, ` as any`, or `@ts-expect-error` in any per-directory bucket.
 # Update via: pnpm ts:ratchet:update
