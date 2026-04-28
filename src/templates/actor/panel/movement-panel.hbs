@@ -1,6 +1,6 @@
-<div class="wh40k-panel wh40k-movement-panel wh40k-grid-col-2">
+<div class="wh40k-panel wh40k-movement-panel tw-col-auto">
     <h1 class="wh40k-panel-header"><i class="fas fa-running"></i> Movement</h1>
-    <div class="wh40k-movement-grid">
+    <div class="wh40k-movement-grid tw-flex tw-flex-col tw-gap-3 tw-p-2">
         {{! Size Selector }}
         <div class="wh40k-field__wrapper wh40k-movement-size">
             <span class="wh40k-field__header">Size</span>
@@ -12,20 +12,20 @@
         {{! Movement Rates (AB-based) }}
         <div class="wh40k-movement-section">
             <div class="wh40k-movement-header">Standard Movement</div>
-            <div class="wh40k-movement-rates">
-                <div class="wh40k-movement-item" data-action="setMovementMode" data-movement-type="half" title="Click to set Half Move as active movement mode">
+            <div class="wh40k-movement-rates tw-grid tw-grid-cols-4 tw-gap-1">
+                <div class="wh40k-movement-item tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer" data-action="setMovementMode" data-movement-type="half" title="Click to set Half Move as active movement mode">
                     <span class="wh40k-movement-label">Half</span>
                     <span class="wh40k-movement-value">{{actor.movement.half}}m</span>
                 </div>
-                <div class="wh40k-movement-item" data-action="setMovementMode" data-movement-type="full" title="Click to set Full Move as active movement mode">
+                <div class="wh40k-movement-item tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer" data-action="setMovementMode" data-movement-type="full" title="Click to set Full Move as active movement mode">
                     <span class="wh40k-movement-label">Full</span>
                     <span class="wh40k-movement-value">{{actor.movement.full}}m</span>
                 </div>
-                <div class="wh40k-movement-item" data-action="setMovementMode" data-movement-type="charge" title="Click to set Charge as active movement mode">
+                <div class="wh40k-movement-item tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer" data-action="setMovementMode" data-movement-type="charge" title="Click to set Charge as active movement mode">
                     <span class="wh40k-movement-label">Charge</span>
                     <span class="wh40k-movement-value">{{actor.movement.charge}}m</span>
                 </div>
-                <div class="wh40k-movement-item" data-action="setMovementMode" data-movement-type="run" title="Click to set Run as active movement mode">
+                <div class="wh40k-movement-item tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer" data-action="setMovementMode" data-movement-type="run" title="Click to set Run as active movement mode">
                     <span class="wh40k-movement-label">Run</span>
                     <span class="wh40k-movement-value">{{actor.movement.run}}m</span>
                 </div>
@@ -35,16 +35,16 @@
         {{! Leap & Jump (SB-based) }}
         <div class="wh40k-movement-section">
             <div class="wh40k-movement-header">Leap &amp; Jump (SB)</div>
-            <div class="wh40k-movement-rates">
-                <div class="wh40k-movement-item" title="Standing vertical leap height">
+            <div class="wh40k-movement-rates tw-grid tw-grid-cols-4 tw-gap-1">
+                <div class="wh40k-movement-item tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer" title="Standing vertical leap height">
                     <span class="wh40k-movement-label">Leap (V)</span>
                     <span class="wh40k-movement-value">{{actor.movement.leapVertical}}m</span>
                 </div>
-                <div class="wh40k-movement-item" title="Running horizontal leap distance">
+                <div class="wh40k-movement-item tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer" title="Running horizontal leap distance">
                     <span class="wh40k-movement-label">Leap (H)</span>
                     <span class="wh40k-movement-value">{{actor.movement.leapHorizontal}}m</span>
                 </div>
-                <div class="wh40k-movement-item" title="Vertical jump height in centimeters">
+                <div class="wh40k-movement-item tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer" title="Vertical jump height in centimeters">
                     <span class="wh40k-movement-label">Jump</span>
                     <span class="wh40k-movement-value">{{actor.movement.jump}}cm</span>
                 </div>
@@ -54,16 +54,16 @@
         {{! Lifting Capacity (SB-based) }}
         <div class="wh40k-movement-section">
             <div class="wh40k-movement-header">Lifting Capacity (SB)</div>
-            <div class="wh40k-movement-rates">
-                <div class="wh40k-movement-item" title="Sustained carrying capacity">
+            <div class="wh40k-movement-rates tw-grid tw-grid-cols-4 tw-gap-1">
+                <div class="wh40k-movement-item tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer" title="Sustained carrying capacity">
                     <span class="wh40k-movement-label">Carry</span>
                     <span class="wh40k-movement-value">{{actor.lifting.carry}}kg</span>
                 </div>
-                <div class="wh40k-movement-item" title="Brief lifting over head">
+                <div class="wh40k-movement-item tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer" title="Brief lifting over head">
                     <span class="wh40k-movement-label">Lift</span>
                     <span class="wh40k-movement-value">{{actor.lifting.lift}}kg</span>
                 </div>
-                <div class="wh40k-movement-item" title="Pushing/dragging capacity">
+                <div class="wh40k-movement-item tw-flex tw-flex-col tw-items-center tw-p-1 tw-cursor-pointer" title="Pushing/dragging capacity">
                     <span class="wh40k-movement-label">Push</span>
                     <span class="wh40k-movement-value">{{actor.lifting.push}}kg</span>
                 </div>
