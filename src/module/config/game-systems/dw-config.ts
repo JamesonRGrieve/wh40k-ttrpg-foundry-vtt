@@ -5,7 +5,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
-import type { OriginStepConfig } from './types.ts';
+import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 export class DWSystemConfig extends CareerBasedSystemConfig {
     readonly id = 'dw' as const;
@@ -30,5 +30,16 @@ export class DWSystemConfig extends CareerBasedSystemConfig {
 
     resolveCareerKey(actor: WH40KBaseActor): string | null {
         return actor.system?.originPath?.speciality ?? null;
+    }
+
+    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
+        const originPath = (actor.system?.originPath ?? {}) as Record<string, string | number>;
+        return [
+            this.makePlayerField(actor),
+            this.makeField('Chapter', 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Chapter'),
+            this.makeField('Speciality', 'system.originPath.role', originPath.role ?? '', 'Speciality'),
+            this.makeField('Rank', 'system.originPath.career', originPath.career ?? ''),
+            this.makeField('Demeanour', 'system.originPath.motivation', originPath.motivation ?? '', 'Demeanour'),
+        ];
     }
 }

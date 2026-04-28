@@ -74,4 +74,5 @@ export type {
     AdvanceOption,
     Prerequisite,
     ChaosAlignment,
+    SidebarHeaderField,
 } from './types.ts';

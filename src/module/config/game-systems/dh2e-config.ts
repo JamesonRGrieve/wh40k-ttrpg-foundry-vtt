@@ -3,8 +3,9 @@
  * Aptitude-based advancement with 4 skill ranks.
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import type { OriginStepConfig } from './types.ts';
+import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'dh2e' as const;
@@ -62,6 +63,17 @@ export class DH2eSystemConfig extends AptitudeBasedSystemConfig {
                 'dh2-without-items-gear',
             ],
         };
+    }
+
+    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
+        const originPath = (actor.system?.originPath ?? {}) as Record<string, string | number>;
+        return [
+            this.makePlayerField(actor),
+            this.makeField(game.i18n.localize('WH40K.OriginPath.HomeWorld'), 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Home World'),
+            this.makeField(game.i18n.localize('WH40K.OriginPath.Background'), 'system.originPath.background', originPath.background ?? '', 'Background'),
+            this.makeField(game.i18n.localize('WH40K.OriginPath.Role'), 'system.originPath.role', originPath.role ?? '', 'Role'),
+            this.makeField('Divination', 'system.originPath.divination', originPath.divination ?? '', 'Divination'),
+        ];
     }
 
     /** DH2e characteristic aptitude pairs (Core Rulebook Table 2-3) */

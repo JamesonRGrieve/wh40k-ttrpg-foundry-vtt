@@ -4,8 +4,9 @@
  * Uses the same cost tables and aptitude system as DH2e.
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import type { OriginStepConfig } from './types.ts';
+import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 export class OWSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'ow' as const;
@@ -36,6 +37,17 @@ export class OWSystemConfig extends AptitudeBasedSystemConfig {
                 'ow-shield-special-equipment-doctrines',
             ],
         };
+    }
+
+    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
+        const originPath = (actor.system?.originPath ?? {}) as Record<string, string | number>;
+        return [
+            this.makePlayerField(actor),
+            this.makeField('Home World', 'system.originPath.homeWorld', originPath.homeWorld ?? ''),
+            this.makeField('Regiment', 'system.originPath.background', originPath.background ?? ''),
+            this.makeField('Speciality', 'system.originPath.role', originPath.role ?? '', 'Speciality'),
+            this.makeField('Demeanour', 'system.originPath.motivation', originPath.motivation ?? '', 'Demeanour'),
+        ];
     }
 
     /** OW characteristic aptitude pairs — same as DH2e */
