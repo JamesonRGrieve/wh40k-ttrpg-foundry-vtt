@@ -2,44 +2,20 @@
  * @file AttackSpecialSheet - ApplicationV2 sheet for attack special items
  */
 
-import BaseItemSheet from './base-item-sheet.ts';
+import defineSimpleItemSheet from './define-simple-item-sheet.ts';
 
-/**
- * Sheet for attack special/quality items.
- */
-// @ts-expect-error - TS2417 static side inheritance
-export default class AttackSpecialSheet extends BaseItemSheet {
-    /** @override */
-    static DEFAULT_OPTIONS = {
-        classes: ['wh40k-rpg', 'sheet', 'item', 'attack-special'],
-        position: {
-            width: 500,
-            height: 400,
-        },
-    };
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static PARTS = {
-        sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-attack-special-sheet.hbs',
-            scrollable: ['.wh40k-tab-content'],
-        },
-    };
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    static TABS = [
+/** Sheet for attack special/quality items. */
+const AttackSpecialSheet = defineSimpleItemSheet({
+    className: 'AttackSpecialSheet',
+    classes: ['wh40k-rpg', 'sheet', 'item', 'attack-special'],
+    template: 'systems/wh40k-rpg/templates/item/item-attack-special-sheet.hbs',
+    width: 500,
+    height: 400,
+    tabs: [
         { tab: 'details', group: 'primary', label: 'Details' },
         { tab: 'description', group: 'primary', label: 'Description' },
-    ];
+    ],
+    defaultTab: 'details',
+});
 
-    /* -------------------------------------------- */
-
-    /** @override */
-    tabGroups = {
-        primary: 'details',
-    };
-}
+export default AttackSpecialSheet;
