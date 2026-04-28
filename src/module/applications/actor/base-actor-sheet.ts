@@ -4,6 +4,7 @@
  */
 
 import { toCamelCase } from '../../handlebars/handlebars-helpers.ts';
+import WH40K from '../../config.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KBaseActorDocument, WH40KCharacteristic, WH40KSkill, WH40KWounds, WH40KInitiative, WH40KMovement } from '../../types/global.d.ts';
@@ -35,7 +36,7 @@ type BaseActorSheetSystem = WH40KBaseActorDocument['system'] & {
     wounds?: WH40KWounds;
     initiative?: WH40KInitiative;
     movement?: WH40KMovement;
-    experience?: { total?: number; used?: number };
+    experience?: { total?: number; used?: number; available?: number; spent?: number };
     schema?: { fields?: Record<string, unknown> };
     _source?: Record<string, unknown>;
 };
@@ -96,6 +97,10 @@ type PreviousSheetState = {
     experience?: number;
     characteristics?: Record<string, { total?: number }>;
 };
+function getFlag<T>(actor: { getFlag(scope: string, key: string): unknown }, key: string): T | undefined {
+    return actor.getFlag('wh40k-rpg', key) as T | undefined;
+}
+
 const ApplicationV2Base = ApplicationV2Mixin(ActorSheetV2) as unknown as AnyApplicationV2Ctor;
 const PrimarySheetBase = PrimarySheetMixin(ApplicationV2Base) as unknown as AnyApplicationV2Ctor;
 const TooltipBase = TooltipMixin(PrimarySheetBase) as unknown as AnyApplicationV2Ctor;
@@ -305,6 +310,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // persisted data, while `system` may contain derived/prepared values used only for display.
         context.source = this.isEditable ? this.actor.system._source : this.actor.system;
 
+        // Universal context flags every actor sheet wants (isGM, dh config). PC/NPC/ruleset
+        // state lives on CharacterSheet because it's character-specific.
+        this._prepareCommonContext(context);
+
         // Prepare characteristics with HUD data
         this._prepareCharacteristicsHUD(context);
 
@@ -318,6 +327,19 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         await this._prepareItems(context);
 
         return context;
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Augment context with the universal flags every actor sheet relies on.
+     * Subclasses must NOT redeclare these — let inheritance do the work. If a
+     * subclass needs to overlay ruleset / edit-mode / NPC flags, it should do
+     * so in its own `_prepareContext` after the super call returns.
+     */
+    protected _prepareCommonContext(context: Record<string, unknown>): void {
+        context.isGM = game.user?.isGM ?? false;
+        context.dh = CONFIG.wh40k || WH40K;
     }
 
     /* -------------------------------------------- */
@@ -420,7 +442,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         };
 
         // Use setFlag - this is async but we don't await it on close
-        (this.actor as any).setFlag('wh40k-rpg', 'sheetState', state);
+        void this.actor.setFlag('wh40k-rpg', 'sheetState', state);
     }
 
     /**
@@ -433,7 +455,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (this._stateRestored) return;
         this._stateRestored = true;
 
-        const state = (this.actor as any).getFlag('wh40k-rpg', 'sheetState') as any;
+        const state = getFlag<{
+            scrollPositions?: Record<string, number>;
+            windowSize?: { width?: number; height?: number };
+        }>(this.actor, 'sheetState');
         if (!state) return;
 
         // Restore scroll positions
@@ -443,7 +468,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Restore window size if different from default
         if (state.windowSize?.width && state.windowSize?.height) {
-            const defaultPos = (this.constructor as any).DEFAULT_OPTIONS.position;
+            const ctor = this.constructor as typeof BaseActorSheet;
+            const defaultPos = ctor.DEFAULT_OPTIONS.position;
             if (state.windowSize.width !== defaultPos?.width || state.windowSize.height !== defaultPos?.height) {
                 this.setPosition({
                     width: state.windowSize.width,
@@ -663,7 +689,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 });
 
                 // Check favorite status for specialist skills
-                const specialistFavorites = ((this.actor as any).getFlag('wh40k-rpg', 'favoriteSpecialistSkills') as string[]) || [];
+                const specialistFavorites = getFlag<string[]>(this.actor, 'favoriteSpecialistSkills') ?? [];
 
                 plainEntries.forEach((entry: any) => {
                     this._augmentSkillData(key, entry, characteristics, data);
@@ -1514,14 +1540,14 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (!target) return;
 
         // Get current expanded state from actor flags
-        const expanded = ((this.actor as any).getFlag('wh40k-rpg', 'ui.expanded') as string[]) || [];
+        const expanded = getFlag<string[]>(this.actor, 'ui.expanded') ?? [];
         const isCurrentlyExpanded = expanded.includes(target);
 
         // Toggle the state
         const newExpanded = isCurrentlyExpanded ? expanded.filter((name: string) => name !== target) : [...expanded, target];
 
         // Update actor flags - this will trigger a re-render
-        await (this.actor as any).setFlag('wh40k-rpg', 'ui.expanded', newExpanded);
+        await this.actor.setFlag('wh40k-rpg', 'ui.expanded', newExpanded);
     }
 
     /* -------------------------------------------- */
@@ -1575,14 +1601,15 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      */
     static async #onEditImage(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const attr = target.dataset.edit ?? 'img';
-        const current = foundry.utils.getProperty((this as any).document._source, attr);
+        const docSource = this.document.toObject(true);
+        const current = foundry.utils.getProperty(docSource, attr);
         const fp = new CONFIG.ux.FilePicker({
             current,
             type: 'image',
-            callback: (path: string) => (this as any).document.update({ [attr]: path }),
+            callback: (path: string) => this.document.update({ [attr]: path }),
             position: {
-                top: (this as any).position.top + 40,
-                left: (this as any).position.left + 10,
+                top: this.position.top + 40,
+                left: this.position.left + 10,
             },
         });
         await fp.browse();
@@ -1675,12 +1702,16 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             );
         }
 
+        const actor = this.actor as BaseActorSheetActor & {
+            rollCharacteristic?: (key: string | undefined) => void;
+            rollSkill?: (key: string | undefined, specialty: string | undefined) => void;
+        };
         switch (rollType) {
             case 'characteristic':
-                (this as any).actor.rollCharacteristic?.(rollTarget);
+                actor.rollCharacteristic?.(rollTarget);
                 return;
             case 'skill':
-                (this as any).actor.rollSkill?.(rollTarget, specialty);
+                actor.rollSkill?.(rollTarget, specialty);
                 return;
         }
     }
@@ -1695,7 +1726,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      */
     static async #itemRoll(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const itemId = target.dataset.itemId || (target.closest('[data-item-id]') as HTMLElement | null)?.dataset.itemId;
-        if (itemId) await (this as any).actor.rollItem?.(itemId);
+        const actor = this.actor as BaseActorSheetActor & { rollItem?: (id: string) => Promise<void> };
+        if (itemId) await actor.rollItem?.(itemId);
     }
 
     /* -------------------------------------------- */
@@ -1714,13 +1746,13 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             console.warn('WH40K | itemEdit: No itemId found', target);
             return;
         }
-        const item = (this as any).actor.items.get(itemId);
+        const item = this.actor.items.get(itemId);
         console.log('WH40K | itemEdit item:', item);
         if (!item) {
             console.warn('WH40K | itemEdit: Item not found with ID', itemId);
             return;
         }
-        item.sheet.render(true);
+        item.sheet?.render(true);
     }
 
     /* -------------------------------------------- */
@@ -1740,7 +1772,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             return;
         }
 
-        const item = (this as any).actor.items.get(itemId);
+        const item = this.actor.items.get(itemId);
         console.log('WH40K | itemDelete item:', item);
         if (!item) {
             console.warn('WH40K | itemDelete: Item not found with ID', itemId);
@@ -1757,7 +1789,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         console.log('WH40K | itemDelete confirmed:', confirmed);
         if (confirmed) {
             try {
-                await (this as any).actor.deleteEmbeddedDocuments('Item', [itemId]);
+                await this.actor.deleteEmbeddedDocuments('Item', [itemId]);
                 console.log('WH40K | itemDelete: Successfully deleted item', itemId);
             } catch (err) {
                 console.error('WH40K | itemDelete: Error deleting item', err);
@@ -1783,7 +1815,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             return;
         }
 
-        const item = (this as any).actor.items.get(itemId);
+        const item = this.actor.items.get(itemId);
         console.log('WH40K | itemVocalize item:', item);
         if (!item) {
             console.warn(`WH40K | itemVocalize: Item ${itemId} not found on actor`);
@@ -1827,7 +1859,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             };
         }
 
-        await (this as any).actor.createEmbeddedDocuments('Item', [data], { renderSheet: true });
+        await this.actor.createEmbeddedDocuments('Item', [data], { renderSheet: true });
     }
 
     /* -------------------------------------------- */
@@ -1854,10 +1886,11 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #effectEdit(event: Event, target: HTMLElement): void {
+    static #effectEdit(this: BaseActorSheet, event: Event, target: HTMLElement): void {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
-        const effect = (this as any).actor.effects.get(effectId);
-        effect?.sheet.render(true);
+        if (!effectId) return;
+        const effect = this.actor.effects.get(effectId) as { sheet?: { render(force?: boolean): void } } | undefined;
+        effect?.sheet?.render(true);
     }
 
     /* -------------------------------------------- */
@@ -1868,9 +1901,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #effectDelete(event: Event, target: HTMLElement): Promise<void> {
+    static async #effectDelete(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
-        const effect = (this as any).actor.effects.get(effectId);
+        if (!effectId) return;
+        const effect = this.actor.effects.get(effectId) as { delete(): Promise<unknown> } | undefined;
         await effect?.delete();
     }
 
@@ -1882,10 +1916,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #effectToggle(event: Event, target: HTMLElement): Promise<void> {
+    static async #effectToggle(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const effectId = (target.closest('[data-effect-id]') as HTMLElement | null)?.dataset.effectId;
-        const effect = (this as any).actor.effects.get(effectId);
-        await effect?.update({ disabled: !effect.disabled });
+        if (!effectId) return;
+        const effect = this.actor.effects.get(effectId) as { disabled: boolean; update(data: Record<string, unknown>): Promise<unknown> } | undefined;
+        if (!effect) return;
+        await effect.update({ disabled: !effect.disabled });
     }
 
     /* -------------------------------------------- */
@@ -1897,17 +1933,17 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static #toggleSection(event: Event, target: HTMLElement): void {
+    static #toggleSection(this: BaseActorSheet, event: Event, target: HTMLElement): void {
         event.stopPropagation();
         const sectionName = target.dataset.toggle;
         if (!sectionName) return;
 
         // Find the dropdown panel element
-        const dropdown = (this as any).element.querySelector(`.wh40k-char-hud-details.${sectionName}`);
+        const dropdown = this.element.querySelector(`.wh40k-char-hud-details.${sectionName}`);
         if (!dropdown) return;
 
         // Close all other dropdowns first
-        (this as any).element.querySelectorAll('.wh40k-char-hud-details.expanded').forEach((el: Element) => {
+        this.element.querySelectorAll('.wh40k-char-hud-details.expanded').forEach((el: Element) => {
             if (el !== dropdown) {
                 el.classList.remove('expanded');
                 // Also remove active class from the toggle icon
@@ -1934,7 +1970,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #toggleTraining(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleTraining(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const field = target.dataset.field;
         const skillKey = target.dataset.skill;
         const level = target.dataset.level ? parseInt(target.dataset.level) : null;
@@ -1943,7 +1979,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         // Pattern 1: Simple field toggle
         if (field) {
             const currentValue = target.dataset.value === 'true';
-            await (this as any).actor.update({ [field]: !currentValue });
+            await this.actor.update({ [field]: !currentValue });
             return;
         }
 
@@ -1952,8 +1988,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             const basePath = specialty != null ? `system.skills.${skillKey}.entries.${specialty}` : `system.skills.${skillKey}`;
 
             // Get current training level
-            const skill =
-                specialty != null ? (this as any).actor.system.skills?.[skillKey]?.entries?.[specialty] : (this as any).actor.system.skills?.[skillKey];
+            const skills = this.actor.system.skills;
+            const skill = specialty != null ? skills?.[skillKey]?.entries?.[Number(specialty)] : skills?.[skillKey];
 
             const currentLevel = skill?.plus20 ? 3 : skill?.plus10 ? 2 : skill?.trained ? 1 : 0;
 
@@ -1966,7 +2002,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
                 [`${basePath}.plus20`]: newLevel >= 3,
             };
 
-            await (this as any).actor.update(updateData);
+            await this.actor.update(updateData);
         }
     }
 
@@ -1978,9 +2014,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #addSpecialistSkill(event: Event, target: HTMLElement): Promise<void> {
+    static async #addSpecialistSkill(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const skillKey = target.dataset.skill;
-        const skill = (this as any).actor.system.skills?.[skillKey];
+        if (!skillKey) return;
+        const skill = this.actor.system.skills?.[skillKey];
         if (!skill) {
             (ui as any).notifications.warn('Skill not specified.');
             return;
@@ -2003,7 +2040,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         } else {
             const { prepareCreateSpecialistSkillPrompt } = await import('../prompts/specialist-skill-dialog.ts');
             await prepareCreateSpecialistSkillPrompt({
-                actor: (this as any).actor,
+                actor: this.actor,
                 skillName: skillKey,
             });
             return;
@@ -2032,7 +2069,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             current: 0,
         });
 
-        await (this as any).actor.update({
+        await this.actor.update({
             [`system.skills.${skillKey}.entries`]: entries,
         });
 
@@ -2047,11 +2084,12 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Button that was clicked.
      */
-    static async #deleteSpecialization(event: Event, target: HTMLElement): Promise<void> {
+    static async #deleteSpecialization(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const skillName = target.dataset.skill;
-        const index = parseInt(target.dataset.index);
+        const index = parseInt(target.dataset.index ?? '');
+        if (!skillName) return;
 
-        const skill = (this as any).actor.system.skills[skillName];
+        const skill = this.actor.system.skills[skillName];
         if (!skill || !Array.isArray(skill.entries)) return;
 
         const entries = [...skill.entries];
@@ -2066,7 +2104,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         if (confirmed) {
             entries.splice(index, 1);
-            await (this as any).actor.update({ [`system.skills.${skillName}.entries`]: entries });
+            await this.actor.update({ [`system.skills.${skillName}.entries`]: entries });
         }
     }
 
@@ -2077,7 +2115,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      * @param {Event} event         Triggering click event.
      * @param {HTMLElement} target  Element that was clicked.
      */
-    static async #viewSkillInfo(event: Event, target: HTMLElement): Promise<void> {
+    static async #viewSkillInfo(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
         event.stopPropagation();
 
@@ -2089,7 +2127,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
             return;
         }
 
-        const skill = (this as any).actor.system.skills?.[skillKey];
+        const skill = this.actor.system.skills?.[skillKey];
         if (!skill) {
             console.warn(`WH40K | viewSkillInfo: Skill ${skillKey} not found`);
             return;
@@ -2107,7 +2145,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const searchLabel = skill.label.toLowerCase().replace(/[^a-z0-9]/g, '');
         const index = await pack.getIndex();
         const entry = index.find((i: { name?: string }) => {
-            const indexName = (i as any).name.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const indexName = (i.name ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
             return indexName === searchLabel;
         });
 
@@ -2132,7 +2170,8 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         if (!this.actor.isOwner) return undefined;
 
         // Check if this item type is supported
-        if ((this.constructor as any).unsupportedItemTypes.has(item.type)) {
+        const ctor = this.constructor as typeof BaseActorSheet;
+        if (ctor.unsupportedItemTypes.has(item.type)) {
             (ui as any).notifications.warn(
                 game.i18n.format('WH40K.Warning.InvalidItem', {
                     itemType: game.i18n.localize(CONFIG.Item.typeLabels[item.type]),
@@ -2200,7 +2239,10 @@ export default class BaseActorSheet extends BaseActorSheetBase {
      */
     static async #spendXPAdvance(this: BaseActorSheet, event: Event, target: HTMLElement): Promise<void> {
         const charKey = target.dataset.characteristic;
-        const char = (this as any).actor.system.characteristics[charKey];
+        if (!charKey) return;
+        const char = this.actor.system.characteristics[charKey] as
+            | (WH40KCharacteristic & { nextAdvanceCost: number; advance?: number })
+            | undefined;
 
         if (!char) {
             (ui as any).notifications.error('Invalid characteristic!');
@@ -2208,7 +2250,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         }
 
         const cost = char.nextAdvanceCost;
-        const available = (this as any).actor.system.experience?.available || 0;
+        const available = this.actor.system.experience?.available || 0;
 
         // Check if enough XP
         if (available < cost) {
@@ -2240,9 +2282,9 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Update actor
         const newAdvance = oldAdvance + 1;
-        const newSpent = ((this as any).actor.system.experience?.spent || 0) + cost;
+        const newSpent = (this.actor.system.experience?.spent || 0) + cost;
 
-        await (this as any).actor.update({
+        await this.actor.update({
             [`system.characteristics.${charKey}.advance`]: newAdvance,
             'system.experience.spent': newSpent,
         });
@@ -2255,31 +2297,31 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         (ui as any).notifications.info(`${char.label} advanced to ${newTotal}! (−${cost} XP)`);
 
         // Trigger characteristic change animation
-        if ((this as any).animateCharacteristicChange) {
-            (this as any).animateCharacteristicChange(charKey, oldTotal, newTotal);
+        if (this.animateCharacteristicChange) {
+            this.animateCharacteristicChange(charKey, oldTotal, newTotal);
         }
 
         // Trigger bonus change animation if bonus changed
-        if (oldBonus !== newBonus && (this as any).animateCharacteristicBonus) {
-            (this as any).animateCharacteristicBonus(charKey, oldBonus, newBonus);
+        if (oldBonus !== newBonus && this.animateCharacteristicBonus) {
+            this.animateCharacteristicBonus(charKey, oldBonus, newBonus);
         }
 
         // Animate circle for V1 HUD (bonus display)
-        const circleElement = (this as any).element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-circle`);
+        const circleElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-circle`) as HTMLElement | null;
         if (circleElement) {
             circleElement.classList.add('value-changed');
             setTimeout(() => circleElement.classList.remove('value-changed'), 500);
         }
 
         // Add value-changed animation to mod display for V1 HUD
-        const modElement = (this as any).element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`);
+        const modElement = this.element.querySelector(`[data-characteristic="${charKey}"] .wh40k-char-hud-mod`) as HTMLElement | null;
         if (modElement) {
             modElement.classList.add('value-changed');
             setTimeout(() => modElement.classList.remove('value-changed'), 500);
         }
 
         // Update the border progress indicator
-        const charBox = (this as any).element.querySelector(`[data-characteristic="${charKey}"]`);
+        const charBox = this.element.querySelector(`[data-characteristic="${charKey}"]`) as HTMLElement | null;
         if (charBox) {
             charBox.style.setProperty('--advance-progress', newAdvance / 5);
             charBox.dataset.advance = newAdvance;
@@ -2298,7 +2340,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         const charKey = (target.closest('[data-characteristic]') as HTMLElement | null)?.dataset.characteristic;
         if (!charKey) return;
 
-        const char = (this as any).actor.system.characteristics[charKey];
+        const char = this.actor.system.characteristics[charKey];
         if (!char) {
             (ui as any).notifications.error('Invalid characteristic!');
             return;
@@ -2362,7 +2404,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
 
         // Update actor with new values if saved
         if (result) {
-            await (this as any).actor.update({
+            await this.actor.update({
                 [`system.characteristics.${charKey}.base`]: parseInt(result.base) || 0,
                 [`system.characteristics.${charKey}.advance`]: parseInt(result.advance) || 0,
                 [`system.characteristics.${charKey}.modifier`]: parseInt(result.modifier) || 0,
