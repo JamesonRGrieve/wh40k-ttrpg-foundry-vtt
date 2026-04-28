@@ -2,11 +2,7 @@
 {{!-- Characteristics HUD + Skills + Specialist Skills + Talents + Traits --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{ tab.cssClass }}" data-tab="{{ tab.id }}" data-group="{{ tab.group }}">
     {{!-- Characteristics Panel --}}
-    <div class="wh40k-panel">
-        <div class="wh40k-panel-header">
-            <span class="wh40k-panel-title"><i class="fas fa-chart-bar"></i> Characteristics</span>
-        </div>
-        <div class="wh40k-panel-body">
+    {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label="Characteristics" icon="fa-chart-bar"}}
             <div class="tw-flex tw-flex-wrap tw-justify-center tw-gap-2">
                 {{#each actor.characteristics as |characteristic name|}}
                     {{#unless (eq name "influence")}}
@@ -54,17 +50,11 @@
                     {{/unless}}
                 {{/each}}
             </div>
-        </div>
-    </div>
+    {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
-    <div class="wh40k-panel">
-        <div class="wh40k-panel-header">
-            <span class="wh40k-panel-title"><i class="fas fa-book"></i> Skills</span>
-        </div>
-        <div class="wh40k-panel-body">
-            {{> systems/wh40k-rpg/templates/actor/panel/skills-panel.hbs}}
-        </div>
-    </div>
+    {{#> systems/wh40k-rpg/templates/actor/partial/panel.hbs label="Skills" icon="fa-book"}}
+        {{> systems/wh40k-rpg/templates/actor/panel/skills-panel.hbs}}
+    {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}
 
     {{> systems/wh40k-rpg/templates/actor/panel/skills-specialist-panel.hbs}}
 
