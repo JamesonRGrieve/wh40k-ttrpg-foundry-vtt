@@ -7,10 +7,12 @@ import type { WH40KActorSystemData, WH40KCharacteristic, WH40KStatBreakdown, WH4
 
 type RollDataLike = Record<string, unknown> & {
     actor?: WH40KBaseActor;
+    sourceActor?: WH40KBaseActor;
     nameOverride?: string;
     type?: string;
+    rollKey?: string;
     baseTarget?: number;
-    modifiers: { modifier: number };
+    modifiers: { modifier: number; situational?: number };
 };
 
 type CharacteristicLike = Record<string, unknown> & WH40KCharacteristic;
@@ -189,6 +191,77 @@ export class WH40KBaseActor extends Actor {
         rollData.baseTarget = characteristic.total;
         rollData.modifiers.modifier = 0;
         await prepareUnifiedRoll(simpleSkillData);
+    }
+
+    /* -------------------------------------------- */
+    /*  Roll Builders                               */
+    /* -------------------------------------------- */
+
+    /**
+     * Build a populated SimpleSkillData for a unified roll. Centralises the boilerplate
+     * shared by `rollCharacteristic` / `rollSkill` / `rollSimpleWeapon` across PC and NPC
+     * actors.
+     *
+     * Asymmetry: PCs (acolyte) honour situational modifiers from items; NPCs do not.
+     * Pass `situationalKey` (with the matching `type`) to opt-in to PC-style situational
+     * modifier collection. Omit it for NPC-style direct rolls.
+     */
+    protected _buildSimpleSkillRoll(opts: {
+        key: string;
+        type: 'characteristic' | 'skill' | 'simpleWeapon';
+        label: string;
+        target: number;
+        situationalKey?: string;
+        nameOverride?: string;
+    }): SimpleSkillData {
+        const TYPE_LITERAL: Record<typeof opts.type, string> = {
+            characteristic: 'Characteristic',
+            skill: 'Skill',
+            simpleWeapon: 'Attack',
+        };
+
+        const simpleSkillData = new SimpleSkillData();
+        const rollData = simpleSkillData.rollData as unknown as RollDataLike;
+        rollData.actor = this;
+        rollData.sourceActor = this;
+        rollData.nameOverride = opts.nameOverride ?? opts.label;
+        rollData.type = TYPE_LITERAL[opts.type];
+        rollData.rollKey = opts.key;
+        rollData.baseTarget = opts.target;
+        rollData.modifiers.modifier = 0;
+
+        if (opts.situationalKey) {
+            const sitMod = this._collectSituationalModifierTotal(opts.type, opts.situationalKey);
+            if (sitMod !== 0) rollData.modifiers.situational = sitMod;
+        }
+
+        return simpleSkillData;
+    }
+
+    /**
+     * Sum situational modifiers for a roll. Subclasses (e.g. WH40KAcolyte) expose the
+     * per-type modifier collectors; if they are not available, this returns 0 — matching
+     * the NPC path where situational modifiers are intentionally not consulted.
+     * @private
+     */
+    private _collectSituationalModifierTotal(type: 'characteristic' | 'skill' | 'simpleWeapon', key: string): number {
+        const provider = this as unknown as {
+            getCharacteristicSituationalModifiers?: (k: string) => Array<{ value: number }>;
+            getSkillSituationalModifiers?: (k: string) => Array<{ value: number }>;
+            getCombatSituationalModifiers?: (k: string) => Array<{ value: number }>;
+        };
+        let modifiers: Array<{ value: number }> | undefined;
+        if (type === 'characteristic') {
+            modifiers = provider.getCharacteristicSituationalModifiers?.(key);
+        } else if (type === 'skill') {
+            modifiers = provider.getSkillSituationalModifiers?.(key);
+        } else {
+            modifiers = provider.getCombatSituationalModifiers?.(key);
+        }
+        if (!modifiers?.length) return 0;
+        let total = 0;
+        for (const mod of modifiers) total += mod.value || 0;
+        return total;
     }
 
     getCharacteristicFuzzy(char: string): WH40KCharacteristic | undefined {

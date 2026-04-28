@@ -1,7 +1,6 @@
 import { DHTargetedActionManager } from '../actions/targeted-action-manager.ts';
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { SYSTEM_ID } from '../constants.ts';
-import { SimpleSkillData } from '../rolls/action-data.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { WH40KBaseActor } from './base-actor.ts';
 
@@ -133,15 +132,13 @@ export class WH40KNPC extends WH40KBaseActor {
             return;
         }
 
-        const simpleSkillData = new SimpleSkillData();
-        const rollData = simpleSkillData.rollData;
-        rollData.actor = this;
-        rollData.sourceActor = this;
-        rollData.nameOverride = flavor || `${char.label} Test`;
-        rollData.type = 'Characteristic';
-        rollData.rollKey = characteristicKey;
-        rollData.baseTarget = char.total;
-        rollData.modifiers.modifier = 0;
+        const simpleSkillData = this._buildSimpleSkillRoll({
+            key: characteristicKey,
+            type: 'characteristic',
+            label: `${char.label} Test`,
+            target: char.total,
+            nameOverride: flavor || undefined,
+        });
         await prepareUnifiedRoll(simpleSkillData);
     }
 
@@ -163,15 +160,12 @@ export class WH40KNPC extends WH40KBaseActor {
         const char = this.system.characteristics[attackCharKey];
         if (!char) return;
 
-        const simpleSkillData = new SimpleSkillData();
-        const rollData = simpleSkillData.rollData;
-        rollData.actor = this;
-        rollData.sourceActor = this;
-        rollData.nameOverride = `${weapon.name} Attack`;
-        rollData.type = 'Attack';
-        rollData.rollKey = attackCharKey;
-        rollData.baseTarget = char.total;
-        rollData.modifiers.modifier = 0;
+        const simpleSkillData = this._buildSimpleSkillRoll({
+            key: attackCharKey,
+            type: 'simpleWeapon',
+            label: `${weapon.name} Attack`,
+            target: char.total,
+        });
         await prepareUnifiedRoll(simpleSkillData);
     }
 
@@ -228,15 +222,13 @@ export class WH40KNPC extends WH40KBaseActor {
         const skill = this.system.trainedSkills[skillName];
         const skillLabel = skill?.name || skillName;
 
-        const simpleSkillData = new SimpleSkillData();
-        const rollData = simpleSkillData.rollData;
-        rollData.actor = this;
-        rollData.sourceActor = this;
-        rollData.nameOverride = flavor || `${skillLabel} Test`;
-        rollData.type = 'Skill';
-        rollData.rollKey = skillName;
-        rollData.baseTarget = target;
-        rollData.modifiers.modifier = 0;
+        const simpleSkillData = this._buildSimpleSkillRoll({
+            key: skillName,
+            type: 'skill',
+            label: `${skillLabel} Test`,
+            target,
+            nameOverride: flavor || undefined,
+        });
         await prepareUnifiedRoll(simpleSkillData);
     }
 

@@ -10,6 +10,7 @@ import type { SidebarHeaderField } from '../../config/game-systems/types.ts';
 import WH40K from '../../config.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KItemSystemData } from '../../types/global.d.ts';
 import { AssignDamageData } from '../../rolls/assign-damage-data.ts';
 import { Hit } from '../../rolls/damage-data.ts';
 import { TransactionManager } from '../../transactions/transaction-manager.ts';
@@ -21,6 +22,7 @@ import ConfirmationDialog from '../dialogs/confirmation-dialog.ts';
 import TransactionRequestDialog from '../dialogs/transaction-request-dialog.ts';
 import { prepareAssignDamageRoll } from '../prompts/assign-damage-dialog.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
+import * as StatActions from '../api/stat-adjustment-actions.ts';
 import type { DialogV2Like, TextEditorImplementationLike } from '../api/application-types.ts';
 
 const TextEditor = (foundry.applications as unknown as { ux: { TextEditor: { implementation: TextEditorImplementationLike } } }).ux.TextEditor.implementation;
@@ -112,6 +114,7 @@ export default class CharacterSheet extends BaseActorSheet {
     declare _traitsFilter: Record<string, unknown>;
     declare _throttleTimers: Map<string, number>;
     declare _originPathSummary?: OriginSummary;
+    private _gameSystemId?: string;
 
     /**
      * Whether the sheet is in edit mode (showing inline stat fields).
@@ -145,17 +148,17 @@ export default class CharacterSheet extends BaseActorSheet {
             'vocalizeMovement': CharacterSheet.#vocalizeMovement,
             'setMovementMode': CharacterSheet.#setMovementMode,
 
-            // Stat adjustment actions
-            'adjustStat': CharacterSheet.#adjustStat,
-            'increment': CharacterSheet.#increment,
-            'decrement': CharacterSheet.#decrement,
-            'setCriticalPip': CharacterSheet.#setCriticalPip,
-            'setFateStar': CharacterSheet.#setFateStar,
-            'setFatigueBolt': CharacterSheet.#setFatigueBolt,
-            'setCorruption': CharacterSheet.#setCorruption,
-            'setInsanity': CharacterSheet.#setInsanity,
-            'restoreFate': CharacterSheet.#restoreFate,
-            'spendFate': CharacterSheet.#spendFate,
+            // Stat adjustment actions — extracted to api/stat-adjustment-actions.ts
+            'adjustStat': StatActions.adjustStat,
+            'increment': StatActions.increment,
+            'decrement': StatActions.decrement,
+            'setCriticalPip': StatActions.setCriticalPip,
+            'setFateStar': StatActions.setFateStar,
+            'setFatigueBolt': StatActions.setFatigueBolt,
+            'setCorruption': StatActions.setCorruption,
+            'setInsanity': StatActions.setInsanity,
+            'restoreFate': StatActions.restoreFate,
+            'spendFate': StatActions.spendFate,
 
             // Equipment actions
             'toggleEquip': CharacterSheet.#toggleEquip,
@@ -454,7 +457,7 @@ export default class CharacterSheet extends BaseActorSheet {
         context.isGM = game.user?.isGM ?? false;
 
         // Ruleset state (DH2e only) — controls Throne Gelt visibility
-        const activeGameSystem = (this as any)._gameSystemId || this.actor.system?.gameSystem || 'rt';
+        const activeGameSystem = this._gameSystemId || this.actor.system?.gameSystem || 'rt';
         const isDH2 = activeGameSystem === 'dh2e';
         const ruleset = WH40KSettings.getRuleset();
         context.ruleset = ruleset;
@@ -639,7 +642,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     async _prepareHeaderContext(context: Record<string, unknown>, options: Record<string, unknown>): Promise<Record<string, unknown>> {
         // Build dynamic origin path select options from compendium packs
-        const gameSystem = (this as any)._gameSystemId || this.actor.system?.gameSystem || 'rt';
+        const gameSystem = this._gameSystemId || this.actor.system?.gameSystem || 'rt';
         const originOptions = await this._getOriginPathOptions(gameSystem);
         context.originOptions = originOptions;
         context.headerFields = this._getSidebarHeaderFields(gameSystem);
@@ -678,8 +681,9 @@ export default class CharacterSheet extends BaseActorSheet {
 
             const index = await pack.getIndex({ fields: ['type', 'system.step'] });
             for (const entry of index) {
-                if ((entry as any).type !== 'originPath') continue;
-                const step = (entry as any).system?.step;
+                if (entry.type !== 'originPath') continue;
+                const entrySystem = entry.system as { step?: string } | undefined;
+                const step = entrySystem?.step;
                 if (!step) continue;
                 if (!stepNames[step]) stepNames[step] = new Set();
                 stepNames[step].add(entry.name);
@@ -798,7 +802,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     _prepareOriginPathSteps(): Record<string, unknown>[] {
         // Use system-specific step config when available
-        const gameSystem = (this as any)._gameSystemId || this.actor.system?.gameSystem || 'rt';
+        const gameSystem = this._gameSystemId || this.actor.system?.gameSystem || 'rt';
         let steps;
         try {
             const sysConfig = SystemConfigRegistry.get(gameSystem);
@@ -822,7 +826,7 @@ export default class CharacterSheet extends BaseActorSheet {
             ];
         }
 
-        const originItems = this.actor.items.filter((item) => (item as any).isOriginPath || (item.type as string) === 'originPath');
+        const originItems = this.actor.items.filter((item) => item.type === 'originPath');
 
         // Calculate totals from all origins
         const charTotals: Record<string, number> = {};
@@ -833,7 +837,8 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const preparedSteps = steps.map((step) => {
             const item = originItems.find((i) => {
-                const itemStep = (i.system as any)?.step || '';
+                const sys = i.system as WH40KItemSystemData & { step?: string };
+                const itemStep = sys?.step || '';
                 return itemStep === step.key || itemStep === step.label;
             });
 
@@ -1229,16 +1234,22 @@ export default class CharacterSheet extends BaseActorSheet {
         // Extract combat talents for display in combat actions panel
         const talents = this.actor.items.filter((i) => (i.type as string) === 'talent');
         sheetContext.combatTalents = talents
-            .filter((t) => (t.system as any)?.category === 'combat')
-            .map((t) => ({
-                id: t.id,
-                name: t.name,
-                img: t.img,
-                system: {
-                    tier: (t.system as any).tier,
-                    category: (t.system as any).category,
-                },
-            }));
+            .filter((t) => {
+                const sys = t.system as WH40KItemSystemData & { category?: string };
+                return sys?.category === 'combat';
+            })
+            .map((t) => {
+                const sys = t.system as WH40KItemSystemData & { category?: string; tier?: number | string };
+                return {
+                    id: t.id,
+                    name: t.name,
+                    img: t.img,
+                    system: {
+                        tier: sys.tier,
+                        category: sys.category,
+                    },
+                };
+            });
 
         // Partition attack actions into melee, ranged, and general (both)
         const attacks = sheetContext.dh?.combatActions?.attacks || [];
@@ -1620,7 +1631,11 @@ export default class CharacterSheet extends BaseActorSheet {
                 const talent = talents.find((t) => t.id === id);
                 if (!talent) return null;
 
-                const sys = talent.system as any;
+                const sys = talent.system as WH40KItemSystemData & {
+                    fullName?: string;
+                    specialization?: string;
+                    category?: string;
+                };
                 return {
                     id: talent.id,
                     name: talent.name,
@@ -1723,11 +1738,12 @@ export default class CharacterSheet extends BaseActorSheet {
         // Extract unique disciplines for filtering
         const disciplines = new Map();
         for (const power of psychicPowers) {
-            const disc = (power.system as any).discipline;
+            const sys = power.system as WH40KItemSystemData & { discipline?: string; disciplineLabel?: string };
+            const disc = sys.discipline;
             if (disc && !disciplines.has(disc)) {
                 disciplines.set(disc, {
                     id: disc,
-                    label: (power.system as any).disciplineLabel || disc.charAt(0).toUpperCase() + disc.slice(1),
+                    label: sys.disciplineLabel || disc.charAt(0).toUpperCase() + disc.slice(1),
                 });
             }
         }
@@ -1736,11 +1752,12 @@ export default class CharacterSheet extends BaseActorSheet {
         // Extract unique order categories
         const categories = new Map();
         for (const order of orders) {
-            const cat = (order.system as any).category;
+            const sys = order.system as WH40KItemSystemData & { category?: string; categoryLabel?: string };
+            const cat = sys.category;
             if (cat && !categories.has(cat)) {
                 categories.set(cat, {
                     id: cat,
-                    label: (order.system as any).categoryLabel || cat.charAt(0).toUpperCase() + cat.slice(1),
+                    label: sys.categoryLabel || cat.charAt(0).toUpperCase() + cat.slice(1),
                 });
             }
         }
@@ -1753,13 +1770,13 @@ export default class CharacterSheet extends BaseActorSheet {
         // Apply discipline filter to psychic powers
         let filteredPsychicPowers = psychicPowers;
         if (activeDiscipline) {
-            filteredPsychicPowers = psychicPowers.filter((p) => (p.system as any).discipline === activeDiscipline);
+            filteredPsychicPowers = psychicPowers.filter((p) => (p.system as WH40KItemSystemData & { discipline?: string }).discipline === activeDiscipline);
         }
 
         // Apply category filter to orders
         let filteredOrders = orders;
         if (activeOrderCategory) {
-            filteredOrders = orders.filter((o) => (o.system as any).category === activeOrderCategory);
+            filteredOrders = orders.filter((o) => (o.system as WH40KItemSystemData & { category?: string }).category === activeOrderCategory);
         }
 
         return {
@@ -1867,7 +1884,7 @@ export default class CharacterSheet extends BaseActorSheet {
      */
     static async #rollInitiative(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
-            const agBonus = (this.actor.system as any).characteristics?.agility?.bonus ?? 0;
+            const agBonus = this.actor.system.characteristics?.agility?.bonus ?? 0;
             const roll = await new (Roll as any)('1d10 + @ab', { ab: agBonus }).evaluate();
 
             const content = `
@@ -1930,16 +1947,16 @@ export default class CharacterSheet extends BaseActorSheet {
         // Route to specific handler based on action key
         switch (actionKey) {
             case 'dodge':
-                await (CharacterSheet as any).#dodge.call(this, event, target);
+                await CharacterSheet.#dodge.call(this, event, target);
                 break;
             case 'parry':
-                await (CharacterSheet as any).#parry.call(this, event, target);
+                await CharacterSheet.#parry.call(this, event, target);
                 break;
             case 'assignDamage':
-                await (CharacterSheet as any).#assignDamage.call(this, event, target);
+                await CharacterSheet.#assignDamage.call(this, event, target);
                 break;
             case 'initiative':
-                await (CharacterSheet as any).#rollInitiative.call(this, event, target);
+                await CharacterSheet.#rollInitiative.call(this, event, target);
                 break;
             default:
                 this._notify('warning', `Unknown combat action: ${actionKey}`, {
@@ -2011,7 +2028,7 @@ export default class CharacterSheet extends BaseActorSheet {
         const movement = movementData[movementType];
         if (!movement) return;
 
-        const distance = (this.actor.system as any).movement[movementType];
+        const distance = this.actor.system.movement[movementType as keyof typeof this.actor.system.movement];
 
         // Prepare chat data
         const chatData = {
@@ -2054,347 +2071,14 @@ export default class CharacterSheet extends BaseActorSheet {
 
         const config = (CONFIG.wh40k as any).movementTypes[movementType];
         const label = config ? game.i18n.localize(config.label) : movementType;
-        const speed = (this.actor.system as any).movement[movementType];
+        const speed = this.actor.system.movement[movementType as keyof typeof this.actor.system.movement];
         ui.notifications.info(`${label}: ${speed}m set as active movement mode.`);
     }
 
     /* -------------------------------------------- */
     /*  Event Handlers - Stat Adjustments           */
+    /*  (extracted to api/stat-adjustment-actions.ts; bound via DEFAULT_OPTIONS.actions) */
     /* -------------------------------------------- */
-
-    /**
-     * Handle stat adjustment button clicks.
-     * Throttled to prevent spam clicks.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #adjustStat(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        const field = target.dataset.field;
-        if (!field) return;
-        const throttleKey = `adjustStat-${field}-${this.actor.id}`;
-        return await (this as any)._throttle(throttleKey, 200, this.#adjustStatImpl, this, [event, target]);
-    }
-
-    /**
-     * Implementation of stat adjustment (used by throttled wrapper).
-     * @private
-     */
-    async #adjustStatImpl(event: Event, target: HTMLElement): Promise<void> {
-        const field = target.dataset.field;
-        const action = target.dataset.statAction;
-        if (!field) return;
-
-        // Handle special actions
-        if (action === 'clear-fatigue') {
-            await this._updateSystemField('system.fatigue.value', 0);
-            return;
-        }
-
-        // Get current value
-        const currentValue = (foundry.utils.getProperty(this.actor, field) as number) || 0;
-
-        // Smart min/max derivation: if field ends with .value, check for .max/.min siblings
-        const min = target.dataset.min !== undefined ? parseInt(target.dataset.min) : null;
-        let max: number | null = target.dataset.max !== undefined ? parseInt(target.dataset.max) : null;
-
-        // Auto-derive max from field structure (e.g., system.wounds.value -> system.wounds.max)
-        if (max === null && field.endsWith('.value')) {
-            const basePath = field.substring(0, field.lastIndexOf('.value'));
-            const maxPath = `${basePath}.max`;
-            const derivedMax = foundry.utils.getProperty(this.actor, maxPath) as number | undefined;
-            if (derivedMax !== undefined && derivedMax !== null) {
-                max = derivedMax;
-            }
-        }
-
-        let newValue = currentValue;
-
-        if (action === 'increment') {
-            newValue = currentValue + 1;
-            if (max !== null && newValue > max) newValue = max;
-        } else if (action === 'decrement') {
-            newValue = currentValue - 1;
-            if (min !== null && newValue < min) newValue = min;
-        }
-
-        if (newValue !== currentValue) {
-            await this._updateSystemField(field, newValue);
-        }
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle increment action (convenience wrapper for adjustStat).
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static #increment(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.stopPropagation(); // Prevent header toggle
-        target.dataset.statAction = 'increment';
-        return CharacterSheet.#adjustStat.call(this, event, target);
-    }
-
-    /**
-     * Handle decrement action (convenience wrapper for adjustStat).
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static #decrement(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.stopPropagation(); // Prevent header toggle
-        target.dataset.statAction = 'decrement';
-        return CharacterSheet.#adjustStat.call(this, event, target);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle clicking on a critical damage pip.
-     * Throttled to prevent spam clicks.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #setCriticalPip(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.stopPropagation(); // Prevent panel toggle
-        const throttleKey = `setCriticalPip-${this.actor.id}`;
-        return await (this as any)._throttle(throttleKey, 200, this.#setCriticalPipImpl, this, [event, target]);
-    }
-
-    /**
-     * Implementation of critical pip setting (used by throttled wrapper).
-     * @private
-     */
-    async #setCriticalPipImpl(event: Event, target: HTMLElement): Promise<void> {
-        const level = parseInt(target.dataset.critLevel || '0');
-        const currentCrit = (this.actor.system as any).wounds?.critical || 0;
-        const newValue = level === currentCrit ? level - 1 : level;
-        const clampedValue = Math.min(Math.max(newValue, 0), 10);
-        await this._updateSystemField('system.wounds.critical', clampedValue);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle clicking on a fate star pip.
-     * Throttled to prevent spam clicks.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #setFateStar(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.stopPropagation(); // Prevent panel toggle
-        const throttleKey = `setFateStar-${this.actor.id}`;
-        return await (this as any)._throttle(throttleKey, 200, this.#setFateStarImpl, this, [event, target]);
-    }
-
-    /**
-     * Implementation of fate star setting (used by throttled wrapper).
-     * @private
-     */
-    async #setFateStarImpl(event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset.fateIndex || '0');
-        const currentFate = (this.actor.system as any).fate?.value || 0;
-        const newValue = index === currentFate ? index - 1 : index;
-        const maxFate = (this.actor.system as any).fate?.max || 0;
-        const clampedValue = Math.min(Math.max(newValue, 0), maxFate);
-        await this._updateSystemField('system.fate.value', clampedValue);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle quick-set fatigue bolt.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #setFatigueBolt(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.stopPropagation(); // Prevent panel toggle
-        const throttleKey = `setFatigueBolt-${this.actor.id}`;
-        return await (this as any)._throttle(throttleKey, 200, this.#setFatigueBoltImpl, this, [event, target]);
-    }
-
-    /**
-     * Implementation of fatigue bolt setting (used by throttled wrapper).
-     * @private
-     */
-    async #setFatigueBoltImpl(event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset.fatigueIndex || '0');
-        const currentFatigue = (this.actor.system as any).fatigue?.value || 0;
-        const newValue = index === currentFatigue ? index - 1 : index;
-        const maxFatigue = (this.actor.system as any).fatigue?.max || 0;
-        const clampedValue = Math.min(Math.max(newValue, 0), maxFatigue);
-        await this._updateSystemField('system.fatigue.value', clampedValue);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle quick-set corruption.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #setCorruption(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.stopPropagation(); // Prevent panel toggle
-        const throttleKey = `setCorruption-${this.actor.id}`;
-        return await (this as any)._throttle(throttleKey, 200, this.#setCorruptionImpl, this, [event, target]);
-    }
-
-    /**
-     * Implementation of corruption setting (used by throttled wrapper).
-     * @private
-     */
-    async #setCorruptionImpl(event: Event, target: HTMLElement): Promise<void> {
-        const targetValue = parseInt(target.dataset.value || '0');
-        if (isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
-            this._notify('error', 'Invalid corruption value', {
-                duration: 3000,
-            });
-            return;
-        }
-        await this._updateSystemField('system.corruption', targetValue);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle quick-set insanity.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #setInsanity(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.stopPropagation(); // Prevent panel toggle
-        const throttleKey = `setInsanity-${this.actor.id}`;
-        return await (this as any)._throttle(throttleKey, 200, this.#setInsanityImpl, this, [event, target]);
-    }
-
-    /**
-     * Implementation of insanity setting (used by throttled wrapper).
-     * @private
-     */
-    async #setInsanityImpl(event: Event, target: HTMLElement): Promise<void> {
-        const targetValue = parseInt(target.dataset.value || '0');
-        if (isNaN(targetValue) || targetValue < 0 || targetValue > 100) {
-            this._notify('error', 'Invalid insanity value', {
-                duration: 3000,
-            });
-            return;
-        }
-        await this._updateSystemField('system.insanity', targetValue);
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle restoring all fate points.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #restoreFate(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.stopPropagation(); // Prevent panel toggle
-        const throttleKey = `restoreFate-${this.actor.id}`;
-        return await (this as any)._throttle(throttleKey, 500, this.#restoreFateImpl, this, [event, target]);
-    }
-
-    /**
-     * Implementation of fate restoration (used by throttled wrapper).
-     * @private
-     */
-    async #restoreFateImpl(event: Event, target: HTMLElement): Promise<void> {
-        const maxFate = (this.actor.system as any).fate?.max || 0;
-        await this._updateSystemField('system.fate.value', maxFate);
-        this._notify('info', `Restored all fate points to ${maxFate}`, {
-            duration: 3000,
-        });
-    }
-
-    /* -------------------------------------------- */
-
-    /**
-     * Handle fate spending actions.
-     * Throttled to prevent accidental double-spending.
-     * @this {CharacterSheet}
-     * @param {Event} event         Triggering click event.
-     * @param {HTMLElement} target  Button that was clicked.
-     */
-    static async #spendFate(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
-        event.stopPropagation(); // Prevent panel toggle
-        const action = target.dataset.fateAction;
-        const throttleKey = `spendFate-${action}-${this.actor.id}`;
-        return await (this as any)._throttle(throttleKey, 500, this.#spendFateImpl, this, [event, target]);
-    }
-
-    /**
-     * Implementation of fate spending (used by throttled wrapper).
-     * @private
-     */
-    async #spendFateImpl(event: Event, target: HTMLElement): Promise<void> {
-        const action = target.dataset.fateAction;
-        const currentFate = this.actor.system.fate?.value || 0;
-
-        if (currentFate <= 0) {
-            this._notify('warning', 'No fate points available to spend!', {
-                duration: 3000,
-            });
-            return;
-        }
-
-        let message = '';
-        switch (action) {
-            case 'reroll':
-                message = `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>re-roll</strong> a test!`;
-                break;
-            case 'bonus':
-                message = `<strong>${this.actor.name}</strong> spends a Fate Point to gain <strong>+10 bonus</strong> to a test!`;
-                break;
-            case 'dos':
-                message = `<strong>${this.actor.name}</strong> spends a Fate Point to add <strong>+1 Degree of Success</strong>!`;
-                break;
-            case 'heal':
-                message = `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>heal damage</strong>!`;
-                break;
-            case 'avoid':
-                message = `<strong>${this.actor.name}</strong> spends a Fate Point to <strong>avoid death</strong>!`;
-                break;
-            case 'burn': {
-                const confirmBurn = await ConfirmationDialog.confirm({
-                    title: 'Burn Fate Point?',
-                    content: 'Are you sure you want to <strong>permanently burn</strong> a Fate Point?',
-                    confirmLabel: 'Burn',
-                    cancelLabel: 'Cancel',
-                });
-                if (!confirmBurn) return;
-                message = `<strong>${this.actor.name}</strong> <strong style="color: #b63a2b;">BURNS</strong> a Fate Point!`;
-                await (this.actor as any).update({
-                    'system.fate.max': Math.max(0, (this.actor.system.fate?.max || 0) - 1),
-                });
-                break;
-            }
-            default:
-                return;
-        }
-
-        await this._updateSystemField('system.fate.value', currentFate - 1);
-
-        await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor as unknown as Actor }),
-            content: `
-                <div class="wh40k-fate-spend-message">
-                    <div style="display: flex; align-items: center; gap: 8px; padding: 12px; background: rgba(196, 135, 29, 0.1); border-left: 3px solid #c4871d; border-radius: 4px;">
-                        <i class="fas fa-star" style="font-size: 1.5rem; color: #c4871d;"></i>
-                        <div>${message}</div>
-                    </div>
-                </div>
-            `,
-        });
-    }
 
     /* -------------------------------------------- */
     /*  Event Handlers - Equipment Actions          */
@@ -2866,7 +2550,7 @@ export default class CharacterSheet extends BaseActorSheet {
     static async #openOriginPathBuilder(this: CharacterSheet, event: Event, target: HTMLElement): Promise<void> {
         try {
             if (game.wh40k?.openOriginPathBuilder) {
-                const gameSystem = (this as any)._gameSystemId || (this as any).actor.system?.gameSystem || 'rt';
+                const gameSystem = this._gameSystemId || this.actor.system?.gameSystem || 'rt';
                 await game.wh40k.openOriginPathBuilder((this as any).actor, { gameSystem });
             } else {
                 (this as any)._notify('warning', 'Origin Path Builder not available', {
@@ -2997,7 +2681,7 @@ export default class CharacterSheet extends BaseActorSheet {
     async _openOriginPathBuilder(): Promise<void> {
         try {
             if (game.wh40k?.openOriginPathBuilder) {
-                const gameSystem = (this as any)._gameSystemId || this.actor.system?.gameSystem || 'rt';
+                const gameSystem = this._gameSystemId || this.actor.system?.gameSystem || 'rt';
                 await game.wh40k.openOriginPathBuilder(this.actor, { gameSystem });
             } else {
                 ui.notifications.warn(game.i18n.localize('WH40K.Utility.OriginPathNotAvailable'));
@@ -3094,7 +2778,7 @@ export default class CharacterSheet extends BaseActorSheet {
             // Clear stored filter state
             (this as any)._equipmentFilter = { search: '', type: '', status: '' };
             // Trigger filter update
-            (CharacterSheet as any).#filterEquipment.call(this, event, searchInput);
+            CharacterSheet.#filterEquipment.call(this, event, searchInput);
         }
     }
 
