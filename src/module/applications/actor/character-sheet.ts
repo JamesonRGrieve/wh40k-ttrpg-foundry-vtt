@@ -7,7 +7,6 @@ import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import type { SidebarHeaderField } from '../../config/game-systems/types.ts';
-import WH40K from '../../config.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KItemSystemData } from '../../types/global.d.ts';
@@ -452,9 +451,9 @@ export default class CharacterSheet extends BaseActorSheet {
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = (await super._prepareContext(options as never)) as CharacterSheetContext;
 
-        // Edit mode state
+        // isGM / dh come from BaseActorSheet._prepareCommonContext (called by super).
+        // Edit mode + ruleset state are character-specific.
         context.inEditMode = this.inEditMode;
-        context.isGM = game.user?.isGM ?? false;
 
         // Ruleset state (DH2e only) — controls Throne Gelt visibility
         const activeGameSystem = this._gameSystemId || this.actor.system?.gameSystem || 'rt';
@@ -465,9 +464,6 @@ export default class CharacterSheet extends BaseActorSheet {
         context.isHomebrew = isDH2 && ruleset === 'homebrew';
         context.isRaw = isDH2 && ruleset === 'raw';
         context.hideThroneGelt = context.isRaw;
-
-        // WH40K-specific configuration
-        context.dh = CONFIG.wh40k || WH40K;
 
         // Prepare characteristic HUD data
         this._prepareCharacteristicHUD(context);
