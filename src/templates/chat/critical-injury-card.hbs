@@ -1,25 +1,16 @@
 {{! Critical Injury Chat Card }}
-<div class="wh40k-chat-card wh40k-injury-card wh40k-injury-card--{{damageType}} tw-overflow-hidden tw-rounded-md">
-    <header class="wh40k-card-header">
-        <img src="{{img}}" alt="{{name}}" class="wh40k-card-icon" />
-        <div class="wh40k-card-title-area">
-            <h3 class="wh40k-card-title">{{name}}</h3>
-            <div class="wh40k-card-badges">
-                <span class="wh40k-badge wh40k-badge--{{severityClass}}">
-                    <i class="fas fa-chart-line"></i>
-                    {{severityLabel}}
-                </span>
-                {{#if permanent}}
-                    <span class="wh40k-badge wh40k-badge--permanent">
-                        <i class="fas fa-infinity"></i>
-                        Permanent
-                    </span>
-                {{/if}}
-            </div>
-        </div>
-    </header>
-
-    <div class="wh40k-card-body">
+{{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
+      cardClass=(concat "wh40k-injury-card wh40k-injury-card--" damageType)
+      outerExtraClass="tw-overflow-hidden tw-rounded-md"
+      image=img
+      imageAlt=name
+      title=name
+      badges=(array
+          (object class=(concat "wh40k-badge--" severityClass) icon="fa-chart-line" label=severityLabel)
+          (iff permanent (object class="wh40k-badge--permanent" icon="fa-infinity" label="Permanent"))
+      )
+      footerLabel=sourceReference
+      footerIcon="fa-book"}}
         <div class="wh40k-injury-meta">
             <span class="wh40k-meta-item">
                 <i class="fas {{damageTypeIcon}}"></i>
@@ -47,14 +38,4 @@
                 {{{description}}}
             </div>
         {{/if}}
-    </div>
-
-    {{#if sourceReference}}
-        <footer class="wh40k-card-footer">
-            <span class="wh40k-source-ref">
-                <i class="fas fa-book"></i>
-                {{sourceReference}}
-            </span>
-        </footer>
-    {{/if}}
-</div>
+{{/chat-card-shell}}

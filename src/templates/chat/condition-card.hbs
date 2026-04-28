@@ -1,26 +1,17 @@
 {{! Condition Chat Card }}
-<div class="wh40k-chat-card wh40k-condition-card wh40k-condition-card--{{nature}} tw-overflow-hidden tw-rounded-md">
-    <header class="wh40k-card-header">
-        <img src="{{img}}" alt="{{name}}" class="wh40k-card-icon" />
-        <div class="wh40k-card-title-area">
-            <h3 class="wh40k-card-title">{{name}}</h3>
-            <div class="wh40k-card-subtitle">{{natureLabel}} Condition</div>
-            <div class="wh40k-card-badges">
-                <span class="wh40k-badge wh40k-badge--{{natureClass}}">
-                    <i class="fas {{natureIcon}}"></i>
-                    {{natureLabel}}
-                </span>
-                {{#if stackable}}
-                    <span class="wh40k-badge wh40k-badge--stacks">
-                        <i class="fas fa-layer-group"></i>
-                        ×{{stacks}}
-                    </span>
-                {{/if}}
-            </div>
-        </div>
-    </header>
-
-    <div class="wh40k-card-body">
+{{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
+      cardClass=(concat "wh40k-condition-card wh40k-condition-card--" nature)
+      outerExtraClass="tw-overflow-hidden tw-rounded-md"
+      image=img
+      imageAlt=name
+      title=name
+      subtitle=(concat natureLabel " Condition")
+      badges=(array
+          (object class=(concat "wh40k-badge--" natureClass) icon=natureIcon label=natureLabel)
+          (iff stackable (object class="wh40k-badge--stacks" icon="fa-layer-group" label=(concat "×" stacks)))
+      )
+      footerLabel=sourceReference
+      footerIcon="fa-book"}}
         <div class="wh40k-condition-meta">
             <span class="wh40k-meta-item wh40k-meta-item--applies">
                 <i class="fas {{appliesToIcon}}"></i>
@@ -60,14 +51,4 @@
                 {{{description}}}
             </div>
         {{/if}}
-    </div>
-
-    {{#if sourceReference}}
-        <footer class="wh40k-card-footer">
-            <span class="wh40k-source-ref">
-                <i class="fas fa-book"></i>
-                {{sourceReference}}
-            </span>
-        </footer>
-    {{/if}}
-</div>
+{{/chat-card-shell}}

@@ -112,6 +112,7 @@ export function initializeStoryHandlebars(): typeof Handlebars {
     Handlebars.registerHelper('object', function (options: { hash?: Record<string, unknown> }) {
         return options?.hash ?? {};
     });
+    Handlebars.registerHelper('array', (...args: unknown[]) => args.slice(0, -1));
     Handlebars.registerHelper('checked', (value: unknown) => (value ? 'checked' : ''));
     Handlebars.registerHelper('signedNumber', (value: unknown) => {
         const num = Number(value ?? 0);
