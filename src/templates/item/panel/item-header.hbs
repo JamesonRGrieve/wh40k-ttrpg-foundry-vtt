@@ -1,6 +1,23 @@
-{{! Item Header - Talent/Trait/Condition Style
-     Compact header for non-physical items with image + name + type badge
-}}
+{{!-- Item Header - Canonical compact header for non-physical items.
+    Image (with edit overlay) + name input + meta badges.
+
+    Optional parameters (all backward-compatible -- call with no params to
+    keep the existing talent/trait behavior):
+      - namePlaceholderKey  i18n key for the name input placeholder
+                            (default: WH40K.Item.NamePlaceholder)
+      - namePlaceholder     raw placeholder string; takes precedence over the
+                            i18n key when both are present
+      - typeLabel           explicit type-badge label string (overrides the
+                            default TYPES.Item.<item.type> lookup)
+      - typeLabelKey        i18n key for the type-badge label (alternative to
+                            typeLabel)
+      - typeIcon            FA icon class for the type badge
+                            (default: item.icon)
+      - hideTypeBadge       boolean -- when truthy, suppresses the default
+                            type badge entirely (so a child template that
+                            already renders its own meta block does not get
+                            a duplicate badge from this partial)
+--}}
 <header class="wh40k-item-header wh40k-item-header--talent tw-grid tw-grid-cols-[80px_minmax(0,1fr)] tw-gap-4 tw-border-b-2 tw-border-[var(--wh40k-gold-dark)] tw-bg-[linear-gradient(180deg,rgba(212,175,55,0.15)_0%,transparent_100%)] tw-px-4 tw-py-3 tw-shrink-0">
     <div class="wh40k-item-header__image tw-group tw-relative tw-h-20 tw-w-20 tw-cursor-pointer tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-[var(--wh40k-gold)] tw-shadow-[var(--wh40k-shadow-md),0_0_10px_rgba(212,175,55,0.3)] tw-transition-all hover:tw-scale-105 hover:tw-shadow-[var(--wh40k-shadow-lg),0_0_20px_rgba(212,175,55,0.5)]" data-action="editImage" data-edit="img">
         <img class="tw-h-full tw-w-full tw-object-cover" src="{{item.img}}" alt="{{item.name}}" />
@@ -10,29 +27,35 @@
     </div>
 
     <div class="wh40k-item-header__info tw-flex tw-min-w-0 tw-flex-col tw-justify-center tw-gap-1">
-        <input type="text" class="wh40k-item-header__name tw-w-full tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-font-display tw-text-xl tw-text-[var(--wh40k-gold)] tw-shadow-[0_1px_2px_var(--wh40k-text-shadow)] placeholder:tw-text-[var(--wh40k-text-muted)] focus:tw-rounded-sm focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-outline-none" name="name" value="{{item.name}}" placeholder="{{localize 'WH40K.Item.NamePlaceholder'}}" />
+        <input type="text" class="wh40k-item-header__name tw-w-full tw-border-0 tw-bg-transparent tw-px-2 tw-py-1 tw-font-display tw-text-xl tw-text-[var(--wh40k-gold)] tw-shadow-[0_1px_2px_var(--wh40k-text-shadow)] placeholder:tw-text-[var(--wh40k-text-muted)] focus:tw-rounded-sm focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-outline-none" name="name" value="{{item.name}}" placeholder="{{#if namePlaceholder}}{{namePlaceholder}}{{else}}{{localize (or namePlaceholderKey 'WH40K.Item.NamePlaceholder')}}{{/if}}" />
 
         <div class="wh40k-item-header__meta tw-mt-1 tw-flex tw-flex-wrap tw-items-center tw-gap-1">
-            {{! Item Type Badge }}
-            <span class="wh40k-badge wh40k-badge--type tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{localize (concat 'TYPES.Item.' item.type)}}">
-                <i class="fas {{item.icon}}"></i>
-                {{localize (concat "TYPES.Item." item.type)}}
-            </span>
-
-            {{! Additional type-specific badges can be added here by child templates }}
-            {{#if system.tier}}
-                <span class="wh40k-badge wh40k-badge--tier tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="Tier {{system.tier}}">
-                    <i class="fas fa-layer-group"></i>
-                    T{{system.tier}}
+            {{#unless hideTypeBadge}}
+                {{! Item Type Badge }}
+                <span class="wh40k-badge wh40k-badge--type tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{#if typeLabel}}{{typeLabel}}{{else if typeLabelKey}}{{localize typeLabelKey}}{{else}}{{localize (concat 'TYPES.Item.' item.type)}}{{/if}}">
+                    <i class="fas {{#if typeIcon}}{{typeIcon}}{{else}}{{item.icon}}{{/if}}"></i>
+                    {{#if typeLabel}}{{typeLabel}}{{else if typeLabelKey}}{{localize typeLabelKey}}{{else}}{{localize (concat "TYPES.Item." item.type)}}{{/if}}
                 </span>
-            {{/if}}
+            {{/unless}}
 
-            {{#if system.category}}
-                <span class="wh40k-badge wh40k-badge--category tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{system.category}}">
-                    <i class="fas fa-tag"></i>
-                    {{system.category}}
-                </span>
-            {{/if}}
+            {{! Default tier/category badges (rendered when system has those
+                fields). Also suppressed by hideTypeBadge so callers that
+                compose their own meta row do not get duplicate extras. }}
+            {{#unless hideTypeBadge}}
+                {{#if system.tier}}
+                    <span class="wh40k-badge wh40k-badge--tier tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="Tier {{system.tier}}">
+                        <i class="fas fa-layer-group"></i>
+                        T{{system.tier}}
+                    </span>
+                {{/if}}
+
+                {{#if system.category}}
+                    <span class="wh40k-badge wh40k-badge--category tw-inline-flex tw-items-center tw-gap-1 tw-whitespace-nowrap tw-rounded-full tw-border tw-border-transparent tw-bg-[rgba(100,100,120,0.3)] tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-medium" title="{{system.category}}">
+                        <i class="fas fa-tag"></i>
+                        {{system.category}}
+                    </span>
+                {{/if}}
+            {{/unless}}
         </div>
     </div>
 </header>
