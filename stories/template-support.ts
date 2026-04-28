@@ -108,6 +108,10 @@ export function initializeStoryHandlebars(): typeof Handlebars {
     });
     Handlebars.registerHelper('multiply', (a: unknown, b: unknown) => Number(a ?? 0) * Number(b ?? 0));
     Handlebars.registerHelper('inc', (value: unknown) => Number(value) + 1);
+    Handlebars.registerHelper('iff', (cond: unknown, ifTrue: unknown, ifFalse: unknown) => (cond ? ifTrue : (ifFalse ?? '')));
+    Handlebars.registerHelper('object', function (options: { hash?: Record<string, unknown> }) {
+        return options?.hash ?? {};
+    });
     Handlebars.registerHelper('checked', (value: unknown) => (value ? 'checked' : ''));
     Handlebars.registerHelper('signedNumber', (value: unknown) => {
         const num = Number(value ?? 0);

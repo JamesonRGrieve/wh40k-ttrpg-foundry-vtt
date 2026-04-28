@@ -1,0 +1,51 @@
+{{!--
+    Vital quick-adjust button row — four buttons: -5 / -1 / +1 / +5.
+    Used by corruption and insanity panels. The deltas and button styling are fixed
+    (matching the existing markup); each caller passes its own field path and wrapper class.
+
+    Required hash params:
+        field        — schema path ("system.corruption")
+        wrapperClass — outer container classes (e.g. "wh40k-corruption-quick-set tw-flex tw-gap-1 tw-mt-2")
+
+    Optional hash params:
+        minValue  — data-min for negative deltas (default 0)
+        maxValue  — data-max for positive deltas (default 100)
+--}}
+<div class="{{wrapperClass}}">
+    <button type="button"
+            class="wh40k-quick-adjust-btn tw-px-2 tw-py-1 tw-bg-gray-700 tw-rounded"
+            data-action="adjustStat"
+            data-field="{{field}}"
+            data-delta="-5"
+            data-min="{{#if minValue}}{{minValue}}{{else}}0{{/if}}"
+            title="Decrease by 5">
+        -5
+    </button>
+    <button type="button"
+            class="wh40k-quick-adjust-btn tw-px-2 tw-py-1 tw-bg-gray-700 tw-rounded"
+            data-action="adjustStat"
+            data-field="{{field}}"
+            data-delta="-1"
+            data-min="{{#if minValue}}{{minValue}}{{else}}0{{/if}}"
+            title="Decrease by 1">
+        -1
+    </button>
+    <button type="button"
+            class="wh40k-quick-adjust-btn tw-px-2 tw-py-1 tw-bg-gray-700 tw-rounded"
+            data-action="adjustStat"
+            data-field="{{field}}"
+            data-delta="1"
+            data-max="{{#if maxValue}}{{maxValue}}{{else}}100{{/if}}"
+            title="Increase by 1">
+        +1
+    </button>
+    <button type="button"
+            class="wh40k-quick-adjust-btn tw-px-2 tw-py-1 tw-bg-gray-700 tw-rounded"
+            data-action="adjustStat"
+            data-field="{{field}}"
+            data-delta="5"
+            data-max="{{#if maxValue}}{{maxValue}}{{else}}100{{/if}}"
+            title="Increase by 5">
+        +5
+    </button>
+</div>

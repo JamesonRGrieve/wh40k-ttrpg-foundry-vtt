@@ -1,0 +1,29 @@
+{{!--
+    Vital edit-mode numeric input row — label + number input.
+    Used inside the expandable details section of every vital panel.
+
+    Required hash params:
+        name      — schema path ("system.wounds.max")
+        label     — display label ("Max Wounds")
+        value     — current value to display
+
+    Optional hash params:
+        labelClass — extra utilities on the label span ("tw-text-xs tw-text-gray-400")
+        inputClass — extra utilities on the input ("tw-w-full tw-p-1 tw-rounded")
+        min        — input min attr
+        max        — input max attr
+        readonly   — boolean
+        placeholder— input placeholder
+--}}
+<label class="wh40k-edit-field">
+    <span class="wh40k-edit-label {{labelClass}}">{{label}}</span>
+    <input type="number"
+           data-dtype="Number"
+           class="wh40k-edit-input {{inputClass}}"
+           name="{{name}}"
+           value="{{value}}"
+           {{#if min}}min="{{min}}"{{else}}min="0"{{/if}}
+           {{#if max}}max="{{max}}"{{/if}}
+           {{#if readonly}}readonly{{/if}}
+           placeholder="{{#if placeholder}}{{placeholder}}{{else}}{{label}}{{/if}}" />
+</label>

@@ -1,0 +1,34 @@
+{{!--
+    Vital progress bar with optional threshold markers.
+
+    Required hash params:
+        cssPrefix      — class prefix (e.g. "wh40k-wounds")
+        percent        — numeric 0..100, or pre-resolved %
+
+    Optional hash params:
+        containerClass — extra classes on bar container (e.g. "tw-relative tw-h-4 ...")
+        cssVarName     — CSS variable for inline-style percent (e.g. "wounds-percent")
+        fillStyleWidth — boolean; when true, render `style="width: {{percent}}%"` on the fill instead of using CSS var
+        fillExtraClass — extra utility classes for the fill (gradients, height, etc.)
+        thresholds     — array of { at, label, title } objects
+        showPercentText— "right" | "below" | falsy. When truthy, render `<span class="{{prefix}}-percent">{{percent}}%</span>` as a sibling.
+        percentText    — override text (e.g. "{{value}} / {{max}}" for fatigue's progress text variant)
+        percentTextClass — extra utilities on the percent text span
+--}}
+<div class="{{cssPrefix}}-bar-container {{containerClass}}">
+    <div class="{{cssPrefix}}-bar"
+         data-percent="{{percent}}"
+         {{#unless fillStyleWidth}}style="--{{#if cssVarName}}{{cssVarName}}{{else}}{{cssPrefix}}-percent{{/if}}: {{percent}}%"{{/unless}}>
+        <div class="{{cssPrefix}}-bar-fill {{fillExtraClass}}"{{#if fillStyleWidth}} style="width: {{percent}}%"{{/if}}></div>
+
+        {{#each thresholds}}
+        <div class="wh40k-threshold-marker" style="left: {{this.at}}%;" title="{{this.title}}">
+            <span class="wh40k-threshold-line"></span>
+            <span class="wh40k-threshold-label">{{this.label}}</span>
+        </div>
+        {{/each}}
+    </div>
+    {{#if showPercentText}}
+    <span class="{{cssPrefix}}-percent {{percentTextClass}}">{{#if percentText}}{{percentText}}{{else}}{{percent}}%{{/if}}</span>
+    {{/if}}
+</div>

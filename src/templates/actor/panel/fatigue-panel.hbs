@@ -1,148 +1,106 @@
-{{!-- Redesigned Fatigue Panel - Core Rules Compliant --}}
-<div class="wh40k-panel tw-rounded-lg tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-overflow-hidden tw-relative tw-mb-4 tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)] {{#if (gt system.fatigue.value system.fatigue.max)}}wh40k-unconscious{{else if (gt system.fatigue.value 0)}}wh40k-fatigued{{/if}}">
+{{!-- Fatigue Panel — vital meter for fatigue levels with collapse threshold + rest/clear actions. --}}
+{{#> systems/wh40k-rpg/templates/actor/partial/vital-panel-shell key="fatigue" label="Fatigue" icon="fa-bolt" actor=actor
+    rootStateClass=(concat (iff (gt system.fatigue.value system.fatigue.max) "wh40k-unconscious") " " (iff (and (lte system.fatigue.value system.fatigue.max) (gt system.fatigue.value 0)) "wh40k-fatigued"))}}
 
-    {{!-- Panel Header - Click to expand/collapse --}}
-    <div class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-p-2 tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-transition-all tw-duration-200 tw-w-full tw-box-border tw-cursor-pointer sheet-control__hide-control"
-         data-toggle="fatigue_details"
-         title="Click to {{#if (isExpanded 'fatigue_details' actor)}}collapse{{else}}expand{{/if}}">
-        <span class="wh40k-panel-title tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-text-dark)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">
-            <i class="fas fa-bolt tw-text-[var(--panel-accent,var(--wh40k-accent-gold))] tw-flex-shrink-0"></i> Fatigue
-        </span>
-        <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded 'fatigue_details' actor)}}wh40k-panel-chevron--open{{/if}}"></i>
+    {{!-- Main Display: Current/Threshold with Quick Controls --}}
+    <div class="wh40k-fatigue-display">
+        {{> systems/wh40k-rpg/templates/actor/partial/vital-quick-controls
+            wrapperClass="wh40k-fatigue-tracker tw-flex tw-items-center tw-justify-between tw-mb-2"
+            cssPrefix="wh40k-fatigue"
+            field="system.fatigue.value"
+            current=system.fatigue.value
+            maxLabel=system.fatigue.max
+            decTitle="Reduce Fatigue"
+            incTitle="Increase Fatigue"}}
+
+        {{> systems/wh40k-rpg/templates/actor/partial/vital-progress-bar
+            cssPrefix="wh40k-fatigue"
+            cssVarName="fatigue-percent"
+            percent=(percent system.fatigue.value system.fatigue.max)
+            containerClass="wh40k-fatigue-bar-container tw-relative tw-h-4 tw-bg-[rgba(0,0,0,0.3)] tw-rounded-md tw-overflow-hidden tw-mb-2"
+            fillExtraClass="tw-h-full tw-bg-gradient-to-r tw-from-yellow-600 tw-to-crimson-dark"
+            showPercentText="below"
+            percentText=(concat system.fatigue.value " / " system.fatigue.max)
+            percentTextClass="tw-text-xs tw-text-gray-400"
+            thresholds=(array (object at=100 label="TB" title="Collapse Threshold"))}}
     </div>
 
-    {{!-- Panel Body --}}
-    <div class="wh40k-panel-body tw-p-4 tw-bg-[var(--wh40k-panel-body-bg)]">
+    {{!-- Warning Messages --}}
+    {{#if (gt system.fatigue.value system.fatigue.max)}}
+    <div class="wh40k-fatigue-alert wh40k-alert-unconscious tw-text-crimson tw-flex tw-items-center tw-gap-2">
+        <i class="fas fa-dizzy"></i>
+        <span>UNCONSCIOUS - Collapsed for {{sub 10 characteristics.toughness.bonus}} minutes!</span>
+    </div>
+    {{else if (gt system.fatigue.value 0)}}
+    <div class="wh40k-fatigue-alert wh40k-alert-fatigued tw-text-warning tw-flex tw-items-center tw-gap-2">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>FATIGUED - Suffer –10 penalty to all Tests</span>
+    </div>
+    {{/if}}
 
-        {{!-- Main Display: Current/Threshold with Quick Controls --}}
-        <div class="wh40k-fatigue-display">
-            <div class="wh40k-fatigue-tracker tw-flex tw-items-center tw-justify-between tw-mb-2">
-                <button type="button"
-                        class="wh40k-fatigue-btn wh40k-fatigue-minus"
-                        data-action="decrement"
-                        data-field="system.fatigue.value"
-                        data-min="0"
-                        title="Reduce Fatigue">
-                    <i class="fas fa-minus"></i>
-                </button>
-
-                <div class="wh40k-fatigue-value tw-flex tw-items-center tw-gap-1">
-                    <span class="wh40k-fatigue-current">{{system.fatigue.value}}</span>
-                    <span class="wh40k-fatigue-sep">/</span>
-                    <span class="wh40k-fatigue-max">{{system.fatigue.max}}</span>
-                </div>
-
-                <button type="button"
-                        class="wh40k-fatigue-btn wh40k-fatigue-plus"
-                        data-action="increment"
-                        data-field="system.fatigue.value"
-                        title="Increase Fatigue">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
-
-            {{!-- Progress Bar --}}
-            <div class="wh40k-fatigue-bar-container tw-relative tw-h-4 tw-bg-[rgba(0,0,0,0.3)] tw-rounded-md tw-overflow-hidden tw-mb-2">
-                <div class="wh40k-fatigue-bar"
-                     data-percent="{{percent system.fatigue.value system.fatigue.max}}"
-                     style="--fatigue-percent: {{percent system.fatigue.value system.fatigue.max}}%">
-                    <div class="wh40k-fatigue-bar-fill tw-h-full tw-bg-gradient-to-r tw-from-yellow-600 tw-to-crimson-dark"></div>
-
-                    {{!-- Threshold Marker at 100% --}}
-                    <div class="wh40k-threshold-marker" style="left: 100%;" title="Collapse Threshold">
-                        <span class="wh40k-threshold-line"></span>
-                        <span class="wh40k-threshold-label">TB</span>
-                    </div>
-                </div>
-                <span class="wh40k-fatigue-percent tw-text-xs tw-text-gray-400">{{system.fatigue.value}} / {{system.fatigue.max}}</span>
-            </div>
-        </div>
-
-        {{!-- Warning Messages --}}
-        {{#if (gt system.fatigue.value system.fatigue.max)}}
-        <div class="wh40k-fatigue-alert wh40k-alert-unconscious tw-text-crimson tw-flex tw-items-center tw-gap-2">
-            <i class="fas fa-dizzy"></i>
-            <span>UNCONSCIOUS - Collapsed for {{sub 10 characteristics.toughness.bonus}} minutes!</span>
-        </div>
-        {{else if (gt system.fatigue.value 0)}}
-        <div class="wh40k-fatigue-alert wh40k-alert-fatigued tw-text-warning tw-flex tw-items-center tw-gap-2">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span>FATIGUED - Suffer –10 penalty to all Tests</span>
-        </div>
+    {{!-- Quick Actions --}}
+    <div class="wh40k-fatigue-actions tw-flex tw-gap-2 tw-mt-2">
+        <button type="button"
+                class="wh40k-fatigue-action-btn wh40k-rest-btn tw-flex tw-items-center tw-gap-1 tw-bg-gray-700 tw-px-2 tw-py-1 tw-rounded"
+                data-action="decrement"
+                data-field="system.fatigue.value"
+                data-min="0"
+                title="Rest to recover 1 fatigue">
+            <i class="fas fa-bed"></i>
+            <span>Rest (-1)</span>
+        </button>
+        {{#if (gt system.fatigue.value 0)}}
+        <button type="button"
+                class="wh40k-fatigue-action-btn wh40k-clear-btn tw-flex tw-items-center tw-gap-1 tw-bg-gray-700 tw-px-2 tw-py-1 tw-rounded"
+                data-action="clear-fatigue"
+                title="Clear all fatigue (full rest)">
+            <i class="fas fa-broom"></i>
+            <span>Clear All</span>
+        </button>
         {{/if}}
-
-        {{!-- Quick Actions --}}
-        <div class="wh40k-fatigue-actions tw-flex tw-gap-2 tw-mt-2">
-            <button type="button"
-                    class="wh40k-fatigue-action-btn wh40k-rest-btn tw-flex tw-items-center tw-gap-1 tw-bg-gray-700 tw-px-2 tw-py-1 tw-rounded"
-                    data-action="decrement"
-                    data-field="system.fatigue.value"
-                    data-min="0"
-                    title="Rest to recover 1 fatigue">
-                <i class="fas fa-bed"></i>
-                <span>Rest (-1)</span>
-            </button>
-            {{#if (gt system.fatigue.value 0)}}
-            <button type="button"
-                    class="wh40k-fatigue-action-btn wh40k-clear-btn tw-flex tw-items-center tw-gap-1 tw-bg-gray-700 tw-px-2 tw-py-1 tw-rounded"
-                    data-action="clear-fatigue"
-                    title="Clear all fatigue (full rest)">
-                <i class="fas fa-broom"></i>
-                <span>Clear All</span>
-            </button>
-            {{/if}}
-        </div>
-
-        {{!-- Edit Mode (Expandable) --}}
-        <div class="wh40k-panel-details fatigue_details tw-mt-2" {{hideIfNot (isExpanded 'fatigue_details' actor)}}>
-
-            {{!-- Current Fatigue Editor --}}
-            <div class="wh40k-fatigue-edit-section">
-                <div class="wh40k-fatigue-edit-header">
-                    <i class="fas fa-cog"></i> Edit Values
-                </div>
-
-                <div class="wh40k-fatigue-edit-grid tw-grid tw-grid-cols-2 tw-gap-2 tw-mt-1">
-                    <label class="wh40k-edit-field">
-                        <span class="wh40k-edit-label tw-text-xs tw-text-gray-400">
-                            Threshold
-                        </span>
-                        <input type="number"
-                               data-dtype="Number"
-                               class="wh40k-edit-input tw-w-full tw-p-1 tw-rounded"
-                               name="system.fatigue.max"
-                               value="{{system.fatigue.max}}"
-                               min="0"
-                               readonly
-                               placeholder="Threshold" />
-                    </label>
-
-                    <label class="wh40k-edit-field">
-                        <span class="wh40k-edit-label tw-text-xs tw-text-gray-400">Current Fatigue</span>
-                        <input type="number"
-                               data-dtype="Number"
-                               class="wh40k-edit-input tw-w-full tw-p-1 tw-rounded"
-                               name="system.fatigue.value"
-                               value="{{system.fatigue.value}}"
-                               min="0"
-                               placeholder="Current" />
-                    </label>
-                </div>
-            </div>
-
-            {{!-- Info Section --}}
-            <div class="wh40k-fatigue-edit-section tw-mt-4">
-                <div class="wh40k-fatigue-info-box tw-bg-[rgba(0,0,0,0.2)] tw-p-3 tw-rounded">
-                    <i class="fas fa-book tw-text-gold"></i>
-                    <div class="wh40k-info-content tw-text-xs tw-space-y-1 tw-mt-1">
-                        <strong>Fatigue Rules (Core)</strong>
-                        <p><strong>Any Fatigue:</strong> –10 penalty to all Tests.</p>
-                        <p><strong>Exceeds TB:</strong> Collapse unconscious for (10 – TB) minutes. Upon waking, fatigue resets to TB.</p>
-                        <p><strong>Recovery:</strong> Each hour of rest removes 1 fatigue. Eight consecutive hours removes all fatigue.</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
     </div>
-</div>
+
+    {{!-- Edit Mode (Expandable) --}}
+    <div class="wh40k-panel-details fatigue_details tw-mt-2" {{hideIfNot (isExpanded 'fatigue_details' actor)}}>
+
+        {{!-- Current Fatigue Editor --}}
+        <div class="wh40k-fatigue-edit-section">
+            <div class="wh40k-fatigue-edit-header">
+                <i class="fas fa-cog"></i> Edit Values
+            </div>
+
+            <div class="wh40k-fatigue-edit-grid tw-grid tw-grid-cols-2 tw-gap-2 tw-mt-1">
+                {{> systems/wh40k-rpg/templates/actor/partial/vital-edit-input
+                    name="system.fatigue.max"
+                    label="Threshold"
+                    value=system.fatigue.max
+                    labelClass="tw-text-xs tw-text-gray-400"
+                    inputClass="tw-w-full tw-p-1 tw-rounded"
+                    readonly=true
+                    placeholder="Threshold"}}
+
+                {{> systems/wh40k-rpg/templates/actor/partial/vital-edit-input
+                    name="system.fatigue.value"
+                    label="Current Fatigue"
+                    value=system.fatigue.value
+                    labelClass="tw-text-xs tw-text-gray-400"
+                    inputClass="tw-w-full tw-p-1 tw-rounded"
+                    placeholder="Current"}}
+            </div>
+        </div>
+
+        {{!-- Info Section --}}
+        <div class="wh40k-fatigue-edit-section tw-mt-4">
+            <div class="wh40k-fatigue-info-box tw-bg-[rgba(0,0,0,0.2)] tw-p-3 tw-rounded">
+                <i class="fas fa-book tw-text-gold"></i>
+                <div class="wh40k-info-content tw-text-xs tw-space-y-1 tw-mt-1">
+                    <strong>Fatigue Rules (Core)</strong>
+                    <p><strong>Any Fatigue:</strong> –10 penalty to all Tests.</p>
+                    <p><strong>Exceeds TB:</strong> Collapse unconscious for (10 – TB) minutes. Upon waking, fatigue resets to TB.</p>
+                    <p><strong>Recovery:</strong> Each hour of rest removes 1 fatigue. Eight consecutive hours removes all fatigue.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{{/systems/wh40k-rpg/templates/actor/partial/vital-panel-shell}}
