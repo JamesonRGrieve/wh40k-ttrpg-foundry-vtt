@@ -5,8 +5,9 @@ import npcTabSrc from '../src/templates/actor/npc/tab-npc.hbs?raw';
 import biographyTabSrc from '../src/templates/actor/player/tab-biography.hbs?raw';
 import skillsTabSrc from '../src/templates/actor/player/tab-skills.hbs?raw';
 import tabsSrc from '../src/templates/actor/player/tabs.hbs?raw';
-import { mockActor } from '../stories/mocks';
 import { initializeStoryHandlebars } from '../stories/template-support';
+import { mockNpcSheetContext, mockPlayerSheetContext } from '../stories/mocks/sheet-contexts';
+import type { SidebarHeaderField } from '../src/module/config/game-systems/types';
 
 initializeStoryHandlebars();
 
@@ -22,141 +23,47 @@ function wrap(html: string): HTMLElement {
     return root;
 }
 
-function playerContext(systemId: 'dh2e' | 'im') {
-    const actor = mockActor({
-        name: systemId === 'im' ? 'Interrogator Hale' : 'Acolyte Vex',
-        items: [],
-        system: {
-            bio: {
-                playerName: 'Player One',
-                age: '31',
-                gender: 'Non-binary',
-                build: 'Lean',
-                complexion: 'Pale',
-                hair: 'Black',
-                eyes: 'Grey',
-                quirks: 'Meticulous note-taker.',
-                superstition: 'Whispers litanies before every firefight.',
-                mementos: 'An old signet ring.',
-            },
-            originPath: {
-                homeWorld: systemId === 'im' ? 'House Varonius' : 'Hive World',
-                background: systemId === 'im' ? 'Administratum' : 'Imperial Guard',
-                role: systemId === 'im' ? 'Savant' : 'Warrior',
-                motivation: systemId === 'im' ? 'Recover a lost ledger' : 'Duty',
-                career: 'Adept',
-                divination: 'Trust in your fellow man, and put your faith in the Emperor.',
-            },
-        },
-    });
+/**
+ * Legacy DH2 header shape kept here so the input[name="system.rank"] assertion
+ * below still has something to find — the current `DH2eSystemConfig.getHeaderFields`
+ * returns Divination instead of Rank, so this test injects the prior shape via
+ * `contextOverrides`.
+ */
+const LEGACY_DH2_HEADER_FIELDS: SidebarHeaderField[] = [
+    { label: 'Player', name: 'system.bio.playerName', type: 'text', value: 'Player One', placeholder: 'Player Name' },
+    { label: 'Home World', name: 'system.originPath.homeWorld', type: 'text', value: 'Hive World', placeholder: 'Home World' },
+    { label: 'Career', name: 'system.originPath.career', type: 'text', value: 'Adept', placeholder: 'Career' },
+    { label: 'Rank', name: 'system.rank', type: 'number', value: 3, placeholder: 'Rank', inputClass: 'wh40k-rank-input' },
+];
 
-    return {
-        actor,
-        system: actor.system,
-        source: actor.system,
-        editable: true,
-        isNPC: false,
-        isGM: true,
-        biography: {
-            source: { notes: '<p>Background notes.</p>' },
-            enriched: { notes: '<p>Background notes.</p>' },
+function playerContext(systemId: 'dh2e' | 'im') {
+    return mockPlayerSheetContext({
+        systemId,
+        actorOverrides: {
+            system: {
+                bio: {
+                    age: '31',
+                    gender: 'Non-binary',
+                    build: 'Lean',
+                    complexion: 'Pale',
+                    hair: 'Black',
+                    eyes: 'Grey',
+                    quirks: 'Meticulous note-taker.',
+                    superstition: 'Whispers litanies before every firefight.',
+                    mementos: 'An old signet ring.',
+                },
+            },
+            items: [],
         },
-        inEditMode: false,
-        journalEntries: [{ id: 'journal-1', name: 'Interrogation Log', system: { time: 'M41.998', place: 'Scintilla', description: 'Important lead.' } }],
-        tabs: [
-            { tab: 'skills', group: 'primary', label: 'Skills', cssClass: 'tab-skills', active: false },
-            { tab: 'combat', group: 'primary', label: 'Combat', cssClass: 'tab-combat', active: false },
-            { tab: 'equipment', group: 'primary', label: 'Equipment', cssClass: 'tab-equipment', active: false },
-            { tab: 'biography', group: 'primary', label: 'Biography', cssClass: 'tab-biography', active: true },
-        ],
-        tab: { id: 'biography', group: 'primary', cssClass: 'tab-biography', active: true },
-        headerFields:
-            systemId === 'im'
-                ? [
-                      { label: 'Player', name: 'system.bio.playerName', type: 'text', value: 'Player One', placeholder: 'Player Name' },
-                      { label: 'Patron', name: 'system.originPath.homeWorld', type: 'text', value: 'House Varonius', placeholder: 'Patron' },
-                      { label: 'Faction', name: 'system.originPath.background', type: 'text', value: 'Administratum', placeholder: 'Faction' },
-                      { label: 'Role', name: 'system.originPath.role', type: 'text', value: 'Savant', placeholder: 'Role' },
-                      { label: 'Endeavour', name: 'system.originPath.motivation', type: 'text', value: 'Recover a lost ledger', placeholder: 'Endeavour' },
-                  ]
-                : [
-                      { label: 'Player', name: 'system.bio.playerName', type: 'text', value: 'Player One', placeholder: 'Player Name' },
-                      { label: 'Home World', name: 'system.originPath.homeWorld', type: 'text', value: 'Hive World', placeholder: 'Home World' },
-                      { label: 'Career', name: 'system.originPath.career', type: 'text', value: 'Adept', placeholder: 'Career' },
-                      { label: 'Rank', name: 'system.rank', type: 'number', value: 3, placeholder: 'Rank', inputClass: 'wh40k-rank-input' },
-                  ],
-        originPathComplete: true,
-        originPathSteps: [{ label: 'Origin', icon: 'fa-globe', item: { _id: 'origin-1', img: 'icons/svg/book.svg', name: 'Hive World' } }],
-    };
+        contextOverrides:
+            systemId === 'dh2e'
+                ? { headerFields: LEGACY_DH2_HEADER_FIELDS }
+                : {},
+    });
 }
 
 function npcContext() {
-    const actor = {
-        ...mockActor({
-            name: 'Cult Demagogue',
-            type: 'npc',
-        }),
-        inCombat: false,
-    };
-    const system = {
-        ...actor.system,
-        threatLevel: 7,
-        threatTier: { label: 'Major Threat', color: '#f97316' },
-        type: 'elite',
-        role: 'commander',
-        faction: 'Imperium Nihilus Separatists',
-        subfaction: 'The Ragged Choir',
-        allegiance: 'Chaos',
-        source: 'IM Core p.214',
-        quickNotes: '<p>Uses bodyguards aggressively.</p>',
-        tactics: '<p>Retreats to elevation when pressured.</p>',
-    };
-    actor.system = system;
-
-    return {
-        actor,
-        system,
-        source: system,
-        editable: true,
-        isNPC: true,
-        isGM: true,
-        tabs: [{ tab: 'npc', group: 'primary', label: 'NPC', cssClass: 'tab-npc', active: true }],
-        tab: { id: 'npc', group: 'primary', cssClass: 'tab-npc', active: true },
-        headerFields: [
-            {
-                label: 'Threat',
-                name: 'system.threatLevel',
-                type: 'number',
-                value: 7,
-                min: 1,
-                max: 30,
-                icon: 'fa-solid fa-skull',
-                rowClass: 'wh40k-threat-row',
-                inputClass: 'wh40k-threat-input',
-                borderColor: '#f97316',
-                valueLabel: 'Major Threat',
-                valueClass: 'wh40k-threat-tier',
-                valueColor: '#f97316',
-            },
-            { label: 'Type', name: 'system.type', type: 'select', value: 'elite', options: { elite: 'Elite', troop: 'Troop' } },
-            { label: 'Role', name: 'system.role', type: 'select', value: 'commander', options: { commander: 'Commander', bruiser: 'Bruiser' } },
-            { label: 'Faction', name: 'system.faction', type: 'text', value: 'Imperium Nihilus Separatists', placeholder: 'Faction' },
-        ],
-        originPathComplete: true,
-        originPathSteps: [{ label: 'Origin', icon: 'fa-globe', item: { _id: 'origin-1', img: 'icons/svg/book.svg', name: 'Hive World' } }],
-        horde: {
-            enabled: true,
-            magnitude: 18,
-            magnitudeMax: 25,
-            magnitudePercent: 72,
-            damageMultiplier: 2,
-            sizeModifier: 20,
-            barClass: 'healthy',
-            destroyed: false,
-        },
-        transactionProfile: { mode: 'barter' },
-        tags: ['leader', 'chaos', 'ranged'],
-    };
+    return mockNpcSheetContext({ systemId: 'im' });
 }
 
 describe('character sheet template composition', () => {
