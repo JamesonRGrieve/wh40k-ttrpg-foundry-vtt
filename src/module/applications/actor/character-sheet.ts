@@ -6,6 +6,7 @@
 import { DHBasicActionManager } from '../../actions/basic-action-manager.ts';
 import { DHTargetedActionManager } from '../../actions/targeted-action-manager.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
+import type { SidebarHeaderField } from '../../config/game-systems/types.ts';
 import WH40K from '../../config.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
 import type { WH40KItem } from '../../documents/item.ts';
@@ -39,24 +40,6 @@ type SheetTabConfig = {
     label: string;
     group: string;
     cssClass?: string;
-};
-
-type SidebarHeaderField = {
-    label: string;
-    name: string;
-    type: 'text' | 'number' | 'select';
-    value: string | number;
-    placeholder?: string;
-    options?: Record<string, string>;
-    min?: number;
-    max?: number;
-    icon?: string;
-    rowClass?: string;
-    inputClass?: string;
-    borderColor?: string;
-    valueLabel?: string;
-    valueClass?: string;
-    valueColor?: string;
 };
 
 type CharacterSheetContext = Record<string, unknown> & {
@@ -669,86 +652,8 @@ export default class CharacterSheet extends BaseActorSheet {
     }
 
     protected _getSidebarHeaderFields(gameSystem: string): SidebarHeaderField[] {
-        const originPath = (this.actor.system?.originPath ?? {}) as Record<string, string | number>;
-        const bio = (this.actor.system?.bio ?? {}) as Record<string, string | number>;
-        const rank = (this.actor.system?.rank as string | number | undefined) ?? 1;
-
-        const field = (
-            label: string,
-            name: string,
-            value: string | number,
-            placeholder = label,
-            type: SidebarHeaderField['type'] = 'text',
-        ): SidebarHeaderField => ({
-            label,
-            name,
-            type,
-            value,
-            placeholder,
-            inputClass: name === 'system.rank' ? 'wh40k-rank-input' : undefined,
-        });
-
-        const playerField = field(game.i18n.localize('WH40K.Character.Player'), 'system.bio.playerName', bio.playerName ?? '', 'Player Name');
-
-        switch (gameSystem) {
-            case 'dh1e':
-                return [
-                    playerField,
-                    field('Home World', 'system.originPath.homeWorld', originPath.homeWorld ?? ''),
-                    field('Career Path', 'system.originPath.career', originPath.career ?? '', 'Career Path'),
-                    field('Rank', 'system.originPath.role', originPath.role ?? ''),
-                    field('Divination', 'system.originPath.divination', originPath.divination ?? ''),
-                ];
-            case 'bc':
-                return [
-                    playerField,
-                    field('Home World', 'system.originPath.homeWorld', originPath.homeWorld ?? ''),
-                    field('Archetype', 'system.originPath.role', originPath.role ?? '', 'Archetype'),
-                    field('Pride', 'system.originPath.background', originPath.background ?? ''),
-                    field('Disgrace', 'system.originPath.trialsAndTravails', originPath.trialsAndTravails ?? '', 'Disgrace'),
-                    field('Motivation', 'system.originPath.motivation', originPath.motivation ?? ''),
-                ];
-            case 'ow':
-                return [
-                    playerField,
-                    field('Home World', 'system.originPath.homeWorld', originPath.homeWorld ?? ''),
-                    field('Regiment', 'system.originPath.background', originPath.background ?? ''),
-                    field('Speciality', 'system.originPath.role', originPath.role ?? '', 'Speciality'),
-                    field('Demeanour', 'system.originPath.motivation', originPath.motivation ?? '', 'Demeanour'),
-                ];
-            case 'dw':
-                return [
-                    playerField,
-                    field('Chapter', 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Chapter'),
-                    field('Speciality', 'system.originPath.role', originPath.role ?? '', 'Speciality'),
-                    field('Rank', 'system.originPath.career', originPath.career ?? ''),
-                    field('Demeanour', 'system.originPath.motivation', originPath.motivation ?? '', 'Demeanour'),
-                ];
-            case 'im':
-                return [
-                    playerField,
-                    field('Patron', 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Patron'),
-                    field('Faction', 'system.originPath.background', originPath.background ?? '', 'Faction'),
-                    field('Role', 'system.originPath.role', originPath.role ?? ''),
-                    field('Endeavour', 'system.originPath.motivation', originPath.motivation ?? '', 'Endeavour'),
-                ];
-            case 'dh2e':
-                return [
-                    playerField,
-                    field(game.i18n.localize('WH40K.OriginPath.HomeWorld'), 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Home World'),
-                    field(game.i18n.localize('WH40K.OriginPath.Background'), 'system.originPath.background', originPath.background ?? '', 'Background'),
-                    field(game.i18n.localize('WH40K.OriginPath.Role'), 'system.originPath.role', originPath.role ?? '', 'Role'),
-                    field('Divination', 'system.originPath.divination', originPath.divination ?? '', 'Divination'),
-                ];
-            case 'rt':
-            default:
-                return [
-                    playerField,
-                    field(game.i18n.localize('WH40K.OriginPath.HomeWorld'), 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Home World'),
-                    field(game.i18n.localize('WH40K.OriginPath.Career'), 'system.originPath.career', originPath.career ?? '', 'Career'),
-                    field(game.i18n.localize('WH40K.Character.Rank'), 'system.rank', rank, 'Rank', 'number'),
-                ];
-        }
+        const config = SystemConfigRegistry.getOrNull(gameSystem) ?? SystemConfigRegistry.get('rt');
+        return config.getHeaderFields(this.actor);
     }
 
     /**

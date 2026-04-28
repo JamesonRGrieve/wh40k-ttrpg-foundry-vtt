@@ -3,8 +3,9 @@
  * Reuses the aptitude-driven four-rank character framework for now.
  */
 
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import type { OriginStepConfig } from './types.ts';
+import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 export class IMSystemConfig extends AptitudeBasedSystemConfig {
     readonly id = 'im' as const;
@@ -21,6 +22,17 @@ export class IMSystemConfig extends AptitudeBasedSystemConfig {
             optionalStep: null,
             packs: [],
         };
+    }
+
+    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
+        const originPath = (actor.system?.originPath ?? {}) as Record<string, string | number>;
+        return [
+            this.makePlayerField(actor),
+            this.makeField('Patron', 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Patron'),
+            this.makeField('Faction', 'system.originPath.background', originPath.background ?? '', 'Faction'),
+            this.makeField('Role', 'system.originPath.role', originPath.role ?? ''),
+            this.makeField('Endeavour', 'system.originPath.motivation', originPath.motivation ?? '', 'Endeavour'),
+        ];
     }
 
     getCharacteristicAptitudes(charKey: string): [string, string] {

@@ -15,7 +15,7 @@ import * as Seneschal from '../advancements/seneschal.ts';
 import * as VoidMaster from '../advancements/void-master.ts';
 import * as WH40K from '../advancements/wh40k-rpg.ts';
 import { CareerBasedSystemConfig } from './career-based-system-config.ts';
-import type { OriginStepConfig } from './types.ts';
+import type { OriginStepConfig, SidebarHeaderField } from './types.ts';
 
 const RT_CAREER_REGISTRY: Record<string, unknown> = {
     rogueTrader: WH40K,
@@ -68,5 +68,16 @@ export class RTSystemConfig extends CareerBasedSystemConfig {
     resolveCareerKey(actor: WH40KBaseActor): string | null {
         const careerName = actor.system?.originPath?.career;
         return careerName ? getCareerKeyFromName(careerName) : null;
+    }
+
+    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
+        const originPath = (actor.system?.originPath ?? {}) as Record<string, string | number>;
+        const rank = (actor.system?.rank as string | number | undefined) ?? 1;
+        return [
+            this.makePlayerField(actor),
+            this.makeField(game.i18n.localize('WH40K.OriginPath.HomeWorld'), 'system.originPath.homeWorld', originPath.homeWorld ?? '', 'Home World'),
+            this.makeField(game.i18n.localize('WH40K.OriginPath.Career'), 'system.originPath.career', originPath.career ?? '', 'Career'),
+            this.makeField(game.i18n.localize('WH40K.Character.Rank'), 'system.rank', rank, 'Rank', 'number'),
+        ];
     }
 }
