@@ -37,6 +37,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/vital-quick-adjust.hbs',
             'systems/wh40k-rpg/templates/actor/partial/tab-strip.hbs',
             'systems/wh40k-rpg/templates/actor/partial/stat-box.hbs',
+            'systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs',
 
             // Acolyte sheet templates
             'systems/wh40k-rpg/templates/actor/player/header-dh.hbs',

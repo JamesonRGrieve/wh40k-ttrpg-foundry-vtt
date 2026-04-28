@@ -2,7 +2,6 @@
  * @file StarshipSheet - Starship actor sheet using ApplicationV2 with PARTS system
  */
 
-import WH40K from '../../config.ts';
 import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KStarship } from '../../documents/starship.ts';
 import BaseActorSheet from './base-actor-sheet.ts';
@@ -89,7 +88,7 @@ export default class StarshipSheet extends BaseActorSheet {
     /** @inheritDoc */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
-        context.dh = CONFIG.wh40k || WH40K;
+        // isGM + dh now come from BaseActorSheet._prepareCommonContext via super.
 
         // Prepare ship-specific data
         this._prepareShipData(context);
