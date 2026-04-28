@@ -2,42 +2,24 @@
  * @file SkillSheet - ApplicationV2 sheet for skill items (compendium skills)
  */
 
-import BaseItemSheet from './base-item-sheet.ts';
+import defineSimpleItemSheet from './define-simple-item-sheet.ts';
 
 /**
  * Sheet for skill items (used in compendiums).
  * Redesigned with Imperial Gothic theme and comprehensive layout.
+ *
+ * Note: this sheet has no tabs — its template renders a single body region.
+ * The non-default scrollable selector reflects that template's structure.
  */
-// @ts-expect-error - TS2417 static side inheritance
-export default class SkillSheet extends BaseItemSheet {
-    /** @override */
-    static DEFAULT_OPTIONS = {
-        classes: ['wh40k-rpg', 'sheet', 'item', 'skill'],
-        position: {
-            width: 600,
-            height: 700,
-        },
-    };
+const SkillSheet = defineSimpleItemSheet({
+    className: 'SkillSheet',
+    classes: ['wh40k-rpg', 'sheet', 'item', 'skill'],
+    template: 'systems/wh40k-rpg/templates/item/item-skill-sheet.hbs',
+    width: 600,
+    height: 700,
+    partOverrides: {
+        scrollable: ['.wh40k-item-body'],
+    },
+});
 
-    /* -------------------------------------------- */
-
-    /** @override */
-    static PARTS = {
-        sheet: {
-            template: 'systems/wh40k-rpg/templates/item/item-skill-sheet.hbs',
-            scrollable: ['.wh40k-item-body'],
-        },
-    };
-
-    /* -------------------------------------------- */
-
-    /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const context = await super._prepareContext(options);
-
-        // Add any additional context data needed for the skill sheet
-        // None needed currently - all data comes from DataModel
-
-        return context;
-    }
-}
+export default SkillSheet;
