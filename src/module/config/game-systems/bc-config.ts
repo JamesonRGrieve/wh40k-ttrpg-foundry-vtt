@@ -9,7 +9,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import { AptitudeBasedSystemConfig } from './aptitude-based-system-config.ts';
-import type { OriginStepConfig, ChaosAlignment } from './types.ts';
+import type { OriginStepConfig, ChaosAlignment, SidebarHeaderField } from './types.ts';
 
 /** Alignment opposition map: each god opposes another */
 const ALIGNMENT_OPPOSITIONS: Record<string, string> = {
@@ -46,6 +46,18 @@ export class BCSystemConfig extends AptitudeBasedSystemConfig {
                 'bc-fate-archetypes',
             ],
         };
+    }
+
+    getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[] {
+        const originPath = (actor.system?.originPath ?? {}) as Record<string, string | number>;
+        return [
+            this.makePlayerField(actor),
+            this.makeField('Home World', 'system.originPath.homeWorld', originPath.homeWorld ?? ''),
+            this.makeField('Archetype', 'system.originPath.role', originPath.role ?? '', 'Archetype'),
+            this.makeField('Pride', 'system.originPath.background', originPath.background ?? ''),
+            this.makeField('Disgrace', 'system.originPath.trialsAndTravails', originPath.trialsAndTravails ?? '', 'Disgrace'),
+            this.makeField('Motivation', 'system.originPath.motivation', originPath.motivation ?? ''),
+        ];
     }
 
     /** BC characteristic aptitude pairs */

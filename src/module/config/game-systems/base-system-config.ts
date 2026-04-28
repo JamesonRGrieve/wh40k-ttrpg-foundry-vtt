@@ -4,7 +4,7 @@
  */
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
-import type { GameSystemId, SkillRankDef, CharacteristicTierDef, OriginStepConfig, AdvanceCostResult, AdvanceOption } from './types.ts';
+import type { GameSystemId, SkillRankDef, CharacteristicTierDef, OriginStepConfig, AdvanceCostResult, AdvanceOption, SidebarHeaderField } from './types.ts';
 
 export abstract class BaseSystemConfig {
     /** Canonical system identifier */
@@ -99,6 +99,45 @@ export abstract class BaseSystemConfig {
      * The schema contains all skills from all systems; this filters to the relevant ones.
      */
     abstract getVisibleSkills(): Set<string>;
+
+    // ── Sidebar Header Fields ────────────────────────────────────
+
+    /**
+     * Get the field rows that populate the player sheet sidebar identity panel
+     * (Player / Home World / Career / Rank for DH2e, Patron / Faction / Role / Endeavour for IM, etc.).
+     * Implementations should return strings that match the existing per-system shape so the form parser
+     * (which is path-sensitive on `name=`) keeps writing into the same schema slots.
+     */
+    abstract getHeaderFields(actor: WH40KBaseActor): SidebarHeaderField[];
+
+    /**
+     * Build a single header-field row. All systems share the same shape; this helper is the only
+     * place the row defaults live so per-system configs stay declarative.
+     */
+    protected makeField(
+        label: string,
+        name: string,
+        value: string | number,
+        placeholder: string = label,
+        type: SidebarHeaderField['type'] = 'text',
+    ): SidebarHeaderField {
+        return {
+            label,
+            name,
+            type,
+            value,
+            placeholder,
+            inputClass: name === 'system.rank' ? 'wh40k-rank-input' : undefined,
+        };
+    }
+
+    /**
+     * The "Player" row that prefixes every system's header field list.
+     */
+    protected makePlayerField(actor: WH40KBaseActor): SidebarHeaderField {
+        const bio = (actor.system?.bio ?? {}) as Record<string, string | number>;
+        return this.makeField(game.i18n.localize('WH40K.Character.Player'), 'system.bio.playerName', bio.playerName ?? '', 'Player Name');
+    }
 
     // ── UI Labels ─────────────────────────────────────────────────
 

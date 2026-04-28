@@ -81,3 +81,22 @@ export interface Prerequisite {
 
 /** Chaos alignment values for Black Crusade */
 export type ChaosAlignment = 'khorne' | 'nurgle' | 'slaanesh' | 'tzeentch' | 'unaligned';
+
+/** Sidebar header field row used by the player sheet identity panel. */
+export interface SidebarHeaderField {
+    label: string;
+    name: string;
+    type: 'text' | 'number' | 'select';
+    value: string | number;
+    placeholder?: string;
+    options?: Record<string, string>;
+    min?: number;
+    max?: number;
+    icon?: string;
+    rowClass?: string;
+    inputClass?: string;
+    borderColor?: string;
+    valueLabel?: string;
+    valueClass?: string;
+    valueColor?: string;
+}
