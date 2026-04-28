@@ -615,104 +615,30 @@ body.theme-dark {
     animation: statIncrease 0.6s ease-out;
 }
 
-@keyframes statIncrease {
-    0% {
-        background-color: transparent;
-        transform: scale(1);
-    }
-    25% {
-        background-color: rgba(74, 222, 128, 0.4);
-        transform: scale(1.15);
-        box-shadow: 0 0 15px rgba(74, 222, 128, 0.6);
-    }
-    100% {
-        background-color: transparent;
-        transform: scale(1);
-    }
-}
 
 /* Decrease animation - red flash with shake */
 .wh40k-stat-decrease {
     animation: statDecrease 0.6s ease-out;
 }
 
-@keyframes statDecrease {
-    0% {
-        background-color: transparent;
-        transform: translateX(0);
-    }
-    10% {
-        transform: translateX(-3px);
-    }
-    20% {
-        background-color: rgba(220, 20, 60, 0.4);
-        transform: translateX(3px);
-        box-shadow: 0 0 15px rgba(220, 20, 60, 0.6);
-    }
-    30% {
-        transform: translateX(-2px);
-    }
-    40% {
-        transform: translateX(2px);
-    }
-    50% {
-        transform: translateX(0);
-    }
-    100% {
-        background-color: transparent;
-    }
-}
 
 /* Generic value change animation - gold glow */
 .wh40k-stat-changed {
     animation: statChanged 0.5s ease-out;
 }
 
-@keyframes statChanged {
-    0% {
-        box-shadow: 0 0 0 rgba(212, 175, 55, 0);
-    }
-    50% {
-        box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
-    }
-    100% {
-        box-shadow: 0 0 0 rgba(212, 175, 55, 0);
-    }
-}
 
 /* Critical warning pulse */
 .wh40k-stat-critical {
     animation: statCritical 1.5s ease-in-out infinite;
 }
 
-@keyframes statCritical {
-    0%,
-    100% {
-        box-shadow: 0 0 5px rgba(220, 20, 60, 0.3);
-        border-color: var(--wh40k-red);
-    }
-    50% {
-        box-shadow: 0 0 20px rgba(220, 20, 60, 0.7);
-        border-color: var(--wh40k-red-bright);
-    }
-}
 
 /* Success glow */
 .wh40k-stat-success {
     animation: statSuccess 0.8s ease-out;
 }
 
-@keyframes statSuccess {
-    0% {
-        box-shadow: 0 0 0 rgba(74, 222, 128, 0);
-    }
-    30% {
-        box-shadow: 0 0 25px rgba(74, 222, 128, 0.7);
-    }
-    100% {
-        box-shadow: 0 0 0 rgba(74, 222, 128, 0);
-    }
-}
 
 /* ── source: src/css/abstracts/_unified-components.css ── */
 /* ============================================ */
@@ -1443,29 +1369,7 @@ body.theme-dark {
     }
 }
 
-@keyframes pulse-warn-intense {
-    0%,
-    100% {
-        opacity: 1;
-        box-shadow: 0 0 8px currentColor;
-    }
-    50% {
-        opacity: 0.3;
-        box-shadow: none;
-    }
-}
 
-@keyframes pulse-critical-intense {
-    0%,
-    100% {
-        opacity: 1;
-        box-shadow: 0 0 12px currentColor;
-    }
-    50% {
-        opacity: 0.3;
-        box-shadow: none;
-    }
-}
 
 /* Vital stat header */
 .wh40k-vital-stat-header {
@@ -2327,16 +2231,6 @@ body.theme-dark {
     }
 }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 /* ──────────────────────────────────────────── */
 /* Button Component */
@@ -3519,25 +3413,7 @@ body.theme-dark {
 /* Animations */
 /* ============================================ */
 
-@keyframes wh40k-pulse {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.6;
-    }
-}
 
-@keyframes wh40k-glow {
-    0%,
-    100% {
-        box-shadow: 0 0 5px var(--wh40k-gold-glow);
-    }
-    50% {
-        box-shadow: 0 0 20px var(--wh40k-gold-glow);
-    }
-}
 
 .wh40k-animate-pulse {
     animation: wh40k-pulse 2s infinite ease-in-out;
@@ -5191,83 +5067,13 @@ body.theme-dark {
     /* ANIMATIONS */
     /* ═══════════════════════════════════════════════════════════════════════ */
 
-    @keyframes burst-pulse {
-        0%,
-        100% {
-            transform: scale(1.15);
-        }
-        50% {
-            transform: scale(1.25);
-        }
-    }
-
-    @keyframes clip-pulse {
-        0%,
-        100% {
-            border-color: rgba(182, 62, 46, 0.4);
-            box-shadow: 0 0 0 rgba(182, 62, 46, 0);
-        }
-        50% {
-            border-color: rgba(182, 62, 46, 0.7);
-            box-shadow: 0 0 15px rgba(182, 62, 46, 0.3);
-        }
-    }
-
-    @keyframes star-twinkle {
-        0%,
-        100% {
-            opacity: 0.8;
-            transform: scale(1);
-        }
-        50% {
-            opacity: 1;
-            transform: scale(1.2);
-        }
-    }
-
-    @keyframes value-change-highlight {
-        0% {
-            box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.6);
-        }
-        50% {
-            box-shadow: 0 0 20px 4px rgba(212, 175, 55, 0.4);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
-        }
-    }
-
-    @keyframes subtle-pulse {
-        0%,
-        100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0.7;
-        }
-    }
-
-    @keyframes slide-in-up {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @keyframes glow-pulse {
-        0%,
-        100% {
-            box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
-        }
-        50% {
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-        }
-    }
-
+    
+    
+    
+    
+    
+    
+    
     /* ═══════════════════════════════════════════════════════════════════════ */
     /* MICRO-INTERACTIONS & POLISH */
     /* ═══════════════════════════════════════════════════════════════════════ */
@@ -15390,17 +15196,6 @@ body.theme-dark {
 /* Animations */
 /* ============================================================================ */
 
-@keyframes pulse-harmful {
-    0%,
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.05);
-        opacity: 0.9;
-    }
-}
 
 /* ── source: src/css/item/_critical-injury.css ── */
 /* Critical Injury Sheet & Chat Card Styles */
@@ -15784,15 +15579,6 @@ body.theme-dark {
 /* Animations */
 /* ============================================================================ */
 
-@keyframes pulse-danger {
-    0%,
-    100% {
-        box-shadow: 0 0 0 0 rgb(from #c0392b r g b / 0.7);
-    }
-    50% {
-        box-shadow: 0 0 8px 2px rgb(from #c0392b r g b / 0.3);
-    }
-}
 
 /* ── source: src/css/item/_origin-path.css ── */
 /* ============================================ */
@@ -19075,16 +18861,6 @@ body.theme-dark {
     box-shadow: inset 0 -1px 0 var(--wh40k-text-shadow), 0 6px 14px var(--wh40k-shadow-soft);
 }
 
-@keyframes wh40k-panel-in {
-    0% {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 .wh40k-tab.active .wh40k-panel {
     animation: wh40k-panel-in 0.3s ease both;
@@ -19559,62 +19335,18 @@ body.theme-dark {
     animation: btn-press 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-@keyframes btn-press {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(0.85);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
 
 /* Button Shake Animation (when hitting limits) */
 .wh40k-btn-shake {
     animation: btn-shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
-@keyframes btn-shake {
-    0%,
-    100% {
-        transform: translateX(0);
-    }
-    10%,
-    30%,
-    50%,
-    70%,
-    90% {
-        transform: translateX(-4px);
-    }
-    20%,
-    40%,
-    60%,
-    80% {
-        transform: translateX(4px);
-    }
-}
 
 /* Number Roll Animation (smooth number change) */
 .wh40k-number-roll {
     animation: number-roll 0.3s ease-out;
 }
 
-@keyframes number-roll {
-    0% {
-        transform: translateY(-10px);
-        opacity: 0.5;
-    }
-    50% {
-        transform: translateY(5px);
-        opacity: 0.8;
-    }
-    100% {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
 
 /* Ensure progress bars have smooth transitions */
 .wh40k-vital-bar-fill,
@@ -20364,15 +20096,6 @@ body.theme-dark {
     }
 }
 
-@keyframes bolt-glow {
-    0%,
-    100% {
-        filter: brightness(1);
-    }
-    50% {
-        filter: brightness(1.3);
-    }
-}
 
 /* Fate Stars Inline */
 .wh40k-fate-stars-inline {
@@ -21788,16 +21511,7 @@ body.theme-dark {
     }
 
     /* Red pulse animation for critical wounds */
-    @keyframes pulse-red {
-        0%,
-        100% {
-            box-shadow: 0 0 0 0 rgba(182, 58, 43, 0.7);
-        }
-        50% {
-            box-shadow: 0 0 0 6px rgba(182, 58, 43, 0);
-        }
-    }
-
+    
     /* Panel state modifiers */
     &.wh40k-wounds-critical {
         .wh40k-panel-header {
@@ -21817,16 +21531,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes pulse-scale {
-        0%,
-        100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.05);
-        }
-    }
-
+    
     /* ============================================ */
     /* Critical Damage Pip System */
     /* ============================================ */
@@ -22441,16 +22146,7 @@ body.theme-dark {
         animation: pulse-orange 2s ease-in-out infinite;
     }
 
-    @keyframes pulse-orange {
-        0%,
-        100% {
-            box-shadow: 0 0 0 0 rgba(192, 128, 32, 0.7);
-        }
-        50% {
-            box-shadow: 0 0 0 6px rgba(192, 128, 32, 0);
-        }
-    }
-
+    
     /* Panel state modifier for exhausted */
     &.wh40k-exhausted {
         .wh40k-panel-header {
@@ -22464,16 +22160,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes pulse-scale {
-        0%,
-        100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.05);
-        }
-    }
-
+    
     /* ============================================ */
     /* Quick Action Buttons */
     /* ============================================ */
@@ -22925,52 +22612,15 @@ body.theme-dark {
     }
 
     /* Gentle glow animation for filled stars */
-    @keyframes gentle-glow {
-        0%,
-        100% {
-            filter: drop-shadow(0 3px 8px var(--wh40k-fate-border));
-        }
-        50% {
-            filter: drop-shadow(0 4px 12px var(--wh40k-fate-primary));
-        }
-    }
-
+    
     /* Sparkle effect when gaining fate (triggered via JS) */
-    @keyframes sparkle {
-        0% {
-            transform: scale(0.5) rotate(0deg);
-            opacity: 0;
-        }
-        50% {
-            transform: scale(1.3) rotate(180deg);
-            opacity: 1;
-        }
-        100% {
-            transform: scale(1) rotate(360deg);
-            opacity: 1;
-        }
-    }
-
+    
     .wh40k-fate-pip.wh40k-sparkle {
         animation: sparkle 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
     /* Fade effect when spending fate (triggered via JS) */
-    @keyframes fade-spend {
-        0% {
-            transform: scale(1);
-            opacity: 1;
-        }
-        50% {
-            transform: scale(1.2);
-            opacity: 0.5;
-        }
-        100% {
-            transform: scale(1);
-            opacity: 0.3;
-        }
-    }
-
+    
     .wh40k-fate-pip.wh40k-spending {
         animation: fade-spend 0.5s ease-out forwards;
     }
@@ -23065,17 +22715,7 @@ body.theme-dark {
         animation: dropdown-slide 0.2s ease;
     }
 
-    @keyframes dropdown-slide {
-        from {
-            opacity: 0;
-            transform: translateY(-8px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
+    
     .wh40k-fate-option {
         width: 100%;
         display: flex;
@@ -23612,16 +23252,7 @@ body.theme-dark {
         animation: damned-pulse 2s ease-in-out infinite;
     }
 
-    @keyframes damned-pulse {
-        0%,
-        100% {
-            box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7);
-        }
-        50% {
-            box-shadow: 0 0 0 8px rgba(139, 0, 0, 0);
-        }
-    }
-
+    
     /* ============================================ */
     /* Header Status (Badge with Icon) */
     /* ============================================ */
@@ -23732,26 +23363,8 @@ body.theme-dark {
         }
     }
 
-    @keyframes badge-pulse {
-        0%,
-        100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.06);
-        }
-    }
-
-    @keyframes seal-pulse {
-        0%,
-        100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.08);
-        }
-    }
-
+    
+    
     /* ============================================ */
     /* Main Display Area */
     /* ============================================ */
@@ -24007,28 +23620,8 @@ body.theme-dark {
         animation: damned-alert 1s ease-in-out infinite;
     }
 
-    @keyframes alert-pulse {
-        0%,
-        100% {
-            box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7);
-        }
-        50% {
-            box-shadow: 0 0 0 4px rgba(139, 0, 0, 0);
-        }
-    }
-
-    @keyframes damned-alert {
-        0%,
-        100% {
-            background: rgba(0, 0, 0, 0.3);
-            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
-        }
-        50% {
-            background: rgba(139, 0, 0, 0.4);
-            box-shadow: 0 0 0 6px rgba(255, 0, 0, 0);
-        }
-    }
-
+    
+    
     /* ============================================ */
     /* Malignancy Preview */
     /* ============================================ */
@@ -24106,16 +23699,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes badge-pulse {
-        0%,
-        100% {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-        }
-        50% {
-            box-shadow: 0 2px 8px rgba(139, 0, 0, 0.5);
-        }
-    }
-
+    
     /* ============================================ */
     /* Edit Mode Sections */
     /* ============================================ */
@@ -24528,16 +24112,7 @@ body.theme-dark {
         animation: insane-pulse 2s ease-in-out infinite;
     }
 
-    @keyframes insane-pulse {
-        0%,
-        100% {
-            box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7);
-        }
-        50% {
-            box-shadow: 0 0 0 8px rgba(139, 0, 0, 0);
-        }
-    }
-
+    
     /* ============================================ */
     /* Header Status (Badge with Icon) */
     /* ============================================ */
@@ -24648,26 +24223,8 @@ body.theme-dark {
         }
     }
 
-    @keyframes badge-pulse {
-        0%,
-        100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.06);
-        }
-    }
-
-    @keyframes seal-pulse {
-        0%,
-        100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.08);
-        }
-    }
-
+    
+    
     /* ============================================ */
     /* Main Display Area */
     /* ============================================ */
@@ -24916,28 +24473,8 @@ body.theme-dark {
         animation: damned-alert 1s ease-in-out infinite;
     }
 
-    @keyframes alert-pulse {
-        0%,
-        100% {
-            box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7);
-        }
-        50% {
-            box-shadow: 0 0 0 4px rgba(139, 0, 0, 0);
-        }
-    }
-
-    @keyframes damned-alert {
-        0%,
-        100% {
-            background: rgba(0, 0, 0, 0.3);
-            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
-        }
-        50% {
-            background: rgba(139, 0, 0, 0.4);
-            box-shadow: 0 0 0 6px rgba(255, 0, 0, 0);
-        }
-    }
-
+    
+    
     /* ============================================ */
     /* Disorder Preview */
     /* ============================================ */
@@ -27091,15 +26628,6 @@ body.theme-dark {
     z-index: 1;
 }
 
-@keyframes pf-marker-pulse {
-    0%,
-    100% {
-        transform: translateX(-50%) translateY(0);
-    }
-    50% {
-        transform: translateX(-50%) translateY(-2px);
-    }
-}
 
 .wh40k-pf-gauge-labels {
     display: flex;
@@ -28511,16 +28039,6 @@ body.theme-dark {
     animation: expandDown 0.2s ease;
 }
 
-@keyframes expandDown {
-    from {
-        opacity: 0;
-        max-height: 0;
-    }
-    to {
-        opacity: 1;
-        max-height: 500px;
-    }
-}
 
 .wh40k-detail-row {
     display: flex;
@@ -30250,15 +29768,6 @@ body.theme-dark {
    Animations
    ======================================== */
 
-@keyframes pulse-glow {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
-}
 
 /* ========================================
    Responsive
@@ -31015,14 +30524,6 @@ body.theme-dark {
     }
 }
 
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
 
 /* ============================================ */
 /* Power Card Actions */
@@ -31175,16 +30676,6 @@ body.theme-dark {
     }
 }
 
-@keyframes expandDown {
-    from {
-        opacity: 0;
-        max-height: 0;
-    }
-    to {
-        opacity: 1;
-        max-height: 500px;
-    }
-}
 
 .wh40k-power-detail-section {
     margin-bottom: var(--wh40k-space-md);
@@ -32274,15 +31765,6 @@ body.theme-dark {
     }
 }
 
-@keyframes pulse-glow {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.6;
-    }
-}
 
 /* ============================================ */
 /* VITAL STAT CARD - ADDITIONAL STYLES */
@@ -32415,14 +31897,6 @@ body.theme-dark {
     }
 }
 
-@keyframes shimmer {
-    0% {
-        transform: translateX(-100%);
-    }
-    100% {
-        transform: translateX(100%);
-    }
-}
 
 .wh40k-wounds-progress {
     background: linear-gradient(
@@ -32470,17 +31944,6 @@ body.theme-dark {
     }
 }
 
-@keyframes alert-pulse {
-    0%,
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.6;
-        transform: scale(1.1);
-    }
-}
 
 .wh40k-alert-fatigue {
     --vital-color-rgb: 192, 128, 32;
@@ -32516,15 +31979,6 @@ body.theme-dark {
     }
 }
 
-@keyframes bolt-glow-combat {
-    0%,
-    100% {
-        filter: brightness(1);
-    }
-    50% {
-        filter: brightness(1.3);
-    }
-}
 
 /* ============================================ */
 /* FATE STARS DISPLAY */
@@ -32554,17 +32008,6 @@ body.theme-dark {
     }
 }
 
-@keyframes star-glow {
-    0%,
-    100% {
-        filter: brightness(1);
-        transform: scale(1);
-    }
-    50% {
-        filter: brightness(1.2);
-        transform: scale(1.05);
-    }
-}
 
 /* ============================================ */
 /* MOBILITY SPEEDS (Compact Vitals Version) */
@@ -33388,17 +32831,6 @@ body.theme-dark {
     }
 }
 
-@keyframes star-pulse {
-    0%,
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.1);
-        opacity: 0.8;
-    }
-}
 
 /* ── source: src/css/chat/_index.css ── */
 /* ============================================
@@ -33965,14 +33397,6 @@ body.theme-dark {
     }
 }
 
-@keyframes critical-pulse {
-    from {
-        box-shadow: 0 0 20px var(--wh40k-card-success-glow), inset 0 0 30px rgba(45, 138, 78, 0.1);
-    }
-    to {
-        box-shadow: 0 0 40px var(--wh40k-card-success-glow), inset 0 0 50px rgba(45, 138, 78, 0.2);
-    }
-}
 
 .wh40k-roll-card__result-label {
     font-family: var(--wh40k-font-display);
@@ -34227,14 +33651,6 @@ body.theme-dark {
     }
 }
 
-@keyframes fury-glow {
-    from {
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-    }
-    to {
-        box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
-    }
-}
 
 /* ============================================ */
 /* Action Controls */
@@ -35978,15 +35394,6 @@ body.theme-dark {
     }
 }
 
-@keyframes melta-pulse {
-    0%,
-    100% {
-        opacity: 0.8;
-    }
-    50% {
-        opacity: 1;
-    }
-}
 
 /* ============================================ */
 /* Prompt Buttons Container (deprecated - use dialog buttons) */
@@ -36875,16 +36282,6 @@ body.theme-dark {
     font-variant-numeric: tabular-nums;
 }
 
-@keyframes wh40k-xp-preview-fadein {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 .wh40k-dialog-buttons {
     display: flex;
@@ -37224,25 +36621,7 @@ body.theme-dark {
     animation: urd-target-pulse-red 0.4s ease;
 }
 
-@keyframes urd-target-pulse-green {
-    0%,
-    100% {
-        filter: brightness(1);
-    }
-    50% {
-        filter: brightness(1.4);
-    }
-}
 
-@keyframes urd-target-pulse-red {
-    0%,
-    100% {
-        filter: brightness(1);
-    }
-    50% {
-        filter: brightness(1.4);
-    }
-}
 
 /* ============================================ */
 /* Difficulty Picker Dropdown */
@@ -37358,16 +36737,6 @@ body.theme-dark {
     }
 }
 
-@keyframes urd-picker-appear {
-    0% {
-        opacity: 0;
-        transform: translateY(-6px) scale(0.96);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
 
 /* ============================================ */
 /* Modifiers Section */
@@ -37918,29 +37287,8 @@ body.theme-dark {
 }
 
 /* Result reveal animation */
-@keyframes urd-result-reveal {
-    0% {
-        opacity: 0;
-        transform: translateY(10px) scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
 
 /* Die land animation */
-@keyframes urd-die-land {
-    0% {
-        transform: rotate(-3deg) scale(1.05);
-    }
-    50% {
-        transform: rotate(2deg) scale(0.98);
-    }
-    100% {
-        transform: rotate(0) scale(1);
-    }
-}
 
 .urd-dice__die-input:not(:placeholder-shown) {
     animation: urd-die-land 0.25s ease;
@@ -39058,20 +38406,6 @@ body.theme-dark {
     }
 }
 
-@keyframes csd-snap {
-    0% {
-        transform: scale(1);
-    }
-    30% {
-        transform: scale(1.08);
-    }
-    60% {
-        transform: scale(0.97);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
 
 .csd-char-header {
     display: flex;
@@ -39203,15 +38537,6 @@ body.theme-dark {
     }
 }
 
-@keyframes csd-bounce {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(3px);
-    }
-}
 
 .csd-assigned-roll {
     width: 40px;
@@ -39262,19 +38587,6 @@ body.theme-dark {
     }
 }
 
-@keyframes csd-value-pop {
-    0% {
-        transform: scale(0.8);
-        opacity: 0.5;
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
 
 /* ============================================ */
 /* Footer Actions */
@@ -39341,15 +38653,6 @@ body.theme-dark {
     }
 }
 
-@keyframes csd-pulse-border {
-    0%,
-    100% {
-        border-color: rgb(from var(--csd-primary) r g b / 0.35);
-    }
-    50% {
-        border-color: rgb(from var(--csd-gold) r g b / 0.6);
-    }
-}
 
 /* ============================================ */
 /* Accessibility - Reduced Motion */
@@ -39456,14 +38759,6 @@ body.theme-dark {
     }
 }
 
-@keyframes xp-shimmer {
-    0% {
-        transform: translateX(-100%);
-    }
-    100% {
-        transform: translateX(100%);
-    }
-}
 
 .wh40k-adv__xp-info {
     display: flex;
@@ -39619,16 +38914,6 @@ body.theme-dark {
     animation: fadeIn var(--adv-transition-normal);
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 /* ============================================ */
 /* Characteristic Cards Grid */
@@ -39667,17 +38952,6 @@ body.theme-dark {
     }
 }
 
-@keyframes purchasePulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(45, 80, 22, 0.6);
-    }
-    50% {
-        box-shadow: 0 0 20px 10px rgba(45, 80, 22, 0.6);
-    }
-    100% {
-        box-shadow: 0 0 0 0 transparent;
-    }
-}
 
 .wh40k-adv__char-header {
     display: flex;
@@ -39734,15 +39008,6 @@ body.theme-dark {
     }
 }
 
-@keyframes currentPulse {
-    0%,
-    100% {
-        box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4);
-    }
-    50% {
-        box-shadow: 0 0 6px 2px rgba(201, 162, 39, 0.6);
-    }
-}
 
 /* Purchase Button */
 .wh40k-adv__char-btn {
@@ -40919,15 +40184,6 @@ body.theme-dark {
     }
 }
 
-@keyframes pulse-glow {
-    0%,
-    100% {
-        box-shadow: 0 0 10px rgba(201, 162, 39, 0.4);
-    }
-    50% {
-        box-shadow: 0 0 16px rgba(201, 162, 39, 0.8);
-    }
-}
 
 /* -------------------------------------------- */
 /*  Main Content Area                           */
@@ -41194,15 +40450,6 @@ body.theme-dark {
     }
 }
 
-@keyframes pulse-border {
-    0%,
-    100% {
-        opacity: 0.3;
-    }
-    50% {
-        opacity: 1;
-    }
-}
 
 /* -------------------------------------------- */
 /*  Selection Detail Panel                      */
@@ -43271,16 +42518,6 @@ body.theme-dark {
     box-shadow: 0 0 20px rgba(201, 162, 39, 0.3);
 }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 .result-value {
     display: flex;
@@ -43352,17 +42589,6 @@ body.theme-dark {
     }
 }
 
-@keyframes pulse {
-    0%,
-    100% {
-        opacity: 0.4;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1.05);
-    }
-}
 
 /* -------------------------------------------- */
 /*  Roll History                                */
@@ -43495,29 +42721,11 @@ body.theme-dark {
     animation: emphasize 1.5s ease-in-out infinite;
 }
 
-@keyframes emphasize {
-    0%,
-    100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-}
 
 .accept-button {
     animation: glow 2s ease-in-out infinite;
 }
 
-@keyframes glow {
-    0%,
-    100% {
-        box-shadow: 0 0 8px rgba(201, 162, 39, 0.3);
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(201, 162, 39, 0.6);
-    }
-}
 
 /* ── source: src/css/_journals.css ── */
 /* ================================== */
@@ -44952,19 +44160,6 @@ body.theme-dark {
     animation: hitLocationPulse 0.5s ease-in-out 4;
 }
 
-@keyframes hitLocationPulse {
-    0%,
-    100% {
-        background: var(--wh40k-panel-bg);
-        border-color: var(--wh40k-border-color);
-        box-shadow: 0 2px 4px var(--wh40k-shadow-soft);
-    }
-    50% {
-        background: rgba(212, 175, 55, 0.25);
-        border-color: var(--wh40k-gold);
-        box-shadow: 0 0 16px rgba(212, 175, 55, 0.5);
-    }
-}
 
 /* ============================================ */
 /* Hit Location Chat Message Styles */
@@ -45562,25 +44757,21 @@ body.theme-dark {
  * under `.wh40k-rpg.sheet.actor.player.npc` below. */
 
 .wh40k-rpg.sheet.actor.player {
-    /* ApplicationV2 Layout Foundation */
+    /* ApplicationV2 Layout Foundation
+     * BaseActorSheet uses `tag: 'form'`, so the application root *is* the
+     * <form>. That means a `.wh40k-rpg.sheet.actor.player form` selector
+     * looks for a form *inside* those classes and never matches the root —
+     * the 2-col grid has to go on .window-content (the actual flex parent
+     * of the wh40k-sidebar + wh40k-body PARTS containers). Without this,
+     * a wide tab body (e.g. the equipment split-panel tables) would shrink
+     * the sidebar to ~0 since `tw-min-w-0` lets it. */
     .window-content {
-        display: flex !important;
-        flex-direction: row !important;
-        overflow: hidden !important;
-        height: 100% !important;
-        background: var(--color-bg-primary, #1a1a1a);
-    }
-
-    form {
         display: grid !important;
         grid-template-columns: minmax(180px, 220px) minmax(0, 1fr) !important;
         grid-template-rows: minmax(0, 1fr) !important;
-        flex: 1 1 auto !important;
-        min-height: 0 !important;
         overflow: hidden !important;
-        gap: 0 !important;
         height: 100% !important;
-        width: 100% !important;
+        background: var(--color-bg-primary, #1a1a1a);
     }
 
     .wh40k-navigation .wh40k-nav-item {
@@ -48831,7 +48022,7 @@ body.theme-dark {
 /* Phase 6: Dedicated sheet for vehicle/ship NPCs */
 /* Based on NPC V2 pattern but optimized for vehicles */
 
-.wh40k-rpg.sheet.actor.vehicle-v2 {
+.wh40k-rpg.sheet.actor.vehicle {
     /* ApplicationV2 Layout Structure */
     .window-content {
         display: flex !important;
@@ -48868,7 +48059,7 @@ body.theme-dark {
     }
 
     /* === HEADER === */
-    .wh40k-vehicle-v2-header {
+    .wh40k-vehicle-header {
         display: grid;
         grid-template-columns: auto 1fr auto;
         gap: var(--wh40k-space-md, 1rem);
@@ -48903,13 +48094,13 @@ body.theme-dark {
     }
 
     /* Identity Section */
-    .wh40k-vehicle-v2-identity {
+    .wh40k-vehicle-identity {
         display: flex;
         flex-direction: column;
         gap: var(--wh40k-space-sm, 0.5rem);
     }
 
-    .wh40k-vehicle-v2-name-input {
+    .wh40k-vehicle-name-input {
         font-size: 1.4rem;
         font-weight: bold;
         background: transparent;
@@ -48926,13 +48117,13 @@ body.theme-dark {
         }
     }
 
-    .wh40k-vehicle-v2-meta-row {
+    .wh40k-vehicle-meta-row {
         display: flex;
         gap: var(--wh40k-space-md, 1rem);
         flex-wrap: wrap;
     }
 
-    .wh40k-vehicle-v2-field {
+    .wh40k-vehicle-field {
         display: flex;
         flex-direction: column;
         gap: 2px;
@@ -48966,13 +48157,13 @@ body.theme-dark {
     }
 
     /* Quick Stats */
-    .wh40k-vehicle-v2-quick-stats {
+    .wh40k-vehicle-quick-stats {
         display: flex;
         flex-direction: column;
         gap: var(--wh40k-space-sm, 0.5rem);
     }
 
-    .wh40k-vehicle-v2-stat-box {
+    .wh40k-vehicle-stat-box {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -48983,13 +48174,13 @@ body.theme-dark {
         min-width: 70px;
     }
 
-    .wh40k-vehicle-v2-stat-label {
+    .wh40k-vehicle-stat-label {
         font-size: 0.65rem;
         text-transform: uppercase;
         color: var(--wh40k-text-muted, #888);
     }
 
-    .wh40k-vehicle-v2-stat-input {
+    .wh40k-vehicle-stat-input {
         width: 45px;
         text-align: center;
         font-size: 1.1rem;
@@ -49003,19 +48194,19 @@ body.theme-dark {
         }
     }
 
-    .wh40k-vehicle-v2-stat-values {
+    .wh40k-vehicle-stat-values {
         display: flex;
         align-items: center;
         gap: 2px;
     }
 
-    .wh40k-vehicle-v2-stat-separator {
+    .wh40k-vehicle-stat-separator {
         font-size: 1rem;
         color: var(--wh40k-text-muted, #888);
     }
 
     /* === PANELS === */
-    .wh40k-vehicle-v2-panel {
+    .wh40k-vehicle-panel {
         background: var(--wh40k-panel-bg, rgba(40, 35, 30, 0.7));
         border: 1px solid var(--wh40k-border-color, #444);
         border-radius: 6px;
@@ -49023,7 +48214,7 @@ body.theme-dark {
         margin-bottom: var(--wh40k-space-md, 1rem);
     }
 
-    .wh40k-vehicle-v2-panel-title {
+    .wh40k-vehicle-panel-title {
         font-size: 1.1rem;
         font-weight: bold;
         color: var(--wh40k-gold, var(--wh40k-color-gold));
@@ -49038,7 +48229,7 @@ body.theme-dark {
     }
 
     /* === TABS === */
-    .wh40k-vehicle-v2-tabs {
+    .wh40k-vehicle-tabs {
         display: flex;
         gap: 0.25rem;
         padding: 0.5rem;
@@ -49077,13 +48268,13 @@ body.theme-dark {
     }
 
     /* === VEHICLE STATS === */
-    .wh40k-vehicle-v2-stats-grid {
+    .wh40k-vehicle-stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: var(--wh40k-space-md, 1rem);
     }
 
-    .wh40k-vehicle-v2-stat-item {
+    .wh40k-vehicle-stat-item {
         display: flex;
         flex-direction: column;
         gap: 0.25rem;
@@ -49112,7 +48303,7 @@ body.theme-dark {
         }
     }
 
-    .wh40k-vehicle-v2-stat-value {
+    .wh40k-vehicle-stat-value {
         font-size: 1.2rem;
         font-weight: bold;
         color: var(--wh40k-text-dark, #f0f0f0);
@@ -49124,13 +48315,13 @@ body.theme-dark {
     }
 
     /* === WEAPONS === */
-    .wh40k-vehicle-v2-weapons-list {
+    .wh40k-vehicle-weapons-list {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
     }
 
-    .wh40k-vehicle-v2-weapon-item {
+    .wh40k-vehicle-weapon-item {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -49145,7 +48336,7 @@ body.theme-dark {
         }
     }
 
-    .wh40k-vehicle-v2-weapon-name {
+    .wh40k-vehicle-weapon-name {
         font-weight: bold;
         cursor: pointer;
 
@@ -49154,7 +48345,7 @@ body.theme-dark {
         }
     }
 
-    .wh40k-vehicle-v2-weapon-stats {
+    .wh40k-vehicle-weapon-stats {
         display: flex;
         gap: 1rem;
         font-size: 0.85rem;
@@ -49162,13 +48353,13 @@ body.theme-dark {
     }
 
     /* === CREW === */
-    .wh40k-vehicle-v2-crew-grid {
+    .wh40k-vehicle-crew-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: var(--wh40k-space-md, 1rem);
     }
 
-    .wh40k-vehicle-v2-crew-item {
+    .wh40k-vehicle-crew-item {
         display: flex;
         flex-direction: column;
         gap: 0.25rem;
@@ -49184,7 +48375,7 @@ body.theme-dark {
         }
     }
 
-    .wh40k-vehicle-v2-crew-controls {
+    .wh40k-vehicle-crew-controls {
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -49209,20 +48400,20 @@ body.theme-dark {
     }
 
     /* === COMPONENTS === */
-    .wh40k-vehicle-v2-items-list {
+    .wh40k-vehicle-items-list {
         display: flex;
         flex-direction: column;
         gap: 0.75rem;
     }
 
-    .wh40k-vehicle-v2-component-item {
+    .wh40k-vehicle-component-item {
         padding: 0.75rem;
         background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
         border: 1px solid var(--wh40k-border-color, #444);
         border-radius: 3px;
     }
 
-    .wh40k-vehicle-v2-component-name {
+    .wh40k-vehicle-component-name {
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -49234,20 +48425,20 @@ body.theme-dark {
         }
     }
 
-    .wh40k-vehicle-v2-component-desc {
+    .wh40k-vehicle-component-desc {
         font-size: 0.85rem;
         color: var(--wh40k-text-muted, #888);
         margin-top: 0.5rem;
     }
 
     /* === TRAITS === */
-    .wh40k-vehicle-v2-traits-list {
+    .wh40k-vehicle-traits-list {
         display: flex;
         flex-direction: column;
         gap: 0.75rem;
     }
 
-    .wh40k-vehicle-v2-trait-item {
+    .wh40k-vehicle-trait-item {
         padding: 0.75rem;
         background: var(--wh40k-input-bg, rgba(0, 0, 0, 0.3));
         border: 1px solid var(--wh40k-border-color, #444);
@@ -49265,7 +48456,7 @@ body.theme-dark {
     }
 
     /* === EMPTY STATES === */
-    .wh40k-vehicle-v2-empty {
+    .wh40k-vehicle-empty {
         padding: 2rem;
         text-align: center;
         color: var(--wh40k-text-muted, #888);
@@ -50424,17 +49615,7 @@ body.theme-dark {
         animation: fadeSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
-    @keyframes fadeSlideIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
+    
     .rt {
         &-body {
             grid-column: span 6;
@@ -52291,18 +51472,7 @@ body.theme-dark {
     }
 
     /* Animations */
-    @keyframes flash-gold {
-        0% {
-            box-shadow: 0 0 0 rgba(212, 175, 55, 0);
-        }
-        50% {
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.8);
-        }
-        100% {
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-        }
-    }
-
+    
     /* Responsive Design */
     @media (max-width: 500px) {
         .enhanced-skill-roll {
@@ -52335,80 +51505,11 @@ body.theme-dark {
     /*  Animation Keyframes                         */
     /* -------------------------------------------- */
 
-    @keyframes stat-increase {
-        0% {
-            background-color: transparent;
-            transform: scale(1);
-        }
-        25% {
-            background-color: rgba(76, 175, 80, 0.4);
-            box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
-            transform: scale(1.05);
-        }
-        50% {
-            background-color: rgba(76, 175, 80, 0.3);
-        }
-        100% {
-            background-color: transparent;
-            box-shadow: none;
-            transform: scale(1);
-        }
-    }
-
-    @keyframes stat-decrease {
-        0% {
-            background-color: transparent;
-            transform: scale(1);
-        }
-        25% {
-            background-color: rgba(244, 67, 54, 0.4);
-            box-shadow: 0 0 8px rgba(244, 67, 54, 0.6);
-            transform: scale(1.05);
-        }
-        50% {
-            background-color: rgba(244, 67, 54, 0.3);
-        }
-        100% {
-            background-color: transparent;
-            box-shadow: none;
-            transform: scale(1);
-        }
-    }
-
-    @keyframes pulse-gold {
-        0%,
-        100% {
-            color: inherit;
-            text-shadow: none;
-        }
-        50% {
-            color: var(--wh40k-color-gold);
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
-        }
-    }
-
-    @keyframes pulse-glow {
-        0%,
-        100% {
-            box-shadow: none;
-        }
-        50% {
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-        }
-    }
-
-    @keyframes flash-update {
-        0% {
-            background-color: transparent;
-        }
-        50% {
-            background-color: rgba(33, 150, 243, 0.3);
-        }
-        100% {
-            background-color: transparent;
-        }
-    }
-
+    
+    
+    
+    
+    
     /* -------------------------------------------- */
     /*  Animation Classes                           */
     /* -------------------------------------------- */
@@ -52492,28 +51593,8 @@ body.theme-dark {
         }
     }
 
-    @keyframes count-up {
-        0% {
-            transform: translateY(10px);
-            opacity: 0.5;
-        }
-        100% {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    @keyframes count-down {
-        0% {
-            transform: translateY(-10px);
-            opacity: 0.5;
-        }
-        100% {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
+    
+    
     /* -------------------------------------------- */
     /*  Special Effects                             */
     /* -------------------------------------------- */
@@ -52523,87 +51604,25 @@ body.theme-dark {
         animation: stat-advance 1s ease-out;
     }
 
-    @keyframes stat-advance {
-        0% {
-            background: transparent;
-            transform: scale(1);
-        }
-        25% {
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, transparent 70%);
-            transform: scale(1.1);
-        }
-        50% {
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
-        }
-        100% {
-            background: transparent;
-            transform: scale(1);
-            box-shadow: none;
-        }
-    }
-
+    
     /* Critical threshold warnings (wounds at 0, fatigue maxed) */
     .stat-critical-warning {
         animation: critical-pulse 1.5s infinite;
     }
 
-    @keyframes critical-pulse {
-        0%,
-        100% {
-            background-color: transparent;
-            border-color: inherit;
-        }
-        50% {
-            background-color: rgba(139, 0, 0, 0.2);
-            border-color: #dc143c;
-            box-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
-        }
-    }
-
+    
     /* Healing effect (for wounds restored) */
     .stat-heal {
         animation: stat-heal 0.8s ease-out;
     }
 
-    @keyframes stat-heal {
-        0% {
-            background-color: transparent;
-        }
-        50% {
-            background-color: rgba(76, 175, 80, 0.5);
-            box-shadow: 0 0 15px rgba(76, 175, 80, 0.7);
-        }
-        100% {
-            background-color: transparent;
-            box-shadow: none;
-        }
-    }
-
+    
     /* Damage taken effect */
     .stat-damage {
         animation: stat-damage 0.8s ease-out;
     }
 
-    @keyframes stat-damage {
-        0% {
-            background-color: transparent;
-        }
-        25% {
-            background-color: rgba(139, 0, 0, 0.6);
-            box-shadow: 0 0 15px rgba(220, 20, 60, 0.8);
-            transform: scale(1.05);
-        }
-        50% {
-            background-color: rgba(139, 0, 0, 0.3);
-        }
-        100% {
-            background-color: transparent;
-            box-shadow: none;
-            transform: scale(1);
-        }
-    }
-
+    
     /* -------------------------------------------- */
     /*  Brief Notifications                         */
     /* -------------------------------------------- */
@@ -52719,21 +51738,7 @@ body.theme-dark {
     }
 
     /* Level up burst effect */
-    @keyframes level-up-burst {
-        0% {
-            box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
-            transform: scale(1);
-        }
-        50% {
-            box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
-            transform: scale(1.05);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
-            transform: scale(1);
-        }
-    }
-
+    
     .level-up-effect {
         animation: level-up-burst 0.6s ease-out;
     }
@@ -52997,12 +52002,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes panel-spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
+    
     /* -------------------------------------------- */
     /*  Panel Variants                              */
     /* -------------------------------------------- */
@@ -53046,16 +52046,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes pulse-warning {
-        0%,
-        100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0.5;
-        }
-    }
-
+    
     /* Danger variant */
     .wh40k-collapsible-panel.danger {
         border-color: #dc143c;
@@ -53088,17 +52079,7 @@ body.theme-dark {
     /* -------------------------------------------- */
 
     /* Slide in from top on first render */
-    @keyframes panel-slide-in {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
+    
     .wh40k-collapsible-panel {
         animation: panel-slide-in 0.3s ease-out;
     }
@@ -53793,16 +52774,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes drop-zone-pulse {
-        0%,
-        100% {
-            opacity: 0.5;
-        }
-        50% {
-            opacity: 1;
-        }
-    }
-
+    
     /* -------------------------------------------- */
     /*  Equipment Slots                             */
     /* -------------------------------------------- */
@@ -53864,16 +52836,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes indicator-glow {
-        0%,
-        100% {
-            box-shadow: 0 0 5px var(--wh40k-gold);
-        }
-        50% {
-            box-shadow: 0 0 15px var(--wh40k-gold), 0 0 25px var(--wh40k-gold);
-        }
-    }
-
+    
     /* -------------------------------------------- */
     /*  Snap-to-Slot Animation                      */
     /* -------------------------------------------- */
@@ -53882,24 +52845,7 @@ body.theme-dark {
         animation: snap-to-slot 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    @keyframes snap-to-slot {
-        0% {
-            transform: scale(1) rotate(0deg);
-        }
-        30% {
-            transform: scale(1.15) rotate(5deg);
-        }
-        60% {
-            transform: scale(0.95) rotate(-3deg);
-        }
-        80% {
-            transform: scale(1.05) rotate(1deg);
-        }
-        100% {
-            transform: scale(1) rotate(0deg);
-        }
-    }
-
+    
     /* -------------------------------------------- */
     /*  Favorites Bar                               */
     /* -------------------------------------------- */
@@ -54532,17 +53478,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes popoverFadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-8px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
+    
     .wh40k-stat-breakdown-header {
         display: flex;
         align-items: center;
@@ -54882,27 +53818,8 @@ body.theme-dark {
         }
     }
 
-    @keyframes toolbar-slide-in {
-        from {
-            transform: translateY(-100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    @keyframes flask-bubble {
-        0%,
-        100% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.1);
-        }
-    }
-
+    
+    
     /* -------------------------------------------- */
     /*  Preview Changes Display                     */
     /* -------------------------------------------- */
@@ -54922,18 +53839,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes preview-pulse {
-        0%,
-        100% {
-            opacity: 0.6;
-            box-shadow: 0 0 5px rgba(212, 175, 55, 0.4);
-        }
-        50% {
-            opacity: 1;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
-        }
-    }
-
+    
     /* -------------------------------------------- */
     /*  Comparison Badges                           */
     /* -------------------------------------------- */
@@ -54975,17 +53881,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes badge-appear {
-        from {
-            transform: scale(0) rotate(-45deg);
-            opacity: 0;
-        }
-        to {
-            transform: scale(1) rotate(0deg);
-            opacity: 1;
-        }
-    }
-
+    
     /* -------------------------------------------- */
     /*  Comparison Panel (Optional Side-by-Side)    */
     /* -------------------------------------------- */
@@ -55090,17 +53986,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes panel-slide-in {
-        from {
-            transform: translateY(-50%) translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(-50%) translateX(0);
-            opacity: 1;
-        }
-    }
-
+    
     /* -------------------------------------------- */
     /*  Impact Summary                              */
     /* -------------------------------------------- */
@@ -55763,76 +54649,14 @@ body.theme-dark {
         }
     }
 
-    @keyframes seal-shake-pip {
-        0%,
-        100% {
-            transform: rotate(0deg);
-        }
-        25% {
-            transform: rotate(-3deg);
-        }
-        75% {
-            transform: rotate(3deg);
-        }
-    }
-
-    @keyframes seal-burn-pip {
-        0%,
-        100% {
-            transform: rotate(0deg) scale(1);
-            filter: drop-shadow(0 2px 10px rgba(139, 0, 0, 0.8)) brightness(1);
-        }
-        50% {
-            transform: rotate(0deg) scale(1.05);
-            filter: drop-shadow(0 2px 12px rgba(255, 0, 0, 1)) brightness(1.2);
-        }
-    }
-
-    @keyframes text-flicker {
-        0%,
-        100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0.7;
-        }
-    }
-
+    
+    
+    
     /* Generic drag-over highlight for any panel drop zone */
     [data-drop-zone].wh40k-drag-over {
         outline: 2px dashed var(--wh40k-gold, var(--wh40k-color-gold));
         outline-offset: -2px;
         background-color: rgba(212, 175, 55, 0.05);
-    }
-
-    .wh40k-characteristics-hud {
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: flex-end;
-        align-items: stretch;
-        gap: 6px;
-        margin-top: 0;
-        padding: 6px 8px;
-        max-width: 620px;
-        overflow: visible;
-        position: relative;
-        background: var(--wh40k-hud-bg);
-        border: 1px solid var(--wh40k-border-color-strong);
-        border-radius: var(--wh40k-radius-lg);
-        box-shadow: inset 0 1px 0 var(--wh40k-text-shadow), inset 0 -1px 0 var(--wh40k-shadow-medium), 0 6px 18px var(--wh40k-shadow-medium);
-        z-index: 1;
-    }
-
-    .wh40k-characteristics-hud::before {
-        content: '';
-        position: absolute;
-        left: 12px;
-        right: 12px;
-        top: 6px;
-        height: 2px;
-        background: linear-gradient(90deg, rgba(20, 20, 20, 0.2), rgba(220, 220, 220, 0.35), rgba(20, 20, 20, 0.2));
-        border-radius: var(--wh40k-radius-sm);
-        pointer-events: none;
     }
 
     .wh40k-char-hud-item {
@@ -55841,7 +54665,7 @@ body.theme-dark {
         justify-items: center;
         gap: var(--wh40k-space-xs);
         padding: 5px 5px;
-        flex: 1 1 0;
+        flex: 0 0 auto;
         min-width: 0;
         position: relative;
         text-align: center;
@@ -55921,19 +54745,9 @@ body.theme-dark {
     }
 
     /* Rolling animation keyframes */
-    @keyframes wh40k-char-roll {
-        0% {
-            transform: scale(1);
-        }
-        30% {
-            transform: scale(1.1);
-        }
-        100% {
-            transform: scale(1);
-        }
-    }
-
+    
     .wh40k-char-hud-circle {
+        position: relative;
         width: 48px;
         height: 48px;
         border-radius: 50%;
@@ -55961,21 +54775,7 @@ body.theme-dark {
     }
 
     /* Value change flash animation */
-    @keyframes wh40k-value-flash {
-        0% {
-            color: var(--wh40k-text-dark);
-            text-shadow: 0 1px 0 var(--wh40k-text-shadow);
-        }
-        50% {
-            color: var(--wh40k-gold, var(--wh40k-color-gold));
-            text-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
-        }
-        100% {
-            color: var(--wh40k-text-dark);
-            text-shadow: 0 1px 0 var(--wh40k-text-shadow);
-        }
-    }
-
+    
     .wh40k-char-hud-base {
         @apply tw-text-[0.65em] tw-uppercase tw-tracking-[0.1em] tw-text-center tw-min-w-[50px] tw-h-[22px] tw-flex tw-items-center tw-justify-center tw-transition-colors tw-duration-300;
         color: var(--wh40k-text-muted);
@@ -55986,18 +54786,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes wh40k-total-flash {
-        0% {
-            color: var(--wh40k-text-muted);
-        }
-        50% {
-            color: var(--wh40k-gold, var(--wh40k-color-gold));
-        }
-        100% {
-            color: var(--wh40k-text-muted);
-        }
-    }
-
+    
     .wh40k-char-hud-toggle {
         width: 18px;
         height: 18px;
@@ -56112,11 +54901,6 @@ body.theme-dark {
 
     /* Responsive sizing for characteristics HUD */
     @media (max-width: 1200px) {
-        .wh40k-characteristics-hud {
-            gap: var(--wh40k-space-xs);
-            padding: 4px 6px;
-        }
-
         .wh40k-char-hud-item {
             padding: 4px;
         }
@@ -56140,11 +54924,6 @@ body.theme-dark {
     }
 
     @media (max-width: 900px) {
-        .wh40k-characteristics-hud {
-            gap: 3px;
-            padding: 3px 4px;
-        }
-
         .wh40k-char-hud-item {
             padding: 3px;
             gap: 2px;
@@ -56501,11 +55280,6 @@ body.theme-dark {
             justify-self: start;
             padding-right: 0;
         }
-
-        .wh40k-characteristics-hud {
-            max-width: 100%;
-            justify-content: flex-start;
-        }
     }
 
     /* Divination — sizing in Tailwind */
@@ -56611,17 +55385,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes origin-pulse {
-        0%,
-        100% {
-            text-shadow: 0 0 4px rgba(212, 175, 55, 0.3);
-        }
-        50% {
-            text-shadow: 0 0 12px rgba(212, 175, 55, 0.9);
-            color: #f0d060;
-        }
-    }
-
+    
     /* Header info — layout in Tailwind */
 
     .wh40k-quick-status-gothic {
@@ -58262,16 +57026,7 @@ body.theme-dark {
         }
     }
 
-    @keyframes pulse-warning {
-        0%,
-        100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0.85;
-        }
-    }
-
+    
     .wh40k-resource-icon {
         font-size: 1.4em;
         color: #3a7a4a;
@@ -59864,31 +58619,13 @@ body.theme-dark {
         gap: 6px !important;
     }
 
-    .wh40k-characteristics-hud {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        justify-content: flex-end !important;
-        align-items: stretch !important;
-        gap: 6px !important;
-        margin-top: 0 !important;
-        padding: 6px 8px !important;
-        max-width: 620px !important;
-        overflow: visible !important;
-        position: relative !important;
-        background: var(--wh40k-hud-bg, linear-gradient(180deg, #f5f0e6 0%, #ede8dc 100%)) !important;
-        border: 1px solid var(--wh40k-border-color-strong, rgba(140, 120, 90, 0.5)) !important;
-        border-radius: var(--wh40k-radius-lg) !important;
-        box-shadow: inset 0 1px 0 var(--wh40k-text-shadow, rgba(255, 255, 255, 0.3)), 0 2px 6px var(--wh40k-shadow-soft, rgba(0, 0, 0, 0.1)) !important;
-        z-index: 1 !important;
-    }
-
     .wh40k-char-hud-item {
         display: grid !important;
         grid-template-rows: auto auto auto auto !important;
         justify-items: center !important;
         gap: var(--wh40k-space-xs) !important;
         padding: 5px !important;
-        flex: 1 1 0 !important;
+        flex: 0 0 auto !important;
         min-width: 0 !important;
         position: relative !important;
         text-align: center !important;
@@ -59934,6 +58671,7 @@ body.theme-dark {
     }
 
     .wh40k-char-hud-circle {
+        position: relative !important;
         width: 48px !important;
         height: 48px !important;
         border-radius: 50% !important;

@@ -1,39 +1,77 @@
-{{! Vehicle Sheet Header }}
-<div class="wh40k-header wh40k-grid-col-6 wh40k-panel wh40k-vehicle-header">
-    <div class="wh40k-header__info tw-grid tw-grid-cols-[auto_minmax(0,1fr)_auto] tw-items-start tw-gap-4 tw-px-6 tw-py-2">
-        <div class="wh40k-header__logo wh40k-portrait-container tw-relative tw-aspect-[11/15] tw-w-44 tw-shrink-0 tw-overflow-hidden tw-rounded-md tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-shadow-[0_2px_8px_var(--wh40k-shadow-medium,rgba(0,0,0,0.2))] tw-transition-all hover:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] hover:tw-shadow-[0_0_8px_rgba(212,175,55,0.5)]">
-            <img class="wh40k-header__logo-image wh40k-portrait tw-h-full tw-w-full tw-cursor-pointer tw-bg-[rgba(0,0,0,0.25)] tw-object-cover" src="{{actor.img}}" data-edit="img" alt="{{actor.name}}" title="{{actor.name}}" />
+{{!-- Vehicle Sheet Header --}}
+<div class="wh40k-header wh40k-panel wh40k-vehicle-header">
+    <div class="wh40k-header__info">
+        {{!-- Identity: name input above portrait --}}
+        <div class="wh40k-vehicle-identity tw-w-44 tw-shrink-0">
+            {{> systems/wh40k-rpg/templates/actor/partial/actor-identity.hbs nameLabelKey="WH40K.Vehicle.Name" portraitWidthClass="tw-w-44"}}
         </div>
-        <div class="wh40k-header-info tw-flex tw-min-w-0 tw-flex-1 tw-flex-col tw-items-stretch tw-gap-1.5">
-            <div class="wh40k-header-row wh40k-name-row tw-flex tw-min-w-0 tw-items-baseline tw-gap-2.5">
-                <span class="wh40k-header-label tw-min-w-[70px] tw-shrink-0 tw-text-[0.85em] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize "WH40K.Vehicle.Name"}}</span>
-                <input class="wh40k-header-input wh40k-name-input tw-min-w-[80px] tw-max-w-[320px] tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[1.2em] tw-font-bold tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="name" type="text" value="{{actor.name}}" />
-            </div>
-            <div class="wh40k-header-row tw-flex tw-min-w-0 tw-items-baseline tw-gap-2.5">
-                <span class="wh40k-header-label tw-min-w-[70px] tw-shrink-0 tw-text-[0.85em] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize "WH40K.Vehicle.Type"}}</span>
-                <select class="wh40k-header-input tw-min-w-[80px] tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.type">
-                    {{selectOptions dh.vehicleTypes selected=source.type labelAttr="label" valueAttr="@key"}}
-                </select>
-            </div>
-            <div class="wh40k-header-row tw-flex tw-min-w-0 tw-items-baseline tw-gap-2.5">
-                <span class="wh40k-header-label tw-min-w-[70px] tw-shrink-0 tw-text-[0.85em] tw-font-bold tw-uppercase tw-text-[var(--wh40k-text-medium,#666)]">{{localize "WH40K.Vehicle.Class"}}</span>
-                <select class="wh40k-header-input tw-min-w-[80px] tw-flex-1 tw-border-0 tw-border-b tw-border-solid tw-border-[var(--wh40k-border-color,#4a3728)] tw-bg-transparent tw-px-1.5 tw-py-0.5 tw-text-[var(--wh40k-text-dark,#333)] focus:tw-border-[var(--wh40k-gold,var(--wh40k-color-gold))] focus:tw-outline-none focus:tw-shadow-[0_1px_0_var(--wh40k-gold,var(--wh40k-color-gold))]" name="system.vehicleClass">
-                    {{selectOptions dh.vehicleClasses selected=source.vehicleClass labelAttr="label" valueAttr="@key"}}
-                </select>
-            </div>
-        </div>
-        <div class="wh40k-quick-stats">
-            <div class="wh40k-stat-box wh40k-integrity-box">
-                <span class="wh40k-stat-label">Integrity</span>
-                <div class="wh40k-stat-values">
-                    <input type="number" class="wh40k-stat-input" name="system.integrity.value" value="{{source.integrity.value}}" title="Current" />
-                    <span class="wh40k-stat-separator">/</span>
-                    <input type="number" class="wh40k-stat-input" name="system.integrity.max" value="{{source.integrity.max}}" title="Max" />
+
+        {{!-- Meta: type + faction --}}
+        <div class="wh40k-vehicle-meta">
+            <div class="wh40k-vehicle-meta-row">
+                {{!-- Type --}}
+                <div class="wh40k-vehicle-field">
+                    <label>{{localize "WH40K.Vehicle.Type"}}</label>
+                    <select name="system.type" class="wh40k-vehicle-select">
+                        <option value="vehicle" {{#if (eq system.type "vehicle")}}selected{{/if}}>Vehicle</option>
+                        <option value="walker" {{#if (eq system.type "walker")}}selected{{/if}}>Walker</option>
+                        <option value="flyer" {{#if (eq system.type "flyer")}}selected{{/if}}>Flyer</option>
+                        <option value="skimmer" {{#if (eq system.type "skimmer")}}selected{{/if}}>Skimmer</option>
+                    </select>
+                </div>
+
+                {{!-- Faction --}}
+                <div class="wh40k-vehicle-field wh40k-vehicle-field--wide">
+                    <label>{{localize "WH40K.NPC.Faction"}}</label>
+                    <input type="text"
+                           name="system.faction"
+                           value="{{source.faction}}"
+                           placeholder="e.g., Imperial Guard, Ork" />
                 </div>
             </div>
-            <div class="wh40k-stat-box wh40k-capacity-box">
-                <span class="wh40k-stat-label">Capacity</span>
-                <input type="number" class="wh40k-stat-input wh40k-stat-single" name="system.carryingCapacity" value="{{source.carryingCapacity}}" />
+        </div>
+
+        {{!-- Quick Stats --}}
+        <div class="wh40k-vehicle-quick-stats">
+            {{!-- Structure --}}
+            <div class="wh40k-vehicle-stat-box wh40k-vehicle-structure">
+                <span class="wh40k-vehicle-stat-label">Structure</span>
+                <div class="wh40k-vehicle-stat-values">
+                    <input type="number"
+                           class="wh40k-vehicle-stat-input"
+                           name="system.wounds.value"
+                           value="{{source.wounds.value}}"
+                           min="0"
+                           title="Current" />
+                    <span class="wh40k-vehicle-stat-separator">/</span>
+                    <input type="number"
+                           class="wh40k-vehicle-stat-input"
+                           name="system.wounds.max"
+                           value="{{source.wounds.max}}"
+                           min="1"
+                           title="Max" />
+                </div>
+            </div>
+
+            {{!-- Hull/Armour --}}
+            <div class="wh40k-vehicle-stat-box wh40k-vehicle-armour">
+                <span class="wh40k-vehicle-stat-label">Armour</span>
+                <input type="number"
+                       class="wh40k-vehicle-stat-input"
+                       name="system.armour.total"
+                       value="{{source.armour.total}}"
+                       min="0" />
+            </div>
+
+            {{!-- Size --}}
+            <div class="wh40k-vehicle-stat-box wh40k-vehicle-size">
+                <span class="wh40k-vehicle-stat-label">Size</span>
+                <input type="number"
+                       class="wh40k-vehicle-stat-input"
+                       name="system.size"
+                       value="{{source.size}}"
+                       min="1"
+                       max="10" />
             </div>
         </div>
     </div>
