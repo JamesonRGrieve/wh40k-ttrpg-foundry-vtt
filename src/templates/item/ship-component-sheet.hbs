@@ -1,19 +1,10 @@
 <div class="wh40k-item-sheet ship-component">
     <form autocomplete="off">
-        <!-- Item Header -->
-        <header class="wh40k-item-header">
-            <div class="wh40k-item-image" data-action="editImage">
-                <img src="{{item.img}}" alt="{{item.name}}" title="{{item.name}}" />
-            </div>
-            
-            <div class="wh40k-item-title">
-                <input type="text" class="wh40k-item-title__name" name="name" value="{{item.name}}" placeholder="Component Name" />
-                <div class="wh40k-item-title__type">
-                    <i class="fas fa-cog"></i>
-                    <span>{{localize "WH40K.ShipComponent"}}</span>
-                </div>
-            </div>
-        </header>
+        {{!-- Item Header (canonical partial) --}}
+        {{> systems/wh40k-rpg/templates/item/panel/item-header.hbs
+            namePlaceholder="Component Name"
+            typeLabelKey="WH40K.ShipComponent"
+            typeIcon="fa-cog"}}
 
         <!-- Tab Navigation -->
         <nav class="wh40k-tabs" data-group="primary">
