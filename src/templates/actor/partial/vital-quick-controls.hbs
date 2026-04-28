@@ -1,0 +1,58 @@
+{{!--
+    Vital quick-controls — minus button / current/max display / plus button.
+    Used by every vital panel and (separately) by dashboard compact rows.
+
+    Required hash params:
+        field        — full schema path (e.g. "system.wounds.value")
+        current      — current resolved value
+        cssPrefix    — class prefix (e.g. "wh40k-wounds")  generates "{{prefix}}-btn", "{{prefix}}-current", etc.
+        wrapperClass — outer flex container utilities (e.g. "tw-flex tw-items-center tw-justify-between")
+
+    Optional hash params:
+        max         — resolved max (renders /max display when provided)
+        maxLabel    — string override for max ("100" for corruption/insanity, "{{system.wounds.max}}" otherwise)
+        decTitle    — title attr for minus button (default "Reduce")
+        incTitle    — title attr for plus button (default "Increase")
+        minValue    — data-min for decrement (default 0)
+        maxValue    — data-max for increment (when set)
+        showCalculator — boolean; when true, render the showStatBreakdown button next to value
+        statKey     — passed to showStatBreakdown action (when showCalculator is true)
+        valueWrapperClass — additional classes on the value display (text-xl, etc.)
+--}}
+<div class="{{wrapperClass}}">
+    <button type="button"
+            class="{{cssPrefix}}-btn {{cssPrefix}}-minus"
+            data-action="decrement"
+            data-field="{{field}}"
+            data-min="{{#if minValue}}{{minValue}}{{else}}0{{/if}}"
+            title="{{#if decTitle}}{{decTitle}}{{else}}Reduce{{/if}}">
+        <i class="fas fa-minus"></i>
+    </button>
+
+    <div class="{{cssPrefix}}-value tw-flex tw-items-center tw-gap-1 {{valueWrapperClass}}">
+        <span class="{{cssPrefix}}-current">{{current}}</span>
+        {{#if maxLabel}}
+        <span class="{{cssPrefix}}-sep">/</span>
+        <span class="{{cssPrefix}}-max">{{maxLabel}}</span>
+        {{/if}}
+        {{#if showCalculator}}
+        <button
+            type="button"
+            class="wh40k-stat-breakdown-btn wh40k-stat-breakdown-btn--inline"
+            data-action="showStatBreakdown"
+            data-stat-key="{{statKey}}"
+            title="Show {{statKey}} calculation">
+            <i class="fa-solid fa-calculator"></i>
+        </button>
+        {{/if}}
+    </div>
+
+    <button type="button"
+            class="{{cssPrefix}}-btn {{cssPrefix}}-plus"
+            data-action="increment"
+            data-field="{{field}}"
+            {{#if maxValue}}data-max="{{maxValue}}"{{/if}}
+            title="{{#if incTitle}}{{incTitle}}{{else}}Increase{{/if}}">
+        <i class="fas fa-plus"></i>
+    </button>
+</div>

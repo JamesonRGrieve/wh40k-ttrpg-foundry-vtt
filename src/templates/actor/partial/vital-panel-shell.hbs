@@ -1,0 +1,40 @@
+{{!--
+    Vital panel shell — outer panel wrapper, header with chevron toggle, body container.
+    Used by wounds, fatigue, fate, corruption, insanity panels.
+
+    Block-partial usage:
+        {{#> vital-panel-shell key="wounds" label="Wounds" icon="fa-heart-broken"
+             actor=actor rootStateClass=(my-state-class)}}
+            {{!-- body content --}}
+        {{/vital-panel-shell}}
+
+    Optional `badge` hash: { stateClass, icon, label, tooltip }. When provided,
+    a degree-badge (corruption / insanity style) renders in the header.
+
+    Panel body padding is the shared `tw-p-4 tw-bg-[var(--wh40k-panel-body-bg)]`.
+--}}
+<div class="wh40k-panel tw-rounded-lg tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-overflow-hidden tw-relative tw-mb-4 tw-shadow-[0_2px_8px_var(--wh40k-shadow-soft)] {{rootStateClass}}">
+    <div class="wh40k-panel-header tw-flex tw-flex-row tw-items-center tw-gap-2 tw-p-2 tw-bg-gradient-to-b tw-from-[rgba(var(--wh40k-accent-gold),0.15)] tw-to-[rgba(var(--wh40k-accent-gold),0.05)] tw-border-b tw-border-[var(--wh40k-border-color-light)] tw-transition-all tw-duration-200 tw-w-full tw-box-border tw-cursor-pointer sheet-control__hide-control"
+         data-toggle="{{key}}_details"
+         title="Click to {{#if (isExpanded (concat key '_details') actor)}}collapse{{else}}expand{{/if}}">
+        <span class="wh40k-panel-title tw-flex-1 tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-[1.1rem] tw-font-semibold tw-text-[var(--wh40k-text-dark)] tw-whitespace-nowrap tw-overflow-hidden tw-text-ellipsis">
+            <i class="fas {{icon}} tw-text-[var(--panel-accent,var(--wh40k-accent-gold))] tw-flex-shrink-0"></i> {{label}}
+        </span>
+
+        {{#if badge}}
+        <div class="wh40k-{{key}}-header-status tw-ml-auto">
+            <div class="wh40k-{{key}}-badge {{badge.stateClass}} tw-flex tw-items-center tw-gap-1 tw-bg-[rgba(0,0,0,0.2)] tw-px-2 tw-py-1 tw-rounded-md"
+                 title="{{badge.tooltip}}">
+                <i class="fas {{badge.icon}} wh40k-badge-icon tw-text-gold"></i>
+                <span class="wh40k-badge-label tw-text-xs tw-font-bold tw-uppercase">{{badge.label}}</span>
+            </div>
+        </div>
+        {{/if}}
+
+        <i class="fas fa-chevron-down wh40k-panel-chevron {{#if (isExpanded (concat key '_details') actor)}}wh40k-panel-chevron--open{{/if}}"></i>
+    </div>
+
+    <div class="wh40k-panel-body tw-p-4 tw-bg-[var(--wh40k-panel-body-bg)]">
+        {{> @partial-block}}
+    </div>
+</div>
