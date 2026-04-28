@@ -15,30 +15,32 @@
             </div>
         </div>
         <div class="wh40k-ship-quick-stats">
-            <div class="wh40k-stat-box wh40k-hull-box">
-                <span class="wh40k-stat-label">Hull Integrity</span>
-                <div class="wh40k-stat-values">
-                    <input type="number" class="wh40k-stat-input" name="system.hullIntegrity.value" value="{{source.hullIntegrity.value}}" title="Current" />
-                    <span class="wh40k-stat-separator">/</span>
-                    <input type="number" class="wh40k-stat-input" name="system.hullIntegrity.max" value="{{source.hullIntegrity.max}}" title="Max" />
-                </div>
-            </div>
-            <div class="wh40k-stat-box wh40k-morale-box">
-                <span class="wh40k-stat-label">Morale</span>
-                <div class="wh40k-stat-values">
-                    <input type="number" class="wh40k-stat-input" name="system.crew.morale.value" value="{{source.crew.morale.value}}" title="Current" />
-                    <span class="wh40k-stat-separator">/</span>
-                    <input type="number" class="wh40k-stat-input" name="system.crew.morale.max" value="{{source.crew.morale.max}}" title="Max" />
-                </div>
-            </div>
-            <div class="wh40k-stat-box wh40k-pop-box">
-                <span class="wh40k-stat-label">Population</span>
-                <input type="number" class="wh40k-stat-input wh40k-stat-single" name="system.crew.population" value="{{source.crew.population}}" />
-            </div>
-            <div class="wh40k-stat-box wh40k-crew-box">
-                <span class="wh40k-stat-label">Crew Rating</span>
-                <input type="number" class="wh40k-stat-input wh40k-stat-single" name="system.crew.crewRating" value="{{source.crew.crewRating}}" />
-            </div>
+            {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
+                label="Hull Integrity"
+                boxClass="wh40k-hull-box"
+                valueName="system.hullIntegrity.value"
+                value=source.hullIntegrity.value
+                maxName="system.hullIntegrity.max"
+                max=source.hullIntegrity.max}}
+            {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
+                label="Morale"
+                boxClass="wh40k-morale-box"
+                valueName="system.crew.morale.value"
+                value=source.crew.morale.value
+                maxName="system.crew.morale.max"
+                max=source.crew.morale.max}}
+            {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
+                label="Population"
+                boxClass="wh40k-pop-box"
+                singleClass="wh40k-stat-single"
+                valueName="system.crew.population"
+                value=source.crew.population}}
+            {{> systems/wh40k-rpg/templates/actor/partial/stat-box.hbs
+                label="Crew Rating"
+                boxClass="wh40k-crew-box"
+                singleClass="wh40k-stat-single"
+                valueName="system.crew.crewRating"
+                value=source.crew.crewRating}}
         </div>
     </div>
 </div>
