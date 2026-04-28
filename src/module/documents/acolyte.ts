@@ -4,7 +4,6 @@ import { prepareDamageRoll } from '../applications/prompts/damage-roll-dialog.ts
 import { prepareUnifiedRoll } from '../applications/prompts/unified-roll-dialog.ts';
 import { SYSTEM_ID } from '../constants.ts';
 import { D100Roll } from '../dice/_module.ts';
-import { SimpleSkillData } from '../rolls/action-data.ts';
 import { ForceFieldData } from '../rolls/force-field-data.ts';
 import { WH40KSettings } from '../wh40k-rpg-settings.ts';
 import { WH40KBaseActor } from './base-actor.ts';
@@ -262,23 +261,14 @@ export class WH40KAcolyte extends WH40KBaseActor {
             return;
         }
 
-        const flavor = flavorOverride || `${char.label} Test`;
-        const situationalModifiers = this.getCharacteristicSituationalModifiers(charKey);
-
-        const simpleSkillData = new SimpleSkillData();
-        const rollData = simpleSkillData.rollData;
-        rollData.actor = this;
-        rollData.sourceActor = this;
-        rollData.nameOverride = flavor;
-        rollData.type = 'Characteristic';
-        rollData.rollKey = charKey;
-        rollData.baseTarget = char.total;
-        rollData.modifiers.modifier = 0;
-        if (situationalModifiers?.length) {
-            let sitMod = 0;
-            for (const mod of situationalModifiers) sitMod += mod.value || 0;
-            if (sitMod !== 0) rollData.modifiers.situational = sitMod;
-        }
+        const simpleSkillData = this._buildSimpleSkillRoll({
+            key: charKey,
+            type: 'characteristic',
+            label: `${char.label} Test`,
+            target: char.total,
+            situationalKey: charKey,
+            nameOverride: flavorOverride || undefined,
+        });
         await prepareUnifiedRoll(simpleSkillData);
     }
 
@@ -309,22 +299,13 @@ export class WH40KAcolyte extends WH40KBaseActor {
             }
         }
 
-        const situationalModifiers = this.getSkillSituationalModifiers(resolvedSkillName);
-
-        const simpleSkillData = new SimpleSkillData();
-        const rollData = simpleSkillData.rollData;
-        rollData.actor = this;
-        rollData.sourceActor = this;
-        rollData.nameOverride = `${label} Test`;
-        rollData.type = 'Skill';
-        rollData.rollKey = resolvedSkillName;
-        rollData.baseTarget = targetValue;
-        rollData.modifiers.modifier = 0;
-        if (situationalModifiers?.length) {
-            let sitMod = 0;
-            for (const mod of situationalModifiers) sitMod += mod.value || 0;
-            if (sitMod !== 0) rollData.modifiers.situational = sitMod;
-        }
+        const simpleSkillData = this._buildSimpleSkillRoll({
+            key: resolvedSkillName,
+            type: 'skill',
+            label: `${label} Test`,
+            target: targetValue,
+            situationalKey: resolvedSkillName,
+        });
         await prepareUnifiedRoll(simpleSkillData);
     }
 
