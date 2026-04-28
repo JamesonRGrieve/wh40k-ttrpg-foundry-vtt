@@ -11,30 +11,12 @@
             </div>
             <div class="wh40k-panel-body">
                 <div class="wh40k-identity-grid tw-grid tw-grid-cols-2 tw-gap-2">
-                    <div class="wh40k-field-row">
-                        <label class="wh40k-field-label">Gender</label>
-                        <input type="text" class="wh40k-field-input" name="system.bio.gender" value="{{system.bio.gender}}" />
-                    </div>
-                    <div class="wh40k-field-row">
-                        <label class="wh40k-field-label">Age</label>
-                        <input type="text" class="wh40k-field-input" name="system.bio.age" value="{{system.bio.age}}" />
-                    </div>
-                    <div class="wh40k-field-row">
-                        <label class="wh40k-field-label">Build</label>
-                        <input type="text" class="wh40k-field-input" name="system.bio.build" value="{{system.bio.build}}" />
-                    </div>
-                    <div class="wh40k-field-row">
-                        <label class="wh40k-field-label">Complexion</label>
-                        <input type="text" class="wh40k-field-input" name="system.bio.complexion" value="{{system.bio.complexion}}" />
-                    </div>
-                    <div class="wh40k-field-row">
-                        <label class="wh40k-field-label">Hair</label>
-                        <input type="text" class="wh40k-field-input" name="system.bio.hair" value="{{system.bio.hair}}" />
-                    </div>
-                    <div class="wh40k-field-row">
-                        <label class="wh40k-field-label">Eyes</label>
-                        <input type="text" class="wh40k-field-input" name="system.bio.eyes" value="{{system.bio.eyes}}" />
-                    </div>
+                    {{> systems/wh40k-rpg/templates/shared/field-row.hbs label="Gender" name="system.bio.gender" value=system.bio.gender}}
+                    {{> systems/wh40k-rpg/templates/shared/field-row.hbs label="Age" name="system.bio.age" value=system.bio.age}}
+                    {{> systems/wh40k-rpg/templates/shared/field-row.hbs label="Build" name="system.bio.build" value=system.bio.build}}
+                    {{> systems/wh40k-rpg/templates/shared/field-row.hbs label="Complexion" name="system.bio.complexion" value=system.bio.complexion}}
+                    {{> systems/wh40k-rpg/templates/shared/field-row.hbs label="Hair" name="system.bio.hair" value=system.bio.hair}}
+                    {{> systems/wh40k-rpg/templates/shared/field-row.hbs label="Eyes" name="system.bio.eyes" value=system.bio.eyes}}
                 </div>
             </div>
         </div>

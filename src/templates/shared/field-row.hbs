@@ -1,0 +1,35 @@
+{{!--
+    Shared labelled input row — wh40k-field-row + wh40k-field-label + wh40k-field-input.
+    Used on the player Biography Identity panel, and anywhere else a flat
+    "label above input" text/number/select field is needed.
+
+    Required hash params:
+        name      — schema path for the form parser ("system.bio.gender")
+        label     — display label ("Gender")
+        value     — current value to display
+
+    Optional hash params:
+        type        — "text" (default), "number", or "select"
+        options     — for type="select", an object keyed by value → label
+                      (rendered with {{selectOptions}} fallback uses {{#each}})
+        placeholder — input placeholder
+        labelClass  — extra utilities on the label
+        inputClass  — extra utilities on the input/select
+        rowClass    — extra utilities on the row wrapper
+--}}
+<div class="wh40k-field-row {{rowClass}}">
+    <label class="wh40k-field-label {{labelClass}}">{{label}}</label>
+    {{#if (eq type "select")}}
+    <select class="wh40k-field-input {{inputClass}}" name="{{name}}">
+        {{#each options}}
+        <option value="{{@key}}" {{#if (eq @key ../value)}}selected{{/if}}>{{this}}</option>
+        {{/each}}
+    </select>
+    {{else}}
+    <input type="{{#if type}}{{type}}{{else}}text{{/if}}"
+           class="wh40k-field-input {{inputClass}}"
+           name="{{name}}"
+           value="{{value}}"
+           {{#if placeholder}}placeholder="{{placeholder}}"{{/if}} />
+    {{/if}}
+</div>
