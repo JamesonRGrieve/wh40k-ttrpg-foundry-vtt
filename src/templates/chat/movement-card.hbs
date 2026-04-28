@@ -1,16 +1,10 @@
 {{! Movement Chat Card }}
-<div class="wh40k-chat-card wh40k-movement-card wh40k-movement-card--{{movementType}} tw-relative tw-overflow-hidden tw-rounded-md">
-    <header class="wh40k-card-header">
-        <div class="wh40k-card-icon-wrapper">
-            <i class="fas {{icon}} wh40k-card-icon"></i>
-        </div>
-        <div class="wh40k-card-title-area">
-            <h3 class="wh40k-card-title">{{actor}}</h3>
-            <div class="wh40k-card-subtitle">Movement: {{movementLabel}}</div>
-        </div>
-    </header>
-
-    <div class="wh40k-card-body">
+{{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
+      cardClass=(concat "wh40k-movement-card wh40k-movement-card--" movementType)
+      outerExtraClass="tw-relative tw-overflow-hidden tw-rounded-md"
+      iconClass=icon
+      title=actor
+      subtitle=(concat "Movement: " movementLabel)}}
         <div class="wh40k-movement-display">
             <div class="wh40k-movement-value">
                 <span class="wh40k-movement-distance">{{distance}}</span>
@@ -27,5 +21,4 @@
                 {{{description}}}
             </div>
         {{/if}}
-    </div>
-</div>
+{{/chat-card-shell}}

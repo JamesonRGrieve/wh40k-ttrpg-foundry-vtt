@@ -1,0 +1,86 @@
+{{!--
+    Chat card shell — outer wrapper, header (image | icon | custom),
+    body container, optional footer. Used by the simple `wh40k-chat-card`
+    family (talent / trait / condition / critical-injury / movement / etc).
+
+    Block-partial usage:
+        {{#> systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs
+              cardClass="wh40k-talent-card"
+              outerExtraClass="tw-overflow-hidden tw-rounded-md"
+              image=item.img
+              imageAlt=item.name
+              title=item.name
+              subtitle=subtitleString
+              badges=badgeArray
+              footerLabel="..."
+              legacyClasses=true}}
+            {{!-- body content for {{> @partial-block}} slot --}}
+        {{/chat-card-shell}}
+
+    Required hash params:
+        cardClass        — class for the outer card div (e.g. "wh40k-talent-card")
+        title            — display title text
+
+    Optional hash params:
+        outerExtraClass  — extra Tailwind classes on the outer card div
+        image            — image src URL (renders <img>); skip for icon variant
+        imageAlt         — alt text (defaults to title)
+        iconClass        — Font Awesome class (e.g. "fa-tag") for icon-wrapper variant
+        subtitle         — secondary line under the title
+        badges           — array of badge entries: { class, icon, label }
+        footerLabel      — single-string footer (e.g. source reference)
+        footerIcon       — Font Awesome class for footer icon
+        legacyClasses    — bool; when true emit legacy classes alongside new BEM
+                           ones for back-compat with already-rendered chat
+                           messages (default true).
+
+    Body content is delivered via {{> @partial-block}}.
+
+    Inline-partial slots (override via {{#*inline "<name>"}}…{{/inline}}):
+        header           — replaces the entire header block
+        footer           — replaces the entire footer block
+--}}
+<div class="wh40k-chat-card {{cardClass}}{{#if outerExtraClass}} {{outerExtraClass}}{{/if}}">
+    {{#if (or image iconClass title badges)}}
+    <header class="wh40k-card__header{{#unless (eq legacyClasses false)}} wh40k-card-header{{/unless}}">
+        {{#if image}}
+            <img class="wh40k-card__icon{{#unless (eq legacyClasses false)}} wh40k-card-icon{{/unless}}" src="{{image}}" alt="{{#if imageAlt}}{{imageAlt}}{{else}}{{title}}{{/if}}" />
+        {{else if iconClass}}
+            <div class="wh40k-card__icon-wrapper{{#unless (eq legacyClasses false)}} wh40k-card-icon-wrapper{{/unless}}">
+                <i class="fas {{iconClass}} wh40k-card__icon{{#unless (eq legacyClasses false)}} wh40k-card-icon{{/unless}}"></i>
+            </div>
+        {{/if}}
+        <div class="wh40k-card__title-area{{#unless (eq legacyClasses false)}} wh40k-card-title-area{{/unless}}">
+            <h3 class="wh40k-card__title{{#unless (eq legacyClasses false)}} wh40k-card-title{{/unless}}">{{title}}</h3>
+            {{#if subtitle}}
+                <div class="wh40k-card__subtitle{{#unless (eq legacyClasses false)}} wh40k-card-subtitle{{/unless}}">{{subtitle}}</div>
+            {{/if}}
+            {{#if badges.length}}
+                <div class="wh40k-card__badges{{#unless (eq legacyClasses false)}} wh40k-card-badges{{/unless}}">
+                    {{#each badges as |badge|}}
+                        {{#if badge.label}}
+                        <span class="wh40k-badge{{#if badge.class}} {{badge.class}}{{/if}}">
+                            {{#if badge.icon}}<i class="fas {{badge.icon}}"></i>{{/if}}
+                            {{badge.label}}
+                        </span>
+                        {{/if}}
+                    {{/each}}
+                </div>
+            {{/if}}
+        </div>
+    </header>
+    {{/if}}
+
+    <div class="wh40k-card__body{{#unless (eq legacyClasses false)}} wh40k-card-body{{/unless}}">
+        {{> @partial-block}}
+    </div>
+
+    {{#if footerLabel}}
+    <footer class="wh40k-card__footer{{#unless (eq legacyClasses false)}} wh40k-card-footer{{/unless}}">
+        <span class="wh40k-card__source{{#unless (eq legacyClasses false)}} wh40k-source-ref{{/unless}}">
+            {{#if footerIcon}}<i class="fas {{footerIcon}}"></i>{{/if}}
+            {{footerLabel}}
+        </span>
+    </footer>
+    {{/if}}
+</div>
