@@ -11,6 +11,7 @@
 
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KItemSystemData, WH40KItemModifiers } from '../../types/global.d.ts';
 import { SystemConfigRegistry } from '../../config/game-systems/index.ts';
 import WH40K from '../../config.ts';
 import { GrantsManager, generateDeterministicId } from '../../managers/grants-manager.ts';
@@ -23,6 +24,44 @@ import OriginPathChoiceDialog from './origin-path-choice-dialog.ts';
 import OriginRollDialog from './origin-roll-dialog.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+
+/**
+ * Narrowed view of an origin-path item's system data, plus the actor-system
+ * fields the builder reads off `this.actor.system`, plus the compendium
+ * index-entry shapes the equipment loader reads off `entry.system`.
+ *
+ * Only fields actually accessed by this file are listed; the underlying
+ * `WH40KItemSystemData` index signature (`[key: string]: unknown`) covers
+ * anything else through narrow downstream casts. We omit fields whose
+ * shape diverges (`cost`, `grants`) from `WH40KItemSystemData` so the
+ * override compiles without `as unknown as ...`.
+ */
+type OriginPathSystemData = Omit<WH40KItemSystemData, 'cost' | 'grants'> & {
+    selectedChoices?: Record<string, string[]>;
+    rollResults?: Record<string, { rolled?: number; breakdown?: string } | undefined>;
+    requirements?: { text?: string };
+    activeModifiers?: Array<Record<string, unknown>>;
+    homebrew?: { throneGelt?: string; thrones?: string };
+    modifiers?: WH40KItemModifiers;
+    grants?: {
+        characteristics?: Record<string, number>;
+        skills?: Array<Record<string, unknown>>;
+        talents?: Array<Record<string, unknown>>;
+        traits?: Array<Record<string, unknown>>;
+        choices?: Array<Record<string, unknown>>;
+        equipment?: Array<Record<string, unknown>>;
+        woundsFormula?: string;
+        fateFormula?: string;
+    };
+    // Actor-system shaped fields (the builder also runs `actor.system as OriginPathSystemData`)
+    originPath?: { divination?: string };
+    throneGelt?: number;
+    influence?: number;
+    characteristics?: Record<string, { base?: number; bonus?: number }>;
+    skills?: Record<string, { entries?: unknown[] } & Record<string, unknown>>;
+    // Compendium index-entry shape (also read via `entry.system as OriginPathSystemData`)
+    cost?: { dh2?: { homebrew?: { requisition?: number; throneGelt?: number } } };
+};
 
 /**
  * Direction modes for origin path creation
@@ -58,6 +97,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     declare _charAssignments: Record<string, number | null>;
     declare _charCustomBases: Record<string, number>;
     declare _charAdvancedMode: boolean;
+    declare _charGenMode: 'point-buy' | 'roll' | 'roll-pool-hb';
     declare _charDragData: { type: string; index: number; characteristic: string | null } | null;
     declare _divination: string;
     declare _thronesRolled: number;
@@ -103,6 +143,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             rollCharacteristicsBank: OriginPathBuilder.#rollCharacteristicsBank,
             charReset: OriginPathBuilder.#charReset,
             charToggleAdvanced: OriginPathBuilder.#charToggleAdvanced,
+            setCharGenMode: OriginPathBuilder.#setCharGenMode,
             rollDivination: OriginPathBuilder.#rollDivination,
             manualDivination: OriginPathBuilder.#manualDivination,
             rollThrones: OriginPathBuilder.#rollThrones,
@@ -158,11 +199,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         this._charAssignments = {};
         this._charCustomBases = {};
         this._charAdvancedMode = false;
+        this._charGenMode = 'roll-pool-hb';
         this._charDragData = null;
-        this._divination = (this.actor.system as any)?.originPath?.divination || '';
+        const actorSys = this.actor.system as OriginPathSystemData;
+        this._divination = actorSys?.originPath?.divination || '';
         const isDH2Homebrew = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
-        this._thronesRolled = isDH2Homebrew ? 0 : (this.actor.system as any)?.throneGelt || 0;
-        this._influenceRolled = isDH2Homebrew ? 0 : (this.actor.system as any)?.influence || 0;
+        this._thronesRolled = isDH2Homebrew ? 0 : actorSys?.throneGelt || 0;
+        this._influenceRolled = isDH2Homebrew ? 0 : actorSys?.influence || 0;
         this._savedScrollTop = 0;
         this._initCharacteristicState();
 
@@ -196,12 +239,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const assignments = (genData.assignments ?? {}) as Record<string, number>;
         const customBases = (genData.customBases ?? {}) as Record<string, number>;
+        const defaultBase = WH40KSettings.getCharacteristicBase();
 
         for (const key of CHARS) {
             this._charAssignments[key] = assignments[key] ?? null;
-            this._charCustomBases[key] = customBases[key] ?? 25;
+            this._charCustomBases[key] = customBases[key] ?? defaultBase;
         }
         this._charAdvancedMode = (customBases.enabled as boolean) ?? false;
+
+        const persistedMode = genData.mode;
+        this._charGenMode = persistedMode === 'point-buy' || persistedMode === 'roll' ? persistedMode : 'roll-pool-hb';
     }
     /*  Properties                                  */
     /* -------------------------------------------- */
@@ -322,6 +369,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (state.charAssignments) this._charAssignments = { ...(state.charAssignments as Record<string, number | null>) };
         if (state.charAdvancedMode !== undefined) this._charAdvancedMode = !!state.charAdvancedMode;
         if (state.charCustomBases) this._charCustomBases = { ...(state.charCustomBases as Record<string, number>) };
+        if (state.charGenMode === 'point-buy' || state.charGenMode === 'roll' || state.charGenMode === 'roll-pool-hb') {
+            this._charGenMode = state.charGenMode;
+        }
         if (typeof state.divination === 'string') this._divination = state.divination;
         if (typeof state.influenceRolled === 'number') this._influenceRolled = state.influenceRolled;
     }
@@ -342,6 +392,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             charAssignments: this._charAssignments,
             charAdvancedMode: this._charAdvancedMode,
             charCustomBases: this._charCustomBases,
+            charGenMode: this._charGenMode,
             divination: this._divination,
             influenceRolled: this._influenceRolled,
         };
@@ -623,7 +674,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _prepareCharGenContext(): Record<string, unknown> {
         const ctor = this.constructor as typeof OriginPathBuilder;
         const CHARS = ctor.GENERATION_CHARACTERISTICS;
-        const DEFAULT_BASE = 25;
+        const DEFAULT_BASE = WH40KSettings.getCharacteristicBase();
         const originBonuses = this._getOriginCharacteristicBonuses();
 
         const rollsBank = this._charRolls.map((value, index) => ({
@@ -635,7 +686,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }));
 
         const characteristics = CHARS.map((key) => {
-            const charData = (this.actor.system as any).characteristics?.[key] || {};
+            const charData = (this.actor.system as OriginPathSystemData).characteristics?.[key] || {};
             const assignedIndex = this._charAssignments[key] ?? null;
             const rollValue = assignedIndex !== null && this._charRolls[assignedIndex] !== undefined ? this._charRolls[assignedIndex] : null;
             const base = this._charAdvancedMode ? this._charCustomBases[key] ?? DEFAULT_BASE : DEFAULT_BASE;
@@ -673,6 +724,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const allAssigned = characteristics.every((c) => c.hasRoll);
         const anyRolls = this._charRolls.some((r) => r > 0);
 
+        const isModeRollPoolHB = this._charGenMode === 'roll-pool-hb';
+
         return {
             rollsBank,
             characteristicRows,
@@ -681,8 +734,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             advancedMode: this._charAdvancedMode,
             allAssigned,
             anyRolls,
-            canApply: allAssigned && anyRolls,
+            canApply: isModeRollPoolHB && allAssigned && anyRolls,
             divination: this._divination,
+            mode: this._charGenMode,
+            isModePointBuy: this._charGenMode === 'point-buy',
+            isModeRoll: this._charGenMode === 'roll',
+            isModeRollPoolHB,
         };
     }
 
@@ -829,8 +886,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (!selection) return;
 
             const system = this._getSelectionSystem(selection);
-            const sourceName = selection.name || (system?.identifier as string) || this._getLocalizedStepLabel((system?.system as any)?.step || '');
-            const modifiers = (system?.modifiers as any)?.characteristics || {};
+            const sys = system as OriginPathSystemData;
+            const sourceName = selection.name || (sys?.identifier as string) || this._getLocalizedStepLabel(((system?.system as OriginPathSystemData | undefined)?.step) || '');
+            const modifiers = sys?.modifiers?.characteristics || {};
 
             for (const [key, value] of Object.entries(modifiers)) {
                 addBonus(key, Number(value) || 0, sourceName);
@@ -852,7 +910,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                         const optionValue = opt.value || opt.name;
                         return optionValue === selectedValue || selectedValue?.startsWith?.(`${optionValue} (`);
                     });
-                    const choiceModifiers = (option?.grants as any)?.characteristics || {};
+                    const choiceModifiers = (option?.grants as WH40KItemModifiers | undefined)?.characteristics || {};
 
                     for (const [key, value] of Object.entries(choiceModifiers)) {
                         addBonus(key, Number(value) || 0, `${sourceName}: ${choiceKey}`);
@@ -928,7 +986,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _getTotalThronesRolled(): number {
         let total = 0;
         for (const [, selection] of this.selections) {
-            const rolled = (selection.system as any)?.rollResults?.thrones?.rolled;
+            const rolled = (selection.system as OriginPathSystemData)?.rollResults?.thrones?.rolled;
             if (typeof rolled === 'number') total += rolled;
         }
         return total;
@@ -951,10 +1009,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
-     * Whether all characteristic rolls have been assigned.
+     * Whether the characteristic step is in a committable state. Only the
+     * `roll-pool-hb` mode is implemented today — point-buy and roll are
+     * stubs and never report ready, blocking commit until they ship.
      * @private
      */
     _hasAssignedCharacteristics(): boolean {
+        if (this._charGenMode !== 'roll-pool-hb') return false;
         return OriginPathBuilder.GENERATION_CHARACTERISTICS.every(
             (key) => this._charAssignments[key] !== null && this._charRolls[this._charAssignments[key]] > 0,
         );
@@ -1294,7 +1355,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // Homebrew grants 3 starting Armoury acquisitions regardless of Influence; RAW uses the DH2e core pg 80 rule (floor(Influence/10)).
         if (this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew()) return 3;
         const rolled = this._influenceRolled || 0;
-        const stored = Number((this.actor.system as any)?.influence || 0);
+        const stored = Number((this.actor.system as OriginPathSystemData)?.influence || 0);
         const influence = rolled > 0 ? rolled : stored;
         return Math.floor(influence / 10);
     }
@@ -1337,22 +1398,23 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             for (const entry of index) {
                 // Cybernetics enter play via grants, not equipment selection.
                 if (entry.type === 'cybernetic') continue;
-                const availability = (entry.system as any)?.availability;
+                const entrySys = entry.system as OriginPathSystemData | undefined;
+                const availability = entrySys?.availability;
                 if (!availability) continue;
                 const modifier = availabilityConfig[availability]?.modifier ?? null;
                 if (modifier === null) continue;
                 if (modifier < scarceModifier) continue;
                 if (entry.name?.startsWith('! Default')) continue;
-                const homebrewCost = (entry.system as any)?.cost?.dh2?.homebrew;
+                const homebrewCost = entrySys?.cost?.dh2?.homebrew;
                 loaded.push({
-                    uuid: `Compendium.${(pack as any).metadata.id}.${entry._id}`,
+                    uuid: `Compendium.${pack.metadata.id}.${entry._id}`,
                     id: entry._id,
                     name: entry.name,
                     img: entry.img,
                     type: entry.type,
-                    identifier: (entry.system as any)?.identifier ?? null,
-                    clipMax: (entry.system as any)?.clip?.max ?? null,
-                    weaponTypes: (entry.system as any)?.weaponTypes ?? [],
+                    identifier: entrySys?.identifier ?? null,
+                    clipMax: entrySys?.clip?.max ?? null,
+                    weaponTypes: entrySys?.weaponTypes ?? [],
                     availability,
                     availabilityLabel: game.i18n.localize(availabilityConfig[availability]?.label || availability),
                     availabilityOrder: modifier,
@@ -1386,8 +1448,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const grantedNames = new Set<string>();
         for (const [, selection] of this.selections) {
             const system = this._getSelectionSystem(selection);
-            const grants = (system.grants as any) || {};
-            for (const entry of (grants.equipment || []) as any[]) {
+            const grants = (system as OriginPathSystemData).grants || {};
+            for (const entry of (grants.equipment || []) as Array<Record<string, unknown>>) {
                 const name = entry?.name;
                 if (name) grantedNames.add(String(name));
             }
@@ -1575,9 +1637,9 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @private
      */
     async _prepareSelectedOrigin(item: NormalizedOrigin): Promise<Record<string, unknown>> {
-        const system = this._getSelectionSystem(item);
-        const grants = (system.grants as any) || {};
-        const modifiers = ((system.modifiers as any)?.characteristics as Record<string, number>) || {};
+        const system = this._getSelectionSystem(item) as OriginPathSystemData;
+        const grants = system.grants || {};
+        const modifiers = (system.modifiers?.characteristics as Record<string, number> | undefined) || {};
 
         const characteristics = [];
         for (const [key, value] of Object.entries(modifiers)) {
@@ -1650,7 +1712,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         // Per-origin throne gelt roll (homebrew only, homeworld and background steps each roll their own formula).
         const thronesFormulaForItem = this._getSelectionThronesFormula(item);
-        const thronesEligibleStep = (item.system as any)?.step === 'homeWorld' || (item.system as any)?.step === 'background';
+        const itemSys = item.system as OriginPathSystemData;
+        const thronesEligibleStep = itemSys?.step === 'homeWorld' || itemSys?.step === 'background';
         const thronesAllowedByRuleset = this.gameSystem === 'dh2e' && WH40KSettings.isHomebrew();
         if (thronesFormulaForItem && thronesEligibleStep && thronesAllowedByRuleset) {
             const hasRolled = rollResults.thrones?.rolled !== undefined && rollResults.thrones?.rolled !== null;
@@ -1700,8 +1763,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             uuid: item.uuid,
             name: item.name,
             img: item.img,
-            description: (system.description as any)?.value || '',
-            requirementsText: (system.requirements as any)?.text || '',
+            description: system.description?.value || '',
+            requirementsText: system.requirements?.text || '',
             isConfirmed: isConfirmed,
             hasChoices: choices.length > 0,
             choices: choices,
@@ -2513,11 +2576,13 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (!candidate) return false;
             const candidateUuid = (candidate as any)._sourceUuid || candidate.uuid;
             if (candidateUuid && (candidateUuid === origin.uuid || candidateUuid === origin.id)) return true;
-            const candidateIdentifier = (candidate.system as any)?.identifier;
-            const originIdentifier = (origin.system as any)?.identifier;
+            const candidateSys = candidate.system as OriginPathSystemData;
+            const originSys = origin.system as OriginPathSystemData;
+            const candidateIdentifier = candidateSys?.identifier;
+            const originIdentifier = originSys?.identifier;
             if (candidateIdentifier && originIdentifier && candidateIdentifier === originIdentifier) {
-                const candidateStep = (candidate.system as any)?.step;
-                const originStep = (origin.system as any)?.step;
+                const candidateStep = candidateSys?.step;
+                const originStep = originSys?.step;
                 if (!candidateStep || !originStep || candidateStep === originStep) return true;
             }
             return false;
@@ -3023,6 +3088,18 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     }
 
     /**
+     * Switch the character-generation mode. Only `roll-pool-hb` has a working
+     * implementation today; `point-buy` and `roll` are stub placeholders.
+     */
+    static #setCharGenMode(this: OriginPathBuilder, event: Event, target: HTMLElement): void {
+        const mode = target.dataset.mode;
+        if (mode === 'point-buy' || mode === 'roll' || mode === 'roll-pool-hb') {
+            this._charGenMode = mode;
+            this.render();
+        }
+    }
+
+    /**
      * Roll on the Divination compendium RollTable (DH2 Core Rulebook Table 2-9).
      * The table text lives in the private packs submodule (GW-copyrighted); if
      * the pack isn't installed, fall back to a bare 1d100 so the player at
@@ -3122,7 +3199,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             this.render();
             return;
         }
-        const felBonus = (this.actor.system as any).characteristics?.fellowship?.bonus || 0;
+        const felBonus = (this.actor.system as OriginPathSystemData).characteristics?.fellowship?.bonus || 0;
         const mod = this._getContextualInfluenceMod();
         const roll = new Roll('1d5');
         await roll.evaluate();
@@ -3312,14 +3389,16 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     'system.characterGeneration.rolls': charRolls,
                     'system.characterGeneration.assignments': charAssignments,
                     'system.characterGeneration.customBases.enabled': this._charAdvancedMode,
+                    'system.characterGeneration.mode': this._charGenMode,
                 };
                 // Reset every base characteristic to (baseline + assigned roll + origin bonuses).
                 // Rolls and origin bonuses are ALWAYS applied on origin commit (no override
                 // checkbox), so a re-commit must rewrite each characteristic even if the
                 // assignment or origin selection moved off of it.
+                const settingDefaultBase = WH40KSettings.getCharacteristicBase();
                 for (const key of CHARS) {
                     charUpdate[`system.characterGeneration.customBases.${key}`] = this._charCustomBases[key];
-                    const baseDefault = this._charAdvancedMode ? this._charCustomBases[key] ?? 25 : 25;
+                    const baseDefault = this._charAdvancedMode ? this._charCustomBases[key] ?? settingDefaultBase : settingDefaultBase;
                     const rollIndex = charAssignments[key];
                     const rolled = rollIndex !== null && charRolls[rollIndex] > 0 ? charRolls[rollIndex] : 0;
                     const originBonus = originModSums[key] || 0;
@@ -3428,11 +3507,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const collectFromSelection = (selection: NormalizedOrigin | null) => {
             if (!selection) return;
             const system = this._getSelectionSystem(selection);
-            const charMods = (system?.modifiers as any)?.characteristics as Record<string, unknown> | undefined;
+            const sys = system as OriginPathSystemData | undefined;
+            const charMods = sys?.modifiers?.characteristics as Record<string, unknown> | undefined;
             if (charMods) {
                 for (const [key, value] of Object.entries(charMods)) addToSum(key, value);
             }
-            const activeMods = (system as any)?.activeModifiers as Array<Record<string, unknown>> | undefined;
+            const activeMods = sys?.activeModifiers;
             if (Array.isArray(activeMods)) {
                 for (const mod of activeMods) {
                     if (mod?.type === 'characteristic' && typeof mod?.key === 'string') {
@@ -3511,7 +3591,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         for (const key of CHARS) {
             update[`system.characteristics.${key}.advance`] = 0;
         }
-        const skills = (this.actor.system as any)?.skills || {};
+        const skills = (this.actor.system as OriginPathSystemData)?.skills || {};
         for (const skillKey of Object.keys(skills)) {
             update[`system.skills.${skillKey}.advance`] = 0;
             const entries = skills[skillKey]?.entries;
@@ -3592,7 +3672,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      */
     async _resolveStandardAmmoItem(weapon: WH40KItem): Promise<Record<string, unknown> | null> {
         const packNames = (this.systemConfig.equipmentPacks as string[]) || [];
-        const weaponIdentifier = (weapon.system as any)?.identifier;
+        const weaponIdentifier = (weapon.system as OriginPathSystemData)?.identifier;
         if (!weaponIdentifier) return null;
 
         for (const packName of packNames) {
@@ -3605,7 +3685,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const index = await (pack as any).getIndex({ fields: ['system.weaponTypes', 'system.identifier', 'name', 'type'] });
             const match = index.find((entry: any) => {
                 if (entry.type !== 'ammunition') return false;
-                const types = (entry.system as any)?.weaponTypes || [];
+                const types = (entry.system as OriginPathSystemData)?.weaponTypes || [];
                 return Array.isArray(types) && types.includes(weaponIdentifier);
             });
             if (!match) continue;

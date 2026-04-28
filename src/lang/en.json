@@ -93,7 +93,14 @@
             "Apply": "Apply Changes",
             "NotAllAssigned": "Please assign all rolls before applying.",
             "Applied": "Characteristic values have been updated!",
-            "OpenSetup": "Setup Characteristics"
+            "OpenSetup": "Setup Characteristics",
+            "ModeAriaLabel": "Characteristic generation mode",
+            "Mode": {
+                "PointBuy": "Point Buy",
+                "Roll": "Roll",
+                "RollPoolHB": "Roll Pool (HB)",
+                "NotImplemented": "Not yet implemented. Choose Roll Pool (HB) to continue."
+            }
         },
         "Utility": {
             "MenuTooltip": "Utility Actions",
@@ -226,6 +233,10 @@
                 "Full": "Full Automation",
                 "Display": "Display Only (no cost enforcement)",
                 "None": "No Automation"
+            },
+            "CharacteristicOffset": {
+                "Name": "Characteristic Offset",
+                "Hint": "Integer added to the 20-point baseline used during character generation. Effective base = 20 + offset. May be negative."
             }
         },
         "ActiveEffect": {
