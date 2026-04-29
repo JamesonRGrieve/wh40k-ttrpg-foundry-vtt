@@ -16,6 +16,8 @@
                         (used by panels that show a list size).
         rootClass     — extra utility classes appended to the outer `wh40k-panel`
                         (e.g. `tw-col-auto`, `wh40k-effects-panel`).
+        rootAttrs     — raw HTML attributes string appended to the outer element
+                        (e.g. `data-drop-zone="general" data-accepts="trait"`).
         headerClass   — extra utility classes on the header (e.g. modifier flags).
         bodyClass     — extra utility classes on the body container.
 
@@ -23,7 +25,7 @@
     / inline buttons / bespoke status badges) should keep using `vital-panel-shell.hbs`
     or stay inline — this scaffold deliberately covers only the static header case.
 --}}
-<div class="wh40k-panel{{#if rootClass}} {{rootClass}}{{/if}}">
+<div class="wh40k-panel{{#if rootClass}} {{rootClass}}{{/if}}"{{#if rootAttrs}} {{{rootAttrs}}}{{/if}}>
     <div class="wh40k-panel-header{{#if headerClass}} {{headerClass}}{{/if}}">
         <span class="wh40k-panel-title">
             {{#if icon}}<i class="fas {{icon}}"></i> {{/if}}{{label}}

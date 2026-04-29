@@ -37,6 +37,7 @@ export class HandlebarManager {
             'systems/wh40k-rpg/templates/actor/partial/vital-quick-adjust.hbs',
             'systems/wh40k-rpg/templates/actor/partial/tab-strip.hbs',
             'systems/wh40k-rpg/templates/actor/partial/stat-box.hbs',
+            'systems/wh40k-rpg/templates/actor/partial/collapsible-panel.hbs',
             'systems/wh40k-rpg/templates/chat/partial/chat-card-shell.hbs',
             'systems/wh40k-rpg/templates/shared/field-row.hbs',
 

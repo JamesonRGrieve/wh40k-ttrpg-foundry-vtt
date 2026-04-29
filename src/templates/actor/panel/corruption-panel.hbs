@@ -8,12 +8,12 @@
         tooltip=(concat (corruptionDegree system.corruption) " - " (corruptionModifier system.corruption) " to tests"))}}
 
     {{!-- Main Display --}}
-    <div class="wh40k-corruption-display">
+    <div class="tw-flex tw-flex-col tw-gap-2">
 
         {{!-- Current Value & Modifier --}}
-        <div class="wh40k-corruption-header tw-flex tw-items-center tw-justify-between tw-mb-2">
+        <div class="tw-flex tw-items-center tw-justify-between tw-mb-2">
             {{> systems/wh40k-rpg/templates/actor/partial/vital-quick-controls
-                wrapperClass="wh40k-corruption-value tw-flex tw-items-center tw-gap-2"
+                wrapperClass="tw-flex tw-items-center tw-gap-2"
                 cssPrefix="wh40k-corruption"
                 field="system.corruption"
                 current=system.corruption
@@ -21,11 +21,11 @@
                 decTitle="Reduce Corruption"
                 incTitle="Increase Corruption"
                 maxValue="100"
-                valueWrapperClass="wh40k-corruption-number tw-flex tw-items-baseline tw-gap-1"}}
+                valueWrapperClass="tw-flex tw-items-baseline tw-gap-1"}}
 
-            <div class="wh40k-corruption-modifier tw-text-sm tw-font-medium">
-                <span class="wh40k-modifier-label">Modifier:</span>
-                <span class="wh40k-modifier-value tw-text-gold">{{corruptionModifier system.corruption}}</span>
+            <div class="tw-flex tw-items-center tw-gap-1 tw-text-sm tw-font-medium">
+                <span class="tw-text-muted">Modifier:</span>
+                <span class="tw-text-gold">{{corruptionModifier system.corruption}}</span>
             </div>
         </div>
 
@@ -43,17 +43,17 @@
 
         {{!-- Warning Messages at Thresholds --}}
         {{#if (eq system.corruption 100)}}
-        <div class="wh40k-corruption-alert wh40k-alert-damned tw-text-crimson tw-flex tw-items-center tw-gap-2">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-bg-[rgba(0,0,0,0.3)] tw-border-2 tw-border-[#8b0000] tw-text-crimson">
             <i class="fas fa-fire-alt"></i>
             <span>DAMNED - Soul Lost to Chaos!</span>
         </div>
         {{else if (gte system.corruption 90)}}
-        <div class="wh40k-corruption-alert wh40k-alert-profane tw-text-crimson-light tw-flex tw-items-center tw-gap-2">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-bg-[rgba(139,0,0,0.2)] tw-border-2 tw-border-[rgba(139,0,0,0.6)] tw-text-crimson-light">
             <i class="fas fa-exclamation-triangle"></i>
             <span>PROFANE - On the Edge of Damnation (-30)</span>
         </div>
         {{else if (gte system.corruption 60)}}
-        <div class="wh40k-corruption-alert wh40k-alert-debased tw-text-warning tw-flex tw-items-center tw-gap-2">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1 tw-text-xs tw-font-bold tw-uppercase tw-tracking-wide tw-rounded tw-bg-[rgba(139,69,19,0.2)] tw-border-2 tw-border-[rgba(139,69,19,0.5)] tw-text-warning">
             <i class="fas fa-skull-crossbones"></i>
             <span>DEBASED - Deeply Corrupted (-20)</span>
         </div>
@@ -63,8 +63,8 @@
 
     {{!-- Malignancies Section (always visible if any exist) --}}
     {{#if (any actor.items "isMalignancy")}}
-    <div class="wh40k-malignancy-preview tw-mt-2 tw-text-sm tw-text-gray-400">
-        <div class="wh40k-malignancy-count tw-flex tw-items-center tw-gap-2">
+    <div class="tw-mt-2 tw-text-sm tw-text-gray-400 tw-p-1 tw-bg-[rgba(20,112,88,0.08)] tw-border tw-border-[rgba(20,112,88,0.4)] tw-rounded">
+        <div class="tw-flex tw-items-center tw-gap-2 tw-text-[0.8rem] tw-font-bold">
             <i class="fas fa-biohazard"></i>
             <span>{{countType actor.items "isMalignancy"}} Malignancies</span>
         </div>
@@ -72,15 +72,15 @@
     {{/if}}
 
     {{!-- Edit Mode (Expandable) --}}
-    <div class="wh40k-panel-details corruption_details tw-mt-2" {{hideIfNot (isExpanded 'corruption_details' actor)}}>
+    <div class="corruption_details tw-mt-2 tw-p-1 tw-bg-[rgba(0,0,0,0.02)] tw-border-t tw-border-[var(--wh40k-border-color-light)]" {{hideIfNot (isExpanded 'corruption_details' actor)}}>
 
         {{!-- Direct Edit Section --}}
-        <div class="wh40k-corruption-edit-section">
-            <div class="wh40k-corruption-edit-header">
+        <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-2">
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-1 tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-text-medium)] tw-mb-2">
                 <i class="fas fa-cog"></i> Edit Corruption
             </div>
 
-            <div class="wh40k-corruption-edit-field tw-mt-1">
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-1">
                 {{> systems/wh40k-rpg/templates/actor/partial/vital-edit-input
                     name="system.corruption"
                     label="Corruption Points (0-100)"
@@ -95,30 +95,30 @@
             {{!-- Quick Adjust Buttons --}}
             {{> systems/wh40k-rpg/templates/actor/partial/vital-quick-adjust
                 field="system.corruption"
-                wrapperClass="wh40k-corruption-quick-set tw-flex tw-gap-1 tw-mt-2"
+                wrapperClass="tw-flex tw-gap-1 tw-mt-2"
                 maxValue="100"}}
         </div>
 
         {{!-- Malignancies List --}}
-        <div class="wh40k-corruption-edit-section tw-mt-4">
-            <div class="wh40k-corruption-edit-header">
+        <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mb-2 tw-mt-4">
+            <div class="tw-flex tw-items-center tw-justify-between tw-gap-1 tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-wide tw-text-[var(--wh40k-text-medium)] tw-mb-2">
                 <i class="fas fa-biohazard"></i> Malignancies
             </div>
 
             {{#if (any actor.items "isMalignancy")}}
-            <div class="wh40k-malignancy-list tw-space-y-1 tw-mt-1">
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-1">
                 {{#each actor.items as |item|}}
                     {{#if item.isMalignancy}}
-                    <div class="wh40k-malignancy-card tw-flex tw-justify-between tw-bg-[rgba(0,0,0,0.2)] tw-p-1 tw-rounded">
+                    <div class="tw-flex tw-justify-between tw-bg-[rgba(0,0,0,0.2)] tw-p-1 tw-rounded">
                         <button type="button"
-                                class="wh40k-malignancy-name item-edit"
+                                class="{{concat 'item-edit'}} tw-flex tw-flex-1 tw-items-center tw-gap-1 tw-bg-none tw-border-none tw-p-1 tw-text-left tw-text-[0.85rem] tw-font-semibold tw-text-[var(--wh40k-text-medium)] tw-cursor-pointer"
                                 data-item-id="{{item.id}}"
                                 title="Edit {{item.name}}">
                             <i class="fas fa-virus"></i>
                             {{item.name}}
                         </button>
                         <button type="button"
-                                class="wh40k-malignancy-delete item-delete"
+                                class="{{concat 'item-delete'}} tw-flex tw-w-6 tw-h-6 tw-items-center tw-justify-center tw-p-0 tw-bg-[var(--wh40k-wounds-bg)] tw-border tw-border-[var(--wh40k-wounds-border)] tw-rounded-md tw-cursor-pointer"
                                 data-item-id="{{item.id}}"
                                 title="Remove {{item.name}}">
                             <i class="fas fa-times"></i>
@@ -130,11 +130,11 @@
             {{/if}}
 
             {{!-- Drop Zone (always visible) --}}
-            <div class="wh40k-dropzone {{#unless (any actor.items "isMalignancy")}}wh40k-dropzone-empty{{/unless}} tw-mt-2 tw-border tw-border-dashed tw-border-gray-600 tw-p-2 tw-text-center tw-rounded"
+            <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-mt-2 tw-p-2 tw-border tw-border-dashed tw-border-gray-600 tw-rounded tw-cursor-pointer tw-transition-all tw-min-h-[80px] tw-text-center hover:tw-border-gold hover:tw-bg-gold/5"
                  data-action="itemCreate"
                  data-type="malignancy">
-                <i class="fas fa-shield-alt wh40k-dropzone-icon"></i>
-                <span class="wh40k-dropzone-text tw-text-xs">
+                <i class="fas fa-shield-alt tw-text-[2rem] tw-text-muted"></i>
+                <span class="tw-text-xs tw-text-muted tw-uppercase tw-tracking-wide tw-text-center" data-dropzone-text>
                     {{#if (any actor.items "isMalignancy")}}
                         Drop Malignancies Here or Click to Create
                     {{else}}
@@ -145,20 +145,20 @@
         </div>
 
         {{!-- Info Section --}}
-        <div class="wh40k-corruption-edit-section tw-mt-4">
-            <div class="wh40k-corruption-info-box tw-bg-[rgba(0,0,0,0.2)] tw-p-3 tw-rounded">
-                <i class="fas fa-book-dead tw-text-crimson"></i>
-                <div class="wh40k-info-content tw-text-xs tw-space-y-1 tw-mt-1">
-                    <strong>Corruption Degrees</strong>
-                    <ul class="wh40k-degree-list tw-list-none tw-pl-0">
-                        <li><span class="wh40k-degree-name">PURE (0):</span> Untainted by Chaos - No penalty</li>
-                        <li><span class="wh40k-degree-name">TAINTED (1-30):</span> Minor exposure - No penalty</li>
-                        <li><span class="wh40k-degree-name">SOILED (31-60):</span> Visibly corrupted - <strong>-10</strong> to checks</li>
-                        <li><span class="wh40k-degree-name">DEBASED (61-90):</span> Deeply fallen - <strong>-20</strong> to checks</li>
-                        <li><span class="wh40k-degree-name">PROFANE (91-99):</span> On the edge - <strong>-30</strong> to checks</li>
-                        <li><span class="wh40k-degree-name wh40k-degree-damned">DAMNED (100):</span> Soul lost to Chaos - <strong>NPC only</strong></li>
+        <div class="tw-p-2 tw-bg-[var(--wh40k-panel-bg-translucent)] tw-border tw-border-[var(--wh40k-border-color-light)] tw-rounded-lg tw-mt-4">
+            <div class="tw-flex tw-gap-2 tw-p-2 tw-bg-[rgba(20,112,88,0.08)] tw-border-l-[3px] tw-border-l-[rgba(20,112,88,0.4)] tw-rounded-md">
+                <i class="fas fa-book-dead tw-text-crimson tw-text-[1.3rem] tw-mt-0.5 tw-shrink-0"></i>
+                <div class="tw-flex tw-flex-col tw-gap-1 tw-text-xs">
+                    <strong class="tw-text-[0.8rem] tw-font-bold tw-text-[var(--wh40k-text-medium)] tw-uppercase tw-tracking-wide">Corruption Degrees</strong>
+                    <ul class="tw-list-none tw-pl-0 tw-text-[0.75rem] tw-text-[var(--wh40k-text-muted)] tw-leading-relaxed tw-m-0">
+                        <li><span class="tw-font-bold tw-text-[var(--wh40k-text-medium)]">PURE (0):</span> Untainted by Chaos - No penalty</li>
+                        <li><span class="tw-font-bold tw-text-[var(--wh40k-text-medium)]">TAINTED (1-30):</span> Minor exposure - No penalty</li>
+                        <li><span class="tw-font-bold tw-text-[var(--wh40k-text-medium)]">SOILED (31-60):</span> Visibly corrupted - <strong>-10</strong> to checks</li>
+                        <li><span class="tw-font-bold tw-text-[var(--wh40k-text-medium)]">DEBASED (61-90):</span> Deeply fallen - <strong>-20</strong> to checks</li>
+                        <li><span class="tw-font-bold tw-text-[var(--wh40k-text-medium)]">PROFANE (91-99):</span> On the edge - <strong>-30</strong> to checks</li>
+                        <li><span class="tw-font-bold tw-text-[var(--wh40k-text-medium)] {{concat 'wh40k-degree-damned'}}">DAMNED (100):</span> Soul lost to Chaos - <strong>NPC only</strong></li>
                     </ul>
-                    <p class="wh40k-corruption-warning tw-text-gray-400 tw-italic"><i class="fas fa-skull"></i> Malignancies are physical and mental manifestations of Chaos corruption.</p>
+                    <p class="tw-text-gray-400 tw-italic tw-mt-1"><i class="fas fa-skull"></i> Malignancies are physical and mental manifestations of Chaos corruption.</p>
                 </div>
             </div>
         </div>

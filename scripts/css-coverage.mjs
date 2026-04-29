@@ -45,6 +45,52 @@ function* walk(dir) {
 
 const CLASS_ATTR_RE = /class(?:Name)?\s*=\s*"([^"]*)"|class(?:Name)?\s*=\s*'([^']*)'/g;
 
+/**
+ * Tokens that are NOT the project's custom CSS classes and therefore should
+ * not count against the "tailwind-only" classification:
+ *
+ * 1. `tw-*` tokens              — Tailwind utilities (bare or variant-prefixed,
+ *                                  e.g. `hover:tw-bg-gold`, `focus:tw-outline-none`).
+ *                                  Variant prefix ("<modifier>:") is stripped before
+ *                                  the `tw-` check so that `hover:tw-*` counts as Tailwind.
+ *
+ * 2. Font Awesome tokens         — `fas`, `far`, `fab`, `fal`, `fat`, `fa-solid`,
+ *                                  `fa-regular`, `fa-brands`, `fa-light`, `fa-thin`,
+ *                                  `fa-duotone`, and any `fa-<name>` icon tokens.
+ *                                  These are a third-party icon library; migrating to
+ *                                  Tailwind has no bearing on them.
+ *
+ * 3. JS-hook infrastructure       — `sheet-control__hide-control` and similar tokens
+ *                                  that are permanent JS selectors (not project CSS).
+ *
+ * 4. Expand/collapse section IDs  — bare identifiers that match the `data-toggle`
+ *                                  pattern (`<word>_details`, `<word>_section`).
+ *                                  These are HBS `hideIfNot` targets, not CSS classes.
+ *
+ * Anything else is treated as a project CSS class (hasNonTw = true).
+ */
+const FA_RE = /^fa[rsbldt]$|^fa-(solid|regular|brands|light|thin|duotone)$|^fa-/;
+const JS_HOOKS = new Set(['sheet-control__hide-control']);
+const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
+
+function isTwOrExempt(token) {
+    // Check raw token first (handles `tw-text-[color:var(--foo)]` where the colon
+    // is inside brackets, not a variant separator).
+    if (token.startsWith('tw-')) return true;
+    // Strip optional Tailwind variant prefix (e.g. `hover:`, `focus:`, `active:`, `dh2e:`)
+    // Only strip a prefix colon that appears before any `[` bracket — colons inside
+    // arbitrary-value brackets (e.g. `tw-text-[color:var(--x)]`) are not variant separators.
+    const bracketPos = token.indexOf('[');
+    const colonPos = token.indexOf(':');
+    const hasVariantColon = colonPos !== -1 && (bracketPos === -1 || colonPos < bracketPos);
+    const bare = hasVariantColon ? token.slice(colonPos + 1) : token;
+    if (bare.startsWith('tw-')) return true;
+    if (FA_RE.test(token)) return true;
+    if (JS_HOOKS.has(token)) return true;
+    if (SECTION_ID_RE.test(token)) return true;
+    return false;
+}
+
 function classifyFile(file) {
     const src = readFileSync(file, 'utf8');
     let hasTw = false;
@@ -61,7 +107,7 @@ function classifyFile(file) {
         if (tokens.length === 0) continue;
         hasAnyClass = true;
         for (const t of tokens) {
-            if (t.startsWith('tw-')) hasTw = true;
+            if (isTwOrExempt(t)) hasTw = true;
             else hasNonTw = true;
         }
     }
