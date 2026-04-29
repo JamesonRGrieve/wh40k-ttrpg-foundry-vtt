@@ -1,10 +1,9 @@
 /**
  * field-row partial smoke tests.
  *
- * Asserts that the shared `wh40k-field-row` partial preserves schema name= paths
- * byte-for-byte (the Foundry form parser writes back through them) and emits the
- * stable wh40k-field-row / wh40k-field-label / wh40k-field-input class triple
- * that downstream CSS selectors depend on.
+ * Asserts that the shared field-row partial preserves schema name= paths
+ * byte-for-byte (the Foundry form parser writes back through them) and
+ * renders the correct element structure with Tailwind utility classes.
  */
 
 import Handlebars from 'handlebars';
@@ -30,11 +29,11 @@ describe('field-row partial', () => {
             value: 'Male',
         });
         const root = dom(html);
-        const row = root.querySelector('.wh40k-field-row');
+        const row = root.querySelector('div');
         expect(row).not.toBeNull();
-        const labelEl = root.querySelector('label.wh40k-field-label');
+        const labelEl = root.querySelector('label');
         expect(labelEl?.textContent?.trim()).toBe('Gender');
-        const input = root.querySelector('input.wh40k-field-input');
+        const input = root.querySelector('input');
         expect(input?.getAttribute('type')).toBe('text');
         expect(input?.getAttribute('name')).toBe('system.bio.gender');
         expect(input?.getAttribute('value')).toBe('Male');
@@ -47,7 +46,7 @@ describe('field-row partial', () => {
             value: 32,
             type: 'number',
         });
-        const input = dom(html).querySelector('input.wh40k-field-input');
+        const input = dom(html).querySelector('input');
         expect(input?.getAttribute('type')).toBe('number');
         expect(input?.getAttribute('name')).toBe('system.bio.age');
         expect(input?.getAttribute('value')).toBe('32');
@@ -62,7 +61,7 @@ describe('field-row partial', () => {
             options: { lean: 'Lean', stocky: 'Stocky', tall: 'Tall' },
         });
         const root = dom(html);
-        const select = root.querySelector('select.wh40k-field-input');
+        const select = root.querySelector('select');
         expect(select).not.toBeNull();
         expect(select?.getAttribute('name')).toBe('system.bio.build');
         const options = root.querySelectorAll('option');
@@ -78,7 +77,7 @@ describe('field-row partial', () => {
             value: '',
             placeholder: 'Eye colour',
         });
-        const input = dom(html).querySelector('input.wh40k-field-input');
+        const input = dom(html).querySelector('input');
         expect(input?.getAttribute('placeholder')).toBe('Eye colour');
     });
 
@@ -92,8 +91,8 @@ describe('field-row partial', () => {
             inputClass: 'tw-uppercase',
         });
         const root = dom(html);
-        expect(root.querySelector('.wh40k-field-row')?.className).toContain('tw-col-span-2');
-        expect(root.querySelector('.wh40k-field-label')?.className).toContain('tw-text-xs');
-        expect(root.querySelector('.wh40k-field-input')?.className).toContain('tw-uppercase');
+        expect(root.querySelector('div')?.className).toContain('tw-col-span-2');
+        expect(root.querySelector('label')?.className).toContain('tw-text-xs');
+        expect(root.querySelector('input')?.className).toContain('tw-uppercase');
     });
 });
