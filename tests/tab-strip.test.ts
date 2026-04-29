@@ -34,7 +34,7 @@ describe('tab-strip partial', () => {
             itemClass: 'wh40k-nav-item',
         });
         const root = dom(html);
-        const items = root.querySelectorAll('a.item');
+        const items = root.querySelectorAll('a.wh40k-nav-item');
         expect(items.length).toBe(3);
         expect(items[0].getAttribute('data-tab')).toBe('overview');
         expect(items[0].className).toContain('active');
@@ -52,7 +52,7 @@ describe('tab-strip partial', () => {
             navClass: 'wh40k-vehicle-tabs',
             itemClass: 'wh40k-tab-btn',
         });
-        const items = dom(html).querySelectorAll('a.item');
+        const items = dom(html).querySelectorAll('a.wh40k-nav-item');
         expect(items[0].getAttribute('data-tab')).toBe('stats');
         expect(items[1].getAttribute('data-tab')).toBe('crew');
         expect(items[1].className).toContain('active');
@@ -81,7 +81,7 @@ describe('tab-strip partial', () => {
                 { tab: 'combat', group: 'primary', label: 'Combat' },
             ],
         });
-        const items = dom(html).querySelectorAll('a.item');
+        const items = dom(html).querySelectorAll('a.wh40k-nav-item');
         Array.from(items).forEach((a) => expect(a.getAttribute('data-action')).toBe('tab'));
     });
 
@@ -89,7 +89,7 @@ describe('tab-strip partial', () => {
         const html = tabStripTemplate({
             tabs: [{ tab: 'overview', label: 'Overview' }],
         });
-        const item = dom(html).querySelector('a.item');
+        const item = dom(html).querySelector('a.wh40k-nav-item');
         expect(item?.getAttribute('data-group')).toBe('primary');
     });
 });
