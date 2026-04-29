@@ -41,7 +41,8 @@ describe('stat-box partial', () => {
         expect(inputs[0].getAttribute('name')).toBe('system.armour.total');
         expect(inputs[0].getAttribute('value')).toBe('7');
         expect(inputs[0].getAttribute('min')).toBe('0');
-        expect(root.querySelector('.wh40k-stat-separator')).toBeNull();
+        const sep = Array.from(root.querySelectorAll('span')).find((s) => s.textContent?.trim() === '/');
+        expect(sep).toBeUndefined();
     });
 
     it('renders value/max pair with separator (starship Hull Integrity)', () => {
@@ -60,7 +61,8 @@ describe('stat-box partial', () => {
         expect(inputs[1].getAttribute('name')).toBe('system.hullIntegrity.max');
         expect(inputs[0].getAttribute('value')).toBe('24');
         expect(inputs[1].getAttribute('value')).toBe('30');
-        expect(root.querySelector('.wh40k-stat-separator')?.textContent).toBe('/');
+        const sep = Array.from(root.querySelectorAll('span')).find((s) => s.textContent?.trim() === '/');
+        expect(sep).not.toBeUndefined();
     });
 
     it('honours minMax override (vehicle Structure: value-min=0, max-min=1)', () => {
