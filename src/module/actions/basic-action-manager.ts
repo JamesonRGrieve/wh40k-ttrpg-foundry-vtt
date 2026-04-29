@@ -233,11 +233,6 @@ export class BasicActionManager {
             }
         }
 
-        const assignDamageData = new AssignDamageData(targetActor as unknown as ActorLike, new Hit());
-        if (ignoreArmour === 'true' || ignoreArmour === 'TRUE') {
-            assignDamageData.ignoreArmour = true;
-        }
-
         const hit = new Hit();
         if (location) hit.location = location;
         if (damage) hit.totalDamage = Number.parseInt(damage);
@@ -245,7 +240,10 @@ export class BasicActionManager {
         if (fatigue) hit.totalFatigue = Number.parseInt(fatigue);
         if (damageType) hit.damageType = damageType;
 
-        assignDamageData.hit = hit;
+        const assignDamageData = new AssignDamageData(targetActor as unknown as ActorLike, hit);
+        if (ignoreArmour === 'true' || ignoreArmour === 'TRUE') {
+            assignDamageData.ignoreArmour = true;
+        }
 
         await assignDamageData.update();
         await assignDamageData.finalize();
