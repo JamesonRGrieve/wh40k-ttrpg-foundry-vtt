@@ -1,5 +1,5 @@
-import type { WH40KNPC } from '../../documents/npc.ts';
 import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KNPC } from '../../documents/npc.ts';
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -7,6 +7,20 @@ interface FilterState {
     category: string;
     faction: string;
     search: string;
+}
+
+/** Shape of system data for NPC-template items. */
+interface NpcTemplateSys {
+    category: string;
+    faction: string;
+    baseThreatLevel: number;
+    type: string;
+    role: string;
+    summary: string;
+    traits?: Array<{ uuid?: string }>;
+    talents?: Array<{ uuid?: string }>;
+    previewAtThreat(threatLevel: number): Record<string, unknown>;
+    generateAtThreat(threatLevel: number, options: { isHorde: boolean }): Record<string, unknown>;
 }
 
 interface TemplateRow {
@@ -142,13 +156,13 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         if (this.#selectedUuid) {
             selectedTemplate = this.#templates.find((t) => t.uuid === this.#selectedUuid);
             if (selectedTemplate) {
-                preview = (selectedTemplate.system as any).previewAtThreat(this.#threatLevel) as Record<string, unknown>;
+                preview = (selectedTemplate.system as unknown as NpcTemplateSys).previewAtThreat(this.#threatLevel);
             }
         }
 
         // Get unique categories and factions for filter dropdowns
-        const categories = [...new Set(this.#templates.map((t) => (t.system as any).category as string))].sort();
-        const factions = [...new Set(this.#templates.map((t) => (t.system as any).faction as string).filter((f) => f))].sort();
+        const categories = [...new Set(this.#templates.map((t) => (t.system as unknown as NpcTemplateSys).category))].sort();
+        const factions = [...new Set(this.#templates.map((t) => (t.system as unknown as NpcTemplateSys).faction).filter((f) => f))].sort();
 
         return {
             ...context,
@@ -159,12 +173,12 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                     uuid: t.uuid,
                     name: t.name,
                     img: t.img ?? '',
-                    category: (t.system as any).category as string,
-                    faction: (t.system as any).faction as string,
-                    baseThreat: (t.system as any).baseThreatLevel as number,
-                    type: (t.system as any).type as string,
-                    role: (t.system as any).role as string,
-                    summary: (t.system as any).summary as string,
+                    category: (t.system as unknown as NpcTemplateSys).category,
+                    faction: (t.system as unknown as NpcTemplateSys).faction,
+                    baseThreat: (t.system as unknown as NpcTemplateSys).baseThreatLevel,
+                    type: (t.system as unknown as NpcTemplateSys).type,
+                    role: (t.system as unknown as NpcTemplateSys).role,
+                    summary: (t.system as unknown as NpcTemplateSys).summary,
                     selected: t.uuid === this.#selectedUuid,
                 }),
             ),
@@ -299,7 +313,7 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
      */
     _filterTemplates(): WH40KItem[] {
         return this.#templates.filter((t) => {
-            const system = t.system as any;
+            const system = t.system as unknown as NpcTemplateSys;
             // Category filter
             if (this.#filters.category && system.category !== this.#filters.category) {
                 return false;
@@ -369,7 +383,8 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
         if (!template) return;
 
         try {
-            const systemData = (template.system as any).generateAtThreat(this.#threatLevel, {
+            const templateSys = template.system as unknown as NpcTemplateSys;
+            const systemData = templateSys.generateAtThreat(this.#threatLevel, {
                 isHorde: this.#isHorde,
             });
 
@@ -386,9 +401,17 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                 // Create embedded traits and talents
                 const itemsToCreate: Record<string, unknown>[] = [];
 
-                for (const trait of (template.system as any).traits || []) {
+                /** Shape of Foundry documents returned by fromUuid for item embedding. */
+                interface EmbeddableItem {
+                    name: string;
+                    type: string;
+                    img: string;
+                    system: object;
+                }
+
+                for (const trait of templateSys.traits ?? []) {
                     if (trait.uuid) {
-                        const item = (await fromUuid(trait.uuid)) as any;
+                        const item = (await fromUuid(trait.uuid)) as EmbeddableItem | null;
                         if (item) {
                             itemsToCreate.push({
                                 name: item.name,
@@ -400,9 +423,9 @@ export default class TemplateSelector extends HandlebarsApplicationMixin(Applica
                     }
                 }
 
-                for (const talent of (template.system as any).talents || []) {
+                for (const talent of templateSys.talents ?? []) {
                     if (talent.uuid) {
-                        const item = (await fromUuid(talent.uuid)) as any;
+                        const item = (await fromUuid(talent.uuid)) as EmbeddableItem | null;
                         if (item) {
                             itemsToCreate.push({
                                 name: item.name,

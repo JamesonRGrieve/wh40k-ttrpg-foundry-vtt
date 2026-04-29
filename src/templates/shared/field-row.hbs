@@ -17,17 +17,17 @@
         inputClass  — extra utilities on the input/select
         rowClass    — extra utilities on the row wrapper
 --}}
-<div class="wh40k-field-row {{rowClass}}">
-    <label class="wh40k-field-label {{labelClass}}">{{label}}</label>
+<div class="tw-flex tw-flex-col tw-gap-1 {{rowClass}}">
+    <label class="tw-font-semibold tw-uppercase tw-text-[0.7rem] tw-tracking-[0.03em] tw-text-[color:var(--color-text-secondary)] {{labelClass}}">{{label}}</label>
     {{#if (eq type "select")}}
-    <select class="wh40k-field-input {{inputClass}}" name="{{name}}">
+    <select class="tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem] {{inputClass}}" name="{{name}}">
         {{#each options}}
         <option value="{{@key}}" {{#if (eq @key ../value)}}selected{{/if}}>{{this}}</option>
         {{/each}}
     </select>
     {{else}}
     <input type="{{#if type}}{{type}}{{else}}text{{/if}}"
-           class="wh40k-field-input {{inputClass}}"
+           class="tw-w-full tw-py-[6px] tw-px-[8px] tw-bg-[var(--wh40k-bg-input)] tw-border tw-border-[var(--wh40k-border-light)] tw-rounded-md tw-text-[color:var(--color-text-primary)] tw-text-[0.9rem] {{inputClass}}"
            name="{{name}}"
            value="{{value}}"
            {{#if placeholder}}placeholder="{{placeholder}}"{{/if}} />

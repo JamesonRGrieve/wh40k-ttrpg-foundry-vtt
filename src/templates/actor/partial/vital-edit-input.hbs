@@ -15,11 +15,11 @@
         readonly   — boolean
         placeholder— input placeholder
 --}}
-<label class="wh40k-edit-field">
-    <span class="wh40k-edit-label {{labelClass}}">{{label}}</span>
+<label class="tw-flex tw-flex-col tw-gap-1">
+    <span class="tw-flex tw-items-center tw-gap-1.5 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wider tw-text-[var(--wh40k-text-muted)] {{labelClass}}">{{label}}</span>
     <input type="number"
            data-dtype="Number"
-           class="wh40k-edit-input {{inputClass}}"
+           class="tw-w-full tw-h-10 tw-px-2 tw-py-0 tw-border-2 tw-border-solid tw-border-[var(--wh40k-border-color-light)] tw-rounded-[6px] tw-bg-[var(--wh40k-input-bg)] tw-text-[1.1rem] tw-font-bold tw-text-[var(--wh40k-text-dark)] tw-text-center tw-font-alt tw-transition-all tw-duration-[150ms] tw-ease-in-out hover:tw-border-[var(--wh40k-border-color)] focus:tw-outline-none focus:tw-border-[var(--wh40k-border-color-strong)] focus:tw-bg-[var(--wh40k-input-bg-focus)] focus:tw-shadow-[0_0_0_3px_var(--wh40k-shadow-soft)] {{inputClass}}"
            name="{{name}}"
            value="{{value}}"
            {{#if min}}min="{{min}}"{{else}}min="0"{{/if}}

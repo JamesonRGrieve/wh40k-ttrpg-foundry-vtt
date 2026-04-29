@@ -1,7 +1,7 @@
 import { capitalize } from '../handlebars/handlebars-helpers.ts';
 import { applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import { WH40KItemContainer } from './item-container.ts';
-import type { WH40KItemDocument, WH40KItemSystemData } from '../types/global.d.ts';
+import type { WH40KItemDocument, WH40KItemSystemData, WH40KBaseActorDocument } from '../types/global.d.ts';
 import type { WH40KBaseActor } from './base-actor.ts';
 
 type AttackSpecialIndexEntry = {
@@ -204,7 +204,8 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isOriginPath(): boolean {
-        return this._type === 'originPath' || (this._type === 'trait' && (this.flags as any)?.rt?.kind === 'origin');
+        const rtFlags = this.flags['rt'] as Record<string, unknown> | undefined;
+        return this._type === 'originPath' || (this._type === 'trait' && rtFlags?.['kind'] === 'origin');
     }
 
     get isSkill(): boolean {
@@ -248,11 +249,13 @@ export class WH40KItem extends WH40KItemContainer {
     }
 
     get isCondition(): boolean {
-        return this._type === 'trait' && (this.flags as any)?.rt?.kind === 'condition';
+        const rtFlags = this.flags['rt'] as Record<string, unknown> | undefined;
+        return this._type === 'trait' && rtFlags?.['kind'] === 'condition';
     }
 
     get originPathStep(): boolean {
-        return (this.flags as any)?.rt?.step || this.system?.step || '';
+        const rtFlags = this.flags['rt'] as Record<string, unknown> | undefined;
+        return rtFlags?.['step'] || this.system?.step || '';
     }
 
     get isWeapon(): boolean {
@@ -537,10 +540,12 @@ export class WH40KItem extends WH40KItemContainer {
     async performAction(): Promise<unknown> {
         if (this.isWeapon) {
             // Weapon attack - handled by the actor sheet
-            return (this.actor as any)?.rollWeaponAction?.(this) || this.sendToChat();
+            const weaponActor = this.actor as unknown as WH40KBaseActorDocument | null;
+            return weaponActor?.rollWeaponAction?.(this) || this.sendToChat();
         } else if (this.isPsychicPower) {
             // Psychic power - handled by the actor sheet
-            return (this.actor as any)?.rollPsychicPower?.(this) || this.sendToChat();
+            const psychicActor = this.actor as unknown as WH40KBaseActorDocument | null;
+            return psychicActor?.rollPsychicPower?.(this) || this.sendToChat();
         } else if (this.isNavigatorPower) {
             // Navigator power - roll navigator power
             return this.rollNavigatorPower();
@@ -580,7 +585,8 @@ export class WH40KItem extends WH40KItemContainer {
 
         // Get the characteristic value
         const charKey = rollConfig.characteristic.toLowerCase();
-        const characteristic = (this.actor as any).characteristics?.[charKey];
+        const talentActor = this.actor as unknown as WH40KBaseActor | null;
+        const characteristic = talentActor?.characteristics?.[charKey];
         if (!characteristic) {
             return this.sendToChat();
         }
@@ -626,11 +632,12 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         // Navigator powers typically use Perception or Willpower
-        const perception = (this.actor as any).characteristics?.perception;
-        const willpower = (this.actor as any).characteristics?.willpower;
+        const navActor = this.actor as unknown as WH40KBaseActor | null;
+        const perception = navActor?.characteristics?.['perception'];
+        const willpower = navActor?.characteristics?.['willpower'];
 
         // Use the higher of the two as base, modified by Navigator Rank
-        const navigatorRank = (this.actor as any).system?.navigatorRank || 0;
+        const navigatorRank = (navActor?.system?.['navigatorRank'] as number | undefined) || 0;
         const baseChar = perception?.total > willpower?.total ? perception : willpower;
         const targetValue = (baseChar?.total || 30) + navigatorRank * 5;
 
@@ -669,7 +676,8 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         // Orders typically use Command or relevant skill
-        const command = (this.actor as any).skills?.command;
+        const orderActor = this.actor as unknown as WH40KBaseActor | null;
+        const command = orderActor?.system?.skills?.['command'] as { current?: number } | undefined;
         const targetValue = command?.current || 50;
 
         const roll = new Roll('1d100');
@@ -707,7 +715,8 @@ export class WH40KItem extends WH40KItemContainer {
         }
 
         // Rituals typically use Willpower
-        const willpower = (this.actor as any).characteristics?.willpower;
+        const ritualActor = this.actor as unknown as WH40KBaseActor | null;
+        const willpower = ritualActor?.characteristics?.['willpower'];
         const targetValue = willpower?.total || 30;
 
         const roll = new Roll('1d100');

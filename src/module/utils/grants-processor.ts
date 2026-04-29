@@ -13,6 +13,16 @@ import type { ItemGrantData, SkillGrantData, CharacteristicGrantData, ChoiceGran
 
 type GrantDataModel = ItemGrantData | SkillGrantData | CharacteristicGrantData | ChoiceGrantData | ResourceGrantData;
 
+interface GrantChoiceOption {
+    value: string;
+    grants?: Record<string, unknown>;
+}
+
+interface GrantChoiceData {
+    label: string;
+    options: GrantChoiceOption[];
+}
+
 export interface Grant {
     name: string;
     level?: string | number;
@@ -204,7 +214,7 @@ export class GrantsProcessor {
         // Create items
         const itemsToAdd = result.itemsToCreate.filter((i) => !i._upgradeExisting);
         if (itemsToAdd.length > 0) {
-            await actor.createEmbeddedDocuments('Item', itemsToAdd as any[]);
+            await actor.createEmbeddedDocuments('Item', itemsToAdd as unknown[]);
         }
 
         // Apply skill upgrades
@@ -278,7 +288,9 @@ export class GrantsProcessor {
      * @private
      */
     static _processCharacteristicModifiers(originItem: WH40KItem, context: GrantContext): void {
-        const charMods = (originItem.system as any)?.modifiers?.characteristics || {};
+        const sys = originItem.system as Record<string, unknown>;
+        const modifiers = sys?.modifiers as Record<string, unknown> | undefined;
+        const charMods = (modifiers?.characteristics as Record<string, number>) || {};
         for (const [char, value] of Object.entries(charMods as Record<string, number>)) {
             if (value !== 0) {
                 context.result.characteristics[char] = (context.result.characteristics[char] || 0) + Number(value);
@@ -291,7 +303,7 @@ export class GrantsProcessor {
      * @private
      */
     static async _processBaseGrants(originItem: WH40KItem, context: GrantContext): Promise<void> {
-        const grants = (originItem.system as any)?.grants || {};
+        const grants = ((originItem.system as Record<string, unknown>)?.grants as Record<string, unknown>) || {};
 
         // Wounds
         if (grants.woundsFormula) {
@@ -333,15 +345,16 @@ export class GrantsProcessor {
      * @private
      */
     static async _processChoiceGrants(originItem: WH40KItem, context: GrantContext): Promise<void> {
-        const grants = (originItem.system as any)?.grants || {};
-        const choices = grants.choices || [];
-        const selectedChoices = (originItem.system as any)?.selectedChoices || {};
+        const originSys = originItem.system as Record<string, unknown>;
+        const grants = (originSys?.grants as Record<string, unknown>) || {};
+        const choices = (grants.choices as GrantChoiceData[]) || [];
+        const selectedChoices = (originSys?.selectedChoices as Record<string, unknown[]>) || {};
 
         for (const choice of choices) {
             const selected = selectedChoices[choice.label] || [];
 
             for (const selectedValue of selected) {
-                const option = choice.options.find((opt: any) => opt.value === selectedValue);
+                const option = choice.options.find((opt) => opt.value === selectedValue);
                 if (!option?.grants) {
                     console.warn(`Origin "${originItem.name}" choice "${choice.label}" has selection "${selectedValue}" but no grants found.`);
                     continue;
@@ -389,7 +402,7 @@ export class GrantsProcessor {
      * @private
      */
     static async _processItemGrants(item: WH40KItem, context: GrantContext): Promise<void> {
-        const grants = (item.system as any)?.grants;
+        const grants = (item.system as Record<string, unknown>)?.grants as Record<string, unknown> | undefined;
         if (!grants) return;
 
         // Process grant arrays
@@ -403,7 +416,7 @@ export class GrantsProcessor {
      * Process an array of grants.
      * @private
      */
-    static async _processGrantArray(grantArray: any[], type: string, context: GrantContext, choiceLabel: string | null = null): Promise<void> {
+    static async _processGrantArray(grantArray: Grant[] | undefined, type: string, context: GrantContext, choiceLabel: string | null = null): Promise<void> {
         if (!grantArray || !Array.isArray(grantArray) || grantArray.length === 0) return;
 
         for (const grant of grantArray) {
@@ -440,7 +453,7 @@ export class GrantsProcessor {
      * Uses SkillKeyHelper for robust name-to-key conversion.
      * @private
      */
-    static _processSkillGrant(skillGrant: any, context: GrantContext): void {
+    static _processSkillGrant(skillGrant: Grant | string, context: GrantContext): void {
         // Normalize skill grant (might be string or object)
         const normalized = typeof skillGrant === 'string' ? { name: skillGrant, level: 'trained' } : skillGrant;
 
@@ -468,7 +481,7 @@ export class GrantsProcessor {
             (i) =>
                 i.type === 'skill' &&
                 i.name.toLowerCase() === displayName.toLowerCase() &&
-                (!normalized.specialization || (i.system as any)?.specialization === normalized.specialization),
+                (!normalized.specialization || (i.system as Record<string, unknown>)?.specialization === normalized.specialization),
         );
 
         if (existingSkill) {
@@ -519,13 +532,13 @@ export class GrantsProcessor {
      * May trigger recursive processing if talent has grants.
      * @private
      */
-    static async _processTalentGrant(talentGrant: any, context: GrantContext): Promise<void> {
+    static async _processTalentGrant(talentGrant: Grant, context: GrantContext): Promise<void> {
         // Check for duplicates
         const existing = context.actor.items.find(
             (i) =>
                 i.type === 'talent' &&
                 i.name === talentGrant.name &&
-                (!talentGrant.specialization || (i.system as any)?.specialization === talentGrant.specialization),
+                (!talentGrant.specialization || (i.system as Record<string, unknown>)?.specialization === talentGrant.specialization),
         );
 
         if (existing) {
@@ -534,7 +547,7 @@ export class GrantsProcessor {
         }
 
         // Fetch talent from UUID or compendium
-        let talentItem: any = null;
+        let talentItem: WH40KItem | null = null;
         if (talentGrant.uuid) {
             try {
                 talentItem = await fromUuid(talentGrant.uuid);
@@ -561,7 +574,7 @@ export class GrantsProcessor {
         // Clone item data
         const itemData = talentItem.toObject();
         if (talentGrant.specialization) {
-            (itemData.system as any).specialization = talentGrant.specialization;
+            (itemData.system as Record<string, unknown>).specialization = talentGrant.specialization;
             // Strip any existing "(X)" suffix so we don't produce "Name (X) (X)"
             const bareName = itemData.name.replace(/\s*\([^)]+\)\s*$/, '').trim();
             itemData.name = `${bareName} (${talentGrant.specialization})`;
@@ -583,9 +596,9 @@ export class GrantsProcessor {
         }
 
         // Recursive processing for granted talent's grants (immediate mode only)
-        if (context.mode === GRANT_MODE.IMMEDIATE && (talentItem.system as any)?.hasGrants) {
+        if (context.mode === GRANT_MODE.IMMEDIATE && (talentItem.system as Record<string, unknown>)?.hasGrants) {
             const nestedContext = new GrantContext(context.actor, {
-                mode: context.mode as any,
+                mode: context.mode,
                 depth: context.depth + 1,
                 maxDepth: context.maxDepth,
                 dryRun: context.dryRun,
@@ -604,7 +617,7 @@ export class GrantsProcessor {
      * Create a basic talent item when full data is unavailable.
      * @private
      */
-    static _createBasicTalent(talentGrant: any, context: GrantContext): void {
+    static _createBasicTalent(talentGrant: Grant, context: GrantContext): void {
         const itemData = {
             type: 'talent',
             name: talentGrant.name,
@@ -624,13 +637,14 @@ export class GrantsProcessor {
      * Process a single trait grant.
      * @private
      */
-    static async _processTraitGrant(traitGrant: any, context: GrantContext): Promise<void> {
+    static async _processTraitGrant(traitGrant: Grant, context: GrantContext): Promise<void> {
         // Check for duplicates (stackable traits can increase level)
         const existing = context.actor.items.find((i) => i.type === 'trait' && i.name === traitGrant.name);
 
-        if (existing && (existing.system as any).stackable && traitGrant.level != null) {
+        const existingSys = existing ? (existing.system as Record<string, unknown>) : null;
+        if (existing && existingSys?.stackable && traitGrant.level != null) {
             // Increase stackable trait level
-            const newLevel = ((existing.system as any).level || 1) + (traitGrant.level || 1);
+            const newLevel = ((existingSys.level as number) || 1) + (traitGrant.level || 1);
             context.result.skillUpdates[`items.${existing.id}.system.level`] = newLevel;
             game.wh40k?.log(`Increased trait ${traitGrant.name} level to ${newLevel}`);
             return;
@@ -640,7 +654,7 @@ export class GrantsProcessor {
         }
 
         // Fetch trait from UUID or compendium
-        let traitItem: any = null;
+        let traitItem: WH40KItem | null = null;
         if (traitGrant.uuid) {
             try {
                 traitItem = await fromUuid(traitGrant.uuid);
@@ -662,7 +676,7 @@ export class GrantsProcessor {
         // Clone item data
         const itemData = traitItem.toObject();
         if (traitGrant.level != null) {
-            (itemData.system as any).level = traitGrant.level;
+            (itemData.system as Record<string, unknown>).level = traitGrant.level;
         }
 
         // Mark as granted
@@ -685,7 +699,7 @@ export class GrantsProcessor {
      * Create a basic trait item when full data is unavailable.
      * @private
      */
-    static _createBasicTrait(traitGrant: any, context: GrantContext): void {
+    static _createBasicTrait(traitGrant: Grant, context: GrantContext): void {
         const itemData = {
             type: 'trait',
             name: traitGrant.name,
@@ -705,8 +719,8 @@ export class GrantsProcessor {
      * Process a single equipment grant.
      * @private
      */
-    static async _processEquipmentGrant(equipGrant: any, context: GrantContext): Promise<void> {
-        let doc: any = null;
+    static async _processEquipmentGrant(equipGrant: Grant, context: GrantContext): Promise<void> {
+        let doc: WH40KItem | null = null;
 
         // Try UUID first
         if (equipGrant.uuid) {
@@ -732,7 +746,7 @@ export class GrantsProcessor {
 
         const itemData = doc.toObject();
         if (equipGrant.quantity && equipGrant.quantity > 1) {
-            (itemData.system as any).quantity = equipGrant.quantity;
+            (itemData.system as Record<string, unknown>).quantity = equipGrant.quantity;
         }
         context.result.itemsToCreate.push(itemData as Record<string, unknown>);
 
@@ -745,7 +759,7 @@ export class GrantsProcessor {
      * Process a special ability grant.
      * @private
      */
-    static _processSpecialAbilityGrant(abilityGrant: any, context: GrantContext): void {
+    static _processSpecialAbilityGrant(abilityGrant: Grant | string, context: GrantContext): void {
         // Special abilities are descriptive text, not items
         // They could be stored as journal entries or just logged
         game.wh40k?.log(`Special ability granted: ${abilityGrant.name || abilityGrant}`);
@@ -775,12 +789,13 @@ export class GrantsProcessor {
         for (const upgrade of upgrades) {
             const existingSkill = context.actor.items.get(upgrade._existingId as string);
             if (existingSkill) {
-                const skillUpdates: Record<string, any> = {};
-                if ((upgrade.system as any).trained) skillUpdates['system.trained'] = true;
-                if ((upgrade.system as any).plus10) skillUpdates['system.plus10'] = true;
-                if ((upgrade.system as any).plus20) skillUpdates['system.plus20'] = true;
+                const skillUpdates: Record<string, boolean> = {};
+                const upgradeSys = upgrade.system as Record<string, unknown>;
+                if (upgradeSys.trained) skillUpdates['system.trained'] = true;
+                if (upgradeSys.plus10) skillUpdates['system.plus10'] = true;
+                if (upgradeSys.plus20) skillUpdates['system.plus20'] = true;
                 if (Object.keys(skillUpdates).length > 0) {
-                    await (existingSkill as any).update(skillUpdates);
+                    await existingSkill.update(skillUpdates);
                 }
             }
         }
@@ -807,7 +822,9 @@ export class GrantsProcessor {
      * @private
      */
     static _evaluateWounds(formula: string, actor: WH40KActor, originItem: WH40KItem): Promise<number> {
-        const storedRoll = (originItem.system as any)?.rollResults?.wounds;
+        const storedRoll = ((originItem.system as Record<string, unknown>)?.rollResults as Record<string, unknown>)?.wounds as
+            | { rolled?: number; breakdown?: string }
+            | undefined;
 
         if (storedRoll?.rolled !== null && storedRoll?.rolled !== undefined) {
             game.wh40k?.log(`Using stored wounds roll: ${storedRoll.rolled} (${storedRoll.breakdown})`);
@@ -824,7 +841,9 @@ export class GrantsProcessor {
      * @private
      */
     static _evaluateFate(formula: string, originItem: WH40KItem): Promise<number> {
-        const storedRoll = (originItem.system as any)?.rollResults?.fate;
+        const storedRoll = ((originItem.system as Record<string, unknown>)?.rollResults as Record<string, unknown>)?.fate as
+            | { rolled?: number; breakdown?: string }
+            | undefined;
 
         if (storedRoll?.rolled !== null && storedRoll?.rolled !== undefined) {
             game.wh40k?.log(`Using stored fate roll: ${storedRoll.rolled} (${storedRoll.breakdown})`);

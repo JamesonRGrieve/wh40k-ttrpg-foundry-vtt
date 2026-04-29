@@ -20,7 +20,7 @@ import { GrantsManager, generateDeterministicId } from '../../managers/grants-ma
 import { OriginChartLayout } from '../../utils/origin-chart-layout.ts';
 import { getCharacteristicDisplayInfo, getTrainingLabel, getChoiceTypeLabel } from '../../utils/origin-ui-labels.ts';
 import { WH40KSettings } from '../../wh40k-rpg-settings.ts';
-import { normalizeOrigin, type NormalizedOrigin } from './normalized-origin.ts';
+import { normalizeOrigin, type NormalizedOrigin, type NormalizedChoice, type NormalizedChoiceOption } from './normalized-origin.ts';
 import OriginDetailDialog from './origin-detail-dialog.ts';
 import OriginPathChoiceDialog from './origin-path-choice-dialog.ts';
 import OriginRollDialog from './origin-roll-dialog.ts';
@@ -106,6 +106,51 @@ interface StepLayout {
     cards: StepLayoutCard[];
     maxPosition: number;
     hasSelection: boolean;
+}
+
+/**
+ * Minimal shape of a raw grant skill/talent/trait entry from system.grants.*.
+ * This mirrors the raw compendium data before normalization.
+ */
+interface GrantItemRaw {
+    name?: string;
+    specialization?: string;
+    level?: string;
+    uuid?: string;
+}
+
+/**
+ * Minimal shape of a raw grant choice entry from system.grants.choices.
+ * This mirrors the raw compendium data before normalization.
+ */
+interface GrantChoiceRaw {
+    label?: string;
+    name?: string;
+    type?: string;
+    count?: number;
+    options?: Array<{ value?: string; name?: string; label?: string; grants?: WH40KItemModifiers }>;
+}
+
+/**
+ * Shape of an equipment item entry stored in equipmentItems and equipmentSelections.
+ * These entries are constructed in _loadEquipmentItems and _toggleEquipmentByUuid and
+ * keyed off compendium index data; all fields are nullable because they come from optional
+ * system sub-documents.
+ */
+interface EquipmentItemEntry extends Record<string, unknown> {
+    uuid: unknown;
+    id: unknown;
+    name: unknown;
+    img: unknown;
+    type: unknown;
+    identifier: unknown;
+    clipMax: unknown;
+    weaponTypes: unknown;
+    availability: unknown;
+    availabilityLabel: unknown;
+    availabilityOrder: unknown;
+    requisition: unknown;
+    throneGelt: unknown;
 }
 
 /**
@@ -407,7 +452,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const equipment = (state.equipmentSelections as Record<string, unknown>) || {};
         for (const [uuid, entry] of Object.entries(equipment)) {
-            this.equipmentSelections.set(uuid, entry as any);
+            this.equipmentSelections.set(uuid, entry as Record<string, unknown>);
         }
 
         if (state.charRolls && Array.isArray(state.charRolls)) this._charRolls = state.charRolls as number[];
@@ -527,7 +572,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const identifier = selection.system.identifier;
         const step = selection.system.step;
         const name = selection.name;
-        const uuid = (selection as any)._sourceUuid || selection.uuid;
+        const uuid = (selection as NormalizedOriginWithMeta)._sourceUuid || selection.uuid;
 
         return (
             pool.find((origin) => uuid && (origin.uuid === uuid || origin.id === uuid)) ||
@@ -548,21 +593,20 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         // Load from all configured packs for this game system
         const packNames = this.systemConfig.packs as string[];
-        const optionalStepIndex = (this.systemConfig.optionalStep as any)?.stepIndex;
+        const optionalStepIndex = this.systemConfig.optionalStep?.stepIndex;
         const allOriginPaths: NormalizedOrigin[] = [];
 
         for (const packName of packNames) {
             // Try fully qualified ID first, then metadata.name fallback
             const pack =
-                game.packs.get(`wh40k-rpg.${packName}`) ??
-                game.packs.find((p: any) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
+                game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
             if (!pack) {
                 console.warn(`Origin path compendium '${packName}' not found`);
                 continue;
             }
-            const documents = await (pack as any).getDocuments();
+            const documents = await pack.getDocuments();
             // Filter and normalize
-            allOriginPaths.push(...documents.filter((d: any) => d.type === 'originPath').map(normalizeOrigin));
+            allOriginPaths.push(...documents.filter((d) => d.type === 'originPath').map(normalizeOrigin));
         }
 
         if (allOriginPaths.length === 0) {
@@ -887,7 +931,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _getSelectionsForDerivedCalculations(): NormalizedOrigin[] {
         const entries: NormalizedOrigin[] = [];
 
-        for (const step of this.orderedSteps as any[]) {
+        for (const step of this.orderedSteps) {
             const selection = this.selections.get(step.step);
             if (selection) entries.push(selection);
         }
@@ -948,10 +992,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
 
             const selectedChoices = (system?.selectedChoices as Record<string, string[]>) || {};
-            const choices = (selection.grants.choices || []) as any[];
+            const choices = selection.grants.choices;
             const labelCounts: Record<string, number> = {};
 
-            for (const choice of choices) {
+            for (const choice of choices as Array<NormalizedChoice & { name?: string }>) {
                 const baseLabel = choice.label || choice.name || 'choice';
                 labelCounts[baseLabel] = (labelCounts[baseLabel] || 0) + 1;
                 const suffix = labelCounts[baseLabel] > 1 ? ` (${labelCounts[baseLabel]})` : '';
@@ -959,8 +1003,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const selectedValues = selectedChoices[choiceKey] || [];
 
                 for (const selectedValue of selectedValues) {
-                    const option = choice.options?.find((opt: any) => {
-                        const optionValue = opt.value || opt.name;
+                    const option = choice.options?.find((opt) => {
+                        const optionValue = opt.value || (opt as NormalizedChoiceOption & { name?: string }).name;
                         return optionValue === selectedValue || selectedValue?.startsWith?.(`${optionValue} (`);
                     });
                     const choiceModifiers = (option?.grants as WH40KItemModifiers | undefined)?.characteristics || {};
@@ -1427,17 +1471,19 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         const availabilityConfig =
-            ((CONFIG as any)?.wh40k?.availabilities as Record<string, { label: string; modifier: number }>) || WH40K.availabilities || {};
+            ((CONFIG as Record<string, unknown>)?.wh40k as { availabilities?: Record<string, { label: string; modifier: number }> } | undefined)
+                ?.availabilities ||
+            WH40K.availabilities ||
+            {};
         const scarceModifier = availabilityConfig.scarce?.modifier ?? 0;
         const loaded: Array<Record<string, unknown>> = [];
 
         for (const packName of packNames) {
             const pack =
-                game.packs.get(`wh40k-rpg.${packName}`) ??
-                game.packs.find((p: any) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
+                game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
             if (!pack) continue;
 
-            const index = await (pack as any).getIndex({
+            const index = await pack.getIndex({
                 fields: [
                     'system.availability',
                     'system.identifier',
@@ -1521,8 +1567,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // User-selected weapons from the Equip Acolyte table.
         for (const entry of this.equipmentSelections.values()) {
             if (entry.type !== 'weapon') continue;
-            const identifier = (entry as any).identifier;
-            const clipMax = (entry as any).clipMax;
+            const identifier = (entry as EquipmentItemEntry).identifier;
+            const clipMax = (entry as EquipmentItemEntry).clipMax;
             if (!identifier || typeof clipMax !== 'number') continue;
             result.push({
                 identifier: String(identifier),
@@ -1548,7 +1594,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // is hidden from the table but still counts against the 3-item cap.
         for (const [uuid, entry] of Array.from(this.equipmentSelections.entries())) {
             if (entry.type !== 'ammunition') continue;
-            const types = Array.isArray((entry as any).weaponTypes) ? ((entry as any).weaponTypes as string[]) : [];
+            const types = Array.isArray((entry as EquipmentItemEntry).weaponTypes) ? ((entry as EquipmentItemEntry).weaponTypes as string[]) : [];
             if (!types.some((id) => availableWeaponIdentifiers.has(id))) {
                 this.equipmentSelections.delete(uuid);
             }
@@ -1562,7 +1608,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             if (search && !String(item.name).toLowerCase().includes(search)) return false;
             // Hide ammunition rows unless at least one compatible weapon is granted or picked.
             if (item.type === 'ammunition') {
-                const types = Array.isArray((item as any).weaponTypes) ? ((item as any).weaponTypes as string[]) : [];
+                const types = Array.isArray((item as EquipmentItemEntry).weaponTypes) ? ((item as EquipmentItemEntry).weaponTypes as string[]) : [];
                 if (!types.some((id) => availableWeaponIdentifiers.has(id))) return false;
             }
             return true;
@@ -1712,7 +1758,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const choices = [];
         const selectedChoices = (system.selectedChoices as Record<string, string[]>) || {};
         const choiceLabelCounts: Record<string, number> = {};
-        const grantChoices = (grants.choices || []) as any[];
+        const grantChoices = (grants.choices || []) as GrantChoiceRaw[];
 
         if (grantChoices.length > 0) {
             for (const choice of grantChoices) {
@@ -1724,7 +1770,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                 const selectedLabels: string[] = [];
                 if (selection && Array.isArray(selection)) {
                     for (const sel of selection) {
-                        const option = choice.options?.find((o: any) => o.value === sel || o.name === sel);
+                        const option = choice.options?.find((o) => o.value === sel || o.name === sel);
                         selectedLabels.push(option?.label || option?.name || sel);
                     }
                 }
@@ -1741,7 +1787,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         const rolls: Record<string, unknown> = {};
-        const rollResults = (system.rollResults as Record<string, any>) || {};
+        const rollResults = (system.rollResults as Record<string, { rolled?: number; breakdown?: string } | undefined>) || {};
 
         if (grants.woundsFormula) {
             const hasRolled = rollResults.wounds?.rolled !== undefined && rollResults.wounds?.rolled !== null;
@@ -1779,7 +1825,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         const skills = [];
-        for (const skill of (grants.skills || []) as any[]) {
+        for (const skill of (grants.skills || []) as GrantItemRaw[]) {
             const displayName = skill.specialization ? `${skill.name} (${skill.specialization})` : skill.name;
             const uuid = await this._findSkillUuid(skill.name, skill.specialization);
             skills.push({
@@ -1793,10 +1839,10 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             });
         }
 
-        const talents = await this._prepareTalentsWithTooltips((grants.talents || []) as any[]);
-        const traits = await this._prepareTraitsWithTooltips((grants.traits || []) as any[]);
+        const talents = await this._prepareTalentsWithTooltips((grants.talents || []) as GrantItemRaw[]);
+        const traits = await this._prepareTraitsWithTooltips((grants.traits || []) as GrantItemRaw[]);
 
-        const currentStep = this.currentStep as any;
+        const currentStep = this.currentStep as OriginStepDef;
         const itemId = item.id;
         let isConfirmed = false;
         if (this.showLineage) {
@@ -1849,7 +1895,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTalentsWithTooltips(talents: unknown[]): Promise<unknown[]> {
+    async _prepareTalentsWithTooltips(talents: GrantItemRaw[]): Promise<unknown[]> {
         const prepared = [];
         for (const talent of talents) {
             let tooltipText = talent.name;
@@ -1889,7 +1935,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * @returns {Promise<Array>}
      * @private
      */
-    async _prepareTraitsWithTooltips(traits: unknown[]): Promise<unknown[]> {
+    async _prepareTraitsWithTooltips(traits: GrantItemRaw[]): Promise<unknown[]> {
         const prepared = [];
         for (const trait of traits) {
             let tooltipText = trait.name;
@@ -2453,12 +2499,15 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     this.selections.clear();
 
                     for (const [step, selData] of Object.entries(data.selections)) {
-                        const origin = await fromUuid((selData as Record<string, any>).uuid);
+                        const origin = await fromUuid((selData as Record<string, unknown>).uuid as string);
                         if (origin) {
                             // Store as plain data object (not Item instance)
-                            const originData = this._itemToSelectionData(origin as any);
-                            originData.system.selectedChoices = (selData as Record<string, any>).selectedChoices;
-                            originData.system.rollResults = (selData as Record<string, any>).rollResults;
+                            const originData = this._itemToSelectionData(origin as unknown as WH40KItem);
+                            originData.system.selectedChoices = (selData as Record<string, unknown>).selectedChoices as Record<string, string[]>;
+                            originData.system.rollResults = (selData as Record<string, unknown>).rollResults as Record<
+                                string,
+                                { rolled?: number; breakdown?: string } | undefined
+                            >;
                             this.selections.set(step, originData);
                         }
                     }
@@ -2613,7 +2662,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         // selection data so previously made choices and rolls stay populated when the user
         // re-clicks the card. Otherwise the preview would load fresh compendium data.
         const confirmed = this._findConfirmedSelectionMatching(origin);
-        this.previewedOrigin = confirmed ?? this._itemToSelectionData(origin as any);
+        this.previewedOrigin = confirmed ?? this._itemToSelectionData(origin as unknown as WH40KItem);
 
         // Re-render to show in selection panel
         this.render();
@@ -2627,7 +2676,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     _findConfirmedSelectionMatching(origin: NormalizedOrigin): NormalizedOrigin | null {
         const matches = (candidate: NormalizedOrigin | null): boolean => {
             if (!candidate) return false;
-            const candidateUuid = (candidate as any)._sourceUuid || candidate.uuid;
+            const candidateUuid = (candidate as NormalizedOriginWithMeta)._sourceUuid || candidate.uuid;
             if (candidateUuid && (candidateUuid === origin.uuid || candidateUuid === origin.id)) return true;
             const candidateSys = candidate.system as OriginPathSystemData;
             const originSys = origin.system as OriginPathSystemData;
@@ -2732,7 +2781,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         }
 
         // Show detail dialog for PREVIEW ONLY (no selection)
-        await OriginDetailDialog.show(origin as any, {
+        await OriginDetailDialog.show(origin as unknown as WH40KItem, {
             allowSelection: false, // Changed to false - preview only
             isSelected: isSelected,
         });
@@ -2747,7 +2796,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         const currentStep = this.currentStep;
 
         // Convert to plain data object if it's an Item
-        const originData = origin.toObject ? this._itemToSelectionData(origin as any) : foundry.utils.deepClone(origin);
+        const originData = origin.toObject ? this._itemToSelectionData(origin as unknown as WH40KItem) : foundry.utils.deepClone(origin);
 
         if (this.showLineage) {
             // Lineage selection
@@ -2809,7 +2858,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             }
 
             // Open the detail dialog
-            await OriginDetailDialog.show(originItem as any, {
+            await OriginDetailDialog.show(originItem as unknown as WH40KItem, {
                 allowSelection: false,
                 isSelected: !!this.selections.get(currentStep.step),
             });
@@ -2869,7 +2918,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             uuid: selection.uuid || selection._sourceUuid,
         };
 
-        const result = await OriginPathChoiceDialog.show(itemLike as any, this.actor);
+        const result = await OriginPathChoiceDialog.show(itemLike as unknown as WH40KItem, this.actor);
 
         if (result) {
             // Always directly mutate the plain data object
@@ -2918,7 +2967,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
 
         const result = await OriginRollDialog.show(statType, formula, {
             actor: this.actor,
-            originItem: itemLike as any,
+            originItem: itemLike as unknown as WH40KItem,
         });
 
         if (result) {
@@ -3080,7 +3129,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             return;
         }
 
-        const item = this.equipmentItems.find((entry) => entry.uuid === uuid);
+        const item = this.equipmentItems.find((entry) => entry.uuid === uuid) as EquipmentItemEntry | undefined;
         if (!item) return;
         this.equipmentSelections.set(uuid, {
             uuid: item.uuid,
@@ -3089,11 +3138,11 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             type: item.type,
             availability: item.availability,
             availabilityLabel: item.availabilityLabel,
-            requisition: (item as any).requisition ?? null,
-            throneGelt: (item as any).throneGelt ?? null,
-            identifier: (item as any).identifier ?? null,
-            clipMax: (item as any).clipMax ?? null,
-            weaponTypes: Array.isArray((item as any).weaponTypes) ? [...((item as any).weaponTypes as string[])] : [],
+            requisition: item.requisition ?? null,
+            throneGelt: item.throneGelt ?? null,
+            identifier: item.identifier ?? null,
+            clipMax: item.clipMax ?? null,
+            weaponTypes: Array.isArray(item.weaponTypes) ? [...(item.weaponTypes as string[])] : [],
         });
         this.render();
     }
@@ -3161,7 +3210,8 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
     static async #rollDivination(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
         const table = await OriginPathBuilder.#getDivinationTable();
         if (table) {
-            const draw = await (table as any).draw({ displayChat: true });
+            const rollTable = table as { draw: (options: { displayChat: boolean }) => Promise<{ results?: Array<{ text?: string }> }> };
+            const draw = await rollTable.draw({ displayChat: true });
             const result = draw?.results?.[0];
             this._divination = (result?.text as string) || '';
         } else {
@@ -3180,12 +3230,12 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * a GM may have edited) and falling back to the compendium entry.
      */
     static async #getDivinationTable(): Promise<unknown | null> {
-        const worldTable = (game.tables as any)?.getName?.('Divination');
+        const worldTable = game.tables?.getName?.('Divination');
         if (worldTable) return worldTable;
         const pack = game.packs.get('wh40k-rpg.dh2-core-rolltables');
         if (!pack) return null;
         const docs = await pack.getDocuments();
-        return (docs as unknown[]).find((d: any) => d?.name === 'Divination') ?? null;
+        return docs.find((d) => d?.name === 'Divination') ?? null;
     }
 
     /**
@@ -3197,7 +3247,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             content: '<form><div class="form-group"><label>Divination:</label><input type="text" name="divination" autofocus /></div></form>',
             callback: (html) => {
                 const form = html[0]?.querySelector?.('form') || html.querySelector?.('form');
-                return (form as any)?.querySelector?.('[name="divination"]')?.value || '';
+                return (form as HTMLFormElement | null)?.querySelector<HTMLInputElement>('[name="divination"]')?.value || '';
             },
             rejectClose: false,
         });
@@ -3230,7 +3280,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             content: '<form><div class="form-group"><label>Thrones:</label><input type="number" name="value" min="0" autofocus /></div></form>',
             callback: (html) => {
                 const form = html[0]?.querySelector?.('form') || html.querySelector?.('form');
-                return parseInt((form as any)?.querySelector?.('[name="value"]')?.value);
+                return parseInt((form as HTMLFormElement | null)?.querySelector<HTMLInputElement>('[name="value"]')?.value ?? '');
             },
             rejectClose: false,
         });
@@ -3267,7 +3317,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             content: '<form><div class="form-group"><label>Influence:</label><input type="number" name="value" min="0" autofocus /></div></form>',
             callback: (html) => {
                 const form = html[0]?.querySelector?.('form') || html.querySelector?.('form');
-                return parseInt((form as any)?.querySelector?.('[name="value"]')?.value);
+                return parseInt((form as HTMLFormElement | null)?.querySelector<HTMLInputElement>('[name="value"]')?.value ?? '');
             },
             rejectClose: false,
         });
@@ -3288,7 +3338,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         try {
             const item = await fromUuid(uuid);
             if (item?.sheet) {
-                (item.sheet as any).render(true);
+                item.sheet.render(true);
             }
         } catch {
             ui.notifications.warn(game.i18n.localize('WH40K.OriginPath.ItemNotFound'));
@@ -3299,7 +3349,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
      * Commit path to character
      */
     static async #commit(this: OriginPathBuilder, event: Event, target: HTMLElement): Promise<void> {
-        const status = this._calculateStatus() as any;
+        const status = this._calculateStatus() as Record<string, unknown>;
 
         if (!status.canCommit) {
             if (!status.stepsComplete) {
@@ -3394,7 +3444,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
                     type: 'originPath',
                     system: data.system || this._getSelectionSystem(data),
                     toObject: () => data,
-                })) as any,
+                })) as unknown as WH40KItem[],
                 this.actor,
                 {
                     selections: this._buildGrantSelections(),
@@ -3620,7 +3670,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         if (injuryIds.length > 0) {
             await this.actor.deleteEmbeddedDocuments('Item', injuryIds);
         }
-        const effectIds = (this.actor as any).effects?.map((e: any) => e.id) ?? [];
+        const effectIds = this.actor.effects?.map((e) => e.id as string) ?? [];
         if (effectIds.length > 0) {
             await this.actor.deleteEmbeddedDocuments('ActiveEffect', effectIds);
         }
@@ -3649,7 +3699,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             update[`system.skills.${skillKey}.advance`] = 0;
             const entries = skills[skillKey]?.entries;
             if (Array.isArray(entries)) {
-                const resetEntries = entries.map((entry: any) => ({ ...entry, advance: 0 }));
+                const resetEntries = entries.map((entry) => ({ ...(entry as Record<string, unknown>), advance: 0 }));
                 update[`system.skills.${skillKey}.entries`] = resetEntries;
             }
         }
@@ -3681,16 +3731,17 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             const uuid = entry.uuid as string;
             const source = await fromUuid(uuid);
             if (!source) continue;
-            const itemData = (source as any).toObject ? (source as any).toObject() : foundry.utils.deepClone(source);
+            const sourceDoc = source as { toObject?: () => Record<string, unknown> };
+            const itemData = sourceDoc.toObject ? sourceDoc.toObject() : (foundry.utils.deepClone(source) as Record<string, unknown>);
             delete itemData._id;
-            itemData.flags ??= {};
-            itemData.flags.core ??= {};
-            itemData.flags.core.sourceId = uuid;
+            (itemData.flags as Record<string, unknown>) ??= {};
+            (itemData.flags as Record<string, Record<string, unknown>>).core ??= {};
+            (itemData.flags as Record<string, Record<string, unknown>>).core.sourceId = uuid;
 
             if (entry.type === 'ammunition') {
                 // Size user-picked ammo to one clip of the primary ranged weapon that supports it.
                 // Prefer origin-granted weapons over weapons the player also picked.
-                const types = Array.isArray((entry as any).weaponTypes) ? ((entry as any).weaponTypes as string[]) : [];
+                const types = Array.isArray((entry as EquipmentItemEntry).weaponTypes) ? ((entry as EquipmentItemEntry).weaponTypes as string[]) : [];
                 const compatible =
                     availableWeapons.find((w) => types.includes(w.identifier) && w.source === 'granted') ??
                     availableWeapons.find((w) => types.includes(w.identifier));
@@ -3703,7 +3754,7 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
             creations.push(itemData);
 
             if (entry.type === 'weapon') {
-                const ammoData = await this._resolveStandardAmmoItem(source as any);
+                const ammoData = await this._resolveStandardAmmoItem(source as unknown as WH40KItem);
                 if (ammoData) {
                     const cloneA = foundry.utils.deepClone(ammoData);
                     const cloneB = foundry.utils.deepClone(ammoData);
@@ -3731,23 +3782,23 @@ export default class OriginPathBuilder extends HandlebarsApplicationMixin(Applic
         for (const packName of packNames) {
             if (!packName.includes('ammo')) continue;
             const pack =
-                game.packs.get(`wh40k-rpg.${packName}`) ??
-                game.packs.find((p: any) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
+                game.packs.get(`wh40k-rpg.${packName}`) ?? game.packs.find((p) => p.metadata.name === packName || p.metadata.id === `wh40k-rpg.${packName}`);
             if (!pack) continue;
 
-            const index = await (pack as any).getIndex({ fields: ['system.weaponTypes', 'system.identifier', 'name', 'type'] });
-            const match = index.find((entry: any) => {
+            const index = await pack.getIndex({ fields: ['system.weaponTypes', 'system.identifier', 'name', 'type'] });
+            const match = index.find((entry) => {
                 if (entry.type !== 'ammunition') return false;
                 const types = (entry.system as OriginPathSystemData)?.weaponTypes || [];
-                return Array.isArray(types) && types.includes(weaponIdentifier);
+                return Array.isArray(types) && types.includes(weaponIdentifier as string);
             });
             if (!match) continue;
-            const doc = await (pack as any).getDocument(match._id);
+            const doc = await pack.getDocument(match._id as string);
             if (!doc) continue;
-            const data = (doc as any).toObject ? (doc as any).toObject() : foundry.utils.deepClone(doc);
-            data.flags ??= {};
-            data.flags.core ??= {};
-            data.flags.core.sourceId = `Compendium.${(pack as any).metadata.id}.${match._id}`;
+            const docWithToObject = doc as { toObject?: () => Record<string, unknown> };
+            const data = docWithToObject.toObject ? docWithToObject.toObject() : (foundry.utils.deepClone(doc) as Record<string, unknown>);
+            (data.flags as Record<string, unknown>) ??= {};
+            (data.flags as Record<string, Record<string, unknown>>).core ??= {};
+            (data.flags as Record<string, Record<string, unknown>>).core.sourceId = `Compendium.${pack.metadata.id}.${match._id}`;
             return data;
         }
         return null;

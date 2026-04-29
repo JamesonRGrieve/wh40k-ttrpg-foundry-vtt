@@ -3,10 +3,10 @@
  * Provides contextual action menus throughout the character sheet
  */
 
-import type { WH40KItem } from '../../documents/item.ts';
 import type { WH40KAcolyte } from '../../documents/acolyte.ts';
-import type { WH40KNPC } from '../../documents/npc.ts';
 import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { WH40KItem } from '../../documents/item.ts';
+import type { WH40KNPC } from '../../documents/npc.ts';
 import type { WH40KCharacteristic, WH40KSkill } from '../../types/global.d.ts';
 import type { ApplicationV2Ctor, ContextMenuEntryLike, DialogV2Like, FoundryApplicationUXLike } from './application-types.ts';
 

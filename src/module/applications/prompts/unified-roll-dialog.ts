@@ -10,6 +10,7 @@
  * - Auto Roll for digital rolling
  */
 
+import type { ActionData } from '../../rolls/action-data.ts';
 import { getDegree, sendActionDataToChat } from '../../rolls/roll-helpers.ts';
 import {
     getAvailableAttackModes,
@@ -24,7 +25,6 @@ import {
 } from '../../rules/attack-options.ts';
 import { RANGE_BRACKETS, calculateTokenDistance } from '../../utils/range-calculator.ts';
 import ApplicationV2Mixin from '../api/application-v2-mixin.ts';
-import type { ActionData } from '../../rolls/action-data.ts';
 
 const { ApplicationV2 } = foundry.applications.api;
 
