@@ -15,19 +15,19 @@
     <div class="wh40k-panel-body">
 
         {{!-- Compact XP Display - Single horizontal line --}}
-        <div class="wh40k-xp-compact-display">
+        <div class="wh40k-xp-compact-display tw-flex tw-items-center tw-rounded-[6px] tw-mb-[var(--wh40k-space-md)]">
             {{!-- Progress Ring --}}
-            <div class="wh40k-xp-ring-inline">
-                <svg viewBox="0 0 100 100" class="wh40k-xp-ring-svg">
+            <div class="wh40k-xp-ring-inline tw-relative tw-w-[50px] tw-h-[50px] tw-shrink-0">
+                <svg viewBox="0 0 100 100" class="wh40k-xp-ring-svg tw-w-full tw-h-full">
                     {{!-- Background circle --}}
-                    <circle cx="50" cy="50" r="45" 
-                            fill="none" 
-                            stroke="rgba(120, 46, 34, 0.2)" 
+                    <circle cx="50" cy="50" r="45"
+                            fill="none"
+                            stroke="rgba(120, 46, 34, 0.2)"
                             stroke-width="10"/>
                     {{!-- Progress circle --}}
-                    <circle cx="50" cy="50" r="45" 
-                            fill="none" 
-                            stroke="url(#xpGradient)" 
+                    <circle cx="50" cy="50" r="45"
+                            fill="none"
+                            stroke="url(#xpGradient)"
                             stroke-width="10"
                             stroke-linecap="round"
                             stroke-dasharray="282.74"
@@ -42,52 +42,52 @@
                         </linearGradient>
                     </defs>
                 </svg>
-                <div class="wh40k-xp-ring-percent">
+                <div class="wh40k-xp-ring-percent tw-absolute tw-top-1/2 tw-left-1/2 tw-translate-x-[-50%] tw-translate-y-[-50%] tw-text-[0.75rem] tw-font-bold tw-font-alt tw-leading-none">
                     {{#if actor.system.experience.total}}{{floor (multiply (divide actor.system.experience.used actor.system.experience.total) 100)}}{{else}}0{{/if}}%
                 </div>
             </div>
 
             {{!-- Available XP Box --}}
-            <div class="wh40k-xp-available-box">
-                <span class="wh40k-xp-available-value">{{system.experience.available}}</span>
-                <span class="wh40k-xp-available-label">Available</span>
+            <div class="wh40k-xp-available-box tw-flex tw-flex-col tw-items-center tw-shrink-0 tw-rounded-[6px]">
+                <span class="wh40k-xp-available-value tw-text-[1.4rem] tw-font-bold tw-font-alt tw-leading-none">{{system.experience.available}}</span>
+                <span class="wh40k-xp-available-label tw-text-[0.65rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">Available</span>
             </div>
 
             {{!-- Visual Buffer --}}
-            <span class="wh40k-xp-separator">|</span>
+            <span class="wh40k-xp-separator tw-text-[1.2rem] tw-font-light tw-shrink-0">|</span>
 
             {{!-- Spent XP --}}
-            <div class="wh40k-xp-inline-stat">
-                <span class="wh40k-xp-inline-value">{{system.experience.used}}</span>
-                <span class="wh40k-xp-inline-label">Spent</span>
+            <div class="wh40k-xp-inline-stat tw-flex tw-items-baseline tw-shrink-0">
+                <span class="wh40k-xp-inline-value tw-text-[1.1rem] tw-font-bold tw-font-alt tw-leading-none">{{system.experience.used}}</span>
+                <span class="wh40k-xp-inline-label tw-text-[0.7rem] tw-font-semibold">Spent</span>
             </div>
 
             {{!-- Visual Buffer --}}
-            <span class="wh40k-xp-separator">|</span>
+            <span class="wh40k-xp-separator tw-text-[1.2rem] tw-font-light tw-shrink-0">|</span>
 
             {{!-- Total XP --}}
-            <div class="wh40k-xp-inline-stat">
-                <span class="wh40k-xp-inline-value">{{system.experience.total}}</span>
-                <span class="wh40k-xp-inline-label">Total</span>
+            <div class="wh40k-xp-inline-stat tw-flex tw-items-baseline tw-shrink-0">
+                <span class="wh40k-xp-inline-value tw-text-[1.1rem] tw-font-bold tw-font-alt tw-leading-none">{{system.experience.total}}</span>
+                <span class="wh40k-xp-inline-label tw-text-[0.7rem] tw-font-semibold">Total</span>
             </div>
 
             {{!-- Visual Buffer --}}
-            <span class="wh40k-xp-separator">|</span>
+            <span class="wh40k-xp-separator tw-text-[1.2rem] tw-font-light tw-shrink-0">|</span>
 
             {{!-- Add XP Button --}}
             <button type="button"
-                    class="wh40k-xp-add-button-inline"
+                    class="wh40k-xp-add-button-inline tw-flex tw-items-center tw-justify-center tw-w-[36px] tw-h-[36px] tw-p-0 tw-rounded-full tw-cursor-pointer tw-shrink-0 tw-ml-auto"
                     data-action="customXP"
                     title="Add XP">
-                <i class="fas fa-plus"></i>
+                <i class="fas fa-plus tw-text-[1rem]"></i>
             </button>
 
             {{!-- Advancement Button --}}
             <button type="button"
-                    class="wh40k-xp-advancement-button"
+                    class="wh40k-xp-advancement-button tw-flex tw-items-center tw-justify-center tw-w-[36px] tw-h-[36px] tw-p-0 tw-rounded-full tw-cursor-pointer tw-shrink-0 tw-ml-0"
                     data-action="openAdvancement"
                     title="{{localize 'WH40K.Advancement.Title'}}">
-                <i class="fa-solid fa-arrow-up-big-small"></i>
+                <i class="fa-solid fa-arrow-up-big-small tw-text-[1rem]"></i>
             </button>
         </div>
 
@@ -95,24 +95,24 @@
         <div class="wh40k-panel-details experience_details" {{hideIfNot (isExpanded 'experience_details' actor)}}>
 
             {{!-- Direct Edit Section --}}
-            <div class="wh40k-xp-edit-section">
-                <div class="wh40k-xp-edit-grid">
-                    <label class="wh40k-edit-field">
-                        <span class="wh40k-edit-label">Total XP Earned</span>
+            <div class="wh40k-xp-edit-section tw-rounded-lg tw-mb-[var(--wh40k-space-sm)]">
+                <div class="wh40k-xp-edit-grid tw-grid tw-grid-cols-2 tw-gap-2">
+                    <label class="wh40k-edit-field tw-flex tw-flex-col">
+                        <span class="wh40k-edit-label tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">Total XP Earned</span>
                         <input type="number"
                                data-dtype="Number"
-                               class="wh40k-edit-input"
+                               class="wh40k-edit-input tw-w-full tw-h-[40px] tw-text-center tw-font-alt tw-font-bold tw-text-[1.1rem] tw-rounded-[6px]"
                                name="system.experience.total"
                                value="{{system.experience.total}}"
                                min="0"
                                placeholder="0" />
                     </label>
 
-                    <label class="wh40k-edit-field">
-                        <span class="wh40k-edit-label">XP Spent</span>
+                    <label class="wh40k-edit-field tw-flex tw-flex-col">
+                        <span class="wh40k-edit-label tw-text-[0.7rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em]">XP Spent</span>
                         <input type="number"
                                data-dtype="Number"
-                               class="wh40k-edit-input"
+                               class="wh40k-edit-input tw-w-full tw-h-[40px] tw-text-center tw-font-alt tw-font-bold tw-text-[1.1rem] tw-rounded-[6px]"
                                name="system.experience.used"
                                value="{{system.experience.used}}"
                                min="0"
@@ -123,10 +123,10 @@
             </div>
 
             {{!-- Info Section --}}
-            <div class="wh40k-xp-info-section">
-                <div class="wh40k-xp-info-box">
-                    <i class="fas fa-book"></i>
-                    <div class="wh40k-info-content">
+            <div class="wh40k-xp-info-section tw-mt-[var(--wh40k-space-sm)]">
+                <div class="wh40k-xp-info-box tw-flex tw-rounded-md">
+                    <i class="fas fa-book tw-text-[1.2rem] tw-mt-[2px] tw-shrink-0"></i>
+                    <div class="wh40k-info-content tw-flex tw-flex-col">
                         <strong>About Experience Points</strong>
                         <p>Spend XP to improve characteristics, acquire skills and talents, or gain psychic powers. Costs vary based on the advancement being purchased.</p>
                     </div>

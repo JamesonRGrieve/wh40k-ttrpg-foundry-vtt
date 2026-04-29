@@ -2,72 +2,74 @@
 <div class="dialog-content">
     <form class="wh40k-prompt wh40k-prompt--damage" autocomplete="off">
         {{! Character Info }}
-        <div class="wh40k-prompt__panel">
-            <div class="wh40k-prompt__header">
-                <img class="wh40k-prompt__icon" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
-                <div class="wh40k-prompt__title-group">
-                    <h2 class="wh40k-prompt__title">{{this.actor.name}}</h2>
-                    <div class="wh40k-prompt__subtitle">Assign Damage</div>
+        <div class="tw-relative tw-p-4 tw-mb-4 tw-border tw-border-solid tw-border-gold/30 tw-rounded-md tw-bg-gradient-to-br tw-from-black/20 tw-to-black/10 tw-shadow-md">
+            <div class="tw-flex tw-items-center tw-gap-3 tw-mb-4 tw-pb-3 tw-border-b tw-border-solid tw-border-white/10">
+                <img class="tw-w-12 tw-h-12 tw-border-2 tw-border-solid tw-border-gold tw-rounded-md tw-object-cover tw-flex-shrink-0" alt="{{this.actor.name}}" src="{{this.actor.img}}" />
+                <div class="tw-flex-1 tw-min-w-0">
+                    <h2 class="tw-m-0 tw-font-display tw-text-lg tw-font-semibold tw-text-gold tw-uppercase tw-tracking-wide tw-truncate">{{this.actor.name}}</h2>
+                    <div class="tw-text-sm tw-text-gray-400 tw-mt-1">Assign Damage</div>
                 </div>
             </div>
 
-            <div class="wh40k-prompt__grid wh40k-prompt__grid--3col">
-                <div class="wh40k-prompt__stat">
-                    <span class="wh40k-prompt__stat-value">{{this.actor.system.wounds.value}}/{{this.actor.system.wounds.max}}</span>
-                    <span class="wh40k-prompt__stat-label">Wounds</span>
+            <div class="tw-grid tw-grid-cols-3 tw-gap-2">
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+                    <span class="tw-font-display tw-font-bold tw-text-lg tw-text-gold">{{this.actor.system.wounds.value}}/{{this.actor.system.wounds.max}}</span>
+                    <span class="tw-text-xs tw-text-gray-400 tw-uppercase tw-tracking-wide">Wounds</span>
                 </div>
-                <div class="wh40k-prompt__stat">
-                    <span class="wh40k-prompt__stat-value">{{this.actor.system.wounds.critical}}</span>
-                    <span class="wh40k-prompt__stat-label">Critical</span>
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+                    <span class="tw-font-display tw-font-bold tw-text-lg tw-text-gold">{{this.actor.system.wounds.critical}}</span>
+                    <span class="tw-text-xs tw-text-gray-400 tw-uppercase tw-tracking-wide">Critical</span>
                 </div>
-                <div class="wh40k-prompt__stat">
-                    <span class="wh40k-prompt__stat-value">{{this.actor.system.fatigue.value}}/{{this.actor.system.fatigue.max}}</span>
-                    <span class="wh40k-prompt__stat-label">Fatigue</span>
+                <div class="tw-flex tw-flex-col tw-items-center tw-gap-0.5">
+                    <span class="tw-font-display tw-font-bold tw-text-lg tw-text-gold">{{this.actor.system.fatigue.value}}/{{this.actor.system.fatigue.max}}</span>
+                    <span class="tw-text-xs tw-text-gray-400 tw-uppercase tw-tracking-wide">Fatigue</span>
                 </div>
             </div>
         </div>
 
         {{! Damage Details }}
-        <div class="wh40k-prompt__panel">
-            <h3 class="wh40k-prompt__section-title">Incoming Damage</h3>
+        <div class="tw-relative tw-p-4 tw-border tw-border-solid tw-border-gold/30 tw-rounded-md tw-bg-gradient-to-br tw-from-black/20 tw-to-black/10 tw-shadow-md">
+            <h3 class="tw-flex tw-items-center tw-gap-1.5 tw-font-display tw-text-sm tw-font-semibold tw-text-gold tw-uppercase tw-tracking-widest tw-m-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-solid tw-border-white/10">
+                Incoming Damage
+            </h3>
 
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Hit Location</span>
-                <select class="wh40k-prompt__select" name="hit.location" id="location">
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-border-b tw-border-solid tw-border-white/5 tw-min-h-[40px]">
+                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Hit Location</span>
+                <select class="tw-min-w-[140px] tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm" name="hit.location" id="location">
                     {{selectOptions locations selected=this.hit.location}}
                 </select>
             </div>
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Damage Type</span>
-                <select class="wh40k-prompt__select" name="hit.damageType" id="damageType">
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-border-b tw-border-solid tw-border-white/5 tw-min-h-[40px]">
+                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Damage Type</span>
+                <select class="tw-min-w-[140px] tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm" name="hit.damageType" id="damageType">
                     {{selectOptions damageType selected=this.hit.damageType}}
                 </select>
             </div>
 
-            <div class="wh40k-prompt__divider"></div>
+            <div class="tw-my-3 tw-border-t tw-border-solid tw-border-white/10"></div>
 
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Total Damage</span>
-                <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="hit.totalDamage" value="{{this.hit.totalDamage}}" />
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-border-b tw-border-solid tw-border-white/5 tw-min-h-[40px]">
+                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Total Damage</span>
+                <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="hit.totalDamage" value="{{this.hit.totalDamage}}" />
             </div>
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Penetration</span>
-                <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="hit.totalPenetration" value="{{this.hit.totalPenetration}}" />
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-border-b tw-border-solid tw-border-white/5 tw-min-h-[40px]">
+                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Penetration</span>
+                <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="hit.totalPenetration" value="{{this.hit.totalPenetration}}" />
             </div>
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Fatigue</span>
-                <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="hit.totalFatigue" value="{{this.hit.totalFatigue}}" />
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-border-b tw-border-solid tw-border-white/5 tw-min-h-[40px]">
+                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Fatigue</span>
+                <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="hit.totalFatigue" value="{{this.hit.totalFatigue}}" />
             </div>
 
-            <div class="wh40k-prompt__divider"></div>
+            <div class="tw-my-3 tw-border-t tw-border-solid tw-border-white/10"></div>
 
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Location Armour</span>
-                <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="armour" value="{{this.armour}}" />
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-border-b tw-border-solid tw-border-white/5 tw-min-h-[40px]">
+                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Location Armour</span>
+                <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="armour" value="{{this.armour}}" />
             </div>
-            <div class="wh40k-prompt__field">
-                <span class="wh40k-prompt__label">Toughness Bonus</span>
-                <input class="wh40k-prompt__input" type="number" data-dtype="Number" name="tb" value="{{this.tb}}" />
+            <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2 tw-items-center tw-py-2 tw-min-h-[40px]">
+                <span class="tw-text-sm tw-font-medium tw-text-gray-200 tw-whitespace-nowrap">Toughness Bonus</span>
+                <input class="tw-w-20 tw-px-3 tw-py-2 tw-bg-black/30 tw-border tw-border-solid tw-border-white/10 tw-rounded-md tw-text-gray-200 tw-text-sm tw-text-center" type="number" data-dtype="Number" name="tb" value="{{this.tb}}" />
             </div>
         </div>
     </form>

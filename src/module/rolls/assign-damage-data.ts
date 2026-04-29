@@ -3,10 +3,31 @@ import { damageTypeDropdown } from '../rules/damage-type.ts';
 import { hitDropdown } from '../rules/hit-locations.ts';
 import { applyRollModeWhispers } from './roll-helpers.ts';
 
+/** Minimal actor shape needed for damage assignment. */
+export interface ActorLike {
+    system: {
+        armour: Record<string, { value: number; toughnessBonus: number }>;
+        wounds: { value: number; critical: number };
+        fatigue: { value: number };
+    };
+    hasTalent: (name: string) => boolean;
+    update: (data: Record<string, unknown>) => Promise<unknown>;
+    createEmbeddedDocuments: (type: string, data: Record<string, unknown>[]) => Promise<unknown>;
+}
+
+/** Minimal hit shape needed for damage assignment. */
+interface HitLike {
+    location: string;
+    damageType: string;
+    totalDamage: number;
+    totalPenetration: number;
+    totalFatigue: number;
+}
+
 export class AssignDamageData {
     locations = hitDropdown();
-    actor;
-    hit;
+    actor: ActorLike;
+    hit: HitLike;
     damageType = damageTypeDropdown();
     ignoreArmour = false;
 
@@ -22,7 +43,7 @@ export class AssignDamageData {
     criticalDamageTaken = 0;
     criticalEffect = '';
 
-    constructor(actor, hit) {
+    constructor(actor: ActorLike, hit: HitLike) {
         this.actor = actor;
         this.hit = hit;
     }
@@ -42,8 +63,8 @@ export class AssignDamageData {
     }
 
     async finalize() {
-        const totalDamage = Number.parseInt(this.hit.totalDamage);
-        const totalPenetration = Number.parseInt(this.hit.totalPenetration);
+        const totalDamage = Number(this.hit.totalDamage);
+        const totalPenetration = Number(this.hit.totalPenetration);
 
         // Reduce Armour by Penetration
         let usableArmour = this.armour;
@@ -85,7 +106,8 @@ export class AssignDamageData {
                 this.criticalDamageTaken = this.criticalDamageTaken - this.tb < 1 ? 1 : this.criticalDamageTaken - this.tb;
             }
 
-            this.criticalEffect = await getCriticalDamage(this.hit.damageType, this.hit.location, this.actor.system.wounds.critical + this.criticalDamageTaken);
+            this.criticalEffect =
+                (await getCriticalDamage(this.hit.damageType, this.hit.location, this.actor.system.wounds.critical + this.criticalDamageTaken)) ?? '';
         }
 
         if (this.hit.totalFatigue > 0) {
@@ -100,7 +122,7 @@ export class AssignDamageData {
 
     async performActionAndSendToChat() {
         // Assign Damage - use dot notation to avoid overwriting sibling properties
-        this.actor = await this.actor.update({
+        await this.actor.update({
             'system.wounds.value': this.actor.system.wounds.value - this.damageTaken,
             'system.wounds.critical': this.actor.system.wounds.critical + this.criticalDamageTaken,
             'system.fatigue.value': this.actor.system.fatigue.value + this.fatigueTaken,
@@ -112,7 +134,10 @@ export class AssignDamageData {
             await this._createCriticalInjuryItem();
         }
 
-        const html = await foundry.applications.handlebars.renderTemplate('systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs', this);
+        const html = await foundry.applications.handlebars.renderTemplate(
+            'systems/wh40k-rpg/templates/chat/assign-damage-chat.hbs',
+            this as unknown as Record<string, unknown>,
+        );
         const chatData: Record<string, unknown> = {
             user: game.user.id,
             rollMode: game.settings.get('core', 'rollMode'),

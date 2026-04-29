@@ -1,14 +1,14 @@
 <div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-1">
     <h1 class="wh40k-panel-header">{{localize "WH40K.Acquisitions.Header"}}</h1>
-    <div class="wh40k-table--border">
-        <div class="table-row--head">
+    <div class="wh40k-table--border tw-rounded-[6px] tw-overflow-hidden tw-border tw-border-solid">
+        <div class="table-row--head tw-text-[0.9em] tw-uppercase tw-tracking-[0.05em] tw-px-[4px] tw-py-[6px]">
             <div class="table-cell--span2">{{localize "WH40K.Acquisitions.Name"}}</div>
-            <div class="table-cell">{{localize "WH40K.Acquisitions.Availability"}}</div>
-            <div class="table-cell">{{localize "WH40K.Acquisitions.Modifier"}}</div>
-            <div class="table-cell">{{localize "WH40K.Acquisitions.Acquired"}}</div>
+            <div class="table-cell tw-px-[4px] tw-py-[6px]">{{localize "WH40K.Acquisitions.Availability"}}</div>
+            <div class="table-cell tw-px-[4px] tw-py-[6px]">{{localize "WH40K.Acquisitions.Modifier"}}</div>
+            <div class="table-cell tw-px-[4px] tw-py-[6px]">{{localize "WH40K.Acquisitions.Acquired"}}</div>
             <div class="table-cell--span2">{{localize "WH40K.Acquisitions.Notes"}}</div>
-            <div class="table-cell--last">
-                <button type="button" class="wh40k-control-button acquisition-add" data-action="addAcquisition">
+            <div class="table-cell--last tw-px-[4px] tw-py-[6px]">
+                <button type="button" class="wh40k-control-button acquisition-add tw-opacity-70 tw-transition-[opacity,transform] tw-duration-200 hover:tw-opacity-100 hover:tw-scale-110" data-action="addAcquisition">
                     <span class="wh40k-control-button__span material-icons">add_circle</span>
                 </button>
             </div>
@@ -16,33 +16,33 @@
         {{#each system.rogueTrader.acquisitions as |acquisition index|}}
             <div class="table-row">
                 <div class="table-cell--span2">
-                    <input class="wh40k-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.name" value="{{acquisition.name}}" />
+                    <input class="wh40k-field__input tw-w-full" type="text" name="system.rogueTrader.acquisitions.{{index}}.name" value="{{acquisition.name}}" />
                 </div>
-                <div class="table-cell">
+                <div class="table-cell tw-px-[4px] tw-py-[6px]">
                     <input
-                        class="wh40k-field__input"
+                        class="wh40k-field__input tw-w-full"
                         type="text"
                         name="system.rogueTrader.acquisitions.{{index}}.availability"
                         value="{{acquisition.availability}}"
                     />
                 </div>
-                <div class="table-cell">
+                <div class="table-cell tw-px-[4px] tw-py-[6px]">
                     <input
-                        class="wh40k-field__input"
+                        class="wh40k-field__input tw-w-full"
                         type="number"
                         data-dtype="Number"
                         name="system.rogueTrader.acquisitions.{{index}}.modifier"
                         value="{{acquisition.modifier}}"
                     />
                 </div>
-                <div class="table-cell wh40k-checkbox-cell">
+                <div class="table-cell wh40k-checkbox-cell tw-text-center tw-px-[4px] tw-py-[6px]">
                     <input type="checkbox" data-dtype="Boolean" name="system.rogueTrader.acquisitions.{{index}}.acquired" {{checked acquisition.acquired}} />
                 </div>
                 <div class="table-cell--span2">
-                    <input class="wh40k-field__input" type="text" name="system.rogueTrader.acquisitions.{{index}}.notes" value="{{acquisition.notes}}" />
+                    <input class="wh40k-field__input tw-w-full" type="text" name="system.rogueTrader.acquisitions.{{index}}.notes" value="{{acquisition.notes}}" />
                 </div>
-                <div class="table-cell--last">
-                    <button type="button" class="wh40k-control-button acquisition-remove" data-action="removeAcquisition" data-index="{{index}}">
+                <div class="table-cell--last tw-px-[4px] tw-py-[6px]">
+                    <button type="button" class="wh40k-control-button acquisition-remove tw-opacity-70 tw-transition-[opacity,transform] tw-duration-200 hover:tw-opacity-100 hover:tw-scale-110" data-action="removeAcquisition" data-index="{{index}}">
                         <span class="wh40k-control-button__span material-icons">delete</span>
                     </button>
                 </div>

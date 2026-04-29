@@ -9,59 +9,59 @@
     </header>
     <div class="wh40k-panel-body">
         {{!-- Psy Rating Display --}}
-        <div class="wh40k-psy-display">
-            <div class="wh40k-psy-current">
-                <div class="wh40k-psy-value">
-                    <span class="wh40k-psy-number">{{system.psy.currentRating}}</span>
-                    <span class="wh40k-psy-label">Available PR</span>
+        <div class="wh40k-psy-display tw-flex tw-rounded-md tw-mb-[var(--wh40k-space-md)]">
+            <div class="wh40k-psy-current tw-shrink-0 tw-flex tw-items-center tw-justify-center">
+                <div class="wh40k-psy-value tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-[80px] tw-h-[80px] tw-rounded-full">
+                    <span class="wh40k-psy-number tw-text-[2rem] tw-font-bold tw-leading-none">{{system.psy.currentRating}}</span>
+                    <span class="wh40k-psy-label tw-text-[0.65rem] tw-uppercase tw-tracking-[0.05em] tw-mt-[2px]">Available PR</span>
                 </div>
             </div>
-            <div class="wh40k-psy-stats">
+            <div class="wh40k-psy-stats tw-flex-1 tw-flex tw-flex-col tw-justify-center">
                 <div class="wh40k-psy-stat">
-                    <label>
-                        <span class="wh40k-stat-label">Rating</span>
-                        <input type="number" name="system.psy.rating" value="{{system.psy.rating}}" min="0" max="10" class="wh40k-psy-input" data-dtype="Number" />
+                    <label class="tw-flex tw-items-center">
+                        <span class="wh40k-stat-label tw-text-[0.8rem] tw-font-semibold tw-min-w-[70px]">Rating</span>
+                        <input type="number" name="system.psy.rating" value="{{system.psy.rating}}" min="0" max="10" class="wh40k-psy-input tw-w-[60px] tw-text-center tw-rounded-md tw-font-semibold" data-dtype="Number" />
                     </label>
                 </div>
                 <div class="wh40k-psy-stat">
-                    <label>
-                        <span class="wh40k-stat-label">Sustained</span>
-                        <input type="number" name="system.psy.sustained" value="{{system.psy.sustained}}" min="0" class="wh40k-psy-input" data-dtype="Number" />
+                    <label class="tw-flex tw-items-center">
+                        <span class="wh40k-stat-label tw-text-[0.8rem] tw-font-semibold tw-min-w-[70px]">Sustained</span>
+                        <input type="number" name="system.psy.sustained" value="{{system.psy.sustained}}" min="0" class="wh40k-psy-input tw-w-[60px] tw-text-center tw-rounded-md tw-font-semibold" data-dtype="Number" />
                     </label>
                 </div>
             </div>
         </div>
-        
+
         {{!-- Psyker Details --}}
-        <div class="wh40k-psy-details">
-            <div class="wh40k-psy-detail-row">
-                <label class="wh40k-psy-detail">
-                    <span class="wh40k-detail-label">Psyker Type</span>
-                    <select name="system.psy.class" class="wh40k-psy-select">
+        <div class="wh40k-psy-details tw-flex tw-flex-col tw-mb-[var(--wh40k-space-md)]">
+            <div class="wh40k-psy-detail-row tw-flex tw-items-center">
+                <label class="wh40k-psy-detail tw-flex-1 tw-flex tw-flex-col">
+                    <span class="wh40k-detail-label tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.03em]">Psyker Type</span>
+                    <select name="system.psy.class" class="wh40k-psy-select tw-flex-1 tw-rounded-md tw-cursor-pointer">
                         <option value="bound" {{#if (eq system.psy.class "bound")}}selected{{/if}}>Bound</option>
                         <option value="unbound" {{#if (eq system.psy.class "unbound")}}selected{{/if}}>Unbound</option>
                         <option value="ascended" {{#if (eq system.psy.class "ascended")}}selected{{/if}}>Ascended</option>
                     </select>
                 </label>
             </div>
-            <div class="wh40k-psy-detail-row">
-                <label class="wh40k-psy-checkbox-row">
-                    <input type="checkbox" name="system.psy.hasFocus" {{checked system.psy.hasFocus}} data-dtype="Boolean" class="wh40k-checkbox" />
-                    <span class="wh40k-checkbox-label">
+            <div class="wh40k-psy-detail-row tw-flex tw-items-center">
+                <label class="wh40k-psy-checkbox-row tw-flex tw-items-center tw-cursor-pointer tw-rounded-md">
+                    <input type="checkbox" name="system.psy.hasFocus" {{checked system.psy.hasFocus}} data-dtype="Boolean" class="wh40k-checkbox tw-w-[16px] tw-h-[16px]" />
+                    <span class="wh40k-checkbox-label tw-text-[0.8rem] tw-flex tw-items-center">
                         <i class="fas fa-gem"></i>
                         Psy Focus
                     </span>
                 </label>
             </div>
         </div>
-        
+
         {{!-- Quick Actions --}}
-        <div class="wh40k-psy-actions">
-            <button type="button" class="wh40k-psy-action-btn" data-action="rollPhenomena" title="Roll Psychic Phenomena">
+        <div class="wh40k-psy-actions tw-flex">
+            <button type="button" class="wh40k-psy-action-btn tw-flex-1 tw-flex tw-items-center tw-justify-center tw-rounded-md tw-font-semibold tw-cursor-pointer tw-text-[0.8rem]" data-action="rollPhenomena" title="Roll Psychic Phenomena">
                 <i class="fas fa-bolt"></i>
                 <span>Phenomena</span>
             </button>
-            <button type="button" class="wh40k-psy-action-btn wh40k-btn-danger" data-action="rollPerils" title="Roll Perils of the Warp">
+            <button type="button" class="wh40k-psy-action-btn wh40k-btn-danger tw-flex-1 tw-flex tw-items-center tw-justify-center tw-rounded-md tw-font-semibold tw-cursor-pointer tw-text-[0.8rem]" data-action="rollPerils" title="Roll Perils of the Warp">
                 <i class="fas fa-skull"></i>
                 <span>Perils</span>
             </button>

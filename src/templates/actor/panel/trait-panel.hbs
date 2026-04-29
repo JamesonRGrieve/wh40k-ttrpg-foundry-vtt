@@ -1,83 +1,83 @@
 {{!-- Traits Panel - Compact Table View with Grouping --}}
-<div class="wh40k-panel wh40k-panel-traits-table" data-drop-zone="general" data-accepts="trait">
+<div class="wh40k-panel wh40k-panel-traits-table tw-mt-0 tw-mb-0 tw-w-full tw-box-border" data-drop-zone="general" data-accepts="trait">
     <div class="wh40k-panel-header">
         <span class="wh40k-panel-title">
             <i class="fas fa-shield-alt"></i> Traits
         </span>
     </div>
-    
-    <div class="wh40k-panel-body">
+
+    <div class="wh40k-panel-body tw-flex tw-flex-col tw-gap-2 tw-w-full tw-box-border">
         {{!-- Grouped Trait Table --}}
         {{#if traits.length}}
-        <div class="wh40k-traits-grouped">
+        <div class="wh40k-traits-grouped tw-flex tw-flex-col tw-gap-3">
             {{#each groupedByCategory as |group|}}
-            <div class="wh40k-trait-group">
-                <div class="wh40k-group-header {{traitCategoryColor group.category}}">
-                    <i class="fas {{traitIcon group.category}}"></i>
-                    <span class="wh40k-group-title">{{group.categoryLabel}}</span>
-                    <span class="wh40k-count-badge">{{group.traits.length}}</span>
+            <div class="wh40k-trait-group tw-flex tw-flex-col tw-relative">
+                <div class="wh40k-group-header tw-flex tw-items-center tw-gap-1 tw-sticky tw-top-0 tw-z-[2] tw-text-[0.75rem] tw-font-bold tw-uppercase tw-tracking-[0.05em] {{traitCategoryColor group.category}}">
+                    <i class="fas {{traitIcon group.category}} tw-text-[0.8rem] tw-shrink-0"></i>
+                    <span class="wh40k-group-title tw-flex-1 tw-min-w-0 tw-truncate">{{group.categoryLabel}}</span>
+                    <span class="wh40k-count-badge tw-rounded-[10px] tw-px-[6px] tw-py-[2px] tw-text-[0.65rem] tw-font-semibold tw-min-w-[20px] tw-text-center">{{group.traits.length}}</span>
                 </div>
-                
-                <div class="wh40k-traits-table" data-category="{{group.category}}">
+
+                <div class="wh40k-traits-table tw-flex tw-flex-col" data-category="{{group.category}}">
                     {{#each group.traits as |trait|}}
-                    <div class="wh40k-trait-row item-drag" 
-                         data-item-id="{{trait.id}}" 
+                    <div class="wh40k-trait-row item-drag tw-flex tw-items-center tw-gap-2 tw-overflow-hidden tw-min-h-[40px] tw-cursor-grab"
+                         data-item-id="{{trait.id}}"
                          draggable="true">
-                        <i class="fas {{trait.categoryIcon}} wh40k-row-icon-inline"></i>
-                        
-                        <div class="wh40k-row-main">
-                            <button type="button" 
-                                  class="wh40k-row-name" 
-                                  data-action="itemEdit" 
-                                  data-item-id="{{trait.id}}" 
+                        <i class="fas {{trait.categoryIcon}} wh40k-row-icon-inline tw-shrink-0 tw-w-[20px] tw-text-center"></i>
+
+                        <div class="wh40k-row-main tw-flex-1 tw-flex tw-flex-col tw-min-w-0 tw-overflow-hidden">
+                            <button type="button"
+                                  class="wh40k-row-name tw-text-left tw-cursor-pointer tw-truncate tw-w-full tw-font-semibold tw-bg-transparent tw-border-none tw-p-0"
+                                  data-action="itemEdit"
+                                  data-item-id="{{trait.id}}"
                                   title="Click to open item sheet">
                                 {{trait.name}}
                             </button>
-                            
+
                             {{#if trait.system.requirements}}
-                            <div class="wh40k-row-meta">
-                                <span class="wh40k-meta-item">
-                                    <i class="fas fa-lock"></i> {{trait.system.requirements}}
+                            <div class="wh40k-row-meta tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-text-[0.7rem]">
+                                <span class="wh40k-meta-item tw-flex tw-items-center tw-whitespace-nowrap">
+                                    <i class="fas fa-lock tw-shrink-0 tw-text-[0.7rem]"></i> {{trait.system.requirements}}
                                 </span>
                             </div>
                             {{/if}}
                         </div>
-                        
+
                         {{!-- Level Stepper for variable traits --}}
                         {{#if trait.hasLevel}}
-                        <div class="wh40k-level-stepper">
-                            <button type="button" 
-                                    class="wh40k-stepper-btn" 
-                                    data-action="adjustTraitLevel" 
-                                    data-item-id="{{trait.id}}" 
+                        <div class="wh40k-level-stepper tw-flex tw-items-center tw-gap-1 tw-shrink-0">
+                            <button type="button"
+                                    class="wh40k-stepper-btn tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[4px] tw-py-[2px] tw-rounded-sm tw-text-[0.7rem]"
+                                    data-action="adjustTraitLevel"
+                                    data-item-id="{{trait.id}}"
                                     data-delta="-1"
                                     title="Decrease Level">
                                 <i class="fas fa-minus"></i>
                             </button>
-                            <span class="wh40k-level-display">{{trait.system.level}}</span>
-                            <button type="button" 
-                                    class="wh40k-stepper-btn" 
-                                    data-action="adjustTraitLevel" 
-                                    data-item-id="{{trait.id}}" 
+                            <span class="wh40k-level-display tw-text-[0.75rem] tw-font-semibold tw-min-w-[20px] tw-text-center">{{trait.system.level}}</span>
+                            <button type="button"
+                                    class="wh40k-stepper-btn tw-bg-transparent tw-border-none tw-cursor-pointer tw-px-[4px] tw-py-[2px] tw-rounded-sm tw-text-[0.7rem]"
+                                    data-action="adjustTraitLevel"
+                                    data-item-id="{{trait.id}}"
                                     data-delta="1"
                                     title="Increase Level">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
                         {{/if}}
-                        
-                        <div class="wh40k-row-actions">
-                            <button type="button" 
-                                    class="wh40k-action-btn" 
-                                    data-action="itemVocalize" 
-                                    data-item-id="{{trait.id}}" 
+
+                        <div class="wh40k-row-actions tw-flex tw-items-center tw-ml-auto tw-shrink-0">
+                            <button type="button"
+                                    class="wh40k-action-btn tw-bg-none tw-border-none tw-cursor-pointer tw-px-[6px] tw-py-[4px] tw-rounded-[3px] tw-text-[0.85rem]"
+                                    data-action="itemVocalize"
+                                    data-item-id="{{trait.id}}"
                                     title="Send to Chat">
                                 <i class="fas fa-comment"></i>
                             </button>
-                            <button type="button" 
-                                    class="wh40k-action-btn wh40k-btn-danger" 
-                                    data-action="itemDelete" 
-                                    data-item-id="{{trait.id}}" 
+                            <button type="button"
+                                    class="wh40k-action-btn wh40k-btn-danger tw-bg-none tw-border-none tw-cursor-pointer tw-px-[6px] tw-py-[4px] tw-rounded-[3px] tw-text-[0.85rem]"
+                                    data-action="itemDelete"
+                                    data-item-id="{{trait.id}}"
                                     title="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -89,7 +89,7 @@
             {{/each}}
         </div>
         {{/if}}
-        
+
         {{!-- Dropzone --}}
         <div class="wh40k-dropzone {{#if traits.length}}wh40k-dropzone--compact{{/if}}" data-action="itemCreate" data-type="trait">
             <i class="fas fa-shield-alt wh40k-dropzone-icon"></i>

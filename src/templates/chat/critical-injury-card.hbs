@@ -11,30 +11,30 @@
       )
       footerLabel=sourceReference
       footerIcon="fa-book"}}
-        <div class="wh40k-injury-meta">
-            <span class="wh40k-meta-item">
-                <i class="fas {{damageTypeIcon}}"></i>
+        <div class="tw-flex tw-gap-2 tw-mb-2 tw-p-1.5 tw-bg-black/[0.03] tw-rounded-md tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-red)]">
+            <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs,2px)] tw-text-[13px] tw-font-semibold">
+                <i class="fas {{damageTypeIcon}} tw-text-[var(--wh40k-accent-red)]"></i>
                 {{damageTypeLabel}}
             </span>
-            <span class="wh40k-meta-item">
-                <i class="fas {{bodyPartIcon}}"></i>
+            <span class="tw-flex tw-items-center tw-gap-[var(--wh40k-space-xs,2px)] tw-text-[13px] tw-font-semibold">
+                <i class="fas {{bodyPartIcon}} tw-text-[var(--wh40k-accent-red)]"></i>
                 {{bodyPartLabel}}
             </span>
         </div>
 
-        <div class="wh40k-injury-effect">
+        <div class="tw-px-2 tw-py-2 tw-bg-[rgba(254,245,231,0.5)] tw-border-l-[3px] tw-border-l-[var(--wh40k-accent-red)] tw-rounded-md tw-leading-relaxed">
             {{{effect}}}
         </div>
 
         {{#if notes}}
-            <div class="wh40k-injury-notes">
-                <strong>Notes:</strong>
+            <div class="tw-mt-2 tw-p-1.5 tw-bg-black/[0.03] tw-rounded-md tw-text-[13px] tw-leading-relaxed">
+                <strong class="tw-font-semibold tw-text-[#5a5a5a]">Notes:</strong>
                 {{notes}}
             </div>
         {{/if}}
 
         {{#if description}}
-            <div class="wh40k-injury-description">
+            <div class="tw-mt-2 tw-pt-2 tw-border-t tw-border-black/10 tw-text-[14px] tw-leading-relaxed">
                 {{{description}}}
             </div>
         {{/if}}

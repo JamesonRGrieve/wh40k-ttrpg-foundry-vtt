@@ -4,6 +4,8 @@
 
 import type { WH40KItem } from '../../documents/item.ts';
 import type { default as WeaponData } from '../../data/item/weapon.ts';
+import type { WH40KBaseActor } from '../../documents/base-actor.ts';
+import type { LabelConfig, LabelAbbreviationConfig, LabelModifierConfig } from '../../config.ts';
 import { ReloadActionManager } from '../../actions/reload-action-manager.ts';
 import { applyRollModeWhispers } from '../../rolls/roll-helpers.ts';
 import { prepareQualityTooltipData } from '../components/wh40k-tooltip.ts';
@@ -11,12 +13,12 @@ import ContainerItemSheet from './container-item-sheet.ts';
 
 interface WeaponSheetContext extends Record<string, unknown> {
     system: WeaponData;
-    CONFIG: any;
-    weaponClasses: Record<string, string>;
-    weaponTypes: Record<string, string>;
-    damageTypes: Record<string, string>;
-    availabilities: Record<string, string>;
-    craftsmanships: Record<string, string>;
+    CONFIG: typeof CONFIG;
+    weaponClasses: Record<string, LabelConfig>;
+    weaponTypes: Record<string, LabelConfig>;
+    damageTypes: Record<string, LabelAbbreviationConfig>;
+    availabilities: Record<string, LabelModifierConfig>;
+    craftsmanships: Record<string, LabelModifierConfig>;
     reloadTimes: Record<string, { label: string }>;
     bodyCollapsed: boolean;
     qualitiesArray: Array<{ identifier: string; label: string; description: string; level: number | null }>;
@@ -114,7 +116,7 @@ export default class WeaponSheet extends ContainerItemSheet {
     /** @override */
     async _prepareContext(options: Record<string, unknown>): Promise<WeaponSheetContext> {
         const context = (await super._prepareContext(options)) as WeaponSheetContext;
-        const system = this.item.system as WeaponData;
+        const system = this.item.system as unknown as WeaponData;
         context.system = system;
 
         // Add CONFIG reference for templates - ensure dropdown options are available
@@ -259,7 +261,7 @@ export default class WeaponSheet extends ContainerItemSheet {
                 event.stopPropagation();
 
                 // Only remove highlight if leaving the drop zone entirely
-                if (!zone.contains(event.relatedTarget)) {
+                if (!zone.contains((event as MouseEvent).relatedTarget as Node | null)) {
                     zone.classList.remove('drag-over', 'drag-invalid');
                 }
             });
@@ -341,7 +343,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      */
     _getModificationEffects(mod: Record<string, unknown>): string[] {
         const effects = [];
-        const m = mod.cachedModifiers || {};
+        const m = (mod.cachedModifiers || {}) as { damage?: number; penetration?: number; toHit?: number; range?: number; weight?: number };
 
         if (m.damage) effects.push(`Damage ${m.damage > 0 ? '+' : ''}${m.damage}`);
         if (m.penetration) effects.push(`Pen ${m.penetration > 0 ? '+' : ''}${m.penetration}`);
@@ -400,7 +402,7 @@ export default class WeaponSheet extends ContainerItemSheet {
             return;
         }
 
-        await actor.rollItem(this.item.id);
+        await (actor as unknown as WH40KBaseActor).rollItem(this.item.id);
     }
 
     /* -------------------------------------------- */
@@ -419,15 +421,16 @@ export default class WeaponSheet extends ContainerItemSheet {
         }
 
         const weapon = this.item;
-        const formula = weapon.system.effectiveDamageFormula;
+        const weaponSystem = weapon.system as unknown as WeaponData;
+        const formula = weaponSystem.effectiveDamageFormula;
         const damageRoll = await new Roll(formula).evaluate();
 
         const hit = {
             location: 'Body',
             damageRoll: { formula: damageRoll.formula, result: damageRoll.result },
             totalDamage: damageRoll.total,
-            damageType: weapon.system.damage.type,
-            totalPenetration: weapon.system.effectivePenetration,
+            damageType: weaponSystem.damage.type,
+            totalPenetration: weaponSystem.effectivePenetration,
             modifiers: {},
             effects: [],
             righteousFury: [],
@@ -443,7 +446,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         const html = await foundry.applications.handlebars.renderTemplate(template, templateData);
         const chatData: Record<string, unknown> = {
             user: game.user.id,
-            speaker: ChatMessage.getSpeaker({ actor }),
+            speaker: ChatMessage.getSpeaker({ actor: actor as unknown as WH40KBaseActor }),
             rollMode: game.settings.get('core', 'rollMode'),
             content: html,
             rolls: [damageRoll],
@@ -515,7 +518,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         if (qualityEntry) {
             // Open the quality sheet
             const quality = await pack.getDocument(qualityEntry._id);
-            void quality?.sheet.render(true);
+            void quality?.sheet?.render(true);
         } else {
             // Fallback: show tooltip from CONFIG
             const def = CONFIG.wh40k?.getQualityDefinition?.(identifier);
@@ -598,7 +601,7 @@ export default class WeaponSheet extends ContainerItemSheet {
 
             // Send to chat if actor is present
             if (actor) {
-                await ReloadActionManager.sendReloadToChat(actor, this.item, result);
+                await ReloadActionManager.sendReloadToChat(actor as unknown as WH40KBaseActor, this.item, result);
             }
         } else {
             ui.notifications.warn(result.message);
@@ -631,7 +634,8 @@ export default class WeaponSheet extends ContainerItemSheet {
         const index = parseInt(target.dataset.modIndex ?? '', 10);
         if (isNaN(index)) return;
 
-        const mods = foundry.utils.deepClone(this.item.system.modifications);
+        const weaponSystem = this.item.system as unknown as WeaponData;
+        const mods = foundry.utils.deepClone(weaponSystem.modifications);
         if (index < 0 || index >= mods.length) return;
 
         mods[index].active = !mods[index].active;
@@ -654,16 +658,17 @@ export default class WeaponSheet extends ContainerItemSheet {
         const index = parseInt(target.dataset.modIndex ?? '', 10);
         if (isNaN(index)) return;
 
-        const mod = this.item.system.modifications[index];
+        const weaponSystem2 = this.item.system as unknown as WeaponData;
+        const mod = weaponSystem2.modifications[index];
         if (!mod) return;
 
-        const modItem = await fromUuid<Item>(mod.uuid);
+        const modItem = (await fromUuid(mod.uuid)) as WH40KItem | null | undefined;
         if (!modItem) {
             ui.notifications.error(`Modification "${mod.name}" not found. It may have been deleted.`);
             return;
         }
 
-        modItem.sheet.render(true);
+        modItem.sheet?.render(true);
     }
 
     /* -------------------------------------------- */
@@ -675,7 +680,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @param {HTMLElement} target  Button that was clicked.
      */
     static async #removeModification(this: any, event: Event, target: HTMLElement): Promise<void> {
-        const index = parseInt(target.dataset.modIndex, 10);
+        const index = parseInt(target.dataset.modIndex ?? '', 10);
         if (isNaN(index)) return;
 
         const mod = this.item.system.modifications[index];
@@ -690,7 +695,8 @@ export default class WeaponSheet extends ContainerItemSheet {
 
         if (!confirmed) return;
 
-        const mods = this.item.system.modifications.filter((_, i) => i !== index);
+        const weaponSystem3 = this.item.system as unknown as WeaponData;
+        const mods = weaponSystem3.modifications.filter((_: unknown, i: number) => i !== index);
         await this.item.update({ 'system.modifications': mods });
 
         ui.notifications.info(`${mod.name} removed.`);
@@ -726,7 +732,8 @@ export default class WeaponSheet extends ContainerItemSheet {
         };
 
         // Add to array
-        const mods = [...this.item.system.modifications, modEntry];
+        const weaponSystemDrop = this.item.system as unknown as WeaponData;
+        const mods = [...weaponSystemDrop.modifications, modEntry];
         await this.item.update({ 'system.modifications': mods });
 
         ui.notifications.info(`${modItem.name} installed.`);
@@ -742,7 +749,7 @@ export default class WeaponSheet extends ContainerItemSheet {
      * @private
      */
     _canAddModification(modItem: any): boolean {
-        const weapon = this.item.system;
+        const weapon = this.item.system as unknown as WeaponData;
         const restrictions = modItem.system.restrictions;
 
         // Check weapon class restriction
@@ -897,7 +904,7 @@ export default class WeaponSheet extends ContainerItemSheet {
         }
 
         // Load ammunition
-        await this.item.system.loadAmmo(ammoItem);
+        await (this.item.system as unknown as WeaponData).loadAmmo(ammoItem);
         return true;
     }
 
@@ -932,19 +939,19 @@ export default class WeaponSheet extends ContainerItemSheet {
     /* -------------------------------------------- */
 
     /** @override */
-    async _onDrop(event: Event): Promise<unknown> {
+    async _onDrop(event: DragEvent): Promise<unknown> {
         event.preventDefault();
 
-        let data;
+        let data: { type?: string; uuid?: string };
         try {
-            data = JSON.parse((event as DragEvent).dataTransfer.getData('text/plain'));
+            data = JSON.parse(event.dataTransfer?.getData('text/plain') ?? '');
         } catch {
             return false;
         }
 
         if (data.type !== 'Item') return false;
 
-        const droppedItem: unknown = await fromUuid(data.uuid);
+        const droppedItem = (await fromUuid(data.uuid ?? '')) as { type?: string } | null | undefined;
         if (!droppedItem) return false;
 
         // Handle weaponModification drops

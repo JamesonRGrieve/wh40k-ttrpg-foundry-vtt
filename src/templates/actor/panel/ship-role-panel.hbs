@@ -1,76 +1,78 @@
-<div class="wh40k-panel spacer wh40k-grid-col-3 wh40k-grid-row-1 wh40k-panel-ship-roles">
-    <div class="wh40k-panel-header collapsible-header" data-panel="ship-roles">
-        <i class="fas fa-user-tie"></i>
-        <span class="wh40k-panel-title">{{localize "WH40K.ShipRole.Header"}}</span>
-        <span class="wh40k-panel-count">{{shipRoles.length}}</span>
-        <button type="button" class="wh40k-panel-add-btn" data-action="itemCreate" data-item-type="shipRole" data-tooltip="Add Ship Role">
+<div class="wh40k-panel tw-col-span-3 tw-row-span-1">
+    <div class="wh40k-panel-header collapsible-header tw-flex tw-items-center tw-gap-1.5" data-panel="ship-roles">
+        <span class="wh40k-panel-title">
+            <i class="fas fa-user-tie"></i>
+            {{localize "WH40K.ShipRole.Header"}}
+        </span>
+        <span class="tw-ml-auto tw-px-2 tw-py-0.5 tw-bg-[rgba(74,55,40,0.1)] tw-rounded-full tw-text-[0.85em] tw-font-semibold">{{shipRoles.length}}</span>
+        <button type="button" class="tw-p-1 tw-bg-transparent tw-border-none tw-cursor-pointer tw-transition-all hover:tw-text-gold hover:tw-scale-110" data-action="itemCreate" data-item-type="shipRole" data-tooltip="Add Ship Role">
             <i class="fas fa-plus"></i>
         </button>
         <i class="fas fa-chevron-down collapse-icon"></i>
     </div>
-    
+
     <div class="wh40k-panel-body collapsible-body" data-panel-body="ship-roles">
         {{#if shipRoles.length}}
-            <div class="wh40k-ship-roles-list">
+            <div class="tw-flex tw-flex-col tw-gap-3">
                 {{#each shipRoles as |role|}}
-                    <div class="wh40k-ship-role-card">
-                        <div class="wh40k-ship-role-header">
-                            <button class="wh40k-ship-role-name" data-action="itemEdit" data-item-id="{{role._id}}" type="button">
-                                <img class="wh40k-item-img" src="{{role.img}}" alt="{{role.name}}" />
-                                <span class="wh40k-role-name-text">{{role.name}}</span>
+                    <div class="tw-bg-[rgba(255,255,255,0.5)] tw-border tw-border-solid tw-border-[rgba(74,55,40,0.15)] tw-rounded-lg tw-overflow-hidden tw-transition-all hover:tw-border-[rgba(74,55,40,0.3)] hover:tw-shadow-sm">
+                        <div class="tw-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-2.5 tw-bg-gradient-to-b tw-from-[rgba(74,55,40,0.08)] tw-to-[rgba(74,55,40,0.03)] tw-border-b tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
+                            <button class="tw-flex tw-items-center tw-gap-1.5 tw-flex-1 tw-bg-transparent tw-border-none tw-p-0 tw-cursor-pointer tw-text-left tw-transition-opacity hover:tw-opacity-70" data-action="itemEdit" data-item-id="{{role._id}}" type="button">
+                                <img class="wh40k-item-img tw-w-7 tw-h-7 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.2)]" src="{{role.img}}" alt="{{role.name}}" />
+                                <span class="tw-text-[1.05em] tw-font-semibold tw-text-[#4a3728]">{{role.name}}</span>
                             </button>
-                            <span class="wh40k-role-rank-badge" data-tooltip="Rank {{role.system.rank}}">
+                            <span class="tw-inline-flex tw-items-center tw-justify-center tw-min-w-[2rem] tw-h-6 tw-px-2 tw-bg-gradient-to-br tw-from-gold tw-to-[#c9a42b] tw-border tw-border-solid tw-border-[#b89420] tw-rounded-full tw-text-[0.8em] tw-font-bold tw-text-[#2a1a0a] tw-shadow-sm" data-tooltip="Rank {{role.system.rank}}">
                                 R{{role.system.rank}}
                             </span>
-                            <button class="wh40k-control-icon" data-action="itemDelete" data-item-id="{{role._id}}" data-tooltip="Remove Role">
+                            <button class="tw-p-1 tw-bg-transparent tw-border-none tw-cursor-pointer tw-opacity-50 hover:tw-opacity-100 tw-transition-opacity" data-action="itemDelete" data-item-id="{{role._id}}" data-tooltip="Remove Role">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
-                        
-                        <div class="wh40k-ship-role-body">
+
+                        <div class="tw-flex tw-flex-col tw-gap-1.5 tw-p-3 tw-text-[0.9em]">
                             {{#if role.system.purpose}}
-                            <div class="wh40k-role-section">
-                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.Purpose"}}:</strong>
-                                <span class="wh40k-role-value">{{{role.system.purpose}}}</span>
+                            <div class="tw-flex tw-flex-col tw-gap-0.5">
+                                <strong class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#6a5348]">{{localize "WH40K.ShipRole.Purpose"}}:</strong>
+                                <span class="tw-text-[#4a3728] tw-leading-snug">{{{role.system.purpose}}}</span>
                             </div>
                             {{/if}}
-                            
+
                             {{#if role.system.careerPreferencesLabel}}
-                            <div class="wh40k-role-section">
-                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.CareerPreferences"}}:</strong>
-                                <span class="wh40k-role-value">{{role.system.careerPreferencesLabel}}</span>
+                            <div class="tw-flex tw-flex-col tw-gap-0.5">
+                                <strong class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#6a5348]">{{localize "WH40K.ShipRole.CareerPreferences"}}:</strong>
+                                <span class="tw-text-[#4a3728] tw-leading-snug">{{role.system.careerPreferencesLabel}}</span>
                             </div>
                             {{/if}}
-                            
+
                             {{#if role.system.subordinatesLabel}}
-                            <div class="wh40k-role-section">
-                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.Subordinates"}}:</strong>
-                                <span class="wh40k-role-value">{{role.system.subordinatesLabel}}</span>
+                            <div class="tw-flex tw-flex-col tw-gap-0.5">
+                                <strong class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#6a5348]">{{localize "WH40K.ShipRole.Subordinates"}}:</strong>
+                                <span class="tw-text-[#4a3728] tw-leading-snug">{{role.system.subordinatesLabel}}</span>
                             </div>
                             {{/if}}
-                            
+
                             {{#if role.system.importantSkillsLabel}}
-                            <div class="wh40k-role-section">
-                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.ImportantSkills"}}:</strong>
-                                <span class="wh40k-role-skills">{{role.system.importantSkillsLabel}}</span>
+                            <div class="tw-flex tw-flex-col tw-gap-0.5">
+                                <strong class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#6a5348]">{{localize "WH40K.ShipRole.ImportantSkills"}}:</strong>
+                                <span class="tw-text-[#4a3728] tw-leading-snug tw-italic">{{role.system.importantSkillsLabel}}</span>
                             </div>
                             {{/if}}
-                            
+
                             {{!-- Abilities (modern structured display) --}}
                             {{#if role.system.abilities.length}}
-                            <div class="wh40k-role-section wh40k-role-abilities">
-                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.Abilities"}}:</strong>
-                                <div class="wh40k-role-abilities-list">
+                            <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mt-1 tw-pt-2 tw-border-t tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
+                                <strong class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#6a5348]">{{localize "WH40K.ShipRole.Abilities"}}:</strong>
+                                <div class="tw-flex tw-flex-col tw-gap-1.5">
                                     {{#each role.system.abilities as |ability|}}
-                                    <div class="wh40k-role-ability">
-                                        <span class="wh40k-ability-name">{{ability.name}}</span>
+                                    <div class="tw-flex tw-items-start tw-gap-1.5 tw-px-2.5 tw-py-2 tw-bg-[rgba(74,55,40,0.05)] tw-rounded-md tw-border-l-[3px] tw-border-l-solid tw-border-l-gold">
+                                        <span class="tw-font-semibold tw-text-[#4a3728] tw-flex-1">{{ability.name}}</span>
                                         {{#if ability.bonus}}
-                                        <span class="wh40k-ability-bonus {{#if (gt ability.bonus 0)}}wh40k-bonus-positive{{else}}wh40k-bonus-negative{{/if}}">
+                                        <span class="tw-inline-flex tw-items-center tw-justify-center tw-min-w-[2.5rem] tw-h-6 tw-px-2 tw-rounded-full tw-text-[0.85em] tw-font-bold {{#if (gt ability.bonus 0)}}tw-bg-[rgba(40,180,80,0.2)] tw-border tw-border-solid tw-border-[rgba(40,180,80,0.3)] tw-text-[#1a6a2a]{{else}}tw-bg-[rgba(200,60,60,0.2)] tw-border tw-border-solid tw-border-[rgba(200,60,60,0.3)] tw-text-[#8a2020]{{/if}}">
                                             {{#if (gt ability.bonus 0)}}+{{/if}}{{ability.bonus}}
                                         </span>
                                         {{/if}}
                                         {{#if ability.description}}
-                                        <div class="wh40k-ability-desc">{{{ability.description}}}</div>
+                                        <div class="tw-w-full tw-mt-1 tw-text-[0.9em] tw-text-[#666] tw-leading-snug [&_p]:tw-m-0">{{{ability.description}}}</div>
                                         {{/if}}
                                     </div>
                                     {{/each}}
@@ -78,19 +80,19 @@
                             </div>
                             {{else if role.system.effect}}
                             {{!-- Legacy effect fallback --}}
-                            <div class="wh40k-role-section wh40k-role-effect">
-                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.Effect"}}:</strong>
-                                <span class="wh40k-role-value">{{{role.system.effect}}}</span>
+                            <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mt-1 tw-pt-2 tw-border-t tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
+                                <strong class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#6a5348]">{{localize "WH40K.ShipRole.Effect"}}:</strong>
+                                <span class="tw-text-[#4a3728] tw-leading-snug">{{{role.system.effect}}}</span>
                             </div>
                             {{/if}}
-                            
+
                             {{!-- Ship Bonuses --}}
                             {{#if role.system.shipBonusesArray.length}}
-                            <div class="wh40k-role-section wh40k-role-bonuses">
-                                <strong class="wh40k-role-label">{{localize "WH40K.ShipRole.ShipBonuses"}}:</strong>
-                                <div class="wh40k-bonus-badges">
+                            <div class="tw-flex tw-flex-col tw-gap-0.5 tw-mt-1 tw-pt-2 tw-border-t tw-border-solid tw-border-[rgba(74,55,40,0.1)]">
+                                <strong class="tw-text-[0.85em] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-text-[#6a5348]">{{localize "WH40K.ShipRole.ShipBonuses"}}:</strong>
+                                <div class="tw-flex tw-flex-wrap tw-gap-1.5">
                                     {{#each role.system.shipBonusesArray as |bonus|}}
-                                    <span class="wh40k-bonus-badge {{#if (gt bonus.value 0)}}wh40k-bonus-positive{{else}}wh40k-bonus-negative{{/if}}">
+                                    <span class="tw-inline-flex tw-items-center tw-gap-0.5 tw-px-2.5 tw-py-1 tw-rounded-full tw-text-[0.85em] tw-font-semibold {{#if (gt bonus.value 0)}}tw-bg-[rgba(40,180,80,0.15)] tw-border tw-border-solid tw-border-[rgba(40,180,80,0.3)] tw-text-[#1a6a2a]{{else}}tw-bg-[rgba(200,60,60,0.15)] tw-border tw-border-solid tw-border-[rgba(200,60,60,0.3)] tw-text-[#8a2020]{{/if}}">
                                         {{bonus.label}}: {{bonus.display}}
                                     </span>
                                     {{/each}}
@@ -102,10 +104,10 @@
                 {{/each}}
             </div>
         {{else}}
-            <div class="wh40k-empty-state">
-                <i class="fas fa-user-tie fa-3x"></i>
-                <p>{{localize "WH40K.ShipRole.NoRoles"}}</p>
-                <button type="button" data-action="itemCreate" data-item-type="shipRole" class="wh40k-btn-create">
+            <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-py-10 tw-px-5 tw-text-center tw-text-[#999]">
+                <i class="fas fa-user-tie fa-3x tw-mb-4 tw-opacity-40"></i>
+                <p class="tw-m-0 tw-mb-4 tw-text-[0.95em]">{{localize "WH40K.ShipRole.NoRoles"}}</p>
+                <button type="button" data-action="itemCreate" data-item-type="shipRole" class="tw-inline-flex tw-items-center tw-gap-1.5 tw-px-4 tw-py-2 tw-bg-gradient-to-b tw-from-gold tw-to-[#c9a42b] tw-border tw-border-solid tw-border-[#b89420] tw-rounded-md tw-text-[#2a1a0a] tw-font-semibold tw-cursor-pointer tw-transition-all hover:tw-shadow-md">
                     <i class="fas fa-plus"></i> {{localize "WH40K.ShipRole.AddRole"}}
                 </button>
             </div>

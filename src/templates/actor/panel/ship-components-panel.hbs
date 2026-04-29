@@ -1,5 +1,7 @@
-<div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-2">
-    <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Components.Header"}}</h1>
+<div class="wh40k-panel tw-col-span-6 tw-row-span-2">
+    <h1 class="wh40k-panel-header">
+        <span class="wh40k-panel-title">{{localize "WH40K.Starship.Components.Header"}}</span>
+    </h1>
     <div class="wh40k-table--border">
         <div class="table-row--head">
             <div class="table-cell--span2">{{localize "WH40K.Starship.Components.Name"}}</div>
@@ -25,7 +27,7 @@
                     <div class="table-cell" title="{{item.system.componentTypeLabel}}">
                         {{item.system.componentTypeLabel}}
                     </div>
-                    <div class="table-cell {{#if (gt item.system.power.generated 0)}}wh40k-power-gen{{else if (gt item.system.power.used 0)}}wh40k-power-use{{/if}}">
+                    <div class="table-cell {{#if (gt item.system.power.generated 0)}}tw-text-success tw-font-semibold{{else if (gt item.system.power.used 0)}}tw-text-crimson{{/if}}">
                         {{item.system.powerDisplay}}
                     </div>
                     <div class="table-cell">{{item.system.space}}</div>

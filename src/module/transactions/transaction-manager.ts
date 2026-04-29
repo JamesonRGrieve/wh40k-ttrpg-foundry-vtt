@@ -128,7 +128,7 @@ export class TransactionManager {
         }
     }
 
-    static listSourcesForBuyer(buyer: Actor): Actor[] {
+    static listSourcesForBuyer(buyer: Actor | import('../documents/base-actor.ts').WH40KBaseActor): Actor[] {
         const requiredPermission = CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER;
 
         return game.actors.contents

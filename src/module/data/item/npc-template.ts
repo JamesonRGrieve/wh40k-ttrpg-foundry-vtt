@@ -18,6 +18,104 @@ const { NumberField, SchemaField, StringField, BooleanField, ArrayField, ObjectF
  */
 export default class NPCTemplateData extends ItemDataModel {
     /* -------------------------------------------- */
+    /*  Property Declarations (matching defineSchema) */
+    /* -------------------------------------------- */
+
+    // Template metadata
+    declare category: string;
+    declare faction: string;
+    declare subfaction: string;
+    declare baseThreatLevel: number;
+
+    // Base configuration
+    declare role: string;
+    declare type: string;
+
+    // Base characteristics
+    declare baseCharacteristics: {
+        weaponSkill: number;
+        ballisticSkill: number;
+        strength: number;
+        toughness: number;
+        agility: number;
+        intelligence: number;
+        perception: number;
+        willpower: number;
+        fellowship: number;
+        influence: number;
+    };
+
+    // Wounds and armour
+    declare baseWounds: number;
+    declare baseArmour: number;
+
+    // Unnaturals
+    declare unnaturals: Record<string, number>;
+
+    // Skills
+    declare trainedSkills: Array<{
+        key: string;
+        name: string;
+        characteristic: string;
+        level: string;
+    }>;
+
+    // Equipment
+    declare equipmentPreset: string;
+    declare customWeapons: Array<{
+        name: string;
+        damage: string;
+        pen: number;
+        range: string;
+        rof: string;
+        clip: number;
+        reload: string;
+        special: string;
+        class: string;
+    }>;
+
+    // Scaling
+    declare scaling: {
+        characteristicScale: number;
+        woundsScale: number;
+        armourScale: number;
+        weaponScale: number;
+        minMultiplier: number;
+        maxMultiplier: number;
+    };
+
+    // Traits, talents, abilities
+    declare traits: Array<{ uuid?: string; name: string; description?: string }>;
+    declare talents: Array<{ uuid?: string; name: string; description?: string }>;
+    declare specialAbilities: string;
+
+    // Notes
+    declare description: string;
+    declare tactics: string;
+    declare source: string;
+
+    // Template options
+    declare allowHorde: boolean;
+    declare defaultMagnitude: number;
+
+    // Variants
+    declare variants: Array<{
+        name: string;
+        description?: string;
+        threatModifier: number;
+        characteristicModifiers: Record<string, number>;
+        additionalEquipment: string[];
+        additionalTraits: string[];
+        additionalTalents: string[];
+    }>;
+
+    // Derived (set in prepareDerivedData)
+    declare _skillCount: number;
+    declare _traitCount: number;
+    declare _talentCount: number;
+    declare _variantCount: number;
+
+    /* -------------------------------------------- */
     /*  Model Configuration                         */
     /* -------------------------------------------- */
 
@@ -255,7 +353,7 @@ export default class NPCTemplateData extends ItemDataModel {
      * @param {string} [options.variant] - Variant name to apply.
      * @returns {Object} NPC system data ready for Actor.create().
      */
-    generateAtThreat(targetThreat, options = {}): Record<string, unknown> {
+    generateAtThreat(targetThreat: number, options: { isHorde?: boolean; variant?: string | null } = {}): Record<string, unknown> {
         const { isHorde = false, variant = null } = options;
 
         // Calculate scaling factor
@@ -270,8 +368,8 @@ export default class NPCTemplateData extends ItemDataModel {
         }
 
         // Generate characteristics
-        const characteristics = {};
-        const charLabels = {
+        const characteristics: Record<string, unknown> = {};
+        const charLabels: Record<string, { label: string; short: string }> = {
             weaponSkill: { label: 'Weapon Skill', short: 'WS' },
             ballisticSkill: { label: 'Ballistic Skill', short: 'BS' },
             strength: { label: 'Strength', short: 'S' },
@@ -319,7 +417,7 @@ export default class NPCTemplateData extends ItemDataModel {
         const armour = Math.max(0, Math.min(15, Math.round(this.baseArmour * clampedArmourScale)));
 
         // Generate skills
-        const trainedSkills = {};
+        const trainedSkills: Record<string, unknown> = {};
         for (const skill of this.trainedSkills) {
             trainedSkills[skill.key] = {
                 name: skill.name,
@@ -426,20 +524,25 @@ export default class NPCTemplateData extends ItemDataModel {
      * @param {number} targetThreat - The target threat level.
      * @returns {Object} Preview data.
      */
-    previewAtThreat(targetThreat): Record<string, unknown> {
+    previewAtThreat(targetThreat: number): Record<string, unknown> {
         const data = this.generateAtThreat(targetThreat);
+        const chars = data.characteristics as Record<string, { short: string; base: number }>;
+        const wounds = data.wounds as { max: number };
+        const armour = data.armour as { total: number };
+        const weapons = data.weapons as { simple?: unknown[] };
+        const skills = data.trainedSkills as Record<string, unknown>;
 
         return {
             threatLevel: targetThreat,
-            characteristics: Object.entries(data.characteristics).map(([key, char]) => ({
+            characteristics: Object.entries(chars).map(([key, char]) => ({
                 key,
                 label: char.short,
                 value: char.base,
             })),
-            wounds: data.wounds.max,
-            armour: data.armour.total,
-            weaponCount: data.weapons.simple.length,
-            skillCount: Object.keys(data.trainedSkills).length,
+            wounds: wounds.max,
+            armour: armour.total,
+            weaponCount: weapons.simple?.length ?? 0,
+            skillCount: Object.keys(skills).length,
         };
     }
 }

@@ -1,5 +1,7 @@
-<div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-1">
-    <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Upgrades.Header"}}</h1>
+<div class="wh40k-panel tw-col-span-6 tw-row-span-1">
+    <h1 class="wh40k-panel-header">
+        <span class="wh40k-panel-title">{{localize "WH40K.Starship.Upgrades.Header"}}</span>
+    </h1>
     <div class="wh40k-table--border">
         <div class="table-row--head">
             <div class="table-cell--span2">{{localize "WH40K.Starship.Upgrades.Name"}}</div>
@@ -23,7 +25,7 @@
                     </div>
                     <div class="table-cell">{{item.system.power}}</div>
                     <div class="table-cell">{{item.system.space}}</div>
-                    <div class="table-cell--span2 wh40k-effect-text">{{{item.system.effect}}}</div>
+                    <div class="table-cell--span2 tw-text-sm tw-leading-snug">{{{item.system.effect}}}</div>
                     <div class="table-cell--last">
                         <label class="wh40k-control-button item-delete" data-item-id="{{item.id}}">
                             <span class="wh40k-control-button__span material-icons">delete</span>

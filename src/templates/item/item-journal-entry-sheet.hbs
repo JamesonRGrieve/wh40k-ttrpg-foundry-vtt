@@ -1,45 +1,45 @@
-<form class="wh40k-item-sheet wh40k-item-sheet--journal" autocomplete="off">
+<form class="wh40k-item-sheet wh40k-item-sheet--journal tw-flex tw-flex-col tw-h-full" autocomplete="off">
     {{! Header }}
-    <header class="wh40k-item-sheet__header">
-        <div class="wh40k-item-sheet__portrait wh40k-item-sheet__portrait--small">
-            <span class="material-icons wh40k-item-sheet__portrait-icon">auto_stories</span>
+    <header class="wh40k-item-sheet__header tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0">
+        <div class="wh40k-item-sheet__portrait wh40k-item-sheet__portrait--small tw-flex tw-items-center tw-justify-center tw-w-12 tw-h-12 tw-shrink-0 tw-rounded-md">
+            <span class="material-icons wh40k-item-sheet__portrait-icon tw-text-gold tw-text-2xl">auto_stories</span>
         </div>
-        <div class="wh40k-item-sheet__header-info">
-            <input class="wh40k-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Journal Entry Title" />
-            <div class="wh40k-item-sheet__type-badge">
-                <span class="material-icons">menu_book</span>
+        <div class="wh40k-item-sheet__header-info tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+            <input class="wh40k-item-sheet__name-input tw-font-display tw-text-xl tw-text-gold tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" type="text" value="{{item.name}}" placeholder="Journal Entry Title" />
+            <div class="wh40k-item-sheet__type-badge tw-inline-flex tw-items-center tw-gap-1 tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">
+                <span class="material-icons tw-text-sm">menu_book</span>
                 <span>Journal Entry</span>
             </div>
         </div>
     </header>
 
     {{! Entry Details Panel }}
-    <section class="wh40k-item-sheet__panel">
-        <h2 class="wh40k-item-sheet__panel-title">
-            <span class="material-icons">event</span>
+    <section class="wh40k-item-sheet__panel tw-p-3">
+        <h2 class="wh40k-item-sheet__panel-title tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold tw-text-base tw-mt-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-solid">
+            <span class="material-icons tw-text-base">event</span>
             Entry Details
         </h2>
-        <div class="wh40k-item-sheet__grid wh40k-item-sheet__grid--2col">
-            <div class="wh40k-item-sheet__field">
-                <label class="wh40k-item-sheet__label">Date</label>
-                <input class="wh40k-item-sheet__input" name="system.time" type="date" value="{{item.system.time}}" />
+        <div class="wh40k-item-sheet__grid wh40k-item-sheet__grid--2col tw-grid tw-grid-cols-2 tw-gap-3">
+            <div class="wh40k-item-sheet__field tw-flex tw-flex-col tw-gap-1">
+                <label class="wh40k-item-sheet__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Date</label>
+                <input class="wh40k-item-sheet__input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.time" type="date" value="{{item.system.time}}" />
             </div>
-            <div class="wh40k-item-sheet__field">
-                <label class="wh40k-item-sheet__label">Location</label>
-                <input class="wh40k-item-sheet__input" name="system.place" type="text" value="{{item.system.place}}" placeholder="Where this occurred..." />
+            <div class="wh40k-item-sheet__field tw-flex tw-flex-col tw-gap-1">
+                <label class="wh40k-item-sheet__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Location</label>
+                <input class="wh40k-item-sheet__input tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="system.place" type="text" value="{{item.system.place}}" placeholder="Where this occurred..." />
             </div>
         </div>
     </section>
 
     {{! Entry Content Panel }}
-    <section class="wh40k-item-sheet__panel wh40k-item-sheet__panel--description">
-        <h2 class="wh40k-item-sheet__panel-title">
-            <span class="material-icons">edit_note</span>
+    <section class="wh40k-item-sheet__panel wh40k-item-sheet__panel--description tw-flex-1 tw-p-3 tw-flex tw-flex-col tw-min-h-0">
+        <h2 class="wh40k-item-sheet__panel-title tw-flex tw-items-center tw-gap-2 tw-font-display tw-text-gold tw-text-base tw-mt-0 tw-mb-3 tw-pb-2 tw-border-b tw-border-solid tw-shrink-0">
+            <span class="material-icons tw-text-base">edit_note</span>
             Entry
         </h2>
-        <div class="wh40k-item-sheet__field wh40k-item-sheet__field--full">
+        <div class="wh40k-item-sheet__field wh40k-item-sheet__field--full tw-flex-1 tw-flex tw-flex-col">
             <textarea
-                class="wh40k-item-sheet__textarea wh40k-item-sheet__textarea--large"
+                class="wh40k-item-sheet__textarea wh40k-item-sheet__textarea--large tw-flex-1 tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-none"
                 name="system.description.value"
                 placeholder="Record your thoughts, discoveries, and observations..."
             >{{item.system.description.value}}</textarea>

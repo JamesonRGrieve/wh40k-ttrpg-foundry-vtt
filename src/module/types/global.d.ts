@@ -31,6 +31,7 @@ export interface WH40KSkill {
     trained: boolean;
     plus10: boolean;
     plus20: boolean;
+    plus30?: boolean;
     bonus: number;
     notes: string;
     cost: number;
@@ -48,6 +49,7 @@ export interface WH40KSkillEntry {
     trained: boolean;
     plus10: boolean;
     plus20: boolean;
+    plus30?: boolean;
     bonus: number;
     notes: string;
     cost: number;
@@ -162,6 +164,8 @@ export interface WH40KEncumbrance {
     value: number;
     max: number;
     over: boolean;
+    backpack_max?: number;
+    backpack_value?: number;
 }
 
 export interface WH40KFatigue {
@@ -511,6 +515,7 @@ declare global {
         userId: string;
         user: FoundryUser;
         tours: { register(namespace: string, name: string, tour: unknown): void; get(id: string): unknown };
+        tables: { getName(name: string): { draw(): Promise<unknown> } | undefined };
         canvas: Canvas;
         i18n: {
             localize(key: string): string;

@@ -1,28 +1,32 @@
-<div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-1">
-    <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Crew.Header"}}</h1>
-    <div class="wh40k-crew-grid">
-        <div class="wh40k-crew-stat">
-            <span class="wh40k-crew-stat-label">{{localize "WH40K.Starship.Crew.Population"}}</span>
-            <input type="number" class="wh40k-crew-stat-input" name="system.crew.population" value="{{source.crew.population}}" />
+<div class="wh40k-panel tw-col-span-6 tw-row-span-1">
+    <h1 class="wh40k-panel-header">
+        <span class="wh40k-panel-title">{{localize "WH40K.Starship.Crew.Header"}}</span>
+    </h1>
+    <div class="tw-grid tw-grid-cols-4 tw-gap-2 tw-p-2">
+        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.15)]">
+            <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-60">{{localize "WH40K.Starship.Crew.Population"}}</span>
+            <input type="number" class="wh40k-field__input tw-text-center tw-font-bold tw-text-lg" name="system.crew.population" value="{{source.crew.population}}" />
         </div>
-        <div class="wh40k-crew-stat">
-            <span class="wh40k-crew-stat-label">{{localize "WH40K.Starship.Crew.Rating"}}</span>
-            <input type="number" class="wh40k-crew-stat-input" name="system.crew.crewRating" value="{{source.crew.crewRating}}" />
+        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.15)]">
+            <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-60">{{localize "WH40K.Starship.Crew.Rating"}}</span>
+            <input type="number" class="wh40k-field__input tw-text-center tw-font-bold tw-text-lg" name="system.crew.crewRating" value="{{source.crew.crewRating}}" />
         </div>
-        <div class="wh40k-crew-stat">
-            <span class="wh40k-crew-stat-label">{{localize "WH40K.Starship.Crew.MoraleCurrent"}}</span>
-            <input type="number" class="wh40k-crew-stat-input" name="system.crew.morale.value" value="{{source.crew.morale.value}}" />
+        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.15)]">
+            <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-60">{{localize "WH40K.Starship.Crew.MoraleCurrent"}}</span>
+            <input type="number" class="wh40k-field__input tw-text-center tw-font-bold tw-text-lg" name="system.crew.morale.value" value="{{source.crew.morale.value}}" />
         </div>
-        <div class="wh40k-crew-stat">
-            <span class="wh40k-crew-stat-label">{{localize "WH40K.Starship.Crew.MoraleMax"}}</span>
-            <input type="number" class="wh40k-crew-stat-input" name="system.crew.morale.max" value="{{source.crew.morale.max}}" />
+        <div class="tw-flex tw-flex-col tw-items-center tw-gap-1 tw-p-2 tw-rounded-md tw-border tw-border-solid tw-border-[rgba(74,55,40,0.15)]">
+            <span class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-60">{{localize "WH40K.Starship.Crew.MoraleMax"}}</span>
+            <input type="number" class="wh40k-field__input tw-text-center tw-font-bold tw-text-lg" name="system.crew.morale.max" value="{{source.crew.morale.max}}" />
         </div>
     </div>
 </div>
 
-<div class="wh40k-panel spacer wh40k-grid-col-6 wh40k-grid-row-1">
-    <h1 class="wh40k-panel-header">{{localize "WH40K.Starship.Crew.Officers"}}</h1>
-    <p class="wh40k-crew-instructions">{{localize "WH40K.Starship.Crew.OfficersDesc"}}</p>
+<div class="wh40k-panel tw-col-span-6 tw-row-span-1">
+    <h1 class="wh40k-panel-header">
+        <span class="wh40k-panel-title">{{localize "WH40K.Starship.Crew.Officers"}}</span>
+    </h1>
+    <p class="tw-text-sm tw-italic tw-opacity-70 tw-px-2 tw-pt-2">{{localize "WH40K.Starship.Crew.OfficersDesc"}}</p>
     <div class="wh40k-table--border">
         <div class="table-row--head">
             <div class="table-cell--span2">{{localize "WH40K.Starship.Crew.Role"}}</div>

@@ -1,41 +1,41 @@
-{{!-- 
+{{!--
   Rogue Trader Condition Item Sheet - V2 Redesign
   Matches weapon/armour sheet patterns with modern ApplicationV2 structure
 --}}
-<div class="wh40k-condition-sheet">
-  <form autocomplete="off">
-    
+<div class="wh40k-condition-sheet tw-flex tw-flex-col tw-h-full">
+  <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
+
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact condition identity with inline stats
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-condition-header">
-      <div class="wh40k-condition-header__image" data-action="editImage" data-edit="img">
-        <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="wh40k-condition-header__image-overlay wh40k-condition-header__image-overlay--{{item.system.nature}}">
+    <header class="wh40k-condition-header tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0">
+      <div class="wh40k-condition-header__image tw-relative tw-w-16 tw-h-16 tw-shrink-0 tw-rounded-md tw-overflow-hidden tw-cursor-pointer" data-action="editImage" data-edit="img">
+        <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
+        <div class="wh40k-condition-header__image-overlay wh40k-condition-header__image-overlay--{{item.system.nature}} tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/60 tw-opacity-0 hover:tw-opacity-100 tw-transition-opacity">
           <i class="fas {{item.system.natureIcon}}"></i>
         </div>
       </div>
-      
-      <div class="wh40k-condition-header__info">
-        <input type="text" class="wh40k-condition-header__name" name="name" value="{{item.name}}" placeholder="Condition Name" />
-        
-        <div class="wh40k-condition-header__meta">
-          <span class="wh40k-condition-badge wh40k-condition-badge--nature wh40k-condition-badge--{{item.system.nature}}" title="Condition Nature">
+
+      <div class="wh40k-condition-header__info tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+        <input type="text" class="wh40k-condition-header__name tw-font-display tw-text-xl tw-text-gold tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="Condition Name" />
+
+        <div class="wh40k-condition-header__meta tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
+          <span class="wh40k-condition-badge wh40k-condition-badge--nature wh40k-condition-badge--{{item.system.nature}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Condition Nature">
             <i class="fas {{item.system.natureIcon}}"></i>
             {{item.system.natureLabel}}
           </span>
-          <span class="wh40k-condition-badge wh40k-condition-badge--applies" title="Applies To">
+          <span class="wh40k-condition-badge wh40k-condition-badge--applies tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Applies To">
             <i class="fas {{item.system.appliesToIcon}}"></i>
             {{item.system.appliesToLabel}}
           </span>
           {{#if item.system.stackable}}
-          <span class="wh40k-condition-badge wh40k-condition-badge--stacks" title="Stackable Condition">
+          <span class="wh40k-condition-badge wh40k-condition-badge--stacks tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Stackable Condition">
             <i class="fas fa-layer-group"></i>
             ×{{item.system.stacks}}
           </span>
           {{/if}}
           {{#if item.system.isTemporary}}
-          <span class="wh40k-condition-badge wh40k-condition-badge--duration" title="Duration">
+          <span class="wh40k-condition-badge wh40k-condition-badge--duration tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Duration">
             <i class="fas fa-clock"></i>
             {{item.system.durationDisplay}}
           </span>
@@ -48,16 +48,16 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs wh40k-tabs--condition wh40k-condition-tabs" data-group="primary">
-      <button type="button" class="wh40k-tab wh40k-condition-tab active" data-tab="details" data-group="primary">
+    <nav class="wh40k-tabs wh40k-tabs--condition wh40k-condition-tabs tw-flex tw-shrink-0" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-condition-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="details" data-group="primary">
         <i class="fas fa-info-circle"></i>
         <span>Details</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-condition-tab" data-tab="description" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-condition-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
         <span>Description</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-condition-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-condition-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="effects" data-group="primary">
         <i class="fas fa-magic"></i>
         <span>Effects</span>
       </button>
@@ -66,30 +66,30 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-condition-content wh40k-tab-content wh40k-tab-content--condition scrollable">
-      
+    <div class="wh40k-condition-content wh40k-tab-content wh40k-tab-content--condition scrollable tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
+
       {{!-- DETAILS TAB --}}
       <div class="wh40k-condition-panel tab active" data-tab="details" data-group="primary">
-        
+
         {{!-- Basic Properties --}}
-        <div class="wh40k-condition-section">
-          <div class="wh40k-condition-section__header">
-            <i class="fas fa-cog"></i>
-            <h3>Condition Properties</h3>
+        <div class="wh40k-condition-section tw-mb-3">
+          <div class="wh40k-condition-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-cog tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Condition Properties</h3>
           </div>
-          <div class="wh40k-condition-section__body">
-            <div class="wh40k-field-grid wh40k-field-grid--2col">
-              <div class="wh40k-field">
-                <label>Nature</label>
-                <select name="system.nature">
+          <div class="wh40k-condition-section__body tw-p-3">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Nature</label>
+                <select name="system.nature" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
                   <option value="beneficial" {{#if (eq item.system.nature "beneficial")}}selected{{/if}}>Beneficial</option>
                   <option value="harmful" {{#if (eq item.system.nature "harmful")}}selected{{/if}}>Harmful</option>
                   <option value="neutral" {{#if (eq item.system.nature "neutral")}}selected{{/if}}>Neutral</option>
                 </select>
               </div>
-              <div class="wh40k-field">
-                <label>Applies To</label>
-                <select name="system.appliesTo">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Applies To</label>
+                <select name="system.appliesTo" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
                   <option value="self" {{#if (eq item.system.appliesTo "self")}}selected{{/if}}>Self</option>
                   <option value="target" {{#if (eq item.system.appliesTo "target")}}selected{{/if}}>Target</option>
                   <option value="both" {{#if (eq item.system.appliesTo "both")}}selected{{/if}}>Both</option>
@@ -101,44 +101,44 @@
         </div>
 
         {{!-- Stacking --}}
-        <div class="wh40k-condition-section">
-          <div class="wh40k-condition-section__header">
-            <i class="fas fa-layer-group"></i>
-            <h3>Stacking</h3>
+        <div class="wh40k-condition-section tw-mb-3">
+          <div class="wh40k-condition-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-layer-group tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Stacking</h3>
           </div>
-          <div class="wh40k-condition-section__body">
-            <div class="wh40k-field wh40k-field--checkbox">
-              <label>
+          <div class="wh40k-condition-section__body tw-p-3">
+            <div class="tw-flex tw-flex-col tw-gap-1">
+              <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm">
                 <input type="checkbox" name="system.stackable" {{checked item.system.stackable}} />
                 <span>Condition is Stackable</span>
               </label>
             </div>
             {{#if item.system.stackable}}
-            <div class="wh40k-field">
-              <label>Current Stacks</label>
-              <input type="number" name="system.stacks" value="{{item.system.stacks}}" 
-                     data-dtype="Number" min="1" />
+            <div class="tw-flex tw-flex-col tw-gap-1 tw-mt-2">
+              <label class="tw-text-sm tw-font-medium">Current Stacks</label>
+              <input type="number" name="system.stacks" value="{{item.system.stacks}}"
+                     data-dtype="Number" min="1" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
             </div>
             {{/if}}
           </div>
         </div>
 
         {{!-- Duration --}}
-        <div class="wh40k-condition-section">
-          <div class="wh40k-condition-section__header">
-            <i class="fas fa-clock"></i>
-            <h3>Duration</h3>
+        <div class="wh40k-condition-section tw-mb-3">
+          <div class="wh40k-condition-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-clock tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Duration</h3>
           </div>
-          <div class="wh40k-condition-section__body">
-            <div class="wh40k-field-grid wh40k-field-grid--2col">
-              <div class="wh40k-field">
-                <label>Duration Value</label>
-                <input type="number" name="system.duration.value" value="{{item.system.duration.value}}" 
-                       data-dtype="Number" min="0" />
+          <div class="wh40k-condition-section__body tw-p-3">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Duration Value</label>
+                <input type="number" name="system.duration.value" value="{{item.system.duration.value}}"
+                       data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
-              <div class="wh40k-field">
-                <label>Duration Units</label>
-                <select name="system.duration.units">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Duration Units</label>
+                <select name="system.duration.units" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm">
                   <option value="permanent" {{#if (eq item.system.duration.units "permanent")}}selected{{/if}}>Permanent</option>
                   <option value="rounds" {{#if (eq item.system.duration.units "rounds")}}selected{{/if}}>Rounds</option>
                   <option value="minutes" {{#if (eq item.system.duration.units "minutes")}}selected{{/if}}>Minutes</option>
@@ -151,12 +151,12 @@
         </div>
 
         {{!-- Effect --}}
-        <div class="wh40k-condition-section">
-          <div class="wh40k-condition-section__header">
-            <i class="fas fa-bolt"></i>
-            <h3>Condition Effect</h3>
+        <div class="wh40k-condition-section tw-mb-3">
+          <div class="wh40k-condition-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-bolt tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Condition Effect</h3>
           </div>
-          <div class="wh40k-condition-section__body wh40k-condition-section__body--editor">
+          <div class="wh40k-condition-section__body wh40k-condition-section__body--editor tw-p-2">
             {{#if inEditMode}}
             {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -166,12 +166,12 @@
         </div>
 
         {{!-- Removal --}}
-        <div class="wh40k-condition-section">
-          <div class="wh40k-condition-section__header">
-            <i class="fas fa-eraser"></i>
-            <h3>Removal Conditions</h3>
+        <div class="wh40k-condition-section tw-mb-3">
+          <div class="wh40k-condition-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-eraser tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Removal Conditions</h3>
           </div>
-          <div class="wh40k-condition-section__body wh40k-condition-section__body--editor">
+          <div class="wh40k-condition-section__body wh40k-condition-section__body--editor tw-p-2">
             {{#if inEditMode}}
             {{editor system.removal target="system.removal" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -181,13 +181,13 @@
         </div>
 
         {{!-- Notes --}}
-        <div class="wh40k-condition-section">
-          <div class="wh40k-condition-section__header">
-            <i class="fas fa-sticky-note"></i>
-            <h3>GM Notes</h3>
+        <div class="wh40k-condition-section tw-mb-3">
+          <div class="wh40k-condition-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-sticky-note tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">GM Notes</h3>
           </div>
-          <div class="wh40k-condition-section__body">
-            <textarea name="system.notes" rows="3" placeholder="Additional notes, special circumstances...">{{item.system.notes}}</textarea>
+          <div class="wh40k-condition-section__body tw-p-3">
+            <textarea name="system.notes" rows="3" placeholder="Additional notes, special circumstances..." class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
           </div>
         </div>
 
@@ -195,14 +195,14 @@
 
       {{!-- DESCRIPTION TAB --}}
       <div class="wh40k-condition-panel tab" data-tab="description" data-group="primary">
-        
+
         {{!-- Full Description --}}
-        <div class="wh40k-condition-section">
-          <div class="wh40k-condition-section__header">
-            <i class="fas fa-book"></i>
-            <h3>Description</h3>
+        <div class="wh40k-condition-section tw-mb-3">
+          <div class="wh40k-condition-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-book tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Description</h3>
           </div>
-          <div class="wh40k-condition-section__body wh40k-condition-section__body--editor">
+          <div class="wh40k-condition-section__body wh40k-condition-section__body--editor tw-p-2">
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -212,27 +212,27 @@
         </div>
 
         {{!-- Source --}}
-        <div class="wh40k-condition-section">
-          <div class="wh40k-condition-section__header">
-            <i class="fas fa-book-open"></i>
-            <h3>Source</h3>
+        <div class="wh40k-condition-section tw-mb-3">
+          <div class="wh40k-condition-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-book-open tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Source</h3>
           </div>
-          <div class="wh40k-condition-section__body">
-            <div class="wh40k-field-grid wh40k-field-grid--3col">
-              <div class="wh40k-field">
-                <label>Source Book</label>
-                <input type="text" name="system.source.book" value="{{source.source.book}}" 
-                       placeholder="Rogue Trader Core" />
+          <div class="wh40k-condition-section__body tw-p-3">
+            <div class="tw-grid tw-grid-cols-3 tw-gap-3">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Source Book</label>
+                <input type="text" name="system.source.book" value="{{source.source.book}}"
+                       placeholder="Rogue Trader Core" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
-              <div class="wh40k-field">
-                <label>Page</label>
-                <input type="text" name="system.source.page" value="{{source.source.page}}" 
-                       placeholder="249" />
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Page</label>
+                <input type="text" name="system.source.page" value="{{source.source.page}}"
+                       placeholder="249" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
-              <div class="wh40k-field">
-                <label>Custom Reference</label>
-                <input type="text" name="system.source.custom" value="{{source.source.custom}}" 
-                       placeholder="Homebrew" />
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Custom Reference</label>
+                <input type="text" name="system.source.custom" value="{{source.source.custom}}"
+                       placeholder="Homebrew" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
             </div>
           </div>

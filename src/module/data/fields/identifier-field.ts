@@ -5,9 +5,15 @@
  * Follows DND5E pattern: permissive validation (accepts legacy formats)
  * but provides helper for generating kebab-case from names.
  */
-export default class IdentifierField extends foundry.data.fields.StringField {
+// Extend via `any` access to bypass fvtt-types AnyDataField private-brand mismatch.
+// Instances of IdentifierField are structurally incompatible with DataField.Any when
+// the base is referenced through the typed namespace because StringField's #assignmentType
+// brand doesn't widen to `any`. Using an `any` base makes the subclass brand-free,
+// which satisfies DataField.Any at call sites. The runtime class is still StringField.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default class IdentifierField extends (foundry.data as any).fields.StringField {
     /** @inheritdoc */
-    static get _defaults(): Record<string, unknown> {
+    static get _defaults() {
         return foundry.utils.mergeObject(super._defaults, {
             nullable: false,
             blank: true,
@@ -18,7 +24,7 @@ export default class IdentifierField extends foundry.data.fields.StringField {
     /* -------------------------------------------- */
 
     /** @inheritdoc */
-    _validateType(value: string): void {
+    protected override _validateType(value: string): void {
         if (value === '') return;
 
         // Permissive validation - allows letters (any case), numbers, underscores, and hyphens

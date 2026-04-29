@@ -29,12 +29,12 @@
 
     {{!-- Warning Messages --}}
     {{#if (eq system.wounds.value 0)}}
-    <div class="wh40k-wounds-alert wh40k-alert-critical">
+    <div class="wh40k-wounds-alert wh40k-alert-critical tw-flex tw-items-center tw-gap-2">
         <i class="fas fa-skull-crossbones"></i>
         <span>CRITICALLY WOUNDED - At 0 wounds!</span>
     </div>
     {{else if (lt (percent system.wounds.value system.wounds.max) 25)}}
-    <div class="wh40k-wounds-alert wh40k-alert-warning">
+    <div class="wh40k-wounds-alert wh40k-alert-warning tw-flex tw-items-center tw-gap-2">
         <i class="fas fa-exclamation-triangle"></i>
         <span>Severely Injured - Below 25%</span>
     </div>
@@ -43,16 +43,16 @@
     {{!-- Critical Damage Pip System - Show if critical > 0 OR wounds = 0 --}}
     {{#if (or (gt system.wounds.critical 0) (eq system.wounds.value 0))}}
     <div class="wh40k-wounds-critical-section">
-        <div class="wh40k-critical-header">
-            <span class="wh40k-critical-title">
+        <div class="wh40k-critical-header tw-flex tw-items-center tw-justify-between">
+            <span class="wh40k-critical-title tw-flex tw-items-center tw-gap-1 tw-font-semibold tw-text-[0.8rem] tw-uppercase tw-tracking-[0.05em]">
                 <i class="fas fa-skull"></i> Critical Damage
             </span>
-            <span class="wh40k-critical-value">{{system.wounds.critical}} / 10</span>
+            <span class="wh40k-critical-value tw-text-[0.8rem] tw-font-bold">{{system.wounds.critical}} / 10</span>
         </div>
-        <div class="wh40k-critical-pips">
+        <div class="wh40k-critical-pips tw-flex tw-flex-wrap">
             {{#each (array 1 2 3 4 5 6 7 8 9 10) as |level|}}
                 <button type="button"
-                        class="wh40k-crit-pip {{#if (lte level ../system.wounds.critical)}}wh40k-crit-pip--filled{{/if}}"
+                        class="wh40k-crit-pip {{#if (lte level ../system.wounds.critical)}}wh40k-crit-pip--filled{{/if}} tw-cursor-pointer"
                         data-action="setCriticalPip"
                         data-crit-level="{{level}}"
                         title="Critical Level {{level}} - Click to toggle">
@@ -68,7 +68,7 @@
 
         {{!-- Max Wounds Editor --}}
         <div class="wh40k-wounds-edit-section">
-            <div class="wh40k-wounds-edit-header">
+            <div class="wh40k-wounds-edit-header tw-flex tw-items-center tw-justify-between tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]">
                 <i class="fas fa-cog"></i> Edit Wounds
             </div>
 
@@ -92,13 +92,13 @@
 
         {{!-- Critical Damage Editor --}}
         <div class="wh40k-wounds-edit-section">
-            <div class="wh40k-wounds-edit-header">
+            <div class="wh40k-wounds-edit-header tw-flex tw-items-center tw-justify-between tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]">
                 <i class="fas fa-skull"></i> Critical Damage
             </div>
 
-            <div class="wh40k-critical-controls">
+            <div class="wh40k-critical-controls tw-flex tw-items-center">
                 <button type="button"
-                        class="wh40k-critical-btn wh40k-btn-minus"
+                        class="wh40k-critical-btn wh40k-btn-minus tw-cursor-pointer"
                         data-action="decrement"
                         data-field="system.wounds.critical"
                         data-min="0"
@@ -108,7 +108,7 @@
 
                 <input type="number"
                        data-dtype="Number"
-                       class="wh40k-critical-input"
+                       class="wh40k-critical-input tw-text-center tw-font-bold"
                        name="system.wounds.critical"
                        value="{{source.wounds.critical}}"
                        min="0"
@@ -116,7 +116,7 @@
                        title="Critical Damage (0-10)" />
 
                 <button type="button"
-                        class="wh40k-critical-btn wh40k-btn-plus"
+                        class="wh40k-critical-btn wh40k-btn-plus tw-cursor-pointer"
                         data-action="increment"
                         data-field="system.wounds.critical"
                         data-max="10"
@@ -126,10 +126,10 @@
             </div>
 
             {{!-- Critical Pips (Edit Mode) --}}
-            <div class="wh40k-critical-pips wh40k-critical-pips-edit">
+            <div class="wh40k-critical-pips wh40k-critical-pips-edit tw-flex tw-flex-wrap">
                 {{#each (array 1 2 3 4 5 6 7 8 9 10) as |level|}}
                     <button type="button"
-                            class="wh40k-crit-pip {{#if (lte level ../system.wounds.critical)}}wh40k-crit-pip--filled{{/if}}"
+                            class="wh40k-crit-pip {{#if (lte level ../system.wounds.critical)}}wh40k-crit-pip--filled{{/if}} tw-cursor-pointer"
                             data-action="setCriticalPip"
                             data-crit-level="{{level}}"
                             title="Set Critical to {{level}}">
@@ -142,10 +142,10 @@
         {{!-- Critical Injuries List --}}
         {{#if (any actor.items "isCriticalInjury")}}
         <div class="wh40k-wounds-edit-section">
-            <div class="wh40k-wounds-edit-header">
+            <div class="wh40k-wounds-edit-header tw-flex tw-items-center tw-justify-between tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]">
                 <i class="fas fa-notes-medical"></i> Critical Injuries
                 <button type="button"
-                        class="wh40k-add-btn-small" data-action="itemCreate"
+                        class="wh40k-add-btn-small tw-cursor-pointer" data-action="itemCreate"
                         data-type="criticalInjury"
                         title="Add Critical Injury">
                     <i class="fas fa-plus"></i>
@@ -155,16 +155,16 @@
             <div class="wh40k-injury-list">
                 {{#each actor.items as |item|}}
                     {{#if item.isCriticalInjury}}
-                    <div class="wh40k-injury-card">
+                    <div class="wh40k-injury-card tw-flex tw-items-center tw-justify-between">
                         <button type="button"
-                                class="wh40k-injury-name item-edit"
+                                class="wh40k-injury-name item-edit tw-cursor-pointer tw-flex tw-items-center tw-gap-1"
                                 data-item-id="{{item.id}}"
                                 title="Edit {{item.name}}">
                             <i class="fas fa-band-aid"></i>
                             {{item.name}}
                         </button>
                         <button type="button"
-                                class="wh40k-injury-delete item-delete"
+                                class="wh40k-injury-delete item-delete tw-cursor-pointer"
                                 data-item-id="{{item.id}}"
                                 title="Remove {{item.name}}">
                             <i class="fas fa-times"></i>
@@ -176,16 +176,16 @@
         </div>
         {{else}}
         <div class="wh40k-wounds-edit-section">
-            <div class="wh40k-wounds-edit-header">
+            <div class="wh40k-wounds-edit-header tw-flex tw-items-center tw-justify-between tw-text-[0.8rem] tw-font-bold tw-uppercase tw-tracking-[0.05em]">
                 <i class="fas fa-notes-medical"></i> Critical Injuries
                 <button type="button"
-                        class="wh40k-add-btn-small" data-action="itemCreate"
+                        class="wh40k-add-btn-small tw-cursor-pointer" data-action="itemCreate"
                         data-type="criticalInjury"
                         title="Add Critical Injury">
                     <i class="fas fa-plus"></i>
                 </button>
             </div>
-            <div class="wh40k-wounds-empty">
+            <div class="wh40k-wounds-empty tw-flex tw-items-center tw-gap-2">
                 <i class="fas fa-shield-alt"></i>
                 <span>No critical injuries</span>
             </div>

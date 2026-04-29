@@ -2,21 +2,21 @@
      Displays source book, page, and custom reference fields.
      Requires system.source object from DescriptionTemplate.
 }}
-<div class="wh40k-item-sheet__panel wh40k-source-panel">
-    <header class="wh40k-panel-header">
-        <i class="fas fa-book"></i>
-        <span>{{localize "WH40K.Source.Label"}}</span>
+<div class="tw-flex tw-flex-col">
+    <header class="tw-flex tw-flex-row tw-items-center tw-gap-1.5 tw-px-2 tw-py-1.5 tw-border-b tw-border-solid tw-border-black/10 tw-bg-gradient-to-b tw-from-gold/15 tw-to-gold/5">
+        <i class="fas fa-book tw-text-gold"></i>
+        <span class="tw-font-display tw-font-semibold">{{localize "WH40K.Source.Label"}}</span>
     </header>
 
-    <div class="wh40k-panel-body">
-        <div class="wh40k-field-group">
-            <div class="wh40k-field">
-                <label class="wh40k-field__label">
+    <div class="tw-p-2 tw-flex tw-flex-col tw-gap-2">
+        <div class="tw-grid tw-grid-cols-[1fr_auto] tw-gap-2">
+            <div class="tw-flex tw-flex-col tw-gap-0.5">
+                <label class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">
                     <i class="fas fa-book"></i>
                     {{localize "WH40K.Source.Book"}}
                 </label>
                 <input
-                    class="wh40k-field__input"
+                    class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm"
                     name="system.source.book"
                     type="text"
                     value="{{source.source.book}}"
@@ -24,10 +24,10 @@
                 />
             </div>
 
-            <div class="wh40k-field wh40k-field--inline">
-                <label class="wh40k-field__label">{{localize "WH40K.Source.Page"}}</label>
+            <div class="tw-flex tw-flex-col tw-gap-0.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">{{localize "WH40K.Source.Page"}}</label>
                 <input
-                    class="wh40k-field__input wh40k-field__input--short"
+                    class="tw-w-24 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm"
                     name="system.source.page"
                     type="text"
                     value="{{source.source.page}}"
@@ -36,13 +36,13 @@
             </div>
         </div>
 
-        <div class="wh40k-field">
-            <label class="wh40k-field__label">
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+            <label class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">
                 <i class="fas fa-pen"></i>
                 {{localize "WH40K.Source.Custom"}}
             </label>
             <input
-                class="wh40k-field__input"
+                class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm"
                 name="system.source.custom"
                 type="text"
                 value="{{source.source.custom}}"
@@ -51,7 +51,7 @@
         </div>
 
         {{#if system.sourceReference}}
-            <div class="wh40k-source-display">
+            <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-sm tw-italic tw-text-gray-500">
                 <i class="fas fa-info-circle"></i>
                 <span>{{system.sourceReference}}</span>
             </div>

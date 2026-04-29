@@ -1,43 +1,47 @@
-<div class="wh40k-panel spacer wh40k-grid-col-3">
+<div class="wh40k-panel tw-col-span-3">
     <h1 class="wh40k-panel-header">
-        <i class="fas fa-tachometer-alt"></i>
-        {{localize "WH40K.Vehicle.Movement"}}
+        <span class="wh40k-panel-title">
+            <i class="fas fa-tachometer-alt"></i>
+            {{localize "WH40K.Vehicle.Movement"}}
+        </span>
     </h1>
-    <div class="wh40k-field__wrapper">
-        <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Size"}}</span>
-        <select class="wh40k-field__input" name="system.size">
-            {{selectOptions dh.vehicleSizes selected=source.size labelAttr="label" valueAttr="@key"}}
-        </select>
-        <small class="wh40k-field__hint">{{system.sizeLabel}} ({{system.sizeDescriptor}})</small>
-    </div>
-    <div class="wh40k-field__wrapper">
-        <span class="wh40k-field__header">{{localize "WH40K.Vehicle.SizeDescriptor"}}</span>
-        <input type="text" class="wh40k-field__input" name="system.sizeDescriptor" value="{{source.sizeDescriptor}}" placeholder="e.g., 20m" />
-    </div>
-    <div class="wh40k-field__wrapper">
-        <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Speed.Cruising"}}</span>
-        <div class="wh40k-input-with-unit">
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.speed.cruising" value="{{source.speed.cruising}}" />
-            <span class="wh40k-unit">kph</span>
+    <div class="tw-flex tw-flex-col tw-gap-2 tw-p-2">
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Size"}}</span>
+            <select class="wh40k-field__input" name="system.size">
+                {{selectOptions dh.vehicleSizes selected=source.size labelAttr="label" valueAttr="@key"}}
+            </select>
+            <small class="tw-text-xs tw-opacity-60 tw-italic">{{system.sizeLabel}} ({{system.sizeDescriptor}})</small>
         </div>
-    </div>
-    <div class="wh40k-field__wrapper">
-        <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Speed.Tactical"}}</span>
-        <div class="wh40k-input-with-unit">
-            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.speed.tactical" value="{{source.speed.tactical}}" />
-            <span class="wh40k-unit">m</span>
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.SizeDescriptor"}}</span>
+            <input type="text" class="wh40k-field__input" name="system.sizeDescriptor" value="{{source.sizeDescriptor}}" placeholder="e.g., 20m" />
         </div>
-    </div>
-    <div class="wh40k-field__wrapper">
-        <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Manoeuverability"}}</span>
-        <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.manoeuverability" value="{{source.manoeuverability}}" />
-    </div>
-    <div class="wh40k-field__wrapper wh40k-field__full">
-        <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Speed.Notes"}}</span>
-        <input type="text" class="wh40k-field__input" name="system.speed.notes" value="{{source.speed.notes}}" placeholder="Speed modifiers, special rules..." />
-    </div>
-    <div class="wh40k-movement-summary">
-        <strong>{{localize "WH40K.Vehicle.Speed.Summary"}}:</strong>
-        {{system.speedSummary}}
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Speed.Cruising"}}</span>
+            <div class="tw-flex tw-items-center tw-gap-1">
+                <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.speed.cruising" value="{{source.speed.cruising}}" />
+                <span class="tw-text-xs tw-opacity-70 tw-shrink-0">kph</span>
+            </div>
+        </div>
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Speed.Tactical"}}</span>
+            <div class="tw-flex tw-items-center tw-gap-1">
+                <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.speed.tactical" value="{{source.speed.tactical}}" />
+                <span class="tw-text-xs tw-opacity-70 tw-shrink-0">m</span>
+            </div>
+        </div>
+        <div class="wh40k-field__wrapper">
+            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Manoeuverability"}}</span>
+            <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.manoeuverability" value="{{source.manoeuverability}}" />
+        </div>
+        <div class="wh40k-field__wrapper tw-col-span-full">
+            <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Speed.Notes"}}</span>
+            <input type="text" class="wh40k-field__input" name="system.speed.notes" value="{{source.speed.notes}}" placeholder="Speed modifiers, special rules..." />
+        </div>
+        <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-xs tw-flex-wrap">
+            <strong>{{localize "WH40K.Vehicle.Speed.Summary"}}:</strong>
+            {{system.speedSummary}}
+        </div>
     </div>
 </div>

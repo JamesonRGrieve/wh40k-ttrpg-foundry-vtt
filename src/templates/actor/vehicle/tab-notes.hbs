@@ -1,11 +1,11 @@
 {{!-- Vehicle Notes Tab --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
-    <div class="wh40k-vehicle-notes">
-        
+    <div class="tw-flex tw-flex-col tw-gap-4">
+
         {{!-- GM Notes --}}
-        <div class="wh40k-vehicle-panel wh40k-vehicle-gm-notes">
-            <h3 class="wh40k-vehicle-panel-title">
-                <i class="fas fa-sticky-note"></i>
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-sticky-note tw-text-gold"></i>
                 GM Notes
             </h3>
             <div class="editor-content" data-edit="system.quickNotes">
@@ -14,9 +14,9 @@
         </div>
 
         {{!-- Tactics --}}
-        <div class="wh40k-vehicle-panel wh40k-vehicle-tactics">
-            <h3 class="wh40k-vehicle-panel-title">
-                <i class="fas fa-chess"></i>
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-chess tw-text-gold"></i>
                 Tactics
             </h3>
             <div class="editor-content" data-edit="system.tactics">
@@ -25,16 +25,17 @@
         </div>
 
         {{!-- Source Reference --}}
-        <div class="wh40k-vehicle-panel wh40k-vehicle-source">
-            <h3 class="wh40k-vehicle-panel-title">
-                <i class="fas fa-book"></i>
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-book tw-text-gold"></i>
                 Source
             </h3>
-            <input type="text" 
-                   name="system.source" 
-                   value="{{source.source}}" 
-                   placeholder="Book reference (e.g., Core Rulebook pg. 123)" />
+            <input type="text"
+                   name="system.source"
+                   value="{{source.source}}"
+                   placeholder="Book reference (e.g., Core Rulebook pg. 123)"
+                   class="tw-w-full tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-text-[#f0f0f0] tw-p-2 tw-rounded-[3px]" />
         </div>
-        
+
     </div>
 </section>
