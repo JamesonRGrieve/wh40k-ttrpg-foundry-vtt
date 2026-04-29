@@ -1,6 +1,6 @@
 import { ConfirmationDialog } from '../applications/dialogs/_module.ts';
 import { prepareAssignDamageRoll } from '../applications/prompts/assign-damage-dialog.ts';
-import { AssignDamageData } from '../rolls/assign-damage-data.ts';
+import { ActorLike, AssignDamageData } from '../rolls/assign-damage-data.ts';
 import { Hit } from '../rolls/damage-data.ts';
 import { uuid, applyRollModeWhispers } from '../rolls/roll-helpers.ts';
 import { DHTargetedActionManager } from './targeted-action-manager.ts';
@@ -199,7 +199,7 @@ export class BasicActionManager {
             return;
         }
 
-        const assignData = new AssignDamageData(targetActor as WH40KBaseActorDocument, hitData);
+        const assignData = new AssignDamageData(targetActor as unknown as ActorLike, hitData);
         await prepareAssignDamageRoll(assignData);
     }
 
@@ -233,7 +233,7 @@ export class BasicActionManager {
             }
         }
 
-        const assignDamageData = new AssignDamageData(targetActor, new Hit());
+        const assignDamageData = new AssignDamageData(targetActor as unknown as ActorLike, new Hit());
         if (ignoreArmour === 'true' || ignoreArmour === 'TRUE') {
             assignDamageData.ignoreArmour = true;
         }
