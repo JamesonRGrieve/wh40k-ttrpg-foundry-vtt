@@ -23,7 +23,7 @@
             {{#each activeModifiers}}
                 <div class="tw-flex tw-justify-between tw-items-center tw-py-1 tw-text-[0.9rem] tw-pl-3 tw-border-l-2 tw-border-[var(--wh40k-border-color)] tw-ml-1">
                     <span class="tw-text-[var(--wh40k-text-muted)] tw-font-medium">{{@key}}</span>
-                    <span class="tw-font-semibold {{#if (gt this 0)}}tw-text-success{{else if (lt this 0)}}tw-text-failure{{/if}}">
+                    <span class="tw-font-semibold {{#if (gt this 0)}}tw-text-success{{else if (lt this 0)}}tw-text-failure wh40k-roll-card__value--negative{{/if}}">
                         {{#if (gt this 0)}}+{{/if}}{{this}}
                     </span>
                 </div>
