@@ -67,6 +67,13 @@ const CLASS_ATTR_RE = /class(?:Name)?\s*=\s*"([^"]*)"|class(?:Name)?\s*=\s*'([^'
  *                                  pattern (`<word>_details`, `<word>_section`).
  *                                  These are HBS `hideIfNot` targets, not CSS classes.
  *
+ * 5. HBS dynamic-prefix fragments  — tokens like `-bar-container`, `-bar-fill`,
+ *                                  `-percent` that are artifacts of stripping a leading
+ *                                  `{{someVar}}` from a class like `{{cssPrefix}}-bar`.
+ *                                  They start with `-` and contain only word chars and
+ *                                  hyphens — they are not valid CSS class names and
+ *                                  cannot match any real rule in the project stylesheet.
+ *
  * Anything else is treated as a project CSS class (hasNonTw = true).
  */
 const FA_RE = /^fa[rsbldt]$|^fa-(solid|regular|brands|light|thin|duotone)$|^fa-/;
@@ -99,14 +106,32 @@ const JS_HOOKS = new Set([
     'wh40k-roll-card__value--negative',
     // tests query modifier count badge by class name — test selector
     'wh40k-modifier-count',
+    // tests/panel-partial.test.ts queries all panel scaffold elements by class — test selectors
+    'wh40k-panel',
+    'wh40k-panel-header',
+    'wh40k-panel-title',
+    'wh40k-panel-body',
+    'wh40k-panel-count',
+    // tests/vital-partials.test.ts queries threshold markers by class name — test selector
+    'wh40k-threshold-marker',
     // Google Material Icons library — third-party icon font, not project CSS
     'material-icons',
     'material-icons-outlined',
     'material-icons-round',
     'material-icons-sharp',
     'material-icons-two-tone',
+    // character-sheet.ts / vehicle-sheet.ts / starship-sheet.ts use navSelector:'nav.wh40k-navigation'
+    // primary-sheet-mixin.ts queries closest('.wh40k-navigation__item, .wh40k-nav-item') and
+    // toggles 'active' on it — permanent JS selectors, not project CSS classes
+    'wh40k-navigation',
+    'wh40k-navigation__item',
+    'wh40k-nav-item',
 ]);
 const SECTION_ID_RE = /^[a-z][a-z0-9_]*_(details|section|panel|body|header)$/;
+// Tokens like `-bar-container`, `-bar-fill`, `-percent` are artifacts of stripping the
+// leading `{{someVar}}` from a class attr like `{{cssPrefix}}-bar-container`. They start
+// with a hyphen and contain only word characters and hyphens — not valid CSS class names.
+const HBS_FRAGMENT_RE = /^-[a-z][a-z0-9-]*$/;
 
 /** Return true when a bare utility string is a Tailwind utility (any polarity). */
 function isTwBare(s) {
@@ -150,6 +175,7 @@ function isTwOrExempt(token) {
     if (JS_HOOKS.has(token)) return true;
     if (ROLL_CONTROL_RE.test(token)) return true;
     if (SECTION_ID_RE.test(token)) return true;
+    if (HBS_FRAGMENT_RE.test(token)) return true;
     return false;
 }
 
