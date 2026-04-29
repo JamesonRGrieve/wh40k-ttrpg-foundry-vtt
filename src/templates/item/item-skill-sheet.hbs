@@ -1,23 +1,23 @@
 {{!-- Skill Item Sheet - Imperial Gothic Redesign --}}
-<div class="wh40k-item-sheet wh40k-skill-sheet">
-    <form autocomplete="off">
+<div class="wh40k-item-sheet wh40k-skill-sheet tw-flex tw-flex-col tw-h-full">
+    <form autocomplete="off" class="tw-flex tw-flex-col tw-flex-1 tw-min-h-0">
         {{!-- Header --}}
-        <header class="wh40k-item-header">
-            <div class="wh40k-item-image" data-edit="img">
-                <img src="{{item.img}}" alt="{{item.name}}" />
+        <header class="wh40k-item-header tw-grid tw-gap-3 tw-px-4 tw-py-3 tw-shrink-0" style="grid-template-columns: 80px 1fr;">
+            <div class="wh40k-item-image tw-w-20 tw-h-20 tw-rounded-md tw-overflow-hidden tw-cursor-pointer tw-shrink-0 tw-border tw-border-solid tw-border-gold" data-edit="img">
+                <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
             </div>
-            <div class="wh40k-item-title">
-                <input type="text" class="wh40k-item-title__name" name="name" value="{{item.name}}" placeholder="Skill Name" />
-                <div class="wh40k-item-meta">
-                    <span class="wh40k-meta-badge wh40k-meta-badge--skill">
+            <div class="wh40k-item-title tw-flex tw-flex-col tw-justify-center tw-gap-1 tw-min-w-0">
+                <input type="text" class="wh40k-item-title__name tw-font-display tw-text-xl tw-text-gold tw-bg-transparent tw-border-none tw-w-full tw-px-1 tw-py-0.5" name="name" value="{{item.name}}" placeholder="Skill Name" />
+                <div class="wh40k-item-meta tw-flex tw-flex-wrap tw-gap-1 tw-mt-1 tw-items-center">
+                    <span class="wh40k-meta-badge wh40k-meta-badge--skill tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
                         <i class="fas fa-graduation-cap"></i> Skill
                     </span>
-                    <select name="system.skillType" class="wh40k-meta-select">
+                    <select name="system.skillType" class="wh40k-meta-select tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
                         <option value="basic" {{#if (eq item.system.skillType "basic")}}selected{{/if}}>Basic</option>
                         <option value="advanced" {{#if (eq item.system.skillType "advanced")}}selected{{/if}}>Advanced</option>
                         <option value="specialist" {{#if (eq item.system.skillType "specialist")}}selected{{/if}}>Specialist</option>
                     </select>
-                    <select name="system.characteristic" class="wh40k-meta-select">
+                    <select name="system.characteristic" class="wh40k-meta-select tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
                         <option value="agility" {{#if (eq item.system.characteristic "agility")}}selected{{/if}}>Agility</option>
                         <option value="ballisticSkill" {{#if (eq item.system.characteristic "ballisticSkill")}}selected{{/if}}>Ballistic Skill</option>
                         <option value="fellowship" {{#if (eq item.system.characteristic "fellowship")}}selected{{/if}}>Fellowship</option>
@@ -29,32 +29,32 @@
                         <option value="willpower" {{#if (eq item.system.characteristic "willpower")}}selected{{/if}}>Willpower</option>
                     </select>
                 </div>
-                
+
                 {{!-- Badges Row --}}
-                <div class="wh40k-skill-badges">
+                <div class="wh40k-skill-badges tw-flex tw-flex-wrap tw-gap-1 tw-mt-1">
                     {{!-- Skill Type Badge --}}
                     {{#if (eq item.system.skillType "basic")}}
-                    <span class="wh40k-skill-type-badge wh40k-skill-type-badge--basic">
+                    <span class="wh40k-skill-type-badge wh40k-skill-type-badge--basic tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
                         <i class="fas fa-circle-check"></i> Basic
                     </span>
                     {{else if (eq item.system.skillType "advanced")}}
-                    <span class="wh40k-skill-type-badge wh40k-skill-type-badge--advanced">
+                    <span class="wh40k-skill-type-badge wh40k-skill-type-badge--advanced tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
                         <i class="fas fa-star"></i> Advanced
                     </span>
                     {{else if (eq item.system.skillType "specialist")}}
-                    <span class="wh40k-skill-type-badge wh40k-skill-type-badge--specialist">
+                    <span class="wh40k-skill-type-badge wh40k-skill-type-badge--specialist tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
                         <i class="fas fa-flask"></i> Specialist
                     </span>
                     {{/if}}
-                    
+
                     {{!-- Characteristic Badge --}}
-                    <span class="wh40k-char-badge">
+                    <span class="wh40k-char-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
                         <i class="fas fa-dice-d20"></i> {{capitalize item.system.characteristicAbbr}}
                     </span>
-                    
+
                     {{!-- Descriptor Badge (if exists) --}}
                     {{#if item.system.descriptor}}
-                    <span class="wh40k-descriptor-badge" title="{{item.system.descriptor}}">
+                    <span class="wh40k-descriptor-badge tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="{{item.system.descriptor}}">
                         <i class="fas fa-tag"></i> {{item.system.descriptor}}
                     </span>
                     {{/if}}
@@ -63,189 +63,187 @@
         </header>
 
         {{!-- Body --}}
-        <div class="wh40k-item-body">
-            
+        <div class="wh40k-item-body tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-3">
+
             {{!-- Properties Panel --}}
-            <section class="wh40k-skill-properties">
-                <h3 class="wh40k-section-title">
-                    <i class="fas fa-info-circle"></i> Properties
+            <section class="wh40k-skill-properties tw-mb-3">
+                <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+                    <i class="fas fa-info-circle tw-text-gold"></i> Properties
                 </h3>
-                
-                <div class="wh40k-properties-grid">
-                    <div class="wh40k-property">
-                        <label>Characteristic</label>
-                        <div class="wh40k-property-value">{{item.system.characteristicLabel}}</div>
+
+                <div class="wh40k-properties-grid tw-grid tw-grid-cols-2 tw-gap-3">
+                    <div class="wh40k-property tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-xs tw-opacity-70">Characteristic</label>
+                        <div class="wh40k-property-value tw-text-sm">{{item.system.characteristicLabel}}</div>
                     </div>
-                    
-                    <div class="wh40k-property">
-                        <label>Skill Type</label>
-                        <div class="wh40k-property-value">{{capitalize item.system.skillType}}</div>
+
+                    <div class="wh40k-property tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-xs tw-opacity-70">Skill Type</label>
+                        <div class="wh40k-property-value tw-text-sm">{{capitalize item.system.skillType}}</div>
                     </div>
-                    
-                    <div class="wh40k-property">
-                        <label>Use Time</label>
-                        <input type="text" name="system.useTime" value="{{item.system.useTime}}" placeholder="Half Action" />
+
+                    <div class="wh40k-property tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-xs tw-opacity-70">Use Time</label>
+                        <input type="text" name="system.useTime" value="{{item.system.useTime}}" placeholder="Half Action" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
                     </div>
-                    
-                    <div class="wh40k-property">
-                        <label>Untrained Use</label>
-                        <div class="wh40k-property-value">
+
+                    <div class="wh40k-property tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-xs tw-opacity-70">Untrained Use</label>
+                        <div class="wh40k-property-value tw-text-sm">
                             {{#if item.system.isBasic}}
-                                <i class="fas fa-check" style="color: #27ae60;"></i> Can use untrained
+                                <i class="fas fa-check tw-text-success"></i> Can use untrained
                             {{else}}
-                                <i class="fas fa-times" style="color: #e74c3c;"></i> Cannot use untrained
+                                <i class="fas fa-times tw-text-crimson"></i> Cannot use untrained
                             {{/if}}
                         </div>
                     </div>
                 </div>
-                
+
                 {{!-- Aptitudes --}}
                 {{#if item.system.aptitudes.length}}
-                <div class="wh40k-property" style="margin-top: 1rem;">
-                    <label>Aptitudes</label>
-                    <div class="wh40k-aptitudes-list">
+                <div class="wh40k-property tw-flex tw-flex-col tw-gap-1 tw-mt-4">
+                    <label class="tw-text-xs tw-opacity-70">Aptitudes</label>
+                    <div class="wh40k-aptitudes-list tw-flex tw-flex-wrap tw-gap-1">
                         {{#each item.system.aptitudes}}
-                        <span class="wh40k-aptitude-tag">{{this}}</span>
+                        <span class="wh40k-aptitude-tag tw-inline-flex tw-items-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs">{{this}}</span>
                         {{/each}}
                     </div>
                 </div>
                 {{else}}
-                <div class="wh40k-property" style="margin-top: 1rem;">
-                    <label>Aptitudes</label>
-                    <input type="text" name="system.aptitudes" value="" placeholder="Agility, General (comma-separated)" />
+                <div class="wh40k-property tw-flex tw-flex-col tw-gap-1 tw-mt-4">
+                    <label class="tw-text-xs tw-opacity-70">Aptitudes</label>
+                    <input type="text" name="system.aptitudes" value="" placeholder="Agility, General (comma-separated)" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
                 </div>
                 {{/if}}
             </section>
-            
+
             {{!-- Descriptor Panel --}}
             {{#if item.system.descriptor}}
-            <section class="wh40k-skill-descriptor">
-                <h3 class="wh40k-section-title">
-                    <i class="fas fa-align-left"></i> Description
+            <section class="wh40k-skill-descriptor tw-mb-3">
+                <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+                    <i class="fas fa-align-left tw-text-gold"></i> Description
                 </h3>
-                <div class="wh40k-descriptor-text">
+                <div class="wh40k-descriptor-text tw-text-sm tw-p-2 tw-rounded-sm">
                     {{item.system.descriptor}}
                 </div>
             </section>
             {{/if}}
-            
+
             {{!-- Specializations (for specialist skills) --}}
             {{#if (eq item.system.skillType "specialist")}}
-            <section class="wh40k-skill-specializations">
-                <h3 class="wh40k-section-title">
-                    <i class="fas fa-list-ul"></i> Specializations
+            <section class="wh40k-skill-specializations tw-mb-3">
+                <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+                    <i class="fas fa-list-ul tw-text-gold"></i> Specializations
                 </h3>
-                
+
                 {{#if item.system.specializations.length}}
-                <div class="wh40k-specializations-list">
+                <div class="wh40k-specializations-list tw-flex tw-flex-wrap tw-gap-1 tw-mb-2">
                     {{#each item.system.specializations}}
-                    <span class="wh40k-specialization-tag">
-                        <i class="fas fa-chevron-right"></i> {{this}}
+                    <span class="wh40k-specialization-tag tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs">
+                        <i class="fas fa-chevron-right tw-text-xs"></i> {{this}}
                     </span>
                     {{/each}}
                 </div>
                 {{/if}}
-                
-                <input type="text" 
-                       class="wh40k-specializations-input" 
-                       name="system.specializations" 
-                       value="{{join item.system.specializations ", "}}" 
-                       placeholder="Imperium, Koronus Expanse, War (comma-separated)" 
-                       style="margin-top: {{#if item.system.specializations.length}}0.75rem{{else}}0{{/if}};" />
+
+                <input type="text"
+                       class="wh40k-specializations-input tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
+                       name="system.specializations"
+                       value="{{join item.system.specializations ", "}}"
+                       placeholder="Imperium, Koronus Expanse, War (comma-separated)" />
             </section>
             {{/if}}
-            
+
             {{!-- Uses & Rules Panel --}}
-            <section class="wh40k-skill-uses">
-                <h3 class="wh40k-section-title">
-                    <i class="fas fa-book-open"></i> Uses &amp; Rules
+            <section class="wh40k-skill-uses tw-mb-3">
+                <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+                    <i class="fas fa-book-open tw-text-gold"></i> Uses &amp; Rules
                 </h3>
-                <div class="wh40k-uses-content editor" data-edit="system.uses">
+                <div class="wh40k-uses-content editor tw-text-sm" data-edit="system.uses">
                     {{{item.system.uses}}}
                 </div>
             </section>
-            
+
             {{!-- Difficulty Examples Table --}}
-            <section class="wh40k-skill-difficulties">
-                <h3 class="wh40k-section-title">
-                    <i class="fas fa-chart-line"></i> Example Difficulties
+            <section class="wh40k-skill-difficulties tw-mb-3">
+                <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+                    <i class="fas fa-chart-line tw-text-gold"></i> Example Difficulties
                 </h3>
-                
+
                 {{#if item.system.exampleDifficulties.length}}
-                <table class="wh40k-difficulties-table">
+                <table class="wh40k-difficulties-table tw-w-full tw-border-collapse">
                     <thead>
                         <tr>
-                            <th>Difficulty</th>
-                            <th style="text-align: center;">Modifier</th>
-                            <th>Example</th>
+                            <th class="tw-px-2 tw-py-1 tw-text-left tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70 tw-border-b tw-border-solid">Difficulty</th>
+                            <th class="tw-px-2 tw-py-1 tw-text-center tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70 tw-border-b tw-border-solid">Modifier</th>
+                            <th class="tw-px-2 tw-py-1 tw-text-left tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70 tw-border-b tw-border-solid">Example</th>
                         </tr>
                     </thead>
                     <tbody>
                         {{#each item.system.exampleDifficulties}}
-                        <tr>
-                            <td class="wh40k-difficulty-name">{{this.difficulty}}</td>
-                            <td class="wh40k-difficulty-modifier {{#if (gt this.modifier 0)}}positive{{else if (lt this.modifier 0)}}negative{{else}}neutral{{/if}}">
+                        <tr class="tw-border-b tw-border-solid tw-border-opacity-10">
+                            <td class="wh40k-difficulty-name tw-px-2 tw-py-1 tw-text-sm">{{this.difficulty}}</td>
+                            <td class="wh40k-difficulty-modifier tw-px-2 tw-py-1 tw-text-sm tw-text-center {{#if (gt this.modifier 0)}}tw-text-success positive{{else if (lt this.modifier 0)}}tw-text-crimson negative{{else}}tw-opacity-70 neutral{{/if}}">
                                 {{#if (gt this.modifier 0)}}+{{/if}}{{this.modifier}}
                             </td>
-                            <td>{{this.example}}</td>
+                            <td class="tw-px-2 tw-py-1 tw-text-sm">{{this.example}}</td>
                         </tr>
                         {{/each}}
                     </tbody>
                 </table>
                 {{else}}
-                <div class="wh40k-difficulties-empty">
+                <div class="wh40k-difficulties-empty tw-flex tw-items-center tw-gap-2 tw-text-sm tw-italic tw-opacity-70 tw-p-2">
                     <i class="fas fa-info-circle"></i> No example difficulties defined
                 </div>
                 {{/if}}
             </section>
-            
+
             {{!-- Special Rules (optional) --}}
             {{#if item.system.specialRules}}
-            <section class="wh40k-skill-special-rules">
-                <h3 class="wh40k-section-title">
-                    <i class="fas fa-exclamation-triangle"></i> Special Rules
+            <section class="wh40k-skill-special-rules tw-mb-3">
+                <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+                    <i class="fas fa-exclamation-triangle tw-text-gold"></i> Special Rules
                 </h3>
-                <div class="wh40k-special-rules-content editor" data-edit="system.specialRules">
+                <div class="wh40k-special-rules-content editor tw-text-sm" data-edit="system.specialRules">
                     {{{item.system.specialRules}}}
                 </div>
             </section>
             {{/if}}
-            
+
             {{!-- Roll Config (advanced settings) --}}
-            <section class="wh40k-skill-roll-config">
-                <h3 class="wh40k-section-title">
-                    <i class="fas fa-cog"></i> Roll Configuration
+            <section class="wh40k-skill-roll-config tw-mb-3">
+                <h3 class="wh40k-section-title tw-flex tw-items-center tw-gap-2 tw-text-sm tw-font-semibold tw-uppercase tw-tracking-wide tw-mb-2">
+                    <i class="fas fa-cog tw-text-gold"></i> Roll Configuration
                 </h3>
-                
-                <div class="wh40k-config-grid">
-                    <div class="wh40k-config-field">
-                        <label>Default Modifier</label>
-                        <input type="number" name="system.rollConfig.defaultModifier" value="{{item.system.rollConfig.defaultModifier}}" />
+
+                <div class="wh40k-config-grid tw-grid tw-grid-cols-3 tw-gap-3">
+                    <div class="wh40k-config-field tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-xs tw-opacity-70">Default Modifier</label>
+                        <input type="number" name="system.rollConfig.defaultModifier" value="{{item.system.rollConfig.defaultModifier}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
                     </div>
-                    
-                    <div class="wh40k-config-field">
-                        <label>Untrained Penalty</label>
-                        <input type="number" name="system.rollConfig.untrainedPenalty" value="{{item.system.rollConfig.untrainedPenalty}}" />
+
+                    <div class="wh40k-config-field tw-flex tw-flex-col tw-gap-1">
+                        <label class="tw-text-xs tw-opacity-70">Untrained Penalty</label>
+                        <input type="number" name="system.rollConfig.untrainedPenalty" value="{{item.system.rollConfig.untrainedPenalty}}" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
                     </div>
-                    
-                    <div class="wh40k-config-field">
-                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+
+                    <div class="wh40k-config-field tw-flex tw-flex-col tw-gap-1 tw-justify-end">
+                        <label class="tw-flex tw-items-center tw-gap-2 tw-cursor-pointer tw-text-sm">
                             <input type="checkbox" name="system.rollConfig.canBeUsedUntrained" {{checked item.system.rollConfig.canBeUsedUntrained}} />
                             Can Use Untrained
                         </label>
                     </div>
                 </div>
             </section>
-            
+
             {{!-- Footer: Source --}}
-            <div class="wh40k-item-footer" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.08);">
-                <label style="font-size: 0.7rem; text-transform: uppercase; color: var(--wh40k-text-muted); margin-bottom: 0.25rem; display: block;">Source</label>
-                <input type="text" 
-                       class="wh40k-source-input" 
-                       name="system.source" 
-                       value="{{#if item.system.source}}{{item.system.source}}{{else}}Core Rulebook{{/if}}" 
-                       placeholder="Core Rulebook" 
-                       style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: var(--wh40k-text-light);" />
+            <div class="wh40k-item-footer tw-mt-4 tw-pt-4 tw-border-t tw-border-solid tw-border-opacity-10">
+                <label class="tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70 tw-mb-1 tw-block">Source</label>
+                <input type="text"
+                       class="wh40k-source-input tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
+                       name="system.source"
+                       value="{{#if item.system.source}}{{item.system.source}}{{else}}Core Rulebook{{/if}}"
+                       placeholder="Core Rulebook" />
             </div>
         </div>
     </form>

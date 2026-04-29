@@ -1,16 +1,18 @@
-<div class="wh40k-panel spacer wh40k-grid-col-2">
+<div class="wh40k-panel tw-col-span-2">
     <h1 class="wh40k-panel-header">
-        <i class="fas fa-heart-broken"></i>
-        {{localize "WH40K.Vehicle.Integrity"}}
+        <span class="wh40k-panel-title">
+            <i class="fas fa-heart-broken"></i>
+            {{localize "WH40K.Vehicle.Integrity"}}
+        </span>
     </h1>
-    <div class="wh40k-integrity-display">
+    <div class="tw-flex tw-flex-col tw-gap-2 tw-p-2">
         <div class="wh40k-field__wrapper">
             <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Integrity.Max"}}</span>
             <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.integrity.max" value="{{source.integrity.max}}" />
         </div>
         <div class="wh40k-field__wrapper">
             <span class="wh40k-field__header">{{localize "WH40K.Vehicle.Integrity.Current"}}</span>
-            <div class="wh40k-integrity-controls">
+            <div class="tw-flex tw-items-center tw-gap-1">
                 <button class="wh40k-control-button" data-action="adjustIntegrity" data-delta="-1" title="Damage">
                     <i class="fas fa-minus"></i>
                 </button>
@@ -25,14 +27,14 @@
             <input type="number" data-dtype="Number" class="wh40k-field__input" name="system.integrity.critical" value="{{source.integrity.critical}}" />
         </div>
         {{#if actor.system.isDamaged}}
-            <div class="wh40k-integrity-status wh40k-status-damaged">
+            <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-warning tw-text-sm tw-font-semibold tw-px-2 tw-py-1 tw-rounded-md tw-bg-[rgba(200,120,0,0.1)]">
                 <i class="fas fa-exclamation-triangle"></i>
                 {{localize "WH40K.Vehicle.Status.Damaged"}}
                 ({{system.integrityPercentage}}%)
             </div>
         {{/if}}
         {{#if actor.system.isDestroyed}}
-            <div class="wh40k-integrity-status wh40k-status-destroyed">
+            <div class="tw-flex tw-items-center tw-gap-1.5 tw-text-crimson tw-text-sm tw-font-bold tw-px-2 tw-py-1 tw-rounded-md tw-bg-[rgba(180,0,0,0.1)]">
                 <i class="fas fa-skull-crossbones"></i>
                 {{localize "WH40K.Vehicle.Status.Destroyed"}}
             </div>

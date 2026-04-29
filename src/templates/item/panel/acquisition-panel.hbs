@@ -2,40 +2,40 @@
      Weight, Availability, and Craftsmanship configuration for physical items
      Uses PhysicalItemTemplate fields
 --}}
-<div class="wh40k-acquisition-panel">
-  <header class="wh40k-panel-header">
-    <i class="fas fa-coins"></i>
-    <span>{{localize "WH40K.Acquisition"}}</span>
+<div class="tw-flex tw-flex-col">
+  <header class="tw-flex tw-flex-row tw-items-center tw-gap-1.5 tw-px-2 tw-py-1.5 tw-border-b tw-border-solid tw-border-black/10 tw-bg-gradient-to-b tw-from-gold/15 tw-to-gold/5">
+    <i class="fas fa-coins tw-text-gold"></i>
+    <span class="tw-font-display tw-font-semibold">{{localize "WH40K.Acquisition"}}</span>
   </header>
-  
-  <div class="wh40k-panel-body">
-    <div class="wh40k-acquisition-grid">
-      
+
+  <div class="tw-p-2">
+    <div class="tw-grid tw-grid-cols-3 tw-gap-2">
+
       {{!-- Weight --}}
-      <div class="wh40k-field">
-        <label class="wh40k-field__label">
+      <div class="tw-flex tw-flex-col tw-gap-0.5">
+        <label class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">
           <i class="fas fa-weight-hanging"></i>
           {{localize "WH40K.Weight"}}
         </label>
-        <div class="wh40k-field__input-group">
-          <input class="wh40k-field__input wh40k-field__input--numeric" 
-                 name="system.weight" 
-                 type="number" 
-                 value="{{source.weight}}" 
-                 step="0.1" 
-                 min="0" 
+        <div class="tw-flex tw-items-center tw-gap-1">
+          <input class="tw-flex-1 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm"
+                 name="system.weight"
+                 type="number"
+                 value="{{source.weight}}"
+                 step="0.1"
+                 min="0"
                  placeholder="0" />
-          <span class="wh40k-field__unit">kg</span>
+          <span class="tw-text-xs tw-text-gray-500">kg</span>
         </div>
       </div>
-      
+
       {{!-- Availability --}}
-      <div class="wh40k-field">
-        <label class="wh40k-field__label">
+      <div class="tw-flex tw-flex-col tw-gap-0.5">
+        <label class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">
           <i class="fas fa-store"></i>
           {{localize "WH40K.Availability"}}
         </label>
-        <select class="wh40k-field__input wh40k-field__select" name="system.availability">
+        <select class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.availability">
           <option value="">{{localize "WH40K.Availability.None"}}</option>
           {{#each config.availabilities}}
           <option value="{{@key}}" {{selected (eq @key ../system.availability)}}>
@@ -44,14 +44,14 @@
           {{/each}}
         </select>
       </div>
-      
+
       {{!-- Craftsmanship --}}
-      <div class="wh40k-field">
-        <label class="wh40k-field__label">
+      <div class="tw-flex tw-flex-col tw-gap-0.5">
+        <label class="tw-flex tw-items-center tw-gap-1 tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">
           <i class="fas fa-hammer"></i>
           {{localize "WH40K.Craftsmanship"}}
         </label>
-        <select class="wh40k-field__input wh40k-field__select" name="system.craftsmanship">
+        <select class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.craftsmanship">
           {{#each config.craftsmanships}}
           <option value="{{@key}}" {{selected (eq @key ../system.craftsmanship)}}>
             {{label}} ({{signedNumber modifier}})
@@ -59,12 +59,12 @@
           {{/each}}
         </select>
       </div>
-      
+
     </div>
-    
+
     {{!-- Acquisition Info Display --}}
     {{#if system.acquisitionInfo}}
-    <div class="wh40k-acquisition-summary">
+    <div class="tw-flex tw-items-center tw-gap-1.5 tw-mt-2 tw-text-sm tw-italic tw-text-gray-500">
       <i class="fas fa-info-circle"></i>
       <span>{{system.acquisitionInfo}}</span>
     </div>

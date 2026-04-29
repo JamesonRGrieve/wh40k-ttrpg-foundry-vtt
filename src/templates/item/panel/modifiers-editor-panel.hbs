@@ -1,125 +1,298 @@
-{{!-- 
-  Modifiers Display/Editor Panel
-  Shows stat modifiers provided by this item
+{{!-- Modifiers Panel - Full Editor
+     Complete modifier editing interface with tabs for different modifier types
+     Used in Modifiers tab for talents, traits, conditions, etc.
 --}}
+<div class="tw-flex tw-flex-col">
 
-<div class="wh40k-modifiers-display">
-  
-  {{!-- Characteristic Modifiers --}}
-  {{#if item.system.modifiers.characteristics}}
-  <div class="wh40k-modifier-section">
-    <h4 class="wh40k-modifier-section__title">
-      <i class="fas fa-user-circle"></i>
-      Characteristics
-    </h4>
-    <div class="wh40k-modifier-list">
-      {{#each item.system.modifiers.characteristics}}
-      {{#unless (eq this 0)}}
-      <div class="wh40k-modifier-item">
-        <span class="wh40k-modifier-item__name">{{capitalize @key}}</span>
-        <span class="wh40k-modifier-item__value {{#if (gt this 0)}}wh40k-modifier-item__value--positive{{else}}wh40k-modifier-item__value--negative{{/if}}">
-          {{signedNumber this}}
-        </span>
+  {{!-- Modifier Type Tabs --}}
+  <nav class="tw-flex tw-gap-1 tw-border-b tw-border-solid tw-border-black/10 tw-mb-2" data-group="modifiers">
+    <button type="button" class="wh40k-modifiers-tab tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent active" data-tab="basic" data-group="modifiers">
+      <i class="fas fa-plus-circle"></i>
+      <span>Basic</span>
+    </button>
+    <button type="button" class="wh40k-modifiers-tab tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent" data-tab="situational" data-group="modifiers">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span>Situational</span>
+    </button>
+    <button type="button" class="wh40k-modifiers-tab tw-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-text-sm tw-font-semibold tw-border-b-2 tw-border-solid tw-border-transparent" data-tab="advanced" data-group="modifiers">
+      <i class="fas fa-cog"></i>
+      <span>Advanced</span>
+    </button>
+  </nav>
+
+  {{!-- Basic Modifiers Tab --}}
+  <div class="wh40k-modifiers-content tw-flex tw-flex-col tw-gap-3 active" data-tab="basic" data-group="modifiers">
+
+    {{!-- Characteristic Modifiers --}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5">
+      <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
+        <i class="fas fa-user-circle"></i>
+        Characteristics
+      </h4>
+      <div class="tw-grid tw-grid-cols-3 tw-gap-2">
+        {{#each config.characteristics}}
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center" title="{{label}}">
+            {{short}}
+          </label>
+          <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
+                 name="system.modifiers.characteristics.{{@key}}"
+                 type="number"
+                 value="{{lookup ../system.modifiers.characteristics @key}}"
+                 placeholder="0" />
+        </div>
+        {{/each}}
       </div>
-      {{/unless}}
-      {{/each}}
+    </div>
+
+    {{!-- Skill Modifiers --}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5">
+      <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
+        <i class="fas fa-book"></i>
+        Skills
+      </h4>
+      <div class="tw-flex tw-flex-col tw-gap-1">
+        {{#each system.modifiers.skills}}
+        <div class="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-py-1 tw-border-b tw-border-solid tw-border-black/5">
+          <label class="tw-text-sm tw-flex-1">{{capitalize @key}}</label>
+          <input class="tw-w-20 tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-0.5 tw-text-sm tw-text-center"
+                 name="system.modifiers.skills.{{@key}}"
+                 type="number"
+                 value="{{this}}"
+                 placeholder="0" />
+          <button type="button"
+                  class="wh40k-btn-control wh40k-btn-control--remove"
+                  data-action="removeSkillModifier"
+                  data-skill="{{@key}}"
+                  title="Remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        {{/each}}
+
+        <button type="button" class="wh40k-btn-secondary wh40k-btn-add tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start" data-action="addSkillModifier">
+          <i class="fas fa-plus"></i>
+          Add Skill Modifier
+        </button>
+      </div>
+    </div>
+
+    {{!-- Combat Modifiers --}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5">
+      <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
+        <i class="fas fa-sword"></i>
+        Combat
+      </h4>
+      <div class="tw-grid tw-grid-cols-3 tw-gap-2">
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Attack</label>
+          <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
+                 name="system.modifiers.combat.attack"
+                 type="number"
+                 value="{{source.modifiers.combat.attack}}"
+                 placeholder="0" />
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Damage</label>
+          <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
+                 name="system.modifiers.combat.damage"
+                 type="number"
+                 value="{{source.modifiers.combat.damage}}"
+                 placeholder="0" />
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Penetration</label>
+          <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
+                 name="system.modifiers.combat.penetration"
+                 type="number"
+                 value="{{source.modifiers.combat.penetration}}"
+                 placeholder="0" />
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Defense</label>
+          <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
+                 name="system.modifiers.combat.defense"
+                 type="number"
+                 value="{{source.modifiers.combat.defense}}"
+                 placeholder="0" />
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Initiative</label>
+          <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
+                 name="system.modifiers.combat.initiative"
+                 type="number"
+                 value="{{source.modifiers.combat.initiative}}"
+                 placeholder="0" />
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Speed</label>
+          <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
+                 name="system.modifiers.combat.speed"
+                 type="number"
+                 value="{{source.modifiers.combat.speed}}"
+                 placeholder="0" />
+        </div>
+      </div>
+    </div>
+
+    {{!-- Resource Modifiers --}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5">
+      <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
+        <i class="fas fa-heart"></i>
+        Resources
+      </h4>
+      <div class="tw-grid tw-grid-cols-3 tw-gap-2">
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Wounds</label>
+          <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
+                 name="system.modifiers.resources.wounds"
+                 type="number"
+                 value="{{source.modifiers.resources.wounds}}"
+                 placeholder="0" />
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Fate</label>
+          <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
+                 name="system.modifiers.resources.fate"
+                 type="number"
+                 value="{{source.modifiers.resources.fate}}"
+                 placeholder="0" />
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Insanity</label>
+          <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
+                 name="system.modifiers.resources.insanity"
+                 type="number"
+                 value="{{source.modifiers.resources.insanity}}"
+                 placeholder="0" />
+        </div>
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+          <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-text-center">Corruption</label>
+          <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm tw-text-center"
+                 name="system.modifiers.resources.corruption"
+                 type="number"
+                 value="{{source.modifiers.resources.corruption}}"
+                 placeholder="0" />
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {{!-- Situational Modifiers Tab --}}
+  <div class="wh40k-modifiers-content tw-flex tw-flex-col tw-gap-3" data-tab="situational" data-group="modifiers">
+    <div class="tw-flex tw-items-start tw-gap-2 tw-p-2 tw-bg-blue-900/15 tw-border tw-border-solid tw-border-blue-800/30 tw-rounded-md">
+      <i class="fas fa-info-circle tw-text-blue-400 tw-flex-shrink-0 tw-mt-0.5"></i>
+      <p class="tw-m-0 tw-text-sm">Situational modifiers apply only when specific conditions are met. Use the condition field to describe when each modifier applies.</p>
+    </div>
+
+    {{!-- Situational Characteristics --}}
+    <div class="tw-flex tw-flex-col tw-gap-1.5">
+      <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
+        <i class="fas fa-user-circle"></i>
+        Conditional Characteristic Bonuses
+      </h4>
+      <div class="tw-flex tw-flex-col tw-gap-1.5">
+        {{#each system.modifiers.situational.characteristics}}
+        <div class="tw-flex tw-items-center tw-gap-2 tw-p-1.5 tw-bg-black/5 tw-border tw-border-solid tw-border-black/10 tw-rounded-sm">
+          <input class="tw-flex-1 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm"
+                 name="system.modifiers.situational.characteristics.{{@index}}.condition"
+                 type="text"
+                 value="{{condition}}"
+                 placeholder="When... (e.g., 'in melee combat')" />
+          <select class="tw-w-36 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm"
+                  name="system.modifiers.situational.characteristics.{{@index}}.key">
+            <option value="">Select Characteristic</option>
+            {{#each ../../config.characteristics}}
+            <option value="{{@key}}" {{selected (eq @key ../key)}}>{{label}}</option>
+            {{/each}}
+          </select>
+          <input class="tw-w-16 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm tw-text-center"
+                 name="system.modifiers.situational.characteristics.{{@index}}.value"
+                 type="number"
+                 value="{{value}}"
+                 placeholder="0" />
+          <button type="button"
+                  class="wh40k-btn-control wh40k-btn-control--remove"
+                  data-action="removeSituationalModifier"
+                  data-type="characteristics"
+                  data-index="{{@index}}"
+                  title="Remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        {{/each}}
+
+        <button type="button"
+                class="wh40k-btn-secondary wh40k-btn-add tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start"
+                data-action="addSituationalModifier"
+                data-type="characteristics">
+          <i class="fas fa-plus"></i>
+          Add Conditional Characteristic Bonus
+        </button>
+      </div>
+    </div>
+
+    {{!-- Similar sections for situational skills and combat would go here --}}
+
+  </div>
+
+  {{!-- Advanced Tab (Other modifiers) --}}
+  <div class="wh40k-modifiers-content tw-flex tw-flex-col tw-gap-3" data-tab="advanced" data-group="modifiers">
+    <div class="tw-flex tw-items-start tw-gap-2 tw-p-2 tw-bg-blue-900/15 tw-border tw-border-solid tw-border-blue-800/30 tw-rounded-md">
+      <i class="fas fa-info-circle tw-text-blue-400 tw-flex-shrink-0 tw-mt-0.5"></i>
+      <p class="tw-m-0 tw-text-sm">Advanced modifiers for custom effects not covered by standard categories.</p>
+    </div>
+
+    <div class="tw-flex tw-flex-col tw-gap-1.5">
+      <h4 class="tw-flex tw-items-center tw-gap-1 tw-font-heading tw-text-sm tw-text-gold tw-uppercase tw-tracking-wide tw-mb-0 tw-pb-1 tw-border-b tw-border-solid tw-border-black/10">
+        <i class="fas fa-plus-square"></i>
+        Custom Modifiers
+      </h4>
+      <div class="tw-flex tw-flex-col tw-gap-1.5">
+        {{#each system.modifiers.other}}
+        <div class="tw-flex tw-items-center tw-gap-2 tw-p-1.5 tw-bg-black/5 tw-border tw-border-solid tw-border-black/10 tw-rounded-sm">
+          <input class="tw-w-28 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm"
+                 name="system.modifiers.other.{{@index}}.key"
+                 type="text"
+                 value="{{key}}"
+                 placeholder="Modifier Key" />
+          <input class="tw-flex-1 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm"
+                 name="system.modifiers.other.{{@index}}.label"
+                 type="text"
+                 value="{{label}}"
+                 placeholder="Display Label" />
+          <input class="tw-w-16 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm tw-text-center"
+                 name="system.modifiers.other.{{@index}}.value"
+                 type="number"
+                 value="{{value}}"
+                 placeholder="0" />
+          <select class="tw-w-24 tw-border tw-border-solid tw-border-black/20 tw-rounded-sm tw-px-2 tw-py-0.5 tw-text-sm"
+                  name="system.modifiers.other.{{@index}}.mode">
+            <option value="add" {{selected (eq mode "add")}}>Add</option>
+            <option value="multiply" {{selected (eq mode "multiply")}}>Multiply</option>
+            <option value="override" {{selected (eq mode "override")}}>Override</option>
+            <option value="upgrade" {{selected (eq mode "upgrade")}}>Upgrade</option>
+            <option value="downgrade" {{selected (eq mode "downgrade")}}>Downgrade</option>
+          </select>
+          <button type="button"
+                  class="wh40k-btn-control wh40k-btn-control--remove"
+                  data-action="removeOtherModifier"
+                  data-index="{{@index}}"
+                  title="Remove">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        {{/each}}
+
+        <button type="button"
+                class="wh40k-btn-secondary wh40k-btn-add tw-flex tw-items-center tw-gap-1 tw-mt-1 tw-self-start"
+                data-action="addOtherModifier">
+          <i class="fas fa-plus"></i>
+          Add Custom Modifier
+        </button>
+      </div>
     </div>
   </div>
-  {{/if}}
-
-  {{!-- Skill Modifiers --}}
-  {{#if item.system.modifiers.skills}}
-  <div class="wh40k-modifier-section">
-    <h4 class="wh40k-modifier-section__title">
-      <i class="fas fa-book"></i>
-      Skills
-    </h4>
-    <div class="wh40k-modifier-list">
-      {{#each item.system.modifiers.skills}}
-      {{#unless (eq this 0)}}
-      <div class="wh40k-modifier-item">
-        <span class="wh40k-modifier-item__name">{{capitalize @key}}</span>
-        <span class="wh40k-modifier-item__value {{#if (gt this 0)}}wh40k-modifier-item__value--positive{{else}}wh40k-modifier-item__value--negative{{/if}}">
-          {{signedNumber this}}
-        </span>
-      </div>
-      {{/unless}}
-      {{/each}}
-    </div>
-  </div>
-  {{/if}}
-
-  {{!-- Combat Modifiers --}}
-  {{#if item.system.modifiers.combat}}
-  <div class="wh40k-modifier-section">
-    <h4 class="wh40k-modifier-section__title">
-      <i class="fas fa-crosshairs"></i>
-      Combat
-    </h4>
-    <div class="wh40k-modifier-list">
-      {{#each item.system.modifiers.combat}}
-      {{#unless (eq this 0)}}
-      <div class="wh40k-modifier-item">
-        <span class="wh40k-modifier-item__name">{{capitalize @key}}</span>
-        <span class="wh40k-modifier-item__value {{#if (gt this 0)}}wh40k-modifier-item__value--positive{{else}}wh40k-modifier-item__value--negative{{/if}}">
-          {{signedNumber this}}
-        </span>
-      </div>
-      {{/unless}}
-      {{/each}}
-    </div>
-  </div>
-  {{/if}}
-
-  {{!-- Resource Modifiers --}}
-  {{#if item.system.modifiers.resources}}
-  <div class="wh40k-modifier-section">
-    <h4 class="wh40k-modifier-section__title">
-      <i class="fas fa-heart"></i>
-      Resources
-    </h4>
-    <div class="wh40k-modifier-list">
-      {{#each item.system.modifiers.resources}}
-      {{#unless (eq this 0)}}
-      <div class="wh40k-modifier-item">
-        <span class="wh40k-modifier-item__name">{{capitalize @key}}</span>
-        <span class="wh40k-modifier-item__value {{#if (gt this 0)}}wh40k-modifier-item__value--positive{{else}}wh40k-modifier-item__value--negative{{/if}}">
-          {{signedNumber this}}
-        </span>
-      </div>
-      {{/unless}}
-      {{/each}}
-    </div>
-  </div>
-  {{/if}}
-
-  {{!-- Other Modifiers --}}
-  {{#if item.system.modifiers.other.length}}
-  <div class="wh40k-modifier-section">
-    <h4 class="wh40k-modifier-section__title">
-      <i class="fas fa-ellipsis-h"></i>
-      Other
-    </h4>
-    <div class="wh40k-modifier-list">
-      {{#each item.system.modifiers.other}}
-      <div class="wh40k-modifier-item">
-        <span class="wh40k-modifier-item__name">{{this.label}} {{#if this.mode}}({{this.mode}}){{/if}}</span>
-        <span class="wh40k-modifier-item__value {{#if (gt this.value 0)}}wh40k-modifier-item__value--positive{{else}}wh40k-modifier-item__value--negative{{/if}}">
-          {{signedNumber this.value}}
-        </span>
-      </div>
-      {{/each}}
-    </div>
-  </div>
-  {{/if}}
-
-  {{!-- No Modifiers Message --}}
-  {{#unless (or item.system.modifiers.characteristics item.system.modifiers.skills item.system.modifiers.combat item.system.modifiers.resources item.system.modifiers.other.length)}}
-  <div class="wh40k-empty-state">
-    <i class="fas fa-info-circle"></i>
-    <p>This item does not provide any stat modifiers.</p>
-    <p class="wh40k-field-hint">Use Active Effects to add modifiers to this item.</p>
-  </div>
-  {{/unless}}
 
 </div>

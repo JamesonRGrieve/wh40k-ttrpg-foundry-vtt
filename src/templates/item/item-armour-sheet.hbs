@@ -1,64 +1,64 @@
-{{!-- 
+{{!--
   Rogue Trader Armour Item Sheet - V2 Complete Redesign
   Matches weapon sheet pattern with modern ApplicationV2 structure
 --}}
-<div class="wh40k-armour-sheet">
-    
+<div class="wh40k-armour-sheet tw-flex tw-flex-col tw-h-full">
+
     {{!-- ═══════════════════════════════════════════════════════════════════
          HEADER: Compact armour identity with inline stats
     ═══════════════════════════════════════════════════════════════════ --}}
-    <header class="wh40k-armour-header">
-      <div class="wh40k-armour-header__image" data-action="editImage">
-        <img src="{{item.img}}" alt="{{item.name}}" />
-        <div class="wh40k-armour-header__image-overlay">
+    <header class="wh40k-armour-header tw-flex tw-items-center tw-gap-3 tw-p-3 tw-shrink-0">
+      <div class="wh40k-armour-header__image tw-relative tw-w-16 tw-h-16 tw-shrink-0 tw-rounded-md tw-overflow-hidden tw-cursor-pointer" data-action="editImage">
+        <img src="{{item.img}}" alt="{{item.name}}" class="tw-w-full tw-h-full tw-object-cover" />
+        <div class="wh40k-armour-header__image-overlay tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black/60 tw-opacity-0 hover:tw-opacity-100 tw-transition-opacity">
           <i class="fas fa-edit"></i>
         </div>
       </div>
-      
-      <div class="wh40k-armour-header__info">
-        <input type="text" class="wh40k-armour-header__name" name="name" value="{{item.name}}" placeholder="Armour Name" />
-        
-        <div class="wh40k-armour-header__meta">
-          <span class="wh40k-armour-badge wh40k-armour-badge--type wh40k-armour-badge--{{item.system.type}}" title="Armour Type">
+
+      <div class="wh40k-armour-header__info tw-flex tw-flex-col tw-gap-1 tw-min-w-0 tw-flex-1">
+        <input type="text" class="wh40k-armour-header__name tw-font-display tw-text-xl tw-text-gold tw-bg-transparent tw-border-none tw-w-full tw-p-1" name="name" value="{{item.name}}" placeholder="Armour Name" />
+
+        <div class="wh40k-armour-header__meta tw-flex tw-flex-wrap tw-gap-1 tw-items-center">
+          <span class="wh40k-armour-badge wh40k-armour-badge--type wh40k-armour-badge--{{item.system.type}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Armour Type">
             <i class="fas {{item.system.typeIcon}}"></i>
             {{item.system.typeLabel}}
           </span>
-          <span class="wh40k-armour-badge wh40k-armour-badge--protection wh40k-armour-badge--{{item.system.protectionLevel}}" title="Maximum Armour Points">
+          <span class="wh40k-armour-badge wh40k-armour-badge--protection wh40k-armour-badge--{{item.system.protectionLevel}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Maximum Armour Points">
             AP {{item.system.maxAP}}
           </span>
           {{#if (ne item.system.craftsmanship "common")}}
-          <span class="wh40k-armour-badge wh40k-armour-badge--craft wh40k-armour-badge--{{item.system.craftsmanship}}" title="Craftsmanship">
+          <span class="wh40k-armour-badge wh40k-armour-badge--craft wh40k-armour-badge--{{item.system.craftsmanship}} tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Craftsmanship">
             <i class="fas fa-hammer"></i>
             {{item.system.craftsmanshipLabel}}
           </span>
           {{/if}}
           {{#if item.system.maxAgility}}
-          <span class="wh40k-armour-badge wh40k-armour-badge--agility" title="Maximum Agility Bonus">
+          <span class="wh40k-armour-badge wh40k-armour-badge--agility tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-sm tw-text-xs" title="Maximum Agility Bonus">
             <i class="fas fa-person-running"></i>
             Max Ag {{item.system.maxAgility}}
           </span>
           {{/if}}
         </div>
       </div>
-      
-      <div class="wh40k-armour-header__actions">
+
+      <div class="wh40k-armour-header__actions tw-flex tw-items-center tw-gap-2 tw-shrink-0">
         {{!-- Edit Mode Toggle (only for actor-owned items) --}}
         {{#if isOwnedByActor}}
         {{#if canEdit}}
-        <button type="button" class="wh40k-action-btn wh40k-action-btn--edit {{#if inEditMode}}active{{/if}}" 
+        <button type="button" class="wh40k-action-btn wh40k-action-btn--edit tw-inline-flex tw-items-center tw-justify-center tw-w-8 tw-h-8 tw-rounded-md tw-cursor-pointer tw-border tw-border-solid {{#if inEditMode}}active{{/if}}"
                 data-action="toggleEditMode" title="{{#if inEditMode}}Exit Edit Mode{{else}}Enter Edit Mode{{/if}}">
           <i class="fas {{#if inEditMode}}fa-lock-open{{else}}fa-pen-to-square{{/if}}"></i>
         </button>
         {{/if}}
         {{/if}}
-        
+
         {{!-- Equipped Toggle --}}
-        <label class="wh40k-toggle-equipped" title="Toggle Equipped">
-          <input type="checkbox" name="system.equipped" {{checked item.system.equipped}} />
-          <span class="wh40k-toggle-equipped__indicator">
+        <label class="wh40k-toggle-equipped tw-flex tw-items-center tw-gap-1 tw-cursor-pointer" title="Toggle Equipped">
+          <input type="checkbox" name="system.equipped" {{checked item.system.equipped}} class="tw-sr-only" />
+          <span class="wh40k-toggle-equipped__indicator tw-inline-flex tw-items-center tw-justify-center tw-w-6 tw-h-6">
             <i class="fas {{#if item.system.equipped}}fa-check-circle{{else}}fa-circle{{/if}}"></i>
           </span>
-          <span class="wh40k-toggle-equipped__label">{{#if item.system.equipped}}Worn{{else}}Stowed{{/if}}</span>
+          <span class="wh40k-toggle-equipped__label tw-text-xs">{{#if item.system.equipped}}Worn{{else}}Stowed{{/if}}</span>
         </label>
       </div>
     </header>
@@ -66,72 +66,72 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          STATS BAR: Primary armour stats at a glance (simplified)
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-armour-stats">
+    <div class="wh40k-armour-stats tw-flex tw-flex-wrap tw-gap-2 tw-p-2 tw-shrink-0">
       {{!-- Weight --}}
-      <div class="wh40k-armour-stat wh40k-armour-stat--weight">
-        <div class="wh40k-armour-stat__icon">
+      <div class="wh40k-armour-stat wh40k-armour-stat--weight tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
+        <div class="wh40k-armour-stat__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold">
           <i class="fas fa-weight-hanging"></i>
         </div>
-        <div class="wh40k-armour-stat__content">
-          <span class="wh40k-armour-stat__label">Weight</span>
-          <span class="wh40k-armour-stat__value">{{system.weight}}kg</span>
+        <div class="wh40k-armour-stat__content tw-flex tw-flex-col">
+          <span class="wh40k-armour-stat__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Weight</span>
+          <span class="wh40k-armour-stat__value tw-font-semibold">{{system.weight}}kg</span>
         </div>
       </div>
-      
+
       {{!-- Max Agility (if limited) --}}
       {{#if system.maxAgility}}
-      <div class="wh40k-armour-stat wh40k-armour-stat--agility">
-        <div class="wh40k-armour-stat__icon">
+      <div class="wh40k-armour-stat wh40k-armour-stat--agility tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
+        <div class="wh40k-armour-stat__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold">
           <i class="fas fa-person-running"></i>
         </div>
-        <div class="wh40k-armour-stat__content">
-          <span class="wh40k-armour-stat__label">Max Ag</span>
-          <span class="wh40k-armour-stat__value">{{system.maxAgility}}</span>
+        <div class="wh40k-armour-stat__content tw-flex tw-flex-col">
+          <span class="wh40k-armour-stat__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Max Ag</span>
+          <span class="wh40k-armour-stat__value tw-font-semibold">{{system.maxAgility}}</span>
         </div>
       </div>
       {{/if}}
-      
+
       {{!-- Head AP --}}
-      <div class="wh40k-armour-stat wh40k-armour-stat--location">
-        <div class="wh40k-armour-stat__icon">
+      <div class="wh40k-armour-stat wh40k-armour-stat--location tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
+        <div class="wh40k-armour-stat__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold">
           <i class="fas fa-head-side-brain"></i>
         </div>
-        <div class="wh40k-armour-stat__content">
-          <span class="wh40k-armour-stat__label">Head</span>
-          <span class="wh40k-armour-stat__value">{{system.armourPoints.head}}</span>
+        <div class="wh40k-armour-stat__content tw-flex tw-flex-col">
+          <span class="wh40k-armour-stat__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Head</span>
+          <span class="wh40k-armour-stat__value tw-font-semibold">{{system.armourPoints.head}}</span>
         </div>
       </div>
-      
+
       {{!-- Body AP --}}
-      <div class="wh40k-armour-stat wh40k-armour-stat--location">
-        <div class="wh40k-armour-stat__icon">
+      <div class="wh40k-armour-stat wh40k-armour-stat--location tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
+        <div class="wh40k-armour-stat__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold">
           <i class="fas fa-shield"></i>
         </div>
-        <div class="wh40k-armour-stat__content">
-          <span class="wh40k-armour-stat__label">Body</span>
-          <span class="wh40k-armour-stat__value">{{system.armourPoints.body}}</span>
+        <div class="wh40k-armour-stat__content tw-flex tw-flex-col">
+          <span class="wh40k-armour-stat__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Body</span>
+          <span class="wh40k-armour-stat__value tw-font-semibold">{{system.armourPoints.body}}</span>
         </div>
       </div>
-      
+
       {{!-- Arms AP (average) --}}
-      <div class="wh40k-armour-stat wh40k-armour-stat--location">
-        <div class="wh40k-armour-stat__icon">
+      <div class="wh40k-armour-stat wh40k-armour-stat--location tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
+        <div class="wh40k-armour-stat__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold">
           <i class="fas fa-hand-fist"></i>
         </div>
-        <div class="wh40k-armour-stat__content">
-          <span class="wh40k-armour-stat__label">Arms</span>
-          <span class="wh40k-armour-stat__value">{{system.armourPoints.leftArm}}/{{system.armourPoints.rightArm}}</span>
+        <div class="wh40k-armour-stat__content tw-flex tw-flex-col">
+          <span class="wh40k-armour-stat__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Arms</span>
+          <span class="wh40k-armour-stat__value tw-font-semibold">{{system.armourPoints.leftArm}}/{{system.armourPoints.rightArm}}</span>
         </div>
       </div>
-      
+
       {{!-- Legs AP (average) --}}
-      <div class="wh40k-armour-stat wh40k-armour-stat--location">
-        <div class="wh40k-armour-stat__icon">
+      <div class="wh40k-armour-stat wh40k-armour-stat--location tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-1 tw-rounded-md tw-text-sm">
+        <div class="wh40k-armour-stat__icon tw-w-4 tw-h-4 tw-flex tw-items-center tw-justify-center tw-text-gold">
           <i class="fas fa-boot"></i>
         </div>
-        <div class="wh40k-armour-stat__content">
-          <span class="wh40k-armour-stat__label">Legs</span>
-          <span class="wh40k-armour-stat__value">{{system.armourPoints.leftLeg}}/{{system.armourPoints.rightLeg}}</span>
+        <div class="wh40k-armour-stat__content tw-flex tw-flex-col">
+          <span class="wh40k-armour-stat__label tw-text-xs tw-uppercase tw-tracking-wide tw-opacity-70">Legs</span>
+          <span class="wh40k-armour-stat__value tw-font-semibold">{{system.armourPoints.leftLeg}}/{{system.armourPoints.rightLeg}}</span>
         </div>
       </div>
     </div>
@@ -139,20 +139,20 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB NAVIGATION
     ═══════════════════════════════════════════════════════════════════ --}}
-    <nav class="wh40k-tabs wh40k-tabs--armour wh40k-armour-tabs" data-group="primary">
-      <button type="button" class="wh40k-tab wh40k-armour-tab active" data-tab="protection" data-group="primary">
+    <nav class="wh40k-tabs wh40k-tabs--armour wh40k-armour-tabs tw-flex tw-shrink-0" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-armour-tab active tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="protection" data-group="primary">
         <i class="fas fa-shield-halved"></i>
         <span>Protection</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-armour-tab" data-tab="mods" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-armour-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="mods" data-group="primary">
         <i class="fas fa-wrench"></i>
         <span>Mods</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-armour-tab" data-tab="description" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-armour-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="description" data-group="primary">
         <i class="fas fa-book"></i>
         <span>Description</span>
       </button>
-      <button type="button" class="wh40k-tab wh40k-armour-tab" data-tab="effects" data-group="primary">
+      <button type="button" class="wh40k-tab wh40k-armour-tab tw-flex tw-items-center tw-gap-1 tw-px-4 tw-py-2 tw-text-sm tw-cursor-pointer tw-border-none tw-bg-transparent" data-tab="effects" data-group="primary">
         <i class="fas fa-magic"></i>
         <span>Effects</span>
       </button>
@@ -161,49 +161,49 @@
     {{!-- ═══════════════════════════════════════════════════════════════════
          TAB CONTENT
     ═══════════════════════════════════════════════════════════════════ --}}
-    <div class="wh40k-armour-content wh40k-tab-content wh40k-tab-content--armour scrollable">
-      
+    <div class="wh40k-armour-content wh40k-tab-content wh40k-tab-content--armour scrollable tw-flex-1 tw-overflow-y-auto tw-overflow-x-hidden tw-min-h-0 tw-p-2">
+
       {{!-- PROTECTION TAB --}}
       <div class="wh40k-armour-panel tab active" data-tab="protection" data-group="primary">
-        
+
         {{!-- Armour Points Grid (only in edit mode) --}}
         {{#if inEditMode}}
-        <div class="wh40k-armour-section">
-          <div class="wh40k-armour-section__header">
-            <i class="fas fa-shield-halved"></i>
-            <h3>Armour Points by Location</h3>
+        <div class="wh40k-armour-section tw-mb-3">
+          <div class="wh40k-armour-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-shield-halved tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Armour Points by Location</h3>
           </div>
-          <div class="wh40k-armour-section__body">
-            <div class="wh40k-armour-ap-grid">
-              <div class="wh40k-armour-ap-field">
-                <label><i class="fas fa-head-side-brain"></i> Head</label>
-                <input type="number" name="system.armourPoints.head" value="{{item.system.armourPoints.head}}" 
-                       data-dtype="Number" min="0" />
+          <div class="wh40k-armour-section__body tw-p-3">
+            <div class="wh40k-armour-ap-grid tw-grid tw-grid-cols-3 tw-gap-3">
+              <div class="wh40k-armour-ap-field tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium"><i class="fas fa-head-side-brain"></i> Head</label>
+                <input type="number" name="system.armourPoints.head" value="{{item.system.armourPoints.head}}"
+                       data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
-              <div class="wh40k-armour-ap-field">
-                <label><i class="fas fa-shield"></i> Body</label>
-                <input type="number" name="system.armourPoints.body" value="{{item.system.armourPoints.body}}" 
-                       data-dtype="Number" min="0" />
+              <div class="wh40k-armour-ap-field tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium"><i class="fas fa-shield"></i> Body</label>
+                <input type="number" name="system.armourPoints.body" value="{{item.system.armourPoints.body}}"
+                       data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
-              <div class="wh40k-armour-ap-field">
-                <label><i class="fas fa-hand-fist"></i> L. Arm</label>
-                <input type="number" name="system.armourPoints.leftArm" value="{{item.system.armourPoints.leftArm}}" 
-                       data-dtype="Number" min="0" />
+              <div class="wh40k-armour-ap-field tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium"><i class="fas fa-hand-fist"></i> L. Arm</label>
+                <input type="number" name="system.armourPoints.leftArm" value="{{item.system.armourPoints.leftArm}}"
+                       data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
-              <div class="wh40k-armour-ap-field">
-                <label><i class="fas fa-hand-fist"></i> R. Arm</label>
-                <input type="number" name="system.armourPoints.rightArm" value="{{item.system.armourPoints.rightArm}}" 
-                       data-dtype="Number" min="0" />
+              <div class="wh40k-armour-ap-field tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium"><i class="fas fa-hand-fist"></i> R. Arm</label>
+                <input type="number" name="system.armourPoints.rightArm" value="{{item.system.armourPoints.rightArm}}"
+                       data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
-              <div class="wh40k-armour-ap-field">
-                <label><i class="fas fa-boot"></i> L. Leg</label>
-                <input type="number" name="system.armourPoints.leftLeg" value="{{item.system.armourPoints.leftLeg}}" 
-                       data-dtype="Number" min="0" />
+              <div class="wh40k-armour-ap-field tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium"><i class="fas fa-boot"></i> L. Leg</label>
+                <input type="number" name="system.armourPoints.leftLeg" value="{{item.system.armourPoints.leftLeg}}"
+                       data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
-              <div class="wh40k-armour-ap-field">
-                <label><i class="fas fa-boot"></i> R. Leg</label>
-                <input type="number" name="system.armourPoints.rightLeg" value="{{item.system.armourPoints.rightLeg}}" 
-                       data-dtype="Number" min="0" />
+              <div class="wh40k-armour-ap-field tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium"><i class="fas fa-boot"></i> R. Leg</label>
+                <input type="number" name="system.armourPoints.rightLeg" value="{{item.system.armourPoints.rightLeg}}"
+                       data-dtype="Number" min="0" class="tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
               </div>
             </div>
           </div>
@@ -211,16 +211,16 @@
         {{/if}}
 
         {{!-- Base Properties --}}
-        <div class="wh40k-armour-section">
-          <div class="wh40k-armour-section__header">
-            <i class="fas fa-cog"></i>
-            <h3>Base Properties</h3>
+        <div class="wh40k-armour-section tw-mb-3">
+          <div class="wh40k-armour-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-cog tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Base Properties</h3>
           </div>
-          <div class="wh40k-armour-section__body">
-            <div class="wh40k-field-grid wh40k-field-grid--2col">
-              <div class="wh40k-field">
-                <label>Armour Type</label>
-                <select name="system.type" class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}" {{#unless inEditMode}}disabled{{/unless}}>
+          <div class="wh40k-armour-section__body tw-p-3">
+            <div class="tw-grid tw-grid-cols-2 tw-gap-3">
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Armour Type</label>
+                <select name="system.type" class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}} tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" {{#unless inEditMode}}disabled{{/unless}}>
                   <option value="flak" {{#if (eq item.system.type "flak")}}selected{{/if}}>Flak</option>
                   <option value="mesh" {{#if (eq item.system.type "mesh")}}selected{{/if}}>Mesh</option>
                   <option value="carapace" {{#if (eq item.system.type "carapace")}}selected{{/if}}>Carapace</option>
@@ -235,16 +235,16 @@
                   <option value="hostile-environment" {{#if (eq item.system.type "hostile-environment")}}selected{{/if}}>Hostile Environment</option>
                 </select>
               </div>
-              <div class="wh40k-field">
-                <label>Max Agility Bonus</label>
-                <input type="number" name="system.maxAgility" value="{{item.system.maxAgility}}" 
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Max Agility Bonus</label>
+                <input type="number" name="system.maxAgility" value="{{item.system.maxAgility}}"
                        data-dtype="Number" min="0" placeholder="No limit"
-                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
+                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}} tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
                        {{#unless inEditMode}}readonly{{/unless}} />
               </div>
-              <div class="wh40k-field">
-                <label>Availability</label>
-                <select name="system.availability" class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}" {{#unless inEditMode}}disabled{{/unless}}>
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Availability</label>
+                <select name="system.availability" class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}} tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" {{#unless inEditMode}}disabled{{/unless}}>
                   <option value="ubiquitous" {{#if (eq item.system.availability "ubiquitous")}}selected{{/if}}>Ubiquitous</option>
                   <option value="abundant" {{#if (eq item.system.availability "abundant")}}selected{{/if}}>Abundant</option>
                   <option value="plentiful" {{#if (eq item.system.availability "plentiful")}}selected{{/if}}>Plentiful</option>
@@ -258,28 +258,28 @@
                   <option value="unique" {{#if (eq item.system.availability "unique")}}selected{{/if}}>Unique</option>
                 </select>
               </div>
-              <div class="wh40k-field">
-                <label>Craftsmanship</label>
-                <select name="system.craftsmanship" class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}" {{#unless inEditMode}}disabled{{/unless}}>
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Craftsmanship</label>
+                <select name="system.craftsmanship" class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}} tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" {{#unless inEditMode}}disabled{{/unless}}>
                   <option value="poor" {{#if (eq item.system.craftsmanship "poor")}}selected{{/if}}>Poor</option>
                   <option value="common" {{#if (eq item.system.craftsmanship "common")}}selected{{/if}}>Common</option>
                   <option value="good" {{#if (eq item.system.craftsmanship "good")}}selected{{/if}}>Good</option>
                   <option value="best" {{#if (eq item.system.craftsmanship "best")}}selected{{/if}}>Best</option>
                 </select>
               </div>
-              <div class="wh40k-field">
-                <label>Weight (kg)</label>
-                <input type="number" name="system.weight" value="{{item.system.weight}}" 
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Weight (kg)</label>
+                <input type="number" name="system.weight" value="{{item.system.weight}}"
                        data-dtype="Number" min="0" step="0.1"
-                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
+                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}} tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
                        {{#unless inEditMode}}readonly{{/unless}} />
               </div>
               {{#unless hideThroneGelt}}
-              <div class="wh40k-field">
-                <label>Cost (Thrones)</label>
+              <div class="tw-flex tw-flex-col tw-gap-1">
+                <label class="tw-text-sm tw-font-medium">Cost (Thrones)</label>
                 <input type="number" name="system.cost.dh2.homebrew.throneGelt" value="{{item.system.cost.dh2.homebrew.throneGelt}}"
                        data-dtype="Number" min="0"
-                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}}"
+                       class="{{#unless inEditMode}}wh40k-input--readonly{{/unless}} tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm"
                        {{#unless inEditMode}}readonly{{/unless}} />
               </div>
               {{/unless}}
@@ -288,22 +288,22 @@
         </div>
 
         {{!-- Special Properties (consolidated from Properties tab) --}}
-        <div class="wh40k-armour-section">
-          <div class="wh40k-armour-section__header">
-            <i class="fas fa-star"></i>
-            <h3>Special Properties</h3>
+        <div class="wh40k-armour-section tw-mb-3">
+          <div class="wh40k-armour-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-star tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Special Properties</h3>
             {{#if propertiesArray.length}}
-            <span class="wh40k-armour-section__count">{{propertiesArray.length}}</span>
+            <span class="wh40k-armour-section__count tw-inline-flex tw-items-center tw-justify-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-semibold">{{propertiesArray.length}}</span>
             {{/if}}
           </div>
-          <div class="wh40k-armour-section__body">
+          <div class="wh40k-armour-section__body tw-p-3">
             {{#if propertiesArray.length}}
-            <div class="wh40k-property-tags">
+            <div class="wh40k-property-tags tw-flex tw-flex-wrap tw-gap-1">
               {{#each propertiesArray as |prop|}}
-              <div class="wh40k-property-tag">
+              <div class="wh40k-property-tag tw-inline-flex tw-items-center tw-gap-1 tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs">
                 <span class="wh40k-property-tag__label">{{prop.label}}</span>
                 {{#if ../inEditMode}}
-                <button type="button" class="wh40k-property-tag__remove" 
+                <button type="button" class="wh40k-property-tag__remove tw-cursor-pointer tw-border-none tw-bg-transparent tw-p-0 tw-leading-none"
                         data-action="removeProperty" data-property="{{prop.id}}"
                         title="Remove property">
                   <i class="fas fa-times"></i>
@@ -313,31 +313,31 @@
               {{/each}}
             </div>
             {{!-- Property descriptions (inline) --}}
-            <div class="wh40k-property-descriptions">
+            <div class="wh40k-property-descriptions tw-mt-2 tw-flex tw-flex-col tw-gap-1">
               {{#each propertiesArray as |prop|}}
               {{#if prop.description}}
-              <div class="wh40k-property-detail">
-                <div class="wh40k-property-detail__name">{{prop.label}}</div>
-                <div class="wh40k-property-detail__desc">{{prop.description}}</div>
+              <div class="wh40k-property-detail tw-text-sm">
+                <div class="wh40k-property-detail__name tw-font-semibold">{{prop.label}}</div>
+                <div class="wh40k-property-detail__desc tw-opacity-80">{{prop.description}}</div>
               </div>
               {{/if}}
               {{/each}}
             </div>
             {{else}}
-            <p class="wh40k-empty-text">No special properties</p>
+            <p class="wh40k-empty-text tw-italic tw-opacity-70 tw-text-sm">No special properties</p>
             {{/if}}
-            
+
             {{!-- Add property control (only in edit mode) --}}
             {{#if inEditMode}}
             {{#if availableProperties}}
-            <div class="wh40k-property-add">
-              <select class="wh40k-property-add__select" name="new-property">
+            <div class="wh40k-property-add tw-flex tw-gap-2 tw-mt-2">
+              <select class="wh40k-property-add__select tw-flex-1 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" name="new-property">
                 <option value="">-- Add Property --</option>
                 {{#each availableProperties as |prop key|}}
                 <option value="{{key}}">{{prop.label}}</option>
                 {{/each}}
               </select>
-              <button type="button" class="wh40k-btn wh40k-btn--primary" data-action="addProperty">
+              <button type="button" class="wh40k-btn wh40k-btn--primary tw-inline-flex tw-items-center tw-gap-1 tw-px-3 tw-py-1 tw-rounded-md tw-cursor-pointer tw-text-sm" data-action="addProperty">
                 <i class="fas fa-plus"></i>
                 Add
               </button>
@@ -351,40 +351,40 @@
 
       {{!-- MODIFICATIONS TAB --}}
       <div class="wh40k-armour-panel tab" data-tab="mods" data-group="primary">
-        
-        <div class="wh40k-armour-section">
-          <div class="wh40k-armour-section__header">
-            <i class="fas fa-wrench"></i>
-            <h3>Modification Slots</h3>
-            <span class="wh40k-armour-section__count">
+
+        <div class="wh40k-armour-section tw-mb-3">
+          <div class="wh40k-armour-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-wrench tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Modification Slots</h3>
+            <span class="wh40k-armour-section__count tw-inline-flex tw-items-center tw-justify-center tw-px-2 tw-py-0.5 tw-rounded-full tw-text-xs tw-font-semibold">
               {{modificationsArray.length}} / {{system.modificationSlots}}
             </span>
           </div>
-          <div class="wh40k-armour-section__body">
-            <div class="wh40k-mod-slots">
-              <label>Total Slots:</label>
-              <input type="number" name="system.modificationSlots" value="{{source.modificationSlots}}" 
-                     data-dtype="Number" min="0" max="10" />
-              <span class="wh40k-mod-slots__available">
+          <div class="wh40k-armour-section__body tw-p-3">
+            <div class="wh40k-mod-slots tw-flex tw-items-center tw-gap-2 tw-mb-2">
+              <label class="tw-text-sm">Total Slots:</label>
+              <input type="number" name="system.modificationSlots" value="{{source.modificationSlots}}"
+                     data-dtype="Number" min="0" max="10" class="tw-w-16 tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
+              <span class="wh40k-mod-slots__available tw-text-xs tw-opacity-70">
                 {{system.availableModSlots}} available
               </span>
             </div>
-            
+
             {{#if modificationsArray.length}}
-            <div class="wh40k-mod-list">
+            <div class="wh40k-mod-list tw-flex tw-flex-col tw-gap-1">
               {{#each modificationsArray as |mod idx|}}
-              <div class="wh40k-mod-item">
-                <div class="wh40k-mod-item__info">
-                  <i class="fas fa-wrench"></i>
-                  <span class="wh40k-mod-item__name">{{mod.name}}</span>
+              <div class="wh40k-mod-item tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-2 tw-py-1 tw-rounded-sm">
+                <div class="wh40k-mod-item__info tw-flex tw-items-center tw-gap-2 tw-flex-1">
+                  <i class="fas fa-wrench tw-opacity-70"></i>
+                  <span class="wh40k-mod-item__name tw-text-sm">{{mod.name}}</span>
                 </div>
-                <div class="wh40k-mod-item__actions">
-                  <button type="button" class="wh40k-btn wh40k-btn--secondary wh40k-btn--icon"
+                <div class="wh40k-mod-item__actions tw-flex tw-gap-1">
+                  <button type="button" class="wh40k-btn wh40k-btn--secondary wh40k-btn--icon tw-inline-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-rounded-md tw-cursor-pointer"
                           data-action="editMod" data-mod-index="{{idx}}"
                           title="Edit Modification">
                     <i class="fas fa-edit"></i>
                   </button>
-                  <button type="button" class="wh40k-btn wh40k-btn--secondary wh40k-btn--icon wh40k-btn--danger"
+                  <button type="button" class="wh40k-btn wh40k-btn--secondary wh40k-btn--icon wh40k-btn--danger tw-inline-flex tw-items-center tw-justify-center tw-w-7 tw-h-7 tw-rounded-md tw-cursor-pointer"
                           data-action="removeMod" data-mod-index="{{idx}}"
                           title="Remove Modification">
                     <i class="fas fa-trash"></i>
@@ -394,14 +394,14 @@
               {{/each}}
             </div>
             {{else}}
-            <div class="wh40k-empty-state wh40k-empty-state--mods">
-              <i class="fas fa-wrench"></i>
-              <span>No Modifications Installed</span>
-              <p>Drag armour modification items here to install them.</p>
+            <div class="wh40k-empty-state wh40k-empty-state--mods tw-flex tw-flex-col tw-items-center tw-justify-center tw-p-6 tw-text-center tw-italic tw-rounded-md">
+              <i class="fas fa-wrench tw-opacity-40 tw-text-3xl tw-mb-2"></i>
+              <span class="tw-text-sm">No Modifications Installed</span>
+              <p class="tw-m-0 tw-text-xs tw-opacity-70">Drag armour modification items here to install them.</p>
             </div>
             {{/if}}
-            
-            <button type="button" class="wh40k-btn wh40k-btn--primary wh40k-btn--full" data-action="addModification">
+
+            <button type="button" class="wh40k-btn wh40k-btn--primary tw-inline-flex tw-items-center tw-justify-center tw-gap-1 tw-w-full tw-px-3 tw-py-2 tw-rounded-md tw-cursor-pointer tw-text-sm tw-mt-2" data-action="addModification">
               <i class="fas fa-plus"></i>
               Add Modification
             </button>
@@ -412,14 +412,14 @@
 
       {{!-- DESCRIPTION TAB --}}
       <div class="wh40k-armour-panel tab" data-tab="description" data-group="primary">
-        
+
         {{!-- Effect --}}
-        <div class="wh40k-armour-section">
-          <div class="wh40k-armour-section__header">
-            <i class="fas fa-bolt"></i>
-            <h3>Effect</h3>
+        <div class="wh40k-armour-section tw-mb-3">
+          <div class="wh40k-armour-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-bolt tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Effect</h3>
           </div>
-          <div class="wh40k-armour-section__body wh40k-armour-section__body--editor">
+          <div class="wh40k-armour-section__body wh40k-armour-section__body--editor tw-p-2">
             {{#if inEditMode}}
             {{editor system.effect target="system.effect" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -429,12 +429,12 @@
         </div>
 
         {{!-- Description --}}
-        <div class="wh40k-armour-section">
-          <div class="wh40k-armour-section__header">
-            <i class="fas fa-book"></i>
-            <h3>Description</h3>
+        <div class="wh40k-armour-section tw-mb-3">
+          <div class="wh40k-armour-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-book tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Description</h3>
           </div>
-          <div class="wh40k-armour-section__body wh40k-armour-section__body--editor">
+          <div class="wh40k-armour-section__body wh40k-armour-section__body--editor tw-p-2">
             {{#if inEditMode}}
             {{editor system.description.value target="system.description.value" button=true editable=editable engine="prosemirror"}}
             {{else}}
@@ -444,25 +444,25 @@
         </div>
 
         {{!-- Notes --}}
-        <div class="wh40k-armour-section">
-          <div class="wh40k-armour-section__header">
-            <i class="fas fa-sticky-note"></i>
-            <h3>Notes</h3>
+        <div class="wh40k-armour-section tw-mb-3">
+          <div class="wh40k-armour-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-sticky-note tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Notes</h3>
           </div>
-          <div class="wh40k-armour-section__body">
-            <textarea name="system.notes" rows="4" placeholder="GM notes, acquisition details, etc.">{{item.system.notes}}</textarea>
+          <div class="wh40k-armour-section__body tw-p-3">
+            <textarea name="system.notes" rows="4" placeholder="GM notes, acquisition details, etc." class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm tw-resize-y">{{item.system.notes}}</textarea>
           </div>
         </div>
 
         {{!-- Source --}}
-        <div class="wh40k-armour-section">
-          <div class="wh40k-armour-section__header">
-            <i class="fas fa-book-open"></i>
-            <h3>Source</h3>
+        <div class="wh40k-armour-section tw-mb-3">
+          <div class="wh40k-armour-section__header tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
+            <i class="fas fa-book-open tw-opacity-70"></i>
+            <h3 class="tw-m-0 tw-text-base tw-font-semibold tw-flex-1">Source</h3>
           </div>
-          <div class="wh40k-armour-section__body">
-            <input type="text" name="system.source" value="{{item.system.source}}" 
-                   placeholder="Rogue Trader Core Rulebook, pg. 123" />
+          <div class="wh40k-armour-section__body tw-p-3">
+            <input type="text" name="system.source" value="{{item.system.source}}"
+                   placeholder="Rogue Trader Core Rulebook, pg. 123" class="tw-w-full tw-px-2 tw-py-1 tw-rounded-sm tw-text-sm" />
           </div>
         </div>
 

@@ -5,53 +5,53 @@
     label="Movement"
     icon="fa-running"
     rootClass="wh40k-panel-movement-compact"}}
-    <div class="wh40k-movement-modern-compact">
+    <div class="wh40k-movement-modern-compact tw-flex tw-flex-col">
         {{! Half Move }}
-        <div class="wh40k-move-modern-cell wh40k-move-half">
-            <div class="wh40k-move-modern-icon">
+        <div class="wh40k-move-modern-cell wh40k-move-half tw-relative tw-flex tw-items-center tw-rounded-[6px] tw-overflow-hidden">
+            <div class="wh40k-move-modern-icon tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2]">
                 <i class="fas fa-walking"></i>
             </div>
-            <div class="wh40k-move-modern-content">
-                <span class="wh40k-move-modern-label">Half</span>
-                <span class="wh40k-move-modern-value">{{system.movement.half}}<span class="wh40k-move-unit">m</span></span>
+            <div class="wh40k-move-modern-content tw-flex tw-items-baseline tw-flex-1 tw-z-[2]">
+                <span class="wh40k-move-modern-label tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]">Half</span>
+                <span class="wh40k-move-modern-value tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none">{{system.movement.half}}<span class="wh40k-move-unit tw-text-[0.8rem] tw-font-normal tw-ml-[2px]">m</span></span>
             </div>
-            <div class="wh40k-move-modern-bar" style="--move-percent: 25%;"></div>
+            <div class="wh40k-move-modern-bar tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1]" style="--move-percent: 25%;"></div>
         </div>
 
         {{! Full Move }}
-        <div class="wh40k-move-modern-cell wh40k-move-full">
-            <div class="wh40k-move-modern-icon">
+        <div class="wh40k-move-modern-cell wh40k-move-full tw-relative tw-flex tw-items-center tw-rounded-[6px] tw-overflow-hidden">
+            <div class="wh40k-move-modern-icon tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2]">
                 <i class="fas fa-shoe-prints"></i>
             </div>
-            <div class="wh40k-move-modern-content">
-                <span class="wh40k-move-modern-label">Full</span>
-                <span class="wh40k-move-modern-value">{{system.movement.full}}<span class="wh40k-move-unit">m</span></span>
+            <div class="wh40k-move-modern-content tw-flex tw-items-baseline tw-flex-1 tw-z-[2]">
+                <span class="wh40k-move-modern-label tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]">Full</span>
+                <span class="wh40k-move-modern-value tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none">{{system.movement.full}}<span class="wh40k-move-unit tw-text-[0.8rem] tw-font-normal tw-ml-[2px]">m</span></span>
             </div>
-            <div class="wh40k-move-modern-bar" style="--move-percent: 50%;"></div>
+            <div class="wh40k-move-modern-bar tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1]" style="--move-percent: 50%;"></div>
         </div>
 
         {{! Charge }}
-        <div class="wh40k-move-modern-cell wh40k-move-charge">
-            <div class="wh40k-move-modern-icon">
+        <div class="wh40k-move-modern-cell wh40k-move-charge tw-relative tw-flex tw-items-center tw-rounded-[6px] tw-overflow-hidden">
+            <div class="wh40k-move-modern-icon tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2]">
                 <i class="fas fa-running"></i>
             </div>
-            <div class="wh40k-move-modern-content">
-                <span class="wh40k-move-modern-label">Charge</span>
-                <span class="wh40k-move-modern-value">{{system.movement.charge}}<span class="wh40k-move-unit">m</span></span>
+            <div class="wh40k-move-modern-content tw-flex tw-items-baseline tw-flex-1 tw-z-[2]">
+                <span class="wh40k-move-modern-label tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]">Charge</span>
+                <span class="wh40k-move-modern-value tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none">{{system.movement.charge}}<span class="wh40k-move-unit tw-text-[0.8rem] tw-font-normal tw-ml-[2px]">m</span></span>
             </div>
-            <div class="wh40k-move-modern-bar" style="--move-percent: 75%;"></div>
+            <div class="wh40k-move-modern-bar tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1]" style="--move-percent: 75%;"></div>
         </div>
 
         {{! Run }}
-        <div class="wh40k-move-modern-cell wh40k-move-run">
-            <div class="wh40k-move-modern-icon">
+        <div class="wh40k-move-modern-cell wh40k-move-run tw-relative tw-flex tw-items-center tw-rounded-[6px] tw-overflow-hidden">
+            <div class="wh40k-move-modern-icon tw-flex tw-items-center tw-justify-center tw-w-[32px] tw-h-[32px] tw-rounded-full tw-shrink-0 tw-z-[2]">
                 <i class="fas fa-wind"></i>
             </div>
-            <div class="wh40k-move-modern-content">
-                <span class="wh40k-move-modern-label">Run</span>
-                <span class="wh40k-move-modern-value">{{system.movement.run}}<span class="wh40k-move-unit">m</span></span>
+            <div class="wh40k-move-modern-content tw-flex tw-items-baseline tw-flex-1 tw-z-[2]">
+                <span class="wh40k-move-modern-label tw-text-[0.75rem] tw-font-semibold tw-uppercase tw-tracking-[0.05em] tw-min-w-[50px]">Run</span>
+                <span class="wh40k-move-modern-value tw-font-alt tw-text-[1.3rem] tw-font-bold tw-leading-none">{{system.movement.run}}<span class="wh40k-move-unit tw-text-[0.8rem] tw-font-normal tw-ml-[2px]">m</span></span>
             </div>
-            <div class="wh40k-move-modern-bar" style="--move-percent: 100%;"></div>
+            <div class="wh40k-move-modern-bar tw-absolute tw-left-0 tw-top-0 tw-bottom-0 tw-z-[1]" style="--move-percent: 100%;"></div>
         </div>
     </div>
 {{/systems/wh40k-rpg/templates/actor/partial/panel.hbs}}

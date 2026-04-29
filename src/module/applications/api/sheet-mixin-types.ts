@@ -334,4 +334,20 @@ export interface BaseActorSheetMixins
     submit(): Promise<void>;
     /** Set the rendered position. */
     setPosition(pos: Partial<{ top: number; left: number; width: number; height: number }>): void;
+
+    /* -------------------------------------------- */
+    /*  ApplicationV2 Protected Methods             */
+    /* -------------------------------------------- */
+
+    /**
+     * Retrieve header control button configuration from ApplicationV2 base.
+     * Protected; declared here so subclasses can override and call super.
+     */
+    _getHeaderControls(): { icon: string; label: string; action?: string; visible?: boolean }[];
+
+    /**
+     * Lifecycle hook called after the application is first rendered.
+     * Protected; declared here so subclasses can override and call super.
+     */
+    _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void>;
 }

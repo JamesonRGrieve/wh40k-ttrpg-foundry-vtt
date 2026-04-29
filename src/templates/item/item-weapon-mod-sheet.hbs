@@ -1,67 +1,67 @@
 <form class="wh40k-item-sheet wh40k-item-sheet--weapon-mod" autocomplete="off">
     {{! Header }}
-    <header class="wh40k-item-sheet__header">
-        <div class="wh40k-item-sheet__portrait">
-            <img class="wh40k-item-sheet__portrait-img" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
+    <header class="tw-flex tw-items-center tw-gap-2 tw-p-2 tw-border-b tw-border-solid tw-border-black/10">
+        <div class="tw-flex-shrink-0">
+            <img class="tw-w-16 tw-h-16 tw-object-cover tw-rounded-md tw-cursor-pointer" src="{{item.img}}" data-edit="img" alt="{{item.name}}" title="{{item.name}}" />
         </div>
-        <div class="wh40k-item-sheet__header-info">
-            <input class="wh40k-item-sheet__name-input" name="name" type="text" value="{{item.name}}" placeholder="Modification Name" />
-            <div class="wh40k-item-sheet__type-badge">
-                <span class="material-icons">build</span>
+        <div class="tw-flex tw-flex-col tw-gap-1 tw-flex-1 tw-min-w-0">
+            <input class="tw-w-full tw-bg-transparent tw-border tw-border-transparent tw-rounded-md tw-px-1.5 tw-py-0.5 tw-text-base tw-font-semibold" name="name" type="text" value="{{item.name}}" placeholder="Modification Name" />
+            <div class="tw-flex tw-items-center tw-gap-1 tw-text-sm tw-text-gold">
+                <span class="material-icons tw-text-lg">build</span>
                 <span>Weapon Modification</span>
             </div>
         </div>
     </header>
 
     {{! Properties Panel }}
-    <section class="wh40k-item-sheet__panel">
-        <h2 class="wh40k-item-sheet__panel-title">
-            <span class="material-icons">tune</span>
+    <section class="tw-p-2 tw-border-b tw-border-solid tw-border-black/10">
+        <h2 class="tw-flex tw-items-center tw-gap-1.5 tw-font-display tw-text-md tw-text-gold tw-mb-2 tw-pb-1.5 tw-border-b tw-border-solid tw-border-black/10">
+            <span class="material-icons tw-text-lg">tune</span>
             Properties
         </h2>
-        <div class="wh40k-item-sheet__grid wh40k-item-sheet__grid--3col">
-            <div class="wh40k-item-sheet__field">
-                <label class="wh40k-item-sheet__label">Weight</label>
-                <input class="wh40k-item-sheet__input" name="system.weight" type="number" data-dtype="Number" value="{{item.system.weight}}" />
+        <div class="tw-grid tw-grid-cols-3 tw-gap-2 tw-mb-2">
+            <div class="tw-flex tw-flex-col tw-gap-0.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">Weight</label>
+                <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.weight" type="number" data-dtype="Number" value="{{item.system.weight}}" />
             </div>
-            <div class="wh40k-item-sheet__field">
-                <label class="wh40k-item-sheet__label">Availability</label>
-                <select class="wh40k-item-sheet__select" name="system.availability">
+            <div class="tw-flex tw-flex-col tw-gap-0.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">Availability</label>
+                <select class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.availability">
                     {{selectOptions (arrayToObject dh.items.availability) selected=item.system.availability}}
                 </select>
             </div>
-            <div class="wh40k-item-sheet__field">
-                <label class="wh40k-item-sheet__label">Craftsmanship</label>
-                <select class="wh40k-item-sheet__select" name="system.craftsmanship">
+            <div class="tw-flex tw-flex-col tw-gap-0.5">
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">Craftsmanship</label>
+                <select class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.craftsmanship">
                     {{selectOptions (arrayToObject dh.items.craftsmanship) selected=item.system.craftsmanship}}
                 </select>
             </div>
         </div>
-        <div class="wh40k-item-sheet__grid wh40k-item-sheet__grid--2col">
-            <div class="wh40k-item-sheet__field wh40k-item-sheet__field--checkbox">
+        <div class="tw-grid tw-grid-cols-2 tw-gap-2 tw-mb-2">
+            <div class="tw-flex tw-items-center tw-gap-2">
                 <input type="checkbox" name="system.equipped" data-dtype="Boolean" {{checked item.system.equipped}} />
-                <label class="wh40k-item-sheet__label">Installed</label>
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer">Installed</label>
             </div>
-            <div class="wh40k-item-sheet__field wh40k-item-sheet__field--checkbox">
+            <div class="tw-flex tw-items-center tw-gap-2">
                 <input type="checkbox" name="system.backpack.inBackpack" data-dtype="Boolean" {{checked item.system.backpack.inBackpack}} />
-                <label class="wh40k-item-sheet__label">In Backpack</label>
+                <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide tw-cursor-pointer">In Backpack</label>
             </div>
         </div>
-        <div class="wh40k-item-sheet__field">
-            <label class="wh40k-item-sheet__label">Source</label>
-            <input class="wh40k-item-sheet__input" name="system.source" type="text" value="{{item.system.source}}" placeholder="Rulebook reference" />
+        <div class="tw-flex tw-flex-col tw-gap-0.5">
+            <label class="tw-text-xs tw-font-semibold tw-uppercase tw-tracking-wide">Source</label>
+            <input class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-px-2 tw-py-1 tw-text-sm" name="system.source" type="text" value="{{item.system.source}}" placeholder="Rulebook reference" />
         </div>
     </section>
 
     {{! Description Panel }}
-    <section class="wh40k-item-sheet__panel wh40k-item-sheet__panel--description">
-        <h2 class="wh40k-item-sheet__panel-title">
-            <span class="material-icons">description</span>
+    <section class="tw-p-2">
+        <h2 class="tw-flex tw-items-center tw-gap-1.5 tw-font-display tw-text-md tw-text-gold tw-mb-2 tw-pb-1.5 tw-border-b tw-border-solid tw-border-black/10">
+            <span class="material-icons tw-text-lg">description</span>
             Description
         </h2>
-        <div class="wh40k-item-sheet__field wh40k-item-sheet__field--full">
+        <div class="tw-flex tw-flex-col tw-gap-0.5 tw-w-full">
             <textarea
-                class="wh40k-item-sheet__textarea"
+                class="tw-w-full tw-border tw-border-solid tw-border-black/20 tw-rounded-md tw-p-2 tw-text-sm tw-font-body tw-resize-y tw-min-h-[80px]"
                 name="system.description.value"
                 placeholder="Describe the modification's effects..."
             >{{item.system.description.value}}</textarea>

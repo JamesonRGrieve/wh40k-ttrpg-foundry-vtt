@@ -358,7 +358,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      */
     static async #removeWeapon(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const index = parseInt(target.dataset.index, 10);
+        const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
         const weapons = foundry.utils.deepClone(this.item.system.customWeapons || []);
@@ -426,7 +426,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      */
     static async #removeTalent(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const index = parseInt(target.dataset.index, 10);
+        const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
         const talents = foundry.utils.deepClone(this.item.system.talents || []);
@@ -464,7 +464,7 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
      */
     static async #removeVariant(this: any, event: Event, target: HTMLElement): Promise<void> {
         event.preventDefault();
-        const index = parseInt(target.dataset.index, 10);
+        const index = parseInt(target.dataset.index ?? '', 10);
         if (isNaN(index)) return;
 
         const variants = foundry.utils.deepClone(this.item.system.variants || []);
@@ -509,13 +509,13 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
 
                 for (const trait of this.item.system.traits || []) {
                     if (trait.uuid) {
-                        const item = await fromUuid(trait.uuid);
+                        const item = (await fromUuid(trait.uuid)) as { name: string | null; type: string; img: string | null; system: unknown } | null;
                         if (item) {
                             itemsToCreate.push({
                                 name: item.name,
                                 type: item.type,
                                 img: item.img,
-                                system: foundry.utils.deepClone(item.system),
+                                system: foundry.utils.deepClone(item.system as Record<string, unknown>),
                             });
                         }
                     }
@@ -523,13 +523,13 @@ export default class NPCTemplateSheet extends (BaseItemSheet as any) {
 
                 for (const talent of this.item.system.talents || []) {
                     if (talent.uuid) {
-                        const item = await fromUuid(talent.uuid);
+                        const item = (await fromUuid(talent.uuid)) as { name: string | null; type: string; img: string | null; system: unknown } | null;
                         if (item) {
                             itemsToCreate.push({
                                 name: item.name,
                                 type: item.type,
                                 img: item.img,
-                                system: foundry.utils.deepClone(item.system),
+                                system: foundry.utils.deepClone(item.system as Record<string, unknown>),
                             });
                         }
                     }

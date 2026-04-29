@@ -1,10 +1,12 @@
 {{! Vehicle Weapons Panel }}
-<div class="wh40k-panel spacer wh40k-grid-col-6">
+<div class="wh40k-panel tw-col-span-6">
     <h1 class="wh40k-panel-header">
-        <i class="fas fa-crosshairs"></i>
-        {{localize "WH40K.Vehicle.Weapons"}}
+        <span class="wh40k-panel-title">
+            <i class="fas fa-crosshairs"></i>
+            {{localize "WH40K.Vehicle.Weapons"}}
+        </span>
     </h1>
-    <div class="wh40k-vehicle-weapons-section">
+    <div class="tw-flex tw-flex-col tw-gap-2 tw-p-2">
         {{#if weapons}}
             <div class="wh40k-table--border">
                 <div class="table-row--head">
@@ -38,15 +40,15 @@
             </div>
         {{/if}}
 
-        <div class="wh40k-weapons-description">
+        <div class="tw-flex tw-flex-col tw-gap-1">
             <label class="wh40k-field__header">{{localize "WH40K.Vehicle.Weapons.Description"}}</label>
-            <div class="wh40k-editor">
+            <div class="tw-rounded-md tw-overflow-hidden">
                 {{editor system.weapons target="system.weapons" button=true editable=editable}}
             </div>
-            <small class="wh40k-field__hint">{{localize "WH40K.Vehicle.Weapons.Hint"}}</small>
+            <small class="tw-text-xs tw-opacity-60 tw-italic">{{localize "WH40K.Vehicle.Weapons.Hint"}}</small>
         </div>
 
-        <div class="wh40k-item-controls">
+        <div class="tw-flex tw-justify-end">
             <button class="wh40k-control-button" data-action="itemCreate" data-type="weapon">
                 <i class="fas fa-plus"></i>
                 {{localize "WH40K.Vehicle.Weapons.Add"}}

@@ -572,6 +572,42 @@ declare global {
     // foundry.applications Namespace
     // =========================================================================
 
+    namespace foundry.applications.api {
+        // fvtt-types' _module.d.mts re-exports the default of application.mjs as both
+        // "ApplicationV2" and "Application". Under some tsconfig configurations (notably
+        // moduleResolution:bundler with the fvtt-types 13.x package shape), the
+        // "ApplicationV2" alias may not resolve through the namespace re-export chain.
+        // Declaring these here ensures every
+        //   const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api
+        // call compiles without 'Property api does not exist' errors.
+        class ApplicationV2 {
+            get element(): HTMLElement;
+            render(options?: boolean | Record<string, unknown>): Promise<unknown>;
+            close(options?: Record<string, unknown>): Promise<unknown>;
+            submit(): Promise<void>;
+            _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>>;
+            _onRender(context: Record<string, unknown>, options: Record<string, unknown>): void | Promise<void>;
+        }
+        namespace ApplicationV2 {
+            type Any = ApplicationV2;
+        }
+        function HandlebarsApplicationMixin<TBase extends new (...args: any[]) => ApplicationV2>(
+            Base: TBase,
+        ): TBase;
+        class DialogV2 {
+            constructor(options?: Record<string, unknown>);
+            render(force?: boolean): Promise<unknown>;
+            close(options?: Record<string, unknown>): Promise<unknown>;
+            static confirm(options?: Record<string, unknown>): Promise<boolean>;
+            static prompt(options?: Record<string, unknown>): Promise<string | null>;
+        }
+        class FormDataExtended extends FormData {
+            constructor(form: HTMLFormElement, options?: Record<string, unknown>);
+            object: Record<string, unknown>;
+            toObject(): Record<string, unknown>;
+        }
+    }
+
     namespace foundry.applications.handlebars {
         /**
          * Render a Handlebars template.

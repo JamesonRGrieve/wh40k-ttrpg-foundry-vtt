@@ -7,14 +7,14 @@
 /*  Config Type Definitions                     */
 /* -------------------------------------------- */
 
-interface LabelConfig {
+export interface LabelConfig {
     label: string;
 }
-interface LabelAbbreviationConfig {
+export interface LabelAbbreviationConfig {
     label: string;
     abbreviation: string;
 }
-interface LabelModifierConfig {
+export interface LabelModifierConfig {
     label: string;
     modifier: number;
 }

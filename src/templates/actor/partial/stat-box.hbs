@@ -31,19 +31,19 @@
                        input — used by vehicle Structure where max-min is 1 and value-min is 0)
         maxAttr      — optional max attr applied to the value input (single-value variant)
 --}}
-<div class="{{#if boxBaseClass}}{{boxBaseClass}}{{else}}wh40k-stat-box{{/if}} {{boxClass}}">
-    <span class="{{#if labelBaseClass}}{{labelBaseClass}}{{else}}wh40k-stat-label{{/if}} {{labelClass}}">{{label}}</span>
+<div class="{{#if boxBaseClass}}{{boxBaseClass}}{{else}}tw-bg-[linear-gradient(140deg,rgba(255,255,255,0.85),rgba(242,238,228,0.75))] tw-border tw-border-[rgba(74,55,40,0.25)] tw-rounded-lg tw-px-2.5 tw-py-2 tw-text-center tw-flex tw-flex-col tw-items-center tw-justify-center tw-min-h-[60px] tw-shadow-[inset_0_1px_2px_rgba(255,255,255,0.5),0_2px_4px_rgba(0,0,0,0.05)] tw-transition-all hover:tw--translate-y-px{{/if}} {{boxClass}}">
+    <span class="{{#if labelBaseClass}}{{labelBaseClass}}{{else}}tw-block tw-text-[0.7em] tw-font-semibold tw-uppercase tw-text-[#4a3728] tw-tracking-[0.1em] tw-mb-0.5{{/if}} {{labelClass}}">{{label}}</span>
     {{#if maxName}}
-    <div class="{{#if valuesBaseClass}}{{valuesBaseClass}}{{else}}wh40k-stat-values{{/if}} {{valuesClass}}">
+    <div class="{{#if valuesBaseClass}}{{valuesBaseClass}}{{else}}tw-flex tw-items-center tw-justify-center tw-gap-[var(--wh40k-space-xs,2px)]{{/if}} {{valuesClass}}">
         <input type="number"
-               class="{{#if inputBaseClass}}{{inputBaseClass}}{{else}}wh40k-stat-input{{/if}} {{inputClass}}"
+               class="{{#if inputBaseClass}}{{inputBaseClass}}{{else}}tw-w-[38px] tw-text-center tw-border tw-border-[rgba(74,55,40,0.2)] tw-bg-white/80 tw-rounded-md tw-px-0.5 tw-py-1 tw-text-[1.1em] tw-font-bold tw-text-[#2a1a0a]{{/if}} {{inputClass}}"
                name="{{valueName}}"
                value="{{value}}"
                {{#if min}}min="{{min}}"{{/if}}
                title="Current" />
-        <span class="{{#if sepBaseClass}}{{sepBaseClass}}{{else}}wh40k-stat-separator{{/if}} {{sepClass}}">/</span>
+        <span class="{{#if sepBaseClass}}{{sepBaseClass}}{{else}}tw-text-[#4a3728] tw-font-bold tw-text-[1.1em]{{/if}} {{sepClass}}">/</span>
         <input type="number"
-               class="{{#if inputBaseClass}}{{inputBaseClass}}{{else}}wh40k-stat-input{{/if}} {{inputClass}}"
+               class="{{#if inputBaseClass}}{{inputBaseClass}}{{else}}tw-w-[38px] tw-text-center tw-border tw-border-[rgba(74,55,40,0.2)] tw-bg-white/80 tw-rounded-md tw-px-0.5 tw-py-1 tw-text-[1.1em] tw-font-bold tw-text-[#2a1a0a]{{/if}} {{inputClass}}"
                name="{{maxName}}"
                value="{{max}}"
                {{#if minMax}}min="{{minMax}}"{{else}}{{#if min}}min="{{min}}"{{/if}}{{/if}}
@@ -51,7 +51,7 @@
     </div>
     {{else}}
     <input type="number"
-           class="{{#if inputBaseClass}}{{inputBaseClass}}{{else}}wh40k-stat-input{{/if}} {{singleClass}} {{inputClass}}"
+           class="{{#if inputBaseClass}}{{inputBaseClass}}{{else}}tw-w-[38px] tw-text-center tw-border tw-border-[rgba(74,55,40,0.2)] tw-bg-white/80 tw-rounded-md tw-px-0.5 tw-py-1 tw-text-[1.1em] tw-font-bold tw-text-[#2a1a0a]{{/if}} {{singleClass}} {{inputClass}}"
            name="{{valueName}}"
            value="{{value}}"
            {{#if min}}min="{{min}}"{{/if}}

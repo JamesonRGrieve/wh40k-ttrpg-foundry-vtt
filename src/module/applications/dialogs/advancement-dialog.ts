@@ -15,7 +15,10 @@ import { SkillKeyHelper } from '../../helpers/skill-key-helper.ts';
 import { checkPrerequisites } from '../../utils/prerequisite-validator.ts';
 import { getAvailableXP, spendXP, canAfford } from '../../utils/xp-transaction.ts';
 
-const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
+import type { ApplicationV2Ctor } from '../api/application-types.ts';
+const { ApplicationV2, HandlebarsApplicationMixin } = (
+    foundry.applications as unknown as { api: { ApplicationV2: ApplicationV2Ctor; HandlebarsApplicationMixin: <T extends ApplicationV2Ctor>(base: T) => T } }
+).api;
 
 interface AdvancementAdvance {
     name: string;
@@ -86,7 +89,7 @@ interface PreparedAdvance {
 
 interface PreparedSkillAdvance {
     id: string;
-    index: number;
+    index?: number;
     name: string;
     displayName: string;
     type: 'skill';
@@ -105,7 +108,7 @@ interface PreparedSkillAdvance {
 
 interface PreparedTalentAdvance {
     id: string;
-    index: number;
+    index?: number;
     uuid: string;
     name: string;
     displayName: string;
@@ -125,7 +128,7 @@ interface PreparedTalentAdvance {
 
 interface PreparedPsychicPower {
     id: string;
-    index: number;
+    index?: number;
     uuid: string;
     name: string;
     displayName: string;
@@ -157,7 +160,7 @@ interface PreparedPsychicPanel {
 
 interface PreparedEliteAdvance {
     id: string;
-    index: number;
+    index?: number;
     uuid: string;
     name: string;
     summary: string;
@@ -181,9 +184,9 @@ interface AdvancementContext extends Record<string, unknown> {
     xp: { total: number; used: number; available: number; usedPercent: number };
     activeTab: string;
     tabs: Array<{ id: string; label: string; icon: string; active: boolean }>;
-    characteristics: Record<string, unknown>[];
-    skills: Record<string, unknown>[];
-    talents: Record<string, unknown>[];
+    characteristics: unknown[];
+    skills: unknown[];
+    talents: unknown[];
     recentPurchases: string[];
 }
 
@@ -254,7 +257,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
     }
 
     #getSystemConfig(): BaseSystemConfig | null {
-        return SystemConfigRegistry.getOrNull(this.#getActorSystem().gameSystem);
+        return SystemConfigRegistry.getOrNull(this.#getActorSystem().gameSystem ?? '');
     }
 
     #getAptitudeConfig(systemConfig: BaseSystemConfig | null): AptitudeBasedSystemConfig | null {
@@ -289,7 +292,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
     /** @override */
     async _prepareContext(options: ApplicationV2Config.RenderOptions): Promise<AdvancementContext> {
-        const context = (await super._prepareContext(options)) as AdvancementContext;
+        const context = (await super._prepareContext(options as unknown as Record<string, unknown>)) as AdvancementContext;
         const system = this.#getActorSystem();
 
         const systemConfig = this.#getSystemConfig();
@@ -445,7 +448,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 cost: advance.cost,
                 type: advance.type,
                 prerequisites: advance.prerequisites ?? [],
-                prereqDisplay: prereqResult.unmet,
+                prereqDisplay: prereqResult.unmet.filter((s): s is string => s !== undefined),
                 owned,
                 canPurchase,
                 cantAfford,
@@ -475,7 +478,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             if (hasEntries) {
                 // Specialist skill: each entry (e.g. Common Lore: Imperium) is its own progression track.
-                for (const entry of skillData.entries) {
+                for (const entry of skillData.entries!) {
                     const entryRank = entry.rank ?? entry.advance ?? 0;
                     const entryName = entry.name || entry.specialization || 'Unknown';
                     const entryLabel = `${label} (${entryName})`;
@@ -597,7 +600,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 .replace(/\s*\([^)]+\)\s*$/, '')
                 .trim()
                 .toLowerCase();
-            ownedByKey.set(`${base}|${spec}`, item);
+            ownedByKey.set(`${base}|${spec}`, item as unknown as Item);
         }
 
         for (const pack of packs) {
@@ -647,7 +650,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         .filter(Boolean);
                     result.push({
                         id: `talent-spec:${baseName}`,
-                        uuid: entry.uuid,
+                        uuid: entry.uuid ?? '',
                         name: baseName,
                         displayName: ownedSpecs.length ? `${baseName} (+ specialization)` : baseName,
                         type: 'talent',
@@ -659,7 +662,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         canPurchase: !blocked && available >= cost,
                         cantAfford: !blocked && available < cost,
                         blocked,
-                        prereqDisplay: prereqResult.unmet,
+                        prereqDisplay: prereqResult.unmet.filter((s): s is string => s !== undefined),
                         aptitudeMatch: match,
                     });
                     continue;
@@ -671,7 +674,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     const currentRank = (owned?.system as { rank?: number } | undefined)?.rank ?? 0;
                     result.push({
                         id: `talent-rank:${baseName}`,
-                        uuid: entry.uuid,
+                        uuid: entry.uuid ?? '',
                         name: baseName,
                         displayName: owned ? `${baseName} (Rank ${currentRank + 1})` : baseName,
                         type: 'talent',
@@ -683,7 +686,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                         canPurchase: !blocked && available >= cost,
                         cantAfford: !blocked && available < cost,
                         blocked,
-                        prereqDisplay: prereqResult.unmet,
+                        prereqDisplay: prereqResult.unmet.filter((s): s is string => s !== undefined),
                         aptitudeMatch: match,
                     });
                     continue;
@@ -693,7 +696,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                 if (ownedByKey.has(`${baseKey}|`)) continue;
                 result.push({
                     id: `talent:${baseName}`,
-                    uuid: entry.uuid,
+                    uuid: entry.uuid ?? '',
                     name: baseName,
                     displayName: baseName,
                     type: 'talent',
@@ -704,7 +707,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
                     canPurchase: !blocked && available >= cost,
                     cantAfford: !blocked && available < cost,
                     blocked,
-                    prereqDisplay: prereqResult.unmet,
+                    prereqDisplay: prereqResult.unmet.filter((s): s is string => s !== undefined),
                     aptitudeMatch: match,
                 });
             }
@@ -791,16 +794,17 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             const index = await pack.getIndex({ fields: ['name', 'type', 'system.discipline', 'system.prCost'] });
             for (const entry of index) {
                 if (entry.type !== 'psychicPower') continue;
-                const prCost = entry.system?.prCost ?? 1;
+                const entrySys = entry.system as { prCost?: number; discipline?: string } | null | undefined;
+                const prCost = entrySys?.prCost ?? 1;
                 // Heuristic XP cost: max(100, 200 × prCost). Powers in DH2 core range 100-600 XP.
                 const cost = Math.max(100, 200 * prCost);
                 const owned = ownedPowers.has(entry.name.toLowerCase());
                 const blocked = prCost > currentRating;
-                const discipline = (entry.system?.discipline ?? 'unknown').toString();
+                const discipline = (entrySys?.discipline ?? 'unknown').toString();
 
                 powers.push({
                     id: `psy:${entry.name}`,
-                    uuid: entry.uuid,
+                    uuid: entry.uuid ?? '',
                     name: entry.name,
                     displayName: entry.name,
                     discipline,
@@ -876,7 +880,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         for (const t of ownedTraits) {
             const spec = ((t.system as { specialization?: string }).specialization ?? '').toLowerCase().trim();
             const key = `${t.name.toLowerCase()}|${spec}`;
-            if (!traitMap.has(key)) traitMap.set(key, t);
+            if (!traitMap.has(key)) traitMap.set(key, t as unknown as Item);
         }
 
         const list = [...traitMap.values()].map((t) => {
@@ -889,7 +893,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
             );
             const source = origin ? origin.name : 'Innate / Granted';
             return {
-                id: t.id,
+                id: t.id ?? '',
                 name: t.name,
                 description:
                     (t.system as { description?: { value?: string }; effect?: string }).description?.value ?? (t.system as { effect?: string }).effect ?? '',
@@ -915,12 +919,13 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         for (const pack of packs) {
             const index = await pack.getIndex({ fields: ['name', 'type', 'system.step', 'system.description.value'] });
             for (const entry of index) {
-                if (entry.system?.step !== 'elite') continue;
+                const eliteSys = entry.system as { step?: string; description?: { value?: string } } | null | undefined;
+                if (eliteSys?.step !== 'elite') continue;
                 const key = entry.name.toLowerCase();
                 if (elitesByName.has(key)) continue;
                 const owned = ownedElites.has(key);
                 // Parse XP cost from description HTML (falls back to 1000)
-                const descHtml = entry.system?.description?.value ?? '';
+                const descHtml = eliteSys?.description?.value ?? '';
                 const xpMatch = descHtml.match(/Experience Cost<\/h3>\s*<p>\s*([\d,]+)\s*xp/i) ?? descHtml.match(/([\d,]+)\s*xp/i);
                 const cost = xpMatch ? parseInt(xpMatch[1].replace(/,/g, ''), 10) : 1000;
                 // Short blurb: first <p> after <h2>
@@ -929,7 +934,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
                 elitesByName.set(key, {
                     id: `elite:${entry.name}`,
-                    uuid: entry.uuid,
+                    uuid: entry.uuid ?? '',
                     name: entry.name,
                     summary,
                     cost,
@@ -1058,7 +1063,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const result = await spendXP(this.actor, nextCost.cost, `${charLabel} (${tierLabel})`);
         if (!result.success) {
-            ui.notifications.error(result.error);
+            ui.notifications.error(result.error ?? '');
             return;
         }
 
@@ -1114,7 +1119,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         }
 
         const career = getCareerAdvancements(this.careerKey);
-        const advances = career?.RANK_1_ADVANCES ?? [];
+        const advances: AdvancementAdvance[] = career?.RANK_1_ADVANCES ?? [];
         const typeAdvances = advances.filter((a) => a.type === advanceType);
         const advance = typeAdvances[advanceIndex];
 
@@ -1145,7 +1150,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const result = await spendXP(this.actor, advance.cost, displayName);
         if (!result.success) {
-            ui.notifications.error(result.error);
+            ui.notifications.error(result.error ?? '');
             return;
         }
 
@@ -1206,7 +1211,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             const result = await spendXP(this.actor, entry.cost, displayName);
             if (!result.success) {
-                ui.notifications.error(result.error);
+                ui.notifications.error(result.error ?? '');
                 return;
             }
 
@@ -1243,12 +1248,12 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             const result = await spendXP(this.actor, entry.cost, displayName);
             if (!result.success) {
-                ui.notifications.error(result.error);
+                ui.notifications.error(result.error ?? '');
                 return;
             }
 
-            const currentAdvance = actorSkill.entries[entryIndex].advance ?? 0;
-            const currentCost = actorSkill.entries[entryIndex].cost ?? 0;
+            const currentAdvance = actorSkill.entries![entryIndex].advance ?? 0;
+            const currentCost = actorSkill.entries![entryIndex].cost ?? 0;
             await this.actor.update({
                 [`system.skills.${entry.skillKey}.entries.${entryIndex}.advance`]: currentAdvance + 1,
                 [`system.skills.${entry.skillKey}.entries.${entryIndex}.cost`]: currentCost + entry.cost,
@@ -1271,7 +1276,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const result = await spendXP(this.actor, entry.cost, displayName);
         if (!result.success) {
-            ui.notifications.error(result.error);
+            ui.notifications.error(result.error ?? '');
             return;
         }
 
@@ -1356,7 +1361,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const result = await spendXP(this.actor, entry.cost, displayName);
         if (!result.success) {
-            ui.notifications.error(result.error);
+            ui.notifications.error(result.error ?? '');
             return;
         }
 
@@ -1449,7 +1454,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const result = await spendXP(this.actor, cost, `Psy Rating ${nextRating}`);
         if (!result.success) {
-            ui.notifications.error(result.error);
+            ui.notifications.error(result.error ?? '');
             return;
         }
 
@@ -1487,7 +1492,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const result = await spendXP(this.actor, entry.cost, entry.name);
         if (!result.success) {
-            ui.notifications.error(result.error);
+            ui.notifications.error(result.error ?? '');
             return;
         }
 
@@ -1526,7 +1531,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
         const result = await spendXP(this.actor, entry.cost, `Elite: ${entry.name}`);
         if (!result.success) {
-            ui.notifications.error(result.error);
+            ui.notifications.error(result.error ?? '');
             return;
         }
 
@@ -1534,11 +1539,11 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
         const itemData = sourceDoc.toObject();
         itemData._id = foundry.utils.randomID();
         itemData.type = 'originPath';
-        const [created] = (await this.actor.createEmbeddedDocuments('Item', [itemData])) as Item[];
+        const [created] = (await this.actor.createEmbeddedDocuments('Item', [itemData])) as unknown as Item[];
 
         try {
             const { default: GrantsManager } = await import('../../managers/grants-manager.ts');
-            await GrantsManager.applyItemGrants(created, this.actor, { showNotification: false });
+            await GrantsManager.applyItemGrants(created as unknown as import('../../documents/item.ts').WH40KItem, this.actor, { showNotification: false });
         } catch (err) {
             console.warn('Elite grant application failed (item was still added):', err);
         }
@@ -1597,7 +1602,9 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
-                talentData = doc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
+                if (doc) {
+                    talentData = doc.toObject() as Record<string, unknown> & { system: Record<string, unknown> };
+                }
                 break;
             }
         }
@@ -1632,7 +1639,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
-                void doc.sheet.render(true);
+                void doc?.sheet?.render(true);
                 return;
             }
         }
@@ -1643,7 +1650,7 @@ export default class AdvancementDialog extends HandlebarsApplicationMixin(Applic
 
             if (match) {
                 const doc = await pack.getDocument(match._id);
-                void doc.sheet.render(true);
+                void doc?.sheet?.render(true);
                 return;
             }
         }

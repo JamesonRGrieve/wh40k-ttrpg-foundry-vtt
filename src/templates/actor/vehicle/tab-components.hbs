@@ -1,49 +1,50 @@
 {{!-- Vehicle Components Tab --}}
 <section class="tab {{#if tab.active}}active{{/if}} {{tab.cssClass}}" data-tab="{{tab.id}}" data-group="{{tab.group}}">
-    <div class="wh40k-vehicle-components">
-        
+    <div class="tw-flex tw-flex-col tw-gap-4">
+
         {{!-- Components/Upgrades List --}}
-        <div class="wh40k-vehicle-panel wh40k-vehicle-components-list">
-            <h3 class="wh40k-vehicle-panel-title">
-                <i class="fas fa-cog"></i>
-                Components & Upgrades
+        <div class="tw-bg-[rgba(40,35,30,0.7)] tw-border tw-border-[#444] tw-rounded-[6px] tw-p-4 tw-mb-4">
+            <h3 class="tw-text-[1.1rem] tw-font-bold tw-text-gold tw-mb-2 tw-flex tw-items-center tw-gap-2">
+                <i class="fas fa-cog tw-text-gold"></i>
+                Components &amp; Upgrades
             </h3>
-            <div class="wh40k-vehicle-items-list">
+            <div class="tw-flex tw-flex-col tw-gap-3">
                 {{#each components}}
-                <div class="wh40k-vehicle-component-item" data-item-id="{{this._id}}">
-                    <div class="wh40k-vehicle-component-name">
-                        <input type="checkbox" 
-                               data-action="toggleComponentActive" 
+                <div class="tw-px-3 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px]" data-item-id="{{this._id}}">
+                    <div class="tw-flex tw-items-center tw-gap-2 tw-font-bold tw-mb-1">
+                        <input type="checkbox"
+                               class="tw-m-0"
+                               data-action="toggleComponentActive"
                                data-item-id="{{this._id}}"
                                {{#if this.system.active}}checked{{/if}} />
                         {{this.name}}
                     </div>
                     {{#if this.system.description}}
-                    <div class="wh40k-vehicle-component-desc">
+                    <div class="tw-text-[0.85rem] tw-text-[#888] tw-mt-2">
                         {{{this.system.description}}}
                     </div>
                     {{/if}}
                 </div>
                 {{/each}}
-                
+
                 {{#each vehicleUpgrades}}
-                <div class="wh40k-vehicle-component-item" data-item-id="{{this._id}}">
-                    <div class="wh40k-vehicle-component-name">
+                <div class="tw-px-3 tw-py-3 tw-bg-[rgba(0,0,0,0.3)] tw-border tw-border-[#444] tw-rounded-[3px]" data-item-id="{{this._id}}">
+                    <div class="tw-flex tw-items-center tw-gap-2 tw-font-bold tw-mb-1">
                         {{this.name}}
                     </div>
                     {{#if this.system.description}}
-                    <div class="wh40k-vehicle-component-desc">
+                    <div class="tw-text-[0.85rem] tw-text-[#888] tw-mt-2">
                         {{{this.system.description}}}
                     </div>
                     {{/if}}
                 </div>
                 {{/each}}
-                
+
                 {{#unless (or components.length vehicleUpgrades.length)}}
-                <div class="wh40k-vehicle-empty">No components or upgrades</div>
+                <div class="tw-py-8 tw-text-center tw-text-[#888] tw-italic">No components or upgrades</div>
                 {{/unless}}
             </div>
         </div>
-        
+
     </div>
 </section>

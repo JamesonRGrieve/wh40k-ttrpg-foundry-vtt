@@ -42,7 +42,7 @@ type BaseActorSheetSystem = WH40KBaseActorDocument['system'] & {
 };
 
 type BaseActorSheetActor = WH40KBaseActor & { system: BaseActorSheetSystem };
-type SkillLike = Partial<
+export type SkillLike = Partial<
     WH40KSkill & {
         hidden: boolean;
         trainingLevel: number;
@@ -53,8 +53,9 @@ type SkillLike = Partial<
         showFavorite: boolean;
         isGranted: boolean;
     }
-> & { trainingLevel: number } & Record<string, unknown>;
-type CharacteristicLike = WH40KCharacteristic;
+> &
+    Record<string, unknown>;
+export type CharacteristicLike = WH40KCharacteristic;
 type TalentLike = WH40KItem & {
     system: WH40KItem['system'] & {
         tier: number | string;
@@ -203,6 +204,22 @@ export default class BaseActorSheet extends BaseActorSheetBase {
     declare render: (options?: Record<string, unknown> | boolean) => any;
     declare submit: () => Promise<void>;
     declare setPosition: (pos: Partial<{ top: number; left: number; width: number; height: number }>) => void;
+    // These are declared as methods (not properties) so subclasses can override them
+    // and call super. The actual implementation lives in Foundry's ApplicationV2 base,
+    // which is erased by the mixin chain cast. These stubs restore type visibility by
+    // delegating through the erased prototype chain via the AnyApplicationV2Ctor base.
+    _getHeaderControls(): { icon: string; label: string; action?: string; visible?: boolean }[] {
+        const proto = Object.getPrototypeOf(BaseActorSheet.prototype) as {
+            _getHeaderControls?: (this: BaseActorSheet) => { icon: string; label: string; action?: string; visible?: boolean }[];
+        };
+        return proto._getHeaderControls?.call(this) ?? [];
+    }
+    async _onFirstRender(context: Record<string, unknown>, options: Record<string, unknown>): Promise<void> {
+        const proto = Object.getPrototypeOf(BaseActorSheet.prototype) as {
+            _onFirstRender?: (this: BaseActorSheet, context: Record<string, unknown>, options: Record<string, unknown>) => Promise<void>;
+        };
+        await proto._onFirstRender?.call(this, context, options);
+    }
 
     // CollapsiblePanelMixin static action handlers
     static _onTogglePanel: (event: Event, target: HTMLElement) => Promise<void>;
@@ -770,7 +787,7 @@ export default class BaseActorSheet extends BaseActorSheetBase {
         data.trainingIndicators = config.map((rank) => ({
             label: rank.label,
             tooltip: rank.tooltip,
-            active: data.trainingLevel >= rank.level,
+            active: (data.trainingLevel ?? 0) >= rank.level,
         }));
 
         // Characteristic short name

@@ -30,7 +30,18 @@ export class WH40KAcolyte extends WH40KBaseActor {
     }
     get skills(): Record<
         string,
-        { label?: string; characteristic: string; trained: boolean; plus10: boolean; plus20: boolean; bonus: number; current: number; entries?: unknown[] }
+        {
+            label?: string;
+            characteristic: string;
+            advanced?: boolean;
+            basic?: boolean;
+            trained: boolean;
+            plus10: boolean;
+            plus20: boolean;
+            bonus: number;
+            current: number;
+            entries?: unknown[];
+        }
     > {
         return this.system.skills;
     }
@@ -61,7 +72,7 @@ export class WH40KAcolyte extends WH40KBaseActor {
     get armour(): Record<string, { value: number; total: number; toughnessBonus: number; traitBonus: number }> {
         return this.system.armour;
     }
-    get encumbrance(): { value: number; max: number; over: boolean } {
+    get encumbrance(): import('../types/global.d.ts').WH40KEncumbrance {
         return this.system.encumbrance;
     }
     get backgroundEffects(): unknown[] {

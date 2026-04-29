@@ -77,13 +77,13 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     _resolvePromise: ((value: Record<string, string[]> | null) => void) | null;
 
     /** The option currently waiting for a specialization choice, or null. */
-    _pendingSpecOption: PendingSpecOption | null;
+    _pendingSpecOption: PendingSpecOption | null = null;
 
     /** Saved scroll position before re-render, restored in _onRender. */
-    _savedScrollTop: number;
+    _savedScrollTop: number = 0;
 
     /** Inherited from ApplicationV2 — re-declared so the mixin return type exposes it. */
-    declare render: (force?: boolean, options?: Record<string, unknown>) => unknown;
+    declare render: (options?: boolean | Record<string, unknown>) => Promise<unknown>;
 
     /** Inherited from ApplicationV2 — re-declared so the mixin return type exposes it. */
     declare close: (options?: Record<string, unknown>) => Promise<void>;
@@ -129,7 +129,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {Actor} actor - The character actor (for context)
      * @param {object} [options={}] - Additional options
      */
-    constructor(item, actor, options = {}) {
+    constructor(item: WH40KItem, actor: WH40KBaseActor, options: Record<string, unknown> = {}) {
         super(options);
 
         /**
@@ -151,10 +151,11 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         // Normalize choices: DH2e uses 'name' while RT uses 'label'.
         // Disambiguate duplicate labels (e.g. two "Starting Skill" choices)
         // by appending " (2)", " (3)", etc. so each choice has a unique key.
-        const rawChoices = (item.system?.grants?.choices || []).map((c) => ({
+        const itemGrants = item.system?.grants as { choices?: RawChoice[] } | undefined;
+        const rawChoices = (itemGrants?.choices || []).map((c: RawChoice) => ({
             ...c,
             label: c.label || c.name || '',
-            options: (c.options || []).map((o) => {
+            options: (c.options || []).map((o: ChoiceOption | string) => {
                 // Handle plain string options (e.g. aptitude choices: ["Offence", "Tech"])
                 if (typeof o === 'string') {
                     return { value: o, label: o, specializations: null };
@@ -178,11 +179,11 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
 
         // Deduplicate choice labels
         const labelCounts: Record<string, number> = {};
-        this.pendingChoices = rawChoices.map((c) => {
+        this.pendingChoices = rawChoices.map((c: RawChoice & { label: string; options: ChoiceOption[] }) => {
             const base = c.label;
             labelCounts[base] = (labelCounts[base] || 0) + 1;
             const suffix = labelCounts[base] > 1 ? ` (${labelCounts[base]})` : '';
-            return { ...c, _key: `${base}${suffix}` };
+            return { ...c, count: c.count ?? 1, _key: `${base}${suffix}` } as PendingChoice;
         });
 
         /**
@@ -200,7 +201,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         this.specializationSelections = new Map();
 
         // Initialize selections from existing selectedChoices
-        const existing = item.system?.selectedChoices || {};
+        const existing = (item.system?.selectedChoices as Record<string, string | string[]> | undefined) ?? {};
         for (const [key, selected] of Object.entries(existing)) {
             const selectedValues = Array.isArray(selected) ? selected : [selected].filter(Boolean);
             this.selections.set(key, new Set(selectedValues));
@@ -230,7 +231,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
     /* -------------------------------------------- */
 
     /** @override */
-    async _prepareContext(options: Record<string, unknown>): Promise<unknown> {
+    async _prepareContext(options: Record<string, unknown>): Promise<Record<string, unknown>> {
         const context = await super._prepareContext(options);
 
         context.item = this.item;
@@ -246,52 +247,63 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
 
                 return {
                     type: choice.type,
-                    typeLabel: this._getChoiceTypeLabel(choice.type),
+                    typeLabel: this._getChoiceTypeLabel(choice.type ?? ''),
                     label: choice.label,
                     choiceKey: choiceKey,
                     count: choice.count,
                     remaining: remaining,
                     options: await Promise.all(
                         (choice.options || []).map(async (option) => {
-                            const optValue = option.value || option.label;
-                            const optLabel = option.label || option.value;
+                            const optValue = option.value || option.label || '';
+                            const optLabel = option.label || option.value || '';
                             let optDesc = option.description || null;
                             const optSpecs = option.specializations || null;
                             let statBlock: string | null = null;
 
                             // Extract UUID from option.uuid OR from grants
-                            let optUuid = typeof option === 'object' ? option.uuid : null;
+                            let optUuid: string | null = typeof option === 'object' ? option.uuid ?? null : null;
                             if (!optUuid && typeof option === 'object' && option.grants) {
                                 const grants = option.grants;
-                                if (grants.talents?.length > 0 && grants.talents[0].uuid) {
-                                    optUuid = grants.talents[0].uuid;
-                                } else if (grants.skills?.length > 0) {
-                                    const skillData = grants.skills[0];
-                                    if (skillData.uuid) {
-                                        optUuid = skillData.uuid;
-                                    } else {
-                                        const skillName = skillData.name || skillData;
-                                        const specialization = skillData.specialization || null;
-                                        optUuid = await findSkillUuid(skillName, specialization);
+                                const firstTalent = (grants.talents ?? [])[0];
+                                const firstTrait = (grants.traits ?? [])[0];
+                                const firstEquip = (grants.equipment ?? [])[0];
+                                if ((grants.talents?.length ?? 0) > 0 && firstTalent?.uuid) {
+                                    optUuid = firstTalent.uuid;
+                                } else if ((grants.skills?.length ?? 0) > 0) {
+                                    const skillData = (grants.skills ?? [])[0];
+                                    if (typeof skillData === 'string') {
+                                        optUuid = await findSkillUuid(skillData, null);
+                                    } else if (skillData) {
+                                        if (skillData.uuid) {
+                                            optUuid = skillData.uuid;
+                                        } else {
+                                            const skillName = skillData.name ?? '';
+                                            const specialization = skillData.specialization ?? null;
+                                            optUuid = await (findSkillUuid as (name: string, spec: string | null) => Promise<string | null>)(
+                                                skillName,
+                                                specialization,
+                                            );
+                                        }
                                     }
-                                } else if (grants.traits?.length > 0 && grants.traits[0].uuid) {
-                                    optUuid = grants.traits[0].uuid;
-                                } else if (grants.equipment?.length > 0 && grants.equipment[0].uuid) {
-                                    optUuid = grants.equipment[0].uuid;
+                                } else if ((grants.traits?.length ?? 0) > 0 && firstTrait?.uuid) {
+                                    optUuid = firstTrait.uuid;
+                                } else if ((grants.equipment?.length ?? 0) > 0 && firstEquip?.uuid) {
+                                    optUuid = firstEquip.uuid;
                                 }
                             }
 
                             // Fetch compendium description and stat block for item-type choices
                             const itemChoiceTypes = new Set(['talent', 'skill', 'equipment', 'gear', 'trait', 'psychicPower']);
-                            if (!optDesc && itemChoiceTypes.has(choice.type)) {
+                            if (!optDesc && itemChoiceTypes.has(choice.type ?? '')) {
                                 const resolved = await this._resolveCompendiumItem(optLabel, optUuid);
                                 if (resolved) {
-                                    if (!optUuid) optUuid = resolved.uuid;
-                                    const rawDesc = resolved.system?.description?.value || '';
+                                    const resolvedDoc = resolved as { uuid?: string; system?: { description?: { value?: string } }; type?: string };
+                                    if (!optUuid) optUuid = resolvedDoc.uuid ?? null;
+                                    const rawDesc = resolvedDoc.system?.description?.value || '';
                                     if (rawDesc) {
                                         optDesc = rawDesc;
                                     }
-                                    statBlock = this._buildStatBlock(resolved);
+                                    statBlock = this._buildStatBlock(resolved as WH40KItem);
                                 }
                             }
 
@@ -323,7 +335,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         );
 
         // Check if all choices are complete
-        context.allChoicesComplete = context.choices.every((c) => c.remaining === 0);
+        context.allChoicesComplete = (context.choices as Array<{ remaining: number }>).every((c) => c.remaining === 0);
 
         return context;
     }
@@ -370,19 +382,22 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @private
      */
     _buildStatBlock(item: WH40KItem): string | null {
-        const sys = item.system;
-        if (!sys) return null;
+        const rawSys = item.system as Record<string, unknown> | undefined;
+        if (!rawSys) return null;
         const parts: string[] = [];
 
+        type AtkData = { type?: string; range?: { value?: number }; rateOfFire?: { single?: number; semi?: number; full?: number } };
+        type DmgData = { formula?: string; bonus?: number; type?: string; penetration?: number };
+
         if (item.type === 'weapon') {
-            const atk = sys.attack || {};
-            const dmg = sys.damage || {};
+            const atk = (rawSys.attack || {}) as AtkData;
+            const dmg = (rawSys.damage || {}) as DmgData;
             if (atk.type) parts.push(atk.type === 'melee' ? 'Melee' : 'Ranged');
-            if (sys.class) parts.push(sys.class);
+            if (rawSys.class) parts.push(String(rawSys.class));
             if (atk.range?.value) parts.push(`Range ${atk.range.value}m`);
             const rof = atk.rateOfFire;
             if (rof) {
-                const modes = [];
+                const modes: string[] = [];
                 if (rof.single) modes.push('S');
                 if (rof.semi) modes.push(`${rof.semi}`);
                 if (rof.full) modes.push(`${rof.full}`);
@@ -395,15 +410,16 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
                 parts.push(`Dmg ${dmgStr}`);
             }
             if (dmg.penetration) parts.push(`Pen ${dmg.penetration}`);
-            if (sys.clip?.max) parts.push(`Clip ${sys.clip.max}`);
-            if (sys.reload) parts.push(`Rld ${sys.reload}`);
+            const clip = rawSys.clip as { max?: number } | undefined;
+            if (clip?.max) parts.push(`Clip ${clip.max}`);
+            if (rawSys.reload) parts.push(`Rld ${String(rawSys.reload)}`);
         } else if (item.type === 'armour') {
-            if (sys.armourPoints != null) parts.push(`AP ${sys.armourPoints}`);
-            if (sys.maxAgility != null) parts.push(`Max Ag ${sys.maxAgility}`);
-            if (sys.coverage) parts.push(sys.coverage);
+            if (rawSys.armourPoints != null) parts.push(`AP ${rawSys.armourPoints}`);
+            if (rawSys.maxAgility != null) parts.push(`Max Ag ${rawSys.maxAgility}`);
+            if (rawSys.coverage) parts.push(String(rawSys.coverage));
         }
 
-        if (sys.weight) parts.push(`${sys.weight} kg`);
+        if (rawSys.weight) parts.push(`${rawSys.weight} kg`);
         return parts.length > 0 ? parts.join(' · ') : null;
     }
 
@@ -456,7 +472,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #toggleOption(event: Event, target: HTMLElement): Promise<void> {
+    static async #toggleOption(this: OriginPathChoiceDialog, event: Event, target: HTMLElement): Promise<void> {
         const choiceKey = target.dataset.choice;
         const optionValue = target.dataset.option;
 
@@ -472,12 +488,12 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         if (!this.selections.has(choiceKey)) {
             this.selections.set(choiceKey, new Set());
         }
-        const selections = this.selections.get(choiceKey);
+        const selections = this.selections.get(choiceKey)!;
         const specKey = `${choiceKey}::${optionValue}`;
 
         // Build the composite value (includes specialization if present)
         const chosenSpec = this.specializationSelections.get(specKey) || '';
-        const hasSpecs = option?.specializations?.length > 0;
+        const hasSpecs = (option?.specializations?.length ?? 0) > 0;
         const compositeValue = hasSpecs && chosenSpec ? `${optionValue} (${chosenSpec})` : optionValue;
 
         // Find any existing composite for this base option (to remove when deselecting)
@@ -525,7 +541,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * When a specialization is chosen, finalize the option selection with composite value.
      * @private
      */
-    static async #selectSpecialization(event: Event, target: HTMLElement): Promise<void> {
+    static async #selectSpecialization(this: OriginPathChoiceDialog, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation();
         const select = target.tagName === 'SELECT' ? (target as HTMLSelectElement) : target.querySelector('select');
         if (!select) return;
@@ -547,7 +563,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         if (!this.selections.has(choiceKey)) {
             this.selections.set(choiceKey, new Set());
         }
-        const selections = this.selections.get(choiceKey);
+        const selections = this.selections.get(choiceKey)!;
 
         // Remove any existing composite for this base option
         const existing = [...selections].find((v) => v === optionValue || v.startsWith(`${optionValue} (`));
@@ -572,7 +588,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static #confirm(event: Event, target: HTMLElement): void {
+    static #confirm(this: OriginPathChoiceDialog, event: Event, target: HTMLElement): void {
         // Validate all choices are complete
         const incomplete = this.pendingChoices.filter((choice) => {
             const selections = this.selections.get(choice._key) || new Set();
@@ -585,7 +601,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         }
 
         // Convert Map to object for storage
-        const selectedChoices = {};
+        const selectedChoices: Record<string, string[]> = {};
         for (const [label, selections] of this.selections.entries()) {
             selectedChoices[label] = Array.from(selections);
         }
@@ -604,7 +620,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static #cancel(event: Event, target: HTMLElement): void {
+    static #cancel(this: OriginPathChoiceDialog, event: Event, target: HTMLElement): void {
         if (this._resolvePromise) {
             this._resolvePromise(null);
         }
@@ -617,7 +633,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {HTMLElement} target - The target element
      * @private
      */
-    static async #viewItem(event: Event, target: HTMLElement): Promise<void> {
+    static async #viewItem(this: OriginPathChoiceDialog, event: Event, target: HTMLElement): Promise<void> {
         event.stopPropagation(); // Don't trigger parent card click
         event.preventDefault(); // Prevent default button behavior
 
@@ -627,7 +643,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
         try {
             const item = await fromUuid(uuid);
             if (item) {
-                item.sheet.render(true);
+                (item as { sheet?: { render: (force?: boolean) => void } }).sheet?.render(true);
             }
         } catch (error) {
             console.warn('Could not load item:', uuid, error);
@@ -642,7 +658,7 @@ export default class OriginPathChoiceDialog extends HandlebarsApplicationMixin(A
      * @param {FormDataExtended} formData - The form data
      * @private
      */
-    static #onSubmit(event: Event, form: HTMLFormElement, formData: Record<string, unknown>): void {
+    static #onSubmit(this: OriginPathChoiceDialog, event: Event, form: HTMLFormElement, formData: Record<string, unknown>): void {
         // Same as confirm - call directly on instance
         return OriginPathChoiceDialog.#confirm.call(this, event, form);
     }
